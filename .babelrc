@@ -1,0 +1,79 @@
+{
+  "env": {
+    "development": {
+      "presets": ["next/babel"],
+      "plugins": [
+        [
+          "module-resolver",
+          {
+            "root": ["./"],
+            "alias": {
+              "@components": "./src/components",
+              "@containers": "./src/containers",
+              "@common": "./src/common",
+              "@store": "./src/store",
+              "@constants": "./src/constants",
+              "@services": "./src/services",
+              "@theme": "./src/theme",
+              "@utils": "./src/utils"
+            }
+          }
+        ],
+        ["styled-components", { "ssr": true }]
+      ]
+    },
+    "production": {
+      "presets": ["next/babel"],
+      "plugins": [
+        [
+          "module-resolver",
+          {
+            "root": ["./"],
+            "alias": {
+              "@components": "./src/components",
+              "@containers": "./src/containers",
+              "@common": "./src/common",
+              "@store": "./src/store",
+              "@constants": "./src/constants",
+              "@services": "./src/services",
+              "@theme": "./src/theme",
+              "@utils": "./src/utils"
+            }
+          }
+        ],
+        ["styled-components", { "ssr": true }]
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "modules": "commonjs"
+            }
+          }
+        ]
+      ],
+      "plugins": [
+        [
+          "module-resolver",
+          {
+            "root": ["./"],
+            "alias": {
+              "@components": "./src/components",
+              "@containers": "./src/containers",
+              "@common": "./src/common",
+              "@store": "./src/store",
+              "@constants": "./src/constants",
+              "@services": "./src/services",
+              "@theme": "./src/theme",
+              "@utils": "./src/utils"
+            }
+          }
+        ],
+        ["styled-components", { "ssr": true }]
+      ]
+    }
+  }
+}

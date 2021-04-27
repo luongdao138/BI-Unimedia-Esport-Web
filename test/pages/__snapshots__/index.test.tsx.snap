@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home page renders correctly 1`] = `
+<main>
+  <h1>
+    Hello, world!
+  </h1>
+  <a
+    href="/login"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+  >
+    login
+  </a>
+</main>
+`;
