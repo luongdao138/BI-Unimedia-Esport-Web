@@ -1,17 +1,30 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createWrapper } from 'next-redux-wrapper'
+import storage from './storage'
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
 import reducer from './reducers'
-import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 const initStore = () => {
   const isServer = typeof window === 'undefined'
 
   if (isServer) {
-    return configureStore({ reducer })
+    return configureStore({
+      reducer,
+      middleware: getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
+    })
   } else {
-    // we need it only on client side
-
     const persistConfig = {
       key: 'auth',
       whitelist: ['auth'],
@@ -19,7 +32,14 @@ const initStore = () => {
     }
 
     const persistedReducer = persistReducer(persistConfig, reducer)
-    const store = configureStore({ reducer: persistedReducer })
+    const store = configureStore({
+      reducer: persistedReducer,
+      middleware: getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
+    })
 
     return store
   }
