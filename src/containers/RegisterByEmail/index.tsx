@@ -11,16 +11,20 @@ import metadataStore from '@store/metadata'
 import { createMetaSelector } from '@store/metadata/selectors'
 import * as Yup from 'yup'
 import { useRouter } from 'next/router'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const { actions, selectors } = authStore
-const metaSelector = createMetaSelector(actions.loginByEmail)
+const metaSelector = createMetaSelector(actions.registerByEmail)
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required('Required').email(),
-  password: Yup.string().required('Required').min(8),
+  email: Yup.string()
+    .test('email-validation', 'Invalid email', (value) => {
+      return CommonHelper.validateEmail(value)
+    })
+    .required('Required'),
 })
 
-const LoginContainer: React.FC = () => {
+const RegisterByEmailContainer: React.FC = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
@@ -37,7 +41,7 @@ const LoginContainer: React.FC = () => {
     onSubmit: (values, _helpers) => {
       if (values.email && values.password) {
         dispatch(
-          actions.loginByEmail({
+          actions.registerByEmail({
             email: values.email,
             password: values.password,
           })
@@ -88,7 +92,7 @@ const LoginContainer: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary" fullWidth>
-            Login
+            Register
           </Button>
         </Grid>
       </Grid>
@@ -107,4 +111,4 @@ const LoginContainer: React.FC = () => {
   )
 }
 
-export default LoginContainer
+export default RegisterByEmailContainer

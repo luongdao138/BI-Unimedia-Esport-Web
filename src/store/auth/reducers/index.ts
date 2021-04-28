@@ -9,7 +9,14 @@ type StateType = {
 const initialState: StateType = { user: undefined }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.loginByEmail.fulfilled, (state, action) => {
-    state.user = action.payload
-  })
+  builder
+    .addCase(actions.loginByEmail.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
+    .addCase(actions.registerByEmail.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
+    .addCase(actions.resetPassword.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
 })
