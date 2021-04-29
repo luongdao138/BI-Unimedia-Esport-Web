@@ -2,19 +2,11 @@ import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
 import Grid from '@material-ui/core/Grid'
-import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import authStore from '@store/auth'
-import metadataStore from '@store/metadata'
-import { createMetaSelector } from '@store/metadata/selectors'
 import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-
-const { actions, selectors } = authStore
-const metaSelector = createMetaSelector(actions.forgotPassword)
-const metaConfirmSelector = createMetaSelector(actions.forgotConfirm)
+import useForgotPassword from './useForgotPassword'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -25,13 +17,17 @@ const validationSchema = Yup.object().shape({
 })
 
 const ForgotPasswordContainer: React.FC = () => {
-  const dispatch = useAppDispatch()
+  const {
+    user,
+    meta,
+    metaConfirm,
+    forgotPassword,
+    forgotConfirm,
+    resetPassword,
+  } = useForgotPassword()
   const [confirmationCode, setConfirm] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const user = useAppSelector(selectors.getAuth)
-  const meta = useAppSelector(metaSelector)
-  const metaConfirm = useAppSelector(metaConfirmSelector)
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<
     services.ForgotPasswordParams
   >({
@@ -41,37 +37,22 @@ const ForgotPasswordContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values) => {
       if (values.email) {
-        dispatch(
-          actions.forgotPassword({
-            email: values.email,
-          })
-        )
+        forgotPassword(values)
       }
     },
   })
 
-  const clearMeta = () => {
-    dispatch(metadataStore.actions.clearMetaData())
-  }
-
   const handleForgotConfirm = () => {
-    dispatch(
-      actions.forgotConfirm({
-        email: values.email,
-        confirmation_code: confirmationCode,
-      })
-    )
+    forgotConfirm({ ...values, confirmation_code: confirmationCode })
   }
 
   const handleResetPassword = () => {
-    dispatch(
-      actions.resetPassword({
-        email: values.email,
-        password: password,
-        password_confirm: passwordConfirmation,
-        confirmation_code: confirmationCode,
-      })
-    )
+    resetPassword({
+      ...values,
+      password: password,
+      password_confirm: passwordConfirmation,
+      confirmation_code: confirmationCode,
+    })
   }
 
   return (
@@ -98,17 +79,6 @@ const ForgotPasswordContainer: React.FC = () => {
             </Button>
           </Grid>
         </Grid>
-
-        <Box mt={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={clearMeta}
-          >
-            Clear metadata state
-          </Button>
-        </Box>
       </form>
 
       {meta.loaded && (

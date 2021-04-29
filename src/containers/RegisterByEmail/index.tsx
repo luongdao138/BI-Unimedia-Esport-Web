@@ -5,16 +5,10 @@ import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import authStore from '@store/auth'
-import metadataStore from '@store/metadata'
-import { createMetaSelector } from '@store/metadata/selectors'
 import * as Yup from 'yup'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-
-const { actions, selectors } = authStore
-const metaSelector = createMetaSelector(actions.registerByEmail)
+import useRegisterByEmail from './useRegisterByEmail'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -26,9 +20,8 @@ const validationSchema = Yup.object().shape({
 
 const RegisterByEmailContainer: React.FC = () => {
   const router = useRouter()
-  const dispatch = useAppDispatch()
-  const user = useAppSelector(selectors.getAuth)
-  const meta = useAppSelector(metaSelector)
+  const { user, meta, registerByEmail, resetMeta } = useRegisterByEmail()
+
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<
     services.UserLoginParams
   >({
@@ -40,12 +33,7 @@ const RegisterByEmailContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values, _helpers) => {
       if (values.email && values.password) {
-        dispatch(
-          actions.registerByEmail({
-            email: values.email,
-            password: values.password,
-          })
-        )
+        registerByEmail(values)
       }
     },
   })
@@ -55,10 +43,6 @@ const RegisterByEmailContainer: React.FC = () => {
       router.push('/welcome')
     }
   }, [meta.loaded])
-
-  const clearMeta = () => {
-    dispatch(metadataStore.actions.clearMetaData())
-  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -102,7 +86,7 @@ const RegisterByEmailContainer: React.FC = () => {
           variant="contained"
           color="primary"
           fullWidth
-          onClick={clearMeta}
+          onClick={resetMeta}
         >
           Clear metadata state
         </Button>
