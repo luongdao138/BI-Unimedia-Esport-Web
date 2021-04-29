@@ -7,6 +7,14 @@ const HomePage: React.FC = () => {
       <Link href="/login">
         <a>login</a>
       </Link>
+      <br />
+      <Link href="/register">
+        <a>register</a>
+      </Link>
+      <br />
+      <Link href="/forgot-password">
+        <a>forgot password</a>
+      </Link>
     </main>
   )
 }

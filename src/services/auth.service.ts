@@ -20,9 +20,67 @@ export type UserLoginResponse = {
   user_code: string
 }
 
+export type UserRegisterResponse = {
+  email: string
+}
+
+export type ForgotPasswordParams = UserRegisterResponse
+
+export type ForgotPasswordResponse = UserRegisterResponse
+
+export type UserConfirmParams = {
+  email: string
+  confirmation_code: string
+}
+
+export type UserConfirmResponse = {
+  success: string
+}
+
+export type UserResetPasswordParams = {
+  email: string
+  password: string
+  password_confirm: string
+  confirmation_code: string
+}
+
 export const login = async (
   params: UserLoginParams
 ): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.LOGIN, params)
+  return data
+}
+
+export const register = async (
+  params: UserLoginParams
+): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.REGISTER, params)
+  return data
+}
+
+export const forgotPassword = async (
+  params: ForgotPasswordParams
+): Promise<ForgotPasswordResponse> => {
+  const { data } = await api.post<ForgotPasswordResponse>(
+    URI.FORGOT_PASSWORD,
+    params
+  )
+  return data
+}
+
+export const forgotConfirm = async (
+  params: UserConfirmParams
+): Promise<UserConfirmResponse> => {
+  const { data } = await api.post<UserConfirmResponse>(
+    URI.FORGOT_CONFIRM,
+    params
+  )
+  return data
+}
+
+export const resetPassword = async (
+  params: UserResetPasswordParams
+): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.RESET_PASSWORD, params)
   return data
 }
