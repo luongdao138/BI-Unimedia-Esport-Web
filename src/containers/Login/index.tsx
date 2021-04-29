@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import * as Yup from 'yup'
 import { useRouter } from 'next/router'
+import styles from './Login.module.scss'
 
 import useLoginByEmail from './useLoginByEmail'
 
@@ -39,7 +40,7 @@ const LoginContainer: React.FC = () => {
   }, [meta.loaded])
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.body}>
       <p>{user && JSON.stringify(user)}</p>
       <p>{meta && JSON.stringify(meta)}</p>
       <Grid container spacing={4}>
