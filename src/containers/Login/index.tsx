@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useFormik } from 'formik'
-import { UserLoginRequest } from '@services/auth.service'
+import { UserLoginParams } from '@services/auth.service'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
@@ -19,7 +19,7 @@ const LoginContainer: React.FC = () => {
   const router = useRouter()
   const { loginByEmail, user, meta, resetMeta } = useLoginByEmail()
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    UserLoginRequest
+    UserLoginParams
   >({
     initialValues: {
       email: '',

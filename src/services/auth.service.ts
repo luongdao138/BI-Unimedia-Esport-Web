@@ -1,7 +1,7 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
 
-export type UserLoginRequest = {
+export type UserLoginParams = {
   email: string
   password: string
   registration_id?: string
@@ -24,11 +24,11 @@ export type UserRegisterResponse = {
   email: string
 }
 
-export type ForgotPasswordRequest = UserRegisterResponse
+export type ForgotPasswordParams = UserRegisterResponse
 
 export type ForgotPasswordResponse = UserRegisterResponse
 
-export type UserConfirmRequest = {
+export type UserConfirmParams = {
   email: string
   confirmation_code: string
 }
@@ -37,7 +37,7 @@ export type UserConfirmResponse = {
   success: string
 }
 
-export type UserResetPasswordRequest = {
+export type UserResetPasswordParams = {
   email: string
   password: string
   password_confirm: string
@@ -45,21 +45,21 @@ export type UserResetPasswordRequest = {
 }
 
 export const login = async (
-  params: UserLoginRequest
+  params: UserLoginParams
 ): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.LOGIN, params)
   return data
 }
 
 export const register = async (
-  params: UserLoginRequest
+  params: UserLoginParams
 ): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.REGISTER, params)
   return data
 }
 
 export const forgotPassword = async (
-  params: ForgotPasswordRequest
+  params: ForgotPasswordParams
 ): Promise<ForgotPasswordResponse> => {
   const { data } = await api.post<ForgotPasswordResponse>(
     URI.FORGOT_PASSWORD,
@@ -69,7 +69,7 @@ export const forgotPassword = async (
 }
 
 export const forgotConfirm = async (
-  params: UserConfirmRequest
+  params: UserConfirmParams
 ): Promise<UserConfirmResponse> => {
   const { data } = await api.post<UserConfirmResponse>(
     URI.FORGOT_CONFIRM,
@@ -79,7 +79,7 @@ export const forgotConfirm = async (
 }
 
 export const resetPassword = async (
-  params: UserResetPasswordRequest
+  params: UserResetPasswordParams
 ): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.RESET_PASSWORD, params)
   return data

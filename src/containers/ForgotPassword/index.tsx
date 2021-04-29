@@ -33,7 +33,7 @@ const ForgotPasswordContainer: React.FC = () => {
   const meta = useAppSelector(metaSelector)
   const metaConfirm = useAppSelector(metaConfirmSelector)
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    services.ForgotPasswordRequest
+    services.ForgotPasswordParams
   >({
     initialValues: {
       email: '',

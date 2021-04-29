@@ -30,7 +30,7 @@ const RegisterByEmailContainer: React.FC = () => {
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(metaSelector)
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    services.UserLoginRequest
+    services.UserLoginParams
   >({
     initialValues: {
       email: '',

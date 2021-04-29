@@ -4,7 +4,7 @@ import { AUTH_ACTION_TYPE } from './types'
 
 export const loginByEmail = createAsyncThunk<
   services.UserLoginResponse,
-  services.UserLoginRequest
+  services.UserLoginParams
 >(AUTH_ACTION_TYPE.LOGIN_BY_EMAIL, async (loginParam, { rejectWithValue }) => {
   try {
     const res = await services.login(loginParam)
@@ -19,7 +19,7 @@ export const loginByEmail = createAsyncThunk<
 
 export const registerByEmail = createAsyncThunk<
   services.UserLoginResponse,
-  services.UserLoginRequest
+  services.UserLoginParams
 >(
   AUTH_ACTION_TYPE.REGISTER_BY_EMAIL,
   async (registerParam, { rejectWithValue }) => {
@@ -37,7 +37,7 @@ export const registerByEmail = createAsyncThunk<
 
 export const forgotPassword = createAsyncThunk<
   services.ForgotPasswordResponse,
-  services.ForgotPasswordRequest
+  services.ForgotPasswordParams
 >(
   AUTH_ACTION_TYPE.FORGOT_PASSWORD,
   async (forgotParam, { rejectWithValue }) => {
@@ -55,7 +55,7 @@ export const forgotPassword = createAsyncThunk<
 
 export const forgotConfirm = createAsyncThunk<
   services.UserConfirmResponse,
-  services.UserConfirmRequest
+  services.UserConfirmParams
 >(AUTH_ACTION_TYPE.FORGOT_CONFIRM, async (forgotParam, { rejectWithValue }) => {
   try {
     const res = await services.forgotConfirm(forgotParam)
@@ -70,7 +70,7 @@ export const forgotConfirm = createAsyncThunk<
 
 export const resetPassword = createAsyncThunk<
   services.UserLoginResponse,
-  services.UserResetPasswordRequest
+  services.UserResetPasswordParams
 >(AUTH_ACTION_TYPE.RESET_PASSWORD, async (forgotParam, { rejectWithValue }) => {
   try {
     const res = await services.resetPassword(forgotParam)
