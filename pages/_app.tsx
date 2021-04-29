@@ -4,7 +4,11 @@ import { useStore } from 'react-redux'
 import { storeWrapper } from '@store/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
-import '@theme/globalcss/main.scss'
+// import '@theme/globalcss/main.scss'
+
+import { ThemeProvider } from '@material-ui/core'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import theme from '@theme/index'
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -18,7 +22,10 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   const store = useStore()
   return (
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </PersistGate>
   )
 }
