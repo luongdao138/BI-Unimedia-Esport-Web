@@ -4,7 +4,7 @@ An opinionated boilerplate to kickstart projects using NextJS
 
 **Features**
 
-- 👏🏼 Next 10.1.3
+- 👏🏼 Next 10.2.0 and webpack 5
 - 🌊 Custom Document and App
 - ⌨️ Type safety using TypeScript
 - 💄 Write SCSS & future CSS with PostCSS + preset-env
@@ -18,7 +18,7 @@ An opinionated boilerplate to kickstart projects using NextJS
 
 ## Getting started
 
-Before you can start developing your awesome application you need to install the project's dependencies. Make sure you have Node (>= 10.13.0) and NPM installed and run:
+Before you can start developing your awesome application you need to install the project's dependencies. Make sure you have Node (14.16.1) and yarn installed and run:
 
 ```sh
 $ yarn install
