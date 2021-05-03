@@ -1,26 +1,29 @@
 import { useEffect } from 'react'
 import { useFormik } from 'formik'
-import { UserLoginParams } from '@services/auth.service'
+import * as services from '@services/auth.service'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import * as Yup from 'yup'
 import { useRouter } from 'next/router'
-import styles from './Login.module.scss'
-
-import useLoginByEmail from './useLoginByEmail'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import useRegisterByEmail from './useRegisterByEmail'
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required('Required').email(),
-  password: Yup.string().required('Required').min(8),
+  email: Yup.string()
+    .test('email-validation', 'Invalid email', (value) => {
+      return CommonHelper.validateEmail(value)
+    })
+    .required('Required'),
 })
 
-const LoginContainer: React.FC = () => {
+const RegisterByEmailContainer: React.FC = () => {
   const router = useRouter()
-  const { loginByEmail, user, meta, resetMeta } = useLoginByEmail()
+  const { user, meta, registerByEmail, resetMeta } = useRegisterByEmail()
+
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    UserLoginParams
+    services.UserLoginParams
   >({
     initialValues: {
       email: '',
@@ -29,7 +32,9 @@ const LoginContainer: React.FC = () => {
     },
     validationSchema,
     onSubmit: (values, _helpers) => {
-      loginByEmail(values)
+      if (values.email && values.password) {
+        registerByEmail(values)
+      }
     },
   })
 
@@ -40,7 +45,7 @@ const LoginContainer: React.FC = () => {
   }, [meta.loaded])
 
   return (
-    <form onSubmit={handleSubmit} className={styles.body}>
+    <form onSubmit={handleSubmit}>
       <p>{user && JSON.stringify(user)}</p>
       <p>{meta && JSON.stringify(meta)}</p>
       <Grid container spacing={4}>
@@ -71,7 +76,7 @@ const LoginContainer: React.FC = () => {
         </Grid>
         <Grid item xs={12}>
           <Button type="submit" variant="contained" color="primary" fullWidth>
-            Login
+            Register
           </Button>
         </Grid>
       </Grid>
@@ -90,4 +95,4 @@ const LoginContainer: React.FC = () => {
   )
 }
 
-export default LoginContainer
+export default RegisterByEmailContainer

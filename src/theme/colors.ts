@@ -4,8 +4,8 @@
  */
 
 export const Colors = {
-  primary: '#FFE600',
-  secondary: '#FF4786',
+  primary: '#FF4786',
+  secondary: '#F7F735',
   grey: {
     '100': '#f5f5f5',
     '200': '#eeeeee',

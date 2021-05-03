@@ -12,5 +12,21 @@ exports[`Home page renders correctly 1`] = `
   >
     login
   </a>
+  <br />
+  <a
+    href="/register"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+  >
+    register
+  </a>
+  <br />
+  <a
+    href="/forgot-password"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+  >
+    forgot password
+  </a>
 </main>
 `;
