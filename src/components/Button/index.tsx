@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const CustomizedButton: React.FC<ButtonProps> = ({
+const ESButton: React.FC<ButtonProps> = ({
   children,
   variant,
   color: _color,
@@ -60,4 +60,4 @@ const CustomizedButton: React.FC<ButtonProps> = ({
   )
 }
 
-export default CustomizedButton
+export default ESButton
