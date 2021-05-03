@@ -46,4 +46,20 @@ export default createMuiTheme({
       fontSize: 12,
     },
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        padding: '7px 16px',
+      },
+      containedSizeLarge: {
+        padding: '12px 22px',
+      },
+      outlinedSizeLarge: {
+        padding: '12px 22px',
+      },
+      outlined: {
+        padding: '6px 15px',
+      },
+    },
+  },
 })

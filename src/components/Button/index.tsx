@@ -3,28 +3,28 @@ import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
-  containedPrimary: {
-    borderRadius: 25,
-    minHeight: 50,
-    boxShadow: '0px 0px 10px #e11ad4',
+  containedPrimary: (props: { gradient?: boolean; round?: boolean }) => ({
+    borderRadius: props.round ? 25 : 4,
+    boxShadow: props.gradient ? '0px 0px 10px #e11ad4' : 'none',
+    background: props.gradient
+      ? 'transparent linear-gradient(234deg, #D600FD 0%, #FC5E66 100%, #FB5C69 100%, #FD6161 100%) 0% 0% no-repeat padding-box;'
+      : Colors.primary,
     fontWeight: 'bold',
     '&:hover': {
-      boxShadow: '0px 0px 10px #e11ad4',
+      boxShadow: props.gradient ? '0px 0px 10px #e11ad4' : 'none',
       background: Colors.white,
       backgroundColor: Colors.white,
       color: Colors.primary,
     },
-    background:
-      'transparent linear-gradient(234deg, #D600FD 0%, #FC5E66 100%, #FB5C69 100%, #FD6161 100%) 0% 0% no-repeat padding-box;',
+
     '&.Mui-disabled': {
       background: '#4D4D4D',
       color: 'rgba(255,255,255,0.3)',
       boxShadow: 'none',
     },
-  },
-  outlined: {
-    borderRadius: 25,
-    minHeight: 50,
+  }),
+  outlined: (props: { gradient?: boolean; round?: boolean }) => ({
+    borderRadius: props.round ? 25 : 4,
     fontWeight: 'bold',
     color: 'rgba(255,255,255,0.7)',
     border: '1px solid rgba(255,255,255,0.7)',
@@ -32,29 +32,20 @@ const useStyles = makeStyles(() => ({
       background: 'rgba(255,255,255,0.3)',
       color: Colors.white,
     },
-  },
+    '&.Mui-disabled': {
+      color: 'rgba(255,255,255,0.3)',
+      border: '1px solid rgba(255,255,255,0.3)',
+    },
+  }),
 }))
 
-const ESButton: React.FC<ButtonProps> = ({
-  children,
-  variant,
-  color: _color,
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
-  const classes = useStyles()
-
-  if (variant === 'contained') {
-    return (
-      <Button classes={classes} variant={variant} color="primary" {...rest}>
-        {children}
-      </Button>
-    )
-  }
+const ESButton: React.FC<
+  ButtonProps & { gradient?: boolean; round?: boolean }
+> = ({ children, classes: _classes, className: _className, ...rest }) => {
+  const classes = useStyles(rest)
 
   return (
-    <Button classes={classes} variant={variant} {...rest}>
+    <Button classes={classes} {...rest}>
       {children}
     </Button>
   )
