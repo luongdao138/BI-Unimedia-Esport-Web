@@ -9,6 +9,7 @@ import { persistStore } from 'redux-persist'
 import { ThemeProvider } from '@material-ui/core'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '@theme/index'
+import 'src/locales/i18n'
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
