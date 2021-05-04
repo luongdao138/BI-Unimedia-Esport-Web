@@ -43,12 +43,17 @@ const ESButton: React.FC<
   ButtonProps & { gradient?: boolean; round?: boolean }
 > = ({ children, classes: _classes, className: _className, ...rest }) => {
   const classes = useStyles(rest)
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { gradient, round, ...props } = rest
   return (
-    <Button classes={classes} {...rest}>
+    <Button classes={classes} {...props}>
       {children}
     </Button>
   )
 }
 
+ESButton.defaultProps = {
+  gradient: false,
+  round: false,
+}
 export default ESButton
