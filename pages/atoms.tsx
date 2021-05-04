@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { Box } from '@material-ui/core'
+import { Box, Tab } from '@material-ui/core'
 import ESButton from '@components/Button'
+import ESTabs from '@components/Tabs'
 
 const Atoms: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -36,6 +37,11 @@ const Atoms: React.FC = () => {
       <ESButton variant="outlined" disabled>
         disabled
       </ESButton>
+      <ESTabs>
+        <Tab label="Item One" value={0} />
+        <Tab label="Item Two" value={1} />
+        <Tab label="Item Three" value={2} />
+      </ESTabs>
     </Box>
   )
 }
