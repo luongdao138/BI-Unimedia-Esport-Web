@@ -26,6 +26,10 @@ export default createMuiTheme({
     error: {
       main: '#F7F735',
     },
+    text: {
+      primary: 'rgba(255,255,255,0.7)',
+      secondary: 'rgba(255,255,255,0.3)',
+    },
   },
 
   breakpoints: {
@@ -35,14 +39,20 @@ export default createMuiTheme({
     fontFamily: font,
     h2: {
       fontSize: 18,
+      fontWeight: 'bold',
+      color: Colors.white,
     },
     h3: {
       fontSize: 16,
+      fontWeight: 'bold',
     },
     body1: {
       fontSize: 14,
     },
     body2: {
+      fontSize: 12,
+    },
+    caption: {
       fontSize: 12,
     },
   },
@@ -59,6 +69,11 @@ export default createMuiTheme({
       },
       outlined: {
         padding: '6px 15px',
+      },
+    },
+    MuiTypography: {
+      gutterBottom: {
+        marginBottom: '1em',
       },
     },
   },
