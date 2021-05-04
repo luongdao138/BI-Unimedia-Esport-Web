@@ -1,9 +1,12 @@
+import { useTranslation } from 'react-i18next'
 import { Box } from '@material-ui/core'
 import ESButton from '@components/Button'
 
 const Atoms: React.FC = () => {
+  const { t } = useTranslation(['common'])
   return (
     <Box margin={4}>
+      <h2>{t('common:welcome')}</h2>
       <ESButton variant="contained" color="primary" size="large" round gradient>
         Primary
       </ESButton>
