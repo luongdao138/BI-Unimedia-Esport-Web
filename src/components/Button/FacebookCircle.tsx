@@ -19,7 +19,7 @@ const ESButtonFacebookCircle: React.FC<AvatarProps> = ({
 }) => {
   const classes = useStyles(rest)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { ...props } = rest
+  // const { ...props } = rest
 
   return (
     <Avatar classes={{ root: classes.root }} className={classes.facebook}>
