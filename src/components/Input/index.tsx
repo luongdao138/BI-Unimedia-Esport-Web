@@ -1,11 +1,4 @@
-import {
-  OutlinedInput,
-  OutlinedInputProps,
-  FormHelperText,
-  FormControl,
-  Box,
-  Typography,
-} from '@material-ui/core'
+import { OutlinedInput, OutlinedInputProps, FormHelperText, FormControl, Box, Typography } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactElement } from 'react'
@@ -17,13 +10,7 @@ export type InputProps = {
   required?: boolean
 }
 
-const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
-  helperText,
-  labelPrimary,
-  labelSecondary,
-  required = false,
-  ...rest
-}) => {
+const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelPrimary, labelSecondary, required = false, ...rest }) => {
   const classes = useStyles()
 
   return (
@@ -41,12 +28,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
           {labelSecondary}
         </Box>
       )}
-      <OutlinedInput
-        id={labelPrimary}
-        classes={{ root: classes.root }}
-        margin="dense"
-        {...rest}
-      />
+      <OutlinedInput id={labelPrimary} classes={{ root: classes.root }} margin="dense" {...rest} />
       {helperText && <FormHelperText error>{helperText}</FormHelperText>}
     </FormControl>
   )

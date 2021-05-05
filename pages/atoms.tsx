@@ -13,6 +13,7 @@ import ESCheckbox from '@components/Checkbox'
 import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
+import ProfileAvatar from '@components/ProfileAvatar'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
@@ -50,23 +51,10 @@ const Atoms: React.FC = () => {
     <>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
-        <ESButton
-          variant="contained"
-          color="primary"
-          size="large"
-          round
-          gradient
-        >
+        <ESButton variant="contained" color="primary" size="large" round gradient>
           Primary
         </ESButton>
-        <ESButton
-          variant="contained"
-          color="primary"
-          size="large"
-          round
-          gradient
-          disabled
-        >
+        <ESButton variant="contained" color="primary" size="large" round gradient disabled>
           Disabled
         </ESButton>
         <ESButton variant="contained" color="primary">
@@ -108,23 +96,10 @@ const Atoms: React.FC = () => {
       </Box>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
-        <ESButton
-          variant="contained"
-          color="primary"
-          size="large"
-          round
-          gradient
-        >
+        <ESButton variant="contained" color="primary" size="large" round gradient>
           Primary
         </ESButton>
-        <ESButton
-          variant="contained"
-          color="primary"
-          size="large"
-          round
-          gradient
-          disabled
-        >
+        <ESButton variant="contained" color="primary" size="large" round gradient disabled>
           Disabled
         </ESButton>
         <ESButton variant="contained" color="primary">
@@ -153,13 +128,7 @@ const Atoms: React.FC = () => {
         />
         <ESInput error helperText="エラー文言が入ります" />
 
-        <ESSelect
-          id="selectedValue"
-          value={values.selectedValue}
-          onChange={handleChange}
-          label="Hello"
-          required={true}
-        >
+        <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} label="Hello" required={true}>
           <option value="" disabled>
             プルダウン
           </option>
@@ -174,11 +143,7 @@ const Atoms: React.FC = () => {
           placeholder="キーワード検索"
           labelPrimary="メールアドレス1"
           labelSecondary={
-            <Typography
-              color="textPrimary"
-              gutterBottom={false}
-              variant="body2"
-            >
+            <Typography color="textPrimary" gutterBottom={false} variant="body2">
               メールアドレスがわからない場合
             </Typography>
           }
@@ -188,19 +153,14 @@ const Atoms: React.FC = () => {
         <ESInput labelPrimary="メールアドレス2" value="qweqweq" disabled />
         <ESInput labelPrimary="メールアドレス3" required />
 
-        <ESCheckbox
-          checked={state.checkedA}
-          onChange={handleChange1}
-          label="end"
-          name="checkedA"
-        />
+        <ESCheckbox checked={state.checkedA} onChange={handleChange1} label="end" name="checkedA" />
         <ESCheckbox />
 
-        <PinInput
-          numberOfPins={6}
-          value={value}
-          onChange={(value) => setValue(value)}
-        />
+        <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
+      </Box>
+      <Box>
+        <ProfileAvatar src="/images/avatar.png" editable />
+        <ProfileAvatar src="/images/avatar_o.png" />
       </Box>
     </>
   )
