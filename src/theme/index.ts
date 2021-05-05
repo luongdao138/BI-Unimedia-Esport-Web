@@ -13,14 +13,14 @@ export default createMuiTheme({
     primary: {
       main: Colors.primary,
       // light: Colors.grey[600],
-      // dark: Colors.grey[950],
+      dark: Colors.grey[900],
       // contrastText: '#fff',
     },
     secondary: {
       main: Colors.secondary,
     },
     background: {
-      default: Colors.black,
+      default: Colors.grey[950],
       paper: '#212121',
     },
     error: {
