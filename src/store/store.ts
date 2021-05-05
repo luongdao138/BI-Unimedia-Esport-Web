@@ -1,15 +1,7 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createWrapper } from 'next-redux-wrapper'
 import storage from './storage'
-import {
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist'
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import reducer from './reducers'
 
 const initStore = () => {

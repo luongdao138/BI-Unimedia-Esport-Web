@@ -12,10 +12,8 @@ const useLoginByEmail = () => {
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getLoginMeta)
-  const loginByEmail = (param: UserLoginParams) =>
-    dispatch(actions.loginByEmail(param))
-  const resetMeta = () =>
-    dispatch(clearMetaData(actions.loginByEmail.typePrefix))
+  const loginByEmail = (param: UserLoginParams) => dispatch(actions.loginByEmail(param))
+  const resetMeta = () => dispatch(clearMetaData(actions.loginByEmail.typePrefix))
   return { user, loginByEmail, resetMeta, meta }
 }
 

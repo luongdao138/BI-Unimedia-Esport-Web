@@ -13,21 +13,24 @@ export default createMuiTheme({
     primary: {
       main: Colors.primary,
       // light: Colors.grey[600],
-      // dark: Colors.grey[950],
+      dark: Colors.grey[900],
       // contrastText: '#fff',
     },
     secondary: {
       main: Colors.secondary,
     },
     background: {
-      default: Colors.black,
+      default: Colors.grey[950],
       paper: '#212121',
     },
     error: {
       main: '#F7F735',
     },
+    text: {
+      primary: 'rgba(255,255,255,0.7)',
+      secondary: 'rgba(255,255,255,0.3)',
+    },
   },
-
   breakpoints: {
     values: breakpointValues,
   },
@@ -35,14 +38,20 @@ export default createMuiTheme({
     fontFamily: font,
     h2: {
       fontSize: 18,
+      fontWeight: 'bold',
+      color: Colors.white,
     },
     h3: {
       fontSize: 16,
+      fontWeight: 'bold',
     },
     body1: {
       fontSize: 14,
     },
     body2: {
+      fontSize: 12,
+    },
+    caption: {
       fontSize: 12,
     },
   },
@@ -59,6 +68,11 @@ export default createMuiTheme({
       },
       outlined: {
         padding: '6px 15px',
+      },
+    },
+    MuiTypography: {
+      gutterBottom: {
+        marginBottom: '1em',
       },
     },
   },

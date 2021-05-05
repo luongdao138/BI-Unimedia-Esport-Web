@@ -1,22 +1,16 @@
-import { Tabs } from '@material-ui/core'
-import { useState } from 'react'
+import { Tabs, TabsProps } from '@material-ui/core'
+import { ChangeEvent, FormEvent } from 'react'
 
-const ESTabs: React.FC = ({ children, ...rest }) => {
-  const [value, setValue] = useState(0)
+interface TabsPropsFixed extends Omit<TabsProps, 'onChange'> {
+  onChange: // eslint-disable-next-line @typescript-eslint/ban-types
+  ((event: ChangeEvent<{}>, value: any) => void) | ((event: FormEvent<HTMLButtonElement>) => void)
+}
+
+const ESTabs: React.FC<TabsPropsFixed> = ({ children, ...rest }) => {
   return (
-    <div>
-      <Tabs
-        indicatorColor="primary"
-        textColor="primary"
-        value={value}
-        onChange={(_, newValue) => {
-          setValue(newValue)
-        }}
-        {...rest}
-      >
-        {children}
-      </Tabs>
-    </div>
+    <Tabs indicatorColor="primary" textColor="primary" {...rest}>
+      {children}
+    </Tabs>
   )
 }
 
