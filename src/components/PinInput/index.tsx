@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { Typography } from '@material-ui/core'
 
 const BACKSPACE_KEY = 8
 const LEFT_ARROW_KEY = 37
@@ -21,16 +22,24 @@ const MOBILE_DOT = 229
 
 interface Props {
   numberOfPins?: number
-  getValue: (value: string) => void
+  onChange: (value: string) => void
+  error?: boolean
+  value?: string
 }
 
-const PinInput: FC<Props> = ({ numberOfPins = 4, getValue }) => {
+const PinInput: FC<Props> = ({
+  numberOfPins = 4,
+  onChange,
+  error = false,
+  value,
+}) => {
+  const values = value.split('')
   const pins: ReactNode[] = []
-  const classes = useStyles()
+  const classes = useStyles({ error: error })
   const inputRefs = []
 
   // trigger input onchange
-  const onChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     if (numberOfPins - 1 > index) {
       inputRefs[index + 1].current.focus()
@@ -110,16 +119,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, getValue }) => {
       values.push(input.current.value)
     }
 
-    if (isArrayEmpty(values)) {
-      getValue(values.join(''))
-    }
-  }
-
-  const isArrayEmpty = (arr) => {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i] === '') return false
-    }
-    return true
+    onChange(values.join(''))
   }
 
   for (let index = 0; index < numberOfPins; index++) {
@@ -132,13 +132,14 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, getValue }) => {
           className={classes.pinText}
           id={index.toString()}
           type="number"
-          autoFocus={index === 0 ? true : false}
+          autoFocus={values.length === index}
           min={0}
           max={9}
           placeholder="0"
           pattern="\d*"
           autoComplete="off"
-          onChange={(e) => onChange(index, e)}
+          value={values[index] || ''}
+          onChange={(e) => handleOnChange(index, e)}
           onKeyDown={(e) => onKeyDown(index, e)}
           onPaste={(e) => onPaste(e)}
         />
@@ -146,7 +147,14 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, getValue }) => {
     )
   }
 
-  return <div className={classes.containerDefaultStyle}>{pins}</div>
+  return (
+    <>
+      <div className={classes.containerDefaultStyle}>{pins}</div>
+      {error && (
+        <Typography color="secondary">入力されたコードは無効です</Typography>
+      )}
+    </>
+  )
 }
 
 const useStyles = makeStyles(() => ({
@@ -163,9 +171,9 @@ const useStyles = makeStyles(() => ({
     marginLeft: 5,
     borderRadius: 5,
   },
-  pinText: {
+  pinText: (props: { error?: boolean }) => ({
     borderRadius: 5,
-    border: `1px solid ${Colors.grey[1000]}`,
+    border: `1px solid ${props.error ? Colors.secondary : Colors.grey[1000]}`,
     outline: 'none',
     boxSizing: 'border-box',
     color: Colors.white,
@@ -175,7 +183,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 30,
     height: '100%',
     width: '100%',
-    backgroundColor: Colors.black,
+    backgroundColor: props.error ? 'rgba(247, 247, 53, 0.1)' : Colors.black,
     '&[type=number]': {
       '-moz-appearance': 'textfield',
       '-webkit-user-select': 'none',
@@ -192,7 +200,7 @@ const useStyles = makeStyles(() => ({
       outline: 'none',
       border: `1px solid ${Colors.white}`,
     },
-  },
+  }),
 }))
 
 export default PinInput

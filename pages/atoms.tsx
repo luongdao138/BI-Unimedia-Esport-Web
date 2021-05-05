@@ -196,7 +196,11 @@ const Atoms: React.FC = () => {
         />
         <ESCheckbox />
 
-        <PinInput numberOfPins={6} getValue={(value) => setValue(value)} />
+        <PinInput
+          numberOfPins={6}
+          value={value}
+          onChange={(value) => setValue(value)}
+        />
       </Box>
     </>
   )
