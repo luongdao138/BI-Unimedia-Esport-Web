@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { useTranslation } from 'react-i18next'
 import { Typography } from '@material-ui/core'
-import { Box } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
+import { AccountBalance } from '@material-ui/icons'
 
 import ESButton from '@components/Button'
+import ESButtonTwitter from '@components/Button/Twitter'
+import ESButtonGoogle from '@components/Button/Google'
+import ESButtonLine from '@components/Button/Line'
+import ESButtonFacebook from '@components/Button/Facebook'
+import ESButtonApple from '@components/Button/Apple'
+import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESChip from '@components/Chip'
+import ESCard from '@components/Card'
+import ESCardMedia from '@components/Card/CardMedia'
+import ESCardContent from '@components/Card/CardContent'
 
 const Atoms: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -67,6 +77,36 @@ const Atoms: React.FC = () => {
         <ESChip label="マインクラフト" onDelete={() => {}} />
         <ESChip label="マインクラフト" onClick={() => {}} color="primary" />
         <ESChip label="マインクラフト" onClick={() => {}} />
+      </Box>
+      <Box margin={4}>
+        <ESButtonTwitter variant="contained" fullWidth />
+        <ESButtonTwitter variant="contained" fullWidth disabled />
+        <ESButtonGoogle variant="contained" fullWidth />
+        <ESButtonLine variant="contained" fullWidth />
+        <ESButtonFacebook variant="contained" fullWidth />
+        <ESButtonApple variant="contained" fullWidth />
+      </Box>
+      <Box margin={4}>
+        <ESButtonFacebookCircle />
+      </Box>
+      <Box margin={4}>
+        <Grid xs={3}>
+          <ESCard>
+            <ESCardMedia imageUrl="https://picsum.photos/id/237/240/120"></ESCardMedia>
+            <ESCardContent>
+              <Typography>募集名が入ります。</Typography>
+            </ESCardContent>
+          </ESCard>
+          <ESCard>
+            <ESCardMedia
+              cornerIcon={<AccountBalance fontSize="small" />}
+              imageUrl="https://picsum.photos/id/412/240/120"
+            ></ESCardMedia>
+            <ESCardContent>
+              <Typography>募集名が入ります。</Typography>
+            </ESCardContent>
+          </ESCard>
+        </Grid>
       </Box>
     </Box>
   )

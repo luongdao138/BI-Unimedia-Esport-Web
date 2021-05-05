@@ -1,7 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import commonEN from './en/common.json'
-import commonJP from './jp/common.json'
+import commonEN from './en/common'
+import commonJP from './en/common'
 
 export const resources = {
   en: {
