@@ -14,9 +14,12 @@ import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
+import ESTabs from '@components/Tabs'
+import ESTab from '@components/Tab'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
+  const [tab, setTab] = useState(0)
   const [state, setState] = useState({
     checkedA: false,
   })
@@ -161,6 +164,13 @@ const Atoms: React.FC = () => {
       <Box>
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
+      </Box>
+      <Box>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
+          <ESTab label="Item One" value={0} />
+          <ESTab label="Item Two" value={1} />
+          <ESTab label="Item Three" value={2} />
+        </ESTabs>
       </Box>
     </>
   )
