@@ -6,7 +6,7 @@ import {
   Box,
   Typography,
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactElement } from 'react'
 
@@ -27,24 +27,13 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   const classes = useStyles()
 
   return (
-    <FormControl fullWidth={rest.fullWidth} style={{ paddingTop: 8 }}>
+    <FormControl fullWidth={rest.fullWidth} className={classes.formPadding}>
       {(labelPrimary || labelSecondary) && (
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <label htmlFor={labelPrimary} style={{ marginBottom: '0.35em' }}>
+          <label htmlFor={labelPrimary} className={classes.labelMargin}>
             {labelPrimary}
             {required && (
-              <Typography
-                component="span"
-                style={{
-                  backgroundColor: Colors.primary,
-                  borderRadius: 2,
-                  paddingLeft: 4,
-                  paddingRight: 4,
-                  fontSize: 10,
-                  marginLeft: 8,
-                  color: Colors.white,
-                }}
-              >
+              <Typography component="span" className={classes.required}>
                 必須
               </Typography>
             )}
@@ -54,7 +43,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
       )}
       <OutlinedInput
         id={labelPrimary}
-        classes={classes}
+        classes={{ root: classes.root }}
         margin="dense"
         {...rest}
       />
@@ -63,7 +52,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: Colors.black,
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -79,6 +68,21 @@ const useStyles = makeStyles(() => ({
         borderColor: 'transparent',
       },
     },
+  },
+  formPadding: {
+    paddingTop: theme.spacing(1),
+  },
+  labelMargin: {
+    marginBottom: '0.35em',
+  },
+  required: {
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+    paddingLeft: theme.spacing(1 / 2),
+    paddingRight: theme.spacing(1 / 2),
+    fontSize: 10,
+    marginLeft: theme.spacing(1),
+    color: Colors.white,
   },
 }))
 

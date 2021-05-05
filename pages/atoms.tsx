@@ -16,6 +16,13 @@ import PinInput from '@components/PinInput'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
+  const [state, setState] = useState({
+    checkedA: false,
+  })
+
+  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, [event.target.name]: event.target.checked })
+  }
   const { t } = useTranslation(['common'])
 
   const { handleChange, values } = useFormik({
@@ -138,14 +145,13 @@ const Atoms: React.FC = () => {
         </ESButton>
         <ESInput placeholder="キーワード検索" />
         <ESInput
-          value="入力中"
           endAdornment={
             <IconButton aria-label="back" size="small">
               <CloseIcon />
             </IconButton>
           }
         />
-        <ESInput error helperText="エラー文言が入ります" value="エラー" />
+        <ESInput error helperText="エラー文言が入ります" />
 
         <ESSelect
           id="selectedValue"
@@ -166,19 +172,28 @@ const Atoms: React.FC = () => {
 
         <ESInput
           placeholder="キーワード検索"
-          labelPrimary="メールアドレス"
+          labelPrimary="メールアドレス1"
           labelSecondary={
-            <Typography color="textPrimary" gutterBottom variant="body2">
+            <Typography
+              color="textPrimary"
+              gutterBottom={false}
+              variant="body2"
+            >
               メールアドレスがわからない場合
             </Typography>
           }
           fullWidth
         />
 
-        <ESInput labelPrimary="メールアドレス" value="qweqweq" disabled />
-        <ESInput labelPrimary="メールアドレス" required />
+        <ESInput labelPrimary="メールアドレス2" value="qweqweq" disabled />
+        <ESInput labelPrimary="メールアドレス3" required />
 
-        <ESCheckbox />
+        <ESCheckbox
+          checked={state.checkedA}
+          onChange={handleChange1}
+          label="end"
+          name="checkedA"
+        />
         <ESCheckbox />
 
         <PinInput numberOfPins={6} getValue={(value) => setValue(value)} />

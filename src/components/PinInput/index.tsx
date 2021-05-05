@@ -7,6 +7,7 @@ import {
   ClipboardEvent,
 } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
 
 const BACKSPACE_KEY = 8
 const LEFT_ARROW_KEY = 37
@@ -164,17 +165,17 @@ const useStyles = makeStyles(() => ({
   },
   pinText: {
     borderRadius: 5,
-    border: '1px solid #4D4D4D',
+    border: `1px solid ${Colors.grey[1000]}`,
     outline: 'none',
     boxSizing: 'border-box',
-    color: 'white',
+    color: Colors.white,
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: 30,
     height: '100%',
     width: '100%',
-    backgroundColor: 'black',
+    backgroundColor: Colors.black,
     '&[type=number]': {
       '-moz-appearance': 'textfield',
       '-webkit-user-select': 'none',
@@ -189,7 +190,7 @@ const useStyles = makeStyles(() => ({
     },
     '&:focus': {
       outline: 'none',
-      border: '1px solid #FFFFFF',
+      border: `1px solid ${Colors.white}`,
     },
   },
 }))

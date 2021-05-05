@@ -1,16 +1,14 @@
-import {
-  CheckboxProps,
-  Checkbox,
-  FormControlLabel,
-  FormControlProps,
-} from '@material-ui/core'
+import { CheckboxProps, Checkbox, FormControlLabel } from '@material-ui/core'
 
-const ESCheckbox: React.FC<CheckboxProps & FormControlProps> = (props) => {
+type Props = {
+  label?: string
+}
+
+const ESCheckbox: React.FC<CheckboxProps & Props> = ({ label, ...rest }) => {
   return (
     <FormControlLabel
-      value="end"
-      control={<Checkbox color="primary" {...props} />}
-      label="End"
+      control={<Checkbox color="primary" {...rest} />}
+      label={label}
       labelPlacement="end"
     />
   )
