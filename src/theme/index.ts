@@ -31,7 +31,6 @@ export default createMuiTheme({
       secondary: 'rgba(255,255,255,0.3)',
     },
   },
-
   breakpoints: {
     values: breakpointValues,
   },
