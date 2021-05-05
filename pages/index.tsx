@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import MainLayout from '@layout/MainLayout'
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
     <main>
       <h1>Hello, world!</h1>
@@ -18,5 +19,7 @@ const HomePage: React.FC = () => {
     </main>
   )
 }
+
+HomePage.Layout = MainLayout
 
 export default HomePage

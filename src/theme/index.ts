@@ -3,7 +3,7 @@ import { Colors } from '@theme/colors'
 import { breakpointValues } from '@theme/variables'
 
 const font =
-  "'Noto Sans Jp', 'Open Sans', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro',Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif"
+  "'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro',Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif"
 
 export const userBreakpoints = breakpointValues
 
@@ -12,23 +12,19 @@ export default createMuiTheme({
     type: 'dark',
     primary: {
       main: Colors.primary,
-      // light: Colors.grey[600],
-      // dark: Colors.grey[950],
-      // contrastText: '#fff',
     },
     secondary: {
       main: Colors.secondary,
     },
     background: {
-      default: Colors.black,
-      paper: '#212121',
+      default: Colors.grey[100],
     },
     error: {
       main: '#F7F735',
     },
     text: {
-      primary: 'rgba(255,255,255,0.7)',
-      secondary: 'rgba(255,255,255,0.3)',
+      primary: Colors.text[200],
+      secondary: Colors.text[300],
     },
   },
 
@@ -39,18 +35,20 @@ export default createMuiTheme({
     fontFamily: font,
     h2: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: 500,
       color: Colors.white,
     },
     h3: {
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: 500,
     },
     body1: {
       fontSize: 14,
+      fontWeight: 400,
     },
     body2: {
       fontSize: 12,
+      fontWeight: 400,
     },
     caption: {
       fontSize: 12,
@@ -74,6 +72,16 @@ export default createMuiTheme({
     MuiTypography: {
       gutterBottom: {
         marginBottom: '1em',
+      },
+    },
+    MuiBadge: {
+      badge: {
+        fontSize: 8,
+        padding: 2,
+      },
+      anchorOriginTopRightRectangle: {
+        top: '4px',
+        right: '4px',
       },
     },
   },

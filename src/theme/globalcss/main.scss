@@ -1,3 +1,51 @@
-body {
-  background-color: white;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+.content-wrapper {
+  max-width: 764px;
+  margin: 0 auto;
+  background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
+  width: 100%;
+  min-height: 2000px;
+}
+.main {
+  margin-top: 60px;
+  min-height: 400px;
+  background: #000;
+}
+.main.no-pattern {
+  background-image: none;
+}
+.aside-left {
+  position: fixed;
+  left: 0;
+  top: 60px;
+  max-width: calc((100% - 764px) / 2);
+  bottom: 0;
+  background: #000;
+  height: 100%;
+  width: 100%;
+  border-right: 1px solid #70707070;
+  justify-content: flex-end;
+  display: flex;
+}
+.aside-right {
+  position: fixed;
+  right: 0;
+  top: 60px;
+  max-width: calc((100% - 764px) / 2);
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  border-left: 1px solid #70707070;
+  justify-content: flex-start;
+  display: flex;
+}
+.back-drop {
+  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
