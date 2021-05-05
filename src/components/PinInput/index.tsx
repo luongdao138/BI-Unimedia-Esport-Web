@@ -1,11 +1,4 @@
-import {
-  FC,
-  ReactNode,
-  createRef,
-  ChangeEvent,
-  KeyboardEvent,
-  ClipboardEvent,
-} from 'react'
+import { FC, ReactNode, createRef, ChangeEvent, KeyboardEvent, ClipboardEvent } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { Typography } from '@material-ui/core'
@@ -27,12 +20,7 @@ interface Props {
   value?: string
 }
 
-const PinInput: FC<Props> = ({
-  numberOfPins = 4,
-  onChange,
-  error = false,
-  value,
-}) => {
+const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value }) => {
   const values = value.split('')
   const pins: ReactNode[] = []
   const classes = useStyles({ error: error })
@@ -46,9 +34,7 @@ const PinInput: FC<Props> = ({
     }
 
     if (inputRefs[index].current.value !== null) {
-      inputRefs[index].current.value = e.target.value.substr(
-        e.target.value.length - 1
-      )
+      inputRefs[index].current.value = e.target.value.substr(e.target.value.length - 1)
     }
 
     setValues()
@@ -60,10 +46,7 @@ const PinInput: FC<Props> = ({
       case BACKSPACE_KEY:
         e.preventDefault()
         if (hasCurrentElement(index)) {
-          if (
-            inputRefs[index].current.value === '' &&
-            hasCurrentElement(index - 1)
-          ) {
+          if (inputRefs[index].current.value === '' && hasCurrentElement(index - 1)) {
             inputRefs[index - 1].current.focus()
             inputRefs[index - 1].current.value = ''
           }
@@ -105,9 +88,7 @@ const PinInput: FC<Props> = ({
         inputRefs[index].current.value = pastedValue[index]
       }
       if (hasCurrentElement(realLength - 1)) {
-        realLength === numberOfPins
-          ? inputRefs[realLength - 1].current.focus()
-          : inputRefs[realLength].current.focus()
+        realLength === numberOfPins ? inputRefs[realLength - 1].current.focus() : inputRefs[realLength].current.focus()
       }
     }
   }
@@ -150,9 +131,7 @@ const PinInput: FC<Props> = ({
   return (
     <>
       <div className={classes.containerDefaultStyle}>{pins}</div>
-      {error && (
-        <Typography color="secondary">入力されたコードは無効です</Typography>
-      )}
+      {error && <Typography color="secondary">入力されたコードは無効です</Typography>}
     </>
   )
 }

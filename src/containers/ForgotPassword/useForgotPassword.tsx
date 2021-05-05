@@ -1,11 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import authStore from '@store/auth'
-import {
-  ForgotPasswordParams,
-  UserConfirmParams,
-  UserResetPasswordParams,
-} from '@services/auth.service'
+import { ForgotPasswordParams, UserConfirmParams, UserResetPasswordParams } from '@services/auth.service'
 
 const { selectors, actions } = authStore
 const getForgotPasswordMeta = createMetaSelector(actions.forgotPassword)
@@ -18,8 +14,7 @@ const useForgotPassword = () => {
   const meta = useAppSelector(getForgotPasswordMeta)
   const metaConfirm = useAppSelector(getForgotConfirmMeta)
 
-  const forgotPassword = (params: ForgotPasswordParams) =>
-    dispatch(actions.forgotPassword(params))
+  const forgotPassword = (params: ForgotPasswordParams) => dispatch(actions.forgotPassword(params))
 
   const forgotConfirm = (params: UserConfirmParams) => {
     dispatch(actions.forgotConfirm(params))

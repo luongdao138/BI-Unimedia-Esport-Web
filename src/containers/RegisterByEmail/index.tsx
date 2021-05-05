@@ -22,9 +22,7 @@ const RegisterByEmailContainer: React.FC = () => {
   const router = useRouter()
   const { user, meta, registerByEmail, resetMeta } = useRegisterByEmail()
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    services.UserLoginParams
-  >({
+  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserLoginParams>({
     initialValues: {
       email: '',
       password: '',
@@ -82,12 +80,7 @@ const RegisterByEmailContainer: React.FC = () => {
       </Grid>
 
       <Box mt={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={resetMeta}
-        >
+        <Button variant="contained" color="primary" fullWidth onClick={resetMeta}>
           Clear metadata state
         </Button>
       </Box>

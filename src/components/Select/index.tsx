@@ -1,12 +1,4 @@
-import {
-  Select,
-  SelectProps,
-  FormControl,
-  FormHelperText,
-  Typography,
-  withStyles,
-  OutlinedInput,
-} from '@material-ui/core'
+import { Select, SelectProps, FormControl, FormHelperText, Typography, withStyles, OutlinedInput } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 // import ArrowDownIcon from '@common/icons/ArrowDownIcon'
@@ -17,12 +9,7 @@ type Props = {
   required?: boolean
 }
 
-const ESSelect: React.FC<SelectProps & Props> = ({
-  helperText,
-  label,
-  required = false,
-  ...rest
-}) => {
+const ESSelect: React.FC<SelectProps & Props> = ({ helperText, label, required = false, ...rest }) => {
   const classes = useStyles()
 
   return (

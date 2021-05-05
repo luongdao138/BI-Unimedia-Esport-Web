@@ -8,13 +8,7 @@ type Props = {
 const ESCheckbox: React.FC<CheckboxProps & Props> = ({ label, ...rest }) => {
   const classes = useStyles()
 
-  return (
-    <FormControlLabel
-      control={<Checkbox color="primary" classes={classes} {...rest} />}
-      label={label}
-      labelPlacement="end"
-    />
-  )
+  return <FormControlLabel control={<Checkbox color="primary" classes={classes} {...rest} />} label={label} labelPlacement="end" />
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
