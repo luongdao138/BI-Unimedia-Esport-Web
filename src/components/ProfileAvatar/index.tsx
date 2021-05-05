@@ -64,7 +64,9 @@ const ESProfileAvatar: React.FC<{ editable?: boolean; src: string; onChange?: (f
     const file = e.target.files[0]
     const reader = new FileReader()
     if (file) {
-      props.onChange(file)
+      if (props.onChange) {
+        props.onChange(file)
+      }
       reader.readAsDataURL(file)
     }
     reader.addEventListener(
