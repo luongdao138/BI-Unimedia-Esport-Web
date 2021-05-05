@@ -20,7 +20,7 @@ export default createMuiTheme({
       main: Colors.secondary,
     },
     background: {
-      default: Colors.black,
+      default: Colors.grey[950],
       paper: '#212121',
     },
     error: {
