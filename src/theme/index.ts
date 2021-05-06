@@ -89,7 +89,9 @@ export default createMuiTheme({
       },
     },
     MuiCardMedia: {
-      padding: '12px 12px 8px 12px',
+      root: {
+        padding: '12px 12px 8px 12px',
+      },
     },
   },
 })
