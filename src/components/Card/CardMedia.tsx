@@ -42,9 +42,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESCardMedia: React.FC<
-  CardMediaProps & { cornerIcon?: any; imageUrl: string }
-> = ({ children, ...rest }) => {
+const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any; imageUrl: string }> = ({ children, ...rest }) => {
   const classes = useStyles(rest)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cornerIcon, imageUrl } = rest

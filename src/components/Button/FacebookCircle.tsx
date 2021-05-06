@@ -12,11 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESButtonFacebookCircle: React.FC<AvatarProps> = ({
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
+const ESButtonFacebookCircle: React.FC<AvatarProps> = ({ classes: _classes, className: _className, ...rest }) => {
   const classes = useStyles(rest)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const { ...props } = rest

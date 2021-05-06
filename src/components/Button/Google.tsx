@@ -38,11 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ESButtonGoogle: React.FC<ButtonProps> = ({
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
+const ESButtonGoogle: React.FC<ButtonProps> = ({ classes: _classes, className: _className, ...rest }) => {
   const classes = useStyles(rest)
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

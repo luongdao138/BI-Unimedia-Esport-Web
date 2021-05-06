@@ -38,11 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ESButtonApple: React.FC<ButtonProps> = ({
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
+const ESButtonApple: React.FC<ButtonProps> = ({ classes: _classes, className: _className, ...rest }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
