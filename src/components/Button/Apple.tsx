@@ -2,7 +2,7 @@ import { Button, ButtonProps } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
-import { AccountBalance } from '@material-ui/icons' //temp
+import Icon from '@material-ui/core/Icon'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -54,7 +54,7 @@ const ESButtonApple: React.FC<ButtonProps> = ({ classes: _classes, className: _c
       }}
       color="primary"
       {...props}
-      startIcon={<AccountBalance />}
+      startIcon={<Icon className="fab fa-apple" />}
     >
       {t('common:button.apple')}
     </Button>

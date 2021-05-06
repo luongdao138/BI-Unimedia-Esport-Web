@@ -2,6 +2,7 @@ import { OutlinedInput, OutlinedInputProps, FormHelperText, FormControl, Box, Ty
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactElement } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type InputProps = {
   helperText?: string
@@ -12,16 +13,17 @@ export type InputProps = {
 
 const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelPrimary, labelSecondary, required = false, ...rest }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   return (
-    <FormControl fullWidth={rest.fullWidth} className={classes.formPadding}>
+    <FormControl fullWidth={rest.fullWidth}>
       {(labelPrimary || labelSecondary) && (
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display="flex" justifyContent="space-between" alignItems="center" className={classes.bottomPadding}>
           <label htmlFor={labelPrimary} className={classes.labelMargin}>
             {labelPrimary}
             {required && (
               <Typography component="span" className={classes.required}>
-                必須
+                {t('common:common.required')}
               </Typography>
             )}
           </label>
@@ -50,12 +52,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderColor: 'transparent',
       },
     },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #000000 inset',
+    },
   },
-  formPadding: {
-    paddingTop: theme.spacing(1),
+  bottomPadding: {
+    paddingBottom: theme.spacing(1),
   },
   labelMargin: {
-    marginBottom: '0.35em',
+    fontWeight: 'bold',
   },
   required: {
     backgroundColor: Colors.primary,

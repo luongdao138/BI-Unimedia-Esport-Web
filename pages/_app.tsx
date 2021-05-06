@@ -1,4 +1,5 @@
 import React, { FC, useEffect } from 'react'
+import { loadCSS } from 'fg-loadcss'
 import { AppProps } from 'next/app'
 import { useStore } from 'react-redux'
 import { storeWrapper } from '@store/store'
@@ -15,8 +16,14 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
+    const node = loadCSS('https://use.fontawesome.com/releases/v5.12.0/css/all.css', document.querySelector('#font-awesome-css'))
+
     if (jssStyles) {
       jssStyles.parentElement?.removeChild(jssStyles)
+    }
+
+    return () => {
+      node.parentNode?.removeChild(node)
     }
   }, [])
 
