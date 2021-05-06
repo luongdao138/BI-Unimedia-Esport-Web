@@ -15,6 +15,7 @@ import ESChip from '@components/Chip'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import ESSlider from '@components/Slider'
 
 const Atoms: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -107,6 +108,25 @@ const Atoms: React.FC = () => {
             </ESCardContent>
           </ESCard>
         </Grid>
+      </Box>
+      <Box margin={4}>
+        <ESSlider
+          items={[
+            <ESCard key="1">
+              <ESCardMedia
+                cornerIcon={<AccountBalance fontSize="small" />}
+                imageUrl="https://picsum.photos/id/412/240/120"
+              ></ESCardMedia>
+              <ESCardContent>
+                <Typography>募集名が入ります。</Typography>
+              </ESCardContent>
+            </ESCard>,
+            <ESButtonApple key="2" variant="contained" fullWidth />,
+            <Typography key="3">募集名が入ります1。</Typography>,
+            <Typography key="4">募集名が入ります2。</Typography>,
+            'Slider',
+          ]}
+        />
       </Box>
     </Box>
   )
