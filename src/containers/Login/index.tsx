@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import { useRouter } from 'next/router'
 import useLoginByEmail from './useLoginByEmail'
 import { IconButton } from '@material-ui/core'
-import { ArrowBack as ArrowBackIcon } from '@material-ui/icons'
+import Icon from '@material-ui/core/Icon'
 import Image from 'next/image'
 import ESInput from '@components/Input'
 import FilterNoneIcon from '@material-ui/icons/FilterNone'
@@ -46,8 +46,8 @@ const LoginContainer: React.FC = () => {
     <>
       <Grid container>
         <Grid item style={{ paddingTop: 40 }}>
-          <IconButton size="small">
-            <ArrowBackIcon />
+          <IconButton style={{ backgroundColor: '#4D4D4D80' }}>
+            <Icon className="fa fa-arrow-left" style={{ fontSize: 12 }} />
           </IconButton>
         </Grid>
 
@@ -114,7 +114,7 @@ const LoginContainer: React.FC = () => {
           </Grid>
 
           <Grid item xs={12} className={classes.socialContainer}>
-            hello
+            Social buttons
           </Grid>
         </Grid>
       </Grid>
