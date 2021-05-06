@@ -147,6 +147,9 @@ const LoginContainer: React.FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
     backgroundColor: `${Colors.grey[1000]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[1000]}80`,
+    },
   },
   iconMargin: {
     marginLeft: theme.spacing(1 / 2),
