@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles(() => ({
-  root: (props: { src: string; stringValue: string }) => {
-    const colorIndex = props.stringValue.toUpperCase().charCodeAt(0) % 11
+  root: (props: { src: string; alt: string }) => {
+    const colorIndex = props.alt ? props.alt.toUpperCase().charCodeAt(0) % 11 : 0
     return {
       backgroundColor: props.src ? 'none' : Colors.avatar[colorIndex],
       width: 50,
@@ -16,15 +16,15 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESAvatar: React.FC<AvatarProps & { stringValue: string }> = (props) => {
-  const classes = useStyles({ src: props.src, stringValue: props.stringValue })
+const ESAvatar: React.FC<AvatarProps> = (props) => {
+  const classes = useStyles({ src: props.src, alt: props.alt })
   if (props.src) {
-    return <Avatar {...props} classes={classes} alt={props.stringValue} />
+    return <Avatar {...props} classes={classes} alt={props.alt} />
   }
 
   return (
     <Avatar classes={classes} {...props}>
-      {props.stringValue.toUpperCase().charAt(0)}
+      {props.alt.toUpperCase().charAt(0)}
     </Avatar>
   )
 }

@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography } from '@material-ui/core'
-import { Box } from '@material-ui/core'
-import { Close as CloseIcon } from '@material-ui/icons'
-
+import { Box, Grid, Typography } from '@material-ui/core'
+import { AccountBalance, Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
+import ESButtonTwitter from '@components/Button/Twitter'
+import ESButtonGoogle from '@components/Button/Google'
+import ESButtonLine from '@components/Button/Line'
+import ESButtonFacebook from '@components/Button/Facebook'
+import ESButtonApple from '@components/Button/Apple'
+import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESChip from '@components/Chip'
+import ESCard from '@components/Card'
+import ESCardMedia from '@components/Card/CardMedia'
+import ESCardContent from '@components/Card/CardContent'
 import ESInput from '@components/Input'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
@@ -15,9 +22,12 @@ import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
 import ESAvatar from '@components/Avatar'
+import ESTabs from '@components/Tabs'
+import ESTab from '@components/Tab'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
+  const [tab, setTab] = useState(0)
   const [state, setState] = useState({
     checkedA: false,
   })
@@ -51,7 +61,7 @@ const Atoms: React.FC = () => {
   return (
     <>
       <Box margin={4}>
-        <h2>{t('common:welcome')}</h2>
+        {/* <h2>{t('')}</h2> */}
         <ESButton variant="contained" color="primary" size="large" round gradient>
           Primary
         </ESButton>
@@ -94,6 +104,33 @@ const Atoms: React.FC = () => {
         <ESChip label="マインクラフト" onDelete={() => {}} />
         <ESChip label="マインクラフト" onClick={() => {}} color="primary" />
         <ESChip label="マインクラフト" onClick={() => {}} />
+      </Box>
+      <Box margin={4}>
+        <ESButtonTwitter variant="contained" fullWidth />
+        <ESButtonTwitter variant="contained" fullWidth disabled />
+        <ESButtonGoogle variant="contained" fullWidth />
+        <ESButtonLine variant="contained" fullWidth />
+        <ESButtonFacebook variant="contained" fullWidth />
+        <ESButtonApple variant="contained" fullWidth />
+      </Box>
+      <Box margin={4}>
+        <ESButtonFacebookCircle />
+      </Box>
+      <Box margin={4}>
+        <Grid xs={3}>
+          <ESCard>
+            <ESCardMedia imageUrl="https://picsum.photos/id/237/240/120"></ESCardMedia>
+            <ESCardContent>
+              <Typography>募集名が入ります。</Typography>
+            </ESCardContent>
+          </ESCard>
+          <ESCard>
+            <ESCardMedia cornerIcon={<AccountBalance fontSize="small" />} imageUrl="https://picsum.photos/id/412/240/120"></ESCardMedia>
+            <ESCardContent>
+              <Typography>募集名が入ります。</Typography>
+            </ESCardContent>
+          </ESCard>
+        </Grid>
       </Box>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
@@ -159,24 +196,31 @@ const Atoms: React.FC = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box>
+      <Box margin={4}>
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>
-      <Box display="flex" flexDirection="row">
-        <ESAvatar stringValue="Avatar" src="/images/avatar.png" />
-        <ESAvatar stringValue="Avatar" src="/images/avatar_o.png" />
-        <ESAvatar stringValue="Avatar" />
-        <ESAvatar stringValue="Bvatar" />
-        <ESAvatar stringValue="Cvatar" />
-        <ESAvatar stringValue="Dvatar" />
-        <ESAvatar stringValue="Evatar" />
-        <ESAvatar stringValue="Fvatar" />
-        <ESAvatar stringValue="Gvatar" />
-        <ESAvatar stringValue="Hvatar" />
-        <ESAvatar stringValue="Ivatar" />
-        <ESAvatar stringValue="Jvatar" />
-        <ESAvatar stringValue="Kvatar" />
+      <Box margin={4} display="flex" flexDirection="row">
+        <ESAvatar alt="Avatar" src="/images/avatar.png" />
+        <ESAvatar alt="Avatar" src="/images/avatar_o.png" />
+        <ESAvatar alt="Avatar" />
+        <ESAvatar alt="Bvatar" />
+        <ESAvatar alt="Cvatar" />
+        <ESAvatar alt="Dvatar" />
+        <ESAvatar alt="Evatar" />
+        <ESAvatar alt="Fvatar" />
+        <ESAvatar alt="Gvatar" />
+        <ESAvatar alt="Hvatar" />
+        <ESAvatar alt="Ivatar" />
+        <ESAvatar alt="Jvatar" />
+        <ESAvatar alt="Kvatar" />
+      </Box>
+      <Box margin={4}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
+          <ESTab label="Item One" value={0} />
+          <ESTab label="Item Two" value={1} />
+          <ESTab label="Item Three" value={2} />
+        </ESTabs>
       </Box>
     </>
   )
