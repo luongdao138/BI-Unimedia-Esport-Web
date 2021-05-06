@@ -10,6 +10,12 @@ import ESButtonLine from '@components/Button/Line'
 import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
+import ESButtonTwitterCircle from '@components/Button/TwitchCircle'
+import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
+import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
+import ESButtonLineCircle from '@components/Button/LineCircle'
+import ESButtonGoogleCircle from '@components/Button/GoogleCircle'
+import ESButtonAppleCircle from '@components/Button/AppleCircle'
 import ESChip from '@components/Chip'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
@@ -114,8 +120,14 @@ const Atoms: React.FC = () => {
         <ESButtonFacebook variant="contained" fullWidth />
         <ESButtonApple variant="contained" fullWidth />
       </Box>
-      <Box margin={4}>
+      <Box margin={2} display="flex">
         <ESButtonFacebookCircle />
+        <ESButtonTwitterCircle />
+        <ESButtonTwitchCircle />
+        <ESButtonInstagramCircle />
+        <ESButtonLineCircle />
+        <ESButtonGoogleCircle />
+        <ESButtonAppleCircle />
       </Box>
       <Box margin={4}>
         <Grid xs={3}>
