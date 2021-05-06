@@ -30,6 +30,10 @@ import ProfileAvatar from '@components/ProfileAvatar'
 import ESAvatar from '@components/Avatar'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
+import Stepper from '@components/Stepper'
+import Step from '@components/Step'
+import StepLabel from '@components/StepLabel'
+import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 
 const Atoms: React.FC = () => {
@@ -38,6 +42,7 @@ const Atoms: React.FC = () => {
   const [state, setState] = useState({
     checkedA: false,
   })
+  const [step, setStep] = useState(2)
 
   const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [event.target.name]: event.target.checked })
@@ -240,6 +245,17 @@ const Atoms: React.FC = () => {
           <ESTab label="Item Two" value={1} />
           <ESTab label="Item Three" value={2} />
         </ESTabs>
+      </Box>
+      <Box margin={4}>
+        <Stepper activeStep={step}>
+          {['基本データ', 'タグ', '好きなゲーム'].map((label, idx) => (
+            <Step key={idx}>
+              <StepButton onClick={() => setStep(idx)}>
+                <StepLabel>{label}</StepLabel>
+              </StepButton>
+            </Step>
+          ))}
+        </Stepper>
       </Box>
       <Box margin={2}>
         <ESStrengthMeter value={33} />

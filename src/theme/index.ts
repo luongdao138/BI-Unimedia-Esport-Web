@@ -3,7 +3,7 @@ import { Colors } from '@theme/colors'
 import { breakpointValues } from '@theme/variables'
 
 const font =
-  "'Noto Sans Jp', 'Open Sans', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro',Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif"
+  "'Roboto','Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro',Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif"
 
 export const userBreakpoints = breakpointValues
 
@@ -91,6 +91,17 @@ export default createMuiTheme({
     MuiCardMedia: {
       root: {
         padding: '12px 12px 8px 12px',
+      },
+    },
+    MuiContainer: {
+      root: {
+        paddingLeft: 24,
+        paddingRight: 24,
+      },
+    },
+    MuiIcon: {
+      fontSizeSmall: {
+        fontSize: 12,
       },
     },
   },
