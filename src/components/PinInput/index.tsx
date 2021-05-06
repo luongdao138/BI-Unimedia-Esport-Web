@@ -2,6 +2,7 @@ import { FC, ReactNode, createRef, ChangeEvent, KeyboardEvent, ClipboardEvent } 
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { Typography } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 
 const BACKSPACE_KEY = 8
 const LEFT_ARROW_KEY = 37
@@ -25,6 +26,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value 
   const pins: ReactNode[] = []
   const classes = useStyles({ error: error })
   const inputRefs = []
+  const { t } = useTranslation(['common'])
 
   // trigger input onchange
   const handleOnChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
@@ -116,7 +118,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value 
           autoFocus={values.length === index}
           min={0}
           max={9}
-          placeholder="0"
+          placeholder={t('common:common.zero')}
           pattern="\d*"
           autoComplete="off"
           value={values[index] || ''}
@@ -131,7 +133,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value 
   return (
     <>
       <div className={classes.containerDefaultStyle}>{pins}</div>
-      {error && <Typography color="secondary">入力されたコードは無効です</Typography>}
+      {error && <Typography color="secondary">{t('common:error.code_invalid')}</Typography>}
     </>
   )
 }
