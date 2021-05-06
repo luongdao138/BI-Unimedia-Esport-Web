@@ -80,5 +80,16 @@ export default createMuiTheme({
         left: 0,
       },
     },
+    MuiCardContent: {
+      root: {
+        padding: '8px 12px 12px 12px',
+        '&:last-child': {
+          paddingBottom: '12px',
+        },
+      },
+    },
+    MuiCardMedia: {
+      padding: '12px 12px 8px 12px',
+    },
   },
 })
