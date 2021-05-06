@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
   },
   iconWrap: {
     position: 'absolute',
-    top: 10,
+    top: 5,
     left: 5,
     zIndex: 1,
   },
