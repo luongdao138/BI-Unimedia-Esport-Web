@@ -14,6 +14,11 @@ import ESButton from '@components/Button'
 import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
 import ESToast from '@components/Toast'
+import ESButtonTwitter from '@components/Button/Twitter'
+import ESButtonGoogle from '@components/Button/Google'
+import ESButtonLine from '@components/Button/Line'
+import ESButtonFacebook from '@components/Button/Facebook'
+import ESButtonApple from '@components/Button/Apple'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Required').email(),
@@ -114,7 +119,11 @@ const LoginContainer: React.FC = () => {
           </Grid>
 
           <Grid item xs={12} className={classes.socialContainer}>
-            Social buttons
+            <ESButtonTwitter variant="contained" fullWidth />
+            <ESButtonGoogle variant="contained" fullWidth />
+            <ESButtonLine variant="contained" fullWidth />
+            <ESButtonFacebook variant="contained" fullWidth />
+            <ESButtonApple variant="contained" fullWidth />
           </Grid>
         </Grid>
       </Grid>
@@ -150,6 +159,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   socialContainer: {
     paddingTop: theme.spacing(8),
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(6),
+    paddingBottom: theme.spacing(8),
   },
 }))
 
