@@ -124,7 +124,6 @@ const Atoms: React.FC = () => {
             <ESButtonApple key="2" variant="contained" fullWidth />,
             <Typography key="3">募集名が入ります1。</Typography>,
             <Typography key="4">募集名が入ります2。</Typography>,
-            'Slider',
           ]}
         />
       </Box>
