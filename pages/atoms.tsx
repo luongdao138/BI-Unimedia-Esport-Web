@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
+import ESAvatar from '@components/Avatar'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 
@@ -60,7 +61,7 @@ const Atoms: React.FC = () => {
   return (
     <>
       <Box margin={4}>
-        <h2>{t('common:welcome')}</h2>
+        {/* <h2>{t('')}</h2> */}
         <ESButton variant="contained" color="primary" size="large" round gradient>
           Primary
         </ESButton>
@@ -195,11 +196,26 @@ const Atoms: React.FC = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box>
+      <Box margin={4}>
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>
-      <Box>
+      <Box margin={4} display="flex" flexDirection="row">
+        <ESAvatar alt="Avatar" src="/images/avatar.png" />
+        <ESAvatar alt="Avatar" src="/images/avatar_o.png" />
+        <ESAvatar alt="Avatar" />
+        <ESAvatar alt="Bvatar" />
+        <ESAvatar alt="Cvatar" />
+        <ESAvatar alt="Dvatar" />
+        <ESAvatar alt="Evatar" />
+        <ESAvatar alt="Fvatar" />
+        <ESAvatar alt="Gvatar" />
+        <ESAvatar alt="Hvatar" />
+        <ESAvatar alt="Ivatar" />
+        <ESAvatar alt="Jvatar" />
+        <ESAvatar alt="Kvatar" />
+      </Box>
+      <Box margin={4}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
           <ESTab label="Item One" value={0} />
           <ESTab label="Item Two" value={1} />

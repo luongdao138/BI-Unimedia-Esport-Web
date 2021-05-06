@@ -23,4 +23,5 @@ export const Colors = {
   },
   black: '#000000',
   white: '#ffffff',
+  avatar: ['#8E47FF', '#476AFF', '#2CEBB0', '#DCEB2C', '#FF9E1A', '#FF6A1C', '#502298', '#2744BF', '#7D8805', '#981643', '#FF4786'],
 }
