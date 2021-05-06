@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
+import ESAvatar from '@components/Avatar'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
@@ -161,6 +162,21 @@ const Atoms: React.FC = () => {
       <Box>
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
+      </Box>
+      <Box display="flex" flexDirection="row">
+        <ESAvatar stringValue="Avatar" src="/images/avatar.png" />
+        <ESAvatar stringValue="Avatar" src="/images/avatar_o.png" />
+        <ESAvatar stringValue="Avatar" />
+        <ESAvatar stringValue="Bvatar" />
+        <ESAvatar stringValue="Cvatar" />
+        <ESAvatar stringValue="Dvatar" />
+        <ESAvatar stringValue="Evatar" />
+        <ESAvatar stringValue="Fvatar" />
+        <ESAvatar stringValue="Gvatar" />
+        <ESAvatar stringValue="Hvatar" />
+        <ESAvatar stringValue="Ivatar" />
+        <ESAvatar stringValue="Jvatar" />
+        <ESAvatar stringValue="Kvatar" />
       </Box>
     </>
   )
