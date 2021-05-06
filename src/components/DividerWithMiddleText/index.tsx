@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core'
+import { Colors } from '@theme/colors'
 
 type Props = {
   text: string
@@ -20,7 +21,7 @@ const useStyles = makeStyles(() => ({
     '&:before, &:after': {
       content: "''",
       flex: 1,
-      border: '1px solid #FFFFFF30',
+      border: `1px solid ${Colors.white}30`,
     },
     '&:before': {
       marginRight: props.marginSpace || 13,

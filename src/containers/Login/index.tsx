@@ -19,6 +19,8 @@ import ESButtonGoogle from '@components/Button/Google'
 import ESButtonLine from '@components/Button/Line'
 import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
+import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Required').email(),
@@ -26,6 +28,7 @@ const validationSchema = Yup.object().shape({
 })
 
 const LoginContainer: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { loginByEmail, meta } = useLoginByEmail()
@@ -50,9 +53,9 @@ const LoginContainer: React.FC = () => {
   return (
     <>
       <Grid container>
-        <Grid item style={{ paddingTop: 40 }}>
-          <IconButton style={{ backgroundColor: '#4D4D4D80' }}>
-            <Icon className="fa fa-arrow-left" style={{ fontSize: 12 }} />
+        <Grid item className={classes.topContainer}>
+          <IconButton className={classes.iconButtonBg}>
+            <Icon className={`fa fa-arrow-left ${classes.iconSmall}`} />
           </IconButton>
         </Grid>
 
@@ -66,11 +69,11 @@ const LoginContainer: React.FC = () => {
               <Grid item xs={12}>
                 <ESInput
                   id="email"
-                  placeholder="exelab@sample.co.jp"
-                  labelPrimary="メールアドレス"
+                  placeholder={t('common:login.email_placeholder')}
+                  labelPrimary={t('common:login.email_label_primary')}
                   labelSecondary={
                     <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                      メールアドレスがわからない場合
+                      {t('common:login.email_label_secondary')}
                       <FilterNoneIcon fontSize="inherit" className={classes.iconMargin} />
                     </Typography>
                   }
@@ -85,11 +88,11 @@ const LoginContainer: React.FC = () => {
               <Grid item xs={12} className={classes.passwordContainer}>
                 <ESInput
                   id="password"
-                  labelPrimary="パスワード"
+                  labelPrimary={t('common:login.password_label_primary')}
                   type="password"
                   labelSecondary={
                     <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                      パスワードをお忘れの場合
+                      {t('common:login.password_label_secondary')}
                     </Typography>
                   }
                   fullWidth
@@ -102,7 +105,7 @@ const LoginContainer: React.FC = () => {
 
               <Grid item xs={12} className={classes.buttonContainer}>
                 <ESButton type="submit" variant="contained" color="primary" round gradient fullWidth>
-                  ログイン
+                  {t('common:login.submit')}
                 </ESButton>
               </Grid>
             </Grid>
@@ -110,12 +113,12 @@ const LoginContainer: React.FC = () => {
 
           <Grid item xs={12} className={classes.linkContainer}>
             <Link href="/register">
-              <a>はじめての方はこちら</a>
+              <a>{t('common:login.register')}</a>
             </Link>
           </Grid>
 
           <Grid item xs={12}>
-            <ESDividerWithMiddleText text="または" />
+            <ESDividerWithMiddleText text={t('common:login.divider')} />
           </Grid>
 
           <Grid item xs={12} className={classes.socialContainer}>
@@ -127,12 +130,21 @@ const LoginContainer: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-      {!!meta.error && <ESToast open={!!meta.error} message={'ログインに失敗しました。'} />}
+      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} />}
     </>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  topContainer: {
+    paddingTop: theme.spacing(4),
+  },
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[1000]}80`,
+  },
+  iconSmall: {
+    fontSize: 12,
+  },
   itemContainer: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
