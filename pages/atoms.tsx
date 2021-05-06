@@ -227,6 +227,12 @@ const Atoms: React.FC = () => {
         <ESAvatar alt="Ivatar" />
         <ESAvatar alt="Jvatar" />
         <ESAvatar alt="Kvatar" />
+        <ESAvatar alt="あvatar" />
+        <ESAvatar alt="いvatar" />
+        <ESAvatar alt="おvatar" />
+        <ESAvatar alt="うvatar" />
+        <ESAvatar alt="えvatar" />
+        <ESAvatar alt="高atar" />
       </Box>
       <Box margin={4}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
