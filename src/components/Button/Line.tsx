@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
+    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#00B900',
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, className: _className, ...rest }) => {
+const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
   const classes = useStyles(rest)
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

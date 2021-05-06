@@ -6,6 +6,7 @@ import Icon from '@material-ui/core/Icon'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
+    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#1D9BF0',
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ESButtonTwitter: React.FC<ButtonProps> = ({ classes: _classes, className: _className, ...rest }) => {
+const ESButtonTwitter: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
   const classes = useStyles(rest)
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

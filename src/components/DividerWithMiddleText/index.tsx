@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:before, &:after': {
       content: "''",
       flex: 1,
-      border: `1px solid ${Colors.white}30`,
+      borderTop: `1px solid ${Colors.white}30`,
     },
     '&:before': {
       marginRight: props.marginSpace || 13,
