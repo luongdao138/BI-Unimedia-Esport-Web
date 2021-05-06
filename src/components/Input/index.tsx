@@ -2,6 +2,7 @@ import { OutlinedInput, OutlinedInputProps, FormHelperText, FormControl, Box, Ty
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactElement } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export type InputProps = {
   helperText?: string
@@ -12,6 +13,7 @@ export type InputProps = {
 
 const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelPrimary, labelSecondary, required = false, ...rest }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   return (
     <FormControl fullWidth={rest.fullWidth}>
@@ -21,7 +23,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelP
             {labelPrimary}
             {required && (
               <Typography component="span" className={classes.required}>
-                必須
+                {t('common:common.required')}
               </Typography>
             )}
           </label>
