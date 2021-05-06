@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography } from '@material-ui/core'
-import { Box, Grid } from '@material-ui/core'
-import { AccountBalance } from '@material-ui/icons'
-
+import { Box, Grid, Typography } from '@material-ui/core'
+import { AccountBalance, Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
 import ESButtonTwitter from '@components/Button/Twitter'
 import ESButtonGoogle from '@components/Button/Google'
@@ -15,30 +14,57 @@ import ESChip from '@components/Chip'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import ESInput from '@components/Input'
+import ESSelect from '@components/Select'
+import ESCheckbox from '@components/Checkbox'
+import IconButton from '@material-ui/core/IconButton'
+import { useFormik } from 'formik'
+import PinInput from '@components/PinInput'
+import ProfileAvatar from '@components/ProfileAvatar'
+import ESTabs from '@components/Tabs'
+import ESTab from '@components/Tab'
 
 const Atoms: React.FC = () => {
+  const [value, setValue] = useState<string>('')
+  const [tab, setTab] = useState(0)
+  const [state, setState] = useState({
+    checkedA: false,
+  })
+
+  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, [event.target.name]: event.target.checked })
+  }
   const { t } = useTranslation(['common'])
+
+  const { handleChange, values } = useFormik({
+    initialValues: {
+      selectedValue: '',
+    },
+    onSubmit: (values) => {
+      values
+      value
+    },
+  })
+
+  const items = [
+    {
+      value: 1,
+      label: '1',
+    },
+    {
+      value: 2,
+      label: '2',
+    },
+  ]
+
   return (
-    <Box>
+    <>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
-        <ESButton
-          variant="contained"
-          color="primary"
-          size="large"
-          round
-          gradient
-        >
+        <ESButton variant="contained" color="primary" size="large" round gradient>
           Primary
         </ESButton>
-        <ESButton
-          variant="contained"
-          color="primary"
-          size="large"
-          round
-          gradient
-          disabled
-        >
+        <ESButton variant="contained" color="primary" size="large" round gradient disabled>
           Disabled
         </ESButton>
         <ESButton variant="contained" color="primary">
@@ -98,17 +124,89 @@ const Atoms: React.FC = () => {
             </ESCardContent>
           </ESCard>
           <ESCard>
-            <ESCardMedia
-              cornerIcon={<AccountBalance fontSize="small" />}
-              imageUrl="https://picsum.photos/id/412/240/120"
-            ></ESCardMedia>
+            <ESCardMedia cornerIcon={<AccountBalance fontSize="small" />} imageUrl="https://picsum.photos/id/412/240/120"></ESCardMedia>
             <ESCardContent>
               <Typography>募集名が入ります。</Typography>
             </ESCardContent>
           </ESCard>
         </Grid>
       </Box>
-    </Box>
+      <Box margin={4}>
+        <h2>{t('common:welcome')}</h2>
+        <ESButton variant="contained" color="primary" size="large" round gradient>
+          Primary
+        </ESButton>
+        <ESButton variant="contained" color="primary" size="large" round gradient disabled>
+          Disabled
+        </ESButton>
+        <ESButton variant="contained" color="primary">
+          Primary
+        </ESButton>
+        <ESButton variant="contained" color="primary" disabled>
+          Disabled
+        </ESButton>
+        <ESButton variant="outlined" round>
+          Outlined
+        </ESButton>
+        <ESButton variant="outlined" round disabled>
+          disabled
+        </ESButton>
+        <ESButton variant="outlined">Outlined</ESButton>
+        <ESButton variant="outlined" disabled>
+          disabled
+        </ESButton>
+        <ESInput placeholder="キーワード検索" />
+        <ESInput
+          endAdornment={
+            <IconButton aria-label="back" size="small">
+              <CloseIcon />
+            </IconButton>
+          }
+        />
+        <ESInput error helperText="エラー文言が入ります" />
+
+        <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} label="Hello" required={true}>
+          <option value="" disabled>
+            プルダウン
+          </option>
+          {items.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </ESSelect>
+
+        <ESInput
+          placeholder="キーワード検索"
+          labelPrimary="メールアドレス1"
+          labelSecondary={
+            <Typography color="textPrimary" gutterBottom={false} variant="body2">
+              メールアドレスがわからない場合
+            </Typography>
+          }
+          fullWidth
+        />
+
+        <ESInput labelPrimary="メールアドレス2" value="qweqweq" disabled />
+        <ESInput labelPrimary="メールアドレス3" required />
+
+        <ESCheckbox checked={state.checkedA} onChange={handleChange1} label="end" name="checkedA" />
+        <ESCheckbox />
+
+        <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
+      </Box>
+      <Box>
+        <ProfileAvatar src="/images/avatar.png" editable />
+        <ProfileAvatar src="/images/avatar_o.png" />
+      </Box>
+      <Box>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
+          <ESTab label="Item One" value={0} />
+          <ESTab label="Item Two" value={1} />
+          <ESTab label="Item Three" value={2} />
+        </ESTabs>
+      </Box>
+    </>
   )
 }
 

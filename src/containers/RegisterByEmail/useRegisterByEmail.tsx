@@ -13,11 +13,9 @@ const useRegisterByEmail = () => {
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getRegisterMeta)
 
-  const registerByEmail = (param: UserLoginParams) =>
-    dispatch(actions.registerByEmail(param))
+  const registerByEmail = (param: UserLoginParams) => dispatch(actions.registerByEmail(param))
 
-  const resetMeta = () =>
-    dispatch(clearMetaData(actions.registerByEmail.typePrefix))
+  const resetMeta = () => dispatch(clearMetaData(actions.registerByEmail.typePrefix))
 
   return { user, registerByEmail, resetMeta, meta }
 }

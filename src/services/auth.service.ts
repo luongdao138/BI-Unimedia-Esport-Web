@@ -44,43 +44,27 @@ export type UserResetPasswordParams = {
   confirmation_code: string
 }
 
-export const login = async (
-  params: UserLoginParams
-): Promise<UserLoginResponse> => {
+export const login = async (params: UserLoginParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.LOGIN, params)
   return data
 }
 
-export const register = async (
-  params: UserLoginParams
-): Promise<UserLoginResponse> => {
+export const register = async (params: UserLoginParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.REGISTER, params)
   return data
 }
 
-export const forgotPassword = async (
-  params: ForgotPasswordParams
-): Promise<ForgotPasswordResponse> => {
-  const { data } = await api.post<ForgotPasswordResponse>(
-    URI.FORGOT_PASSWORD,
-    params
-  )
+export const forgotPassword = async (params: ForgotPasswordParams): Promise<ForgotPasswordResponse> => {
+  const { data } = await api.post<ForgotPasswordResponse>(URI.FORGOT_PASSWORD, params)
   return data
 }
 
-export const forgotConfirm = async (
-  params: UserConfirmParams
-): Promise<UserConfirmResponse> => {
-  const { data } = await api.post<UserConfirmResponse>(
-    URI.FORGOT_CONFIRM,
-    params
-  )
+export const forgotConfirm = async (params: UserConfirmParams): Promise<UserConfirmResponse> => {
+  const { data } = await api.post<UserConfirmResponse>(URI.FORGOT_CONFIRM, params)
   return data
 }
 
-export const resetPassword = async (
-  params: UserResetPasswordParams
-): Promise<UserLoginResponse> => {
+export const resetPassword = async (params: UserResetPasswordParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.RESET_PASSWORD, params)
   return data
 }
