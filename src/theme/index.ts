@@ -75,5 +75,10 @@ export default createMuiTheme({
         marginBottom: '1em',
       },
     },
+    MuiSnackbar: {
+      root: {
+        left: 0,
+      },
+    },
   },
 })

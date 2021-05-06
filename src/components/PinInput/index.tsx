@@ -17,7 +17,7 @@ interface Props {
   numberOfPins?: number
   onChange: (value: string) => void
   error?: boolean
-  value?: string
+  value: string
 }
 
 const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value }) => {
