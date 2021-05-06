@@ -75,6 +75,11 @@ export default createMuiTheme({
         marginBottom: '1em',
       },
     },
+    MuiSnackbar: {
+      root: {
+        left: 0,
+      },
+    },
     MuiCardContent: {
       root: {
         padding: '8px 12px 12px 12px',

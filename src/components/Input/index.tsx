@@ -14,9 +14,9 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelP
   const classes = useStyles()
 
   return (
-    <FormControl fullWidth={rest.fullWidth} className={classes.formPadding}>
+    <FormControl fullWidth={rest.fullWidth}>
       {(labelPrimary || labelSecondary) && (
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display="flex" justifyContent="space-between" alignItems="center" className={classes.bottomPadding}>
           <label htmlFor={labelPrimary} className={classes.labelMargin}>
             {labelPrimary}
             {required && (
@@ -50,12 +50,15 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderColor: 'transparent',
       },
     },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #000000 inset',
+    },
   },
-  formPadding: {
-    paddingTop: theme.spacing(1),
+  bottomPadding: {
+    paddingBottom: theme.spacing(1),
   },
   labelMargin: {
-    marginBottom: '0.35em',
+    fontWeight: 'bold',
   },
   required: {
     backgroundColor: Colors.primary,
