@@ -23,4 +23,5 @@ export const Colors = {
   },
   black: '#000000',
   white: '#ffffff',
+  green: '#2CEBB0',
 }
