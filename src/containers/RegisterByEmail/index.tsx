@@ -90,6 +90,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[1000]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[1000]}80`,
+    },
   },
   linkContainer: {
     textAlign: 'center',
