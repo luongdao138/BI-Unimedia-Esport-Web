@@ -10,6 +10,12 @@ import ESButtonLine from '@components/Button/Line'
 import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
+import ESButtonTwitterCircle from '@components/Button/TwitchCircle'
+import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
+import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
+import ESButtonLineCircle from '@components/Button/LineCircle'
+import ESButtonGoogleCircle from '@components/Button/GoogleCircle'
+import ESButtonAppleCircle from '@components/Button/AppleCircle'
 import ESChip from '@components/Chip'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
@@ -28,6 +34,7 @@ import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
+import ESStrengthMeter from '@components/StrengthMeter'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
@@ -118,8 +125,14 @@ const Atoms: React.FC = () => {
         <ESButtonFacebook variant="contained" fullWidth />
         <ESButtonApple variant="contained" fullWidth />
       </Box>
-      <Box margin={4}>
+      <Box margin={2} display="flex">
         <ESButtonFacebookCircle />
+        <ESButtonTwitterCircle />
+        <ESButtonTwitchCircle />
+        <ESButtonInstagramCircle />
+        <ESButtonLineCircle />
+        <ESButtonGoogleCircle />
+        <ESButtonAppleCircle />
       </Box>
       <Box margin={4}>
         <Grid xs={3}>
@@ -219,6 +232,12 @@ const Atoms: React.FC = () => {
         <ESAvatar alt="Ivatar" />
         <ESAvatar alt="Jvatar" />
         <ESAvatar alt="Kvatar" />
+        <ESAvatar alt="あvatar" />
+        <ESAvatar alt="いvatar" />
+        <ESAvatar alt="おvatar" />
+        <ESAvatar alt="うvatar" />
+        <ESAvatar alt="えvatar" />
+        <ESAvatar alt="高atar" />
       </Box>
       <Box margin={4}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
@@ -237,6 +256,21 @@ const Atoms: React.FC = () => {
             </Step>
           ))}
         </Stepper>
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={33} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={50} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={66} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={85} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={100} />
       </Box>
     </>
   )
