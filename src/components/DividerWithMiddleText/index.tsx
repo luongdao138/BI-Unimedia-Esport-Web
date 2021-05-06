@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 
 type Props = {
@@ -12,11 +12,12 @@ const DividerWithMiddleText: React.FC<Props> = ({ text, marginSpace }) => {
   return <div className={classes.root}>{text}</div>
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: (props: { marginSpace?: string }) => ({
     display: 'flex',
     alignItems: 'center',
     textAlign: 'center',
+    fontSize: 16,
 
     '&:before, &:after': {
       content: "''",
@@ -30,6 +31,13 @@ const useStyles = makeStyles(() => ({
       marginLeft: props.marginSpace || 13,
     },
   }),
+
+  [theme.breakpoints.down('sm')]: {
+    root: {
+      marginLeft: '-24px',
+      marginRight: '-24px',
+    },
+  },
 }))
 
 export default DividerWithMiddleText

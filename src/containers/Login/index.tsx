@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
-import { Grid, makeStyles, Theme, Typography } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import * as Yup from 'yup'
 import { useRouter } from 'next/router'
 import useLoginByEmail from './useLoginByEmail'
@@ -31,7 +31,7 @@ const LoginContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { loginByEmail, meta } = useLoginByEmail()
+  const { loginByEmail, meta, resetMeta } = useLoginByEmail()
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
       email: '',
@@ -52,21 +52,21 @@ const LoginContainer: React.FC = () => {
 
   return (
     <>
-      <Grid container>
-        <Grid item className={classes.topContainer}>
+      <Box pt={7.5} pb={9} className={classes.topContainer}>
+        <Box py={2}>
           <IconButton className={classes.iconButtonBg}>
-            <Icon className={`fa fa-arrow-left ${classes.iconSmall}`} />
+            <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
-        </Grid>
+        </Box>
 
-        <Grid container direction="row" justify="center">
-          <Grid item className={classes.itemContainer}>
+        <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center" className={classes.container}>
+          <Box pt={1.375} pb={8}>
             <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
-          </Grid>
+          </Box>
 
-          <form onSubmit={handleSubmit}>
-            <Grid container direction="row" justify="center">
-              <Grid item xs={12}>
+          <Box width="100%" flexDirection="column" alignItems="center">
+            <form onSubmit={handleSubmit}>
+              <Box>
                 <ESInput
                   id="email"
                   placeholder={t('common:login.email_placeholder')}
@@ -83,9 +83,9 @@ const LoginContainer: React.FC = () => {
                   helperText={touched.email && errors.email}
                   error={touched.email && !!errors.email}
                 />
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} className={classes.passwordContainer}>
+              <Box pt={3}>
                 <ESInput
                   id="password"
                   labelPrimary={t('common:login.password_label_primary')}
@@ -101,79 +101,66 @@ const LoginContainer: React.FC = () => {
                   helperText={touched.password && errors.password}
                   error={touched.password && !!errors.password}
                 />
-              </Grid>
+              </Box>
 
-              <Grid item xs={12} className={classes.buttonContainer}>
-                <ESButton type="submit" variant="contained" color="primary" round gradient fullWidth>
+              <Box pt={6} pb={4} pl={13} pr={13} className={classes.buttonContainer}>
+                <ESButton type="submit" variant="contained" color="primary" round gradient fullWidth size="large">
                   {t('common:login.submit')}
                 </ESButton>
-              </Grid>
-            </Grid>
-          </form>
+              </Box>
+            </form>
+          </Box>
 
-          <Grid item xs={12} className={classes.linkContainer}>
+          <Box pb={8} className={classes.linkContainer}>
             <Link href="/register">
               <a>{t('common:login.register')}</a>
             </Link>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12}>
+          <Box width="100%">
             <ESDividerWithMiddleText text={t('common:login.divider')} />
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} className={classes.socialContainer}>
+          <Box px={13} pt={8} className={classes.buttonContainer}>
             <ESButtonTwitter variant="contained" fullWidth />
             <ESButtonGoogle variant="contained" fullWidth />
             <ESButtonLine variant="contained" fullWidth />
             <ESButtonFacebook variant="contained" fullWidth />
             <ESButtonApple variant="contained" fullWidth />
-          </Grid>
-        </Grid>
-      </Grid>
-      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} />}
+          </Box>
+        </Box>
+      </Box>
+      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} resetMeta={resetMeta} />}
     </>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  topContainer: {
-    paddingTop: theme.spacing(4),
-  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[1000]}80`,
-  },
-  iconSmall: {
-    fontSize: 12,
-  },
-  itemContainer: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
   },
   iconMargin: {
     marginLeft: theme.spacing(1 / 2),
   },
-  passwordContainer: {
-    paddingTop: theme.spacing(3),
-  },
-  buttonContainer: {
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(4),
-    textAlign: 'center',
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
-  },
   linkContainer: {
-    paddingBottom: theme.spacing(8),
     textAlign: 'center',
+    fontSize: 14,
     '& a': {
       color: theme.palette.primary.main,
     },
   },
-  socialContainer: {
-    paddingTop: theme.spacing(8),
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
-    paddingBottom: theme.spacing(8),
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    buttonContainer: {
+      paddingLeft: theme.spacing(5),
+      paddingRight: theme.spacing(5),
+    },
+    topContainer: {
+      paddingTop: 0,
+    },
   },
 }))
 

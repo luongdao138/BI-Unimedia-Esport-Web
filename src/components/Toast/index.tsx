@@ -12,13 +12,15 @@ interface Props {
   open: boolean
   message: string
   onClose?: () => void
+  resetMeta: () => void
 }
 
-const Toast: React.FC<Props> = ({ open, message, onClose }) => {
+const Toast: React.FC<Props> = ({ open, message, onClose, resetMeta }) => {
   const classes = useStyles()
 
   function handleClose() {
     onClose && onClose()
+    resetMeta && resetMeta()
   }
 
   return (
@@ -47,15 +49,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 0,
     backgroundColor: theme.palette.primary.main,
     justifyContent: 'center',
-    fontSize: 14,
     boxShadow: 'none',
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   snackBarRoot: {
     width: '100%',
     top: 0,
+    height: 30,
   },
   message: {
     color: Colors.white,
+    paddingTop: theme.spacing(0.625),
+    paddingBottom: theme.spacing(0.625),
+    fontSize: 14,
   },
 }))
 

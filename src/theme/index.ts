@@ -93,5 +93,16 @@ export default createMuiTheme({
         padding: '12px 12px 8px 12px',
       },
     },
+    MuiContainer: {
+      root: {
+        paddingLeft: 24,
+        paddingRight: 24,
+      },
+    },
+    MuiIcon: {
+      fontSizeSmall: {
+        fontSize: 12,
+      },
+    },
   },
 })
