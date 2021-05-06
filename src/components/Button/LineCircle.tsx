@@ -1,4 +1,4 @@
-import { Avatar, SvgIcon, Link, LinkProps } from '@material-ui/core'
+import { Avatar, SvgIcon, IconButton, IconButtonProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -13,12 +13,15 @@ const useStyles = makeStyles(() => ({
     height: 39,
     width: 38,
   },
+  iconRoot: {
+    padding: 2,
+  },
 }))
 
-const ESButtonLineCircle: React.FC<LinkProps> = ({ classes: _classes, className: _className, ...rest }) => {
-  const classes = useStyles(rest)
+const ESButtonLineCircle: React.FC<IconButtonProps> = (props) => {
+  const classes = useStyles()
   return (
-    <Link {...rest}>
+    <IconButton {...props} classes={{ root: classes.iconRoot }}>
       <Avatar classes={{ root: classes.root }} className={classes.Line}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 39.155 37.308">
           <g id="Group_7252" data-name="Group 7252">
@@ -62,7 +65,7 @@ const ESButtonLineCircle: React.FC<LinkProps> = ({ classes: _classes, className:
           </g>
         </SvgIcon>
       </Avatar>
-    </Link>
+    </IconButton>
   )
 }
 

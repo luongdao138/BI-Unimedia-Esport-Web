@@ -121,13 +121,13 @@ const Atoms: React.FC = () => {
         <ESButtonApple variant="contained" fullWidth />
       </Box>
       <Box margin={2} display="flex">
-        <ESButtonFacebookCircle href="#facebook" />
-        <ESButtonTwitterCircle href="#twitter" />
-        <ESButtonTwitchCircle href="#twitch" />
-        <ESButtonInstagramCircle href="#Instagram" />
-        <ESButtonLineCircle href="#Line" />
-        <ESButtonGoogleCircle href="#Google" />
-        <ESButtonAppleCircle href="#Apple" />
+        <ESButtonFacebookCircle />
+        <ESButtonTwitterCircle />
+        <ESButtonTwitchCircle />
+        <ESButtonInstagramCircle />
+        <ESButtonLineCircle />
+        <ESButtonGoogleCircle />
+        <ESButtonAppleCircle />
       </Box>
       <Box margin={4}>
         <Grid xs={3}>
