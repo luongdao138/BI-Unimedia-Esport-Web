@@ -24,6 +24,7 @@ import ProfileAvatar from '@components/ProfileAvatar'
 import ESAvatar from '@components/Avatar'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
+import ESStrengthMeter from '@components/StrengthMeter'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
@@ -221,6 +222,21 @@ const Atoms: React.FC = () => {
           <ESTab label="Item Two" value={1} />
           <ESTab label="Item Three" value={2} />
         </ESTabs>
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={33} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={50} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={66} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={85} />
+      </Box>
+      <Box margin={2}>
+        <ESStrengthMeter value={100} />
       </Box>
     </>
   )
