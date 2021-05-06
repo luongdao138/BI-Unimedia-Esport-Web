@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Grid, Typography } from '@material-ui/core'
-import { AccountBalance, Close as CloseIcon } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/core/styles'
+import { Box, Grid, Typography, Icon } from '@material-ui/core'
+import { Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
 import ESButtonTwitter from '@components/Button/Twitter'
 import ESButtonGoogle from '@components/Button/Google'
@@ -32,7 +33,19 @@ import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESStrengthMeter from '@components/StrengthMeter'
 
+const useStyles = makeStyles(() => {
+  return {
+    iconRoot: {
+      width: '1.3em',
+    },
+    iconFontSizeSmall: {
+      fontSize: '1.125rem',
+    },
+  }
+})
+
 const Atoms: React.FC = () => {
+  const classes = useStyles()
   const [value, setValue] = useState<string>('')
   const [tab, setTab] = useState(0)
   const [state, setState] = useState({
@@ -138,7 +151,46 @@ const Atoms: React.FC = () => {
             </ESCardContent>
           </ESCard>
           <ESCard>
-            <ESCardMedia cornerIcon={<AccountBalance fontSize="small" />} imageUrl="https://picsum.photos/id/412/240/120"></ESCardMedia>
+            <ESCardMedia
+              cornerIcon={
+                <Icon
+                  classes={{
+                    root: classes.iconRoot,
+                    fontSizeSmall: classes.iconFontSizeSmall,
+                  }}
+                  className="fas fa-university"
+                  fontSize="small"
+                />
+              }
+              imageUrl="https://picsum.photos/id/412/240/120"
+            ></ESCardMedia>
+            <ESCardContent>
+              <Typography>募集名が入ります。</Typography>
+            </ESCardContent>
+          </ESCard>
+          <ESCard>
+            <ESCardMedia
+              cornerIcon={
+                <Icon
+                  classes={{
+                    root: classes.iconRoot,
+                    fontSizeSmall: classes.iconFontSizeSmall,
+                  }}
+                  className="fas fa-trophy"
+                  fontSize="small"
+                />
+              }
+              imageUrl="https://picsum.photos/id/112/240/120"
+            ></ESCardMedia>
+            <ESCardContent>
+              <Typography>募集名が入ります。</Typography>
+            </ESCardContent>
+          </ESCard>
+          <ESCard>
+            <ESCardMedia
+              cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+              imageUrl="https://picsum.photos/id/112/240/120"
+            ></ESCardMedia>
             <ESCardContent>
               <Typography>募集名が入ります。</Typography>
             </ESCardContent>
