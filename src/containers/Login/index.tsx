@@ -103,8 +103,17 @@ const LoginContainer: React.FC = () => {
                 />
               </Box>
 
-              <Box pt={6} pb={4} pl={13} pr={13} className={classes.buttonContainer}>
-                <ESButton type="submit" variant="contained" color="primary" round gradient fullWidth size="large">
+              <Box pt={6} pb={4} className={classes.buttonContainer} textAlign="center">
+                <ESButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  round
+                  gradient
+                  size="large"
+                  minWidth={280}
+                  className={classes.submitBtn}
+                >
                   {t('common:login.submit')}
                 </ESButton>
               </Box>
@@ -121,12 +130,12 @@ const LoginContainer: React.FC = () => {
             <ESDividerWithMiddleText text={t('common:login.divider')} />
           </Box>
 
-          <Box px={13} pt={8} className={classes.buttonContainer}>
-            <ESButtonTwitter variant="contained" fullWidth />
-            <ESButtonGoogle variant="contained" fullWidth />
-            <ESButtonLine variant="contained" fullWidth />
-            <ESButtonFacebook variant="contained" fullWidth />
-            <ESButtonApple variant="contained" fullWidth />
+          <Box pt={8} textAlign="center">
+            <ESButtonTwitter variant="contained" className={classes.submitBtn} />
+            <ESButtonGoogle variant="contained" className={classes.submitBtn} />
+            <ESButtonLine variant="contained" className={classes.submitBtn} />
+            <ESButtonFacebook variant="contained" className={classes.submitBtn} />
+            <ESButtonApple variant="contained" className={classes.submitBtn} />
           </Box>
         </Box>
       </Box>
@@ -138,6 +147,9 @@ const LoginContainer: React.FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
     backgroundColor: `${Colors.grey[1000]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[1000]}80`,
+    },
   },
   iconMargin: {
     marginLeft: theme.spacing(1 / 2),
@@ -149,17 +161,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  [theme.breakpoints.down('sm')]: {
+  buttonContainer: {},
+  topContainer: {},
+  container: {},
+  submitBtn: {},
+  ['@media (max-width: 414px)']: {
     container: {
       paddingLeft: 0,
       paddingRight: 0,
     },
-    buttonContainer: {
-      paddingLeft: theme.spacing(5),
-      paddingRight: theme.spacing(5),
-    },
     topContainer: {
       paddingTop: 0,
+    },
+  },
+  ['@media (max-width: 330px)']: {
+    submitBtn: {
+      minWidth: 220,
     },
   },
 }))
