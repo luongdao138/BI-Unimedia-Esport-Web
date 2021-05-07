@@ -38,6 +38,7 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
+import MainLayout from '@layout/MainLayout'
 
 const useStyles = makeStyles(() => {
   return {
@@ -50,7 +51,7 @@ const useStyles = makeStyles(() => {
   }
 })
 
-const Atoms: React.FC = () => {
+const Atoms = () => {
   const classes = useStyles()
   const [value, setValue] = useState<string>('')
   const [tab, setTab] = useState(0)
@@ -298,16 +299,6 @@ const Atoms: React.FC = () => {
         <ESAvatar alt="Dvatar" />
         <ESAvatar alt="Evatar" />
         <ESAvatar alt="Fvatar" />
-        <ESAvatar alt="Gvatar" />
-        <ESAvatar alt="Hvatar" />
-        <ESAvatar alt="Ivatar" />
-        <ESAvatar alt="Jvatar" />
-        <ESAvatar alt="Kvatar" />
-        <ESAvatar alt="あvatar" />
-        <ESAvatar alt="いvatar" />
-        <ESAvatar alt="おvatar" />
-        <ESAvatar alt="うvatar" />
-        <ESAvatar alt="えvatar" />
         <ESAvatar alt="高atar" />
       </Box>
       <Box margin={4}>
@@ -321,7 +312,7 @@ const Atoms: React.FC = () => {
         <Stepper activeStep={step}>
           {['基本データ', 'タグ', '好きなゲーム'].map((label, idx) => (
             <Step key={idx}>
-              <StepButton onClick={() => setStep(idx)}>
+              <StepButton disableRipple onClick={() => setStep(idx)}>
                 <StepLabel>{label}</StepLabel>
               </StepButton>
             </Step>
@@ -346,5 +337,7 @@ const Atoms: React.FC = () => {
     </>
   )
 }
+
+Atoms.Layout = MainLayout
 
 export default Atoms
