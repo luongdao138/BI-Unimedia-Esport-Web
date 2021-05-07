@@ -20,8 +20,8 @@ const RegisterByEmailContainer: React.FC = () => {
   const classes = useStyles()
   const social = useSocialLogin()
 
-  const handleGoogleLogin = (params) => social.login({ ...params, type: 'login' })
-
+  const handleGoogleLogin = (params) => social.login({ ...params, type: 'register' })
+  const handleFacebookLogin = (params) => social.login({ ...params, type: 'register' })
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
@@ -71,7 +71,7 @@ const RegisterByEmailContainer: React.FC = () => {
           <ESButtonTwitter />
           <ESButtonGoogle onSuccess={handleGoogleLogin} />
           <ESButtonLine />
-          <ESButtonFacebook />
+          <ESButtonFacebook onSuccess={handleFacebookLogin} />
           <ESButtonApple />
         </Box>
 

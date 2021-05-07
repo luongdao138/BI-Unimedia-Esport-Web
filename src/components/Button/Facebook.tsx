@@ -1,7 +1,9 @@
+import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login-typed'
 import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
+import { LoginSocialParams } from '@services/auth.service'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -74,4 +76,20 @@ const ESButtonFacebook: React.FC<ButtonProps> = ({ classes: _classes, ...rest })
 ESButtonFacebook.defaultProps = {
   variant: 'contained',
 }
-export default ESButtonFacebook
+
+type FacebookButtonProps = { onSuccess?: (param: LoginSocialParams) => void } & ButtonProps
+
+const FacebookButton: React.FC<FacebookButtonProps> = ({ onSuccess, ...rest }) => {
+  const handleResponse = async (response: ReactFacebookLoginInfo) => {
+    !!onSuccess && onSuccess({ social_channel: 'facebook', access_token: response.accessToken })
+  }
+  return (
+    <FacebookLogin
+      appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
+      autoLoad
+      callback={handleResponse}
+      render={(renderProps) => <ESButtonFacebook {...rest} onClick={renderProps.onClick} />}
+    />
+  )
+}
+export default FacebookButton
