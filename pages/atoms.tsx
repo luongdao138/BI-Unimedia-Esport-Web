@@ -103,7 +103,7 @@ const Atoms: React.FC = () => {
           キャンセル
         </ButtonPrimary>
         <ButtonPrimary variant="contained" color="primary" size="small" round={false} gradient={false}>
-          small
+          small test
         </ButtonPrimary>
         <ButtonPrimary variant="contained" color="primary" size="large" round disabled>
           Disabled
