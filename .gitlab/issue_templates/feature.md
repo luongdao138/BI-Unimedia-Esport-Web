@@ -2,9 +2,9 @@
 
 - title, mission
 
-## Referential issues / 関連issue
+## Referential issues / 関連 issue
 
-- ``N/A``
+- `N/A`
 
 ## Goal / ゴール
 
@@ -18,7 +18,7 @@
 
 ## Documents / 参加資料
 
-- ``N/A``
+- `N/A`
 
 ## Checklists
 
@@ -41,5 +41,3 @@
   - [ ] [Дэлгэцийн олон хэмжээс](https://gitlab.unimedia.mn/ums-example-group/ums-example-project/-/wikis/front-end#responsive-sizes) дээр зөв ажиллаж байгаа эсэх :white_check_mark:
 - Version Management
   - [ ] [package-lock](https://gitlab.unimedia.mn/ums-example-group/ums-example-project/-/wikis/front-end#version-management) файлыг шалгасан эсэх :white_check_mark:
-
-

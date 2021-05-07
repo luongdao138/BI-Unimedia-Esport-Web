@@ -49,3 +49,150 @@
   bottom: 0;
   z-index: -1;
 }
+
+/* Primary Button */
+
+.MuiButtonBase-root.button-primary {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3',
+    'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
+    'MS PGothic', sans-serif;
+
+  line-height: 1.75;
+  text-transform: uppercase;
+  height: 50px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.MuiButtonBase-root.button-primary.primary-large {
+  height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.MuiButtonBase-root.button-primary.primary-small {
+  height: 38px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.MuiButtonBase-root.button-primary.primary-rounded {
+  border-radius: 25px;
+}
+
+.MuiButtonBase-root.button-primary {
+  padding: 12px 60px;
+}
+.MuiButtonBase-root.button-primary:not(.Mui-disabled).gradient {
+  background: linear-gradient(
+      234deg,
+      rgb(214, 0, 253) 0%,
+      rgb(252, 94, 102) 100%,
+      rgb(251, 92, 105) 100%,
+      rgb(253, 97, 97) 100%
+    )
+    0% 0% no-repeat padding-box padding-box transparent;
+  border: 1px solid #ff7ef6;
+  box-shadow: rgb(225 26 212) 0px 0px 10px;
+}
+
+.MuiButtonBase-root.button-primary:not(.Mui-disabled).gradient:hover {
+  border: 1px solid #fff;
+}
+
+.MuiButtonBase-root.button-primary.Mui-disabled {
+  color: rgba(255, 255, 255, 0.3);
+  background: rgb(77, 77, 77);
+  box-shadow: none;
+  border: 0 none;
+}
+
+.MuiButtonBase-root.button-primary:hover {
+  border: 1px solid #fff;
+}
+.MuiButtonBase-root.button-primary.gradient:active,
+.MuiButtonBase-root.button-primary.gradient:focus {
+  box-shadow: rgb(225 26 212) 0px 0px 4px !important;
+  transition: all 0.1s ease-in;
+}
+
+.MuiButtonBase-root.button-primary:active,
+.MuiButtonBase-root.button-primary:focus {
+  box-shadow: none;
+  transition: all 0.1s ease-in;
+  background: #000;
+}
+
+.MuiButtonBase-root.button-primary {
+  position: relative;
+  transition: all 0.45s ease-Out;
+  color: #fff;
+}
+
+.MuiButtonBase-root.button-primary.gradient .circle {
+  width: 0%;
+  height: 0%;
+  opacity: 0;
+  line-height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  transition: all 0.5s ease-Out;
+  top: 50%;
+  left: 50%;
+}
+
+.MuiButtonBase-root.button-primary .circle {
+  width: 0%;
+  height: 0%;
+  opacity: 0;
+  line-height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  transition: all 0.5s ease-Out;
+  top: 50%;
+  left: 50%;
+}
+
+.MuiButtonBase-root.button-primary.gradient:hover .circle {
+  width: 200%;
+  height: 700%;
+  opacity: 1;
+  top: -150px;
+  left: -50%;
+}
+
+.MuiButtonBase-root.button-primary:hover .circle {
+  width: 200%;
+  height: 700%;
+  opacity: 0.2;
+  top: -150px;
+  left: -50%;
+}
+
+.MuiButtonBase-root.button-primary.primary-small:hover .circle {
+  width: 200%;
+  height: 700%;
+  opacity: 0.2;
+  top: -100px;
+  left: -50%;
+}
+
+.label-primary {
+  z-index: 2;
+  position: relative;
+}
+.MuiButtonBase-root.button-primary.label-primary {
+  color: #ffffff70;
+}
+
+.MuiButtonBase-root.button-primary.gradient:hover .label-primary {
+  color: #ff4786;
+}
+.MuiButtonBase-root.button-primary:hover .label-primary {
+  color: #fff;
+}

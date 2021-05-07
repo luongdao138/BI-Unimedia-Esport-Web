@@ -4,6 +4,7 @@ import { Typography } from '@material-ui/core'
 import { Box } from '@material-ui/core'
 
 import ESButton from '@components/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
 import ESChip from '@components/Chip'
 
 const Atoms: React.FC = () => {
@@ -12,25 +13,43 @@ const Atoms: React.FC = () => {
     <Box>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
-        <ESButton
+        <ButtonPrimary
           variant="contained"
           color="primary"
-          size="large"
           round
-          gradient
+          onClick={() => {
+            alert('aaa')
+          }}
         >
-          Primary
-        </ESButton>
-        <ESButton
+          保存する
+        </ButtonPrimary>
+        <ButtonPrimary
+          variant="contained"
+          color="primary"
+          round
+          gradient={false}
+        >
+          キャンセル
+        </ButtonPrimary>
+        <ButtonPrimary
+          variant="contained"
+          color="primary"
+          size="small"
+          round={false}
+          gradient={false}
+        >
+          small
+        </ButtonPrimary>
+        <ButtonPrimary
           variant="contained"
           color="primary"
           size="large"
           round
-          gradient
           disabled
         >
           Disabled
-        </ESButton>
+        </ButtonPrimary>
+
         <ESButton variant="contained" color="primary">
           Primary
         </ESButton>

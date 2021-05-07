@@ -11,6 +11,10 @@ class Document extends NextDocument<Props> {
         <Head>
           <link rel="shortcut icon" href="/favicon.png" key="shortcutIcon" />
           <link rel="manifest" href="/manifest.json" />
+          <link
+            href="/fonts/fontawesome-free-5.15.3-web/css/all.css"
+            rel="stylesheet"
+          ></link>
         </Head>
         <body>
           <Main />

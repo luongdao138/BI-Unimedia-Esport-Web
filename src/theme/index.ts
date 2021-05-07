@@ -69,6 +69,14 @@ export default createMuiTheme({
         padding: '6px 15px',
       },
     },
+    MuiIcon: {
+      root: {
+        overflow: 'inherit',
+      },
+      fontSizeSmall: {
+        fontSize: '0.92rem',
+      },
+    },
     MuiTypography: {
       gutterBottom: {
         marginBottom: '1em',
