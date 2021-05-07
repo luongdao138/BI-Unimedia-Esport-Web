@@ -66,6 +66,18 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary="ロビー" />
           </ListItem>
+          <ListItem className={classes.list} button disableRipple>
+            <ListItemIcon className={classes.icon}>
+              <Icon fontSize="small" className="fa fa-university" />
+            </ListItemIcon>
+            <ListItemText className={classes.listText} primary="ロビー" />
+          </ListItem>
+          <ListItem className={classes.list} button disableRipple>
+            <ListItemIcon className={classes.icon}>
+              <Icon fontSize="small" className="fa fa-users" />
+            </ListItemIcon>
+            <ListItemText className={classes.listText} primary="コミュニティ" />
+          </ListItem>
         </List>
       </Box>
     </>
