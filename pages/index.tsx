@@ -1,11 +1,14 @@
 import HomeContainer from '@containers/Home'
+import MainLayout from '@layout/MainLayout'
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
-    <main>
+    <MainLayout>
       <HomeContainer />
-    </main>
+    </MainLayout>
   )
 }
+
+HomePage.Layout = MainLayout
 
 export default HomePage

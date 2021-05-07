@@ -36,5 +36,10 @@ export default {
     required: '必須',
     zero: '0',
     see_more: 'もっと見る',
+    at: '@',
+  },
+  home: {
+    follow: 'フォローする',
+    unfollow: 'フォロー中',
   },
 }

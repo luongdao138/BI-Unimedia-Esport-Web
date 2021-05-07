@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Box, Grid, Typography } from '@material-ui/core'
 import { Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
 import ESButtonTwitter from '@components/Button/Twitter'
 import ESButtonGoogle from '@components/Button/Google'
 import ESButtonLine from '@components/Button/Line'
@@ -76,13 +77,27 @@ const Atoms: React.FC = () => {
   return (
     <>
       <Box margin={4}>
-        {/* <h2>{t('')}</h2> */}
-        <ESButton variant="contained" color="primary" size="large" round gradient>
-          Primary
-        </ESButton>
-        <ESButton variant="contained" color="primary" size="large" round gradient disabled>
+        <h2>{t('common:welcome')}</h2>
+        <ButtonPrimary
+          variant="contained"
+          color="primary"
+          round
+          onClick={() => {
+            alert('aaa')
+          }}
+        >
+          保存する
+        </ButtonPrimary>
+        <ButtonPrimary variant="contained" color="primary" round gradient={false}>
+          キャンセル
+        </ButtonPrimary>
+        <ButtonPrimary variant="contained" color="primary" size="small" round={false} gradient={false}>
+          small test
+        </ButtonPrimary>
+        <ButtonPrimary variant="contained" color="primary" size="large" round disabled>
           Disabled
-        </ESButton>
+        </ButtonPrimary>
+
         <ESButton variant="contained" color="primary">
           Primary
         </ESButton>
