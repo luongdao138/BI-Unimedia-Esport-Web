@@ -20,7 +20,7 @@ const RegisterByEmailContainer: React.FC = () => {
   const classes = useStyles()
   const social = useSocialLogin()
 
-  const handleGoogleLogin = (params) => social.login({ ...params, type: 'register' })
+  const handleGoogleLogin = (params) => social.login({ ...params, type: 'login' })
 
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
