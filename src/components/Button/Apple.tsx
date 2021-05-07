@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: '#212121',
+      background: '#1b1b1b',
     },
   },
   leftIcon: {
@@ -34,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important',
+    backgroundColor: '#212121 !important',
     color: '#FFF !important',
   },
 }))

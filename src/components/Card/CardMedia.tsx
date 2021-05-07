@@ -1,10 +1,33 @@
 import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
+const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children, ...rest }) => {
+  const classes = useStyles()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { cornerIcon } = rest
+
+  return (
+    <>
+      {cornerIcon && (
+        <div className={classes.cornerWrap}>
+          <div className={classes.iconWrap}>{cornerIcon}</div>
+          <div className={classes.triangle}></div>
+        </div>
+      )}
+      <Box className={classes.mediaWrap}>
+        <CardMedia className={classes.media} image={rest.image}>
+          {children}
+        </CardMedia>
+      </Box>
+    </>
+  )
+}
+
 const useStyles = makeStyles(() => ({
   mediaWrap: {
     position: 'relative',
     paddingTop: '50%',
+    overflow: 'hidden',
   },
   media: {
     position: 'absolute',
@@ -29,43 +52,17 @@ const useStyles = makeStyles(() => ({
     borderTopWidth: 50,
     borderTopStyle: 'solid',
     borderTopColor: 'rgba(0,0,0,.7)',
-    backdropFilter: 'blur(1px)',
     borderRightWidth: 50,
     borderRightStyle: 'solid',
     borderRightColor: 'transparent',
   },
   iconWrap: {
     position: 'absolute',
-    top: 5,
-    left: 5,
+    top: 0,
+    left: 0,
+    padding: 7,
     zIndex: 1,
   },
 }))
 
-const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any; imageUrl: string }> = ({ children, ...rest }) => {
-  const classes = useStyles(rest)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { cornerIcon, imageUrl } = rest
-
-  return (
-    <>
-      {cornerIcon && (
-        <div className={classes.cornerWrap}>
-          <div className={classes.iconWrap}>{cornerIcon}</div>
-          <div className={classes.triangle}></div>
-        </div>
-      )}
-      <Box className={classes.mediaWrap}>
-        <CardMedia className={classes.media} image={imageUrl}>
-          {children}
-        </CardMedia>
-      </Box>
-    </>
-  )
-}
-
-ESCardMedia.defaultProps = {
-  cornerIcon: false,
-  imageUrl: '',
-}
 export default ESCardMedia

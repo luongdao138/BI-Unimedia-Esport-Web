@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: '#1877F2',
+      background: '#0d61ce',
     },
   },
   leftIcon: {
@@ -35,13 +34,13 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important',
+    backgroundColor: '#1877F2 !important',
     color: '#FFF !important',
   },
 }))
 
 const ESButtonFacebook: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
-  const classes = useStyles(rest)
+  const classes = useStyles()
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ...props } = rest

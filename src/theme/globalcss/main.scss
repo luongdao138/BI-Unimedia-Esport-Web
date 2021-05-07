@@ -195,3 +195,11 @@
 .MuiButtonBase-root.button-primary:hover .label-primary {
   color: #fff;
 }
+.slideWrap {
+  margin-top: 32px;
+}
+.slideWrap .swiper-button-disabled {
+  visibility: 'hidden';
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}

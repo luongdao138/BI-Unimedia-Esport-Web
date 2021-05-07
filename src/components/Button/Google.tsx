@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: Colors.white,
+      background: '#efefef',
     },
   },
   leftIcon: {
@@ -35,13 +34,13 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important',
-    color: '#FFF !important',
+    backgroundColor: '#FFF !important',
+    color: '#4D4D4D !important',
   },
 }))
 
 const ESButtonGoogle: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
-  const classes = useStyles(rest)
+  const classes = useStyles()
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ...props } = rest
