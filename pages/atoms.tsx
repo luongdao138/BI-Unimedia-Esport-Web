@@ -29,6 +29,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
+import ProfileCover from '@components/ProfileCover'
 import ESAvatar from '@components/Avatar'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
@@ -284,7 +285,8 @@ const Atoms = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box margin={4}>
+      <Box position="relative" height={300} pt={23} pl={4} margin={4}>
+        <ProfileCover src="/images/avatar.png" />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>
