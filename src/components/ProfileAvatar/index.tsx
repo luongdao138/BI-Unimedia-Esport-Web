@@ -5,20 +5,20 @@ import { CameraAlt as Camera } from '@material-ui/icons'
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'inline-block',
+    display: 'block',
   },
-  avatar: {
+  avatar: (props: { size?: number }) => ({
     zIndex: 3,
-    width: 120,
-    height: 120,
-  },
-  touch: {
+    width: props.size,
+    height: props.size,
+  }),
+  touch: (props: { size?: number }) => ({
     zIndex: 3,
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
-    width: 120,
-    height: 120,
+    width: props.size,
+    height: props.size,
     borderRadius: '50%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     '&:hover $backdrop': {
       display: 'flex',
     },
-  },
+  }),
   camera: {
     display: 'none',
     position: 'absolute',
@@ -56,7 +56,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESProfileAvatar: React.FC<{ editable?: boolean; src: string; onChange?: (files: File) => void }> = (props) => {
+const ESProfileAvatar: React.FC<{ editable?: boolean; size?: number; src: string; onChange?: (files: File) => void }> = (props) => {
   const classes = useStyles(props)
   const [value, setValue] = useState<string | ArrayBuffer>('')
   useEffect(() => {
@@ -97,5 +97,6 @@ const ESProfileAvatar: React.FC<{ editable?: boolean; src: string; onChange?: (f
 
 ESProfileAvatar.defaultProps = {
   editable: false,
+  size: 120,
 }
 export default ESProfileAvatar
