@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Grid, Typography, Box, Container, Theme, makeStyles } from '@material-ui/core'
-import ESButton from '@components/Button'
+// import ESButton from '@components/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import TagSelect from '@containers/GameSelect/TagSelect'
+import GameSelect from '@containers/GameSelect/GameSelect'
 
 const GameSelectContainer: React.FC = () => {
   const classes = useStyles()
@@ -18,7 +20,7 @@ const GameSelectContainer: React.FC = () => {
       case 1:
         return <TagSelect />
       case 2:
-        return <Box>step3</Box>
+        return <GameSelect />
     }
   }
 
@@ -34,7 +36,7 @@ const GameSelectContainer: React.FC = () => {
       </Box>
       <Grid container direction="column" className={classes.contents}>
         <Box className={classes.stepperHolder}>
-          <Stepper activeStep={step}>
+          <Stepper activeStep={step} style={{ padding: 0 }}>
             {['基本データ', 'タグ', '好きなゲーム'].map((label, idx) => (
               <Step key={idx}>
                 <StepButton onClick={() => setStep(idx)}>
@@ -50,17 +52,11 @@ const GameSelectContainer: React.FC = () => {
       <Box className={classes.stickyFooter}>
         <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
           <Box className={classes.nextBtnHolder}>
-            <ESButton
-              variant="contained"
-              color="primary"
-              size="large"
-              className={classes.nextBtn}
-              round
-              gradient
-              onClick={() => setStep(step + 1)}
-            >
-              次へ
-            </ESButton>
+            <Box className={classes.nextBtn}>
+              <ButtonPrimary color="primary" fullWidth onClick={() => setStep(step + 1)}>
+                次へ
+              </ButtonPrimary>
+            </Box>
           </Box>
         </Container>
       </Box>
