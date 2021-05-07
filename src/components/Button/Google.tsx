@@ -1,5 +1,5 @@
-import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { GoogleLogin, GoogleLoginResponse } from 'react-google-login'
+import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
