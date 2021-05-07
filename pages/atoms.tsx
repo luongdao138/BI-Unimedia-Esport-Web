@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography, Icon } from '@material-ui/core'
 import { Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -38,7 +38,6 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
-import ESIcon from '@components/Icon'
 
 const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
@@ -165,7 +164,7 @@ const Atoms: React.FC = () => {
           </ESCard>
           <ESCard>
             <ESCardMedia
-              cornerIcon={<ESIcon className="fas fa-university" fontSize="small" />}
+              cornerIcon={<Icon className="fas fa-university" fontSize="small" />}
               image="https://picsum.photos/id/412/240/120"
             ></ESCardMedia>
             <ESCardContent>
@@ -174,7 +173,7 @@ const Atoms: React.FC = () => {
           </ESCard>
           <ESCard>
             <ESCardMedia
-              cornerIcon={<ESIcon className="fas fa-trophy" fontSize="small" />}
+              cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />}
               image="https://picsum.photos/id/112/240/120"
             ></ESCardMedia>
             <ESCardContent>
@@ -183,7 +182,7 @@ const Atoms: React.FC = () => {
           </ESCard>
           <ESCard>
             <ESCardMedia
-              cornerIcon={<ESIcon className="fas fa-users" fontSize="small" />}
+              cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
               image="https://picsum.photos/id/112/240/120"
             ></ESCardMedia>
             <ESCardContent>
@@ -194,10 +193,11 @@ const Atoms: React.FC = () => {
       </Box>
       <Box margin={4}>
         <ESSlider
+          navigation
           items={[
             <ESCard key="1">
               <ESCardMedia
-                cornerIcon={<ESIcon className="fas fa-users" fontSize="small" />}
+                cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
                 image="https://picsum.photos/id/412/240/120"
               ></ESCardMedia>
               <ESCardContent>

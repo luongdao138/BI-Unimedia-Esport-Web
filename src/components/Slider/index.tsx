@@ -1,7 +1,6 @@
 import React, { ReactElement, useRef } from 'react'
-import { Typography, Box, Link, Theme } from '@material-ui/core'
+import { Typography, Box, Link, Theme, Icon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import ESIcon from '@components/Icon'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation } from 'swiper/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,7 +10,9 @@ import 'swiper/components/navigation/navigation.min.css'
 SwiperCore.use([Navigation])
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrap: {},
+  wrap: {
+    paddingLeft: 16,
+  },
   sliderButtonNext: {
     width: 30,
     height: 160,
@@ -30,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: theme.spacing(1),
     top: '50%',
     transform: 'translateY(-80px)',
+    visibility: 'visible',
+    opacity: 1,
   },
   sliderButtonPrev: {
     width: 30,
@@ -49,6 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: theme.spacing(1),
     top: '50%',
     transform: 'translateY(-80px)',
+    visibility: 'visible',
+    opacity: 1,
   },
   fas: {
     textAlign: 'center',
@@ -61,19 +66,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   moreIcon: {
     marginLeft: theme.spacing(0.5),
   },
-  slideLarge: {
-    maxWidth: 256,
-  },
-  slideMedium: {
-    maxWidth: 191,
+  slideWidth: (props: { width?: number }) => ({
+    maxWidth: props.width ? props.width : 191, //Card Width 256
+  }),
+  containerStart: {
+    marginLeft: theme.spacing(1),
   },
 }))
 
-const ESSlide: React.FC<{ items: ReactElement[]; title?: string; moreLink?: string; large?: boolean }> = ({ items, ...rest }) => {
-  const classes = useStyles()
+const ESSlide: React.FC<{ items: ReactElement[]; title?: string; moreLink?: string; width?: number; navigation?: boolean }> = ({
+  items,
+  navigation,
+  ...rest
+}) => {
+  const classes = useStyles(rest)
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { title, moreLink, large, ...props } = rest
+  const { title, moreLink, width, ...props } = rest
   const prevRef = useRef(null)
   const nextRef = useRef(null)
 
@@ -98,32 +107,36 @@ const ESSlide: React.FC<{ items: ReactElement[]; title?: string; moreLink?: stri
         }}
       >
         {title && (
-          <Typography slot="container-start" variant="h3" gutterBottom>
+          <Typography className={classes.containerStart} slot="container-start" variant="h3" gutterBottom>
             {title}
           </Typography>
         )}
 
         {items.map((item, index) => {
           return (
-            <SwiperSlide key={index} className={large ? classes.slideLarge : classes.slideMedium}>
+            <SwiperSlide key={index} className={classes.slideWidth}>
               {item}
             </SwiperSlide>
           )
         })}
 
-        <div ref={prevRef} className={classes.sliderButtonPrev}>
-          <ESIcon classes={{ root: classes.fas }} className="fas fa-chevron-left" fontSize="small" />
-        </div>
-        <div ref={nextRef} className={classes.sliderButtonNext}>
-          <ESIcon classes={{ root: classes.fas }} className="fas fa-chevron-right" fontSize="small" />
-        </div>
+        {navigation && (
+          <>
+            <div ref={prevRef} className={classes.sliderButtonPrev}>
+              <Icon classes={{ root: classes.fas }} className="fas fa-chevron-left" fontSize="small" />
+            </div>
+            <div ref={nextRef} className={classes.sliderButtonNext}>
+              <Icon classes={{ root: classes.fas }} className="fas fa-chevron-right" fontSize="small" />
+            </div>
+          </>
+        )}
 
         {moreLink && (
           <Box slot="container-end" display="flex" justifyContent="flex-end">
             <Link href={moreLink} className={classes.moreLink}>
               <Typography>
                 {t('common:common.see_more')}
-                <ESIcon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />
+                <Icon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />
               </Typography>
             </Link>
           </Box>

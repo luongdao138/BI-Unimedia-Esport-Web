@@ -52,15 +52,15 @@ const useStyles = makeStyles(() => ({
     borderTopWidth: 50,
     borderTopStyle: 'solid',
     borderTopColor: 'rgba(0,0,0,.7)',
-    backdropFilter: 'blur(1px)',
     borderRightWidth: 50,
     borderRightStyle: 'solid',
     borderRightColor: 'transparent',
   },
   iconWrap: {
     position: 'absolute',
-    top: 5,
-    left: 5,
+    top: 0,
+    left: 0,
+    padding: 7,
     zIndex: 1,
   },
 }))
