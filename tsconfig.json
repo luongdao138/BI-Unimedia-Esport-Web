@@ -22,6 +22,7 @@
       "@components/*": ["./src/components/*"],
       "@constants/*": ["./src/constants/*"],
       "@containers/*": ["./src/containers/*"],
+      "@layouts/*": ["./src/layouts/*"],
       "@services/*": ["./src/services/*"],
       "@store/*": ["./src/store/*"],
       "@theme/*": ["./src/theme/*"],

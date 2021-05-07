@@ -1,98 +1,124 @@
-import { useEffect } from 'react'
-import { useFormik } from 'formik'
-import * as services from '@services/auth.service'
-import Grid from '@material-ui/core/Grid'
-import Box from '@material-ui/core/Box'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import * as Yup from 'yup'
-import { useRouter } from 'next/router'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import useRegisterByEmail from './useRegisterByEmail'
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .test('email-validation', 'Invalid email', (value) => {
-      return CommonHelper.validateEmail(value)
-    })
-    .required('Required'),
-})
+import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon'
+import Image from 'next/image'
+import ESButton from '@components/Button'
+import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
+import Link from 'next/link'
+import ESButtonTwitter from '@components/Button/Twitter'
+import ESButtonGoogle from '@components/Button/Google'
+import ESButtonLine from '@components/Button/Line'
+import ESButtonFacebook from '@components/Button/Facebook'
+import ESButtonApple from '@components/Button/Apple'
+import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
 
 const RegisterByEmailContainer: React.FC = () => {
-  const router = useRouter()
-  const { user, meta, registerByEmail, resetMeta } = useRegisterByEmail()
-
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    services.UserLoginParams
-  >({
-    initialValues: {
-      email: '',
-      password: '',
-      registration_id: undefined,
-    },
-    validationSchema,
-    onSubmit: (values, _helpers) => {
-      if (values.email && values.password) {
-        registerByEmail(values)
-      }
-    },
-  })
-
-  useEffect(() => {
-    if (meta.loaded) {
-      router.push('/welcome')
-    }
-  }, [meta.loaded])
+  const { t } = useTranslation(['common'])
+  const classes = useStyles()
 
   return (
-    <form onSubmit={handleSubmit}>
-      <p>{user && JSON.stringify(user)}</p>
-      <p>{meta && JSON.stringify(meta)}</p>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <TextField
-            id="email"
-            label="Email"
-            placeholder="Email"
-            onChange={handleChange}
-            value={values.email}
-            helperText={touched.email && errors.email}
-            error={touched.email && !!errors.email}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="password"
-            label="Password"
-            type="password"
-            placeholder="password"
-            onChange={handleChange}
-            value={values.password}
-            helperText={touched.password && errors.password}
-            error={touched.password && !!errors.password}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Register
-          </Button>
-        </Grid>
-      </Grid>
-
-      <Box mt={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={resetMeta}
-        >
-          Clear metadata state
-        </Button>
+    <Box pt={7.5} pb={9} className={classes.topContainer}>
+      <Box py={2}>
+        <IconButton className={classes.iconButtonBg}>
+          <Icon className="fa fa-arrow-left" fontSize="small" />
+        </IconButton>
       </Box>
-    </form>
+
+      <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center" className={classes.container}>
+        <Box pt={1.375} pb={6}>
+          <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
+        </Box>
+
+        <Box width="100%" flexDirection="column" alignItems="center">
+          <Box textAlign="center">
+            <Typography className={classes.termsText}>
+              <a onClick={() => true}>{t('common:register.link1')}</a>
+              {t('common:register.description1')}
+              <a onClick={() => true}>{t('common:register.link2')}</a>
+              {t('common:register.description2')}
+              <br />
+              {t('common:register.description3')}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box pt={6} pb={8} className={classes.buttonContainer} textAlign="center">
+          <ESButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            round
+            gradient
+            size="large"
+            minWidth={280}
+            className={classes.submitBtn}
+          >
+            {t('common:login.submit')}
+          </ESButton>
+        </Box>
+
+        <Box width="100%">
+          <ESDividerWithMiddleText text={t('common:login.divider')} />
+        </Box>
+
+        <Box pt={8} textAlign="center">
+          <ESButtonTwitter variant="contained" className={classes.submitBtn} />
+          <ESButtonGoogle variant="contained" className={classes.submitBtn} />
+          <ESButtonLine variant="contained" className={classes.submitBtn} />
+          <ESButtonFacebook variant="contained" className={classes.submitBtn} />
+          <ESButtonApple variant="contained" className={classes.submitBtn} />
+        </Box>
+
+        <Box pt={4} className={classes.linkContainer}>
+          <Link href="/register">
+            <a>{t('common:register.footer_link')}</a>
+          </Link>
+        </Box>
+      </Box>
+    </Box>
   )
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  termsText: {
+    '& > a': {
+      color: theme.palette.primary.main,
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[1000]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[1000]}80`,
+    },
+  },
+  linkContainer: {
+    textAlign: 'center',
+    fontSize: 14,
+    '& a': {
+      color: theme.palette.primary.main,
+    },
+  },
+  buttonContainer: {},
+  topContainer: {},
+  container: {},
+  submitBtn: {},
+  ['@media (max-width: 414px)']: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    topContainer: {
+      paddingTop: 0,
+    },
+  },
+  ['@media (max-width: 330px)']: {
+    submitBtn: {
+      minWidth: 220,
+    },
+  },
+}))
 
 export default RegisterByEmailContainer

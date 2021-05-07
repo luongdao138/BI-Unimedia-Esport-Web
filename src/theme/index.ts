@@ -27,10 +27,9 @@ export default createMuiTheme({
       secondary: Colors.text[300],
     },
   },
-
-  breakpoints: {
-    values: breakpointValues,
-  },
+  // breakpoints: {
+  //   values: breakpointValues,
+  // },
   typography: {
     fontFamily: font,
     h2: {
@@ -90,6 +89,30 @@ export default createMuiTheme({
       anchorOriginTopRightRectangle: {
         top: '4px',
         right: '4px',
+      },
+    },
+    MuiSnackbar: {
+      root: {
+        left: 0,
+      },
+    },
+    MuiCardContent: {
+      root: {
+        padding: '8px 12px 12px 12px',
+        '&:last-child': {
+          paddingBottom: '12px',
+        },
+      },
+    },
+    MuiCardMedia: {
+      root: {
+        padding: '12px 12px 8px 12px',
+      },
+    },
+    MuiContainer: {
+      root: {
+        paddingLeft: 24,
+        paddingRight: 24,
       },
     },
   },

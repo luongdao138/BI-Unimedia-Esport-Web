@@ -3,7 +3,8 @@ import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
-  containedPrimary: (props: { round?: boolean }) => ({
+  containedPrimary: (props: { gradient?: boolean; round?: boolean; minWidth?: number }) => ({
+    minWidth: props.minWidth,
     borderRadius: props.round ? 25 : 4,
     boxShadow: 'none',
     background: Colors.primary,
@@ -37,15 +38,14 @@ const useStyles = makeStyles(() => ({
   }),
 }))
 
-const ESButton: React.FC<ButtonProps & { round?: boolean }> = ({
+const ESButton: React.FC<ButtonProps & { gradient?: boolean; round?: boolean; minWidth?: number }> = ({
   children,
   classes: _classes,
-  className: _className,
   ...rest
 }) => {
   const classes = useStyles(rest)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { round, ...props } = rest
+  const { gradient, round, minWidth, ...props } = rest
   return (
     <Button classes={classes} {...props} disableRipple>
       {children}

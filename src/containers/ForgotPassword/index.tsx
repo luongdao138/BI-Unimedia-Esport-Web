@@ -17,20 +17,11 @@ const validationSchema = Yup.object().shape({
 })
 
 const ForgotPasswordContainer: React.FC = () => {
-  const {
-    user,
-    meta,
-    metaConfirm,
-    forgotPassword,
-    forgotConfirm,
-    resetPassword,
-  } = useForgotPassword()
+  const { user, meta, metaConfirm, forgotPassword, forgotConfirm, resetPassword } = useForgotPassword()
   const [confirmationCode, setConfirm] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    services.ForgotPasswordParams
-  >({
+  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.ForgotPasswordParams>({
     initialValues: {
       email: '',
     },
@@ -93,14 +84,7 @@ const ForgotPasswordContainer: React.FC = () => {
             style={{ paddingBottom: 20 }}
           />
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleForgotConfirm}
-            style={{ marginBottom: 20 }}
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth onClick={handleForgotConfirm} style={{ marginBottom: 20 }}>
             Confirm forgot
           </Button>
         </>
@@ -130,13 +114,7 @@ const ForgotPasswordContainer: React.FC = () => {
             style={{ paddingBottom: 20 }}
           />
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleResetPassword}
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth onClick={handleResetPassword}>
             Confirm forgot
           </Button>
         </>

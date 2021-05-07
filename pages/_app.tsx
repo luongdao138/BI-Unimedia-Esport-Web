@@ -5,6 +5,8 @@ import { storeWrapper } from '@store/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import '@theme/globalcss/main.scss'
+import { authorizationProvider } from '@services/interceptor'
+// import '@theme/globalcss/main.scss'
 
 import { ThemeProvider } from '@material-ui/core'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -15,6 +17,7 @@ const App: FC<AppProps> = ({ Component, pageProps }: any) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
+
     if (jssStyles) {
       jssStyles.parentElement?.removeChild(jssStyles)
     }
@@ -23,6 +26,7 @@ const App: FC<AppProps> = ({ Component, pageProps }: any) => {
   const Layout = Component.Layout ? Component.Layout : React.Fragment
 
   const store = useStore()
+  authorizationProvider(store)
   return (
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
       <ThemeProvider theme={theme}>
