@@ -61,5 +61,7 @@ const ESButtonTwitter: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) 
   )
 }
 
-ESButtonTwitter.defaultProps = {}
+ESButtonTwitter.defaultProps = {
+  variant: 'contained',
+}
 export default ESButtonTwitter

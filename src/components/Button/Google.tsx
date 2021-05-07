@@ -1,7 +1,9 @@
+import { GoogleLogin, GoogleLoginResponse } from 'react-google-login'
 import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
+import { LoginSocialParams } from '@services/auth.service'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -91,5 +93,25 @@ const ESButtonGoogle: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) =
   )
 }
 
-ESButtonGoogle.defaultProps = {}
-export default ESButtonGoogle
+ESButtonGoogle.defaultProps = {
+  variant: 'contained',
+}
+
+type GoogleButtonProps = { onSuccess?: (param: LoginSocialParams) => void } & ButtonProps
+
+const GoogleButton: React.FC<GoogleButtonProps> = ({ onSuccess, ...rest }) => {
+  const handleResponse = async (response: GoogleLoginResponse) => {
+    const auth = await response.getAuthResponse()
+    !!onSuccess && onSuccess({ social_channel: 'google', access_token: auth.access_token })
+  }
+  return (
+    <GoogleLogin
+      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      render={(renderProps) => <ESButtonGoogle {...rest} onClick={renderProps.onClick} />}
+      onSuccess={handleResponse}
+      cookiePolicy="none"
+      scope="email profile"
+    />
+  )
+}
+export default GoogleButton

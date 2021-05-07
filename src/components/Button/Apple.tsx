@@ -60,5 +60,8 @@ const ESButtonApple: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) =>
     </Button>
   )
 }
+ESButtonApple.defaultProps = {
+  variant: 'contained',
+}
 
 export default ESButtonApple

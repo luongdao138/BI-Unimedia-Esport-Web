@@ -29,6 +29,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
+import ProfileCover from '@components/ProfileCover'
 import ESAvatar from '@components/Avatar'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
@@ -38,8 +39,9 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
+import MainLayout from '@layout/MainLayout'
 
-const Atoms: React.FC = () => {
+const Atoms = () => {
   const [value, setValue] = useState<string>('')
   const [tab, setTab] = useState(0)
   const [state, setState] = useState({
@@ -78,8 +80,6 @@ const Atoms: React.FC = () => {
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
         <ButtonPrimary
-          variant="contained"
-          color="primary"
           round
           onClick={() => {
             alert('aaa')
@@ -87,13 +87,13 @@ const Atoms: React.FC = () => {
         >
           保存する
         </ButtonPrimary>
-        <ButtonPrimary variant="contained" color="primary" round gradient={false}>
+        <ButtonPrimary round gradient={false}>
           キャンセル
         </ButtonPrimary>
-        <ButtonPrimary variant="contained" color="primary" size="small" round={false} gradient={false}>
+        <ButtonPrimary size="small" round={false} gradient={false}>
           small test
         </ButtonPrimary>
-        <ButtonPrimary variant="contained" color="primary" size="large" round disabled>
+        <ButtonPrimary size="large" round disabled>
           Disabled
         </ButtonPrimary>
 
@@ -274,7 +274,8 @@ const Atoms: React.FC = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box margin={4}>
+      <Box position="relative" height={300} pt={23} pl={4} margin={4}>
+        <ProfileCover src="/images/avatar.png" />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>
@@ -287,16 +288,6 @@ const Atoms: React.FC = () => {
         <ESAvatar alt="Dvatar" />
         <ESAvatar alt="Evatar" />
         <ESAvatar alt="Fvatar" />
-        <ESAvatar alt="Gvatar" />
-        <ESAvatar alt="Hvatar" />
-        <ESAvatar alt="Ivatar" />
-        <ESAvatar alt="Jvatar" />
-        <ESAvatar alt="Kvatar" />
-        <ESAvatar alt="あvatar" />
-        <ESAvatar alt="いvatar" />
-        <ESAvatar alt="おvatar" />
-        <ESAvatar alt="うvatar" />
-        <ESAvatar alt="えvatar" />
         <ESAvatar alt="高atar" />
       </Box>
       <Box margin={4}>
@@ -310,7 +301,7 @@ const Atoms: React.FC = () => {
         <Stepper activeStep={step}>
           {['基本データ', 'タグ', '好きなゲーム'].map((label, idx) => (
             <Step key={idx}>
-              <StepButton onClick={() => setStep(idx)}>
+              <StepButton disableRipple onClick={() => setStep(idx)}>
                 <StepLabel>{label}</StepLabel>
               </StepButton>
             </Step>
@@ -335,5 +326,7 @@ const Atoms: React.FC = () => {
     </>
   )
 }
+
+Atoms.Layout = MainLayout
 
 export default Atoms

@@ -108,5 +108,7 @@ const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => 
   )
 }
 
-ESButtonLine.defaultProps = {}
+ESButtonLine.defaultProps = {
+  variant: 'contained',
+}
 export default ESButtonLine

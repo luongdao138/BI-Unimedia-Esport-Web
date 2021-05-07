@@ -4,7 +4,7 @@
   margin: 0 auto;
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
   width: 100%;
-  min-height: 2000px;
+  // min-height: 2000px;
 }
 .main {
   margin-top: 60px;
@@ -65,8 +65,14 @@
   height: 50px;
   overflow: hidden;
   border: 1px solid #ccc;
+  width: '100%';
   border-radius: 6px;
 }
+
+.MuiButtonBase-root.button-primary.full-width {
+  width: '100%';
+}
+
 .MuiButtonBase-root.button-primary.primary-large {
   height: 50px;
   font-size: 16px;
