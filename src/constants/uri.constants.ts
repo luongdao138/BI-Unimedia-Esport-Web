@@ -2,10 +2,11 @@ const DOMAIN = process.env.NEXT_PUBLIC_API
 
 export const URI = {
   DOMAIN,
-  LOGIN: '/auth/login',
-  REGISTER: '/signup/register',
-  FORGOT_PASSWORD: '/passwords/forgot',
-  FORGOT_CONFIRM: '/passwords/confirm',
-  RESET_PASSWORD: '/passwords/reset',
-  USERS_SEARCH: '/users/search',
+  LOGIN: '/v1/auth/login',
+  LOGIN_SOCIAL: '/v1/signup/social',
+  REGISTER: '/v1/signup/register',
+  FORGOT_PASSWORD: '/v1/passwords/forgot',
+  FORGOT_CONFIRM: '/v1/passwords/confirm',
+  RESET_PASSWORD: '/v1/passwords/reset',
+  USERS_SEARCH: '/v1/users/search',
 }

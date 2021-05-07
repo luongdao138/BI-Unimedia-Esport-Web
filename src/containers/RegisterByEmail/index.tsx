@@ -13,9 +13,14 @@ import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 
+import useSocialLogin from '@utils/hooks/useSocialLogin'
+
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const social = useSocialLogin()
+
+  const handleGoogleLogin = (params) => social.login({ ...params, type: 'login' })
 
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
@@ -63,11 +68,11 @@ const RegisterByEmailContainer: React.FC = () => {
         </Box>
 
         <Box pt={8} textAlign="center">
-          <ESButtonTwitter variant="contained" className={classes.submitBtn} />
-          <ESButtonGoogle variant="contained" className={classes.submitBtn} />
-          <ESButtonLine variant="contained" className={classes.submitBtn} />
-          <ESButtonFacebook variant="contained" className={classes.submitBtn} />
-          <ESButtonApple variant="contained" className={classes.submitBtn} />
+          <ESButtonTwitter />
+          <ESButtonGoogle onSuccess={handleGoogleLogin} />
+          <ESButtonLine />
+          <ESButtonFacebook />
+          <ESButtonApple />
         </Box>
 
         <Box pt={4} className={classes.linkContainer}>

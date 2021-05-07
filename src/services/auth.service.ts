@@ -44,8 +44,19 @@ export type UserResetPasswordParams = {
   confirmation_code: string
 }
 
+export type LoginSocialParams = {
+  social_channel: 'google' | 'twitter' | 'apple' | 'facebook' | 'line'
+  access_token: string
+  type?: 'login' | 'register'
+}
+
 export const login = async (params: UserLoginParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.LOGIN, params)
+  return data
+}
+
+export const loginSocial = async (params: LoginSocialParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.LOGIN_SOCIAL, params)
   return data
 }
 

@@ -53,11 +53,7 @@ const SideMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.menu}>
-        <List
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          className={classes.root}
-        >
+        <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
           <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-home" />
@@ -69,6 +65,18 @@ const SideMenu: React.FC = () => {
               <Icon fontSize="small" className="fa fa-trophy" />
             </ListItemIcon>
             <ListItemText className={classes.listText} primary="ロビー" />
+          </ListItem>
+          <ListItem className={classes.list} button disableRipple>
+            <ListItemIcon className={classes.icon}>
+              <Icon fontSize="small" className="fa fa-university" />
+            </ListItemIcon>
+            <ListItemText className={classes.listText} primary="ロビー" />
+          </ListItem>
+          <ListItem className={classes.list} button disableRipple>
+            <ListItemIcon className={classes.icon}>
+              <Icon fontSize="small" className="fa fa-users" />
+            </ListItemIcon>
+            <ListItemText className={classes.listText} primary="コミュニティ" />
           </ListItem>
         </List>
       </Box>
