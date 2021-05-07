@@ -91,8 +91,6 @@ const Atoms = () => {
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
         <ButtonPrimary
-          variant="contained"
-          color="primary"
           round
           onClick={() => {
             alert('aaa')
@@ -100,13 +98,13 @@ const Atoms = () => {
         >
           保存する
         </ButtonPrimary>
-        <ButtonPrimary variant="contained" color="primary" round gradient={false}>
+        <ButtonPrimary round gradient={false}>
           キャンセル
         </ButtonPrimary>
-        <ButtonPrimary variant="contained" color="primary" size="small" round={false} gradient={false}>
+        <ButtonPrimary size="small" round={false} gradient={false}>
           small test
         </ButtonPrimary>
-        <ButtonPrimary variant="contained" color="primary" size="large" round disabled>
+        <ButtonPrimary size="large" round disabled>
           Disabled
         </ButtonPrimary>
 
