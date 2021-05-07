@@ -71,5 +71,7 @@ const ESButtonFacebook: React.FC<ButtonProps> = ({ classes: _classes, ...rest })
   )
 }
 
-ESButtonFacebook.defaultProps = {}
+ESButtonFacebook.defaultProps = {
+  variant: 'contained',
+}
 export default ESButtonFacebook
