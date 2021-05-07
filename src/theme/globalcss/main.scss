@@ -57,8 +57,7 @@
   overflow: hidden;
   cursor: pointer;
   font-weight: bold;
-  font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3',
-    'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
+  font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
     'MS PGothic', sans-serif;
 
   line-height: 1.75;
@@ -87,14 +86,8 @@
   padding: 12px 60px;
 }
 .MuiButtonBase-root.button-primary:not(.Mui-disabled).gradient {
-  background: linear-gradient(
-      234deg,
-      rgb(214, 0, 253) 0%,
-      rgb(252, 94, 102) 100%,
-      rgb(251, 92, 105) 100%,
-      rgb(253, 97, 97) 100%
-    )
-    0% 0% no-repeat padding-box padding-box transparent;
+  background: linear-gradient(234deg, rgb(214, 0, 253) 0%, rgb(252, 94, 102) 100%, rgb(251, 92, 105) 100%, rgb(253, 97, 97) 100%) 0% 0%
+    no-repeat padding-box padding-box transparent;
   border: 1px solid #ff7ef6;
   box-shadow: rgb(225 26 212) 0px 0px 10px;
 }

@@ -17,6 +17,21 @@ export const loginByEmail = createAsyncThunk<services.UserLoginResponse, service
   }
 )
 
+export const loginSocial = createAsyncThunk<services.UserLoginResponse, services.LoginSocialParams>(
+  AUTH_ACTION_TYPE.LOGIN_SOCIAL,
+  async (loginParam, { rejectWithValue }) => {
+    try {
+      const res = await services.loginSocial(loginParam)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const registerByEmail = createAsyncThunk<services.UserLoginResponse, services.UserLoginParams>(
   AUTH_ACTION_TYPE.REGISTER_BY_EMAIL,
   async (registerParam, { rejectWithValue }) => {

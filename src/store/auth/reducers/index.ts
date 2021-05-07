@@ -13,6 +13,9 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.loginByEmail.fulfilled, (state, action) => {
       state.user = action.payload
     })
+    .addCase(actions.loginSocial.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
     .addCase(actions.registerByEmail.fulfilled, (state, action) => {
       state.user = action.payload
     })
