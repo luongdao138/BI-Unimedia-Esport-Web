@@ -8,20 +8,36 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import TagSelect from '@containers/GameSelect/TagSelect'
 import GameSelect from '@containers/GameSelect/GameSelect'
+import UserOtherInfo from './UserOtherInfo'
+
+const FINAL_STEP = 2
 
 const GameSelectContainer: React.FC = () => {
   const classes = useStyles()
-  const [step, setStep] = useState(2)
+  const [step, setStep] = useState(0)
+  const [user] = useState({
+    prefecture: null,
+    gender: null,
+    birthDate: null,
+  })
 
   function getStepViews() {
     switch (step) {
       case 0:
-        return <Box>step1</Box>
+        return <UserOtherInfo user={user} />
       case 1:
         return <TagSelect />
       case 2:
         return <GameSelect />
     }
+  }
+
+  // TODO handle confirm
+  const handleConfirm = () => console.log('CONFIRM')
+
+  const handleButtonClick = () => {
+    if (step == FINAL_STEP) handleConfirm()
+    else setStep(step + 1)
   }
 
   return (
@@ -53,8 +69,8 @@ const GameSelectContainer: React.FC = () => {
         <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
           <Box className={classes.nextBtnHolder}>
             <Box className={classes.nextBtn}>
-              <ButtonPrimary color="primary" fullWidth onClick={() => setStep(step + 1)}>
-                次へ
+              <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
+                {step == FINAL_STEP ? '完了' : '次へ'}
               </ButtonPrimary>
             </Box>
           </Box>
