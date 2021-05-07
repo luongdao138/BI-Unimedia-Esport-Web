@@ -35,5 +35,6 @@ export default {
   common: {
     required: '必須',
     zero: '0',
+    at: '@',
   },
 }
