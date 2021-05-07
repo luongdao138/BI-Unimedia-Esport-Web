@@ -53,11 +53,7 @@ const SideMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.menu}>
-        <List
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          className={classes.root}
-        >
+        <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
           <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-home" />

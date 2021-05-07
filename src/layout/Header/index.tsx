@@ -37,11 +37,7 @@ export const Header: React.FC = () => {
             <div className={classes.search}>search area</div>
             <div className={classes.toolArea}>
               <IconButton color="inherit">
-                <Badge
-                  badgeContent={17}
-                  color="primary"
-                  className={classes.badge}
-                >
+                <Badge badgeContent={17} color="primary" className={classes.badge}>
                   <NotificationsIcon className={classes.icon} />
                 </Badge>
               </IconButton>
