@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { UserSearchResponse, Meta } from '@services/search.service'
+import { UserResponse, Meta } from '@services/search.service'
 
 type StateType = {
-  searchUsers?: Array<UserSearchResponse>
+  searchUsers?: Array<UserResponse>
   searchUsersMeta?: Meta
 }
 

@@ -11,11 +11,11 @@ const getUserSearchMeta = createMetaSelector(actions.userSearch)
 const useUserSearch = () => {
   const dispatch = useAppDispatch()
   const searchUsers = useAppSelector(selectors.getSearchUsers)
-  const paginationMeta = useAppSelector(selectors.getSearchUsersMeta)
+  const page = useAppSelector(selectors.getSearchUsersMeta)
   const meta = useAppSelector(getUserSearchMeta)
   const userSearch = (param: UserSearchParams) => dispatch(actions.userSearch(param))
   const resetMeta = () => dispatch(clearMetaData(actions.userSearch.typePrefix))
-  return { searchUsers, userSearch, resetMeta, meta, paginationMeta }
+  return { searchUsers, userSearch, resetMeta, meta, page }
 }
 
 export default useUserSearch

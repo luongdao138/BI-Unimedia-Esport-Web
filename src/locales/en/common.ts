@@ -37,4 +37,8 @@ export default {
     zero: '0',
     at: '@',
   },
+  home: {
+    follow: 'フォローする',
+    unfollow: 'フォロー中',
+  },
 }

@@ -2,14 +2,16 @@ import { useEffect } from 'react'
 import { Grid, Box } from '@material-ui/core'
 import useUserSearch from './useUserSearch'
 import ESButton from '@components/Button'
-import ESToast from '@components/Toast'
+// import ESToast from '@components/Toast'
 import ESLoader from '@components/Loader'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
+// import { useRouter } from 'next/router'
 
 const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const { searchUsers, userSearch, meta, resetMeta, paginationMeta } = useUserSearch()
+  // const router = useRouter()
+  const { searchUsers, userSearch, meta, page } = useUserSearch()
 
   useEffect(() => {
     userSearch({ page: 1, keyword: 'bab' })
@@ -18,13 +20,11 @@ const UserSearchContainer: React.FC = () => {
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [paginationMeta])
+  }, [page])
 
   function handleScroll() {
     if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return
-
-    if (paginationMeta && paginationMeta.current_page !== paginationMeta.total_pages)
-      userSearch({ page: paginationMeta.current_page + 1, keyword: 'bab' })
+    if (page && page.current_page !== page.total_pages) userSearch({ page: page.current_page + 1, keyword: '' })
   }
 
   return (
@@ -36,13 +36,13 @@ const UserSearchContainer: React.FC = () => {
             key={i}
             rightItem={
               <Box flexShrink={0}>
-                {user.isFollowed ? (
+                {user.attributes.isFollowed ? (
                   <ESButton variant="contained" color="primary" size="medium" round>
-                    フォロー中
+                    {t('common:home.unfollow')}
                   </ESButton>
                 ) : (
                   <ESButton variant="outlined" size="medium" round>
-                    フォローする
+                    {t('common:home.follow')}
                   </ESButton>
                 )}
               </Box>
@@ -57,7 +57,6 @@ const UserSearchContainer: React.FC = () => {
           </Grid>
         )}
       </Grid>
-      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} resetMeta={resetMeta} />}
     </>
   )
 }
