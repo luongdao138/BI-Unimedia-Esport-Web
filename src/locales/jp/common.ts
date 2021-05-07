@@ -35,5 +35,10 @@ export default {
   common: {
     required: '必須',
     zero: '0',
+    at: '@',
+  },
+  home: {
+    follow: 'フォローする',
+    unfollow: 'フォロー中',
   },
 }

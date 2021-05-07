@@ -7,4 +7,5 @@ export const URI = {
   FORGOT_PASSWORD: '/passwords/forgot',
   FORGOT_CONFIRM: '/passwords/confirm',
   RESET_PASSWORD: '/passwords/reset',
+  USERS_SEARCH: '/users/search',
 }

@@ -5,6 +5,7 @@ import { useStore } from 'react-redux'
 import { storeWrapper } from '@store/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import { authorizationProvider } from '@services/interceptor'
 // import '@theme/globalcss/main.scss'
 
 import { ThemeProvider } from '@material-ui/core'
@@ -28,6 +29,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   }, [])
 
   const store = useStore()
+  authorizationProvider(store)
   return (
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
       <ThemeProvider theme={theme}>
