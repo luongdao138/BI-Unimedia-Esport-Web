@@ -23,11 +23,7 @@ const ESCard: React.FC<CardProps> = ({ children, ...rest }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ...props } = rest
   return (
-    <Card
-      {...props}
-      classes={{ root: classes.cardRoot }}
-      className={classes.root}
-    >
+    <Card {...props} classes={{ root: classes.cardRoot }} className={classes.root}>
       {children}
     </Card>
   )

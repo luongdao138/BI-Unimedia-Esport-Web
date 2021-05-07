@@ -10,11 +10,7 @@ const useStyles = makeStyles(() => ({
 
 const ESCardContent: React.FC<CardContentProps> = ({ children, ...rest }) => {
   const classes = useStyles(rest)
-  return (
-    <CardContent classes={{ root: classes.contentRoot }}>
-      {children}
-    </CardContent>
-  )
+  return <CardContent classes={{ root: classes.contentRoot }}>{children}</CardContent>
 }
 
 ESCardContent.defaultProps = {}

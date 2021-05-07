@@ -3,7 +3,7 @@ import { Colors } from '@theme/colors'
 import { breakpointValues } from '@theme/variables'
 
 const font =
-  "'Noto Sans Jp', 'Open Sans', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro',Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif"
+  "'Roboto','Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro',Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif"
 
 export const userBreakpoints = breakpointValues
 
@@ -13,14 +13,14 @@ export default createMuiTheme({
     primary: {
       main: Colors.primary,
       // light: Colors.grey[600],
-      // dark: Colors.grey[950],
+      dark: Colors.grey[900],
       // contrastText: '#fff',
     },
     secondary: {
       main: Colors.secondary,
     },
     background: {
-      default: Colors.black,
+      default: Colors.grey[950],
       paper: '#212121',
     },
     error: {
@@ -31,10 +31,9 @@ export default createMuiTheme({
       secondary: 'rgba(255,255,255,0.3)',
     },
   },
-
-  breakpoints: {
-    values: breakpointValues,
-  },
+  // breakpoints: {
+  //   values: breakpointValues,
+  // },
   typography: {
     fontFamily: font,
     h2: {
@@ -76,6 +75,11 @@ export default createMuiTheme({
         marginBottom: '1em',
       },
     },
+    MuiSnackbar: {
+      root: {
+        left: 0,
+      },
+    },
     MuiCardContent: {
       root: {
         padding: '8px 12px 12px 12px',
@@ -87,6 +91,17 @@ export default createMuiTheme({
     MuiCardMedia: {
       root: {
         padding: '12px 12px 8px 12px',
+      },
+    },
+    MuiContainer: {
+      root: {
+        paddingLeft: 24,
+        paddingRight: 24,
+      },
+    },
+    MuiIcon: {
+      fontSizeSmall: {
+        fontSize: 12,
       },
     },
   },

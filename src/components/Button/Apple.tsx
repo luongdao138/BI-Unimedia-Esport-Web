@@ -2,10 +2,11 @@ import { Button, ButtonProps } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
-import { AccountBalance } from '@material-ui/icons' //temp
+import Icon from '@material-ui/core/Icon'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
+    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#212121',
@@ -19,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: '#212121',
+      background: '#1b1b1b',
     },
   },
   leftIcon: {
@@ -33,16 +33,12 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important',
+    backgroundColor: '#212121 !important',
     color: '#FFF !important',
   },
 }))
 
-const ESButtonApple: React.FC<ButtonProps> = ({
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
+const ESButtonApple: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,7 +54,7 @@ const ESButtonApple: React.FC<ButtonProps> = ({
       }}
       color="primary"
       {...props}
-      startIcon={<AccountBalance />}
+      startIcon={<Icon className="fab fa-apple" />}
     >
       {t('common:button.apple')}
     </Button>

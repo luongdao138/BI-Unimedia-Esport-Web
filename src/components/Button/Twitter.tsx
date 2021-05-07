@@ -2,10 +2,11 @@ import { Button, ButtonProps } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
-import { AccountBalance } from '@material-ui/icons' //temp
+import Icon from '@material-ui/core/Icon'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
+    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#1D9BF0',
@@ -19,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: '#1D9BF0',
+      background: '#1785d0',
     },
   },
   leftIcon: {
@@ -33,17 +33,13 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important', //change it
+    backgroundColor: '#1D9BF0 !important',
     color: '#FFF !important',
   },
 }))
 
-const ESButtonTwitter: React.FC<ButtonProps> = ({
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
-  const classes = useStyles(rest)
+const ESButtonTwitter: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
+  const classes = useStyles()
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ...props } = rest
@@ -58,7 +54,7 @@ const ESButtonTwitter: React.FC<ButtonProps> = ({
       }}
       color="primary"
       {...props}
-      startIcon={<AccountBalance />}
+      startIcon={<Icon className="fab fa-twitter" />}
     >
       {t('common:button.twitter')}
     </Button>

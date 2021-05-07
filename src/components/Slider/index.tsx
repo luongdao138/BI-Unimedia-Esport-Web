@@ -1,28 +1,135 @@
+import React, { ReactElement, useRef } from 'react'
+import { Typography, Box, Link, Theme } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
+import ESIcon from '@components/Icon'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import SwiperCore, { Navigation } from 'swiper/core'
 import { makeStyles } from '@material-ui/core/styles'
 import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
-import React, { ReactElement } from 'react'
+import 'swiper/components/navigation/navigation.min.css'
+SwiperCore.use([Navigation])
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   wrap: {},
+  sliderButtonNext: {
+    width: 30,
+    height: 160,
+    position: 'absolute',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'rgba(255,255,255,.3)',
+    borderRadius: 4,
+    zIndex: 1,
+    background: 'rgba(0,0,0,.7)',
+    backdropFilter: 'blur(1px)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
+    right: theme.spacing(1),
+    top: '50%',
+    transform: 'translateY(-80px)',
+  },
+  sliderButtonPrev: {
+    width: 30,
+    height: 160,
+    position: 'absolute',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'rgba(255,255,255,.3)',
+    borderRadius: 4,
+    zIndex: 1,
+    background: 'rgba(0,0,0,.7)',
+    backdropFilter: 'blur(1px)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer',
+    left: theme.spacing(1),
+    top: '50%',
+    transform: 'translateY(-80px)',
+  },
+  fas: {
+    textAlign: 'center',
+  },
+  moreLink: {
+    marginTop: theme.spacing(1),
+    color: 'rgba(255,255,255,.7)',
+    marginRight: theme.spacing(3),
+  },
+  moreIcon: {
+    marginLeft: theme.spacing(0.5),
+  },
+  slideLarge: {
+    maxWidth: 256,
+  },
+  slideMedium: {
+    maxWidth: 191,
+  },
 }))
 
-const ESSlide: React.FC<{ items: ReactElement[] }> = ({ items, ...rest }) => {
+const ESSlide: React.FC<{ items: ReactElement[]; title?: string; moreLink?: string; large?: boolean }> = ({ items, ...rest }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { ...props } = rest
+  const { title, moreLink, large, ...props } = rest
+  const prevRef = useRef(null)
+  const nextRef = useRef(null)
+
   return (
-    <Swiper
-      slidesPerView={3}
-      spaceBetween={16}
-      {...props}
-      className={classes.wrap}
-    >
-      {items.map((item, index) => {
-        return <SwiperSlide key={index}>{item}</SwiperSlide>
-      })}
-    </Swiper>
+    <div className="slideWrap">
+      <Swiper
+        slidesPerView="auto"
+        spaceBetween={0}
+        {...props}
+        className={classes.wrap}
+        onInit={(swiper) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line no-param-reassign
+          swiper.params.navigation.prevEl = prevRef.current
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line no-param-reassign
+          swiper.params.navigation.nextEl = nextRef.current
+          swiper.navigation.init()
+          swiper.navigation.update()
+        }}
+      >
+        {title && (
+          <Typography slot="container-start" variant="h3" gutterBottom>
+            {title}
+          </Typography>
+        )}
+
+        {items.map((item, index) => {
+          return (
+            <SwiperSlide key={index} className={large ? classes.slideLarge : classes.slideMedium}>
+              {item}
+            </SwiperSlide>
+          )
+        })}
+
+        <div ref={prevRef} className={classes.sliderButtonPrev}>
+          <ESIcon classes={{ root: classes.fas }} className="fas fa-chevron-left" fontSize="small" />
+        </div>
+        <div ref={nextRef} className={classes.sliderButtonNext}>
+          <ESIcon classes={{ root: classes.fas }} className="fas fa-chevron-right" fontSize="small" />
+        </div>
+
+        {moreLink && (
+          <Box slot="container-end" display="flex" justifyContent="flex-end">
+            <Link href={moreLink} className={classes.moreLink}>
+              <Typography>
+                {t('common:common.see_more')}
+                <ESIcon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />
+              </Typography>
+            </Link>
+          </Box>
+        )}
+      </Swiper>
+    </div>
   )
 }
 

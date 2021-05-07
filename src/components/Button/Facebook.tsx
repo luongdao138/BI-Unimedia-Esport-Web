@@ -1,11 +1,11 @@
-import { Button, ButtonProps } from '@material-ui/core'
+import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
-import { AccountBalance } from '@material-ui/icons' //temp
 
 const useStyles = makeStyles((theme) => ({
   contained: {
+    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#1877F2',
@@ -19,8 +19,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: '#1877F2',
+      background: '#0d61ce',
     },
   },
   leftIcon: {
@@ -33,17 +32,13 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important',
+    backgroundColor: '#1877F2 !important',
     color: '#FFF !important',
   },
 }))
 
-const ESButtonFacebook: React.FC<ButtonProps> = ({
-  classes: _classes,
-  className: _className,
-  ...rest
-}) => {
-  const classes = useStyles(rest)
+const ESButtonFacebook: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => {
+  const classes = useStyles()
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ...props } = rest
@@ -58,7 +53,17 @@ const ESButtonFacebook: React.FC<ButtonProps> = ({
       }}
       color="primary"
       {...props}
-      startIcon={<AccountBalance />}
+      startIcon={
+        <SvgIcon>
+          <path
+            id="Path_98"
+            data-name="Path 98"
+            d="M313.837,213.3l.656-4.28h-4.107v-2.777a2.14,2.14,0,0,1,2.413-2.312h1.867v-3.644a22.77,22.77,0,0,0-3.314-.289c-3.382,0-5.593,2.05-5.593,5.761v3.262H302v4.28h3.759V223.65a14.964,14.964,0,0,0,4.627,0V213.3Z"
+            transform="translate(-302 -200)"
+            fill="#fff"
+          />
+        </SvgIcon>
+      }
     >
       {t('common:button.facebook')}
     </Button>

@@ -1,10 +1,33 @@
 import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
+const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children, ...rest }) => {
+  const classes = useStyles()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { cornerIcon } = rest
+
+  return (
+    <>
+      {cornerIcon && (
+        <div className={classes.cornerWrap}>
+          <div className={classes.iconWrap}>{cornerIcon}</div>
+          <div className={classes.triangle}></div>
+        </div>
+      )}
+      <Box className={classes.mediaWrap}>
+        <CardMedia className={classes.media} image={rest.image}>
+          {children}
+        </CardMedia>
+      </Box>
+    </>
+  )
+}
+
 const useStyles = makeStyles(() => ({
   mediaWrap: {
     position: 'relative',
     paddingTop: '50%',
+    overflow: 'hidden',
   },
   media: {
     position: 'absolute',
@@ -36,38 +59,10 @@ const useStyles = makeStyles(() => ({
   },
   iconWrap: {
     position: 'absolute',
-    top: 10,
+    top: 5,
     left: 5,
     zIndex: 1,
   },
 }))
 
-const ESCardMedia: React.FC<
-  CardMediaProps & { cornerIcon?: any; imageUrl: string }
-> = ({ children, ...rest }) => {
-  const classes = useStyles(rest)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { cornerIcon, imageUrl } = rest
-
-  return (
-    <>
-      {cornerIcon && (
-        <div className={classes.cornerWrap}>
-          <div className={classes.iconWrap}>{cornerIcon}</div>
-          <div className={classes.triangle}></div>
-        </div>
-      )}
-      <Box className={classes.mediaWrap}>
-        <CardMedia className={classes.media} image={imageUrl}>
-          {children}
-        </CardMedia>
-      </Box>
-    </>
-  )
-}
-
-ESCardMedia.defaultProps = {
-  cornerIcon: false,
-  imageUrl: '',
-}
 export default ESCardMedia
