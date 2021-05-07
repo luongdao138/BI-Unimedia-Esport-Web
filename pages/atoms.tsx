@@ -36,6 +36,7 @@ import Step from '@components/Step'
 import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
+import ESLoader from '@components/Loader'
 
 const useStyles = makeStyles(() => {
   return {
@@ -110,7 +111,7 @@ const Atoms: React.FC = () => {
           disabled
         </ESButton>
       </Box>
-      <Box>
+      <Box margin={4}>
         <Typography variant="h2" gutterBottom>
           h2 画面タイトルは18px boldで表記します
         </Typography>
@@ -125,10 +126,13 @@ const Atoms: React.FC = () => {
           ※注釈などのテキストは12pxで表記します
         </Typography>
       </Box>
-      <Box>
+      <Box margin={4}>
         <ESChip label="マインクラフト" onDelete={() => {}} />
         <ESChip label="マインクラフト" onClick={() => {}} color="primary" />
         <ESChip label="マインクラフト" onClick={() => {}} />
+      </Box>
+      <Box margin={4}>
+        <ESLoader></ESLoader>
       </Box>
       <Box margin={4}>
         <ESButtonTwitter variant="contained" fullWidth />
