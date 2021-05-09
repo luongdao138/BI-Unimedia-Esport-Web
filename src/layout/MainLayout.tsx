@@ -3,7 +3,7 @@ import { Header } from '@layout/Header'
 import SideMenu from '@containers/SideMenu'
 
 interface MainLayoutProps {
-  patternBg: boolean
+  patternBg?: boolean
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg }) => {

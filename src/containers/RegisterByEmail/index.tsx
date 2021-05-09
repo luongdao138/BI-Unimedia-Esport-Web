@@ -69,7 +69,7 @@ const RegisterByEmailContainer: React.FC = () => {
         <Box pt={8} textAlign="center">
           <ESButtonTwitter />
           <ESButtonGoogle onSuccess={handleSocialLogin} />
-          <ESButtonLine />
+          <ESButtonLine onSuccess={handleSocialLogin} />
           <ESButtonFacebook onSuccess={handleSocialLogin} />
           <ESButtonApple onSuccess={handleSocialLogin} />
         </Box>
