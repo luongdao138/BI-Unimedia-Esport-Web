@@ -35,7 +35,7 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
       selectedValue: '',
     },
     // validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (_values) => {
       //   loginByEmail(values)
       //   console.log('values', values)
       user.prefecture = '1'

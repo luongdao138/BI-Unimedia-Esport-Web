@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles } from '@material-ui/core'
+import { Grid, Typography, Box, Container, Theme, makeStyles, Divider } from '@material-ui/core'
 // import ESButton from '@components/Button'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
@@ -8,44 +8,68 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import TagSelect from '@containers/GameSelect/TagSelect'
 import GameSelect from '@containers/GameSelect/GameSelect'
+import ESChip from '@components/Chip'
 import UserOtherInfo from './UserOtherInfo'
 import useUpdateProfile from './useUpdateProfile'
-import useGetPrefectures from './useGetPrefectures'
+// import useGetPrefectures from './useGetPrefectures'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+// import useUpdateProfile from './useUpdateProfile'
+import settingsStore from '@store/settings'
+import _ from 'lodash'
 
 const FINAL_STEP = 2
+const { selectors, actions } = settingsStore
 
 const GameSelectContainer: React.FC = () => {
+  const dispatch = useAppDispatch()
   const classes = useStyles()
+  const features = useAppSelector(selectors.getFeatures)
+  // eslint-disable-next-line no-console
+  console.log(features)
+  const getFeatures = () => dispatch(actions.getFeatures())
 
+  useEffect(() => {
+    getFeatures()
+  }, [])
   // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
   // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
-  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
-  const { getPrefectures, prefecturesMeta, resetPrefecturesMeta } = useGetPrefectures()
+  const { profileUpdateMeta } = useUpdateProfile()
+  // const { resetGetPrefecturesMeta } = useGetPrefectures()
 
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
     prefecture: null,
     gender: null,
     birthDate: null,
-    tags: null,
+    tags: [],
     favorite_games: null,
   })
+  const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
 
   useEffect(() => {
-    // TODO call endpoints here
-  }, [])
-
-  useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log('profileUpdateMeta', profileUpdateMeta)
   }, [profileUpdateMeta])
 
-  useEffect(() => {
-    console.log('prefecturesMeta', prefecturesMeta)
-  }, [prefecturesMeta])
+  // useEffect(() => {
+    // eslint-disable-next-line no-console
+  //   console.log('prefecturesMeta', prefecturesMeta)
+  // }, [prefecturesMeta])
 
+  // eslint-disable-next-line no-console
   console.log('user', user)
+  const onFeatureSelect = (id: string) => {
+    const newFeatures = [...selectedFeatures];
+    if (selectedFeatures.find((activeId) => activeId === id)) {
+      _.remove(newFeatures, (activeId) => activeId === id)
+    } else {
+      newFeatures.push(id)
+    }
+    setSelectedFeatures(newFeatures);
+  }
+  // console.log('user', user)
 
-  const updateUserData = (data) => {
+  const updateUserData = (_data) => {
     setUser({
       prefecture: '1',
       gender: '1',
@@ -60,17 +84,18 @@ const GameSelectContainer: React.FC = () => {
       case 0:
         return <UserOtherInfo user={user} />
       case 1:
-        return <TagSelect />
+        return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
         return <GameSelect />
     }
   }
 
   // TODO handle confirm
+  // eslint-disable-next-line no-console
   const handleConfirm = () => console.log('CONFIRM')
 
   const handleButtonClick = () => {
-    updateUserData()
+    updateUserData(null)
 
     if (step == FINAL_STEP) handleConfirm()
     else setStep(step + 1)
@@ -102,6 +127,17 @@ const GameSelectContainer: React.FC = () => {
         <Box className={classes.blankSpace}></Box>
       </Grid>
       <Box className={classes.stickyFooter}>
+        {step === 2 ? (
+          <>
+            <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
+              <Box pl={2.5} pt={2}>
+                <ESChip label={'sample'} onDelete={() => null} className={classes.chipSpacing} />
+              </Box>
+            </Container>
+            <Divider />
+          </>
+        ) : null}
+
         <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
           <Box className={classes.nextBtnHolder}>
             <Box className={classes.nextBtn}>
@@ -147,6 +183,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   nextBtn: { minWidth: 280 },
   blankSpace: {
     height: 169,
+  },
+  chipSpacing: {
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   [theme.breakpoints.down('sm')]: {
     container: {

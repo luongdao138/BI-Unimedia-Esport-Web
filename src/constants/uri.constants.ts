@@ -11,4 +11,6 @@ export const URI = {
   USERS_SEARCH: '/v1/users/search',
   PROFILE_UPDATE: '/v1/users/update', // TODO
   GET_PREFECTURES: '/v1/users/update', // TODO
+  USER_SETTINGS: "/v1/users/settings",
+  USER_FEATURES: "/v1/user_features"
 }

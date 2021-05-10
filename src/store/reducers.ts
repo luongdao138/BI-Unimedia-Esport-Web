@@ -4,6 +4,7 @@ import auth from '@store/auth'
 import search from '@store/search'
 import profile from '@store/profile'
 import common from '@store/common'
+import settings from '@store/settings'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   search: search.reducers,
   profile: profile.reducers,
   common: common.reducers,
+  settings: settings.reducers,
 })
 export default reducer
 
