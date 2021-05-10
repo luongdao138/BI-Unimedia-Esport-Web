@@ -9,11 +9,17 @@ import StepButton from '@components/StepButton'
 import TagSelect from '@containers/GameSelect/TagSelect'
 import GameSelect from '@containers/GameSelect/GameSelect'
 import UserOtherInfo from './UserOtherInfo'
+import useUpdateProfile from './useUpdateProfile'
 
 const FINAL_STEP = 2
 
 const GameSelectContainer: React.FC = () => {
   const classes = useStyles()
+
+  // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
+  // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
+  const { profileUpdate, meta, resetMeta } = useUpdateProfile()
+
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
     prefecture: null,

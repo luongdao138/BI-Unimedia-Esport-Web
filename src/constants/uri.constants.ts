@@ -9,4 +9,5 @@ export const URI = {
   FORGOT_CONFIRM: '/v1/passwords/confirm',
   RESET_PASSWORD: '/v1/passwords/reset',
   USERS_SEARCH: '/v1/users/search',
+  PROFILE_UPDATE: '/v1/users/update', // TODO
 }
