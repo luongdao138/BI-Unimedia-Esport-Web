@@ -47,6 +47,7 @@ export type UserResetPasswordParams = {
 export type LoginSocialParams = {
   social_channel: 'google' | 'twitter' | 'apple' | 'facebook' | 'line'
   access_token: string
+  access_token_secret?: string
   type?: 'login' | 'register'
 }
 
