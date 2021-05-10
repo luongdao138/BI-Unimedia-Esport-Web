@@ -11,7 +11,6 @@ import GameSelect from '@containers/GameSelect/GameSelect'
 import ESChip from '@components/Chip'
 import UserOtherInfo from './UserOtherInfo'
 import useUpdateProfile from './useUpdateProfile'
-import useGetPrefectures from './useGetPrefectures'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import settingsStore from '@store/settings'
 import _ from 'lodash'
@@ -27,16 +26,10 @@ const GameSelectContainer: React.FC = () => {
   console.log(features)
   const getFeatures = () => dispatch(actions.getFeatures())
 
-  useEffect(() => {
-    getFeatures()
-  }, [])
-
   // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
   // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { getPrefectures, getPrefecturesMeta, resetGetPrefecturesMeta } = useGetPrefectures()
 
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
@@ -49,14 +42,13 @@ const GameSelectContainer: React.FC = () => {
   const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('profileUpdateMeta', profileUpdateMeta)
-  }, [profileUpdateMeta])
+    getFeatures()
+  }, [])
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log('getPrefecturesMeta', getPrefecturesMeta)
-  }, [getPrefecturesMeta])
+    console.log('profileUpdateMeta', profileUpdateMeta)
+  }, [profileUpdateMeta])
 
   // eslint-disable-next-line no-console
   console.log('user', user)

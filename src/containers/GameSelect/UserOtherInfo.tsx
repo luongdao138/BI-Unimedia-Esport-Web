@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Grid, Box, Container, Theme, makeStyles } from '@material-ui/core'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
 import { useFormik } from 'formik'
+import { GENDER } from '@constants/common.constants'
+import useGetPrefectures from './useGetPrefectures'
 
 export type UserOtherInfoParams = {
   email: string
@@ -22,11 +24,41 @@ interface UserOtherInfoProps {
   user: User // TODO use global type instead
 }
 
+const genders = [
+  {
+    value: GENDER.MALE,
+    label: '男性',
+  },
+  {
+    value: GENDER.FEMALE,
+    label: '女性',
+  },
+  {
+    value: GENDER.OTHER,
+    label: 'その他',
+  },
+]
+
 const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
   const classes = useStyles()
   //   const { t } = useTranslation(['common'])
   //   const router = useRouter()
-  //   const { loginByEmail, meta, resetMeta } = useLoginByEmail()
+
+  const { prefectures, getPrefectures } = useGetPrefectures()
+
+  useEffect(() => {
+    getPrefectures({})
+  }, [])
+
+  const memoizedPrefectures = useMemo(() => {
+    if (prefectures && prefectures.data) {
+      return prefectures.data.map((prefecture) => ({
+        label: prefecture.attributes.area,
+        value: prefecture.id,
+      }))
+    }
+  }, [prefectures])
+
   const { handleChange, values, handleSubmit } = useFormik<UserOtherInfoParams>({
     initialValues: {
       email: '',
@@ -74,11 +106,12 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
         <Grid item xs={8}>
           <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} fullWidth>
             <option value="">都道府県</option>
-            {items.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
+            {memoizedPrefectures &&
+              memoizedPrefectures.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
           </ESSelect>
         </Grid>
         <Grid item xs={4}></Grid>
@@ -93,7 +126,7 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
         <Grid item xs={8}>
           <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} fullWidth>
             <option value="">性別</option>
-            {items.map((item) => (
+            {genders.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>
