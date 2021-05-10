@@ -1,51 +1,39 @@
-import { createRef, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Grid, Typography, Box, Container, Theme, makeStyles, Divider } from '@material-ui/core'
-// import ESButton from '@components/Button'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
-import TagSelect from '@containers/GameSelect/TagSelect'
-import GameSelect from '@containers/GameSelect/GameSelect'
+import TagSelect from '@containers/UserSettings/TagSelect'
+import GameSelect from '@containers/UserSettings/GameSelect'
 import ESChip from '@components/Chip'
 import UserOtherInfo from './UserOtherInfo'
 import useUpdateProfile from './useUpdateProfile'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import settingsStore from '@store/settings'
+import useSettings from './useSettings'
 import _ from 'lodash'
 import { GameTitlesResponse } from '@services/settings.service'
 
 const FINAL_STEP = 2
-const { selectors, actions } = settingsStore
 
-const GameSelectContainer: React.FC = () => {
-  const dispatch = useAppDispatch()
+const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
   const userOtherInfoRef = useRef()
-  const features = useAppSelector(selectors.getFeatures)
-  const gameTitles = useAppSelector(selectors.getAllGameTitles)
-  // eslint-disable-next-line no-console
-  console.log(features)
-  const getFeatures = () => dispatch(actions.getFeatures())
-  const getGameTitles = () => dispatch(actions.getAllGameTitles())
+  const { features, gameTitles, getFeatures, getGameTitles } = useSettings()
 
   useEffect(() => {
     getFeatures()
     getGameTitles()
   }, [])
 
-  // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
-  // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
   const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
 
   const [step, setStep] = useState(0)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [user, setUser] = useState({
     prefecture: null,
     gender: null,
     birthDate: null,
-    tags: [],
-    favorite_games: null,
   })
   const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
   const [selectedGTitles, setSelectedGTitles] = useState([] as GameTitlesResponse)
@@ -127,12 +115,8 @@ const GameSelectContainer: React.FC = () => {
   const handleButtonClick = () => {
     updateUserData(null)
     if (userOtherInfoRef && userOtherInfoRef.current) {
-      userOtherInfoRef.current.saveUserOtherInfo()
+      (userOtherInfoRef as any).current.saveUserOtherInfo()
     }
-
-    console.log('UserOtherInfo changed', userOtherInfoData)
-    console.log('selectedGTitles', selectedGTitles)
-    console.log('selectedFeatures', selectedFeatures)
 
     profileUpdate({
       ...userOtherInfoData,
@@ -259,4 +243,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
-export default GameSelectContainer
+
+export default UserSettingsContainer

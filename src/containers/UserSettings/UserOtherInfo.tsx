@@ -36,7 +36,7 @@ const genders = [
   },
 ]
 
-const UserOtherInfo: React.FC<UserOtherInfoProps> = forwardRef(({ user, onDataChange }, ref) => {
+const UserOtherInfo: React.FC<UserOtherInfoProps> = forwardRef(({ onDataChange }, ref) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   //   const router = useRouter()
