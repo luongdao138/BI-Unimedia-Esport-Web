@@ -1,5 +1,5 @@
 import UserSearchContainer from '@containers/Search/UserSearch'
-import MainLayout from '@layout/MainLayout'
+import MainLayout from '@layouts/MainLayout'
 
 const SearchPage = () => {
   return <UserSearchContainer />
