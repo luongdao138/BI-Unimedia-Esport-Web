@@ -25,6 +25,8 @@ import ESSlider from '@components/Slider'
 import ESInput from '@components/Input'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
+import ESMenu from '@components/Menu'
+import ESMenuItem from '@components/Menu/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
@@ -154,6 +156,13 @@ const Atoms = () => {
         <ESButtonGoogleCircle />
         <ESButtonAppleCircle />
       </Box>
+      <ESMenu>
+        <ESMenuItem onClick={() => console.log('プロフィールを編集')}>プロフィールを編集</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('大会履歴')}>大会履歴</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('アクティビティ')}>アクティビティ</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('QRコード')}>QRコード</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('ログアウト')}>ログアウト</ESMenuItem>
+      </ESMenu>
       <Box margin={4}>
         <Grid xs={3}>
           <ESCard>
