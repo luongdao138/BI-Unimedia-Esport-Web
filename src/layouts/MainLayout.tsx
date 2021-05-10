@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header } from '@layout/Header'
+import { Header } from '@layouts/Header'
 import SideMenu from '@containers/SideMenu'
 
 interface MainLayoutProps {
