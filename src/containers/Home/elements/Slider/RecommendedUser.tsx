@@ -33,6 +33,7 @@ export const RecommendedUser: React.FC = () => {
       moreLink="#"
       navigation={false}
       width={84}
+      disableResponsiveWidth
       items={[
         <Box key="1" className={classes.wrap}>
           <ESAvatar src="https://picsum.photos/id/100/300/300" />
