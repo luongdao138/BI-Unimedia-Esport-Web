@@ -1,14 +1,14 @@
-import HomeContainer from '@containers/Home'
-import MainLayout from '@layouts/MainLayout'
+import TopContainer from '@containers/Top'
+import LandingPageLayout from '@layouts/LandingPageLayout'
 
-const HomePage = () => {
+const TopPage = () => {
   return (
-    <MainLayout>
-      <HomeContainer />
-    </MainLayout>
+    <LandingPageLayout>
+      <TopContainer />
+    </LandingPageLayout>
   )
 }
 
-HomePage.Layout = MainLayout
+TopPage.Layout = LandingPageLayout
 
-export default HomePage
+export default TopPage
