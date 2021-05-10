@@ -123,15 +123,35 @@ const TopContainer: React.FC = () => {
               </Typography>
             </Grid>
             <Box className={classes.bottomInnerContent}>
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
-              <RecruitingTournament />
+              <Grid container spacing={0}>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+                <Grid item xs={4}>
+                  <RecruitingTournament />
+                </Grid>
+              </Grid>
               <Box slot="container-end" display="flex" justifyContent="flex-end">
                 <Link href={'#'} className={classes.moreLink}>
                   <Typography>
@@ -246,12 +266,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   bottomInnerContent: {
     marginBottom: 100,
-    display: 'flex',
-    flexWrap: 'wrap',
-    '& > *': {
-      width: '33%',
-      flexGrow: 1,
-    },
+    margin: '0 auto',
+    maxWidth: 755,
   },
   moreLink: {
     marginTop: theme.spacing(1),
