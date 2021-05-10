@@ -1,14 +1,10 @@
 import TopContainer from '@containers/Top'
-import LandingPageLayout from '@layouts/LandingPageLayout'
+import PlainLayout from '@layouts/PlainLayout'
 
 const TopPage = () => {
-  return (
-    <LandingPageLayout>
-      <TopContainer />
-    </LandingPageLayout>
-  )
+  return <TopContainer />
 }
 
-TopPage.Layout = LandingPageLayout
+TopPage.Layout = PlainLayout
 
 export default TopPage
