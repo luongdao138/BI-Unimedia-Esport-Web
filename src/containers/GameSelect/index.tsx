@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { createRef, useEffect, useRef, useState } from 'react'
 import { Grid, Typography, Box, Container, Theme, makeStyles, Divider } from '@material-ui/core'
 // import ESButton from '@components/Button'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -10,7 +10,7 @@ import TagSelect from '@containers/GameSelect/TagSelect'
 import GameSelect from '@containers/GameSelect/GameSelect'
 import ESChip from '@components/Chip'
 import UserOtherInfo from './UserOtherInfo'
-// import useUpdateProfile from './useUpdateProfile'
+import useUpdateProfile from './useUpdateProfile'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import settingsStore from '@store/settings'
 import _ from 'lodash'
@@ -22,6 +22,7 @@ const { selectors, actions } = settingsStore
 const GameSelectContainer: React.FC = () => {
   const dispatch = useAppDispatch()
   const classes = useStyles()
+  const userOtherInfoRef = useRef()
   const features = useAppSelector(selectors.getFeatures)
   const gameTitles = useAppSelector(selectors.getAllGameTitles)
   // eslint-disable-next-line no-console
@@ -36,7 +37,7 @@ const GameSelectContainer: React.FC = () => {
 
   // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
   // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
-  // const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
+  const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
 
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
@@ -51,12 +52,9 @@ const GameSelectContainer: React.FC = () => {
   const [unselectedGTitles, setUnselectedGTitles] = useState([] as GameTitlesResponse)
 
   useEffect(() => {
-    getFeatures()
-  }, [])
-
-  // useEffect(() => {
-  //   console.log('profileUpdateMeta', profileUpdateMeta)
-  // }, [profileUpdateMeta])
+    // eslint-disable-next-line no-console
+    console.log('profileUpdateMeta', profileUpdateMeta)
+  }, [profileUpdateMeta])
 
   useEffect(() => {
     setUnselectedGTitles([...gameTitles])
@@ -96,19 +94,25 @@ const GameSelectContainer: React.FC = () => {
   // console.log('user', user)
 
   const updateUserData = (_data) => {
-    setUser({
-      prefecture: '1',
-      gender: '1',
-      birthDate: '1',
-      tags: [],
-      favorite_games: [],
-    })
+    // setUser({
+    //   prefecture: '1',
+    //   gender: '1',
+    //   birthDate: '1',
+    //   tags: [],
+    //   favorite_games: [],
+    // })
+  }
+
+  const [userOtherInfoData, setUserOtherInfoData] = useState(null)
+  const onUserOtherInfoChanged = (data) => {
+    // eslint-disable-next-line no-console
+    setUserOtherInfoData(data)
   }
 
   function getStepViews() {
     switch (step) {
       case 0:
-        return <UserOtherInfo user={user} />
+        return <UserOtherInfo ref={userOtherInfoRef} user={user} onDataChange={onUserOtherInfoChanged} />
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
@@ -122,6 +126,19 @@ const GameSelectContainer: React.FC = () => {
 
   const handleButtonClick = () => {
     updateUserData(null)
+    if (userOtherInfoRef && userOtherInfoRef.current) {
+      userOtherInfoRef.current.saveUserOtherInfo()
+    }
+
+    console.log('UserOtherInfo changed', userOtherInfoData)
+    console.log('selectedGTitles', selectedGTitles)
+    console.log('selectedFeatures', selectedFeatures)
+
+    profileUpdate({
+      ...userOtherInfoData,
+      game_titles: selectedGTitles.map((gameTitle) => parseInt(gameTitle.id)),
+      features: selectedFeatures.map((feature) => parseInt(feature)),
+    })
 
     if (step == FINAL_STEP) handleConfirm()
     else setStep(step + 1)
