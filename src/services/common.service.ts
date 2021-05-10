@@ -5,12 +5,8 @@ import { URI } from '@constants/uri.constants'
 export type GetPrefecturesParams = {}
 
 export type GetPrefecturesResponse = {
-  data: any //Array<ProfileResponse>
+  data: any
 }
-
-// export type ProfileResponse = {
-//   attributes: any
-// }
 
 export const getPrefectures = async (params: GetPrefecturesParams): Promise<GetPrefecturesResponse> => {
   const { data } = await api.get<GetPrefecturesResponse>(URI.GET_PREFECTURES, { params })

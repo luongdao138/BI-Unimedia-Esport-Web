@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Grid, Typography, Box, Container, Theme, makeStyles, Divider } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
@@ -8,36 +8,41 @@ import StepButton from '@components/StepButton'
 import TagSelect from '@containers/UserSettings/TagSelect'
 import GameSelect from '@containers/UserSettings/GameSelect'
 import ESChip from '@components/Chip'
-import UserOtherInfo from './UserOtherInfo'
+import BasicInfo from './BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
+import useGetPrefectures from './useGetPrefectures'
 import useSettings from './useSettings'
 import _ from 'lodash'
 import { GameTitlesResponse } from '@services/settings.service'
 
 const FINAL_STEP = 2
+const BASIC_INFO_INIT_STATE = {
+  sex: null,
+  show_sex: false,
+  birth_date: null,
+  show_birth_date: false,
+  area_id: null,
+  show_area: false,
+}
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
-  const userOtherInfoRef = useRef()
+  const basicInfoRef = useRef(null)
+  const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
+  const { prefectures, getPrefectures } = useGetPrefectures()
   const { features, gameTitles, getFeatures, getGameTitles } = useSettings()
+  const [step, setStep] = useState(0)
+  const [basicInfoData, setBasicInfoData] = useState(BASIC_INFO_INIT_STATE)
+  const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
+  const [selectedGameTitles, setSelectedGameTitles] = useState([] as GameTitlesResponse)
+  const [unselectedGameTitles, setUnselectedGameTitles] = useState([] as GameTitlesResponse)
+  const [userSettingsValues, setUserSettingsValues] = useState(null)
 
   useEffect(() => {
     getFeatures()
     getGameTitles()
+    getPrefectures({})
   }, [])
-
-  const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
-
-  const [step, setStep] = useState(0)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [user, setUser] = useState({
-    prefecture: null,
-    gender: null,
-    birthDate: null,
-  })
-  const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
-  const [selectedGTitles, setSelectedGTitles] = useState([] as GameTitlesResponse)
-  const [unselectedGTitles, setUnselectedGTitles] = useState([] as GameTitlesResponse)
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -45,7 +50,7 @@ const UserSettingsContainer: React.FC = () => {
   }, [profileUpdateMeta])
 
   useEffect(() => {
-    setUnselectedGTitles([...gameTitles])
+    setUnselectedGameTitles([...gameTitles])
   }, [gameTitles])
 
   const onFeatureSelect = (id: string) => {
@@ -59,68 +64,80 @@ const UserSettingsContainer: React.FC = () => {
   }
 
   const onGameTitleClick = (game: GameTitlesResponse[0]) => {
-    const newUnselected = [...unselectedGTitles]
-    const newSelected = [...selectedGTitles]
+    const newUnselected = [...unselectedGameTitles]
+    const newSelected = [...selectedGameTitles]
     if (newUnselected.find((unselectedId) => unselectedId.id === game.id)) {
       _.remove(newUnselected, (unselectedId) => unselectedId.id === game.id)
       newSelected.push(game)
     }
-    setUnselectedGTitles(newUnselected)
-    setSelectedGTitles(newSelected)
+    setUnselectedGameTitles(newUnselected)
+    setSelectedGameTitles(newSelected)
   }
 
   const onGameSelectionRemove = (game: GameTitlesResponse[0]) => {
-    const newUnselected = [...unselectedGTitles]
-    const newSelected = [...selectedGTitles]
+    const newUnselected = [...unselectedGameTitles]
+    const newSelected = [...selectedGameTitles]
     if (newSelected.find((selected) => selected.id === game.id)) {
       _.remove(newSelected, (selected) => selected.id === game.id)
       newUnselected.push(game)
     }
-    setUnselectedGTitles(newUnselected)
-    setSelectedGTitles(newSelected)
-  }
-  // console.log('user', user)
-
-  const updateUserData = (_data) => {
-    // setUser({
-    //   prefecture: '1',
-    //   gender: '1',
-    //   birthDate: '1',
-    //   tags: [],
-    //   favorite_games: [],
-    // })
+    setUnselectedGameTitles(newUnselected)
+    setSelectedGameTitles(newSelected)
   }
 
-  const [userOtherInfoData, setUserOtherInfoData] = useState(null)
-  const onUserOtherInfoChanged = (data) => {
-    // eslint-disable-next-line no-console
-    setUserOtherInfoData(data)
+  const onBasicInfoChanged = (data) => {
+    setBasicInfoData(data)
+
+    setUserSettingsValues({
+      sex: data.sex ? parseInt(data.sex) : null,
+      show_sex: data.show_sex,
+      birth_date: data.birth_date ? data.birth_date : null,
+      show_birth_date: data.show_birth_date,
+      area_id: data.area_id ? parseInt(data.area_id) : null,
+      show_area: data.show_area,
+      game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
+      features: selectedFeatures.map((feature) => parseInt(feature)),
+    })
   }
 
   function getStepViews() {
     switch (step) {
       case 0:
-        return <UserOtherInfo ref={userOtherInfoRef} user={user} onDataChange={onUserOtherInfoChanged} />
+        return <BasicInfo ref={basicInfoRef} profile={basicInfoData} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
-        return <GameSelect gameTitles={unselectedGTitles} onGameSelect={onGameTitleClick} />
+        return <GameSelect gameTitles={unselectedGameTitles} onGameSelect={onGameTitleClick} />
     }
   }
+
+  const memoizedData = useMemo(() => {
+    if (userSettingsValues) {
+      return userSettingsValues
+    }
+  }, [userSettingsValues])
+
+  useEffect(() => {
+    if (memoizedData) profileUpdate(memoizedData)
+  }, [memoizedData])
 
   // TODO handle confirm
   // eslint-disable-next-line no-console
   const handleConfirm = () => console.log('CONFIRM')
 
   const handleButtonClick = () => {
-    updateUserData(null)
-    if (userOtherInfoRef && userOtherInfoRef.current) {
-      (userOtherInfoRef as any).current.saveUserOtherInfo()
+    if (basicInfoRef && basicInfoRef.current) {
+      basicInfoRef.current.saveBasicInfo()
     }
 
-    profileUpdate({
-      ...userOtherInfoData,
-      game_titles: selectedGTitles.map((gameTitle) => parseInt(gameTitle.id)),
+    setUserSettingsValues({
+      sex: basicInfoData.sex ? parseInt(basicInfoData.sex) : null,
+      show_sex: basicInfoData.show_sex,
+      birth_date: basicInfoData.birth_date ? basicInfoData.birth_date : null,
+      show_birth_date: basicInfoData.show_birth_date,
+      area_id: basicInfoData.area_id ? parseInt(basicInfoData.area_id) : null,
+      show_area: basicInfoData.show_area,
+      game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
       features: selectedFeatures.map((feature) => parseInt(feature)),
     })
 
@@ -158,7 +175,7 @@ const UserSettingsContainer: React.FC = () => {
           <>
             <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
               <Box pl={2.5} pt={2}>
-                {selectedGTitles.map((game) => (
+                {selectedGameTitles.map((game) => (
                   <ESChip
                     key={game.id}
                     label={game.attributes.display_name}
@@ -216,7 +233,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nextBtn: { minWidth: 280 },
   blankSpace: {
-    height: 169,
+    height: 300,
   },
   chipSpacing: {
     marginRight: theme.spacing(2),

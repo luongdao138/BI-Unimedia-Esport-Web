@@ -1,22 +1,30 @@
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useState } from 'react'
 import { Grid, Box, Container, Theme, makeStyles } from '@material-ui/core'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
-import ESButton from '@components/Button'
 import { useFormik } from 'formik'
 import { GENDER } from '@constants/common.constants'
-import useGetPrefectures from './useGetPrefectures'
 import { DropdownDate } from './date-dropdown.component'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import { formatDate } from './date-dropdown-helper'
 
-export type UserOtherInfoParams = {
+export type BasicInfoParams = {
   selectedPrefecture: string
   selectedGender: string
 }
 
-interface UserOtherInfoProps {
-  user: any // TODO use global type instead
+type BasicInfo = {
+  sex: string
+  show_sex: boolean
+  birth_date: string
+  show_birth_date: boolean
+  area_id: string
+  show_area: boolean
+}
+
+interface BasicInfoProps {
+  profile: BasicInfo
+  prefectures: any
   ref: any
   onDataChange: (data: any) => void
 }
@@ -36,23 +44,17 @@ const genders = [
   },
 ]
 
-const UserOtherInfo: React.FC<UserOtherInfoProps> = forwardRef(({ onDataChange }, ref) => {
+const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, onDataChange }, ref) => {
   const classes = useStyles()
-  const { t } = useTranslation(['common'])
-  //   const router = useRouter()
+  // const { t } = useTranslation(['common'])
 
-  const { prefectures, getPrefectures } = useGetPrefectures()
-  const [date, setDate] = useState({ date: null, selectedDate: '2020-03-03' })
+  const [date, setDate] = useState({ date: null, selectedDate: profile.birth_date ? profile.birth_date : null })
 
   useImperativeHandle(ref, () => ({
-    saveUserOtherInfo() {
+    saveBasicInfo() {
       handleSubmit()
     },
   }))
-
-  useEffect(() => {
-    getPrefectures({})
-  }, [])
 
   const memoizedPrefectures = useMemo(() => {
     if (prefectures && prefectures.data) {
@@ -63,28 +65,28 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = forwardRef(({ onDataChange }
     }
   }, [prefectures])
 
-  const { handleChange, values, handleSubmit } = useFormik<UserOtherInfoParams>({
+  const { handleChange, values, handleSubmit } = useFormik<BasicInfoParams>({
     initialValues: {
-      selectedPrefecture: '',
-      selectedGender: '',
+      selectedPrefecture: profile.area_id ? profile.area_id : '',
+      selectedGender: profile.sex ? profile.sex : '',
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSubmit: (values) => {
       onDataChange({
-        sex: values.selectedGender ? parseInt(values.selectedGender) : null,
+        sex: values.selectedGender,
         show_sex: checkboxStates.isShowGender,
         birth_date: date.selectedDate ? date.selectedDate : null,
         show_birth_date: checkboxStates.isShowBirthdate,
-        area_id: values.selectedPrefecture ? parseInt(values.selectedPrefecture) : null,
+        area_id: values.selectedPrefecture,
         show_area: checkboxStates.isShowPrefecture,
       })
     },
   })
 
   const [checkboxStates, setCheckboxStates] = useState({
-    isShowPrefecture: false,
-    isShowGender: false,
-    isShowBirthdate: false,
+    isShowPrefecture: profile.show_area,
+    isShowGender: profile.show_sex,
+    isShowBirthdate: profile.show_birth_date,
   })
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,4 +192,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default UserOtherInfo
+export default BasicInfo
