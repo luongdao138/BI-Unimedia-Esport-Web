@@ -3,7 +3,7 @@ import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import Image from 'next/image'
-import ESButton from '@components/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
 import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
 import ESButtonTwitter from '@components/Button/Twitter'
@@ -65,18 +65,9 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={5} pb={8} className={classes.buttonContainer} textAlign="center">
-          <ESButton
-            variant="contained"
-            color="primary"
-            round
-            gradient
-            size="large"
-            minWidth={280}
-            className={classes.submitBtn}
-            onClick={() => router.push('/register/by-email')}
-          >
+          <ButtonPrimary round className={classes.submitBtn} onClick={() => router.push('/register/by-email')}>
             {t('common:register.button')}
-          </ESButton>
+          </ButtonPrimary>
         </Box>
 
         <Box width="100%">
@@ -84,11 +75,11 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={8} textAlign="center">
-          <ESButtonTwitter variant="contained" className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonGoogle variant="contained" className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonLine variant="contained" className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonFacebook variant="contained" className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonApple variant="contained" className={classes.submitBtn} onSuccess={handleSocialLogin} />
+          <ESButtonTwitter className={classes.submitBtn} onSuccess={handleSocialLogin} />
+          <ESButtonGoogle className={classes.submitBtn} onSuccess={handleSocialLogin} />
+          <ESButtonLine className={classes.submitBtn} onSuccess={handleSocialLogin} />
+          <ESButtonFacebook className={classes.submitBtn} onSuccess={handleSocialLogin} />
+          <ESButtonApple className={classes.submitBtn} onSuccess={handleSocialLogin} />
         </Box>
 
         <Box pt={4} className={classes.linkContainer}>

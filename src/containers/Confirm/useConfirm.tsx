@@ -25,6 +25,7 @@ const useConfirm = (confirmationCode: string) => {
   useEffect(() => {
     if (metaConfirm.loaded) {
       router.push('/register/profile')
+      resetMeta()
     }
   }, [metaConfirm.loaded])
 

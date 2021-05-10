@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
-import ESButton from '@components/Button'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -11,14 +10,14 @@ import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useRegisterByEmail from './useRegisterByEmail'
-import { useRouter } from 'next/router'
 import ESStrengthMeter from '@components/StrengthMeter'
+import ButtonPrimary from '@components/ButtonPrimary'
+import ESLoader from '@components/FullScreenLoader'
 
 const RegisterByEmailContainer: React.FC = () => {
-  const router = useRouter()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { meta, registerByEmail } = useRegisterByEmail()
+  const { registerByEmail, meta } = useRegisterByEmail()
   const [score, setScore] = useState(0)
 
   const validationSchema = Yup.object().shape({
@@ -51,12 +50,6 @@ const RegisterByEmailContainer: React.FC = () => {
       }
     },
   })
-
-  useEffect(() => {
-    if (meta.loaded) {
-      router.push('/register/confirm')
-    }
-  }, [meta.loaded])
 
   const buttonActive = (): boolean => {
     return values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== '' && score > 40
@@ -114,22 +107,13 @@ const RegisterByEmailContainer: React.FC = () => {
         </Box>
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
-            <ESButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              round
-              gradient
-              size="large"
-              minWidth={280}
-              className={classes.submitBtn}
-              disabled={!buttonActive()}
-            >
+            <ButtonPrimary type="submit" round className={classes.submitBtn} disabled={!buttonActive()}>
               {t('common:register_by_email.button')}
-            </ESButton>
+            </ButtonPrimary>
           </Box>
         </Box>
       </form>
+      {meta.pending && <ESLoader open={meta.pending} />}
     </>
   )
 }

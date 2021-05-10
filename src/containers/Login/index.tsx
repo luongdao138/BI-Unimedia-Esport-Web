@@ -1,9 +1,7 @@
-import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import * as Yup from 'yup'
-import { useRouter } from 'next/router'
 import useLoginByEmail from './useLoginByEmail'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -21,6 +19,7 @@ import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import useSocialLogin from '@utils/hooks/useSocialLogin'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Required').email(),
@@ -28,9 +27,9 @@ const validationSchema = Yup.object().shape({
 })
 
 const LoginContainer: React.FC = () => {
+  const social = useSocialLogin()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
   const { loginByEmail, meta, resetMeta } = useLoginByEmail()
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
@@ -44,11 +43,7 @@ const LoginContainer: React.FC = () => {
     },
   })
 
-  useEffect(() => {
-    if (meta.loaded) {
-      router.push('/welcome')
-    }
-  }, [meta.loaded])
+  const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
 
   return (
     <>
@@ -131,11 +126,11 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pt={8} textAlign="center">
-            <ESButtonTwitter variant="contained" className={classes.submitBtn} />
-            <ESButtonGoogle variant="contained" className={classes.submitBtn} />
-            <ESButtonLine variant="contained" className={classes.submitBtn} />
-            <ESButtonFacebook variant="contained" className={classes.submitBtn} />
-            <ESButtonApple variant="contained" className={classes.submitBtn} />
+            <ESButtonTwitter className={classes.submitBtn} onSuccess={handleSocialLogin} />
+            <ESButtonGoogle className={classes.submitBtn} onSuccess={handleSocialLogin} />
+            <ESButtonLine className={classes.submitBtn} onSuccess={handleSocialLogin} />
+            <ESButtonFacebook className={classes.submitBtn} onSuccess={handleSocialLogin} />
+            <ESButtonApple className={classes.submitBtn} onSuccess={handleSocialLogin} />
           </Box>
         </Box>
       </Box>

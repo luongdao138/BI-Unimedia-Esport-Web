@@ -4,11 +4,11 @@ import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESButton from '@components/Button'
 import useConfirm from './useConfirm'
 import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 const ConfirmContainer: React.FC = () => {
   const router = useRouter()
@@ -64,19 +64,9 @@ const ConfirmContainer: React.FC = () => {
 
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
-          <ESButton
-            onClick={handleSubmit}
-            variant="contained"
-            color="primary"
-            round
-            gradient
-            size="large"
-            minWidth={280}
-            className={classes.submitBtn}
-            disabled={!buttonActive()}
-          >
+          <ButtonPrimary onClick={handleSubmit} round className={classes.submitBtn} disabled={!buttonActive()}>
             {t('common:register_by_email.button')}
-          </ESButton>
+          </ButtonPrimary>
         </Box>
       </Box>
       {metaConfirm.pending && <ESLoader open={metaConfirm.pending} />}
