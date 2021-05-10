@@ -35,7 +35,8 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
       selectedValue: '',
     },
     // validationSchema,
-    onSubmit: (_values) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onSubmit: (values) => {
       //   loginByEmail(values)
       //   console.log('values', values)
       user.prefecture = '1'

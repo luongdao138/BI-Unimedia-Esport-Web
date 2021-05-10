@@ -11,9 +11,8 @@ import GameSelect from '@containers/GameSelect/GameSelect'
 import ESChip from '@components/Chip'
 import UserOtherInfo from './UserOtherInfo'
 import useUpdateProfile from './useUpdateProfile'
-// import useGetPrefectures from './useGetPrefectures'
+import useGetPrefectures from './useGetPrefectures'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-// import useUpdateProfile from './useUpdateProfile'
 import settingsStore from '@store/settings'
 import _ from 'lodash'
 
@@ -31,10 +30,13 @@ const GameSelectContainer: React.FC = () => {
   useEffect(() => {
     getFeatures()
   }, [])
+
   // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
   // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
-  const { profileUpdateMeta } = useUpdateProfile()
-  // const { resetGetPrefecturesMeta } = useGetPrefectures()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { getPrefectures, getPrefecturesMeta, resetGetPrefecturesMeta } = useGetPrefectures()
 
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
@@ -51,21 +53,21 @@ const GameSelectContainer: React.FC = () => {
     console.log('profileUpdateMeta', profileUpdateMeta)
   }, [profileUpdateMeta])
 
-  // useEffect(() => {
+  useEffect(() => {
     // eslint-disable-next-line no-console
-  //   console.log('prefecturesMeta', prefecturesMeta)
-  // }, [prefecturesMeta])
+    console.log('getPrefecturesMeta', getPrefecturesMeta)
+  }, [getPrefecturesMeta])
 
   // eslint-disable-next-line no-console
   console.log('user', user)
   const onFeatureSelect = (id: string) => {
-    const newFeatures = [...selectedFeatures];
+    const newFeatures = [...selectedFeatures]
     if (selectedFeatures.find((activeId) => activeId === id)) {
       _.remove(newFeatures, (activeId) => activeId === id)
     } else {
       newFeatures.push(id)
     }
-    setSelectedFeatures(newFeatures);
+    setSelectedFeatures(newFeatures)
   }
   // console.log('user', user)
 
