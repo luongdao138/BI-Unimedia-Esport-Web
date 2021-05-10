@@ -85,7 +85,6 @@ const FacebookButton: React.FC<FacebookButtonProps> = ({ onSuccess, ...rest }) =
   return (
     <FacebookLogin
       appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
-      autoLoad
       callback={handleResponse}
       render={(renderProps) => <ESButtonFacebook {...rest} onClick={renderProps.onClick} />}
     />
