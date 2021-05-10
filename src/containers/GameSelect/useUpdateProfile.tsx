@@ -5,16 +5,16 @@ import { ProfileUpdateParams } from '@services/profile.service'
 import profileStore from '@store/profile'
 
 const { selectors, actions } = profileStore
-const profileUpdateMeta = createMetaSelector(actions.profileUpdate)
+const _profileUpdateMeta = createMetaSelector(actions.profileUpdate)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUpdateProfile = () => {
   const dispatch = useAppDispatch()
   const profile = useAppSelector(selectors.getProfile)
-  const meta = useAppSelector(profileUpdateMeta)
+  const profileUpdateMeta = useAppSelector(_profileUpdateMeta)
   const profileUpdate = (param: ProfileUpdateParams) => dispatch(actions.profileUpdate(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.profileUpdate.typePrefix))
-  return { profile, profileUpdate, resetMeta, meta }
+  const resetProfileUpdateMeta = () => dispatch(clearMetaData(actions.profileUpdate.typePrefix))
+  return { profile, profileUpdate, resetProfileUpdateMeta, profileUpdateMeta }
 }
 
 export default useUpdateProfile

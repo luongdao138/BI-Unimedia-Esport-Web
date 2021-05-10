@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Grid, Typography, Box, Container, Theme, makeStyles } from '@material-ui/core'
 // import ESButton from '@components/Button'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -10,6 +10,7 @@ import TagSelect from '@containers/GameSelect/TagSelect'
 import GameSelect from '@containers/GameSelect/GameSelect'
 import UserOtherInfo from './UserOtherInfo'
 import useUpdateProfile from './useUpdateProfile'
+import useGetPrefectures from './useGetPrefectures'
 
 const FINAL_STEP = 2
 
@@ -18,7 +19,8 @@ const GameSelectContainer: React.FC = () => {
 
   // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
   // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
-  const { profileUpdate, meta, resetMeta } = useUpdateProfile()
+  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
+  const { getPrefectures, prefecturesMeta, resetPrefecturesMeta } = useGetPrefectures()
 
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
@@ -28,6 +30,18 @@ const GameSelectContainer: React.FC = () => {
     tags: null,
     favorite_games: null,
   })
+
+  useEffect(() => {
+    // TODO call endpoints here
+  }, [])
+
+  useEffect(() => {
+    console.log('profileUpdateMeta', profileUpdateMeta)
+  }, [profileUpdateMeta])
+
+  useEffect(() => {
+    console.log('prefecturesMeta', prefecturesMeta)
+  }, [prefecturesMeta])
 
   console.log('user', user)
 

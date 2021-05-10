@@ -10,4 +10,5 @@ export const URI = {
   RESET_PASSWORD: '/v1/passwords/reset',
   USERS_SEARCH: '/v1/users/search',
   PROFILE_UPDATE: '/v1/users/update', // TODO
+  GET_PREFECTURES: '/v1/users/update', // TODO
 }
