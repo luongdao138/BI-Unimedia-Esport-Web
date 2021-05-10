@@ -39,7 +39,7 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
-import MainLayout from '@layout/MainLayout'
+import MainLayout from '@layouts/MainLayout'
 
 const Atoms = () => {
   const [value, setValue] = useState<string>('')

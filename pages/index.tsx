@@ -1,5 +1,5 @@
 import HomeContainer from '@containers/Home'
-import MainLayout from '@layout/MainLayout'
+import MainLayout from '@layouts/MainLayout'
 
 const HomePage = () => {
   return (
