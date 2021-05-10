@@ -28,6 +28,13 @@ export default {
     privacy: '個人情報保護方針に同意する',
     footer_link: 'アカウントをお持ちの方',
   },
+  register_by_email: {
+    email: 'メールアドレス',
+    forgot_password: 'パスワードをお忘れの場合',
+    email_placeholder: 'exelab@sample.co.jp',
+    password: 'パスワード',
+    hint: '8文字以上の半角英数字を入力してくださいパスワードは英大文字、英小文字、数字を1文字以上使用してください',
+  },
   error: {
     login_failed: 'ログインに失敗しました。',
     code_invalid: '入力されたコードは無効です',
