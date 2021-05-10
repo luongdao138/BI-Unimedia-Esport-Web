@@ -3,15 +3,15 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: 60,
-    height: 60,
+    width: 30,
+    height: 30,
   },
   Twitch: {
     background: '#6441A5',
   },
   svgRoot: {
-    height: 31,
-    width: 33,
+    height: 17,
+    width: 16,
   },
   iconRoot: {
     padding: 4,
@@ -23,11 +23,11 @@ const ESButtonTwitchCircle: React.FC<IconButtonProps> = (props) => {
   return (
     <IconButton {...props} classes={{ root: classes.iconRoot }}>
       <Avatar classes={{ root: classes.root }} className={classes.Twitch}>
-        <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 31.056 32.475">
+        <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 15.528 16.237">
           <path
             id="Path_16710"
             data-name="Path 16710"
-            d="M12.571,11.2l-2.118,5.648V39.437h7.762v4.238h4.238l4.233-4.238h6.352l8.472-8.468V11.2Zm2.821,2.822h23.3V29.554L33.745,34.5H25.981l-4.232,4.232V34.5H15.392Zm7.766,14.121h2.824V19.673H23.158Zm7.764,0h2.824V19.673H30.921Z"
+            d="M11.512,11.2l-1.059,2.824V25.319h3.881v2.119h2.119l2.116-2.119h3.176l4.236-4.234V11.2Zm1.411,1.411H24.57v7.766L22.1,22.848H18.217L16.1,24.964V22.848H12.922Zm3.883,7.06h1.412V15.436H16.805Zm3.882,0H22.1V15.436H20.687Z"
             transform="translate(-10.453 -11.2)"
             fill="#fff"
             fillRule="evenodd"
