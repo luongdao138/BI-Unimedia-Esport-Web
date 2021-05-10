@@ -3,15 +3,15 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: 60,
-    height: 60,
+    width: 30,
+    height: 30,
   },
   facebook: {
     background: '#1877F2',
   },
   svgRoot: {
-    height: 36,
-    width: 19,
+    height: 18,
+    width: 10,
   },
   iconRoot: {
     padding: 4,
@@ -24,11 +24,11 @@ const ESButtonFacebookCircle: React.FC<IconButtonProps> = (props) => {
   return (
     <IconButton {...props} classes={{ root: classes.iconRoot }}>
       <Avatar classes={{ root: classes.root }} className={classes.facebook}>
-        <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 19 36">
+        <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 9.5 17.872">
           <path
             id="Path_98"
             data-name="Path 98"
-            d="M319.755,219.954l.985-6.42h-6.16v-4.166c0-1.756.86-3.468,3.619-3.468H321v-5.466a34.154,34.154,0,0,0-4.972-.434c-5.073,0-8.389,3.075-8.389,8.641v4.893H302v6.42h5.639v15.52a22.447,22.447,0,0,0,6.941,0v-15.52Z"
+            d="M310.878,209.977l.492-3.21h-3.08v-2.083a1.605,1.605,0,0,1,1.81-1.734h1.4v-2.733a17.076,17.076,0,0,0-2.486-.217c-2.537,0-4.195,1.537-4.195,4.321v2.447H302v3.21h2.82v7.76a11.222,11.222,0,0,0,3.47,0v-7.76Z"
             transform="translate(-302 -200)"
             fill="#fff"
           />
