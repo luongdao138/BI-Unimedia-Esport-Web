@@ -9,7 +9,7 @@ exports[`Home page renders correctly 1`] = `
       className="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-appBar-2 mui-fixed MuiPaper-elevation4"
     >
       <div
-        className="MuiContainer-root MuiContainer-maxWidthXl"
+        className="MuiContainer-root MuiContainer-maxWidthLg"
       >
         <div
           className="MuiToolbar-root MuiToolbar-regular makeStyles-toolbar-3 MuiToolbar-gutters"
@@ -20,7 +20,142 @@ exports[`Home page renders correctly 1`] = `
           <div
             className="makeStyles-search-6"
           >
-            search area
+            <div
+              className="MuiBox-root MuiBox-root-15 makeStyles-searchCont-13"
+            >
+              <div
+                className="MuiInputBase-root MuiOutlinedInput-root makeStyles-input-12 MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+                onClick={[Function]}
+              >
+                <input
+                  className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+                  id="search"
+                  onAnimationStart={[Function]}
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder="キーワード検索"
+                  type="text"
+                  value=""
+                />
+                <fieldset
+                  aria-hidden={true}
+                  className="PrivateNotchedOutline-root-16 MuiOutlinedInput-notchedOutline"
+                  style={
+                    Object {
+                      "paddingLeft": 8,
+                    }
+                  }
+                >
+                  <legend
+                    className="PrivateNotchedOutline-legend-17"
+                    style={
+                      Object {
+                        "width": 0.01,
+                      }
+                    }
+                  >
+                    <span
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "&#8203;",
+                        }
+                      }
+                    />
+                  </legend>
+                </fieldset>
+              </div>
+              <div
+                className="MuiInputBase-root MuiOutlinedInput-root WithStyles(ForwardRef(OutlinedInput))-root-20 makeStyles-select-14 MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+                onClick={[Function]}
+                style={
+                  Object {
+                    "minWidth": 170,
+                  }
+                }
+              >
+                <select
+                  className="MuiSelect-root MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+                  id="input"
+                  multiple={false}
+                  onAnimationStart={[Function]}
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                >
+                  <option
+                    value={1}
+                  >
+                    ニックネーム・ID
+                  </option>
+                  <option
+                    value={2}
+                  >
+                    Community
+                  </option>
+                </select>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7 10l5 5 5-5z"
+                  />
+                </svg>
+                <fieldset
+                  aria-hidden={true}
+                  className="PrivateNotchedOutline-root-16 MuiOutlinedInput-notchedOutline"
+                  style={
+                    Object {
+                      "paddingLeft": 8,
+                    }
+                  }
+                >
+                  <legend
+                    className="PrivateNotchedOutline-legend-17"
+                    style={
+                      Object {
+                        "width": 0.01,
+                      }
+                    }
+                  >
+                    <span
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "&#8203;",
+                        }
+                      }
+                    />
+                  </legend>
+                </fieldset>
+              </div>
+              <button
+                className="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-searchBtn-8 MuiButton-containedPrimary makeStyles-containedPrimary-21 makeStyles-containedPrimary-23"
+                disabled={false}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                type="button"
+              >
+                <span
+                  className="MuiButton-label"
+                >
+                  検索
+                </span>
+              </button>
+            </div>
           </div>
           <div
             className="makeStyles-toolArea-7"
@@ -78,16 +213,16 @@ exports[`Home page renders correctly 1`] = `
       className="aside-left"
     >
       <div
-        className="MuiBox-root MuiBox-root-16 makeStyles-menu-11"
+        className="MuiBox-root MuiBox-root-33 makeStyles-menu-28"
       >
         <div
-          className="MuiBox-root MuiBox-root-17 makeStyles-userInfo-13"
+          className="MuiBox-root MuiBox-root-34 makeStyles-userInfo-30"
         >
           <div
-            className="makeStyles-root-18"
+            className="makeStyles-root-35"
           >
             <div
-              className="MuiAvatar-root MuiAvatar-circle makeStyles-avatar-19 makeStyles-avatar-24"
+              className="MuiAvatar-root MuiAvatar-circle makeStyles-avatar-36 makeStyles-avatar-41"
             >
               <img
                 className="MuiAvatar-img"
@@ -96,15 +231,15 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="MuiBox-root MuiBox-root-26"
+            className="MuiBox-root MuiBox-root-43"
           >
             <h2
-              className="MuiTypography-root makeStyles-name-14 MuiTypography-h2"
+              className="MuiTypography-root makeStyles-name-31 MuiTypography-h2"
             >
               eXe LAB事務局
             </h2>
             <p
-              className="MuiTypography-root makeStyles-usercode-15 MuiTypography-body2"
+              className="MuiTypography-root makeStyles-usercode-32 MuiTypography-body2"
             >
               @exelab_staff
             </p>
@@ -112,11 +247,11 @@ exports[`Home page renders correctly 1`] = `
         </div>
         <nav
           aria-labelledby="nested-list-subheader"
-          className="MuiList-root makeStyles-root-8 MuiList-padding"
+          className="MuiList-root makeStyles-root-25 MuiList-padding"
         >
           <div
             aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root makeStyles-list-10 MuiListItem-gutters MuiListItem-button"
+            className="MuiButtonBase-root MuiListItem-root makeStyles-list-27 MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onDragLeave={[Function]}
             onFocus={[Function]}
@@ -132,7 +267,7 @@ exports[`Home page renders correctly 1`] = `
             tabIndex={0}
           >
             <div
-              className="MuiListItemIcon-root makeStyles-icon-12"
+              className="MuiListItemIcon-root makeStyles-icon-29"
             >
               <span
                 aria-hidden={true}
@@ -140,7 +275,7 @@ exports[`Home page renders correctly 1`] = `
               />
             </div>
             <div
-              className="MuiListItemText-root makeStyles-listText-9"
+              className="MuiListItemText-root makeStyles-listText-26"
             >
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
@@ -151,7 +286,7 @@ exports[`Home page renders correctly 1`] = `
           </div>
           <div
             aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root makeStyles-list-10 MuiListItem-gutters MuiListItem-button"
+            className="MuiButtonBase-root MuiListItem-root makeStyles-list-27 MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onDragLeave={[Function]}
             onFocus={[Function]}
@@ -167,7 +302,7 @@ exports[`Home page renders correctly 1`] = `
             tabIndex={0}
           >
             <div
-              className="MuiListItemIcon-root makeStyles-icon-12"
+              className="MuiListItemIcon-root makeStyles-icon-29"
             >
               <span
                 aria-hidden={true}
@@ -175,7 +310,7 @@ exports[`Home page renders correctly 1`] = `
               />
             </div>
             <div
-              className="MuiListItemText-root makeStyles-listText-9"
+              className="MuiListItemText-root makeStyles-listText-26"
             >
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
@@ -186,7 +321,7 @@ exports[`Home page renders correctly 1`] = `
           </div>
           <div
             aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root makeStyles-list-10 MuiListItem-gutters MuiListItem-button"
+            className="MuiButtonBase-root MuiListItem-root makeStyles-list-27 MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onDragLeave={[Function]}
             onFocus={[Function]}
@@ -202,7 +337,7 @@ exports[`Home page renders correctly 1`] = `
             tabIndex={0}
           >
             <div
-              className="MuiListItemIcon-root makeStyles-icon-12"
+              className="MuiListItemIcon-root makeStyles-icon-29"
             >
               <span
                 aria-hidden={true}
@@ -210,7 +345,7 @@ exports[`Home page renders correctly 1`] = `
               />
             </div>
             <div
-              className="MuiListItemText-root makeStyles-listText-9"
+              className="MuiListItemText-root makeStyles-listText-26"
             >
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
@@ -221,7 +356,7 @@ exports[`Home page renders correctly 1`] = `
           </div>
           <div
             aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root makeStyles-list-10 MuiListItem-gutters MuiListItem-button"
+            className="MuiButtonBase-root MuiListItem-root makeStyles-list-27 MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onDragLeave={[Function]}
             onFocus={[Function]}
@@ -237,7 +372,7 @@ exports[`Home page renders correctly 1`] = `
             tabIndex={0}
           >
             <div
-              className="MuiListItemIcon-root makeStyles-icon-12"
+              className="MuiListItemIcon-root makeStyles-icon-29"
             >
               <span
                 aria-hidden={true}
@@ -245,7 +380,7 @@ exports[`Home page renders correctly 1`] = `
               />
             </div>
             <div
-              className="MuiListItemText-root makeStyles-listText-9"
+              className="MuiListItemText-root makeStyles-listText-26"
             >
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
@@ -255,11 +390,11 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="MuiBox-root MuiBox-root-27"
+            className="MuiBox-root MuiBox-root-44"
           />
           <div
             aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root makeStyles-list-10 MuiListItem-gutters MuiListItem-button"
+            className="MuiButtonBase-root MuiListItem-root makeStyles-list-27 MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onDragLeave={[Function]}
             onFocus={[Function]}
@@ -275,7 +410,7 @@ exports[`Home page renders correctly 1`] = `
             tabIndex={0}
           >
             <div
-              className="MuiListItemIcon-root makeStyles-icon-12"
+              className="MuiListItemIcon-root makeStyles-icon-29"
             >
               <span
                 aria-hidden={true}
@@ -283,7 +418,7 @@ exports[`Home page renders correctly 1`] = `
               />
             </div>
             <div
-              className="MuiListItemText-root makeStyles-listText-9"
+              className="MuiListItemText-root makeStyles-listText-26"
             >
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
@@ -294,7 +429,7 @@ exports[`Home page renders correctly 1`] = `
           </div>
           <div
             aria-disabled={false}
-            className="MuiButtonBase-root MuiListItem-root makeStyles-list-10 MuiListItem-gutters MuiListItem-button"
+            className="MuiButtonBase-root MuiListItem-root makeStyles-list-27 MuiListItem-gutters MuiListItem-button"
             onBlur={[Function]}
             onDragLeave={[Function]}
             onFocus={[Function]}
@@ -310,7 +445,7 @@ exports[`Home page renders correctly 1`] = `
             tabIndex={0}
           >
             <div
-              className="MuiListItemIcon-root makeStyles-icon-12"
+              className="MuiListItemIcon-root makeStyles-icon-29"
             >
               <span
                 aria-hidden={true}
@@ -318,7 +453,7 @@ exports[`Home page renders correctly 1`] = `
               />
             </div>
             <div
-              className="MuiListItemText-root makeStyles-listText-9"
+              className="MuiListItemText-root makeStyles-listText-26"
             >
               <span
                 className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
@@ -334,13 +469,13 @@ exports[`Home page renders correctly 1`] = `
       className="content-wrapper"
     >
       <div
-        className="makeStyles-grow-28"
+        className="makeStyles-grow-45"
       >
         <header
-          className="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-appBar-29 MuiPaper-elevation4"
+          className="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-appBar-46 MuiPaper-elevation4"
         >
           <div
-            className="MuiToolbar-root MuiToolbar-regular makeStyles-toolbar-30 MuiToolbar-gutters"
+            className="MuiToolbar-root MuiToolbar-regular makeStyles-toolbar-47 MuiToolbar-gutters"
           >
             <h2
               className="MuiTypography-root MuiTypography-h2"
@@ -380,10 +515,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             おすすめユーザー
@@ -392,13 +527,13 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-44 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-61 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-46 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-63 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -406,20 +541,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたなべ
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-47 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-64 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-48 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-65 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -427,20 +562,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   グレちゃんグレちゃんグレちゃん
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-49 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-66 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-50 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-67 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -448,20 +583,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-51 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-68 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-52 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-69 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -469,20 +604,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   コイチ
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-53 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-70 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-54 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-71 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -490,20 +625,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたなべ
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-55 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-72 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-56 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-73 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -511,20 +646,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-57 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-74 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-58 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-75 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -532,20 +667,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-59 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-76 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-60 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-77 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -553,20 +688,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-61 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-78 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-62 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-79 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -574,20 +709,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-63 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-80 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-64 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-81 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -595,20 +730,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-65 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-82 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-66 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-83 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -616,20 +751,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-67 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-84 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-68 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-85 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -637,20 +772,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-69 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-86 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-70 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-87 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -658,20 +793,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-71 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-88 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-72 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-89 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -679,20 +814,20 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-43"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-60"
             >
               <div
-                className="MuiBox-root MuiBox-root-73 makeStyles-wrap-33"
+                className="MuiBox-root MuiBox-root-90 makeStyles-wrap-50"
               >
                 <div
-                  className="MuiAvatar-root makeStyles-root-45 makeStyles-root-74 MuiAvatar-circle"
+                  className="MuiAvatar-root makeStyles-root-62 makeStyles-root-91 MuiAvatar-circle"
                 >
                   <img
                     className="MuiAvatar-img"
@@ -700,7 +835,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <span
-                  className="MuiTypography-root makeStyles-name-34 MuiTypography-caption"
+                  className="MuiTypography-root makeStyles-name-51 MuiTypography-caption"
                 >
                   わたうに
                 </span>
@@ -708,11 +843,11 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="MuiBox-root MuiBox-root-75"
+            className="MuiBox-root MuiBox-root-92"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -723,7 +858,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>
@@ -734,10 +869,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             おすすめの募集
@@ -746,16 +881,16 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -763,14 +898,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-85 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-102 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
@@ -779,7 +914,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -790,16 +925,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -807,14 +942,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-87 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-104 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
@@ -823,7 +958,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -834,16 +969,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -851,14 +986,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-88 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-105 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
@@ -867,7 +1002,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -878,16 +1013,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -895,14 +1030,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-89 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-106 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
@@ -911,7 +1046,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -922,16 +1057,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -939,14 +1074,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-90 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-107 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
@@ -955,7 +1090,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -966,16 +1101,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -983,14 +1118,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-91 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-108 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
@@ -999,7 +1134,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1010,16 +1145,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1027,14 +1162,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-92 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-109 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
@@ -1043,7 +1178,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1054,16 +1189,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-76"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-93"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1071,14 +1206,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-93 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-110 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
@@ -1087,7 +1222,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1099,27 +1234,27 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="makeStyles-sliderButtonPrev-37"
+            className="makeStyles-sliderButtonPrev-54"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-left MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-left MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="makeStyles-sliderButtonNext-36"
+            className="makeStyles-sliderButtonNext-53"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-right MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="MuiBox-root MuiBox-root-94"
+            className="MuiBox-root MuiBox-root-111"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -1130,7 +1265,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>
@@ -1141,10 +1276,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             おすすめイベント
@@ -1153,16 +1288,16 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1170,14 +1305,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-96 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-113 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
@@ -1186,7 +1321,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1197,16 +1332,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1214,14 +1349,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-97 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-114 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
@@ -1230,7 +1365,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1241,16 +1376,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1258,14 +1393,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-98 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-115 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
@@ -1274,7 +1409,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1285,16 +1420,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1302,14 +1437,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-99 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-116 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
@@ -1318,7 +1453,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1329,16 +1464,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1346,14 +1481,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-100 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-117 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
@@ -1362,7 +1497,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1373,16 +1508,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1390,14 +1525,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-101 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-118 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
@@ -1406,7 +1541,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1417,16 +1552,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1434,14 +1569,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-102 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-119 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
@@ -1450,7 +1585,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1461,16 +1596,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-95"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-112"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1478,14 +1613,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-103 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-120 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
@@ -1494,7 +1629,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1506,27 +1641,27 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="makeStyles-sliderButtonPrev-37"
+            className="makeStyles-sliderButtonPrev-54"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-left MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-left MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="makeStyles-sliderButtonNext-36"
+            className="makeStyles-sliderButtonNext-53"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-right MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="MuiBox-root MuiBox-root-104"
+            className="MuiBox-root MuiBox-root-121"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -1537,7 +1672,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>
@@ -1548,10 +1683,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             フォローしている人の募集
@@ -1560,16 +1695,16 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1577,14 +1712,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-106 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-123 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
@@ -1593,7 +1728,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1604,16 +1739,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1621,14 +1756,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-107 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-124 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
@@ -1637,7 +1772,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1648,16 +1783,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1665,14 +1800,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-108 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-125 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
@@ -1681,7 +1816,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1692,16 +1827,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1709,14 +1844,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-109 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-126 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
@@ -1725,7 +1860,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1736,16 +1871,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1753,14 +1888,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-110 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-127 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
@@ -1769,7 +1904,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1780,16 +1915,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1797,14 +1932,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-111 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-128 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
@@ -1813,7 +1948,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1824,16 +1959,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1841,14 +1976,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-112 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-129 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
@@ -1857,7 +1992,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1868,16 +2003,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-105"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-122"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1885,14 +2020,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-113 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-130 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
@@ -1901,7 +2036,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -1913,27 +2048,27 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="makeStyles-sliderButtonPrev-37"
+            className="makeStyles-sliderButtonPrev-54"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-left MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-left MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="makeStyles-sliderButtonNext-36"
+            className="makeStyles-sliderButtonNext-53"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-right MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="MuiBox-root MuiBox-root-114"
+            className="MuiBox-root MuiBox-root-131"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -1944,7 +2079,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>
@@ -1955,10 +2090,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             フォローしている人がエントリーしている大会
@@ -1967,16 +2102,16 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -1984,14 +2119,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-116 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-133 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
@@ -2000,7 +2135,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2011,16 +2146,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2028,14 +2163,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-117 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-134 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
@@ -2044,7 +2179,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2055,16 +2190,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2072,14 +2207,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-118 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-135 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
@@ -2088,7 +2223,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2099,16 +2234,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2116,14 +2251,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-119 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-136 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
@@ -2132,7 +2267,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2143,16 +2278,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2160,14 +2295,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-120 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-137 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
@@ -2176,7 +2311,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2187,16 +2322,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2204,14 +2339,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-121 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-138 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
@@ -2220,7 +2355,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2231,16 +2366,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2248,14 +2383,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-122 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-139 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
@@ -2264,7 +2399,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2275,16 +2410,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-115"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-132"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2292,14 +2427,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-123 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-140 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
@@ -2308,7 +2443,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2320,27 +2455,27 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="makeStyles-sliderButtonPrev-37"
+            className="makeStyles-sliderButtonPrev-54"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-left MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-left MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="makeStyles-sliderButtonNext-36"
+            className="makeStyles-sliderButtonNext-53"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-right MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="MuiBox-root MuiBox-root-124"
+            className="MuiBox-root MuiBox-root-141"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -2351,7 +2486,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>
@@ -2362,10 +2497,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             フォローしている人がエントリーしていた大会結果
@@ -2374,16 +2509,16 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2391,14 +2526,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-126 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-143 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
@@ -2407,7 +2542,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2418,16 +2553,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2435,14 +2570,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-127 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-144 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
@@ -2451,7 +2586,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2462,16 +2597,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2479,14 +2614,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-128 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-145 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
@@ -2495,7 +2630,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2506,16 +2641,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2523,14 +2658,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-129 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-146 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
@@ -2539,7 +2674,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2550,16 +2685,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2567,14 +2702,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-130 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-147 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
@@ -2583,7 +2718,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2594,16 +2729,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2611,14 +2746,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-131 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-148 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
@@ -2627,7 +2762,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2638,16 +2773,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2655,14 +2790,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-132 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-149 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
@@ -2671,7 +2806,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2682,16 +2817,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-125"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-142"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2699,14 +2834,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-133 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-150 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
@@ -2715,7 +2850,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2727,27 +2862,27 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="makeStyles-sliderButtonPrev-37"
+            className="makeStyles-sliderButtonPrev-54"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-left MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-left MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="makeStyles-sliderButtonNext-36"
+            className="makeStyles-sliderButtonNext-53"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-right MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="MuiBox-root MuiBox-root-134"
+            className="MuiBox-root MuiBox-root-151"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -2758,7 +2893,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>
@@ -2769,10 +2904,10 @@ exports[`Home page renders correctly 1`] = `
         className="slideWrap"
       >
         <div
-          className="swiper-container makeStyles-wrap-35"
+          className="swiper-container makeStyles-wrap-52"
         >
           <h3
-            className="MuiTypography-root makeStyles-containerStart-42 MuiTypography-h3 MuiTypography-gutterBottom"
+            className="MuiTypography-root makeStyles-containerStart-59 MuiTypography-h3 MuiTypography-gutterBottom"
             slot="container-start"
           >
             フォローしている人の書き込みトピック
@@ -2781,16 +2916,16 @@ exports[`Home page renders correctly 1`] = `
             className="swiper-wrapper"
           >
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2798,14 +2933,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-136 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-153 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
@@ -2814,7 +2949,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2825,16 +2960,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2842,14 +2977,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-137 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-154 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
@@ -2858,7 +2993,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2869,16 +3004,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2886,14 +3021,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-138 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-155 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
@@ -2902,7 +3037,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2913,16 +3048,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2930,14 +3065,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-139 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-156 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
@@ -2946,7 +3081,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -2957,16 +3092,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -2974,14 +3109,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-140 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-157 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
@@ -2990,7 +3125,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -3001,16 +3136,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -3018,14 +3153,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-141 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-158 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
@@ -3034,7 +3169,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -3045,16 +3180,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -3062,14 +3197,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-142 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-159 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
@@ -3078,7 +3213,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -3089,16 +3224,16 @@ exports[`Home page renders correctly 1`] = `
               </div>
             </div>
             <div
-              className="swiper-slide makeStyles-slideWidth-41 makeStyles-slideWidth-135"
+              className="swiper-slide makeStyles-slideWidth-58 makeStyles-slideWidth-152"
             >
               <div
-                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-77 makeStyles-root-78 MuiPaper-elevation1 MuiPaper-rounded"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-94 makeStyles-root-95 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  className="makeStyles-cornerWrap-82"
+                  className="makeStyles-cornerWrap-99"
                 >
                   <div
-                    className="makeStyles-iconWrap-84"
+                    className="makeStyles-iconWrap-101"
                   >
                     <span
                       aria-hidden={true}
@@ -3106,14 +3241,14 @@ exports[`Home page renders correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="makeStyles-triangle-83"
+                    className="makeStyles-triangle-100"
                   />
                 </div>
                 <div
-                  className="MuiBox-root MuiBox-root-143 makeStyles-mediaWrap-80"
+                  className="MuiBox-root MuiBox-root-160 makeStyles-mediaWrap-97"
                 >
                   <div
-                    className="MuiCardMedia-root makeStyles-media-81"
+                    className="MuiCardMedia-root makeStyles-media-98"
                     style={
                       Object {
                         "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
@@ -3122,7 +3257,7 @@ exports[`Home page renders correctly 1`] = `
                   />
                 </div>
                 <div
-                  className="MuiCardContent-root makeStyles-contentRoot-86"
+                  className="MuiCardContent-root makeStyles-contentRoot-103"
                 >
                   <p
                     className="MuiTypography-root MuiTypography-body1"
@@ -3134,27 +3269,27 @@ exports[`Home page renders correctly 1`] = `
             </div>
           </div>
           <div
-            className="makeStyles-sliderButtonPrev-37"
+            className="makeStyles-sliderButtonPrev-54"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-left MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-left MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="makeStyles-sliderButtonNext-36"
+            className="makeStyles-sliderButtonNext-53"
           >
             <span
               aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-fas-38 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="material-icons MuiIcon-root makeStyles-fas-55 fas fa-chevron-right MuiIcon-fontSizeSmall"
             />
           </div>
           <div
-            className="MuiBox-root MuiBox-root-144"
+            className="MuiBox-root MuiBox-root-161"
             slot="container-end"
           >
             <a
-              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-39 MuiTypography-colorPrimary"
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-56 MuiTypography-colorPrimary"
               href="#"
               onBlur={[Function]}
               onFocus={[Function]}
@@ -3165,7 +3300,7 @@ exports[`Home page renders correctly 1`] = `
                 common:common.see_more
                 <span
                   aria-hidden={true}
-                  className="material-icons MuiIcon-root makeStyles-moreIcon-40 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-57 fas fa-chevron-right MuiIcon-fontSizeSmall"
                 />
               </p>
             </a>

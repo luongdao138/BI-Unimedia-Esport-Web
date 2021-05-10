@@ -15,7 +15,7 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     colorPrimary: {
-      backgroundColor: 'rgba(255,255,255,.3)',
+      backgroundColor: Colors.white_opacity[30],
     },
     bar: {
       borderRadius: 2,

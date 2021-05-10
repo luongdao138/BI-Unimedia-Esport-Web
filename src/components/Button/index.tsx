@@ -18,22 +18,24 @@ const useStyles = makeStyles(() => ({
 
     '&.Mui-disabled': {
       background: '#4D4D4D',
-      color: 'rgba(255,255,255,0.3)',
+      color: Colors.white_opacity[30],
       boxShadow: 'none',
     },
   }),
   outlined: (props: { round?: boolean }) => ({
     borderRadius: props.round ? 25 : 4,
     fontWeight: 'bold',
-    color: 'rgba(255,255,255,0.7)',
-    border: '1px solid rgba(255,255,255,0.7)',
+    color: Colors.white_opacity[70],
+    border: '1px solid',
+    borderColor: Colors.white_opacity[70],
     '&:hover': {
-      background: 'rgba(255,255,255,0.3)',
+      background: Colors.white_opacity[30],
       color: Colors.white,
     },
     '&.Mui-disabled': {
-      color: 'rgba(255,255,255,0.3)',
-      border: '1px solid rgba(255,255,255,0.3)',
+      color: Colors.white_opacity[30],
+      border: '1px solid',
+      borderColor: Colors.white_opacity[30],
     },
   }),
 }))
