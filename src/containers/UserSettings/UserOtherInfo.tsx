@@ -165,21 +165,6 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = forwardRef(({ onDataChange }
         {prefectureView}
         {genderView}
         {birthDateView}
-
-        <Box pt={6} pb={4} className={classes.buttonContainer} textAlign="center">
-          <ESButton
-            variant="contained"
-            color="primary"
-            round
-            gradient
-            size="large"
-            minWidth={280}
-            className={classes.submitBtn}
-            onClick={() => handleSubmit()}
-          >
-            {t('common:login.submit')}
-          </ESButton>
-        </Box>
       </form>
     </Container>
   )
