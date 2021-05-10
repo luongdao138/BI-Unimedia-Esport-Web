@@ -129,7 +129,7 @@ const useStyles = makeStyles(() => ({
   inputFocused: { width: 0, opacity: 0, visibility: 'hidden' },
   inputBlur: { width: 170, opacity: 1, visibility: 'visible' },
   input: {
-    transition: 'all 0.2s ease-in-out',
+    transition: 'all 0.2s ease',
     willChange: 'width',
     borderBottomRightRadius: 'unset',
     zIndex: 11,
