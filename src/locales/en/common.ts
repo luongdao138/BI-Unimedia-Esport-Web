@@ -43,4 +43,11 @@ export default {
     follow: 'フォローする',
     unfollow: 'フォロー中',
   },
+  profile: {
+    favorite_game: '好きなゲーム',
+    edit: '編集',
+    read_more: 'もっとみる',
+    following: 'フォロー中',
+    followers: 'フォロワー',
+  },
 }
