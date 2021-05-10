@@ -31,3 +31,18 @@ export const getFeatures = createAsyncThunk<services.UserFeaturesResponse>(
     }
   }
 )
+
+export const getAllGameTitles = createAsyncThunk<services.GameTitlesResponse>(
+  SETTINGS_ACTION_TYPE.GET_GAME_TITLES_ALL,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getAllGameTitles()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

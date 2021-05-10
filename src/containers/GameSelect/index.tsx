@@ -10,10 +10,11 @@ import TagSelect from '@containers/GameSelect/TagSelect'
 import GameSelect from '@containers/GameSelect/GameSelect'
 import ESChip from '@components/Chip'
 import UserOtherInfo from './UserOtherInfo'
-import useUpdateProfile from './useUpdateProfile'
+// import useUpdateProfile from './useUpdateProfile'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import settingsStore from '@store/settings'
 import _ from 'lodash'
+import { GameTitlesResponse } from '@services/settings.service'
 
 const FINAL_STEP = 2
 const { selectors, actions } = settingsStore
@@ -22,14 +23,20 @@ const GameSelectContainer: React.FC = () => {
   const dispatch = useAppDispatch()
   const classes = useStyles()
   const features = useAppSelector(selectors.getFeatures)
+  const gameTitles = useAppSelector(selectors.getAllGameTitles)
   // eslint-disable-next-line no-console
   console.log(features)
   const getFeatures = () => dispatch(actions.getFeatures())
+  const getGameTitles = () => dispatch(actions.getAllGameTitles())
+
+  useEffect(() => {
+    getFeatures()
+    getGameTitles()
+  }, [])
 
   // TODO: 1) uri.constants.ts dotor endpoint todorhoi bolhoor update hiih
   // 2) profile.service.ts dotor ProfileUpdateResponse -iig todorhoi bolhoor typed bolgoh
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
+  // const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
 
   const [step, setStep] = useState(0)
   const [user, setUser] = useState({
@@ -40,18 +47,21 @@ const GameSelectContainer: React.FC = () => {
     favorite_games: null,
   })
   const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
+  const [selectedGTitles, setSelectedGTitles] = useState([] as GameTitlesResponse)
+  const [unselectedGTitles, setUnselectedGTitles] = useState([] as GameTitlesResponse)
 
   useEffect(() => {
     getFeatures()
   }, [])
 
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('profileUpdateMeta', profileUpdateMeta)
-  }, [profileUpdateMeta])
+  // useEffect(() => {
+  //   console.log('profileUpdateMeta', profileUpdateMeta)
+  // }, [profileUpdateMeta])
 
-  // eslint-disable-next-line no-console
-  console.log('user', user)
+  useEffect(() => {
+    setUnselectedGTitles([...gameTitles])
+  }, [gameTitles])
+
   const onFeatureSelect = (id: string) => {
     const newFeatures = [...selectedFeatures]
     if (selectedFeatures.find((activeId) => activeId === id)) {
@@ -60,6 +70,28 @@ const GameSelectContainer: React.FC = () => {
       newFeatures.push(id)
     }
     setSelectedFeatures(newFeatures)
+  }
+
+  const onGameTitleClick = (game: GameTitlesResponse[0]) => {
+    const newUnselected = [...unselectedGTitles]
+    const newSelected = [...selectedGTitles]
+    if (newUnselected.find((unselectedId) => unselectedId.id === game.id)) {
+      _.remove(newUnselected, (unselectedId) => unselectedId.id === game.id)
+      newSelected.push(game)
+    }
+    setUnselectedGTitles(newUnselected)
+    setSelectedGTitles(newSelected)
+  }
+
+  const onGameSelectionRemove = (game: GameTitlesResponse[0]) => {
+    const newUnselected = [...unselectedGTitles]
+    const newSelected = [...selectedGTitles]
+    if (newSelected.find((selected) => selected.id === game.id)) {
+      _.remove(newSelected, (selected) => selected.id === game.id)
+      newUnselected.push(game)
+    }
+    setUnselectedGTitles(newUnselected)
+    setSelectedGTitles(newSelected)
   }
   // console.log('user', user)
 
@@ -80,7 +112,7 @@ const GameSelectContainer: React.FC = () => {
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
-        return <GameSelect />
+        return <GameSelect gameTitles={unselectedGTitles} onGameSelect={onGameTitleClick} />
     }
   }
 
@@ -125,7 +157,14 @@ const GameSelectContainer: React.FC = () => {
           <>
             <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
               <Box pl={2.5} pt={2}>
-                <ESChip label={'sample'} onDelete={() => null} className={classes.chipSpacing} />
+                {selectedGTitles.map((game) => (
+                  <ESChip
+                    key={game.id}
+                    label={game.attributes.display_name}
+                    onDelete={() => onGameSelectionRemove(game)}
+                    className={classes.chipSpacing}
+                  />
+                ))}
               </Box>
             </Container>
             <Divider />

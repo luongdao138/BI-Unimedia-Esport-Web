@@ -1,6 +1,7 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type GetPrefecturesParams = {}
 
 export type GetPrefecturesResponse = {

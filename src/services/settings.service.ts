@@ -29,6 +29,19 @@ export type UserFeaturesResponse = {
   }
 }[]
 
+export type GameTitlesResponse = {
+  id: string,
+  type: string;
+  attributes: {
+    display_name: string;
+    short_name: string;
+    jp_kana_name: string;
+    en_name: string;
+    user_id: any;
+    image_url: any;
+  }
+}[]
+
 export const getSettings = async (): Promise<UserSettingsResponse> => {
   const { data } = await api.get<UserSettingsResponse>(URI.USER_SETTINGS)
   return data
@@ -37,4 +50,9 @@ export const getSettings = async (): Promise<UserSettingsResponse> => {
 export const getFeatures = async (): Promise<UserFeaturesResponse> => {
   const { data } = await api.get(URI.USER_FEATURES)
   return data.data as UserFeaturesResponse
+}
+
+export const getAllGameTitles = async (): Promise<GameTitlesResponse> => {
+  const { data } = await api.get(URI.GAME_TITLES_ALL)
+  return data.data as GameTitlesResponse
 }
