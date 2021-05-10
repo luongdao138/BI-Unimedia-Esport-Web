@@ -5,6 +5,8 @@ import Container from '@material-ui/core/Container'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
+import SearchArea from '@containers/SearchArea'
+import { searchOptions } from '@constants/common.constants'
 
 const useStyles = makeStyles(() => ({
   grow: { flexGrow: 1 },
@@ -26,15 +28,27 @@ const useStyles = makeStyles(() => ({
   toolArea: {},
 }))
 
+interface returnItem {
+  value: string
+  type: number
+}
+
 export const Header: React.FC = () => {
   const classes = useStyles()
+
+  const onSearch = (_data: returnItem) => {
+    //ignore @typescript-eslint/no-empty-function
+  }
+
   return (
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="fixed">
-        <Container maxWidth="xl">
+        <Container maxWidth="lg">
           <Toolbar className={classes.toolbar}>
             <img src="/images/logo.svg" />
-            <div className={classes.search}>search area</div>
+            <div className={classes.search}>
+              <SearchArea selectData={searchOptions} onSearch={onSearch} />
+            </div>
             <div className={classes.toolArea}>
               <IconButton color="inherit">
                 <Badge badgeContent={17} color="primary" className={classes.badge}>
