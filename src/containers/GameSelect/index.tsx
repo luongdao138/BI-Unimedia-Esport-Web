@@ -15,11 +15,25 @@ const FINAL_STEP = 2
 const GameSelectContainer: React.FC = () => {
   const classes = useStyles()
   const [step, setStep] = useState(0)
-  const [user] = useState({
+  const [user, setUser] = useState({
     prefecture: null,
     gender: null,
     birthDate: null,
+    tags: null,
+    favorite_games: null,
   })
+
+  console.log('user', user)
+
+  const updateUserData = (data) => {
+    setUser({
+      prefecture: '1',
+      gender: '1',
+      birthDate: '1',
+      tags: [],
+      favorite_games: [],
+    })
+  }
 
   function getStepViews() {
     switch (step) {
@@ -36,6 +50,8 @@ const GameSelectContainer: React.FC = () => {
   const handleConfirm = () => console.log('CONFIRM')
 
   const handleButtonClick = () => {
+    updateUserData()
+
     if (step == FINAL_STEP) handleConfirm()
     else setStep(step + 1)
   }
