@@ -12,5 +12,6 @@ export const URI = {
   PROFILE_UPDATE: '/v1/users/update', // TODO
   GET_PREFECTURES: '/v1/users/update', // TODO
   USER_SETTINGS: "/v1/users/settings",
-  USER_FEATURES: "/v1/user_features"
+  USER_FEATURES: "/v1/user_features",
+  GAME_TITLES_ALL: "/v1/game_titles_all"
 }
