@@ -5,6 +5,7 @@ import ESCheckbox from '@components/Checkbox'
 import { useFormik } from 'formik'
 import { GENDER } from '@constants/common.constants'
 import useGetPrefectures from './useGetPrefectures'
+import { DropdownDate } from './date-dropdown.component'
 
 export type UserOtherInfoParams = {
   email: string
@@ -39,12 +40,26 @@ const genders = [
   },
 ]
 
+// const formatDate = (date) => {
+//   // formats a JS date to 'yyyy-mm-dd'
+//   var d = new Date(date),
+//     month = '' + (d.getMonth() + 1),
+//     day = '' + d.getDate(),
+//     year = d.getFullYear()
+
+//   if (month.length < 2) month = '0' + month
+//   if (day.length < 2) day = '0' + day
+
+//   return [year, month, day].join('-')
+// }
+
 const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
   const classes = useStyles()
   //   const { t } = useTranslation(['common'])
   //   const router = useRouter()
 
   const { prefectures, getPrefectures } = useGetPrefectures()
+  const [dateNew, setDateNew] = useState({ date: null, selectedDate: '2020-03-03' })
 
   useEffect(() => {
     getPrefectures({})
@@ -58,6 +73,19 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
       }))
     }
   }, [prefectures])
+
+  const formatDate = (date) => {
+    // formats a JS date to 'yyyy-mm-dd'
+    const d = new Date(date)
+    let month = '' + (d.getMonth() + 1)
+    let day = '' + d.getDate()
+    const year = d.getFullYear()
+
+    if (month.length < 2) month = '0' + month
+    if (day.length < 2) day = '0' + day
+
+    return [year, month, day].join('-')
+  }
 
   const { handleChange, values, handleSubmit } = useFormik<UserOtherInfoParams>({
     initialValues: {
@@ -88,17 +116,6 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
   const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [event.target.name]: event.target.checked })
   }
-
-  const items = [
-    {
-      value: 1,
-      label: '1990',
-    },
-    {
-      value: 2,
-      label: '2000',
-    },
-  ]
 
   const prefectureView = (
     <Box>
@@ -138,52 +155,25 @@ const UserOtherInfo: React.FC<UserOtherInfoProps> = ({ user }) => {
       <ESCheckbox checked={state.checkedB} onChange={handleChange1} label="性別を公開する" name="checkedB" />
     </Box>
   )
+
   const birthDateView = (
     <Box>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} fullWidth>
-            <option value="">年</option>
-            {items.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </ESSelect>
-        </Grid>
-        <Grid item xs>
-          <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} fullWidth>
-            <option value="">月</option>
-            {items.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </ESSelect>
-        </Grid>
-        <Grid item xs>
-          <ESSelect id="selectedValue" value={values.selectedValue} onChange={handleChange} fullWidth>
-            <option value="">日</option>
-            {items.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </ESSelect>
-        </Grid>
-      </Grid>
+      <Grid container spacing={2}></Grid>
+      <DropdownDate
+        selectedDate={
+          // optional
+          dateNew.selectedDate // 'yyyy-mm-dd' format only
+        }
+        onDateChange={(date) => {
+          // console.log('date', date)
+          setDateNew({ date: date, selectedDate: formatDate(date) })
+        }}
+        defaultValues={{ year: '年', month: '月', day: '日' }}
+        options={{ yearReverse: true }}
+      />
       <ESCheckbox checked={state.checkedC} onChange={handleChange1} label="生年月日を公開する" name="checkedC" />
     </Box>
   )
-  //   const { handleChange, values } = useFormik({
-  //     initialValues: {
-  //       selectedValue: '',
-  //     },
-  //     onSubmit: (values) => {
-  //       values
-  //       value
-  //     },
-  //   })
 
   return (
     <Container maxWidth="xs" className={classes.container}>
