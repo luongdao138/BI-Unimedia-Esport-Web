@@ -1,25 +1,25 @@
 import { useEffect, useState, BaseSyntheticEvent } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { Avatar } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'block',
+    display: 'inline-block',
   },
-  avatar: (props: { size?: number }) => ({
-    zIndex: 3,
-    width: props.size,
-    height: props.size,
-  }),
-  touch: (props: { size?: number }) => ({
-    zIndex: 3,
+  dropAreaThumb: {
+    width: '100%',
+    height: 'auto',
+    objectFit: 'cover',
+  },
+  touch: {
     display: 'flex',
-    position: 'relative',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     overflow: 'hidden',
-    width: props.size,
-    height: props.size,
-    borderRadius: '50%',
+    width: '100%',
+    height: 250,
     alignItems: 'center',
     justifyContent: 'center',
     '&:hover': {
@@ -31,37 +31,60 @@ const useStyles = makeStyles(() => ({
     '&:hover $backdrop': {
       display: 'flex',
     },
-  }),
+  },
   camera: {
     display: 'none',
     position: 'absolute',
-    zIndex: 5,
+    color: '#fff',
+    bottom: 30,
+    right: 30,
+    zIndex: 2,
   },
   backdrop: {
     display: 'none',
     opacity: 0.6,
     background: '#000',
     position: 'absolute',
-    height: '100%',
+    height: '65%',
     width: '100%',
-    top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    content: '""',
-    zIndex: 4,
+    zIndex: 1,
   },
   input: {
     display: 'none',
   },
 }))
 
-const ESProfileAvatar: React.FC<{ editable?: boolean; size?: number; src: string; onChange?: (files: File) => void }> = (props) => {
+const ProfileCover: React.FC<{ src: string; onChange?: (files: File) => void }> = (props) => {
   const classes = useStyles(props)
   const [value, setValue] = useState<string | ArrayBuffer>('')
+
   useEffect(() => {
     setValue(props.src)
   }, [props.src])
+
+  const handleDragEnter = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrag = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDragOut = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setValue(URL.createObjectURL(e.dataTransfer.files[0]))
+  }
   const handleChange = (e: BaseSyntheticEvent) => {
     const file = e.target.files[0]
     const reader = new FileReader()
@@ -80,23 +103,24 @@ const ESProfileAvatar: React.FC<{ editable?: boolean; size?: number; src: string
     )
   }
   return (
-    <div className={classes.root}>
-      {props.editable ? (
-        <label htmlFor="cover-upload" className={classes.touch}>
-          <input type="file" id="cover-upload" accept="image/*" onChange={handleChange} className={classes.input} />
-          <Avatar className={classes.avatar} src={value.toString()} />
+    <div
+      className={classes.root}
+      onDrop={(e) => handleDrop(e)}
+      onDragOver={(e) => handleDrag(e)}
+      onDragLeave={(e) => handleDragOut(e)}
+      onDragEnter={(e) => handleDragEnter(e)}
+    >
+      {
+        <label htmlFor="cover-img-upload" className={classes.touch}>
+          <input type="file" id="cover-img-upload" accept="image/*" onChange={handleChange} className={classes.input} />
+
+          <img src={value.toString()} className={classes.dropAreaThumb} />
           <Camera fontSize="large" className={classes.camera} />
           <div className={classes.backdrop} />
         </label>
-      ) : (
-        <Avatar className={classes.avatar} src={props.src} />
-      )}
+      }
     </div>
   )
 }
 
-ESProfileAvatar.defaultProps = {
-  editable: false,
-  size: 120,
-}
-export default ESProfileAvatar
+export default ProfileCover

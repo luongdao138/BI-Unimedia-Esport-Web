@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 import Icon from '@material-ui/core/Icon'
+import Script from 'react-load-script'
+import { LoginSocialParams } from '@services/auth.service'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -20,8 +22,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: 'rgba(255,255,255,.3)',
     '&:hover': {
       boxShadow: 'none',
-      opacity: 0.95,
-      background: '#212121',
+      background: '#1b1b1b',
     },
   },
   leftIcon: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
-    backgroundColor: '#314773 !important',
+    backgroundColor: '#212121 !important',
     color: '#FFF !important',
   },
 }))
@@ -65,4 +66,60 @@ ESButtonApple.defaultProps = {
   variant: 'contained',
 }
 
-export default ESButtonApple
+type AppleButtonProps = { onSuccess?: (param: LoginSocialParams) => void } & ButtonProps
+
+declare global {
+  interface Window {
+    AppleID: {
+      auth: {
+        init: ({
+          clientId,
+          scope,
+          redirectURI,
+          usePopup,
+        }: {
+          clientId: string
+          scope: string
+          redirectURI: string
+          usePopup: boolean
+        }) => void
+        signIn: () => Promise<{
+          authorization: {
+            id_token: string
+          }
+        }>
+      }
+    }
+  }
+}
+
+const AppleButton: React.FC<AppleButtonProps> = ({ onSuccess, ...rest }) => {
+  const handleLoadScript = () => {
+    window.AppleID.auth.init({
+      clientId: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID,
+      scope: 'name email',
+      redirectURI: process.env.NEXT_PUBLIC_APPLE_CALLBACK,
+      usePopup: true,
+    })
+  }
+  const handleLogin = async () => {
+    try {
+      const { authorization } = await window.AppleID.auth.signIn()
+      !!onSuccess && onSuccess({ social_channel: 'apple', access_token: authorization.id_token })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  return (
+    <>
+      <ESButtonApple onClick={handleLogin} {...rest} />
+      <Script
+        url="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"
+        onError={console.error}
+        onLoad={handleLoadScript}
+      />
+    </>
+  )
+}
+
+export default AppleButton

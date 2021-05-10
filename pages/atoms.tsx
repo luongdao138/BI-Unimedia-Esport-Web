@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/core/styles'
 import { Box, Grid, Typography, Icon } from '@material-ui/core'
 import { Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
@@ -22,13 +21,17 @@ import ESChip from '@components/Chip'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import ESSlider from '@components/Slider'
 import ESInput from '@components/Input'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
+import ESMenu from '@components/Menu'
+import ESMenuItem from '@components/Menu/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import { useFormik } from 'formik'
 import PinInput from '@components/PinInput'
 import ProfileAvatar from '@components/ProfileAvatar'
+import ProfileCover from '@components/ProfileCover'
 import ESAvatar from '@components/Avatar'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
@@ -38,21 +41,9 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
-import MainLayout from '@layout/MainLayout'
-
-const useStyles = makeStyles(() => {
-  return {
-    iconRoot: {
-      width: '1.3em',
-    },
-    iconFontSizeSmall: {
-      fontSize: '1.125rem',
-    },
-  }
-})
+import MainLayout from '@layouts/MainLayout'
 
 const Atoms = () => {
-  const classes = useStyles()
   const [value, setValue] = useState<string>('')
   const [tab, setTab] = useState(0)
   const [state, setState] = useState({
@@ -165,27 +156,25 @@ const Atoms = () => {
         <ESButtonGoogleCircle />
         <ESButtonAppleCircle />
       </Box>
+      <ESMenu>
+        <ESMenuItem onClick={() => console.log('プロフィールを編集')}>プロフィールを編集</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('大会履歴')}>大会履歴</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('アクティビティ')}>アクティビティ</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('QRコード')}>QRコード</ESMenuItem>
+        <ESMenuItem onClick={() => console.log('ログアウト')}>ログアウト</ESMenuItem>
+      </ESMenu>
       <Box margin={4}>
         <Grid xs={3}>
           <ESCard>
-            <ESCardMedia imageUrl="https://picsum.photos/id/237/240/120"></ESCardMedia>
+            <ESCardMedia image="https://picsum.photos/id/237/240/120"></ESCardMedia>
             <ESCardContent>
               <Typography>募集名が入ります。</Typography>
             </ESCardContent>
           </ESCard>
           <ESCard>
             <ESCardMedia
-              cornerIcon={
-                <Icon
-                  classes={{
-                    root: classes.iconRoot,
-                    fontSizeSmall: classes.iconFontSizeSmall,
-                  }}
-                  className="fas fa-university"
-                  fontSize="small"
-                />
-              }
-              imageUrl="https://picsum.photos/id/412/240/120"
+              cornerIcon={<Icon className="fas fa-university" fontSize="small" />}
+              image="https://picsum.photos/id/412/240/120"
             ></ESCardMedia>
             <ESCardContent>
               <Typography>募集名が入ります。</Typography>
@@ -193,17 +182,8 @@ const Atoms = () => {
           </ESCard>
           <ESCard>
             <ESCardMedia
-              cornerIcon={
-                <Icon
-                  classes={{
-                    root: classes.iconRoot,
-                    fontSizeSmall: classes.iconFontSizeSmall,
-                  }}
-                  className="fas fa-trophy"
-                  fontSize="small"
-                />
-              }
-              imageUrl="https://picsum.photos/id/112/240/120"
+              cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />}
+              image="https://picsum.photos/id/112/240/120"
             ></ESCardMedia>
             <ESCardContent>
               <Typography>募集名が入ります。</Typography>
@@ -212,13 +192,32 @@ const Atoms = () => {
           <ESCard>
             <ESCardMedia
               cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-              imageUrl="https://picsum.photos/id/112/240/120"
+              image="https://picsum.photos/id/112/240/120"
             ></ESCardMedia>
             <ESCardContent>
               <Typography>募集名が入ります。</Typography>
             </ESCardContent>
           </ESCard>
         </Grid>
+      </Box>
+      <Box margin={4}>
+        <ESSlider
+          navigation
+          items={[
+            <ESCard key="1">
+              <ESCardMedia
+                cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                image="https://picsum.photos/id/412/240/120"
+              ></ESCardMedia>
+              <ESCardContent>
+                <Typography>募集名が入ります。</Typography>
+              </ESCardContent>
+            </ESCard>,
+            <ESButtonApple key="2" variant="contained" fullWidth />,
+            <Typography key="3">募集名が入ります1。</Typography>,
+            <Typography key="4">募集名が入ります2。</Typography>,
+          ]}
+        />
       </Box>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
@@ -284,7 +283,8 @@ const Atoms = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box margin={4}>
+      <Box position="relative" height={300} pt={23} pl={4} margin={4}>
+        <ProfileCover src="/images/avatar.png" />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>

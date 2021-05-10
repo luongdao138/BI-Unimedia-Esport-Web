@@ -1,22 +1,11 @@
-import Link from 'next/link'
-import MainLayout from '@layout/MainLayout'
+import HomeContainer from '@containers/Home'
+import MainLayout from '@layouts/MainLayout'
 
 const HomePage = () => {
   return (
-    <main>
-      <h1>Hello, world!</h1>
-      <Link href="/login">
-        <a>login</a>
-      </Link>
-      <br />
-      <Link href="/register">
-        <a>register</a>
-      </Link>
-      <br />
-      <Link href="/forgot-password">
-        <a>forgot password</a>
-      </Link>
-    </main>
+    <MainLayout>
+      <HomeContainer />
+    </MainLayout>
   )
 }
 

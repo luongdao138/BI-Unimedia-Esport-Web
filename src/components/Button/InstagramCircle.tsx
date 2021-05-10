@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     width: 36,
   },
   iconRoot: {
-    padding: 2,
+    padding: 4,
   },
 }))
 
