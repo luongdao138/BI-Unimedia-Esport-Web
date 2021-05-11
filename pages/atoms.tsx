@@ -157,11 +157,11 @@ const Atoms = () => {
         <ESButtonAppleCircle />
       </Box>
       <ESMenu>
-        <ESMenuItem onClick={() => console.log('プロフィールを編集')}>プロフィールを編集</ESMenuItem>
-        <ESMenuItem onClick={() => console.log('大会履歴')}>大会履歴</ESMenuItem>
-        <ESMenuItem onClick={() => console.log('アクティビティ')}>アクティビティ</ESMenuItem>
-        <ESMenuItem onClick={() => console.log('QRコード')}>QRコード</ESMenuItem>
-        <ESMenuItem onClick={() => console.log('ログアウト')}>ログアウト</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('プロフィールを編集')}>プロフィールを編集</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('大会履歴')}>大会履歴</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('アクティビティ')}>アクティビティ</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('QRコード')}>QRコード</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('ログアウト')}>ログアウト</ESMenuItem>
       </ESMenu>
       <Box margin={4}>
         <Grid xs={3}>
