@@ -64,8 +64,8 @@ const RegisterContainer: React.FC = () => {
           <ESCheckbox disableRipple checked={checkbox.privacy} onChange={handleChange} label="個人情報保護方針に同意する" name="privacy" />
         </Box>
 
-        <Box pt={5} pb={8} className={classes.buttonContainer} textAlign="center">
-          <ButtonPrimary round className={classes.submitBtn} onClick={() => router.push('/register/by-email')}>
+        <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
+          <ButtonPrimary round fullWidth onClick={() => router.push('/register/by-email')}>
             {t('common:register.button')}
           </ButtonPrimary>
         </Box>
@@ -74,12 +74,12 @@ const RegisterContainer: React.FC = () => {
           <ESDividerWithMiddleText text={t('common:login.divider')} />
         </Box>
 
-        <Box pt={8} textAlign="center">
-          <ESButtonTwitter className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonGoogle className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonLine className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonFacebook className={classes.submitBtn} onSuccess={handleSocialLogin} />
-          <ESButtonApple className={classes.submitBtn} onSuccess={handleSocialLogin} />
+        <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
+          <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} />
+          <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} />
+          <ESButtonLine fullWidth onSuccess={handleSocialLogin} />
+          <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} />
+          <ESButtonApple fullWidth onSuccess={handleSocialLogin} />
         </Box>
 
         <Box pt={4} className={classes.linkContainer}>
@@ -113,22 +113,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  buttonContainer: {},
-  topContainer: {},
-  container: {},
-  submitBtn: {},
-  ['@media (max-width: 414px)']: {
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
+  },
+  [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
       paddingRight: 0,
     },
     topContainer: {
       paddingTop: 0,
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    submitBtn: {
-      minWidth: 220,
     },
   },
 }))

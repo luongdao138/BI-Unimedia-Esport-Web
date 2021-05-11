@@ -43,11 +43,15 @@ const ConfirmContainer: React.FC = () => {
         </Box>
 
         <Box width="100%" px={5} pt={12} flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
-          <Typography variant="h3">6桁の認証コードを送信しました</Typography>
+          <Typography variant="h3" className={classes.hint}>
+            6桁の認証コードを送信しました
+          </Typography>
           <Box py={4} display="flex" alignItems="center" flexDirection="column">
             <ESPinInput error={!!metaConfirm.error} value={confirmationCode} onChange={(value) => setConfirmationCode(value)} />
           </Box>
-          <Typography variant="body2">認証コードを再送する</Typography>
+          <Typography variant="body2" className={classes.hint}>
+            認証コードを再送する
+          </Typography>
         </Box>
 
         <Box pt={12}>
@@ -64,9 +68,11 @@ const ConfirmContainer: React.FC = () => {
 
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
-          <ButtonPrimary onClick={handleSubmit} round className={classes.submitBtn} disabled={!buttonActive()}>
-            {t('common:register_by_email.button')}
-          </ButtonPrimary>
+          <Box maxWidth={280} className={classes.buttonContainer}>
+            <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()} onClick={handleSubmit}>
+              {t('common:register_by_email.button')}
+            </ButtonPrimary>
+          </Box>
         </Box>
       </Box>
       {metaConfirm.pending && <ESLoader open={metaConfirm.pending} />}
@@ -100,14 +106,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   hintDetail: {
     color: Colors.text[300],
   },
-  buttonContainer: {},
-  topContainer: {},
-  container: {},
-  submitBtn: {},
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
+  },
   blankSpace: {
     height: 169,
   },
-  ['@media (max-width: 414px)']: {
+  [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
       paddingRight: 0,
@@ -117,11 +123,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    submitBtn: {
-      minWidth: 220,
     },
   },
 }))

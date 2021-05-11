@@ -107,9 +107,11 @@ const RegisterByEmailContainer: React.FC = () => {
         </Box>
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
-            <ButtonPrimary type="submit" round className={classes.submitBtn} disabled={!buttonActive()}>
-              {t('common:register_by_email.button')}
-            </ButtonPrimary>
+            <Box maxWidth={280} className={classes.buttonContainer}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()}>
+                {t('common:register_by_email.button')}
+              </ButtonPrimary>
+            </Box>
           </Box>
         </Box>
       </form>
@@ -138,21 +140,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     justifyContent: 'center',
   },
-  topContainer: {},
-  container: {},
-  submitBtn: {},
-  ['@media (max-width: 414px)']: {
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
+  },
+  [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
       paddingRight: 0,
     },
     topContainer: {
       paddingTop: 0,
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    submitBtn: {
-      minWidth: 220,
     },
   },
 }))

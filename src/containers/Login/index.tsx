@@ -8,7 +8,7 @@ import Icon from '@material-ui/core/Icon'
 import Image from 'next/image'
 import ESInput from '@components/Input'
 import FilterNoneIcon from '@material-ui/icons/FilterNone'
-import ESButton from '@components/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
 import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
 import ESToast from '@components/Toast'
@@ -98,19 +98,10 @@ const LoginContainer: React.FC = () => {
                 />
               </Box>
 
-              <Box pt={6} pb={4} className={classes.buttonContainer} textAlign="center">
-                <ESButton
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  round
-                  gradient
-                  size="large"
-                  minWidth={280}
-                  className={classes.submitBtn}
-                >
+              <Box pt={6} pb={4} maxWidth={280} className={classes.buttonContainer}>
+                <ButtonPrimary type="submit" round fullWidth>
                   {t('common:login.submit')}
-                </ESButton>
+                </ButtonPrimary>
               </Box>
             </form>
           </Box>
@@ -125,12 +116,12 @@ const LoginContainer: React.FC = () => {
             <ESDividerWithMiddleText text={t('common:login.divider')} />
           </Box>
 
-          <Box pt={8} textAlign="center">
-            <ESButtonTwitter className={classes.submitBtn} onSuccess={handleSocialLogin} />
-            <ESButtonGoogle className={classes.submitBtn} onSuccess={handleSocialLogin} />
-            <ESButtonLine className={classes.submitBtn} onSuccess={handleSocialLogin} />
-            <ESButtonFacebook className={classes.submitBtn} onSuccess={handleSocialLogin} />
-            <ESButtonApple className={classes.submitBtn} onSuccess={handleSocialLogin} />
+          <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
+            <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonLine onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonApple onSuccess={handleSocialLogin} fullWidth />
           </Box>
         </Box>
       </Box>
@@ -156,22 +147,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  buttonContainer: {},
-  topContainer: {},
-  container: {},
-  submitBtn: {},
-  ['@media (max-width: 414px)']: {
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
+  },
+  [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
       paddingRight: 0,
     },
     topContainer: {
       paddingTop: 0,
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    submitBtn: {
-      minWidth: 220,
     },
   },
 }))
