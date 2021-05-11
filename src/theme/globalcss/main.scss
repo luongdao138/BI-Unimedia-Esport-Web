@@ -209,8 +209,11 @@
 .parallax {
   margin: 0 auto;
   width: 100%;
-  height: 1050px;
+  height: 740px;
   background: url('/images/lp_image.png') center 60px repeat-x #212121 fixed;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 .parallax-inner {
   background: #30155160;

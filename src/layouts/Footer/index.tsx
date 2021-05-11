@@ -23,6 +23,7 @@ const useStyles = makeStyles(() => ({
     borderTop: `1px solid  ${Colors.text[300]}`,
     textAlign: 'center',
     background: '#060606',
+    position: 'relative',
   },
 }))
 
