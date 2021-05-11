@@ -33,4 +33,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-# /test/pages/__snapshots__
+/test/pages/__snapshots__
