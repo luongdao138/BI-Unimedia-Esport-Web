@@ -1,10 +1,12 @@
 import { Typography, Box, Grid, makeStyles, Theme } from '@material-ui/core'
+import { useRouter } from 'next/router'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { useTranslation } from 'react-i18next'
 
 export const ParallaxContent: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const router = useRouter()
 
   return (
     <>
@@ -22,7 +24,7 @@ export const ParallaxContent: React.FC = () => {
               <ButtonPrimary
                 round
                 onClick={() => {
-                  return null
+                  router.push('/home')
                 }}
               >
                 {t('common:top.start_exelab')}
