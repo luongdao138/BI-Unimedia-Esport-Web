@@ -3,16 +3,17 @@
   max-width: 800px;
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
   width: 100%;
+  padding-top: 60px;
 }
-.content {
-  min-height: calc(100vh - 126px);
-}
+
 .main-wrapper {
-  margin-top: 60px;
   display: flex;
   min-height: 400px;
   background: #000;
   justify-content: flex-end;
+}
+.content {
+  min-height: calc(100vh - 126px);
 }
 .main.no-pattern {
   background-image: none;
