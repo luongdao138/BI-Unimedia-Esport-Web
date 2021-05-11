@@ -6,10 +6,12 @@ import ESTab from '@components/Tab'
 import ESInput from '@components/Input'
 import { GameTitlesResponse } from '@services/settings.service'
 import { useTranslation } from 'react-i18next'
+import _ from 'lodash'
 
 interface Props {
   gameTitles: GameTitlesResponse
   onGameSelect: (gameTitle: GameTitlesResponse[0]) => void
+  onSearch: (searchText: string) => void
 }
 
 const GameSelect: React.FC<Props> = (props) => {
@@ -17,6 +19,10 @@ const GameSelect: React.FC<Props> = (props) => {
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const { t } = useTranslation(['common'])
+
+  const onSearchInputChange = _.debounce(e => {
+    props.onSearch(e.target.value);
+  }, 1000)
 
   return (
     <Box marginTop={2}>
@@ -26,7 +32,7 @@ const GameSelect: React.FC<Props> = (props) => {
         <ESTab label={t('common:profile.favorite_game.create_new')} value={2} />
       </ESTabs>
       <Box pt={4} pl={2.5}>
-        <ESInput placeholder={t('common:search_by_keyword')} fullWidth />
+        <ESInput placeholder={t('common:search_by_keyword')} fullWidth onChange={onSearchInputChange}/>
         <Box pt={4}>
           {gameTitles.map((title) => (
             <ESChip
