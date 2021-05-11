@@ -28,6 +28,7 @@ const BASIC_INFO_INIT_STATE = {
   area_id: null,
   show_area: false,
 }
+let prevStep = null
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
@@ -137,20 +138,25 @@ const UserSettingsContainer: React.FC = () => {
       basicInfoRef.current.saveBasicInfo()
     }
 
-    setUserSettingsValues({
-      sex: basicInfoData.sex ? parseInt(basicInfoData.sex) : null,
-      show_sex: basicInfoData.show_sex,
-      birth_date: basicInfoData.birth_date ? basicInfoData.birth_date : null,
-      show_birth_date: basicInfoData.show_birth_date,
-      area_id: basicInfoData.area_id ? parseInt(basicInfoData.area_id) : null,
-      show_area: basicInfoData.show_area,
-      game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
-      features: selectedFeatures.map((feature) => parseInt(feature)),
-    })
-
     if (step == FINAL_STEP) handleConfirm()
     else setStep(step + 1)
   }
+
+  useEffect(() => {
+    if (prevStep) {
+      setUserSettingsValues({
+        sex: basicInfoData.sex ? parseInt(basicInfoData.sex) : null,
+        show_sex: basicInfoData.show_sex,
+        birth_date: basicInfoData.birth_date ? basicInfoData.birth_date : null,
+        show_birth_date: basicInfoData.show_birth_date,
+        area_id: basicInfoData.area_id ? parseInt(basicInfoData.area_id) : null,
+        show_area: basicInfoData.show_area,
+        game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
+        features: selectedFeatures.map((feature) => parseInt(feature)),
+      })
+    }
+    prevStep = step
+  }, [step])
 
   const handleSkip = () => {
     router.push('/welcome')
