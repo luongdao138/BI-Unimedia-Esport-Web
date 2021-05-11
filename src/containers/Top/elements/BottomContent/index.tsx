@@ -101,6 +101,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   moreIcon: {
     marginLeft: theme.spacing(0.5),
   },
+  button: {
+    textAlign: 'center',
+  },
   [theme.breakpoints.down('sm')]: {
     bottomContent: {
       paddingTop: theme.spacing(10),

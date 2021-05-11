@@ -10,7 +10,7 @@ export const TopContent: React.FC = () => {
     <Box className={classes.topContent}>
       <Box className={classes.innerWrap}>
         <Grid container spacing={3}>
-          <Grid item lg={6} sm={6} xs={12}>
+          <Grid item lg={7} sm={7} xs={12}>
             <Box className={classes.leftContent}>
               <Box display="flex" alignItems="flex-end">
                 <SvgIcon className={classes.icon} viewBox="0 0 206 43.301">
@@ -79,7 +79,7 @@ export const TopContent: React.FC = () => {
               </Box>
             </Box>
           </Grid>
-          <Grid item lg={6} sm={6} xs={12}>
+          <Grid item lg={5} sm={5} xs={12}>
             <Box className={classes.rightContent}>
               <img className={classes.rightImage} src="/images/lp_laptop.png" />
             </Box>
@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       bottom: 0,
       content: '""',
-      height: 530,
+      height: '100%',
       display: 'block',
     },
   },

@@ -11,15 +11,19 @@ const useStyles = makeStyles(() => ({
 }))
 
 interface TagsProps {
-  items: Array<String>
+  items: Array<string>
 }
 
 const HeaderTags: React.FC<TagsProps> = ({ items }) => {
   const classes = useStyles()
   return (
     <Box display="flex" className={classes.marginTop8}>
-      {items.map((item) => {
-        return <Typography className={classes.marginRight}>#{item}</Typography>
+      {items.map((item, index) => {
+        return (
+          <Typography key={`key-${index}`} className={classes.marginRight}>
+            #{item}
+          </Typography>
+        )
       })}
     </Box>
   )

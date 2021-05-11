@@ -9,6 +9,4 @@ const HomePage = () => {
   )
 }
 
-HomePage.Layout = MainLayout
-
 export default HomePage
