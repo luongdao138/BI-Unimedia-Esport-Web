@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
     padding: 24,
     borderTop: `1px solid  ${Colors.text[300]}`,
     textAlign: 'center',
+    display: 'flex',
   },
   footerDark: {
     width: '100%',

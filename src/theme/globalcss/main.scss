@@ -4,6 +4,9 @@
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
   width: 100%;
 }
+.content {
+  min-height: calc(100vh - 126px);
+}
 .main-wrapper {
   margin-top: 60px;
   display: flex;
@@ -36,7 +39,7 @@
 .aside-right {
   position: relative;
   max-width: 100%;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   justify-content: flex-start;
   display: flex;
