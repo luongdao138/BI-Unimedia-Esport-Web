@@ -29,6 +29,10 @@ export type UserFeaturesResponse = {
   }
 }[]
 
+export type GameTitlesParam = {
+  searchText: string
+}
+
 export type GameTitlesResponse = {
   id: string,
   type: string;
@@ -52,7 +56,8 @@ export const getFeatures = async (): Promise<UserFeaturesResponse> => {
   return data.data as UserFeaturesResponse
 }
 
-export const getAllGameTitles = async (): Promise<GameTitlesResponse> => {
+export const getAllGameTitles = async (param?: GameTitlesParam): Promise<GameTitlesResponse> => {
+  param;
   const { data } = await api.get(URI.GAME_TITLES_ALL)
   return data.data as GameTitlesResponse
 }

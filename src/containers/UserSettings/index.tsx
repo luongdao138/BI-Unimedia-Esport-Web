@@ -54,7 +54,9 @@ const UserSettingsContainer: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    setUnselectedGameTitles([...gameTitles])
+    const newUnselected = [...gameTitles]
+    _.remove(newUnselected, (item) => !!selectedGameTitles.find((selectedItem) => selectedItem.id === item.id))
+    setUnselectedGameTitles(newUnselected)
   }, [gameTitles])
 
   const onFeatureSelect = (id: string) => {
@@ -93,6 +95,10 @@ const UserSettingsContainer: React.FC = () => {
     setBasicInfoData(data)
   }
 
+  const onGameTitleSearch = (text: string) => {
+    getGameTitles(text.trim())
+  }
+
   function getStepViews() {
     switch (step) {
       case 0:
@@ -100,7 +106,7 @@ const UserSettingsContainer: React.FC = () => {
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
-        return <GameSelect gameTitles={unselectedGameTitles} onGameSelect={onGameTitleClick} />
+        return <GameSelect gameTitles={unselectedGameTitles} onGameSelect={onGameTitleClick} onSearch={onGameTitleSearch} />
     }
   }
 
