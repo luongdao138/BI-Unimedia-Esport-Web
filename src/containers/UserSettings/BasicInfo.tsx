@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Grid, Box, Container, Theme, makeStyles } from '@material-ui/core'
-import ESSelect from '@components/Select'
-import ESCheckbox from '@components/Checkbox'
 import { useFormik } from 'formik'
 import { GENDER } from '@constants/common.constants'
-import { DropdownDate } from './date-dropdown.component'
 import { useTranslation } from 'react-i18next'
-import { formatDate } from './date-dropdown-helper'
+import ESSelect from '@components/Select'
+import ESCheckbox from '@components/Checkbox'
+import ESDatePicker from '@components/DatePicker'
+import { formatDate } from '@components/DatePicker/date-dropdown-helper'
 
 export type BasicInfoParams = {
   selectedPrefecture: string
@@ -137,7 +137,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
   const birthDateView = (
     <Box>
       <Grid container spacing={2}></Grid>
-      <DropdownDate
+      <ESDatePicker
         selectedDate={date.selectedDate}
         onDateChange={(date) => {
           if (date === null) {
@@ -146,8 +146,6 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
             setDate({ date: date, selectedDate: formatDate(date) })
           }
         }}
-        defaultValues={{ year: t('common:date.year'), month: t('common:date.month'), day: t('common:date.day') }}
-        options={{ yearReverse: true }}
       />
       <ESCheckbox
         checked={checkboxStates.isShowBirthdate}
