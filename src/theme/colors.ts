@@ -9,12 +9,13 @@ export const Colors = {
   grey: {
     '100': '#212121',
     '200': '#4D4D4D',
+    '300': '#ADABAB',
   },
   text: {
     '100': '#FFFFFF',
     '200': '#FFFFFF70',
     '300': '#FFFFFF30',
-    '400': '212121',
+    '400': '#212121',
   },
   black: '#000000',
   white: '#ffffff',

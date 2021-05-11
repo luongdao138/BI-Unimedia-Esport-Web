@@ -47,6 +47,21 @@ export const registerByEmail = createAsyncThunk<services.UserLoginResponse, serv
   }
 )
 
+export const registerConfirm = createAsyncThunk<services.UserLoginResponse, services.UserConfirmParams>(
+  AUTH_ACTION_TYPE.REGISTER_CONFIRM,
+  async (confirmParam, { rejectWithValue }) => {
+    try {
+      const res = await services.registerConfirm(confirmParam)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const forgotPassword = createAsyncThunk<services.ForgotPasswordResponse, services.ForgotPasswordParams>(
   AUTH_ACTION_TYPE.FORGOT_PASSWORD,
   async (forgotParam, { rejectWithValue }) => {
