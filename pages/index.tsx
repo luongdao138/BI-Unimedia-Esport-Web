@@ -1,14 +1,10 @@
-import HomeContainer from '@containers/Home'
-import MainLayout from '@layouts/MainLayout'
+import TopContainer from '@containers/Top'
+import PlainLayout from '@layouts/PlainLayout'
 
-const HomePage = () => {
-  return (
-    <MainLayout>
-      <HomeContainer />
-    </MainLayout>
-  )
+const TopPage = () => {
+  return <TopContainer />
 }
 
-HomePage.Layout = MainLayout
+TopPage.Layout = PlainLayout
 
-export default HomePage
+export default TopPage

@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     transition: 'all 0.1s ease-out',
     '&:hover': {
       background: 'transparent',
-      borderRight: '2px solid ' + Colors.primary,
     },
     '&:hover $listText': {
       color: Colors.primary,

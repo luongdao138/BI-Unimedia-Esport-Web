@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 interface TagsProps {
-  text: String
+  text: string
   icon: string
 }
 

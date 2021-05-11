@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, IconButton, Icon, withStyles } from '@material-ui/core'
+import { Box, Grid, Typography, IconButton, Icon, withStyles, Theme } from '@material-ui/core'
 import { AvatarGroup } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
 import ProfileAvatar from '@components/ProfileAvatar'
@@ -19,12 +19,9 @@ import { Colors } from '@theme/colors'
 import HeaderTags from './Partials/headerTags'
 import Iconic from './Partials/iconic'
 import Followers from './Partials/followers'
-import useProfileData from './useProfileData'
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    // backgroundColor: '#E4E4E4',
-  },
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {},
   headerContainer: {
     height: 256,
     position: 'relative',
@@ -34,18 +31,18 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     width: '100%',
     height: '100%',
-    paddingRight: 24,
-    paddingLeft: 24,
-    paddingTop: 24,
+    paddingRight: theme.spacing(3),
+    paddingLeft: theme.spacing(3),
+    paddingTop: theme.spacing(3),
   },
   headerContainerSecond: {
-    paddingRight: 24,
-    paddingLeft: 24,
-    paddingTop: 24,
+    paddingRight: theme.spacing(3),
+    paddingLeft: theme.spacing(3),
+    paddingTop: theme.spacing(3),
   },
   bodyContainer: {
-    paddingRight: 24,
-    paddingLeft: 24,
+    paddingRight: theme.spacing(3),
+    paddingLeft: theme.spacing(3),
     marginTop: 50,
   },
   coverImage: {
@@ -62,13 +59,8 @@ const useStyles = makeStyles((theme) => ({
   menu: {
     position: 'absolute',
     top: 190,
-    right: 8,
+    right: theme.spacing(1),
   },
-
-  // marginTop8: {
-  //   marginTop: 8,
-  // },
-
   marginRight: {
     marginRight: 8,
   },
@@ -112,11 +104,41 @@ const ProfileContainer: React.FC = () => {
             </IconButton>
             <ProfileAvatar src="/images/avatar.png" editable />
             <ESMenu className={classes.menu}>
-              <ESMenuItem onClick={() => console.log('index.tsx 31 ')}>プロフィールを編集</ESMenuItem>
-              <ESMenuItem onClick={() => console.log('index.tsx 31 ')}>大会履歴</ESMenuItem>
-              <ESMenuItem onClick={() => console.log('index.tsx 31 ')}>アクティビティ</ESMenuItem>
-              <ESMenuItem onClick={() => console.log('index.tsx 31 ')}>QRコード</ESMenuItem>
-              <ESMenuItem onClick={() => console.log('index.tsx 31 ')}>ログアウト</ESMenuItem>
+              <ESMenuItem
+                onClick={() => {
+                  return null
+                }}
+              >
+                プロフィールを編集
+              </ESMenuItem>
+              <ESMenuItem
+                onClick={() => {
+                  return null
+                }}
+              >
+                大会履歴
+              </ESMenuItem>
+              <ESMenuItem
+                onClick={() => {
+                  return null
+                }}
+              >
+                アクティビティ
+              </ESMenuItem>
+              <ESMenuItem
+                onClick={() => {
+                  return null
+                }}
+              >
+                QRコード
+              </ESMenuItem>
+              <ESMenuItem
+                onClick={() => {
+                  return null
+                }}
+              >
+                ログアウト
+              </ESMenuItem>
             </ESMenu>
           </Grid>
         </Grid>
@@ -156,17 +178,13 @@ const ProfileContainer: React.FC = () => {
             </Box>
           </Box>
           <Box>
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="マインクラフト" onClick={() => {}} />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="シャドウバーズ" onClick={() => {}} />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="PUBG" onClick={() => {}} />
-            <ESChip
-              className={`${classes.marginTop20} ${classes.marginRight20}`}
-              label="Counter Strike Global Offensive"
-              onClick={() => {}}
-            />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="RAINBOW SIX SIEGE" onClick={() => {}} />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="UNO" onClick={() => {}} />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="ポケモンカード" onClick={() => {}} />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="マインクラフト" />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="シャドウバーズ" />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="PUBG" />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="Counter Strike Global Offensive" />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="RAINBOW SIX SIEGE" />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="UNO" />
+            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="ポケモンカード" />
           </Box>
           <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
             <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>

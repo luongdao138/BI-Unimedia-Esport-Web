@@ -1,16 +1,14 @@
-import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import * as Yup from 'yup'
-import { useRouter } from 'next/router'
 import useLoginByEmail from './useLoginByEmail'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import Image from 'next/image'
 import ESInput from '@components/Input'
 import FilterNoneIcon from '@material-ui/icons/FilterNone'
-import ESButton from '@components/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
 import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
 import ESToast from '@components/Toast'
@@ -21,6 +19,7 @@ import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import useSocialLogin from '@utils/hooks/useSocialLogin'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Required').email(),
@@ -28,9 +27,9 @@ const validationSchema = Yup.object().shape({
 })
 
 const LoginContainer: React.FC = () => {
+  const social = useSocialLogin()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
   const { loginByEmail, meta, resetMeta } = useLoginByEmail()
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
@@ -44,11 +43,7 @@ const LoginContainer: React.FC = () => {
     },
   })
 
-  useEffect(() => {
-    if (meta.loaded) {
-      router.push('/welcome')
-    }
-  }, [meta.loaded])
+  const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
 
   return (
     <>
@@ -103,19 +98,10 @@ const LoginContainer: React.FC = () => {
                 />
               </Box>
 
-              <Box pt={6} pb={4} className={classes.buttonContainer} textAlign="center">
-                <ESButton
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  round
-                  gradient
-                  size="large"
-                  minWidth={280}
-                  className={classes.submitBtn}
-                >
+              <Box pt={6} pb={4} maxWidth={280} className={classes.buttonContainer}>
+                <ButtonPrimary type="submit" round fullWidth>
                   {t('common:login.submit')}
-                </ESButton>
+                </ButtonPrimary>
               </Box>
             </form>
           </Box>
@@ -130,12 +116,12 @@ const LoginContainer: React.FC = () => {
             <ESDividerWithMiddleText text={t('common:login.divider')} />
           </Box>
 
-          <Box pt={8} textAlign="center">
-            <ESButtonTwitter variant="contained" className={classes.submitBtn} />
-            <ESButtonGoogle variant="contained" className={classes.submitBtn} />
-            <ESButtonLine variant="contained" className={classes.submitBtn} />
-            <ESButtonFacebook variant="contained" className={classes.submitBtn} />
-            <ESButtonApple variant="contained" className={classes.submitBtn} />
+          <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
+            <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonLine onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonApple onSuccess={handleSocialLogin} fullWidth />
           </Box>
         </Box>
       </Box>
@@ -146,9 +132,9 @@ const LoginContainer: React.FC = () => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
-    backgroundColor: `${Colors.grey[1000]}80`,
+    backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
-      backgroundColor: `${Colors.grey[1000]}80`,
+      backgroundColor: `${Colors.grey[200]}80`,
     },
   },
   iconMargin: {
@@ -161,22 +147,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  buttonContainer: {},
-  topContainer: {},
-  container: {},
-  submitBtn: {},
-  ['@media (max-width: 414px)']: {
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
+  },
+  [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
       paddingRight: 0,
     },
     topContainer: {
       paddingTop: 0,
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    submitBtn: {
-      minWidth: 220,
     },
   },
 }))
