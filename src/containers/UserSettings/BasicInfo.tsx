@@ -5,7 +5,7 @@ import ESCheckbox from '@components/Checkbox'
 import { useFormik } from 'formik'
 import { GENDER } from '@constants/common.constants'
 import { DropdownDate } from './date-dropdown.component'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { formatDate } from './date-dropdown-helper'
 
 export type BasicInfoParams = {
@@ -29,25 +29,23 @@ interface BasicInfoProps {
   onDataChange: (data: any) => void
 }
 
-const genders = [
-  {
-    value: GENDER.MALE,
-    label: '男性',
-  },
-  {
-    value: GENDER.FEMALE,
-    label: '女性',
-  },
-  {
-    value: GENDER.OTHER,
-    label: 'その他',
-  },
-]
-
 const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, onDataChange }, ref) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
-
+  const { t } = useTranslation(['common'])
+  const genders = [
+    {
+      value: GENDER.MALE,
+      label: t('common:gender.male'),
+    },
+    {
+      value: GENDER.FEMALE,
+      label: t('common:gender.female'),
+    },
+    {
+      value: GENDER.OTHER,
+      label: t('common:gender.other'),
+    },
+  ]
   const [date, setDate] = useState({ date: null, selectedDate: profile.birth_date ? profile.birth_date : null })
 
   useImperativeHandle(ref, () => ({
@@ -98,7 +96,7 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="selectedPrefecture" value={values.selectedPrefecture} onChange={handleChange} fullWidth>
-            <option value="">都道府県</option>
+            <option value="">{t('common:profile.prefectures')}</option>
             {memoizedPrefectures &&
               memoizedPrefectures.map((item) => (
                 <option key={item.value} value={item.value}>
@@ -112,7 +110,7 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
       <ESCheckbox
         checked={checkboxStates.isShowPrefecture}
         onChange={handleCheckboxChange}
-        label="都道府県を公開する"
+        label={t('common:profile.show_prefectures')}
         name="isShowPrefecture"
       />
     </Box>
@@ -123,7 +121,7 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="selectedGender" value={values.selectedGender} onChange={handleChange} fullWidth>
-            <option value="">性別</option>
+            <option value="">{t('common:profile.gender')}</option>
             {genders.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
@@ -133,7 +131,12 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
         </Grid>
         <Grid item xs={4}></Grid>
       </Grid>
-      <ESCheckbox checked={checkboxStates.isShowGender} onChange={handleCheckboxChange} label="性別を公開する" name="isShowGender" />
+      <ESCheckbox
+        checked={checkboxStates.isShowGender}
+        onChange={handleCheckboxChange}
+        label={t('common:profile.show_gender')}
+        name="isShowGender"
+      />
     </Box>
   )
 
@@ -149,13 +152,13 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
           // console.log('date', date)
           setDate({ date: date, selectedDate: formatDate(date) })
         }}
-        defaultValues={{ year: '年', month: '月', day: '日' }}
+        defaultValues={{ year: t('common:date.year'), month: t('common:date.month'), day: t('common:date.day') }}
         options={{ yearReverse: true }}
       />
       <ESCheckbox
         checked={checkboxStates.isShowBirthdate}
         onChange={handleCheckboxChange}
-        label="生年月日を公開する"
+        label={t('common:profile.show_birthdate')}
         name="isShowBirthdate"
       />
     </Box>
@@ -175,20 +178,6 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     marginTop: theme.spacing(60 / 8),
-  },
-  iconMargin: {
-    marginLeft: theme.spacing(1 / 2),
-  },
-  buttonContainer: {},
-  submitBtn: {},
-  ['@media (max-width: 414px)']: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    topContainer: {
-      paddingTop: 0,
-    },
   },
 }))
 

@@ -1,5 +1,5 @@
 export default {
-  welcome: 'Welcome to React and react-i18next',
+  welcome: 'eXeLABへようこそ',
   button: {
     twitter: 'Twitterでログイン',
     google: 'Googleでログイン',
@@ -43,4 +43,33 @@ export default {
     follow: 'フォローする',
     unfollow: 'フォロー中',
   },
+  profile: {
+    prefectures: '都道府県',
+    show_prefectures: '都道府県を公開する',
+    gender: '性別',
+    show_gender: '性別を公開する',
+    show_birthdate: '生年月日を公開する',
+    basic_info: '基本データ',
+    tag: 'タグ',
+    favorite_game: {
+      title: '好きなゲーム',
+      search_by_keyword: 'キーワードで探す',
+      search_by_genre: 'ジャンルから探す',
+      create_new: '新しく作る',
+    },
+  },
+  gender: {
+    male: '男性',
+    female: '女性',
+    other: 'その他',
+  },
+  date: {
+    year: '年',
+    month: '月',
+    day: '日',
+  },
+  skip: 'スキップする',
+  next: '次へ',
+  done: '完了',
+  search_by_keyword: 'キーワード検索',
 }

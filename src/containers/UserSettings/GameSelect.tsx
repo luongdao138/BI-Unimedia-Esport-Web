@@ -4,27 +4,29 @@ import ESChip from '@components/Chip'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESInput from '@components/Input'
-import { GameTitlesResponse } from '@services/settings.service';
+import { GameTitlesResponse } from '@services/settings.service'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
-  gameTitles: GameTitlesResponse,
+  gameTitles: GameTitlesResponse
   onGameSelect: (gameTitle: GameTitlesResponse[0]) => void
 }
 
 const GameSelect: React.FC<Props> = (props) => {
-  const { gameTitles } = props;
+  const { gameTitles } = props
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const { t } = useTranslation(['common'])
 
   return (
     <Box marginTop={2}>
       <ESTabs value={tab} onChange={(_, v) => setTab(v)} classes={{ flexContainer: classes.tabContainer }}>
-        <ESTab label="キーワードで探す" value={0} />
-        <ESTab label="ジャンルから探す" value={1} />
-        <ESTab label="新しく作る" value={2} />
+        <ESTab label={t('common:profile.favorite_game.title')} value={0} />
+        <ESTab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
+        <ESTab label={t('common:profile.favorite_game.create_new')} value={2} />
       </ESTabs>
       <Box pt={4} pl={2.5}>
-        <ESInput placeholder="キーワード検索" fullWidth />
+        <ESInput placeholder={t('common:search_by_keyword')} fullWidth />
         <Box pt={4}>
           {gameTitles.map((title) => (
             <ESChip

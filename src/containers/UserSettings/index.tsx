@@ -14,6 +14,8 @@ import useGetPrefectures from './useGetPrefectures'
 import useSettings from './useSettings'
 import _ from 'lodash'
 import { GameTitlesResponse } from '@services/settings.service'
+import { useTranslation } from 'react-i18next'
+import { Colors } from '@theme/colors'
 
 const FINAL_STEP = 2
 const BASIC_INFO_INIT_STATE = {
@@ -27,6 +29,7 @@ const BASIC_INFO_INIT_STATE = {
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
   const basicInfoRef = useRef(null)
   const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
   const { prefectures, getPrefectures } = useGetPrefectures()
@@ -37,6 +40,7 @@ const UserSettingsContainer: React.FC = () => {
   const [selectedGameTitles, setSelectedGameTitles] = useState([] as GameTitlesResponse)
   const [unselectedGameTitles, setUnselectedGameTitles] = useState([] as GameTitlesResponse)
   const [userSettingsValues, setUserSettingsValues] = useState(null)
+  const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   useEffect(() => {
     getFeatures()
@@ -150,15 +154,15 @@ const UserSettingsContainer: React.FC = () => {
       <Box pt={2} pb={2} alignItems="center" display="flex">
         <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
           <Typography variant="h2" style={{ fontSize: 30 }}>
-            eXeLABへようこそ
+            {t('common:welcome')}
           </Typography>
-          <Typography>スキップする</Typography>
+          <Typography>{t('common:skip')}</Typography>
         </Grid>
       </Box>
       <Grid container direction="column" className={classes.contents}>
         <Box className={classes.stepperHolder}>
           <Stepper activeStep={step} style={{ padding: 0 }}>
-            {['基本データ', 'タグ', '好きなゲーム'].map((label, idx) => (
+            {stepsTitles.map((label, idx) => (
               <Step key={idx}>
                 <StepButton onClick={() => setStep(idx)}>
                   <StepLabel>{label}</StepLabel>
@@ -193,7 +197,7 @@ const UserSettingsContainer: React.FC = () => {
           <Box className={classes.nextBtnHolder}>
             <Box className={classes.nextBtn}>
               <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
-                {step == FINAL_STEP ? '完了' : '次へ'}
+                {step == FINAL_STEP ? t('common:done') : t('common:next')}
               </ButtonPrimary>
             </Box>
           </Box>
@@ -215,7 +219,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: 0,
     bottom: 0,
     width: '100%',
-    background: 'black',
+    background: Colors.black,
   },
   stepperHolder: {
     paddingRight: theme.spacing(12),

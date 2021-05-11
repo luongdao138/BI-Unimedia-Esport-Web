@@ -1,21 +1,18 @@
-
 import { Box, Theme, makeStyles } from '@material-ui/core'
 import ESChip from '@components/Chip'
-import { UserFeaturesResponse } from '@services/settings.service';
+import { UserFeaturesResponse } from '@services/settings.service'
 
 interface Props {
-  features: UserFeaturesResponse,
-  selectedFeatures: string[],
-  onSelect: (id: string) => void,
+  features: UserFeaturesResponse
+  selectedFeatures: string[]
+  onSelect: (id: string) => void
 }
 
 const TagSelect: React.FC<Props> = (props) => {
-  const { selectedFeatures, features } = props;
+  const { selectedFeatures, features } = props
   const classes = useStyles()
   const checkIsActive = (id: string) => !!selectedFeatures.find((selectedId) => selectedId === id)
 
-  // eslint-disable-next-line no-console
-  console.log(props);
   return (
     <Box marginTop={5}>
       {features.map((chip) => (
