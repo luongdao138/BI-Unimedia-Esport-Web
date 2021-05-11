@@ -78,17 +78,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
         margin="dense"
         endAdornment={renderIcon()}
       />
-
-      <Select
-        id={'input'}
-        variant="outlined"
-        margin="dense"
-        native
-        onChange={onSelect}
-        className={classes.select}
-        style={hasValue ? { minWidth: 0, width: 0 } : { minWidth: 170 }}
-        input={<Input />}
-      >
+      <Select id={'input'} variant="outlined" margin="dense" native onChange={onSelect} className={classes.select} input={<Input />}>
         {selectData &&
           selectData.map(({ value, name }: dataItem, index) => (
             <option key={index + value} value={value}>
@@ -129,8 +119,6 @@ const useStyles = makeStyles(() => ({
   inputFocused: { width: 0, opacity: 0, visibility: 'hidden' },
   inputBlur: { width: 170, opacity: 1, visibility: 'visible' },
   input: {
-    transition: 'all 0.2s ease',
-    willChange: 'width',
     borderBottomRightRadius: 'unset',
     zIndex: 11,
     width: '100%',
