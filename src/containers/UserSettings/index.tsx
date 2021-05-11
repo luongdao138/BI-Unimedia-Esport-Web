@@ -141,7 +141,7 @@ const UserSettingsContainer: React.FC = () => {
 
   return (
     <>
-      <Container maxWidth="md" className={classes.container}>
+      <Container maxWidth="sm" className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
             <Typography variant="h2" style={{ fontSize: 30 }}>
