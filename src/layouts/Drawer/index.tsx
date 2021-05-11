@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
     top: 61,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     backdropFilter: 'blur(5px)',
-    borderRight: `1px solid ${Colors.text[200]}`,
+    borderRight: `1px solid ${Colors.text[300]}`,
   },
   box: {
     width: 184,

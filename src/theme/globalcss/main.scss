@@ -312,6 +312,12 @@
   }
 }
 
+@media (min-width: 960px) {
+  .ESDrawer {
+    display: none;
+  }
+}
+
 @media (max-width: 960px) {
   .aside-left {
     display: none;
