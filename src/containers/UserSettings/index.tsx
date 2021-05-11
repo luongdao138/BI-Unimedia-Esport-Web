@@ -170,7 +170,6 @@ const UserSettingsContainer: React.FC = () => {
             {t('common:welcome')}
           </Typography>
           <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
-          {/* <Typography></Typography> */}
         </Grid>
       </Box>
       <Grid container direction="column" className={classes.contents}>
