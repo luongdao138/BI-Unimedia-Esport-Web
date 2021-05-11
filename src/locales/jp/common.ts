@@ -44,6 +44,8 @@ export default {
     zero: '0',
     see_more: 'もっと見る',
     at: '@',
+    search_results: '検索結果',
+    total: '件',
   },
   home: {
     home: 'ホーム',
@@ -56,5 +58,14 @@ export default {
     read_more: 'もっとみる',
     following: 'フォロー中',
     followers: 'フォロワー',
+  },
+  user: {
+    user_results: 'ニックネーム・ID「ああああああ」 の検索結果',
+  },
+  tournament: {
+    card_date: '開　催　日',
+    organizer: '主催者',
+    entry: 'エントリー',
+    tournament_results: '大会「ああああああ」 の検索結果',
   },
 }

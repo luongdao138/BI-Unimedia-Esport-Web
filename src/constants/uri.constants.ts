@@ -9,5 +9,8 @@ export const URI = {
   FORGOT_PASSWORD: '/v1/passwords/forgot',
   FORGOT_CONFIRM: '/v1/passwords/confirm',
   RESET_PASSWORD: '/v1/passwords/reset',
-  USERS_SEARCH: '/v1/users/search',
+  USERS_SEARCH: '/v2/users/search',
+  FOLLOW: '/v1/followers/follow',
+  UNFOLLOW: '/v1/followers/unfollow',
+  TOURNAMENTS_SEARCH: '/v1/tournaments/search',
 }

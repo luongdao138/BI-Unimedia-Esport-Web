@@ -1,10 +1,25 @@
+export const searchTypes = {
+  USER: 1,
+  COMMUNITY: 2,
+  TOURNAMENT: 3,
+  RECRUITMENT: 4,
+}
+
 export const searchOptions = [
   {
-    value: 1,
+    value: searchTypes.USER,
     name: 'ニックネーム・ID',
   },
   {
-    value: 2,
-    name: 'Community',
+    value: searchTypes.COMMUNITY,
+    name: 'コミュニティ',
+  },
+  {
+    value: searchTypes.TOURNAMENT,
+    name: 'アリーナ',
+  },
+  {
+    value: searchTypes.RECRUITMENT,
+    name: 'ロビー',
   },
 ]
