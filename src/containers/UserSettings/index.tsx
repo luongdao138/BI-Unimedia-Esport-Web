@@ -8,6 +8,7 @@ import StepButton from '@components/StepButton'
 import TagSelect from '@containers/UserSettings/TagSelect'
 import GameSelect from '@containers/UserSettings/GameSelect'
 import ESChip from '@components/Chip'
+import ESButton from '@components/Button'
 import BasicInfo from './BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
 import useGetPrefectures from './useGetPrefectures'
@@ -16,6 +17,7 @@ import _ from 'lodash'
 import { GameTitlesResponse } from '@services/settings.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
+import { useRouter } from 'next/router'
 
 const FINAL_STEP = 2
 const BASIC_INFO_INIT_STATE = {
@@ -29,6 +31,7 @@ const BASIC_INFO_INIT_STATE = {
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const basicInfoRef = useRef(null)
   const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
@@ -125,9 +128,9 @@ const UserSettingsContainer: React.FC = () => {
     if (memoizedData) profileUpdate(memoizedData)
   }, [memoizedData])
 
-  // TODO handle confirm
-  // eslint-disable-next-line no-console
-  const handleConfirm = () => console.log('CONFIRM')
+  const handleConfirm = () => {
+    router.push('/welcome')
+  }
 
   const handleButtonClick = () => {
     if (basicInfoRef && basicInfoRef.current) {
@@ -149,6 +152,10 @@ const UserSettingsContainer: React.FC = () => {
     else setStep(step + 1)
   }
 
+  const handleSkip = () => {
+    router.push('/welcome')
+  }
+
   return (
     <Container maxWidth="md" className={classes.container}>
       <Box pt={2} pb={2} alignItems="center" display="flex">
@@ -156,7 +163,8 @@ const UserSettingsContainer: React.FC = () => {
           <Typography variant="h2" style={{ fontSize: 30 }}>
             {t('common:welcome')}
           </Typography>
-          <Typography>{t('common:skip')}</Typography>
+          <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
+          {/* <Typography></Typography> */}
         </Grid>
       </Box>
       <Grid container direction="column" className={classes.contents}>
