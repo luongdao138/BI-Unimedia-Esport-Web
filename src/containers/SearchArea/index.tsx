@@ -167,11 +167,6 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     transition: 'all 0.1s ease-out',
     willChange: 'width',
-    '&:focus': {
-      borderColor: '1px solid green',
-      backgroundColor: 'blue',
-      zIndex: 99,
-    },
   },
 }))
 export default SearchArea
