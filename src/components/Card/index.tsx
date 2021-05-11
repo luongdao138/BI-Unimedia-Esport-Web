@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderRadius: 4,
     borderStyle: 'solid',
-    borderColor: Colors.white_opacity[30],
+    borderColor: Colors.white_opacity[15],
   },
   root: {
     position: 'relative',

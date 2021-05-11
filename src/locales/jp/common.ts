@@ -1,5 +1,16 @@
 export default {
   welcome: 'Welcome to React and react-i18next',
+  top: {
+    title: '”ゲーム”が広がる。仲間ができる。',
+    start_exelab: 'exeLABをはじめる',
+    is: 'は',
+    top_title: `すべてのゲーマーとそのファンのための
+コミュニケーションサービスです。`,
+    top_description: `カジュアルに仲間を募集する、コミュニティに参加する、大会で腕試しなど、自身のスタイルに合わせた使い方が可能です。
+今後も拡張されていく様々な機能を通して、ゲーマー同士やファンとの交流を広げていきます。`,
+    download_app_version: 'アプリ版のダウンロードはこちら',
+    recruiting_tournament: '募集中の大会',
+  },
   button: {
     twitter: 'Twitterでログイン',
     google: 'Googleでログイン',

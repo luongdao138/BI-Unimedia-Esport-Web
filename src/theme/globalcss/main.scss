@@ -289,6 +289,26 @@
   opacity: 0;
   transition: all 0.2s ease-in-out;
 }
+.plain-main {
+  background: #060606;
+}
+.parallax {
+  margin: 0 auto;
+  width: 100%;
+  height: 740px;
+  background: url('/images/lp_image.png') center 60px repeat-x #212121 fixed;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.parallax-inner {
+  background: #30155160;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1050px;
+}
 .visible-mobile {
   display: none !important;
 }
