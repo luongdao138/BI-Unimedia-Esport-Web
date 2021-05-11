@@ -31,6 +31,7 @@ export default {
   error: {
     login_failed: 'ログインに失敗しました。',
     code_invalid: '入力されたコードは無効です',
+    user_settings_failed: 'User settings failed',
   },
   common: {
     required: '必須',

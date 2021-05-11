@@ -198,7 +198,7 @@ const UserSettingsContainer: React.FC = () => {
         </Box>
       </Container>
       {!!profileUpdateMeta.error && (
-        <ESToast open={!!profileUpdateMeta.error} message={'Show error message here'} resetMeta={resetProfileUpdateMeta} />
+        <ESToast open={!!profileUpdateMeta.error} message={t('common:error.user_settings_failed')} resetMeta={resetProfileUpdateMeta} />
       )}
     </>
   )
