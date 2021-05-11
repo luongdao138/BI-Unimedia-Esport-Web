@@ -1,18 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
 .content-wrapper {
   max-width: 800px;
-  margin: 0 auto;
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
   width: 100%;
-  // min-height: 2000px;
 }
-.main {
+.main-wrapper {
   margin-top: 60px;
+  display: flex;
   min-height: 400px;
   background: #000;
+  justify-content: flex-end;
 }
 .main.no-pattern {
   background-image: none;
+}
+.main {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-left: calc((100% - 800px) / 2);
 }
 .aside-left {
   position: fixed;
@@ -28,11 +34,8 @@
   display: flex;
 }
 .aside-right {
-  position: fixed;
-  right: 0;
-  top: 60px;
-  max-width: calc((100% - 800px) / 2);
-  bottom: 0;
+  position: relative;
+  max-width: 100%;
   height: 100%;
   width: 100%;
   border-left: 1px solid #70707070;
@@ -50,7 +53,91 @@
   z-index: -1;
 }
 
-/* Primary Button */
+.hamburger {
+  padding: 10px 10px;
+  cursor: pointer;
+  transition-property: opacity, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  overflow: visible;
+  display: none;
+}
+.hamburger:hover {
+  opacity: 0.7;
+}
+.hamburger.is-active:hover {
+  opacity: 0.7;
+}
+.hamburger.is-active .hamburger-inner,
+.hamburger.is-active .hamburger-inner::before,
+.hamburger.is-active .hamburger-inner::after {
+  background-color: #fff;
+}
+
+.hamburger--slider .hamburger-inner {
+  top: 2px;
+}
+.hamburger--slider .hamburger-inner::before {
+  top: 10px;
+  transition-property: transform, opacity;
+  transition-timing-function: ease;
+  transition-duration: 0.15s;
+}
+.hamburger--slider .hamburger-inner::after {
+  top: 20px;
+}
+
+.hamburger--slider.is-active .hamburger-inner {
+  transform: translate3d(0, 10px, 0) rotate(45deg);
+}
+.hamburger--slider.is-active .hamburger-inner::before {
+  transform: rotate(-45deg) translate3d(-5.71429px, -6px, 0);
+  opacity: 0;
+}
+.hamburger--slider.is-active .hamburger-inner::after {
+  transform: translate3d(0, -20px, 0) rotate(-90deg);
+}
+
+.hamburger-box {
+  width: 26px;
+  height: 21px;
+  display: inline-block;
+  position: relative;
+}
+
+.hamburger-inner {
+  display: block;
+  top: 12px;
+}
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  width: 24px;
+  height: 1px;
+  background-color: #fff;
+  border-radius: 4px;
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+.hamburger-inner::before,
+.hamburger-inner::after {
+  content: '';
+  display: block;
+}
+.hamburger-inner::before {
+  top: -10px;
+}
+.hamburger-inner::after {
+  bottom: -10px;
+}
 
 .MuiButtonBase-root.button-primary {
   position: relative;
@@ -59,7 +146,6 @@
   font-weight: bold;
   font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
     'MS PGothic', sans-serif;
-
   line-height: 1.75;
   text-transform: uppercase;
   height: 50px;
@@ -202,4 +288,81 @@
   visibility: 'hidden';
   opacity: 0;
   transition: all 0.2s ease-in-out;
+}
+.visible-mobile {
+  display: none !important;
+}
+.header-container {
+  position: relative;
+}
+
+@media (max-width: 1200px) {
+  .aside-left {
+    width: 200px;
+    max-width: 200px;
+  }
+  .main {
+    padding-left: 200px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .content-wrapper {
+    max-width: 660px;
+  }
+}
+
+@media (min-width: 960px) {
+  .ESDrawer {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .aside-left {
+    display: none;
+  }
+  .aside-right {
+    display: none;
+  }
+  .main {
+    max-width: 100%;
+    padding-left: 0;
+  }
+  .content-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+  .header-container.MuiContainer-root {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .hamburger {
+    display: block;
+  }
+  .search-area {
+    display: none;
+  }
+  .visible-mobile {
+    display: inline-block !important;
+  }
+  .logo {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: block;
+    width: auto;
+    margin: 0 auto;
+    width: 100px;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 414px) {
+    .logo {
+      width: 80px;
+    }
+  }
 }

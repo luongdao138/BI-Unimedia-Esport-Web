@@ -27,9 +27,9 @@ export default createMuiTheme({
       secondary: Colors.text[300],
     },
   },
-  // breakpoints: {
-  //   values: breakpointValues,
-  // },
+  breakpoints: {
+    values: breakpointValues,
+  },
   typography: {
     fontFamily: font,
     h2: {
@@ -85,10 +85,6 @@ export default createMuiTheme({
       badge: {
         fontSize: 8,
         padding: 2,
-      },
-      anchorOriginTopRightRectangle: {
-        top: '4px',
-        right: '4px',
       },
     },
     MuiSnackbar: {
