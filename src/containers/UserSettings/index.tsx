@@ -140,7 +140,7 @@ const UserSettingsContainer: React.FC = () => {
 
   return (
     <>
-      <Container maxWidth="sm" className={classes.container}>
+      <Container className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
             <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
@@ -218,6 +218,7 @@ const ResponsiveTypo = withStyles({
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
+    maxWidth: 600,
     marginTop: theme.spacing(60 / 8),
   },
   contents: {

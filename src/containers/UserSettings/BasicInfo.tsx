@@ -157,7 +157,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
   )
 
   return (
-    <Container maxWidth="sm" className={classes.container}>
+    <Container maxWidth="md" className={classes.container}>
       <form>
         {prefectureView}
         {genderView}
