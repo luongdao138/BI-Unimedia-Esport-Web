@@ -19,4 +19,5 @@ export const URI = {
   FOLLOW: '/v1/followers/follow',
   UNFOLLOW: '/v1/followers/unfollow',
   TOURNAMENTS_SEARCH: '/v1/tournaments/search',
+  RECOMMENDED_USERS: '/v1/recommended_users',
 }

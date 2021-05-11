@@ -3,13 +3,17 @@
   max-width: 800px;
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
   width: 100%;
+  padding-top: 60px;
 }
+
 .main-wrapper {
-  margin-top: 60px;
   display: flex;
   min-height: 400px;
   background: #000;
   justify-content: flex-end;
+}
+.content {
+  min-height: calc(100vh - 126px);
 }
 .main.no-pattern {
   background-image: none;
@@ -36,20 +40,21 @@
 .aside-right {
   position: relative;
   max-width: 100%;
-  height: 100%;
+  height: 100vh;
   width: 100%;
-  border-left: 1px solid #70707070;
   justify-content: flex-start;
   display: flex;
+  z-index: 100;
 }
 .back-drop {
-  backdrop-filter: blur(5px);
-  background: rgba(0, 0, 0, 0.5);
+  //backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.8);
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  will-change: all;
   z-index: -1;
 }
 

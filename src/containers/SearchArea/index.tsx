@@ -3,6 +3,7 @@ import { OutlinedInput, Box, Select, withStyles, IconButton, Icon } from '@mater
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '@components/Button'
+import { useRouter } from 'next/router'
 import _ from 'lodash'
 
 interface SearchAreaProps {
@@ -21,6 +22,7 @@ interface returnItem {
 }
 
 const SearchArea: React.FC<SearchAreaProps> = (props) => {
+  const router = useRouter()
   const { selectData, onSearch } = props
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [option, setOption] = useState<number>(1)
@@ -34,6 +36,14 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
       setHasvalue(false)
     }
   }, [value])
+
+  useEffect(() => {
+    if (!_.isEmpty(router.query)) {
+      const keyword = router.query.keyword ? router.query.keyword.toString() : ''
+      setOption(Number(router.query?.type))
+      setValue(keyword)
+    }
+  }, [router.query])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
@@ -78,17 +88,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
         margin="dense"
         endAdornment={renderIcon()}
       />
-
-      <Select
-        id={'input'}
-        variant="outlined"
-        margin="dense"
-        native
-        onChange={onSelect}
-        className={classes.select}
-        style={hasValue ? { minWidth: 0, width: 0 } : { minWidth: 170 }}
-        input={<Input />}
-      >
+      <Select id={'input'} variant="outlined" margin="dense" native onChange={onSelect} className={classes.select} input={<Input />}>
         {selectData &&
           selectData.map(({ value, name }: dataItem, index) => (
             <option key={index + value} value={value}>
@@ -129,8 +129,6 @@ const useStyles = makeStyles(() => ({
   inputFocused: { width: 0, opacity: 0, visibility: 'hidden' },
   inputBlur: { width: 170, opacity: 1, visibility: 'visible' },
   input: {
-    transition: 'all 0.2s ease',
-    willChange: 'width',
     borderBottomRightRadius: 'unset',
     zIndex: 11,
     width: '100%',
