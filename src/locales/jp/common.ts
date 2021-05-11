@@ -43,4 +43,8 @@ export default {
     follow: 'フォローする',
     unfollow: 'フォロー中',
   },
+  followers: {
+    title: 'フォロー中',
+    th: '人',
+  },
 }
