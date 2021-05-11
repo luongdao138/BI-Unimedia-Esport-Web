@@ -144,13 +144,13 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
     <Box>
       <Grid container spacing={2}></Grid>
       <DropdownDate
-        selectedDate={
-          // optional
-          date.selectedDate // 'yyyy-mm-dd' format only
-        }
+        selectedDate={date.selectedDate}
         onDateChange={(date) => {
-          // console.log('date', date)
-          setDate({ date: date, selectedDate: formatDate(date) })
+          if (date === null) {
+            setDate({ date: null, selectedDate: null })
+          } else {
+            setDate({ date: date, selectedDate: formatDate(date) })
+          }
         }}
         defaultValues={{ year: t('common:date.year'), month: t('common:date.month'), day: t('common:date.day') }}
         options={{ yearReverse: true }}

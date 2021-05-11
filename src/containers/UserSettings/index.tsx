@@ -52,10 +52,10 @@ const UserSettingsContainer: React.FC = () => {
     getPrefectures({})
   }, [])
 
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log('profileUpdateMeta', profileUpdateMeta)
-  }, [profileUpdateMeta])
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-console
+  //   console.log('profileUpdateMeta', profileUpdateMeta)
+  // }, [profileUpdateMeta])
 
   useEffect(() => {
     setUnselectedGameTitles([...gameTitles])

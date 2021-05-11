@@ -285,8 +285,20 @@ export class DropdownDate extends React.Component<IProps, IState> {
       } else if (type === DropdownComponent.day) {
         selectedDay = value
       }
+
       if (selectedYear !== -1 && selectedMonth !== -1 && selectedDay !== -1) {
         this.props.onDateChange(new Date(selectedYear, selectedMonth, selectedDay))
+      } else if (selectedYear !== -1 && selectedMonth !== -1) {
+        this.props.onDateChange(new Date(selectedYear + '-' + monthByNumber[selectedMonth]))
+      } else if (selectedYear !== -1) {
+        this.setState({ selectedMonth: 1, selectedDay: 1 })
+        this.props.onDateChange(new Date(selectedYear + '-01-01'))
+      } else if (selectedYear === -1) {
+        selectedYear = -1
+        selectedMonth = -1
+        selectedDay = -1
+        this.setState({ selectedYear: -1, selectedMonth: -1, selectedDay: -1 })
+        this.props.onDateChange(null)
       }
     }
   }
