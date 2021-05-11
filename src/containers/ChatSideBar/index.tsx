@@ -14,6 +14,10 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
       <IconButton onClick={() => toggleChatBar(!expand)} className={classes.arrowBtn} disableRipple>
         <span className={classes.arrow}></span>
       </IconButton>
+      <Box className={classes.content}>
+        <Box className={classes.header}></Box>
+        <Box className={classes.inner}>ChatListHere</Box>
+      </Box>
       <div className="back-drop"></div>
     </Box>
   )
@@ -21,11 +25,12 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
 
 const useStyles = makeStyles({
   sidebarCont: {
-    width: (expand) => (expand ? 90 : 260),
-    height: 1000,
+    width: (expand) => (expand ? 260 : 90),
+    height: '100%',
+    willChange: 'width',
     display: 'block',
     position: 'fixed',
-    transform: (expand) => (expand ? 'translateX(calc(0px))' : 'translateX(calc(-170px))'),
+    transform: (expand) => (expand ? 'translateX(calc(-170px))' : 'translateX(calc(0px))'),
     transition: 'all 0.1s ease',
     borderLeft: '1px solid #70707070',
     top: 61,
@@ -65,5 +70,9 @@ const useStyles = makeStyles({
       background: 'rgba(0,0,0,0.5)',
     },
   },
+
+  content: {},
+  inner: {},
+  header: {},
 })
 export default ChatSideBar
