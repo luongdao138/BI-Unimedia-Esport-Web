@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { Grid, Box, Container, Theme, makeStyles } from '@material-ui/core'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
@@ -25,11 +25,10 @@ type BasicInfo = {
 interface BasicInfoProps {
   profile: BasicInfo
   prefectures: any
-  ref: any
   onDataChange: (data: any) => void
 }
 
-const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, onDataChange }, ref) => {
+const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChange }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const genders = [
@@ -48,12 +47,6 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
   ]
   const [date, setDate] = useState({ date: null, selectedDate: profile.birth_date ? profile.birth_date : null })
 
-  useImperativeHandle(ref, () => ({
-    saveBasicInfo() {
-      handleSubmit()
-    },
-  }))
-
   const memoizedPrefectures = useMemo(() => {
     if (prefectures && prefectures.data) {
       return prefectures.data.map((prefecture) => ({
@@ -63,22 +56,12 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
     }
   }, [prefectures])
 
-  const { handleChange, values, handleSubmit } = useFormik<BasicInfoParams>({
+  const { handleChange, values } = useFormik<BasicInfoParams>({
     initialValues: {
       selectedPrefecture: profile.area_id ? profile.area_id : '',
       selectedGender: profile.sex ? profile.sex : '',
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onSubmit: (values) => {
-      onDataChange({
-        sex: values.selectedGender,
-        show_sex: checkboxStates.isShowGender,
-        birth_date: date.selectedDate ? date.selectedDate : null,
-        show_birth_date: checkboxStates.isShowBirthdate,
-        area_id: values.selectedPrefecture,
-        show_area: checkboxStates.isShowPrefecture,
-      })
-    },
+    onSubmit: (_) => null,
   })
 
   const [checkboxStates, setCheckboxStates] = useState({
@@ -90,6 +73,17 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckboxStates({ ...checkboxStates, [event.target.name]: event.target.checked })
   }
+
+  useEffect(() => {
+    onDataChange({
+      sex: values.selectedGender,
+      show_sex: checkboxStates.isShowGender,
+      birth_date: date.selectedDate ? date.selectedDate : null,
+      show_birth_date: checkboxStates.isShowBirthdate,
+      area_id: values.selectedPrefecture,
+      show_area: checkboxStates.isShowPrefecture,
+    })
+  }, [values, date, checkboxStates])
 
   const prefectureView = (
     <Box>
@@ -173,7 +167,7 @@ const BasicInfo: React.FC<BasicInfoProps> = forwardRef(({ profile, prefectures, 
       </form>
     </Container>
   )
-})
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

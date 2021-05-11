@@ -9,6 +9,8 @@ import TagSelect from '@containers/UserSettings/TagSelect'
 import GameSelect from '@containers/UserSettings/GameSelect'
 import ESChip from '@components/Chip'
 import ESButton from '@components/Button'
+import ESToast from '@components/Toast'
+import ESLoader from '@components/Loader'
 import BasicInfo from './BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
 import useGetPrefectures from './useGetPrefectures'
@@ -19,7 +21,7 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 
-const FINAL_STEP = 2
+const FINAL_STEP = 3
 const BASIC_INFO_INIT_STATE = {
   sex: null,
   show_sex: false,
@@ -28,14 +30,12 @@ const BASIC_INFO_INIT_STATE = {
   area_id: null,
   show_area: false,
 }
-let prevStep = null
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
-  const basicInfoRef = useRef(null)
-  const { profileUpdate, profileUpdateMeta } = useUpdateProfile()
+  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const { prefectures, getPrefectures } = useGetPrefectures()
   const { features, gameTitles, getFeatures, getGameTitles } = useSettings()
   const [step, setStep] = useState(0)
@@ -44,6 +44,7 @@ const UserSettingsContainer: React.FC = () => {
   const [selectedGameTitles, setSelectedGameTitles] = useState([] as GameTitlesResponse)
   const [unselectedGameTitles, setUnselectedGameTitles] = useState([] as GameTitlesResponse)
   const [userSettingsValues, setUserSettingsValues] = useState(null)
+  const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   useEffect(() => {
@@ -51,11 +52,6 @@ const UserSettingsContainer: React.FC = () => {
     getGameTitles()
     getPrefectures({})
   }, [])
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-console
-  //   console.log('profileUpdateMeta', profileUpdateMeta)
-  // }, [profileUpdateMeta])
 
   useEffect(() => {
     setUnselectedGameTitles([...gameTitles])
@@ -95,23 +91,12 @@ const UserSettingsContainer: React.FC = () => {
 
   const onBasicInfoChanged = (data) => {
     setBasicInfoData(data)
-
-    setUserSettingsValues({
-      sex: data.sex ? parseInt(data.sex) : null,
-      show_sex: data.show_sex,
-      birth_date: data.birth_date ? data.birth_date : null,
-      show_birth_date: data.show_birth_date,
-      area_id: data.area_id ? parseInt(data.area_id) : null,
-      show_area: data.show_area,
-      game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
-      features: selectedFeatures.map((feature) => parseInt(feature)),
-    })
   }
 
   function getStepViews() {
     switch (step) {
       case 0:
-        return <BasicInfo ref={basicInfoRef} profile={basicInfoData} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+        return <BasicInfo profile={basicInfoData} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
@@ -119,104 +104,103 @@ const UserSettingsContainer: React.FC = () => {
     }
   }
 
-  const memoizedData = useMemo(() => {
-    if (userSettingsValues) {
-      return userSettingsValues
-    }
-  }, [userSettingsValues])
-
   useEffect(() => {
-    if (memoizedData) profileUpdate(memoizedData)
-  }, [memoizedData])
+    const data = {
+      sex: basicInfoData.sex ? parseInt(basicInfoData.sex) : null,
+      show_sex: basicInfoData.show_sex,
+      birth_date: basicInfoData.birth_date ? basicInfoData.birth_date : null,
+      show_birth_date: basicInfoData.show_birth_date,
+      area_id: basicInfoData.area_id ? parseInt(basicInfoData.area_id) : null,
+      show_area: basicInfoData.show_area,
+      game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
+      features: selectedFeatures.map((feature) => parseInt(feature)),
+    }
+    setUserSettingsValues(data)
+  }, [basicInfoData, selectedFeatures, selectedGameTitles])
 
-  const handleConfirm = () => {
-    router.push('/welcome')
-  }
+  const navigate = () => router.push('/welcome')
 
   const handleButtonClick = () => {
-    if (basicInfoRef && basicInfoRef.current) {
-      basicInfoRef.current.saveBasicInfo()
-    }
+    if (step != FINAL_STEP) setStep(step + 1)
 
-    if (step == FINAL_STEP) handleConfirm()
-    else setStep(step + 1)
+    profileUpdate(userSettingsValues)
   }
 
   useEffect(() => {
-    if (prevStep) {
-      setUserSettingsValues({
-        sex: basicInfoData.sex ? parseInt(basicInfoData.sex) : null,
-        show_sex: basicInfoData.show_sex,
-        birth_date: basicInfoData.birth_date ? basicInfoData.birth_date : null,
-        show_birth_date: basicInfoData.show_birth_date,
-        area_id: basicInfoData.area_id ? parseInt(basicInfoData.area_id) : null,
-        show_area: basicInfoData.show_area,
-        game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
-        features: selectedFeatures.map((feature) => parseInt(feature)),
-      })
-    }
-    prevStep = step
-  }, [step])
+    if (step == FINAL_STEP) showLoader(profileUpdateMeta.pending)
+    if (profileUpdateMeta.loaded && step == FINAL_STEP) navigate()
+  }, [profileUpdateMeta])
 
-  const handleSkip = () => {
-    router.push('/welcome')
-  }
+  const handleSkip = () => navigate()
 
   return (
-    <Container maxWidth="md" className={classes.container}>
-      <Box pt={2} pb={2} alignItems="center" display="flex">
-        <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
-          <Typography variant="h2" style={{ fontSize: 30 }}>
-            {t('common:welcome')}
-          </Typography>
-          <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
-        </Grid>
-      </Box>
-      <Grid container direction="column" className={classes.contents}>
-        <Box className={classes.stepperHolder}>
-          <Stepper activeStep={step} style={{ padding: 0 }}>
-            {stepsTitles.map((label, idx) => (
-              <Step key={idx}>
-                <StepButton onClick={() => setStep(idx)}>
-                  <StepLabel>{label}</StepLabel>
-                </StepButton>
-              </Step>
-            ))}
-          </Stepper>
+    <>
+      <Container maxWidth="md" className={classes.container}>
+        <Box pt={2} pb={2} alignItems="center" display="flex">
+          <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
+            <Typography variant="h2" style={{ fontSize: 30 }}>
+              {t('common:welcome')}
+            </Typography>
+            <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
+          </Grid>
         </Box>
-        {getStepViews()}
-        <Box className={classes.blankSpace}></Box>
-      </Grid>
-      <Box className={classes.stickyFooter}>
-        {step === 2 ? (
-          <>
-            <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
-              <Box pl={2.5} pt={2}>
-                {selectedGameTitles.map((game) => (
-                  <ESChip
-                    key={game.id}
-                    label={game.attributes.display_name}
-                    onDelete={() => onGameSelectionRemove(game)}
-                    className={classes.chipSpacing}
-                  />
-                ))}
-              </Box>
-            </Container>
-            <Divider />
-          </>
-        ) : null}
-
-        <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
-          <Box className={classes.nextBtnHolder}>
-            <Box className={classes.nextBtn}>
-              <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
-                {step == FINAL_STEP ? t('common:done') : t('common:next')}
-              </ButtonPrimary>
-            </Box>
+        <Grid container direction="column" className={classes.contents}>
+          <Box className={classes.stepperHolder}>
+            <Stepper activeStep={step} style={{ padding: 0 }}>
+              {stepsTitles.map((label, idx) => (
+                <Step key={idx}>
+                  <StepButton onClick={() => setStep(idx)}>
+                    <StepLabel>{label}</StepLabel>
+                  </StepButton>
+                </Step>
+              ))}
+            </Stepper>
           </Box>
-        </Container>
-      </Box>
-    </Container>
+          {getStepViews()}
+          <Box className={classes.blankSpace}></Box>
+        </Grid>
+        <Box className={classes.stickyFooter}>
+          {step === 2 ? (
+            <>
+              <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
+                <Box pl={2.5} pt={2}>
+                  {selectedGameTitles.map((game) => (
+                    <ESChip
+                      key={game.id}
+                      label={game.attributes.display_name}
+                      onDelete={() => onGameSelectionRemove(game)}
+                      className={classes.chipSpacing}
+                    />
+                  ))}
+                </Box>
+              </Container>
+              <Divider />
+            </>
+          ) : null}
+
+          <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
+            {loader ? (
+              <Grid item xs={12}>
+                <Box my={4} display="flex" justifyContent="center" alignItems="center">
+                  <ESLoader />
+                </Box>
+              </Grid>
+            ) : (
+              <Box className={classes.nextBtnHolder}>
+                <Box className={classes.nextBtn}>
+                  <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
+                    {step == FINAL_STEP - 1 ? t('common:done') : t('common:next')}
+                  </ButtonPrimary>
+                </Box>
+              </Box>
+            )}
+          </Container>
+        </Box>
+      </Container>
+      {!!profileUpdateMeta.error && (
+        <ESToast open={!!profileUpdateMeta.error} message={'Show error message here'} resetMeta={resetProfileUpdateMeta} />
+      )}
+    </>
   )
 }
 
