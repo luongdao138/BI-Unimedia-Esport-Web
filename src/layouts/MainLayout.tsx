@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Header } from '@layouts/Header'
 import { Footer } from '@layouts/Footer'
+import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
 
 interface MainLayoutProps {
@@ -9,24 +10,28 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer }) => {
+  const [open, setOpen] = useState<boolean>(false)
+
+  const toggleDrawer = (open: boolean) => {
+    setOpen(open)
+  }
+
   return (
-    <div>
-      <Header />
-      <div className={patternBg ? 'main' : 'no-pattern'}>
-        <aside className="aside-left">
-          <SideMenu />
-        </aside>
+    <div className="main-wrapper">
+      <Header open={open} toggleDrawer={toggleDrawer} />
+      <aside className="aside-left mui-fixed">
+        <SideMenu />
+      </aside>
+      <main role="main" className={patternBg ? 'main' : 'no-pattern'}>
         <div className="content-wrapper">
-          <div>
-            {children}
-            {footer ? <Footer /> : ''}
-          </div>
+          {children}
+          {footer ? <Footer /> : ''}
         </div>
         <aside className="aside-right">
-          <div>right</div>
           <div className="back-drop"></div>
         </aside>
-      </div>
+      </main>
+      <ESDrawer toggleDrawer={toggleDrawer} open={open} />
     </div>
   )
 }

@@ -10,7 +10,6 @@ import { genRanHex } from '@utils/helpers/CommonHelper'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
-    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#00B900',
