@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Box, Grid, Typography, IconButton, Icon, withStyles, Theme } from '@material-ui/core'
 import { AvatarGroup } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +20,8 @@ import { Colors } from '@theme/colors'
 import HeaderTags from './Partials/headerTags'
 import Iconic from './Partials/iconic'
 import Followers from './Partials/followers'
+import { useAppSelector } from '@store/hooks'
+import userProfileStore from '@store/userProfile'
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {},
@@ -86,6 +89,15 @@ const StyledAvatarGroup = withStyles({
 const ProfileContainer: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const { selectors } = userProfileStore
+  const userProfile = useAppSelector(selectors.getUserProfile)
+  // useEffect(() => {
+  //   getUserProfile()
+  // }, [])
+  useEffect(() => {
+    // console.log('index.tsx 96 ', userProfile)
+  }, [userProfile])
+
   return (
     <>
       <Grid xs={12} direction="column" className={classes.container}>
