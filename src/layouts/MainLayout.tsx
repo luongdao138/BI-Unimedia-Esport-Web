@@ -30,12 +30,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer }) 
       </aside>
       <main role="main" className={patternBg ? 'main' : 'no-pattern'}>
         <div className="content-wrapper">
-          {children}
+          <div className="content">{children}</div>
           {footer ? <Footer /> : ''}
         </div>
         <aside className="aside-right">
           <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} />
-          <div className="back-drop"></div>
         </aside>
       </main>
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
