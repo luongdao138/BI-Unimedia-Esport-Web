@@ -20,19 +20,19 @@ const GameSelect: React.FC<Props> = (props) => {
   const [tab, setTab] = useState(0)
   const { t } = useTranslation(['common'])
 
-  const onSearchInputChange = _.debounce(e => {
-    props.onSearch(e.target.value);
+  const onSearchInputChange = _.debounce((e) => {
+    props.onSearch(e.target.value)
   }, 1000)
 
   return (
-    <Box marginTop={2}>
+    <Box marginTop={2} width={1}>
       <ESTabs value={tab} onChange={(_, v) => setTab(v)} classes={{ flexContainer: classes.tabContainer }}>
         <ESTab label={t('common:profile.favorite_game.title')} value={0} />
         <ESTab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
         <ESTab label={t('common:profile.favorite_game.create_new')} value={2} />
       </ESTabs>
       <Box pt={4} pl={2.5}>
-        <ESInput placeholder={t('common:search_by_keyword')} fullWidth onChange={onSearchInputChange}/>
+        <ESInput placeholder={t('common:search_by_keyword')} fullWidth onChange={onSearchInputChange} />
         <Box pt={4}>
           {gameTitles.map((title) => (
             <ESChip

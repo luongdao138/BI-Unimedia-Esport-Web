@@ -3,7 +3,6 @@ import { Grid, Typography, Box, Container, Theme, makeStyles, Divider, withStyle
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
-import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import TagSelect from '@containers/UserSettings/TagSelect'
 import GameSelect from '@containers/UserSettings/GameSelect'
@@ -151,13 +150,24 @@ const UserSettingsContainer: React.FC = () => {
         <Grid container direction="column" className={classes.contents}>
           <Box className={classes.stepperHolder}>
             <Stepper activeStep={step} style={{ padding: 0 }}>
-              {stepsTitles.map((label, idx) => (
-                <Step key={idx}>
-                  <StepButton onClick={() => setStep(idx)}>
-                    <StepLabel>{label}</StepLabel>
-                  </StepButton>
-                </Step>
-              ))}
+              {stepsTitles.map((label, idx) => {
+                const buttonProps = { optional: undefined }
+
+                buttonProps.optional = (
+                  <>
+                    <Box m={2} />
+                    <Typography variant="caption" classes={{ caption: idx === step ? classes.captionActive : classes.captionInactive }}>
+                      {label}
+                    </Typography>
+                  </>
+                )
+
+                return (
+                  <Step key={idx}>
+                    <StepButton onClick={() => setStep(idx)} {...buttonProps} />
+                  </Step>
+                )
+              })}
             </Stepper>
           </Box>
           {getStepViews()}
@@ -274,6 +284,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     nextBtn: {
       minWidth: theme.spacing(27.5),
     },
+  },
+  captionActive: {
+    fontSize: theme.typography.body1.fontSize,
+    color: Colors.white,
+  },
+  captionInactive: {
+    fontSize: theme.typography.body1.fontSize,
   },
 }))
 
