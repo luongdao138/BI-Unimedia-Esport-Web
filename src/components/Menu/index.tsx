@@ -39,8 +39,8 @@ const ESMenu: React.FC<MenuProps> = ({ className, children }) => {
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{
-          vertical: 'center',
-          horizontal: 'left',
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
@@ -49,6 +49,7 @@ const ESMenu: React.FC<MenuProps> = ({ className, children }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
         onClick={handleClose}
+        disableScrollLock
       >
         {children}
       </StyledMenu>

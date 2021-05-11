@@ -10,7 +10,6 @@ import { genRanHex } from '@utils/helpers/CommonHelper'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
-    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#00B900',
@@ -21,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 4,
-    borderColor: 'rgba(255,255,255,.3)',
+    borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
       background: '#01a201',

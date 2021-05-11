@@ -1,5 +1,6 @@
 import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
 
 const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children, ...rest }) => {
   const classes = useStyles()
@@ -51,7 +52,7 @@ const useStyles = makeStyles(() => ({
     height: 0,
     borderTopWidth: 50,
     borderTopStyle: 'solid',
-    borderTopColor: 'rgba(0,0,0,.7)',
+    borderTopColor: Colors.black_opacity[70],
     borderRightWidth: 50,
     borderRightStyle: 'solid',
     borderRightColor: 'transparent',

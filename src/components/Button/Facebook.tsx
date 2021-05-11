@@ -7,7 +7,6 @@ import { LoginSocialParams } from '@services/auth.service'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
-    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#1877F2',
@@ -18,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 4,
-    borderColor: 'rgba(255,255,255,.3)',
+    borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
       background: '#0d61ce',
@@ -85,7 +84,6 @@ const FacebookButton: React.FC<FacebookButtonProps> = ({ onSuccess, ...rest }) =
   return (
     <FacebookLogin
       appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
-      autoLoad
       callback={handleResponse}
       render={(renderProps) => <ESButtonFacebook {...rest} onClick={renderProps.onClick} />}
     />

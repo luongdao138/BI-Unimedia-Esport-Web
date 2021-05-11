@@ -22,4 +22,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.resetPassword.fulfilled, (state, action) => {
       state.user = action.payload
     })
+    .addCase(actions.registerConfirm.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
 })

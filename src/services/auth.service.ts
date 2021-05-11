@@ -47,6 +47,7 @@ export type UserResetPasswordParams = {
 export type LoginSocialParams = {
   social_channel: 'google' | 'twitter' | 'apple' | 'facebook' | 'line'
   access_token: string
+  access_token_secret?: string
   type?: 'login' | 'register'
 }
 
@@ -62,6 +63,11 @@ export const loginSocial = async (params: LoginSocialParams): Promise<UserLoginR
 
 export const register = async (params: UserLoginParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.REGISTER, params)
+  return data
+}
+
+export const registerConfirm = async (params: UserConfirmParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.CONFIRM, params)
   return data
 }
 

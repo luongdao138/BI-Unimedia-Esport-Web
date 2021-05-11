@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/esports-web-v2
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 20
+      runas: ubuntu
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 60
+      runas: root
+  ApplicationStart:
+    - location: scripts/application_start.sh
+      timeout: 20
+      runas: ubuntu

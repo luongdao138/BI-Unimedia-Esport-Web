@@ -15,7 +15,7 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
     },
     colorPrimary: {
-      backgroundColor: 'rgba(255,255,255,.3)',
+      backgroundColor: Colors.white_opacity[30],
     },
     bar: {
       borderRadius: 2,
@@ -44,9 +44,7 @@ const ESStrengthMeter: React.FC<{ value: number }> = ({ value }) => {
   }
 
   useEffect(() => {
-    if (value) {
-      setPercentages(getPartPercentage(value))
-    }
+    setPercentages(getPartPercentage(value))
   }, [value])
 
   return (

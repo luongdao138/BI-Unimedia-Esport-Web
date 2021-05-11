@@ -162,6 +162,41 @@ const Atoms = () => {
         <ESMenuItem onClick={() => console.error('アクティビティ')}>アクティビティ</ESMenuItem>
         <ESMenuItem onClick={() => console.error('QRコード')}>QRコード</ESMenuItem>
         <ESMenuItem onClick={() => console.error('ログアウト')}>ログアウト</ESMenuItem>
+        <ESMenuItem
+          onClick={() => {
+            return null
+          }}
+        >
+          プロフィールを編集
+        </ESMenuItem>
+        <ESMenuItem
+          onClick={() => {
+            return null
+          }}
+        >
+          大会履歴
+        </ESMenuItem>
+        <ESMenuItem
+          onClick={() => {
+            return null
+          }}
+        >
+          アクティビティ
+        </ESMenuItem>
+        <ESMenuItem
+          onClick={() => {
+            return null
+          }}
+        >
+          QRコード
+        </ESMenuItem>
+        <ESMenuItem
+          onClick={() => {
+            return null
+          }}
+        >
+          ログアウト
+        </ESMenuItem>
       </ESMenu>
       <Box margin={4}>
         <Grid xs={3}>
@@ -283,7 +318,7 @@ const Atoms = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box position="relative" height={300} pt={23} pl={4} margin={4}>
+      <Box margin={4}>
         <ProfileCover src="/images/avatar.png" />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
