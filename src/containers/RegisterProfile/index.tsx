@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
+import { useStore } from 'react-redux'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -9,50 +9,64 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import useRegisterByEmail from './useRegisterByEmail'
-import ESStrengthMeter from '@components/StrengthMeter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
+import useProfile from './useProfile'
+import { isEmpty } from 'lodash'
 
-const RegisterByEmailContainer: React.FC = () => {
+const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerByEmail, meta, backAction } = useRegisterByEmail()
-  const [score, setScore] = useState(0)
+  const { registerProfile, meta, backAction } = useProfile()
+  const store = useStore()
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .test('email-validation', 'エラー文言が入ります', (value) => {
-        return CommonHelper.validateEmail(value)
+    user_code: Yup.string()
+      .required('エラー文言が入ります')
+      .max(50, '長すぎる')
+      .min(2, '2文字以上入力してください。')
+      .test('user_code', 'エラー文言が入ります', function (value) {
+        return CommonHelper.userCodeValid(value)
       })
-      .required('エラー文言が入ります'),
-    password: Yup.string()
-      .test('password-validation', 'エラー文言が入ります', (value) => {
-        const tempScore = CommonHelper.scorePassword(value)
-
-        setScore(tempScore)
-        return tempScore > 40
-      })
-      .required('エラー文言が入ります'),
+      .test('user_code', 'エラー文言が入ります', function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    nickname: Yup.string()
+      .required('エラー文言が入ります')
+      .max(50, '長すぎる')
+      .min(2, '2文字以上入力してください。')
+      .test('nickname', 'エラー文言が入ります', function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserLoginParams>({
+  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserProfileParams>({
     initialValues: {
-      email: '',
-      password: '',
-      registration_id: undefined,
+      user_code: '',
+      nickname: '',
     },
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
-      if (values.email && values.password) {
-        registerByEmail(values)
+      if (!hasMatchNgWord()) {
+        registerProfile(values)
       }
     },
   })
 
+  const hasMatchNgWord = (): boolean =>
+    CommonHelper.matchNgWords(store, values.user_code).length > 0 || CommonHelper.matchNgWords(store, values.nickname).length > 0
+
   const buttonActive = (): boolean => {
-    return values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== '' && score > 40
+    return (
+      values.nickname !== null &&
+      values.user_code !== null &&
+      values.nickname !== '' &&
+      values.user_code !== '' &&
+      values.nickname.length >= 2 &&
+      values.user_code.length >= 2 &&
+      isEmpty(errors)
+    )
   }
 
   return (
@@ -69,40 +83,39 @@ const RegisterByEmailContainer: React.FC = () => {
           </Box>
 
           <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
-            <Box>
+            <Box pb={1}>
               <ESInput
-                id="email"
+                id="user_code"
                 autoFocus
-                placeholder={t('common:register_by_email.email_placeholder')}
-                labelPrimary={t('common:register_by_email.email')}
-                labelSecondary={
-                  <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                    {t('common:register_by_email.forgot_password')}
-                  </Typography>
-                }
+                labelPrimary="ユーザーID"
                 fullWidth
-                value={values.email}
+                value={values.user_code}
                 onChange={handleChange}
-                helperText={touched.email && errors.email}
-                error={touched.email && !!errors.email}
+                helperText={touched.user_code && errors.user_code}
+                error={touched.user_code && !!errors.user_code}
               />
+            </Box>
+
+            <Box>
+              <Box display="flex" flexDirection="row" pb={1}>
+                <Icon className={`fa fa-exclamation-triangle ${classes.iconMargin}`} fontSize="small" />
+                <Typography variant="body2">ユーザーIDはあとから変更ができません</Typography>
+              </Box>
+
+              <Typography variant="body2">半角英数字、”+_-”が使用できます</Typography>
             </Box>
 
             <Box pt={3} pb={1}>
               <ESInput
-                id="password"
-                labelPrimary={t('common:register_by_email.password')}
-                type="password"
-                labelSecondary={<ESStrengthMeter value={score} />}
+                id="nickname"
+                labelPrimary="ニックネーム"
                 fullWidth
-                value={values.password}
+                value={values.nickname}
                 onChange={handleChange}
-                helperText={touched.password && errors.password}
-                error={touched.password && !!errors.password}
+                helperText={touched.nickname && errors.nickname}
+                error={touched.nickname && !!errors.nickname}
               />
             </Box>
-
-            <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
           </Box>
         </Box>
         <Box className={classes.stickyFooter}>
@@ -126,6 +139,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
+  },
+  iconMargin: {
+    marginRight: theme.spacing(1 / 2),
   },
   stickyFooter: {
     position: 'fixed',
@@ -155,4 +171,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default RegisterByEmailContainer
+export default RegisterProfileContainer

@@ -4,16 +4,16 @@ import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import useConfirm from './useConfirm'
+import useForgotConfirm from './useForgotConfirm'
 import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
 
-const ConfirmContainer: React.FC = () => {
+const ForgotConfirmContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { user, registerConfirm, metaConfirm, backAction } = useConfirm(confirmationCode)
+  const { user, forgotConfirm, metaConfirm, backAction } = useForgotConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -21,11 +21,11 @@ const ConfirmContainer: React.FC = () => {
       confirmation_code: confirmationCode,
     }
 
-    registerConfirm(params)
+    forgotConfirm(params)
   }
 
   const buttonActive = (): boolean => {
-    return user.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
+    return user?.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
   }
 
   return (
@@ -128,4 +128,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default ConfirmContainer
+export default ForgotConfirmContainer
