@@ -1,10 +1,10 @@
-import RegisterByEmailContainer from '@containers/RegisterByEmail'
+import RegisterContainer from '@containers/Register'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
 
 const RegisterPage: React.FC = () => {
   return (
     <AuthenticationLayout>
-      <RegisterByEmailContainer />
+      <RegisterContainer />
     </AuthenticationLayout>
   )
 }

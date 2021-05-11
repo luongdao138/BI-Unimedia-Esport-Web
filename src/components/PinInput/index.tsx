@@ -1,7 +1,7 @@
 import { FC, ReactNode, createRef, ChangeEvent, KeyboardEvent, ClipboardEvent } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { Typography } from '@material-ui/core'
+import { Typography, Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
 const BACKSPACE_KEY = 8
@@ -21,7 +21,7 @@ interface Props {
   value: string
 }
 
-const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value }) => {
+const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value }) => {
   const values = value.split('')
   const pins: ReactNode[] = []
   const classes = useStyles({ error: error })
@@ -53,6 +53,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value 
             inputRefs[index - 1].current.value = ''
           }
           inputRefs[index].current.value = ''
+          setValues()
         }
         break
       case LEFT_ARROW_KEY:
@@ -91,6 +92,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value 
       }
       if (hasCurrentElement(realLength - 1)) {
         realLength === numberOfPins ? inputRefs[realLength - 1].current.focus() : inputRefs[realLength].current.focus()
+        setValues()
       }
     }
   }
@@ -132,29 +134,33 @@ const PinInput: FC<Props> = ({ numberOfPins = 4, onChange, error = false, value 
 
   return (
     <>
-      <div className={classes.containerDefaultStyle}>{pins}</div>
-      {error && <Typography color="secondary">{t('common:error.code_invalid')}</Typography>}
+      <Box display="flex" flexDirection="row" justifyContent="center" width={328} className={classes.boxWidth}>
+        {pins}
+      </Box>
+      <Box width={328} className={classes.boxWidth} textAlign="left" pt={1}>
+        {error && (
+          <Typography variant="body2" color="secondary">
+            {t('common:error.code_invalid')}
+          </Typography>
+        )}
+      </Box>
     </>
   )
 }
 
-const useStyles = makeStyles(() => ({
-  containerDefaultStyle: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
+const useStyles = makeStyles((theme: Theme) => ({
   pinDefaultStyle: {
-    width: 50,
-    height: 60,
-    marginRight: 5,
-    marginLeft: 5,
+    width: 48,
+    height: 67,
+    marginRight: theme.spacing(1),
     borderRadius: 5,
+    '&:nth-last-child(1)': {
+      marginRight: 0,
+    },
   },
   pinText: (props: { error?: boolean }) => ({
     borderRadius: 5,
-    border: `1px solid ${props.error ? Colors.secondary : Colors.grey[1000]}`,
+    border: `1px solid ${props.error ? Colors.secondary : Colors.grey[200]}`,
     outline: 'none',
     boxSizing: 'border-box',
     color: Colors.white,
@@ -182,6 +188,15 @@ const useStyles = makeStyles(() => ({
       border: `1px solid ${Colors.white}`,
     },
   }),
+  boxWidth: {},
+  ['@media (max-width: 330px)']: {
+    boxWidth: {
+      width: 280,
+    },
+    pinDefaultStyle: {
+      height: 57,
+    },
+  },
 }))
 
 export default PinInput

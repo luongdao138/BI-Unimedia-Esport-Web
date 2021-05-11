@@ -1,5 +1,16 @@
 export default {
   welcome: 'Welcome to React and react-i18next',
+  top: {
+    title: '”ゲーム”が広がる。仲間ができる。',
+    start_exelab: 'exeLABをはじめる',
+    is: 'は',
+    top_title: `すべてのゲーマーとそのファンのための
+コミュニケーションサービスです。`,
+    top_description: `カジュアルに仲間を募集する、コミュニティに参加する、大会で腕試しなど、自身のスタイルに合わせた使い方が可能です。
+今後も拡張されていく様々な機能を通して、ゲーマー同士やファンとの交流を広げていきます。`,
+    download_app_version: 'アプリ版のダウンロードはこちら',
+    recruiting_tournament: '募集中の大会',
+  },
   button: {
     twitter: 'Twitterでログイン',
     google: 'Googleでログイン',
@@ -28,6 +39,13 @@ export default {
     privacy: '個人情報保護方針に同意する',
     footer_link: 'アカウントをお持ちの方',
   },
+  register_by_email: {
+    email: 'メールアドレス',
+    forgot_password: 'パスワードをお忘れの場合',
+    email_placeholder: 'exelab@sample.co.jp',
+    password: 'パスワード',
+    hint: '8文字以上の半角英数字を入力してくださいパスワードは英大文字、英小文字、数字を1文字以上使用してください',
+  },
   error: {
     login_failed: 'ログインに失敗しました。',
     code_invalid: '入力されたコードは無効です',
@@ -37,6 +55,8 @@ export default {
     zero: '0',
     see_more: 'もっと見る',
     at: '@',
+    search_results: '検索結果',
+    total: '件',
   },
   home: {
     home: 'ホーム',
@@ -46,5 +66,21 @@ export default {
   followers: {
     title: 'フォロー中',
     th: '人',
+  },
+  profile: {
+    favorite_game: '好きなゲーム',
+    edit: '編集',
+    read_more: 'もっとみる',
+    following: 'フォロー中',
+    followers: 'フォロワー',
+  },
+  user: {
+    user_results: 'ニックネーム・ID「ああああああ」 の検索結果',
+  },
+  tournament: {
+    card_date: '開　催　日',
+    organizer: '主催者',
+    entry: 'エントリー',
+    tournament_results: '大会「ああああああ」 の検索結果',
   },
 }

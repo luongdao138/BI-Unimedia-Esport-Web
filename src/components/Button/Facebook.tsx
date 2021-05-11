@@ -7,7 +7,6 @@ import { LoginSocialParams } from '@services/auth.service'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
-    minWidth: 280,
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     background: '#1877F2',

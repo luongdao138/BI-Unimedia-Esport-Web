@@ -22,9 +22,21 @@ export type Meta = {
   total_pages: number
 }
 
+export type FollowParams = {
+  user_id: number
+}
+
 export const userSearch = async (params: UserSearchParams): Promise<UserSearchResponse> => {
-  const { data } = await api.get<UserSearchResponse>(URI.USERS_SEARCH, {
-    params,
-  })
+  const { data } = await api.post<UserSearchResponse>(URI.USERS_SEARCH, params)
+  return data
+}
+
+export const follow = async (params: FollowParams): Promise<any> => {
+  const { data } = await api.post(URI.FOLLOW, params)
+  return data
+}
+
+export const unfollow = async (params: FollowParams): Promise<any> => {
+  const { data } = await api.post(URI.UNFOLLOW, params)
   return data
 }
