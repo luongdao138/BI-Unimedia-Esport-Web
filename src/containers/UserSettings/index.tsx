@@ -150,24 +150,11 @@ const UserSettingsContainer: React.FC = () => {
         <Grid container direction="column" className={classes.contents}>
           <Box className={classes.stepperHolder}>
             <Stepper activeStep={step} style={{ padding: 0 }}>
-              {stepsTitles.map((label, idx) => {
-                const buttonProps = { optional: undefined }
-
-                buttonProps.optional = (
-                  <>
-                    <Box m={2} />
-                    <Typography variant="caption" classes={{ caption: idx === step ? classes.captionActive : classes.captionInactive }}>
-                      {label}
-                    </Typography>
-                  </>
-                )
-
-                return (
-                  <Step key={idx}>
-                    <StepButton onClick={() => setStep(idx)} {...buttonProps} />
-                  </Step>
-                )
-              })}
+              {stepsTitles.map((label, idx) => (
+                <Step key={idx}>
+                  <StepButton onClick={() => setStep(idx)}>{label}</StepButton>
+                </Step>
+              ))}
             </Stepper>
           </Box>
           {getStepViews()}
