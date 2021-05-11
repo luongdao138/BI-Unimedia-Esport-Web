@@ -34,6 +34,8 @@ export default {
     email_placeholder: 'exelab@sample.co.jp',
     password: 'パスワード',
     hint: '8文字以上の半角英数字を入力してくださいパスワードは英大文字、英小文字、数字を1文字以上使用してください',
+    button: '次へ',
+    back: 'メールアドレスで登録',
   },
   error: {
     login_failed: 'ログインに失敗しました。',
