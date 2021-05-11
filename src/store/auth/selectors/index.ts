@@ -7,4 +7,4 @@ export const getAuth = createSelector(getRoot, (state) => state.user)
 
 export const getIsRegistered = createSelector(getRoot, (state) => state.user && !!state.user.nickname && !!state.user.user_code)
 
-export const getIsAuthenticated = createSelector(getRoot, (state) => !!state.user.accessToken)
+export const getIsAuthenticated = createSelector(getRoot, (state) => !!state.user?.accessToken)

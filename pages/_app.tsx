@@ -8,6 +8,7 @@ import '@theme/globalcss/main.scss'
 import { authorizationProvider } from '@services/interceptor'
 import ESLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
+import useNgWords from '@utils/hooks/useNgWords'
 
 import { ThemeProvider } from '@material-ui/core'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -17,6 +18,9 @@ import 'src/locales/i18n'
 const App: FC<AppProps> = ({ Component, pageProps }: any) => {
   const [loader, setLoader] = React.useState(false)
   const router = useRouter()
+  const store = useStore()
+  authorizationProvider(store)
+  useNgWords(store)
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -37,9 +41,6 @@ const App: FC<AppProps> = ({ Component, pageProps }: any) => {
   }, [])
 
   const Layout = Component.Layout ? Component.Layout : React.Fragment
-
-  const store = useStore()
-  authorizationProvider(store)
   return (
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
       <ThemeProvider theme={theme}>
