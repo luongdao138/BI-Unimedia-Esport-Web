@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles, Divider } from '@material-ui/core'
+import { Grid, Typography, Box, Container, Theme, makeStyles, Divider, withStyles, createMuiTheme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
@@ -144,9 +144,7 @@ const UserSettingsContainer: React.FC = () => {
       <Container maxWidth="sm" className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
-            <Typography variant="h2" style={{ fontSize: 30 }}>
-              {t('common:welcome')}
-            </Typography>
+            <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
             <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
           </Grid>
         </Box>
@@ -209,6 +207,17 @@ const UserSettingsContainer: React.FC = () => {
     </>
   )
 }
+
+const theme = createMuiTheme()
+
+const ResponsiveTypo = withStyles({
+  root: {
+    fontSize: '1.5rem',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.875rem', // 30px
+    },
+  },
+})(Typography)
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
