@@ -7,15 +7,13 @@ import { useTranslation } from 'react-i18next'
 import useConfirm from './useConfirm'
 import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
-import { useRouter } from 'next/router'
 import ButtonPrimary from '@components/ButtonPrimary'
 
 const ConfirmContainer: React.FC = () => {
-  const router = useRouter()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { user, registerConfirm, metaConfirm } = useConfirm(confirmationCode)
+  const { user, registerConfirm, metaConfirm, backAction } = useConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -34,7 +32,7 @@ const ConfirmContainer: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2} display="flex" flexDirection="row" alignItems="center">
-          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
+          <IconButton className={classes.iconButtonBg} onClick={backAction}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
           <Box pl={2}>

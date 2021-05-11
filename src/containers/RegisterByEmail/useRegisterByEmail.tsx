@@ -20,6 +20,8 @@ const useRegisterByEmail = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerByEmail.typePrefix))
 
+  const backAction = () => router.push('/register')
+
   useEffect(() => {
     if (meta.loaded) {
       router.push('/register/confirm')
@@ -27,7 +29,7 @@ const useRegisterByEmail = () => {
     }
   }, [meta.loaded])
 
-  return { user, registerByEmail, resetMeta, meta }
+  return { user, registerByEmail, resetMeta, meta, backAction }
 }
 
 export default useRegisterByEmail
