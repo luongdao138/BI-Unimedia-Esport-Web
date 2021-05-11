@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     right: 0,
     overflow: 'hidden',
     width: '100%',
-    height: 250,
+    height: 188,
     alignItems: 'center',
     justifyContent: 'center',
     '&:hover': {
