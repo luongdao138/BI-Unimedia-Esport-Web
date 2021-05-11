@@ -44,9 +44,7 @@ const ESStrengthMeter: React.FC<{ value: number }> = ({ value }) => {
   }
 
   useEffect(() => {
-    if (value) {
-      setPercentages(getPartPercentage(value))
-    }
+    setPercentages(getPartPercentage(value))
   }, [value])
 
   return (

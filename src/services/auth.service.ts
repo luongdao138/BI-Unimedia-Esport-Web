@@ -66,6 +66,11 @@ export const register = async (params: UserLoginParams): Promise<UserLoginRespon
   return data
 }
 
+export const registerConfirm = async (params: UserConfirmParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.CONFIRM, params)
+  return data
+}
+
 export const forgotPassword = async (params: ForgotPasswordParams): Promise<ForgotPasswordResponse> => {
   const { data } = await api.post<ForgotPasswordResponse>(URI.FORGOT_PASSWORD, params)
   return data

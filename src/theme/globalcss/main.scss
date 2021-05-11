@@ -70,7 +70,7 @@
 }
 
 .MuiButtonBase-root.button-primary.full-width {
-  width: '100%';
+  width: 100%;
 }
 
 .MuiButtonBase-root.button-primary.primary-large {
@@ -89,7 +89,7 @@
 }
 
 .MuiButtonBase-root.button-primary {
-  padding: 12px 60px;
+  padding: 12px 40px;
 }
 .MuiButtonBase-root.button-primary:not(.Mui-disabled).gradient {
   background: linear-gradient(234deg, rgb(214, 0, 253) 0%, rgb(252, 94, 102) 100%, rgb(251, 92, 105) 100%, rgb(253, 97, 97) 100%) 0% 0%
