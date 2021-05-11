@@ -3,10 +3,12 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import { useTranslation } from 'react-i18next'
 import { RecruitingTournament } from './../Tournaments'
 import { Colors } from '@theme/colors'
+import { useRouter } from 'next/router'
 
 export const BottomContent: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const router = useRouter()
 
   return (
     <Box className={classes.bottomContent}>
@@ -60,7 +62,7 @@ export const BottomContent: React.FC = () => {
             <ButtonPrimary
               round
               onClick={() => {
-                return null
+                router.push('/home')
               }}
             >
               {t('common:top.start_exelab')}
