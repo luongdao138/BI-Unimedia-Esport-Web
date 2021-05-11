@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react'
 import { AppProps } from 'next/app'
 import { useStore } from 'react-redux'
-import { storeWrapper } from '@store/store'
+import { StoreType, storeWrapper } from '@store/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import '@theme/globalcss/main.scss'
@@ -12,13 +12,14 @@ import useNgWords from '@utils/hooks/useNgWords'
 
 import { ThemeProvider } from '@material-ui/core'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import userProfile from '@store/userProfile'
 import theme from '@theme/index'
 import 'src/locales/i18n'
 
 const App: FC<AppProps> = ({ Component, pageProps }: any) => {
   const [loader, setLoader] = React.useState(false)
   const router = useRouter()
-  const store = useStore()
+  const store: StoreType = useStore()
   authorizationProvider(store)
   useNgWords(store)
 
@@ -28,6 +29,10 @@ const App: FC<AppProps> = ({ Component, pageProps }: any) => {
 
     if (jssStyles) {
       jssStyles.parentElement?.removeChild(jssStyles)
+    }
+
+    if (store.getState().auth.user) {
+      store.dispatch(userProfile.actions.getUserProfile())
     }
 
     const handleRouteChange = () => {

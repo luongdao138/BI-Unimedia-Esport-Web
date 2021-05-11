@@ -1,10 +1,11 @@
 import { useEffect, useState, BaseSyntheticEvent } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
+import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'inline-block',
+    position: 'relative',
   },
   dropAreaThumb: {
     width: '100%',
@@ -13,13 +14,12 @@ const useStyles = makeStyles(() => ({
   },
   touch: {
     display: 'flex',
-    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     overflow: 'hidden',
     width: '100%',
-    height: 250,
+    height: 188,
     alignItems: 'center',
     justifyContent: 'center',
     '&:hover': {
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
   camera: {
     display: 'none',
     position: 'absolute',
-    color: '#fff',
+    color: Colors.white,
     bottom: 30,
     right: 30,
     zIndex: 2,
@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   backdrop: {
     display: 'none',
     opacity: 0.6,
-    background: '#000',
+    background: Colors.black,
     position: 'absolute',
     height: '65%',
     width: '100%',

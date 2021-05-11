@@ -313,7 +313,7 @@ const Atoms = () => {
 
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
-      <Box position="relative" height={300} pt={23} pl={4} margin={4}>
+      <Box margin={4}>
         <ProfileCover src="/images/avatar.png" />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />

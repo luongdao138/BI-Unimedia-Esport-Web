@@ -7,9 +7,11 @@ export const Colors = {
   primary: '#FF4786',
   secondary: '#F7F735',
   grey: {
+    '10': '#060606',
     '100': '#212121',
     '200': '#4D4D4D',
     '300': '#ADABAB',
+    '400': '#707070',
   },
   text: {
     '100': '#FFFFFF',
@@ -20,6 +22,7 @@ export const Colors = {
   black: '#000000',
   white: '#ffffff',
   white_opacity: {
+    '15': 'rgba(255,255,255,.15)',
     '30': 'rgba(255,255,255,.3)',
     '70': 'rgba(255,255,255,.7)',
   },
