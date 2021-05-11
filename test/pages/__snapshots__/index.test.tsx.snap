@@ -3,2841 +3,699 @@
 exports[`Home page renders correctly 1`] = `
 Array [
   <div
-    className="makeStyles-grow-1"
-  >
-    <header
-      className="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-appBar-2 MuiPaper-elevation4"
-    >
-      <div
-        className="MuiToolbar-root MuiToolbar-regular makeStyles-toolbar-3 MuiToolbar-gutters"
-      >
-        <h2
-          className="MuiTypography-root MuiTypography-h2"
-        >
-          common:home.home
-        </h2>
-        <button
-          className="MuiButtonBase-root MuiIconButton-root"
-          disabled={false}
-          onBlur={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={0}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root fas fa-ellipsis-v MuiIcon-fontSizeSmall"
-            />
-          </span>
-        </button>
-      </div>
-    </header>
-  </div>,
-  <div
-    className="slideWrap"
+    className="parallax"
   >
     <div
-      className="swiper-container makeStyles-wrap-8"
+      className="parallax-inner"
+    />
+  </div>,
+  <div
+    className="MuiBox-root MuiBox-root-5 makeStyles-innerWrap-1"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3"
     >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        おすすめユーザー
-      </h3>
       <div
-        className="swiper-wrapper"
+        className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
       >
         <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
+          className="MuiBox-root MuiBox-root-6 makeStyles-parallaxContent-2"
         >
-          <div
-            className="MuiBox-root MuiBox-root-17 makeStyles-wrap-6"
+          <h2
+            className="MuiTypography-root makeStyles-parallaxTitle-4 MuiTypography-h2"
+          >
+            common:top.title
+          </h2>
+          <img
+            className="makeStyles-logo-3"
+            src="/images/lp_exelab_logo.svg"
+          />
+          <button
+            className="MuiButtonBase-root button-primary primary-rounded gradient primary-large"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
           >
             <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-19 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/100/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたなべ
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-20 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-21 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/101/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              グレちゃんグレちゃんグレちゃん
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-22 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-23 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/99/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-24 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-25 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/98/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              コイチ
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-26 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-27 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/97/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたなべ
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-28 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-29 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/96/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-30 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-31 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/95/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-32 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-33 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/94/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-34 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-35 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/93/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-36 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-37 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/92/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-38 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-39 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/91/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-40 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-41 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/90/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-42 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-43 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/89/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-44 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-45 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/88/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-16"
-        >
-          <div
-            className="MuiBox-root MuiBox-root-46 makeStyles-wrap-6"
-          >
-            <div
-              className="MuiAvatar-root makeStyles-root-18 makeStyles-root-47 MuiAvatar-circle"
-            >
-              <img
-                className="MuiAvatar-img"
-                src="https://picsum.photos/id/87/300/300"
-              />
-            </div>
-            <span
-              className="MuiTypography-root makeStyles-name-7 MuiTypography-caption"
-            >
-              わたうに
-            </span>
-          </div>
-        </div>
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-48"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="circle"
             />
-          </p>
-        </a>
+            <span
+              className="label-primary MuiButton-label"
+            >
+              common:top.start_exelab
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>,
   <div
-    className="slideWrap"
+    className="MuiBox-root MuiBox-root-20 makeStyles-topContent-10"
   >
     <div
-      className="swiper-container makeStyles-wrap-8"
+      className="MuiBox-root MuiBox-root-21 makeStyles-innerWrap-7"
     >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        おすすめの募集
-      </h3>
       <div
-        className="swiper-wrapper"
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3"
       >
         <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-7 MuiGrid-grid-lg-7"
         >
           <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
+            className="MuiBox-root MuiBox-root-22 makeStyles-leftContent-8"
           >
             <div
-              className="makeStyles-cornerWrap-55"
+              className="MuiBox-root MuiBox-root-23"
             >
-              <div
-                className="makeStyles-iconWrap-57"
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root makeStyles-icon-11"
+                focusable="false"
+                viewBox="0 0 206 43.301"
               >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                <g
+                  data-name=""
+                  transform="translate(0)"
+                >
+                  <path
+                    d="M66.556,0,55.837,15.333,45.047,0H36.671L51.649,21.3,36.6,42.8h8.376L55.837,27.329,66.627,42.8H75L59.954,21.3,74.932,0Z"
+                    data-name="Path 6617"
+                    fill="#fff"
+                    id="Path_6617"
+                    transform="translate(-10.619)"
+                  />
+                  <path
+                    d="M105.689,16.476h7.1v8.66h-7.1ZM119.105,10.3H99.3V45.864h19.805V39.688H105.689V31.241h13.487V10.3Z"
+                    data-name="Path 6618"
+                    fill="#fff"
+                    id="Path_6618"
+                    transform="translate(-28.811 -2.988)"
+                  />
+                  <path
+                    d="M6.389,16.476h7.1v8.66h-7.1ZM19.8,10.3H0V45.864H19.8V39.688H6.389V31.241H19.876V10.3Z"
+                    data-name="Path 6619"
+                    fill="#fff"
+                    id="Path_6619"
+                    transform="translate(0 -2.988)"
+                  />
+                  <path
+                    d="M204.569,7.67h14.339V18.388H204.569ZM197.4.5V43.446h7.169V25.558h14.339V43.446h7.17V.5Z"
+                    data-name="Path 6620"
+                    fill="#fff"
+                    id="Path_6620"
+                    transform="translate(-57.275 -0.145)"
+                  />
+                  <path
+                    d="M257,25.558h14.339V36.277H257ZM257,7.67h10.719V18.388H257ZM249.9.5V43.446h28.607V18.388h-3.549V.5Z"
+                    data-name="Path 6621"
+                    fill="#fff"
+                    id="Path_6621"
+                    transform="translate(-72.507 -0.145)"
+                  />
+                  <path
+                    d="M145,.5V43.446h28.678v-7.17H152.17V.5Z"
+                    data-name="Path 6622"
+                    fill="#fff"
+                    id="Path_6622"
+                    transform="translate(-42.071 -0.145)"
+                  />
+                </g>
+              </svg>
+              <h2
+                className="MuiTypography-root makeStyles-iconText-12 MuiTypography-h2"
+              >
+                common:top.is
+              </h2>
+            </div>
+            <h2
+              className="MuiTypography-root makeStyles-topTitle-13 MuiTypography-h2"
+            >
+              common:top.top_title
+            </h2>
+            <p
+              className="MuiTypography-root makeStyles-topDescription-14 MuiTypography-body1"
+            >
+              common:top.top_description
+            </p>
+            <p
+              className="MuiTypography-root makeStyles-topDescriptionBottom-15 MuiTypography-body1"
+            >
+              common:top.download_app_version
+            </p>
+            <div
+              className="MuiBox-root MuiBox-root-24 makeStyles-buttonWrap-16"
+            >
+              <button
+                className="MuiButtonBase-root"
+                disabled={false}
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                type="button"
+              >
+                <img
+                  className="makeStyles-google_app_stores-17"
+                  src="/images/appstore.png"
                 />
-              </div>
+              </button>
               <div
-                className="makeStyles-triangle-56"
+                className="MuiBox-root MuiBox-root-25 makeStyles-buttonSeperator-18"
               />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-58 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
+              <button
+                className="MuiButtonBase-root"
+                disabled={false}
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                tabIndex={0}
+                type="button"
               >
-                募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
-              </p>
+                <img
+                  className="makeStyles-google_app_stores-17"
+                  src="/images/googleplay.png"
+                />
+              </button>
             </div>
           </div>
         </div>
         <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-5 MuiGrid-grid-lg-5"
         >
           <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
+            className="MuiBox-root MuiBox-root-26 makeStyles-rightContent-9"
           >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-60 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-61 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-62 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-63 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。25
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-64 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。26
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-65 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。27
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-49"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-66 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。28
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="makeStyles-sliderButtonPrev-10"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-left MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="makeStyles-sliderButtonNext-9"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-right MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-67"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
+            <img
+              className="makeStyles-rightImage-19"
+              src="/images/lp_laptop.png"
             />
-          </p>
-        </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>,
   <div
-    className="slideWrap"
+    className="MuiBox-root MuiBox-root-34 makeStyles-bottomContent-28"
   >
     <div
-      className="swiper-container makeStyles-wrap-8"
+      className="MuiBox-root MuiBox-root-35 makeStyles-innerWrap-27"
     >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        おすすめイベント
-      </h3>
       <div
-        className="swiper-wrapper"
+        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3"
       >
         <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+        >
+          <h2
+            className="MuiTypography-root makeStyles-bottomTitle-29 MuiTypography-h2 MuiTypography-alignCenter"
+          >
+            common:top.recruiting_tournament
+          </h2>
+        </div>
+        <div
+          className="MuiBox-root MuiBox-root-36 makeStyles-bottomInnerContent-30"
         >
           <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
+            className="MuiGrid-root MuiGrid-container"
           >
             <div
-              className="makeStyles-cornerWrap-55"
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
             >
               <div
-                className="makeStyles-iconWrap-57"
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
               >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-45 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
               </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
             </div>
             <div
-              className="MuiBox-root MuiBox-root-69 makeStyles-mediaWrap-53"
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
             >
               <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
-                  }
-                }
-              />
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-47 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
             </div>
             <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-48 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-49 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-50 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-51 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-52 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-53 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6 MuiGrid-grid-md-4 MuiGrid-grid-xl-4"
+            >
+              <div
+                className="MuiPaper-root MuiCard-root makeStyles-cardRoot-37 makeStyles-root-38 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  className="makeStyles-cornerWrap-42"
+                >
+                  <div
+                    className="makeStyles-iconWrap-44"
+                  >
+                    <span
+                      aria-hidden={true}
+                      className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
+                    />
+                  </div>
+                  <div
+                    className="makeStyles-triangle-43"
+                  />
+                </div>
+                <div
+                  className="MuiBox-root MuiBox-root-54 makeStyles-mediaWrap-40"
+                >
+                  <div
+                    className="MuiCardMedia-root makeStyles-media-41"
+                    style={
+                      Object {
+                        "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="MuiCardContent-root makeStyles-contentRoot-46"
+                >
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="MuiBox-root MuiBox-root-55"
+            slot="container-end"
+          >
+            <a
+              className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-31 MuiTypography-colorPrimary"
+              href="#"
+              onBlur={[Function]}
+              onFocus={[Function]}
             >
               <p
                 className="MuiTypography-root MuiTypography-body1"
               >
-                募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
+                common:common.see_more
+                <span
+                  aria-hidden={true}
+                  className="material-icons MuiIcon-root makeStyles-moreIcon-32 fas fa-chevron-right MuiIcon-fontSizeSmall"
+                />
               </p>
-            </div>
+            </a>
           </div>
         </div>
         <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
+          className="MuiGrid-root makeStyles-button-33 MuiGrid-item MuiGrid-grid-xs-12"
         >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
+          <button
+            className="MuiButtonBase-root button-primary primary-rounded gradient primary-large"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={0}
+            type="button"
           >
             <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-70 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-71 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-72 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-73 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。25
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-74 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。26
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-75 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。27
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-68"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-76 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。28
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="makeStyles-sliderButtonPrev-10"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-left MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="makeStyles-sliderButtonNext-9"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-right MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-77"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
+              className="circle"
             />
-          </p>
-        </a>
-      </div>
-    </div>
-  </div>,
-  <div
-    className="slideWrap"
-  >
-    <div
-      className="swiper-container makeStyles-wrap-8"
-    >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        フォローしている人の募集
-      </h3>
-      <div
-        className="swiper-wrapper"
-      >
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-79 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-80 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-81 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-82 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-83 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。25
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-84 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。26
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-85 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。27
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-78"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-86 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。28
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="makeStyles-sliderButtonPrev-10"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-left MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="makeStyles-sliderButtonNext-9"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-right MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-87"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
             <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
-            />
-          </p>
-        </a>
-      </div>
-    </div>
-  </div>,
-  <div
-    className="slideWrap"
-  >
-    <div
-      className="swiper-container makeStyles-wrap-8"
-    >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        フォローしている人がエントリーしている大会
-      </h3>
-      <div
-        className="swiper-wrapper"
-      >
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
+              className="label-primary MuiButton-label"
             >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-89 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
-              </p>
-            </div>
-          </div>
+              common:top.start_exelab
+            </span>
+          </button>
         </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-90 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-91 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-92 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-93 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。25
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-94 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。26
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-95 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。27
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-88"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-96 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。28
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="makeStyles-sliderButtonPrev-10"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-left MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="makeStyles-sliderButtonNext-9"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-right MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-97"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
-            />
-          </p>
-        </a>
-      </div>
-    </div>
-  </div>,
-  <div
-    className="slideWrap"
-  >
-    <div
-      className="swiper-container makeStyles-wrap-8"
-    >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        フォローしている人がエントリーしていた大会結果
-      </h3>
-      <div
-        className="swiper-wrapper"
-      >
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-99 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-100 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-101 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-102 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-103 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。25
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-104 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。26
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-105 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。27
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-98"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-106 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。28
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="makeStyles-sliderButtonPrev-10"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-left MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="makeStyles-sliderButtonNext-9"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-right MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-107"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
-            />
-          </p>
-        </a>
-      </div>
-    </div>
-  </div>,
-  <div
-    className="slideWrap"
-  >
-    <div
-      className="swiper-container makeStyles-wrap-8"
-    >
-      <h3
-        className="MuiTypography-root makeStyles-containerStart-15 MuiTypography-h3 MuiTypography-gutterBottom"
-        slot="container-start"
-      >
-        フォローしている人の書き込みトピック
-      </h3>
-      <div
-        className="swiper-wrapper"
-      >
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-109 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/412/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。1 募集名が入ります。1募集名が入ります。1募集名が入ります。
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-110 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/403/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-111 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/402/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-112 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/401/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。2
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-113 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/400/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。25
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-114 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/399/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。26
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-115 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/398/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。27
-              </p>
-            </div>
-          </div>
-        </div>
-        <div
-          className="swiper-slide makeStyles-slideWidth-14 makeStyles-slideWidth-108"
-        >
-          <div
-            className="MuiPaper-root MuiCard-root makeStyles-cardRoot-50 makeStyles-root-51 MuiPaper-elevation1 MuiPaper-rounded"
-          >
-            <div
-              className="makeStyles-cornerWrap-55"
-            >
-              <div
-                className="makeStyles-iconWrap-57"
-              >
-                <span
-                  aria-hidden={true}
-                  className="material-icons MuiIcon-root fas fa-users MuiIcon-fontSizeSmall"
-                />
-              </div>
-              <div
-                className="makeStyles-triangle-56"
-              />
-            </div>
-            <div
-              className="MuiBox-root MuiBox-root-116 makeStyles-mediaWrap-53"
-            >
-              <div
-                className="MuiCardMedia-root makeStyles-media-54"
-                style={
-                  Object {
-                    "backgroundImage": "url(\\"https://picsum.photos/id/397/240/120\\")",
-                  }
-                }
-              />
-            </div>
-            <div
-              className="MuiCardContent-root makeStyles-contentRoot-59"
-            >
-              <p
-                className="MuiTypography-root MuiTypography-body1"
-              >
-                募集名が入ります。2募集名が入ります。2募集名が入ります。2募集名が入ります。28
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        className="makeStyles-sliderButtonPrev-10"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-left MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="makeStyles-sliderButtonNext-9"
-      >
-        <span
-          aria-hidden={true}
-          className="material-icons MuiIcon-root makeStyles-fas-11 fas fa-chevron-right MuiIcon-fontSizeSmall"
-        />
-      </div>
-      <div
-        className="MuiBox-root MuiBox-root-117"
-        slot="container-end"
-      >
-        <a
-          className="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-moreLink-12 MuiTypography-colorPrimary"
-          href="#"
-          onBlur={[Function]}
-          onFocus={[Function]}
-        >
-          <p
-            className="MuiTypography-root MuiTypography-body1"
-          >
-            common:common.see_more
-            <span
-              aria-hidden={true}
-              className="material-icons MuiIcon-root makeStyles-moreIcon-13 fas fa-chevron-right MuiIcon-fontSizeSmall"
-            />
-          </p>
-        </a>
       </div>
     </div>
   </div>,
