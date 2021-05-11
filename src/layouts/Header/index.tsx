@@ -7,6 +7,7 @@ import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
 import { searchOptions } from '@constants/common.constants'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -57,10 +58,15 @@ interface headerProps {
 }
 
 export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
+  const router = useRouter()
   const classes = useStyles()
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
+    router.push({
+      pathname: '/search',
+      search: `?type=${_data.type}&keyword=${_data.value}`,
+    })
   }
 
   return (
