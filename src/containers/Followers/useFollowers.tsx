@@ -13,14 +13,14 @@ const getFollowMeta = createMetaSelector(actions.followers)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useFollowers = () => {
   const dispatch = useAppDispatch()
-  const users = useAppSelector(selectors.getFollowers)
+  const followers = useAppSelector(selectors.getFollowers)
   const page = useAppSelector(selectors.getFollowersMeta)
   const meta = useAppSelector(getFollowMeta)
   const currentUser = useAppSelector(authSelector.getAuth)
-  const followers = (param: FollowersParams) => dispatch(actions.followers(param))
+  const fetchFollowers = (param: FollowersParams) => dispatch(actions.followers(param))
   const resetMeta = () => dispatch(clearMetaData(actions.followers.typePrefix))
 
-  return { currentUser, users, followers, resetMeta, meta, page }
+  return { currentUser, followers, fetchFollowers, resetMeta, meta, page }
 }
 
 export default useFollowers
