@@ -2,7 +2,7 @@ export default {
   welcome: 'Welcome to React and react-i18next',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'exeLABをはじめる',
+    start_exelab: 'eXeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -61,7 +61,7 @@ export default {
     total: '件',
   },
   home: {
-    exelab: 'eXe LAB事務局',
+    exelab: 'eXeLAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
