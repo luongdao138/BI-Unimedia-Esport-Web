@@ -60,6 +60,7 @@ export default {
     gender: '性別',
     male: '男性',
     female: '女性',
+    other: 'その他',
     required: '必須',
     zero: '0',
     see_more: 'もっと見る',

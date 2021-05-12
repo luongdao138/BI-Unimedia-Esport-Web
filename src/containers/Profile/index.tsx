@@ -17,6 +17,7 @@ import ESCardContent from '@components/Card/CardContent'
 import ESAvatar from '@components/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { GENDER } from '@constants/common.constants'
 import HeaderTags from './Partials/headerTags'
 import Iconic from './Partials/iconic'
 import Followers from './Partials/followers'
@@ -98,9 +99,14 @@ const ProfileContainer: React.FC = () => {
     // console.log('index.tsx 96 ', userProfile)
   }, [userProfile])
 
-  if (userProfile === null) return null
+  if (userProfile === null || userProfile === undefined) return null
 
-  const gender = userProfile.data.attributes.sex
+  const gender =
+    userProfile.data.attributes.sex === GENDER.FEMALE
+      ? t('common:common.female')
+      : userProfile.data.attributes.sex === GENDER.MALE
+      ? t('common:common.male')
+      : t('common:common.other')
 
   return (
     <>
