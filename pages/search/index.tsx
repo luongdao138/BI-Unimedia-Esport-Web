@@ -6,7 +6,7 @@ import { searchTypes } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 
-const SearchPage = () => {
+const SearchPage: React.FC = () => {
   const router = useRouter()
   const [type, setType] = useState<number>()
 

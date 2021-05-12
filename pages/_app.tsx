@@ -17,6 +17,9 @@ import theme from '@theme/index'
 import PageWithLayoutType from '@constants/page'
 
 import 'src/locales/i18n'
+import 'swiper/swiper.min.css'
+import 'swiper/components/pagination/pagination.min.css'
+import 'swiper/components/navigation/navigation.min.css'
 
 type Props = AppProps & {
   Component: PageWithLayoutType

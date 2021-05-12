@@ -43,7 +43,7 @@ import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
 import MainLayout from '@layouts/MainLayout'
 
-const Atoms = () => {
+const Atoms: React.FC = () => {
   const [value, setValue] = useState<string>('')
   const [tab, setTab] = useState(0)
   const [state, setState] = useState({
