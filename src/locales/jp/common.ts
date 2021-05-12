@@ -53,6 +53,13 @@ export default {
     code_invalid: '入力されたコードは無効です',
   },
   common: {
+    birthday: '生年月日',
+    year: '年',
+    month: '月',
+    day: '日',
+    gender: '性別',
+    male: '男性',
+    female: '女性',
     required: '必須',
     zero: '0',
     see_more: 'もっと見る',

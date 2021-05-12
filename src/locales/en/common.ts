@@ -61,6 +61,13 @@ export default {
     total: '件',
   },
   home: {
+    birthday: '生年月日',
+    year: '年',
+    month: '月',
+    day: '日',
+    gender: '性別',
+    male: '男性',
+    female: '女性',
     exelab: 'eXe LAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
