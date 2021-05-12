@@ -5,7 +5,7 @@ import authStore from '@store/auth'
 import { UserConfirmParams } from '@services/auth.service'
 import { clearMetaData } from '@store/metadata/actions'
 import { useRouter } from 'next/router'
-
+import { ESRoutes } from '@constants/route.constants'
 const { selectors, actions } = authStore
 const getForgotConfirm = createMetaSelector(actions.forgotConfirm)
 
@@ -20,11 +20,11 @@ const useForgotConfirm = (confirmationCode: string) => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.forgotConfirm.typePrefix))
 
-  const backAction = () => router.push('/forgot-password')
+  const backAction = () => router.push(ESRoutes.FORGOT_PASSWORD)
 
   useEffect(() => {
     if (metaConfirm.loaded) {
-      router.push('/forgot-password/reset')
+      router.push(ESRoutes.FORGOT_PASSWORD_RESET)
       resetMeta()
     }
   }, [metaConfirm.loaded])
@@ -37,7 +37,7 @@ const useForgotConfirm = (confirmationCode: string) => {
 
   useEffect(() => {
     if (user === undefined) {
-      router.push('/forgot-password')
+      router.push(ESRoutes.FORGOT_PASSWORD)
     }
   }, [])
 
