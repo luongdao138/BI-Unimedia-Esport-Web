@@ -4,13 +4,13 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import StepButton from '@components/StepButton'
-import TagSelect from '@containers/UserSettings/TagSelect'
+import TagSelect from '@components/TagSelect'
 import GameSelect from '@containers/UserSettings/GameSelect'
 import ESChip from '@components/Chip'
 import ESButton from '@components/Button'
 import ESToast from '@components/Toast'
 import ESLoader from '@components/Loader'
-import BasicInfo from './BasicInfo'
+import BasicInfo from '@components/BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
 import useGetPrefectures from './useGetPrefectures'
 import useSettings from './useSettings'
@@ -19,6 +19,8 @@ import { GameTitlesResponse } from '@services/settings.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
+import { useAppSelector } from '@store/hooks'
+import userProfileStore from '@store/userProfile'
 
 const FINAL_STEP = 3
 const BASIC_INFO_INIT_STATE = {
@@ -45,6 +47,20 @@ const UserSettingsContainer: React.FC = () => {
   const [userSettingsValues, setUserSettingsValues] = useState(null)
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
+
+  const { selectors } = userProfileStore
+  const userProfile = useAppSelector(selectors.getUserProfile)
+  const [profile, setProfile] = useState(null)
+
+  // eslint-disable-next-line no-console
+  console.log('profile', profile)
+
+  useEffect(() => {
+    // console.log('userProfile', userProfile)
+    if (userProfile) {
+      setProfile(userProfile.data.attributes)
+    }
+  }, [userProfile])
 
   useEffect(() => {
     getFeatures()
