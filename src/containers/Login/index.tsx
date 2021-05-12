@@ -20,7 +20,7 @@ import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
-
+import { ESRoutes } from '@constants/route.constants'
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('Required').email(),
   password: Yup.string().required('Required').min(8),
@@ -86,7 +86,7 @@ const LoginContainer: React.FC = () => {
                   labelPrimary={t('common:login.password_label_primary')}
                   type="password"
                   labelSecondary={
-                    <Link href="/forgot-password">
+                    <Link href={ESRoutes.FORGOT_PASSWORD}>
                       <a className={classes.noLink}>
                         <Typography color="textPrimary" gutterBottom={false} variant="body2">
                           {t('common:login.password_label_secondary')}
@@ -111,7 +111,7 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pb={8} className={classes.linkContainer}>
-            <Link href="/register">
+            <Link href={ESRoutes.REGISTER}>
               <a>{t('common:login.register')}</a>
             </Link>
           </Box>

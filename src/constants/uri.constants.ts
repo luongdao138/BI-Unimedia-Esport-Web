@@ -11,6 +11,7 @@ export const URI = {
   FORGOT_CONFIRM: '/v1/passwords/confirm',
   RESET_PASSWORD: '/v1/passwords/reset',
   FOLLOWERS: '/v2/followers',
+  FOLLOWING: '/v2/following',
   NG_WORDS: '/v1/ng_words',
   USER_DETAIL_PROFILE: '/v2/users/profile',
   USERS_SEARCH: '/v2/users/search',

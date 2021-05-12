@@ -76,6 +76,10 @@ export default {
     title: 'フォロー中',
     th: '人',
   },
+  following: {
+    title: 'フォロワー',
+    th: '人',
+  },
   profile: {
     favorite_game: '好きなゲーム',
     edit: '編集',
