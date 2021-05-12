@@ -1,6 +1,7 @@
 import MainLayout from '@layouts/MainLayout'
+import PageWithLayoutType from '@constants/page'
 
-const TournamentsPage = () => {
+const TournamentsPage: PageWithLayoutType = () => {
   return <div>Tournaments</div>
 }
 

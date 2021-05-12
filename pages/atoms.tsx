@@ -42,8 +42,9 @@ import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
 import MainLayout from '@layouts/MainLayout'
+import PageWithLayoutType from '@constants/page'
 
-const Atoms: React.FC = () => {
+const Atoms: PageWithLayoutType = () => {
   const [value, setValue] = useState<string>('')
   const [tab, setTab] = useState(0)
   const [state, setState] = useState({
