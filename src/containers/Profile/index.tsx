@@ -98,11 +98,15 @@ const ProfileContainer: React.FC = () => {
     // console.log('index.tsx 96 ', userProfile)
   }, [userProfile])
 
+  if (userProfile === null) return null
+
+  const gender = userProfile.data.attributes.sex
+
   return (
     <>
       <Grid xs={12} direction="column" className={classes.container}>
         <Grid xs={12} className={classes.headerContainer}>
-          <ProfileCover src="https://picsum.photos/240/120" />
+          <ProfileCover src={userProfile.data.attributes.cover_url} />
           <Grid
             xs={12}
             container
@@ -114,61 +118,29 @@ const ProfileContainer: React.FC = () => {
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src="/images/avatar.png" editable />
+            <ProfileAvatar src={userProfile.data.attributes.avatar_url} editable />
             <ESMenu className={classes.menu}>
-              <ESMenuItem
-                onClick={() => {
-                  return null
-                }}
-              >
-                プロフィールを編集
-              </ESMenuItem>
-              <ESMenuItem
-                onClick={() => {
-                  return null
-                }}
-              >
-                大会履歴
-              </ESMenuItem>
-              <ESMenuItem
-                onClick={() => {
-                  return null
-                }}
-              >
-                アクティビティ
-              </ESMenuItem>
-              <ESMenuItem
-                onClick={() => {
-                  return null
-                }}
-              >
-                QRコード
-              </ESMenuItem>
-              <ESMenuItem
-                onClick={() => {
-                  return null
-                }}
-              >
-                ログアウト
-              </ESMenuItem>
+              <ESMenuItem onClick={() => null}>プロフィールを編集</ESMenuItem>
+              <ESMenuItem onClick={() => null}>大会履歴</ESMenuItem>
+              <ESMenuItem onClick={() => null}>アクティビティ</ESMenuItem>
+              <ESMenuItem onClick={() => null}>QRコード</ESMenuItem>
+              <ESMenuItem onClick={() => null}>ログアウト</ESMenuItem>
             </ESMenu>
           </Grid>
         </Grid>
         <Grid xs={12} className={classes.headerContainerSecond}>
-          <Typography variant="h2">eXe LAB事務局</Typography>
-          <Typography>@exelab_staff</Typography>
-          <Typography className={classes.marginTop20}>
-            自己紹介はここに表示されます。自己紹介はここに表示されます。自己紹介はここに表示されます。自己紹介はここに表示されます。自己紹介はここに表示されます。自己紹介はここに表示されます。
-          </Typography>
-          <HeaderTags items={['学生', 'ゲーム 初心者', '大会参加したい', '夜型', 'スマホ', 'Switch']} />
+          <Typography variant="h2">{userProfile.data.attributes.nickname}</Typography>
+          <Typography>@{userProfile.data.attributes.user_code}</Typography>
+          <Typography className={classes.marginTop20}>{userProfile.data.attributes.bio}</Typography>
+          <HeaderTags items={userProfile.data.attributes.features} />
           <Box display="flex">
-            <Iconic text="東京都 渋谷区" icon="fas fa-map-marker-alt" />
-            <Iconic text="男性" icon="fas fa-user" />
+            <Iconic text={userProfile.data.attributes.area.area} icon="fas fa-map-marker-alt" />
+            <Iconic text={gender} icon="fas fa-user" />
             <Iconic text="1990年01月11日" icon="fa fa-birthday-cake" />
           </Box>
           <Box display="flex">
-            <Followers text={t('common:profile.following')} count={999} />
-            <Followers text={t('common:profile.followers')} count={999} />
+            <Followers text={t('common:profile.following')} count={userProfile.data.attributes.following} />
+            <Followers text={t('common:profile.followers')} count={userProfile.data.attributes.followers} />
           </Box>
           <Box display="flex" className={classes.marginTop20}>
             <ESButtonFacebookCircle className={classes.marginRight} />
@@ -190,13 +162,11 @@ const ProfileContainer: React.FC = () => {
             </Box>
           </Box>
           <Box>
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="マインクラフト" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="シャドウバーズ" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="PUBG" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="Counter Strike Global Offensive" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="RAINBOW SIX SIEGE" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="UNO" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="ポケモンカード" />
+            {userProfile.data.attributes.game_titles.length > 0
+              ? userProfile.data.attributes.game_titles.map((g, i: number) => {
+                  return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
+                })
+              : null}
           </Box>
           <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
             <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
