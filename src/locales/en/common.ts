@@ -72,6 +72,10 @@ export default {
     video: '動画',
     settings: '設定',
   },
+  followers: {
+    title: 'フォロー中',
+    th: '人',
+  },
   profile: {
     favorite_game: '好きなゲーム',
     edit: '編集',

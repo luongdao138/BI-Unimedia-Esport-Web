@@ -41,6 +41,7 @@ import StepLabel from '@components/StepLabel'
 import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
+import ESFollowers from '@containers/Followers'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
@@ -116,6 +117,9 @@ const Atoms: PageWithLayoutType = () => {
         <ESButton variant="outlined" disabled>
           disabled
         </ESButton>
+      </Box>
+      <Box>
+        <ESFollowers />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>
