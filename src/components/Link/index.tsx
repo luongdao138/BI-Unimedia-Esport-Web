@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ESLink: React.FC<LinkProps> = ({ children, classes: _classes, onClick }) => {
+const ESLink: React.FC<LinkProps> = ({ children, onClick }) => {
   const classes = useStyles()
 
   return (
