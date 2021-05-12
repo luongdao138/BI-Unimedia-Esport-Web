@@ -163,7 +163,7 @@ const ProfileContainer: React.FC = () => {
           </Box>
           <Box>
             {userProfile.data.attributes.game_titles.length > 0
-              ? userProfile.data.attributes.game_titles.map((g, i: number) => {
+              ? userProfile.data.attributes.game_titles.map((g: any, i: number) => {
                   return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
                 })
               : null}
