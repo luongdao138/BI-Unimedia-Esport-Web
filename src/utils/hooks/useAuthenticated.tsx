@@ -10,10 +10,13 @@ const useAuthenticated = () => {
   const isAuth = useAppSelector(getIsAuthenticated)
 
   useEffect(() => {
+    if (!isAuth) router.push('/home')
     if (isAuth && !isRegistered) {
       router.push('/profile')
     }
   }, [isAuth, isRegistered])
+
+  return { isAuth, isRegistered }
 }
 
 export default useAuthenticated
