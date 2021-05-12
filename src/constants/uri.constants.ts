@@ -12,6 +12,8 @@ export const URI = {
   FORGOT_CONFIRM: '/v1/passwords/confirm',
   RESET_PASSWORD: '/v1/passwords/reset',
   PROFILE_UPDATE: '/v2/users/settings/step1',
+  FOLLOWERS: '/v2/followers',
+  FOLLOWING: '/v2/following',
   NG_WORDS: '/v1/ng_words',
   GET_PREFECTURES: 'v2/areas',
   USER_SETTINGS: '/v2/users/settings',
@@ -23,4 +25,6 @@ export const URI = {
   UNFOLLOW: '/v1/followers/unfollow',
   TOURNAMENTS_SEARCH: '/v1/tournaments/search',
   RECOMMENDED_USERS: '/v1/recommended_users',
+  TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
+  PROFILE_ACTIVITY_LOG: '/v1/activity_logs',
 }

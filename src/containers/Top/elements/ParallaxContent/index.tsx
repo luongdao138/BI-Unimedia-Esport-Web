@@ -2,7 +2,7 @@ import { Typography, Box, Grid, makeStyles, Theme } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { useTranslation } from 'react-i18next'
-
+import { ESRoutes } from '@constants/route.constants'
 export const ParallaxContent: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -24,7 +24,7 @@ export const ParallaxContent: React.FC = () => {
               <ButtonPrimary
                 round
                 onClick={() => {
-                  router.push('/home')
+                  router.push(ESRoutes.HOME)
                 }}
               >
                 {t('common:top.start_exelab')}

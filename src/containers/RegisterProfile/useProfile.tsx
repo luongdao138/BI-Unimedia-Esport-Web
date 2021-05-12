@@ -5,6 +5,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import authStore from '@store/auth'
 import { UserProfileParams } from '@services/auth.service'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 const { actions } = authStore
 const getRegisterProfile = createMetaSelector(actions.registerProfile)
@@ -19,7 +20,7 @@ const useProfile = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerProfile.typePrefix))
 
-  const backAction = () => router.push('/register')
+  const backAction = () => router.push(ESRoutes.REGISTER)
 
   useEffect(() => {
     if (meta.loaded) {
