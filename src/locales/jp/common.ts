@@ -1,5 +1,5 @@
 export default {
-  welcome: 'Welcome to React and react-i18next',
+  welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
     start_exelab: 'exeLABをはじめる',
@@ -51,6 +51,7 @@ export default {
   error: {
     login_failed: 'ログインに失敗しました。',
     code_invalid: '入力されたコードは無効です',
+    user_settings_failed: 'User settings failed',
   },
   common: {
     required: '必須',
@@ -66,12 +67,38 @@ export default {
     unfollow: 'フォロー中',
   },
   profile: {
-    favorite_game: '好きなゲーム',
+    prefectures: '都道府県',
+    show_prefectures: '都道府県を公開する',
+    gender: '性別',
+    show_gender: '性別を公開する',
+    show_birthdate: '生年月日を公開する',
+    basic_info: '基本データ',
+    tag: 'タグ',
+    favorite_game: {
+      title: '好きなゲーム',
+      search_by_keyword: 'キーワードで探す',
+      search_by_genre: 'ジャンルから探す',
+      create_new: '新しく作る',
+    },
     edit: '編集',
     read_more: 'もっとみる',
     following: 'フォロー中',
     followers: 'フォロワー',
   },
+  gender: {
+    male: '男性',
+    female: '女性',
+    other: 'その他',
+  },
+  date: {
+    year: '年',
+    month: '月',
+    day: '日',
+  },
+  skip: 'スキップする',
+  next: '次へ',
+  done: '完了',
+  search_by_keyword: 'キーワード検索',
   user: {
     user_results: 'ニックネーム・ID「ああああああ」 の検索結果',
   },

@@ -1,3 +1,9 @@
+export const GENDER = {
+  MALE: 1,
+  FEMALE: 2,
+  OTHER: 3,
+}
+
 export const searchTypes = {
   USER: 1,
   COMMUNITY: 2,
