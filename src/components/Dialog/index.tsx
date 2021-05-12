@@ -3,6 +3,7 @@ import { makeStyles, Theme, withStyles, WithStyles, createStyles } from '@materi
 
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
+import Icon from '@material-ui/core/Icon'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import { useTranslation } from 'react-i18next'
 
@@ -46,41 +47,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
       {onClose ? (
         <>
           <IconButton aria-label="close" onClick={onClose}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-              <g id="LV2_btn_back" data-name="LV2 / btn / back" transform="translate(0)">
-                <rect
-                  id="Rectangle_2705"
-                  data-name="Rectangle 2705"
-                  width="36"
-                  height="36"
-                  rx="18"
-                  transform="translate(0)"
-                  fill="rgba(77,77,77,0.8)"
-                />
-                <g id="Component_49_2" data-name="Component 49 – 2" transform="translate(12 12)">
-                  <g id="Group_6190" data-name="Group 6190" transform="translate(-211.513)">
-                    <path
-                      id="Path_16686"
-                      data-name="Path 16686"
-                      d="M217.513,309l-6,6,6,6"
-                      transform="translate(0 -309)"
-                      fill="none"
-                      stroke="#fff"
-                      strokeWidth="1"
-                    />
-                    <line
-                      id="Line_439"
-                      data-name="Line 439"
-                      x2="12"
-                      transform="translate(211.513 6)"
-                      fill="none"
-                      stroke="#fff"
-                      strokeWidth="1"
-                    />
-                  </g>
-                </g>
-              </g>
-            </svg>
+            <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
           <span style={{ color: 'white' }}>{children}</span>
         </>
