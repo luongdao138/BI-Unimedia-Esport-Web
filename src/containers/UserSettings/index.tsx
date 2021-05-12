@@ -21,23 +21,23 @@ import TabPanel from '@components/TabPanel'
 
 import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
+import Review from './Review'
 
-const FINAL_STEP = 3
+const FINAL_STEP = 4
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
-  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
+  const { userProfile, getUserProfileMeta } = useGetProfile()
   const { prefectures, getPrefectures } = useGetPrefectures()
-  const { features, getFeatures, getGameTitles } = useSettings()
+  const { features, getFeatures } = useSettings()
+  const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const [step, setStep] = useState(0)
+  const [profile, setProfile] = useState(null)
+  const [isReview, setReview] = useState(false)
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
-
-  const { userProfile, getUserProfileMeta } = useGetProfile()
-
-  const [profile, setProfile] = useState(null)
 
   useEffect(() => {
     if (userProfile) {
@@ -48,13 +48,12 @@ const UserSettingsContainer: React.FC = () => {
 
   useEffect(() => {
     getFeatures()
-    getGameTitles()
     getPrefectures({})
   }, [])
 
-  const onFeatureSelect = (selectedIds) => {
+  const onFeatureSelect = (selectedFeatures) => {
     setProfile((prevState) => {
-      return { ...prevState, features: selectedIds }
+      return { ...prevState, features: selectedFeatures }
     })
   }
   const onGameChange = (games: GameTitle['attributes'][]) => {
@@ -70,7 +69,7 @@ const UserSettingsContainer: React.FC = () => {
   const navigate = () => router.push('/welcome')
 
   const handleButtonClick = () => {
-    if (step != FINAL_STEP) setStep(step + 1)
+    if (step !== FINAL_STEP - 1) setStep(step + 1)
 
     const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
@@ -95,11 +94,17 @@ const UserSettingsContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    if (step == FINAL_STEP) showLoader(profileUpdateMeta.pending)
-    if (profileUpdateMeta.loaded && step == FINAL_STEP) navigate()
+    if (isReview) showLoader(profileUpdateMeta.pending)
+    if (profileUpdateMeta.loaded && step === FINAL_STEP - 1) setReview(true)
+    if (profileUpdateMeta.loaded && isReview) navigate()
   }, [profileUpdateMeta])
 
   const handleSkip = () => navigate()
+
+  const handleFix = (_step) => {
+    setReview(false)
+    setStep(_step)
+  }
 
   return profile && getUserProfileMeta.loaded ? (
     <>
@@ -107,31 +112,38 @@ const UserSettingsContainer: React.FC = () => {
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
             <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
-            <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
+            {!isReview && <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>}
           </Grid>
         </Box>
-        <Grid container direction="column" className={classes.contents}>
-          <Box className={classes.stepperHolder}>
-            <Stepper activeStep={step} style={{ padding: 0 }}>
-              {stepsTitles.map((label, idx) => (
-                <Step key={idx}>
-                  <StepButton onClick={() => setStep(idx)}>{label}</StepButton>
-                </Step>
-              ))}
-            </Stepper>
-          </Box>
-          <Box mt={4} />
-          <TabPanel value={step} index={0}>
-            <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
-          </TabPanel>
-          <TabPanel value={step} index={1}>
-            <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
-          </TabPanel>
-          <TabPanel value={step} index={2}>
-            <GameSelector values={profile.game_titles} onChange={onGameChange} />
-          </TabPanel>
-          <Box className={classes.blankSpace}></Box>
-        </Grid>
+
+        {isReview ? (
+          <Review profile={profile} onFixClicked={handleFix} />
+        ) : (
+          <Grid container direction="column" className={classes.contents}>
+            <Box className={classes.stepperHolder}>
+              <Stepper activeStep={step} style={{ padding: 0 }}>
+                {stepsTitles.map((label, idx) => (
+                  <Step key={idx}>
+                    <StepButton onClick={() => setStep(idx)}>{label}</StepButton>
+                  </Step>
+                ))}
+              </Stepper>
+            </Box>
+            <Box mt={4} />
+            <TabPanel value={step} index={0}>
+              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+            </TabPanel>
+            <TabPanel value={step} index={1}>
+              <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
+            </TabPanel>
+            <TabPanel value={step} index={2}>
+              <GameSelector values={profile.game_titles} onChange={onGameChange} />
+            </TabPanel>
+          </Grid>
+        )}
+
+        <Box mt={36} />
+
         <Box className={classes.stickyFooter}>
           <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
             {loader ? (
@@ -144,7 +156,7 @@ const UserSettingsContainer: React.FC = () => {
               <Box className={classes.nextBtnHolder}>
                 <Box className={classes.nextBtn}>
                   <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
-                    {step == FINAL_STEP - 1 ? t('common:done') : t('common:next')}
+                    {step === FINAL_STEP - 1 ? t('common:done') : t('common:next')}
                   </ButtonPrimary>
                 </Box>
               </Box>
@@ -198,9 +210,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
   },
   nextBtn: { minWidth: 280 },
-  blankSpace: {
-    height: 300,
-  },
   chipSpacing: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
