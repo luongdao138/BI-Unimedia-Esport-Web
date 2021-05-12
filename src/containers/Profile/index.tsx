@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Grid, Typography, IconButton, Icon, withStyles, Theme } from '@material-ui/core'
 import { AvatarGroup } from '@material-ui/lab'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,10 @@ import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
 import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESChip from '@components/Chip'
 import ESCard from '@components/Card'
+import ESTabs from '@components/Tabs'
+import ESTab from '@components/Tab'
+import TournamentHistoryContainer from '@containers/Profile/TournamentHistory'
+import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
 import ESAvatar from '@components/Avatar'
@@ -90,6 +94,7 @@ const ProfileContainer: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { selectors } = userProfileStore
+  const [tab, setTab] = useState(0)
   const userProfile = useAppSelector(selectors.getUserProfile)
   // useEffect(() => {
   //   getUserProfile()
@@ -177,172 +182,183 @@ const ProfileContainer: React.FC = () => {
             <ESButtonInstagramCircle className={classes.marginRight} />
           </Box>
         </Grid>
-        <Grid xs={12} className={classes.bodyContainer}>
-          <Box display="flex" justifyContent="space-between">
-            <Box display="flex">
-              <Typography variant="h2" className={classes.marginRight20}>
-                {t('common:profile.favorite_game')}
-              </Typography>
-              <Typography variant="h2">10</Typography>
+        <Box margin={3}>
+          <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
+            <ESTab label={t('common:user_profile.profile')} value={0} />
+            <ESTab label={t('common:user_profile.tournament_history')} value={1} />
+            <ESTab label={t('common:user_profile.activity_log')} value={2} />
+          </ESTabs>
+        </Box>
+        {tab == 1 && <TournamentHistoryContainer userId={127} />}
+        {tab == 2 && <ActivityLogsContainer userId={127} />}
+        {tab == 0 && (
+          <Grid xs={12} className={classes.bodyContainer}>
+            <Box display="flex" justifyContent="space-between">
+              <Box display="flex">
+                <Typography variant="h2" className={classes.marginRight20}>
+                  {t('common:profile.favorite_game')}
+                </Typography>
+                <Typography variant="h2">10</Typography>
+              </Box>
+              <Box display="flex">
+                <Typography>{t('common:profile.edit')}</Typography>
+              </Box>
             </Box>
-            <Box display="flex">
-              <Typography>{t('common:profile.edit')}</Typography>
+            <Box>
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="マインクラフト" />
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="シャドウバーズ" />
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="PUBG" />
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="Counter Strike Global Offensive" />
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="RAINBOW SIX SIEGE" />
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="UNO" />
+              <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="ポケモンカード" />
             </Box>
-          </Box>
-          <Box>
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="マインクラフト" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="シャドウバーズ" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="PUBG" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="Counter Strike Global Offensive" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="RAINBOW SIX SIEGE" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="UNO" />
-            <ESChip className={`${classes.marginTop20} ${classes.marginRight20}`} label="ポケモンカード" />
-          </Box>
-          <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-            <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
-            <Icon className={'fa fa-angle-down'} fontSize="small" />
-          </Box>
-          <Box display="flex" mt={3}>
-            <Grid container>
-              <Grid item xs={6} md={4}>
-                <ESCard>
-                  <ESCardMedia
-                    cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                    image="https://picsum.photos/id/112/240/120"
-                  ></ESCardMedia>
-                  <ESCardContent>
-                    <Typography variant="h2">コミュニティ名がはい...</Typography>
-                    <Typography variant="caption" gutterBottom>
-                      主催者 わたなべ
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end">
-                      <StyledAvatarGroup max={3}>
-                        <ESAvatar alt="Avatar" />
-                        <ESAvatar alt="Bvatar" />
-                        <ESAvatar alt="Cvatar" />
-                        <ESAvatar alt="Cvatar" />
-                      </StyledAvatarGroup>
-                    </Box>
-                  </ESCardContent>
-                </ESCard>
+            <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+              <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
+              <Icon className={'fa fa-angle-down'} fontSize="small" />
+            </Box>
+            <Box display="flex" mt={3}>
+              <Grid container>
+                <Grid item xs={6} md={4}>
+                  <ESCard>
+                    <ESCardMedia
+                      cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                      image="https://picsum.photos/id/112/240/120"
+                    ></ESCardMedia>
+                    <ESCardContent>
+                      <Typography variant="h2">コミュニティ名がはい...</Typography>
+                      <Typography variant="caption" gutterBottom>
+                        主催者 わたなべ
+                      </Typography>
+                      <Box display="flex" justifyContent="flex-end">
+                        <StyledAvatarGroup max={3}>
+                          <ESAvatar alt="Avatar" />
+                          <ESAvatar alt="Bvatar" />
+                          <ESAvatar alt="Cvatar" />
+                          <ESAvatar alt="Cvatar" />
+                        </StyledAvatarGroup>
+                      </Box>
+                    </ESCardContent>
+                  </ESCard>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                  <ESCard>
+                    <ESCardMedia
+                      cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                      image="https://picsum.photos/id/112/240/120"
+                    ></ESCardMedia>
+                    <ESCardContent>
+                      <Typography variant="h2">コミュニティ名がはい...</Typography>
+                      <Typography variant="caption" gutterBottom>
+                        主催者 わたなべ
+                      </Typography>
+                      <Box display="flex" justifyContent="flex-end">
+                        <StyledAvatarGroup max={3}>
+                          <ESAvatar alt="Avatar" />
+                          <ESAvatar alt="Bvatar" />
+                          <ESAvatar alt="Cvatar" />
+                          <ESAvatar alt="Cvatar" />
+                        </StyledAvatarGroup>
+                      </Box>
+                    </ESCardContent>
+                  </ESCard>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                  <ESCard>
+                    <ESCardMedia
+                      cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                      image="https://picsum.photos/id/112/240/120"
+                    ></ESCardMedia>
+                    <ESCardContent>
+                      <Typography variant="h2">コミュニティ名がはい...</Typography>
+                      <Typography variant="caption" gutterBottom>
+                        主催者 わたなべ
+                      </Typography>
+                      <Box display="flex" justifyContent="flex-end">
+                        <StyledAvatarGroup max={3}>
+                          <ESAvatar alt="Avatar" />
+                          <ESAvatar alt="Bvatar" />
+                          <ESAvatar alt="Cvatar" />
+                          <ESAvatar alt="Cvatar" />
+                        </StyledAvatarGroup>
+                      </Box>
+                    </ESCardContent>
+                  </ESCard>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                  <ESCard>
+                    <ESCardMedia
+                      cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                      image="https://picsum.photos/id/112/240/120"
+                    ></ESCardMedia>
+                    <ESCardContent>
+                      <Typography variant="h2">コミュニティ名がはい...</Typography>
+                      <Typography variant="caption" gutterBottom>
+                        主催者 わたなべ
+                      </Typography>
+                      <Box display="flex" justifyContent="flex-end">
+                        <StyledAvatarGroup max={3}>
+                          <ESAvatar alt="Avatar" />
+                          <ESAvatar alt="Bvatar" />
+                          <ESAvatar alt="Cvatar" />
+                          <ESAvatar alt="Cvatar" />
+                        </StyledAvatarGroup>
+                      </Box>
+                    </ESCardContent>
+                  </ESCard>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                  <ESCard>
+                    <ESCardMedia
+                      cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                      image="https://picsum.photos/id/112/240/120"
+                    ></ESCardMedia>
+                    <ESCardContent>
+                      <Typography variant="h2">コミュニティ名がはい...</Typography>
+                      <Typography variant="caption" gutterBottom>
+                        主催者 わたなべ
+                      </Typography>
+                      <Box display="flex" justifyContent="flex-end">
+                        <StyledAvatarGroup max={3}>
+                          <ESAvatar alt="Avatar" />
+                          <ESAvatar alt="Bvatar" />
+                          <ESAvatar alt="Cvatar" />
+                          <ESAvatar alt="Cvatar" />
+                        </StyledAvatarGroup>
+                      </Box>
+                    </ESCardContent>
+                  </ESCard>
+                </Grid>
+                <Grid item xs={6} md={4}>
+                  <ESCard>
+                    <ESCardMedia
+                      cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+                      image="https://picsum.photos/id/112/240/120"
+                    ></ESCardMedia>
+                    <ESCardContent>
+                      <Typography variant="h2">コミュニティ名がはい...</Typography>
+                      <Typography variant="caption" gutterBottom>
+                        主催者 わたなべ
+                      </Typography>
+                      <Box display="flex" justifyContent="flex-end">
+                        <StyledAvatarGroup max={3}>
+                          <ESAvatar alt="Avatar" />
+                          <ESAvatar alt="Bvatar" />
+                          <ESAvatar alt="Cvatar" />
+                          <ESAvatar alt="Cvatar" />
+                        </StyledAvatarGroup>
+                      </Box>
+                    </ESCardContent>
+                  </ESCard>
+                </Grid>
               </Grid>
-              <Grid item xs={6} md={4}>
-                <ESCard>
-                  <ESCardMedia
-                    cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                    image="https://picsum.photos/id/112/240/120"
-                  ></ESCardMedia>
-                  <ESCardContent>
-                    <Typography variant="h2">コミュニティ名がはい...</Typography>
-                    <Typography variant="caption" gutterBottom>
-                      主催者 わたなべ
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end">
-                      <StyledAvatarGroup max={3}>
-                        <ESAvatar alt="Avatar" />
-                        <ESAvatar alt="Bvatar" />
-                        <ESAvatar alt="Cvatar" />
-                        <ESAvatar alt="Cvatar" />
-                      </StyledAvatarGroup>
-                    </Box>
-                  </ESCardContent>
-                </ESCard>
-              </Grid>
-              <Grid item xs={6} md={4}>
-                <ESCard>
-                  <ESCardMedia
-                    cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                    image="https://picsum.photos/id/112/240/120"
-                  ></ESCardMedia>
-                  <ESCardContent>
-                    <Typography variant="h2">コミュニティ名がはい...</Typography>
-                    <Typography variant="caption" gutterBottom>
-                      主催者 わたなべ
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end">
-                      <StyledAvatarGroup max={3}>
-                        <ESAvatar alt="Avatar" />
-                        <ESAvatar alt="Bvatar" />
-                        <ESAvatar alt="Cvatar" />
-                        <ESAvatar alt="Cvatar" />
-                      </StyledAvatarGroup>
-                    </Box>
-                  </ESCardContent>
-                </ESCard>
-              </Grid>
-              <Grid item xs={6} md={4}>
-                <ESCard>
-                  <ESCardMedia
-                    cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                    image="https://picsum.photos/id/112/240/120"
-                  ></ESCardMedia>
-                  <ESCardContent>
-                    <Typography variant="h2">コミュニティ名がはい...</Typography>
-                    <Typography variant="caption" gutterBottom>
-                      主催者 わたなべ
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end">
-                      <StyledAvatarGroup max={3}>
-                        <ESAvatar alt="Avatar" />
-                        <ESAvatar alt="Bvatar" />
-                        <ESAvatar alt="Cvatar" />
-                        <ESAvatar alt="Cvatar" />
-                      </StyledAvatarGroup>
-                    </Box>
-                  </ESCardContent>
-                </ESCard>
-              </Grid>
-              <Grid item xs={6} md={4}>
-                <ESCard>
-                  <ESCardMedia
-                    cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                    image="https://picsum.photos/id/112/240/120"
-                  ></ESCardMedia>
-                  <ESCardContent>
-                    <Typography variant="h2">コミュニティ名がはい...</Typography>
-                    <Typography variant="caption" gutterBottom>
-                      主催者 わたなべ
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end">
-                      <StyledAvatarGroup max={3}>
-                        <ESAvatar alt="Avatar" />
-                        <ESAvatar alt="Bvatar" />
-                        <ESAvatar alt="Cvatar" />
-                        <ESAvatar alt="Cvatar" />
-                      </StyledAvatarGroup>
-                    </Box>
-                  </ESCardContent>
-                </ESCard>
-              </Grid>
-              <Grid item xs={6} md={4}>
-                <ESCard>
-                  <ESCardMedia
-                    cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                    image="https://picsum.photos/id/112/240/120"
-                  ></ESCardMedia>
-                  <ESCardContent>
-                    <Typography variant="h2">コミュニティ名がはい...</Typography>
-                    <Typography variant="caption" gutterBottom>
-                      主催者 わたなべ
-                    </Typography>
-                    <Box display="flex" justifyContent="flex-end">
-                      <StyledAvatarGroup max={3}>
-                        <ESAvatar alt="Avatar" />
-                        <ESAvatar alt="Bvatar" />
-                        <ESAvatar alt="Cvatar" />
-                        <ESAvatar alt="Cvatar" />
-                      </StyledAvatarGroup>
-                    </Box>
-                  </ESCardContent>
-                </ESCard>
-              </Grid>
-            </Grid>
-          </Box>
-          <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-            <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
-            <Icon className={'fa fa-angle-down'} fontSize="small" />
-          </Box>
-        </Grid>
+            </Box>
+            <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+              <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
+              <Icon className={'fa fa-angle-down'} fontSize="small" />
+            </Box>
+          </Grid>
+        )}
       </Grid>
     </>
   )
