@@ -19,8 +19,7 @@ import { GameTitlesResponse } from '@services/settings.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
-import { useAppSelector } from '@store/hooks'
-import userProfileStore from '@store/userProfile'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 const FINAL_STEP = 3
 const BASIC_INFO_INIT_STATE = {
@@ -48,8 +47,7 @@ const UserSettingsContainer: React.FC = () => {
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
-  const { selectors } = userProfileStore
-  const userProfile = useAppSelector(selectors.getUserProfile)
+  const { userProfile } = useGetProfile()
   const [profile, setProfile] = useState(null)
 
   // eslint-disable-next-line no-console
