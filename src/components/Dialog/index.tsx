@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Icon from '@material-ui/core/Icon'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import { useTranslation } from 'react-i18next'
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,6 +29,7 @@ const useStyles = makeStyles({
 })
 
 export interface ESDialogProps {
+  title: string
   open: boolean
   handleClose: () => void
 }
@@ -56,11 +56,11 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   )
 })
 
-const ESDialog: React.FC<ESDialogProps> = ({ open, handleClose, children, ...rest }) => {
+const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children, ...rest }) => {
   const classes = useStyles()
-  const { t } = useTranslation(['common'])
   return (
     <Dialog
+      maxWidth="md"
       aria-labelledby="Followers"
       open={open}
       onClose={handleClose}
@@ -78,7 +78,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ open, handleClose, children, ...res
       {...rest}
     >
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-        {t('common:followers.title')}
+        {title}
       </DialogTitle>
 
       {children}
