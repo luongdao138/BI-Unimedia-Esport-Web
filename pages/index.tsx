@@ -1,7 +1,8 @@
 import TopContainer from '@containers/Top'
 import PlainLayout from '@layouts/PlainLayout'
+import PageWithLayoutType from '@constants/page'
 
-const TopPage = () => {
+const TopPage: PageWithLayoutType = () => {
   return <TopContainer />
 }
 
