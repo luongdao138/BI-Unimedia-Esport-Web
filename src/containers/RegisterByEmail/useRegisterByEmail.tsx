@@ -5,6 +5,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import authStore from '@store/auth'
 import { UserLoginParams } from '@services/auth.service'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 const { selectors, actions } = authStore
 const getRegisterMeta = createMetaSelector(actions.registerByEmail)
@@ -20,11 +21,11 @@ const useRegisterByEmail = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerByEmail.typePrefix))
 
-  const backAction = () => router.push('/register')
+  const backAction = () => router.push(ESRoutes.REGISTER)
 
   useEffect(() => {
     if (meta.loaded) {
-      router.push('/register/confirm')
+      router.push(ESRoutes.REGISTER_CONFIRM)
       resetMeta()
     }
   }, [meta.loaded])
