@@ -36,7 +36,7 @@ const ESFollowing: React.FC = () => {
     <div>
       <ESButton onClick={handleClickOpen}>
         <span style={{ fontSize: 14, fontWeight: 'normal' }}>{t('common:following.title')}</span>
-        <label style={{ marginLeft: 5, color: 'white', fontSize: 24, fontWeight: 'bold' }}>{page.total_count}</label>
+        <label style={{ marginLeft: 5, color: 'white', fontSize: 24, fontWeight: 'bold' }}>{page ? page.total_count : 0}</label>
         <span style={{ marginLeft: 5 }}>{t('common:following.th')}</span>
       </ESButton>
       <ESDialog title={t('common:following.title')} open={open} handleClose={handleClose}>

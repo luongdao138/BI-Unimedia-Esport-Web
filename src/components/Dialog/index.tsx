@@ -60,6 +60,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
   const classes = useStyles()
   return (
     <Dialog
+      maxWidth="md"
       aria-labelledby="Followers"
       open={open}
       onClose={handleClose}
