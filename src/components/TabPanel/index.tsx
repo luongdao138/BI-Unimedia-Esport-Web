@@ -1,9 +1,7 @@
-import { StandardProps } from '@material-ui/core'
-
-export interface TabPanelProps extends StandardProps<React.HTMLAttributes<HTMLDivElement>, 'root'> {
-  children?: React.ReactNode
+interface TabPanelProps extends JSX.IntrinsicAttributes {
   index: any
   value: any
+  children?: React.ReactNode
 }
 
 function TabPanel(props: TabPanelProps): JSX.Element {
