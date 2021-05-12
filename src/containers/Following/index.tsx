@@ -8,14 +8,18 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import useFollowing from './useFollowing'
 
-const ESFollowing: React.FC = () => {
+export interface ESFollowingProps {
+  user_id: number
+}
+
+const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const { t } = useTranslation(['common'])
-  const { currentUser, following, fetchFollowing, page } = useFollowing()
+  const { following, fetchFollowing, page } = useFollowing()
 
   useEffect(() => {
-    fetchFollowing({ page: 1, user_id: currentUser.id })
+    fetchFollowing({ page: 1, user_id: user_id })
   }, [])
 
   const handleClickOpen = () => {
@@ -29,7 +33,7 @@ const ESFollowing: React.FC = () => {
       setHasMore(false)
       return
     }
-    fetchFollowing({ page: page.current_page + 1, user_id: currentUser.id })
+    fetchFollowing({ page: page.current_page + 1, user_id: user_id })
   }
 
   return (
@@ -46,7 +50,7 @@ const ESFollowing: React.FC = () => {
             next={fetchMoreData}
             hasMore={hasMore}
             loader={<ESLoader />}
-            height={400}
+            height={500}
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b>{t('common:infinite_scroll.message')}</b>
