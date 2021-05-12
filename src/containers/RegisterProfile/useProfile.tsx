@@ -23,7 +23,7 @@ const useProfile = () => {
 
   useEffect(() => {
     if (meta.loaded) {
-      router.push('/register/confirm')
+      router.push('/user-settings')
       resetMeta()
     }
   }, [meta.loaded])

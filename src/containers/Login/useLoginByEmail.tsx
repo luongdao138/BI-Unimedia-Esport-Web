@@ -17,15 +17,16 @@ const useLoginByEmail = () => {
   const meta = useAppSelector(getLoginMeta)
   const loginByEmail = (param: UserLoginParams) => dispatch(actions.loginByEmail(param))
   const resetMeta = () => dispatch(clearMetaData(actions.loginByEmail.typePrefix))
+  const handleClick = () => router.push('/home')
 
   useEffect(() => {
     if (meta.loaded) {
-      router.push('/welcome')
+      router.push('/home')
       resetMeta()
     }
   }, [meta.loaded])
 
-  return { user, loginByEmail, resetMeta, meta }
+  return { user, loginByEmail, resetMeta, meta, handleClick }
 }
 
 export default useLoginByEmail

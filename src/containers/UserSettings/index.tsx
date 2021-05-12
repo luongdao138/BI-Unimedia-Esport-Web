@@ -137,7 +137,7 @@ const UserSettingsContainer: React.FC = () => {
     setUserSettingsValues(data)
   }, [basicInfoData, selectedFeatures, selectedGameTitles])
 
-  const navigate = () => router.push('/welcome')
+  const navigate = () => router.push('/home')
 
   const handleButtonClick = () => {
     if (step != FINAL_STEP) setStep(step + 1)
@@ -154,7 +154,7 @@ const UserSettingsContainer: React.FC = () => {
 
   return (
     <>
-      <Container className={classes.container}>
+      <Box className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
             <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
@@ -211,7 +211,7 @@ const UserSettingsContainer: React.FC = () => {
             )}
           </Container>
         </Box>
-      </Container>
+      </Box>
       {!!profileUpdateMeta.error && (
         <ESToast open={!!profileUpdateMeta.error} message={t('common:error.user_settings_failed')} resetMeta={resetProfileUpdateMeta} />
       )}
@@ -232,7 +232,6 @@ const ResponsiveTypo = withStyles({
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    maxWidth: 600,
     marginTop: theme.spacing(60 / 8),
   },
   contents: {

@@ -21,6 +21,14 @@ export type UserLoginResponse = {
   confirmation_code?: string
 }
 
+export type UserProfileResponse = {
+  data: {
+    id: string
+    type: string
+    attributes: UserLoginResponse
+  }
+}
+
 export type UserRegisterResponse = {
   email: string
 }
@@ -92,7 +100,7 @@ export const resetPassword = async (params: UserResetPasswordParams): Promise<Us
   return data
 }
 
-export const registerProfile = async (params: UserProfileParams): Promise<UserLoginResponse> => {
-  const { data } = await api.post<UserLoginResponse>(URI.REGISTER_PROFILE, params)
+export const registerProfile = async (params: UserProfileParams): Promise<UserProfileResponse> => {
+  const { data } = await api.put<UserProfileResponse>(URI.REGISTER_PROFILE, params)
   return data
 }

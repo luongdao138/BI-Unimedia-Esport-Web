@@ -30,7 +30,7 @@ const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta } = useLoginByEmail()
+  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
       email: '',
@@ -49,7 +49,7 @@ const LoginContainer: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2}>
-          <IconButton className={classes.iconButtonBg}>
+          <IconButton className={classes.iconButtonBg} onClick={handleClick}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
         </Box>

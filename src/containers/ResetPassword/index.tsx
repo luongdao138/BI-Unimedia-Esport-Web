@@ -33,8 +33,8 @@ const ResetPasswordContainer: React.FC = () => {
 
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserResetPasswordParams>({
     initialValues: {
-      email: user.email,
-      confirmation_code: user.confirmation_code,
+      email: user?.email,
+      confirmation_code: user?.confirmation_code,
       password: '',
       password_confirm: '',
     },

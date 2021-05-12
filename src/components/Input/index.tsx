@@ -12,7 +12,7 @@ export type InputProps = {
 }
 
 const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelPrimary, labelSecondary, required = false, ...rest }) => {
-  const classes = useStyles()
+  const classes = useStyles({ hasSecondary: !!labelSecondary })
   const { t } = useTranslation(['common'])
 
   return (
@@ -59,12 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   bottomPadding: {
     paddingBottom: theme.spacing(1),
   },
-  labelMargin: {
+  labelMargin: (props: { hasSecondary?: boolean }) => ({
     fontWeight: 'bold',
     fontSize: theme.typography.h3.fontSize,
     color: theme.palette.text.primary,
-    width: '50%',
-  },
+    width: props.hasSecondary ? '50%' : '100%',
+  }),
   required: {
     backgroundColor: Colors.primary,
     borderRadius: 2,

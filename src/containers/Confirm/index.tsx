@@ -25,7 +25,7 @@ const ConfirmContainer: React.FC = () => {
   }
 
   const buttonActive = (): boolean => {
-    return user.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
+    return user?.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
   }
 
   return (

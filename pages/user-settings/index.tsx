@@ -1,10 +1,12 @@
 import UserSettingsContainer from '@containers/UserSettings'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
+import PrivateAuthLayout from '@layouts/PrivateAuthLayout'
 
 const UserSettingsPage: React.FC = () => {
-  const { isAuth } = useAuthenticated()
-
-  return isAuth && <UserSettingsContainer />
+  return (
+    <PrivateAuthLayout>
+      <UserSettingsContainer />
+    </PrivateAuthLayout>
+  )
 }
 
 export default UserSettingsPage

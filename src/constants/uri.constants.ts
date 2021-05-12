@@ -3,6 +3,7 @@ const DOMAIN = process.env.NEXT_PUBLIC_API
 export const URI = {
   DOMAIN,
   LOGIN: '/v1/auth/login',
+  REFRESH: '/v1/auth/refresh_token',
   LOGIN_SOCIAL: '/v2/signup/social',
   REGISTER: '/v1/signup/register',
   REGISTER_PROFILE: '/v1/users/settings/stepweb1',
