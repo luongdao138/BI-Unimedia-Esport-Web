@@ -18,7 +18,7 @@ const StyledAvatarGroup = withStyles({
     width: 20,
     height: 20,
     fontSize: 12,
-    color: 'white',
+    color: Colors.white,
   },
 })(AvatarGroup)
 
