@@ -1,7 +1,63 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
+import { GameTitle } from './game.service'
 
-export const getUserProfile = async (): Promise<any> => {
-  const { data } = await api.get(URI.USER_DETAIL_PROFILE)
+type UserProfile = {
+  id: string
+  type: 'user'
+  attributes: {
+    email: string
+    nickname: string
+    user_code: string
+    bio: string | null
+    birth_date: string
+    sex: number
+    instagram_link: string | null
+    facebook_link: string | null
+    twitter_link: string | null
+    twitch_link: string
+    show_sex: boolean
+    show_area: boolean
+    show_birth_date: boolean
+    nickname2: string
+    icon: string | null
+    template_id: number | null
+    is_following: boolean
+    is_followed: boolean
+    is_blocked: boolean
+    blocked_by_user: boolean
+    followers: number
+    following: number
+    avatar_url: string | null
+    cover_url: string | null
+    area: null | {
+      id: number
+      area: string
+      status: number
+      created_at: string
+      updated_at: string
+    }
+    features: Feature[]
+    game_titles: GameTitle['attributes'][]
+    template: null
+    security_settings: {
+      show_tournament_history: boolean
+      show_activity_logs: boolean
+      show_about: boolean
+      allow_messages_from_strangers: boolean
+      allow_groups_from_strangers: boolean
+    }
+    is_deleted: boolean
+  }
+}
+
+export type Feature = { id: number; feature: string }
+
+export type ProfileResponse = {
+  data: UserProfile
+}
+
+export const getUserProfile = async (): Promise<ProfileResponse> => {
+  const { data } = await api.get<ProfileResponse>(URI.USER_DETAIL_PROFILE)
   return data
 }

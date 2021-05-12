@@ -6,7 +6,7 @@ export type ProfileUpdateParams = {
   show_sex: boolean
   birth_date: string
   show_birth_date: boolean
-  area_id: number
+  area_id?: number
   show_area: boolean
   game_titles: number[]
   features: number[]

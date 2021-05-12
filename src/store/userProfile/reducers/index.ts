@@ -1,8 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
 
 type StateType = {
-  detail: any | null
+  detail: ProfileResponse
 }
 
 const initialState: StateType = { detail: undefined }

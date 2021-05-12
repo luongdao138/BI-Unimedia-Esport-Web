@@ -20,6 +20,7 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import TabPanel from '@components/TabPanel'
 
 import GameSelector from '@components/GameSelector'
+import { GameTitle } from '@services/game.service'
 
 const FINAL_STEP = 3
 
@@ -41,7 +42,7 @@ const UserSettingsContainer: React.FC = () => {
   useEffect(() => {
     if (userProfile) {
       const profileData = userProfile.data.attributes
-      setProfile({ ...profileData, area_id: profileData.area.id })
+      setProfile({ ...profileData, area_id: profileData.area ? profileData.area.id : -1 })
     }
   }, [userProfile])
 
@@ -55,6 +56,9 @@ const UserSettingsContainer: React.FC = () => {
     setProfile((prevState) => {
       return { ...prevState, features: selectedIds }
     })
+  }
+  const onGameChange = (games: GameTitle['attributes'][]) => {
+    setProfile({ ...profile, game_titles: games })
   }
 
   const onBasicInfoChanged = (data) => {
@@ -70,7 +74,24 @@ const UserSettingsContainer: React.FC = () => {
 
     const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
-    profileUpdate({ ...data, features: _.map(profile.features, (feature) => feature.id), game_titles: [1, 2] })
+    let newParams: {
+      sex: any
+      show_sex: boolean
+      birth_date: any
+      show_birth_date: boolean
+      area_id?: any
+      show_area: boolean
+    } = { ...data }
+
+    if (newParams.area_id === -1) {
+      newParams = _.omit(newParams, 'area_id')
+    }
+
+    profileUpdate({
+      ...newParams,
+      features: _.map(profile.features, (feature) => feature.id),
+      game_titles: _.map(profile.game_titles, (g) => g.id),
+    })
   }
 
   useEffect(() => {
@@ -107,7 +128,7 @@ const UserSettingsContainer: React.FC = () => {
             <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
           </TabPanel>
           <TabPanel value={step} index={2}>
-            <GameSelector />
+            <GameSelector values={profile.game_titles} onChange={onGameChange} />
           </TabPanel>
           <Box className={classes.blankSpace}></Box>
         </Grid>
@@ -160,6 +181,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: 0,
     width: '100%',
     background: Colors.black,
+    borderTop: `1px solid ${theme.palette.common.white}15`,
   },
   stepperHolder: {
     paddingRight: theme.spacing(12),

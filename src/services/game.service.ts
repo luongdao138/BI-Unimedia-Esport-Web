@@ -15,12 +15,11 @@ export type GameTitle = {
   id: string
   type: 'game_title'
   attributes: {
+    id?: number
     display_name: string
     short_name: string
     jp_kana_name: string
     en_name: string
-    user_id: any
-    image_url: any
   }
 }
 

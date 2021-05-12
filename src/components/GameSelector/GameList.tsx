@@ -10,7 +10,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const GameList: React.FC<{ games: GameTitle[] }> = ({ games }) => {
+type GameListProps = { games: GameTitle['attributes'][]; handleAdd: (game: GameTitle['attributes']) => void }
+
+const GameList: React.FC<GameListProps> = ({ games, handleAdd }) => {
   const classes = useStyles()
   if (games.length === 0) {
     return (
@@ -22,7 +24,7 @@ const GameList: React.FC<{ games: GameTitle[] }> = ({ games }) => {
   return (
     <>
       {games.map((g, idx) => (
-        <Chip key={idx} label={g.attributes.display_name} className={classes.chip} />
+        <Chip key={idx} label={g.display_name} className={classes.chip} onClick={() => handleAdd(g)} />
       ))}
     </>
   )
