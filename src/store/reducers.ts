@@ -5,6 +5,9 @@ import userProfile from '@store/userProfile'
 import search from '@store/search'
 import follow from '@store/follow'
 import following from '@store/following'
+import profile from '@store/profile'
+import common from '@store/common'
+import settings from '@store/settings'
 import ngWords from '@store/ngWords'
 import tournament from '@store/tournament'
 
@@ -14,6 +17,9 @@ const reducer = combineReducers({
   search: search.reducers,
   follow: follow.reducers,
   following: following.reducers,
+  profile: profile.reducers,
+  common: common.reducers,
+  settings: settings.reducers,
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   tournament: tournament.reducers,

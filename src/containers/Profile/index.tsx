@@ -196,7 +196,7 @@ const ProfileContainer: React.FC = () => {
             <Box display="flex" justifyContent="space-between">
               <Box display="flex">
                 <Typography variant="h2" className={classes.marginRight20}>
-                  {t('common:profile.favorite_game')}
+                  {t('common:profile.favorite_game.title')}
                 </Typography>
                 <Typography variant="h2">10</Typography>
               </Box>
