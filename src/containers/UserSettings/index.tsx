@@ -47,14 +47,10 @@ const UserSettingsContainer: React.FC = () => {
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
-  const { userProfile } = useGetProfile()
+  const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
 
-  // eslint-disable-next-line no-console
-  console.log('profile', profile)
-
   useEffect(() => {
-    // console.log('userProfile', userProfile)
     if (userProfile) {
       setProfile(userProfile.data.attributes)
     }
@@ -115,7 +111,7 @@ const UserSettingsContainer: React.FC = () => {
   function getStepViews() {
     switch (step) {
       case 0:
-        return <BasicInfo profile={basicInfoData} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+        return <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
       case 2:
@@ -152,7 +148,7 @@ const UserSettingsContainer: React.FC = () => {
 
   const handleSkip = () => navigate()
 
-  return (
+  return profile && getUserProfileMeta.loaded ? (
     <>
       <Container className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
@@ -216,6 +212,8 @@ const UserSettingsContainer: React.FC = () => {
         <ESToast open={!!profileUpdateMeta.error} message={t('common:error.user_settings_failed')} resetMeta={resetProfileUpdateMeta} />
       )}
     </>
+  ) : (
+    <ESLoader />
   )
 }
 

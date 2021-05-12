@@ -13,17 +13,8 @@ export type BasicInfoParams = {
   selectedGender: string
 }
 
-type BasicInfo = {
-  sex: string
-  show_sex: boolean
-  birth_date: string
-  show_birth_date: boolean
-  area_id: string
-  show_area: boolean
-}
-
 interface BasicInfoProps {
-  profile: BasicInfo
+  profile: any
   prefectures: any
   onDataChange: (data: any) => void
 }
@@ -45,7 +36,12 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
       label: t('common:gender.other'),
     },
   ]
-  const [date, setDate] = useState({ date: null, selectedDate: profile.birth_date ? profile.birth_date : null })
+
+  const { area, show_area, sex, show_sex, birth_date, show_birth_date } = profile
+  // eslint-disable-next-line no-console
+  console.log('BasicInfo', area, show_area, sex, show_sex, birth_date, show_birth_date)
+
+  const [date, setDate] = useState({ date: null, selectedDate: birth_date ? birth_date : null })
 
   const memoizedPrefectures = useMemo(() => {
     if (prefectures && prefectures.data) {
@@ -58,16 +54,16 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
 
   const { handleChange, values } = useFormik<BasicInfoParams>({
     initialValues: {
-      selectedPrefecture: profile.area_id ? profile.area_id : '',
-      selectedGender: profile.sex ? profile.sex : '',
+      selectedPrefecture: area ? area.id : '',
+      selectedGender: sex ? sex : '',
     },
     onSubmit: (_) => null,
   })
 
   const [checkboxStates, setCheckboxStates] = useState({
-    isShowPrefecture: profile.show_area,
-    isShowGender: profile.show_sex,
-    isShowBirthdate: profile.show_birth_date,
+    isShowPrefecture: show_area,
+    isShowGender: show_sex,
+    isShowBirthdate: show_birth_date,
   })
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
