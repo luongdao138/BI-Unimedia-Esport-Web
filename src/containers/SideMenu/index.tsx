@@ -72,6 +72,7 @@ const ListItem = withStyles({
     '&$selected': {
       backgroundColor: 'transparent',
       color: Colors.primary,
+      borderRight: `2px solid ${Colors.primary}`,
       '& .MuiListItemIcon-root': {
         color: Colors.primary,
       },

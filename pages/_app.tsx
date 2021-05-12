@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { AppProps } from 'next/app'
 import { useStore } from 'react-redux'
 import { StoreType, storeWrapper } from '@store/store'
@@ -14,9 +14,16 @@ import { ThemeProvider } from '@material-ui/core'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import userProfile from '@store/userProfile'
 import theme from '@theme/index'
+import PageWithLayoutType from '@constants/page'
+
 import 'src/locales/i18n'
 
-const App: FC<AppProps> = ({ Component, pageProps }: any) => {
+type Props = AppProps & {
+  Component: PageWithLayoutType
+  pageProps: any
+}
+
+const App = ({ Component, pageProps }: Props) => {
   const [loader, setLoader] = React.useState(false)
   const router = useRouter()
   const store: StoreType = useStore()
@@ -45,7 +52,7 @@ const App: FC<AppProps> = ({ Component, pageProps }: any) => {
     }
   }, [])
 
-  const Layout = Component.Layout ? Component.Layout : React.Fragment
+  const Layout = Component.Layout ?? React.Fragment
   return (
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
       <ThemeProvider theme={theme}>
