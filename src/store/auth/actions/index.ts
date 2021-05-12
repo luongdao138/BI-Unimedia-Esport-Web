@@ -62,11 +62,11 @@ export const registerConfirm = createAsyncThunk<services.UserLoginResponse, serv
   }
 )
 
-export const forgotPassword = createAsyncThunk<services.ForgotPasswordResponse, services.ForgotPasswordParams>(
-  AUTH_ACTION_TYPE.FORGOT_PASSWORD,
-  async (forgotParam, { rejectWithValue }) => {
+export const registerProfile = createAsyncThunk<services.UserLoginResponse, services.UserProfileParams>(
+  AUTH_ACTION_TYPE.REGISTER_PROFILE,
+  async (registerProfileParam, { rejectWithValue }) => {
     try {
-      const res = await services.forgotPassword(forgotParam)
+      const res = await services.registerProfile(registerProfileParam)
       return res
     } catch (error) {
       if (!error.response) {
@@ -77,12 +77,27 @@ export const forgotPassword = createAsyncThunk<services.ForgotPasswordResponse, 
   }
 )
 
-export const forgotConfirm = createAsyncThunk<services.UserConfirmResponse, services.UserConfirmParams>(
+export const forgotPassword = createAsyncThunk<services.ForgotPasswordResponse, services.ForgotPasswordParams>(
+  AUTH_ACTION_TYPE.FORGOT_PASSWORD,
+  async (forgotParam, { rejectWithValue }) => {
+    try {
+      await services.forgotPassword(forgotParam)
+      return forgotParam
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const forgotConfirm = createAsyncThunk<any, services.UserConfirmParams>(
   AUTH_ACTION_TYPE.FORGOT_CONFIRM,
   async (forgotParam, { rejectWithValue }) => {
     try {
-      const res = await services.forgotConfirm(forgotParam)
-      return res
+      await services.forgotConfirm(forgotParam)
+      return forgotParam
     } catch (error) {
       if (!error.response) {
         throw error

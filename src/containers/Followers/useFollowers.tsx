@@ -4,7 +4,6 @@ import { clearMetaData } from '@store/metadata/actions'
 import followStore from '@store/follow'
 import authStore from '@store/auth'
 import { FollowersParams } from '@services/follow.service'
-import { useEffect } from 'react'
 
 const { selectors, actions } = followStore
 const frag = authStore

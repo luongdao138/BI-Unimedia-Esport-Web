@@ -3,11 +3,7 @@ import { makeStyles, Theme, withStyles, WithStyles, createStyles } from '@materi
 
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
-import Button from '@material-ui/core/Button'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import MuiDialogContent from '@material-ui/core/DialogContent'
-import MuiDialogActions from '@material-ui/core/DialogActions'
-import Typography from '@material-ui/core/Typography'
 import { useTranslation } from 'react-i18next'
 
 const styles = (theme: Theme) =>
@@ -70,7 +66,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
                       transform="translate(0 -309)"
                       fill="none"
                       stroke="#fff"
-                      stroke-width="1"
+                      strokeWidth="1"
                     />
                     <line
                       id="Line_439"
@@ -79,7 +75,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
                       transform="translate(211.513 6)"
                       fill="none"
                       stroke="#fff"
-                      stroke-width="1"
+                      strokeWidth="1"
                     />
                   </g>
                 </g>

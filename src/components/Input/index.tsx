@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelMargin: {
     fontWeight: 'bold',
+    fontSize: theme.typography.h3.fontSize,
+    color: theme.palette.text.primary,
+    width: '50%',
   },
   required: {
     backgroundColor: Colors.primary,

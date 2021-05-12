@@ -19,7 +19,7 @@ const initStore = () => {
   } else {
     const persistConfig = {
       key: 'auth',
-      whitelist: ['auth'],
+      whitelist: ['auth', 'ngWords'],
       storage,
     }
 

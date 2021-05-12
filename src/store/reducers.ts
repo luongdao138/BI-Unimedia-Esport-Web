@@ -4,6 +4,7 @@ import auth from '@store/auth'
 import userProfile from '@store/userProfile'
 import search from '@store/search'
 import follow from '@store/follow'
+import ngWords from '@store/ngWords'
 import tournament from '@store/tournament'
 
 const reducer = combineReducers({
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   metadata: metadata.reducer,
   search: search.reducers,
   follow: follow.reducers,
+  ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   tournament: tournament.reducers,
 })
