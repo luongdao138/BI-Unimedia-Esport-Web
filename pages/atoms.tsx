@@ -42,6 +42,7 @@ import StepButton from '@components/StepButton'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
 import ESFollowers from '@containers/Followers'
+import ESFollowing from '@containers/Following'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
@@ -120,6 +121,7 @@ const Atoms: PageWithLayoutType = () => {
       </Box>
       <Box>
         <ESFollowers />
+        <ESFollowing />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>

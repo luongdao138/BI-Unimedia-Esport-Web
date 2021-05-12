@@ -72,8 +72,15 @@ export default {
     video: '動画',
     settings: '設定',
   },
+  infinite_scroll: {
+    message: 'Yay! You have seen it all',
+  },
   followers: {
     title: 'フォロー中',
+    th: '人',
+  },
+  following: {
+    title: 'フォロワー',
     th: '人',
   },
   profile: {
