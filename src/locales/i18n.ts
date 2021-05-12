@@ -2,6 +2,9 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import commonEN from './en/common'
 import commonJP from './en/common'
+import moment from 'moment'
+import 'moment/locale/ja'
+moment.locale('ja')
 
 export const resources = {
   en: {
