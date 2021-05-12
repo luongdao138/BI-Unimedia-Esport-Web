@@ -61,9 +61,16 @@ export default {
     total: '件',
   },
   home: {
+    exelab: 'eXe LAB事務局',
+    exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
     unfollow: 'フォロー中',
+    tournament: 'アリーナ',
+    lobby: 'ロビー',
+    community: 'コミュニティ',
+    video: '動画',
+    settings: '設定',
   },
   profile: {
     favorite_game: '好きなゲーム',
