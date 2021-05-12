@@ -107,10 +107,10 @@ const SideMenu: React.FC = () => {
           <ProfileAvatar size={80} src="/images/avatar.png" />
           <Box width="100%" textAlign="center">
             <Typography variant="h2" className={classes.name}>
-              {t('common:home:exelab')}
+              {t('common:home.exelab')}
             </Typography>
             <Typography variant="body2" className={classes.usercode}>
-              {t('common:home:exelab_staff')}
+              {t('common:home.exelab_staff')}
             </Typography>
           </Box>
         </Box>
@@ -120,7 +120,7 @@ const SideMenu: React.FC = () => {
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-home" />
             </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home:home')} />
+            <ListItemText className={classes.listText} primary={t('common:home.home')} />
           </ListItem>
           <ListItem
             className={classes.list}
@@ -132,26 +132,26 @@ const SideMenu: React.FC = () => {
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-trophy" />
             </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home:tournament')} />
+            <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
           </ListItem>
           <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-university" />
             </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home:lobby')} />
+            <ListItemText className={classes.listText} primary={t('common:home.lobby')} />
           </ListItem>
           <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-users" />
             </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home:community')} />
+            <ListItemText className={classes.listText} primary={t('common:home.community')} />
           </ListItem>
           <Box paddingBottom={4} />
           <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-play-circle" />
             </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home:video')} />
+            <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem>
           <ListItem
             className={classes.list}
@@ -163,7 +163,7 @@ const SideMenu: React.FC = () => {
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-cog" />
             </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home:settings')} />
+            <ListItemText className={classes.listText} primary={t('common:home.settings')} />
           </ListItem>
         </List>
       </Box>
