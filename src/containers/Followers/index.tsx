@@ -40,7 +40,7 @@ const ESFollowers: React.FC = () => {
       <ESDialog open={open} handleClose={handleClose}>
         <Grid container>
           {users.map((user, i) => (
-            <UserListItem data={user} key={i} />
+            <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
           ))}
           {meta.pending && (
             <Grid item xs={12}>
