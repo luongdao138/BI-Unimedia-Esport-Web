@@ -22,14 +22,6 @@ import { useRouter } from 'next/router'
 import useGetProfile from '@utils/hooks/useGetProfile'
 
 const FINAL_STEP = 3
-const BASIC_INFO_INIT_STATE = {
-  sex: null,
-  show_sex: false,
-  birth_date: null,
-  show_birth_date: false,
-  area_id: null,
-  show_area: false,
-}
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
@@ -39,11 +31,8 @@ const UserSettingsContainer: React.FC = () => {
   const { prefectures, getPrefectures } = useGetPrefectures()
   const { features, gameTitles, getFeatures, getGameTitles } = useSettings()
   const [step, setStep] = useState(0)
-  const [basicInfoData, setBasicInfoData] = useState(BASIC_INFO_INIT_STATE)
-  const [selectedFeatures, setSelectedFeatures] = useState([] as string[])
   const [selectedGameTitles, setSelectedGameTitles] = useState([] as GameTitlesResponse)
   const [unselectedGameTitles, setUnselectedGameTitles] = useState([] as GameTitlesResponse)
-  const [userSettingsValues, setUserSettingsValues] = useState(null)
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
@@ -52,7 +41,8 @@ const UserSettingsContainer: React.FC = () => {
 
   useEffect(() => {
     if (userProfile) {
-      setProfile(userProfile.data.attributes)
+      const profileData = userProfile.data.attributes
+      setProfile({ ...profileData, area_id: profileData.area.id })
     }
   }, [userProfile])
 
@@ -68,14 +58,10 @@ const UserSettingsContainer: React.FC = () => {
     setUnselectedGameTitles(newUnselected)
   }, [gameTitles])
 
-  const onFeatureSelect = (id: string) => {
-    const newFeatures = [...selectedFeatures]
-    if (selectedFeatures.find((activeId) => activeId === id)) {
-      _.remove(newFeatures, (activeId) => activeId === id)
-    } else {
-      newFeatures.push(id)
-    }
-    setSelectedFeatures(newFeatures)
+  const onFeatureSelect = (selectedIds) => {
+    setProfile((prevState) => {
+      return { ...prevState, features: selectedIds }
+    })
   }
 
   const onGameTitleClick = (game: GameTitlesResponse[0]) => {
@@ -101,7 +87,9 @@ const UserSettingsContainer: React.FC = () => {
   }
 
   const onBasicInfoChanged = (data) => {
-    setBasicInfoData(data)
+    setProfile((prevState) => {
+      return { ...prevState, ...data }
+    })
   }
 
   const onGameTitleSearch = (text: string) => {
@@ -113,32 +101,20 @@ const UserSettingsContainer: React.FC = () => {
       case 0:
         return <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
       case 1:
-        return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
+        return <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
       case 2:
         return <GameSelect gameTitles={unselectedGameTitles} onGameSelect={onGameTitleClick} onSearch={onGameTitleSearch} />
     }
   }
-
-  useEffect(() => {
-    const data = {
-      sex: basicInfoData.sex ? parseInt(basicInfoData.sex) : null,
-      show_sex: basicInfoData.show_sex,
-      birth_date: basicInfoData.birth_date ? basicInfoData.birth_date : null,
-      show_birth_date: basicInfoData.show_birth_date,
-      area_id: basicInfoData.area_id ? parseInt(basicInfoData.area_id) : null,
-      show_area: basicInfoData.show_area,
-      game_titles: selectedGameTitles.map((gameTitle) => parseInt(gameTitle.id)),
-      features: selectedFeatures.map((feature) => parseInt(feature)),
-    }
-    setUserSettingsValues(data)
-  }, [basicInfoData, selectedFeatures, selectedGameTitles])
 
   const navigate = () => router.push('/welcome')
 
   const handleButtonClick = () => {
     if (step != FINAL_STEP) setStep(step + 1)
 
-    profileUpdate(userSettingsValues)
+    const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area', 'game_titles'])
+
+    profileUpdate({ ...data, features: _.map(profile.features, (feature) => feature.id) })
   }
 
   useEffect(() => {
@@ -167,6 +143,7 @@ const UserSettingsContainer: React.FC = () => {
               ))}
             </Stepper>
           </Box>
+          <Box mt={4} />
           {getStepViews()}
           <Box className={classes.blankSpace}></Box>
         </Grid>
