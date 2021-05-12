@@ -20,13 +20,15 @@ const HeaderTags: React.FC<TagsProps> = ({ items }) => {
   const classes = useStyles()
   return (
     <Box display="flex" className={classes.marginTop8}>
-      {items.map((item: Feature, index: number) => {
-        return (
-          <Typography key={`key-${index}`} className={classes.marginRight}>
-            #{item.feature}
-          </Typography>
-        )
-      })}
+      {items.length > 0
+        ? items.map((item: Feature, index: number) => {
+            return (
+              <Typography key={`key-${index}`} className={classes.marginRight}>
+                #{item.feature}
+              </Typography>
+            )
+          })
+        : null}
     </Box>
   )
 }
