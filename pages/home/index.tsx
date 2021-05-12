@@ -1,13 +1,11 @@
 import HomeContainer from '@containers/Home'
 import MainLayout from '@layouts/MainLayout'
-import React from 'react'
+import PageWithLayoutType from '@constants/page'
 
 const HomePage: React.FC = () => {
-  return (
-    <MainLayout>
-      <HomeContainer />
-    </MainLayout>
-  )
+  return <HomeContainer />
 }
+
+;(HomePage as PageWithLayoutType).Layout = MainLayout
 
 export default HomePage
