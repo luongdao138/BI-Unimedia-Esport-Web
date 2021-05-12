@@ -1,4 +1,5 @@
 import Box from '@material-ui/core/Box'
+import Link from 'next/link'
 import List from '@material-ui/core/List'
 import MuiListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -10,6 +11,7 @@ import ProfileAvatar from '@components/ProfileAvatar'
 import { Typography } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { ESRoutes } from '@constants/route.constants'
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -117,24 +119,22 @@ const SideMenu: React.FC = () => {
         </Box>
 
         <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-          <ListItem className={classes.list} button disableRipple selected={isSelected('/home')} onClick={() => router.push('/home')}>
-            <ListItemIcon className={classes.icon}>
-              <Icon fontSize="small" className="fa fa-home" />
-            </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home.home')} />
-          </ListItem>
-          <ListItem
-            className={classes.list}
-            button
-            disableRipple
-            selected={isSelected('/tournaments')}
-            onClick={() => router.push('/tournaments')}
-          >
-            <ListItemIcon className={classes.icon}>
-              <Icon fontSize="small" className="fa fa-trophy" />
-            </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
-          </ListItem>
+          <Link href={ESRoutes.HOME}>
+            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
+              <ListItemIcon className={classes.icon}>
+                <Icon fontSize="small" className="fa fa-home" />
+              </ListItemIcon>
+              <ListItemText className={classes.listText} primary={t('common:home.home')} />
+            </ListItem>
+          </Link>
+          <Link href={ESRoutes.TOURNAMENTS}>
+            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.TOURNAMENTS)}>
+              <ListItemIcon className={classes.icon}>
+                <Icon fontSize="small" className="fa fa-trophy" />
+              </ListItemIcon>
+              <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
+            </ListItem>
+          </Link>
           <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-university" />
@@ -154,18 +154,14 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem>
-          <ListItem
-            className={classes.list}
-            button
-            disableRipple
-            selected={isSelected('/settings')}
-            onClick={() => router.push('/settings')}
-          >
-            <ListItemIcon className={classes.icon}>
-              <Icon fontSize="small" className="fa fa-cog" />
-            </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:home.settings')} />
-          </ListItem>
+          <Link href={ESRoutes.SETTINGS}>
+            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
+              <ListItemIcon className={classes.icon}>
+                <Icon fontSize="small" className="fa fa-cog" />
+              </ListItemIcon>
+              <ListItemText className={classes.listText} primary={t('common:home.settings')} />
+            </ListItem>
+          </Link>
         </List>
       </Box>
     </>
