@@ -6,6 +6,7 @@ import search from '@store/search'
 import profile from '@store/profile'
 import common from '@store/common'
 import settings from '@store/settings'
+import ngWords from '@store/ngWords'
 import tournament from '@store/tournament'
 
 const reducer = combineReducers({
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   profile: profile.reducers,
   common: common.reducers,
   settings: settings.reducers,
+  ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   tournament: tournament.reducers,
 })

@@ -7,24 +7,24 @@ import { clearMetaData } from '@store/metadata/actions'
 import { useRouter } from 'next/router'
 
 const { selectors, actions } = authStore
-const getRegisterConfirmMeta = createMetaSelector(actions.registerConfirm)
+const getForgotConfirm = createMetaSelector(actions.forgotConfirm)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useConfirm = (confirmationCode: string) => {
+const useForgotConfirm = (confirmationCode: string) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
-  const metaConfirm = useAppSelector(getRegisterConfirmMeta)
+  const metaConfirm = useAppSelector(getForgotConfirm)
 
-  const registerConfirm = (params: UserConfirmParams) => dispatch(actions.registerConfirm(params))
+  const forgotConfirm = (params: UserConfirmParams) => dispatch(actions.forgotConfirm(params))
 
-  const resetMeta = () => dispatch(clearMetaData(actions.registerConfirm.typePrefix))
+  const resetMeta = () => dispatch(clearMetaData(actions.forgotConfirm.typePrefix))
 
-  const backAction = () => router.push('/register/by-email')
+  const backAction = () => router.push('/forgot-password')
 
   useEffect(() => {
     if (metaConfirm.loaded) {
-      router.push('/register/profile')
+      router.push('/forgot-password/reset')
       resetMeta()
     }
   }, [metaConfirm.loaded])
@@ -35,13 +35,19 @@ const useConfirm = (confirmationCode: string) => {
     }
   }, [confirmationCode])
 
+  useEffect(() => {
+    if (user === undefined) {
+      router.push('/forgot-password')
+    }
+  }, [])
+
   return {
     user,
-    registerConfirm,
+    forgotConfirm,
     metaConfirm,
     resetMeta,
     backAction,
   }
 }
 
-export default useConfirm
+export default useForgotConfirm

@@ -1,3 +1,5 @@
+import { StoreType } from '@store/store'
+
 /* eslint-disable no-useless-escape */
 const validateEmail = (email: string): boolean => {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -52,8 +54,34 @@ const scorePassword = (pass: string): number => {
   return score
 }
 
+const userCodeValid = (value: string): boolean => {
+  return /^([a-zA-Z0-9_-]+)$/.test(value)
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const matchNgWords = (store: StoreType, subject: string) => {
+  if (subject !== undefined && subject !== null && subject.length > 0) {
+    const { ngWords } = store.getState()
+    const words = ngWords.words.data.map(function (ngWord) {
+      return ngWord.attributes.word
+    })
+    if (words.length > 0) {
+      const regexMetachars = /[(){[*+?.\\^$|]/g
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i].replace(regexMetachars, '\\$&')
+      }
+      const regex = new RegExp(words.join('|'), 'gi')
+      return [...new Set(subject.match(regex))] || []
+    } else return []
+  } else {
+    return []
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
   scorePassword,
+  userCodeValid,
+  matchNgWords,
 }
