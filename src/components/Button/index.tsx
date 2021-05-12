@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
   }),
   outlined: (props: { round?: boolean }) => ({
     borderRadius: props.round ? 25 : 4,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: Colors.white_opacity[70],
     border: '1px solid',
     borderColor: Colors.white_opacity[70],

@@ -10,9 +10,6 @@ export type GameGenre = {
     icon: string
   }
 }
-export type GameGenreResponse = {
-  data: GameGenre[]
-}
 
 export type GameTitle = {
   id: string
@@ -27,8 +24,21 @@ export type GameTitle = {
   }
 }
 
+export type GameGenreResponse = {
+  data: GameGenre[]
+}
+
 export type GameTitleResponse = {
   data: GameTitle[]
+}
+
+export type CreateGameTitleParams = {
+  display_name: string
+  game_genre_id: number
+}
+
+export type CreateGameTitleResponse = {
+  data: GameTitle
 }
 
 export const getGameGenres = async (): Promise<GameGenreResponse> => {
@@ -38,5 +48,15 @@ export const getGameGenres = async (): Promise<GameGenreResponse> => {
 
 export const getGameByGenreId = async (genreId: number): Promise<GameTitleResponse> => {
   const { data } = await api.get<GameTitleResponse>(`${URI.GAME_TITLES}?genre_id=${genreId}`)
+  return data
+}
+
+export const getGameByTitle = async (keyword: string): Promise<GameTitleResponse> => {
+  const { data } = await api.get<GameTitleResponse>(`${URI.GAME_TITLES}?name=${keyword}`)
+  return data
+}
+
+export const createGameTitle = async (params: CreateGameTitleParams): Promise<CreateGameTitleResponse> => {
+  const { data } = await api.post<CreateGameTitleResponse>(URI.GAME_TITLES, params)
   return data
 }

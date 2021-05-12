@@ -10,7 +10,17 @@ type StateType = {
 const initialState: StateType = { genres: [], games: [] }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.getGameGenres.fulfilled, (state, action) => {
-    state.genres = action.payload.data
-  })
+  builder
+    .addCase(actions.getGameGenres.fulfilled, (state, action) => {
+      state.genres = action.payload.data
+    })
+    .addCase(actions.getGameByGenreId.fulfilled, (state, action) => {
+      state.games = action.payload.data
+    })
+    .addCase(actions.getGameByTitle.fulfilled, (state, action) => {
+      state.games = action.payload.data
+    })
+    .addCase(actions.clearGameTitles, (state) => {
+      state.games = []
+    })
 })

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
@@ -10,33 +10,39 @@ import TabPanel from '../TabPanel'
 import GameSearchByGenre from './GameSearchByGenre'
 import GameSearchByTitle from './GameSearchByTitle'
 import AddGame from './AddGame'
-import { useAppDispatch } from '@store/hooks'
-import { getGameByGenreId, getGameGenres } from '@store/game/actions'
+import GameList from './GameList'
+import useGameGenre from './useGameGenre'
+import useGameTitles from './useGameTitles'
 
 const GameSelector: React.FC = () => {
-  const dispatch = useAppDispatch()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const { t } = useTranslation(['common'])
-  useEffect(() => {
-    dispatch(getGameGenres())
-    dispatch(getGameByGenreId(1))
-  }, [])
+  const { genres } = useGameGenre()
+  const { games, clearGames } = useGameTitles()
+  const handleChangeTab = (_, v) => {
+    setTab(v)
+    clearGames()
+  }
   return (
     <>
-      <Tabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tab} aria-label="simple tabs example">
+      <Tabs value={tab} onChange={handleChangeTab} className={classes.tab}>
         <Tab label={t('common:profile.favorite_game.title')} value={0} />
         <Tab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
         <Tab label={t('common:profile.favorite_game.create_new')} value={2} />
       </Tabs>
       <TabPanel value={tab} index={0}>
-        <GameSearchByTitle />
+        <GameSearchByTitle>
+          <GameList games={games} />
+        </GameSearchByTitle>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <GameSearchByGenre genres={[]} />
+        <GameSearchByGenre genres={genres} clearGames={clearGames}>
+          <GameList games={games} />
+        </GameSearchByGenre>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <AddGame genres={[]} />
+        <AddGame genres={genres} />
       </TabPanel>
     </>
   )

@@ -1,2 +1,5 @@
 export const GET_GAME_GENRES = 'games/getGameGenres'
 export const GET_GAME_BY_GENRE = 'games/getGameByGenreId'
+export const GET_GAME_BY_TITLE = 'games/getGameByTitle'
+export const CREATE_GAME_TITLE = 'games/createGameTitle'
+export const CLEAR_GAME_TITLES = 'games/clearGameTitles'
