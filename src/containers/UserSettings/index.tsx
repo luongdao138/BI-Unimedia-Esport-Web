@@ -4,11 +4,11 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import StepButton from '@components/StepButton'
-import TagSelect from '@containers/UserSettings/TagSelect'
+import TagSelect from '@components/TagSelect'
 import ESButton from '@components/Button'
 import ESToast from '@components/Toast'
 import ESLoader from '@components/Loader'
-import BasicInfo from './BasicInfo'
+import BasicInfo from '@components/BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
 import useGetPrefectures from './useGetPrefectures'
 import useSettings from './useSettings'
@@ -16,6 +16,7 @@ import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 import GameSelector from '@components/GameSelector'
 
@@ -43,6 +44,15 @@ const UserSettingsContainer: React.FC = () => {
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
+  const { userProfile, getUserProfileMeta } = useGetProfile()
+  const [profile, setProfile] = useState(null)
+
+  useEffect(() => {
+    if (userProfile) {
+      setProfile(userProfile.data.attributes)
+    }
+  }, [userProfile])
+
   useEffect(() => {
     getFeatures()
     getGameTitles()
@@ -66,7 +76,7 @@ const UserSettingsContainer: React.FC = () => {
   function getStepViews() {
     switch (step) {
       case 0:
-        return <BasicInfo profile={basicInfoData} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+        return <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
       case 1:
         return <TagSelect features={features} selectedFeatures={selectedFeatures} onSelect={onFeatureSelect} />
     }
@@ -100,7 +110,7 @@ const UserSettingsContainer: React.FC = () => {
 
   const handleSkip = () => navigate()
 
-  return (
+  return profile && getUserProfileMeta.loaded ? (
     <>
       <Container className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
@@ -147,6 +157,8 @@ const UserSettingsContainer: React.FC = () => {
         <ESToast open={!!profileUpdateMeta.error} message={t('common:error.user_settings_failed')} resetMeta={resetProfileUpdateMeta} />
       )}
     </>
+  ) : (
+    <ESLoader />
   )
 }
 

@@ -8,16 +8,17 @@ export type UserLoginParams = {
 }
 
 export type UserLoginResponse = {
-  accessToken: string
-  avatar_url: string | null
+  accessToken?: string
+  avatar_url?: string | null
   email: string
-  id: number
-  is_social: boolean
-  nickname: string
-  refreshToken: string
-  sign_in_count: number
-  updateStep: number
-  user_code: string
+  id?: number
+  is_social?: boolean
+  nickname?: string
+  refreshToken?: string
+  sign_in_count?: number
+  updateStep?: number
+  user_code?: string
+  confirmation_code?: string
 }
 
 export type UserRegisterResponse = {
@@ -49,6 +50,11 @@ export type LoginSocialParams = {
   access_token: string
   access_token_secret?: string
   type?: 'login' | 'register'
+}
+
+export type UserProfileParams = {
+  user_code: string
+  nickname: string
 }
 
 export const login = async (params: UserLoginParams): Promise<UserLoginResponse> => {
@@ -83,5 +89,10 @@ export const forgotConfirm = async (params: UserConfirmParams): Promise<UserConf
 
 export const resetPassword = async (params: UserResetPasswordParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.RESET_PASSWORD, params)
+  return data
+}
+
+export const registerProfile = async (params: UserProfileParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.REGISTER_PROFILE, params)
   return data
 }

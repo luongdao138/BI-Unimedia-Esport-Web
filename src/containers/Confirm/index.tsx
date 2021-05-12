@@ -7,15 +7,13 @@ import { useTranslation } from 'react-i18next'
 import useConfirm from './useConfirm'
 import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
-import { useRouter } from 'next/router'
 import ButtonPrimary from '@components/ButtonPrimary'
 
 const ConfirmContainer: React.FC = () => {
-  const router = useRouter()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { user, registerConfirm, metaConfirm } = useConfirm(confirmationCode)
+  const { user, registerConfirm, metaConfirm, backAction } = useConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -34,7 +32,7 @@ const ConfirmContainer: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2} display="flex" flexDirection="row" alignItems="center">
-          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
+          <IconButton className={classes.iconButtonBg} onClick={backAction}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
           <Box pl={2}>
@@ -43,6 +41,9 @@ const ConfirmContainer: React.FC = () => {
         </Box>
 
         <Box width="100%" px={5} pt={12} flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
+          <Typography variant="h3" className={classes.hint}>
+            メールアドレスに送信された
+          </Typography>
           <Typography variant="h3" className={classes.hint}>
             6桁の認証コードを送信しました
           </Typography>

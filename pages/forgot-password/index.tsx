@@ -1,7 +1,12 @@
 import ForgotPasswordContainer from '@containers/ForgotPassword'
+import AuthenticationLayout from '@layouts/AuthenticationLayout'
 
 const ForgotPasswordPage: React.FC = () => {
-  return <ForgotPasswordContainer />
+  return (
+    <AuthenticationLayout>
+      <ForgotPasswordContainer />
+    </AuthenticationLayout>
+  )
 }
 
 export default ForgotPasswordPage

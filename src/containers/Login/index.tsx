@@ -86,9 +86,13 @@ const LoginContainer: React.FC = () => {
                   labelPrimary={t('common:login.password_label_primary')}
                   type="password"
                   labelSecondary={
-                    <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                      {t('common:login.password_label_secondary')}
-                    </Typography>
+                    <Link href="/forgot-password">
+                      <a className={classes.noLink}>
+                        <Typography color="textPrimary" gutterBottom={false} variant="body2">
+                          {t('common:login.password_label_secondary')}
+                        </Typography>
+                      </a>
+                    </Link>
                   }
                   fullWidth
                   value={values.password}
@@ -150,6 +154,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+  },
+  noLink: {
+    textDecoration: 'none',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

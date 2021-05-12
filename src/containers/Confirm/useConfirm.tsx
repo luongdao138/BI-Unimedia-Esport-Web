@@ -16,11 +16,11 @@ const useConfirm = (confirmationCode: string) => {
   const user = useAppSelector(selectors.getAuth)
   const metaConfirm = useAppSelector(getRegisterConfirmMeta)
 
-  const registerConfirm = (params: UserConfirmParams) => {
-    dispatch(actions.registerConfirm(params))
-  }
+  const registerConfirm = (params: UserConfirmParams) => dispatch(actions.registerConfirm(params))
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerConfirm.typePrefix))
+
+  const backAction = () => router.push('/register/by-email')
 
   useEffect(() => {
     if (metaConfirm.loaded) {
@@ -40,6 +40,7 @@ const useConfirm = (confirmationCode: string) => {
     registerConfirm,
     metaConfirm,
     resetMeta,
+    backAction,
   }
 }
 

@@ -19,10 +19,19 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.registerByEmail.fulfilled, (state, action) => {
       state.user = action.payload
     })
+    .addCase(actions.forgotPassword.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
+    .addCase(actions.forgotConfirm.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
     .addCase(actions.resetPassword.fulfilled, (state, action) => {
       state.user = action.payload
     })
     .addCase(actions.registerConfirm.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
+    .addCase(actions.registerProfile.fulfilled, (state, action) => {
       state.user = action.payload
     })
 })

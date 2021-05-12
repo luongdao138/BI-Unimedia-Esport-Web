@@ -1,11 +1,8 @@
 import { Colors } from '@theme/colors'
 import { Box, LinearProgress } from '@material-ui/core'
-import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, withStyles, Theme } from '@material-ui/core/styles'
 import { useEffect, useState } from 'react'
 
-const useStyles = makeStyles(() => ({
-  strengthWrap: { display: 'flex' },
-}))
 const BorderLinearProgress = withStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -13,6 +10,9 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
       borderRadius: 2,
       width: 80,
       marginRight: theme.spacing(1),
+      '&:nth-last-child(1)': {
+        marginRight: 0,
+      },
     },
     colorPrimary: {
       backgroundColor: Colors.white_opacity[30],
@@ -25,7 +25,6 @@ const BorderLinearProgress = withStyles((theme: Theme) =>
 )(LinearProgress)
 
 const ESStrengthMeter: React.FC<{ value: number }> = ({ value }) => {
-  const classes = useStyles()
   const [percentages, setPercentages] = useState<number[]>([0, 0, 0])
 
   const getPartPercentage = (value: number) => {
@@ -48,7 +47,7 @@ const ESStrengthMeter: React.FC<{ value: number }> = ({ value }) => {
   }, [value])
 
   return (
-    <Box className={classes.strengthWrap}>
+    <Box width="50%" display="flex" justifyContent="flex-end">
       <BorderLinearProgress variant="determinate" value={percentages[0]} />
       <BorderLinearProgress variant="determinate" value={percentages[1]} />
       <BorderLinearProgress variant="determinate" value={percentages[2]} />

@@ -17,7 +17,7 @@ import ESLoader from '@components/FullScreenLoader'
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerByEmail, meta } = useRegisterByEmail()
+  const { registerByEmail, meta, backAction } = useRegisterByEmail()
   const [score, setScore] = useState(0)
 
   const validationSchema = Yup.object().shape({
@@ -60,7 +60,7 @@ const RegisterByEmailContainer: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
-            <IconButton className={classes.iconButtonBg}>
+            <IconButton className={classes.iconButtonBg} onClick={backAction}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
