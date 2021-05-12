@@ -6,7 +6,7 @@ type Data = {
   error?: string
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+export default async (req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> => {
   try {
     if (req.method === 'POST') {
       const { data } = await axios.post<Data>(
