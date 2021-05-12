@@ -19,21 +19,20 @@ const RegisterByEmailContainer: React.FC = () => {
   const classes = useStyles()
   const { registerByEmail, meta, backAction } = useRegisterByEmail()
   const [score, setScore] = useState(0)
-
   const validationSchema = Yup.object().shape({
     email: Yup.string()
-      .test('email-validation', 'エラー文言が入ります', (value) => {
+      .test('email-validation', t('common:common.error'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required('エラー文言が入ります'),
+      .required(t('common:common.error')),
     password: Yup.string()
-      .test('password-validation', 'エラー文言が入ります', (value) => {
+      .test('password-validation', t('common:common.error'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
         return tempScore > 40
       })
-      .required('エラー文言が入ります'),
+      .required(t('common:common.error')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserLoginParams>({
@@ -103,6 +102,7 @@ const RegisterByEmailContainer: React.FC = () => {
             </Box>
 
             <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
+            <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
           </Box>
         </Box>
         <Box className={classes.stickyFooter}>

@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
 import ESButton from '@components/Button'
+import { ESRoutes } from '@constants/route.constants'
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -73,7 +74,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     })
   }
 
-  const navigateToLogin = () => router.push('/login')
+  const navigateToLogin = () => router.push(ESRoutes.LOGIN)
 
   return (
     <div className={classes.grow}>

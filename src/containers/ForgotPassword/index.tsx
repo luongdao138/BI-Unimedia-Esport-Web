@@ -12,18 +12,17 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
 import { IconButton } from '@material-ui/core'
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .test('email-validation', 'エラー文言が入ります', (value) => {
-      return CommonHelper.validateEmail(value)
-    })
-    .required('エラー文言が入ります'),
-})
-
 const ForgotPasswordContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { forgotPassword, meta, backAction } = useForgotPassword()
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .test('email-validation', t('common:common.error'), (value) => {
+        return CommonHelper.validateEmail(value)
+      })
+      .required(t('common:common.error')),
+  })
 
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.ForgotPasswordParams>({
     initialValues: {
@@ -50,7 +49,7 @@ const ForgotPasswordContainer: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{t('common:register_by_email.back')}</Typography>
+              <Typography variant="h2">{t('common:forgot_password.title')}</Typography>
             </Box>
           </Box>
 
@@ -60,7 +59,7 @@ const ForgotPasswordContainer: React.FC = () => {
                 id="email"
                 autoFocus
                 placeholder={t('common:register_by_email.email_placeholder')}
-                labelPrimary="登録済みメールアドレス"
+                labelPrimary={t('common:forgot_password.email')}
                 fullWidth
                 value={values.email}
                 onChange={handleChange}
@@ -74,7 +73,7 @@ const ForgotPasswordContainer: React.FC = () => {
           <Box className={classes.nextBtnHolder}>
             <Box maxWidth={280} className={classes.buttonContainer}>
               <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()}>
-                認証コードを送信
+                {t('common:forgot_password.send')}
               </ButtonPrimary>
             </Box>
           </Box>

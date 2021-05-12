@@ -2,7 +2,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'eXeLABをはじめる',
+    start_exelab: 'exeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -44,9 +44,16 @@ export default {
     forgot_password: 'パスワードをお忘れの場合',
     email_placeholder: 'exelab@sample.co.jp',
     password: 'パスワード',
-    hint: '8文字以上の半角英数字を入力してくださいパスワードは英大文字、英小文字、数字を1文字以上使用してください',
+    hint: '8文字以上の半角英数字を入力してください',
+    hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
     button: '次へ',
     back: 'メールアドレスで登録',
+  },
+  register_profile: {
+    user_id: 'ユーザーID',
+    nickname: 'ニックネーム',
+    hint: 'ユーザーIDはあとから変更ができません',
+    hint2: '半角英数字、”+_-”が使用できます',
   },
   error: {
     login_failed: 'ログインに失敗しました。',
@@ -60,9 +67,12 @@ export default {
     at: '@',
     search_results: '検索結果',
     total: '件',
+    error: 'エラー文言が入ります',
+    too_long: '長すぎる',
+    at_least: '2文字以上入力してください。',
   },
   home: {
-    exelab: 'eXeLAB事務局',
+    exelab: 'eXe LAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
@@ -72,6 +82,9 @@ export default {
     community: 'コミュニティ',
     video: '動画',
     settings: '設定',
+  },
+  infinite_scroll: {
+    message: 'Yay! You have seen it all',
   },
   followers: {
     title: 'フォロー中',
@@ -147,5 +160,18 @@ export default {
     tournament_create_sx: 'を作成しました。',
     tournament_entry_px: '【大会】',
     tournament_entry_sx: 'にエントリーしました。',
+  },
+  confirm: {
+    sent: 'メールアドレスに送信された',
+    verification_code: '6桁の認証コードを送信しました',
+    resend: '認証コードを再送する',
+    dont_receive: '認証コードが届かない場合',
+    send_again: '入力したメールアドレスに誤りがある可能性があります。前の画面に戻り、もう一度送信してください。',
+  },
+  forgot_password: {
+    title: 'パスワードの再発行',
+    email: '登録済みメールアドレス',
+    send: '認証コードを送信',
+    reissue: '再発行する',
   },
 }

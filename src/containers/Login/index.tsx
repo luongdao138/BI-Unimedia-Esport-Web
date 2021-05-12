@@ -21,16 +21,16 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
 import { ESRoutes } from '@constants/route.constants'
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required('Required').email(),
-  password: Yup.string().required('Required').min(8),
-})
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required(t('common:common.error')).email(),
+    password: Yup.string().required(t('common:common.error')).min(8),
+  })
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
       email: '',

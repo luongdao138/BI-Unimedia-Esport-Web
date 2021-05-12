@@ -2,6 +2,7 @@ import { useAppSelector } from '@store/hooks'
 import { getIsRegistered, getIsAuthenticated } from '@store/auth/selectors'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useProfileValid = () => {
@@ -10,7 +11,7 @@ const useProfileValid = () => {
   const isAuth = useAppSelector(getIsAuthenticated)
 
   useEffect(() => {
-    if (isAuth && !isRegistered) router.push('/register/profile')
+    if (isAuth && !isRegistered) router.push(ESRoutes.REGISTER_PROFILE)
   }, [isAuth, isRegistered])
 
   return { isAuth }

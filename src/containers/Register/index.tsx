@@ -61,8 +61,14 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={3} flexDirection="column" display="flex">
-          <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label="利用規約に同意する" name="terms" />
-          <ESCheckbox disableRipple checked={checkbox.privacy} onChange={handleChange} label="個人情報保護方針に同意する" name="privacy" />
+          <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label={t('common:register.terms')} name="terms" />
+          <ESCheckbox
+            disableRipple
+            checked={checkbox.privacy}
+            onChange={handleChange}
+            label={t('common:register.privacy')}
+            name="privacy"
+          />
         </Box>
 
         <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
