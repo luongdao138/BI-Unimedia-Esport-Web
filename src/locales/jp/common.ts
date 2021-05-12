@@ -2,7 +2,7 @@ export default {
   welcome: 'Welcome to React and react-i18next',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'exeLABをはじめる',
+    start_exelab: 'eXeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -69,7 +69,7 @@ export default {
     total: '件',
   },
   home: {
-    exelab: 'eXe LAB事務局',
+    exelab: 'eXeLAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
@@ -103,5 +103,30 @@ export default {
     organizer: '主催者',
     entry: 'エントリー',
     tournament_results: '大会「ああああああ」 の検索結果',
+  },
+  user_profile: {
+    profile: 'プロフィール',
+    tournament_history: '大会履歴',
+    activity_log: 'アクティビティ',
+  },
+  action_types: {
+    topic_comment_px: '【トピック】',
+    topic_comment_sx: 'へコメントしました。',
+    topic_create_px: '【トピック】',
+    topic_create_sx: 'を作成しました。',
+    community_create_px: '【コミュニティ】',
+    community_create_sx: 'を作成しました。',
+    community_join_px: '【コミュニティ】',
+    community_join_sx: 'に参加しました。',
+    user_follows_px: '',
+    user_follows_sx: 'さんをフォローしました。',
+    recruitment_create_px: '【募集】',
+    recruitment_create_sx: 'を作成しました。',
+    recruitment_entry_px: '【募集】',
+    recruitment_entry_sx: 'にエントリーしました。',
+    tournament_create_px: '【大会】',
+    tournament_create_sx: 'を作成しました。',
+    tournament_entry_px: '【大会】',
+    tournament_entry_sx: 'にエントリーしました。',
   },
 }

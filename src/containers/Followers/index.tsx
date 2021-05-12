@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import ESButton from '@components/Button'
+import { Box, Typography, Button } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
 import useFollowers from '../../containers/Followers/useFollowers'
@@ -7,17 +7,35 @@ import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import DialogContent from '@material-ui/core/DialogContent'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
 
 export interface ESFollowersProps {
-  user_id: number
+  user_id?: number
 }
 
+const useStyles = makeStyles(() => ({
+  rowContainer: {
+    marginRight: 20,
+    alignItems: 'center',
+  },
+  countContainer: {
+    marginLeft: 8,
+    marginRight: 10,
+  },
+  count: {
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+}))
+
 const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
+  const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const { t } = useTranslation(['common'])
 
-  const { followers, fetchFollowers, page } = useFollowers()
+  const { t } = useTranslation(['common'])
+  const { currentUser, followers, fetchFollowers, page } = useFollowers()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -28,7 +46,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
   }
 
   useEffect(() => {
-    fetchFollowers({ page: 1, user_id: user_id })
+    fetchFollowers({ page: 1, user_id: user_id == null ? currentUser.id : user_id })
   }, [])
 
   const fetchMoreData = () => {
@@ -41,11 +59,15 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
 
   return (
     <div>
-      <ESButton onClick={handleClickOpen}>
-        <span style={{ fontSize: 14, fontWeight: 'normal' }}>{t('common:followers.title')}</span>
-        <label style={{ marginLeft: 5, color: 'white', fontSize: 24, fontWeight: 'bold' }}>{page ? page.total_count : 0}</label>
-        <span style={{ marginLeft: 5 }}>{t('common:followers.th')}</span>
-      </ESButton>
+      <Button onClick={handleClickOpen}>
+        <Box display="flex" className={classes.rowContainer}>
+          <Typography>{t('common:followers.title')}</Typography>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
+            <Typography>{t('common:followers.th')}</Typography>
+          </Box>
+        </Box>
+      </Button>
       <ESDialog open={open} title={t('common:followers.title')} handleClose={handleClose}>
         <DialogContent>
           <InfiniteScroll
