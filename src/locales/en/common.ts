@@ -94,6 +94,7 @@ export default {
   profile: {
     favorite_game: '好きなゲーム',
     edit: '編集',
+    edit_profile: 'プロフィールを編集する',
     read_more: 'もっとみる',
     following: 'フォロー中',
     followers: 'フォロワー',
