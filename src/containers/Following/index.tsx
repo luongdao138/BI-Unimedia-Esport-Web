@@ -1,25 +1,43 @@
 import { useEffect, useState } from 'react'
-import ESButton from '@components/Button'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
 import UserListItem from '@components/UserItem'
 import DialogContent from '@material-ui/core/DialogContent'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { Box, Typography, Button } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
+import { makeStyles } from '@material-ui/core/styles'
 import useFollowing from './useFollowing'
+import { Colors } from '@theme/colors'
 
 export interface ESFollowingProps {
   user_id: number
 }
 
+const useStyles = makeStyles(() => ({
+  rowContainer: {
+    marginRight: 20,
+    alignItems: 'center',
+  },
+  countContainer: {
+    marginLeft: 8,
+    marginRight: 10,
+  },
+  count: {
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+}))
+
 const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { following, fetchFollowing, page } = useFollowing()
+  const { currentUser, following, fetchFollowing, page } = useFollowing()
 
   useEffect(() => {
-    fetchFollowing({ page: 1, user_id: user_id })
+    fetchFollowing({ page: 1, user_id: user_id == null ? currentUser.id : user_id })
   }, [])
 
   const handleClickOpen = () => {
@@ -38,11 +56,15 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
 
   return (
     <div>
-      <ESButton onClick={handleClickOpen}>
-        <span style={{ fontSize: 14, fontWeight: 'normal' }}>{t('common:following.title')}</span>
-        <label style={{ marginLeft: 5, color: 'white', fontSize: 24, fontWeight: 'bold' }}>{page ? page.total_count : 0}</label>
-        <span style={{ marginLeft: 5 }}>{t('common:following.th')}</span>
-      </ESButton>
+      <Button onClick={handleClickOpen}>
+        <Box display="flex" className={classes.rowContainer}>
+          <Typography>{t('common:following.title')}</Typography>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
+            <Typography>{t('common:following.th')}</Typography>
+          </Box>
+        </Box>
+      </Button>
       <ESDialog title={t('common:following.title')} open={open} handleClose={handleClose}>
         <DialogContent>
           <InfiniteScroll

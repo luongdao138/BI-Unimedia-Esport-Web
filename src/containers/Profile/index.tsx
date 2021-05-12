@@ -23,9 +23,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import HeaderTags from './Partials/headerTags'
 import Iconic from './Partials/iconic'
-import Followers from './Partials/followers'
 import { useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
+import ESFollowers from '@containers/Followers'
+import ESFollowing from '@containers/Following'
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {},
@@ -103,6 +104,8 @@ const ProfileContainer: React.FC = () => {
     // console.log('index.tsx 96 ', userProfile)
   }, [userProfile])
 
+  // console.log(userProfile.data.id)
+
   return (
     <>
       <Grid xs={12} direction="column" className={classes.container}>
@@ -172,8 +175,8 @@ const ProfileContainer: React.FC = () => {
             <Iconic text="1990年01月11日" icon="fa fa-birthday-cake" />
           </Box>
           <Box display="flex">
-            <Followers text={t('common:profile.following')} count={999} />
-            <Followers text={t('common:profile.followers')} count={999} />
+            <ESFollowers user_id={null} />
+            <ESFollowing user_id={null} />
           </Box>
           <Box display="flex" className={classes.marginTop20}>
             <ESButtonFacebookCircle className={classes.marginRight} />
