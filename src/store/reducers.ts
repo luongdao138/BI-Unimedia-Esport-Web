@@ -8,6 +8,7 @@ import common from '@store/common'
 import settings from '@store/settings'
 import ngWords from '@store/ngWords'
 import tournament from '@store/tournament'
+import game from '@store/game'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   tournament: tournament.reducers,
+  gameTitle: game.reducers,
 })
 export default reducer
 

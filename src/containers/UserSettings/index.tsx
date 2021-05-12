@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles, Divider, withStyles, createMuiTheme } from '@material-ui/core'
+import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import StepButton from '@components/StepButton'
 import TagSelect from '@components/TagSelect'
-import GameSelect from '@containers/UserSettings/GameSelect'
-import ESChip from '@components/Chip'
 import ESButton from '@components/Button'
 import ESToast from '@components/Toast'
 import ESLoader from '@components/Loader'
@@ -15,11 +13,13 @@ import useUpdateProfile from './useUpdateProfile'
 import useGetPrefectures from './useGetPrefectures'
 import useSettings from './useSettings'
 import _ from 'lodash'
-import { GameTitlesResponse } from '@services/settings.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import TabPanel from '@components/TabPanel'
+
+import GameSelector from '@components/GameSelector'
 
 const FINAL_STEP = 3
 
@@ -29,14 +29,13 @@ const UserSettingsContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const { prefectures, getPrefectures } = useGetPrefectures()
-  const { features, gameTitles, getFeatures, getGameTitles } = useSettings()
+  const { features, getFeatures, getGameTitles } = useSettings()
   const [step, setStep] = useState(0)
-  const [selectedGameTitles, setSelectedGameTitles] = useState([] as GameTitlesResponse)
-  const [unselectedGameTitles, setUnselectedGameTitles] = useState([] as GameTitlesResponse)
   const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   const { userProfile, getUserProfileMeta } = useGetProfile()
+
   const [profile, setProfile] = useState(null)
 
   useEffect(() => {
@@ -52,38 +51,10 @@ const UserSettingsContainer: React.FC = () => {
     getPrefectures({})
   }, [])
 
-  useEffect(() => {
-    const newUnselected = [...gameTitles]
-    _.remove(newUnselected, (item) => !!selectedGameTitles.find((selectedItem) => selectedItem.id === item.id))
-    setUnselectedGameTitles(newUnselected)
-  }, [gameTitles])
-
   const onFeatureSelect = (selectedIds) => {
     setProfile((prevState) => {
       return { ...prevState, features: selectedIds }
     })
-  }
-
-  const onGameTitleClick = (game: GameTitlesResponse[0]) => {
-    const newUnselected = [...unselectedGameTitles]
-    const newSelected = [...selectedGameTitles]
-    if (newUnselected.find((unselectedId) => unselectedId.id === game.id)) {
-      _.remove(newUnselected, (unselectedId) => unselectedId.id === game.id)
-      newSelected.push(game)
-    }
-    setUnselectedGameTitles(newUnselected)
-    setSelectedGameTitles(newSelected)
-  }
-
-  const onGameSelectionRemove = (game: GameTitlesResponse[0]) => {
-    const newUnselected = [...unselectedGameTitles]
-    const newSelected = [...selectedGameTitles]
-    if (newSelected.find((selected) => selected.id === game.id)) {
-      _.remove(newSelected, (selected) => selected.id === game.id)
-      newUnselected.push(game)
-    }
-    setUnselectedGameTitles(newUnselected)
-    setSelectedGameTitles(newSelected)
   }
 
   const onBasicInfoChanged = (data) => {
@@ -92,29 +63,14 @@ const UserSettingsContainer: React.FC = () => {
     })
   }
 
-  const onGameTitleSearch = (text: string) => {
-    getGameTitles(text.trim())
-  }
-
-  function getStepViews() {
-    switch (step) {
-      case 0:
-        return <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
-      case 1:
-        return <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
-      case 2:
-        return <GameSelect gameTitles={unselectedGameTitles} onGameSelect={onGameTitleClick} onSearch={onGameTitleSearch} />
-    }
-  }
-
   const navigate = () => router.push('/welcome')
 
   const handleButtonClick = () => {
     if (step != FINAL_STEP) setStep(step + 1)
 
-    const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area', 'game_titles'])
+    const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
-    profileUpdate({ ...data, features: _.map(profile.features, (feature) => feature.id) })
+    profileUpdate({ ...data, features: _.map(profile.features, (feature) => feature.id), game_titles: [1, 2] })
   }
 
   useEffect(() => {
@@ -144,28 +100,18 @@ const UserSettingsContainer: React.FC = () => {
             </Stepper>
           </Box>
           <Box mt={4} />
-          {getStepViews()}
+          <TabPanel value={step} index={0}>
+            <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+          </TabPanel>
+          <TabPanel value={step} index={1}>
+            <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
+          </TabPanel>
+          <TabPanel value={step} index={2}>
+            <GameSelector />
+          </TabPanel>
           <Box className={classes.blankSpace}></Box>
         </Grid>
         <Box className={classes.stickyFooter}>
-          {step === 2 ? (
-            <>
-              <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
-                <Box pl={2.5} pt={2}>
-                  {selectedGameTitles.map((game) => (
-                    <ESChip
-                      key={game.id}
-                      label={game.attributes.display_name}
-                      onDelete={() => onGameSelectionRemove(game)}
-                      className={classes.chipSpacing}
-                    />
-                  ))}
-                </Box>
-              </Container>
-              <Divider />
-            </>
-          ) : null}
-
           <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
             {loader ? (
               <Grid item xs={12}>
@@ -194,14 +140,9 @@ const UserSettingsContainer: React.FC = () => {
   )
 }
 
-const theme = createMuiTheme()
-
 const ResponsiveTypo = withStyles({
   root: {
-    fontSize: '1.5rem',
-    [theme.breakpoints.up('sm')]: {
-      fontSize: '1.875rem', // 30px
-    },
+    fontSize: 30,
   },
 })(Typography)
 

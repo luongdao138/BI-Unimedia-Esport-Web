@@ -82,10 +82,14 @@ export default {
     basic_info: '基本データ',
     tag: 'タグ',
     favorite_game: {
+      add_button: '追加する',
       title: '好きなゲーム',
+      title_label: 'ゲーム名',
       search_by_keyword: 'キーワードで探す',
       search_by_genre: 'ジャンルから探す',
       create_new: '新しく作る',
+      genre: 'ジャンル：',
+      genre_label: 'ゲームジャンル',
     },
     edit: '編集',
     read_more: 'もっとみる',
@@ -106,6 +110,7 @@ export default {
   next: '次へ',
   done: '完了',
   search_by_keyword: 'キーワード検索',
+  please_select: '選択してください',
   user: {
     user_results: 'ニックネーム・ID「ああああああ」 の検索結果',
   },

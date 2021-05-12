@@ -15,6 +15,8 @@ export const URI = {
   USER_SETTINGS: '/v2/users/settings',
   USER_FEATURES: '/v2/user_features',
   GAME_TITLES_ALL: '/v2/game_titles_all',
+  GAME_GENRES: '/v1/game_genres/',
+  GAME_TITLES: '/v1/game_titles',
   NG_WORDS: '/v1/ng_words',
   USER_DETAIL_PROFILE: '/v2/users/profile',
   USERS_SEARCH: '/v2/users/search',

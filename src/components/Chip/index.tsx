@@ -1,6 +1,7 @@
 import { Chip, ChipProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Close as CloseIcon } from '@material-ui/icons'
+import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -8,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     height: 36,
     borderRadius: 4,
     color: theme.palette.text.primary,
+    backgroundColor: Colors.grey['200'],
   },
   clickableColorPrimary: {
     color: theme.palette.common.white,

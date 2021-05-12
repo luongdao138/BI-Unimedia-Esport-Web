@@ -7,6 +7,7 @@ import ESInput from '@components/Input'
 import { GameTitlesResponse } from '@services/settings.service'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import { Colors } from '@theme/colors'
 
 interface Props {
   gameTitles: GameTitlesResponse
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   tabContainer: {
-    borderBottom: '2px solid #6c6c6c',
+    borderBottom: `1px solid ${Colors.white}30`,
   },
 }))
 export default GameSelect
