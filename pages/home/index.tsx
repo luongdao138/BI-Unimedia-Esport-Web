@@ -1,7 +1,8 @@
 import HomeContainer from '@containers/Home'
 import MainLayout from '@layouts/MainLayout'
+import React from 'react'
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <MainLayout>
       <HomeContainer />

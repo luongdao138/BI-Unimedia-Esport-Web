@@ -15,6 +15,9 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import userProfile from '@store/userProfile'
 import theme from '@theme/index'
 import 'src/locales/i18n'
+import 'swiper/swiper.min.css'
+import 'swiper/components/pagination/pagination.min.css'
+import 'swiper/components/navigation/navigation.min.css'
 
 const App: FC<AppProps> = ({ Component, pageProps }: any) => {
   const [loader, setLoader] = React.useState(false)
