@@ -54,7 +54,7 @@ const Review: React.FC<ReviewProps> = ({ profile, onFixClicked }) => {
   }
 
   const basicInfoTypo = (title, value, isShow) => (
-    <Box>
+    <Box mt={1} mb={1}>
       <Typography variant="h2">{`${title}：${value}（ ${isShow ? t('common:profile.show') : t('common:profile.dont_show')}）`}</Typography>
     </Box>
   )

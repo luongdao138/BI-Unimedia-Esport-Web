@@ -22,7 +22,7 @@ import TabPanel from '@components/TabPanel'
 import GameSelector from '@components/GameSelector'
 import Review from './Review'
 
-const FINAL_STEP = 3
+const FINAL_STEP = 4
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
@@ -65,7 +65,7 @@ const UserSettingsContainer: React.FC = () => {
   const navigate = () => router.push('/welcome')
 
   const handleButtonClick = () => {
-    if (step != FINAL_STEP) setStep(step + 1)
+    if (step !== FINAL_STEP - 1) setStep(step + 1)
 
     const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
@@ -73,8 +73,9 @@ const UserSettingsContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    if (step == FINAL_STEP) showLoader(profileUpdateMeta.pending)
-    if (profileUpdateMeta.loaded && step == FINAL_STEP) setReview(true)
+    if (isReview) showLoader(profileUpdateMeta.pending)
+    if (profileUpdateMeta.loaded && step === FINAL_STEP - 1) setReview(true)
+    if (profileUpdateMeta.loaded && isReview) navigate()
   }, [profileUpdateMeta])
 
   const handleSkip = () => navigate()
@@ -134,7 +135,7 @@ const UserSettingsContainer: React.FC = () => {
               <Box className={classes.nextBtnHolder}>
                 <Box className={classes.nextBtn}>
                   <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
-                    {step == FINAL_STEP - 1 ? t('common:done') : t('common:next')}
+                    {step === FINAL_STEP - 1 ? t('common:done') : t('common:next')}
                   </ButtonPrimary>
                 </Box>
               </Box>
