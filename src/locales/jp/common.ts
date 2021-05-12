@@ -75,8 +75,12 @@ export default {
   },
   profile: {
     prefectures: '都道府県',
+    location: '所在地',
     show_prefectures: '都道府県を公開する',
+    show: '公開する',
+    dont_show: '公開しない',
     gender: '性別',
+    birth_date: '生年月日',
     show_gender: '性別を公開する',
     show_birthdate: '生年月日を公開する',
     basic_info: '基本データ',
@@ -95,6 +99,8 @@ export default {
     read_more: 'もっとみる',
     following: 'フォロー中',
     followers: 'フォロワー',
+    no_game_selected: 'No game selected',
+    no_tag_selected: 'No tag selected',
   },
   gender: {
     male: '男性',
@@ -120,4 +126,6 @@ export default {
     entry: 'エントリー',
     tournament_results: '大会「ああああああ」 の検索結果',
   },
+  confirmation_review: '入力情報の確認',
+  fix: '修正する',
 }
