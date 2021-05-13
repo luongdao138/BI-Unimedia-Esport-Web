@@ -10,7 +10,7 @@ type StateType = {
   recommendations: Array<any>
 }
 
-const initialState: StateType = { detail: undefined, tournamentHistories: [], activityLogs: [] }
+const initialState: StateType = { detail: undefined, tournamentHistories: [], activityLogs: [], recommendations: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getUserProfile.fulfilled, (state, action) => {
