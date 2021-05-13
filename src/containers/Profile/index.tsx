@@ -32,20 +32,20 @@ const ProfileContainer: React.FC = () => {
     <>
       <Grid container direction="column">
         <Box className={classes.headerContainer}>
-          <ProfileCover src={userProfile.data.attributes.cover_url} />
+          <ProfileCover src={userProfile.attributes.cover_url} />
           <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={userProfile ? userProfile.data.attributes.avatar_url : '/images/avatar.png'} editable />
+            <ProfileAvatar src={userProfile ? userProfile.attributes.avatar_url : '/images/avatar.png'} editable />
             <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
               {t('common:profile.edit_profile')}
             </ESButton>
           </Grid>
         </Box>
         <Grid item xs={12} className={classes.headerContainerSecond}>
-          <Typography variant="h2">{userProfile.data.attributes.nickname}</Typography>
-          <Typography>@{userProfile.data.attributes.user_code}</Typography>
+          <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
+          <Typography>@{userProfile.attributes.user_code}</Typography>
           <Box display="flex">
             <ESFollowers user_code={null} />
             <ESFollowing user_code={null} />

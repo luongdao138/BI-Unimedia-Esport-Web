@@ -34,7 +34,7 @@ const ProfileEditContainer: React.FC = () => {
 
   useEffect(() => {
     if (userProfile) {
-      setProfile(userProfile.data.attributes)
+      setProfile(userProfile.attributes)
     }
   }, [userProfile])
 

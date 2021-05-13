@@ -1,4 +1,4 @@
-import { Container } from '@material-ui/core'
+import { Container, List } from '@material-ui/core'
 import Chip from '@components/Chip'
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
@@ -14,12 +14,17 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      paddingBottom: theme.spacing(14),
+    },
   },
   listContainer: {
     maxWidth: 600,
     paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
+    maxHeight: 140,
+    overflowY: 'auto',
   },
   chip: {
     marginRight: theme.spacing(2),
@@ -32,11 +37,15 @@ const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) =>
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <Container maxWidth="md" className={classes.listContainer}>
-        {games.map((g, idx) => (
-          <Chip key={idx} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
-        ))}
-      </Container>
+      {games.length > 0 && (
+        <Container maxWidth="md" className={classes.listContainer}>
+          <List>
+            {games.map((g, idx) => (
+              <Chip key={idx} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
+            ))}
+          </List>
+        </Container>
+      )}
     </div>
   )
 }

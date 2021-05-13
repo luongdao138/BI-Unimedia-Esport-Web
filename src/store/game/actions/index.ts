@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/game.service'
-import { CLEAR_GAME_TITLES, GET_GAME_BY_GENRE, GET_GAME_BY_TITLE, GET_GAME_GENRES } from './types'
+import { CLEAR_GAME_TITLES, CREATE_GAME_TITLE, GET_GAME_BY_GENRE, GET_GAME_BY_TITLE, GET_GAME_GENRES } from './types'
 
 export const getGameGenres = createAsyncThunk<services.GameGenreResponse>(GET_GAME_GENRES, async (_param, { rejectWithValue }) => {
   try {
@@ -42,7 +42,7 @@ export const getGameByTitle = createAsyncThunk<services.GameTitleResponse, strin
 )
 
 export const createGameTitle = createAsyncThunk<services.CreateGameTitleResponse, services.CreateGameTitleParams>(
-  GET_GAME_BY_TITLE,
+  CREATE_GAME_TITLE,
   async (params, { rejectWithValue }) => {
     try {
       const res = await services.createGameTitle(params)

@@ -4,7 +4,7 @@ import * as actions from '../actions'
 import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
 
 type StateType = {
-  detail: ProfileResponse
+  data: ProfileResponse['data']
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
@@ -12,11 +12,15 @@ type StateType = {
   nicknames2?: Array<Nickname2>
 }
 
-const initialState: StateType = { detail: undefined, tournamentHistories: [], activityLogs: [], recommendations: [], nicknames2: [] }
+const initialState: StateType = { data: undefined, tournamentHistories: [], activityLogs: [], recommendations: [], nicknames2: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getUserProfile.fulfilled, (state, action) => {
-    state.detail = action.payload
+    state.data = action.payload.data
+  })
+
+  builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
+    state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
   })
 
   builder.addCase(actions.tournamentHistorySearch.fulfilled, (state, action) => {
@@ -38,7 +42,7 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.profileEdit.fulfilled, (state, action) => {
-    state.detail = action.payload
+    state.data = action.payload.data
   })
 
   builder.addCase(actions.getRecommendations.fulfilled, (state, action) => {

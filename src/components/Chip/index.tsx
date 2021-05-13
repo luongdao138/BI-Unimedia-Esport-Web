@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     fontSize: theme.typography.body1.fontSize,
     height: 36,
+    maxWidth: theme.spacing(20),
     borderRadius: 4,
     color: theme.palette.text.primary,
     backgroundColor: Colors.grey['200'],

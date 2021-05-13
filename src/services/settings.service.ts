@@ -55,9 +55,3 @@ export const getFeatures = async (): Promise<UserFeaturesResponse> => {
   const { data } = await api.get(URI.USER_FEATURES)
   return data.data as UserFeaturesResponse
 }
-
-export const getAllGameTitles = async (param?: GameTitlesParam): Promise<GameTitlesResponse> => {
-  param
-  const { data } = await api.get(URI.GAME_TITLES_ALL)
-  return data.data as GameTitlesResponse
-}

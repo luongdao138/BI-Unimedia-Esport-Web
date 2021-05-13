@@ -128,6 +128,7 @@ export default {
       create_new: '新しく作る',
       genre: 'ジャンル：',
       genre_label: 'ゲームジャンル',
+      add_success: 'ゲームを新しく追加しました',
     },
     edit: '編集',
     edit_profile: 'プロフィールを編集する',
@@ -136,6 +137,7 @@ export default {
     followers: 'フォロワー',
     no_game_selected: 'No game selected',
     no_tag_selected: 'No tag selected',
+    no_tag_available: 'No tag available',
   },
   gender: {
     male: '男性',
@@ -191,6 +193,9 @@ export default {
     tournament_entry_px: '【大会】',
     tournament_entry_sx: 'にエントリーしました。',
   },
+  chat: {
+    title: 'メッセージ',
+  },
   confirm: {
     sent: 'メールアドレスに送信された',
     verification_code: '6桁の認証コードを送信しました',
@@ -206,7 +211,4 @@ export default {
   },
   confirmation_review: '入力情報の確認',
   fix: '修正する',
-  chat: {
-    title: 'メッセージ',
-  },
 }

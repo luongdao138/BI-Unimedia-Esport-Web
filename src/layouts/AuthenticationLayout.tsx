@@ -14,11 +14,11 @@ const AuthenticationLayout: React.FC = ({ children }) => {
   const { pathname } = useRouter()
 
   useEffect(() => {
-    if (isAuthenticated) router.push(ESRoutes.HOME)
+    if (isAuthenticated && pathname !== ESRoutes.REGISTER_CONFIRM) router.push(ESRoutes.HOME)
     else if (!hasEmail && pathname === ESRoutes.REGISTER_CONFIRM) router.push(ESRoutes.REGISTER_BY_EMAIL)
     else if (!hasEmail && (pathname === ESRoutes.FORGOT_PASSWORD_CONFIRM || pathname === ESRoutes.FORGOT_PASSWORD_RESET))
       router.push(ESRoutes.FORGOT_PASSWORD)
-  }, [])
+  }, [isAuthenticated])
 
   return (
     <Container maxWidth={false} className={classes.root}>
