@@ -133,4 +133,7 @@ export default {
     tournament_entry_px: '【大会】',
     tournament_entry_sx: 'にエントリーしました。',
   },
+  chat: {
+    title: 'メッセージ',
+  },
 }

@@ -1,9 +1,11 @@
-import { Box } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { IconButton } from '@material-ui/core'
+import { IconButton, Icon } from '@material-ui/core'
 import RoomListItem from '@components/Chat/RoomListItem'
 import List from '@material-ui/core/List'
 import { ChatDataType } from '@components/Chat/types/chat.types'
+import { useTranslation } from 'react-i18next'
+import { Colors } from '@theme/colors'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -53,13 +55,19 @@ const ChatListExample: ChatDataType[] = [
 
 const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
+  const { t } = useTranslation(['common'])
   return (
     <Box className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}>
       <IconButton onClick={() => toggleChatBar(!expand)} className={classes.arrowBtn} disableRipple>
         <span className={classes.arrow}></span>
       </IconButton>
       <Box className={classes.content}>
-        <Box className={classes.header}></Box>
+        <Box className={classes.header} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+          <Typography className={classes.headerTitle} variant={'body1'}>
+            {t('common:chat.title')}
+          </Typography>
+          <Icon className={`fas fa-inbox ${classes.headerIcon}`} />
+        </Box>
         <Box className={classes.inner}>
           <List>
             {ChatListExample.map((item, index) => (
@@ -96,8 +104,8 @@ const useStyles = makeStyles({
     borderLeft: '1px solid #bfbfbf',
     transition: 'none',
     color: 'transparent',
-    transform: (expand) => (expand ? 'rotate(-45deg)' : 'rotate(135deg)'),
-    left: (expand) => (expand ? '7px' : '4px'),
+    transform: (expand) => (expand ? 'rotate(135deg)' : 'rotate(-45deg)'),
+    left: (expand) => (expand ? '4px' : '7px'),
   },
   arrowBtn: {
     background: 'rgba(0,0,0,0.5)',
@@ -123,6 +131,20 @@ const useStyles = makeStyles({
 
   content: {},
   inner: {},
-  header: {},
+  header: {
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 10,
+    paddingBottom: 6,
+  },
+  headerTitle: {
+    color: Colors.white,
+    display: (expand) => (expand ? 'flex' : 'none'),
+  },
+  headerIcon: {
+    color: Colors.white,
+    fontSize: (expand) => (expand ? '14px' : '18px'),
+    paddingLeft: (expand) => (expand ? '0' : '14px'),
+  },
 })
 export default ChatSideBar
