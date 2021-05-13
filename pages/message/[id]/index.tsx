@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import MainLayout from '@layouts/MainLayout'
+import MessageLayout from '@layouts/MessageLayout'
 import PageWithLayoutType from '@constants/page'
 
 const Room: PageWithLayoutType = () => {
@@ -9,6 +9,6 @@ const Room: PageWithLayoutType = () => {
   return <>roomID:{id}</>
 }
 
-Room.Layout = MainLayout
+Room.Layout = MessageLayout
 
 export default Room
