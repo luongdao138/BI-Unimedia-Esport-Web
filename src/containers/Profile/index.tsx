@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { withRouter, NextRouter } from 'next/router'
 import { Box, Grid, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ProfileAvatar from '@components/ProfileAvatar'
@@ -15,12 +16,21 @@ import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 
-const ProfileContainer: React.FC = () => {
+interface WithRouterProps {
+  router: NextRouter
+}
+
+type ProfileProps = WithRouterProps
+
+const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
   const { userProfile } = useUserData()
-
+  const user_code = router.query.user_code || []
+  if (user_code) {
+    router.back()
+  }
   if (userProfile === null || userProfile === undefined) return null
 
   return (
@@ -61,7 +71,7 @@ const ProfileContainer: React.FC = () => {
   )
 }
 
-export default ProfileContainer
+export default withRouter(ProfileContainer)
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
