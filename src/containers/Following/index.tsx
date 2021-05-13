@@ -12,7 +12,7 @@ import { Colors } from '@theme/colors'
 import _ from 'lodash'
 
 export interface ESFollowingProps {
-  user_id: number
+  user_code: number
 }
 
 const useStyles = makeStyles(() => ({
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
+const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const classes = useStyles()
@@ -39,8 +39,8 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
 
   useEffect(() => {
     const params = { page: 1 }
-    if (user_id != null) {
-      _.merge(params, { user_id: user_id })
+    if (user_code != null) {
+      _.merge(params, { user_code: user_code })
     }
     fetchFollowing(params)
   }, [])
@@ -56,7 +56,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
       setHasMore(false)
       return
     }
-    fetchFollowing({ page: page.current_page + 1, user_id: user_id })
+    fetchFollowing({ page: page.current_page + 1, user_code: user_code })
   }
 
   return (

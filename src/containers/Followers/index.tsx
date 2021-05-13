@@ -12,7 +12,7 @@ import { Colors } from '@theme/colors'
 import _ from 'lodash'
 
 export interface ESFollowersProps {
-  user_id?: number
+  user_code?: number
 }
 
 const useStyles = makeStyles(() => ({
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
+const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -48,8 +48,8 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
 
   useEffect(() => {
     const params = { page: 1 }
-    if (user_id != null) {
-      _.merge(params, { user_id: user_id })
+    if (user_code != null) {
+      _.merge(params, { user_code: user_code })
     }
     fetchFollowers(params)
   }, [])
@@ -59,7 +59,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
       setHasMore(false)
       return
     }
-    fetchFollowers({ page: page.current_page + 1, user_id: user_id })
+    fetchFollowers({ page: page.current_page + 1, user_code: user_code })
   }
 
   return (
