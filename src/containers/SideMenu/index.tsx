@@ -1,4 +1,4 @@
-import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography, Button } from '@material-ui/core'
+import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -64,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
   usercode: {
     color: theme.palette.text.secondary,
   },
+  clickable: {
+    cursor: 'pointer',
+  },
 }))
 
 const ListItem = withStyles({
@@ -105,19 +108,19 @@ const SideMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.menu}>
-        <Button onClick={() => router.push(ESRoutes.PROFILE)}>
+        <Box className={classes.clickable} onClick={() => router.push(ESRoutes.PROFILE)}>
           <Box className={classes.userInfo}>
-            <ProfileAvatar size={80} src={userProfile ? userProfile.data.attributes.avatar_url : '/images/avatar.png'} />
+            <ProfileAvatar size={80} src={userProfile ? userProfile.attributes.avatar_url : '/images/avatar.png'} />
             <Box width="100%" textAlign="center">
               <Typography variant="h2" className={classes.name}>
-                {userProfile ? userProfile.data.attributes.nickname : ''}
+                {userProfile ? userProfile.attributes.nickname : ''}
               </Typography>
               <Typography variant="body2" className={classes.usercode}>
-                @{userProfile ? userProfile.data.attributes.user_code : ''}
+                @{userProfile ? userProfile.attributes.user_code : ''}
               </Typography>
             </Box>
           </Box>
-        </Button>
+        </Box>
 
         <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
           <Link href={ESRoutes.HOME}>

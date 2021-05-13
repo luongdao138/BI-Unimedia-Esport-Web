@@ -4,6 +4,7 @@ import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
 import ChatSideBar from '@containers/ChatSideBar'
+import useProfileValid from '@utils/hooks/useProfileValid'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -13,6 +14,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [expand, setExpand] = useState<boolean>(false)
+  useProfileValid()
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -28,7 +30,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer }) 
       <aside className="aside-left mui-fixed">
         <SideMenu />
       </aside>
-      <main role="main" className={patternBg ? 'main' : 'no-pattern'}>
+      <main role="main" className={patternBg ? 'main' : 'main no-pattern'}>
         <div className="content-wrapper">
           <div className="content">{children}</div>
           {footer ? <Footer /> : ''}

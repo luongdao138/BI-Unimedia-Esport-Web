@@ -1,13 +1,24 @@
 import { Chip, ChipProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Close as CloseIcon } from '@material-ui/icons'
+import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     fontSize: theme.typography.body1.fontSize,
     height: 36,
+    maxWidth: theme.spacing(20),
     borderRadius: 4,
     color: theme.palette.text.primary,
+    backgroundColor: Colors.grey['200'],
+  },
+  colorPrimary: {
+    backgroundColor: Colors.primary,
+  },
+  clickable: {
+    '&:focus': {
+      backgroundColor: Colors.grey['200'],
+    },
   },
   clickableColorPrimary: {
     color: theme.palette.common.white,
@@ -16,10 +27,13 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:focus': {
       color: theme.palette.common.white,
+      backgroundColor: Colors.primary,
     },
   },
   deleteIcon: {
     color: theme.palette.common.white,
+    width: 18,
+    height: 18,
   },
 }))
 

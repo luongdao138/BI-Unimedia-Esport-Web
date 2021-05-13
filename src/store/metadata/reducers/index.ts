@@ -25,7 +25,7 @@ export default function metadataReducer(state: Record<string, Meta> = {}, action
       updated = {
         pending: false,
         loaded: false,
-        error: action.payload.error,
+        error: action.payload?.error,
       }
       break
     case 'clear':

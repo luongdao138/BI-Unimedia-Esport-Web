@@ -25,7 +25,7 @@ const ConfirmContainer: React.FC = () => {
   }
 
   const buttonActive = (): boolean => {
-    return user.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
+    return user?.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
   }
 
   return (
@@ -42,25 +42,25 @@ const ConfirmContainer: React.FC = () => {
 
         <Box width="100%" px={5} pt={12} flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
           <Typography variant="h3" className={classes.hint}>
-            メールアドレスに送信された
+            {t('common:confirm.sent')}
           </Typography>
           <Typography variant="h3" className={classes.hint}>
-            6桁の認証コードを送信しました
+            {t('common:confirm.verification_code')}
           </Typography>
           <Box py={4} display="flex" alignItems="center" flexDirection="column">
             <ESPinInput error={!!metaConfirm.error} value={confirmationCode} onChange={(value) => setConfirmationCode(value)} />
           </Box>
           <Typography variant="body2" className={classes.hint}>
-            認証コードを再送する
+            {t('common:confirm.resend')}
           </Typography>
         </Box>
 
         <Box pt={12}>
           <Typography variant="body2" className={classes.hint}>
-            認証コードが届かない場合
+            {t('common:confirm.dont_receive')}
           </Typography>
           <Typography variant="body2" className={classes.hintDetail}>
-            入力したメールアドレスに誤りがある可能性があります。前の画面に戻り、もう一度送信してください。
+            {t('common:confirm.send_again')}
           </Typography>
         </Box>
 

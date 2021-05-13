@@ -15,6 +15,8 @@ import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface WithRouterProps {
   router: NextRouter
@@ -24,6 +26,7 @@ type ProfileProps = WithRouterProps
 
 const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
   const { userProfile } = useUserData()
@@ -33,27 +36,29 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }
   if (userProfile === null || userProfile === undefined) return null
 
+  const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+
   return (
     <>
       <Grid container direction="column">
         <Box className={classes.headerContainer}>
-          <ProfileCover src={userProfile.data.attributes.cover_url} />
+          <ProfileCover src={userProfile.attributes.cover_url} />
           <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={userProfile ? userProfile.data.attributes.avatar_url : '/images/avatar.png'} editable />
-            <ESButton variant="outlined" round className={classes.menu}>
+            <ProfileAvatar src={userProfile ? userProfile.attributes.avatar_url : '/images/avatar.png'} editable />
+            <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
               {t('common:profile.edit_profile')}
             </ESButton>
           </Grid>
         </Box>
         <Grid item xs={12} className={classes.headerContainerSecond}>
-          <Typography variant="h2">{userProfile.data.attributes.nickname}</Typography>
-          <Typography>@{userProfile.data.attributes.user_code}</Typography>
+          <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
+          <Typography>@{userProfile.attributes.user_code}</Typography>
           <Box display="flex">
-            <ESFollowers user_id={null} />
-            <ESFollowing user_id={null} />
+            <ESFollowers user_code={null} />
+            <ESFollowing user_code={null} />
           </Box>
         </Grid>
         <Box margin={3}>
