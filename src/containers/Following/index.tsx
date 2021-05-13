@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import useFollowing from './useFollowing'
 import { Colors } from '@theme/colors'
+import _ from 'lodash'
 
 export interface ESFollowingProps {
   user_id: number
@@ -39,7 +40,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
   useEffect(() => {
     const params = { page: 1 }
     if (user_id != null) {
-      params['user_id'] = user_id
+      _.merge(params, { user_id: user_id })
     }
     fetchFollowing(params)
   }, [])

@@ -9,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import _ from 'lodash'
 
 export interface ESFollowersProps {
   user_id?: number
@@ -48,7 +49,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
   useEffect(() => {
     const params = { page: 1 }
     if (user_id != null) {
-      params['user_id'] = user_id
+      _.merge(params, { user_id: user_id })
     }
     fetchFollowers(params)
   }, [])
