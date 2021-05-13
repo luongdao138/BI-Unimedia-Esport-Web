@@ -17,6 +17,10 @@ export default createReducer(initialState, (builder) => {
     state.detail = action.payload
   })
 
+  builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
+    state.detail.data.attributes = { ...state.detail.data.attributes, ...action.payload.data.attributes }
+  })
+
   builder.addCase(actions.tournamentHistorySearch.fulfilled, (state, action) => {
     let tmpHistories = action.payload.data
     if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {

@@ -3,7 +3,6 @@ import metadata from '@store/metadata'
 import auth from '@store/auth'
 import userProfile from '@store/userProfile'
 import search from '@store/search'
-import profile from '@store/profile'
 import common from '@store/common'
 import settings from '@store/settings'
 import follow from '@store/follow'
@@ -16,7 +15,6 @@ const reducer = combineReducers({
   auth: auth.reducers,
   metadata: metadata.reducer,
   search: search.reducers,
-  profile: profile.reducers,
   common: common.reducers,
   settings: settings.reducers,
   follow: follow.reducers,

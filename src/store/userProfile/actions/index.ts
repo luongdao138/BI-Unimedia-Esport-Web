@@ -17,6 +17,21 @@ export const getUserProfile = createAsyncThunk(
     return null
   }
 )
+
+export const profileUpdate = createAsyncThunk<services.ProfileUpdateResponse, services.ProfileUpdateParams>(
+  USER_PROFILE_ACTION_TYPE.PROFILE_UPDATE,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.profileUpdate(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
 // export const tournamentHistorySearch = createAsyncThunk(
 //   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
 //   async (_u: undefined, { rejectWithValue }) => {
