@@ -179,7 +179,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(7),
   },
   contents: {
-    minHeight: 500,
+    minHeight: theme.spacing(70), // 560px
     marginTop: theme.spacing(8),
   },
   stickyFooter: {
@@ -222,11 +222,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    nextBtn: {
-      minWidth: theme.spacing(27.5),
     },
   },
   captionActive: {
