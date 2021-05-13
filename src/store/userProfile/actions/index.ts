@@ -13,6 +13,21 @@ export const getUserProfile = createAsyncThunk(USER_PROFILE_ACTION_TYPE.GET_USER
     return rejectWithValue(error.response.data)
   }
 })
+export const getMemberProfile = createAsyncThunk(
+  USER_PROFILE_ACTION_TYPE.GET_MEMBER_PROFILE,
+  async (param: string | null, { rejectWithValue }) => {
+    if (param === null) return null
+    try {
+      const res = await services.getUserProfile(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
 
 export const profileUpdate = createAsyncThunk<services.ProfileResponse, services.ProfileUpdateParams>(
   USER_PROFILE_ACTION_TYPE.PROFILE_UPDATE,

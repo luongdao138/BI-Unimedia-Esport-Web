@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { withRouter, NextRouter } from 'next/router'
 import { Box, Grid, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,6 @@ import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 import { ESRoutes } from '@constants/route.constants'
-import { useRouter } from 'next/router'
 
 interface WithRouterProps {
   router: NextRouter
@@ -26,15 +25,20 @@ type ProfileProps = WithRouterProps
 
 const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const classes = useStyles()
-  const router = useRouter()
   const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
-  const { userProfile } = useUserData()
   const user_code = router.query.user_code || []
-  if (user_code) {
-    router.back()
-  }
+  const isOthers = user_code.length > 0
+  // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
+  const { userProfile, getMemberProfile } = useUserData(isOthers)
+  useEffect(() => {
+    if (isOthers) getMemberProfile(user_code[0])
+  }, [user_code])
+
   if (userProfile === null || userProfile === undefined) return null
+
+  const cover = userProfile.attributes.cover_url ?? '/images/avatar.png'
+  const avatar = userProfile ? userProfile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
 
@@ -42,12 +46,12 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     <>
       <Grid container direction="column">
         <Box className={classes.headerContainer}>
-          <ProfileCover src={userProfile.attributes.cover_url} />
+          <ProfileCover src={cover} />
           <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={userProfile ? userProfile.attributes.avatar_url : '/images/avatar.png'} editable />
+            <ProfileAvatar src={avatar} editable />
             <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
               {t('common:profile.edit_profile')}
             </ESButton>
@@ -59,6 +63,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           <Box display="flex">
             <ESFollowers user_code={null} />
             <ESFollowing user_code={null} />
+            {/* <ESFollowers user_code={isOthers ? user_code[0] : null} />
+            <ESFollowing user_code={isOthers ? user_code[0] : null} /> */}
           </Box>
         </Grid>
         <Box margin={3}>
