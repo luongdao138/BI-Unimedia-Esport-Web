@@ -7,6 +7,8 @@ import ProfileCover from '@components/ProfileCover'
 import ESButton from '@components/Button'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
+import ESMenu from '@components/Menu'
+import ESMenuItem from '@components/Menu/MenuItem'
 import TournamentHistoryContainer from '@containers/Profile/TournamentHistory'
 import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
 import ProfileMainContainer from '@containers/Profile/ProfileMain'
@@ -42,31 +44,57 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
 
-  return (
-    <>
-      <Grid container direction="column">
+  const getHeader = () => {
+    return (
+      <>
         <Box className={classes.headerContainer}>
           <ProfileCover src={cover} />
-          <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}>
+          {/* <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}> */}
+          <Box className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={avatar} editable />
-            <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
-              {t('common:profile.edit_profile')}
-            </ESButton>
-          </Grid>
+            <ProfileAvatar src={avatar} editable={!isOthers} />
+            {isOthers ? (
+              <Box className={classes.menu}>
+                <ESButton variant="outlined" round className={classes.marginRight}>
+                  {t('common:profile.inbox')}
+                </ESButton>
+                <ESButton variant="outlined" round className={classes.marginRight}>
+                  {t('common:profile.follow_as')}
+                </ESButton>
+                <ESMenu>
+                  <ESMenuItem onClick={() => null}>{t('common:profile.menu_block')}</ESMenuItem>
+                  <ESMenuItem onClick={() => null}>{t('common:profile.menu_report')}</ESMenuItem>
+                </ESMenu>
+              </Box>
+            ) : (
+              <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
+                {t('common:profile.edit_profile')}
+              </ESButton>
+            )}
+          </Box>
         </Box>
         <Grid item xs={12} className={classes.headerContainerSecond}>
-          <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
-          <Typography>@{userProfile.attributes.user_code}</Typography>
+          <Box mb={2}>
+            <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
+            <Typography>@{userProfile.attributes.user_code}</Typography>
+          </Box>
           <Box display="flex">
             <ESFollowers user_code={null} />
             <ESFollowing user_code={null} />
             {/* <ESFollowers user_code={isOthers ? user_code[0] : null} />
-            <ESFollowing user_code={isOthers ? user_code[0] : null} /> */}
+  <ESFollowing user_code={isOthers ? user_code[0] : null} /> */}
           </Box>
         </Grid>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Grid container direction="column">
+        {getHeader()}
         <Box margin={3}>
           <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
             <ESTab label={t('common:user_profile.profile')} value={0} />
@@ -76,7 +104,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         </Box>
         {tab == 1 && <TournamentHistoryContainer userId={127} />}
         {tab == 2 && <ActivityLogsContainer userId={127} />}
-        {tab == 0 && <ProfileMainContainer userProfile={userProfile} />}
+        {tab == 0 && <ProfileMainContainer userProfile={userProfile} isOthers={isOthers} />}
       </Grid>
     </>
   )
@@ -94,6 +122,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: 0,
     width: '100%',
     height: 256,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
@@ -112,9 +144,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   menu: {
     position: 'absolute',
     top: 200,
+    display: 'flex',
     right: theme.spacing(1),
+    flexDirection: 'row',
   },
   marginRight: {
     marginRight: 8,
+  },
+  relative: {
+    position: 'relative',
   },
 }))

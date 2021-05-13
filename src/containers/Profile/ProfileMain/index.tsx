@@ -15,9 +15,10 @@ import { UserProfile } from '@services/user.service'
 
 interface Props {
   userProfile: UserProfile
+  isOthers: boolean
 }
 
-const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
+const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const gender =
@@ -53,9 +54,11 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
             </Typography>
             <Typography variant="h2">10</Typography>
           </Box>
-          <Box display="flex">
-            <Typography>{t('common:profile.edit')}</Typography>
-          </Box>
+          {isOthers ? null : (
+            <Box display="flex">
+              <Typography>{t('common:profile.edit')}</Typography>
+            </Box>
+          )}
         </Box>
         <Box>
           {userProfile.attributes.game_titles.length > 0
