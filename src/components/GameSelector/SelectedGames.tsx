@@ -8,17 +8,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.black,
     borderTop: `1px solid #FFFFFF30`,
     paddingBottom: theme.spacing(20),
-    marginBottom: theme.spacing(20),
     position: 'fixed',
     left: 0,
     bottom: 0,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    maxHeight: 180,
-    overflowY: 'auto',
     [theme.breakpoints.down('sm')]: {
-      marginBottom: theme.spacing(14),
+      paddingBottom: theme.spacing(14),
     },
   },
   listContainer: {
@@ -26,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
+    maxHeight: 180,
+    overflowY: 'auto',
   },
   chip: {
     marginRight: theme.spacing(2),
@@ -38,13 +37,15 @@ const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) =>
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <Container maxWidth="md" className={classes.listContainer}>
-        <List>
-          {games.map((g, idx) => (
-            <Chip key={idx} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
-          ))}
-        </List>
-      </Container>
+      {games.length > 0 && (
+        <Container maxWidth="md" className={classes.listContainer}>
+          <List>
+            {games.map((g, idx) => (
+              <Chip key={idx} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
+            ))}
+          </List>
+        </Container>
+      )}
     </div>
   )
 }
