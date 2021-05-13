@@ -30,6 +30,12 @@ export const searchOptions = [
   },
 ]
 
+export const GENDER = {
+  MALE: 1,
+  FEMALE: 2,
+  OTHER: 3,
+}
+
 export const ACTIVITY_ACTION_TYPE = {
   TOPIC_CREATE: 'topic_create',
   TOPIC_COMMENT: 'topic_comment',
