@@ -34,38 +34,38 @@ type UserProfile = {
     email: string
     nickname: string
     user_code: string
-    bio: string | null
-    birth_date: string
-    sex: number
-    instagram_link: string | null
-    facebook_link: string | null
-    twitter_link: string | null
-    twitch_link: string
+    bio?: string | null
+    birth_date?: string
+    sex?: number
+    instagram_link?: string | null
+    facebook_link?: string | null
+    twitter_link?: string | null
+    twitch_link?: string
     show_sex: boolean
     show_area: boolean
     show_birth_date: boolean
-    nickname2: string
-    icon: string | null
-    template_id: number | null
+    nickname2?: string
+    icon?: string | null
+    template_id?: number | null
     is_following: boolean
     is_followed: boolean
     is_blocked: boolean
     blocked_by_user: boolean
-    followers: number
-    following: number
-    avatar_url: string | null
-    cover_url: string | null
-    area: null | {
-      id: number
-      area: string
-      status: number
-      created_at: string
-      updated_at: string
+    followers?: number
+    following?: number
+    avatar_url?: string | null
+    cover_url?: string | null
+    area?: null | {
+      id?: number
+      area?: string
+      status?: number
+      created_at?: string
+      updated_at?: string
     }
-    features: Feature[]
-    game_titles: GameTitle['attributes'][]
-    template: null
-    security_settings: {
+    features?: Feature[]
+    game_titles?: GameTitle['attributes'][]
+    template?: null
+    security_settings?: {
       show_tournament_history: boolean
       show_activity_logs: boolean
       show_about: boolean
