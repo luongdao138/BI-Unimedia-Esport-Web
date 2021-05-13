@@ -11,10 +11,57 @@ import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
 import ProfileMainContainer from '@containers/Profile/ProfileMain'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { useAppSelector } from '@store/hooks'
-import userProfileStore from '@store/userProfile'
+import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+
+const ProfileContainer: React.FC = () => {
+  const classes = useStyles()
+  const { t } = useTranslation(['common'])
+  const [tab, setTab] = useState(0)
+  const { userProfile } = useUserData()
+
+  if (userProfile === null || userProfile === undefined) return null
+
+  return (
+    <>
+      <Grid container direction="column">
+        <Box className={classes.headerContainer}>
+          <ProfileCover src={userProfile.attributes.cover_url} />
+          <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}>
+            <IconButton className={classes.iconButtonBg}>
+              <Icon className="fa fa-arrow-left" fontSize="small" />
+            </IconButton>
+            <ProfileAvatar src={userProfile ? userProfile.attributes.avatar_url : '/images/avatar.png'} editable />
+            <ESButton variant="outlined" round className={classes.menu}>
+              {t('common:profile.edit_profile')}
+            </ESButton>
+          </Grid>
+        </Box>
+        <Grid item xs={12} className={classes.headerContainerSecond}>
+          <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
+          <Typography>@{userProfile.attributes.user_code}</Typography>
+          <Box display="flex">
+            <ESFollowers user_code={null} />
+            <ESFollowing user_code={null} />
+          </Box>
+        </Grid>
+        <Box margin={3}>
+          <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
+            <ESTab label={t('common:user_profile.profile')} value={0} />
+            <ESTab label={t('common:user_profile.tournament_history')} value={1} />
+            <ESTab label={t('common:user_profile.activity_log')} value={2} />
+          </ESTabs>
+        </Box>
+        {tab == 1 && <TournamentHistoryContainer userId={127} />}
+        {tab == 2 && <ActivityLogsContainer userId={127} />}
+        {tab == 0 && <ProfileMainContainer userProfile={userProfile} />}
+      </Grid>
+    </>
+  )
+}
+
+export default ProfileContainer
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
@@ -25,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 0,
     width: '100%',
-    height: '100%',
+    height: 256,
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
@@ -50,58 +97,3 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 8,
   },
 }))
-const ProfileContainer: React.FC = () => {
-  const classes = useStyles()
-  const { t } = useTranslation(['common'])
-  const { selectors } = userProfileStore
-  const [tab, setTab] = useState(0)
-  const userProfile = useAppSelector(selectors.getUserProfile)
-
-  if (userProfile === null || userProfile === undefined) return null
-
-  return (
-    <>
-      <Grid xs={12} direction="column">
-        <Grid xs={12} className={classes.headerContainer}>
-          <ProfileCover src={userProfile.attributes.cover_url} />
-          <Grid
-            xs={12}
-            container
-            direction="column"
-            justify="space-between"
-            alignItems="flex-start"
-            className={classes.headerItemsContainer}
-          >
-            <IconButton className={classes.iconButtonBg}>
-              <Icon className="fa fa-arrow-left" fontSize="small" />
-            </IconButton>
-            <ProfileAvatar src={userProfile.attributes.avatar_url} editable />
-            <ESButton variant="outlined" round className={classes.menu}>
-              {t('common:profile.edit_profile')}
-            </ESButton>
-          </Grid>
-        </Grid>
-        <Grid xs={12} className={classes.headerContainerSecond}>
-          <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
-          <Typography>@{userProfile.attributes.user_code}</Typography>
-          <Box display="flex">
-            <ESFollowers user_id={null} />
-            <ESFollowing user_id={null} />
-          </Box>
-        </Grid>
-        <Box margin={3}>
-          <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
-            <ESTab label={t('common:user_profile.profile')} value={0} />
-            <ESTab label={t('common:user_profile.tournament_history')} value={1} />
-            <ESTab label={t('common:user_profile.activity_log')} value={2} />
-          </ESTabs>
-        </Box>
-        {tab == 1 && <TournamentHistoryContainer userId={127} />}
-        {tab == 2 && <ActivityLogsContainer userId={127} />}
-        {tab == 0 && <ProfileMainContainer userProfile={userProfile} />}
-      </Grid>
-    </>
-  )
-}
-
-export default ProfileContainer

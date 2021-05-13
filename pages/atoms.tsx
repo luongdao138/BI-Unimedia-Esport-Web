@@ -120,8 +120,8 @@ const Atoms: PageWithLayoutType = () => {
         </ESButton>
       </Box>
       <Box>
-        <ESFollowers user_id={30} />
-        <ESFollowing user_id={30} />
+        <ESFollowers user_code={null} />
+        <ESFollowing user_code={null} />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>

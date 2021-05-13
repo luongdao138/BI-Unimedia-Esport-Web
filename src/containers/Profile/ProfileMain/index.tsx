@@ -1,29 +1,16 @@
-import { Box, Grid, Typography, Icon, withStyles } from '@material-ui/core'
-import { AvatarGroup } from '@material-ui/lab'
+import { Box, Grid, Typography, Icon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
-import ESCard from '@components/Card'
-import ESCardMedia from '@components/Card/CardMedia'
-import ESCardContent from '@components/Card/CardContent'
-import ESAvatar from '@components/Avatar'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitchCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
 import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
+import CommunityCard from '@components/CommunityCard'
 import HeaderTags from '../Partials/headerTags'
 import Iconic from '../Partials/iconic'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { UserProfile } from '@services/user.service'
-
-const StyledAvatarGroup = withStyles({
-  avatar: {
-    width: 20,
-    height: 20,
-    fontSize: 12,
-    color: 'white',
-  },
-})(AvatarGroup)
 
 interface Props {
   userProfile: UserProfile
@@ -41,7 +28,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
 
   return (
     <>
-      <Grid xs={12} className={classes.headerContainerSecond}>
+      <Grid xs={12} item className={classes.headerContainerSecond}>
         <Typography className={classes.marginTop20}>{userProfile.attributes.bio}</Typography>
         <HeaderTags items={userProfile.attributes.features} />
         <Box display="flex">
@@ -56,7 +43,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
           <ESButtonInstagramCircle className={classes.marginRight} />
         </Box>
       </Grid>
-      <Grid xs={12} className={classes.bodyContainer}>
+      <Grid xs={12} item className={classes.bodyContainer}>
         <Box display="flex" justifyContent="space-between">
           <Box display="flex">
             <Typography variant="h2" className={classes.marginRight20}>
@@ -82,136 +69,22 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
         <Box display="flex" mt={3}>
           <Grid container>
             <Grid item xs={6} md={4}>
-              <ESCard>
-                <ESCardMedia
-                  cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                  image="https://picsum.photos/id/112/240/120"
-                ></ESCardMedia>
-                <ESCardContent>
-                  <Typography variant="h2">コミュニティ名がはい...</Typography>
-                  <Typography variant="caption" gutterBottom>
-                    主催者 わたなべ
-                  </Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <StyledAvatarGroup max={3}>
-                      <ESAvatar alt="Avatar" />
-                      <ESAvatar alt="Bvatar" />
-                      <ESAvatar alt="Cvatar" />
-                      <ESAvatar alt="Cvatar" />
-                    </StyledAvatarGroup>
-                  </Box>
-                </ESCardContent>
-              </ESCard>
+              <CommunityCard community={null} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <ESCard>
-                <ESCardMedia
-                  cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                  image="https://picsum.photos/id/112/240/120"
-                ></ESCardMedia>
-                <ESCardContent>
-                  <Typography variant="h2">コミュニティ名がはい...</Typography>
-                  <Typography variant="caption" gutterBottom>
-                    主催者 わたなべ
-                  </Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <StyledAvatarGroup max={3}>
-                      <ESAvatar alt="Avatar" />
-                      <ESAvatar alt="Bvatar" />
-                      <ESAvatar alt="Cvatar" />
-                      <ESAvatar alt="Cvatar" />
-                    </StyledAvatarGroup>
-                  </Box>
-                </ESCardContent>
-              </ESCard>
+              <CommunityCard community={null} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <ESCard>
-                <ESCardMedia
-                  cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                  image="https://picsum.photos/id/112/240/120"
-                ></ESCardMedia>
-                <ESCardContent>
-                  <Typography variant="h2">コミュニティ名がはい...</Typography>
-                  <Typography variant="caption" gutterBottom>
-                    主催者 わたなべ
-                  </Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <StyledAvatarGroup max={3}>
-                      <ESAvatar alt="Avatar" />
-                      <ESAvatar alt="Bvatar" />
-                      <ESAvatar alt="Cvatar" />
-                      <ESAvatar alt="Cvatar" />
-                    </StyledAvatarGroup>
-                  </Box>
-                </ESCardContent>
-              </ESCard>
+              <CommunityCard community={null} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <ESCard>
-                <ESCardMedia
-                  cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                  image="https://picsum.photos/id/112/240/120"
-                ></ESCardMedia>
-                <ESCardContent>
-                  <Typography variant="h2">コミュニティ名がはい...</Typography>
-                  <Typography variant="caption" gutterBottom>
-                    主催者 わたなべ
-                  </Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <StyledAvatarGroup max={3}>
-                      <ESAvatar alt="Avatar" />
-                      <ESAvatar alt="Bvatar" />
-                      <ESAvatar alt="Cvatar" />
-                      <ESAvatar alt="Cvatar" />
-                    </StyledAvatarGroup>
-                  </Box>
-                </ESCardContent>
-              </ESCard>
+              <CommunityCard community={null} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <ESCard>
-                <ESCardMedia
-                  cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                  image="https://picsum.photos/id/112/240/120"
-                ></ESCardMedia>
-                <ESCardContent>
-                  <Typography variant="h2">コミュニティ名がはい...</Typography>
-                  <Typography variant="caption" gutterBottom>
-                    主催者 わたなべ
-                  </Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <StyledAvatarGroup max={3}>
-                      <ESAvatar alt="Avatar" />
-                      <ESAvatar alt="Bvatar" />
-                      <ESAvatar alt="Cvatar" />
-                      <ESAvatar alt="Cvatar" />
-                    </StyledAvatarGroup>
-                  </Box>
-                </ESCardContent>
-              </ESCard>
+              <CommunityCard community={null} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <ESCard>
-                <ESCardMedia
-                  cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-                  image="https://picsum.photos/id/112/240/120"
-                ></ESCardMedia>
-                <ESCardContent>
-                  <Typography variant="h2">コミュニティ名がはい...</Typography>
-                  <Typography variant="caption" gutterBottom>
-                    主催者 わたなべ
-                  </Typography>
-                  <Box display="flex" justifyContent="flex-end">
-                    <StyledAvatarGroup max={3}>
-                      <ESAvatar alt="Avatar" />
-                      <ESAvatar alt="Bvatar" />
-                      <ESAvatar alt="Cvatar" />
-                      <ESAvatar alt="Cvatar" />
-                    </StyledAvatarGroup>
-                  </Box>
-                </ESCardContent>
-              </ESCard>
+              <CommunityCard community={null} />
             </Grid>
           </Grid>
         </Box>
