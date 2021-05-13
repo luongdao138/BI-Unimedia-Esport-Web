@@ -18,10 +18,10 @@ import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import TabPanel from '@components/TabPanel'
-
 import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import Review from './Review'
+import { ESRoutes } from '@constants/route.constants'
 
 const FINAL_STEP = 4
 
@@ -65,7 +65,7 @@ const UserSettingsContainer: React.FC = () => {
     })
   }
 
-  const navigate = () => router.push('/home')
+  const navigate = () => router.push(ESRoutes.HOME)
 
   const handleButtonClick = () => {
     if (step !== FINAL_STEP - 1) setStep(step + 1)
