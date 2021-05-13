@@ -12,11 +12,12 @@ import { Colors } from '@theme/colors'
 import _ from 'lodash'
 
 export interface ESFollowingProps {
-  user_code: number
+  user_code: string
 }
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
+    fontSize: 14,
     marginRight: 20,
     alignItems: 'center',
   },
@@ -26,6 +27,7 @@ const useStyles = makeStyles(() => ({
   },
   count: {
     fontWeight: 'bold',
+    fontSize: 24,
     color: Colors.white,
   },
 }))
@@ -66,8 +68,8 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
           <Typography>{t('common:following.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
-            <Typography>{t('common:following.th')}</Typography>
           </Box>
+          <Typography>{t('common:following.th')}</Typography>
         </Box>
       </Button>
       <ESDialog title={t('common:following.title')} open={open} handleClose={handleClose}>

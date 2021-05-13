@@ -23,7 +23,7 @@ export type Meta = {
 }
 
 export const following = async (params: FollowingParams): Promise<FollowingResponse> => {
-  const { data } = await api.get<FollowingResponse>(URI.FOLLOWING, {
+  const { data } = await api.post<FollowingResponse>(URI.FOLLOWING, {
     params,
   })
   return data
