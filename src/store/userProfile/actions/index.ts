@@ -28,21 +28,6 @@ export const profileUpdate = createAsyncThunk<services.ProfileResponse, services
     }
   }
 )
-// export const tournamentHistorySearch = createAsyncThunk(
-//   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
-//   async (_u: undefined, { rejectWithValue }) => {
-//     try {
-//       const res = await services.tournamentHistorySearch(param)
-//       return res
-//     } catch (error) {
-//       if (!error.response) {
-//         throw error
-//       }
-//       return rejectWithValue(error.response.data)
-//     }
-//     return null
-//   }
-// )
 
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(
   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
@@ -64,6 +49,33 @@ export const getActivityLogs = createAsyncThunk<any, services.ActivityLogParams>
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.getActivityLog(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getNicknames = createAsyncThunk(USER_PROFILE_ACTION_TYPE.PROFILE_NICKNAMES, async (_, { rejectWithValue }) => {
+  try {
+    const res = await services.getNicknames()
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
+export const profileEdit = createAsyncThunk<services.ProfileResponse, services.ProfileEditParams>(
+  USER_PROFILE_ACTION_TYPE.PROFILE_EDIT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.profileEdit(param)
       return res
     } catch (error) {
       if (!error.response) {

@@ -2,7 +2,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'eXeLABをはじめる',
+    start_exelab: 'exeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -60,6 +60,7 @@ export default {
     code_invalid: '入力されたコードは無効です',
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
+    failed: '失敗しました',
   },
   common: {
     birthday: '生年月日',
@@ -79,9 +80,12 @@ export default {
     error: 'エラー文言が入ります',
     too_long: '長すぎる',
     at_least: '2文字以上入力してください。',
+    contains_ngword: '不適切な文字列が含まれています。',
+    not_selected: '選択されていません',
+    save: '保存する',
   },
   home: {
-    exelab: 'eXeLAB事務局',
+    exelab: 'eXe LAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
@@ -160,9 +164,14 @@ export default {
     tournament_results: '大会「ああああああ」 の検索結果',
   },
   user_profile: {
+    edit_profile: 'プロフィールを編集',
     profile: 'プロフィール',
     tournament_history: '大会履歴',
     activity_log: 'アクティビティ',
+    set_two_names: '二つ名を設定するt',
+    self_introduction: '自己紹介',
+    tag_edit: 'タグ編集',
+    sns: 'SNS',
   },
   action_types: {
     topic_comment_px: '【トピック】',

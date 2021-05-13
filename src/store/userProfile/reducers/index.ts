@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
-import { HistoryResponse, Meta } from '@services/user.service'
+import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
 
 type StateType = {
   data: ProfileResponse['data']
@@ -9,9 +9,10 @@ type StateType = {
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
   recommendations: Array<any>
+  nicknames2?: Array<Nickname2>
 }
 
-const initialState: StateType = { data: undefined, tournamentHistories: [], activityLogs: [], recommendations: [] }
+const initialState: StateType = { data: undefined, tournamentHistories: [], activityLogs: [], recommendations: [], nicknames2: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getUserProfile.fulfilled, (state, action) => {
@@ -34,6 +35,14 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {
     state.activityLogs = action.payload.data
+  })
+
+  builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
+    state.nicknames2 = action.payload.data.attributes.nicknames
+  })
+
+  builder.addCase(actions.profileEdit.fulfilled, (state, action) => {
+    state.data = action.payload.data
   })
 
   builder.addCase(actions.getRecommendations.fulfilled, (state, action) => {

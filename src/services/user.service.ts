@@ -9,7 +9,7 @@ export type HistorySearchParams = {
 
 export type HistorySearchResponse = {
   data: Array<HistoryResponse>
-  links: any
+  links: Links
 }
 
 export type HistoryResponse = {
@@ -18,6 +18,24 @@ export type HistoryResponse = {
 
 export type ActivityLogParams = {
   user_id: number
+}
+
+export type NicknamesResponse = {
+  data: CommonResponse
+}
+
+export type Nickname2 = {
+  id: number
+  nickname: string
+  subtext: string
+}
+
+export type CommonResponse = {
+  attributes: any
+}
+
+export type Links = {
+  meta: Meta
 }
 
 export type Meta = {
@@ -82,6 +100,24 @@ export type ProfileResponse = {
   data: UserProfile
 }
 
+export type ProfileEditParams = {
+  sex: number
+  show_sex: boolean
+  birth_date: string
+  show_birth_date: boolean
+  area_id?: number
+  show_area: boolean
+  features: number[]
+  nickname: string
+  nickname2: string
+  bio: string
+  instagram_link: string
+  facebook_link: string
+  twitter_link: string
+  twitch_link: string
+  discord_link: string
+}
+
 export type ProfileUpdateParams = {
   sex?: number
   show_sex?: boolean
@@ -128,5 +164,15 @@ export const getActivityLog = async (params: ActivityLogParams): Promise<any> =>
 
 export const getRecommendations = async (): Promise<RecommendationsResponse> => {
   const { data } = await api.get<RecommendationsResponse>(URI.USER_RECOMMENDATIONS)
+  return data
+}
+
+export const getNicknames = async (): Promise<NicknamesResponse> => {
+  const { data } = await api.get<any>(URI.NICKNAMES_2)
+  return data
+}
+
+export const profileEdit = async (params: ProfileEditParams): Promise<ProfileResponse> => {
+  const { data } = await api.put<ProfileResponse>(URI.USER_DETAIL_PROFILE, params)
   return data
 }
