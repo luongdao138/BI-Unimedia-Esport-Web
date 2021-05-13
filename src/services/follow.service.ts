@@ -3,7 +3,7 @@ import { URI } from '@constants/uri.constants'
 
 export type FollowersParams = {
   page: number
-  user_id?: number
+  user_code?: number
 }
 
 export type FollowersResponse = {
