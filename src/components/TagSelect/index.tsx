@@ -4,24 +4,36 @@ import { UserFeaturesResponse } from '@services/settings.service'
 
 interface Props {
   features: UserFeaturesResponse
-  selectedFeatures: string[]
-  onSelect: (id: string) => void
+  selectedFeatures: any[]
+  onSelectChange: (selectedIds) => void
 }
 
-const TagSelect: React.FC<Props> = (props) => {
-  const { selectedFeatures, features } = props
+const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange }) => {
   const classes = useStyles()
-  const checkIsActive = (id: string) => !!selectedFeatures.find((selectedId) => selectedId === id)
+
+  const checkIsSelected = (id: number) => selectedFeatures.find((feature) => feature.id === id)
+
+  const handleSelect = (selectedFeature) => {
+    const selectedId = parseInt(selectedFeature.id)
+    const tempSelectedFeatures = selectedFeatures.concat()
+    if (checkIsSelected(selectedId)) {
+      const filtered = tempSelectedFeatures.filter((feature) => feature.id !== selectedId)
+      onSelectChange(filtered)
+    } else {
+      tempSelectedFeatures.push({ id: selectedId, feature: selectedFeature.attributes.feature })
+      onSelectChange(tempSelectedFeatures)
+    }
+  }
 
   return (
-    <Box marginTop={5}>
-      {features.map((chip) => (
+    <Box>
+      {features.map((feature) => (
         <ESChip
-          key={chip.id}
+          key={feature.id}
           className={classes.chipSpacing}
-          label={chip.attributes.feature}
-          onClick={() => props.onSelect(chip.id)}
-          color={checkIsActive(chip.id) ? 'primary' : undefined}
+          label={feature.attributes.feature}
+          onClick={() => handleSelect(feature)}
+          color={checkIsSelected(parseInt(feature.id)) ? 'primary' : undefined}
         />
       ))}
     </Box>

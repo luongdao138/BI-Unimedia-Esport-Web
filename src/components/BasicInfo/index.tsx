@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Grid, Box, Container, Theme, makeStyles } from '@material-ui/core'
+import { Grid, Box } from '@material-ui/core'
 import { useFormik } from 'formik'
 import { GENDER } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
@@ -13,23 +13,13 @@ export type BasicInfoParams = {
   selectedGender: string
 }
 
-type BasicInfo = {
-  sex: string
-  show_sex: boolean
-  birth_date: string
-  show_birth_date: boolean
-  area_id: string
-  show_area: boolean
-}
-
 interface BasicInfoProps {
-  profile: BasicInfo
+  profile: any
   prefectures: any
   onDataChange: (data: any) => void
 }
 
 const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChange }) => {
-  const classes = useStyles()
   const { t } = useTranslation(['common'])
   const genders = [
     {
@@ -45,7 +35,10 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
       label: t('common:gender.other'),
     },
   ]
-  const [date, setDate] = useState({ date: null, selectedDate: profile.birth_date ? profile.birth_date : null })
+
+  const { area_id, show_area, sex, show_sex, birth_date, show_birth_date } = profile
+
+  const [date, setDate] = useState({ date: null, selectedDate: birth_date ? birth_date : null })
 
   const memoizedPrefectures = useMemo(() => {
     if (prefectures && prefectures.data) {
@@ -58,16 +51,16 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
 
   const { handleChange, values } = useFormik<BasicInfoParams>({
     initialValues: {
-      selectedPrefecture: profile.area_id ? profile.area_id : '',
-      selectedGender: profile.sex ? profile.sex : '',
+      selectedPrefecture: area_id ? area_id : '',
+      selectedGender: sex ? sex : '',
     },
     onSubmit: (_) => null,
   })
 
   const [checkboxStates, setCheckboxStates] = useState({
-    isShowPrefecture: profile.show_area,
-    isShowGender: profile.show_sex,
-    isShowBirthdate: profile.show_birth_date,
+    isShowPrefecture: show_area,
+    isShowGender: show_sex,
+    isShowBirthdate: show_birth_date,
   })
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,11 +69,11 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
 
   useEffect(() => {
     onDataChange({
-      sex: values.selectedGender,
+      sex: parseInt(values.selectedGender),
       show_sex: checkboxStates.isShowGender,
       birth_date: date.selectedDate ? date.selectedDate : null,
       show_birth_date: checkboxStates.isShowBirthdate,
-      area_id: values.selectedPrefecture,
+      area_id: parseInt(values.selectedPrefecture),
       show_area: checkboxStates.isShowPrefecture,
     })
   }, [values, date, checkboxStates])
@@ -111,7 +104,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
   )
 
   const genderView = (
-    <Box>
+    <Box marginTop={3}>
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="selectedGender" value={values.selectedGender} onChange={handleChange} fullWidth>
@@ -135,8 +128,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
   )
 
   const birthDateView = (
-    <Box>
-      <Grid container spacing={2}></Grid>
+    <Box marginTop={3}>
       <ESDatePicker
         selectedDate={date.selectedDate}
         onDateChange={(date) => {
@@ -147,6 +139,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
           }
         }}
       />
+
       <ESCheckbox
         checked={checkboxStates.isShowBirthdate}
         onChange={handleCheckboxChange}
@@ -157,20 +150,14 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
   )
 
   return (
-    <Container maxWidth="md" className={classes.container}>
+    <Box maxWidth="md">
       <form>
         {prefectureView}
         {genderView}
         {birthDateView}
       </form>
-    </Container>
+    </Box>
   )
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    marginTop: theme.spacing(60 / 8),
-  },
-}))
 
 export default BasicInfo

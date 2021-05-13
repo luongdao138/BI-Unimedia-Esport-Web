@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
 import { HistoryResponse, Meta } from '@services/user.service'
 
 type StateType = {
-  detail: any | null
+  detail: ProfileResponse
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>

@@ -10,6 +10,7 @@ import follow from '@store/follow'
 import following from '@store/following'
 import tournament from '@store/tournament'
 import ngWords from '@store/ngWords'
+import game from '@store/game'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   tournament: tournament.reducers,
+  gameTitle: game.reducers,
 })
 export default reducer
 
