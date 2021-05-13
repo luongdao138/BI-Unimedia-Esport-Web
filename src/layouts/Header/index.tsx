@@ -8,6 +8,10 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { useAppSelector } from '@store/hooks'
+import ESButton from '@components/Button'
+import { ESRoutes } from '@constants/route.constants'
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -60,6 +64,7 @@ interface headerProps {
 export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const router = useRouter()
   const classes = useStyles()
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -68,6 +73,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
       search: `?type=${_data.type}&keyword=${_data.value}`,
     })
   }
+
+  const navigateToLogin = () => router.push(ESRoutes.LOGIN)
 
   return (
     <div className={classes.grow}>
@@ -90,19 +97,32 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
               <SearchArea selectData={searchOptions} onSearch={onSearch} />
             </div>
             <div className={classes.toolArea}>
-              <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
-                <Icon className={`fa fa-search ${classes.icon}`} />
-              </IconButton>
-              <IconButton className={classes.button} disableRipple color="inherit">
-                <Badge badgeContent={17} color="primary" className={classes.badge}>
-                  <Icon className={`fa fa-bell ${classes.icon}`} />
-                </Badge>
-              </IconButton>
-              <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
-                <Badge badgeContent={17} color="primary" className={classes.badge}>
-                  <Icon className={`fa fa-inbox ${classes.icon}`} />
-                </Badge>
-              </IconButton>
+              {isAuthenticated ? (
+                <>
+                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                    <Icon className={`fa fa-search ${classes.icon}`} />
+                  </IconButton>
+                  <IconButton className={classes.button} disableRipple color="inherit">
+                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                      <Icon className={`fa fa-bell ${classes.icon}`} />
+                    </Badge>
+                  </IconButton>
+                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                      <Icon className={`fa fa-inbox ${classes.icon}`} />
+                    </Badge>
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                    <Icon className={`fa fa-search ${classes.icon}`} />
+                  </IconButton>
+                  <ESButton variant="contained" color="primary" onClick={navigateToLogin}>
+                    ログイン
+                  </ESButton>
+                </>
+              )}
             </div>
           </Toolbar>
         </Container>

@@ -14,14 +14,19 @@ import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 const ProfileContainer: React.FC = () => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
   const { userProfile } = useUserData()
 
   if (userProfile === null || userProfile === undefined) return null
+
+  const edit = () => router.push(ESRoutes.PROFILE_EDIT)
 
   return (
     <>
@@ -33,7 +38,7 @@ const ProfileContainer: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <ProfileAvatar src={userProfile ? userProfile.data.attributes.avatar_url : '/images/avatar.png'} editable />
-            <ESButton variant="outlined" round className={classes.menu}>
+            <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
               {t('common:profile.edit_profile')}
             </ESButton>
           </Grid>

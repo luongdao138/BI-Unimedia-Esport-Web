@@ -5,6 +5,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import authStore from '@store/auth'
 import { UserLoginParams } from '@services/auth.service'
 import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 const { selectors, actions } = authStore
 const getLoginMeta = createMetaSelector(actions.loginByEmail)
@@ -17,15 +18,16 @@ const useLoginByEmail = () => {
   const meta = useAppSelector(getLoginMeta)
   const loginByEmail = (param: UserLoginParams) => dispatch(actions.loginByEmail(param))
   const resetMeta = () => dispatch(clearMetaData(actions.loginByEmail.typePrefix))
+  const handleClick = () => router.push(ESRoutes.HOME)
 
   useEffect(() => {
     if (meta.loaded) {
-      router.push('/welcome')
+      router.push(ESRoutes.HOME)
       resetMeta()
     }
   }, [meta.loaded])
 
-  return { user, loginByEmail, resetMeta, meta }
+  return { user, loginByEmail, resetMeta, meta, handleClick }
 }
 
 export default useLoginByEmail

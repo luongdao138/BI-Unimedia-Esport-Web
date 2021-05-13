@@ -164,6 +164,11 @@ const Atoms: PageWithLayoutType = () => {
         <ESButtonAppleCircle />
       </Box>
       <ESMenu>
+        <ESMenuItem onClick={() => console.error('プロフィールを編集')}>プロフィールを編集</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('大会履歴')}>大会履歴</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('アクティビティ')}>アクティビティ</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('QRコード')}>QRコード</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('ログアウト')}>ログアウト</ESMenuItem>
         <ESMenuItem
           onClick={() => {
             return null

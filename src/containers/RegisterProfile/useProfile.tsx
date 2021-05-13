@@ -24,7 +24,7 @@ const useProfile = () => {
 
   useEffect(() => {
     if (meta.loaded) {
-      router.push(ESRoutes.REGISTER_CONFIRM)
+      router.push(ESRoutes.USER_SETTINGS)
       resetMeta()
     }
   }, [meta.loaded])
