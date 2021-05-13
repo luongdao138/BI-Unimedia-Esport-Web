@@ -117,9 +117,6 @@ const Review: React.FC<ReviewProps> = ({ profile, onFixClicked }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    marginTop: theme.spacing(60 / 8),
-  },
   chipSpacing: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
