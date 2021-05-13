@@ -7,18 +7,18 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'block',
   },
-  avatar: (props: { size?: number }) => ({
+  avatar: {
     zIndex: 3,
-    width: props.size,
-    height: props.size,
-  }),
-  touch: (props: { size?: number }) => ({
+    width: 120,
+    height: 120,
+  },
+  touch: {
     zIndex: 3,
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
-    width: props.size,
-    height: props.size,
+    width: 120,
+    height: 120,
     borderRadius: '50%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     '&:hover $backdrop': {
       display: 'flex',
     },
-  }),
+  },
   camera: {
     display: 'none',
     position: 'absolute',
@@ -89,7 +89,7 @@ const ESProfileAvatar: React.FC<{ editable?: boolean; size?: number; src: string
           <div className={classes.backdrop} />
         </label>
       ) : (
-        <Avatar className={classes.avatar} src={props.src} />
+        <Avatar className={classes.avatar} src={props.src} style={props.size && { width: props.size, height: props.size }} />
       )}
     </div>
   )
@@ -97,6 +97,5 @@ const ESProfileAvatar: React.FC<{ editable?: boolean; size?: number; src: string
 
 ESProfileAvatar.defaultProps = {
   editable: false,
-  size: 120,
 }
 export default ESProfileAvatar

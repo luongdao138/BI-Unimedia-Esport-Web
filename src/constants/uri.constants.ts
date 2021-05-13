@@ -17,6 +17,9 @@ export const URI = {
   USERS_SEARCH: '/v2/users/search',
   FOLLOW: '/v1/followers/follow',
   UNFOLLOW: '/v1/followers/unfollow',
+  COMMUNITY_LIST: '/v1/communities/list',
   TOURNAMENTS_SEARCH: '/v1/tournaments/search',
   RECOMMENDED_USERS: '/v1/recommended_users',
+  TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
+  PROFILE_ACTIVITY_LOG: '/v1/activity_logs',
 }
