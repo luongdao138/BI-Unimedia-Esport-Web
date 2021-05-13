@@ -55,11 +55,13 @@ const AddGame: React.FC<Props> = ({ genres }) => {
       <Toast open={open} message={t('profile.favorite_game.add_success')} onClose={() => setOpen(false)} />
       <form onSubmit={formik.handleSubmit}>
         <Select
+          id="game_genre_id"
           name="game_genre_id"
           value={formik.values.game_genre_id}
           onChange={formik.handleChange}
           fullWidth
           required
+          size="small"
           error={!!formik.errors.game_genre_id}
           label={t('profile.favorite_game.genre_label')}
         >
@@ -74,6 +76,7 @@ const AddGame: React.FC<Props> = ({ genres }) => {
         </Select>
         <Box pb={4} />
         <Input
+          id="display_name"
           name="display_name"
           value={formik.values.display_name}
           onChange={formik.handleChange}
