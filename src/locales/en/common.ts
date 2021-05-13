@@ -184,6 +184,9 @@ export default {
     tournament_entry_px: '【大会】',
     tournament_entry_sx: 'にエントリーしました。',
   },
+  chat: {
+    title: 'メッセージ',
+  },
   confirm: {
     sent: 'メールアドレスに送信された',
     verification_code: '6桁の認証コードを送信しました',

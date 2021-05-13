@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import moment from 'moment'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useSmartTime = (data: string | number) => {
   const [time, setTime] = useState<string>('')
   useEffect(() => {

@@ -2,7 +2,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'exeLABをはじめる',
+    start_exelab: 'eXeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -81,7 +81,7 @@ export default {
     at_least: '2文字以上入力してください。',
   },
   home: {
-    exelab: 'eXe LAB事務局',
+    exelab: 'eXeLAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
@@ -183,6 +183,9 @@ export default {
     tournament_create_sx: 'を作成しました。',
     tournament_entry_px: '【大会】',
     tournament_entry_sx: 'にエントリーしました。',
+  },
+  chat: {
+    title: 'メッセージ',
   },
   confirm: {
     sent: 'メールアドレスに送信された',

@@ -12,5 +12,6 @@ export const ESRoutes = {
   PROFILE: '/profile',
   TOURNAMENTS: '/tournaments',
   SETTINGS: '/settings',
+  MESSAGE: '/message/',
   USER_SETTINGS: '/user-settings',
 }

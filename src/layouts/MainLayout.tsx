@@ -30,7 +30,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer }) 
       <aside className="aside-left mui-fixed">
         <SideMenu />
       </aside>
-      <main role="main" className={patternBg ? 'main' : 'no-pattern'}>
+      <main role="main" className={patternBg ? 'main' : 'main no-pattern'}>
         <div className="content-wrapper">
           <div className="content">{children}</div>
           {footer ? <Footer /> : ''}

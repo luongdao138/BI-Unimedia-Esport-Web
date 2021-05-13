@@ -9,3 +9,4 @@ export const getTourHistories = createSelector(getRoot, (state) => state.tournam
 export const getTourHistoriesMeta = createSelector(getRoot, (state) => state.tournamentHistoriesMeta)
 export const getActivityLogs = createSelector(getRoot, (state) => state.activityLogs)
 // export const getCommunityList = createSelector(getRootCommunity, (state) => state.my_community_list)
+export const getRecommendations = createSelector(getRoot, (state) => state.recommendations)
