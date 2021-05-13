@@ -132,6 +132,7 @@ export default {
     followers: 'フォロワー',
     no_game_selected: 'No game selected',
     no_tag_selected: 'No tag selected',
+    no_tag_available: 'No tag available',
   },
   gender: {
     male: '男性',

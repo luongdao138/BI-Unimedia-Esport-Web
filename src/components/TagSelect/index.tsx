@@ -1,6 +1,7 @@
-import { Box, Theme, makeStyles } from '@material-ui/core'
+import { Box, Theme, makeStyles, Typography } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { UserFeaturesResponse } from '@services/settings.service'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   features: UserFeaturesResponse
@@ -10,6 +11,7 @@ interface Props {
 
 const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   const checkIsSelected = (id: number) => selectedFeatures.find((feature) => feature.id === id)
 
@@ -23,6 +25,14 @@ const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange
       tempSelectedFeatures.push({ id: selectedId, feature: selectedFeature.attributes.feature })
       onSelectChange(tempSelectedFeatures)
     }
+  }
+
+  if (features.length === 0) {
+    return (
+      <Box pt={8} textAlign="center">
+        <Typography color="textSecondary">{t('common:profile.no_tag_available')}</Typography>
+      </Box>
+    )
   }
 
   return (
