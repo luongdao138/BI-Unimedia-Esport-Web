@@ -32,6 +32,7 @@ export default createReducer(initialState, (builder) => {
       state.user = action.payload
     })
     .addCase(actions.registerProfile.fulfilled, (state, action) => {
-      state.user = action.payload
+      state.user.nickname = action.payload.data.attributes.nickname
+      state.user.user_code = action.payload.data.attributes.user_code
     })
 })

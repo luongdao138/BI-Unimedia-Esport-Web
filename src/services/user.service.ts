@@ -2,6 +2,31 @@ import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
 
+export type HistorySearchParams = {
+  user_id: number
+  page: number
+}
+
+export type HistorySearchResponse = {
+  data: Array<HistoryResponse>
+  links: any
+}
+
+export type HistoryResponse = {
+  attributes: any
+}
+
+export type ActivityLogParams = {
+  user_id: number
+}
+
+export type Meta = {
+  current_page: number
+  per_page: number
+  total_count: number
+  total_pages: number
+}
+
 type UserProfile = {
   id: string
   type: 'user'
@@ -59,5 +84,15 @@ export type ProfileResponse = {
 
 export const getUserProfile = async (): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(URI.USER_DETAIL_PROFILE)
+  return data
+}
+
+export const tournamentHistorySearch = async (params: HistorySearchParams): Promise<HistorySearchResponse> => {
+  const { data } = await api.get<HistorySearchResponse>(URI.TOURNAMENTS_HISTORY_SEARCH, { params })
+  return data
+}
+
+export const getActivityLog = async (params: ActivityLogParams): Promise<any> => {
+  const { data } = await api.get<any>(URI.PROFILE_ACTIVITY_LOG, { params })
   return data
 }

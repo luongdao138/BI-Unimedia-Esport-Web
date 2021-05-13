@@ -29,3 +29,15 @@ export const searchOptions = [
     name: 'ロビー',
   },
 ]
+
+export const ACTIVITY_ACTION_TYPE = {
+  TOPIC_CREATE: 'topic_create',
+  TOPIC_COMMENT: 'topic_comment',
+  COMMUNITY_CREATE: 'community_create',
+  COMMUNITY_JOIN: 'community_join',
+  USER_FOLLOWS: 'user_follows',
+  RECRUITMENT_CREATE: 'recruitment_create',
+  RECRUITMENT_JOIN: 'recruitment_join',
+  TOURNAMENT_CREATE: 'tournament_create',
+  TOURNAMENT_JOIN: 'tournament_join',
+}

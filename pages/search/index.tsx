@@ -5,8 +5,9 @@ import MainLayout from '@layouts/MainLayout'
 import { searchTypes } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
+import PageWithLayoutType from '@constants/page'
 
-const SearchPage = () => {
+const SearchPage: PageWithLayoutType = () => {
   const router = useRouter()
   const [type, setType] = useState<number>()
 
