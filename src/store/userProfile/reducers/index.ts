@@ -7,6 +7,7 @@ type StateType = {
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
+  recommendations: Array<any>
 }
 
 const initialState: StateType = { detail: undefined, tournamentHistories: [], activityLogs: [] }
@@ -28,5 +29,9 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {
     state.activityLogs = action.payload.data
+  })
+
+  builder.addCase(actions.getRecommendations.fulfilled, (state, action) => {
+    state.recommendations = action.payload.data
   })
 })

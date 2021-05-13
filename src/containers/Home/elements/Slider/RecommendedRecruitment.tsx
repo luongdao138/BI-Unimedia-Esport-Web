@@ -4,7 +4,27 @@ import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
 
-export const RecommendedRecruitment: React.FC = () => {
+interface Props {
+  data: Array<recruitmentProps>
+}
+
+type recruitmentProps = {
+  type: string
+  attributes: recruitmentAttributesProps
+}
+
+type recruitmentAttributesProps = {
+  title: string
+  message: string
+  recruitment_cover: string | null
+  max_participants: number
+  start_datetime: string | null
+  participants_count: number
+  entry_count: number
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const RecommendedRecruitment: React.FC<Props> = ({ data }) => {
   return (
     <ESSlider
       title="おすすめの募集"

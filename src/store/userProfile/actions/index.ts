@@ -61,3 +61,18 @@ export const getActivityLogs = createAsyncThunk<any, services.ActivityLogParams>
     }
   }
 )
+
+export const getRecommendations = createAsyncThunk<services.RecommendationsResponse>(
+  USER_PROFILE_ACTION_TYPE.RECOMMENDATIONS,
+  async (_params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendations()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
