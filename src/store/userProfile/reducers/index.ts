@@ -1,16 +1,17 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
-import { HistoryResponse, Meta } from '@services/user.service'
+import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
 
 type StateType = {
   detail: ProfileResponse
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
+  nicknames2?: Array<Nickname2>
 }
 
-const initialState: StateType = { detail: undefined, tournamentHistories: [], activityLogs: [] }
+const initialState: StateType = { detail: undefined, tournamentHistories: [], activityLogs: [], nicknames2: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getUserProfile.fulfilled, (state, action) => {
@@ -29,5 +30,9 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {
     state.activityLogs = action.payload.data
+  })
+
+  builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
+    state.nicknames2 = action.payload.data.attributes.nicknames
   })
 })
