@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles } from '@material-ui/core'
+import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles, createMuiTheme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
@@ -163,15 +163,20 @@ const UserSettingsContainer: React.FC = () => {
   )
 }
 
+const theme = createMuiTheme()
+
 const ResponsiveTypo = withStyles({
   root: {
-    fontSize: 30,
+    fontSize: '1.5rem',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.875rem', // 30px
+    },
   },
 })(Typography)
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    marginTop: theme.spacing(60 / 8),
+    marginTop: theme.spacing(7),
   },
   contents: {
     minHeight: 500,
