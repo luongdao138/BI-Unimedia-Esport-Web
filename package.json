@@ -38,6 +38,7 @@
     "next": "10.2.0",
     "next-compose-plugins": "2.2.1",
     "next-redux-wrapper": "6.0.2",
+    "next-use-contextual-routing": "^2.0.0",
     "oauth": "^0.9.15",
     "react": "17.0.1",
     "react-dom": "17.0.1",

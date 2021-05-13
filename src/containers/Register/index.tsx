@@ -14,12 +14,11 @@ import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ESCheckbox from '@components/Checkbox'
-import { useRouter } from 'next/router'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const RegisterContainer: React.FC = () => {
-  const router = useRouter()
   const social = useSocialLogin()
   const [checkbox, setCheckox] = useState({
     terms: false,
@@ -27,6 +26,7 @@ const RegisterContainer: React.FC = () => {
   })
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const { handleLink, navigateScreen } = useReturnHref()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
@@ -37,7 +37,7 @@ const RegisterContainer: React.FC = () => {
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
-        <IconButton className={classes.iconButtonBg} onClick={() => router.push(ESRoutes.LOGIN)}>
+        <IconButton className={classes.iconButtonBg} onClick={() => navigateScreen(ESRoutes.LOGIN)}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
       </Box>
@@ -72,7 +72,7 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
-          <ButtonPrimary round fullWidth onClick={() => router.push(ESRoutes.REGISTER_BY_EMAIL)}>
+          <ButtonPrimary round fullWidth onClick={() => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)}>
             {t('common:register.button')}
           </ButtonPrimary>
         </Box>
@@ -90,7 +90,7 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={4} className={classes.linkContainer}>
-          <Link href={ESRoutes.LOGIN}>
+          <Link href={handleLink(ESRoutes.LOGIN)} as={ESRoutes.LOGIN} shallow>
             <a>{t('common:register.footer_link')}</a>
           </Link>
         </Box>

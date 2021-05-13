@@ -27,6 +27,8 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
+    intro: `exeLABをお楽しみいただくには
+ログインが必要です`,
   },
   register: {
     button: 'メールアドレスで登録',
