@@ -31,7 +31,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
   const time = useSmartTime(date)
   const chatRoomId = _.get(item, 'chatRoomId', null)
 
-  const clickHandler = (e: any) => {
+  const clickHandler = (e: React.MouseEvent) => {
     e.preventDefault()
     if (chatRoomId && onClick) {
       onClick(chatRoomId)

@@ -12,6 +12,7 @@ import { ESRoutes } from '@constants/route.constants'
 interface ChatSideBarProps {
   expand: boolean
   toggleChatBar: (state: boolean) => void
+  arrow?: boolean
 }
 
 const ChatListExample: ChatDataType[] = [
@@ -55,7 +56,7 @@ const ChatListExample: ChatDataType[] = [
   },
 ]
 
-const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
+const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand, arrow }) => {
   const classes = useStyles(expand)
   const { t } = useTranslation(['common'])
   const router = useRouter()
@@ -65,10 +66,18 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   }
 
   return (
-    <Box className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}>
-      <IconButton onClick={() => toggleChatBar(!expand)} className={classes.arrowBtn} disableRipple>
-        <span className={classes.arrow}></span>
-      </IconButton>
+    <Box
+      className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}
+      onMouseEnter={() => toggleChatBar(true)}
+      onMouseLeave={() => toggleChatBar(false)}
+    >
+      {arrow ? (
+        <IconButton onClick={() => toggleChatBar(!expand)} className={classes.arrowBtn} disableRipple>
+          <span className={classes.arrow}></span>
+        </IconButton>
+      ) : (
+        ''
+      )}
       <Box className={classes.content}>
         <Box className={classes.header} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
           <Typography className={classes.headerTitle} variant={'body1'}>
@@ -155,4 +164,9 @@ const useStyles = makeStyles({
     paddingLeft: (expand) => (expand ? '0' : '14px'),
   },
 })
+
+ChatSideBar.defaultProps = {
+  arrow: false,
+}
+
 export default ChatSideBar
