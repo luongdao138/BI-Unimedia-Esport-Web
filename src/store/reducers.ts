@@ -8,6 +8,7 @@ import following from '@store/following'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
 import tournament from '@store/tournament'
+import recruitment from './recruitment'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   userProfile: userProfile.reducers,
   community: community.reducers,
   tournament: tournament.reducers,
+  recruitment: recruitment.reducers,
 })
 export default reducer
 

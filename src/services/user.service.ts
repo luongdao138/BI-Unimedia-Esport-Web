@@ -26,6 +26,15 @@ export type Meta = {
   total_pages: number
 }
 
+export type RecommendationsResponse = {
+  data: Array<RecommendationsArray>
+  links: any
+}
+
+type RecommendationsArray = {
+  attributes: any
+}
+
 export const getUserProfile = async (): Promise<any> => {
   const { data } = await api.get(URI.USER_DETAIL_PROFILE)
   return data
@@ -38,5 +47,10 @@ export const tournamentHistorySearch = async (params: HistorySearchParams): Prom
 
 export const getActivityLog = async (params: ActivityLogParams): Promise<any> => {
   const { data } = await api.get<any>(URI.PROFILE_ACTIVITY_LOG, { params })
+  return data
+}
+
+export const getRecommendations = async (): Promise<RecommendationsResponse> => {
+  const { data } = await api.get<RecommendationsResponse>(URI.USER_RECOMMENDATIONS)
   return data
 }

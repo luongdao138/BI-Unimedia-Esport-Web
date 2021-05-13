@@ -12,6 +12,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  innerWrap: { width: 60 },
+  avatar: {
+    margin: '0 auto',
+  },
   name: {
     color: Colors.white,
     marginTop: theme.spacing(0.5),
@@ -24,7 +28,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export const RecommendedUser: React.FC = () => {
+interface Props {
+  users: Array<userProps>
+}
+
+type userProps = {
+  type: string
+  attributes: userAttributesProps
+}
+
+type userAttributesProps = {
+  user_code: string
+  nickname: string
+  avatar: string
+}
+
+export const RecommendedUser: React.FC<Props> = ({ users }) => {
   const classes = useStyles()
 
   return (
@@ -34,98 +53,16 @@ export const RecommendedUser: React.FC = () => {
       navigation={false}
       width={84}
       disableResponsiveWidth
-      items={[
-        <Box key="1" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/100/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたなべ
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/101/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            グレちゃんグレちゃんグレちゃん
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/99/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/98/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            コイチ
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/97/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたなべ
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/96/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/95/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/94/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/93/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/92/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/91/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/90/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/89/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/88/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-        <Box key="2" className={classes.wrap}>
-          <ESAvatar src="https://picsum.photos/id/87/300/300" />
-          <Typography variant="caption" className={classes.name}>
-            わたうに
-          </Typography>
-        </Box>,
-      ]}
+      items={users.map((user, i) => (
+        <Box key={i}>
+          <Box className={classes.innerWrap}>
+            <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
+            <Typography variant="caption" className={classes.name}>
+              {user.attributes.nickname}
+            </Typography>
+          </Box>
+        </Box>
+      ))}
     />
   )
 }
