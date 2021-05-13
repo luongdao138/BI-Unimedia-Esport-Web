@@ -5,6 +5,7 @@ import authStore from '@store/auth'
 import { ForgotPasswordParams, UserResetPasswordParams } from '@services/auth.service'
 import { useRouter } from 'next/router'
 import { clearMetaData } from '@store/metadata/actions'
+import { ESRoutes } from '@constants/route.constants'
 
 const { selectors, actions } = authStore
 const getForgotPasswordMeta = createMetaSelector(actions.forgotPassword)
@@ -24,11 +25,11 @@ const useForgotPassword = () => {
     dispatch(actions.resetPassword(params))
   }
 
-  const backAction = () => router.push('/login')
+  const backAction = () => router.push(ESRoutes.LOGIN)
 
   useEffect(() => {
     if (meta.loaded) {
-      router.push('/forgot-password/confirm')
+      router.push(ESRoutes.FORGOT_PASSWORD_CONFIRM)
       dispatch(clearMetaData(actions.forgotPassword.typePrefix))
     }
   }, [meta.loaded])

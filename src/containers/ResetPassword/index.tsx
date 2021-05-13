@@ -22,19 +22,19 @@ const ResetPasswordContainer: React.FC = () => {
 
   const validationSchema = Yup.object().shape({
     password: Yup.string()
-      .test('password-validation', 'エラー文言が入ります', (value) => {
+      .test('password-validation', t('common:common.error'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
         return tempScore > 40
       })
-      .required('エラー文言が入ります'),
+      .required(t('common:common.error')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserResetPasswordParams>({
     initialValues: {
-      email: user.email,
-      confirmation_code: user.confirmation_code,
+      email: user?.email,
+      confirmation_code: user?.confirmation_code,
       password: '',
       password_confirm: '',
     },
@@ -42,7 +42,11 @@ const ResetPasswordContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values) => {
       if (values) {
-        resetPassword(values)
+        const params = {
+          ...values,
+          password_confirm: values.password,
+        }
+        resetPassword(params)
       }
     },
   })
@@ -58,7 +62,7 @@ const ResetPasswordContainer: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{t('common:register_by_email.back')}</Typography>
+              <Typography variant="h2">{t('common:forgot_password.title')}</Typography>
             </Box>
           </Box>
 
@@ -78,13 +82,14 @@ const ResetPasswordContainer: React.FC = () => {
             </Box>
 
             <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
+            <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
           </Box>
         </Box>
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
             <Box maxWidth={280} className={classes.buttonContainer}>
               <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()}>
-                再発行する
+                {t('common:forgot_password.reissue')}
               </ButtonPrimary>
             </Box>
           </Box>

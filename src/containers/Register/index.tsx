@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import ESCheckbox from '@components/Checkbox'
 import { useRouter } from 'next/router'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
+import { ESRoutes } from '@constants/route.constants'
 
 const RegisterContainer: React.FC = () => {
   const router = useRouter()
@@ -36,7 +37,7 @@ const RegisterContainer: React.FC = () => {
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
-        <IconButton className={classes.iconButtonBg} onClick={() => router.push('/login')}>
+        <IconButton className={classes.iconButtonBg} onClick={() => router.push(ESRoutes.LOGIN)}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
       </Box>
@@ -60,12 +61,18 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={3} flexDirection="column" display="flex">
-          <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label="利用規約に同意する" name="terms" />
-          <ESCheckbox disableRipple checked={checkbox.privacy} onChange={handleChange} label="個人情報保護方針に同意する" name="privacy" />
+          <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label={t('common:register.terms')} name="terms" />
+          <ESCheckbox
+            disableRipple
+            checked={checkbox.privacy}
+            onChange={handleChange}
+            label={t('common:register.privacy')}
+            name="privacy"
+          />
         </Box>
 
         <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
-          <ButtonPrimary round fullWidth onClick={() => router.push('/register/by-email')}>
+          <ButtonPrimary round fullWidth onClick={() => router.push(ESRoutes.REGISTER_BY_EMAIL)}>
             {t('common:register.button')}
           </ButtonPrimary>
         </Box>
@@ -83,7 +90,7 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={4} className={classes.linkContainer}>
-          <Link href="/login">
+          <Link href={ESRoutes.LOGIN}>
             <a>{t('common:register.footer_link')}</a>
           </Link>
         </Box>

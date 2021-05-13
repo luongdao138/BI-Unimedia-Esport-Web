@@ -20,17 +20,17 @@ import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required('Required').email(),
-  password: Yup.string().required('Required').min(8),
-})
+import { ESRoutes } from '@constants/route.constants'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta } = useLoginByEmail()
+  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required(t('common:common.error')).email(),
+    password: Yup.string().required(t('common:common.error')).min(8),
+  })
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
       email: '',
@@ -49,7 +49,7 @@ const LoginContainer: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2}>
-          <IconButton className={classes.iconButtonBg}>
+          <IconButton className={classes.iconButtonBg} onClick={handleClick}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
         </Box>
@@ -86,7 +86,7 @@ const LoginContainer: React.FC = () => {
                   labelPrimary={t('common:login.password_label_primary')}
                   type="password"
                   labelSecondary={
-                    <Link href="/forgot-password">
+                    <Link href={ESRoutes.FORGOT_PASSWORD}>
                       <a className={classes.noLink}>
                         <Typography color="textPrimary" gutterBottom={false} variant="body2">
                           {t('common:login.password_label_secondary')}
@@ -111,7 +111,7 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pb={8} className={classes.linkContainer}>
-            <Link href="/register">
+            <Link href={ESRoutes.REGISTER}>
               <a>{t('common:login.register')}</a>
             </Link>
           </Box>

@@ -18,10 +18,10 @@ import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import TabPanel from '@components/TabPanel'
-
 import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import Review from './Review'
+import { ESRoutes } from '@constants/route.constants'
 
 const FINAL_STEP = 4
 
@@ -65,7 +65,7 @@ const UserSettingsContainer: React.FC = () => {
     })
   }
 
-  const navigate = () => router.push('/welcome')
+  const navigate = () => router.push(ESRoutes.HOME)
 
   const handleButtonClick = () => {
     if (step !== FINAL_STEP - 1) setStep(step + 1)
@@ -106,7 +106,7 @@ const UserSettingsContainer: React.FC = () => {
 
   return profile && getUserProfileMeta.loaded ? (
     <>
-      <Container className={classes.container}>
+      <Box className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
             <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
@@ -153,7 +153,7 @@ const UserSettingsContainer: React.FC = () => {
             </Box>
           </Container>
         </Box>
-      </Container>
+      </Box>
       {!!profileUpdateMeta.error && (
         <ESToast open={!!profileUpdateMeta.error} message={t('common:error.user_settings_failed')} resetMeta={resetProfileUpdateMeta} />
       )}
@@ -171,7 +171,6 @@ const ResponsiveTypo = withStyles({
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    maxWidth: 600,
     marginTop: theme.spacing(60 / 8),
   },
   contents: {

@@ -19,23 +19,22 @@ const RegisterProfileContainer: React.FC = () => {
   const classes = useStyles()
   const { registerProfile, meta, backAction } = useProfile()
   const store = useStore()
-
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
-      .required('エラー文言が入ります')
-      .max(50, '長すぎる')
-      .min(2, '2文字以上入力してください。')
-      .test('user_code', 'エラー文言が入ります', function (value) {
+      .required(t('common:common.error'))
+      .max(50, t('common:common.too_long'))
+      .min(2, t('common:common.at_least'))
+      .test('user_code', 'at_least', function (value) {
         return CommonHelper.userCodeValid(value)
       })
-      .test('user_code', 'エラー文言が入ります', function (value) {
+      .test('user_code', 'at_least', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
-      .required('エラー文言が入ります')
-      .max(50, '長すぎる')
-      .min(2, '2文字以上入力してください。')
-      .test('nickname', 'エラー文言が入ります', function (value) {
+      .required(t('common:common.error'))
+      .max(50, t('common:common.too_long'))
+      .min(2, t('common:common.at_least'))
+      .test('nickname', 'at_least', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
   })
@@ -87,7 +86,7 @@ const RegisterProfileContainer: React.FC = () => {
               <ESInput
                 id="user_code"
                 autoFocus
-                labelPrimary="ユーザーID"
+                labelPrimary={t('common:register_profile.user_id')}
                 fullWidth
                 value={values.user_code}
                 onChange={handleChange}
@@ -99,16 +98,16 @@ const RegisterProfileContainer: React.FC = () => {
             <Box>
               <Box display="flex" flexDirection="row" pb={1}>
                 <Icon className={`fa fa-exclamation-triangle ${classes.iconMargin}`} fontSize="small" />
-                <Typography variant="body2">ユーザーIDはあとから変更ができません</Typography>
+                <Typography variant="body2">{t('common:register_profile.hint')}</Typography>
               </Box>
 
-              <Typography variant="body2">半角英数字、”+_-”が使用できます</Typography>
+              <Typography variant="body2">{t('common:register_profile.hint2')}</Typography>
             </Box>
 
             <Box pt={3} pb={1}>
               <ESInput
                 id="nickname"
-                labelPrimary="ニックネーム"
+                labelPrimary={t('common:register_profile.nickname')}
                 fullWidth
                 value={values.nickname}
                 onChange={handleChange}

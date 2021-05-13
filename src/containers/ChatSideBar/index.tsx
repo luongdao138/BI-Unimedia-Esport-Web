@@ -1,11 +1,55 @@
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { IconButton } from '@material-ui/core'
+import RoomListItem from '@components/Chat/RoomListItem'
+import List from '@material-ui/core/List'
+import { ChatDataType } from '@components/Chat/types/chat.types'
 
 interface ChatSideBarProps {
   expand: boolean
   toggleChatBar: (state: boolean) => void
 }
+
+const ChatListExample: ChatDataType[] = [
+  {
+    unseenCount: 0,
+    chatRoomId: '123',
+    lastMsgAt: 1620109342592,
+    roomName: 'Name of the room Long Name Long',
+    lastMsg: 'asdasdsad',
+    roomImg:
+      'https://images-na.ssl-images-amazon.com/images/M/MV5BNTk2OGU4NzktODhhOC00Nzc2LWIyNzYtOWViMjljZGFiNTMxXkEyXkFqcGdeQXVyMTE1NTQwOTk@._V1_UY256_CR12,0,172,256_AL_.jpg',
+    sortKey: '123123',
+    createdAt: 1620794831,
+    groupType: 1,
+    isAdmin: false,
+  },
+  {
+    unseenCount: 100,
+    chatRoomId: '123',
+    lastMsgAt: 1620109342592,
+    roomName: 'sadsadsad',
+    lastMsg: 'asdasdsad',
+    roomImg:
+      'https://images-na.ssl-images-amazon.com/images/M/MV5BNTk2OGU4NzktODhhOC00Nzc2LWIyNzYtOWViMjljZGFiNTMxXkEyXkFqcGdeQXVyMTE1NTQwOTk@._V1_UY256_CR12,0,172,256_AL_.jpg',
+    sortKey: '123123',
+    createdAt: 1620794831,
+    groupType: 1,
+    isAdmin: false,
+  },
+  {
+    unseenCount: 4,
+    chatRoomId: '123',
+    lastMsgAt: 1620109342592,
+    roomName: 'Name of the room',
+    lastMsg: 'asdasdsad',
+    roomImg: 'https://uifaces.co/our-content/donated/DUhuoeI8.jpg',
+    sortKey: '123123',
+    createdAt: 1620794831,
+    groupType: 1,
+    isAdmin: false,
+  },
+]
 
 const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
@@ -16,7 +60,13 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
       </IconButton>
       <Box className={classes.content}>
         <Box className={classes.header}></Box>
-        <Box className={classes.inner}>ChatListHere</Box>
+        <Box className={classes.inner}>
+          <List>
+            {ChatListExample.map((item, index) => (
+              <RoomListItem expand={expand} item={item} key={index} />
+            ))}
+          </List>
+        </Box>
       </Box>
       <div className="back-drop"></div>
     </Box>

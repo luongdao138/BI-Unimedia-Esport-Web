@@ -5,9 +5,6 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation } from 'swiper/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import 'swiper/swiper.min.css'
-import 'swiper/components/pagination/pagination.min.css'
-import 'swiper/components/navigation/navigation.min.css'
 SwiperCore.use([Navigation])
 
 const DEFAULT_SLIDE_WIDTH = 191
@@ -27,10 +24,12 @@ const ESSlide: React.FC<{
   const { title, moreLink, width, ...props } = rest
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize)
+    if (window) {
+      handleLoad()
+    }
   }, [])
 
-  const handleResize = () => {
+  const handleLoad = () => {
     if (window.innerWidth <= 767 && !disableResponsiveWidth) {
       setLocalWidth(DEFAULT_SLIDE_WIDTH)
     } else {

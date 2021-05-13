@@ -1,12 +1,11 @@
 import RegisterProfileContainer from '@containers/RegisterProfile'
-import AuthenticationLayout from '@layouts/AuthenticationLayout'
+import PrivateAuthLayout from '@layouts/PrivateAuthLayout'
+import PageWithLayoutType from '@constants/page'
 
-const SetUpProfilePage: React.FC = () => {
-  return (
-    <AuthenticationLayout>
-      <RegisterProfileContainer />
-    </AuthenticationLayout>
-  )
+const SetUpProfilePage: PageWithLayoutType = () => {
+  return <RegisterProfileContainer />
 }
+
+SetUpProfilePage.Layout = PrivateAuthLayout
 
 export default SetUpProfilePage
