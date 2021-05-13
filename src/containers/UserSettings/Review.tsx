@@ -72,7 +72,7 @@ const Review: React.FC<ReviewProps> = ({ profile, onFixClicked }) => {
       </Stepper>
 
       <Box mt={4}>
-        {basicInfoTypo(t('common:profile.location'), profile ? profile.area.area : '', profile.show_area)}
+        {basicInfoTypo(t('common:profile.location'), profile && profile.area ? profile.area.area : '', profile.show_area)}
         {basicInfoTypo(t('common:profile.gender'), gender ? gender.label : '', profile.show_sex)}
         {basicInfoTypo(t('common:profile.birth_date'), formatDate(profile.birth_date), profile.show_birth_date)}
       </Box>
