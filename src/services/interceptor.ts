@@ -71,10 +71,6 @@ export const authorizationProvider = (store: StoreType): void => {
           // store.dispatch(authActionCreators.logout())
         }
         return Promise.reject(response)
-      } else if (error.response && error.response.status === 400) {
-        return Promise.reject(error.response)
-      } else if (error.response && error.response.status === 422) {
-        return Promise.reject(error.response)
       } else if (error.response && error.response.status === 404 && error.response.data.error === 'disabled') {
         // store.dispatch(errorActionCreators.setDisabled())
       } else if (error.response && error.response.status === 500) {

@@ -13,11 +13,12 @@ import useRegisterByEmail from './useRegisterByEmail'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
+import ESToast from '@components/Toast'
 
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerByEmail, meta, backAction } = useRegisterByEmail()
+  const { registerByEmail, meta, backAction, resetMeta } = useRegisterByEmail()
   const [score, setScore] = useState(0)
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -116,6 +117,7 @@ const RegisterByEmailContainer: React.FC = () => {
         </Box>
       </form>
       {meta.pending && <ESLoader open={meta.pending} />}
+      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.signup_failed')} resetMeta={resetMeta} />}
     </>
   )
 }

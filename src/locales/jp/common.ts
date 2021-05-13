@@ -59,6 +59,7 @@ export default {
     login_failed: 'ログインに失敗しました。',
     code_invalid: '入力されたコードは無効です',
     user_settings_failed: 'User settings failed',
+    signup_failed: '登録に失敗しました。',
   },
   common: {
     required: '必須',
