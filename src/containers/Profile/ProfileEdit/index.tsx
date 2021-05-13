@@ -46,6 +46,7 @@ const ProfileEditContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
+      resetMeta()
       router.push(ESRoutes.PROFILE)
     }
   }, [meta.loaded])
