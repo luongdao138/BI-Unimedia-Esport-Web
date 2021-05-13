@@ -1,9 +1,12 @@
 import { useEffect } from 'react'
 import { Grid, Box, Container, makeStyles } from '@material-ui/core'
 import { useFormik } from 'formik'
-// import { useTranslation } from 'react-i18next'
+import * as Yup from 'yup'
+import { useTranslation } from 'react-i18next'
 import ESSelect from '@components/Select'
 import ESInput from '@components/Input'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useStore } from 'react-redux'
 
 export type NameInfoParams = {
   nickname: string
@@ -15,20 +18,39 @@ interface NameInfoProps {
   profile: any
   nicknameData: any
   onDataChange: (data: any) => void
+  handleError: (error) => void
 }
 
-const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange }) => {
+const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange, handleError }) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
+  const store = useStore()
+  const { t } = useTranslation(['common'])
 
   const { nickname, nickname2, bio } = profile
 
-  const { handleChange, values, touched, errors } = useFormik<NameInfoParams>({
+  const validationSchema = Yup.object().shape({
+    bio: Yup.string()
+      .max(250, t('common:common.too_long'))
+      .min(2, t('common:common.at_least'))
+      .test('bio', '不適切な文字列が含まれています。', function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    nickname: Yup.string()
+      .required(t('common:common.error'))
+      .max(50, t('common:common.too_long'))
+      .min(2, t('common:common.at_least'))
+      .test('nickname', '不適切な文字列が含まれています。', function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+  })
+
+  const { handleChange, values, errors } = useFormik<NameInfoParams>({
     initialValues: {
       nickname: nickname ? nickname : '',
       nickname2: nickname2 ? nickname2 : '',
       bio: bio ? bio : '',
     },
+    validationSchema,
     onSubmit: (_) => null,
   })
 
@@ -39,6 +61,10 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
       bio: values.bio,
     })
   }, [values])
+
+  useEffect(() => {
+    handleError(errors)
+  }, [errors])
 
   const nickname2View = (
     <Box>
@@ -73,8 +99,8 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
             fullWidth
             value={values.nickname}
             onChange={handleChange}
-            helperText={touched.nickname && errors.nickname}
-            error={touched.nickname && !!errors.nickname}
+            helperText={errors.nickname}
+            error={!!errors.nickname}
           />
         </Grid>
       </Grid>
@@ -94,8 +120,8 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
             rows={4}
             value={values.bio}
             onChange={handleChange}
-            helperText={touched.bio && errors.bio}
-            error={touched.bio && !!errors.bio}
+            helperText={errors.bio}
+            error={!!errors.bio}
           />
         </Grid>
       </Grid>

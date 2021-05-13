@@ -27,11 +27,10 @@ const ProfileEditContainer: React.FC = () => {
   const { features, getFeatures } = useSettings()
   const { prefectures, getPrefectures } = useGetPrefectures()
   const { nicknames2, getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
-
   const [nicknameData, setNicknameData] = useState([])
-
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
+  const [hasError, setError] = useState(false)
 
   useEffect(() => {
     if (userProfile) {
@@ -69,6 +68,10 @@ const ProfileEditContainer: React.FC = () => {
     })
   }
 
+  const handleError = (errors) => {
+    setError(!_.isEmpty(errors))
+  }
+
   const handleSubmit = () => {
     profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
   }
@@ -88,7 +91,7 @@ const ProfileEditContainer: React.FC = () => {
             <Typography variant="h3" gutterBottom className={classes.label}>
               ニックネーム
             </Typography>
-            <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} />
+            <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} handleError={handleError} />
             <Typography variant="h3" gutterBottom className={classes.label}>
               タグ
             </Typography>
@@ -112,13 +115,7 @@ const ProfileEditContainer: React.FC = () => {
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary
-              type="submit"
-              round
-              fullWidth
-              //disabled={!buttonActive()}
-              onClick={handleSubmit}
-            >
+            <ButtonPrimary type="submit" round fullWidth disabled={hasError} onClick={handleSubmit}>
               保存する
               {/* {t('common:register_by_email.button')} */}
             </ButtonPrimary>

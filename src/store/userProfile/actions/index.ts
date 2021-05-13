@@ -60,7 +60,7 @@ export const getNicknames = createAsyncThunk(USER_PROFILE_ACTION_TYPE.PROFILE_NI
   }
 })
 
-export const profileEdit = createAsyncThunk<services.CommonResponse, services.ProfileEditParams>(
+export const profileEdit = createAsyncThunk<services.ProfileResponse, services.ProfileEditParams>(
   USER_PROFILE_ACTION_TYPE.PROFILE_EDIT,
   async (param, { rejectWithValue }) => {
     try {

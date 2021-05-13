@@ -138,7 +138,7 @@ export const getNicknames = async (): Promise<NicknamesResponse> => {
   return data
 }
 
-export const profileEdit = async (params: ProfileEditParams): Promise<CommonResponse> => {
-  const { data } = await api.put<CommonResponse>(URI.USER_DETAIL_PROFILE, { params })
+export const profileEdit = async (params: ProfileEditParams): Promise<ProfileResponse> => {
+  const { data } = await api.put<ProfileResponse>(URI.USER_DETAIL_PROFILE, params)
   return data
 }

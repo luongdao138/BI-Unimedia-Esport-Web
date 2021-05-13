@@ -35,4 +35,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
     state.nicknames2 = action.payload.data.attributes.nicknames
   })
+
+  builder.addCase(actions.profileEdit.fulfilled, (state, action) => {
+    state.detail = action.payload
+  })
 })
