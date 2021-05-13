@@ -206,7 +206,7 @@ const Atoms: PageWithLayoutType = () => {
         </ESMenuItem>
       </ESMenu>
       <Box margin={4}>
-        <Grid xs={3}>
+        <Grid item xs={3}>
           <ESCard>
             <ESCardMedia image="https://picsum.photos/id/237/240/120"></ESCardMedia>
             <ESCardContent>
