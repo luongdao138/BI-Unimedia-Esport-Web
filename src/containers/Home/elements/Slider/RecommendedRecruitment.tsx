@@ -24,7 +24,7 @@ type recruitmentAttributesProps = {
   entry_count: number
 }
 
-export const RecommendedRecruitment: React.FC<Props> = ({ data }) => {
+export const RecommendedRecruitment: React.FC<Props> = () => {
   return (
     <ESSlider
       title="おすすめの募集"
