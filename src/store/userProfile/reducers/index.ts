@@ -5,6 +5,7 @@ import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
 
 type StateType = {
   data: ProfileResponse['data']
+  lastSeenUserData: ProfileResponse['data']
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
@@ -12,11 +13,22 @@ type StateType = {
   nicknames2?: Array<Nickname2>
 }
 
-const initialState: StateType = { data: undefined, tournamentHistories: [], activityLogs: [], recommendations: [], nicknames2: [] }
+const initialState: StateType = {
+  data: undefined,
+  lastSeenUserData: undefined,
+  tournamentHistories: [],
+  activityLogs: [],
+  recommendations: [],
+  nicknames2: [],
+}
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getUserProfile.fulfilled, (state, action) => {
     state.data = action.payload.data
+  })
+
+  builder.addCase(actions.getMemberProfile.fulfilled, (state, action) => {
+    state.lastSeenUserData = action.payload.data
   })
 
   builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
