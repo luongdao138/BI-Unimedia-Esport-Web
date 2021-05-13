@@ -14,6 +14,5 @@ export const getUserProfile = createAsyncThunk(
       }
       return rejectWithValue(error.response.data)
     }
-    return null
   }
 )
