@@ -42,8 +42,8 @@ const ProfileContainer: React.FC = () => {
           <Typography variant="h2">{userProfile.data.attributes.nickname}</Typography>
           <Typography>@{userProfile.data.attributes.user_code}</Typography>
           <Box display="flex">
-            <ESFollowers user_id={null} />
-            <ESFollowing user_id={null} />
+            <ESFollowers user_code={null} />
+            <ESFollowing user_code={null} />
           </Box>
         </Grid>
         <Box margin={3}>

@@ -9,9 +9,10 @@ import DialogContent from '@material-ui/core/DialogContent'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import _ from 'lodash'
 
 export interface ESFollowersProps {
-  user_id?: number
+  user_code?: number
 }
 
 const useStyles = makeStyles(() => ({
@@ -29,13 +30,13 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
+const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
   const { t } = useTranslation(['common'])
-  const { currentUser, followers, fetchFollowers, page } = useFollowers()
+  const { followers, fetchFollowers, page } = useFollowers()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -46,7 +47,11 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
   }
 
   useEffect(() => {
-    fetchFollowers({ page: 1, user_id: user_id == null ? currentUser.id : user_id })
+    const params = { page: 1 }
+    if (user_code != null) {
+      _.merge(params, { user_code: user_code })
+    }
+    fetchFollowers(params)
   }, [])
 
   const fetchMoreData = () => {
@@ -54,7 +59,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
       setHasMore(false)
       return
     }
-    fetchFollowers({ page: page.current_page + 1, user_id: user_id })
+    fetchFollowers({ page: page.current_page + 1, user_code: user_code })
   }
 
   return (
