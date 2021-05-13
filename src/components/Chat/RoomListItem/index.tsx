@@ -1,16 +1,135 @@
 import { makeStyles } from '@material-ui/core/styles'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemText from '@material-ui/core/ListItemText'
+import Avatar from '@components/Avatar'
+import Typography from '@material-ui/core/Typography'
+import { ChatDataType } from '@components/Chat/types/chat.types'
+import _ from 'lodash'
+import Box from '@material-ui/core/Box'
+import { Colors } from '@theme/colors'
+import useSmartTime from '@utils/hooks/useSmartTime'
+import Badge from '@material-ui/core/Badge'
+import 'moment/locale/ja'
 
 interface RoomListItemProps {
   expand?: boolean
+  item: ChatDataType
 }
 
-const RoomListItem: React.FC<RoomListItemProps> = ({ expand }) => {
-  const classes = useStyles()
-  return <div className={classes.root}>{expand}</div>
+const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item }) => {
+  const active = item.unseenCount == 0 ? false : true
+  const date = _.get(item, 'lastMsgAt', +item.createdAt)
+  const roomImg = _.get(item, 'roomImg', '')
+  const name = _.get(item, 'roomName', '')
+  const lastMsg = _.get(item, 'lastMsg', '')
+  const unseenCount = _.get(item, 'unseenCount', 0)
+  const classes = useStyles({ active, expand })
+  const time = useSmartTime(date)
+
+  return (
+    <ListItem className={classes.root}>
+      <ListItemAvatar>
+        <Badge
+          className={classes.badgeLeft}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          color="primary"
+          overlap="circle"
+          badgeContent={unseenCount}
+          showZero={false}
+        >
+          <Avatar src={roomImg} alt="M" />
+        </Badge>
+      </ListItemAvatar>
+
+      <ListItemText className={classes.content}>
+        <Typography noWrap={true} className={classes.name} variant="body2">
+          {name}
+        </Typography>
+        <Typography noWrap={true} className={classes.body} variant="body1">
+          {lastMsg}
+        </Typography>
+      </ListItemText>
+
+      <ListItemSecondaryAction className={classes.end}>
+        <Badge className={classes.badgeRight} color="primary" overlap="circle" badgeContent={unseenCount} showZero={false}>
+          <Box className={classes.countBox}></Box>
+        </Badge>
+        <Typography variant="body2" className={classes.time}>
+          {time}
+        </Typography>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
 }
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'block',
+    alignItems: 'flex-start',
+    cursor: 'pointer',
+  },
+
+  name: (props: { active?: boolean; expand?: boolean }) => {
+    return {
+      color: props.active ? Colors.white : Colors.text[200],
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }
+  },
+
+  body: (props: { active?: boolean; expand?: boolean }) => {
+    return {
+      color: props.active ? Colors.white : Colors.text[200],
+      fontWeight: props.active ? 600 : 500,
+    }
+  },
+
+  content: (props: { active?: boolean; expand?: boolean }) => {
+    return {
+      display: props.expand ? 'inline-block' : 'none',
+      marginTop: 0,
+      width: '100%',
+    }
+  },
+
+  end: (props: { active?: boolean; expand?: boolean }) => {
+    return {
+      display: props.expand ? 'flex' : 'none',
+      top: 0,
+      bottom: 0,
+      flexDirection: 'column',
+      transform: 'none',
+      paddingTop: 10,
+      paddingBottom: 10,
+    }
+  },
+  countBox: {
+    marginBottom: 10,
+    width: 25,
+    height: 25,
+  },
+  time: {
+    fontSize: 11,
+    alignSelf: 'flex-end',
+  },
+  badgeRight: {
+    '& .MuiBadge-badge': {
+      top: 0,
+      right: 0,
+      transform: 'none',
+    },
+    '& .MuiBadge-invisible': {
+      opacity: 0,
+      visiblity: 'hidden',
+    },
+  },
+  badgeLeft: (props: { active?: boolean; expand?: boolean }) => {
+    return {
+      '& .MuiBadge-badge': {
+        opacity: props.expand ? 0 : 1,
+      },
+    }
   },
 }))
 
