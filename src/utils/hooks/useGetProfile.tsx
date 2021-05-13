@@ -9,7 +9,6 @@ const useGetProfile = () => {
   const { selectors } = userProfileStore
   const userProfile = useAppSelector(selectors.getUserProfile)
   const getUserProfileMeta = useAppSelector(getUserProfileMetaSelector)
-
   return { userProfile, getUserProfileMeta }
 }
 

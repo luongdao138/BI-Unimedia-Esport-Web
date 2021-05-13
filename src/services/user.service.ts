@@ -45,45 +45,45 @@ export type Meta = {
   total_pages: number
 }
 
-type UserProfile = {
+export type UserProfile = {
   id: string
   type: 'user'
   attributes: {
     email: string
     nickname: string
     user_code: string
-    bio: string | null
-    birth_date: string
-    sex: number
-    instagram_link: string | null
-    facebook_link: string | null
-    twitter_link: string | null
-    twitch_link: string
+    bio?: string | null
+    birth_date?: string
+    sex?: number
+    instagram_link?: string | null
+    facebook_link?: string | null
+    twitter_link?: string | null
+    twitch_link?: string
     show_sex: boolean
     show_area: boolean
     show_birth_date: boolean
-    nickname2: string
-    icon: string | null
-    template_id: number | null
+    nickname2?: string
+    icon?: string | null
+    template_id?: number | null
     is_following: boolean
     is_followed: boolean
     is_blocked: boolean
     blocked_by_user: boolean
-    followers: number
-    following: number
-    avatar_url: string | null
-    cover_url: string | null
-    area: null | {
-      id: number
-      area: string
-      status: number
-      created_at: string
-      updated_at: string
+    followers?: number
+    following?: number
+    avatar_url?: string | null
+    cover_url?: string | null
+    area?: null | {
+      id?: number
+      area?: string
+      status?: number
+      created_at?: string
+      updated_at?: string
     }
-    features: Feature[]
-    game_titles: GameTitle['attributes'][]
-    template: null
-    security_settings: {
+    features?: Feature[]
+    game_titles?: GameTitle['attributes'][]
+    template?: null
+    security_settings?: {
       show_tournament_history: boolean
       show_activity_logs: boolean
       show_about: boolean
@@ -118,9 +118,19 @@ export type ProfileEditParams = {
   discord_link: string
 }
 
-export const getUserProfile = async (): Promise<ProfileResponse> => {
-  const { data } = await api.get<ProfileResponse>(URI.USER_DETAIL_PROFILE)
-  return data
+export type ProfileUpdateParams = {
+  sex?: number
+  show_sex?: boolean
+  birth_date?: string
+  show_birth_date?: boolean
+  area_id?: number
+  show_area?: boolean
+  game_titles: number[]
+  features: number[]
+}
+
+export type ProfileUpdateResponse = {
+  data: UserProfile
 }
 
 export type RecommendationsResponse = {
@@ -130,6 +140,16 @@ export type RecommendationsResponse = {
 
 type RecommendationsArray = {
   attributes: any
+}
+
+export const getUserProfile = async (): Promise<ProfileResponse> => {
+  const { data } = await api.get<ProfileResponse>(URI.USER_DETAIL_PROFILE)
+  return data
+}
+
+export const profileUpdate = async (params: ProfileUpdateParams): Promise<ProfileUpdateResponse> => {
+  const { data } = await api.put<ProfileUpdateResponse>(URI.PROFILE_UPDATE, params)
+  return data
 }
 
 export const tournamentHistorySearch = async (params: HistorySearchParams): Promise<HistorySearchResponse> => {

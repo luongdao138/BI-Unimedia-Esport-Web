@@ -23,6 +23,16 @@ const useStyles = makeStyles((theme) => ({
   listItemSecondary: {
     right: theme.spacing(4.5),
   },
+  [theme.breakpoints.down('sm')]: {
+    listItem: {
+      paddingLeft: theme.spacing(2),
+      paddingTop: theme.spacing(0.5),
+      paddingBottom: theme.spacing(0.5),
+    },
+    listItemSecondary: {
+      right: theme.spacing(2),
+    },
+  },
 }))
 
 const GameSearchByGenre: React.FC<Props> = ({ genres, children, clearGames }) => {

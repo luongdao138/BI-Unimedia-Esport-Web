@@ -8,16 +8,17 @@ type Props = {
   helperText?: string
   label?: string
   required?: boolean
+  size?: 'big' | 'small'
 }
 
-const ESSelect: React.FC<SelectProps & Props> = ({ helperText, label, required = false, ...rest }) => {
-  const classes = useStyles()
+const ESSelect: React.FC<SelectProps & Props> = ({ size = 'big', helperText, label, required = false, ...rest }) => {
+  const classes = useStyles({ isBig: size === 'big' })
   const { t } = useTranslation(['common'])
 
   return (
     <FormControl fullWidth={rest.fullWidth} className={classes.formPadding}>
       {label && (
-        <label htmlFor={label} className={classes.labelMargin}>
+        <label htmlFor={rest.id} className={classes.labelMargin}>
           {label}
           {required && (
             <Typography component="span" className={classes.required}>
@@ -27,7 +28,6 @@ const ESSelect: React.FC<SelectProps & Props> = ({ helperText, label, required =
         </label>
       )}
       <Select
-        id={label}
         variant="outlined"
         margin="dense"
         native
@@ -60,9 +60,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   formPadding: {
     paddingTop: theme.spacing(1),
   },
-  labelMargin: {
-    marginBottom: '0.35em',
-  },
+  labelMargin: (props: { isBig?: boolean }) => ({
+    fontWeight: props.isBig ? 'bold' : 'normal',
+    fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
+    color: theme.palette.text.primary,
+    paddingBottom: theme.spacing(1),
+  }),
   required: {
     backgroundColor: Colors.primary,
     borderRadius: 2,

@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles } from '@material-ui/core'
+import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles, createMuiTheme, StepLabel } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
-import StepButton from '@components/StepButton'
 import TagSelect from '@components/TagSelect'
 import ESButton from '@components/Button'
 import ESToast from '@components/Toast'
@@ -22,6 +21,7 @@ import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import Review from './Review'
 import { ESRoutes } from '@constants/route.constants'
+import { UserProfile } from '@services/user.service'
 
 const FINAL_STEP = 4
 
@@ -34,13 +34,13 @@ const UserSettingsContainer: React.FC = () => {
   const { features, getFeatures } = useSettings()
   const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const [step, setStep] = useState(0)
-  const [profile, setProfile] = useState(null)
+  const [profile, setProfile] = useState<(UserProfile['attributes'] & { area_id?: number }) | null>(null)
   const [isReview, setReview] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   useEffect(() => {
     if (userProfile) {
-      const profileData = userProfile.data.attributes
+      const profileData = userProfile.attributes
       setProfile({ ...profileData, area_id: profileData.area ? profileData.area.id : -1 })
     }
   }, [userProfile])
@@ -72,14 +72,7 @@ const UserSettingsContainer: React.FC = () => {
 
     const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
-    let newParams: {
-      sex: any
-      show_sex: boolean
-      birth_date: any
-      show_birth_date: boolean
-      area_id?: any
-      show_area: boolean
-    } = { ...data }
+    let newParams = { ...data }
 
     if (newParams.area_id === -1) {
       newParams = _.omit(newParams, 'area_id')
@@ -122,7 +115,7 @@ const UserSettingsContainer: React.FC = () => {
               <Stepper activeStep={step} style={{ padding: 0 }}>
                 {stepsTitles.map((label, idx) => (
                   <Step key={idx}>
-                    <StepButton onClick={() => setStep(idx)}>{label}</StepButton>
+                    <StepLabel>{label}</StepLabel>
                   </Step>
                 ))}
               </Stepper>
@@ -163,18 +156,23 @@ const UserSettingsContainer: React.FC = () => {
   )
 }
 
+const theme = createMuiTheme()
+
 const ResponsiveTypo = withStyles({
   root: {
-    fontSize: 30,
+    fontSize: '1.5rem',
+    [theme.breakpoints.up('sm')]: {
+      fontSize: '1.875rem', // 30px
+    },
   },
 })(Typography)
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    marginTop: theme.spacing(60 / 8),
+    marginTop: theme.spacing(7),
   },
   contents: {
-    minHeight: 500,
+    minHeight: theme.spacing(70), // 560px
     marginTop: theme.spacing(8),
   },
   stickyFooter: {
@@ -217,11 +215,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
-    },
-  },
-  ['@media (max-width: 330px)']: {
-    nextBtn: {
-      minWidth: theme.spacing(27.5),
     },
   },
   captionActive: {
