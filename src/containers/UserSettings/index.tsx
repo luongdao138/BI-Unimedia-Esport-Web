@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles, createMuiTheme } from '@material-ui/core'
+import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles, createMuiTheme, StepLabel } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
-import StepButton from '@components/StepButton'
 import TagSelect from '@components/TagSelect'
 import ESButton from '@components/Button'
 import ESToast from '@components/Toast'
@@ -122,7 +121,7 @@ const UserSettingsContainer: React.FC = () => {
               <Stepper activeStep={step} style={{ padding: 0 }}>
                 {stepsTitles.map((label, idx) => (
                   <Step key={idx}>
-                    <StepButton onClick={() => setStep(idx)}>{label}</StepButton>
+                    <StepLabel>{label}</StepLabel>
                   </Step>
                 ))}
               </Stepper>

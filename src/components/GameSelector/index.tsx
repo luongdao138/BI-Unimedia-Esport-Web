@@ -16,6 +16,7 @@ import useGameTitles from './useGameTitles'
 import { GameTitle } from '@services/game.service'
 import _ from 'lodash'
 import SelectedGames from './SelectedGames'
+import { Box } from '@material-ui/core'
 
 type GameTitleItem = GameTitle['attributes']
 export type GameSelectorProps = { values: GameTitleItem[]; onChange: (games: GameTitleItem[]) => void }
@@ -33,14 +34,14 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   }
   const handleAdd = (game: GameTitleItem) => {
     if (!_.some(props.values, game)) {
-      props.onChange([...props.values, game])
+      props.onChange([game, ...props.values])
     }
   }
   const handleRemove = (game: GameTitleItem) => {
     props.onChange(_.differenceBy(props.values, [game], 'id'))
   }
   return (
-    <>
+    <Box mb={4}>
       <Tabs value={tab} onChange={handleChangeTab} className={classes.tab}>
         <Tab label={t('common:profile.favorite_game.title')} value={0} />
         <Tab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
@@ -60,7 +61,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
         <AddGame genres={genres} />
       </TabPanel>
       <SelectedGames games={props.values} handleRemove={handleRemove} />
-    </>
+    </Box>
   )
 }
 
