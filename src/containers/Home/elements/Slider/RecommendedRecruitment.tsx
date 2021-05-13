@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Typography, Icon } from '@material-ui/core'
 import ESSlider from '@components/Slider'
 import ESCard from '@components/Card'
@@ -23,7 +24,6 @@ type recruitmentAttributesProps = {
   entry_count: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const RecommendedRecruitment: React.FC<Props> = ({ data }) => {
   return (
     <ESSlider
