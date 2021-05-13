@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 const validationSchema = Yup.object().shape({
   display_name: Yup.string().required(),
-  game_genre_id: Yup.number().test('password-validation', 'エラー文言が入ります', (value) => {
+  game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
     return value !== -1
   }),
 })
@@ -52,7 +52,7 @@ const AddGame: React.FC<Props> = ({ genres }) => {
 
   return (
     <Box pt={4} px={5}>
-      <Toast open={open} message="ゲームを新しく追加しました" onClose={() => setOpen(false)} />
+      <Toast open={open} message={t('profile.favorite_game.add_success')} onClose={() => setOpen(false)} />
       <form onSubmit={formik.handleSubmit}>
         <Select
           name="game_genre_id"
@@ -79,6 +79,7 @@ const AddGame: React.FC<Props> = ({ genres }) => {
           onChange={formik.handleChange}
           fullWidth
           required
+          size="small"
           error={!!formik.errors.display_name}
           labelPrimary={t('profile.favorite_game.title_label')}
         />

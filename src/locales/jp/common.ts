@@ -124,6 +124,7 @@ export default {
       create_new: '新しく作る',
       genre: 'ジャンル：',
       genre_label: 'ゲームジャンル',
+      add_success: 'ゲームを新しく追加しました',
     },
     edit: '編集',
     edit_profile: 'プロフィールを編集する',
