@@ -4,4 +4,5 @@ export enum USER_PROFILE_ACTION_TYPE {
   PROFILE_ACTIVITY_LOG = 'profile/activityLog',
   PROFILE_NICKNAMES = 'profile/nicknames2',
   PROFILE_EDIT = 'profile/edit',
+  RECOMMENDATIONS = 'user/recommendations',
 }

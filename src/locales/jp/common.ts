@@ -197,4 +197,7 @@ export default {
   },
   confirmation_review: '入力情報の確認',
   fix: '修正する',
+  chat: {
+    title: 'メッセージ',
+  },
 }

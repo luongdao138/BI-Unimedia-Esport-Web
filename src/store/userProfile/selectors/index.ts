@@ -10,3 +10,4 @@ export const getTourHistoriesMeta = createSelector(getRoot, (state) => state.tou
 export const getActivityLogs = createSelector(getRoot, (state) => state.activityLogs)
 export const getNicknames2 = createSelector(getRoot, (state) => state.nicknames2)
 // export const getCommunityList = createSelector(getRootCommunity, (state) => state.my_community_list)
+export const getRecommendations = createSelector(getRoot, (state) => state.recommendations)

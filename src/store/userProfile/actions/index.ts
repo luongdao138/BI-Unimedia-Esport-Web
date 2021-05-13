@@ -14,7 +14,6 @@ export const getUserProfile = createAsyncThunk(
       }
       return rejectWithValue(error.response.data)
     }
-    return null
   }
 )
 
@@ -65,6 +64,21 @@ export const profileEdit = createAsyncThunk<services.ProfileResponse, services.P
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.profileEdit(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getRecommendations = createAsyncThunk<services.RecommendationsResponse>(
+  USER_PROFILE_ACTION_TYPE.RECOMMENDATIONS,
+  async (_params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendations()
       return res
     } catch (error) {
       if (!error.response) {

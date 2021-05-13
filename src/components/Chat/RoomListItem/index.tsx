@@ -16,9 +16,11 @@ import 'moment/locale/ja'
 interface RoomListItemProps {
   expand?: boolean
   item: ChatDataType
+  selected?: boolean
+  onClick?: (id: string) => void
 }
 
-const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item }) => {
+const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onClick }) => {
   const active = item.unseenCount == 0 ? false : true
   const date = _.get(item, 'lastMsgAt', +item.createdAt)
   const roomImg = _.get(item, 'roomImg', '')
@@ -27,9 +29,17 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item }) => {
   const unseenCount = _.get(item, 'unseenCount', 0)
   const classes = useStyles({ active, expand })
   const time = useSmartTime(date)
+  const chatRoomId = _.get(item, 'chatRoomId', null)
+
+  const clickHandler = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (chatRoomId && onClick) {
+      onClick(chatRoomId)
+    }
+  }
 
   return (
-    <ListItem className={classes.root}>
+    <ListItem className={classes.root} selected={selected} onClick={clickHandler}>
       <ListItemAvatar>
         <Badge
           className={classes.badgeLeft}
@@ -133,6 +143,8 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-RoomListItem.defaultProps = {}
+RoomListItem.defaultProps = {
+  selected: false,
+}
 
 export default RoomListItem
