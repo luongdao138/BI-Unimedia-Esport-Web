@@ -85,7 +85,7 @@
     "jest": "25.2.4",
     "jest-svg-transformer": "1.0.0",
     "jest-watch-typeahead": "0.6.1",
-    "lint-staged": "github:fholzer/lint-staged#cygwin-fix",
+    "lint-staged": "10.1.0",
     "nodemon": "2.0.2",
     "prettier": "2.0.2",
     "stylelint": "13.2.1",
