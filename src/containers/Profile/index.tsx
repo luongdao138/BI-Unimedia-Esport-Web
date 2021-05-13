@@ -11,8 +11,7 @@ import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
 import ProfileMainContainer from '@containers/Profile/ProfileMain'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { useAppSelector } from '@store/hooks'
-import userProfileStore from '@store/userProfile'
+import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 0,
     width: '100%',
-    height: '100%',
+    height: 256,
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
@@ -54,35 +53,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ProfileContainer: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { selectors } = userProfileStore
   const [tab, setTab] = useState(0)
-  const userProfile = useAppSelector(selectors.getUserProfile)
+  const { userProfile } = useUserData()
 
   if (userProfile === null || userProfile === undefined) return null
 
   return (
     <>
-      <Grid xs={12} direction="column">
-        <Grid xs={12} className={classes.headerContainer}>
+      <Grid container direction="column">
+        <Grid item xs={12} className={classes.headerContainer}>
           <ProfileCover src={userProfile.data.attributes.cover_url} />
-          <Grid
-            xs={12}
-            container
-            direction="column"
-            justify="space-between"
-            alignItems="flex-start"
-            className={classes.headerItemsContainer}
-          >
+          <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={userProfile.data.attributes.avatar_url} editable />
+            <ProfileAvatar src={userProfile ? userProfile.data.attributes.avatar_url : '/images/avatar.png'} editable />
             <ESButton variant="outlined" round className={classes.menu}>
               {t('common:profile.edit_profile')}
             </ESButton>
           </Grid>
         </Grid>
-        <Grid xs={12} className={classes.headerContainerSecond}>
+        <Grid item xs={12} className={classes.headerContainerSecond}>
           <Typography variant="h2">{userProfile.data.attributes.nickname}</Typography>
           <Typography>@{userProfile.data.attributes.user_code}</Typography>
           <Box display="flex">
