@@ -7,7 +7,7 @@ import StepButton from '@components/StepButton'
 import TagSelect from '@components/TagSelect'
 import ESButton from '@components/Button'
 import ESToast from '@components/Toast'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
 import BasicInfo from '@components/BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
 import useGetPrefectures from './useGetPrefectures'
@@ -36,7 +36,6 @@ const UserSettingsContainer: React.FC = () => {
   const [step, setStep] = useState(0)
   const [profile, setProfile] = useState(null)
   const [isReview, setReview] = useState(false)
-  const [loader, showLoader] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   useEffect(() => {
@@ -94,7 +93,6 @@ const UserSettingsContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    if (isReview) showLoader(profileUpdateMeta.pending)
     if (profileUpdateMeta.loaded && step === FINAL_STEP - 1) setReview(true)
     if (profileUpdateMeta.loaded && isReview) navigate()
   }, [profileUpdateMeta])
@@ -146,21 +144,13 @@ const UserSettingsContainer: React.FC = () => {
 
         <Box className={classes.stickyFooter}>
           <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
-            {loader ? (
-              <Grid item xs={12}>
-                <Box my={4} display="flex" justifyContent="center" alignItems="center">
-                  <ESLoader />
-                </Box>
-              </Grid>
-            ) : (
-              <Box className={classes.nextBtnHolder}>
-                <Box className={classes.nextBtn}>
-                  <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
-                    {step === FINAL_STEP - 1 ? t('common:done') : t('common:next')}
-                  </ButtonPrimary>
-                </Box>
+            <Box className={classes.nextBtnHolder}>
+              <Box className={classes.nextBtn}>
+                <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
+                  {step === FINAL_STEP - 1 ? t('common:done') : t('common:next')}
+                </ButtonPrimary>
               </Box>
-            )}
+            </Box>
           </Container>
         </Box>
       </Container>
@@ -169,7 +159,7 @@ const UserSettingsContainer: React.FC = () => {
       )}
     </>
   ) : (
-    <ESLoader />
+    <ESLoader open={getUserProfileMeta.pending} />
   )
 }
 
@@ -185,6 +175,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(60 / 8),
   },
   contents: {
+    minHeight: 500,
     marginTop: theme.spacing(8),
   },
   stickyFooter: {
@@ -193,7 +184,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: 0,
     width: '100%',
     background: Colors.black,
-    borderTop: `1px solid ${theme.palette.common.white}15`,
+    borderTop: `1px solid #ffffff30`,
   },
   stepperHolder: {
     paddingRight: theme.spacing(12),

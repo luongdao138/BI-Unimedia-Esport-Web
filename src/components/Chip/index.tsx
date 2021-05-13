@@ -11,6 +11,14 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.primary,
     backgroundColor: Colors.grey['200'],
   },
+  colorPrimary: {
+    backgroundColor: Colors.primary,
+  },
+  clickable: {
+    '&:focus': {
+      backgroundColor: Colors.grey['200'],
+    },
+  },
   clickableColorPrimary: {
     color: theme.palette.common.white,
     '&:hover': {
@@ -18,10 +26,13 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:focus': {
       color: theme.palette.common.white,
+      backgroundColor: Colors.primary,
     },
   },
   deleteIcon: {
     color: theme.palette.common.white,
+    width: 18,
+    height: 18,
   },
 }))
 

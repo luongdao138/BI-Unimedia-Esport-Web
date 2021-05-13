@@ -82,7 +82,7 @@ const Review: React.FC<ReviewProps> = ({ profile, onFixClicked }) => {
       <Stepper activeStep={STEP2}>
         <></>
         <Step>
-          <StepButton onClick={() => onFixClicked(STEP1)}>{t('common:profile.tag')}</StepButton>
+          <StepButton onClick={() => onFixClicked(STEP2)}>{t('common:profile.tag')}</StepButton>
         </Step>
       </Stepper>
 
@@ -100,7 +100,7 @@ const Review: React.FC<ReviewProps> = ({ profile, onFixClicked }) => {
         <></>
         <></>
         <Step>
-          <StepButton onClick={() => onFixClicked(STEP1)}>{t('common:profile.favorite_game.title')}</StepButton>
+          <StepButton onClick={() => onFixClicked(STEP3)}>{t('common:profile.favorite_game.title')}</StepButton>
         </Step>
       </Stepper>
 

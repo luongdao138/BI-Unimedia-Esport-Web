@@ -33,7 +33,7 @@ const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange
           className={classes.chipSpacing}
           label={feature.attributes.feature}
           onClick={() => handleSelect(feature)}
-          color={checkIsSelected(parseInt(feature.id)) ? 'primary' : undefined}
+          color={checkIsSelected(parseInt(feature.id)) ? 'primary' : 'default'}
         />
       ))}
     </Box>
