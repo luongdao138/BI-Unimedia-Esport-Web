@@ -9,6 +9,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      fontSize: 18,
       margin: 0,
       padding: theme.spacing(2),
       left: theme.spacing(2),
@@ -18,6 +19,10 @@ const styles = (theme: Theme) =>
       left: theme.spacing(1),
       top: theme.spacing(1),
       color: theme.palette.grey[500],
+    },
+    dialogTitle: {
+      color: 'white',
+      fontSize: 18,
     },
   })
 
@@ -49,7 +54,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
           <IconButton aria-label="close" onClick={onClose}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
-          <span style={{ color: 'white' }}>{children}</span>
+          <span className={classes.dialogTitle}>{children}</span>
         </>
       ) : null}
     </MuiDialogTitle>
