@@ -27,7 +27,7 @@ export type Meta = {
   total_pages: number
 }
 
-type UserProfile = {
+export type UserProfile = {
   id: string
   type: 'user'
   attributes: {
@@ -83,12 +83,12 @@ export type ProfileResponse = {
 }
 
 export type ProfileUpdateParams = {
-  sex: number
-  show_sex: boolean
-  birth_date: string
-  show_birth_date: boolean
+  sex?: number
+  show_sex?: boolean
+  birth_date?: string
+  show_birth_date?: boolean
   area_id?: number
-  show_area: boolean
+  show_area?: boolean
   game_titles: number[]
   features: number[]
 }

@@ -14,6 +14,7 @@ import HeaderTags from '../Partials/headerTags'
 import Iconic from '../Partials/iconic'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
+import { UserProfile } from '@services/user.service'
 
 const StyledAvatarGroup = withStyles({
   avatar: {
@@ -25,27 +26,26 @@ const StyledAvatarGroup = withStyles({
 })(AvatarGroup)
 
 interface Props {
-  userProfile: { data: { attributes: any } }
+  userProfile: UserProfile
 }
 
 const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-
   const gender =
-    userProfile.data.attributes.sex === GENDER.FEMALE
+    userProfile.attributes.sex === GENDER.FEMALE
       ? t('common:common.female')
-      : userProfile.data.attributes.sex === GENDER.MALE
+      : userProfile.attributes.sex === GENDER.MALE
       ? t('common:common.male')
       : t('common:common.other')
 
   return (
     <>
       <Grid xs={12} className={classes.headerContainerSecond}>
-        <Typography className={classes.marginTop20}>{userProfile.data.attributes.bio}</Typography>
-        <HeaderTags items={userProfile.data.attributes.features} />
+        <Typography className={classes.marginTop20}>{userProfile.attributes.bio}</Typography>
+        <HeaderTags items={userProfile.attributes.features} />
         <Box display="flex">
-          <Iconic text={userProfile.data.attributes.area.area} icon="fas fa-map-marker-alt" />
+          <Iconic text={userProfile.attributes.area.area} icon="fas fa-map-marker-alt" />
           <Iconic text={gender} icon="fas fa-user" />
           <Iconic text="1990年01月11日" icon="fa fa-birthday-cake" />
         </Box>
@@ -69,8 +69,8 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
           </Box>
         </Box>
         <Box>
-          {userProfile.data.attributes.game_titles.length > 0
-            ? userProfile.data.attributes.game_titles.map((g: any, i: number) => {
+          {userProfile.attributes.game_titles.length > 0
+            ? userProfile.attributes.game_titles.map((g: any, i: number) => {
                 return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
               })
             : null}

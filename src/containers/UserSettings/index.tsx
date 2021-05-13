@@ -21,6 +21,7 @@ import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import Review from './Review'
 import { ESRoutes } from '@constants/route.constants'
+import { UserProfile } from '@services/user.service'
 
 const FINAL_STEP = 4
 
@@ -33,13 +34,13 @@ const UserSettingsContainer: React.FC = () => {
   const { features, getFeatures } = useSettings()
   const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const [step, setStep] = useState(0)
-  const [profile, setProfile] = useState(null)
+  const [profile, setProfile] = useState<(UserProfile['attributes'] & { area_id?: number }) | null>(null)
   const [isReview, setReview] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   useEffect(() => {
     if (userProfile) {
-      const profileData = userProfile.data.attributes
+      const profileData = userProfile.attributes
       setProfile({ ...profileData, area_id: profileData.area ? profileData.area.id : -1 })
     }
   }, [userProfile])
@@ -71,14 +72,7 @@ const UserSettingsContainer: React.FC = () => {
 
     const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
-    let newParams: {
-      sex: any
-      show_sex: boolean
-      birth_date: any
-      show_birth_date: boolean
-      area_id?: any
-      show_area: boolean
-    } = { ...data }
+    let newParams = { ...data }
 
     if (newParams.area_id === -1) {
       newParams = _.omit(newParams, 'area_id')

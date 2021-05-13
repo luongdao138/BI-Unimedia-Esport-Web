@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 8,
   },
 }))
-
 const ProfileContainer: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -64,7 +63,7 @@ const ProfileContainer: React.FC = () => {
     <>
       <Grid xs={12} direction="column">
         <Grid xs={12} className={classes.headerContainer}>
-          <ProfileCover src={userProfile.data.attributes.cover_url} />
+          <ProfileCover src={userProfile.attributes.cover_url} />
           <Grid
             xs={12}
             container
@@ -76,15 +75,15 @@ const ProfileContainer: React.FC = () => {
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={userProfile.data.attributes.avatar_url} editable />
+            <ProfileAvatar src={userProfile.attributes.avatar_url} editable />
             <ESButton variant="outlined" round className={classes.menu}>
               {t('common:profile.edit_profile')}
             </ESButton>
           </Grid>
         </Grid>
         <Grid xs={12} className={classes.headerContainerSecond}>
-          <Typography variant="h2">{userProfile.data.attributes.nickname}</Typography>
-          <Typography>@{userProfile.data.attributes.user_code}</Typography>
+          <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
+          <Typography>@{userProfile.attributes.user_code}</Typography>
           <Box display="flex">
             <ESFollowers user_id={null} />
             <ESFollowing user_id={null} />
