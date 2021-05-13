@@ -12,4 +12,5 @@ export const ESRoutes = {
   PROFILE: '/profile',
   TOURNAMENTS: '/tournaments',
   SETTINGS: '/settings',
+  USER_SETTINGS: '/user-settings',
 }

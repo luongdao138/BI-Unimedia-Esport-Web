@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiStepLabel-label': {
       fontSize: 14,
     },
+    paddingBottom: theme.spacing(4),
   },
 }))
 

@@ -4,6 +4,7 @@ import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
 import ChatSideBar from '@containers/ChatSideBar'
+import useProfileValid from '@utils/hooks/useProfileValid'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -13,6 +14,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [expand, setExpand] = useState<boolean>(false)
+  useProfileValid()
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)

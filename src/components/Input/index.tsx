@@ -9,17 +9,25 @@ export type InputProps = {
   labelPrimary?: string
   labelSecondary?: ReactElement
   required?: boolean
+  size?: 'big' | 'small'
 }
 
-const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelPrimary, labelSecondary, required = false, ...rest }) => {
-  const classes = useStyles()
+const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
+  size = 'big',
+  helperText,
+  labelPrimary,
+  labelSecondary,
+  required = false,
+  ...rest
+}) => {
+  const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big' })
   const { t } = useTranslation(['common'])
 
   return (
     <FormControl fullWidth={rest.fullWidth}>
       {(labelPrimary || labelSecondary) && (
         <Box display="flex" justifyContent="space-between" alignItems="center" className={classes.bottomPadding}>
-          <label htmlFor={labelPrimary} className={classes.labelMargin}>
+          <label htmlFor={rest.id} className={classes.labelMargin}>
             {labelPrimary}
             {required && (
               <Typography component="span" className={classes.required}>
@@ -30,7 +38,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({ helperText, labelP
           {labelSecondary}
         </Box>
       )}
-      <OutlinedInput id={labelPrimary} classes={{ root: classes.root }} margin="dense" {...rest} />
+      <OutlinedInput classes={{ root: classes.root }} margin="dense" {...rest} />
       {helperText && <FormHelperText error>{helperText}</FormHelperText>}
     </FormControl>
   )
@@ -59,12 +67,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   bottomPadding: {
     paddingBottom: theme.spacing(1),
   },
-  labelMargin: {
-    fontWeight: 'bold',
-    fontSize: theme.typography.h3.fontSize,
+  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
+    fontWeight: props.isBig ? 'bold' : 'normal',
+    fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
     color: theme.palette.text.primary,
-    width: '50%',
-  },
+    width: props.hasSecondary ? '50%' : '100%',
+  }),
   required: {
     backgroundColor: Colors.primary,
     borderRadius: 2,

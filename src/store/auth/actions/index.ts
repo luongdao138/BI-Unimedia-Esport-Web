@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/auth.service'
 import { AUTH_ACTION_TYPE } from './types'
 
@@ -16,6 +16,8 @@ export const loginByEmail = createAsyncThunk<services.UserLoginResponse, service
     }
   }
 )
+
+export const refreshLogin = createAction<services.UserLoginResponse>(AUTH_ACTION_TYPE.LOGIN_BY_EMAIL)
 
 export const loginSocial = createAsyncThunk<services.UserLoginResponse, services.LoginSocialParams>(
   AUTH_ACTION_TYPE.LOGIN_SOCIAL,
@@ -62,7 +64,7 @@ export const registerConfirm = createAsyncThunk<services.UserLoginResponse, serv
   }
 )
 
-export const registerProfile = createAsyncThunk<services.UserLoginResponse, services.UserProfileParams>(
+export const registerProfile = createAsyncThunk<services.UserProfileResponse, services.UserProfileParams>(
   AUTH_ACTION_TYPE.REGISTER_PROFILE,
   async (registerProfileParam, { rejectWithValue }) => {
     try {
