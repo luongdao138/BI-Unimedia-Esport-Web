@@ -1,16 +1,13 @@
-import Box from '@material-ui/core/Box'
+import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography, Button } from '@material-ui/core'
 import Link from 'next/link'
-import List from '@material-ui/core/List'
-import MuiListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import Icon from '@material-ui/core/Icon'
 import ProfileAvatar from '@components/ProfileAvatar'
-import { Typography } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
+import { useAppSelector } from '@store/hooks'
+import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,23 +97,27 @@ const SideMenu: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
+  const { selectors } = userProfileStore
+  const userProfile = useAppSelector(selectors.getUserProfile)
   const isSelected = (routeName: string): boolean => {
     return router.pathname === routeName
   }
   return (
     <>
       <Box className={classes.menu}>
-        <Box className={classes.userInfo}>
-          <ProfileAvatar size={80} src="/images/avatar.png" />
-          <Box width="100%" textAlign="center">
-            <Typography variant="h2" className={classes.name}>
-              {t('common:home.exelab')}
-            </Typography>
-            <Typography variant="body2" className={classes.usercode}>
-              {t('common:home.exelab_staff')}
-            </Typography>
+        <Button onClick={() => router.push(ESRoutes.PROFILE)}>
+          <Box className={classes.userInfo}>
+            <ProfileAvatar size={80} src={userProfile ? userProfile.data.attributes.avatar_url : '/images/avatar.png'} />
+            <Box width="100%" textAlign="center">
+              <Typography variant="h2" className={classes.name}>
+                {userProfile ? userProfile.data.attributes.nickname : ''}
+              </Typography>
+              <Typography variant="body2" className={classes.usercode}>
+                @{userProfile ? userProfile.data.attributes.user_code : ''}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        </Button>
 
         <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
           <Link href={ESRoutes.HOME}>

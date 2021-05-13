@@ -53,6 +53,14 @@ export default {
     code_invalid: '入力されたコードは無効です',
   },
   common: {
+    birthday: '生年月日',
+    year: '年',
+    month: '月',
+    day: '日',
+    gender: '性別',
+    male: '男性',
+    female: '女性',
+    other: 'その他',
     required: '必須',
     zero: '0',
     see_more: 'もっと見る',
@@ -86,6 +94,7 @@ export default {
   profile: {
     favorite_game: '好きなゲーム',
     edit: '編集',
+    edit_profile: 'プロフィールを編集する',
     read_more: 'もっとみる',
     following: 'フォロー中',
     followers: 'フォロワー',

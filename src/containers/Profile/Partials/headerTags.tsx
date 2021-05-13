@@ -11,20 +11,24 @@ const useStyles = makeStyles(() => ({
 }))
 
 interface TagsProps {
-  items: Array<string>
+  items: Array<Feature> | null
 }
+
+type Feature = { id: number; feature: string }
 
 const HeaderTags: React.FC<TagsProps> = ({ items }) => {
   const classes = useStyles()
   return (
     <Box display="flex" className={classes.marginTop8}>
-      {items.map((item, index) => {
-        return (
-          <Typography key={`key-${index}`} className={classes.marginRight}>
-            #{item}
-          </Typography>
-        )
-      })}
+      {items.length > 0 && items !== null
+        ? items.map((item: Feature, index: number) => {
+            return (
+              <Typography key={`key-${index}`} className={classes.marginRight}>
+                #{item.feature}
+              </Typography>
+            )
+          })
+        : null}
     </Box>
   )
 }
