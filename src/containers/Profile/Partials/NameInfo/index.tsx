@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Grid, Box, Container, makeStyles } from '@material-ui/core'
+import { Grid, Box, Container, makeStyles, Typography, Theme } from '@material-ui/core'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
@@ -32,14 +32,14 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
     bio: Yup.string()
       .max(250, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
-      .test('bio', '不適切な文字列が含まれています。', function (value) {
+      .test('bio', t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
       .required(t('common:common.error'))
       .max(50, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
-      .test('nickname', '不適切な文字列が含まれています。', function (value) {
+      .test('nickname', t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
   })
@@ -71,12 +71,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="nickname2" value={values.nickname2} onChange={handleChange} fullWidth>
-            <option value="">
-              {
-                '二つ名を設定するt'
-                //('common:user_profile.set_two_names')
-              }
-            </option>
+            <option value="">{t('common:user_profile.set_two_names')}</option>
             {nicknameData &&
               nicknameData.map((item) => (
                 <option key={item.nickname} value={item.nickname}>
@@ -111,10 +106,12 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
     <Box>
       <Grid container spacing={2}>
         <Grid item xs={12}>
+          <Typography variant="h3" gutterBottom className={classes.label}>
+            {t('common:user_profile.self_introduction')}
+          </Typography>
           <ESInput
             id="bio"
             autoFocus
-            labelPrimary="自己紹介"
             fullWidth
             multiline
             rows={4}
@@ -139,9 +136,12 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    marginTop: 0, //theme.spacing(60 / 8),
+    marginTop: 0,
+  },
+  label: {
+    marginTop: theme.spacing(3),
   },
 }))
 

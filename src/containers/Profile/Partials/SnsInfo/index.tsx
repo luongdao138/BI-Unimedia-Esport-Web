@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Grid, Container, makeStyles, Box } from '@material-ui/core'
 import { useFormik } from 'formik'
-// import { useTranslation } from 'react-i18next'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitchCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
@@ -24,8 +23,6 @@ interface SnsInfoProps {
 
 const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange }) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
-
   const { instagram_link, facebook_link, twitter_link, twitch_link, discord_link } = profile
 
   const { handleChange, values, touched, errors } = useFormik<SnsInfoParams>({

@@ -4,7 +4,7 @@ import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import Dialog from '@material-ui/core/Dialog'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import TagSelect from '@components/TagSelect'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import BlankLayout from '@layouts/BlankLayout'
@@ -25,7 +25,7 @@ interface TagSelectDialogProps {
 
 const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, onFeatureSelect }) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
 
   return (
@@ -34,12 +34,12 @@ const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, o
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <ButtonBase onClick={() => setOpen(true)} className={classes.inputContainer}>
-              <Box display="flex" flexDirection="row">
+              <Box display="flex" flexDirection="row" flexWrap="wrap">
                 {_.isEmpty(selected) ? (
-                  <Typography>{`選択されていません`}</Typography>
+                  <Typography>{t('common:common.not_selected')}</Typography>
                 ) : (
                   selected.map((item) => (
-                    <Box margin={1} key={item.id}>
+                    <Box paddingRight={1} key={item.id}>
                       <Typography>{`#${item.feature}`}</Typography>
                     </Box>
                   ))
@@ -57,7 +57,7 @@ const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, o
                         <Icon className="fa fa-arrow-left" fontSize="small" />
                       </IconButton>
                       <Box pl={2}>
-                        <Typography variant="h2">タグ編集</Typography>
+                        <Typography variant="h2">{t('common:user_profile.tag_edit')}</Typography>
                       </Box>
                     </Box>
 
@@ -86,6 +86,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,

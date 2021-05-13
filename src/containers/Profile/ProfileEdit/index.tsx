@@ -84,27 +84,27 @@ const ProfileEditContainer: React.FC = () => {
           <IconButton className={classes.iconButtonBg} onClick={() => router.push(ESRoutes.PROFILE)}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
-          <Box pl={2}>{<Typography variant="h2">{t('common:profile.edit_profile')}</Typography>}</Box>
+          <Box pl={2}>{<Typography variant="h2">{t('common:user_profile.edit_profile')}</Typography>}</Box>
         </Box>
 
         {profile && getUserProfileMeta.loaded && (
           <Box>
             <Typography variant="h3" gutterBottom className={classes.label}>
-              ニックネーム
+              {t('common:register_profile.nickname')}
             </Typography>
             <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} handleError={handleError} />
             <Typography variant="h3" gutterBottom className={classes.label}>
-              タグ
+              {t('common:profile.tag')}
             </Typography>
             <TagSelectDialog selected={profile.features} features={features} onFeatureSelect={onFeatureSelect} />
             <Typography variant="h3" gutterBottom className={classes.label}>
-              基本データ
+              {t('common:profile.basic_info')}
             </Typography>
             <Box paddingX={3}>
               <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
             </Box>
             <Typography variant="h3" gutterBottom className={classes.label}>
-              SNS
+              {t('common:user_profile.sns')}
             </Typography>
             <SnsInfo profile={profile} onDataChange={onBasicInfoChanged} />
           </Box>
@@ -117,23 +117,13 @@ const ProfileEditContainer: React.FC = () => {
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
             <ButtonPrimary type="submit" round fullWidth disabled={hasError} onClick={handleSubmit}>
-              保存する
-              {/* {t('common:register_by_email.button')} */}
+              {t('common:common.save')}
             </ButtonPrimary>
           </Box>
         </Box>
       </Box>
       <ESLoader open={getUserProfileMeta.pending || meta.pending} />
-      {!!meta.error && (
-        <ESToast
-          open={!!meta.error}
-          message={
-            'update failed'
-            //t('common:error.update_failed')
-          }
-          resetMeta={resetMeta}
-        />
-      )}
+      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.failed')} resetMeta={resetMeta} />}
     </>
   )
 }
