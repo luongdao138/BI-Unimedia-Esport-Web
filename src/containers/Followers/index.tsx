@@ -35,7 +35,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
   const [hasMore, setHasMore] = useState(true)
 
   const { t } = useTranslation(['common'])
-  const { currentUser, followers, fetchFollowers, page } = useFollowers()
+  const { followers, fetchFollowers, page } = useFollowers()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -46,7 +46,11 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
   }
 
   useEffect(() => {
-    fetchFollowers({ page: 1, user_id: user_id == null ? currentUser.id : user_id })
+    const params = { page: 1 }
+    if (user_id != null) {
+      params['user_id'] = user_id
+    }
+    fetchFollowers(params)
   }, [])
 
   const fetchMoreData = () => {
