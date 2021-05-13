@@ -2,7 +2,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'exeLABをはじめる',
+    start_exelab: 'eXeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -54,6 +54,14 @@ export default {
     user_settings_failed: 'User settings failed',
   },
   common: {
+    birthday: '生年月日',
+    year: '年',
+    month: '月',
+    day: '日',
+    gender: '性別',
+    male: '男性',
+    female: '女性',
+    other: 'その他',
     required: '必須',
     zero: '0',
     see_more: 'もっと見る',
@@ -62,7 +70,7 @@ export default {
     total: '件',
   },
   home: {
-    exelab: 'eXe LAB事務局',
+    exelab: 'eXeLAB事務局',
     exelab_staff: '@exelab_staff',
     home: 'ホーム',
     follow: 'フォローする',
@@ -96,6 +104,7 @@ export default {
       create_new: '新しく作る',
     },
     edit: '編集',
+    edit_profile: 'プロフィールを編集する',
     read_more: 'もっとみる',
     following: 'フォロー中',
     followers: 'フォロワー',
