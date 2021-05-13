@@ -5,7 +5,9 @@ import RoomListItem from '@components/Chat/RoomListItem'
 import List from '@material-ui/core/List'
 import { ChatDataType } from '@components/Chat/types/chat.types'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
+import { ESRoutes } from '@constants/route.constants'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -56,6 +58,12 @@ const ChatListExample: ChatDataType[] = [
 const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
   const { t } = useTranslation(['common'])
+  const router = useRouter()
+
+  const navigateRoom = (id: string) => {
+    router.push(`${ESRoutes.MESSAGE}${id}`, undefined, { shallow: true })
+  }
+
   return (
     <Box className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}>
       <IconButton onClick={() => toggleChatBar(!expand)} className={classes.arrowBtn} disableRipple>
@@ -71,7 +79,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
         <Box className={classes.inner}>
           <List>
             {ChatListExample.map((item, index) => (
-              <RoomListItem expand={expand} item={item} key={index} />
+              <RoomListItem onClick={navigateRoom} expand={expand} item={item} key={index} />
             ))}
           </List>
         </Box>
