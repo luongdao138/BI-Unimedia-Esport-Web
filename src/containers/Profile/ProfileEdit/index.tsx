@@ -106,7 +106,7 @@ const ProfileEditContainer: React.FC = () => {
             <Typography variant="h3" gutterBottom className={classes.label}>
               {t('common:user_profile.sns')}
             </Typography>
-            <SnsInfo profile={profile} onDataChange={onBasicInfoChanged} />
+            <SnsInfo profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
           </Box>
         )}
 
