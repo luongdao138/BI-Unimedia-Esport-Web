@@ -49,9 +49,9 @@ export type UserProfile = {
   id: string
   type: 'user'
   attributes: {
-    email: string
-    nickname: string
-    user_code: string
+    email?: string
+    nickname?: string
+    user_code?: string
     bio?: string | null
     birth_date?: string
     sex?: number
@@ -59,20 +59,22 @@ export type UserProfile = {
     facebook_link?: string | null
     twitter_link?: string | null
     twitch_link?: string
-    show_sex: boolean
-    show_area: boolean
-    show_birth_date: boolean
+    show_sex?: boolean
+    show_area?: boolean
+    show_birth_date?: boolean
     nickname2?: string
     icon?: string | null
     template_id?: number | null
-    is_following: boolean
-    is_followed: boolean
-    is_blocked: boolean
-    blocked_by_user: boolean
+    is_following?: boolean
+    is_followed?: boolean
+    is_blocked?: boolean
+    blocked_by_user?: boolean
     followers?: number
     following?: number
     avatar_url?: string | null
     cover_url?: string | null
+    update_step: number
+    area_id?: number
     area?: null | {
       id?: number
       area?: string
@@ -90,7 +92,7 @@ export type UserProfile = {
       allow_messages_from_strangers: boolean
       allow_groups_from_strangers: boolean
     }
-    is_deleted: boolean
+    is_deleted?: boolean
   }
 }
 
@@ -142,6 +144,10 @@ type RecommendationsArray = {
   attributes: any
 }
 
+export type GameEditParams = {
+  game_titles: number[]
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -174,5 +180,10 @@ export const getNicknames = async (): Promise<NicknamesResponse> => {
 
 export const profileEdit = async (params: ProfileEditParams): Promise<ProfileResponse> => {
   const { data } = await api.put<ProfileResponse>(URI.USER_DETAIL_PROFILE, params)
+  return data
+}
+
+export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse> => {
+  const { data } = await api.put<ProfileResponse>(URI.GAME_UPDATE, params)
   return data
 }

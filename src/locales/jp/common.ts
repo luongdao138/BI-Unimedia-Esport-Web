@@ -97,7 +97,7 @@ export default {
     settings: '設定',
   },
   infinite_scroll: {
-    message: 'Yay! You have seen it all',
+    message: 'あなたはそれをすべて見ました',
   },
   followers: {
     title: 'フォロー中',
@@ -176,6 +176,7 @@ export default {
     self_introduction: '自己紹介',
     tag_edit: 'タグ編集',
     sns: 'SNS',
+    choose_game: 'ゲームを選ぶ',
   },
   action_types: {
     topic_comment_px: '【トピック】',

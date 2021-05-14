@@ -50,7 +50,7 @@ export const authorizationProvider = (store: StoreType): void => {
                 refresh_token: refreshToken,
               })
               .then((res) => {
-                store.dispatch({ type: loginByEmail.fulfilled, payload: res.data })
+                store.dispatch({ type: loginByEmail.fulfilled.toString(), payload: res.data })
                 onAccessTokenFetched(res.data.accessToken)
               })
               .finally(() => {
