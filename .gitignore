@@ -33,6 +33,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# idea
+.idea/*
+
 /test/pages/__snapshots__/
 yarn.lock
 package-lock.json
