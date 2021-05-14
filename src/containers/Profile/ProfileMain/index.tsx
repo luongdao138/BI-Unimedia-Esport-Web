@@ -46,7 +46,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           <Iconic text={time} icon="fa fa-birthday-cake" />
         </Box>
         <Box display="flex" className={classes.marginTop20}>
-          <ESButtonDiscordCircle className={classes.marginRight} link={''} />
+          <ESButtonDiscordCircle className={classes.marginRight} link={userProfile.attributes.discord_link} />
           <ESButtonFacebookCircle className={classes.marginRight} link={userProfile.attributes.facebook_link} />
           <ESButtonTwitterCircle className={classes.marginRight} link={userProfile.attributes.twitter_link} />
           <ESButtonTwitchCircle className={classes.marginRight} link={userProfile.attributes.twitch_link} />
