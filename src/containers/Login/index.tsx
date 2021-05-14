@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
@@ -21,15 +22,23 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
 import { ESRoutes } from '@constants/route.constants'
+import ESLoader from '@components/FullScreenLoader'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import ESCheckbox from '@components/Checkbox'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
   const { t } = useTranslation(['common'])
+  const [checkbox, setCheckox] = useState({
+    terms: false,
+    privacy: false,
+  })
   const classes = useStyles()
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+  const { handleLink } = useReturnHref()
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required(t('common:common.error')).email(),
-    password: Yup.string().required(t('common:common.error')).min(8),
+    email: Yup.string().required(t('common:common.error')).email(t('common:common.error')),
+    password: Yup.string().required(t('common:common.error')).min(8, t('common:common.error')),
   })
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
@@ -39,9 +48,15 @@ const LoginContainer: React.FC = () => {
     },
     validationSchema,
     onSubmit: (values, _helpers) => {
-      loginByEmail(values)
+      if (checkbox.terms && checkbox.privacy) {
+        loginByEmail(values)
+      }
     },
   })
+
+  const handleChangeCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
+  }
 
   const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
 
@@ -86,7 +101,7 @@ const LoginContainer: React.FC = () => {
                   labelPrimary={t('common:login.password_label_primary')}
                   type="password"
                   labelSecondary={
-                    <Link href={ESRoutes.FORGOT_PASSWORD}>
+                    <Link href={handleLink(ESRoutes.FORGOT_PASSWORD)} as={ESRoutes.FORGOT_PASSWORD} shallow>
                       <a className={classes.noLink}>
                         <Typography color="textPrimary" gutterBottom={false} variant="body2">
                           {t('common:login.password_label_secondary')}
@@ -102,6 +117,23 @@ const LoginContainer: React.FC = () => {
                 />
               </Box>
 
+              <Box pt={3} flexDirection="column" display="flex">
+                <ESCheckbox
+                  disableRipple
+                  checked={checkbox.terms}
+                  onChange={handleChangeCheckBox}
+                  label={t('common:register.terms')}
+                  name="terms"
+                />
+                <ESCheckbox
+                  disableRipple
+                  checked={checkbox.privacy}
+                  onChange={handleChangeCheckBox}
+                  label={t('common:register.privacy')}
+                  name="privacy"
+                />
+              </Box>
+
               <Box pt={6} pb={4} maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth>
                   {t('common:login.submit')}
@@ -111,7 +143,7 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pb={8} className={classes.linkContainer}>
-            <Link href={ESRoutes.REGISTER}>
+            <Link href={handleLink(ESRoutes.REGISTER)} as={ESRoutes.REGISTER} shallow>
               <a>{t('common:login.register')}</a>
             </Link>
           </Box>
@@ -129,6 +161,7 @@ const LoginContainer: React.FC = () => {
           </Box>
         </Box>
       </Box>
+      {meta.pending && <ESLoader open={meta.pending} />}
       {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} resetMeta={resetMeta} />}
     </>
   )

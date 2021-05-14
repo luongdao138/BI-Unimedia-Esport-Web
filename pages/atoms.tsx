@@ -120,7 +120,7 @@ const Atoms: PageWithLayoutType = () => {
         </ESButton>
       </Box>
       <Box>
-        <ESFollowers user_code={null} />
+        <ESFollowers user_code={'Umtest2'} />
         <ESFollowing user_code={null} />
       </Box>
       <Box margin={4}>
@@ -155,11 +155,11 @@ const Atoms: PageWithLayoutType = () => {
         <ESButtonApple variant="contained" fullWidth />
       </Box>
       <Box margin={2} display="flex">
-        <ESButtonFacebookCircle />
-        <ESButtonTwitterCircle />
-        <ESButtonTwitchCircle />
-        <ESButtonInstagramCircle />
-        <ESButtonLineCircle />
+        <ESButtonFacebookCircle link={''} />
+        <ESButtonTwitterCircle link={''} />
+        <ESButtonTwitchCircle link={''} />
+        <ESButtonInstagramCircle link={''} />
+        <ESButtonLineCircle link={''} />
         <ESButtonGoogleCircle />
         <ESButtonAppleCircle />
       </Box>

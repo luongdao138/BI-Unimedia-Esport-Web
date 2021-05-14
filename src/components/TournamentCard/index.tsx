@@ -1,4 +1,4 @@
-import { Typography, Box, withStyles, makeStyles, Icon } from '@material-ui/core'
+import { Typography, Box, withStyles, makeStyles, Icon, Chip } from '@material-ui/core'
 import { AvatarGroup } from '@material-ui/lab'
 import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
@@ -32,8 +32,11 @@ const useStyles = makeStyles(() => ({
     height: 15,
     backgroundColor: Colors.grey[400],
   },
+  chipPrimary: {
+    height: 20,
+    backgroundColor: Colors.primary,
+  },
   mediaOverlay: {
-    backgroundColor: Colors.black_opacity[70],
     position: 'absolute',
     top: 0,
     left: 0,
@@ -41,6 +44,13 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     width: '100%',
     height: '100%',
+  },
+  blurOverlay: {
+    backgroundColor: Colors.black_opacity[70],
+  },
+  firstIcon: {
+    width: 19.56,
+    height: 15.4,
   },
 }))
 
@@ -62,12 +72,45 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   return (
     <ESCard>
       <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
-        {tournament.type === TYPES.HISTORY && (
-          <Box className={classes.mediaOverlay} display="flex" justifyContent="center" alignItems="center">
-            <ESAvatar alt="Avatar" src="/images/avatar.png" />
-            <ESAvatar alt="Avatar" />
+        <>
+          <Box
+            className={classes.mediaOverlay}
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            padding={1}
+          >
+            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer.nickname} />
+            <Chip
+              className={classes.chipPrimary}
+              size="small"
+              label={
+                <Box color={Colors.white}>
+                  <Typography variant="caption">トーナメント</Typography>
+                </Box>
+              }
+            />
           </Box>
-        )}
+          {tournament.type === TYPES.HISTORY && (
+            <Box
+              zIndex={2}
+              className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Box paddingRight={1} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between" height={72.98}>
+                <img className={classes.firstIcon} src="/images/first_icon.png" />
+                <ESAvatar alt="Avatar" src="/images/avatar.png" />
+              </Box>
+              <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-between" height={72.98}>
+                <Typography>{'999'}</Typography>
+                <ESAvatar alt="Avatar" />
+              </Box>
+            </Box>
+          )}
+        </>
       </ESCardMedia>
       <ESCardContent>
         <Box color={Colors.white}>

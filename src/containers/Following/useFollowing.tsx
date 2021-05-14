@@ -18,9 +18,10 @@ const useFollowing = () => {
   const meta = useAppSelector(getMeta)
   const currentUser = useAppSelector(authSelector.getAuth)
   const fetchFollowing = (param: FollowingParams) => dispatch(actions.following(param))
+  const clearFollowing = () => dispatch(actions.clearFollowing())
   const resetMeta = () => dispatch(clearMetaData(actions.following.typePrefix))
 
-  return { currentUser, following, fetchFollowing, resetMeta, meta, page }
+  return { clearFollowing, currentUser, following, fetchFollowing, resetMeta, meta, page }
 }
 
 export default useFollowing

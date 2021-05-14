@@ -144,6 +144,10 @@ type RecommendationsArray = {
   attributes: any
 }
 
+export type GameEditParams = {
+  game_titles: number[]
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -176,5 +180,10 @@ export const getNicknames = async (): Promise<NicknamesResponse> => {
 
 export const profileEdit = async (params: ProfileEditParams): Promise<ProfileResponse> => {
   const { data } = await api.put<ProfileResponse>(URI.USER_DETAIL_PROFILE, params)
+  return data
+}
+
+export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse> => {
+  const { data } = await api.put<ProfileResponse>(URI.GAME_UPDATE, params)
   return data
 }

@@ -36,4 +36,7 @@ export default createReducer(initialState, (builder) => {
       const newUser = _.pick(action.payload.data.attributes, ['nickname', 'user_code'])
       state.user = { ...state.user, ...newUser }
     })
+    .addCase(actions.logout.fulfilled, (state) => {
+      state.user = undefined
+    })
 })

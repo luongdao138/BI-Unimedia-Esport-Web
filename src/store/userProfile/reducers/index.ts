@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
 import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
-import { registerProfile } from '@store/auth/actions'
+import { registerProfile, logout } from '@store/auth/actions'
 
 type StateType = {
   data: ProfileResponse['data']
@@ -62,7 +62,15 @@ export default createReducer(initialState, (builder) => {
     state.data = action.payload.data
   })
 
+  builder.addCase(actions.gameEdit.fulfilled, (state, action) => {
+    state.data = action.payload.data
+  })
+
   builder.addCase(actions.getRecommendations.fulfilled, (state, action) => {
     state.recommendations = action.payload.data
+  })
+
+  builder.addCase(logout.fulfilled, (state) => {
+    state.data = undefined
   })
 })

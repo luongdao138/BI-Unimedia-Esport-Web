@@ -30,6 +30,9 @@ const useStyles = makeStyles(() => ({
     fontSize: 24,
     color: Colors.white,
   },
+  loaderCenter: {
+    textAlign: 'center',
+  },
 }))
 
 const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
@@ -37,7 +40,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
   const [hasMore, setHasMore] = useState(true)
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { following, fetchFollowing, page } = useFollowing()
+  const { clearFollowing, following, fetchFollowing, page } = useFollowing()
 
   useEffect(() => {
     const params = { page: 1 }
@@ -45,7 +48,10 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
       _.merge(params, { user_code: user_code })
     }
     fetchFollowing(params)
-  }, [])
+    return function clear() {
+      clearFollowing()
+    }
+  }, [user_code])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -78,8 +84,12 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
             dataLength={following.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<ESLoader />}
-            height={500}
+            loader={
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            }
+            height={600}
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b>{t('common:infinite_scroll.message')}</b>

@@ -4,15 +4,15 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import authStore from '@store/auth'
 import { UserProfileParams } from '@services/auth.service'
-import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { actions } = authStore
 const getRegisterProfile = createMetaSelector(actions.registerProfile)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useProfile = () => {
-  const router = useRouter()
+  const { navigateScreen } = useReturnHref()
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getRegisterProfile)
 
@@ -20,12 +20,12 @@ const useProfile = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerProfile.typePrefix))
 
-  const backAction = () => router.push(ESRoutes.REGISTER)
+  const backAction = () => navigateScreen(ESRoutes.REGISTER)
 
   useEffect(() => {
     if (meta.loaded) {
       resetMeta()
-      router.push(ESRoutes.USER_SETTINGS)
+      navigateScreen(ESRoutes.USER_SETTINGS)
     }
   }, [meta.loaded])
 
