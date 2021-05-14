@@ -29,7 +29,7 @@ const ESButtonTwitterCircle: React.FC<IconButtonProps & SocialProps> = ({ link }
   const disabled = !link || link.length === 0
   const classes = useStyles({ disabled: disabled })
   return (
-    <IconButton href={link} classes={{ root: classes.iconRoot }}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 16.625 13.511">
           <path

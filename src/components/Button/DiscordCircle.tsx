@@ -6,9 +6,6 @@ const useStyles = makeStyles(() => ({
     width: 30,
     height: 30,
   },
-  Discord: {
-    background: '#7289DA',
-  },
   svgRoot: {
     height: 30,
     width: 30,
@@ -16,7 +13,17 @@ const useStyles = makeStyles(() => ({
   iconRoot: {
     padding: 4,
   },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: '#7289DA',
+      opacity: props.disabled ? 0.3 : 1,
+    }
+  },
 }))
+
+interface SocialProps {
+  link?: string
+}
 {
   /* <svg id="LV1_ic_Discord" data-name="LV1 / ic / Discord" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
   <circle id="Ellipse_2" data-name="Ellipse 2" cx="15" cy="15" r="15" fill="#7289da"/>
@@ -26,11 +33,12 @@ const useStyles = makeStyles(() => ({
 </svg> */
 }
 
-const ESButtonDiscordCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.Discord}>
+    <IconButton disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 30 30">
           <path
             id="Path_99"
