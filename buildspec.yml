@@ -8,7 +8,7 @@ phases:
       - npm install -g yarn
   pre_build:
     commands:
-      - yarn install
+      - yarn install --production=true
       # - sed -i s/"return ENV_TYPES.*"/"return ENV_TYPES\.${DEPLOY_ENV};"/i ./src/constants/env.constants.ts
       # - cp .env.${DEPLOY_ENV} .env
       # - aws s3 cp s3://${CONFIG_BUCKET}/configs/${DEPLOY_ENV}/.env.${DEPLOY_ENV} .env
@@ -18,10 +18,8 @@ phases:
       - yarn build
   post_build:
     commands:
+      - rm -rf node_modules
       - find . -name '.DS_Store' -type f -delete
 artifacts:
   files:
     - '**/*'
-cache:
-  paths:
-    - 'node_modules/**/*'
