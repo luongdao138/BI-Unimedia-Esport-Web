@@ -3,19 +3,19 @@ import * as actions from '../actions'
 import { NotificationResponse, Meta } from '@services/notification.service'
 
 type StateType = {
-  my_notification_list: Array<NotificationResponse>
-  my_notification_list_meta?: Meta
+  notifications?: Array<NotificationResponse>
+  notificationsMeta?: Meta
 }
 
-const initialState: StateType = { my_notification_list: [] }
+const initialState: StateType = { notifications: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.notifications.fulfilled, (state, action) => {
     let tmpNotifications = action.payload.data
-    if (action.payload.links != undefined) {
-      tmpNotifications = state.my_notification_list.concat(action.payload.data)
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpNotifications = state.notifications.concat(action.payload.data)
     }
-    state.my_notification_list = tmpNotifications
-    state.my_notification_list_meta = action.payload.links?.meta
+    state.notifications = tmpNotifications
+    state.notificationsMeta = action.payload.meta
   })
 })
