@@ -213,17 +213,11 @@ const SideMenu: React.FC = () => {
         )}
       </Box>
 
-      {isAuthenticated && (
-        <ESModal open={modal} handleClose={() => setModal(false)}>
-          <BlankLayout>
-            {content === 'qr' ? (
-              <QrContainer handleClose={() => setModal(false)} />
-            ) : (
-              <LogoutContainer handleClose={() => setModal(false)} />
-            )}
-          </BlankLayout>
-        </ESModal>
-      )}
+      <ESModal open={modal} handleClose={() => setModal(false)}>
+        <BlankLayout>
+          {content === 'qr' ? <QrContainer handleClose={() => setModal(false)} /> : <LogoutContainer handleClose={() => setModal(false)} />}
+        </BlankLayout>
+      </ESModal>
     </>
   )
 }
