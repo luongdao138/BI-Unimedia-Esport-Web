@@ -3,6 +3,7 @@ import { createWrapper } from 'next-redux-wrapper'
 import storage from './storage'
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import reducer from './reducers'
+import { authMiddleware } from './middlewares/authMiddleware'
 
 const initStore = () => {
   const isServer = typeof window === 'undefined'
@@ -30,7 +31,7 @@ const initStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }),
+      }).concat(authMiddleware),
     })
 
     return store
