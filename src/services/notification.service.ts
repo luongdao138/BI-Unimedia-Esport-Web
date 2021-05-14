@@ -7,7 +7,7 @@ export type NotificationListParams = {
 
 export type NotificationListResponse = {
   data: Array<NotificationResponse>
-  links: any
+  meta: any
 }
 
 export type NotificationResponse = {
