@@ -89,7 +89,6 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
                 <ESLoader />
               </div>
             }
-            height={500}
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b>{t('common:infinite_scroll.message')}</b>
