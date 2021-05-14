@@ -34,6 +34,10 @@ const RegisterContainer: React.FC = () => {
 
   const handleSocialLogin = (params) => social.login({ ...params, type: 'register' })
 
+  const buttonActive = (): boolean => {
+    return checkbox.terms && checkbox.privacy
+  }
+
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
@@ -72,7 +76,7 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
-          <ButtonPrimary round fullWidth onClick={() => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)}>
+          <ButtonPrimary round fullWidth onClick={() => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)} disabled={!buttonActive()}>
             {t('common:register.button')}
           </ButtonPrimary>
         </Box>
@@ -82,11 +86,11 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
-          <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} />
-          <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} />
-          <ESButtonLine fullWidth onSuccess={handleSocialLogin} />
-          <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} />
-          <ESButtonApple fullWidth onSuccess={handleSocialLogin} />
+          <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+          <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+          <ESButtonLine fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+          <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+          <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
         </Box>
 
         <Box pt={4} className={classes.linkContainer}>

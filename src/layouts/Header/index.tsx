@@ -25,6 +25,7 @@ import RegisterByEmailContainer from '@containers/RegisterByEmail'
 import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
+import { useContextualRouting } from 'next-use-contextual-routing'
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -78,7 +79,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const { handleReturn, navigateScreen } = useReturnHref()
+  const { handleReturn } = useReturnHref()
+  const { makeContextualHref } = useContextualRouting()
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -88,7 +90,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     })
   }
 
-  const openModal = () => navigateScreen(ESRoutes.WELCOME)
+  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
 
   const renderContent = () => {
     switch (router.query.pathName) {
