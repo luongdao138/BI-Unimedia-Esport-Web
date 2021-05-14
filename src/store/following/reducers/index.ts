@@ -10,13 +10,17 @@ type StateType = {
 const initialState: StateType = { following: [] }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.following.fulfilled, (state, action) => {
-    let tmpFollowing = action.payload.data
-    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
-      tmpFollowing = state.following.concat(action.payload.data)
-    }
+  builder
+    .addCase(actions.following.fulfilled, (state, action) => {
+      let tmpFollowing = action.payload.data
+      if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+        tmpFollowing = state.following.concat(action.payload.data)
+      }
 
-    state.following = tmpFollowing
-    state.followingMeta = action.payload.links?.meta
-  })
+      state.following = tmpFollowing
+      state.followingMeta = action.payload.links?.meta
+    })
+    .addCase(actions.clearFollowing, (state) => {
+      state.following = []
+    })
 })
