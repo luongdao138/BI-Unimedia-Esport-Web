@@ -4,6 +4,7 @@ import storage from './storage'
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import reducer from './reducers'
 import { authMiddleware } from './middlewares/authMiddleware'
+import { webSocketMiddle } from './middlewares/socketMiddleware'
 
 const initStore = () => {
   const isServer = typeof window === 'undefined'
@@ -31,7 +32,7 @@ const initStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(authMiddleware),
+      }).concat(authMiddleware, webSocketMiddle),
     })
 
     return store
