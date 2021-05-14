@@ -120,8 +120,8 @@ const Atoms: PageWithLayoutType = () => {
         </ESButton>
       </Box>
       <Box>
-        <ESFollowers user_id={30} />
-        <ESFollowing user_id={30} />
+        <ESFollowers user_code={'Umtest2'} />
+        <ESFollowing user_code={null} />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>
@@ -164,6 +164,11 @@ const Atoms: PageWithLayoutType = () => {
         <ESButtonAppleCircle />
       </Box>
       <ESMenu>
+        <ESMenuItem onClick={() => console.error('プロフィールを編集')}>プロフィールを編集</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('大会履歴')}>大会履歴</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('アクティビティ')}>アクティビティ</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('QRコード')}>QRコード</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('ログアウト')}>ログアウト</ESMenuItem>
         <ESMenuItem
           onClick={() => {
             return null
@@ -201,7 +206,7 @@ const Atoms: PageWithLayoutType = () => {
         </ESMenuItem>
       </ESMenu>
       <Box margin={4}>
-        <Grid xs={3}>
+        <Grid item xs={3}>
           <ESCard>
             <ESCardMedia image="https://picsum.photos/id/237/240/120"></ESCardMedia>
             <ESCardContent>

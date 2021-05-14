@@ -3,12 +3,12 @@ import { URI } from '@constants/uri.constants'
 
 export type FollowingParams = {
   page: number
-  user_id: number
+  user_code?: string
 }
 
 export type FollowingResponse = {
   data: Array<UserResponse>
-  links: any
+  meta: any
 }
 
 export type UserResponse = {
@@ -23,8 +23,6 @@ export type Meta = {
 }
 
 export const following = async (params: FollowingParams): Promise<FollowingResponse> => {
-  const { data } = await api.get<FollowingResponse>(URI.FOLLOWING, {
-    params,
-  })
+  const { data } = await api.post<FollowingResponse>(`${URI.FOLLOWING}/${params.user_code ? params.user_code : ''}`, params)
   return data
 }

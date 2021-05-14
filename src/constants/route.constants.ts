@@ -10,7 +10,10 @@ export const ESRoutes = {
   FORGOT_PASSWORD_RESET: '/forgot-password/reset',
   FORGOT_PASSWORD_CONFIRM: '/forgot-password/confirm',
   PROFILE: '/profile',
+  PROFILE_EDIT: '/profile/edit',
+  GAME_EDIT: '/profile/game',
   TOURNAMENTS: '/tournaments',
   SETTINGS: '/settings',
+  USER_SETTINGS: '/user-settings',
   MESSAGE: '/message/',
 }

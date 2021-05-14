@@ -12,7 +12,7 @@ interface Props {
   open: boolean
   message: string
   onClose?: () => void
-  resetMeta: () => void
+  resetMeta?: () => void
 }
 
 const Toast: React.FC<Props> = ({ open, message, onClose, resetMeta }) => {

@@ -1,5 +1,6 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
+import { UserProfile } from './user.service'
 
 export type UserLoginParams = {
   email: string
@@ -10,7 +11,7 @@ export type UserLoginParams = {
 export type UserLoginResponse = {
   accessToken?: string
   avatar_url?: string | null
-  email: string
+  email?: string
   id?: number
   is_social?: boolean
   nickname?: string
@@ -20,6 +21,8 @@ export type UserLoginResponse = {
   user_code?: string
   confirmation_code?: string
 }
+
+export type UserProfileResponse = { data: UserProfile }
 
 export type UserRegisterResponse = {
   email: string
@@ -92,7 +95,7 @@ export const resetPassword = async (params: UserResetPasswordParams): Promise<Us
   return data
 }
 
-export const registerProfile = async (params: UserProfileParams): Promise<UserLoginResponse> => {
-  const { data } = await api.post<UserLoginResponse>(URI.REGISTER_PROFILE, params)
+export const registerProfile = async (params: UserProfileParams): Promise<UserProfileResponse> => {
+  const { data } = await api.put<UserProfileResponse>(URI.REGISTER_PROFILE, params)
   return data
 }

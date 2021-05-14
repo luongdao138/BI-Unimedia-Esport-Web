@@ -9,13 +9,15 @@ import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import useFollowing from './useFollowing'
 import { Colors } from '@theme/colors'
+import _ from 'lodash'
 
 export interface ESFollowingProps {
-  user_id: number
+  user_code: string
 }
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
+    fontSize: 14,
     marginRight: 20,
     alignItems: 'center',
   },
@@ -25,20 +27,31 @@ const useStyles = makeStyles(() => ({
   },
   count: {
     fontWeight: 'bold',
+    fontSize: 24,
     color: Colors.white,
+  },
+  loaderCenter: {
+    textAlign: 'center',
   },
 }))
 
-const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
+const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { currentUser, following, fetchFollowing, page } = useFollowing()
+  const { clearFollowing, following, fetchFollowing, page } = useFollowing()
 
   useEffect(() => {
-    fetchFollowing({ page: 1, user_id: user_id == null ? currentUser.id : user_id })
-  }, [])
+    const params = { page: 1 }
+    if (user_code != null) {
+      _.merge(params, { user_code: user_code })
+    }
+    fetchFollowing(params)
+    return function clear() {
+      clearFollowing()
+    }
+  }, [user_code])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -51,7 +64,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
       setHasMore(false)
       return
     }
-    fetchFollowing({ page: page.current_page + 1, user_id: user_id })
+    fetchFollowing({ page: page.current_page + 1, user_code: user_code })
   }
 
   return (
@@ -61,8 +74,8 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
           <Typography>{t('common:following.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
-            <Typography>{t('common:following.th')}</Typography>
           </Box>
+          <Typography>{t('common:following.th')}</Typography>
         </Box>
       </Button>
       <ESDialog title={t('common:following.title')} open={open} handleClose={handleClose}>
@@ -71,8 +84,12 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_id }) => {
             dataLength={following.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<ESLoader />}
-            height={500}
+            loader={
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            }
+            height={600}
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b>{t('common:infinite_scroll.message')}</b>

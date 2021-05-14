@@ -9,9 +9,10 @@ import DialogContent from '@material-ui/core/DialogContent'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import _ from 'lodash'
 
 export interface ESFollowersProps {
-  user_id?: number
+  user_code?: string
 }
 
 const useStyles = makeStyles(() => ({
@@ -25,17 +26,21 @@ const useStyles = makeStyles(() => ({
   },
   count: {
     fontWeight: 'bold',
+    fontSize: 24,
     color: Colors.white,
+  },
+  loaderCenter: {
+    textAlign: 'center',
   },
 }))
 
-const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
+const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
   const { t } = useTranslation(['common'])
-  const { currentUser, followers, fetchFollowers, page } = useFollowers()
+  const { clearFollowers, followers, fetchFollowers, page } = useFollowers()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -46,15 +51,22 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
   }
 
   useEffect(() => {
-    fetchFollowers({ page: 1, user_id: user_id == null ? currentUser.id : user_id })
-  }, [])
+    const params = { page: 1 }
+    if (user_code != null) {
+      _.merge(params, { user_code: user_code })
+    }
+    fetchFollowers(params)
+    return function clear() {
+      clearFollowers()
+    }
+  }, [user_code])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
       return
     }
-    fetchFollowers({ page: page.current_page + 1, user_id: user_id })
+    fetchFollowers({ page: page.current_page + 1, user_code: user_code })
   }
 
   return (
@@ -64,8 +76,8 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
           <Typography>{t('common:followers.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
-            <Typography>{t('common:followers.th')}</Typography>
           </Box>
+          <Typography>{t('common:followers.th')}</Typography>
         </Box>
       </Button>
       <ESDialog open={open} title={t('common:followers.title')} handleClose={handleClose}>
@@ -74,8 +86,12 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_id }) => {
             dataLength={followers.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<ESLoader />}
-            height={500}
+            loader={
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            }
+            height={600}
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b>{t('common:infinite_scroll.message')}</b>

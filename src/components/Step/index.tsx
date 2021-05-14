@@ -26,6 +26,13 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiStepIcon-text': {
       fill: theme.palette.text.secondary,
     },
+    '& .MuiStepLabel-label.MuiStepLabel-alternativeLabel': {
+      fontSize: 14,
+    },
+    '& .MuiStepLabel-label.MuiStepLabel-active': {
+      color: theme.palette.common.white,
+      fontWeight: 400,
+    },
   },
 }))
 
