@@ -13,12 +13,12 @@ export default createReducer(initialState, (builder) => {
   builder
     .addCase(actions.followers.fulfilled, (state, action) => {
       let tmpFollowers = action.payload.data
-      if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
         tmpFollowers = state.followers.concat(action.payload.data)
       }
 
       state.followers = tmpFollowers
-      state.followersMeta = action.payload.links?.meta
+      state.followersMeta = action.payload.meta
     })
     .addCase(actions.clearFollowers, (state) => {
       state.followers = []

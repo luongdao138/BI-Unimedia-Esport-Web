@@ -8,7 +8,7 @@ export type FollowersParams = {
 
 export type FollowersResponse = {
   data: Array<UserResponse>
-  links: any
+  meta: any
 }
 
 export type UserResponse = {
