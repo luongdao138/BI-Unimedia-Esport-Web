@@ -8,7 +8,7 @@ phases:
       - npm install -g yarn
   pre_build:
     commands:
-      - yarn install --production=true
+      - yarn install
       # - sed -i s/"return ENV_TYPES.*"/"return ENV_TYPES\.${DEPLOY_ENV};"/i ./src/constants/env.constants.ts
       # - cp .env.${DEPLOY_ENV} .env
       # - aws s3 cp s3://${CONFIG_BUCKET}/configs/${DEPLOY_ENV}/.env.${DEPLOY_ENV} .env
