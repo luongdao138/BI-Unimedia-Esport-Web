@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
+import { ESRoutes } from '@constants/route.constants'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useReturnHref = () => {
@@ -14,8 +15,10 @@ const useReturnHref = () => {
   const handleLink = (pathName: string) => {
     return router.query._UCR_return_href ? makeContextualHref({ pathName: pathName }) : pathName
   }
+  const handleLogin = () =>
+    router.query._UCR_return_href ? router.push(returnHref, undefined, { shallow: true }) : router.push(ESRoutes.HOME)
 
-  return { handleReturn, navigateScreen, handleLink }
+  return { handleReturn, navigateScreen, handleLink, handleLogin }
 }
 
 export default useReturnHref

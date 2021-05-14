@@ -11,7 +11,7 @@ const getLoginMeta = createMetaSelector(actions.loginByEmail)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLoginByEmail = () => {
-  const { handleReturn } = useReturnHref()
+  const { handleReturn, handleLogin } = useReturnHref()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getLoginMeta)
@@ -21,7 +21,7 @@ const useLoginByEmail = () => {
 
   useEffect(() => {
     if (meta.loaded) {
-      handleReturn()
+      handleLogin()
       resetMeta()
     }
   }, [meta.loaded])
