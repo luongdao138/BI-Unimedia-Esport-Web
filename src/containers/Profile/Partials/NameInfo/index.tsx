@@ -58,7 +58,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
     onDataChange({
       nickname: values.nickname,
       nickname2: values.nickname2,
-      bio: values.bio,
+      bio: values.bio.trim(),
     })
   }, [values])
 
