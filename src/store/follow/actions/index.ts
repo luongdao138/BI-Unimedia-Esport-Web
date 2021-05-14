@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/follow.service'
 import { FOLLOWERS_ACTION_TYPE } from './types'
 
@@ -16,3 +16,5 @@ export const followers = createAsyncThunk<services.FollowersResponse, services.F
     }
   }
 )
+
+export const clearFollowers = createAction(FOLLOWERS_ACTION_TYPE.CLEAR_FOLLOWERS)

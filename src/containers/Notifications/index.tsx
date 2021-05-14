@@ -1,0 +1,18 @@
+import { useEffect } from 'react'
+import useNotificationList from './useNotificationList'
+import NotificationListItem from './notificationItem'
+const NotificationContainer: React.FC = () => {
+  const { notifications, fetchNotifications } = useNotificationList()
+  useEffect(() => {
+    fetchNotifications({ page: 1 })
+  }, [])
+  return (
+    <>
+      {notifications.map((notification, i) => (
+        <NotificationListItem data={notification} key={i} />
+        // <span key={i}>{notification.attributes.nickname}</span>
+      ))}
+    </>
+  )
+}
+export default NotificationContainer

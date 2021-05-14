@@ -2,35 +2,27 @@ import { useEffect, useState } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
+import GameSelector from '@components/GameSelector'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import useProfileEdit from './useProfileEdit'
+import useGameEdit from './useGameEdit'
 import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
-import BasicInfo from '@components/BasicInfo'
-import NameInfo from '../Partials/NameInfo'
-import SnsInfo from '../Partials/SnsInfo'
-import TagSelectDialog from '../Partials/TagSelectDialog'
 import useGetProfile from '@utils/hooks/useGetProfile'
-import useGetPrefectures from '@containers/UserSettings/useGetPrefectures'
-import useSettings from '@containers/UserSettings/useSettings'
 import { ESRoutes } from '@constants/route.constants'
+import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 
-const ProfileEditContainer: React.FC = () => {
+const GameEditContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
 
-  const { features, getFeatures } = useSettings()
-  const { prefectures, getPrefectures } = useGetPrefectures()
-  const { nicknames2, getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
-  const [nicknameData, setNicknameData] = useState([])
+  const { gameEdit, resetMeta, meta } = useGameEdit()
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
-  const [hasError, setError] = useState(false)
 
   useEffect(() => {
     if (userProfile) {
@@ -39,42 +31,18 @@ const ProfileEditContainer: React.FC = () => {
   }, [userProfile])
 
   useEffect(() => {
-    if (nicknames2) {
-      setNicknameData(nicknames2)
-    }
-  }, [nicknames2])
-
-  useEffect(() => {
     if (meta.loaded && !meta.error) {
       resetMeta()
       router.push(ESRoutes.PROFILE)
     }
   }, [meta.loaded])
 
-  useEffect(() => {
-    getNicknames()
-    getFeatures()
-    getPrefectures({})
-  }, [])
-
-  const onBasicInfoChanged = (data) => {
-    setProfile((prevState) => {
-      return { ...prevState, ...data }
-    })
-  }
-
-  const onFeatureSelect = (selectedFeatures) => {
-    setProfile((prevState) => {
-      return { ...prevState, features: selectedFeatures }
-    })
-  }
-
-  const handleError = (errors) => {
-    setError(!_.isEmpty(errors))
+  const onGameChange = (games: GameTitle['attributes'][]) => {
+    setProfile({ ...profile, game_titles: games })
   }
 
   const handleSubmit = () => {
-    profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
+    gameEdit({ game_titles: _.map(profile.game_titles, (g) => g.id) })
   }
 
   return (
@@ -84,29 +52,12 @@ const ProfileEditContainer: React.FC = () => {
           <IconButton className={classes.iconButtonBg} onClick={() => router.push(ESRoutes.PROFILE)}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
-          <Box pl={2}>{<Typography variant="h2">{t('common:user_profile.edit_profile')}</Typography>}</Box>
+          <Box pl={2}>{<Typography variant="h2">{t('common:user_profile.choose_game')}</Typography>}</Box>
         </Box>
 
         {profile && getUserProfileMeta.loaded && (
           <Box>
-            <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:register_profile.nickname')}
-            </Typography>
-            <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} handleError={handleError} />
-            <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:profile.tag')}
-            </Typography>
-            <TagSelectDialog selected={profile.features} features={features} onFeatureSelect={onFeatureSelect} />
-            <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:profile.basic_info')}
-            </Typography>
-            <Box paddingX={3}>
-              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
-            </Box>
-            <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:user_profile.sns')}
-            </Typography>
-            <SnsInfo profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
+            <GameSelector values={profile.game_titles} onChange={onGameChange} />
           </Box>
         )}
 
@@ -116,7 +67,7 @@ const ProfileEditContainer: React.FC = () => {
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth disabled={hasError} onClick={handleSubmit}>
+            <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit}>
               {t('common:common.save')}
             </ButtonPrimary>
           </Box>
@@ -129,11 +80,6 @@ const ProfileEditContainer: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(3),
-    paddingRight: theme.spacing(6),
-  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
@@ -174,4 +120,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default ProfileEditContainer
+export default GameEditContainer
