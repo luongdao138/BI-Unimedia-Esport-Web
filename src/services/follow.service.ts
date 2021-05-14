@@ -3,7 +3,7 @@ import { URI } from '@constants/uri.constants'
 
 export type FollowersParams = {
   page: number
-  user_code?: number
+  user_code?: string
 }
 
 export type FollowersResponse = {
@@ -23,8 +23,6 @@ export type Meta = {
 }
 
 export const followers = async (params: FollowersParams): Promise<FollowersResponse> => {
-  const { data } = await api.get<FollowersResponse>(URI.FOLLOWERS, {
-    params,
-  })
+  const { data } = await api.post<FollowersResponse>(`${URI.FOLLOWERS}/${params.user_code ? params.user_code : ''}`, {})
   return data
 }
