@@ -45,6 +45,10 @@ export default createReducer(initialState, (builder) => {
     state.data = action.payload.data
   })
 
+  builder.addCase(actions.gameEdit.fulfilled, (state, action) => {
+    state.data = action.payload.data
+  })
+
   builder.addCase(actions.getRecommendations.fulfilled, (state, action) => {
     state.recommendations = action.payload.data
   })

@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Icon } from '@material-ui/core'
+import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
@@ -11,6 +11,8 @@ import Iconic from '../Partials/iconic'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { UserProfile } from '@services/user.service'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface Props {
   userProfile: UserProfile
@@ -18,6 +20,7 @@ interface Props {
 
 const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const gender =
     userProfile.attributes.sex === GENDER.FEMALE
@@ -25,6 +28,8 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
       : userProfile.attributes.sex === GENDER.MALE
       ? t('common:common.male')
       : t('common:common.other')
+
+  const editGame = () => router.push(ESRoutes.GAME_EDIT)
 
   return (
     <>
@@ -52,7 +57,9 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
             <Typography variant="h2">10</Typography>
           </Box>
           <Box display="flex">
-            <Typography>{t('common:profile.edit')}</Typography>
+            <ButtonBase onClick={editGame}>
+              <Typography>{t('common:profile.edit')}</Typography>
+            </ButtonBase>
           </Box>
         </Box>
         <Box>

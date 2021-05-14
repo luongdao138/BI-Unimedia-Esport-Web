@@ -172,6 +172,7 @@ export default {
     self_introduction: '自己紹介',
     tag_edit: 'タグ編集',
     sns: 'SNS',
+    choose_game: 'ゲームを選ぶ',
   },
   action_types: {
     topic_comment_px: '【トピック】',
