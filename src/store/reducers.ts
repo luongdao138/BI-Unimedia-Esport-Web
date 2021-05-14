@@ -12,6 +12,7 @@ import community from '@store/community'
 import tournament from '@store/tournament'
 import recruitment from './recruitment'
 import game from '@store/game'
+import notification from '@store/notification'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -27,6 +28,7 @@ const reducer = combineReducers({
   tournament: tournament.reducers,
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
+  notification: notification.reducers,
 })
 export default reducer
 

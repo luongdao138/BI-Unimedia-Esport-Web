@@ -8,7 +8,7 @@ export type FollowingParams = {
 
 export type FollowingResponse = {
   data: Array<UserResponse>
-  links: any
+  meta: any
 }
 
 export type UserResponse = {
@@ -23,6 +23,6 @@ export type Meta = {
 }
 
 export const following = async (params: FollowingParams): Promise<FollowingResponse> => {
-  const { data } = await api.post<FollowingResponse>(`${URI.FOLLOWING}/${params.user_code ? params.user_code : ''}`, {})
+  const { data } = await api.post<FollowingResponse>(`${URI.FOLLOWING}/${params.user_code ? params.user_code : ''}`, params)
   return data
 }

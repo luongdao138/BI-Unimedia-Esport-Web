@@ -123,3 +123,15 @@ export const resetPassword = createAsyncThunk<services.UserLoginResponse, servic
     }
   }
 )
+
+export const logout = createAsyncThunk(AUTH_ACTION_TYPE.LOGOUT, async (_, { rejectWithValue }) => {
+  try {
+    const res = await services.logout()
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})

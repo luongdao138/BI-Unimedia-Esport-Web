@@ -18,9 +18,10 @@ const useFollowers = () => {
   const meta = useAppSelector(getFollowMeta)
   const currentUser = useAppSelector(authSelector.getAuth)
   const fetchFollowers = (param: FollowersParams) => dispatch(actions.followers(param))
+  const clearFollowers = () => dispatch(actions.clearFollowers())
   const resetMeta = () => dispatch(clearMetaData(actions.followers.typePrefix))
 
-  return { currentUser, followers, fetchFollowers, resetMeta, meta, page }
+  return { clearFollowers, currentUser, followers, fetchFollowers, resetMeta, meta, page }
 }
 
 export default useFollowers

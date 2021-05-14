@@ -7,4 +7,5 @@ export enum AUTH_ACTION_TYPE {
   FORGOT_CONFIRM = 'auth/forgotConfirm',
   RESET_PASSWORD = 'auth/resetPassword',
   REGISTER_PROFILE = 'auth/registerProfile',
+  LOGOUT = 'auth/logout',
 }
