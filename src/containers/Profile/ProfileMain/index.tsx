@@ -8,7 +8,7 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import CommunityCard from '@components/CommunityCard'
 import HeaderTags from '../Partials/headerTags'
 import Iconic from '../Partials/iconic'
-// import useSmartTime from '@utils/hooks/useSmartTime'
+import useSmartTime from '@utils/hooks/useSmartTime'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { UserProfile } from '@services/user.service'
@@ -27,7 +27,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
       : userProfile.attributes.sex === GENDER.MALE
       ? t('common:common.male')
       : t('common:common.other')
-  // const time = useSmartTime(userProfile.attributes.birth_date)
+  const time = useSmartTime(userProfile.attributes.birth_date)
 
   return (
     <>
@@ -37,7 +37,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
         <Box display="flex">
           <Iconic text={userProfile.attributes.area ? userProfile.attributes.area.area : 'unknown'} icon="fas fa-map-marker-alt" />
           <Iconic text={gender} icon="fas fa-user" />
-          <Iconic text="1990年01月11日" icon="fa fa-birthday-cake" />
+          <Iconic text={time} icon="fa fa-birthday-cake" />
         </Box>
         <Box display="flex" className={classes.marginTop20}>
           <ESButtonFacebookCircle className={classes.marginRight} />
