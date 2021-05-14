@@ -6,9 +6,6 @@ const useStyles = makeStyles(() => ({
     width: 30,
     height: 30,
   },
-  facebook: {
-    background: '#1877F2',
-  },
   svgRoot: {
     height: 18,
     width: 10,
@@ -16,14 +13,24 @@ const useStyles = makeStyles(() => ({
   iconRoot: {
     padding: 4,
   },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: '#1877F2',
+      opacity: props.disabled ? 0.3 : 1,
+    }
+  },
 }))
 
-const ESButtonFacebookCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+interface SocialProps {
+  link?: string
+}
 
+const ESButtonFacebookCircle: React.FC<IconButtonProps & SocialProps> = ({ link }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.facebook}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 9.5 17.872">
           <path
             id="Path_98"

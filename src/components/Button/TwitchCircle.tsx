@@ -6,9 +6,6 @@ const useStyles = makeStyles(() => ({
     width: 30,
     height: 30,
   },
-  Twitch: {
-    background: '#6441A5',
-  },
   svgRoot: {
     height: 17,
     width: 16,
@@ -16,13 +13,24 @@ const useStyles = makeStyles(() => ({
   iconRoot: {
     padding: 4,
   },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: '#6441A5',
+      opacity: props.disabled ? 0.3 : 1,
+    }
+  },
 }))
 
-const ESButtonTwitchCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+interface SocialProps {
+  link?: string
+}
+
+const ESButtonTwitchCircle: React.FC<IconButtonProps & SocialProps> = ({ link }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.Twitch}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 15.528 16.237">
           <path
             id="Path_16710"
