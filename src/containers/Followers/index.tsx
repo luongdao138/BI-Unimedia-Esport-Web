@@ -29,6 +29,9 @@ const useStyles = makeStyles(() => ({
     fontSize: 24,
     color: Colors.white,
   },
+  loaderCenter: {
+    textAlign: 'center',
+  },
 }))
 
 const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
@@ -37,7 +40,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
   const [hasMore, setHasMore] = useState(true)
 
   const { t } = useTranslation(['common'])
-  const { followers, fetchFollowers, page } = useFollowers()
+  const { clearFollowers, followers, fetchFollowers, page } = useFollowers()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -53,6 +56,9 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
       _.merge(params, { user_code: user_code })
     }
     fetchFollowers(params)
+    return function clear() {
+      clearFollowers()
+    }
   }, [])
 
   const fetchMoreData = () => {
@@ -80,7 +86,11 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
             dataLength={followers.length}
             next={fetchMoreData}
             hasMore={hasMore}
-            loader={<ESLoader />}
+            loader={
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            }
             height={500}
             endMessage={
               <p style={{ textAlign: 'center' }}>
