@@ -33,5 +33,6 @@ export const URI = {
   NICKNAMES_2: '/v2/users/get_nicknames2',
   USER_RECOMMENDATIONS: '/v2/users/recommendations',
   RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations',
-  GAME_UPDATE: '/v1/users',
+  GAME_UPDATE: '/v2/users/game_titles',
+  NOTIFICATION_LIST: '/v2/notification/own',
 }

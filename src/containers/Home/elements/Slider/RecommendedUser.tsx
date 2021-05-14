@@ -3,6 +3,8 @@ import ESSlider from '@components/Slider'
 import ESAvatar from '@components/Avatar'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
@@ -12,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  innerWrap: { width: 60 },
+  innerWrap: { width: 60, cursor: 'pointer' },
   avatar: {
     margin: '0 auto',
   },
@@ -45,6 +47,7 @@ type userAttributesProps = {
 
 export const RecommendedUser: React.FC<Props> = ({ users }) => {
   const classes = useStyles()
+  const router = useRouter()
 
   return (
     <ESSlider
@@ -55,7 +58,7 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
       disableResponsiveWidth
       items={users.map((user, i) => (
         <Box key={i}>
-          <Box className={classes.innerWrap}>
+          <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>
             <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
             <Typography variant="caption" className={classes.name}>
               {user.attributes.nickname}

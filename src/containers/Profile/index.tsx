@@ -81,10 +81,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography>@{userProfile.attributes.user_code}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowers user_code={null} />
-            <ESFollowing user_code={null} />
-            {/* <ESFollowers user_code={isOthers ? user_code[0] : null} />
-  <ESFollowing user_code={isOthers ? user_code[0] : null} /> */}
+            <ESFollowers user_code={isOthers ? user_code[0] : null} />
+            <ESFollowing user_code={isOthers ? user_code[0] : null} />
           </Box>
         </Grid>
       </>
