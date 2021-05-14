@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
 import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
+import { registerProfile } from '@store/auth/actions'
 
 type StateType = {
   data: ProfileResponse['data']
@@ -32,6 +33,10 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
+    state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
+  })
+
+  builder.addCase(registerProfile.fulfilled, (state, action) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
   })
 
