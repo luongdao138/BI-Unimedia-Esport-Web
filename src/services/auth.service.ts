@@ -1,5 +1,6 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
+import { UserProfile } from './user.service'
 
 export type UserLoginParams = {
   email: string
@@ -10,7 +11,7 @@ export type UserLoginParams = {
 export type UserLoginResponse = {
   accessToken?: string
   avatar_url?: string | null
-  email: string
+  email?: string
   id?: number
   is_social?: boolean
   nickname?: string
@@ -21,13 +22,7 @@ export type UserLoginResponse = {
   confirmation_code?: string
 }
 
-export type UserProfileResponse = {
-  data: {
-    id: string
-    type: string
-    attributes: UserLoginResponse
-  }
-}
+export type UserProfileResponse = { data: UserProfile }
 
 export type UserRegisterResponse = {
   email: string

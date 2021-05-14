@@ -1,9 +1,13 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
 
+export type NotificationListParams = {
+  page: number
+}
+
 export type NotificationListResponse = {
   data: Array<NotificationResponse>
-  links: any
+  meta: any
 }
 
 export type NotificationResponse = {
@@ -17,7 +21,7 @@ export type Meta = {
   total_pages: number
 }
 
-export const notificationList = async (): Promise<NotificationListResponse> => {
-  const { data } = await api.get<NotificationListResponse>(URI.NOTIFICATION_LIST)
+export const notificationList = async (params: NotificationListParams): Promise<NotificationListResponse> => {
+  const { data } = await api.get<NotificationListResponse>(URI.NOTIFICATION_LIST, { params })
   return data
 }

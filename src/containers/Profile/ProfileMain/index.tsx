@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Icon } from '@material-ui/core'
+import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
@@ -12,6 +12,8 @@ import Iconic from '../Partials/iconic'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { UserProfile } from '@services/user.service'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface Props {
   userProfile: UserProfile
@@ -20,6 +22,7 @@ interface Props {
 
 const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const classes = useStyles()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const gender =
     userProfile.attributes.sex === GENDER.FEMALE
@@ -28,6 +31,8 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
       ? t('common:common.male')
       : t('common:common.other')
   // const time = useSmartTime(userProfile.attributes.birth_date)
+
+  const editGame = () => router.push(ESRoutes.GAME_EDIT)
 
   return (
     <>
@@ -56,7 +61,9 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           </Box>
           {isOthers ? null : (
             <Box display="flex">
-              <Typography>{t('common:profile.edit')}</Typography>
+              <ButtonBase onClick={editGame}>
+                <Typography>{t('common:profile.edit')}</Typography>
+              </ButtonBase>
             </Box>
           )}
         </Box>

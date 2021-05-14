@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import _ from 'lodash'
 import * as actions from '../actions'
 import { UserLoginResponse } from '@services/auth.service'
 
@@ -32,8 +33,8 @@ export default createReducer(initialState, (builder) => {
       state.user = action.payload
     })
     .addCase(actions.registerProfile.fulfilled, (state, action) => {
-      state.user.nickname = action.payload.data.attributes.nickname
-      state.user.user_code = action.payload.data.attributes.user_code
+      const newUser = _.pick(action.payload.data.attributes, ['nickname', 'user_code'])
+      state.user = { ...state.user, ...newUser }
     })
     .addCase(actions.logout.fulfilled, (state) => {
       state.user = undefined

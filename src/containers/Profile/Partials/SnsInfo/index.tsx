@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 import { Grid, Container, makeStyles, Box } from '@material-ui/core'
 import { useFormik } from 'formik'
+import * as Yup from 'yup'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitchCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
 import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
+import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
 
 export type SnsInfoParams = {
@@ -19,11 +21,21 @@ export type SnsInfoParams = {
 interface SnsInfoProps {
   profile: any
   onDataChange: (data: any) => void
+  handleError: (error) => void
 }
 
-const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange }) => {
+const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
   const { instagram_link, facebook_link, twitter_link, twitch_link, discord_link } = profile
+
+  const validationSchema = Yup.object().shape({
+    instagram_link: Yup.string().max(250, t('common:common.too_long')),
+    discord_link: Yup.string().max(250, t('common:common.too_long')),
+    facebook_link: Yup.string().max(250, t('common:common.too_long')),
+    twitter_link: Yup.string().max(250, t('common:common.too_long')),
+    twitch_link: Yup.string().max(250, t('common:common.too_long')),
+  })
 
   const { handleChange, values, touched, errors } = useFormik<SnsInfoParams>({
     initialValues: {
@@ -33,18 +45,23 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange }) => {
       twitch_link: twitch_link ? twitch_link : '',
       discord_link: discord_link ? discord_link : '',
     },
+    validationSchema,
     onSubmit: (_) => null,
   })
 
   useEffect(() => {
     onDataChange({
-      instagram_link: values.instagram_link,
-      facebook_link: values.facebook_link,
-      twitter_link: values.twitter_link,
-      twitch_link: values.twitch_link,
-      discord_link: values.discord_link,
+      instagram_link: values.instagram_link.trim(),
+      facebook_link: values.facebook_link.trim(),
+      twitter_link: values.twitter_link.trim(),
+      twitch_link: values.twitch_link.trim(),
+      discord_link: values.discord_link.trim(),
     })
   }, [values])
+
+  useEffect(() => {
+    handleError(errors)
+  }, [errors])
 
   return (
     <Container maxWidth="md" className={classes.container}>
