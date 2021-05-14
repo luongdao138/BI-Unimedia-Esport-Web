@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import useNotificationList from './useNotificationList'
+import NotificationListItem from './notificationItem'
 const NotificationContainer: React.FC = () => {
   const { notifications, fetchNotifications } = useNotificationList()
   useEffect(() => {
@@ -8,7 +9,8 @@ const NotificationContainer: React.FC = () => {
   return (
     <>
       {notifications.map((notification, i) => (
-        <span key={i}>{notification.attributes.nickname}</span>
+        <NotificationListItem data={notification} key={i} />
+        // <span key={i}>{notification.attributes.nickname}</span>
       ))}
     </>
   )
