@@ -97,7 +97,7 @@ export default {
     settings: '設定',
   },
   infinite_scroll: {
-    message: 'Yay! You have seen it all',
+    message: 'あなたはそれをすべて見ました',
   },
   followers: {
     title: 'フォロー中',

@@ -23,6 +23,6 @@ export type Meta = {
 }
 
 export const followers = async (params: FollowersParams): Promise<FollowersResponse> => {
-  const { data } = await api.post<FollowersResponse>(`${URI.FOLLOWERS}/${params.user_code ? params.user_code : ''}`, {})
+  const { data } = await api.post<FollowersResponse>(`${URI.FOLLOWERS}/${params.user_code ? params.user_code : ''}`, params)
   return data
 }

@@ -59,7 +59,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
     return function clear() {
       clearFollowers()
     }
-  }, [])
+  }, [user_code])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {

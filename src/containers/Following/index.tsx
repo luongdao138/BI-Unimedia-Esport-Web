@@ -51,7 +51,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
     return function clear() {
       clearFollowing()
     }
-  }, [])
+  }, [user_code])
 
   const handleClickOpen = () => {
     setOpen(true)
