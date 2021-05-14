@@ -135,5 +135,7 @@ export default {
   },
   chat: {
     title: 'メッセージ',
+    back_list: '宛先',
+    create_new: '新規作成',
   },
 }

@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -83,9 +84,9 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 <div className="hamburger-inner"></div>
               </div>
             </div>
-            <a href="/" className="logo">
-              <img src="/images/logo.svg" />
-            </a>
+            <Link href="/">
+              <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
+            </Link>
             <div className={classes.search + ' search-area'}>
               <SearchArea selectData={searchOptions} onSearch={onSearch} />
             </div>
