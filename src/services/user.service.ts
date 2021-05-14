@@ -59,6 +59,7 @@ export type UserProfile = {
     facebook_link?: string | null
     twitter_link?: string | null
     twitch_link?: string
+    discord_link?: string
     show_sex?: boolean
     show_area?: boolean
     show_birth_date?: boolean

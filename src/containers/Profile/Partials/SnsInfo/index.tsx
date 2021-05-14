@@ -69,7 +69,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box display="flex" flexDirection="row" justifyContent="center">
-              <ESButtonFacebookCircle disabled={true} className={classes.icon} />
+              <ESButtonFacebookCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="facebook_link"
                 autoFocus
@@ -83,7 +83,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" flexDirection="row" justifyContent="center">
-              <ESButtonTwitterCircle disabled={true} className={classes.icon} />
+              <ESButtonTwitterCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="twitter_link"
                 autoFocus
@@ -97,7 +97,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" flexDirection="row" justifyContent="center">
-              <ESButtonTwitchCircle disabled={true} className={classes.icon} />
+              <ESButtonTwitchCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="twitch_link"
                 autoFocus
@@ -111,7 +111,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" flexDirection="row" justifyContent="center">
-              <ESButtonInstagramCircle disabled={true} className={classes.icon} />
+              <ESButtonInstagramCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="instagram_link"
                 autoFocus
@@ -125,7 +125,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" flexDirection="row" justifyContent="center">
-              <ESButtonDiscordCircle disabled={true} className={classes.icon} />
+              <ESButtonDiscordCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="discord_link"
                 autoFocus
