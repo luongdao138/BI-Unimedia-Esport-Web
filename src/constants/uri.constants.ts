@@ -35,4 +35,5 @@ export const URI = {
   RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations',
   GAME_UPDATE: '/v2/users/game_titles',
   NOTIFICATION_LIST: '/v2/notification/own',
+  LOGOUT: '/v1/auth/logout',
 }

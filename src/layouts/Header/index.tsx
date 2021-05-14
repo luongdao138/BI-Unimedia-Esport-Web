@@ -12,6 +12,20 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
 import ESButton from '@components/Button'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import ESModal from '@components/Modal'
+import BlankLayout from '@layouts/BlankLayout'
+import LoginContainer from '@containers/Login'
+import IntroContainer from '@containers/Login/Intro'
+import ForgotContainer from '@containers/ForgotPassword'
+import ForgotConfirmContainer from '@containers/ForgotConfirm'
+import ResetPasswordContainer from '@containers/ResetPassword'
+import RegisterContainer from '@containers/Register'
+import RegisterByEmailContainer from '@containers/RegisterByEmail'
+import ConfirmContainer from '@containers/Confirm'
+import RegisterProfileContainer from '@containers/RegisterProfile'
+import UserSettingsContainer from '@containers/UserSettings'
+import { useContextualRouting } from 'next-use-contextual-routing'
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -65,6 +79,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { handleReturn } = useReturnHref()
+  const { makeContextualHref } = useContextualRouting()
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -74,7 +90,34 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     })
   }
 
-  const navigateToLogin = () => router.push(ESRoutes.LOGIN)
+  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+
+  const renderContent = () => {
+    switch (router.query.pathName) {
+      case ESRoutes.LOGIN:
+        return <LoginContainer />
+      case ESRoutes.WELCOME:
+        return <IntroContainer />
+      case ESRoutes.FORGOT_PASSWORD:
+        return <ForgotContainer />
+      case ESRoutes.FORGOT_PASSWORD_CONFIRM:
+        return <ForgotConfirmContainer />
+      case ESRoutes.FORGOT_PASSWORD_RESET:
+        return <ResetPasswordContainer />
+      case ESRoutes.REGISTER:
+        return <RegisterContainer />
+      case ESRoutes.REGISTER_BY_EMAIL:
+        return <RegisterByEmailContainer />
+      case ESRoutes.REGISTER_CONFIRM:
+        return <ConfirmContainer />
+      case ESRoutes.REGISTER_PROFILE:
+        return <RegisterProfileContainer />
+      case ESRoutes.USER_SETTINGS:
+        return <UserSettingsContainer />
+      default:
+        break
+    }
+  }
 
   return (
     <div className={classes.grow}>
@@ -118,12 +161,16 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
-                  <ESButton variant="contained" color="primary" onClick={navigateToLogin}>
+                  <ESButton variant="contained" color="primary" onClick={openModal}>
                     ログイン
                   </ESButton>
                 </>
               )}
             </div>
+
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
+              <BlankLayout>{renderContent()}</BlankLayout>
+            </ESModal>
           </Toolbar>
         </Container>
       </AppBar>

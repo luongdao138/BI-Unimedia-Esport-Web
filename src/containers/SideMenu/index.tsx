@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -9,6 +10,11 @@ import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
+import ESModal from '@components/Modal'
+import BlankLayout from '@layouts/BlankLayout'
+import QrContainer from '@containers/Qr'
+import LogoutContainer from '@containers/Logout'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -97,6 +103,8 @@ const ListItem = withStyles({
 })(MuiListItem)
 
 const SideMenu: React.FC = () => {
+  const [modal, setModal] = useState(false)
+  const [content, setContent] = useState('')
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -105,6 +113,12 @@ const SideMenu: React.FC = () => {
   const isSelected = (routeName: string): boolean => {
     return router.pathname === routeName
   }
+
+  const handleModal = (contentType: string) => {
+    setModal(true)
+    setContent(contentType)
+  }
+
   return (
     <>
       <Box className={classes.menu}>
@@ -166,8 +180,27 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:home.settings')} />
             </ListItem>
           </Link>
+          <Box paddingBottom={4} />
+          <ListItem className={classes.list} button disableRipple onClick={() => handleModal('qr')}>
+            <ListItemIcon className={classes.icon}>
+              <Icon fontSize="small" className="fa fa-qrcode" />
+            </ListItemIcon>
+            <ListItemText className={classes.listText} primary={t('common:qr')} />
+          </ListItem>
+          <ListItem className={classes.list} button disableRipple onClick={() => handleModal('logout')}>
+            <ListItemIcon className={classes.icon}>
+              <Icon fontSize="small" className="fa fa-sign-out-alt" />
+            </ListItemIcon>
+            <ListItemText className={classes.listText} primary={t('common:logout')} />
+          </ListItem>
         </List>
       </Box>
+
+      <ESModal open={modal} handleClose={() => setModal(false)}>
+        <BlankLayout>
+          {content === 'qr' ? <QrContainer handleClose={() => setModal(false)} /> : <LogoutContainer handleClose={() => setModal(false)} />}
+        </BlankLayout>
+      </ESModal>
     </>
   )
 }

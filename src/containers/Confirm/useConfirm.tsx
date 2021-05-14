@@ -4,15 +4,15 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import authStore from '@store/auth'
 import { UserConfirmParams } from '@services/auth.service'
 import { clearMetaData } from '@store/metadata/actions'
-import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { selectors, actions } = authStore
 const getRegisterConfirmMeta = createMetaSelector(actions.registerConfirm)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useConfirm = (confirmationCode: string) => {
-  const router = useRouter()
+  const { navigateScreen } = useReturnHref()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const metaConfirm = useAppSelector(getRegisterConfirmMeta)
@@ -21,11 +21,11 @@ const useConfirm = (confirmationCode: string) => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerConfirm.typePrefix))
 
-  const backAction = () => router.push(ESRoutes.REGISTER_BY_EMAIL)
+  const backAction = () => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
 
   useEffect(() => {
     if (metaConfirm.loaded) {
-      router.push(ESRoutes.REGISTER_PROFILE)
+      navigateScreen(ESRoutes.REGISTER_PROFILE)
       resetMeta()
     }
   }, [metaConfirm.loaded])
