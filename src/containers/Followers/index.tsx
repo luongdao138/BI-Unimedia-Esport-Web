@@ -12,7 +12,7 @@ import { Colors } from '@theme/colors'
 import _ from 'lodash'
 
 export interface ESFollowersProps {
-  user_code?: number
+  user_code?: string
 }
 
 const useStyles = makeStyles(() => ({
@@ -26,6 +26,7 @@ const useStyles = makeStyles(() => ({
   },
   count: {
     fontWeight: 'bold',
+    fontSize: 24,
     color: Colors.white,
   },
 }))
@@ -69,8 +70,8 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
           <Typography>{t('common:followers.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
-            <Typography>{t('common:followers.th')}</Typography>
           </Box>
+          <Typography>{t('common:followers.th')}</Typography>
         </Box>
       </Button>
       <ESDialog open={open} title={t('common:followers.title')} handleClose={handleClose}>

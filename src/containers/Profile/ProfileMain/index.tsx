@@ -8,6 +8,7 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import CommunityCard from '@components/CommunityCard'
 import HeaderTags from '../Partials/headerTags'
 import Iconic from '../Partials/iconic'
+// import useSmartTime from '@utils/hooks/useSmartTime'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { UserProfile } from '@services/user.service'
@@ -16,9 +17,10 @@ import { useRouter } from 'next/router'
 
 interface Props {
   userProfile: UserProfile
+  isOthers: boolean
 }
 
-const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
+const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
@@ -28,6 +30,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
       : userProfile.attributes.sex === GENDER.MALE
       ? t('common:common.male')
       : t('common:common.other')
+  // const time = useSmartTime(userProfile.attributes.birth_date)
 
   const editGame = () => router.push(ESRoutes.GAME_EDIT)
 
@@ -35,9 +38,9 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
     <>
       <Grid xs={12} item className={classes.headerContainerSecond}>
         <Typography className={classes.marginTop20}>{userProfile.attributes.bio}</Typography>
-        <HeaderTags items={userProfile.attributes.features} />
+        <HeaderTags items={userProfile.attributes.features ?? null} />
         <Box display="flex">
-          <Iconic text={userProfile.attributes.area.area} icon="fas fa-map-marker-alt" />
+          <Iconic text={userProfile.attributes.area ? userProfile.attributes.area.area : 'unknown'} icon="fas fa-map-marker-alt" />
           <Iconic text={gender} icon="fas fa-user" />
           <Iconic text="1990年01月11日" icon="fa fa-birthday-cake" />
         </Box>
@@ -52,15 +55,17 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile }) => {
         <Box display="flex" justifyContent="space-between">
           <Box display="flex">
             <Typography variant="h2" className={classes.marginRight20}>
-              {t('common:profile.favorite_game')}
+              {t('common:profile.favorite_game.title')}
             </Typography>
             <Typography variant="h2">10</Typography>
           </Box>
-          <Box display="flex">
-            <ButtonBase onClick={editGame}>
-              <Typography>{t('common:profile.edit')}</Typography>
-            </ButtonBase>
-          </Box>
+          {isOthers ? null : (
+            <Box display="flex">
+              <ButtonBase onClick={editGame}>
+                <Typography>{t('common:profile.edit')}</Typography>
+              </ButtonBase>
+            </Box>
+          )}
         </Box>
         <Box>
           {userProfile.attributes.game_titles.length > 0

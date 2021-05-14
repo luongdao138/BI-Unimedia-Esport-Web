@@ -146,8 +146,8 @@ export type GameEditParams = {
   game_titles: number[]
 }
 
-export const getUserProfile = async (): Promise<ProfileResponse> => {
-  const { data } = await api.get<ProfileResponse>(URI.USER_DETAIL_PROFILE)
+export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
+  const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
 }
 

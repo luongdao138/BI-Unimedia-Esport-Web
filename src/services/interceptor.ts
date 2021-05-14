@@ -2,7 +2,7 @@
 import api from './api'
 import { StoreType } from '../store/store'
 import { URI } from '@constants/uri.constants'
-import { refreshLogin } from '@store/auth/actions'
+import { loginByEmail } from '@store/auth/actions'
 
 let subscribers: Function[] = []
 
@@ -50,7 +50,7 @@ export const authorizationProvider = (store: StoreType): void => {
                 refresh_token: refreshToken,
               })
               .then((res) => {
-                store.dispatch(refreshLogin(res.data))
+                store.dispatch({ type: loginByEmail.fulfilled.toString(), payload: res.data })
                 onAccessTokenFetched(res.data.accessToken)
               })
               .finally(() => {
