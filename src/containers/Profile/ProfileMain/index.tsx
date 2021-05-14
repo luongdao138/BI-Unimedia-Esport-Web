@@ -2,8 +2,8 @@ import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
-import ESButtonTwitterCircle from '@components/Button/TwitchCircle'
-import ESButtonTwitchCircle from '@components/Button/TwitterCircle'
+import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
+import ESButtonTwitchCircle from '@components/Button/TwitchCircle'
 import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import CommunityCard from '@components/CommunityCard'
 import HeaderTags from '../Partials/headerTags'
@@ -45,10 +45,10 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           <Iconic text={time} icon="fa fa-birthday-cake" />
         </Box>
         <Box display="flex" className={classes.marginTop20}>
-          <ESButtonFacebookCircle className={classes.marginRight} />
-          <ESButtonTwitterCircle className={classes.marginRight} />
-          <ESButtonTwitchCircle className={classes.marginRight} />
-          <ESButtonInstagramCircle className={classes.marginRight} />
+          <ESButtonFacebookCircle className={classes.marginRight} link={userProfile.attributes.facebook_link} />
+          <ESButtonTwitterCircle className={classes.marginRight} link={userProfile.attributes.twitter_link} />
+          <ESButtonTwitchCircle className={classes.marginRight} link={userProfile.attributes.twitch_link} />
+          <ESButtonInstagramCircle className={classes.marginRight} link={userProfile.attributes.instagram_link} />
         </Box>
       </Grid>
       <Grid xs={12} item className={classes.bodyContainer}>
