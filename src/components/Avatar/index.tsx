@@ -23,7 +23,11 @@ interface Props extends AvatarProps {
 const ESAvatar: React.FC<Props> = (props) => {
   const classes = useStyles({ src: props.src, alt: props.alt, size: props.size })
   if (props.src) {
-    return <Avatar {...props} classes={classes} alt={props.alt} />
+    return (
+      <Avatar {...props} classes={classes} alt={props.alt}>
+        <img src="/images/avatar_o.png" className={classes.root} />
+      </Avatar>
+    )
   }
 
   return (
