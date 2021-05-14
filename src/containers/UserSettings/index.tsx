@@ -34,7 +34,7 @@ const UserSettingsContainer: React.FC = () => {
   const { features, getFeatures } = useSettings()
   const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const [step, setStep] = useState(0)
-  const [profile, setProfile] = useState<(UserProfile['attributes'] & { area_id?: number }) | null>(null)
+  const [profile, setProfile] = useState<UserProfile['attributes'] | null>(null)
   const [isReview, setReview] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
@@ -44,6 +44,14 @@ const UserSettingsContainer: React.FC = () => {
       setProfile({ ...profileData, area_id: profileData.area ? profileData.area.id : -1 })
     }
   }, [userProfile])
+
+  useEffect(() => {
+    if (getUserProfileMeta.loaded) {
+      if (!userProfile || userProfile.attributes.update_step !== 1) {
+        router.push(ESRoutes.HOME)
+      }
+    }
+  }, [getUserProfileMeta.loaded])
 
   useEffect(() => {
     getFeatures()

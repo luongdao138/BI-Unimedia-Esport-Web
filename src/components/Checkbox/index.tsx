@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingTop: theme.spacing(0.625),
     paddingBottom: theme.spacing(0.625),
-    paddingLeft: theme.spacing(1),
+    paddingLeft: 0,
     paddingRight: theme.spacing(1),
     '&:hover': {
       backgroundColor: 'transparent',

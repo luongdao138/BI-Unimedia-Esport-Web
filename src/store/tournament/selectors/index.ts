@@ -5,3 +5,5 @@ const getRoot = (state: RootState) => state.tournament
 
 export const getSearchTournaments = createSelector(getRoot, (state) => state.searchTournaments)
 export const getSearchTournamentsMeta = createSelector(getRoot, (state) => state.searchTournamentsMeta)
+export const getTournamentFollowers = createSelector(getRoot, (state) => state.tournamentFollowers)
+export const getTournamentResults = createSelector(getRoot, (state) => state.tournamentResults)

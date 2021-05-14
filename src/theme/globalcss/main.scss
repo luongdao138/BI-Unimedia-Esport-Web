@@ -10,8 +10,9 @@
   max-width: 890px;
   background: #000;
   width: 100%;
-  padding-top: 60px;
+  margin-top: 60px;
   border-right: 1px solid #212121;
+  position: relative;
 }
 
 .main-wrapper {
@@ -300,7 +301,7 @@
   margin-top: 32px;
 }
 .slideWrap .swiper-button-disabled {
-  visibility: 'hidden';
+  visibility: hidden;
   opacity: 0;
   transition: all 0.2s ease-in-out;
 }
@@ -330,19 +331,60 @@
 .header-container {
   position: relative;
 }
+.chat-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+}
 
 .chat-flex {
   display: flex;
   height: 100%;
   flex: 1;
+  padding-top: 60px;
 }
 .room-list-column {
   flex: 0 0 260px;
   border-right: 1px solid #212121;
   height: 100%;
+  max-width: 260px;
+  transition: width 0.5s ease;
+  visibility: visible;
+  opacity: 1;
+  width: 100%;
 }
 .room-column {
+  visibility: visible;
+  opacity: 1;
+  width: 100%;
   flex: 1;
+}
+
+.header-first-column {
+  flex: 0 0 260px;
+  height: 100%;
+  align-items: center;
+  max-width: 260px;
+  display: flex;
+  padding: 16px;
+  width: 100%;
+  border-bottom: 1px solid #212121;
+}
+.header-second-column {
+  flex: 1;
+  border-bottom: 1px solid #212121;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-arrow-room {
+  display: flex;
+  align-items: center;
+  display: none;
 }
 
 @media (max-width: 1200px) {
@@ -369,7 +411,40 @@
 
 @media (max-width: 720px) {
   .room-list-column {
+    visibility: hidden;
+    opacity: 0;
+    width: 0;
     display: none;
+  }
+  .mobile-arrow-room {
+    display: flex;
+  }
+  .header-first-column {
+    display: none;
+  }
+  .chat-wrapper .room-create-button {
+    display: none;
+  }
+  .chat-wrapper.show-list .room-list-column {
+    visibility: visible;
+    opacity: 1;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    flex: 1;
+  }
+  .chat-wrapper.show-list .room-column {
+    visibility: hidden;
+    opacity: 0;
+    width: 0;
+    display: none;
+  }
+  .chat-wrapper.show-list .mobile-arrow-room {
+    display: none;
+  }
+  .chat-wrapper.show-list .header-first-column,
+  .chat-wrapper.show-list .room-create-button {
+    display: flex;
   }
 }
 
@@ -392,6 +467,7 @@
   .chat-wrapper {
     width: 100%;
     max-width: 100%;
+    position: relative;
     border: 0 none;
   }
   .content-wrapper {
