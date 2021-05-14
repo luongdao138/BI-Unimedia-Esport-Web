@@ -104,3 +104,8 @@ export const registerProfile = async (params: UserProfileParams): Promise<UserPr
   const { data } = await api.put<UserProfileResponse>(URI.REGISTER_PROFILE, params)
   return data
 }
+
+export const logout = async (): Promise<any> => {
+  const { data } = await api.post<any>(URI.LOGOUT)
+  return data
+}

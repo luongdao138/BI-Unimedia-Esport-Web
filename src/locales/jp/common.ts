@@ -27,8 +27,8 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
-    intro: `exeLABをお楽しみいただくには
-ログインが必要です`,
+    intro_hint1: 'exeLABをお楽しみいただくには',
+    intro_hint2: 'ログインが必要です',
   },
   register: {
     button: 'メールアドレスで登録',
@@ -217,4 +217,15 @@ export default {
   },
   confirmation_review: '入力情報の確認',
   fix: '修正する',
+  qr: 'QRコード',
+  logout: 'ログアウト',
+  qr_screen: {
+    title: 'QRコードは株式会社デンソーウェーブの商標登録です',
+  },
+  logout_screen: {
+    title: 'exeLABからログアウトしますか？',
+    desc: 'いつでもログインし直すことができます。',
+    cancel: 'キャンセル',
+    ok: 'ログアウト',
+  },
 }

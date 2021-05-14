@@ -34,4 +34,5 @@ export const URI = {
   USER_RECOMMENDATIONS: '/v2/users/recommendations',
   RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations',
   NOTIFICATION_LIST: '/v2/notification/own',
+  LOGOUT: '/v1/auth/logout',
 }

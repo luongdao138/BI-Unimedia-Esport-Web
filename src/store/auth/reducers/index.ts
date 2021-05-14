@@ -35,4 +35,7 @@ export default createReducer(initialState, (builder) => {
       state.user.nickname = action.payload.data.attributes.nickname
       state.user.user_code = action.payload.data.attributes.user_code
     })
+    .addCase(actions.logout.fulfilled, (state) => {
+      state.user = undefined
+    })
 })
