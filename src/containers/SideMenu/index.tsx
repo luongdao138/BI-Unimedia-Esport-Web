@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
+import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
@@ -73,6 +74,10 @@ const useStyles = makeStyles((theme) => ({
   clickable: {
     cursor: 'pointer',
   },
+  logout: {
+    position: 'absolute',
+    bottom: 70,
+  },
 }))
 
 const ListItem = withStyles({
@@ -109,6 +114,7 @@ const SideMenu: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { selectors } = userProfileStore
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const isSelected = (routeName: string): boolean => {
     return router.pathname === routeName
@@ -122,17 +128,19 @@ const SideMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.menu}>
-        <Box className={classes.clickable} onClick={() => router.push(ESRoutes.PROFILE)}>
+        <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE)}>
           <Box className={classes.userInfo}>
             <ProfileAvatar size={80} src={userProfile ? userProfile.attributes.avatar_url : '/images/avatar.png'} />
-            <Box width="100%" textAlign="center">
-              <Typography variant="h2" className={classes.name}>
-                {userProfile ? userProfile.attributes.nickname : ''}
-              </Typography>
-              <Typography variant="body2" className={classes.usercode}>
-                @{userProfile ? userProfile.attributes.user_code : ''}
-              </Typography>
-            </Box>
+            {isAuthenticated && (
+              <Box width="100%" textAlign="center">
+                <Typography variant="h2" className={classes.name}>
+                  {userProfile ? userProfile.attributes.nickname : ''}
+                </Typography>
+                <Typography variant="body2" className={classes.usercode}>
+                  @{userProfile ? userProfile.attributes.user_code : ''}
+                </Typography>
+              </Box>
+            )}
           </Box>
         </Box>
 
@@ -180,27 +188,42 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:home.settings')} />
             </ListItem>
           </Link>
-          <Box paddingBottom={4} />
-          <ListItem className={classes.list} button disableRipple onClick={() => handleModal('qr')}>
-            <ListItemIcon className={classes.icon}>
-              <Icon fontSize="small" className="fa fa-qrcode" />
-            </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:qr')} />
-          </ListItem>
-          <ListItem className={classes.list} button disableRipple onClick={() => handleModal('logout')}>
-            <ListItemIcon className={classes.icon}>
-              <Icon fontSize="small" className="fa fa-sign-out-alt" />
-            </ListItemIcon>
-            <ListItemText className={classes.listText} primary={t('common:logout')} />
-          </ListItem>
+          {isAuthenticated && (
+            <>
+              <Box paddingBottom={4} />
+              <ListItem className={classes.list} button disableRipple onClick={() => handleModal('qr')}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-qrcode" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:qr')} />
+              </ListItem>
+            </>
+          )}
         </List>
+
+        {isAuthenticated && (
+          <Box className={classes.logout}>
+            <ListItem className={classes.list} button disableRipple onClick={() => handleModal('logout')}>
+              <ListItemIcon className={classes.icon}>
+                <Icon fontSize="small" className="fa fa-sign-out-alt" />
+              </ListItemIcon>
+              <ListItemText className={classes.listText} primary={t('common:logout')} />
+            </ListItem>
+          </Box>
+        )}
       </Box>
 
-      <ESModal open={modal} handleClose={() => setModal(false)}>
-        <BlankLayout>
-          {content === 'qr' ? <QrContainer handleClose={() => setModal(false)} /> : <LogoutContainer handleClose={() => setModal(false)} />}
-        </BlankLayout>
-      </ESModal>
+      {isAuthenticated && (
+        <ESModal open={modal} handleClose={() => setModal(false)}>
+          <BlankLayout>
+            {content === 'qr' ? (
+              <QrContainer handleClose={() => setModal(false)} />
+            ) : (
+              <LogoutContainer handleClose={() => setModal(false)} />
+            )}
+          </BlankLayout>
+        </ESModal>
+      )}
     </>
   )
 }
