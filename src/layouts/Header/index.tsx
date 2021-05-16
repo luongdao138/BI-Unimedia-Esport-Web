@@ -27,8 +27,17 @@ import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import { useContextualRouting } from 'next-use-contextual-routing'
+import { useState } from 'react'
+import { Typography, Popover } from '@material-ui/core'
+import NotificationContainer from '@containers/Notifications'
 
 const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
   grow: { flexGrow: 1 },
   appBar: {
     background: '#000',
@@ -82,6 +91,17 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const { handleReturn } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null)
+  }
+
+  const openNotif = Boolean(anchorEl)
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -143,6 +163,35 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
+                  <Typography
+                    aria-owns={openNotif ? 'mouse-over-popover' : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handlePopoverOpen}
+                    onMouseLeave={handlePopoverClose}
+                  >
+                    Hover with a Popover.
+                  </Typography>
+                  <Popover
+                    id="mouse-over-popover"
+                    className={classes.popover}
+                    classes={{
+                      paper: classes.paper,
+                    }}
+                    open={openNotif}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                  >
+                    <NotificationContainer />
+                  </Popover>
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>

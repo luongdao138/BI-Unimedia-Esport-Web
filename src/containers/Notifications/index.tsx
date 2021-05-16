@@ -1,15 +1,31 @@
-import { Grid } from '@material-ui/core'
-import { useEffect, useState } from 'react'
+import { Box, Grid, Icon, IconButton, Typography } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useNotificationList from './useNotificationList'
 import NotificationListItem from './notificationItem'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   loaderCenter: {
     textAlign: 'center',
+  },
+  icon: {
+    fontSize: 12,
+    color: theme.palette.text.primary,
+  },
+  iconButton: {
+    backgroundColor: theme.palette.text.secondary,
+    marginRight: 14,
+  },
+  headerTitle: {
+    color: Colors.white,
+    display: 'inline-block',
+  },
+  create: {
+    marginLeft: 'auto',
   },
 }))
 
@@ -33,6 +49,14 @@ const NotificationContainer: React.FC = () => {
 
   return (
     <div>
+      <Box className="header-first-column">
+        <IconButton className={classes.iconButton} disableRipple>
+          <Icon className={`fa fa-arrow-left ${classes.icon}`} />
+        </IconButton>
+        <Typography variant="body1" className={classes.headerTitle}>
+          通知一覧
+        </Typography>
+      </Box>
       <InfiniteScroll
         dataLength={notifications.length}
         next={fetchMoreData}
@@ -57,4 +81,5 @@ const NotificationContainer: React.FC = () => {
     </div>
   )
 }
+
 export default NotificationContainer
