@@ -40,6 +40,8 @@ export type ResultsResponse = {
   attributes: any
 }
 
+export type TournamentStatus = 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
+export type TournamentRule = 'single' | 'double' | 'battle_royale'
 export type TournamentDetail = {
   id: string
   type: 'tournament_details'
@@ -47,9 +49,9 @@ export type TournamentDetail = {
     title: string
     overview: string
     notes: string
-    rule: 'single' | 'double' | 'battle_royale'
+    rule: TournamentRule
     max_participants: number
-    status: 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
+    status: TournamentStatus
     is_freezed: boolean
     start_date: string
     end_date: string
