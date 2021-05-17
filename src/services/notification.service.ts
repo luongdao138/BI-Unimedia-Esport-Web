@@ -15,7 +15,7 @@ export type NotificationResponse = {
 }
 
 export type NotificationBadgeResponse = {
-  attributes: any
+  badge: number
 }
 
 export type Meta = {

@@ -10,7 +10,7 @@ import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import { useAppSelector } from '@store/hooks'
+import { useAppSelector, useAppDispatch } from '@store/hooks'
 import ESButton from '@components/Button'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
@@ -27,9 +27,11 @@ import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import { useContextualRouting } from 'next-use-contextual-routing'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Popover } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
+import { getNotificationBadge } from '@store/notification/actions'
+import { getNotificationBadge as selector } from '@store/notification/selectors'
 
 const useStyles = makeStyles((theme) => ({
   popover: {
@@ -92,6 +94,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const { handleReturn } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const dispatch = useAppDispatch()
+  const badge = useAppSelector(selector)
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget)
@@ -139,6 +143,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         break
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getNotificationBadge())
+    }
+  }, [isAuthenticated])
 
   return (
     <div className={classes.grow}>
@@ -196,7 +206,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                   >
-                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                    <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-bell ${classes.icon}`} />
                     </Badge>
                   </IconButton>

@@ -12,7 +12,7 @@ const NotificationBadgeListContainer: React.FC = () => {
 
   return (
     <div>
-      {notifications.map((notification, i) => (
+      {notifications.slice(0, 5).map((notification, i) => (
         <Grid item xs={12} key={i}>
           <NotificationListItem data={notification} />
         </Grid>
