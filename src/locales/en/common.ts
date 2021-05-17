@@ -159,13 +159,17 @@ export default {
   search_by_keyword: 'キーワード検索',
   please_select: '選択してください',
   user: {
-    user_results: 'ニックネーム・ID「ああああああ」 の検索結果',
+    user_results: 'ニックネーム・ID「:key」 の検索結果',
   },
   tournament: {
     card_date: '開　催　日',
     organizer: '主催者',
     entry: 'エントリー',
-    tournament_results: '大会「ああああああ」 の検索結果',
+    tournament_results: '大会「:key」 の検索結果',
+  },
+  search: {
+    search: '検索',
+    search_placeholder: 'キーワード検索',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',

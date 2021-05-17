@@ -15,10 +15,13 @@ const SearchPage: PageWithLayoutType = () => {
   const classes = useStyles()
   const router = useRouter()
   const [type, setType] = useState<number>()
+  const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
     if (!_.isEmpty(router.query)) {
       setType(Number(router.query.type))
+      const _keyword = router.query.keyword ? router.query.keyword.toString() : ''
+      setKeyword(_keyword)
     }
   }, [router.query])
 
@@ -33,6 +36,17 @@ const SearchPage: PageWithLayoutType = () => {
     }
   }
 
+  const renderKeyword = () => {
+    switch (type) {
+      case searchTypes.USER:
+        return t('common:user.user_results').replace(/:key/gi, keyword)
+      case searchTypes.TOURNAMENT:
+        return t('common:tournament.tournament_results').replace(/:key/gi, keyword)
+      default:
+        return <></>
+    }
+  }
+
   return (
     <Grid container className={classes.container}>
       <Box pb={3} display="flex" flexDirection="row" alignItems="center">
@@ -40,7 +54,7 @@ const SearchPage: PageWithLayoutType = () => {
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
         <Typography variant="h2" noWrap>
-          {t('common:user.user_results')}
+          {renderKeyword()}
         </Typography>
       </Box>
       {renderSwitch()}
