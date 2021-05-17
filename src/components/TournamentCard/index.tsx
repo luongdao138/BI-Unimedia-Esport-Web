@@ -150,7 +150,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
           <Box display="flex" justifyContent="flex-end">
             <StyledAvatarGroup max={4}>
               {attr.participants.map((participant, i) => (
-                <ESAvatar key={`participants${i}`} src={participant.avatar} alt={participant.name} />
+                <ESAvatar key={`participants${i}`} src={participant.profile_image} alt={participant.nickname} />
               ))}
             </StyledAvatarGroup>
           </Box>
