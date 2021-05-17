@@ -38,9 +38,8 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
 
 const useStyles = makeStyles({
   sidebarCont: {
-    width: (expand) => (expand ? 260 : 90),
+    width: 290, //
     height: '100%',
-    willChange: 'width',
     display: 'block',
     position: 'fixed',
     transform: (expand) => (expand ? 'translateX(calc(-170px))' : 'translateX(calc(0px))'),
