@@ -10,7 +10,7 @@ const TournamentDetail: React.FC = () => {
         '...loading'
       ) : (
         <>
-          <TournamentDetailHeader status={tournament?.attributes?.status || 'ready'}>
+          <TournamentDetailHeader status={tournament?.attributes?.status || 'ready'} cover={tournament?.attributes?.cover_image}>
             <pre>{JSON.stringify(tournament, null, 2)}</pre>
           </TournamentDetailHeader>
           {/* <pre>{JSON.stringify(tournament, null, 2)}</pre> */}

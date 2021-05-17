@@ -8,9 +8,10 @@ import Tab from '@components/Tab'
 
 type TournamentHeaderProps = {
   status: TournamentStatus
+  cover: string | null
   children?: ReactNode
 }
-const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children }) => {
+const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, cover }) => {
   const classes = useStyles()
   const [tab, setTab] = useState(-1)
   useEffect(() => {
@@ -32,20 +33,32 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children })
     }
   }, [status])
   return (
-    <Box className={classes.root}>
-      <Tabs
-        value={tab}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onChange={() => {}}
-        classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
-      >
-        <Tab label="エントリー" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
-        <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
-        <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
-        <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
-      </Tabs>
-      <Box>{children}</Box>
-    </Box>
+    <>
+      <Box
+        style={{
+          background: `url(${cover})`,
+          height: 188,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+        }}
+        mb={3}
+      />
+      <Box className={classes.root}>
+        <Tabs
+          value={tab}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onChange={() => {}}
+          classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
+        >
+          <Tab label="エントリー" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
+          <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
+          <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
+          <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
+        </Tabs>
+        <Box>{children}</Box>
+      </Box>
+    </>
   )
 }
 
