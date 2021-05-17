@@ -60,7 +60,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           />
           <Box className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
-              <Icon className="fa fa-cloud-upload" fontSize="small" />
+              <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <ProfileAvatar
               src={avatar}

@@ -1,9 +1,6 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-import { UPLOADER_TYPE } from '@constants/image.constants'
 import { GameTitle } from './game.service'
-
-UPLOADER_TYPE.AVATAR
 
 export type HistorySearchParams = {
   user_id: number

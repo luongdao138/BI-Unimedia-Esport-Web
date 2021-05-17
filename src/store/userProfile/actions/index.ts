@@ -59,24 +59,6 @@ export const profileImage = createAsyncThunk<services.ProfileImageParams, servic
   }
 )
 
-// ProfileImage: (data: ProfileImageParams) => {
-//   return (dispatch: Function) => {
-//     dispatch(userProfileActionCreators.ProfileImageRequest());
-//     userProfileServices.ProfileImage(data).then(
-//       (detail) => {
-//         dispatch(
-//           userProfileActionCreators.ProfileImageSuccess(
-//             detail.data.data.attributes
-//           )
-//         );
-//       },
-//       (error) => {
-//         dispatch(userProfileActionCreators.ProfileImageFailure(error));
-//       }
-//     );
-//   };
-// },
-
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(
   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
   async (param, { rejectWithValue }) => {
