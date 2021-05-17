@@ -1,7 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
-import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
+import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 
 type StateType = {
@@ -12,6 +11,7 @@ type StateType = {
   activityLogs?: Array<any>
   recommendations: Array<any>
   nicknames2?: Array<Nickname2>
+  recommendedEvent: Array<CommonResponse>
 }
 
 const initialState: StateType = {
@@ -21,6 +21,7 @@ const initialState: StateType = {
   activityLogs: [],
   recommendations: [],
   nicknames2: [],
+  recommendedEvent: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -72,5 +73,9 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(logout.fulfilled, (state) => {
     state.data = undefined
+  })
+
+  builder.addCase(actions.getRecommendedEvent.fulfilled, (state, action) => {
+    state.recommendedEvent = action.payload.data
   })
 })

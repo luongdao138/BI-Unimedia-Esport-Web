@@ -8,4 +8,5 @@ export enum USER_PROFILE_ACTION_TYPE {
   RECOMMENDATIONS = 'user/recommendations',
   PROFILE_UPDATE = 'profile/profileUpdate',
   GAME_EDIT = 'profile/gameEdit',
+  RECOMMENDED_EVENT = 'user/recommended_event',
 }
