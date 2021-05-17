@@ -22,10 +22,10 @@ export default createReducer(initialState, (builder) => {
     state.searchTournaments = searchTournaments
     state.searchTournamentsMeta = action.payload.links?.meta
   })
-  builder.addCase(actions.tournamentFollowers.fulfilled, (state, action) => {
+  builder.addCase(actions.getTournamentFollowers.fulfilled, (state, action) => {
     state.tournamentFollowers = action.payload.data
   })
-  builder.addCase(actions.tournamentResults.fulfilled, (state, action) => {
+  builder.addCase(actions.getTournamentResults.fulfilled, (state, action) => {
     state.tournamentResults = action.payload.data
   })
   builder.addCase(actions.getTournamentDetail.fulfilled, (state, action) => {
