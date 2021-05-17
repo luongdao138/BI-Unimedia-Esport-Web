@@ -48,7 +48,7 @@ export const tournamentResults = createAsyncThunk<services.TournamentResultsResp
   }
 )
 
-export const getTournamentDetail = createAsyncThunk<services.TournamentDetailResponse, number>(
+export const getTournamentDetail = createAsyncThunk<services.TournamentDetailResponse, string>(
   types.GET_TOURNAMENT_DETAIL,
   async (param, { rejectWithValue }) => {
     try {

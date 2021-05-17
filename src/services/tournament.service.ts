@@ -124,7 +124,7 @@ export const tournamentResults = async (): Promise<TournamentResultsResponse> =>
   return data
 }
 
-export const getTournamentDetail = async (id: number): Promise<TournamentDetailResponse> => {
-  const { data } = await api.get<TournamentDetailResponse>(`/v1/tournaments/details/${id}`)
+export const getTournamentDetail = async (hash_key: string): Promise<TournamentDetailResponse> => {
+  const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
   return data
 }
