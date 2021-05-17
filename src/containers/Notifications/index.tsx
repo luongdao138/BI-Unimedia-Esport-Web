@@ -69,7 +69,7 @@ const NotificationContainer: React.FC = () => {
   }, [])
 
   return (
-    <div className={classes.wrap}>
+    <div className={classes.wrap} id="test">
       <Box className={classes.header}>
         <IconButton className={classes.iconButton} disableRipple>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
@@ -79,6 +79,7 @@ const NotificationContainer: React.FC = () => {
         </Typography>
       </Box>
       <InfiniteScroll
+        scrollableTarget={'test'}
         dataLength={notifications.length}
         next={fetchMoreData}
         hasMore={hasMore}
