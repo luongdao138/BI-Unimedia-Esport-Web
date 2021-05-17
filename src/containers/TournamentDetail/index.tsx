@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { TournamentStatus } from '@services/tournament.service'
 
 import RecruitingAction from './RecruitingAction'
+// import DetailInfo from '@containers/Profile/td'
 
 const TournamentDetail: React.FC = () => {
   const router = useRouter()
@@ -23,9 +24,8 @@ const TournamentDetail: React.FC = () => {
   }
   return (
     <div>
-      {meta.pending && !tournament ? (
-        '...loading'
-      ) : (
+      {meta.pending && '...loading'}{' '}
+      {meta.loaded && tournament && (
         <>
           <TournamentDetailHeader
             status={tournament?.attributes?.status || 'ready'}
@@ -33,9 +33,8 @@ const TournamentDetail: React.FC = () => {
             onHandleBack={handleBack}
           >
             {actionComponent[tournament.attributes.status]}
-            <pre>{JSON.stringify(tournament, null, 2)}</pre>
           </TournamentDetailHeader>
-          <pre>{JSON.stringify(tournament, null, 2)}</pre>
+          {/* <DetailInfo detail={tournament} /> */}
         </>
       )}
     </div>
