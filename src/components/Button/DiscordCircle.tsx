@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     width: 30,
   },
   iconRoot: {
-    padding: 4,
+    padding: 0,
   },
 }))
 {
@@ -30,6 +30,7 @@ const ESButtonDiscordCircle: React.FC<IconButtonProps> = (props) => {
   const classes = useStyles()
   return (
     <IconButton {...props} classes={{ root: classes.iconRoot }}>
+      <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.Discord}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 30 30">
           <path
