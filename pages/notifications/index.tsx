@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const NotificationsPage: PageWithLayoutType = () => {
-  return <NotificationContainer />
+  return (
+    <MainLayout footer={false}>
+      <NotificationContainer />
+    </MainLayout>
+  )
 }
-
-NotificationsPage.Layout = MainLayout
 
 export default NotificationsPage
