@@ -31,6 +31,7 @@ export const URI = {
   TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
   TOURNAMENT_FOLLOWERS: '/v2/tournaments/???',
   TOURNAMENT_RESULTS: '/v2/tournaments/???',
+  TOURNAMENT_DETAIL: '/v1/tournaments/details/',
   COMMUNITY_FOLLOWERS_TOPICS: '/v2/communities/???',
   PROFILE_ACTIVITY_LOG: '/v1/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',

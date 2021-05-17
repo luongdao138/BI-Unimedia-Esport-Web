@@ -23,6 +23,15 @@ export type GameTitle = {
   }
 }
 
+export type GameHardware = {
+  id: 'string'
+  type: 'game_hardware'
+  attributes: {
+    id: number
+    name: string
+  }
+}
+
 export type GameGenreResponse = {
   data: GameGenre[]
 }
