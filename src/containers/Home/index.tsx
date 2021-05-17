@@ -58,6 +58,12 @@ const HomeContainer: React.FC = () => {
     getRecruitmentRecommendations()
   }, [])
 
+  // RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
+  // RECRUITMENT_FOLLOWER: '/recruitment/follower',
+  // EVENT_RECOMMENDED: '/event/recommended',
+  // TOURNAMENT_FOLLOWER_ENTERING: '/tournament/follower/entering',
+  // TOURNAMENT_FOLLOWER_ENDED: '/tournament/follower/ended',
+  // TOPIC_FOLLOWER: '/topic/follower',
   const renderItem = (val: string) => {
     switch (val) {
       case 'recommendedUser':

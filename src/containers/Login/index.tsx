@@ -25,6 +25,7 @@ import { ESRoutes } from '@constants/route.constants'
 import ESLoader from '@components/FullScreenLoader'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ESCheckbox from '@components/Checkbox'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
@@ -37,7 +38,11 @@ const LoginContainer: React.FC = () => {
   const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
   const { handleLink } = useReturnHref()
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required(t('common:common.error')).email(t('common:common.error')),
+    email: Yup.string()
+      .test('email-validation', t('common:common.error'), (value) => {
+        return CommonHelper.validateEmail(value)
+      })
+      .required(t('common:common.error')),
     password: Yup.string().required(t('common:common.error')).min(8, t('common:common.error')),
   })
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
@@ -59,6 +64,10 @@ const LoginContainer: React.FC = () => {
   }
 
   const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
+
+  const buttonActive = (): boolean => values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== ''
+
+  const isCheckboxChecked = (): boolean => checkbox.terms && checkbox.privacy
 
   return (
     <>
@@ -135,7 +144,7 @@ const LoginContainer: React.FC = () => {
               </Box>
 
               <Box pt={6} pb={4} maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth>
+                <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive() || !isCheckboxChecked()}>
                   {t('common:login.submit')}
                 </ButtonPrimary>
               </Box>
@@ -153,11 +162,11 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
-            <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth />
-            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth />
-            <ESButtonLine onSuccess={handleSocialLogin} fullWidth />
-            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth />
-            <ESButtonApple onSuccess={handleSocialLogin} fullWidth />
+            <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonLine onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonApple onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
           </Box>
         </Box>
       </Box>

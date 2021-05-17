@@ -39,9 +39,7 @@ export type ResultsResponse = {
 }
 
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
-  const { data } = await api.get<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, {
-    params,
-  })
+  const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
 }
 

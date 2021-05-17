@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Grid, Box, makeStyles, Typography, IconButton, Icon } from '@material-ui/core'
+import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
 import useUserSearch from './useUserSearch'
 import ESLoader from '@components/Loader'
 import UserListItem from '@components/UserItem'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
-import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 
@@ -12,7 +12,7 @@ const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { searchUsers, userSearch, meta, page } = useUserSearch()
+  const { searchUsers, userSearch, page, meta, resetMeta } = useUserSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
@@ -21,33 +21,18 @@ const UserSearchContainer: React.FC = () => {
       setKeyword(keyword)
       userSearch({ page: 1, keyword: keyword })
     }
+
+    return () => resetMeta()
   }, [router.query])
 
-  useEffect(() => {
-    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
-    if (page && page.current_page !== page.total_pages) userSearch({ page: page.current_page + 1, keyword: keyword })
-  }, [searchUsers])
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [page])
-
-  const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return
-    if (page && page.current_page !== page.total_pages) userSearch({ page: page.current_page + 1, keyword: '' })
+  const loadMore = () => {
+    if (page && page.current_page !== page.total_pages) {
+      userSearch({ page: page.current_page + 1, keyword: keyword })
+    }
   }
 
   return (
-    <Grid container className={classes.container}>
-      <Box pb={3} display="flex" flexDirection="row" alignItems="center">
-        <IconButton className={classes.iconButtonBg}>
-          <Icon className="fa fa-arrow-left" fontSize="small" />
-        </IconButton>
-        <Typography variant="h2" noWrap>
-          {t('common:user.user_results')}
-        </Typography>
-      </Box>
+    <Grid container>
       {!!page && (
         <Grid item xs={12}>
           <Typography variant="caption" gutterBottom>
@@ -55,9 +40,17 @@ const UserSearchContainer: React.FC = () => {
           </Typography>
         </Grid>
       )}
-      {searchUsers.map((user, i) => (
-        <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
-      ))}
+      <InfiniteScroll
+        className={classes.container}
+        dataLength={searchUsers.length}
+        next={loadMore}
+        hasMore={page && page.current_page !== page.total_pages}
+        loader={null}
+      >
+        {searchUsers.map((user, i) => (
+          <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
+        ))}
+      </InfiniteScroll>
       {meta.pending && (
         <Grid item xs={12}>
           <Box my={4} display="flex" justifyContent="center" alignItems="center">
@@ -70,15 +63,9 @@ const UserSearchContainer: React.FC = () => {
 }
 
 const useStyles = makeStyles(() => ({
-  iconButtonBg: {
-    backgroundColor: `${Colors.grey[1000]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[1000]}80`,
-    },
-  },
   container: {
-    padding: 24,
-    paddingTop: 16,
+    display: 'flex',
+    flexWrap: 'wrap',
   },
 }))
 

@@ -3,12 +3,15 @@ import ESSlider from '@components/Slider'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import { ESRoutes } from '@constants/route.constants'
+import { useTranslation } from 'react-i18next'
 
 export const TopicFollow: React.FC = () => {
+  const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title="フォローしている人の書き込みトピック"
-      moreLink="#"
+      title={t('common:home.topic_follow')}
+      moreLink={ESRoutes.TOPIC_FOLLOWER}
       navigation
       width={256}
       items={[

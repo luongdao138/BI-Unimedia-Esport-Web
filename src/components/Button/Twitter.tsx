@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
-      background: '#1785d0',
+      background: '#1D9BF0',
     },
   },
   leftIcon: {
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
+    opacity: 0.3,
     backgroundColor: '#1D9BF0 !important',
     color: '#FFF !important',
   },
@@ -57,6 +58,7 @@ const ESButtonTwitter: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) 
       {...props}
       startIcon={<Icon className="fab fa-twitter" />}
     >
+      <div className="esbutton-hover" />
       {t('common:button.twitter')}
     </Button>
   )
