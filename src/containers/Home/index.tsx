@@ -12,9 +12,6 @@ import recruitmentData from './useRecruitmentData'
 import { Box } from '@material-ui/core'
 // import tournamentData from './useTournamentData'
 // import topicData from './useTopicData'
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
-import { useAppDispatch } from '@store/hooks'
-
 const DEFAULT_ORDER = [
   {
     key: 1,
@@ -55,14 +52,10 @@ const HomeContainer: React.FC = () => {
   const [order] = useState<Array<orderType>>(DEFAULT_ORDER)
   const { recommendedUsers, getUserRecommendations } = useUserData()
   const { recommendedRecruitments, getRecruitmentRecommendations } = recruitmentData()
-  const dispatch = useAppDispatch()
 
   useEffect(() => {
     getUserRecommendations()
     getRecruitmentRecommendations()
-    dispatch({
-      type: `${WEBSOCKET_PREFIX}:CONNECT`,
-    })
   }, [])
 
   // RECRUITMENT_RECOMMENDED: '/recruitment/recommended',

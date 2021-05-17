@@ -19,17 +19,9 @@ const onClose = (store: StoreType) => (_event: CloseEvent) => {
 
 const onMessage = (store: StoreType) => (event: MessageEvent) => {
   const message = JSON.parse(event.data)
-  const accessToken = store.getState().auth.user?.accessToken
+
   if (message && message.action) {
     store.dispatch({ type: message.action, data: message })
-    if (message.action == 'INIT_CONNECTION' && message.content?.status == 'success') {
-      socket.send(
-        JSON.stringify({
-          action: 'GET_MESSAGES',
-          ticket: accessToken,
-        })
-      )
-    }
   } else {
     store.dispatch({
       type: `${WEBSOCKET_PREFIX}:FAILURE`,
@@ -46,9 +38,10 @@ const closeExisting = () => {
 
 export const webSocketMiddle: Middleware = (store: StoreType) => (next: AppDispatch) => <A extends Action>(action: A): A => {
   const connect = () => {
-    const currentUser = store.getState().auth.user
+    const accessToken = store.getState().auth.user?.accessToken
+    const encrypted = btoa(accessToken)
     closeExisting()
-    const uri = `${process.env.NEXT_PUBLIC_CHAT_END_POINT}/?accessToken=${currentUser?.accessToken}&deviceId=${DEVICE_ID}&appVersion=web_v2`
+    const uri = `${process.env.NEXT_PUBLIC_CHAT_END_POINT}/?accessToken=${encrypted}&deviceId=${DEVICE_ID}&appVersion=web_v2`
     socket = new ReconnectingWebSocket(uri)
     socket.onmessage = onMessage(store)
     socket.onclose = onClose(store)
