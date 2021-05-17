@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next'
 
 type SelectInputItem = {
   id: number
-  nickname: string
+  nickName: string
   avatar: string
-  user_code: string
+  userCode: string
 }
 
 interface SelectInputProps {
@@ -24,12 +24,24 @@ const useStyles = makeStyles((theme) =>
     root: {
       '& .MuiAutocomplete-listbox': {
         backgroundColor: theme.palette.common.white,
-        border: `2px solid ${theme.palette.common.white}`,
+        border: `0 none`,
+        padding: 0,
+        margin: 0,
         fontSize: 18,
         '& .MuiAutocomplete-option:hover': {
           backgroundColor: theme.palette.grey['200'],
         },
       },
+    },
+    chip: {
+      display: 'flex',
+      '& .MuiChip-label': {
+        maxWidth: 140,
+      },
+    },
+    autocomplete: {
+      margin: 0,
+      padding: 0,
     },
   })
 )
@@ -49,23 +61,24 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) =
         multiple
         limitTags={2}
         options={items}
-        getOptionLabel={(option) => option.nickname}
+        getOptionLabel={(option) => option.nickName}
         filterSelectedOptions
+        className={classes.autocomplete}
         noOptionsText={t('common:chat.no_user_available')}
         onChange={(_, values) => onItemsSelected(values)}
         renderOption={(item) => {
           return (
             <Box display="flex" overflow="hidden">
-              <ESAvatar alt={item.nickname} src={item.avatar} />
+              <ESAvatar alt={item.nickName} src={item.avatar} />
               <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
                 <Box color={Colors.black}>
                   <Typography variant="h3" noWrap>
-                    {item.nickname}
+                    {item.nickName}
                   </Typography>
                 </Box>
                 <Box color={Colors.black}>
                   <Typography variant="body2" noWrap>
-                    {`${t('common.at')}${item.user_code}`}
+                    {`${t('common.at')}${item.userCode}`}
                   </Typography>
                 </Box>
               </Box>
@@ -74,7 +87,15 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) =
         }}
         renderInput={(params) => <SelectInputTextField {...params} inputRef={textRef} />}
         renderTags={(value, getTagProps) =>
-          value.map((item, index) => <ESChip key={index} label={item.nickname} {...getTagProps({ index })} />)
+          value.map((item, index) => (
+            <ESChip
+              size="small"
+              className={classes.chip}
+              key={index}
+              label={<EllipsisText>{item.nickName}</EllipsisText>}
+              {...getTagProps({ index })}
+            />
+          ))
         }
         PopperComponent={PopperMy}
       />
@@ -83,3 +104,23 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) =
 }
 
 export default ESSelectInput
+
+const CHIP_MAX_WIDTH = 250
+const CHIP_ICON_WIDTH = 30
+
+const EllipsisText = (props) => {
+  const { children } = props
+
+  return (
+    <div
+      style={{
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        maxWidth: CHIP_MAX_WIDTH - CHIP_ICON_WIDTH,
+      }}
+    >
+      {children}
+    </div>
+  )
+}

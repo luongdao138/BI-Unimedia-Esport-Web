@@ -10,21 +10,21 @@ import { useTranslation } from 'react-i18next'
 const top100Films = [
   {
     id: 1,
-    nickname: 'Long nickname Long nickname Long nickname Long nickname Long nickname ',
+    nickName: 'Long nickname Long nickname Long nickname Long nickname Long nickname ',
     avatar: 'https://robohash.org/consequaturquidemcorporis.png?size=50x50&set=set1',
-    user_code: 'long usercode long usercode long usercode long usercode long usercode ',
+    userCode: 'long usercode long usercode long usercode long usercode long usercode ',
   },
   {
     id: 2,
-    nickname: 'Peggy',
+    nickName: 'Peggy',
     avatar: 'https://robohash.org/quosdoloremoccaecati.png?size=50x50&set=set1',
-    user_code: 'pmeus1',
+    userCode: 'pmeus1',
   },
   {
     id: 3,
-    nickname: 'Katerine',
+    nickName: 'Katerine',
     avatar: 'https://robohash.org/eanihiltempore.png?size=50x50&set=set1',
-    user_code: 'kgionettitti2',
+    userCode: 'kgionettitti2',
   },
 ]
 
