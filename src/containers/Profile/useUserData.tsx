@@ -36,13 +36,13 @@ const useUserData = (others: boolean): any => {
   // const progressListener = (progress: number) => {
   //   console.log('progressListener ', progress)
   // }
-  const avatarChange = async (file: File, user_id: number) => {
+  const profileImageChange = async (file: File, user_id: number, type: number) => {
     const params = {
-      type: UPLOADER_TYPE.AVATAR,
+      type: type,
       fileName: file.name,
       contentType: file.type,
       room: user_id,
-      action_type: ACTION_TYPE.CREATE,
+      action_type: ACTION_TYPE.UPDATE,
     }
     try {
       const res = await getPreSignedUrl(params)
@@ -53,7 +53,7 @@ const useUserData = (others: boolean): any => {
         const params = {
           user_id: user_id,
           image_url: 'https://' + file_url,
-          file_type: UPLOADER_TYPE.USER_PROFILE,
+          file_type: type === UPLOADER_TYPE.AVATAR ? UPLOADER_TYPE.USER_PROFILE : UPLOADER_TYPE.USER_COVER,
         }
         dispatch(userActions.profileImage(params))
       }
@@ -70,7 +70,7 @@ const useUserData = (others: boolean): any => {
     getMemberProfile,
     resetCommunityMeta,
     resetUserMeta,
-    avatarChange,
+    profileImageChange,
     userMeta,
     communityMeta,
   }

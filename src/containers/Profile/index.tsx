@@ -18,6 +18,7 @@ import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 import { ESRoutes } from '@constants/route.constants'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 
 interface WithRouterProps {
   router: NextRouter
@@ -32,7 +33,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const user_code = router.query.user_code || []
   const isOthers = user_code.length > 0
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
-  const { userProfile, getMemberProfile, avatarChange } = useUserData(isOthers)
+  const { userProfile, getMemberProfile, profileImageChange } = useUserData(isOthers)
   useEffect(() => {
     if (isOthers) getMemberProfile(user_code[0])
   }, [user_code])
@@ -52,12 +53,20 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     return (
       <>
         <Box className={classes.headerContainer}>
-          <ProfileCover src={cover} />
+          <ProfileCover
+            src={cover}
+            editable={!isOthers}
+            onChange={(f: File) => profileImageChange(f, parseInt(userProfile.id), UPLOADER_TYPE.COVER)}
+          />
           <Box className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
-              <Icon className="fa fa-arrow-left" fontSize="small" />
+              <Icon className="fa fa-cloud-upload" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={avatar} editable={!isOthers} onChange={(f: File) => avatarChange(f, parseInt(userProfile.id))} />
+            <ProfileAvatar
+              src={avatar}
+              editable={!isOthers}
+              onChange={(f: File) => profileImageChange(f, parseInt(userProfile.id), UPLOADER_TYPE.AVATAR)}
+            />
             {isOthers ? (
               <Box className={classes.menu}>
                 <ESButton variant="outlined" round className={classes.marginRight}>

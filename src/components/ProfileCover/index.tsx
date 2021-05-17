@@ -1,126 +1,136 @@
-import { useEffect, useState, BaseSyntheticEvent } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { useEffect, useState } from 'react'
+import { makeStyles, Box } from '@material-ui/core'
+import Image from 'next/image'
 import { CameraAlt as Camera } from '@material-ui/icons'
+import ESLoader from '@components/Loader'
+import { useDropzone } from 'react-dropzone'
 import { Colors } from '@theme/colors'
 
+type ProfileCoverProps = {
+  editable?: boolean
+  src: string
+  onChange?: (files: File) => void
+}
+
+const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) => {
+  const classes = useStyles()
+  const [update, setUpdate] = useState<boolean>(false)
+  const [drag, setDrag] = useState<boolean>(false)
+  const dropZoneConfig = {
+    accept: 'image/*',
+    onDrop: (files: any) => handleChange(files),
+  }
+  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+
+  useEffect(() => {
+    setUpdate(false)
+  }, [src])
+
+  const handleChange = (files: Array<File>) => {
+    setUpdate(true)
+    setDrag(false)
+    const file = files[0]
+    const reader = new FileReader()
+    if (file) {
+      if (onChange) {
+        onChange(file)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  return (
+    <div className={classes.root}>
+      <Image height="148" width="116" src="/images/big_logo.png" className={classes.defaultBackground} />
+      {src ? <img src={src} className={classes.image} /> : null}
+      {editable ? (
+        <>
+          {drag && !update ? <Camera fontSize="large" className={classes.camera} /> : null}
+          {drag || update ? <div className={classes.backdrop} /> : null}
+          <div
+            {...getRootProps()}
+            className={classes.dropZone}
+            onMouseEnter={() => {
+              if (!update) setDrag(true)
+            }}
+            onMouseLeave={() => setDrag(false)}
+            onDragEnter={() => {
+              if (!update) setDrag(true)
+            }}
+            onDragLeave={() => setDrag(false)}
+          >
+            <input {...getInputProps()} />
+          </div>
+          {update ? (
+            <Box className={classes.loader}>
+              <ESLoader />
+            </Box>
+          ) : null}
+        </>
+      ) : null}
+    </div>
+  )
+}
+
+export default ProfileCover
+
+const COVER_HEIGHT = 188
 const useStyles = makeStyles(() => ({
   root: {
     position: 'relative',
-  },
-  dropAreaThumb: {
-    width: '100%',
-    height: 'auto',
-    objectFit: 'cover',
-  },
-  touch: {
+    background:
+      'linear-gradient(234deg, rgb(214, 0, 253) 0%, rgb(252, 94, 102) 100%, rgb(251, 92, 105) 100%, rgb(253, 97, 97) 100%) 0% 0% no-repeat padding-box padding-box transparent',
     display: 'flex',
     top: 0,
     left: 0,
     right: 0,
     overflow: 'hidden',
     width: '100%',
-    height: 188,
+    height: COVER_HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-    '&:hover $camera': {
-      display: 'flex',
-    },
-    '&:hover $backdrop': {
-      display: 'flex',
-    },
   },
-  camera: {
-    display: 'none',
+  defaultBackground: {
     position: 'absolute',
-    color: Colors.white,
-    bottom: 30,
-    right: 30,
-    zIndex: 2,
+    width: '100%',
+    height: 'auto',
+  },
+  image: {
+    position: 'absolute',
+    width: '100%',
+    height: 'auto',
+    objectFit: 'contain',
   },
   backdrop: {
-    display: 'none',
     opacity: 0.6,
     background: Colors.black,
     position: 'absolute',
-    height: '65%',
+    height: '100%',
     width: '100%',
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 1,
+    zIndex: 4,
   },
-  input: {
-    display: 'none',
+  camera: {
+    display: 'flex',
+    position: 'absolute',
+    zIndex: 5,
+  },
+  loader: {
+    display: 'flex',
+    position: 'absolute',
+    zIndex: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropZone: {
+    display: 'flex',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 6,
   },
 }))
-
-const ProfileCover: React.FC<{ src: string; onChange?: (files: File) => void }> = (props) => {
-  const classes = useStyles(props)
-  const [value, setValue] = useState<string | ArrayBuffer>('')
-
-  useEffect(() => {
-    setValue(props.src)
-  }, [props.src])
-
-  const handleDragEnter = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
-  const handleDrag = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
-  const handleDragOut = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
-  const handleDrop = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setValue(URL.createObjectURL(e.dataTransfer.files[0]))
-  }
-  const handleChange = (e: BaseSyntheticEvent) => {
-    const file = e.target.files[0]
-    const reader = new FileReader()
-    if (file) {
-      if (props.onChange) {
-        props.onChange(file)
-      }
-      reader.readAsDataURL(file)
-    }
-    reader.addEventListener(
-      'load',
-      () => {
-        setValue(reader.result)
-      },
-      false
-    )
-  }
-  return (
-    <div
-      className={classes.root}
-      onDrop={(e) => handleDrop(e)}
-      onDragOver={(e) => handleDrag(e)}
-      onDragLeave={(e) => handleDragOut(e)}
-      onDragEnter={(e) => handleDragEnter(e)}
-    >
-      {
-        <label htmlFor="cover-img-upload" className={classes.touch}>
-          <input type="file" id="cover-img-upload" accept="image/*" onChange={handleChange} className={classes.input} />
-
-          <img src={value.toString()} className={classes.dropAreaThumb} />
-          <Camera fontSize="large" className={classes.camera} />
-          <div className={classes.backdrop} />
-        </label>
-      }
-    </div>
-  )
-}
-
-export default ProfileCover

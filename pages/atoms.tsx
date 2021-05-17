@@ -332,7 +332,7 @@ const Atoms: PageWithLayoutType = () => {
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
       <Box margin={4}>
-        <ProfileCover src="/images/avatar.png" />
+        <ProfileCover src={undefined} />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>

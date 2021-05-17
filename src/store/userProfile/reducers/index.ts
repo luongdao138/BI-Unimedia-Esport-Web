@@ -38,7 +38,7 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.profileImage.fulfilled, (state, action) => {
-    if (action.payload.file_type === UPLOADER_TYPE.AVATAR) {
+    if (action.payload.file_type === UPLOADER_TYPE.USER_PROFILE) {
       state.data.attributes.avatar_url = action.payload.image_url
     } else {
       state.data.attributes.cover_url = action.payload.image_url
