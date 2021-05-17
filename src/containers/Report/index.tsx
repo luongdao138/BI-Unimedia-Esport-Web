@@ -45,7 +45,7 @@ const ESReport: React.FC<ESReportProps> = () => {
 
   useEffect(() => {
     if (meta.loaded) {
-      setOpen(true)
+      // setOpen(true)
       formik.resetForm()
     }
   }, [meta.loaded])
