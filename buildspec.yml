@@ -18,10 +18,8 @@ phases:
       - yarn build
   post_build:
     commands:
+      - rm -rf node_modules
       - find . -name '.DS_Store' -type f -delete
 artifacts:
   files:
     - '**/*'
-cache:
-  paths:
-    - 'node_modules/**/*'

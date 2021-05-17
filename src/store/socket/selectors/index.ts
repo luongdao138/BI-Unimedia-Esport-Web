@@ -1,0 +1,6 @@
+import { createSelector } from '@reduxjs/toolkit'
+import { RootState } from '@store/store'
+
+const getRoot = (state: RootState) => state.socket
+
+export const getRoomList = createSelector(getRoot, (state) => state.roomList)

@@ -20,7 +20,7 @@ export type HistoryResponse = {
 }
 
 export type ActivityLogParams = {
-  user_id: number
+  user_code: string
 }
 
 export type NicknamesResponse = {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box, InputAdornment } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
@@ -20,6 +20,7 @@ const RegisterByEmailContainer: React.FC = () => {
   const classes = useStyles()
   const { registerByEmail, meta, backAction, resetMeta } = useRegisterByEmail()
   const [score, setScore] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .test('email-validation', t('common:common.error'), (value) => {
@@ -92,8 +93,24 @@ const RegisterByEmailContainer: React.FC = () => {
               <ESInput
                 id="password"
                 labelPrimary={t('common:register_by_email.password')}
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 labelSecondary={<ESStrengthMeter value={score} />}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      size="small"
+                      disableRipple
+                      onMouseDown={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <Icon className="fas fa-eye" fontSize="small" />
+                      ) : (
+                        <Icon className="fas fa-eye-slash" fontSize="small" />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                }
                 fullWidth
                 value={values.password}
                 onChange={handleChange}
