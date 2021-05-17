@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: '6px',
     // border: '1px solid rgba(255, 255, 255, 0.3)',
   },
+  '&:hover $notificationWrap': {
+    background: 'white',
+  },
 }))
 
 export default NotificationBadgeItem
