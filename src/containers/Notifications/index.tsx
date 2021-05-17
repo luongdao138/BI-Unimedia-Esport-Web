@@ -27,6 +27,27 @@ const useStyles = makeStyles((theme) => ({
   create: {
     marginLeft: 'auto',
   },
+  wrap: {
+    height: 'calc(100vh - 60px)',
+    overflow: 'auto',
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar': {
+      width: 0,
+      height: 0,
+    },
+  },
+  header: {
+    padding: 16,
+    width: '100%',
+    position: 'sticky',
+    background: Colors.black,
+    zIndex: 10,
+    left: 0,
+    top: 0,
+    right: 0,
+    height: 60,
+    borderBottom: '1px solid #212121',
+  },
 }))
 
 const NotificationContainer: React.FC = () => {
@@ -48,8 +69,8 @@ const NotificationContainer: React.FC = () => {
   }, [])
 
   return (
-    <div>
-      <Box className="header-first-column" style={{ maxWidth: '100%' }}>
+    <div className={classes.wrap}>
+      <Box className={classes.header}>
         <IconButton className={classes.iconButton} disableRipple>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
