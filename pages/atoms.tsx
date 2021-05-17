@@ -43,6 +43,7 @@ import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+import ESReport from '@containers/Report'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
@@ -122,6 +123,9 @@ const Atoms: PageWithLayoutType = () => {
       <Box>
         <ESFollowers user_code={'Umtest2'} />
         <ESFollowing user_code={null} />
+      </Box>
+      <Box>
+        <ESReport />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>
