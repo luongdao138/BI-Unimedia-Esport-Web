@@ -6,25 +6,26 @@ import ESLoader from '@components/Loader'
 import ActivityItem from '../Partials/ActivityItem'
 
 interface Props {
-  userId: any
+  userCode: string
 }
 
-const ActivityLogsContainer: React.FC<Props> = ({ userId }) => {
+const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
-  const { activityLogs, getActivityLogs } = useActivityLogs()
+  const { activityLogs, getActivityLogs, meta, resetMeta } = useActivityLogs()
 
   useEffect(() => {
     getActivityLogs({
-      //page: 1,
-      user_id: userId,
+      // page: 1,
+      user_code: userCode,
     })
+    return () => resetMeta()
   }, [])
 
   const loadMore = () => {
     // if (page && page.current_page !== page.total_pages) {
     getActivityLogs({
       // page: page.current_page + 1,
-      user_id: userId,
+      user_code: userCode,
     })
     // }
   }
@@ -38,17 +39,25 @@ const ActivityLogsContainer: React.FC<Props> = ({ userId }) => {
         // hasMore={page && page.current_page !== page.total_pages}
         hasMore={false}
         loader={
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
-          </Grid>
+          null
+          // <Grid item xs={12}>
+          //   <Box my={4} display="flex" justifyContent="center" alignItems="center">
+          //     <ESLoader />
+          //   </Box>
+          // </Grid>
         }
       >
         {activityLogs.map((log, i) => (
           <ActivityItem activity={log} key={i} />
         ))}
       </InfiniteScroll>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </Grid>
   )
 }
