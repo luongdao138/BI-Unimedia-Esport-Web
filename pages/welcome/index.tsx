@@ -1,5 +1,11 @@
-const WelcomePage: React.FC = () => {
-  return <h1>Welcome page</h1>
+import IntroContainer from '@containers/Login/Intro'
+import AuthenticationLayout from '@layouts/AuthenticationLayout'
+import PageWithLayoutType from '@constants/page'
+
+const Welcome: PageWithLayoutType = () => {
+  return <IntroContainer />
 }
 
-export default WelcomePage
+Welcome.Layout = AuthenticationLayout
+
+export default Welcome

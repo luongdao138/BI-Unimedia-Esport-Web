@@ -57,7 +57,7 @@ const Room: PageWithLayoutType = () => {
       <Box className={classes.selectInputContainer}>
         <Box paddingLeft={2} paddingRight={2}>
           <Typography variant="h2" noWrap>
-            {t('common:chat.destination')}
+            {t('common:chat.back_list')}
           </Typography>
         </Box>
         <ESSelectInput items={top100Films} onItemsSelected={handleSelectedItems} />

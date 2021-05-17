@@ -6,9 +6,6 @@ const useStyles = makeStyles(() => ({
     width: 60,
     height: 60,
   },
-  Line: {
-    background: '#00B900',
-  },
   svgRoot: {
     height: 39,
     width: 38,
@@ -16,13 +13,25 @@ const useStyles = makeStyles(() => ({
   iconRoot: {
     padding: 4,
   },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: '#00B900',
+      opacity: props.disabled ? 0.3 : 1,
+    }
+  },
 }))
 
-const ESButtonLineCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+interface SocialProps {
+  link?: string
+  onlyIcon?: boolean
+}
+
+const ESButtonLineCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.Line}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 39.155 37.308">
           <g id="Group_7252" data-name="Group 7252">
             <path

@@ -101,6 +101,21 @@ export const profileEdit = createAsyncThunk<services.ProfileResponse, services.P
   }
 )
 
+export const gameEdit = createAsyncThunk<services.ProfileResponse, services.GameEditParams>(
+  USER_PROFILE_ACTION_TYPE.GAME_EDIT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.gameEdit(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const getRecommendations = createAsyncThunk<services.RecommendationsResponse>(
   USER_PROFILE_ACTION_TYPE.RECOMMENDATIONS,
   async (_params, { rejectWithValue }) => {

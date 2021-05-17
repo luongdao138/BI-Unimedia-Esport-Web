@@ -27,6 +27,8 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
+    intro_hint1: 'exeLABをお楽しみいただくには',
+    intro_hint2: 'ログインが必要です',
   },
   register: {
     button: 'メールアドレスで登録',
@@ -97,7 +99,7 @@ export default {
     settings: '設定',
   },
   infinite_scroll: {
-    message: 'Yay! You have seen it all',
+    message: 'あなたはそれをすべて見ました',
   },
   followers: {
     title: 'フォロー中',
@@ -176,6 +178,7 @@ export default {
     self_introduction: '自己紹介',
     tag_edit: 'タグ編集',
     sns: 'SNS',
+    choose_game: 'ゲームを選ぶ',
   },
   action_types: {
     topic_comment_px: '【トピック】',
@@ -199,8 +202,12 @@ export default {
   },
   chat: {
     title: 'メッセージ',
-    destination: '宛先',
     no_user_available: 'No user available',
+    back_list: '宛先',
+    create_new: '新規作成',
+  },
+  notification: {
+    title: '通知一覧',
   },
   confirm: {
     sent: 'メールアドレスに送信された',
@@ -217,4 +224,15 @@ export default {
   },
   confirmation_review: '入力情報の確認',
   fix: '修正する',
+  qr: 'QRコード',
+  logout: 'ログアウト',
+  qr_screen: {
+    title: 'QRコードは株式会社デンソーウェーブの商標登録です',
+  },
+  logout_screen: {
+    title: 'exeLABからログアウトしますか？',
+    desc: 'いつでもログインし直すことができます。',
+    cancel: 'キャンセル',
+    ok: 'ログアウト',
+  },
 }

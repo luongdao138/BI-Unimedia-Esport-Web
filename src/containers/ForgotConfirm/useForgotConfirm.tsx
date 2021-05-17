@@ -4,27 +4,28 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import authStore from '@store/auth'
 import { UserConfirmParams } from '@services/auth.service'
 import { clearMetaData } from '@store/metadata/actions'
-import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
+
 const { selectors, actions } = authStore
 const getForgotConfirm = createMetaSelector(actions.forgotConfirm)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useForgotConfirm = (confirmationCode: string) => {
-  const router = useRouter()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const metaConfirm = useAppSelector(getForgotConfirm)
+  const { navigateScreen } = useReturnHref()
 
   const forgotConfirm = (params: UserConfirmParams) => dispatch(actions.forgotConfirm(params))
 
   const resetMeta = () => dispatch(clearMetaData(actions.forgotConfirm.typePrefix))
 
-  const backAction = () => router.push(ESRoutes.FORGOT_PASSWORD)
+  const backAction = () => navigateScreen(ESRoutes.FORGOT_PASSWORD)
 
   useEffect(() => {
     if (metaConfirm.loaded) {
-      router.push(ESRoutes.FORGOT_PASSWORD_RESET)
+      navigateScreen(ESRoutes.FORGOT_PASSWORD_RESET)
       resetMeta()
     }
   }, [metaConfirm.loaded])
@@ -37,7 +38,7 @@ const useForgotConfirm = (confirmationCode: string) => {
 
   useEffect(() => {
     if (user === undefined) {
-      router.push(ESRoutes.FORGOT_PASSWORD)
+      navigateScreen(ESRoutes.FORGOT_PASSWORD)
     }
   }, [])
 

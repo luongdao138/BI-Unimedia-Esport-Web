@@ -134,7 +134,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: 0,
     bottom: 0,
     width: '100%',
-    backgroundColor: Colors.black,
+    background: Colors.black,
+    borderTop: `1px solid #ffffff30`,
   },
   nextBtnHolder: {
     display: 'flex',

@@ -8,12 +8,38 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import { useAppSelector } from '@store/hooks'
+import { useAppSelector, useAppDispatch } from '@store/hooks'
 import ESButton from '@components/Button'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import ESModal from '@components/Modal'
+import BlankLayout from '@layouts/BlankLayout'
+import LoginContainer from '@containers/Login'
+import IntroContainer from '@containers/Login/Intro'
+import ForgotContainer from '@containers/ForgotPassword'
+import ForgotConfirmContainer from '@containers/ForgotConfirm'
+import ResetPasswordContainer from '@containers/ResetPassword'
+import RegisterContainer from '@containers/Register'
+import RegisterByEmailContainer from '@containers/RegisterByEmail'
+import ConfirmContainer from '@containers/Confirm'
+import RegisterProfileContainer from '@containers/RegisterProfile'
+import UserSettingsContainer from '@containers/UserSettings'
+import { useContextualRouting } from 'next-use-contextual-routing'
+import { useState, useEffect } from 'react'
+import { Popover } from '@material-ui/core'
+import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
+import { getNotificationBadge } from '@store/notification/actions'
+import { getNotificationBadge as selector } from '@store/notification/selectors'
 
 const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
   grow: { flexGrow: 1 },
   appBar: {
     background: '#000',
@@ -65,6 +91,21 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { handleReturn } = useReturnHref()
+  const { makeContextualHref } = useContextualRouting()
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const dispatch = useAppDispatch()
+  const badge = useAppSelector(selector)
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null)
+  }
+
+  const openNotif = Boolean(anchorEl)
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -74,7 +115,40 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     })
   }
 
-  const navigateToLogin = () => router.push(ESRoutes.LOGIN)
+  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+
+  const renderContent = () => {
+    switch (router.query.pathName) {
+      case ESRoutes.LOGIN:
+        return <LoginContainer />
+      case ESRoutes.WELCOME:
+        return <IntroContainer />
+      case ESRoutes.FORGOT_PASSWORD:
+        return <ForgotContainer />
+      case ESRoutes.FORGOT_PASSWORD_CONFIRM:
+        return <ForgotConfirmContainer />
+      case ESRoutes.FORGOT_PASSWORD_RESET:
+        return <ResetPasswordContainer />
+      case ESRoutes.REGISTER:
+        return <RegisterContainer />
+      case ESRoutes.REGISTER_BY_EMAIL:
+        return <RegisterByEmailContainer />
+      case ESRoutes.REGISTER_CONFIRM:
+        return <ConfirmContainer />
+      case ESRoutes.REGISTER_PROFILE:
+        return <RegisterProfileContainer />
+      case ESRoutes.USER_SETTINGS:
+        return <UserSettingsContainer />
+      default:
+        break
+    }
+  }
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getNotificationBadge())
+    }
+  }, [isAuthenticated])
 
   return (
     <div className={classes.grow}>
@@ -90,20 +164,49 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 <div className="hamburger-inner"></div>
               </div>
             </div>
-            <a href="/" className="logo">
-              <img src="/images/logo.svg" />
-            </a>
+            <Link href="/">
+              <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
+            </Link>
             <div className={classes.search + ' search-area'}>
               <SearchArea selectData={searchOptions} onSearch={onSearch} />
             </div>
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
+                  <Popover
+                    id="mouse-over-popover"
+                    className={classes.popover}
+                    classes={{
+                      paper: classes.paper,
+                    }}
+                    open={openNotif}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                  >
+                    <NotificationBadgeListContainer />
+                  </Popover>
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
-                  <IconButton className={classes.button} disableRipple color="inherit">
-                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                  <IconButton
+                    className={classes.button}
+                    disableRipple
+                    color="inherit"
+                    aria-owns={openNotif ? 'mouse-over-popover' : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handlePopoverOpen}
+                    onMouseLeave={handlePopoverClose}
+                  >
+                    <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-bell ${classes.icon}`} />
                     </Badge>
                   </IconButton>
@@ -118,12 +221,16 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
-                  <ESButton variant="contained" color="primary" onClick={navigateToLogin}>
+                  <ESButton variant="contained" color="primary" onClick={openModal}>
                     ログイン
                   </ESButton>
                 </>
               )}
             </div>
+
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
+              <BlankLayout>{renderContent()}</BlankLayout>
+            </ESModal>
           </Toolbar>
         </Container>
       </AppBar>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Grid, Typography, Box } from '@material-ui/core'
+import { Grid, Typography, Box, ButtonBase } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import ESButton from '@components/Button'
 import * as services from '@services/search.service'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface Props {
   data: any
@@ -13,6 +15,7 @@ interface Props {
 
 const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
   const { t } = useTranslation(['common'])
+  const router = useRouter()
   const user = data.attributes
 
   const [followed, setFollowed] = useState<boolean | undefined>(isFollowed)
@@ -53,11 +56,15 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
     }
   }
 
+  const editGame = () => router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+
   return (
     <Grid item xs={12}>
       <Box marginY={2} display="flex" justifyContent="space-between">
         <Box display="flex" overflow="hidden">
-          <ESAvatar alt={user.nickname} src={user.avatar} />
+          <ButtonBase onClick={editGame}>
+            <ESAvatar alt={user.nickname} src={user.avatar} />
+          </ButtonBase>
           <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
             <Box color={Colors.white}>
               <Typography variant="h3" noWrap>
