@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     width: 38,
   },
   iconRoot: {
-    padding: 4,
+    padding: 0,
   },
   avatar: (props: { disabled: boolean }) => {
     return {
@@ -31,6 +31,7 @@ const ESButtonLineCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onl
   const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
     <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 39.155 37.308">
           <g id="Group_7252" data-name="Group 7252">

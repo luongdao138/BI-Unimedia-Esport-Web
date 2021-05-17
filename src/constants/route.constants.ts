@@ -16,4 +16,10 @@ export const ESRoutes = {
   SETTINGS: '/settings',
   USER_SETTINGS: '/user-settings',
   MESSAGE: '/message/',
+  RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
+  RECRUITMENT_FOLLOWER: '/recruitment/follower',
+  EVENT_RECOMMENDED: '/event/recommended',
+  TOURNAMENT_FOLLOWER_ENTERING: '/tournament/follower/entering',
+  TOURNAMENT_FOLLOWER_ENDED: '/tournament/follower/ended',
+  TOPIC_FOLLOWER: '/topic/follower',
 }
