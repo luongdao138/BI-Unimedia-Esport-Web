@@ -16,3 +16,18 @@ export const postReport = createAsyncThunk<services.ReportResponse, services.Rep
     }
   }
 )
+
+export const reportReasons = createAsyncThunk<services.ReasonsResponse, services.ReasonsParams>(
+  REPORT_ACTION_TYPE.REPORT_REASONS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getReportReasons(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

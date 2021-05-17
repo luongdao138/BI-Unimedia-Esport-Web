@@ -15,6 +15,7 @@ export const URI = {
   FOLLOWERS: '/v2/followers',
   FOLLOWING: '/v2/following',
   REPORT: '/v1/reports',
+  REPORT_REASONS: '/v1/report_reasons',
   NG_WORDS: '/v1/ng_words',
   GET_PREFECTURES: 'v2/areas',
   USER_SETTINGS: '/v2/users/settings',
