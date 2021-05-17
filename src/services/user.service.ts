@@ -1,6 +1,9 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 import { GameTitle } from './game.service'
+
+UPLOADER_TYPE.AVATAR
 
 export type HistorySearchParams = {
   user_id: number
@@ -121,6 +124,12 @@ export type ProfileEditParams = {
   discord_link: string
 }
 
+export type ProfileImageParams = {
+  user_id: number | string
+  image_url: string
+  file_type: number
+}
+
 export type ProfileUpdateParams = {
   sex?: number
   show_sex?: boolean
@@ -181,6 +190,11 @@ export const getNicknames = async (): Promise<NicknamesResponse> => {
 
 export const profileEdit = async (params: ProfileEditParams): Promise<ProfileResponse> => {
   const { data } = await api.put<ProfileResponse>(URI.USER_DETAIL_PROFILE, params)
+  return data
+}
+
+export const profileImage = async (params: ProfileImageParams): Promise<any> => {
+  const { data } = await api.put<any>(URI.USER_PROFILE_IMAGE, params)
   return data
 }
 

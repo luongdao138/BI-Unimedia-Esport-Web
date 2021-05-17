@@ -32,7 +32,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const user_code = router.query.user_code || []
   const isOthers = user_code.length > 0
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
-  const { userProfile, getMemberProfile } = useUserData(isOthers)
+  const { userProfile, getMemberProfile, avatarChange } = useUserData(isOthers)
   useEffect(() => {
     if (isOthers) getMemberProfile(user_code[0])
   }, [user_code])
@@ -57,7 +57,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={avatar} editable={!isOthers} />
+            <ProfileAvatar src={avatar} editable={!isOthers} onChange={(f: File) => avatarChange(f, parseInt(userProfile.id))} />
             {isOthers ? (
               <Box className={classes.menu}>
                 <ESButton variant="outlined" round className={classes.marginRight}>

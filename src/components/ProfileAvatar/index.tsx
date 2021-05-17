@@ -66,10 +66,11 @@ const ESProfileAvatar: React.FC<{ editable?: boolean; size?: number; src: string
     const file = e.target.files[0]
     const reader = new FileReader()
     if (file) {
+      // reader.readAsText(file, 'UTF-16')
+      reader.readAsDataURL(file)
       if (props.onChange) {
         props.onChange(file)
       }
-      reader.readAsDataURL(file)
     }
     reader.addEventListener(
       'load',

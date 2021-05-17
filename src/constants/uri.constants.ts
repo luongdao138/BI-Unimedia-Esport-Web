@@ -22,6 +22,7 @@ export const URI = {
   GAME_GENRES: '/v1/game_genres',
   GAME_TITLES: '/v1/game_titles',
   USER_DETAIL_PROFILE: '/v2/users/profile',
+  USER_PROFILE_IMAGE: '/v1/profile_images/user_images',
   USERS_SEARCH: '/v2/users/search',
   FOLLOW: '/v1/followers/follow',
   UNFOLLOW: '/v1/followers/unfollow',
@@ -38,5 +39,6 @@ export const URI = {
   RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations',
   GAME_UPDATE: '/v2/users/game_titles',
   NOTIFICATION_LIST: '/v2/notification/own',
+  S3_PRESIGNED_URL: '/v2/s3/presigned_url',
   LOGOUT: '/v1/auth/logout',
 }

@@ -7,5 +7,6 @@ export enum USER_PROFILE_ACTION_TYPE {
   PROFILE_EDIT = 'profile/edit',
   RECOMMENDATIONS = 'user/recommendations',
   PROFILE_UPDATE = 'profile/profileUpdate',
+  PROFILE_IMAGE = 'profile/profileImage',
   GAME_EDIT = 'profile/gameEdit',
 }
