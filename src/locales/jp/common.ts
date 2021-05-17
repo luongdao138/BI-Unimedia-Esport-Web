@@ -97,6 +97,12 @@ export default {
     community: 'コミュニティ',
     video: '動画',
     settings: '設定',
+    recommended_recruitment: 'おすすめの募集',
+    recommended_event: 'おすすめイベント',
+    recruitment_follow: 'フォローしている人の募集',
+    topic_follow: 'フォローしている人の書き込みトピック',
+    tournament_follow: 'フォローしている人がエントリーしている大会',
+    tournament_result: 'フォローしている人がエントリーしていた大会結果',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
@@ -161,13 +167,17 @@ export default {
   search_by_keyword: 'キーワード検索',
   please_select: '選択してください',
   user: {
-    user_results: 'ニックネーム・ID「ああああああ」 の検索結果',
+    user_results: 'ニックネーム・ID「:key」 の検索結果',
   },
   tournament: {
     card_date: '開　催　日',
     organizer: '主催者',
     entry: 'エントリー',
-    tournament_results: '大会「ああああああ」 の検索結果',
+    tournament_results: '大会「:key」 の検索結果',
+  },
+  search: {
+    search: '検索',
+    search_placeholder: 'キーワード検索',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -202,6 +212,7 @@ export default {
   },
   chat: {
     title: 'メッセージ',
+    no_user_available: 'No user available',
     back_list: '宛先',
     create_new: '新規作成',
   },

@@ -13,6 +13,7 @@ import tournament from '@store/tournament'
 import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
+import socket from '@store/socket'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -29,6 +30,7 @@ const reducer = combineReducers({
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
   notification: notification.reducers,
+  socket: socket.reducers,
 })
 export default reducer
 

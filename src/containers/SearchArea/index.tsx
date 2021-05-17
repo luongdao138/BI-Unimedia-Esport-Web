@@ -4,6 +4,7 @@ import { Colors } from '@theme/colors'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '@components/Button'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 
 interface SearchAreaProps {
@@ -22,6 +23,7 @@ interface returnItem {
 }
 
 const SearchArea: React.FC<SearchAreaProps> = (props) => {
+  const { t } = useTranslation(['common'])
   const router = useRouter()
   const { selectData, onSearch } = props
   const [hasValue, setHasvalue] = useState<boolean>(false)
@@ -81,14 +83,23 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     <Box className={classes.searchCont}>
       <OutlinedInput
         onChange={onChange}
-        placeholder={'キーワード検索'}
+        placeholder={t('common:search.search_placeholder')}
         id={'search'}
         value={value}
         classes={{ root: classes.input }}
         margin="dense"
         endAdornment={renderIcon()}
       />
-      <Select id={'input'} variant="outlined" margin="dense" native onChange={onSelect} className={classes.select} input={<Input />}>
+      <Select
+        id={'input'}
+        variant="outlined"
+        margin="dense"
+        native
+        onChange={onSelect}
+        value={option}
+        className={classes.select}
+        input={<Input />}
+      >
         {selectData &&
           selectData.map(({ value, name }: dataItem, index) => (
             <option key={index + value} value={value}>
@@ -98,7 +109,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
       </Select>
 
       <Button onClick={handleSearch} className={classes.searchBtn} variant="contained" color="primary">
-        検索
+        {t('common:search.search')}
       </Button>
     </Box>
   )

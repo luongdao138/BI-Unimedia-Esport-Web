@@ -56,13 +56,13 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
     }
   }
 
-  const editGame = () => router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+  const toProfile = () => router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
 
   return (
     <Grid item xs={12}>
       <Box marginY={2} display="flex" justifyContent="space-between">
         <Box display="flex" overflow="hidden">
-          <ButtonBase onClick={editGame}>
+          <ButtonBase onClick={toProfile}>
             <ESAvatar alt={user.nickname} src={user.avatar} />
           </ButtonBase>
           <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">

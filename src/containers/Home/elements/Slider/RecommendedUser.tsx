@@ -52,7 +52,6 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
   return (
     <ESSlider
       title="おすすめユーザー"
-      moreLink="#"
       navigation={false}
       width={84}
       disableResponsiveWidth

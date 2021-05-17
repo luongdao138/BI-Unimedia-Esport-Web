@@ -150,15 +150,21 @@ const Atoms: PageWithLayoutType = () => {
         <ESButtonTwitter variant="contained" fullWidth />
         <ESButtonTwitter variant="contained" fullWidth disabled />
         <ESButtonGoogle variant="contained" fullWidth />
+        <ESButtonGoogle variant="contained" fullWidth disabled />
         <ESButtonLine variant="contained" fullWidth />
+        <ESButtonLine variant="contained" fullWidth disabled />
         <ESButtonFacebook variant="contained" fullWidth />
+        <ESButtonFacebook variant="contained" fullWidth disabled />
         <ESButtonApple variant="contained" fullWidth />
+        <ESButtonApple variant="contained" fullWidth disabled />
       </Box>
       <Box margin={2} display="flex">
-        <ESButtonFacebookCircle link={''} />
-        <ESButtonTwitterCircle link={''} />
-        <ESButtonTwitchCircle link={''} />
-        <ESButtonInstagramCircle link={''} />
+        <ESButtonFacebookCircle link={'#'} />
+        <ESButtonTwitterCircle link={'#'} />
+        <ESButtonTwitchCircle link={'#'} />
+        <ESButtonInstagramCircle link={'#'} />
+      </Box>
+      <Box margin={2} display="flex">
         <ESButtonLineCircle link={''} />
         <ESButtonGoogleCircle />
         <ESButtonAppleCircle />
