@@ -65,9 +65,9 @@ const LoginContainer: React.FC = () => {
 
   const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
 
-  const buttonActive = (): boolean => {
-    return values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== '' && checkbox.terms && checkbox.privacy
-  }
+  const buttonActive = (): boolean => values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== ''
+
+  const isCheckboxChecked = (): boolean => checkbox.terms && checkbox.privacy
 
   return (
     <>
@@ -144,7 +144,7 @@ const LoginContainer: React.FC = () => {
               </Box>
 
               <Box pt={6} pb={4} maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()}>
+                <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive() || !isCheckboxChecked()}>
                   {t('common:login.submit')}
                 </ButtonPrimary>
               </Box>
@@ -162,11 +162,11 @@ const LoginContainer: React.FC = () => {
           </Box>
 
           <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
-            <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth disabled={!buttonActive()} />
-            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth disabled={!buttonActive()} />
-            <ESButtonLine onSuccess={handleSocialLogin} fullWidth disabled={!buttonActive()} />
-            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth disabled={!buttonActive()} />
-            <ESButtonApple onSuccess={handleSocialLogin} fullWidth disabled={!buttonActive()} />
+            <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonLine onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
+            <ESButtonApple onSuccess={handleSocialLogin} fullWidth disabled={!isCheckboxChecked()} />
           </Box>
         </Box>
       </Box>
