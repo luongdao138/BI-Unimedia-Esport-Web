@@ -1,10 +1,10 @@
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
-const TournamentsPage: PageWithLayoutType = () => {
+const TournamentPage: PageWithLayoutType = () => {
   return <div>Tournaments</div>
 }
 
-TournamentsPage.Layout = MainLayout
+TournamentPage.Layout = MainLayout
 
-export default TournamentsPage
+export default TournamentPage

@@ -174,6 +174,18 @@ export default {
     organizer: '主催者',
     entry: 'エントリー',
     tournament_results: '大会「ああああああ」 の検索結果',
+    follower_entering: 'フォローしている人がエントリーしている大会',
+    follower_ended: 'フォローしている人がエントリーしていた大会結果',
+  },
+  recruitment: {
+    recommended_recruitment_list: 'おすすめの募集一覧',
+    recruitment_follower: 'フォローしている人の募集',
+  },
+  event: {
+    recommended_event_list: 'おすすめイベント一覧',
+  },
+  topic: {
+    topic_follower_list: 'フォローしている人の書き込みトピック',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',

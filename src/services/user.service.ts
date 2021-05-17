@@ -149,6 +149,13 @@ export type GameEditParams = {
   game_titles: number[]
 }
 
+export type RecommendedEventResponse = {
+  data: Array<CommonResponse>
+}
+export type ResultsResponse = {
+  attributes: any
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -170,7 +177,7 @@ export const getActivityLog = async (params: ActivityLogParams): Promise<any> =>
 }
 
 export const getRecommendations = async (): Promise<RecommendationsResponse> => {
-  const { data } = await api.get<RecommendationsResponse>(URI.USER_RECOMMENDATIONS)
+  const { data } = await api.post<RecommendationsResponse>(URI.USER_RECOMMENDATIONS)
   return data
 }
 
@@ -186,5 +193,10 @@ export const profileEdit = async (params: ProfileEditParams): Promise<ProfileRes
 
 export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse> => {
   const { data } = await api.put<ProfileResponse>(URI.GAME_UPDATE, params)
+  return data
+}
+
+export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> => {
+  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT)
   return data
 }
