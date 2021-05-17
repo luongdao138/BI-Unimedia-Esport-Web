@@ -146,14 +146,15 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
           </Box>
           <Typography variant="caption">/{data.max_participants}</Typography>
         </Box>
-        <Box display="flex" justifyContent="flex-end">
-          <StyledAvatarGroup max={4}>
-            <ESAvatar alt="Avatar" />
-            <ESAvatar alt="Bvatar" />
-            <ESAvatar alt="Cvatar" />
-            <ESAvatar alt="Cvatar" />
-          </StyledAvatarGroup>
-        </Box>
+        {!!attr.participants && attr.participants.length > 0 && (
+          <Box display="flex" justifyContent="flex-end">
+            <StyledAvatarGroup max={4}>
+              {attr.participants.map((participant, i) => (
+                <ESAvatar key={`participants${i}`} src={participant.avatar} alt={participant.name} />
+              ))}
+            </StyledAvatarGroup>
+          </Box>
+        )}
       </ESCardContent>
     </ESCard>
   )
