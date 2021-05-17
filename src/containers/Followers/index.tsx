@@ -59,7 +59,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
     return function clear() {
       clearFollowers()
     }
-  }, [])
+  }, [user_code])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
@@ -91,6 +91,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
                 <ESLoader />
               </div>
             }
+            height={600}
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b>{t('common:infinite_scroll.message')}</b>

@@ -3,12 +3,15 @@ import ESSlider from '@components/Slider'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import { ESRoutes } from '@constants/route.constants'
+import { useTranslation } from 'react-i18next'
 
 export const TournamentFollow: React.FC = () => {
+  const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title="フォローしている人がエントリーしている大会"
-      moreLink="#"
+      title={t('common:home.tournament_follow')}
+      moreLink={ESRoutes.TOURNAMENT_FOLLOWER_ENTERING}
       navigation
       width={256}
       items={[

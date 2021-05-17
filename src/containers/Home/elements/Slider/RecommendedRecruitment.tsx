@@ -4,6 +4,8 @@ import ESSlider from '@components/Slider'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import { ESRoutes } from '@constants/route.constants'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   data: Array<recruitmentProps>
@@ -25,11 +27,12 @@ type recruitmentAttributesProps = {
 }
 
 export const RecommendedRecruitment: React.FC<Props> = () => {
+  const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title="おすすめの募集"
+      title={t('common:home.recommended_recruitment')}
       navigation
-      moreLink="#"
+      moreLink={ESRoutes.RECRUITMENT_RECOMMENDED}
       width={256}
       items={[
         <ESCard key="1">

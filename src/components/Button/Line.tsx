@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
-      background: '#01a201',
+      background: '#00B900',
     },
   },
   leftIcon: {
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
+    opacity: 0.3,
     backgroundColor: '#00B900 !important',
     color: '#FFF !important',
   },
@@ -107,6 +108,7 @@ const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => 
         </SvgIcon>
       }
     >
+      <div className="esbutton-hover" />
       {t('common:button.line')}
     </Button>
   )

@@ -6,23 +6,33 @@ const useStyles = makeStyles(() => ({
     width: 30,
     height: 30,
   },
-  Twitter: {
-    background: '#1D9BF0',
-  },
   svgRoot: {
     height: 14,
     width: 17,
   },
   iconRoot: {
-    padding: 4,
+    padding: 0,
+  },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: '#1D9BF0',
+      opacity: props.disabled ? 0.3 : 1,
+    }
   },
 }))
 
-const ESButtonTwitterCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+interface SocialProps {
+  link?: string
+  onlyIcon?: boolean
+}
+
+const ESButtonTwitterCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.Twitter}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <div className="esbutton-hover" />
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 16.625 13.511">
           <path
             id="Path_104"

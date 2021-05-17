@@ -6,23 +6,33 @@ const useStyles = makeStyles(() => ({
     width: 30,
     height: 30,
   },
-  Instagram: {
-    background: 'transparent linear-gradient(46deg, #FCD81D 0%, #EB1C24 50%, #A33A93 100%) 0% 0% no-repeat padding-box;',
-  },
   svgRoot: {
     height: 18,
     width: 18,
   },
   iconRoot: {
-    padding: 4,
+    padding: 0,
+  },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: 'transparent linear-gradient(46deg, #FCD81D 0%, #EB1C24 50%, #A33A93 100%) 0% 0% no-repeat padding-box;',
+      opacity: props.disabled ? 0.3 : 1,
+    }
   },
 }))
 
-const ESButtonInstagramCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+interface SocialProps {
+  link?: string
+  onlyIcon?: boolean
+}
+
+const ESButtonInstagramCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.Instagram}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <div className="esbutton-hover" />
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 18.118 18.118">
           <path
             id="Path_16708"

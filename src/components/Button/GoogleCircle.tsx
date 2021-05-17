@@ -7,23 +7,33 @@ const useStyles = makeStyles(() => ({
     width: 60,
     height: 60,
   },
-  Google: {
-    background: Colors.white,
-  },
   svgRoot: {
     height: 32,
     width: 32,
   },
   iconRoot: {
-    padding: 4,
+    padding: 0,
+  },
+  avatar: (props: { disabled: boolean }) => {
+    return {
+      background: Colors.white,
+      opacity: props.disabled ? 0.3 : 1,
+    }
   },
 }))
 
-const ESButtonGoogleCircle: React.FC<IconButtonProps> = (props) => {
-  const classes = useStyles()
+interface SocialProps {
+  link?: string
+  onlyIcon?: boolean
+}
+
+const ESButtonGoogleCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon }) => {
+  const disabled = !link || link.length === 0
+  const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
-    <IconButton {...props} classes={{ root: classes.iconRoot }}>
-      <Avatar classes={{ root: classes.root }} className={classes.Google}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <div className="esbutton-hover" />
+      <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 31.773 31.773">
           <path
             id="Shape"

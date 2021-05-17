@@ -39,8 +39,12 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
 
   if (userProfile === null || userProfile === undefined) return null
 
-  const cover = userProfile.attributes.cover_url ?? '/images/avatar.png'
-  const avatar = userProfile ? userProfile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
+  const cover = userProfile.attributes.cover_url ?? '/images/cover.png'
+  const avatar = userProfile?.attributes?.avatar_url
+    ? userProfile.attributes.avatar_url
+    : isOthers
+    ? '/images/avatar_o.png'
+    : '/images/avatar.png'
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
 
@@ -49,7 +53,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
       <>
         <Box className={classes.headerContainer}>
           <ProfileCover src={cover} />
-          {/* <Grid container direction="column" justify="space-between" alignItems="flex-start" className={classes.headerItemsContainer}> */}
           <Box className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
