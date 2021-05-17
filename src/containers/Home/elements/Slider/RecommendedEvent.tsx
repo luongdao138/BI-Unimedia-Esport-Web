@@ -3,13 +3,16 @@ import ESSlider from '@components/Slider'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import { ESRoutes } from '@constants/route.constants'
+import { useTranslation } from 'react-i18next'
 
 export const RecommendedEvent: React.FC = () => {
+  const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title="おすすめイベント"
+      title={t('common:home.recommended_event')}
       navigation
-      moreLink="#"
+      moreLink={ESRoutes.EVENT_RECOMMENDED}
       width={256}
       items={[
         <ESCard key="1">

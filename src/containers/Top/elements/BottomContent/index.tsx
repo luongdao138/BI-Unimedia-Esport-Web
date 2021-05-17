@@ -21,31 +21,31 @@ export const BottomContent: React.FC = () => {
           </Grid>
           <Box className={classes.bottomInnerContent}>
             <Grid container spacing={0}>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
-              <Grid item xs={12} sm={6} md={4} xl={4}>
+              <Grid item xs={6} sm={6} md={4} xl={4}>
                 <RecruitingTournament />
               </Grid>
             </Grid>

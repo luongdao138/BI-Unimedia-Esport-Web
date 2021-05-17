@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
-      background: '#0d61ce',
+      background: '#1877F2',
     },
   },
   leftIcon: {
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
+    opacity: 0.3,
     backgroundColor: '#1877F2 !important',
     color: '#FFF !important',
   },
@@ -66,6 +67,7 @@ const ESButtonFacebook: React.FC<ButtonProps> = ({ classes: _classes, ...rest })
         </SvgIcon>
       }
     >
+      <div className="esbutton-hover" />
       {t('common:button.facebook')}
     </Button>
   )

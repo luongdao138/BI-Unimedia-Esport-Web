@@ -97,6 +97,12 @@ export default {
     community: 'コミュニティ',
     video: '動画',
     settings: '設定',
+    recommended_recruitment: 'おすすめの募集',
+    recommended_event: 'おすすめイベント',
+    recruitment_follow: 'フォローしている人の募集',
+    topic_follow: 'フォローしている人の書き込みトピック',
+    tournament_follow: 'フォローしている人がエントリーしている大会',
+    tournament_result: 'フォローしている人がエントリーしていた大会結果',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
