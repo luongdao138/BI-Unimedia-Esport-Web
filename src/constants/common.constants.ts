@@ -30,6 +30,10 @@ export const GENDER = {
   OTHER: 3,
 }
 
+export const RESPONSE_STATUS = {
+  SUCCESS: 200,
+}
+
 export const ACTIVITY_ACTION_TYPE = {
   TOPIC_CREATE: 'topic_create',
   TOPIC_COMMENT: 'topic_comment',

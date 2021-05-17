@@ -44,6 +44,21 @@ export const profileUpdate = createAsyncThunk<services.ProfileResponse, services
   }
 )
 
+export const profileImage = createAsyncThunk<services.ProfileImageParams, services.ProfileImageParams>(
+  USER_PROFILE_ACTION_TYPE.PROFILE_IMAGE,
+  async (param, { rejectWithValue }) => {
+    try {
+      await services.profileImage(param)
+      return param
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(
   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
   async (param, { rejectWithValue }) => {

@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 
 type StateType = {
   data: ProfileResponse['data']
@@ -35,6 +36,14 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
+  })
+
+  builder.addCase(actions.profileImage.fulfilled, (state, action) => {
+    if (action.payload.file_type === UPLOADER_TYPE.USER_PROFILE) {
+      state.data.attributes.avatar_url = action.payload.image_url
+    } else {
+      state.data.attributes.cover_url = action.payload.image_url
+    }
   })
 
   builder.addCase(registerProfile.fulfilled, (state, action) => {
