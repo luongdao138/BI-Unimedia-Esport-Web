@@ -1,5 +1,6 @@
 import { TournamentStatus } from '@services/tournament.service'
-import { Box, Icon } from '@material-ui/core'
+import { Box, Icon, IconButton } from '@material-ui/core'
+import ChevronLeftIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactNode, useEffect, useState } from 'react'
@@ -10,10 +11,11 @@ type TournamentHeaderProps = {
   status: TournamentStatus
   cover: string | null
   children?: ReactNode
+  onHandleBack: () => void
 }
-const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, cover }) => {
+const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, cover, onHandleBack }) => {
   const classes = useStyles()
-  const [tab, setTab] = useState(-1)
+  const [tab, setTab] = useState(4)
   useEffect(() => {
     switch (status) {
       case 'recruiting':
@@ -29,7 +31,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
         setTab(3)
         break
       default:
-        setTab(-1)
+        setTab(4)
     }
   }, [status])
   return (
@@ -43,7 +45,11 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
           backgroundPosition: 'center center',
         }}
         mb={3}
-      />
+      >
+        <IconButton onClick={onHandleBack} className={classes.backButton}>
+          <ChevronLeftIcon />
+        </IconButton>
+      </Box>
       <Box className={classes.root}>
         <Tabs
           value={tab}
@@ -55,6 +61,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
           <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
           <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
           <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
+          <Tab style={{ display: 'none' }} />
         </Tabs>
         <Box>{children}</Box>
       </Box>
@@ -87,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-around',
     maxWidth: theme.spacing(60),
   },
+  backButton: { backgroundColor: `${Colors.grey['200']}80`, margin: 24, marginTop: 16, padding: 6 },
 }))
 
 export default TournamentHeader
