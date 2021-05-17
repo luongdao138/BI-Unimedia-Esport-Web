@@ -49,12 +49,12 @@ const NotificationContainer: React.FC = () => {
 
   return (
     <div>
-      <Box className="header-first-column">
+      <Box className="header-first-column" style={{ maxWidth: '100%' }}>
         <IconButton className={classes.iconButton} disableRipple>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>
-          通知一覧
+          {t('common:notification.title')}
         </Typography>
       </Box>
       <InfiniteScroll

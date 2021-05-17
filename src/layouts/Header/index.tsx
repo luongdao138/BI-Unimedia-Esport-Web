@@ -28,8 +28,8 @@ import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { useState } from 'react'
-import { Typography, Popover } from '@material-ui/core'
-import NotificationContainer from '@containers/Notifications'
+import { Popover } from '@material-ui/core'
+import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
 
 const useStyles = makeStyles((theme) => ({
   popover: {
@@ -163,14 +163,6 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
-                  <Typography
-                    aria-owns={openNotif ? 'mouse-over-popover' : undefined}
-                    aria-haspopup="true"
-                    onMouseEnter={handlePopoverOpen}
-                    onMouseLeave={handlePopoverClose}
-                  >
-                    Hover with a Popover.
-                  </Typography>
                   <Popover
                     id="mouse-over-popover"
                     className={classes.popover}
@@ -181,21 +173,29 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                     anchorEl={anchorEl}
                     anchorOrigin={{
                       vertical: 'bottom',
-                      horizontal: 'left',
+                      horizontal: 'right',
                     }}
                     transformOrigin={{
                       vertical: 'top',
-                      horizontal: 'left',
+                      horizontal: 'right',
                     }}
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                   >
-                    <NotificationContainer />
+                    <NotificationBadgeListContainer />
                   </Popover>
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
-                  <IconButton className={classes.button} disableRipple color="inherit">
+                  <IconButton
+                    className={classes.button}
+                    disableRipple
+                    color="inherit"
+                    aria-owns={openNotif ? 'mouse-over-popover' : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handlePopoverOpen}
+                    onMouseLeave={handlePopoverClose}
+                  >
                     <Badge badgeContent={17} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-bell ${classes.icon}`} />
                     </Badge>

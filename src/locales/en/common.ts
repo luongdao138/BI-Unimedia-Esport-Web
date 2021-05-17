@@ -205,6 +205,9 @@ export default {
     back_list: '宛先',
     create_new: '新規作成',
   },
+  notification: {
+    title: '通知一覧',
+  },
   confirm: {
     sent: 'メールアドレスに送信された',
     verification_code: '6桁の認証コードを送信しました',
