@@ -199,6 +199,8 @@ export default {
   },
   chat: {
     title: 'メッセージ',
+    destination: '宛先',
+    no_user_available: 'No user available',
   },
   confirm: {
     sent: 'メールアドレスに送信された',
