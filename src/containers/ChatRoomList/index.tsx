@@ -13,6 +13,7 @@ import { getRoomList } from '@store/socket/selectors'
 import _ from 'lodash'
 import Loader from '@components/Loader'
 import Box from '@material-ui/core/Box'
+import { makeStyles } from '@material-ui/core'
 
 interface ChatRoomListProps {
   expand?: boolean
@@ -26,6 +27,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   const user = useAppSelector(getAuth)
   const userId = user.id
   const listData = useAppSelector(getRoomList)
+  const classes = useStyles()
 
   useEffect(() => {
     if (userId) {
@@ -76,11 +78,14 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderLoader = () => {
-    return (
-      <Box className="small-loader centered">
-        <Loader />
-      </Box>
-    )
+    if (listData === undefined) {
+      return (
+        <Box className={classes.loaderBox}>
+          <Loader />
+        </Box>
+      )
+    }
+    return null
   }
 
   return (
@@ -91,6 +96,21 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
     </MuiList>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  loaderBox: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: '50px',
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+    },
+  },
+}))
 
 ChatRoomList.defaultProps = {
   expand: true,

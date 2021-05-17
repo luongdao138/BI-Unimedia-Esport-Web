@@ -22,25 +22,6 @@
   justify-content: flex-end;
 }
 
-.small-loader {
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-.small-loader {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-}
-
 .content {
   min-height: calc(100vh - 126px);
 }
