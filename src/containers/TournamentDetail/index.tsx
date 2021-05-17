@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { TournamentStatus } from '@services/tournament.service'
 
 import RecruitingAction from './RecruitingAction'
-// import DetailInfo from '@containers/Profile/td'
+import DetailInfo from '@containers/TournamentDetail/Partials/DetailInfo'
 
 const TournamentDetail: React.FC = () => {
   const router = useRouter()
@@ -34,7 +34,7 @@ const TournamentDetail: React.FC = () => {
           >
             {actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
-          {/* <DetailInfo detail={tournament} /> */}
+          <DetailInfo detail={tournament} />
         </>
       )}
     </div>

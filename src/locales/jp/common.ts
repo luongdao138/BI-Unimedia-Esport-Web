@@ -168,6 +168,13 @@ export default {
     organizer: '主催者',
     entry: 'エントリー',
     tournament_results: '大会「ああああああ」 の検索結果',
+    rule: {
+      single: 'トーナメント',
+      battle_royale: 'バトルロイヤル',
+    },
+    has_prize: '副賞あり',
+    online: 'オンライン',
+    offline: 'オフライン',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
