@@ -1,6 +1,7 @@
 import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
+import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitchCircle'
@@ -45,6 +46,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           <Iconic text={time} icon="fa fa-birthday-cake" />
         </Box>
         <Box display="flex" className={classes.marginTop20}>
+          <ESButtonDiscordCircle className={classes.marginRight} link={userProfile.attributes.discord_link} />
           <ESButtonFacebookCircle className={classes.marginRight} link={userProfile.attributes.facebook_link} />
           <ESButtonTwitterCircle className={classes.marginRight} link={userProfile.attributes.twitter_link} />
           <ESButtonTwitchCircle className={classes.marginRight} link={userProfile.attributes.twitch_link} />

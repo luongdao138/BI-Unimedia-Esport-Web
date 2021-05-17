@@ -16,3 +16,18 @@ export const notifications = createAsyncThunk<services.NotificationListResponse,
     }
   }
 )
+
+export const getNotificationBadge = createAsyncThunk<services.NotificationBadgeResponse>(
+  NOTIFICATION_ACTION_TYPE.GET_NOTIFICATION_BADGE,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getNotificationBadge()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

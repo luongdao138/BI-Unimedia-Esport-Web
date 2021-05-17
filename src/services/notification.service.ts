@@ -14,6 +14,10 @@ export type NotificationResponse = {
   attributes: any
 }
 
+export type NotificationBadgeResponse = {
+  badge: number
+}
+
 export type Meta = {
   current_page: number
   per_page: number
@@ -23,5 +27,10 @@ export type Meta = {
 
 export const notificationList = async (params: NotificationListParams): Promise<NotificationListResponse> => {
   const { data } = await api.get<NotificationListResponse>(URI.NOTIFICATION_LIST, { params })
+  return data
+}
+
+export const getNotificationBadge = async (): Promise<NotificationBadgeResponse> => {
+  const { data } = await api.get<NotificationBadgeResponse>(URI.NOTIFICATION_BADGE)
   return data
 }

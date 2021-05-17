@@ -35,7 +35,7 @@ const LogoutContainer: React.FC<Props> = ({ handleClose }) => {
           justifyContent="space-evenly"
           display="flex"
           alignItems="center"
-          flex-flexDirection="column"
+          flexDirection="column"
           className={classes.buttonContainer}
         >
           <Box width={220} pb={2} className={classes.button}>
