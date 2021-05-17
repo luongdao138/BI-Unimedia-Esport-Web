@@ -202,6 +202,7 @@ export default {
   },
   chat: {
     title: 'メッセージ',
+    no_user_available: 'No user available',
     back_list: '宛先',
     create_new: '新規作成',
   },
