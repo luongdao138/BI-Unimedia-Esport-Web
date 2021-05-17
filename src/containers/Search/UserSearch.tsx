@@ -12,7 +12,7 @@ const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { searchUsers, userSearch, page } = useUserSearch()
+  const { searchUsers, userSearch, page, meta } = useUserSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
@@ -43,18 +43,19 @@ const UserSearchContainer: React.FC = () => {
         dataLength={searchUsers.length}
         next={loadMore}
         hasMore={page && page.current_page !== page.total_pages}
-        loader={
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
-          </Grid>
-        }
+        loader={null}
       >
         {searchUsers.map((user, i) => (
           <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
         ))}
       </InfiniteScroll>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </Grid>
   )
 }

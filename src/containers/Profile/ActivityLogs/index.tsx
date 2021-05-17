@@ -18,6 +18,7 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
       // page: 1,
       user_code: userCode,
     })
+
     return () => resetMeta()
   }, [])
 
@@ -38,14 +39,7 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
         next={loadMore}
         // hasMore={page && page.current_page !== page.total_pages}
         hasMore={false}
-        loader={
-          null
-          // <Grid item xs={12}>
-          //   <Box my={4} display="flex" justifyContent="center" alignItems="center">
-          //     <ESLoader />
-          //   </Box>
-          // </Grid>
-        }
+        loader={null}
       >
         {activityLogs.map((log, i) => (
           <ActivityItem activity={log} key={i} />
@@ -66,6 +60,7 @@ const useStyles = makeStyles(() => ({
   container: {
     padding: 24,
     paddingTop: 16,
+    paddingBottom: 0,
     display: 'flex',
     flexWrap: 'wrap',
   },

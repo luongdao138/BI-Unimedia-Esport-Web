@@ -12,7 +12,7 @@ const TournamentSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { searchTournaments, tournamentSearch, page } = useTournamentSearch()
+  const { searchTournaments, tournamentSearch, page, meta } = useTournamentSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
@@ -43,13 +43,7 @@ const TournamentSearchContainer: React.FC = () => {
         dataLength={searchTournaments.length}
         next={loadMore}
         hasMore={page && page.current_page !== page.total_pages}
-        loader={
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
-          </Grid>
-        }
+        loader={null}
       >
         {searchTournaments.map((tournament, i) => (
           <Grid key={i} item xs={6} md={4}>
@@ -57,6 +51,13 @@ const TournamentSearchContainer: React.FC = () => {
           </Grid>
         ))}
       </InfiniteScroll>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </Grid>
   )
 }
