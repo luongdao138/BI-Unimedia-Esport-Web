@@ -12,7 +12,7 @@ const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { searchUsers, userSearch, page, meta } = useUserSearch()
+  const { searchUsers, userSearch, page, meta, resetMeta } = useUserSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
@@ -21,6 +21,8 @@ const UserSearchContainer: React.FC = () => {
       setKeyword(keyword)
       userSearch({ page: 1, keyword: keyword })
     }
+
+    return () => resetMeta()
   }, [router.query])
 
   const loadMore = () => {

@@ -12,7 +12,7 @@ const TournamentSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const { searchTournaments, tournamentSearch, page, meta } = useTournamentSearch()
+  const { searchTournaments, tournamentSearch, page, meta, resetMeta } = useTournamentSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
@@ -21,6 +21,8 @@ const TournamentSearchContainer: React.FC = () => {
       setKeyword(_keyword)
       tournamentSearch({ page: 1, keyword: _keyword })
     }
+
+    return () => resetMeta()
   }, [router.query])
 
   const loadMore = () => {
