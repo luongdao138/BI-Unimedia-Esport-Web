@@ -21,6 +21,26 @@
   background: #000;
   justify-content: flex-end;
 }
+
+.small-loader {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+.small-loader {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
 .content {
   min-height: calc(100vh - 126px);
 }
@@ -35,6 +55,10 @@
   flex-direction: row;
   padding-left: calc((100% - 800px) / 2);
   min-height: 100vh;
+}
+.chat-main.main {
+  height: 100vh;
+  overflow: hidden;
 }
 .aside-left {
   position: fixed;
@@ -362,7 +386,53 @@
   width: 100%;
   flex: 1;
 }
-
+.scroll-bar {
+  overflow: overlay;
+  ::-webkit-scrollbar {
+    width: 5px;
+    padding: 2;
+    opacity: 0;
+    visibility: hidden;
+  }
+  ::-webkit-scrollbar-track {
+    padding-left: 1px;
+    opacity: 0;
+    visibility: hidden;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #222;
+    border-radius: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+  }
+}
+.scroll-bar:hover {
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  margin-right: 1px;
+  scrollbar-color: #222 transparent;
+  scrollbar-width: thin;
+  ::-webkit-scrollbar {
+    width: 5px;
+    opacity: 1;
+    padding: 2;
+    visibility: visible;
+  }
+  ::-webkit-scrollbar-track {
+    padding-left: 1px;
+    opacity: 1;
+    visibility: visible;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #222;
+    border-radius: 6px;
+    opacity: 1;
+    visibility: visible;
+  }
+}
 .header-first-column {
   flex: 0 0 260px;
   height: 100%;

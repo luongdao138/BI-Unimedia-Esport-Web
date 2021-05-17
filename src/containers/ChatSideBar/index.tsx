@@ -49,8 +49,13 @@ const useStyles = makeStyles({
     top: 61,
     bottom: 0,
   },
-  content: {},
-  inner: {},
+  content: {
+    height: '100%',
+  },
+  inner: {
+    height: '100%',
+    position: 'relative',
+  },
   header: {
     paddingLeft: 16,
     paddingRight: 16,
