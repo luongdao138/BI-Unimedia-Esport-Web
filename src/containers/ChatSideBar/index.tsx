@@ -42,11 +42,21 @@ const useStyles = makeStyles({
     height: '100%',
     display: 'block',
     position: 'fixed',
-    transform: (expand) => (expand ? 'translateX(calc(-170px))' : 'translateX(calc(0px))'),
+    transform: 'translateX(calc(0px))',
     transition: 'all 0.1s ease',
     borderLeft: '1px solid #70707070',
     top: 61,
     bottom: 0,
+    '&.expanded-sidebar': {
+      transform: 'translateX(calc(-170px))',
+    },
+    '&.expanded-sidebar $headerTitle': {
+      display: 'flex',
+    },
+    '&.expanded-sidebar $headerIcon': {
+      fontSize: '14px',
+      paddingLeft: 0,
+    },
   },
   content: {
     height: '100%',
@@ -63,12 +73,12 @@ const useStyles = makeStyles({
   },
   headerTitle: {
     color: Colors.white,
-    display: (expand) => (expand ? 'flex' : 'none'),
+    display: 'none',
   },
   headerIcon: {
     color: Colors.white,
-    fontSize: (expand) => (expand ? '14px' : '18px'),
-    paddingLeft: (expand) => (expand ? '0' : '14px'),
+    fontSize: '18px',
+    paddingLeft: '14px',
   },
 })
 
