@@ -7,6 +7,7 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 interface Props {
   data: any
@@ -17,6 +18,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const user = data.attributes
+  const { userProfile } = useGetProfile()
 
   const [followed, setFollowed] = useState<boolean | undefined>(isFollowed)
   const [mounted, setMounted] = useState<boolean>(true)
@@ -77,7 +79,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
             </Typography>
           </Box>
         </Box>
-        {followed !== undefined && (
+        {followed !== undefined && userProfile.id != data.id && (
           <Box flexShrink={0}>
             {followed ? (
               <ESButton disabled={isLoading} onClick={unfollow} variant="contained" color="primary" size="medium" round>

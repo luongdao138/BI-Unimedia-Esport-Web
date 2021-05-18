@@ -128,6 +128,28 @@ export type ParticipantsResponse = {
   attributes: any
 }
 
+export type TeamJoin = {
+  id: number | string
+  leader_name: string
+  team_name: string
+  team_icon_url: string
+  members: Array<TeamMember>
+}
+
+export type TeamMember = {
+  user_id: number
+  name: string
+}
+
+export type EntryJoin = {
+  name: string
+}
+
+export type JoinParams = {
+  data: TeamJoin | EntryJoin
+  hash_key: string
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.get<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, {
     params,
@@ -155,17 +177,17 @@ export const getTournamentParticipants = async (params: GetParticipantsParams): 
   return data
 }
 
-export const joinTournament = async (hash_key: string): Promise<undefined> => {
-  const { data } = await api.post<undefined>(`/web/v2/tournaments/${hash_key}/details`)
+export const joinTournament = async (params: JoinParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.JOIN_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 
-export const leaveTournament = async (hash_key: string): Promise<undefined> => {
-  const { data } = await api.post<undefined>(`/web/v2/tournaments/${hash_key}/details`)
+export const leaveTournament = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.LEAVE_TOURNAMENT.replace(/:id/gi, hash_key))
   return data
 }
 
 export const getEntryStatus = async (hash_key: string): Promise<EntryStatusResponse> => {
-  const { data } = await api.post<EntryStatusResponse>(`/web/v2/tournaments/${hash_key}/details`)
+  const { data } = await api.get<EntryStatusResponse>(URI.CHECK_ENTRY_STATUS.replace(/:id/gi, hash_key))
   return data
 }

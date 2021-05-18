@@ -15,6 +15,7 @@ import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
+import useEntry from './useEntry'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -27,6 +28,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const classes = useStyles()
   const store = useStore()
   const [open, setOpen] = useState(false)
+  const { join, leave } = useEntry()
 
   const validationSchema = Yup.object().shape({
     nickname: Yup.string()
@@ -47,6 +49,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         // eslint-disable-next-line no-console
         console.log('nickname', values.nickname)
         // TODO call endpoint here
+        join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
         handleClose()
       }
     },
@@ -62,14 +65,15 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     <Box>
       <Box className={classes.actionButtonContainer}>
         <Box className={classes.actionButton}>
-          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            エントリーする
-          </ButtonPrimary>
-        </Box>
-        <Box className={classes.actionButton}>
-          <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(true)}>
-            エントリーを辞退する
-          </ESButton>
+          {tournament.attributes.is_entered ? (
+            <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
+              エントリーを辞退する
+            </ESButton>
+          ) : (
+            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+              エントリーする
+            </ButtonPrimary>
+          )}
         </Box>
       </Box>
       <StickyActionModal

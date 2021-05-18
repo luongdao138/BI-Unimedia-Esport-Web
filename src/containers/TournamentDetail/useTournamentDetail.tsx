@@ -22,6 +22,13 @@ const useTournamentDetail = (): { tournament: TournamentDetail; meta: Meta } => 
       dispatch(actions.getTournamentDetail(String(query.hash_key)))
     }
   }, [query.hash_key])
+
+  useEffect(() => {
+    if (query.hash_key && tournament) {
+      dispatch(actions.getEntryStatus(String(query.hash_key)))
+    }
+  }, [tournament])
+
   useEffect(() => {
     return function () {
       dispatch(clearMetaData(actions.getTournamentDetail.typePrefix))
