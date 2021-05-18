@@ -182,6 +182,10 @@ export default {
     online: 'オンライン',
     offline: 'オフライン',
   },
+  search: {
+    search: '検索',
+    search_placeholder: 'キーワード検索',
+  },
   user_profile: {
     edit_profile: 'プロフィールを編集',
     profile: 'プロフィール',
