@@ -34,7 +34,7 @@ interface SocialProps {
 </svg> */
 }
 
-const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon }) => {
+const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon, ...rest }) => {
   const disabled = !link || link.length === 0
   const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   function copyToClipboard() {
@@ -47,7 +47,7 @@ const ESButtonDiscordCircle: React.FC<IconButtonProps & SocialProps> = ({ link, 
     alert(link + ' copied')
   }
   return (
-    <IconButton onClick={copyToClipboard} disabled={disabled} classes={{ root: classes.iconRoot }}>
+    <IconButton onClick={copyToClipboard} disabled={disabled} classes={{ root: classes.iconRoot }} {...rest}>
       <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 30 30">
