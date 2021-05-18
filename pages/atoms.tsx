@@ -43,6 +43,7 @@ import ESStrengthMeter from '@components/StrengthMeter'
 import ESLoader from '@components/Loader'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+import ESReport from '@containers/Report'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
@@ -122,6 +123,13 @@ const Atoms: PageWithLayoutType = () => {
       <Box>
         <ESFollowers user_code={'Umtest2'} />
         <ESFollowing user_code={null} />
+      </Box>
+      <Box>
+        <ESReport
+          target_id="msg_1597122710436_29aff640-db91-11ea-981b-5ba655e05f4f"
+          room_id="e684510b-d212-49bb-98ac-73613aaa07c3"
+          user_email="sample@sample.com"
+        />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>
@@ -332,7 +340,7 @@ const Atoms: PageWithLayoutType = () => {
         <PinInput numberOfPins={6} value={value} onChange={(value) => setValue(value)} />
       </Box>
       <Box margin={4}>
-        <ProfileCover src="/images/avatar.png" />
+        <ProfileCover src={undefined} />
         <ProfileAvatar src="/images/avatar.png" editable />
         <ProfileAvatar src="/images/avatar_o.png" />
       </Box>

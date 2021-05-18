@@ -7,6 +7,7 @@ import common from '@store/common'
 import settings from '@store/settings'
 import follow from '@store/follow'
 import following from '@store/following'
+import report from '@store/report'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
 import tournament from '@store/tournament'
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   settings: settings.reducers,
   follow: follow.reducers,
   following: following.reducers,
+  report: report.reducers,
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   community: community.reducers,

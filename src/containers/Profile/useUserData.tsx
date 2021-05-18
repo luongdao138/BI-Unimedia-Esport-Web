@@ -1,8 +1,12 @@
+/* eslint-disable no-console */
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import community from '@store/community'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
+import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
+import { RESPONSE_STATUS } from '@constants/common.constants'
+import { getPreSignedUrl, upload } from '@services/image.service'
 
 const userSelectors = userProfileStore.selectors
 const userActions = userProfileStore.actions
@@ -28,9 +32,48 @@ const useUserData = (others: boolean): any => {
     userProfile = useAppSelector(userSelectors.getUserProfile)
     communityList = useAppSelector(communitySelectors.getCommunityList)
   }
+
+  // const progressListener = (progress: number) => {
+  //   console.log('progressListener ', progress)
+  // }
+  const profileImageChange = async (file: File, user_id: number, type: number) => {
+    const params = {
+      type: type,
+      fileName: file.name,
+      contentType: file.type,
+      room: user_id,
+      action_type: ACTION_TYPE.UPDATE,
+    }
+    try {
+      const res = await getPreSignedUrl(params)
+      const file_url = res.file_url
+      const signed_url = res.url
+      const u_res = await upload(file, signed_url)
+      if (u_res === RESPONSE_STATUS.SUCCESS) {
+        const params = {
+          user_id: user_id,
+          image_url: 'https://' + file_url,
+          file_type: type === UPLOADER_TYPE.AVATAR ? UPLOADER_TYPE.USER_PROFILE : UPLOADER_TYPE.USER_COVER,
+        }
+        dispatch(userActions.profileImage(params))
+      }
+    } catch (error) {
+      console.log('useUserData.tsx 44 getPreSignedUrl failed', error)
+    }
+  }
   const resetCommunityMeta = () => dispatch(clearMetaData(communityActions.getCommunityList.typePrefix))
   const resetUserMeta = () => dispatch(clearMetaData(userActions.getMemberProfile.typePrefix))
-  return { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta }
+  return {
+    userProfile,
+    communityList,
+    getCommunityList,
+    getMemberProfile,
+    resetCommunityMeta,
+    resetUserMeta,
+    profileImageChange,
+    userMeta,
+    communityMeta,
+  }
 }
 
 export default useUserData
