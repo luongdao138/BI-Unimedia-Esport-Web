@@ -18,7 +18,7 @@ export const tournamentSearch = createAsyncThunk<services.TournamentSearchRespon
   }
 )
 
-export const tournamentFollowers = createAsyncThunk<services.TournamentFollowersResponse>(
+export const getTournamentFollowers = createAsyncThunk<services.TournamentFollowersResponse>(
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_FOLLOWERS,
   async (_, { rejectWithValue }) => {
     try {
@@ -33,7 +33,7 @@ export const tournamentFollowers = createAsyncThunk<services.TournamentFollowers
   }
 )
 
-export const tournamentResults = createAsyncThunk<services.TournamentResultsResponse>(
+export const getTournamentResults = createAsyncThunk<services.TournamentResultsResponse>(
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_RESULTS,
   async (_, { rejectWithValue }) => {
     try {
@@ -101,3 +101,18 @@ export const leaveTournament = createAsyncThunk<undefined, string>(types.LEAVE_T
     return rejectWithValue(error.response.data)
   }
 })
+
+export const getTournamentParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
+  types.GET_TOURNAMENT_PARTICIPANTS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentParticipants(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

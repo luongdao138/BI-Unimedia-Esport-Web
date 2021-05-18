@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     width: 33,
   },
   iconRoot: {
-    padding: 2,
+    padding: 0,
   },
   avatar: (props: { disabled: boolean }) => {
     return {
@@ -31,6 +31,7 @@ const ESButtonAppleCircle: React.FC<IconButtonProps & SocialProps> = ({ link, on
   const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
     <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+      <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 28.152 32.633">
           <path

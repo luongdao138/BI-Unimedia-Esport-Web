@@ -3,12 +3,15 @@ import ESSlider from '@components/Slider'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
+import { ESRoutes } from '@constants/route.constants'
+import { useTranslation } from 'react-i18next'
 
 export const RecruitmentFollow: React.FC = () => {
+  const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title="フォローしている人の募集"
-      moreLink="#"
+      title={t('common:home.recruitment_follow')}
+      moreLink={ESRoutes.RECRUITMENT_FOLLOWER}
       navigation
       width={256}
       items={[
