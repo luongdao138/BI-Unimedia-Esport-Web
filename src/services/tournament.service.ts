@@ -102,11 +102,16 @@ export type TournamentDetail = {
     my_info: []
     my_position: null | string
     hash_key: string
+    is_entered?: boolean
   }
 }
 
 export type TournamentDetailResponse = {
   data: TournamentDetail
+}
+
+export type EntryStatusResponse = {
+  is_entry: boolean
 }
 
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
@@ -128,5 +133,20 @@ export const tournamentResults = async (): Promise<TournamentResultsResponse> =>
 
 export const getTournamentDetail = async (hash_key: string): Promise<TournamentDetailResponse> => {
   const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
+  return data
+}
+
+export const joinTournament = async (hash_key: string): Promise<undefined> => {
+  const { data } = await api.post<undefined>(`/web/v2/tournaments/${hash_key}/details`)
+  return data
+}
+
+export const leaveTournament = async (hash_key: string): Promise<undefined> => {
+  const { data } = await api.post<undefined>(`/web/v2/tournaments/${hash_key}/details`)
+  return data
+}
+
+export const getEntryStatus = async (hash_key: string): Promise<EntryStatusResponse> => {
+  const { data } = await api.post<EntryStatusResponse>(`/web/v2/tournaments/${hash_key}/details`)
   return data
 }
