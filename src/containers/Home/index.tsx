@@ -14,6 +14,7 @@ import { Box } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
 import useTopicData from './useTopicData'
 import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSYNC_PREFIX } from '@constants/sync.constants'
 import { useAppDispatch } from '@store/hooks'
 
 const DEFAULT_ORDER = [
@@ -66,6 +67,9 @@ const HomeContainer: React.FC = () => {
     getRecruitmentRecommendations()
     dispatch({
       type: `${WEBSOCKET_PREFIX}:CONNECT`,
+    })
+    dispatch({
+      type: `${WEBSYNC_PREFIX}:CONNECT`,
     })
     getRecommendedEventList()
     getRecruitmentFollow()
