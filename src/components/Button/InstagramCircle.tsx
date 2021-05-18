@@ -24,13 +24,14 @@ const useStyles = makeStyles(() => ({
 interface SocialProps {
   link?: string
   onlyIcon?: boolean
+  className?: string
 }
 
-const ESButtonInstagramCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon }) => {
+const ESButtonInstagramCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon, className }) => {
   const disabled = !link || link.length === 0
   const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
-    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }}>
+    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
       <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 18.118 18.118">

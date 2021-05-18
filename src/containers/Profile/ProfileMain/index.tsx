@@ -41,9 +41,9 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
         <Typography className={classes.marginTop20}>{userProfile.attributes.bio}</Typography>
         <HeaderTags items={userProfile.attributes.features ?? null} />
         <Box display="flex">
-          <Iconic text={userProfile.attributes.area ? userProfile.attributes.area.area : 'unknown'} icon="fas fa-map-marker-alt" />
+          {userProfile.attributes.area ? <Iconic text={userProfile.attributes.area.area} icon="fas fa-map-marker-alt" /> : null}
           <Iconic text={gender} icon="fas fa-user" />
-          <Iconic text={time} icon="fa fa-birthday-cake" />
+          {time ? <Iconic text={time} icon="fa fa-birthday-cake" /> : null}
         </Box>
         <Box display="flex" className={classes.marginTop20}>
           <ESButtonDiscordCircle className={classes.marginRight} link={userProfile.attributes.discord_link} />
@@ -72,7 +72,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
         <Box>
           {userProfile.attributes.game_titles.length > 0
             ? userProfile.attributes.game_titles.map((g: any, i: number) => {
-                return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
+                if (i < 10) return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
               })
             : null}
         </Box>

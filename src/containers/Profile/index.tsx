@@ -32,23 +32,30 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
-  const user_code = router.query.user_code || []
-  const isOthers = user_code.length > 0
   const [openReport, setOpenReport] = useState(false)
-  // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
-  const { userProfile, getMemberProfile, profileImageChange } = useUserData(isOthers)
+
+  const raw_code = router.query.user_code || []
+
+  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange } = useUserData(raw_code)
+
   useEffect(() => {
-    if (isOthers) getMemberProfile(user_code[0])
-  }, [user_code])
+    if (isOthers) {
+      getMemberProfile(userCode)
+    }
+  }, [raw_code])
 
-  if (userProfile === null || userProfile === undefined) return null
+  useEffect(() => {
+    if (meta.error) {
+      router.push(ESRoutes.NOT_FOUND)
+    }
+  }, [meta.error])
 
-  const cover = userProfile.attributes.cover_url ?? '/images/cover.png'
-  const avatar = userProfile?.attributes?.avatar_url
-    ? userProfile.attributes.avatar_url
-    : isOthers
-    ? '/images/avatar_o.png'
-    : '/images/avatar.png'
+  if (profile === null || profile === undefined) {
+    return null
+  }
+
+  const cover = profile?.attributes?.cover_url ?? '/images/cover.png'
+  const avatar = profile?.attributes?.avatar_url ? profile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
 
@@ -61,7 +68,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           <ProfileCover
             src={cover}
             editable={!isOthers}
-            onChange={(f: File) => profileImageChange(f, parseInt(userProfile.id), UPLOADER_TYPE.COVER)}
+            onChange={(f: File) => {
+              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER)
+            }}
           />
           <Box className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
@@ -70,7 +79,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <ProfileAvatar
               src={avatar}
               editable={!isOthers}
-              onChange={(f: File) => profileImageChange(f, parseInt(userProfile.id), UPLOADER_TYPE.AVATAR)}
+              onChange={(f: File) => {
+                isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR)
+              }}
             />
             {isOthers ? (
               <Box className={classes.menu}>
@@ -94,18 +105,18 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         </Box>
         <Grid item xs={12} className={classes.headerContainerSecond}>
           <Box mb={2}>
-            <Typography variant="h2">{userProfile.attributes.nickname}</Typography>
-            <Typography>@{userProfile.attributes.user_code}</Typography>
+            <Typography variant="h2">{profile.attributes.nickname}</Typography>
+            <Typography>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowers user_code={isOthers ? user_code[0] : null} />
-            <ESFollowing user_code={isOthers ? user_code[0] : null} />
+            <ESFollowers user_code={isOthers ? userCode : null} />
+            <ESFollowing user_code={isOthers ? userCode : null} />
           </Box>
         </Grid>
         <ESReport
           reportType={REPORT_TYPE.USER_LIST}
-          target_id={userProfile.id}
-          data={userProfile}
+          target_id={profile.id}
+          data={profile}
           open={openReport}
           handleClose={() => setOpenReport(false)}
         />
@@ -124,9 +135,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <ESTab label={t('common:user_profile.activity_log')} value={2} />
           </ESTabs>
         </Box>
+        {tab == 0 && <ProfileMainContainer userProfile={profile} isOthers={isOthers} />}
         {tab == 1 && <TournamentHistoryContainer userId={127} />}
-        {tab == 2 && <ActivityLogsContainer userCode={userProfile.attributes.user_code} />}
-        {tab == 0 && <ProfileMainContainer userProfile={userProfile} isOthers={isOthers} />}
+        {tab == 2 && <ActivityLogsContainer userCode={userCode} />}
       </Grid>
     </>
   )

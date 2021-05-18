@@ -14,6 +14,7 @@ export const ESRoutes = {
   GAME_EDIT: '/profile/game',
   TOURNAMENTS: '/tournaments',
   SETTINGS: '/settings',
+  NOT_FOUND: '/404',
   USER_SETTINGS: '/user-settings',
   MESSAGE: '/message/',
   RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
