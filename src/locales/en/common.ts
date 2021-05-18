@@ -173,11 +173,14 @@ export default {
     card_date: '開　催　日',
     organizer: '主催者',
     entry: 'エントリー',
-    tournament_results: '大会「:key」 の検索結果',
-  },
-  search: {
-    search: '検索',
-    search_placeholder: 'キーワード検索',
+    tournament_results: '大会「ああああああ」 の検索結果',
+    rule: {
+      single: 'トーナメント',
+      battle_royale: 'バトルロイヤル',
+    },
+    has_prize: '副賞あり',
+    online: 'オンライン',
+    offline: 'オフライン',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
