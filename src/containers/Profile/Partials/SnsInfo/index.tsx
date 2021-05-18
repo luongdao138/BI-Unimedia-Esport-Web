@@ -72,7 +72,6 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
               <ESButtonFacebookCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="facebook_link"
-                autoFocus
                 fullWidth
                 value={values.facebook_link}
                 onChange={handleChange}
@@ -86,7 +85,6 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
               <ESButtonTwitterCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="twitter_link"
-                autoFocus
                 fullWidth
                 value={values.twitter_link}
                 onChange={handleChange}
@@ -100,7 +98,6 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
               <ESButtonTwitchCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="twitch_link"
-                autoFocus
                 fullWidth
                 value={values.twitch_link}
                 onChange={handleChange}
@@ -114,7 +111,6 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
               <ESButtonInstagramCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="instagram_link"
-                autoFocus
                 fullWidth
                 value={values.instagram_link}
                 onChange={handleChange}
@@ -128,7 +124,6 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
               <ESButtonDiscordCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="discord_link"
-                autoFocus
                 fullWidth
                 value={values.discord_link}
                 onChange={handleChange}

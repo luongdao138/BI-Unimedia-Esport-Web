@@ -8,9 +8,11 @@ const useRecruitmentData = () => {
   const dispatch = useAppDispatch()
 
   const recommendedRecruitments = useAppSelector(selectors.getRecommendations)
+  const recruitmentFollow = useAppSelector(selectors.getRecruitmentFollowers)
   const getRecruitmentRecommendations = () => dispatch(actions.getRecommendations())
+  const getRecruitmentFollow = () => dispatch(actions.getRecruitmentFollowers())
 
-  return { recommendedRecruitments, getRecruitmentRecommendations }
+  return { recommendedRecruitments, getRecruitmentRecommendations, recruitmentFollow, getRecruitmentFollow }
 }
 
 export default useRecruitmentData

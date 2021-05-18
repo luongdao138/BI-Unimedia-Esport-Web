@@ -16,3 +16,18 @@ export const getRecommendations = createAsyncThunk<services.RecommendationsRespo
     }
   }
 )
+
+export const getRecruitmentFollowers = createAsyncThunk<services.RecruitmentFollowersResponse>(
+  RECRUITMENT_ACTION_TYPE.RECRUITMENT_FOLLOWERS,
+  async (_params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecruitmentFollowers()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

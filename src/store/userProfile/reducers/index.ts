@@ -1,8 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
-import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
+import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 
 type StateType = {
   data: ProfileResponse['data']
@@ -12,6 +12,7 @@ type StateType = {
   activityLogs?: Array<any>
   recommendations: Array<any>
   nicknames2?: Array<Nickname2>
+  recommendedEvent: Array<CommonResponse>
 }
 
 const initialState: StateType = {
@@ -21,6 +22,7 @@ const initialState: StateType = {
   activityLogs: [],
   recommendations: [],
   nicknames2: [],
+  recommendedEvent: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -34,6 +36,14 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
+  })
+
+  builder.addCase(actions.profileImage.fulfilled, (state, action) => {
+    if (action.payload.file_type === UPLOADER_TYPE.USER_PROFILE) {
+      state.data.attributes.avatar_url = action.payload.image_url
+    } else {
+      state.data.attributes.cover_url = action.payload.image_url
+    }
   })
 
   builder.addCase(registerProfile.fulfilled, (state, action) => {
@@ -72,5 +82,9 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(logout.fulfilled, (state) => {
     state.data = undefined
+  })
+
+  builder.addCase(actions.getRecommendedEvent.fulfilled, (state, action) => {
+    state.recommendedEvent = action.payload.data
   })
 })

@@ -97,7 +97,9 @@ const useStyles = makeStyles(() => ({
 
   content: (props: { active?: boolean; expand?: boolean }) => {
     return {
-      display: props.expand ? 'inline-block' : 'none',
+      display: 'inline-block',
+      visibility: props.expand ? 'visible' : 'hidden',
+      opacity: props.expand ? '1' : '0',
       marginTop: 0,
       width: '100%',
     }
