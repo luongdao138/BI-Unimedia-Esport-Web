@@ -2,43 +2,60 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import community from '@store/community'
+import auth from '@store/auth'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { clearMetaData } from '@store/metadata/actions'
+// import { clearMetaData } from '@store/metadata/actions'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 import { RESPONSE_STATUS } from '@constants/common.constants'
 import { getPreSignedUrl, upload } from '@services/image.service'
 import { UserProfile } from '@services/user.service'
-
-const userSelectors = userProfileStore.selectors
-const userActions = userProfileStore.actions
-const communitySelectors = community.selectors
-const communityActions = community.actions
-const getCommunityListMeta = createMetaSelector(communityActions.getCommunityList)
-const getUserMeta = createMetaSelector(userActions.getMemberProfile)
+import { CommunityResponse } from '@services/community.service'
+import { Meta } from '@store/metadata/actions/types'
 
 const useUserData = (
-  others: boolean
+  raw_code: string | Array<string> | []
 ): {
-  userProfile: UserProfile
-  getMemberProfile: (user_code: string) => void
+  userCode: string
+  profile: UserProfile
+  isOthers: boolean
+  meta: Meta
+  communityList: CommunityResponse[]
+  communityMeta: Meta
+  getCommunityList: () => void
+  getMemberProfile: (userCode: string) => void
   profileImageChange: (file: File, user_id: number, type: number) => void
 } => {
-  const dispatch = useAppDispatch()
-  let userProfile = null
-  userProfile = useAppSelector(userSelectors.getUserProfile)
-  let communityList = null
-  const userMeta = useAppSelector(getUserMeta)
-  const communityMeta = useAppSelector(getCommunityListMeta)
-  const getCommunityList = () => dispatch(communityActions.getCommunityList())
-  const getMemberProfile = (user_code: string) => dispatch(userActions.getMemberProfile(user_code))
-  if (others) {
-    userProfile = useAppSelector(userSelectors.getLastSeenUserData)
-    //TODO fix
-    communityList = useAppSelector(communitySelectors.getCommunityList)
-  } else {
-    userProfile = useAppSelector(userSelectors.getUserProfile)
-    communityList = useAppSelector(communitySelectors.getCommunityList)
+  const authSelectors = auth.selectors
+  const myUserCode = useAppSelector(authSelectors.getUserCode)
+  const communitySelectors = community.selectors
+  const communityActions = community.actions
+  const getCommunityListMeta = createMetaSelector(communityActions.getCommunityList)
+  const userSelectors = userProfileStore.selectors
+  const userActions = userProfileStore.actions
+
+  let isOthers = raw_code.length > 0
+  let userCode = myUserCode
+  if (isOthers && raw_code[0] === myUserCode) {
+    isOthers = false
   }
+  const dispatch = useAppDispatch()
+
+  let meta = null
+  let profile = null
+  if (isOthers) {
+    const getMemberMeta = createMetaSelector(userActions.getMemberProfile)
+    userCode = raw_code[0]
+    profile = useAppSelector(userSelectors.getLastSeenUserData)
+    meta = useAppSelector(getMemberMeta)
+  } else {
+    const getUserMeta = createMetaSelector(userActions.getUserProfile)
+    profile = useAppSelector(userSelectors.getUserProfile)
+    meta = useAppSelector(getUserMeta)
+  }
+  const getMemberProfile = () => dispatch(userActions.getMemberProfile(userCode))
+  const getCommunityList = () => dispatch(communityActions.getCommunityList())
+  const communityList = useAppSelector(communitySelectors.getCommunityList)
+  const communityMeta = useAppSelector(getCommunityListMeta)
 
   // const progressListener = (progress: number) => {
   //   console.log('progressListener ', progress)
@@ -68,18 +85,18 @@ const useUserData = (
       console.log('useUserData.tsx 44 getPreSignedUrl failed', error)
     }
   }
-  const resetCommunityMeta = () => dispatch(clearMetaData(communityActions.getCommunityList.typePrefix))
-  const resetUserMeta = () => dispatch(clearMetaData(userActions.getMemberProfile.typePrefix))
+  // const resetCommunityMeta = () => dispatch(clearMetaData(communityActions.getCommunityList.typePrefix))
+  // const resetUserMeta = () => dispatch(clearMetaData(userActions.getMemberProfile.typePrefix))
   return {
-    userProfile,
+    userCode,
+    profile,
+    isOthers,
+    meta,
     communityList,
+    communityMeta,
     getCommunityList,
     getMemberProfile,
-    resetCommunityMeta,
-    resetUserMeta,
     profileImageChange,
-    userMeta,
-    communityMeta,
   }
 }
 
