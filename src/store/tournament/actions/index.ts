@@ -78,7 +78,7 @@ export const getEntryStatus = createAsyncThunk<services.EntryStatusResponse, str
   }
 )
 
-export const joinTournament = createAsyncThunk<undefined, string>(types.JOIN_TOURNAMENT, async (param, { rejectWithValue }) => {
+export const joinTournament = createAsyncThunk<void, string>(types.JOIN_TOURNAMENT, async (param, { rejectWithValue }) => {
   try {
     const res = await services.joinTournament(param)
     return res
@@ -90,7 +90,7 @@ export const joinTournament = createAsyncThunk<undefined, string>(types.JOIN_TOU
   }
 })
 
-export const leaveTournament = createAsyncThunk<undefined, string>(types.LEAVE_TOURNAMENT, async (param, { rejectWithValue }) => {
+export const leaveTournament = createAsyncThunk<void, string>(types.LEAVE_TOURNAMENT, async (param, { rejectWithValue }) => {
   try {
     const res = await services.leaveTournament(param)
     return res
@@ -101,3 +101,18 @@ export const leaveTournament = createAsyncThunk<undefined, string>(types.LEAVE_T
     return rejectWithValue(error.response.data)
   }
 })
+
+export const getTournamentMatches = createAsyncThunk<services.TournamentMatchResponse>(
+  types.GET_TOURNAMENT_MATCHES,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentMatches()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

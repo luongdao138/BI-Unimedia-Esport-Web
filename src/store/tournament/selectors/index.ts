@@ -8,3 +8,4 @@ export const getSearchTournamentsMeta = createSelector(getRoot, (state) => state
 export const getTournamentFollowers = createSelector(getRoot, (state) => state.tournamentFollowers)
 export const getTournamentResults = createSelector(getRoot, (state) => state.tournamentResults)
 export const getTournamentDetail = createSelector(getRoot, (state) => state.tournamentDetail)
+export const getTournamentMatches = createSelector(getRoot, (state) => state.tournamentMatches)

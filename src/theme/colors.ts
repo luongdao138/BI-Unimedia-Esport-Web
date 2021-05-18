@@ -28,6 +28,7 @@ export const Colors = {
   },
   black_opacity: {
     '15': 'rgba(0,0,0,.15)',
+    '30': 'rgba(0,0,0,.3)',
     '70': 'rgba(0,0,0,.7)',
     '80': 'rgba(0,0,0,.8)',
   },

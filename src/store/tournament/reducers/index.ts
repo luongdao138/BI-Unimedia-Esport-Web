@@ -1,6 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { TournamentResponse, Meta, FollowersResponse, ResultsResponse, TournamentDetail } from '@services/tournament.service'
+import {
+  TournamentResponse,
+  Meta,
+  FollowersResponse,
+  ResultsResponse,
+  TournamentDetail,
+  TournamentMatchResponse,
+} from '@services/tournament.service'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -8,9 +15,15 @@ type StateType = {
   tournamentFollowers: Array<FollowersResponse>
   tournamentResults: Array<ResultsResponse>
   tournamentDetail?: TournamentDetail
+  tournamentMatches: TournamentMatchResponse
 }
 
-const initialState: StateType = { searchTournaments: [], tournamentFollowers: [], tournamentResults: [] }
+const initialState: StateType = {
+  searchTournaments: [],
+  tournamentFollowers: [],
+  tournamentResults: [],
+  tournamentMatches: { matches: [], third_place_match: [] },
+}
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
@@ -39,5 +52,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.is_entered = false
+  })
+  builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
+    state.tournamentMatches = action.payload
   })
 })
