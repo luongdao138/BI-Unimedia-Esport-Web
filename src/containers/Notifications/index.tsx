@@ -7,6 +7,8 @@ import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const useStyles = makeStyles((theme) => ({
   loaderCenter: {
@@ -55,6 +57,7 @@ const NotificationContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const [hasMore, setHasMore] = useState(true)
   const { notifications, fetchNotifications, page } = useNotificationList()
+  const { navigateScreen } = useReturnHref()
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
@@ -95,7 +98,7 @@ const NotificationContainer: React.FC = () => {
         }
       >
         {notifications.map((notification, i) => (
-          <Grid item xs={12} key={i}>
+          <Grid item xs={12} key={i} onClick={() => navigateScreen(ESRoutes.NOTIFICATIONS)}>
             <NotificationListItem data={notification} />
           </Grid>
         ))}
