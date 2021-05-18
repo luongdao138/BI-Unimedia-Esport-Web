@@ -1,14 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { NotificationResponse, Meta, NotificationBadgeResponse } from '@services/notification.service'
+import { NotificationResponse, Meta, NotificationBadgeResponse, NotificationDetailResponse } from '@services/notification.service'
 
 type StateType = {
   notifications?: Array<NotificationResponse>
   notificationsMeta?: Meta
   notificaitonBadge: NotificationBadgeResponse
+  notificaitonDetail: NotificationDetailResponse
 }
 
-const initialState: StateType = { notifications: [], notificaitonBadge: undefined }
+const initialState: StateType = { notifications: [], notificaitonBadge: undefined, notificaitonDetail: undefined }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.notifications.fulfilled, (state, action) => {
@@ -22,5 +23,13 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getNotificationBadge.fulfilled, (state, action) => {
     state.notificaitonBadge = action.payload
+  })
+
+  builder.addCase(actions.getNotificationDetail.fulfilled, (state, action) => {
+    state.notificaitonDetail = action.payload
+  })
+
+  builder.addCase(actions.clearNotificationDetail, (state) => {
+    state.notificaitonDetail = undefined
   })
 })
