@@ -34,7 +34,7 @@ export type Meta = {
 }
 
 export const createReport = async (params: ReportParams): Promise<ReportResponse> => {
-  const { data } = await api.post<ReportResponse>(URI.REPORT, params)
+  const { data } = await api.put<ReportResponse>(URI.REPORT, params)
   return data
 }
 

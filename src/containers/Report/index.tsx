@@ -25,13 +25,13 @@ export interface ESReportProps {
   target_id?: number
   user_email?: string
   msg_body?: string
-  obj?: any
+  data?: any
   open?: boolean
   reportType: number
   handleClose?: () => void
 }
 
-const ESReport: React.FC<ESReportProps> = ({ obj, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -96,15 +96,15 @@ const ESReport: React.FC<ESReportProps> = ({ obj, target_id, room_id, chat_id, r
       <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            {obj && reportType == REPORT_TYPE.USER_LIST ? (
+            {data && reportType == REPORT_TYPE.USER_LIST ? (
               <Grid container spacing={2}>
                 <Grid item>
-                  <ProfileAvatar src={obj.attributes.avatar_url} editable={false} />
+                  <ProfileAvatar src={data.attributes.avatar_url} editable={false} />
                 </Grid>
                 <Grid>
                   <Box mt={4}>
-                    <Typography>{obj.attributes.nickname}</Typography>
-                    <Typography>{obj.attributes.user_code}</Typography>
+                    <Typography>{data.attributes.nickname}</Typography>
+                    <Typography>{data.attributes.user_code}</Typography>
                   </Box>
                 </Grid>
               </Grid>
