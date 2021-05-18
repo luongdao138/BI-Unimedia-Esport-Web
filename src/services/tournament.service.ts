@@ -114,6 +114,20 @@ export type EntryStatusResponse = {
   is_entry: boolean
 }
 
+export type GetParticipantsParams = {
+  page: number
+  hash_key: string
+}
+
+export type GetParticipantsResponse = {
+  data: Array<ParticipantsResponse>
+  meta: Meta
+}
+
+export type ParticipantsResponse = {
+  attributes: any
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.get<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, {
     params,
@@ -133,6 +147,11 @@ export const tournamentResults = async (): Promise<TournamentResultsResponse> =>
 
 export const getTournamentDetail = async (hash_key: string): Promise<TournamentDetailResponse> => {
   const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
+  return data
+}
+
+export const getTournamentParticipants = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
+  const { data } = await api.post<GetParticipantsResponse>(URI.TOURNAMENTS_MEMBERS.replace(/:id/gi, params.hash_key), params)
   return data
 }
 

@@ -14,7 +14,7 @@ const useActivityLogs = () => {
   // const page = useAppSelector(selectors.getTourHistoriesMeta)
   const meta = useAppSelector(getActivityLogsMeta)
   const getActivityLogs = (param: ActivityLogParams) => dispatch(actions.getActivityLogs(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.tournamentHistorySearch.typePrefix))
+  const resetMeta = () => dispatch(clearMetaData(actions.getActivityLogs.typePrefix))
   return { activityLogs, getActivityLogs, resetMeta, meta }
 }
 

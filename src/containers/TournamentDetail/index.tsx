@@ -23,7 +23,7 @@ const TournamentDetail: React.FC = () => {
   }
   return (
     <div>
-      {meta.pending && '...loading'}{' '}
+      {meta.pending && '...loading'}
       {meta.loaded && tournament && (
         <>
           <TournamentDetailHeader

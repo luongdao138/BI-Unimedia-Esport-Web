@@ -4,6 +4,7 @@ import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/tournament.service'
 // import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
+import Participants from '@containers/TournamentDetail/Participants'
 
 interface Props {
   detail: TournamentDetail
@@ -36,9 +37,7 @@ const Summary: React.FC<Props> = () => {
 
         <Box className={classes.actionButtonContainer}>
           <Box className={classes.actionButton}>
-            <ESButton variant="outlined" fullWidth onClick={() => {}}>
-              エントリーメンバー
-            </ESButton>
+            <Participants detail={detail} />
           </Box>
           <Box className={classes.actionButton}>
             <ESButton variant="outlined" fullWidth onClick={() => {}}>

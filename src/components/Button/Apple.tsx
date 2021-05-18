@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
-      background: '#1b1b1b',
+      background: '#212121',
     },
   },
   leftIcon: {
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
+    opacity: 0.3,
     backgroundColor: '#212121 !important',
     color: '#FFF !important',
   },
@@ -57,6 +58,7 @@ const ESButtonApple: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) =>
       {...props}
       startIcon={<Icon className="fab fa-apple" />}
     >
+      <div className="esbutton-hover" />
       {t('common:button.apple')}
     </Button>
   )

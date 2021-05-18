@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white_opacity[30],
     '&:hover': {
       boxShadow: 'none',
-      background: '#efefef',
+      background: Colors.white,
     },
   },
   leftIcon: {
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
   },
   disabled: {
+    opacity: 0.3,
     backgroundColor: '#FFF !important',
     color: '#4D4D4D !important',
   },
@@ -87,6 +88,7 @@ const ESButtonGoogle: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) =
         </SvgIcon>
       }
     >
+      <div className="esbutton-hover" />
       {t('common:button.google')}
     </Button>
   )
