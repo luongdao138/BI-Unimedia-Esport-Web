@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Button, Box, Typography, Grid } from '@material-ui/core'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -13,6 +13,7 @@ import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
 import useReport from './useReport'
 import useReasons from './useReasons'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import * as Yup from 'yup'
@@ -24,18 +25,11 @@ export interface ESReportProps {
   user_email?: string
   msg_body?: string
   user?: any
+  open?: boolean
+  handleClose?: () => void
 }
 
-const validationSchema = Yup.object().shape({
-  user_email: Yup.string().required(),
-  description: Yup.string().required(),
-  reason_id: Yup.number().test('reason_id', '', (value) => {
-    return value !== -1
-  }),
-})
-
-const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body }) => {
-  const [open, setOpen] = useState(false)
+const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body, open, handleClose }) => {
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -43,6 +37,20 @@ const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body 
   useEffect(() => {
     fetchReasons({ page: 1 })
   }, [])
+
+  const validationSchema = Yup.object().shape({
+    user_email: Yup.string()
+      .test('email-validation', t('common.error'), (value) => {
+        return CommonHelper.validateEmail(value)
+      })
+      .required(),
+    description: Yup.string().required().max(1000, t('common.too_long')),
+    reason_id: Yup.number()
+      .test('reason_id', '', (value) => {
+        return value !== -1
+      })
+      .required(),
+  })
 
   const formik = useFormik<ReportParams>({
     initialValues: {
@@ -64,36 +72,29 @@ const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body 
 
   useEffect(() => {
     if (meta.loaded) {
-      setOpen(false)
+      handleClose()
+
+      formik.resetForm()
+    }
+    if (!open) {
       formik.resetForm()
     }
   }, [meta.loaded])
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
-
   return (
     <div>
-      <Button type="button" onClick={handleClickOpen}>
-        {t('user_report.title')}
-      </Button>
-
       <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
             {user ? (
               <Grid container spacing={2}>
                 <Grid item>
-                  <ProfileAvatar src={user.avatar} editable={false} />
+                  <ProfileAvatar src={user.attributes.avatar_url} editable={false} />
                 </Grid>
                 <Grid>
                   <Box mt={4}>
-                    <Typography>{user.nickname}</Typography>
-                    <Typography>{user.user_code}</Typography>
+                    <Typography>{user.attributes.nickname}</Typography>
+                    <Typography>{user.attributes.user_code}</Typography>
                   </Box>
                 </Grid>
               </Grid>
