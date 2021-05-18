@@ -66,6 +66,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) =
         className={classes.autocomplete}
         noOptionsText={t('common:chat.no_user_available')}
         onChange={(_, values) => onItemsSelected(values)}
+        getOptionSelected={(option, value) => option.id === value.id}
         renderOption={(item) => {
           return (
             <Box display="flex" overflow="hidden">

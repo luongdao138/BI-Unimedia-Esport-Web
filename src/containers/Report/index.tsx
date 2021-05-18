@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
+import { useEffect } from 'react'
+import { Button, Box, Typography, Grid } from '@material-ui/core'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import Radio from '@material-ui/core/Radio'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Input from '@components/Input'
-import Select from '@components/Select'
+import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
+import ESDialog from '@components/Dialog'
+import ProfileAvatar from '@components/ProfileAvatar'
 import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
 import useReport from './useReport'
 import useReasons from './useReasons'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import * as Yup from 'yup'
 
 export interface ESReportProps {
   chat_id?: string
   room_id?: string
   target_id?: string
   user_email?: string
+  msg_body?: string
+  user?: any
+  open?: boolean
+  handleClose?: () => void
 }
 
-const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) => {
-  const [open, setOpen] = useState(false)
+const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body, open, handleClose }) => {
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -30,17 +38,33 @@ const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) =
     fetchReasons({ page: 1 })
   }, [])
 
+  const validationSchema = Yup.object().shape({
+    user_email: Yup.string()
+      .test('email-validation', t('common.error'), (value) => {
+        return CommonHelper.validateEmail(value)
+      })
+      .required(),
+    description: Yup.string().required().max(1000, t('common.too_long')),
+    reason_id: Yup.number()
+      .test('reason_id', '', (value) => {
+        return value !== -1
+      })
+      .required(),
+  })
+
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
       reason_id: -1,
+      report_type: '',
+      user_email: '',
     },
-
+    validationSchema,
     onSubmit(values) {
       _.merge(values, { report_type: 'user' })
-      _.merge(values, { user_email: user_email })
       _.merge(values, { target_id: target_id })
       _.merge(values, { room_id: room_id })
+      _.merge(values, { msg_body: msg_body })
 
       createReport(values)
     },
@@ -48,63 +72,91 @@ const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) =
 
   useEffect(() => {
     if (meta.loaded) {
-      setOpen(false)
+      handleClose()
+
+      formik.resetForm()
+    }
+    if (!open) {
       formik.resetForm()
     }
   }, [meta.loaded])
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
-
   return (
     <div>
-      <Button type="button" onClick={handleClickOpen}>
-        Report
-      </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="report-form-dialog-title">Report</DialogTitle>
-        <DialogContent>
-          <form onSubmit={formik.handleSubmit}>
-            <Select
+      <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
+        <form onSubmit={formik.handleSubmit}>
+          <DialogContent>
+            {user ? (
+              <Grid container spacing={2}>
+                <Grid item>
+                  <ProfileAvatar src={user.attributes.avatar_url} editable={false} />
+                </Grid>
+                <Grid>
+                  <Box mt={4}>
+                    <Typography>{user.attributes.nickname}</Typography>
+                    <Typography>{user.attributes.user_code}</Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            ) : null}
+
+            <Box mt={1}>
+              <Typography>{t('user_report.desc_first')}</Typography>
+              <Typography>{t('user_report.desc_second')}</Typography>
+              <Typography>{t('user_report.desc_third')}</Typography>
+            </Box>
+
+            <Box mt={1}></Box>
+
+            <RadioVertical
               id="reason_id"
               name="reason_id"
               value={formik.values.reason_id}
               onChange={formik.handleChange}
-              fullWidth
               required
-              size="small"
-              error={!!formik.errors.reason_id}
-              label={t('profile.favorite_game.genre_label')}
+              label={t('user_report.reason')}
             >
-              <option disabled value={-1}>
-                {t('please_select')}
-              </option>
               {reasons.map((g, idx) => (
-                <option key={idx} value={g.id}>
-                  {g.attributes.reason}
-                </option>
+                <FormControlLabel key={idx} value={g.id} control={<Radio />} label={g.attributes.reason} />
               ))}
-            </Select>
+            </RadioVertical>
+
+            <Box mt={1}></Box>
             <Input
-              autoFocus
               id="description"
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
-              label="Description"
+              labelPrimary={t('user_report.reason_desc')}
+              placeholder={t('user_report.reason_desc')}
               fullWidth
+              required
+              error={!!formik.errors.description}
+              multiline
+              rows={4}
             />
+            <Box mt={1}></Box>
+            <Input
+              id="user_email"
+              name="user_email"
+              value={formik.values.user_email}
+              onChange={formik.handleChange}
+              labelPrimary={t('user_report.reporter_email')}
+              placeholder={t('user_report.reporter_email_placeholder')}
+              fullWidth
+              required
+              error={!!formik.errors.user_email}
+            />
+            <Box mt={1}></Box>
+          </DialogContent>
+          <DialogActions style={{ justifyContent: 'center' }}>
             <Button color="primary" type="submit" disabled={meta.pending}>
-              Submit Report
+              {t('user_report.btn_text')}
             </Button>
             {meta.pending ? <ESLoader /> : null}
-          </form>
-        </DialogContent>
-      </Dialog>
+          </DialogActions>
+        </form>
+      </ESDialog>
     </div>
   )
 }

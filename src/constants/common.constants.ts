@@ -45,3 +45,13 @@ export const ACTIVITY_ACTION_TYPE = {
   TOURNAMENT_CREATE: 'tournament_create',
   TOURNAMENT_JOIN: 'tournament_join',
 }
+
+export const CHAT_CONSTANTS = {
+  MIN_COMPOSER_HEIGHT: 50,
+  MAX_COMPOSER_HEIGHT: 150,
+  DEFAULT_PLACEHOLDER: 'PlaceHolder',
+  BUBBLE_DEFAULT_COLORS: {
+    PRIMARY: '#FFFFF',
+    SECONDARY: '#00000',
+  },
+}

@@ -1,9 +1,8 @@
 export const WEBSOCKET_PREFIX = 'WEBSOCKET'
-
+export const WEBSYNC_PREFIX = 'WEBSYNC'
 export default {
   WEBSOCKET_PREFIX,
 }
-
 export enum CHAT_MESSAGE_TYPE {
   TEXT_MESSAGE = 1,
 }
