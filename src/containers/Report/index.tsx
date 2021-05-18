@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import Input from '@components/Input'
 import Select from '@components/Select'
+import ESLoader from '@components/Loader'
 import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
 import useReport from './useReport'
@@ -42,13 +43,12 @@ const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) =
       _.merge(values, { room_id: room_id })
 
       createReport(values)
-      setOpen(false)
     },
   })
 
   useEffect(() => {
     if (meta.loaded) {
-      // setOpen(true)
+      setOpen(false)
       formik.resetForm()
     }
   }, [meta.loaded])
@@ -89,7 +89,7 @@ const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) =
                 </option>
               ))}
             </Select>
-            <TextField
+            <Input
               autoFocus
               id="description"
               name="description"
@@ -101,6 +101,7 @@ const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) =
             <Button color="primary" type="submit" disabled={meta.pending}>
               Submit Report
             </Button>
+            {meta.pending ? <ESLoader /> : null}
           </form>
         </DialogContent>
       </Dialog>
