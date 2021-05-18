@@ -62,3 +62,42 @@ export const getTournamentDetail = createAsyncThunk<services.TournamentDetailRes
     }
   }
 )
+
+export const getEntryStatus = createAsyncThunk<services.EntryStatusResponse, string>(
+  types.GET_ENTRY_STATUS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getEntryStatus(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const joinTournament = createAsyncThunk<undefined, string>(types.JOIN_TOURNAMENT, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.joinTournament(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
+export const leaveTournament = createAsyncThunk<undefined, string>(types.LEAVE_TOURNAMENT, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.leaveTournament(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
