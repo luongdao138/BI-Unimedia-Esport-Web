@@ -1,8 +1,7 @@
 import { Mention, MentionsInput } from 'react-mentions'
 
-import defaultStyle from './defaultStyle'
-import defaultMentionStyle from './defaultMentionStyle'
 import { ChatSuggestionList } from '../types/chat.types'
+import classNames from './mention.module.css'
 
 const users: ChatSuggestionList[] = [
   {
@@ -48,32 +47,21 @@ interface ComposerProps {
 }
 
 const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg }) => {
-  const style = Object.assign({}, defaultStyle, {
-    input: {
-      overflow: 'auto',
-      height: 70,
-    },
-    highlighter: {
-      boxSizing: 'border-box',
-      overflow: 'hidden',
-      height: 70,
-    },
-  })
-
   return (
     <>
       <div className="advanced">
         <MentionsInput
           value={msg}
-          style={style}
+          spellCheck={false}
+          classNames={classNames}
           onChange={({ target: { value } }) => {
             onChange(value)
           }}
         >
           <Mention
-            style={defaultMentionStyle}
             trigger="@"
             data={users}
+            className={classNames.mentions__mention}
             markup="@[to=__id__]"
             renderSuggestion={renderSuggestion}
             displayTransform={(id: string, display: string) => {
