@@ -4,6 +4,8 @@ import { URI } from '@constants/uri.constants'
 export type ReportParams = {
   description: string
   reason_id: number
+  report_type: string
+  user_email: string
 }
 
 export type ReportResponse = {
