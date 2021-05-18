@@ -17,6 +17,7 @@ import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+import ESReport from '@containers/Report'
 import { ESRoutes } from '@constants/route.constants'
 
 interface WithRouterProps {
@@ -31,6 +32,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [tab, setTab] = useState(0)
   const user_code = router.query.user_code || []
   const isOthers = user_code.length > 0
+  const [openReport, setOpenReport] = useState(false)
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
   const { userProfile, getMemberProfile } = useUserData(isOthers)
   useEffect(() => {
@@ -47,6 +49,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     : '/images/avatar.png'
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+
+  const handleReportOpen = () => setOpenReport(true)
 
   const getHeader = () => {
     return (
@@ -68,7 +72,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                 </ESButton>
                 <ESMenu>
                   <ESMenuItem onClick={() => null}>{t('common:profile.menu_block')}</ESMenuItem>
-                  <ESMenuItem onClick={() => null}>{t('common:profile.menu_report')}</ESMenuItem>
+                  <ESMenuItem onClick={handleReportOpen}>{t('common:user_report.title')}</ESMenuItem>
                 </ESMenu>
               </Box>
             ) : (
@@ -88,6 +92,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <ESFollowing user_code={isOthers ? user_code[0] : null} />
           </Box>
         </Grid>
+        <ESReport user={userProfile} open={openReport} handleClose={() => setOpenReport(false)} />
       </>
     )
   }

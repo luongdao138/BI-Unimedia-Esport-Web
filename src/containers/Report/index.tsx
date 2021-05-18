@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Button, Box, Typography, Grid } from '@material-ui/core'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -24,6 +24,8 @@ export interface ESReportProps {
   user_email?: string
   msg_body?: string
   user?: any
+  open?: boolean
+  handleClose?: () => void
 }
 
 const validationSchema = Yup.object().shape({
@@ -34,8 +36,7 @@ const validationSchema = Yup.object().shape({
   }),
 })
 
-const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body }) => {
-  const [open, setOpen] = useState(false)
+const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body, open, handleClose }) => {
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -64,36 +65,26 @@ const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body 
 
   useEffect(() => {
     if (meta.loaded) {
-      setOpen(false)
+      handleClose()
+
       formik.resetForm()
     }
   }, [meta.loaded])
 
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
-
   return (
     <div>
-      <Button type="button" onClick={handleClickOpen}>
-        {t('user_report.title')}
-      </Button>
-
       <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
             {user ? (
               <Grid container spacing={2}>
                 <Grid item>
-                  <ProfileAvatar src={user.avatar} editable={false} />
+                  <ProfileAvatar src={user.attributes.avatar_url} editable={false} />
                 </Grid>
                 <Grid>
                   <Box mt={4}>
-                    <Typography>{user.nickname}</Typography>
-                    <Typography>{user.user_code}</Typography>
+                    <Typography>{user.attributes.nickname}</Typography>
+                    <Typography>{user.attributes.user_code}</Typography>
                   </Box>
                 </Grid>
               </Grid>
