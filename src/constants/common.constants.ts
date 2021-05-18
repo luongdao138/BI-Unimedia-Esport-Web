@@ -46,6 +46,16 @@ export const ACTIVITY_ACTION_TYPE = {
   TOURNAMENT_JOIN: 'tournament_join',
 }
 
+export enum REPORT_TYPE {
+  USER_LIST = 0,
+  COMMUNITY = 1,
+  TOPIC = 2,
+  CHAT = 3,
+  TOPIC_COMMENT = 4,
+  RECRUITMENT = 5,
+  TOURNAMENT = 6,
+}
+
 export const CHAT_CONSTANTS = {
   MIN_COMPOSER_HEIGHT: 50,
   MAX_COMPOSER_HEIGHT: 150,

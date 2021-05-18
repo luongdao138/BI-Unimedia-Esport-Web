@@ -14,7 +14,7 @@ export const URI = {
   PROFILE_UPDATE: '/v2/users/settings/step1',
   FOLLOWERS: '/v2/followers',
   FOLLOWING: '/v2/following',
-  REPORT: '/v1/reports',
+  REPORT: '/v2/reports/create',
   REPORT_REASONS: '/v1/report_reasons',
   NG_WORDS: '/v1/ng_words',
   GET_PREFECTURES: 'v2/areas',
