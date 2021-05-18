@@ -17,7 +17,7 @@ export type Meta = {
   total_pages: number
 }
 
-export type CommunityFollowersTopicResponse = {
+export type TopicFollowersResponse = {
   data: Array<FollowersTopicResponse>
 }
 
@@ -30,7 +30,7 @@ export const communityList = async (): Promise<CommunityListResponse> => {
   return data
 }
 
-export const followersTopic = async (): Promise<CommunityFollowersTopicResponse> => {
-  const { data } = await api.get<CommunityFollowersTopicResponse>(URI.COMMUNITY_FOLLOWERS_TOPICS)
+export const getTopicFollowers = async (): Promise<TopicFollowersResponse> => {
+  const { data } = await api.post<TopicFollowersResponse>(URI.TOPICS_FOLLOWERS)
   return data
 }

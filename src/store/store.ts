@@ -5,6 +5,7 @@ import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } fro
 import reducer from './reducers'
 import { authMiddleware } from './middlewares/authMiddleware'
 import { webSocketMiddle } from './middlewares/socketMiddleware'
+import { webSyncMiddle } from './middlewares/webSyncMiddleware'
 
 const initStore = () => {
   const isServer = typeof window === 'undefined'
@@ -32,7 +33,7 @@ const initStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(authMiddleware, webSocketMiddle),
+      }).concat(authMiddleware, webSocketMiddle, webSyncMiddle),
     })
 
     return store

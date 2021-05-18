@@ -20,6 +20,7 @@ import ESFollowing from '@containers/Following'
 import ESReport from '@containers/Report'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 
 interface WithRouterProps {
   router: NextRouter
@@ -35,7 +36,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const isOthers = user_code.length > 0
   const [openReport, setOpenReport] = useState(false)
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
-  const { userProfile, getMemberProfile } = useUserData(isOthers)
+  const { userProfile, getMemberProfile, profileImageChange } = useUserData(isOthers)
   useEffect(() => {
     if (isOthers) getMemberProfile(user_code[0])
   }, [user_code])
@@ -57,12 +58,20 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     return (
       <>
         <Box className={classes.headerContainer}>
-          <ProfileCover src={cover} />
+          <ProfileCover
+            src={cover}
+            editable={!isOthers}
+            onChange={(f: File) => profileImageChange(f, parseInt(userProfile.id), UPLOADER_TYPE.COVER)}
+          />
           <Box className={classes.headerItemsContainer}>
             <IconButton className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
-            <ProfileAvatar src={avatar} editable={!isOthers} />
+            <ProfileAvatar
+              src={avatar}
+              editable={!isOthers}
+              onChange={(f: File) => profileImageChange(f, parseInt(userProfile.id), UPLOADER_TYPE.AVATAR)}
+            />
             {isOthers ? (
               <Box className={classes.menu}>
                 <ESButton variant="outlined" round className={classes.marginRight}>

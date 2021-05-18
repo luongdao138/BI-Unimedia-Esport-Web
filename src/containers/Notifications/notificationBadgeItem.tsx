@@ -33,14 +33,15 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   notificationWrap: {
+    maxWidth: 370,
+    cursor: 'pointer',
     width: '100%',
     padding: theme.spacing(1),
-    // background: Colors.black_opacity[80],
     borderRadius: '6px',
-    // border: '1px solid rgba(255, 255, 255, 0.3)',
-  },
-  '&:hover $notificationWrap': {
-    background: 'white',
+    '&:hover': {
+      boxShadow: 'none',
+      background: '#1a1a1a',
+    },
   },
 }))
 

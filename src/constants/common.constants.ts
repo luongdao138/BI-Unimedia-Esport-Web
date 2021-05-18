@@ -30,6 +30,10 @@ export const GENDER = {
   OTHER: 3,
 }
 
+export const RESPONSE_STATUS = {
+  SUCCESS: 200,
+}
+
 export const ACTIVITY_ACTION_TYPE = {
   TOPIC_CREATE: 'topic_create',
   TOPIC_COMMENT: 'topic_comment',
@@ -50,4 +54,14 @@ export enum REPORT_TYPE {
   TOPIC_COMMENT = 4,
   RECRUITMENT = 5,
   TOURNAMENT = 6,
+}
+
+export const CHAT_CONSTANTS = {
+  MIN_COMPOSER_HEIGHT: 50,
+  MAX_COMPOSER_HEIGHT: 150,
+  DEFAULT_PLACEHOLDER: 'PlaceHolder',
+  BUBBLE_DEFAULT_COLORS: {
+    PRIMARY: '#FFFFF',
+    SECONDARY: '#00000',
+  },
 }
