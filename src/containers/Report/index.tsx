@@ -64,17 +64,11 @@ const ESReport: React.FC<ESReportProps> = ({ attr, target_id, room_id, chat_id, 
     validationSchema,
     onSubmit(values) {
       switch (reportType) {
-        case REPORT_TYPE.USER_LIST:
-          _.merge(values, { target_id: target_id })
-          break
         case REPORT_TYPE.CHAT:
           _.merge(values, { target_id: chat_id })
           _.merge(values, { chat_id: chat_id })
           _.merge(values, { room_id: room_id })
           _.merge(values, { message_body: msg_body })
-          break
-        case REPORT_TYPE.COMMUNITY:
-          _.merge(values, { target_id: target_id })
           break
         default:
           _.merge(values, { target_id: target_id })
