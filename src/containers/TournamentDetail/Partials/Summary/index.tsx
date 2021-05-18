@@ -2,8 +2,9 @@
 import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/tournament.service'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
+import Participants from '@containers/TournamentDetail/Participants'
 
 interface Props {
   detail: TournamentDetail
@@ -13,7 +14,7 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Summary: React.FC<Props> = ({ detail }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t } = useTranslation(['common'])
+  // const { t } = useTranslation(['common'])
   const classes = useStyles()
 
   const buildHeaderValue = () => {
@@ -36,9 +37,7 @@ const Summary: React.FC<Props> = ({ detail }) => {
 
         <Box className={classes.actionButtonContainer}>
           <Box className={classes.actionButton}>
-            <ESButton variant="outlined" fullWidth onClick={() => {}}>
-              エントリーメンバー
-            </ESButton>
+            <Participants detail={detail} />
           </Box>
           <Box className={classes.actionButton}>
             <ESButton variant="outlined" fullWidth onClick={() => {}}>

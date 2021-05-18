@@ -43,11 +43,7 @@ const TeamMemberItem: React.FC<Props> = ({ team }) => {
         <AccordionDetails>
           <Box ml={6} display="flex" flex={1} flexDirection="column">
             {members.map((member, i) => (
-              <UserListItem
-                data={userData(member)}
-                isFollowed={false}
-                key={i} //isFollowed={member.attributes.is_followed}
-              />
+              <UserListItem data={userData(member)} key={i} isFollowed={Boolean(member.is_followed)} />
             ))}
           </Box>
         </AccordionDetails>

@@ -88,6 +88,7 @@ export default {
     save: '保存する',
     yes: 'あり',
     no: 'なし',
+    man: '人',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -203,6 +204,8 @@ export default {
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
     report: '通報',
+    entry_members: 'エントリーメンバー',
+    number_of_entries: 'エントリー数',
   },
   search: {
     search: '検索',

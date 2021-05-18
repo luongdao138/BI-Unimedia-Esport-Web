@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, Button, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
 import useParticipants from './useParticipants'
@@ -10,13 +10,17 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import TeamMemberItem from '../Partials/TeamMemberItem'
+import ESButton from '@components/Button'
+import { TournamentDetail } from '@services/tournament.service'
 
 export interface ParticipantsProps {
-  hash_key: string
-  isTeam: boolean
+  detail: TournamentDetail
 }
 
-const Participants: React.FC<ParticipantsProps> = ({ hash_key, isTeam }) => {
+const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
+  const data = detail.attributes
+  const isTeam = data.participant_type > 1
+  const hash_key = data.hash_key
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -57,9 +61,9 @@ const Participants: React.FC<ParticipantsProps> = ({ hash_key, isTeam }) => {
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>
-        <Typography>{t('common:followers.title')}</Typography>
-      </Button>
+      <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
+        {t('common:tournament.entry_members')}
+      </ESButton>
       <ESModal open={open} handleClose={handleClose}>
         <BlankLayout>
           <Box pt={7.5} className={classes.topContainer}>
@@ -71,14 +75,18 @@ const Participants: React.FC<ParticipantsProps> = ({ hash_key, isTeam }) => {
                 <Typography variant="h2">{t('common:tournament.participant.back')}</Typography>
               </Box>
             </Box>
-            <Box py={2} textAlign="right" flexDirection="row" display="flex" justifyContent="flex-end">
-              <Typography variant="h2">エントリー数</Typography>
-              <Typography variant="h2">999</Typography>
-              <Typography variant="h2">人</Typography>
-              <Typography variant="h2">/</Typography>
-              <Typography variant="h2">999</Typography>
-              <Typography variant="h2">人</Typography>
-              <Icon className="fa fa-upload" fontSize="small" />
+            <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
+              <Box mr={2}>
+                <Typography variant="h3">{t('common:tournament.number_of_entries')}</Typography>
+              </Box>
+              <Typography variant="h3">
+                {data.participant_count}
+                {t('common:common.man')}/{data.max_participants}
+                {t('common:common.man')}
+              </Typography>
+              <Box ml={2}>
+                <Icon className="fa fa-upload" fontSize="small" />
+              </Box>
             </Box>
             <InfiniteScroll
               dataLength={participants.length}

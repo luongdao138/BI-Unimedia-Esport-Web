@@ -13,7 +13,7 @@ const useParticipants = () => {
   const page = useAppSelector(selectors.getParticipantsMeta)
   const meta = useAppSelector(getMeta)
   const getParticipants = (param) => dispatch(actions.getTournamentParticipants(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.getTournamentDetail.typePrefix))
+  const resetMeta = () => dispatch(clearMetaData(actions.getTournamentParticipants.typePrefix))
   return { participants, getParticipants, resetMeta, meta, page }
 }
 
