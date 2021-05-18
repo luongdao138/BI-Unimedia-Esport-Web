@@ -7,8 +7,8 @@ import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { ESRoutes } from '@constants/route.constants'
-import useReturnHref from '@utils/hooks/useReturnHref'
+import { useRouter } from 'next/router'
+import NOTIFICATION_TYPE_SYSTEM from '@store/notification/actions/types'
 
 const useStyles = makeStyles((theme) => ({
   loaderCenter: {
@@ -57,7 +57,7 @@ const NotificationContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const [hasMore, setHasMore] = useState(true)
   const { notifications, fetchNotifications, page } = useNotificationList()
-  const { navigateScreen } = useReturnHref()
+  const router = useRouter()
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
@@ -74,7 +74,7 @@ const NotificationContainer: React.FC = () => {
   return (
     <div className={classes.wrap} id="test">
       <Box className={classes.header}>
-        <IconButton className={classes.iconButton} disableRipple>
+        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>
@@ -98,7 +98,16 @@ const NotificationContainer: React.FC = () => {
         }
       >
         {notifications.map((notification, i) => (
-          <Grid item xs={12} key={i} onClick={() => navigateScreen(ESRoutes.NOTIFICATIONS)}>
+          <Grid
+            item
+            xs={12}
+            key={i}
+            onClick={() => {
+              if (notification.attributes.ntype_id == NOTIFICATION_TYPE_SYSTEM) {
+                router.push(`/notifications/${notification.id}`)
+              }
+            }}
+          >
             <NotificationListItem data={notification} />
           </Grid>
         ))}

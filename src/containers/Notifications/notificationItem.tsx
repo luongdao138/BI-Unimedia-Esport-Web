@@ -2,6 +2,7 @@ import { Typography, Box, Theme, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ESAvatar from '@components/Avatar'
 import useSmartTime from '@utils/hooks/useSmartTime'
+import _ from 'lodash'
 interface Props {
   data: any
 }
@@ -9,6 +10,7 @@ interface Props {
 const NotificationListItem: React.FC<Props> = ({ data }) => {
   const notification = data.attributes
   const classes = useStyles()
+  const createdAt = useSmartTime(_.get(notification, 'created_at', ''))
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
@@ -22,7 +24,7 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
           <Typography noWrap>{notification.message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
-              {useSmartTime(notification.created_at)}
+              {createdAt}
             </Typography>
           </Box>
         </Box>
