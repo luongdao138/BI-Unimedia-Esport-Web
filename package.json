@@ -60,6 +60,7 @@
     "reselect": "4.0.0",
     "sass": "1.32.12",
     "swiper": "^6.5.9",
+    "@types/react-mentions": "^4.1.0",
     "uuid": "^8.3.2",
     "webpack": "5.36.1",
     "yup": "0.32.9"
@@ -72,7 +73,6 @@
     "@types/node": "13.9.5",
     "@types/oauth": "^0.9.1",
     "@types/react": "16.9.27",
-    "@types/react-mentions": "^4.1.0",
     "@types/react-redux": "7.1.16",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.3",
