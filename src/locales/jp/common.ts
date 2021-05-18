@@ -63,6 +63,7 @@ export default {
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
+    password_reissue: 'パスワードを再発行しました',
   },
   common: {
     birthday: '生年月日',

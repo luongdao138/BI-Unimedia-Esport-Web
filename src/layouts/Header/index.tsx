@@ -80,7 +80,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 22,
   },
   search: {},
-  toolArea: {},
+  toolArea: {
+    display: 'flex',
+  },
   button: {
     padding: 10,
   },
