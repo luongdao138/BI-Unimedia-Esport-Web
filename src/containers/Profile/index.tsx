@@ -19,6 +19,7 @@ import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 import ESReport from '@containers/Report'
 import { ESRoutes } from '@constants/route.constants'
+import { REPORT_TYPE } from '@constants/common.constants'
 
 interface WithRouterProps {
   router: NextRouter
@@ -93,10 +94,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           </Box>
         </Grid>
         <ESReport
-          user={userProfile}
-          target_id="msg_1597122710436_29aff640-db91-11ea-981b-5ba655e05f4f"
-          room_id="e684510b-d212-49bb-98ac-73613aaa07c3"
-          msg_body="Hi"
+          reportType={REPORT_TYPE.USER_LIST}
+          target_id={userProfile.id}
+          attr={userProfile}
           open={openReport}
           handleClose={() => setOpenReport(false)}
         />

@@ -17,19 +17,21 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import * as Yup from 'yup'
+import { REPORT_TYPE } from '@constants/common.constants'
 
 export interface ESReportProps {
   chat_id?: string
   room_id?: string
-  target_id?: string
+  target_id?: number
   user_email?: string
   msg_body?: string
-  user?: any
+  attr?: any
   open?: boolean
+  reportType: number
   handleClose?: () => void
 }
 
-const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({ attr, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -56,15 +58,29 @@ const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body,
     initialValues: {
       description: '',
       reason_id: -1,
-      report_type: '',
+      report_type: 0,
       user_email: '',
     },
     validationSchema,
     onSubmit(values) {
-      _.merge(values, { report_type: 'user' })
-      _.merge(values, { target_id: target_id })
-      _.merge(values, { room_id: room_id })
-      _.merge(values, { msg_body: msg_body })
+      switch (reportType) {
+        case REPORT_TYPE.USER_LIST:
+          _.merge(values, { target_id: target_id })
+          break
+        case REPORT_TYPE.CHAT:
+          _.merge(values, { target_id: chat_id })
+          _.merge(values, { chat_id: chat_id })
+          _.merge(values, { room_id: room_id })
+          _.merge(values, { message_body: msg_body })
+          break
+        case REPORT_TYPE.COMMUNITY:
+          _.merge(values, { target_id: target_id })
+          break
+        default:
+          _.merge(values, { target_id: target_id })
+          break
+      }
+      _.merge(values, { report_type: reportType })
 
       createReport(values)
     },
@@ -86,15 +102,15 @@ const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body,
       <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            {user ? (
+            {attr && reportType == REPORT_TYPE.USER_LIST ? (
               <Grid container spacing={2}>
                 <Grid item>
-                  <ProfileAvatar src={user.attributes.avatar_url} editable={false} />
+                  <ProfileAvatar src={attr.attributes.avatar_url} editable={false} />
                 </Grid>
                 <Grid>
                   <Box mt={4}>
-                    <Typography>{user.attributes.nickname}</Typography>
-                    <Typography>{user.attributes.user_code}</Typography>
+                    <Typography>{attr.attributes.nickname}</Typography>
+                    <Typography>{attr.attributes.user_code}</Typography>
                   </Box>
                 </Grid>
               </Grid>
