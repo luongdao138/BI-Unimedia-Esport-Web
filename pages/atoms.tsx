@@ -128,7 +128,7 @@ const Atoms: PageWithLayoutType = () => {
         <ESReport
           target_id="msg_1597122710436_29aff640-db91-11ea-981b-5ba655e05f4f"
           room_id="e684510b-d212-49bb-98ac-73613aaa07c3"
-          user_email="sample@sample.com"
+          msg_body="Hi"
         />
       </Box>
       <Box margin={4}>
