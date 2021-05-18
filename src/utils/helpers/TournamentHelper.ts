@@ -1,4 +1,5 @@
 import { PARTICIPATION_TYPES, RULE } from '@constants/tournament.constants'
+import moment from 'moment'
 
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
@@ -21,7 +22,12 @@ const ruleText = (rule: string): string => {
   return ruleText
 }
 
+const formatDate = (date: string): string => {
+  return moment(date).format('YYYY年MM月DD日')
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
+  formatDate,
 }

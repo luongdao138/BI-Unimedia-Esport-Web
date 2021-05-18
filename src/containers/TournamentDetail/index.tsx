@@ -34,7 +34,7 @@ const TournamentDetail: React.FC = () => {
           >
             {actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
-          <DetailInfo detail={tournament} />
+          <DetailInfo detail={tournament} extended />
         </>
       )}
     </div>
