@@ -4,7 +4,7 @@ import { Dialog } from '@material-ui/core'
 
 export interface ESDialogProps {
   open: boolean
-  handleClose: () => void
+  handleClose?: () => void
 }
 
 const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
