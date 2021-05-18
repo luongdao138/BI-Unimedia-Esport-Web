@@ -7,3 +7,6 @@ export enum TOURNAMENT_ACTION_TYPE {
 }
 
 export const GET_TOURNAMENT_DETAIL = 'tournament/getTournamentDetail'
+export const GET_ENTRY_STATUS = 'tournament/getEntryStatus'
+export const JOIN_TOURNAMENT = 'tournament/joinTournament'
+export const LEAVE_TOURNAMENT = 'tournament/leaveTournament'

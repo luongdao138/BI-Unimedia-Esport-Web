@@ -31,4 +31,13 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTournamentDetail.fulfilled, (state, action) => {
     state.tournamentDetail = action.payload.data
   })
+  builder.addCase(actions.getEntryStatus.fulfilled, (state, action) => {
+    state.tournamentDetail.attributes.is_entered = action.payload.is_entry
+  })
+  builder.addCase(actions.joinTournament.fulfilled, (state) => {
+    state.tournamentDetail.attributes.is_entered = true
+  })
+  builder.addCase(actions.leaveTournament.fulfilled, (state) => {
+    state.tournamentDetail.attributes.is_entered = false
+  })
 })
