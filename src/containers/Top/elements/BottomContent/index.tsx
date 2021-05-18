@@ -1,14 +1,21 @@
+import { useEffect } from 'react'
 import { Typography, Box, Grid, makeStyles, Theme, Link, Icon } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { useTranslation } from 'react-i18next'
-import { RecruitingTournament } from './../Tournaments'
+import TournamentCardRecruiting from '@components/TournamentCard/Recruiting'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useTournamentData from './useTournamentData'
+
 export const BottomContent: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const router = useRouter()
+  const { recruitingTournaments, getRecruitingTournaments } = useTournamentData()
+  useEffect(() => {
+    getRecruitingTournaments()
+  }, [])
 
   return (
     <Box className={classes.bottomContent}>
@@ -21,36 +28,14 @@ export const BottomContent: React.FC = () => {
           </Grid>
           <Box className={classes.bottomInnerContent}>
             <Grid container spacing={0}>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
-              <Grid item xs={6} sm={6} md={4} xl={4}>
-                <RecruitingTournament />
-              </Grid>
+              {recruitingTournaments.map((tournament, i) => (
+                <Grid key={i} item xs={6} sm={6} md={4} xl={4}>
+                  <TournamentCardRecruiting tournament={tournament} />
+                </Grid>
+              ))}
             </Grid>
             <Box slot="container-end" display="flex" justifyContent="flex-end">
-              <Link href={'#'} className={classes.moreLink}>
+              <Link href={ESRoutes.RECRUITING_TOURNAMENTS} className={classes.moreLink}>
                 <Typography>
                   {t('common:common.see_more')}
                   <Icon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />

@@ -38,6 +38,14 @@ export type ResultsResponse = {
   attributes: any
 }
 
+export type RecruitingTournamentResponse = {
+  data: Array<RecruitingResponse>
+}
+
+export type RecruitingResponse = {
+  attributes: any
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -50,5 +58,10 @@ export const getTournamentFollowers = async (): Promise<TournamentFollowersRespo
 
 export const getTournamentResults = async (): Promise<TournamentResultsResponse> => {
   const { data } = await api.post<TournamentResultsResponse>(URI.TOURNAMENT_RESULTS)
+  return data
+}
+
+export const getRecruitingTournaments = async (): Promise<RecruitingTournamentResponse> => {
+  const { data } = await api.get<RecruitingTournamentResponse>(URI.RECRUITING_TOURNAMENT)
   return data
 }

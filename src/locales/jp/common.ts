@@ -176,6 +176,7 @@ export default {
     tournament_results: '大会「:key」 の検索結果',
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
+    recruiting_tournament_list: '募集中の大会一覧',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
