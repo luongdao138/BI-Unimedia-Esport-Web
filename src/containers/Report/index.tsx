@@ -96,7 +96,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            {data && reportType == REPORT_TYPE.USER_LIST ? (
+            {data && (reportType == REPORT_TYPE.USER_LIST || reportType == REPORT_TYPE.CHAT) ? (
               <Grid container spacing={2}>
                 <Grid item>
                   <ProfileAvatar src={data.attributes.avatar_url} editable={false} />
