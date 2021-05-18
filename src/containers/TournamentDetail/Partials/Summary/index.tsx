@@ -12,7 +12,7 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Summary: React.FC<Props> = () => {
+const Summary: React.FC<Props> = ({ detail }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const { t } = useTranslation(['common'])
   const classes = useStyles()
