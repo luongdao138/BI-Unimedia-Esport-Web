@@ -105,7 +105,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                   <Box mt={4}>
                     <Typography variant="h2">{data.attributes.nickname}</Typography>
                     <Typography variant="h2">{data.attributes.user_code}</Typography>
-                    {msg_body ? <Typography>{msg_body}</Typography> : null}
+                    {msg_body && <Typography>{msg_body}</Typography>}
                   </Box>
                 </Grid>
               </Grid>
