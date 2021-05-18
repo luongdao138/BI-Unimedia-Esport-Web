@@ -16,6 +16,8 @@ export const URI = {
   FOLLOWING: '/v2/following',
   REPORT: '/v2/reports/create',
   REPORT_REASONS: '/v1/report_reasons',
+  BLOCK: '/v1/blocks',
+  UNBLOCK: '/v1/blocks/unblock',
   NG_WORDS: '/v1/ng_words',
   GET_PREFECTURES: 'v2/areas',
   USER_SETTINGS: '/v2/users/settings',

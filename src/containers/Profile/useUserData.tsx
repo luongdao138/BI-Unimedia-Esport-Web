@@ -7,6 +7,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 import { RESPONSE_STATUS } from '@constants/common.constants'
 import { getPreSignedUrl, upload } from '@services/image.service'
+import { UserProfile } from '@services/user.service'
 
 const userSelectors = userProfileStore.selectors
 const userActions = userProfileStore.actions
@@ -15,7 +16,13 @@ const communityActions = community.actions
 const getCommunityListMeta = createMetaSelector(communityActions.getCommunityList)
 const getUserMeta = createMetaSelector(userActions.getMemberProfile)
 
-const useUserData = (others: boolean): any => {
+const useUserData = (
+  others: boolean
+): {
+  userProfile: UserProfile
+  getMemberProfile: (user_code: string) => void
+  profileImageChange: (file: File, user_id: number, type: number) => void
+} => {
   const dispatch = useAppDispatch()
   let userProfile = null
   userProfile = useAppSelector(userSelectors.getUserProfile)

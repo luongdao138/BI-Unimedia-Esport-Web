@@ -15,9 +15,12 @@ import ProfileMainContainer from '@containers/Profile/ProfileMain'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
+import useBlock from './useBlock'
+import useUnblock from './useUnblock'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 import ESReport from '@containers/Report'
+import ESLoader from '@components/Loader'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -35,6 +38,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const user_code = router.query.user_code || []
   const isOthers = user_code.length > 0
   const [openReport, setOpenReport] = useState(false)
+  const { blockUser, blockMeta } = useBlock()
+  const { unblockUser, unblockMeta } = useUnblock()
+
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
   const { userProfile, getMemberProfile, profileImageChange } = useUserData(isOthers)
   useEffect(() => {
@@ -81,7 +87,18 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                   {t('common:profile.follow_as')}
                 </ESButton>
                 <ESMenu>
-                  <ESMenuItem onClick={() => null}>{t('common:profile.menu_block')}</ESMenuItem>
+                  {userProfile.attributes.is_blocked ? (
+                    <ESMenuItem onClick={() => unblockUser({ block_type: 'user', target_id: Number(userProfile.id) })}>
+                      {t('common:profile.menu_unblock')}
+                      {blockMeta.pending ? <ESLoader /> : null}
+                    </ESMenuItem>
+                  ) : (
+                    <ESMenuItem onClick={() => blockUser({ block_type: 'user', target_id: Number(userProfile.id) })}>
+                      {t('common:profile.menu_block')}
+                      {unblockMeta.pending ? <ESLoader /> : null}
+                    </ESMenuItem>
+                  )}
+
                   <ESMenuItem onClick={handleReportOpen}>{t('common:user_report.title')}</ESMenuItem>
                 </ESMenu>
               </Box>
