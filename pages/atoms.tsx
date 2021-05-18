@@ -125,7 +125,11 @@ const Atoms: PageWithLayoutType = () => {
         <ESFollowing user_code={null} />
       </Box>
       <Box>
-        <ESReport />
+        <ESReport
+          target_id="msg_1597122710436_29aff640-db91-11ea-981b-5ba655e05f4f"
+          room_id="e684510b-d212-49bb-98ac-73613aaa07c3"
+          user_email="sample@sample.com"
+        />
       </Box>
       <Box margin={4}>
         <Typography variant="h2" gutterBottom>

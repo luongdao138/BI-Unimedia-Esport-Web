@@ -15,9 +15,11 @@ import _ from 'lodash'
 export interface ESReportProps {
   chat_id?: string
   room_id?: string
+  target_id?: string
+  user_email?: string
 }
 
-const ESReport: React.FC<ESReportProps> = () => {
+const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, user_email }) => {
   const [open, setOpen] = useState(false)
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
@@ -35,8 +37,9 @@ const ESReport: React.FC<ESReportProps> = () => {
 
     onSubmit(values) {
       _.merge(values, { report_type: 'user' })
-      _.merge(values, { user_email: 'sample_email@email.com' })
-      _.merge(values, { target_id: 'asdf_fasdf_89080' })
+      _.merge(values, { user_email: user_email })
+      _.merge(values, { target_id: target_id })
+      _.merge(values, { room_id: room_id })
 
       createReport(values)
       setOpen(false)
