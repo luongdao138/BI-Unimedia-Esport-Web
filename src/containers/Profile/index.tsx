@@ -96,7 +96,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         <ESReport
           reportType={REPORT_TYPE.USER_LIST}
           target_id={userProfile.id}
-          attr={userProfile}
+          obj={userProfile}
           open={openReport}
           handleClose={() => setOpenReport(false)}
         />
