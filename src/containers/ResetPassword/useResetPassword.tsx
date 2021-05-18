@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { clearMetaData } from '@store/metadata/actions'
 import authStore from '@store/auth'
 import { UserResetPasswordParams } from '@services/auth.service'
 import { ESRoutes } from '@constants/route.constants'
@@ -19,18 +18,15 @@ const useResetPassword = () => {
 
   const resetPassword = (param: UserResetPasswordParams) => dispatch(actions.resetPassword(param))
 
-  const resetMeta = () => dispatch(clearMetaData(actions.resetPassword.typePrefix))
-
   const backAction = () => navigateScreen(ESRoutes.FORGOT_PASSWORD)
 
   useEffect(() => {
     if (meta.loaded) {
       navigateScreen(ESRoutes.LOGIN)
-      resetMeta()
     }
   }, [meta.loaded])
 
-  return { user, resetPassword, resetMeta, meta, backAction }
+  return { user, resetPassword, meta, backAction }
 }
 
 export default useResetPassword
