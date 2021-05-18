@@ -47,4 +47,5 @@ export const URI = {
   TOURNAMENT_FOLLOWERS: '/v2/users/followings_recruitment',
   TOURNAMENT_RESULTS: '/v2/users/followings_tournament_result',
   RECRUITMENT_FOLLOWERS: '/v2/users/followings_recruitment',
+  RECRUITING_TOURNAMENT: '/v2/tournaments/public_recruiting',
 }
