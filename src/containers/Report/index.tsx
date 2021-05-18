@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Box, Typography } from '@material-ui/core'
+import { Button, Box, Typography, Grid } from '@material-ui/core'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import Radio from '@material-ui/core/Radio'
@@ -8,6 +8,7 @@ import Input from '@components/Input'
 import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
 import ESDialog from '@components/Dialog'
+import ProfileAvatar from '@components/ProfileAvatar'
 import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
 import useReport from './useReport'
@@ -22,6 +23,7 @@ export interface ESReportProps {
   target_id?: string
   user_email?: string
   msg_body?: string
+  user?: any
 }
 
 const validationSchema = Yup.object().shape({
@@ -32,7 +34,7 @@ const validationSchema = Yup.object().shape({
   }),
 })
 
-const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, msg_body }) => {
+const ESReport: React.FC<ESReportProps> = ({ user, target_id, room_id, msg_body }) => {
   const [open, setOpen] = useState(false)
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
@@ -83,9 +85,28 @@ const ESReport: React.FC<ESReportProps> = ({ target_id, room_id, msg_body }) => 
       <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            <Typography>{t('user_report.desc_first')}</Typography>
-            <Typography>{t('user_report.desc_second')}</Typography>
-            <Typography>{t('user_report.desc_third')}</Typography>
+            {user ? (
+              <Grid container spacing={2}>
+                <Grid item>
+                  <ProfileAvatar src={user.avatar} editable={false} />
+                </Grid>
+                <Grid>
+                  <Box mt={4}>
+                    <Typography>{user.nickname}</Typography>
+                    <Typography>{user.user_code}</Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            ) : null}
+
+            <Box mt={1}>
+              <Typography>{t('user_report.desc_first')}</Typography>
+              <Typography>{t('user_report.desc_second')}</Typography>
+              <Typography>{t('user_report.desc_third')}</Typography>
+            </Box>
+
+            <Box mt={1}></Box>
+
             <RadioVertical
               id="reason_id"
               name="reason_id"

@@ -129,6 +129,11 @@ const Atoms: PageWithLayoutType = () => {
           target_id="msg_1597122710436_29aff640-db91-11ea-981b-5ba655e05f4f"
           room_id="e684510b-d212-49bb-98ac-73613aaa07c3"
           msg_body="Hi"
+          user={{
+            avatar: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/30/1618455315-30.jpg',
+            nickname: 'lowko',
+            user_code: 'sc lowko',
+          }}
         />
       </Box>
       <Box margin={4}>
