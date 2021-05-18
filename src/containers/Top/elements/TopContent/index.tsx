@@ -111,6 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black_opacity[70],
     backdropFilter: 'blur(1px)',
     marginBottom: 0,
+    position: 'relative',
     '&::after': {
       margin: '0 auto',
       background: "url('/images/lp_pattern.png') center bottom repeat-x transparent",

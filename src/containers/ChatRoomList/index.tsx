@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import RoomListItem from '@components/Chat/RoomListItem'
 import MuiList from '@material-ui/core/List'
 import { ChatDataType } from '@components/Chat/types/chat.types'
@@ -6,14 +5,12 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { FixedSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { socketActions } from '@store/socket/actions'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import { getAuth } from '@store/auth/selectors'
 import { getRoomList } from '@store/socket/selectors'
 import _ from 'lodash'
 import Loader from '@components/Loader'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core'
+import { useAppSelector } from '@store/hooks'
 
 interface ChatRoomListProps {
   expand?: boolean
@@ -23,22 +20,8 @@ interface ChatRoomListProps {
 const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   const router = useRouter()
   const { id } = router.query
-  const dispatch = useAppDispatch()
-  const user = useAppSelector(getAuth)
-  const userId = user.id
   const listData = useAppSelector(getRoomList)
   const classes = useStyles()
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(
-        socketActions.socketSend({
-          action: 'GET_ALL_ROOMS',
-          userId: userId,
-        })
-      )
-    }
-  }, [])
 
   const navigateRoom = (id: string) => {
     router.push(`${ESRoutes.MESSAGE}${id}`, undefined, { shallow: true })

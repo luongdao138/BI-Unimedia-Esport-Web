@@ -3,14 +3,24 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v1 as uuidv1 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
+import { socketActions } from '@store/socket/actions'
 
 const DEVICE_ID = uuidv1()
 
 let socket: any = null
 
-const onOpen = (_store: StoreType) => (_event: Event) => {
-  // eslint-disable-next-line no-console
-  console.log('connected!!')
+const onOpen = (store: StoreType) => (_event: Event) => {
+  const userId = store.getState().auth.user?.id
+  if (userId) {
+    // eslint-disable-next-line no-console
+    console.log('connected, end fetching list')
+    store.dispatch(
+      socketActions.socketSend({
+        action: 'GET_ALL_ROOMS',
+        userId: userId,
+      })
+    )
+  }
 }
 
 const onClose = (store: StoreType) => (_event: CloseEvent) => {

@@ -63,6 +63,7 @@ export default {
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
+    password_reissue: 'パスワードを再発行しました',
   },
   common: {
     birthday: '生年月日',
@@ -114,6 +115,23 @@ export default {
   following: {
     title: 'フォロワー',
     th: '人',
+  },
+  user_report: {
+    title: '通報する',
+    desc_first: '通報内容をご確認のうえ必要情報を記載、選択してください',
+    desc_second: 'また、通報いただいた内容は全て運営が確認をいたしますが、その際の対応',
+    desc_third: '及び返信を行わない場合がある旨、予めご了承ください',
+    user_info_title: '通報する内容',
+    reason: '通報する理由',
+    reason_desc: '詳細・補足',
+    require: '※必須',
+    reporter_email: 'メールアドレスの確認',
+    reporter_email_placeholder: 'mail address',
+    reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
+    btn_text: '通報する',
+    title_chat: 'Chat',
+    user_report_done: 'User Reported',
+    reported: 'Reported!',
   },
   profile: {
     prefectures: '都道府県',
@@ -174,6 +192,19 @@ export default {
     organizer: '主催者',
     entry: 'エントリー',
     tournament_results: '大会「:key」 の検索結果',
+    follower_entering: 'フォローしている人がエントリーしている大会',
+    follower_ended: 'フォローしている人がエントリーしていた大会結果',
+    recruiting_tournament_list: '募集中の大会一覧',
+  },
+  recruitment: {
+    recommended_recruitment_list: 'おすすめの募集一覧',
+    recruitment_follower: 'フォローしている人の募集',
+  },
+  event: {
+    recommended_event_list: 'おすすめイベント一覧',
+  },
+  topic: {
+    topic_follower_list: 'フォローしている人の書き込みトピック',
   },
   search: {
     search: '検索',

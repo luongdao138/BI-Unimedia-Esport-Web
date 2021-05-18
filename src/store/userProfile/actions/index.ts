@@ -145,3 +145,18 @@ export const getRecommendations = createAsyncThunk<services.RecommendationsRespo
     }
   }
 )
+
+export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventResponse>(
+  USER_PROFILE_ACTION_TYPE.RECOMMENDED_EVENT,
+  async (_params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendedEvent()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

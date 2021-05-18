@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
+import LoginRequired from '@containers/LoginRequired'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() => ({
   grow: { flexGrow: 1 },
@@ -24,6 +26,7 @@ const useStyles = makeStyles(() => ({
 export const Header: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const router = useRouter()
 
   return (
     <div className={classes.grow}>
@@ -31,13 +34,9 @@ export const Header: React.FC = () => {
         <Toolbar className={classes.toolbar}>
           <Typography variant="h2">{t('common:home.home')}</Typography>
           <ESMenu>
-            <ESMenuItem
-              onClick={() => {
-                return null
-              }}
-            >
-              コミュニティを作る
-            </ESMenuItem>
+            <LoginRequired>
+              <ESMenuItem onClick={() => router.push('/tournaments')}>コミュニティを作る</ESMenuItem>
+            </LoginRequired>
           </ESMenu>
         </Toolbar>
       </AppBar>

@@ -7,6 +7,8 @@ import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { useRouter } from 'next/router'
+import NOTIFICATION_TYPE_SYSTEM from '@store/notification/actions/types'
 
 const useStyles = makeStyles((theme) => ({
   loaderCenter: {
@@ -27,6 +29,27 @@ const useStyles = makeStyles((theme) => ({
   create: {
     marginLeft: 'auto',
   },
+  wrap: {
+    height: 'calc(100vh - 60px)',
+    overflow: 'auto',
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar': {
+      width: 0,
+      height: 0,
+    },
+  },
+  header: {
+    padding: 16,
+    width: '100%',
+    position: 'sticky',
+    background: Colors.black,
+    zIndex: 10,
+    left: 0,
+    top: 0,
+    right: 0,
+    height: 60,
+    borderBottom: '1px solid #212121',
+  },
 }))
 
 const NotificationContainer: React.FC = () => {
@@ -34,6 +57,7 @@ const NotificationContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const [hasMore, setHasMore] = useState(true)
   const { notifications, fetchNotifications, page } = useNotificationList()
+  const router = useRouter()
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
@@ -48,9 +72,9 @@ const NotificationContainer: React.FC = () => {
   }, [])
 
   return (
-    <div>
-      <Box className="header-first-column" style={{ maxWidth: '100%' }}>
-        <IconButton className={classes.iconButton} disableRipple>
+    <div className={classes.wrap} id="test">
+      <Box className={classes.header}>
+        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>
@@ -58,6 +82,7 @@ const NotificationContainer: React.FC = () => {
         </Typography>
       </Box>
       <InfiniteScroll
+        scrollableTarget={'test'}
         dataLength={notifications.length}
         next={fetchMoreData}
         hasMore={hasMore}
@@ -73,7 +98,16 @@ const NotificationContainer: React.FC = () => {
         }
       >
         {notifications.map((notification, i) => (
-          <Grid item xs={12} key={i}>
+          <Grid
+            item
+            xs={12}
+            key={i}
+            onClick={() => {
+              if (notification.attributes.ntype_id == NOTIFICATION_TYPE_SYSTEM) {
+                router.push(`/notifications/${notification.id}`)
+              }
+            }}
+          >
             <NotificationListItem data={notification} />
           </Grid>
         ))}

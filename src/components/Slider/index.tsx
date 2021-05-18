@@ -88,7 +88,7 @@ const ESSlide: React.FC<{
 
         {moreLink && (
           <Box slot="container-end" display="flex" justifyContent="flex-end">
-            <Link href={moreLink} className={classes.moreLink}>
+            <Link href={moreLink} className={classes.moreLink} underline={'none'}>
               <Typography>
                 {t('common:common.see_more')}
                 <Icon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />

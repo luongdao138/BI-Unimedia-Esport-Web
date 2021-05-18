@@ -12,3 +12,4 @@ export const getActivityLogs = createSelector(getRoot, (state) => state.activity
 export const getNicknames2 = createSelector(getRoot, (state) => state.nicknames2)
 // export const getCommunityList = createSelector(getRootCommunity, (state) => state.my_community_list)
 export const getRecommendations = createSelector(getRoot, (state) => state.recommendations)
+export const getRecommendedEvent = createSelector(getRoot, (state) => state.recommendedEvent)
