@@ -130,3 +130,8 @@ export const getTournamentDetail = async (hash_key: string): Promise<TournamentD
   const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
   return data
 }
+
+export const getTournamentParticipants = async (hash_key: string): Promise<TournamentDetailResponse> => {
+  const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
+  return data
+}

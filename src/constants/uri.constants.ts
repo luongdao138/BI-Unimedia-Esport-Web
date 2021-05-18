@@ -33,6 +33,7 @@ export const URI = {
   TOURNAMENT_FOLLOWERS: '/v2/tournaments/???',
   TOURNAMENT_RESULTS: '/v2/tournaments/???',
   TOURNAMENT_DETAIL: '/v1/tournaments/details/',
+  TOURNAMENTS_PARTICIPANTS: 'v1/tournaments/:id/participants',
   COMMUNITY_FOLLOWERS_TOPICS: '/v2/communities/???',
   NICKNAMES_2: '/v2/users/get_nicknames2',
   USER_RECOMMENDATIONS: '/v2/users/recommendations',

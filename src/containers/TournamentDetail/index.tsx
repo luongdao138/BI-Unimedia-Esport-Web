@@ -7,6 +7,7 @@ import { TournamentStatus } from '@services/tournament.service'
 
 import RecruitingAction from './RecruitingAction'
 import DetailInfo from '@containers/TournamentDetail/Partials/DetailInfo'
+import Participants from './Participants'
 
 const TournamentDetail: React.FC = () => {
   const router = useRouter()
@@ -35,6 +36,7 @@ const TournamentDetail: React.FC = () => {
             {actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
           <DetailInfo detail={tournament} />
+          <Participants />
         </>
       )}
     </div>

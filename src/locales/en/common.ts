@@ -182,6 +182,9 @@ export default {
     has_prize: '副賞あり',
     online: 'オンライン',
     offline: 'オフライン',
+    participant: {
+      back: 'エントリーメンバー',
+    },
   },
   search: {
     search: '検索',
