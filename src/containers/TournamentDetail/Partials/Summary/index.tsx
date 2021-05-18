@@ -2,7 +2,7 @@
 import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/tournament.service'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
 
 interface Props {
@@ -11,9 +11,9 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Summary: React.FC<Props> = ({ detail }) => {
+const Summary: React.FC<Props> = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { t } = useTranslation(['common'])
+  // const { t } = useTranslation(['common'])
   const classes = useStyles()
 
   const buildHeaderValue = () => {
