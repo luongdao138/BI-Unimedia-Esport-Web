@@ -1,6 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { TournamentResponse, Meta, FollowersResponse, ResultsResponse, TournamentDetail } from '@services/tournament.service'
+import {
+  TournamentResponse,
+  Meta,
+  FollowersResponse,
+  ResultsResponse,
+  TournamentDetail,
+  ParticipantsResponse,
+} from '@services/tournament.service'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -8,9 +15,11 @@ type StateType = {
   tournamentFollowers: Array<FollowersResponse>
   tournamentResults: Array<ResultsResponse>
   tournamentDetail?: TournamentDetail
+  tournamentParticipants?: Array<ParticipantsResponse>
+  participantsMeta?: Meta
 }
 
-const initialState: StateType = { searchTournaments: [], tournamentFollowers: [], tournamentResults: [] }
+const initialState: StateType = { searchTournaments: [], tournamentFollowers: [], tournamentResults: [], tournamentParticipants: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
@@ -39,5 +48,13 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.is_entered = false
+  })
+  builder.addCase(actions.getTournamentParticipants.fulfilled, (state, action) => {
+    let _participants = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      _participants = state.tournamentParticipants.concat(action.payload.data)
+    }
+    state.tournamentParticipants = _participants
+    state.participantsMeta = action.payload.meta
   })
 })

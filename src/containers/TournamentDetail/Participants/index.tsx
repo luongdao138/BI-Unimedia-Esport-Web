@@ -2,26 +2,27 @@ import { useEffect, useState } from 'react'
 import { Box, Typography, Button, IconButton, Icon, Theme } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
-import useFollowers from '@containers/Followers/useFollowers'
+import useParticipants from './useParticipants'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import _ from 'lodash'
 import BlankLayout from '@layouts/BlankLayout'
+import TeamMemberItem from '../Partials/TeamMemberItem'
 
 export interface ParticipantsProps {
-  tournament_hash_key?: string
+  hash_key: string
+  isTeam: boolean
 }
 
-const Participants: React.FC<ParticipantsProps> = ({ tournament_hash_key }) => {
+const Participants: React.FC<ParticipantsProps> = ({ hash_key, isTeam }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
   const { t } = useTranslation(['common'])
-  const { clearFollowers, followers, fetchFollowers, page } = useFollowers()
+  const { participants, getParticipants, resetMeta, page } = useParticipants()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -32,22 +33,26 @@ const Participants: React.FC<ParticipantsProps> = ({ tournament_hash_key }) => {
   }
 
   useEffect(() => {
-    const params = { page: 1 }
-    if (tournament_hash_key != null) {
-      _.merge(params, { user_code: tournament_hash_key })
+    if (open) {
+      getParticipants({ page: 1, hash_key: hash_key })
     }
-    fetchFollowers(params)
-    return function clear() {
-      clearFollowers()
+
+    return () => {
+      resetMeta()
     }
-  }, [tournament_hash_key])
+  }, [open])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
       return
     }
-    fetchFollowers({ page: page.current_page + 1, user_code: tournament_hash_key })
+    getParticipants({ page: page.current_page + 1, hash_key: hash_key })
+  }
+
+  const userData = (participant) => {
+    const _user = participant.attributes.user
+    return { id: _user.id, attributes: { ..._user, avatar: participant.attributes.avatar_url } }
   }
 
   return (
@@ -76,7 +81,7 @@ const Participants: React.FC<ParticipantsProps> = ({ tournament_hash_key }) => {
               <Icon className="fa fa-upload" fontSize="small" />
             </Box>
             <InfiniteScroll
-              dataLength={followers.length}
+              dataLength={participants.length}
               next={fetchMoreData}
               hasMore={hasMore}
               loader={
@@ -91,9 +96,11 @@ const Participants: React.FC<ParticipantsProps> = ({ tournament_hash_key }) => {
                 </p>
               }
             >
-              {followers.map((user, i) => (
-                <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
-              ))}
+              {isTeam
+                ? participants.map((participant, i) => <TeamMemberItem key={`team${i}`} team={participant} />)
+                : participants.map((participant, i) => (
+                    <UserListItem data={userData(participant)} key={i} isFollowed={participant.attributes.is_followed} />
+                  ))}
             </InfiniteScroll>
           </Box>
         </BlankLayout>

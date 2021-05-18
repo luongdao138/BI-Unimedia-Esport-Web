@@ -25,7 +25,7 @@ const TournamentDetail: React.FC = () => {
   }
   return (
     <div>
-      {meta.pending && '...loading'}{' '}
+      {meta.pending && '...loading'}
       {meta.loaded && tournament && (
         <>
           <TournamentDetailHeader
@@ -35,8 +35,8 @@ const TournamentDetail: React.FC = () => {
           >
             {actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
-          <DetailInfo detail={tournament} />
-          <Participants />
+          <Participants hash_key={tournament.attributes.hash_key} isTeam={tournament.attributes.participant_type > 1} />
+          <DetailInfo detail={tournament} extended />
         </>
       )}
     </div>

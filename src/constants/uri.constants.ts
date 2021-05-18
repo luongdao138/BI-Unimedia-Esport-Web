@@ -29,7 +29,7 @@ export const URI = {
   TOURNAMENTS_SEARCH: '/v1/tournaments/search',
   RECOMMENDED_USERS: '/v1/recommended_users',
   TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
-  TOURNAMENTS_MEMBERS: '/v1/tournaments/:id/participants',
+  TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   TOURNAMENT_FOLLOWERS: '/v2/tournaments/???',
   TOURNAMENT_RESULTS: '/v2/tournaments/???',
