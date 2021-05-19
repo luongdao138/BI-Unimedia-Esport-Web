@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 interface Props {
   data: any
   isFollowed?: boolean
-  handleClose: () => void
+  handleClose?: () => void
 }
 
 const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
