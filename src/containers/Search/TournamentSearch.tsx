@@ -46,6 +46,7 @@ const TournamentSearchContainer: React.FC = () => {
         next={loadMore}
         hasMore={page && page.current_page !== page.total_pages}
         loader={null}
+        scrollThreshold="1px"
       >
         {searchTournaments.map((tournament, i) => (
           <Grid key={i} item xs={6} md={4}>
