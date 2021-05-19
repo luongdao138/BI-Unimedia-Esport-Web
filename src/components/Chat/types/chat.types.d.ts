@@ -1,3 +1,5 @@
+import { SuggestionDataItem } from 'react-mentions'
+
 export type ChatDataType = {
   unseenCount: number
   chatRoomId: string
@@ -10,4 +12,10 @@ export type ChatDataType = {
   groupType: number
   isAdmin: boolean
   blocked?: any[]
+}
+
+export interface ChatSuggestionList extends SuggestionDataItem {
+  userId: number | string
+  nickName: string
+  profile: string
 }

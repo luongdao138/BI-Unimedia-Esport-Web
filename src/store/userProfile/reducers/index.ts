@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
+import { blockUser, unblockUser } from '@store/block/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 
 type StateType = {
@@ -86,5 +87,13 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getRecommendedEvent.fulfilled, (state, action) => {
     state.recommendedEvent = action.payload.data
+  })
+
+  builder.addCase(blockUser.fulfilled, (state) => {
+    state.lastSeenUserData.attributes.is_blocked = true
+  })
+
+  builder.addCase(unblockUser.fulfilled, (state) => {
+    state.lastSeenUserData.attributes.is_blocked = false
   })
 })

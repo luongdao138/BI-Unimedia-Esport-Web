@@ -4,6 +4,8 @@ import { URI } from '@constants/uri.constants'
 export type ReportParams = {
   description: string
   reason_id: number
+  report_type: number
+  user_email: string
 }
 
 export type ReportResponse = {
@@ -32,7 +34,7 @@ export type Meta = {
 }
 
 export const createReport = async (params: ReportParams): Promise<ReportResponse> => {
-  const { data } = await api.post<ReportResponse>(URI.REPORT, params)
+  const { data } = await api.put<ReportResponse>(URI.REPORT, params)
   return data
 }
 

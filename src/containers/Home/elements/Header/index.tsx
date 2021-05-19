@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { ESRoutes } from '@constants/route.constants'
+import LoginRequired from '@containers/LoginRequired'
 import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() => ({
@@ -34,7 +35,10 @@ export const Header: React.FC = () => {
         <Toolbar className={classes.toolbar}>
           <Typography variant="h2">{t('common:home.home')}</Typography>
           <ESMenu>
-            <ESMenuItem onClick={() => router.push(ESRoutes.HOME_ORDER)}>{t('common:home.change_order')}</ESMenuItem>
+            <LoginRequired>
+              <ESMenuItem onClick={() => router.push(ESRoutes.HOME_ORDER)}>{t('common:home.change_order')}</ESMenuItem>
+              <ESMenuItem onClick={() => router.push('/tournaments')}>コミュニティを作る</ESMenuItem>
+            </LoginRequired>
           </ESMenu>
         </Toolbar>
       </AppBar>

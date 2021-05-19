@@ -36,13 +36,14 @@ import { getNotificationBadge as selector } from '@store/notification/selectors'
 const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
     position: 'relative',
+    display: 'inline-block',
     '&:hover $dropDownContent': {
       width: 'auto',
-      display: 'block',
       visiblity: 'visible',
       opocity: 1,
       transition: 'all 0.5s ease',
       height: 'auto',
+      display: 'block',
     },
   },
   dropDownContent: {
@@ -80,7 +81,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 22,
   },
   search: {},
-  toolArea: {},
+  toolArea: {
+    display: 'flex',
+  },
   button: {
     padding: 10,
   },
@@ -187,7 +190,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
-                  <Box className={classes.dropDownMenu}>
+                  <Box className={`${classes.dropDownMenu}`}>
                     <IconButton className={classes.button} disableRipple color="inherit">
                       <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
                         <Icon className={`fa fa-bell ${classes.icon}`} />
@@ -197,6 +200,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                       <NotificationBadgeListContainer />
                     </Box>
                   </Box>
+
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Badge badgeContent={17} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-inbox ${classes.icon}`} />

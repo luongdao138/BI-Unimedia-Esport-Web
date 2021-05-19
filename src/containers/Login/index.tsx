@@ -35,7 +35,7 @@ const LoginContainer: React.FC = () => {
     privacy: false,
   })
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
+  const { loginByEmail, meta, resetMeta, metaReset, resetPasswordMeta, handleClick } = useLoginByEmail()
   const { handleLink } = useReturnHref()
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -172,6 +172,7 @@ const LoginContainer: React.FC = () => {
       </Box>
       {meta.pending && <ESLoader open={meta.pending} />}
       {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} resetMeta={resetMeta} />}
+      {metaReset.loaded && <ESToast open={metaReset.loaded} message={t('common:error.password_reissue')} resetMeta={resetPasswordMeta} />}
     </>
   )
 }
