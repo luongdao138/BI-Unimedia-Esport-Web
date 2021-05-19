@@ -150,6 +150,24 @@ export type JoinParams = {
   hash_key: string
 }
 
+export type GetSuggestedTeamMembersParams = {
+  page: number
+  keyword?: string
+  tournament_id?: number
+  hash_key?: string
+}
+
+export type SuggestedTeamMembersResponse = {
+  id: string
+  type: string
+  attributes: any
+}
+
+export type GetSuggestedTeamMembersResponse = {
+  data: Array<SuggestedTeamMembersResponse>
+  links: any
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.get<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, {
     params,
@@ -189,5 +207,10 @@ export const leaveTournament = async (hash_key: string): Promise<void> => {
 
 export const getEntryStatus = async (hash_key: string): Promise<EntryStatusResponse> => {
   const { data } = await api.get<EntryStatusResponse>(URI.CHECK_ENTRY_STATUS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const getSuggestedTeamMembers = async (params: GetSuggestedTeamMembersParams): Promise<GetSuggestedTeamMembersResponse> => {
+  const { data } = await api.post<GetSuggestedTeamMembersResponse>(URI.SUGGESTED_TEAM_MEMBERS, params)
   return data
 }

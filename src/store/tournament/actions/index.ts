@@ -116,3 +116,18 @@ export const getTournamentParticipants = createAsyncThunk<services.GetParticipan
     }
   }
 )
+
+export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTeamMembersResponse, services.GetSuggestedTeamMembersParams>(
+  types.GET_SUGGESTED_TEAM_MEMBERS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getSuggestedTeamMembers(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

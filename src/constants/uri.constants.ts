@@ -30,6 +30,7 @@ export const URI = {
   RECOMMENDED_USERS: '/v1/recommended_users',
   TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
+  SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
   JOIN_TOURNAMENT: '/v2/tournaments/:id/join',
   LEAVE_TOURNAMENT: '/v2/tournaments/:id/leave',
   CHECK_ENTRY_STATUS: '/v2/tournaments/:id/check_entry_status',

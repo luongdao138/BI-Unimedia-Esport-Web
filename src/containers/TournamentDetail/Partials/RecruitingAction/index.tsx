@@ -36,9 +36,11 @@ const RecruitingAction: React.FC<RecruitingActionProps> = ({ tournament }) => {
   return (
     <Box>
       <Summary detail={tournament} />
-
+      IF SOLO
       <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={handleClose} />
+      IF TEAM
       <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={handleClose} />
+      IF ADMIN
       <CloseRecruitmentModal tournament={tournament} handleClose={handleClose} />
       {/* {renderModalView()} */}
     </Box>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { TournamentDetail } from '@services/tournament.service'
+import { SuggestedTeamMembersResponse, TournamentDetail } from '@services/tournament.service'
 import { useState } from 'react'
 import ESButton from '@components/Button'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
@@ -17,6 +17,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
 import ProfileAvatar from '@components/ProfileAvatar'
 import ESSimpleSelectInput from '@components/SimpleSelectInput'
+import useSuggestedTeamMembers from './useSuggestedTeamMembers'
+import ESLabel from '@components/Label'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -24,28 +26,9 @@ interface TeamEntryModalProps {
   handleClose: () => void
 }
 
-const initMembers = [
-  {
-    id: 1,
-    nickname: 'Long nickname Long nickname Long nickname Long nickname Long nickname ',
-    avatar: 'https://robohash.org/consequaturquidemcorporis.png?size=50x50&set=set1',
-    user_code: 'long usercode long usercode long usercode long usercode long usercode ',
-  },
-  {
-    id: 2,
-    nickname: 'Peggy',
-    avatar: 'https://robohash.org/quosdoloremoccaecati.png?size=50x50&set=set1',
-    user_code: 'pmeus1',
-  },
-  {
-    id: 3,
-    nickname: 'Katerine',
-    avatar: 'https://robohash.org/eanihiltempore.png?size=50x50&set=set1',
-    user_code: 'kgionettitti2',
-  },
-]
-
 const FINAL_STEP = 1
+
+let teamMembers = []
 
 const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, handleClose }) => {
   const { t } = useTranslation(['common'])
@@ -53,72 +36,110 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const store = useStore()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
+  const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
 
-  const validationSchema = Yup.object().shape({
+  const membersValidationSchema = Yup.object().shape({
+    user_id: Yup.number().required(),
+    name: Yup.string().required(),
+    user_code: Yup.string().required(),
     nickname: Yup.string()
-      .required(t('common:common.error'))
+      .required('Name is required')
       .max(40, t('common:common.too_long'))
-      .test('nickname', 'at_least', function (value) {
+      .test('name', 'at_least', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
-    members: Yup.array().of(
-      Yup.object().shape({
-        name: Yup.string()
-          .required('Name is required')
-          .max(40, t('common:common.too_long'))
-          .test('nickname', 'at_least', function (value) {
-            return CommonHelper.matchNgWords(store, value).length <= 0
-          }),
-      })
-    ),
   })
 
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const validationSchema = Yup.object().shape({
+    id: Yup.string().required(),
+    leader_name: Yup.string().required(),
+    team_name: Yup.string()
+      .required(t('common:common.error'))
+      .max(40, t('common:common.too_long'))
+      .test('team_name', 'at_least', function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    team_icon_url: Yup.string().required(),
+    members: Yup.array().of(membersValidationSchema),
+  })
+
+  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue, setValues } = useFormik({
     initialValues: {
-      nickname: '',
-      members: [],
+      id: userProfile ? userProfile.id : null,
+      leader_name: userProfile ? userProfile.attributes.nickname : '',
+      team_name: '',
+      team_icon_url: 'Icon url here',
+      members: Array(tournament.attributes.participant_type),
     },
     validationSchema,
     onSubmit: (values) => {
-      if (values.nickname) {
-        // eslint-disable-next-line no-console
-        console.log('nickname', values.nickname)
-        // TODO call endpoint here
-        handleClose()
-        setOpen(false)
-      }
+      // eslint-disable-next-line no-console
+      console.log('values', values)
+      // if (isValid) {
+      //
+      //   // TODO call endpoint here
+      handleClose()
+      //   setOpen(false)
+      //   reset()
+      // }
     },
   })
 
   useEffect(() => {
-    if (open) {
-      setStep(0)
-      setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
+    if (open && userProfile) {
+      teamMembers = Array(tournament.attributes.participant_type)
+
+      for (let i = 0; i < tournament.attributes.participant_type; i++) {
+        let initialValue = { user_id: '', name: '', nickname: '', user_code: '' }
+        if (i === 0) {
+          initialValue = {
+            user_id: userProfile.id,
+            name: userProfile.attributes.nickname,
+            nickname: userProfile.attributes.nickname,
+            user_code: userProfile.attributes.user_code,
+          }
+        }
+
+        values.members[i] = initialValue
+      }
+
+      setFieldValue('members', values.members)
     }
-  }, [open])
+  }, [open, userProfile])
+
+  useEffect(() => {
+    getSuggestedTeamMembers({ page: 1, keyword: '', tournament_id: tournament.id })
+  }, [])
+
+  const reset = () => {
+    setStep(0)
+    resetMeta()
+    teamMembers = []
+    setValues({ id: '', leader_name: '', team_name: '', team_icon_url: '', members: [] })
+  }
 
   const handleReturn = () => {
     if (step === FINAL_STEP) {
       setStep(0)
     } else {
+      reset()
       setOpen(false)
     }
   }
 
-  const teamMembers = [1, 2, 3, 4]
-
-  // TODO use proper data later
-  const [availableMembers, setAvailableMembers] = useState(initMembers)
-
-  const handleSelectedMembers = (selectedMember) => {
-    // eslint-disable-next-line no-console
-    console.log(selectedMember)
+  const handleSelectedMembers = (selectedMember: SuggestedTeamMembersResponse, index) => {
     if (selectedMember) {
-      const filteredMembers = availableMembers.filter((member) => member !== selectedMember)
-      setAvailableMembers(filteredMembers)
+      const nickname = selectedMember.attributes.nickname
+      const userCode = selectedMember.attributes.user_code
+      const member = { user_id: selectedMember.id, name: nickname, nickname: nickname, user_code: userCode }
+
+      teamMembers[index] = selectedMember
+      values.members[index] = member
+      setFieldValue('members', values.members)
     } else {
-      // TODO X darsan user -iig butsaaj songoltod oruulah
-      setAvailableMembers(initMembers)
+      teamMembers[index] = null
+      values.members[index] = null
+      setFieldValue('members', values.members)
     }
   }
 
@@ -130,96 +151,100 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     }
   }
 
+  const renderMembersSelector = () => {
+    const elements = []
+
+    for (let i = 0; i < values.members.length; i++) {
+      if (i === 0) {
+        elements.push(
+          <Box key={i} my={2}>
+            <ESLabel label={`メンバー${i + 1}（あなた）`} size="small" />
+            <Typography>{userProfile ? userProfile.attributes.nickname : ''}</Typography>
+          </Box>
+        )
+      } else {
+        elements.push(
+          <Box key={i} my={2}>
+            <ESSimpleSelectInput
+              label={`メンバー${i + 1}`}
+              index={i}
+              selectedItem={teamMembers[i] ? teamMembers[i] : null}
+              items={suggestedTeamMembers}
+              onItemsSelected={handleSelectedMembers}
+            />
+          </Box>
+        )
+      }
+    }
+
+    return elements
+  }
+
   const teamCreateForm = () => (
     <Box>
       <BlackBox>
         <DetailInfo detail={tournament} />
       </BlackBox>
 
-      <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
-        <Box display="flex" alignItems="center">
-          <Typography component="span">{'アイコン'}</Typography>
-          <Typography component="span" className={classes.required}>
-            {t('common:common.required')}
-          </Typography>
-        </Box>
-
+      <Box className={classes.formContainer}>
+        <ESLabel label={'アイコン'} required />
+        <Box m={1} />
         <ProfileAvatar src="/images/avatar.png" editable />
 
-        <Box>
-          <ESInput
-            id="nickname"
-            autoFocus
-            placeholder={'Inser your name'}
-            labelPrimary={'チーム名'}
-            fullWidth
-            required
-            value={values.nickname}
-            onChange={handleChange}
-            helperText={touched.nickname && errors.nickname}
-            error={touched.nickname && !!errors.nickname}
-          />
-        </Box>
+        <Box mt={4} />
+        <ESInput
+          id="team_name"
+          autoFocus
+          placeholder={'Inser your team name'}
+          labelPrimary={'チーム名'}
+          fullWidth
+          required
+          value={values.team_name}
+          onChange={handleChange}
+          helperText={touched.team_name && errors.team_name}
+          error={touched.team_name && !!errors.team_name}
+        />
 
-        <Box display="flex" alignItems="center">
-          <Typography component="span">{'エントリーメンバー'}</Typography>
-          <Typography component="span" className={classes.required}>
-            {t('common:common.required')}
-          </Typography>
-        </Box>
+        <Box mt={4} />
+        <ESLabel label={'エントリーメンバー'} required />
 
-        {teamMembers.map((_, index) => {
-          // TODO
-          if (index === 0) {
-            return (
-              <Box key={index}>
-                <Typography>{`メンバー${index}（あなた）`}</Typography>
-                <Typography>{userProfile.attributes.nickname}</Typography>
-              </Box>
-            )
-          }
-          return (
-            <Box key={index}>
-              <ESSimpleSelectInput label={`メンバー${index}`} required items={availableMembers} onItemsSelected={handleSelectedMembers} />
-            </Box>
-          )
-        })}
+        {renderMembersSelector()}
       </Box>
     </Box>
   )
 
+  const renderMembersNicknameChanger = () => {
+    const elements = []
+
+    for (let i = 0; i < values.members.length; i++) {
+      elements.push(
+        <Box key={i}>
+          <Box>
+            <Typography>{`メンバー${i + 1}${i === 0 && '（あなた）'}`}</Typography>
+            <Typography>{values.members[i].name}</Typography>
+            <Typography>{`${t('common:common.at')}${values.members[i].user_code}`}</Typography>
+          </Box>
+          <ESInput
+            id={`members.${i}.nickname`}
+            autoFocus
+            placeholder={'Inser your name'}
+            fullWidth
+            value={values.members[i].nickname}
+            onChange={handleChange}
+          />
+        </Box>
+      )
+    }
+
+    return elements
+  }
+
   const nicknameChangeForm = () => (
     <Box>
-      <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
-        <Box display="flex" alignItems="center">
-          <Typography component="span">{'エントリーネーム'}</Typography>
-          <Typography component="span" className={classes.required}>
-            {t('common:common.required')}
-          </Typography>
-        </Box>
+      <Box className={classes.formContainer}>
+        <ESLabel label={'エントリーネーム'} required />
 
-        {teamMembers.map((_, index) => {
-          // TODO
-          return (
-            <Box key={index}>
-              <Box>
-                <Typography>{`メンバー${index}（あなた）`}</Typography>
-                <Typography>{userProfile.attributes.nickname}</Typography>
-                <Typography>{`${t('common:common.at')}${userProfile.attributes.user_code}`}</Typography>
-              </Box>
-              <ESInput
-                id={`member${index}`}
-                autoFocus
-                placeholder={'Inser your name'}
-                fullWidth
-                value={values.nickname}
-                onChange={handleChange}
-                helperText={touched.nickname && errors.nickname}
-                error={touched.nickname && !!errors.nickname}
-              />
-            </Box>
-          )
-        })}
+        {renderMembersNicknameChanger()}
       </Box>
     </Box>
   )
@@ -278,7 +303,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     // width: '100%',
     // margin: '0 auto',
   },
-  container: {},
+  formContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: theme.spacing(8),
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
