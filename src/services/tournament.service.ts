@@ -177,6 +177,11 @@ export const getTournamentParticipants = async (params: GetParticipantsParams): 
   return data
 }
 
+export const getTournamentInteresteds = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
+  const { data } = await api.post<GetParticipantsResponse>(URI.TOURNAMENTS_INTERESTEDS.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
 export const joinTournament = async (params: JoinParams): Promise<void> => {
   const { data } = await api.post<void>(URI.JOIN_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
   return data

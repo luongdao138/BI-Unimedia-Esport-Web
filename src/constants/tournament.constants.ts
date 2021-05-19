@@ -15,3 +15,8 @@ export const RULE = {
   SINGLE: 'single',
   BATTLE_ROYALE: 'battle_royale',
 }
+
+export const PARTICIPANT_TYPE = {
+  HOME: 'home',
+  GUEST: 'guest',
+}

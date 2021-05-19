@@ -10,3 +10,5 @@ export const getTournamentResults = createSelector(getRoot, (state) => state.tou
 export const getTournamentDetail = createSelector(getRoot, (state) => state.tournamentDetail)
 export const getParticipants = createSelector(getRoot, (state) => state.tournamentParticipants)
 export const getParticipantsMeta = createSelector(getRoot, (state) => state.participantsMeta)
+export const getInteresteds = createSelector(getRoot, (state) => state.tournamentInteresteds)
+export const getInterestedsMeta = createSelector(getRoot, (state) => state.interestedsMeta)

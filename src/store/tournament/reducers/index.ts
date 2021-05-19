@@ -17,9 +17,17 @@ type StateType = {
   tournamentDetail?: TournamentDetail
   tournamentParticipants?: Array<ParticipantsResponse>
   participantsMeta?: Meta
+  tournamentInteresteds?: Array<ParticipantsResponse>
+  interestedsMeta?: Meta
 }
 
-const initialState: StateType = { searchTournaments: [], tournamentFollowers: [], tournamentResults: [], tournamentParticipants: [] }
+const initialState: StateType = {
+  searchTournaments: [],
+  tournamentFollowers: [],
+  tournamentResults: [],
+  tournamentParticipants: [],
+  tournamentInteresteds: [],
+}
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
@@ -56,5 +64,13 @@ export default createReducer(initialState, (builder) => {
     }
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
+  })
+  builder.addCase(actions.getTournamentInteresteds.fulfilled, (state, action) => {
+    let _interesteds = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      _interesteds = state.tournamentInteresteds.concat(action.payload.data)
+    }
+    state.tournamentInteresteds = _interesteds
+    state.interestedsMeta = action.payload.meta
   })
 })
