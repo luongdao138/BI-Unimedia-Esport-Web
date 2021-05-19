@@ -13,7 +13,7 @@ const useTournamentMatches = (): { matches: TournamentMatchRound[]; third_place_
   const meta = useAppSelector(getMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
   useEffect(() => {
-    dispatch(actions.getTournamentMatches())
+    dispatch(actions.getTournamentMatches('328'))
   }, [])
   return { matches, third_place_match, meta }
 }

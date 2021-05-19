@@ -4,11 +4,12 @@ import Bracket from '@components/Bracket'
 const Matches: React.FC = () => {
   const { matches } = useTournamentMatches()
   return (
-    <Bracket.Container activeRound={8}>
+    <Bracket.Container activeRound={0}>
       {matches.map((round, rid) => (
         <Bracket.Round key={rid} roundNo={rid}>
           {round.map((match, mid) => (
             <Bracket.Match
+              // onClick={}
               key={mid}
               headerText={`${rid + 1}-${mid + 1}`}
               editable

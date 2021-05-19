@@ -132,11 +132,11 @@ export const getTournamentInteresteds = createAsyncThunk<services.GetParticipant
   }
 )
 
-export const getTournamentMatches = createAsyncThunk<services.TournamentMatchResponse>(
+export const getTournamentMatches = createAsyncThunk<services.TournamentMatchResponse, string>(
   types.GET_TOURNAMENT_MATCHES,
-  async (_, { rejectWithValue }) => {
+  async (param, { rejectWithValue }) => {
     try {
-      const res = await services.getTournamentMatches()
+      const res = await services.getTournamentMatches(param)
       return res
     } catch (error) {
       if (!error.response) {
