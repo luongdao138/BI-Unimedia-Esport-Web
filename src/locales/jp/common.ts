@@ -85,6 +85,8 @@ export default {
     contains_ngword: '不適切な文字列が含まれています。',
     not_selected: '選択されていません',
     save: '保存する',
+    cancel: 'キャンセル',
+    done: '完了',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -103,6 +105,7 @@ export default {
     topic_follow: 'フォローしている人の書き込みトピック',
     tournament_follow: 'フォローしている人がエントリーしている大会',
     tournament_result: 'フォローしている人がエントリーしていた大会結果',
+    change_order: '並び順を変更する',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

@@ -10,4 +10,5 @@ export enum USER_PROFILE_ACTION_TYPE {
   PROFILE_IMAGE = 'profile/profileImage',
   GAME_EDIT = 'profile/gameEdit',
   RECOMMENDED_EVENT = 'user/recommended_event',
+  UPDATE_HOME_SETTINGS = 'user/update_home_settings',
 }

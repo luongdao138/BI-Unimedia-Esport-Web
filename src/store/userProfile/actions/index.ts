@@ -160,3 +160,18 @@ export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventRes
     }
   }
 )
+
+export const updateHomeSettings = createAsyncThunk<services.HomeSettingsResponse, services.HomeSettingsParams>(
+  USER_PROFILE_ACTION_TYPE.UPDATE_HOME_SETTINGS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.updateHomeSettings(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
