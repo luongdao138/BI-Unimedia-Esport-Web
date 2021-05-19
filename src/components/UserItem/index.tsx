@@ -11,9 +11,10 @@ import { useRouter } from 'next/router'
 interface Props {
   data: any
   isFollowed?: boolean
+  handleClose: () => void
 }
 
-const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
+const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const user = data.attributes
@@ -56,7 +57,10 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed }) => {
     }
   }
 
-  const toProfile = () => router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+  const toProfile = () => {
+    handleClose()
+    router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+  }
 
   return (
     <Grid item xs={12}>

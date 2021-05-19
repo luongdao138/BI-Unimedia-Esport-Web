@@ -3,13 +3,13 @@ import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
 
 export type HistorySearchParams = {
-  user_id: number
-  page: number
+  page?: number
+  user_code: string
 }
 
 export type HistorySearchResponse = {
   data: Array<HistoryResponse>
-  links: Links
+  meta: Meta
 }
 
 export type HistoryResponse = {
@@ -38,10 +38,6 @@ export type Nickname2 = {
 
 export type CommonResponse = {
   attributes: any
-}
-
-export type Links = {
-  meta: Meta
 }
 
 export type Meta = {
@@ -193,7 +189,7 @@ export const profileUpdate = async (params: ProfileUpdateParams): Promise<Profil
 }
 
 export const tournamentHistorySearch = async (params: HistorySearchParams): Promise<HistorySearchResponse> => {
-  const { data } = await api.get<HistorySearchResponse>(URI.TOURNAMENTS_HISTORY_SEARCH, { params })
+  const { data } = await api.post<HistorySearchResponse>(URI.TOURNAMENTS_HISTORY_SEARCH, params)
   return data
 }
 
