@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black_opacity[80],
     borderRadius: '6px',
     border: '1px solid rgba(255, 255, 255, 0.3)',
+    cursor: 'pointer',
+    '&:hover': {
+      boxShadow: 'none',
+      background: '#1a1a1a',
+    },
   },
 }))
 
