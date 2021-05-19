@@ -21,6 +21,8 @@ import ESLabel from '@components/Label'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
 import ESTeamIconUploader from '@components/TeamIconUploader'
+import useEntry from './useEntry'
+import _ from 'lodash'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -41,6 +43,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
+  const { join, leave } = useEntry()
 
   const membersValidationSchema = Yup.object().shape({
     user_id: Yup.number().required(),
@@ -77,15 +80,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     },
     validationSchema,
     onSubmit: (values) => {
-      // eslint-disable-next-line no-console
-      console.log('values', values)
-      // if (isValid) {
-      //
-      //   // TODO call endpoint here
-      handleClose()
-      //   setOpen(false)
-      //   reset()
-      // }
+      if (isValid) {
+        const filtered = _.filter(values.members, (member) => member.user_id !== values.id)
+        const data = _.map(filtered, ({ user_id, nickname }) => ({ user_id, name: nickname }))
+        join({ hash_key: tournament.attributes.hash_key, data: { ...values, members: data } })
+        setOpen(false)
+        reset()
+        handleClose()
+      }
     },
   })
 
@@ -267,14 +269,15 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     <Box>
       <Box className={classes.actionButtonContainer}>
         <Box className={classes.actionButton}>
-          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            エントリーする
-          </ButtonPrimary>
-        </Box>
-        <Box className={classes.actionButton}>
-          <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(true)}>
-            エントリーを辞退する
-          </ESButton>
+          {tournament.attributes.is_entered ? (
+            <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
+              エントリーを辞退する
+            </ESButton>
+          ) : (
+            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+              エントリーする
+            </ButtonPrimary>
+          )}
         </Box>
       </Box>
       <StickyActionModal
@@ -282,6 +285,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         returnText={step === FINAL_STEP ? 'エントリーネームの設定' : 'エントリーする'}
         actionButtonText={step === FINAL_STEP ? '次へ' : '次へ'}
         actionButtonDisabled={!isValid}
+        actionHintText={'次の画面でエントリーネームを変更できます'}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
