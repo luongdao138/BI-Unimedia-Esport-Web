@@ -6,7 +6,7 @@ import reducer from './reducers'
 import { authMiddleware } from './middlewares/authMiddleware'
 import { webSocketMiddle } from './middlewares/socketMiddleware'
 
-const initStore = () => {
+const store = (): any => {
   const isServer = typeof window === 'undefined'
 
   if (isServer) {
@@ -39,7 +39,8 @@ const initStore = () => {
   }
 }
 
-export const storeWrapper = createWrapper(initStore)
-export type StoreType = ReturnType<typeof initStore>
+export const storeWrapper = createWrapper(store)
+export type StoreType = ReturnType<typeof store>
 export type RootState = ReturnType<StoreType['getState']>
 export type AppDispatch = StoreType['dispatch']
+export default store

@@ -72,7 +72,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   return (
-    <MuiList style={{ height: '100%' }}>
+    <MuiList className={classes.root}>
       {renderLoader()}
       {renderList()}
       {renderPlaceHolder()}
@@ -81,6 +81,10 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
 }
 
 const useStyles = makeStyles(() => ({
+  root: {
+    height: '100%',
+    padding: 0,
+  },
   loaderBox: {
     width: 20,
     height: 20,
