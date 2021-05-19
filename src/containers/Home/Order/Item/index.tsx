@@ -3,6 +3,7 @@ import { Typography, Box, IconButton, Icon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { HOME_SETTINGS } from '@constants/common.constants'
+import { useTranslation } from 'react-i18next'
 
 export type Props = {
   id: any
@@ -12,23 +13,24 @@ export type Props = {
 
 export const Item: React.FC<Props> = forwardRef(({ id, ...props }, ref: any) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   const getSettingName = (id: string) => {
     switch (id) {
-      case HOME_SETTINGS.RECOMMENDED_USER.id:
-        return HOME_SETTINGS.RECOMMENDED_USER.value
-      case HOME_SETTINGS.RECOMMENDED_RECRUITMENT.id:
-        return HOME_SETTINGS.RECOMMENDED_RECRUITMENT.value
-      case HOME_SETTINGS.RECOMMENDED_EVENT.id:
-        return HOME_SETTINGS.RECOMMENDED_EVENT.value
-      case HOME_SETTINGS.RECRUITMENT_FOLLOW.id:
-        return HOME_SETTINGS.RECRUITMENT_FOLLOW.value
-      case HOME_SETTINGS.TOURNAMENT_FOLLOW.id:
-        return HOME_SETTINGS.TOURNAMENT_FOLLOW.value
-      case HOME_SETTINGS.TOURNAMENT_RESULT.id:
-        return HOME_SETTINGS.TOURNAMENT_RESULT.value
-      case HOME_SETTINGS.TOPIC_FOLLOW.id:
-        return HOME_SETTINGS.TOPIC_FOLLOW.value
+      case HOME_SETTINGS.RECOMMENDED_USER:
+        return t('common:home.recommended_user')
+      case HOME_SETTINGS.RECOMMENDED_RECRUITMENT:
+        return t('common:home.recommended_recruitment')
+      case HOME_SETTINGS.RECOMMENDED_EVENT:
+        return t('common:home.recommended_event')
+      case HOME_SETTINGS.RECRUITMENT_FOLLOW:
+        return t('common:home.recruitment_follow')
+      case HOME_SETTINGS.TOURNAMENT_FOLLOW:
+        return t('common:home.tournament_follow')
+      case HOME_SETTINGS.TOURNAMENT_RESULT:
+        return t('common:home.tournament_result')
+      case HOME_SETTINGS.TOPIC_FOLLOW:
+        return t('common:home.topic_follow')
       default:
         return ''
     }

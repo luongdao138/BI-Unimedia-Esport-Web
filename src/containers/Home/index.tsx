@@ -45,19 +45,19 @@ const HomeContainer: React.FC = () => {
 
   const renderItem = (value: string) => {
     switch (value) {
-      case HOME_SETTINGS.RECOMMENDED_USER.id:
+      case HOME_SETTINGS.RECOMMENDED_USER:
         return <RecommendedUser users={recommendedUsers} />
-      case HOME_SETTINGS.RECOMMENDED_RECRUITMENT.id:
+      case HOME_SETTINGS.RECOMMENDED_RECRUITMENT:
         return <RecommendedRecruitment data={recommendedRecruitments} />
-      case HOME_SETTINGS.RECOMMENDED_EVENT.id:
+      case HOME_SETTINGS.RECOMMENDED_EVENT:
         return <RecommendedEvent data={recommendedEventList} />
-      case HOME_SETTINGS.RECRUITMENT_FOLLOW.id:
+      case HOME_SETTINGS.RECRUITMENT_FOLLOW:
         return <RecruitmentFollow data={recruitmentFollow} />
-      case HOME_SETTINGS.TOURNAMENT_FOLLOW.id:
+      case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return <TournamentFollow data={tournamentFollowers} />
-      case HOME_SETTINGS.TOURNAMENT_RESULT.id:
+      case HOME_SETTINGS.TOURNAMENT_RESULT:
         return <TournamentResult data={tournamentResults} />
-      case HOME_SETTINGS.TOPIC_FOLLOW.id:
+      case HOME_SETTINGS.TOPIC_FOLLOW:
         return <TopicFollow data={followersTopicList} />
       default:
         return ''

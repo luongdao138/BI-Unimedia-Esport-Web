@@ -107,6 +107,7 @@ export default {
     tournament_follow: 'フォローしている人がエントリーしている大会',
     tournament_result: 'フォローしている人がエントリーしていた大会結果',
     change_order: '並び順を変更する',
+    recommended_user: 'おすすめユーザー',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

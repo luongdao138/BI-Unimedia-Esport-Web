@@ -47,34 +47,13 @@ export const ACTIVITY_ACTION_TYPE = {
 }
 
 export const HOME_SETTINGS = {
-  RECOMMENDED_USER: {
-    id: '1',
-    value: 'おすすめユーザー',
-  },
-  RECOMMENDED_RECRUITMENT: {
-    id: '2',
-    value: 'おすすめの募集',
-  },
-  RECOMMENDED_EVENT: {
-    id: '3',
-    value: 'イベント',
-  },
-  RECRUITMENT_FOLLOW: {
-    id: '4',
-    value: 'フォローしている人の募集',
-  },
-  TOURNAMENT_FOLLOW: {
-    id: '5',
-    value: 'フォローしている人がエントリーしている大会',
-  },
-  TOURNAMENT_RESULT: {
-    id: '6',
-    value: 'フォローしている人がエントリーしていた大会結果',
-  },
-  TOPIC_FOLLOW: {
-    id: '7',
-    value: 'フォローしている人の書き込みトピック',
-  },
+  RECOMMENDED_USER: '1',
+  RECOMMENDED_RECRUITMENT: '2',
+  RECOMMENDED_EVENT: '3',
+  RECRUITMENT_FOLLOW: '4',
+  TOURNAMENT_FOLLOW: '5',
+  TOURNAMENT_RESULT: '6',
+  TOPIC_FOLLOW: '7',
 }
 
 export enum REPORT_TYPE {
