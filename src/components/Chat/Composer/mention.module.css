@@ -1,5 +1,5 @@
 .mentions {
-  margin: 1em 0;
+  margin-bottom: 14px;
 }
 
 .mentions--multiLine .mentions__control {
@@ -19,7 +19,7 @@
 }
 
 .mentions--multiLine .mentions__input {
-  border: 1px solid silver;
+  border: 1px solid #777;
   padding: 9px;
   outline: 0;
   color: #fff;
@@ -27,12 +27,21 @@
   font-size: 14px !important;
   font-weight: 400;
   line-height: 1.7;
+  min-height: 38px;
+  border-radius: 24px;
+  background-color: #101010;
+  height: 38px;
 }
 
 .mentions__suggestions__list {
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  font-size: 10pt;
+  font-size: 14px;
+  bottom: -5px;
+  left: 2px;
+  color: #101010;
+  position: absolute;
+  min-width: 200px;
 }
 
 .mentions__suggestions__item {

@@ -60,6 +60,7 @@ const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg }) 
         >
           <Mention
             trigger="@"
+            appendSpaceOnAdd
             data={users}
             className={classNames.mentions__mention}
             markup="@[to=__id__]"
