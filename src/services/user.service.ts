@@ -16,7 +16,13 @@ export type HistoryResponse = {
   attributes: any
 }
 
+export type ActivityLogResponse = {
+  data: Array<ActivityLog>
+  meta: Meta
+}
+
 export type ActivityLogParams = {
+  page?: number
   user_code: string
 }
 
@@ -45,6 +51,20 @@ export type Meta = {
   total_pages: number
 }
 
+export type ActivityLog = {
+  attributes: {
+    action_type: string
+    created_at: string
+    description: string
+    target_cover_url: string | null
+    target_id: number
+    target_name: string
+    user_avatar_url: string
+    user_code: null | number | string
+    user_id: number
+    user_name: string
+  }
+}
 export type UserProfile = {
   id: string
   type: 'user'
@@ -186,8 +206,8 @@ export const tournamentHistorySearch = async (params: HistorySearchParams): Prom
   return data
 }
 
-export const getActivityLog = async (params: ActivityLogParams): Promise<any> => {
-  const { data } = await api.get<any>(URI.PROFILE_ACTIVITY_LOG, { params })
+export const getActivityLog = async (params: ActivityLogParams): Promise<ActivityLogResponse> => {
+  const { data } = await api.post<any>(URI.PROFILE_ACTIVITY_LOG, params)
   return data
 }
 

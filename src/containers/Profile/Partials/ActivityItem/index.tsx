@@ -120,7 +120,7 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
 
   return (
     <Grid item xs={12}>
-      <Box my={1}>
+      <Box my={1} py={1}>
         <ButtonBase className={classes.btnContainer} onClick={handleTarget}>
           <ESChip
             className={classes.chip}
