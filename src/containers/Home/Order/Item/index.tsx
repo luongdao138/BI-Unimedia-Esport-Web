@@ -10,7 +10,7 @@ export type Props = {
   style?: any
 }
 
-export const Item: React.FC<Props> = forwardRef(({ id, ...props }, ref) => {
+export const Item: React.FC<Props> = forwardRef(({ id, ...props }, ref: any) => {
   const classes = useStyles()
 
   const getSettingName = (id: string) => {
