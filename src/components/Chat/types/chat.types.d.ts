@@ -15,7 +15,17 @@ export type ChatDataType = {
 }
 
 export interface ChatSuggestionList extends SuggestionDataItem {
-  userId: number | string
+  userId: number
   nickName: string
   profile: string
+  memberType?: number
+  unseenCount?: number
+  chatRoomId?: string
+  sortKey?: sting
+  memberStatus?: number
+  createdAt?: number
+  groupType?: number
+  userCode?: string
+  nickName?: string
+  profile?: string
 }
