@@ -11,11 +11,11 @@ interface Props {
 
 const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
-  const { activityLogs, getActivityLogs, meta, resetMeta } = useActivityLogs()
+  const { activityLogs, getActivityLogs, pages, meta, resetMeta } = useActivityLogs()
 
   useEffect(() => {
     getActivityLogs({
-      // page: 1,
+      page: 1,
       user_code: userCode,
     })
 
@@ -23,12 +23,12 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
   }, [])
 
   const loadMore = () => {
-    // if (page && page.current_page !== page.total_pages) {
-    getActivityLogs({
-      // page: page.current_page + 1,
-      user_code: userCode,
-    })
-    // }
+    if (pages && pages.current_page !== pages.total_pages) {
+      getActivityLogs({
+        page: pages.current_page + 1,
+        user_code: userCode,
+      })
+    }
   }
 
   return (
@@ -37,8 +37,7 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
         className={classes.container}
         dataLength={activityLogs.length}
         next={loadMore}
-        // hasMore={page && page.current_page !== page.total_pages}
-        hasMore={false}
+        hasMore={pages && pages.current_page !== pages.total_pages}
         loader={null}
       >
         {activityLogs.map((log, i) => (

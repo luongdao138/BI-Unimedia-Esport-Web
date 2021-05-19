@@ -10,6 +10,7 @@ type StateType = {
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
+  activityLogsMeta?: Meta
   recommendations: Array<any>
   nicknames2?: Array<Nickname2>
   recommendedEvent: Array<CommonResponse>
@@ -20,6 +21,7 @@ const initialState: StateType = {
   lastSeenUserData: undefined,
   tournamentHistories: [],
   activityLogs: [],
+  activityLogsMeta: undefined,
   recommendations: [],
   nicknames2: [],
   recommendedEvent: [],
@@ -61,7 +63,12 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {
-    state.activityLogs = action.payload.data
+    let tmpActivityLogs = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpActivityLogs = state.activityLogs.concat(action.payload.data)
+    }
+    state.activityLogs = tmpActivityLogs
+    state.activityLogsMeta = action.payload.meta
   })
 
   builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
