@@ -9,13 +9,15 @@ type ProfileAvatarProps = {
   editable?: boolean
   size?: number
   src: string
+  isUploading: boolean
   onChange?: (file: File) => void
 }
 
-const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, onChange }) => {
+const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ editable, size, src, isUploading, onChange }) => {
   const classes = useStyles()
-  const [update, setUpdate] = useState<boolean>(false)
   const [drag, setDrag] = useState<boolean>(false)
+  const [localSrc, setLocalSrc] = useState<string | ArrayBuffer>('')
+
   const dropZoneConfig = {
     accept: 'image/*',
     onDrop: (files: any) => handleChange(files),
@@ -23,11 +25,12 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, on
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
-    setUpdate(false)
+    if (src) {
+      setLocalSrc(src)
+    }
   }, [src])
 
   const handleChange = (files: Array<File>) => {
-    setUpdate(true)
     setDrag(false)
     const file = files[0]
     const reader = new FileReader()
@@ -35,7 +38,11 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, on
       if (onChange) {
         onChange(file)
       }
+
       reader.readAsDataURL(file)
+      reader.onload = () => {
+        setLocalSrc(reader.result)
+      }
     }
   }
 
@@ -43,24 +50,24 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, on
     <div className={classes.root}>
       {editable ? (
         <label htmlFor="cover-upload" className={classes.touch}>
-          <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} />
-          {drag && !update ? <Camera fontSize="large" className={classes.camera} /> : null}
-          {drag || update ? <div className={classes.backdrop} /> : null}
+          <Avatar className={classes.avatar} src={localSrc.toString() || '/images/avatar.png'} />
+          {drag && !isUploading ? <Camera fontSize="large" className={classes.camera} /> : null}
+          {drag || isUploading ? <div className={classes.backdrop} /> : null}
           <div
             {...getRootProps()}
             className={classes.dropZone}
             onMouseEnter={() => {
-              if (!update) setDrag(true)
+              if (!isUploading) setDrag(true)
             }}
             onMouseLeave={() => setDrag(false)}
             onDragEnter={() => {
-              if (!update) setDrag(true)
+              if (!isUploading) setDrag(true)
             }}
             onDragLeave={() => setDrag(false)}
           >
             <input {...getInputProps()} />
           </div>
-          {update ? (
+          {isUploading ? (
             <Box className={classes.loader}>
               <ESLoader />
             </Box>
@@ -73,10 +80,12 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, on
   )
 }
 
-ESProfileAvatar.defaultProps = {
+ESTeamIconUploader.defaultProps = {
   editable: false,
+  isUploading: false,
 }
-export default ESProfileAvatar
+
+export default ESTeamIconUploader
 
 const useStyles = makeStyles(() => ({
   root: {

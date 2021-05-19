@@ -15,10 +15,12 @@ import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
-import ProfileAvatar from '@components/ProfileAvatar'
 import ESSimpleSelectInput from '@components/SimpleSelectInput'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'
 import ESLabel from '@components/Label'
+import useUploadImage from '@utils/hooks/useUploadImage'
+import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
+import ESTeamIconUploader from '@components/TeamIconUploader'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -36,7 +38,9 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const store = useStore()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
+  const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
+  const { uploadArenaTeamImage } = useUploadImage()
 
   const membersValidationSchema = Yup.object().shape({
     user_id: Yup.number().required(),
@@ -68,7 +72,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       id: userProfile ? userProfile.id : null,
       leader_name: userProfile ? userProfile.attributes.nickname : '',
       team_name: '',
-      team_icon_url: 'Icon url here',
+      team_icon_url: '',
       members: Array(tournament.attributes.participant_type),
     },
     validationSchema,
@@ -180,8 +184,17 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     return elements
   }
 
+  const handleImageUpload = (file: File) => {
+    setUploading(true)
+
+    uploadArenaTeamImage(file, 1, UPLOADER_TYPE.TEAM, ACTION_TYPE.CREATE, (imageUrl) => {
+      setUploading(false)
+      setFieldValue('team_icon_url', imageUrl)
+    })
+  }
+
   const teamCreateForm = () => (
-    <Box>
+    <Box mt={6}>
       <BlackBox>
         <DetailInfo detail={tournament} />
       </BlackBox>
@@ -189,7 +202,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       <Box className={classes.formContainer}>
         <ESLabel label={'アイコン'} required />
         <Box m={1} />
-        <ProfileAvatar src="/images/avatar.png" editable />
+        <ESTeamIconUploader src="/images/avatar.png" editable onChange={handleImageUpload} isUploading={isUploading} />
 
         <Box mt={4} />
         <ESInput
@@ -218,12 +231,13 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
     for (let i = 0; i < values.members.length; i++) {
       elements.push(
-        <Box key={i}>
+        <Box key={i} my={2}>
           <Box>
-            <Typography>{`メンバー${i + 1}${i === 0 && '（あなた）'}`}</Typography>
+            <Typography>{`メンバー${i + 1}${i === 0 ? '（あなた）' : ''}`}</Typography>
             <Typography>{values.members[i].name}</Typography>
             <Typography>{`${t('common:common.at')}${values.members[i].user_code}`}</Typography>
           </Box>
+          <Box mt={2} />
           <ESInput
             id={`members.${i}.nickname`}
             autoFocus
