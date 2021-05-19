@@ -12,7 +12,7 @@ const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title }) => {
     <div>
       <Box margin={2} display="flex" justifyContent="space-between">
         <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-          <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
+          <Box overflow="hidden" textOverflow="ellipsis" ml={0} display="flex" flexDirection="column" justifyContent="center" width="100%">
             <Typography noWrap style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 }}>
               {title}
             </Typography>
