@@ -1,10 +1,13 @@
-import { WEBSYNC_PREFIX } from '@constants/sync.constants'
+import { WEBSYNC_PREFIX, AppSyncActionType } from '@constants/sync.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v1 as uuidv1 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
+import notificationStore from '@store/notification'
+import { getNotificationBadge } from '@store/notification/actions'
 const DEVICE_ID = uuidv1()
 let socket: any = null
+const notificationActions = notificationStore.actions
 
 const onOpen = (store: StoreType) => (_event: Event) => {
   const userId = store.getState().auth.user?.id
@@ -20,9 +23,14 @@ const onClose = (store: StoreType) => (_event: CloseEvent) => {
 
 const onMessage = (store: StoreType) => (event: MessageEvent) => {
   const message = JSON.parse(event.data)
-
-  if (message && message.action) {
-    store.dispatch({ type: message.action, data: message })
+  if (message && message.action !== undefined && message.action !== null) {
+    switch (message.action) {
+      case AppSyncActionType.NOTIFICATION:
+        store.dispatch(getNotificationBadge())
+        store.dispatch(notificationActions.notifications({ page: 1 }))
+        break
+      default:
+    }
   } else {
     store.dispatch({
       type: `${WEBSYNC_PREFIX}:FAILURE`,
