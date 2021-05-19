@@ -206,6 +206,13 @@ export type RecruitingResponse = {
   attributes: any
 }
 
+export type SetParticipantParams = {
+  hash_key?: string
+  match_id: number
+  participant_id: number | null
+  type: string
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -263,5 +270,10 @@ export const getSuggestedTeamMembers = async (params: GetSuggestedTeamMembersPar
 
 export const getTournamentMatches = async (hash_key: string): Promise<TournamentMatchResponse> => {
   const { data } = await api.get<TournamentMatchResponse>(URI.TOURNAMENTS_MATCHES.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const setParticipant = async (params: SetParticipantParams): Promise<void> => {
+  const { data } = await api.put<void>(URI.TOURNAMENTS_SET_PARTICIPANT.replace(/:id/gi, params.hash_key), params)
   return data
 }
