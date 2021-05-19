@@ -16,7 +16,13 @@ export type HistoryResponse = {
   attributes: any
 }
 
+export type ActivityLogResponse = {
+  data: Array<ActivityLog>
+  meta: Meta
+}
+
 export type ActivityLogParams = {
+  page?: number
   user_code: string
 }
 
@@ -45,6 +51,20 @@ export type Meta = {
   total_pages: number
 }
 
+export type ActivityLog = {
+  attributes: {
+    action_type: string
+    created_at: string
+    description: string
+    target_cover_url: string | null
+    target_id: number
+    target_name: string
+    user_avatar_url: string
+    user_code: null | number | string
+    user_id: number
+    user_name: string
+  }
+}
 export type UserProfile = {
   id: string
   type: 'user'
@@ -121,6 +141,12 @@ export type ProfileEditParams = {
   discord_link: string
 }
 
+export type ProfileImageParams = {
+  user_id: number | string
+  image_url: string
+  file_type: number
+}
+
 export type ProfileUpdateParams = {
   sex?: number
   show_sex?: boolean
@@ -149,6 +175,13 @@ export type GameEditParams = {
   game_titles: number[]
 }
 
+export type RecommendedEventResponse = {
+  data: Array<CommonResponse>
+}
+export type ResultsResponse = {
+  attributes: any
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -164,13 +197,13 @@ export const tournamentHistorySearch = async (params: HistorySearchParams): Prom
   return data
 }
 
-export const getActivityLog = async (params: ActivityLogParams): Promise<any> => {
-  const { data } = await api.get<any>(URI.PROFILE_ACTIVITY_LOG, { params })
+export const getActivityLog = async (params: ActivityLogParams): Promise<ActivityLogResponse> => {
+  const { data } = await api.post<any>(URI.PROFILE_ACTIVITY_LOG, params)
   return data
 }
 
 export const getRecommendations = async (): Promise<RecommendationsResponse> => {
-  const { data } = await api.get<RecommendationsResponse>(URI.USER_RECOMMENDATIONS)
+  const { data } = await api.post<RecommendationsResponse>(URI.USER_RECOMMENDATIONS)
   return data
 }
 
@@ -184,7 +217,17 @@ export const profileEdit = async (params: ProfileEditParams): Promise<ProfileRes
   return data
 }
 
+export const profileImage = async (params: ProfileImageParams): Promise<any> => {
+  const { data } = await api.put<any>(URI.USER_PROFILE_IMAGE, params)
+  return data
+}
+
 export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse> => {
   const { data } = await api.put<ProfileResponse>(URI.GAME_UPDATE, params)
+  return data
+}
+
+export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> => {
+  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT)
   return data
 }

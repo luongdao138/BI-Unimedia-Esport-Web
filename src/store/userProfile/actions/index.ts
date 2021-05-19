@@ -44,6 +44,21 @@ export const profileUpdate = createAsyncThunk<services.ProfileResponse, services
   }
 )
 
+export const profileImage = createAsyncThunk<services.ProfileImageParams, services.ProfileImageParams>(
+  USER_PROFILE_ACTION_TYPE.PROFILE_IMAGE,
+  async (param, { rejectWithValue }) => {
+    try {
+      await services.profileImage(param)
+      return param
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(
   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
   async (param, { rejectWithValue }) => {
@@ -59,7 +74,7 @@ export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchRe
   }
 )
 
-export const getActivityLogs = createAsyncThunk<any, services.ActivityLogParams>(
+export const getActivityLogs = createAsyncThunk<services.ActivityLogResponse, services.ActivityLogParams>(
   USER_PROFILE_ACTION_TYPE.PROFILE_ACTIVITY_LOG,
   async (param, { rejectWithValue }) => {
     try {
@@ -121,6 +136,21 @@ export const getRecommendations = createAsyncThunk<services.RecommendationsRespo
   async (_params, { rejectWithValue }) => {
     try {
       const res = await services.getRecommendations()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventResponse>(
+  USER_PROFILE_ACTION_TYPE.RECOMMENDED_EVENT,
+  async (_params, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendedEvent()
       return res
     } catch (error) {
       if (!error.response) {

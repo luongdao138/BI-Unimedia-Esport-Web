@@ -22,7 +22,7 @@ export const getTournamentFollowers = createAsyncThunk<services.TournamentFollow
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_FOLLOWERS,
   async (_, { rejectWithValue }) => {
     try {
-      const res = await services.tournamentFollowers()
+      const res = await services.getTournamentFollowers()
       return res
     } catch (error) {
       if (!error.response) {
@@ -37,7 +37,22 @@ export const getTournamentResults = createAsyncThunk<services.TournamentResultsR
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_RESULTS,
   async (_, { rejectWithValue }) => {
     try {
-      const res = await services.tournamentResults()
+      const res = await services.getTournamentResults()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getRecruitingTournaments = createAsyncThunk<services.RecruitingTournamentResponse>(
+  TOURNAMENT_ACTION_TYPE.RECRUITING_TOURNAMENT,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecruitingTournaments()
       return res
     } catch (error) {
       if (!error.response) {

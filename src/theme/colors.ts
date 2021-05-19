@@ -26,6 +26,7 @@ export const Colors = {
     '30': 'rgba(255,255,255,.3)',
     '70': 'rgba(255,255,255,.7)',
   },
+  black_card: '#0A0A0A',
   black_opacity: {
     '15': 'rgba(0,0,0,.15)',
     '30': 'rgba(0,0,0,.3)',

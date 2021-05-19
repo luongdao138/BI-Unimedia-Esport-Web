@@ -27,13 +27,36 @@ import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import { useContextualRouting } from 'next-use-contextual-routing'
-import { useState, useEffect } from 'react'
-import { Popover } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
 import { getNotificationBadge } from '@store/notification/actions'
 import { getNotificationBadge as selector } from '@store/notification/selectors'
 
 const useStyles = makeStyles((theme) => ({
+  dropDownMenu: {
+    position: 'relative',
+    display: 'inline-block',
+    '&:hover $dropDownContent': {
+      width: 'auto',
+      visiblity: 'visible',
+      opocity: 1,
+      transition: 'all 0.5s ease',
+      height: 'auto',
+      display: 'block',
+    },
+  },
+  dropDownContent: {
+    width: 0,
+    overflow: 'hidden',
+    visiblity: 'hidden',
+    opocity: 0,
+    position: 'absolute',
+    background: 'black',
+    right: 0,
+    height: 0,
+    willChange: 'all',
+  },
   popover: {
     pointerEvents: 'none',
   },
@@ -58,7 +81,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 22,
   },
   search: {},
-  toolArea: {},
+  toolArea: {
+    display: 'flex',
+  },
   button: {
     padding: 10,
   },
@@ -93,19 +118,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const { handleReturn } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const dispatch = useAppDispatch()
   const badge = useAppSelector(selector)
-
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null)
-  }
-
-  const openNotif = Boolean(anchorEl)
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -173,43 +187,20 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
-                  <Popover
-                    id="mouse-over-popover"
-                    className={classes.popover}
-                    classes={{
-                      paper: classes.paper,
-                    }}
-                    open={openNotif}
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    onClose={handlePopoverClose}
-                    disableRestoreFocus
-                  >
-                    <NotificationBadgeListContainer />
-                  </Popover>
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
-                  <IconButton
-                    className={classes.button}
-                    disableRipple
-                    color="inherit"
-                    aria-owns={openNotif ? 'mouse-over-popover' : undefined}
-                    aria-haspopup="true"
-                    onMouseEnter={handlePopoverOpen}
-                    onMouseLeave={handlePopoverClose}
-                  >
-                    <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
-                      <Icon className={`fa fa-bell ${classes.icon}`} />
-                    </Badge>
-                  </IconButton>
+                  <Box className={`${classes.dropDownMenu}`}>
+                    <IconButton className={classes.button} disableRipple color="inherit">
+                      <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
+                        <Icon className={`fa fa-bell ${classes.icon}`} />
+                      </Badge>
+                    </IconButton>
+                    <Box className={classes.dropDownContent}>
+                      <NotificationBadgeListContainer />
+                    </Box>
+                  </Box>
+
                   <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Badge badgeContent={17} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-inbox ${classes.icon}`} />
@@ -227,7 +218,6 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               )}
             </div>
-
             <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
               <BlankLayout>{renderContent()}</BlankLayout>
             </ESModal>

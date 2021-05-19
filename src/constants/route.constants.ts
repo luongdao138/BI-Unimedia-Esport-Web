@@ -14,6 +14,7 @@ export const ESRoutes = {
   GAME_EDIT: '/profile/game',
   TOURNAMENTS: '/tournaments',
   SETTINGS: '/settings',
+  NOT_FOUND: '/404',
   USER_SETTINGS: '/user-settings',
   MESSAGE: '/message/',
   RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
@@ -22,4 +23,7 @@ export const ESRoutes = {
   TOURNAMENT_FOLLOWER_ENTERING: '/tournament/follower/entering',
   TOURNAMENT_FOLLOWER_ENDED: '/tournament/follower/ended',
   TOPIC_FOLLOWER: '/topic/follower',
+  NOTIFICATIONS: '/notifications',
+  USER_SECURITY_SETTINGS: '/settings/user_security_settings',
+  RECRUITING_TOURNAMENTS: '/tournament/recruiting',
 }
