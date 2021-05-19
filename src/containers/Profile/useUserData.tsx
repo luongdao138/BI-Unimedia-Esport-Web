@@ -8,8 +8,23 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 import { RESPONSE_STATUS } from '@constants/common.constants'
 import { getPreSignedUrl, upload } from '@services/image.service'
+import { UserProfile } from '@services/user.service'
+import { CommunityResponse } from '@services/community.service'
+import { Meta } from '@store/metadata/actions/types'
 
-const useUserData = (raw_code: string | Array<string> | []): any => {
+const useUserData = (
+  raw_code: string | Array<string> | []
+): {
+  userCode: string
+  profile: UserProfile
+  isOthers: boolean
+  meta: Meta
+  communityList: CommunityResponse[]
+  communityMeta: Meta
+  getCommunityList: () => void
+  getMemberProfile: (userCode: string) => void
+  profileImageChange: (file: File, user_id: number, type: number) => void
+} => {
   const authSelectors = auth.selectors
   const myUserCode = useAppSelector(authSelectors.getUserCode)
   const communitySelectors = community.selectors

@@ -162,6 +162,7 @@ export default {
     follow_as: 'フォローする',
     inbox: 'inbox',
     menu_block: 'ブロック',
+    menu_unblock: 'ブロックを解除する',
     menu_report: '通報',
     following: 'フォロー中',
     followers: 'フォロワー',
