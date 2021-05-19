@@ -138,6 +138,16 @@ const useStyles = makeStyles((theme) => ({
     },
     '& $matchContent:hover': {
       left: 4,
+      transition: '0.2s left',
+    },
+    '& $matchContent::before': {
+      left: -40,
+      width: 41,
+      transition: '0.2s left, 0.2s width',
+    },
+    '& $matchContent:hover::before': {
+      left: -44,
+      width: 44,
     },
   },
   lastActive: {
