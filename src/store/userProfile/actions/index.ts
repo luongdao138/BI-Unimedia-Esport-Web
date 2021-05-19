@@ -74,7 +74,7 @@ export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchRe
   }
 )
 
-export const getActivityLogs = createAsyncThunk<any, services.ActivityLogParams>(
+export const getActivityLogs = createAsyncThunk<services.ActivityLogResponse, services.ActivityLogParams>(
   USER_PROFILE_ACTION_TYPE.PROFILE_ACTIVITY_LOG,
   async (param, { rejectWithValue }) => {
     try {
