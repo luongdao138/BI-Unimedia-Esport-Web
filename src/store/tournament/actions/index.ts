@@ -131,3 +131,33 @@ export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTea
     }
   }
 )
+
+export const getTournamentInteresteds = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
+  types.GET_TOURNAMENT_INTERESTEDS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentInteresteds(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getTournamentMatches = createAsyncThunk<services.TournamentMatchResponse, string>(
+  types.GET_TOURNAMENT_MATCHES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentMatches(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

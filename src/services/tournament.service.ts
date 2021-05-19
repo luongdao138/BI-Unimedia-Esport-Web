@@ -113,6 +113,36 @@ export type TournamentDetailResponse = {
 export type EntryStatusResponse = {
   is_entry: boolean
 }
+export type TournamentMatchParticipant = {
+  id: number
+  role: 'admin' | 'participant' | 'interested' | 'co_organizer'
+  name: string
+  pid: number
+  nickname: string
+  user_code: string
+}
+export type TournamentMatchItem = {
+  id: number
+  round_no: number
+  match_no: number
+  score_guest: null | number
+  score_home: null | number
+  winner: 'home' | 'guest' | null
+  bracket: string
+  is_edited: boolean
+  is_editable: boolean
+  home_user: TournamentMatchParticipant | null
+  home_avatar: null | string
+  guest_user: TournamentMatchParticipant | null
+  guest_avatar: null | string
+}
+
+export type TournamentMatchRound = TournamentMatchItem[]
+
+export type TournamentMatchResponse = {
+  matches: TournamentMatchRound[]
+  third_place_match: TournamentMatchRound
+}
 
 export type GetParticipantsParams = {
   page: number
@@ -195,6 +225,11 @@ export const getTournamentParticipants = async (params: GetParticipantsParams): 
   return data
 }
 
+export const getTournamentInteresteds = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
+  const { data } = await api.post<GetParticipantsResponse>(URI.TOURNAMENTS_INTERESTEDS.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
 export const joinTournament = async (params: JoinParams): Promise<void> => {
   const { data } = await api.post<void>(URI.JOIN_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
   return data
@@ -212,5 +247,10 @@ export const getEntryStatus = async (hash_key: string): Promise<EntryStatusRespo
 
 export const getSuggestedTeamMembers = async (params: GetSuggestedTeamMembersParams): Promise<GetSuggestedTeamMembersResponse> => {
   const { data } = await api.post<GetSuggestedTeamMembersResponse>(URI.SUGGESTED_TEAM_MEMBERS, params)
+  return data
+}
+
+export const getTournamentMatches = async (hash_key: string): Promise<TournamentMatchResponse> => {
+  const { data } = await api.get<TournamentMatchResponse>(URI.TOURNAMENTS_MATCHES.replace(/:id/gi, hash_key))
   return data
 }

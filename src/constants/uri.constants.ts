@@ -31,6 +31,8 @@ export const URI = {
   TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
+  TOURNAMENTS_INTERESTEDS: '/v2/tournaments/:id/interested',
+  TOURNAMENTS_MATCHES: '/v1/tournaments/matches/:id',
   JOIN_TOURNAMENT: '/v2/tournaments/:id/join',
   LEAVE_TOURNAMENT: '/v2/tournaments/:id/leave',
   CHECK_ENTRY_STATUS: '/v2/tournaments/:id/check_entry_status',

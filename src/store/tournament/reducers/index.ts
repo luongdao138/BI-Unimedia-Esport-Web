@@ -8,6 +8,7 @@ import {
   TournamentDetail,
   ParticipantsResponse,
   SuggestedTeamMembersResponse,
+  TournamentMatchResponse,
 } from '@services/tournament.service'
 
 type StateType = {
@@ -20,6 +21,9 @@ type StateType = {
   participantsMeta?: Meta
   suggestedTeamMembers?: Array<SuggestedTeamMembersResponse>
   suggestedTeamMembersMeta?: Meta
+  tournamentInteresteds?: Array<ParticipantsResponse>
+  interestedsMeta?: Meta
+  tournamentMatches: TournamentMatchResponse
 }
 
 const initialState: StateType = {
@@ -28,6 +32,8 @@ const initialState: StateType = {
   tournamentResults: [],
   tournamentParticipants: [],
   suggestedTeamMembers: [],
+  tournamentInteresteds: [],
+  tournamentMatches: { matches: [], third_place_match: [] },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -74,5 +80,16 @@ export default createReducer(initialState, (builder) => {
 
     state.suggestedTeamMembers = _suggestedTeamMembers
     state.suggestedTeamMembersMeta = action.payload.links?.meta
+  })
+  builder.addCase(actions.getTournamentInteresteds.fulfilled, (state, action) => {
+    let _interesteds = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      _interesteds = state.tournamentInteresteds.concat(action.payload.data)
+    }
+    state.tournamentInteresteds = _interesteds
+    state.interestedsMeta = action.payload.meta
+  })
+  builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
+    state.tournamentMatches = action.payload
   })
 })
