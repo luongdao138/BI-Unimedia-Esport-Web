@@ -3,10 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles(() => ({
-  root: (props: { src: string; alt: string; size?: number }) => {
+  root: (props: { src: string; alt: string | null; size?: number }) => {
     const colorIndex = props.alt ? props.alt.toUpperCase().charCodeAt(0) % 11 : 0
+    let backgroundColor = props.src ? 'none' : Colors.avatar[colorIndex]
+    if (!props.alt) {
+      backgroundColor = '#4D4D4D'
+    }
     return {
-      backgroundColor: props.src ? 'none' : Colors.avatar[colorIndex],
+      backgroundColor,
       fontSize: 33,
       width: props.size,
       height: props.size,
@@ -32,13 +36,14 @@ const ESAvatar: React.FC<Props> = (props) => {
 
   return (
     <Avatar classes={classes} {...props}>
-      {props.alt.toUpperCase().charAt(0)}
+      {props.alt ? props.alt.toUpperCase().charAt(0) : ''}
     </Avatar>
   )
 }
 
 ESAvatar.defaultProps = {
   size: 50,
+  alt: '',
 }
 
 export default ESAvatar

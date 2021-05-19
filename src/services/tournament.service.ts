@@ -127,7 +127,7 @@ export type TournamentMatchItem = {
   match_no: number
   score_guest: null | number
   score_home: null | number
-  winner: string
+  winner: 'home' | 'guest' | null
   bracket: string
   is_edited: boolean
   is_editable: boolean

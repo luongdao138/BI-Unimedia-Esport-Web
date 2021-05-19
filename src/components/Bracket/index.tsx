@@ -1,6 +1,108 @@
-import { ReactNode } from 'react'
+import { createContext, MouseEvent, ReactNode, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import Avatar from '../Avatar'
+import { Typography } from '@material-ui/core'
+
+interface BracketContainerProps {
+  children?: ReactNode
+  activeRound?: number
+}
+
+const BracketContext = createContext(0)
+
+const Container: React.FC<BracketContainerProps> = ({ children, activeRound }) => {
+  const classes = useStyles()
+  return (
+    <BracketContext.Provider value={activeRound}>
+      <div className={classes.bracket}>{children}</div>
+    </BracketContext.Provider>
+  )
+}
+Container.defaultProps = {
+  activeRound: 0,
+}
+
+interface BracketRoundProps {
+  children?: ReactNode
+  roundNo: number
+}
+const Round: React.FC<BracketRoundProps> = ({ children, roundNo }) => {
+  const classes = useStyles()
+  const activeRound = useContext(BracketContext)
+  const className = `${classes.round} ${roundNo <= activeRound && classes.active} ${roundNo === activeRound && classes.lastActive}`
+  return <div className={className}>{children}</div>
+}
+
+type Participant = {
+  label: string
+  avatar: string | null
+  score: number | null
+}
+
+interface MatchProps {
+  editable: boolean
+  headerText?: string
+  winner: 'home' | 'guest' | null
+  participant1: Participant | null
+  participant2: Participant | null
+  onClick?: (e: MouseEvent) => void
+}
+
+const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, editable, winner, ...rest }) => {
+  const classes = useStyles()
+  return (
+    <div className={classes.match}>
+      <div className={`${classes.matchContent} ${editable && classes.editable}`} {...rest}>
+        <div className={classes.matchHeader}>{headerText}</div>
+        <div className={classes.participantWrapper}>
+          <div className={classes.participant}>
+            {participant1 ? (
+              <>
+                <Avatar className={classes.avatar} alt={participant1.label} src={participant1.avatar} />
+                <Typography className={classes.label} noWrap={true}>
+                  {participant1.label}
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Avatar className={classes.avatar} alt={null} />
+                <Typography className={classes.noLabel}>設定してください</Typography>
+              </>
+            )}
+          </div>
+          <div className={classes.score}>-</div>
+          {winner !== null && winner === 'guest' && <div className={classes.backdrop} />}
+        </div>
+        <div className={classes.participantWrapper}>
+          <div className={classes.participant}>
+            {participant2 ? (
+              <>
+                <Avatar className={classes.avatar} alt={participant2.label} src={participant2.avatar} />
+                <Typography className={classes.label} noWrap={true}>
+                  {participant2.label}
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Avatar className={classes.avatar} alt={null} />
+                <Typography className={classes.noLabel}>設定してください</Typography>
+              </>
+            )}
+          </div>
+          <div className={classes.score}>-</div>
+          {winner !== null && winner === 'home' && <div className={classes.backdrop} />}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+Match.defaultProps = {
+  editable: false,
+}
+
+export default { Container, Round, Match }
 
 const useStyles = makeStyles((theme) => ({
   bracket: {
@@ -10,6 +112,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     // flexGrow: 1,
     flexDirection: 'column',
+    opacity: 0.4,
     '&:first-child $match': {
       marginLeft: 8,
     },
@@ -21,6 +124,28 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:last-child $match::after': {
       display: 'none',
+    },
+    '&$active $editable': {
+      cursor: 'pointer',
+    },
+  },
+  editable: {},
+  active: {
+    opacity: 1,
+    '& $matchContent': {
+      left: 0,
+      transition: '0.2s left',
+    },
+    '& $matchContent:hover': {
+      left: 4,
+    },
+  },
+  lastActive: {
+    '& $match:nth-child(odd)::after': {
+      opacity: 0.4,
+    },
+    '& $match:nth-child(even)::after': {
+      opacity: 0.4,
     },
   },
 
@@ -73,12 +198,26 @@ const useStyles = makeStyles((theme) => ({
     '&:nth-child(even) $matchContent': {
       marginTop: -19,
     },
+    '& $matchContent': {
+      marginTop: -19,
+      '& $backdrop': {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#00000070',
+        top: 0,
+        left: 0,
+        borderRadius: 3,
+      },
+    },
   },
+  backdrop: {},
+
   matchContent: {
     position: 'relative',
     backgroundColor: Colors.black_opacity['30'],
     borderRadius: theme.spacing(0.5),
-    border: '1px solid rgb(76,76,76)',
+    border: '1px solid #4c4c4c',
     width: 232,
     '&::before': {
       content: "''",
@@ -95,34 +234,54 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(1.5),
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
-    borderBottom: '1px solid rgb(76,76,76)',
     height: 18,
     backgroundColor: Colors.black,
     width: '100%',
     overflow: 'hidden',
+    lineHeight: 1.7,
+  },
+  participantWrapper: {
+    display: 'flex',
+    height: 42,
+    paddingLeft: 12,
+    paddingRight: 32,
+    paddingTop: 8,
+    paddingBottom: 8,
+    position: 'relative',
+    borderTop: '1px solid #4c4c4c',
+
+    color: '#FFFFFF',
+  },
+  participant: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  score: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    color: '#FFFFFF70',
+    backgroundColor: '#000000',
+    right: 8,
+    bottom: 4,
+    minWidth: 20,
+    height: 34,
+    fontSize: 20,
+    paddingLeft: 4,
+    paddingRight: 4,
+  },
+  avatar: {
+    height: 26,
+    width: 26,
+    marginRight: 12,
+    fontSize: 16,
+  },
+  label: {
+    width: 150,
+    textAlign: 'start',
+  },
+  noLabel: {
+    color: '#FFFFFF30',
   },
 }))
-
-const Container: React.FC<{ children?: ReactNode }> = ({ children }) => {
-  const classes = useStyles()
-  return <div className={classes.bracket}>{children}</div>
-}
-
-const Round: React.FC<{ children?: ReactNode }> = ({ children }) => {
-  const classes = useStyles()
-  return <div className={classes.round}>{children}</div>
-}
-
-const Match: React.FC<{ children?: ReactNode; headerText?: string }> = ({ children, headerText }) => {
-  const classes = useStyles()
-  return (
-    <div className={classes.match}>
-      <div className={classes.matchContent}>
-        <div className={classes.matchHeader}>{headerText}</div>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-export default { Container, Round, Match }
