@@ -58,7 +58,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
   }
 
   const toProfile = () => {
-    handleClose()
+    if (handleClose) handleClose()
     router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
   }
 
