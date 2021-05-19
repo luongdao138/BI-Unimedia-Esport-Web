@@ -18,7 +18,9 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
       page: 1,
       user_code: userCode,
     })
+  }, [userCode])
 
+  useEffect(() => {
     return () => resetMeta()
   }, [])
 

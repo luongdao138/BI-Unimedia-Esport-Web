@@ -55,12 +55,12 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.tournamentHistorySearch.fulfilled, (state, action) => {
     let tmpHistories = action.payload.data
-    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       tmpHistories = state.tournamentHistories.concat(action.payload.data)
     }
 
     state.tournamentHistories = tmpHistories
-    state.tournamentHistoriesMeta = action.payload.links?.meta
+    state.tournamentHistoriesMeta = action.payload.meta
   })
 
   builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {

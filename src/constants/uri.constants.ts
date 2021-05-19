@@ -33,7 +33,7 @@ export const URI = {
   COMMUNITY_LIST: '/v1/communities/list',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   RECOMMENDED_USERS: '/v1/recommended_users',
-  TOURNAMENTS_HISTORY_SEARCH: '/v1/tournaments/history_search',
+  TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',

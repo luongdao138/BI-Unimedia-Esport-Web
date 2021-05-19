@@ -99,7 +99,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
             }
           >
             {followers.map((user, i) => (
-              <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
+              <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} handleClose={handleClose} />
             ))}
           </InfiniteScroll>
         </DialogContent>
