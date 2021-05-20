@@ -19,7 +19,8 @@ const SearchPage: PageWithLayoutType = () => {
 
   useEffect(() => {
     if (!_.isEmpty(router.query)) {
-      setType(Number(router.query.type))
+      const _type = router.query.type ? Number(router.query.type) : searchTypes.USER
+      setType(_type)
       const _keyword = router.query.keyword ? router.query.keyword.toString() : ''
       setKeyword(_keyword)
     }

@@ -154,7 +154,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           </ESTabs>
         </Box>
         {tab == 0 && <ProfileMainContainer userProfile={profile} isOthers={isOthers} />}
-        {tab == 1 && <TournamentHistoryContainer userId={127} />}
+        {tab == 1 && <TournamentHistoryContainer userCode={userCode} />}
         {tab == 2 && <ActivityLogsContainer userCode={userCode} />}
       </Grid>
     </>

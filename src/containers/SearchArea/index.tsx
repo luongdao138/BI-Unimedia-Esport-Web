@@ -6,6 +6,7 @@ import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import { searchTypes } from '@constants/common.constants'
 
 interface SearchAreaProps {
   selectData: dataItem[]
@@ -41,9 +42,10 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
 
   useEffect(() => {
     if (!_.isEmpty(router.query)) {
-      const keyword = router.query.keyword ? router.query.keyword.toString() : ''
-      setOption(Number(router.query?.type))
-      setValue(keyword)
+      const _keyword = router.query.keyword ? router.query.keyword.toString() : ''
+      const _type = router.query.type ? Number(router.query.type) : searchTypes.USER
+      setOption(_type)
+      setValue(_keyword)
     }
   }, [router.query])
 

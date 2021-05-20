@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Typography, Button } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
-import useFollowers from '../../containers/Followers/useFollowers'
+import useFollowers from './useFollowers'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -99,7 +99,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
             }
           >
             {followers.map((user, i) => (
-              <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />
+              <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} handleClose={handleClose} />
             ))}
           </InfiniteScroll>
         </DialogContent>

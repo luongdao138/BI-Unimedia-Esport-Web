@@ -251,6 +251,7 @@ export default {
     no_user_available: 'No user available',
     back_list: '宛先',
     create_new: '新規作成',
+    placeholder: 'メッセージを入力…',
   },
   notification: {
     title: '通知一覧',
@@ -280,5 +281,33 @@ export default {
     desc: 'いつでもログインし直すことができます。',
     cancel: 'キャンセル',
     ok: 'ログアウト',
+  },
+  my_page_settings: {
+    title: 'マイページの情報公開範囲',
+    tournament_title: '大会履歴',
+    activity_title: 'アクティビティ',
+    profile_title: 'プロフィール',
+  },
+  message_settings: {
+    title: 'メッセージの受信設定',
+    receive_messages_from_anyone: '誰からでもメッセージを受け取る',
+    receive_invitations_from_anyone: '誰からでもメッセージグループの招待を受け取る',
+  },
+  block_settings: {
+    title: 'ブロックしたユーザー',
+  },
+  security_settings: {
+    title: 'セキュリティ',
+  },
+  settings: {
+    title: '設定',
+    account_settings: 'アカウント設定',
+    security: 'セキュリティ',
+    notification_settings: '通知設定',
+    purchase_history: '購入履歴',
+    service_info: 'サービス情報',
+    terms: '利用規約',
+    personal_info: '個人情報の取扱について',
+    commercial_transaction: '特定商取引に関する表記',
   },
 }

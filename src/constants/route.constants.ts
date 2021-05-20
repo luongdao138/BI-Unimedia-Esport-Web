@@ -25,6 +25,9 @@ export const ESRoutes = {
   TOURNAMENT_FOLLOWER_ENDED: '/tournament/follower/ended',
   TOPIC_FOLLOWER: '/topic/follower',
   NOTIFICATIONS: '/notifications',
-  USER_SECURITY_SETTINGS: '/settings/user_security_settings',
+  USER_SECURITY_SETTINGS: '/settings/security_settings',
+  MY_PAGE_SETTINGS: '/settings/security_settings/my_page',
+  MESSAGE_SETTINGS: '/settings/security_settings/message',
+  BLOCK_SETTINGS: '/settings/security_settings/block',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
 }

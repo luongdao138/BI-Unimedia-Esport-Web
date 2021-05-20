@@ -46,6 +46,7 @@ const UserSearchContainer: React.FC = () => {
         next={loadMore}
         hasMore={page && page.current_page !== page.total_pages}
         loader={null}
+        scrollThreshold="1px"
       >
         {searchUsers.map((user, i) => (
           <UserListItem data={user} key={i} isFollowed={user.attributes.is_followed} />

@@ -4,22 +4,29 @@ import { Colors } from '@theme/colors'
 
 export interface SettingsRowItemProps {
   title?: string
+  checked?: boolean
+  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  name?: string
+  showSwitch?: boolean
 }
 
-const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title }) => {
+const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handleChange, name, showSwitch }) => {
   const classes = useStyles()
+
   return (
     <div>
       <Box margin={2} display="flex" justifyContent="space-between">
         <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-          <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
+          <Box overflow="hidden" textOverflow="ellipsis" ml={0} display="flex" flexDirection="column" justifyContent="center" width="100%">
             <Typography noWrap style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 }}>
               {title}
             </Typography>
           </Box>
-          <Box textAlign="center">
-            <ESSwitchIOS />
-          </Box>
+          {showSwitch ? (
+            <Box textAlign="center">
+              <ESSwitchIOS key={title} handleChange={handleChange} name={name} checked={checked} />
+            </Box>
+          ) : null}
         </Box>
       </Box>
     </div>
