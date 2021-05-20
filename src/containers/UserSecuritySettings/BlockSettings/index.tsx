@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useEffect, useState } from 'react'
 import useBlockSettings from './useBlockSettings'
 import { useRouter } from 'next/router'
-import UserListItem from '@components/UserItem'
+import BlockedUserItem from './BlockedUserItem'
 
 const ESBlockSettings: React.FC = () => {
   const { t } = useTranslation('common')
@@ -61,7 +61,7 @@ const ESBlockSettings: React.FC = () => {
               router.push(`/profile/${user.attributes.user_code}`)
             }}
           >
-            <UserListItem data={user} key={i} />
+            <BlockedUserItem data={user} key={i} />
           </Grid>
         ))}
       </InfiniteScroll>
