@@ -1,17 +1,18 @@
-import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
+import React from 'react'
 import { TournamentDetail } from '@services/tournament.service'
-import { UserProfile } from '@services/user.service'
-import { Colors } from '@theme/colors'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
+import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'
+import { UserProfile } from '@services/user.service'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
-interface RecruitmentClosedProps {
+interface RecruitingProps {
   tournament: TournamentDetail
   userProfile: UserProfile
 }
 
-const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
+const Recruiting: React.FC<RecruitingProps> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { tournament } = props
@@ -58,4 +59,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default RecruitmentClosed
+export default Recruiting
