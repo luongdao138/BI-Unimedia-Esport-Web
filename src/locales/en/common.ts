@@ -284,6 +284,7 @@ export default {
     profile_title: 'プロフィール',
   },
   settings: {
+    title: '設定',
     account_settings: 'アカウント設定',
     security_settings: 'セキュリティ',
     notification_settings: '通知設定',

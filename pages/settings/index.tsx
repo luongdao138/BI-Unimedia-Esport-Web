@@ -12,7 +12,7 @@ const SettingsPage: PageWithLayoutType = () => {
   const { t } = useTranslation('common')
   return (
     <div>
-      <HeaderWithButton title="設定" />
+      <HeaderWithButton title={t('settings.title')} />
       <Box>
         <div
           onClick={() => {
