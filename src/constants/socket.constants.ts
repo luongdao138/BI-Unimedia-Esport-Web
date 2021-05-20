@@ -10,4 +10,5 @@ export enum CHAT_MESSAGE_TYPE {
 export enum CHAT_ACTION_TYPE {
   //socket
   GET_ALL_ROOMS = 'GET_ALL_ROOMS',
+  GET_ROOM_MEMBERS = 'GET_ROOM_MEMBERS',
 }

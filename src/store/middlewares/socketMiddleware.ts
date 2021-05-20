@@ -14,6 +14,7 @@ const onOpen = (store: StoreType) => (_event: Event) => {
   if (userId) {
     // eslint-disable-next-line no-console
     console.log('connected, end fetching list')
+    store.dispatch({ type: `${WEBSOCKET_PREFIX}:CONNECTED` })
     store.dispatch(
       socketActions.socketSend({
         action: 'GET_ALL_ROOMS',

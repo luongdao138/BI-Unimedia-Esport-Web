@@ -29,3 +29,19 @@ export interface ChatSuggestionList extends SuggestionDataItem {
   nickName?: string
   profile?: string
 }
+
+export interface ChatRoomMemberItem {
+  chatRoomId: string
+  createdAt: number
+  display: string
+  groupType: number
+  id: string
+  memberStatus: number
+  memberType: number
+  nickName: string
+  profile: string
+  sortKey: string
+  unseenCount: number
+  userCode: string
+  userId: number
+}
