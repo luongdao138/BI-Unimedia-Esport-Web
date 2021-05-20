@@ -4,7 +4,7 @@ import { TournamentDetail } from '@services/tournament.service'
 // import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
 import Participants from '@containers/TournamentDetail/Participants'
-import { ROLE } from '@constants/tournament.constants'
+import { ROLE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface Props {
   tournament: TournamentDetail
@@ -16,8 +16,11 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
 
   // console.log('tournament', tournament)
 
-  const role = tournament.attributes.my_role
-  const isModerator = role === ROLE.ADMIN || role === ROLE.CO_ORGANIZER
+  const myRole = tournament.attributes.my_role
+  const status = tournament.attributes.status
+  const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
+
+  const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
 
   return (
     <Box className={classes.body}>
@@ -32,20 +35,21 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                 グループチャット
               </ESButton>
             </Box>
+            {isRecruitmentClosed && isModerator && (
+              <Box className={classes.actionButtonContainer}>
+                <Box className={classes.actionButton}>
+                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                    対戦表
+                  </ESButton>
+                </Box>
+              </Box>
+            )}
           </>
         ) : (
           <Box className={classes.actionButton}>
             <Participants detail={tournament} />
           </Box>
         )}
-      </Box>
-
-      <Box className={classes.actionButtonContainer}>
-        <Box className={classes.actionButton}>
-          <ESButton variant="outlined" fullWidth onClick={() => {}}>
-            対戦表
-          </ESButton>
-        </Box>
       </Box>
     </Box>
   )

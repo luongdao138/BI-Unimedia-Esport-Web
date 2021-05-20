@@ -11,6 +11,7 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/tournament.service'
 import { UserProfile } from '@services/user.service'
+import ESLink from '@components/Link'
 
 interface Props {
   tournament: TournamentDetail
@@ -26,26 +27,48 @@ const ActionComponent: React.FC<Props> = (props) => {
   const status = tournament.attributes.status
   const myRole = tournament.attributes.my_role
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
+  const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
+  const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
 
-  const buildEntryPeriodValue = () => {
+  const buildArenaPeriodValue = () => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
     const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
-    return `エントリー期間 ${entryStartDate} - ${entryEndDate}`
+
+    const arenaStatus = isRecruiting ? 'エントリー期間' : isRecruitmentClosed ? '開催期間' : ''
+
+    return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
   }
 
   return (
     <Box>
       <Box className={classes.container}>
         <Box className={classes.header}>
-          <Typography variant="body1">{buildEntryPeriodValue()}</Typography>
+          <Typography variant="body1">{buildArenaPeriodValue()}</Typography>
         </Box>
         {children}
         <SubActionButtons tournament={tournament} />
       </Box>
 
-      {isModerator && status === TOURNAMENT_STATUS.RECRUITING && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
-      {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
-      {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+      {isRecruitmentClosed && isModerator && (
+        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+          <Typography color="primary">{`大会開始前に対戦表を確定してください`}</Typography>
+          <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
+            <Typography variant="body2">
+              {`締め切りまであと`}
+              <ESLink onClick={() => {}}>{'対戦表'}</ESLink>
+              {`が確定していない場合はエントリーが無効となるのでご注意ください`}
+            </Typography>
+          </Box>
+        </Box>
+      )}
+
+      {!isRecruitmentClosed && (
+        <>
+          {isModerator && isRecruiting && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
+          {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+          {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+        </>
+      )}
     </Box>
   )
 }
