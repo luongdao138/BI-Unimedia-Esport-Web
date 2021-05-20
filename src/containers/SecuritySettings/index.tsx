@@ -3,55 +3,66 @@ import { useTranslation } from 'react-i18next'
 import SettingsRowItem from '@components/SettingsRowItem'
 import HeaderWithButton from '@components/HeaderWithButton'
 import useSecuritySettings from './useSecuritySettings'
-import useUpdateSecuritySettings from './useUpdateSecuritySettings'
 import { useEffect, useState } from 'react'
+import ESLoader from '@components/Loader'
+import _ from 'lodash'
 
 const ESSecuritySettings: React.FC = () => {
   const { t } = useTranslation('common')
-  const { securitySettings, fetchSecuritySettings } = useSecuritySettings()
-  const { updateSecuritySettings } = useUpdateSecuritySettings()
-
-  useEffect(() => {
-    fetchSecuritySettings()
-  }, [])
+  const { fetchMeta, securitySettings, updateSecuritySettings } = useSecuritySettings()
 
   const [state, setState] = useState({
-    show_tournament_history: securitySettings && securitySettings.data.attributes.show_tournament_history,
-    show_activity_logs: securitySettings && securitySettings.data.attributes.show_activity_logs,
-    show_about: securitySettings && securitySettings.data.attributes.show_about,
+    show_tournament_history: false,
+    show_activity_logs: false,
+    show_about: false,
   })
 
+  useEffect(() => {
+    if (securitySettings) {
+      setState(securitySettings)
+    }
+  }, [securitySettings])
+
   const handleChange = (e) => {
-    setState({ ...state, [e.target.key]: e.target.checked })
-    updateSecuritySettings(state)
+    setState({ ...state, [e.target.name]: e.target.checked })
   }
+
+  useEffect(() => {
+    if (securitySettings) {
+      if (!_.isEqual(securitySettings, state)) {
+        updateSecuritySettings(state)
+      }
+    }
+  }, [state.show_tournament_history, state.show_activity_logs, state.show_about])
 
   return (
     <div>
       <HeaderWithButton title={t('user_security_settings.title')} />
+      {fetchMeta.pending && <ESLoader />}
+
       <Box>
         <SettingsRowItem
-          key="tournament"
+          key="show_tournament_history"
           title={t('user_security_settings.tournament_title')}
           checked={state.show_tournament_history}
           handleChange={handleChange}
-          name="tournament"
+          name="show_tournament_history"
           showSwitch={true}
         />
         <SettingsRowItem
-          key="activity"
+          key="show_activity_logs"
           title={t('user_security_settings.activity_title')}
           checked={state.show_activity_logs}
           handleChange={handleChange}
-          name="activity"
+          name="show_activity_logs"
           showSwitch={true}
         />
         <SettingsRowItem
-          key="profile"
+          key="show_about"
           title={t('user_security_settings.profile_title')}
           checked={state.show_about}
           handleChange={handleChange}
-          name="profile"
+          name="show_about"
           showSwitch={true}
         />
       </Box>

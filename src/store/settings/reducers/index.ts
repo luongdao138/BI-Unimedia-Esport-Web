@@ -1,11 +1,11 @@
 import * as actions from '../actions'
 import { UserFeaturesResponse } from '@services/settings.service'
-import { GetSecuritySettingsResponse } from '@services/settings.service'
+import { SecuritySettingsResponse } from '@services/settings.service'
 import { createReducer } from '@reduxjs/toolkit'
 
 type StateType = {
   userFeatures: UserFeaturesResponse
-  securitySettings: GetSecuritySettingsResponse
+  securitySettings: SecuritySettingsResponse['data']['attributes']
 }
 
 const initialState: StateType = { userFeatures: [], securitySettings: undefined }
@@ -17,6 +17,6 @@ export default createReducer(initialState, (builder) => {
       state.userFeatures = userFeatures
     })
     .addCase(actions.getSecuritySettings.fulfilled, (state, action) => {
-      state.securitySettings = action.payload
+      state.securitySettings = action.payload.data.attributes
     })
 })
