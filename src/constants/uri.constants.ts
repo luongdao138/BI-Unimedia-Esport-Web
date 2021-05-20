@@ -30,6 +30,7 @@ export const URI = {
   USERS_SEARCH: '/v2/users/search',
   FOLLOW: '/v1/followers/follow',
   UNFOLLOW: '/v1/followers/unfollow',
+  USER_SECURITY_SETTINGS: '/v1/users/security/setting',
   COMMUNITY_LIST: '/v1/communities/list',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   RECOMMENDED_USERS: '/v1/recommended_users',

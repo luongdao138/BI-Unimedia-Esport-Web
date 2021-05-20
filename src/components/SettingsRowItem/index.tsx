@@ -4,10 +4,14 @@ import { Colors } from '@theme/colors'
 
 export interface SettingsRowItemProps {
   title?: string
+  checked?: boolean
+  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  name?: string
 }
 
-const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title }) => {
+const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handleChange, name }) => {
   const classes = useStyles()
+
   return (
     <div>
       <Box margin={2} display="flex" justifyContent="space-between">
@@ -18,7 +22,7 @@ const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title }) => {
             </Typography>
           </Box>
           <Box textAlign="center">
-            <ESSwitchIOS />
+            <ESSwitchIOS key={title} handleChange={handleChange} name={name} checked={checked} />
           </Box>
         </Box>
       </Box>
