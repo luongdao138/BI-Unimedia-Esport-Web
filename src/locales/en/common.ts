@@ -288,6 +288,14 @@ export default {
     activity_title: 'アクティビティ',
     profile_title: 'プロフィール',
   },
+  message_settings: {
+    title: 'メッセージの受信設定',
+    receive_messages_from_anyone: '誰からでもメッセージを受け取る',
+    receive_invitations_from_anyone: '誰からでもメッセージグループの招待を受け取る',
+  },
+  block_settings: {
+    title: 'ブロックしたユーザー',
+  },
   security_settings: {
     title: 'セキュリティ',
     my_page: 'マイページの情報公開範囲',

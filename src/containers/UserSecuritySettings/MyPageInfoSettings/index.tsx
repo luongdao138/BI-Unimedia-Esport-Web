@@ -2,14 +2,14 @@ import { Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import SettingsRowItem from '@components/SettingsRowItem'
 import HeaderWithButton from '@components/HeaderWithButton'
-import useSecuritySettings from './useMyPageInfoSettings'
+import useMyPageSettings from './useMyPageSettings'
 import { useEffect, useState } from 'react'
 import ESLoader from '@components/Loader'
 import _ from 'lodash'
 
 const ESMyPageInfoSettings: React.FC = () => {
   const { t } = useTranslation('common')
-  const { fetchMeta, securitySettings, updateSecuritySettings } = useSecuritySettings()
+  const { fetchMeta, securitySettings, updateSecuritySettings } = useMyPageSettings()
 
   const [state, setState] = useState({
     show_tournament_history: false,
