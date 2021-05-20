@@ -28,7 +28,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         // case when socket error or wrong data return from server
         newMessagesList = []
         newUsers = action.data.members
-      } else if (state.lastKey != null && state.activeRoom === action.data.content[0].chatRoomId) {
+      } else if (state.lastKey != null && state.activeRoom === action.data.chatRoomId) {
         //paginating data merging
         const prevArray = state.messages
         const temp = _.concat(prevArray, action.data.content)
@@ -40,7 +40,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       }
       return {
         ...state,
-        activeRoom: action.data.content[0].chatRoomId,
+        activeRoom: action.data.chatRoomId,
         messages: newMessagesList,
         members: newUsers,
         lastKey: action.data.lastKey,
