@@ -51,4 +51,5 @@ export const URI = {
   TOURNAMENT_RESULTS: '/v2/users/followings_tournament_result',
   RECRUITMENT_FOLLOWERS: '/v2/users/followings_recruitment',
   RECRUITING_TOURNAMENT: '/v2/tournaments/public_recruiting',
+  HOME_SETTINGS: '/v2/users/home_settings',
 }

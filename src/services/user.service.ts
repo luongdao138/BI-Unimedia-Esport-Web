@@ -110,6 +110,7 @@ export type UserProfile = {
       allow_groups_from_strangers: boolean
     }
     is_deleted?: boolean
+    home_settings?: string[]
   }
 }
 
@@ -178,6 +179,14 @@ export type ResultsResponse = {
   attributes: any
 }
 
+export type HomeSettingsParams = {
+  home_settings: string[]
+}
+
+export type HomeSettingsResponse = {
+  home_settings: string[]
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -225,5 +234,10 @@ export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse>
 
 export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> => {
   const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT)
+  return data
+}
+
+export const updateHomeSettings = async (params: HomeSettingsParams): Promise<HomeSettingsResponse> => {
+  const { data } = await api.post<HomeSettingsResponse>(URI.HOME_SETTINGS, params)
   return data
 }

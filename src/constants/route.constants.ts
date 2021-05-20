@@ -1,6 +1,7 @@
 export const ESRoutes = {
   WELCOME: '/welcome',
   HOME: '/home',
+  HOME_ORDER: '/home/order',
   LOGIN: '/login',
   REGISTER: '/register',
   REGISTER_PROFILE: '/register/profile',

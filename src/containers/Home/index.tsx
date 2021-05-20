@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Header } from './elements/Header'
 import { RecommendedUser } from './elements/Slider/RecommendedUser'
 import { RecommendedRecruitment } from './elements/Slider/RecommendedRecruitment'
@@ -16,46 +16,10 @@ import useTopicData from './useTopicData'
 import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
 import { WEBSYNC_PREFIX } from '@constants/sync.constants'
 import { useAppDispatch } from '@store/hooks'
-
-const DEFAULT_ORDER = [
-  {
-    key: 1,
-    value: 'recommendedUser',
-  },
-  {
-    key: 2,
-    value: 'recommendedRecruitment',
-  },
-  {
-    key: 3,
-    value: 'recommendedEvent',
-  },
-  {
-    key: 4,
-    value: 'recruitmentFollow',
-  },
-  {
-    key: 5,
-    value: 'tournamentFollow',
-  },
-  {
-    key: 6,
-    value: 'tournamentResult',
-  },
-  {
-    key: 7,
-    value: 'topicFollow',
-  },
-]
-
-type orderType = {
-  key: number
-  value: string
-}
+import { HOME_SETTINGS } from '@constants/common.constants'
 
 const HomeContainer: React.FC = () => {
-  const [order] = useState<Array<orderType>>(DEFAULT_ORDER)
-  const { recommendedUsers, getUserRecommendations } = useUserData()
+  const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile } = useUserData()
   const { recommendedRecruitments, getRecruitmentRecommendations, recruitmentFollow, getRecruitmentFollow } = uesRecruitmentData()
   const { recommendedEventList, getRecommendedEventList } = useEventData()
   const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
@@ -63,6 +27,7 @@ const HomeContainer: React.FC = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
+    getUserProfile()
     getUserRecommendations()
     getRecruitmentRecommendations()
     dispatch({
@@ -78,21 +43,21 @@ const HomeContainer: React.FC = () => {
     getFollowersTopicList()
   }, [])
 
-  const renderItem = (val: string) => {
-    switch (val) {
-      case 'recommendedUser':
+  const renderItem = (value: string) => {
+    switch (value) {
+      case HOME_SETTINGS.RECOMMENDED_USER:
         return <RecommendedUser users={recommendedUsers} />
-      case 'recommendedRecruitment':
+      case HOME_SETTINGS.RECOMMENDED_RECRUITMENT:
         return <RecommendedRecruitment data={recommendedRecruitments} />
-      case 'recommendedEvent':
+      case HOME_SETTINGS.RECOMMENDED_EVENT:
         return <RecommendedEvent data={recommendedEventList} />
-      case 'recruitmentFollow':
+      case HOME_SETTINGS.RECRUITMENT_FOLLOW:
         return <RecruitmentFollow data={recruitmentFollow} />
-      case 'tournamentFollow':
+      case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return <TournamentFollow data={tournamentFollowers} />
-      case 'tournamentResult':
+      case HOME_SETTINGS.TOURNAMENT_RESULT:
         return <TournamentResult data={tournamentResults} />
-      case 'topicFollow':
+      case HOME_SETTINGS.TOPIC_FOLLOW:
         return <TopicFollow data={followersTopicList} />
       default:
         return ''
@@ -102,8 +67,8 @@ const HomeContainer: React.FC = () => {
   return (
     <>
       <Header />
-      {order.map((item) => {
-        return renderItem(item.value)
+      {homeSettings.map((value) => {
+        return renderItem(value)
       })}
       <Box marginBottom={9} />
     </>
