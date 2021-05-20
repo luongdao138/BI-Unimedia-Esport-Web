@@ -1,11 +1,11 @@
 import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { v1 as uuidv1 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
 import { socketActions } from '@store/socket/actions'
 
-const DEVICE_ID = uuidv1()
+const DEVICE_ID = uuidv4()
 
 let socket: any = null
 
