@@ -29,10 +29,10 @@ const Matches: React.FC = () => {
                   editable
                   winner={match.winner}
                   participant1={
-                    match.guest_user ? { avatar: match.home_avatar, label: match.guest_user.name, score: match.score_home } : null
+                    match.home_user ? { avatar: match.home_avatar, label: match.home_user.name, score: match.score_home } : null
                   }
                   participant2={
-                    match.home_user ? { avatar: match.guest_avatar, label: match.home_user.name, score: match.score_guest } : null
+                    match.guest_user ? { avatar: match.guest_avatar, label: match.guest_user.name, score: match.score_guest } : null
                   }
                 />
               ))}
