@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { AppDispatch } from '@store/store'
-import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import _ from 'lodash'
 
 export const socketActions = {
