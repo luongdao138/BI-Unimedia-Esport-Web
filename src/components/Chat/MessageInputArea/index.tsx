@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { useState, useMemo, ReactNode } from 'react'
 import { Box, Icon, IconButton, makeStyles } from '@material-ui/core'
 import Composer from '@components/Chat/Composer'
@@ -64,7 +62,6 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
 
   const handleKeyPress = (evt: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.key === 'Enter' && evt.shiftKey === false) {
-      console.log('im here')
       evt.preventDefault()
       onPressSend ? onPressSend(text) : undefined
     }
