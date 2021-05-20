@@ -26,15 +26,17 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   return (
     <FormControl fullWidth={rest.fullWidth}>
       {(labelPrimary || labelSecondary) && (
-        <Box display="flex" justifyContent="space-between" alignItems="center" className={classes.bottomPadding}>
-          <label htmlFor={rest.id} className={classes.labelMargin}>
-            {labelPrimary}
+        <Box display="flex" justifyContent="space-between" alignItems="center" pb={1}>
+          <Box className={classes.labelPrimaryContainer} display="flex" alignItems="center">
+            <label htmlFor={rest.id} className={classes.labelMargin}>
+              {labelPrimary}
+            </label>
             {required && (
               <Typography component="span" className={classes.required}>
                 {t('common:common.required')}
               </Typography>
             )}
-          </label>
+          </Box>
           {labelSecondary}
         </Box>
       )}
@@ -64,13 +66,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
   },
-  bottomPadding: {
-    paddingBottom: theme.spacing(1),
-  },
   labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
     fontWeight: props.isBig ? 'bold' : 'normal',
     fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
-    color: theme.palette.text.primary,
+  }),
+  labelPrimaryContainer: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
     width: props.hasSecondary ? '50%' : '100%',
   }),
   required: {
@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 2,
     paddingLeft: theme.spacing(1 / 2),
     paddingRight: theme.spacing(1 / 2),
+    height: 16,
     fontSize: 10,
     marginLeft: theme.spacing(1),
     color: Colors.white,

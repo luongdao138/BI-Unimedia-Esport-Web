@@ -20,6 +20,12 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
   },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  },
 }))
 const validationSchema = Yup.object().shape({
   display_name: Yup.string().required(),
@@ -51,7 +57,7 @@ const AddGame: React.FC<Props> = ({ genres }) => {
   }, [meta.loaded])
 
   return (
-    <Box pt={4} px={5}>
+    <Box pt={4} px={5} className={classes.container}>
       <Toast open={open} message={t('profile.favorite_game.add_success')} onClose={() => setOpen(false)} />
       <form onSubmit={formik.handleSubmit}>
         <Select

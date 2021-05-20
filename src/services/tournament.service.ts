@@ -106,6 +106,31 @@ export type TournamentDetail = {
   }
 }
 
+export type TournamentCreateParams = {
+  title: string
+  overview: string
+  game_title_id: GameTitle['attributes'][]
+  game_hardware_id: number
+  has_third_place: boolean
+  max_participants: number
+  terms_of_participation: string
+  acceptance_start_date: string
+  acceptance_end_date: string
+  start_date: string
+  end_date: string
+  area_id: number
+  area_name: string
+  address: string
+  has_prize: boolean
+  retain_history: boolean
+  prize_amount: string
+  notes: string
+  owner_id: number
+  organizer_name: string
+  cover_image_url: string
+  co_organizers: string[]
+}
+
 export type TournamentDetailResponse = {
   data: TournamentDetail
 }
