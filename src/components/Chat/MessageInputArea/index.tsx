@@ -11,6 +11,7 @@ import { parseValue } from '@components/Chat/utils'
 import { regex } from '../constants'
 import useAvailable from '@components/Chat/utils/useAvailable'
 import { Actions, SuggestionListItem } from '@components/Chat/elements'
+import { MentionItem } from 'react-mentions'
 
 export interface MessageInputAreaProps {
   onPressActionButton?: (type: number) => void
@@ -41,8 +42,8 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
 
   const { t } = useTranslation(['common'])
 
-  const onChangeText = (text: string) => {
-    setText(text)
+  const onChangeText = (_event: { target: { value: string } }, newValue: string, _newPlainTextValue: string, _mentions: MentionItem[]) => {
+    setText(newValue)
   }
 
   const send = () => {

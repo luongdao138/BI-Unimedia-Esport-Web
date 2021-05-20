@@ -1,4 +1,4 @@
-import { Mention, MentionsInput } from 'react-mentions'
+import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions'
 
 import { ChatSuggestionList } from '../types/chat.types'
 import classNames from './mention.module.css'
@@ -12,7 +12,7 @@ interface ComposerProps {
     index: number,
     focused: boolean
   ) => React.ReactNode
-  onChange: (value: string) => void
+  onChange: OnChangeHandlerFunc
   placeholder: string
   msg?: string
   users: ChatSuggestionList[]
@@ -45,9 +45,7 @@ const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, pl
           },
         }}
         classNames={classNames}
-        onChange={({ target: { value } }) => {
-          onChange(value)
-        }}
+        onChange={onChange}
       >
         <Mention
           trigger="@"
