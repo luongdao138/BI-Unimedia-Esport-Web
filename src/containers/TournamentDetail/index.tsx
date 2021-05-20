@@ -13,13 +13,13 @@ const TournamentDetail: React.FC = () => {
   const handleBack = () => router.back()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
-    in_progress: <></>,
+    in_progress: <></>, //headset
     cancelled: <></>,
-    completed: <></>,
+    completed: <></>, //trophy
     ready: <></>,
-    ready_to_start: <></>,
+    ready_to_start: <></>, //hourglass
     recruiting: <RecruitingAction tournament={tournament} />,
-    recruitment_closed: <></>,
+    recruitment_closed: <></>, //hourglass
   }
   return (
     <div>
