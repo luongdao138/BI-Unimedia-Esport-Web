@@ -9,10 +9,13 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 interface RoomMemberItemProps {
+  id: number
   name: string
+  userCode: string
+  onDelete: (id: number) => void
 }
 
-const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ name }) => {
+const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onDelete }) => {
   const classes = useStyles()
   return (
     <ListItem onClick={() => null} className={classes.root}>
@@ -28,10 +31,10 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ name }) => {
         </Badge>
       </ListItemAvatar>
 
-      <ListItemText primary={name} secondary="Jan 9, 2014" />
+      <ListItemText primary={name} secondary={userCode} />
 
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
+        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(id)}>
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>

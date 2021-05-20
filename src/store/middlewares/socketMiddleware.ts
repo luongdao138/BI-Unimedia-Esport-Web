@@ -1,4 +1,4 @@
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
@@ -17,7 +17,7 @@ const onOpen = (store: StoreType) => (_event: Event) => {
     store.dispatch({ type: `${WEBSOCKET_PREFIX}:CONNECTED` })
     store.dispatch(
       socketActions.socketSend({
-        action: 'GET_ALL_ROOMS',
+        action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
         userId: userId,
       })
     )
