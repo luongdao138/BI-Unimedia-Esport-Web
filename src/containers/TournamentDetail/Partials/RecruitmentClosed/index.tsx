@@ -3,7 +3,7 @@ import { TournamentDetail } from '@services/tournament.service'
 import { UserProfile } from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import ActionComponent from '../ActionComponent'
 
 interface RecruitmentClosedProps {
@@ -13,7 +13,7 @@ interface RecruitmentClosedProps {
 
 const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
   const classes = useStyles()
-  const { t } = useTranslation(['common'])
+  // const { t } = useTranslation(['common'])
   const { tournament } = props
 
   return (
@@ -25,15 +25,6 @@ const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
             {`${TournamentHelper.getRemainingDate(tournament.attributes.acceptance_end_date)}`}
           </Typography>
           <Typography>{`日`}</Typography>
-        </Box>
-
-        <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-          <Typography className={classes.entryMembersInfoText}>{t('common:tournament.number_of_entries')}</Typography>
-          <Box mr={2} />
-          <Typography className={classes.highlightedNumber}>{tournament.attributes.participant_count}</Typography>
-          <Typography>{`${t('common:common.man')} / `}</Typography>
-          <Typography className={classes.highlightedNumber}>{tournament.attributes.max_participants}</Typography>
-          <Typography>{t('common:common.man')}</Typography>
         </Box>
       </Box>
     </ActionComponent>
