@@ -1,8 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { ProfileResponse } from '@services/user.service'
 import * as actions from '../actions'
-import { HistoryResponse, Nickname2, Meta } from '@services/user.service'
+import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
+import { blockUser, unblockUser } from '@store/block/actions'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 
 type StateType = {
   data: ProfileResponse['data']
@@ -10,8 +11,10 @@ type StateType = {
   tournamentHistories?: Array<HistoryResponse>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
+  activityLogsMeta?: Meta
   recommendations: Array<any>
   nicknames2?: Array<Nickname2>
+  recommendedEvent: Array<CommonResponse>
 }
 
 const initialState: StateType = {
@@ -19,8 +22,10 @@ const initialState: StateType = {
   lastSeenUserData: undefined,
   tournamentHistories: [],
   activityLogs: [],
+  activityLogsMeta: undefined,
   recommendations: [],
   nicknames2: [],
+  recommendedEvent: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -34,6 +39,14 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
+  })
+
+  builder.addCase(actions.profileImage.fulfilled, (state, action) => {
+    if (action.payload.file_type === UPLOADER_TYPE.USER_PROFILE) {
+      state.data.attributes.avatar_url = action.payload.image_url
+    } else {
+      state.data.attributes.cover_url = action.payload.image_url
+    }
   })
 
   builder.addCase(registerProfile.fulfilled, (state, action) => {
@@ -51,7 +64,12 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {
-    state.activityLogs = action.payload.data
+    let tmpActivityLogs = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpActivityLogs = state.activityLogs.concat(action.payload.data)
+    }
+    state.activityLogs = tmpActivityLogs
+    state.activityLogsMeta = action.payload.meta
   })
 
   builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
@@ -72,5 +90,17 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(logout.fulfilled, (state) => {
     state.data = undefined
+  })
+
+  builder.addCase(actions.getRecommendedEvent.fulfilled, (state, action) => {
+    state.recommendedEvent = action.payload.data
+  })
+
+  builder.addCase(blockUser.fulfilled, (state) => {
+    state.lastSeenUserData.attributes.is_blocked = true
+  })
+
+  builder.addCase(unblockUser.fulfilled, (state) => {
+    state.lastSeenUserData.attributes.is_blocked = false
   })
 })

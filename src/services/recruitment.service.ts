@@ -9,7 +9,20 @@ type RecommendationsArray = {
   attributes: any
 }
 
+export type RecruitmentFollowersResponse = {
+  data: Array<FollowersArray>
+}
+
+type FollowersArray = {
+  attributes: any
+}
+
 export const getRecommendations = async (): Promise<RecommendationsResponse> => {
-  const { data } = await api.get<RecommendationsResponse>(URI.RECRUITMENT_RECOMMENDATIONS)
+  const { data } = await api.post<RecommendationsResponse>(URI.RECRUITMENT_RECOMMENDATIONS)
+  return data
+}
+
+export const getRecruitmentFollowers = async (): Promise<RecruitmentFollowersResponse> => {
+  const { data } = await api.post<RecruitmentFollowersResponse>(URI.RECRUITMENT_FOLLOWERS)
   return data
 }

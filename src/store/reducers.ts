@@ -7,12 +7,14 @@ import common from '@store/common'
 import settings from '@store/settings'
 import follow from '@store/follow'
 import following from '@store/following'
+import report from '@store/report'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
 import tournament from '@store/tournament'
 import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
+import socket from '@store/socket'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -22,6 +24,7 @@ const reducer = combineReducers({
   settings: settings.reducers,
   follow: follow.reducers,
   following: following.reducers,
+  report: report.reducers,
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
   community: community.reducers,
@@ -29,6 +32,7 @@ const reducer = combineReducers({
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
   notification: notification.reducers,
+  socket: socket.reducers,
 })
 export default reducer
 

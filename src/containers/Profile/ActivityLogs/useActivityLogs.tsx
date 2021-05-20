@@ -11,11 +11,12 @@ const getActivityLogsMeta = createMetaSelector(actions.getActivityLogs)
 const useActivityLogs = () => {
   const dispatch = useAppDispatch()
   const activityLogs = useAppSelector(selectors.getActivityLogs)
+  const pages = useAppSelector(selectors.getActivityLogsMeta)
   // const page = useAppSelector(selectors.getTourHistoriesMeta)
   const meta = useAppSelector(getActivityLogsMeta)
   const getActivityLogs = (param: ActivityLogParams) => dispatch(actions.getActivityLogs(param))
   const resetMeta = () => dispatch(clearMetaData(actions.getActivityLogs.typePrefix))
-  return { activityLogs, getActivityLogs, resetMeta, meta }
+  return { activityLogs, getActivityLogs, resetMeta, meta, pages }
 }
 
 export default useActivityLogs

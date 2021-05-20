@@ -90,7 +90,6 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
         <Grid item xs={12}>
           <ESInput
             id="nickname"
-            autoFocus
             fullWidth
             value={values.nickname}
             onChange={handleChange}
@@ -111,7 +110,6 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
           </Typography>
           <ESInput
             id="bio"
-            autoFocus
             fullWidth
             multiline
             rows={4}

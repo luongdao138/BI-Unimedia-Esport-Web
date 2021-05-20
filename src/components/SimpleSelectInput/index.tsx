@@ -5,46 +5,18 @@ import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-
-type SelectInputItem = {
-  id: number
-  nickname: string
-  avatar: string
-  user_code: string
-}
+import { SuggestedTeamMembersResponse } from '@services/tournament.service'
+import ESLabel from '@components/Label'
 
 interface SelectInputProps {
-  items: SelectInputItem[]
   label?: string
-  required?: boolean
-  onItemsSelected: (selectedItems) => void
+  index?: number
+  selectedItem: SuggestedTeamMembersResponse
+  items: SuggestedTeamMembersResponse[]
+  onItemsSelected: (selectedItems: SuggestedTeamMembersResponse, index) => void
 }
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      '& .MuiAutocomplete-listbox': {
-        backgroundColor: theme.palette.common.white,
-        border: `2px solid ${theme.palette.common.white}`,
-        fontSize: 18,
-        '& .MuiAutocomplete-option:hover': {
-          backgroundColor: theme.palette.grey['200'],
-        },
-      },
-    },
-    required: {
-      backgroundColor: Colors.primary,
-      borderRadius: 2,
-      paddingLeft: theme.spacing(1 / 2),
-      paddingRight: theme.spacing(1 / 2),
-      fontSize: 10,
-      marginLeft: theme.spacing(1),
-      color: Colors.white,
-    },
-  })
-)
-
-const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ items, label, required, onItemsSelected }) => {
+const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ label, index, selectedItem, items, onItemsSelected }) => {
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
@@ -65,24 +37,28 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ items, label, require
   return (
     <Box width={1}>
       <Autocomplete
+        key={label}
+        value={selectedItem}
         options={items}
-        getOptionLabel={(option) => option.nickname}
+        getOptionLabel={(item) => item.attributes.nickname}
         filterSelectedOptions
         noOptionsText={t('common:chat.no_user_available')}
-        onChange={(_, values) => onItemsSelected(values)}
+        onChange={(_, values) => {
+          onItemsSelected(values as SuggestedTeamMembersResponse, index)
+        }}
         renderOption={(item) => {
           return (
             <Box display="flex" overflow="hidden">
-              <ESAvatar alt={item.nickname} src={item.avatar} />
+              <ESAvatar alt={item.attributes.nickname} src={item.attributes.avatar} />
               <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
                 <Box color={Colors.black}>
                   <Typography variant="h3" noWrap>
-                    {item.nickname}
+                    {item.attributes.nickname}
                   </Typography>
                 </Box>
                 <Box color={Colors.black}>
                   <Typography variant="body2" noWrap>
-                    {`${t('common.at')}${item.user_code}`}
+                    {`${t('common:common.at')}${item.attributes.user_code}`}
                   </Typography>
                 </Box>
               </Box>
@@ -91,25 +67,38 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ items, label, require
         }}
         renderInput={(params) => (
           <Box>
-            <Box display="flex" alignItems="center">
-              <Typography component="span">{label}</Typography>
-              {required && (
-                <Typography component="span" className={classes.required}>
-                  {t('common:common.required')}
-                </Typography>
-              )}
-            </Box>
+            <ESLabel label={label} size="small" />
+            <Box m={1} />
             <SelectInputTextField variant="outlined" {...params} inputRef={textRef} />
           </Box>
         )}
         PopperComponent={PopperMy}
+        ListboxProps={{
+          onScroll: (event: React.SyntheticEvent) => {
+            const listboxNode = event.currentTarget
+            if (listboxNode.scrollTop + listboxNode.clientHeight === listboxNode.scrollHeight) {
+              // console.log('Reach the end of suggestions')
+            }
+          },
+        }}
       />
     </Box>
   )
 }
 
-ESSimpleSelectInput.defaultProps = {
-  required: false,
-}
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      '& .MuiAutocomplete-listbox': {
+        backgroundColor: theme.palette.common.white,
+        border: `2px solid ${theme.palette.common.white}`,
+        fontSize: 18,
+        '& .MuiAutocomplete-option:hover': {
+          backgroundColor: theme.palette.grey['200'],
+        },
+      },
+    },
+  })
+)
 
 export default ESSimpleSelectInput

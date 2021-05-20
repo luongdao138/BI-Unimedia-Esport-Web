@@ -7,6 +7,9 @@ import {
   ResultsResponse,
   TournamentDetail,
   ParticipantsResponse,
+  SuggestedTeamMembersResponse,
+  TournamentMatchResponse,
+  RecruitingResponse,
 } from '@services/tournament.service'
 
 type StateType = {
@@ -17,9 +20,24 @@ type StateType = {
   tournamentDetail?: TournamentDetail
   tournamentParticipants?: Array<ParticipantsResponse>
   participantsMeta?: Meta
+  suggestedTeamMembers?: Array<SuggestedTeamMembersResponse>
+  suggestedTeamMembersMeta?: Meta
+  tournamentInteresteds?: Array<ParticipantsResponse>
+  interestedsMeta?: Meta
+  tournamentMatches: TournamentMatchResponse
+  recruitingTournaments: Array<RecruitingResponse>
 }
 
-const initialState: StateType = { searchTournaments: [], tournamentFollowers: [], tournamentResults: [], tournamentParticipants: [] }
+const initialState: StateType = {
+  searchTournaments: [],
+  tournamentFollowers: [],
+  tournamentResults: [],
+  tournamentParticipants: [],
+  suggestedTeamMembers: [],
+  tournamentInteresteds: [],
+  tournamentMatches: { matches: [], third_place_match: [] },
+  recruitingTournaments: [],
+}
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
@@ -56,5 +74,28 @@ export default createReducer(initialState, (builder) => {
     }
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
+  })
+  builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
+    let _suggestedTeamMembers = action.payload.data
+    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+      _suggestedTeamMembers = state.suggestedTeamMembers.concat(action.payload.data)
+    }
+
+    state.suggestedTeamMembers = _suggestedTeamMembers
+    state.suggestedTeamMembersMeta = action.payload.links?.meta
+  })
+  builder.addCase(actions.getTournamentInteresteds.fulfilled, (state, action) => {
+    let _interesteds = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      _interesteds = state.tournamentInteresteds.concat(action.payload.data)
+    }
+    state.tournamentInteresteds = _interesteds
+    state.interestedsMeta = action.payload.meta
+  })
+  builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
+    state.tournamentMatches = action.payload
+  })
+  builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
+    state.recruitingTournaments = action.payload.data
   })
 })

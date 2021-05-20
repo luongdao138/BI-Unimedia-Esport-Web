@@ -11,11 +11,22 @@ export type NotificationListResponse = {
 }
 
 export type NotificationResponse = {
+  id: number
   attributes: any
 }
 
 export type NotificationBadgeResponse = {
   badge: number
+}
+
+export type NotificationDetailParams = {
+  id: number
+}
+
+export type NotificationDetailResponse = {
+  data: {
+    attributes: any
+  }
 }
 
 export type Meta = {
@@ -27,6 +38,11 @@ export type Meta = {
 
 export const notificationList = async (params: NotificationListParams): Promise<NotificationListResponse> => {
   const { data } = await api.get<NotificationListResponse>(URI.NOTIFICATION_LIST, { params })
+  return data
+}
+
+export const getNotificationDetail = async (params: NotificationDetailParams): Promise<NotificationDetailResponse> => {
+  const { data } = await api.get<NotificationDetailResponse>(`${URI.NOTIFICATION_DETAIL}/${params}`)
   return data
 }
 

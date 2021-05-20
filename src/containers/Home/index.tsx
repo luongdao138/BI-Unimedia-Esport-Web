@@ -8,11 +8,13 @@ import { TournamentFollow } from './elements/Slider/TournamentFollow'
 import { TournamentResult } from './elements/Slider/TournamentResult'
 import { TopicFollow } from './elements/Slider/TopicFollow'
 import useUserData from './useUserData'
-import recruitmentData from './useRecruitmentData'
+import uesRecruitmentData from './useRecruitmentData'
+import useEventData from './useEventData'
 import { Box } from '@material-ui/core'
-// import tournamentData from './useTournamentData'
-// import topicData from './useTopicData'
+import useTournamentData from './useTournamentData'
+import useTopicData from './useTopicData'
 import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSYNC_PREFIX } from '@constants/sync.constants'
 import { useAppDispatch } from '@store/hooks'
 
 const DEFAULT_ORDER = [
@@ -54,7 +56,10 @@ type orderType = {
 const HomeContainer: React.FC = () => {
   const [order] = useState<Array<orderType>>(DEFAULT_ORDER)
   const { recommendedUsers, getUserRecommendations } = useUserData()
-  const { recommendedRecruitments, getRecruitmentRecommendations } = recruitmentData()
+  const { recommendedRecruitments, getRecruitmentRecommendations, recruitmentFollow, getRecruitmentFollow } = uesRecruitmentData()
+  const { recommendedEventList, getRecommendedEventList } = useEventData()
+  const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
+  const { followersTopicList, getFollowersTopicList } = useTopicData()
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -63,14 +68,16 @@ const HomeContainer: React.FC = () => {
     dispatch({
       type: `${WEBSOCKET_PREFIX}:CONNECT`,
     })
+    dispatch({
+      type: `${WEBSYNC_PREFIX}:CONNECT`,
+    })
+    getRecommendedEventList()
+    getRecruitmentFollow()
+    getTournamentFollowers()
+    getTournamentResults()
+    getFollowersTopicList()
   }, [])
 
-  // RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
-  // RECRUITMENT_FOLLOWER: '/recruitment/follower',
-  // EVENT_RECOMMENDED: '/event/recommended',
-  // TOURNAMENT_FOLLOWER_ENTERING: '/tournament/follower/entering',
-  // TOURNAMENT_FOLLOWER_ENDED: '/tournament/follower/ended',
-  // TOPIC_FOLLOWER: '/topic/follower',
   const renderItem = (val: string) => {
     switch (val) {
       case 'recommendedUser':
@@ -78,15 +85,15 @@ const HomeContainer: React.FC = () => {
       case 'recommendedRecruitment':
         return <RecommendedRecruitment data={recommendedRecruitments} />
       case 'recommendedEvent':
-        return <RecommendedEvent />
+        return <RecommendedEvent data={recommendedEventList} />
       case 'recruitmentFollow':
-        return <RecruitmentFollow />
+        return <RecruitmentFollow data={recruitmentFollow} />
       case 'tournamentFollow':
-        return <TournamentFollow />
+        return <TournamentFollow data={tournamentFollowers} />
       case 'tournamentResult':
-        return <TournamentResult />
+        return <TournamentResult data={tournamentResults} />
       case 'topicFollow':
-        return <TopicFollow />
+        return <TopicFollow data={followersTopicList} />
       default:
         return ''
     }

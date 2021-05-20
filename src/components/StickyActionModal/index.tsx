@@ -11,6 +11,7 @@ type StickyActionModalProps = {
   children?: ReactNode
   actionButtonText: string
   actionButtonDisabled: boolean
+  actionHintText?: string
   returnText: string
   onReturnClicked: () => void
   onActionButtonClicked: () => void
@@ -20,6 +21,7 @@ const StickyActionModal: React.FC<StickyActionModalProps> = ({
   children,
   actionButtonText,
   actionButtonDisabled,
+  actionHintText,
   returnText,
   onReturnClicked,
   onActionButtonClicked,
@@ -43,8 +45,13 @@ const StickyActionModal: React.FC<StickyActionModalProps> = ({
         </Box>
 
         <Box className={classes.stickyFooter}>
+          {actionHintText && (
+            <Box className={classes.hintTextContainer}>
+              <Typography variant="body2">{actionHintText}</Typography>
+            </Box>
+          )}
           <Box className={classes.actionButtonHolder}>
-            <Box>
+            <Box className={classes.buttonContainer}>
               <ButtonPrimary type="button" round fullWidth disabled={actionButtonDisabled} onClick={onActionButtonClicked}>
                 {actionButtonText}
               </ButtonPrimary>
@@ -71,12 +78,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     background: Colors.black,
     borderTop: `1px solid #ffffff30`,
+    paddingTop: theme.spacing(2.5),
   },
   actionButtonHolder: {
     display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(8),
     justifyContent: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
+    maxWidth: theme.spacing(35),
   },
   childrenContainer: {
     marginBottom: theme.spacing(20),
@@ -86,6 +98,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
       marginBottom: theme.spacing(20),
     },
+  },
+  hintTextContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: theme.spacing(2.5),
   },
 }))
 

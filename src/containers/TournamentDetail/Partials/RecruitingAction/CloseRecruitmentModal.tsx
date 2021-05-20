@@ -104,9 +104,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
     },
   },
-  //
   actionButton: {
-    width: theme.spacing(35),
+    marginTop: theme.spacing(3),
+    width: '100%',
+    margin: '0 auto',
+    maxWidth: theme.spacing(35),
   },
   childrenContainer: {
     display: 'flex',

@@ -7,8 +7,8 @@ const { selectors, actions } = community
 const useTopicData = () => {
   const dispatch = useAppDispatch()
 
-  const followersTopicList = useAppSelector(selectors.getFollowersTopicList)
-  const getFollowersTopicList = () => dispatch(actions.getFollowersTopic())
+  const followersTopicList = useAppSelector(selectors.getTopicFollowersList)
+  const getFollowersTopicList = () => dispatch(actions.getTopicFollowers())
 
   return { followersTopicList, getFollowersTopicList }
 }
