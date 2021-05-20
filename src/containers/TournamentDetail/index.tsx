@@ -1,25 +1,28 @@
 import { ReactNode } from 'react'
 import useTournamentDetail from './useTournamentDetail'
-
 import TournamentDetailHeader from '@components/TournamentDetailHeader'
 import { useRouter } from 'next/router'
 import { TournamentStatus } from '@services/tournament.service'
 import DetailInfo from '@containers/TournamentDetail/Partials/DetailInfo'
-import RecruitingAction from './Partials/RecruitingAction'
+import RecruitmentClosed from './Partials/RecruitmentClosed'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import Recruiting from './Partials/Recruiting'
+import InProgress from './Partials/InProgress'
 
 const TournamentDetail: React.FC = () => {
   const router = useRouter()
   const { tournament, meta } = useTournamentDetail()
   const handleBack = () => router.back()
+  const { userProfile } = useGetProfile()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
-    in_progress: <></>,
+    in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
     cancelled: <></>,
-    completed: <></>,
+    completed: <></>, //trophy
     ready: <></>,
-    ready_to_start: <></>,
-    recruiting: <RecruitingAction tournament={tournament} />,
-    recruitment_closed: <></>,
+    ready_to_start: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
+    recruiting: <Recruiting tournament={tournament} userProfile={userProfile} />,
+    recruitment_closed: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
   }
   return (
     <div>

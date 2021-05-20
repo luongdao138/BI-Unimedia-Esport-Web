@@ -37,3 +37,13 @@ export const ROLE = {
   PARTICIPANT: 'participant',
   INTERESTED: 'interested',
 }
+
+export const TOURNAMENT_STATUS = {
+  IN_PROGRESS: 'in_progress',
+  CANCELLED: 'cancelled',
+  COMPLETED: 'completed',
+  READY: 'ready',
+  READY_TO_START: 'ready_to_start',
+  RECRUITING: 'recruiting',
+  RECRUITMENT_CLOSED: 'recruitment_closed',
+}
