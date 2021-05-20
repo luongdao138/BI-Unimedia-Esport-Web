@@ -20,3 +20,13 @@ export const PARTICIPANT_TYPE = {
   HOME: 'home',
   GUEST: 'guest',
 }
+
+export const ROLE = {
+  ADMIN: 'admin',
+  CO_ORGANIZER: 'co_organizer',
+  PARTICIPANT: 'participant',
+  INTERESTED: 'interested',
+}
+export const STATUS = {
+  RECRUITING: 'recruiting',
+}
