@@ -55,3 +55,41 @@ export const getFeatures = async (): Promise<UserFeaturesResponse> => {
   const { data } = await api.get(URI.USER_FEATURES)
   return data.data as UserFeaturesResponse
 }
+
+export type SecuritySettingsParam = {
+  show_tournament_history: boolean
+  show_activity_logs: boolean
+  show_about: boolean
+}
+
+export type SecuritySettingsResponse = {
+  success: string
+  meta: any
+}
+
+export type SecuritySettings = {
+  id: string
+  type: 'user_security_setting'
+  attributes: {
+    show_tournament_history: boolean
+    show_activity_logs: boolean
+    show_about: boolean
+    allow_messages_from_strangers: boolean
+    allow_groups_from_strangers: boolean
+  }
+}
+
+export type GetSecuritySettingsResponse = {
+  data: SecuritySettings
+  meta: any
+}
+
+export const updateSecuritySettings = async (params: SecuritySettingsParam): Promise<SecuritySettingsResponse> => {
+  const { data } = await api.post<SecuritySettingsResponse>(URI.USER_SECURITY_SETTINGS, params)
+  return data
+}
+
+export const getSecuritySettings = async (): Promise<GetSecuritySettingsResponse> => {
+  const { data } = await api.get<GetSecuritySettingsResponse>(URI.USER_SECURITY_SETTINGS, {})
+  return data
+}

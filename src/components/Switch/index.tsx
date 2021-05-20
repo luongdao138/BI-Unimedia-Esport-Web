@@ -1,6 +1,12 @@
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles'
-import Switch, { SwitchProps } from '@material-ui/core/Switch'
-import { useState } from 'react'
+import Switch from '@material-ui/core/Switch'
+
+export interface SwitchIOSProps {
+  title?: string
+  checked?: boolean
+  name?: string
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
 
 const AntSwitch = withStyles((theme: Theme) =>
   createStyles({
@@ -38,13 +44,8 @@ const AntSwitch = withStyles((theme: Theme) =>
   })
 )(Switch)
 
-const ESSwitchIOS: React.FC<SwitchProps> = () => {
-  const [state, setState] = useState(true)
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState(event.target.checked)
-  }
-  return <AntSwitch checked={state} onChange={handleChange} />
+const ESSwitchIOS: React.FC<SwitchIOSProps> = ({ checked, handleChange, ...rest }) => {
+  return <AntSwitch checked={checked} onChange={handleChange} {...rest} />
 }
 
 export default ESSwitchIOS
