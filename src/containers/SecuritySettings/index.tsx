@@ -36,6 +36,7 @@ const ESSecuritySettings: React.FC = () => {
           checked={state.show_tournament_history}
           handleChange={handleChange}
           name="tournament"
+          showSwitch={true}
         />
         <SettingsRowItem
           key="activity"
@@ -43,6 +44,7 @@ const ESSecuritySettings: React.FC = () => {
           checked={state.show_activity_logs}
           handleChange={handleChange}
           name="activity"
+          showSwitch={true}
         />
         <SettingsRowItem
           key="profile"
@@ -50,6 +52,7 @@ const ESSecuritySettings: React.FC = () => {
           checked={state.show_about}
           handleChange={handleChange}
           name="profile"
+          showSwitch={true}
         />
       </Box>
     </div>

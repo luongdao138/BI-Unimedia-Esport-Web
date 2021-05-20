@@ -283,4 +283,14 @@ export default {
     activity_title: 'アクティビティ',
     profile_title: 'プロフィール',
   },
+  settings: {
+    account_settings: 'アカウント設定',
+    security: 'セキュリティ',
+    notification_settings: '通知設定',
+    purchase_history: '購入履歴',
+    service_info: 'サービス情報',
+    terms: '利用規約',
+    personal_info: '個人情報の取扱について',
+    commercial_transaction: '特定商取引に関する表記',
+  },
 }

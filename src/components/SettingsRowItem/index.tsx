@@ -7,9 +7,10 @@ export interface SettingsRowItemProps {
   checked?: boolean
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   name?: string
+  showSwitch?: boolean
 }
 
-const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handleChange, name }) => {
+const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handleChange, name, showSwitch }) => {
   const classes = useStyles()
 
   return (
@@ -21,9 +22,11 @@ const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handl
               {title}
             </Typography>
           </Box>
-          <Box textAlign="center">
-            <ESSwitchIOS key={title} handleChange={handleChange} name={name} checked={checked} />
-          </Box>
+          {showSwitch ? (
+            <Box textAlign="center">
+              <ESSwitchIOS key={title} handleChange={handleChange} name={name} checked={checked} />
+            </Box>
+          ) : null}
         </Box>
       </Box>
     </div>
