@@ -1,5 +1,5 @@
 import { State } from '../actions/types'
-import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX } from '@constants/socket.constants'
 import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
@@ -11,6 +11,8 @@ const initialState: State = {
   lastKey: null,
   paginating: false,
   activeRoom: null,
+  chatMembers: [],
+  socketReady: false,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -45,6 +47,21 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         members: newUsers,
         lastKey: action.data.lastKey,
         paginating: false,
+      }
+    case CHAT_ACTION_TYPE.GET_ROOM_MEMBERS:
+      return {
+        ...state,
+        chatMembers: action.data.content,
+      }
+    case `${WEBSOCKET_PREFIX}:CONNECTED`:
+      return {
+        ...state,
+        socketReady: true,
+      }
+    case `${WEBSOCKET_PREFIX}:DISCONNECTED`:
+      return {
+        ...state,
+        socketReady: false,
       }
     default:
       return state

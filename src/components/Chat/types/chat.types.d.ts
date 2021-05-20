@@ -18,7 +18,6 @@ export type ChatDataType = {
 export interface ChatSuggestionList extends SuggestionDataItem {
   userId: number
   nickName: string
-  profile: string
   memberType?: number
   unseenCount?: number
   chatRoomId?: string
@@ -27,7 +26,6 @@ export interface ChatSuggestionList extends SuggestionDataItem {
   createdAt?: number
   groupType?: number
   userCode?: string
-  nickName?: string
   profile?: string
 }
 

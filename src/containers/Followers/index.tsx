@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Box, Typography, Button } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
-import useFollowers from '../../containers/Followers/useFollowers'
+import useFollowers from './useFollowers'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -85,7 +85,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
           <InfiniteScroll
             dataLength={followers.length}
             next={fetchMoreData}
-            hasMore={hasMore}
+            hasMore={hasMore && followers.length > 0}
             loader={
               <div className={classes.loaderCenter}>
                 <ESLoader />

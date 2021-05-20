@@ -7,4 +7,6 @@ export interface State {
   paginating: boolean
   members: ChatRoomMemberItem[] | undefined
   activeRoom: string | undefined
+  chatMembers: ChatRoomMemberItem[]
+  socketReady: boolean
 }
