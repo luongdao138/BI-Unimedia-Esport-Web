@@ -1,4 +1,4 @@
-import { Box, Theme } from '@material-ui/core'
+import { Box, Theme, Grid } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
@@ -14,24 +14,29 @@ export const FooterAction: React.FC<Props> = ({ onCancel, onDone }) => {
   const { t } = useTranslation(['common'])
 
   return (
-    <Box className={classes.actionWrap}>
-      <Box className={classes.actionButton}>
-        <ButtonPrimary round gradient={false} onClick={onCancel}>
-          {t('common:common.cancel')}
-        </ButtonPrimary>
-      </Box>
-      <Box mr={2} />
-      <Box className={classes.actionButton}>
-        <ButtonPrimary round onClick={onDone}>
-          {t('common:common.done')}
-        </ButtonPrimary>
-      </Box>
-    </Box>
+    <Grid container spacing={1} className={classes.actionWrap}>
+      <Grid item sm={12} md={6} lg={6} xl={6}>
+        <Box className={classes.actionCancelButton}>
+          <ButtonPrimary round gradient={false} onClick={onCancel}>
+            {t('common:common.cancel')}
+          </ButtonPrimary>
+        </Box>
+      </Grid>
+      <Grid item sm={12} md={6} lg={6} xl={6}>
+        <Box className={classes.actionDoneButton}>
+          <ButtonPrimary round onClick={onDone}>
+            {t('common:common.done')}
+          </ButtonPrimary>
+        </Box>
+      </Grid>
+    </Grid>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionWrap: {
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(11),
     display: 'flex',
@@ -40,8 +45,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: '1px solid',
     borderTopColor: Colors.white_opacity[30],
   },
-  actionButton: {
+  actionCancelButton: {
     maxWidth: '100%',
     width: 220,
+    marginRight: theme.spacing(1),
+    marginLeft: 'auto',
+  },
+  actionDoneButton: {
+    maxWidth: '100%',
+    width: 220,
+    marginRight: 'auto',
+    marginLeft: theme.spacing(1),
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionWrap: {
+      flexDirection: 'column-reverse',
+      paddingBottom: theme.spacing(5),
+    },
+    actionCancelButton: {
+      marginRight: 'auto',
+    },
+    actionDoneButton: {
+      marginLeft: 'auto',
+    },
   },
 }))

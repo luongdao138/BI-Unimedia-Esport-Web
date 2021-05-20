@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
   dragItemWrap: {
     display: 'flex',
     height: 40,
-    alignItems: 'center',
+    alignItems: 'baseline',
     '&:hover': {
       background: Colors.white_opacity[30],
       cursor: 'grab',
@@ -64,6 +64,6 @@ const useStyles = makeStyles(() => ({
     color: Colors.white_opacity[30],
   },
   dragTitle: {
-    color: Colors.white_opacity[30],
+    color: Colors.white_opacity[70],
   },
 }))
