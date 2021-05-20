@@ -10,7 +10,7 @@ import useTournamentDetail from '../useTournamentDetail'
 
 const Matches: React.FC = () => {
   const classes = useStyles()
-  const { matches, setParticipant, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
+  const { matches, setParticipant, fetchMatches, setMeta, roundTitles, meta: matchesMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const [selectedMatch, setSelectedMatch] = useState()
 
@@ -57,6 +57,7 @@ const Matches: React.FC = () => {
                 ))}
               </Bracket.Container>
               <SelectParticipantModal
+                meta={setMeta}
                 tournament={tournament}
                 selectedMatch={selectedMatch}
                 handleSetParticipant={(params) => setParticipant({ ...params, hash_key: tournament.attributes.hash_key })}

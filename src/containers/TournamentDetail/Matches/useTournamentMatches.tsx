@@ -8,6 +8,7 @@ import { SetParticipantParams, TournamentMatchRound } from '@services/tournament
 import { Meta } from '@store/metadata/actions/types'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
+const setParticipantMeta = createMetaSelector(actions.setParticipant)
 
 type RoundTitles = { matches: string[]; third_place_match: string[] }
 
@@ -15,6 +16,7 @@ const useTournamentMatches = (): {
   matches: TournamentMatchRound[]
   third_place_match: TournamentMatchRound
   meta: Meta
+  setMeta: Meta
   fetchMatches: () => void
   setParticipant: (params: SetParticipantParams) => void
   roundTitles: RoundTitles
@@ -23,6 +25,7 @@ const useTournamentMatches = (): {
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
+  const setMeta = useAppSelector(setParticipantMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
   useEffect(() => {
     fetchMatches()
@@ -55,7 +58,7 @@ const useTournamentMatches = (): {
   }
 
   const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
-  return { matches, third_place_match, meta, setParticipant, fetchMatches, roundTitles }
+  return { matches, third_place_match, meta, setParticipant, fetchMatches, roundTitles, setMeta }
 }
 
 export default useTournamentMatches

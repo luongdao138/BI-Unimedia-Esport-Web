@@ -89,6 +89,8 @@ export default {
     yes: 'あり',
     no: 'なし',
     man: '人',
+    no_data: '対象データありません',
+    dash: '-',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -227,6 +229,11 @@ export default {
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',
+    select_user: 'ユーザーを選ぶ',
+    set_participants: '設定する',
+    unset_participants: 'サブボタン',
+    match_setting: '試合設定',
+    vs: 'VS',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
