@@ -5,12 +5,15 @@ import TournamentDetailHeader from '@components/TournamentDetailHeader'
 import { useRouter } from 'next/router'
 import { TournamentStatus } from '@services/tournament.service'
 import DetailInfo from '@containers/TournamentDetail/Partials/DetailInfo'
-import RecruitingAction from './Partials/RecruitingAction'
+// import RecruitingAction from './Partials/RecruitingAction'
+import RecruitmentClosed from './Partials/RecruitmentClosed'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 const TournamentDetail: React.FC = () => {
   const router = useRouter()
   const { tournament, meta } = useTournamentDetail()
   const handleBack = () => router.back()
+  const { userProfile } = useGetProfile()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <></>, //headset
@@ -18,8 +21,8 @@ const TournamentDetail: React.FC = () => {
     completed: <></>, //trophy
     ready: <></>,
     ready_to_start: <></>, //hourglass
-    recruiting: <RecruitingAction tournament={tournament} />,
-    recruitment_closed: <></>, //hourglass
+    recruiting: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, // <RecruitingAction tournament={tournament} />,
+    recruitment_closed: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
   }
   return (
     <div>
