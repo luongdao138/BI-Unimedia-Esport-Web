@@ -6,7 +6,7 @@ import IndividualEntryModal from './IndividualEntryModal'
 import CloseRecruitmentModal from './CloseRecruitmentModal'
 import TeamEntryModal from './TeamEntryModal'
 import SubActionButtons from './SubActionButtons'
-import { ROLE, STATUS } from '@constants/tournament.constants'
+import { ROLE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/tournament.service'
@@ -23,6 +23,7 @@ const ActionComponent: React.FC<Props> = (props) => {
   // const { t } = useTranslation(['common'])
 
   const isTeam = tournament.attributes.participant_type > 1
+  const status = tournament.attributes.status
   const myRole = tournament.attributes.my_role
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
 
@@ -42,7 +43,7 @@ const ActionComponent: React.FC<Props> = (props) => {
         <SubActionButtons tournament={tournament} />
       </Box>
 
-      {isModerator && status === STATUS.RECRUITING && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
+      {isModerator && status === TOURNAMENT_STATUS.RECRUITING && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
       {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
       {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
     </Box>
