@@ -11,16 +11,16 @@ export interface SwitchIOSProps {
 const AntSwitch = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: 28,
-      height: 16,
+      width: 63,
+      height: 36,
       padding: 0,
       display: 'flex',
     },
     switchBase: {
-      padding: 2,
+      padding: 4,
       color: theme.palette.grey[500],
       '&$checked': {
-        transform: 'translateX(12px)',
+        transform: 'translateX(28px)',
         color: theme.palette.common.white,
         '& + $track': {
           opacity: 1,
@@ -30,13 +30,13 @@ const AntSwitch = withStyles((theme: Theme) =>
       },
     },
     thumb: {
-      width: 12,
-      height: 12,
+      width: 28,
+      height: 28,
       boxShadow: 'none',
     },
     track: {
       border: `1px solid ${theme.palette.grey[500]}`,
-      borderRadius: 16 / 2,
+      borderRadius: 18,
       opacity: 1,
       backgroundColor: theme.palette.common.white,
     },
