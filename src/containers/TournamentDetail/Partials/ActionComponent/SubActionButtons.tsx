@@ -19,7 +19,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const myRole = tournament.attributes.my_role
   const status = tournament.attributes.status
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
-
+  const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
 
   return (
@@ -27,28 +27,65 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
       <Box className={classes.actionButtonContainer}>
         {tournament.attributes.is_entered || isModerator ? (
           <>
-            <Box className={classes.actionButton}>
-              <Participants detail={tournament} />
-            </Box>
-            <Box className={classes.actionButton}>
-              <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                グループチャット
-              </ESButton>
-            </Box>
-            {isRecruitmentClosed && isModerator && (
-              <Box className={classes.actionButtonContainer}>
+            {isInProgress ? (
+              <>
+                <Box className={classes.actionButton}>
+                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                    参加メンバー
+                  </ESButton>
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                    グループチャット
+                  </ESButton>
+                </Box>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
                     対戦表
                   </ESButton>
                 </Box>
-              </Box>
+              </>
+            ) : (
+              <>
+                <Box className={classes.actionButton}>
+                  <Participants detail={tournament} />
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                    グループチャット
+                  </ESButton>
+                </Box>
+                {isRecruitmentClosed && isModerator && (
+                  <Box className={classes.actionButton}>
+                    <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                      対戦表
+                    </ESButton>
+                  </Box>
+                )}
+              </>
             )}
           </>
         ) : (
-          <Box className={classes.actionButton}>
-            <Participants detail={tournament} />
-          </Box>
+          <>
+            {isInProgress ? (
+              <>
+                <Box className={classes.actionButton}>
+                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                    参加メンバー
+                  </ESButton>
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                    対戦表
+                  </ESButton>
+                </Box>
+              </>
+            ) : (
+              <Box className={classes.actionButton}>
+                <Participants detail={tournament} />
+              </Box>
+            )}
+          </>
         )}
       </Box>
     </Box>

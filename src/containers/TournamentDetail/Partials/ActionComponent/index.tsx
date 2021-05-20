@@ -29,12 +29,13 @@ const ActionComponent: React.FC<Props> = (props) => {
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
+  const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
 
   const buildArenaPeriodValue = () => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
     const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
 
-    const arenaStatus = isRecruiting ? 'エントリー期間' : isRecruitmentClosed ? '開催期間' : ''
+    const arenaStatus = isRecruiting ? 'エントリー期間' : isRecruitmentClosed || isInProgress ? '開催期間' : ''
 
     return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
   }
