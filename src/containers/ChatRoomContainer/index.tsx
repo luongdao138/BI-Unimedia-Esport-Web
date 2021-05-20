@@ -6,8 +6,10 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { currentUserId } from '@store/auth/selectors'
 import { messages } from '@store/socket/selectors'
 import { ChatSuggestionList } from '@components/Chat/types/chat.types'
-import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
+import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
+import moment from 'moment'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -96,6 +98,21 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     }
   }, [userId, roomId])
 
+  const handlePress = (text: string) => {
+    const currentTimestamp = moment().valueOf()
+    const clientId = uuidv4()
+    const payload = {
+      action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+      roomId: roomId,
+      createdAt: currentTimestamp,
+      userId: userId,
+      msg: text,
+      clientId: clientId,
+      type: CHAT_MESSAGE_TYPE.TEXT,
+    }
+    dispatch(socketActions.sendMessage(payload))
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.list}>
@@ -104,7 +121,10 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           _.isArray(data) &&
           data.map((value, index) => {
             return (
-              <Box style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: '#333', display: 'block' }} key={index}>
+              <Box
+                style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: value.sent ? '#555' : '#212121', display: 'block' }}
+                key={index}
+              >
                 <Typography color="textSecondary" noWrap={false} variant="body2">
                   {value.msg}
                 </Typography>
@@ -113,7 +133,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           })}
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea users={users} />
+        <MessageInputArea onPressSend={handlePress} users={users} />
       </Box>
     </Box>
   )

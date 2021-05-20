@@ -19,7 +19,7 @@ const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageT
         return chr.clientId == item
       })
       if (newObj) {
-        olddata[indexMsg] = _.assign(updatedObj[indexMsg], newObj)
+        olddata[indexMsg] = _.assign({}, updatedObj[indexMsg], newObj)
         updatedObj = olddata
       }
     })

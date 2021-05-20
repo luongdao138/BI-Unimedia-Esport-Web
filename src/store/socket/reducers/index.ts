@@ -3,6 +3,7 @@ import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX } from '@constants/socket.constants'
 import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
+import { ChatHelper } from './utils'
 
 const initialState: State = {
   roomList: undefined,
@@ -17,6 +18,11 @@ const initialState: State = {
 
 let newMessagesList: MessageType[] | undefined
 let newUsers: ChatRoomMemberItem[] | undefined
+let result: MessageType[] | undefined
+let pending: MessageType[] | undefined
+let oldMessages: MessageType[] | undefined
+let newMsg: MessageType[] | undefined
+let mergedMsg: MessageType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
@@ -48,6 +54,27 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         lastKey: action.data.lastKey,
         paginating: false,
       }
+    case CHAT_ACTION_TYPE.MESSAGE_PENDING:
+      if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
+        pending = [action.data]
+      } else {
+        pending = _.concat(action.data, ...state.messages)
+      }
+      return {
+        ...state,
+        messages: pending,
+      }
+
+    case CHAT_ACTION_TYPE.SEND_MESSAGE:
+      oldMessages = state.messages
+      newMsg = action.data.content
+      mergedMsg = ChatHelper.messagesMerge([...oldMessages], newMsg)
+      result = mergedMsg
+      return {
+        ...state,
+        messages: result,
+      }
+
     case CHAT_ACTION_TYPE.GET_ROOM_MEMBERS:
       return {
         ...state,
