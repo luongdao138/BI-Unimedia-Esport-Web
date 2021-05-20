@@ -14,6 +14,17 @@ const EventRecommendedContainer: React.FC = () => {
     getRecommendedEventList()
   }, [])
 
+  const renderList = () => {
+    if (recommendedEventList.length !== 0) {
+      return recommendedEventList.map((event, i) => (
+        <Grid key={i} item xs={6} md={4}>
+          <EventCard event={event} />
+        </Grid>
+      ))
+    }
+    return null
+  }
+
   return (
     <>
       <Box py={2} px={3} mb={6} display="flex" flexDirection="row" alignItems="center">
@@ -25,11 +36,7 @@ const EventRecommendedContainer: React.FC = () => {
         </Typography>
       </Box>
       <Grid container className={classes.container}>
-        {recommendedEventList.map((event, i) => (
-          <Grid key={i} item xs={6} md={4}>
-            <EventCard event={event} />
-          </Grid>
-        ))}
+        {renderList()}
       </Grid>
     </>
   )
@@ -46,6 +53,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
     marginRight: theme.spacing(2),
+  },
+  loaderBox: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: '50px',
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+    },
   },
 }))
 

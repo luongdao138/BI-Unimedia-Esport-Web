@@ -178,7 +178,9 @@ export type GameEditParams = {
 
 export type RecommendedEventResponse = {
   data: Array<CommonResponse>
+  meta: PaginationResponse
 }
+
 export type ResultsResponse = {
   attributes: any
 }
@@ -189,6 +191,13 @@ export type HomeSettingsParams = {
 
 export type HomeSettingsResponse = {
   home_settings: string[]
+}
+
+export type PaginationResponse = {
+  current_page: number
+  total_pages: number
+  total_count: number
+  per_page: number
 }
 
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
