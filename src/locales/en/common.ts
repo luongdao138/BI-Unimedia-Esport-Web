@@ -282,11 +282,17 @@ export default {
     cancel: 'キャンセル',
     ok: 'ログアウト',
   },
-  user_security_settings: {
+  my_page_settings: {
     title: 'マイページの情報公開範囲',
     tournament_title: '大会履歴',
     activity_title: 'アクティビティ',
     profile_title: 'プロフィール',
+  },
+  security_settings: {
+    title: 'セキュリティ',
+    my_page: 'マイページの情報公開範囲',
+    message: 'メッセージの受信設定',
+    block: 'ブロックしたユーザー',
   },
   settings: {
     title: '設定',

@@ -26,5 +26,8 @@ export const ESRoutes = {
   TOPIC_FOLLOWER: '/topic/follower',
   NOTIFICATIONS: '/notifications',
   USER_SECURITY_SETTINGS: '/settings/security_settings',
+  MY_PAGE_SETTINGS: '/settings/security_settings/my_page',
+  MESSAGE_SETTINGS: '/settings/security_settings/message',
+  BLOCK_SETTINGS: '/settings/security_settings/block',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
 }
