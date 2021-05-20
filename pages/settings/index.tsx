@@ -30,7 +30,7 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.USER_NOTIFICATION_SETTINGS)
           }}
         >
           <SettingsRowItem key="notification_settings" title={t('settings.notification_settings')} showSwitch={false} />

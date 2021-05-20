@@ -294,6 +294,18 @@ export default {
     message: 'メッセージの受信設定',
     block: 'ブロックしたユーザー',
   },
+  notification_settings: {
+    title: '通知設定',
+    settings_select_all: '一括設定',
+    follow: 'フォロー',
+    receive_message: 'メッセージの受信',
+    reply_to_comment: 'コメントへの返信',
+    reply_to_comment_community: 'コメントへの返信（コミュニティ）',
+    system_notification_community: 'コミュニティに関するシステム通知',
+    system_notification_tournament: '大会に関するシステム通知',
+    system_notification_recruitment: '募集に関するシステム通知',
+    system_notification: '運営からのお知らせ',
+  },
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
