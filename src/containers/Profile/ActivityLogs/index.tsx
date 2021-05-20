@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { Grid, Box, makeStyles } from '@material-ui/core'
 import useActivityLogs from './useActivityLogs'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 import ActivityItem from '../Partials/ActivityItem'
+
+import { FixedSizeList as List } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
 
 interface Props {
   userCode: string
@@ -12,6 +14,9 @@ interface Props {
 const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
   const { activityLogs, getActivityLogs, pages, meta, resetMeta } = useActivityLogs()
+  useEffect(() => {
+    return () => resetMeta()
+  }, [])
 
   useEffect(() => {
     getActivityLogs({
@@ -20,12 +25,10 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
     })
   }, [userCode])
 
-  useEffect(() => {
-    return () => resetMeta()
-  }, [])
+  const hasNextPage = pages && pages.current_page !== pages.total_pages
 
   const loadMore = () => {
-    if (pages && pages.current_page !== pages.total_pages) {
+    if (hasNextPage) {
       getActivityLogs({
         page: pages.current_page + 1,
         user_code: userCode,
@@ -33,19 +36,34 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
     }
   }
 
+  const Row = (props: { index: number; style: React.CSSProperties; data: any }) => {
+    const { index, style, data } = props
+    const log = data[index]
+    return (
+      <div style={style} key={index}>
+        <ActivityItem activity={log} />
+      </div>
+    )
+  }
+
+  const itemCount = hasNextPage ? activityLogs.length + 1 : activityLogs.length
   return (
-    <Grid container>
-      <InfiniteScroll
-        className={classes.container}
-        dataLength={activityLogs.length}
-        next={loadMore}
-        hasMore={pages && pages.current_page !== pages.total_pages}
-        loader={null}
-      >
-        {activityLogs.map((log, i) => (
-          <ActivityItem activity={log} key={i} />
-        ))}
-      </InfiniteScroll>
+    <Box className={(classes.container, 'scroll-bar')}>
+      <InfiniteLoader isItemLoaded={(index: number) => index < activityLogs.length} itemCount={itemCount} loadMoreItems={loadMore}>
+        {({ onItemsRendered, ref }) => (
+          <List
+            height={800}
+            width={'100%'}
+            itemCount={activityLogs.length}
+            itemData={activityLogs}
+            itemSize={66}
+            onItemsRendered={onItemsRendered}
+            ref={ref}
+          >
+            {Row}
+          </List>
+        )}
+      </InfiniteLoader>
       {meta.pending && (
         <Grid item xs={12}>
           <Box my={4} display="flex" justifyContent="center" alignItems="center">
@@ -53,12 +71,13 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
           </Box>
         </Grid>
       )}
-    </Grid>
+    </Box>
   )
 }
 
 const useStyles = makeStyles(() => ({
   container: {
+    height: 800,
     padding: 24,
     paddingTop: 16,
     paddingBottom: 0,
