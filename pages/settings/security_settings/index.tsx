@@ -26,14 +26,14 @@ const SecuritySettingsPage: PageWithLayoutType = () => {
             router.push(ESRoutes.MESSAGE_SETTINGS)
           }}
         >
-          <SettingsRowItem key="security" title={t('security_settings.message')} showSwitch={false} />
+          <SettingsRowItem key="message" title={t('security_settings.message')} showSwitch={false} />
         </div>
         <div
           onClick={() => {
             router.push(ESRoutes.BLOCK_SETTINGS)
           }}
         >
-          <SettingsRowItem key="security" title={t('security_settings.block')} showSwitch={false} />
+          <SettingsRowItem key="block" title={t('security_settings.block')} showSwitch={false} />
         </div>
       </Box>
     </div>
