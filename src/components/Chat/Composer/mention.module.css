@@ -49,8 +49,8 @@
   max-height: 300px;
 }
 
-.mentions__suggestions__item {
-}
+/* .mentions__suggestions__item {
+} */
 
 .mentions__suggestions__item--focused {
   background-color: #cee4e5;

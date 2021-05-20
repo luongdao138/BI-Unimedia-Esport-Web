@@ -5,6 +5,8 @@ const getRoot = (state: RootState) => state.auth
 
 export const getAuth = createSelector(getRoot, (state) => state.user)
 
+export const currentUserId = createSelector(getRoot, (state) => state.user?.id)
+
 export const getUserCode = createSelector(getRoot, (state) => state.user?.user_code)
 
 export const getIsRegistered = createSelector(getRoot, (state) => state.user && !!state.user.nickname && !!state.user.user_code)
