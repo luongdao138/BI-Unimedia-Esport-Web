@@ -6,4 +6,5 @@ export interface State {
   lastKey: string | null
   paginating: boolean
   members: ChatRoomMemberItem[] | undefined
+  activeRoom: string | undefined
 }
