@@ -85,7 +85,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
           <InfiniteScroll
             dataLength={followers.length}
             next={fetchMoreData}
-            hasMore={hasMore}
+            hasMore={hasMore && followers.length > 0}
             loader={
               <div className={classes.loaderCenter}>
                 <ESLoader />
