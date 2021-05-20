@@ -4,11 +4,11 @@ import { ArrowBack } from '@material-ui/icons'
 import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
-import SelectParticipantModal from '../Partials/SelectParticipantModal'
+import SelectParticipantModal from '../TournamentDetail/Partials/SelectParticipantModal'
 import useTournamentMatches from './useTournamentMatches'
-import useTournamentDetail from '../useTournamentDetail'
+import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
 
-const Matches: React.FC = () => {
+const ArenaMatches: React.FC = () => {
   const classes = useStyles()
   const { matches, setParticipant, fetchMatches, setMeta, roundTitles, meta: matchesMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
@@ -75,7 +75,7 @@ const Matches: React.FC = () => {
   )
 }
 
-export default Matches
+export default ArenaMatches
 
 const useStyles = makeStyles(() => ({
   root: {
