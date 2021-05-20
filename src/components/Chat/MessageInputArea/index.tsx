@@ -46,6 +46,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
 
   const send = () => {
     onPressSend ? onPressSend(text) : undefined
+    setText('')
   }
 
   const renderSuggestion = (
