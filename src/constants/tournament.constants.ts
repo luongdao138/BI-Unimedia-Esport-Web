@@ -20,3 +20,20 @@ export const PARTICIPANT_TYPE = {
   HOME: 'home',
   GUEST: 'guest',
 }
+
+export const STATUS = {
+  READY: 'ready',
+  RECRUITING: 'recruiting',
+  RECRUITMENT_CLOSED: 'recruitment_closed',
+  READY_TO_START: 'ready_to_start',
+  IN_PROGRESS: 'in_progress',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+}
+
+export const ROLE = {
+  ADMIN: 'admin',
+  CO_ORGANIZER: 'co_organizer',
+  PARTICIPANT: 'participant',
+  INTERESTED: 'interested',
+}

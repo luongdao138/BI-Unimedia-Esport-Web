@@ -234,6 +234,8 @@ export default {
     unset_participants: 'サブボタン',
     match_setting: '試合設定',
     vs: 'VS',
+    match_result: '対戦結果',
+    edit_match_result: '対戦結果を編集する',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
