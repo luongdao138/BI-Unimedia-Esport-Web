@@ -63,19 +63,18 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
 
   return (
     <Box>
-      <Box className={classes.actionButtonContainer}>
-        <Box className={classes.actionButton}>
-          {tournament.attributes.is_entered ? (
-            <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-              エントリーを辞退する
-            </ESButton>
-          ) : (
-            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-              エントリーする
-            </ButtonPrimary>
-          )}
-        </Box>
+      <Box className={classes.actionButton}>
+        {tournament.attributes.is_entered ? (
+          <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
+            エントリーを辞退する
+          </ESButton>
+        ) : (
+          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+            エントリーする
+          </ButtonPrimary>
+        )}
       </Box>
+
       <StickyActionModal
         open={open}
         returnText={'エントリーする'}
@@ -146,9 +145,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
     },
   },
-  //
   actionButton: {
-    width: theme.spacing(35),
+    marginTop: theme.spacing(3),
+    width: '100%',
+    margin: '0 auto',
+    maxWidth: theme.spacing(35),
   },
 }))
 

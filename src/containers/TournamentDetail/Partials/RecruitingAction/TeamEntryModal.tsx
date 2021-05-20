@@ -267,19 +267,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   return (
     <Box>
-      <Box className={classes.actionButtonContainer}>
-        <Box className={classes.actionButton}>
-          {tournament.attributes.is_entered ? (
-            <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-              エントリーを辞退する
-            </ESButton>
-          ) : (
-            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-              エントリーする
-            </ButtonPrimary>
-          )}
-        </Box>
+      <Box className={classes.actionButton}>
+        {tournament.attributes.is_entered ? (
+          <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
+            エントリーを辞退する
+          </ESButton>
+        ) : (
+          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+            エントリーする
+          </ButtonPrimary>
+        )}
       </Box>
+
       <StickyActionModal
         open={open}
         returnText={step === FINAL_STEP ? 'エントリーネームの設定' : 'エントリーする'}
@@ -338,9 +337,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
     },
   },
-  //
   actionButton: {
-    width: theme.spacing(35),
+    marginTop: theme.spacing(3),
+    width: '100%',
+    margin: '0 auto',
+    maxWidth: theme.spacing(35),
   },
   required: {
     backgroundColor: Colors.primary,
