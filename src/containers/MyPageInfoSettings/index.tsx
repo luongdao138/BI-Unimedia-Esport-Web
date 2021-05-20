@@ -2,12 +2,12 @@ import { Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import SettingsRowItem from '@components/SettingsRowItem'
 import HeaderWithButton from '@components/HeaderWithButton'
-import useSecuritySettings from './useSecuritySettings'
+import useSecuritySettings from './useMyPageInfoSettings'
 import { useEffect, useState } from 'react'
 import ESLoader from '@components/Loader'
 import _ from 'lodash'
 
-const ESSecuritySettings: React.FC = () => {
+const ESMyPageInfoSettings: React.FC = () => {
   const { t } = useTranslation('common')
   const { fetchMeta, securitySettings, updateSecuritySettings } = useSecuritySettings()
 
@@ -37,13 +37,13 @@ const ESSecuritySettings: React.FC = () => {
 
   return (
     <div>
-      <HeaderWithButton title={t('user_security_settings.title')} />
+      <HeaderWithButton title={t('my_page_settings.title')} />
       {fetchMeta.pending && <ESLoader />}
 
       <Box>
         <SettingsRowItem
           key="show_tournament_history"
-          title={t('user_security_settings.tournament_title')}
+          title={t('my_page_settings.tournament_title')}
           checked={state.show_tournament_history}
           handleChange={handleChange}
           name="show_tournament_history"
@@ -51,7 +51,7 @@ const ESSecuritySettings: React.FC = () => {
         />
         <SettingsRowItem
           key="show_activity_logs"
-          title={t('user_security_settings.activity_title')}
+          title={t('my_page_settings.activity_title')}
           checked={state.show_activity_logs}
           handleChange={handleChange}
           name="show_activity_logs"
@@ -59,7 +59,7 @@ const ESSecuritySettings: React.FC = () => {
         />
         <SettingsRowItem
           key="show_about"
-          title={t('user_security_settings.profile_title')}
+          title={t('my_page_settings.profile_title')}
           checked={state.show_about}
           handleChange={handleChange}
           name="show_about"
@@ -70,4 +70,4 @@ const ESSecuritySettings: React.FC = () => {
   )
 }
 
-export default ESSecuritySettings
+export default ESMyPageInfoSettings
