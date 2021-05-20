@@ -6,6 +6,7 @@ import { getRoomMembers } from '@store/socket/selectors'
 import { currentUserId } from '@store/auth/selectors'
 import React, { useEffect } from 'react'
 import RoomMemberItem from '@components/Chat/RoomMemberItem/index'
+import { CHAT_ACTION_TYPE, CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -20,7 +21,7 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) =
     if (userId && roomId) {
       dispatch(
         socketActions.socketSend({
-          action: 'GET_ROOM_MEMBERS',
+          action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
           userId: userId,
           roomId: roomId,
         })
@@ -28,12 +29,25 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) =
     }
   }, [userId, roomId])
 
+  const onItemDelete = (id: number) => {
+    dispatch(
+      socketActions.socketSend({
+        action: CHAT_ACTION_TYPE.REMOVE_MEMBER,
+        userId: userId,
+        roomId: roomId,
+        memberId: `${id}`,
+      })
+    )
+  }
+
   return (
     <Box className={classes.room}>
       <List>
-        {roomMembers.map((val) => (
-          <RoomMemberItem key={val.userId} name={val.nickName} />
-        ))}
+        {roomMembers
+          .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE)
+          .map((val) => (
+            <RoomMemberItem key={val.userId} userCode={val.userCode} id={val.userId} name={val.nickName} onDelete={onItemDelete} />
+          ))}
       </List>
     </Box>
   )

@@ -80,6 +80,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         chatMembers: action.data.content,
       }
+    case CHAT_ACTION_TYPE.REMOVE_MEMBER:
+      return {
+        ...state,
+        chatMembers: action.data.content,
+      }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {
         ...state,

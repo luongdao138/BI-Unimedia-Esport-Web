@@ -1,5 +1,5 @@
 import { SuggestionDataItem } from 'react-mentions'
-import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
+import { CHAT_MESSAGE_TYPE, CHAT_MEMBER_TYPE, CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 export type ChatDataType = {
   unseenCount: number
@@ -59,8 +59,8 @@ export interface ChatRoomMemberItem {
   display: string
   groupType: number
   id: string
-  memberStatus: number
-  memberType: number
+  memberStatus: CHAT_MEMBER_STATUS
+  memberType: CHAT_MEMBER_TYPE
   nickName: string
   profile: string
   sortKey: string
