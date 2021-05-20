@@ -107,14 +107,30 @@ export default { Container, Round, Match }
 const useStyles = makeStyles((theme) => ({
   bracket: {
     display: 'flex',
+    '& $round:not(first-child)>h3': {
+      paddingLeft: 48,
+    },
+    '& $round:first-child>h3': {
+      paddingLeft: 8,
+    },
+    '& $round h3': {
+      position: 'absolute',
+      height: 40,
+      top: 0,
+      left: 0,
+    },
   },
   round: {
     display: 'flex',
     // flexGrow: 1,
     flexDirection: 'column',
-    opacity: 0.4,
+    paddingTop: 48,
+    position: 'relative',
+    '& $match': {
+      opacity: 0.4,
+    },
     '&:first-child $match': {
-      marginLeft: 8,
+      marginLeft: 0,
     },
     '&:first-child $match::before': {
       display: 'none',
@@ -131,7 +147,9 @@ const useStyles = makeStyles((theme) => ({
   },
   editable: {},
   active: {
-    opacity: 1,
+    '& $match': {
+      opacity: 1,
+    },
     '& $matchContent': {
       left: 0,
       transition: '0.2s left',
@@ -178,7 +196,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: -1,
       marginLeft: -2,
     },
-    '&:nth-child(odd)::after': {
+    '&:nth-child(even)::after': {
       content: "''",
       display: 'block',
       border: '1px solid transparent',
@@ -190,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
       width: 41,
       top: '50%',
     },
-    '&:nth-child(even)::after': {
+    '&:nth-child(odd)::after': {
       content: "''",
       display: 'block',
       border: '1px solid transparent',
