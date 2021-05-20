@@ -33,7 +33,7 @@ export const getFeatures = createAsyncThunk<services.UserFeaturesResponse>(
   }
 )
 
-export const getSecuritySettings = createAsyncThunk<services.GetSecuritySettingsResponse>(
+export const getSecuritySettings = createAsyncThunk<services.SecuritySettingsResponse>(
   SETTINGS_ACTION_TYPE.GET_USER_SECURITY_SETTINGS,
   async (_, { rejectWithValue }) => {
     try {

@@ -63,8 +63,7 @@ export type SecuritySettingsParam = {
 }
 
 export type SecuritySettingsResponse = {
-  success: string
-  meta: any
+  data: SecuritySettings
 }
 
 export type SecuritySettings = {
@@ -74,14 +73,7 @@ export type SecuritySettings = {
     show_tournament_history: boolean
     show_activity_logs: boolean
     show_about: boolean
-    allow_messages_from_strangers: boolean
-    allow_groups_from_strangers: boolean
   }
-}
-
-export type GetSecuritySettingsResponse = {
-  data: SecuritySettings
-  meta: any
 }
 
 export const updateSecuritySettings = async (params: SecuritySettingsParam): Promise<SecuritySettingsResponse> => {
@@ -89,7 +81,7 @@ export const updateSecuritySettings = async (params: SecuritySettingsParam): Pro
   return data
 }
 
-export const getSecuritySettings = async (): Promise<GetSecuritySettingsResponse> => {
-  const { data } = await api.get<GetSecuritySettingsResponse>(URI.USER_SECURITY_SETTINGS, {})
+export const getSecuritySettings = async (): Promise<SecuritySettingsResponse> => {
+  const { data } = await api.get<SecuritySettingsResponse>(URI.USER_SECURITY_SETTINGS, {})
   return data
 }
