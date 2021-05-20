@@ -17,14 +17,14 @@ export const FooterAction: React.FC<Props> = ({ onCancel, onDone }) => {
     <Grid container spacing={1} className={classes.actionWrap}>
       <Grid item sm={12} md={6} lg={6} xl={6}>
         <Box className={classes.actionCancelButton}>
-          <ButtonPrimary round gradient={false} onClick={onCancel}>
+          <ButtonPrimary round gradient={false} onClick={onCancel} fullWidth>
             {t('common:common.cancel')}
           </ButtonPrimary>
         </Box>
       </Grid>
       <Grid item sm={12} md={6} lg={6} xl={6}>
         <Box className={classes.actionDoneButton}>
-          <ButtonPrimary round onClick={onDone}>
+          <ButtonPrimary round onClick={onDone} fullWidth>
             {t('common:common.done')}
           </ButtonPrimary>
         </Box>
