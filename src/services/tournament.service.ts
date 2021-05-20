@@ -116,7 +116,8 @@ export type EntryStatusResponse = {
 export type TournamentMatchParticipant = {
   id: number
   role: 'admin' | 'participant' | 'interested' | 'co_organizer'
-  name: string
+  name?: string
+  team_name?: string
   pid: number
   nickname: string
   user_code: string

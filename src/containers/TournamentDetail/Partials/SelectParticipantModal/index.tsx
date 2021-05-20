@@ -1,17 +1,149 @@
 import React, { useState, useEffect } from 'react'
 import { SetParticipantParams, TournamentDetail, TournamentMatchItem } from '@services/tournament.service'
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, IconButton, Icon, ThemeProvider, createMuiTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
-import ESAvatar from '@components/Avatar'
-import { IconButton } from '@material-ui/core'
-import Icon from '@material-ui/core/Icon'
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
+import ESAvatar from '@components/Avatar'
+import ESModal from '@components/Modal'
 import InterestedList from './InterestedList'
 import { PARTICIPANT_TYPE } from '@constants/tournament.constants'
+import { Meta } from '@store/metadata/actions/types'
+
+interface SelectParticipantModalProps {
+  meta: Meta
+  tournament: TournamentDetail
+  selectedMatch: TournamentMatchItem
+  handleClose: (refresh: boolean) => void
+  handleSetParticipant: (params: SetParticipantParams) => void
+}
+
+const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
+  meta,
+  tournament,
+  selectedMatch,
+  handleClose,
+  handleSetParticipant,
+}) => {
+  const data = tournament.attributes
+  const isTeam = data.participant_type > 1
+  const { t } = useTranslation(['common'])
+  const classes = useStyles()
+  const [match, setMatch] = useState(selectedMatch)
+  const [showParticipants, setShowParticipants] = useState<boolean>(false)
+  const [refresh, setRefresh] = useState<boolean>(false)
+  const [targetParticipant, setTargetParticipant] = useState<any | undefined>()
+  const [selectedType, setSelectedType] = useState<string | undefined>()
+
+  useEffect(() => {
+    setMatch(selectedMatch)
+  }, [selectedMatch])
+
+  useEffect(() => {
+    if (meta.loaded && targetParticipant) {
+      if (selectedType == PARTICIPANT_TYPE.HOME) {
+        setMatch({ ...match, home_user: targetParticipant.user, home_avatar: targetParticipant.avatar })
+      } else if (selectedType == PARTICIPANT_TYPE.GUEST) {
+        setMatch({ ...match, guest_user: targetParticipant.user, guest_avatar: targetParticipant.avatar })
+      }
+      setSelectedType(undefined)
+      setTargetParticipant(undefined)
+    }
+  }, [meta.loaded])
+
+  const selectedHandler = (participant, _type) => {
+    handleSetParticipant({ match_id: match.id, participant_id: participant.pid, type: _type })
+    setTargetParticipant(participant)
+    setShowParticipants(false)
+    setRefresh(true)
+  }
+
+  const handleSelect = (type) => {
+    setSelectedType(type)
+    setShowParticipants(true)
+  }
+
+  const participantItem = (user, avatar, type) => {
+    const _name = isTeam ? user?.team_name : user?.name
+    const emptyParticipant = {
+      avatar: null,
+      user: null,
+      pid: null,
+    }
+    return (
+      <Box paddingRight={1} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
+        <ESAvatar size={120} alt={_name || ''} src={avatar} />
+        <Box pt={1}></Box>
+        <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
+        {!isTeam && <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>}
+
+        <Box pt={6} display="flex" alignItems="flex-end">
+          {!user ? (
+            <ButtonPrimary disabled={meta.pending} size="small" round={false} gradient={false} onClick={() => handleSelect(type)}>
+              {t('common:tournament.set_participants')}
+            </ButtonPrimary>
+          ) : (
+            <ButtonPrimary
+              disabled={meta.pending}
+              size="small"
+              round={false}
+              gradient={false}
+              onClick={() => {
+                setSelectedType(type)
+                selectedHandler(emptyParticipant, type)
+              }}
+            >
+              {t('common:tournament.unset_participants')}
+            </ButtonPrimary>
+          )}
+        </Box>
+      </Box>
+    )
+  }
+
+  return (
+    <ESModal open={!!match}>
+      {!!match && (
+        <BlankLayout>
+          <Box pt={7.5} className={classes.topContainer}>
+            <Box py={2} display="flex" flexDirection="row" alignItems="center">
+              <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Box pl={2}>
+                <Typography variant="h2">{t('common:tournament.match_setting')}</Typography>
+              </Box>
+            </Box>
+            <Box pb={6} pt={6} textAlign="center">
+              <ThemeProvider theme={theme}>
+                <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
+              </ThemeProvider>
+            </Box>
+            <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
+              {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
+              <Box display="flex" alignItems="center">
+                <ThemeProvider theme={theme}>
+                  <Typography variant="body2">{t('common:tournament.vs')}</Typography>
+                </ThemeProvider>
+              </Box>
+              {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
+            </Box>
+            <Box className={classes.blankSpace}></Box>
+          </Box>
+          <InterestedList
+            tournament={tournament}
+            open={showParticipants}
+            handleClose={() => setShowParticipants(false)}
+            onSelect={(participant) => selectedHandler(participant, selectedType)}
+          />
+        </BlankLayout>
+      )}
+      {meta.pending && <ESLoader open={meta.pending} />}
+    </ESModal>
+  )
+}
 
 const theme = createMuiTheme({
   overrides: {
@@ -28,116 +160,6 @@ const theme = createMuiTheme({
     },
   },
 })
-
-interface SelectParticipantModalProps {
-  tournament: TournamentDetail
-  selectedMatch: TournamentMatchItem
-  handleClose: (refresh: boolean) => void
-  handleSetParticipant: (params: SetParticipantParams) => void
-}
-
-const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
-  tournament,
-  selectedMatch,
-  handleClose,
-  handleSetParticipant,
-}) => {
-  const { t } = useTranslation(['common'])
-  const classes = useStyles()
-  const [selected, setSelected] = useState<string | undefined>()
-  const [match, setMatch] = useState(selectedMatch)
-  const [refresh, setRefresh] = useState<boolean>(false)
-
-  const selectedHandler = (participant) => {
-    handleSetParticipant({ match_id: match.id, participant_id: participant.user.pid, type: selected })
-    if (selected == PARTICIPANT_TYPE.HOME) setMatch({ ...match, home_user: participant.user, home_avatar: participant.avatar })
-    else if (selected == PARTICIPANT_TYPE.GUEST) setMatch({ ...match, guest_user: participant.user, guest_avatar: participant.avatar })
-    setSelected(undefined)
-    setRefresh(true)
-  }
-
-  useEffect(() => {
-    setMatch(selectedMatch)
-  }, [selectedMatch])
-
-  const handleHome = () => {
-    if (!match.home_user) {
-      setSelected(PARTICIPANT_TYPE.HOME)
-    } else {
-      handleSetParticipant({ match_id: match.id, participant_id: null, type: PARTICIPANT_TYPE.HOME })
-      setMatch({ ...match, home_user: null, home_avatar: null })
-      setRefresh(true)
-    }
-  }
-
-  const handleGuest = () => {
-    if (!match.guest_user) {
-      setSelected(PARTICIPANT_TYPE.GUEST)
-    } else {
-      handleSetParticipant({ match_id: match.id, participant_id: null, type: PARTICIPANT_TYPE.GUEST })
-      setMatch({ ...match, guest_user: null, guest_avatar: null })
-      setRefresh(true)
-    }
-  }
-
-  return (
-    <ESModal open={!!match}>
-      {!!match && (
-        <BlankLayout>
-          <Box pt={7.5} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">試合設定{t('common:user_profile.tag_edit')}</Typography>
-              </Box>
-            </Box>
-            <Box pb={6} pt={6} textAlign="center">
-              <ThemeProvider theme={theme}>
-                <Typography variant="body1">{`${match.round_no + 1} - ${match.match_no + 1}`}</Typography>
-              </ThemeProvider>
-            </Box>
-            <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
-              <Box paddingRight={1} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
-                <ESAvatar size={120} alt={match.home_user?.name} src={match.home_avatar} />
-                <Box pt={1}></Box>
-                <Typography variant="h3">{match.home_user?.name || '-'}</Typography>
-                <Typography>{match.home_user ? `${t('common:common.at')}${match.home_user.user_code}` : '-'}</Typography>
-
-                <Box pt={6} display="flex" alignItems="flex-end">
-                  <ButtonPrimary size="small" round={false} gradient={false} onClick={handleHome}>
-                    {!match.home_user ? '設定する' : 'サブボタン'}
-                  </ButtonPrimary>
-                </Box>
-              </Box>
-              <Box display="flex" alignItems="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body2">{'VS'}</Typography>
-                </ThemeProvider>
-              </Box>
-              <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
-                <ESAvatar size={120} alt={match.guest_user?.name} src={match.guest_avatar} />
-                <Box pt={1}></Box>
-                <Typography variant="h3">{match.guest_user?.name || '-'}</Typography>
-                <Typography>{match.guest_user ? `${t('common:common.at')}${match.guest_user.user_code}` : '-'}</Typography>
-
-                <Box pt={6} display="flex" alignItems="flex-end">
-                  <ButtonPrimary size="small" round={false} gradient={false} onClick={handleGuest}>
-                    {!match.guest_user ? '設定する' : 'サブボタン'}
-                  </ButtonPrimary>
-                </Box>
-              </Box>
-            </Box>
-
-            <Box className={classes.blankSpace}></Box>
-          </Box>
-          <InterestedList tournament={tournament} open={!!selected} handleClose={() => setSelected(undefined)} onSelect={selectedHandler} />
-        </BlankLayout>
-      )}
-    </ESModal>
-  )
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
