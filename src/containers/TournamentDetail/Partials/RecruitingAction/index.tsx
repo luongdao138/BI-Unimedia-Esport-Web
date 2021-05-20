@@ -8,21 +8,10 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import Summary from '../Summary'
 // import { Colors } from '@theme/colors'
 import TeamEntryModal from './TeamEntryModal'
+import { ROLE, STATUS } from '@constants/tournament.constants'
 
 interface RecruitingActionProps {
   tournament: TournamentDetail
-}
-
-const ROLE = {
-  // TODO const
-  ADMIN: 'admin',
-  CO_ORGANIZER: 'co_organizer',
-  PARTICIPANT: 'participant',
-  INTERESTED: 'interested',
-}
-const STATUS = {
-  // TODO const
-  RECRUITING: 'recruiting',
 }
 
 const RecruitingAction: React.FC<RecruitingActionProps> = ({ tournament }) => {
@@ -62,7 +51,7 @@ const RecruitingAction: React.FC<RecruitingActionProps> = ({ tournament }) => {
 
   return (
     <Box>
-      <Summary detail={tournament} />
+      <Summary tournament={tournament} />
 
       {renderModals()}
     </Box>
