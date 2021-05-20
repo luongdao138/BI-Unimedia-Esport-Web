@@ -38,10 +38,10 @@ const RecruitingAction: React.FC<RecruitingActionProps> = ({ tournament }) => {
   const handleClose = () => console.log('handle close')
 
   const renderEntryModals = () => {
-    if (tournament.attributes.participant_type === 1) {
-      return <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={handleClose} />
-    } else {
+    if (tournament.attributes.participant_type > 1) {
       return <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={handleClose} />
+    } else {
+      return <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={handleClose} />
     }
   }
 
