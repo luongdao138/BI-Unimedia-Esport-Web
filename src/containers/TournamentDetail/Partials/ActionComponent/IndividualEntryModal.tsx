@@ -5,7 +5,6 @@ import ESButton from '@components/Button'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Colors } from '@theme/colors'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -16,6 +15,8 @@ import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
 import useEntry from './useEntry'
+import ESToast from '@components/Toast'
+import ESLoader from '@components/FullScreenLoader'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -28,7 +29,14 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const classes = useStyles()
   const store = useStore()
   const [open, setOpen] = useState(false)
-  const { join, leave } = useEntry()
+  const { join, leave, joinMeta, leaveMeta } = useEntry()
+
+  useEffect(() => {
+    if (joinMeta.loaded || joinMeta.error) {
+      setOpen(false)
+      handleClose()
+    }
+  }, [joinMeta.loaded, joinMeta.error])
 
   const validationSchema = Yup.object().shape({
     nickname: Yup.string()
@@ -46,11 +54,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     validationSchema,
     onSubmit: (values) => {
       if (values.nickname) {
-        // eslint-disable-next-line no-console
-        console.log('nickname', values.nickname)
-        // TODO call endpoint here
         join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
-        handleClose()
       }
     },
   })
@@ -88,7 +92,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
             <DetailInfo detail={tournament} />
           </BlackBox>
 
-          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8}>
             <Box>
               <ESInput
                 id="nickname"
@@ -105,46 +109,15 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
           </Box>
         </form>
       </StickyActionModal>
+
+      {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
+      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={'Failed to entry arena'} />}
+      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={'Failed to leave arena'} />}
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  iconButtonBg: {
-    backgroundColor: `${Colors.grey[200]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[200]}80`,
-    },
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    background: Colors.black,
-    borderTop: `1px solid #ffffff30`,
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    // width:
-    // width: '100%',
-    // margin: '0 auto',
-  },
-  container: {},
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    topContainer: {
-      paddingTop: 0,
-    },
-  },
   actionButton: {
     marginTop: theme.spacing(3),
     width: '100%',

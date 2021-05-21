@@ -5,7 +5,6 @@ import ESButton from '@components/Button'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Colors } from '@theme/colors'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -23,6 +22,8 @@ import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
 import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
+import ESToast from '@components/Toast'
+import ESLoader from '@components/FullScreenLoader'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -43,7 +44,20 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
-  const { join, leave } = useEntry()
+  const { join, leave, joinMeta, leaveMeta } = useEntry()
+  const [teamMemberItems, setTeamMemberItems] = useState(suggestedTeamMembers)
+
+  useEffect(() => {
+    setTeamMemberItems(suggestedTeamMembers)
+  }, [suggestedTeamMembers])
+
+  useEffect(() => {
+    if (joinMeta.loaded || joinMeta.error) {
+      setOpen(false)
+      reset()
+      handleClose()
+    }
+  }, [joinMeta.loaded, joinMeta.error])
 
   const membersValidationSchema = Yup.object().shape({
     user_id: Yup.number().required(),
@@ -84,9 +98,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         const filtered = _.filter(values.members, (member) => member.user_id !== values.id)
         const data = _.map(filtered, ({ user_id, nickname }) => ({ user_id, name: nickname }))
         join({ hash_key: tournament.attributes.hash_key, data: { ...values, members: data } })
-        setOpen(false)
-        reset()
-        handleClose()
       }
     },
   })
@@ -175,8 +186,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
               label={`メンバー${i + 1}`}
               index={i}
               selectedItem={teamMembers[i] ? teamMembers[i] : null}
-              items={suggestedTeamMembers}
+              items={teamMemberItems}
               onItemsSelected={handleSelectedMembers}
+              onScrollEnd={() => {
+                // setTeamMemberItems([...teamMemberItems, ...teamMemberItems])
+              }}
             />
           </Box>
         )
@@ -290,36 +304,15 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       >
         <form onSubmit={handleActionButton}>{step === FINAL_STEP ? nicknameChangeForm() : teamCreateForm()}</form>
       </StickyActionModal>
+
+      {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
+      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={'Failed to entry arena'} resetMeta={resetMeta} />}
+      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={'Failed to leave arena'} resetMeta={resetMeta} />}
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  iconButtonBg: {
-    backgroundColor: `${Colors.grey[200]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[200]}80`,
-    },
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    background: Colors.black,
-    borderTop: `1px solid #ffffff30`,
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    // width:
-    // width: '100%',
-    // margin: '0 auto',
-  },
   formContainer: {
     width: '100%',
     flexDirection: 'column',
@@ -328,29 +321,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
   },
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    topContainer: {
-      paddingTop: 0,
-    },
-  },
   actionButton: {
     marginTop: theme.spacing(3),
     width: '100%',
     margin: '0 auto',
     maxWidth: theme.spacing(35),
-  },
-  required: {
-    backgroundColor: Colors.primary,
-    borderRadius: 2,
-    paddingLeft: theme.spacing(1 / 2),
-    paddingRight: theme.spacing(1 / 2),
-    fontSize: 10,
-    marginLeft: theme.spacing(1),
-    color: Colors.white,
   },
 }))
 
