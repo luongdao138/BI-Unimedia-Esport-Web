@@ -3,7 +3,7 @@ import { TournamentDetail } from '@services/tournament.service'
 import { UserProfile } from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import ActionComponent from '../ActionComponent'
 
 interface RecruitmentClosedProps {
@@ -13,18 +13,18 @@ interface RecruitmentClosedProps {
 
 const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   const { tournament } = props
 
   return (
     <ActionComponent {...props}>
       <Box className={classes.body}>
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-          <Typography>{`締め切りまであと`}</Typography>
+          <Typography>{t('common:tournament.until_deadline')}</Typography>
           <Typography className={classes.highlightedNumber}>
             {`${TournamentHelper.getRemainingDate(tournament.attributes.acceptance_end_date)}`}
           </Typography>
-          <Typography>{`日`}</Typography>
+          <Typography>{t('common:common.day')}</Typography>
         </Box>
       </Box>
     </ActionComponent>

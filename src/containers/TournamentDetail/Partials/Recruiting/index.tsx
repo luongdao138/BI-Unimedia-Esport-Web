@@ -21,11 +21,11 @@ const Recruiting: React.FC<RecruitingProps> = (props) => {
     <ActionComponent {...props}>
       <Box className={classes.body}>
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-          <Typography>{`締め切りまであと`}</Typography>
+          <Typography>{t('common:tournament.until_deadline')}</Typography>
           <Typography className={classes.highlightedNumber}>
             {`${TournamentHelper.getRemainingDate(tournament.attributes.acceptance_end_date)}`}
           </Typography>
-          <Typography>{`日`}</Typography>
+          <Typography>{t('common:common.day')}</Typography>
         </Box>
 
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">

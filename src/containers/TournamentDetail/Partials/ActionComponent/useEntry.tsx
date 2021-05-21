@@ -3,6 +3,7 @@ import * as actions from '@store/tournament/actions'
 import { JoinParams } from '@services/tournament.service'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
+import { clearMetaData } from '@store/metadata/actions'
 
 const _closeMeta = createMetaSelector(actions.closeTournament)
 const _joinMeta = createMetaSelector(actions.joinTournament)
@@ -16,17 +17,24 @@ const useEntry = (): {
   closeMeta: Meta
   joinMeta: Meta
   leaveMeta: Meta
+  resetJoinMeta: () => void
+  resetLeaveMeta: () => void
+  resetCloseMeta: () => void
 } => {
   const dispatch = useAppDispatch()
   const join = (param: JoinParams) => dispatch(actions.joinTournament(param))
   const leave = (param) => dispatch(actions.leaveTournament(param))
   const close = (param) => dispatch(actions.closeTournament(param))
 
-  const closeMeta = useAppSelector(_closeMeta)
   const joinMeta = useAppSelector(_joinMeta)
   const leaveMeta = useAppSelector(_leaveMeta)
+  const closeMeta = useAppSelector(_closeMeta)
 
-  return { join, leave, close, closeMeta, joinMeta, leaveMeta }
+  const resetJoinMeta = () => dispatch(clearMetaData(actions.joinTournament.typePrefix))
+  const resetLeaveMeta = () => dispatch(clearMetaData(actions.leaveTournament.typePrefix))
+  const resetCloseMeta = () => dispatch(clearMetaData(actions.closeTournament.typePrefix))
+
+  return { join, leave, close, closeMeta, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta, resetCloseMeta }
 }
 
 export default useEntry

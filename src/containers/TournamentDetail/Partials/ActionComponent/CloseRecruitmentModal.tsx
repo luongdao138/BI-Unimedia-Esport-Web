@@ -5,7 +5,7 @@ import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
@@ -20,10 +20,10 @@ interface CloseRecruitmentModalProps {
 }
 
 const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament }) => {
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const { close, closeMeta } = useEntry()
+  const { close, closeMeta, resetCloseMeta } = useEntry()
 
   useEffect(() => {
     if (closeMeta.loaded || closeMeta.error) {
@@ -35,11 +35,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
     <Box>
       <Box className={classes.actionButton}>
         <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-          エントリーを締め切る
+          {t('common:tournament.close_recruitment.button_text')}
         </ButtonPrimary>
       </Box>
       <Box className={classes.description}>
-        <Typography variant="body2">{'エントリー期間終了時、自動的にエントリーが締め切られます'}</Typography>
+        <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
       </Box>
 
       <ESModal open={open}>
@@ -47,16 +47,16 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
           <BlackBox>
             <Box className={classes.childrenContainer}>
               <Box color={Colors.white} alignItems="center">
-                <Typography className={classes.title}>{'現在の人数でメンバーを確定しますか？'}</Typography>
+                <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
                 <Typography variant="h2" className={classes.description}>
-                  {'エントリー人数と参加枠数の設定に差がある場合、自動的にトーナメントの枠数の最適化を行います'}
+                  {t('common:tournament.close_recruitment.dialog_description')}
                 </Typography>
               </Box>
 
               <Box>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
-                    キャンセル
+                    {t('common:cancel')}
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
@@ -67,14 +67,14 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
                       close(tournament.attributes.hash_key)
                     }}
                   >
-                    締め切る
+                    {t('common:tournament.close_recruitment.confirm')}
                   </ButtonPrimary>
                 </Box>
               </Box>
 
               <Box display="flex" flexDirection="row" alignItems="center" color="#F7F560">
                 <WarningRounded fontSize="small" />
-                <Typography variant="body2">{'エントリー募集の再開はできません'}</Typography>
+                <Typography variant="body2">{t('common:tournament.close_recruitment.warning')}</Typography>
               </Box>
             </Box>
           </BlackBox>
@@ -82,7 +82,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
       </ESModal>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
-      {!!closeMeta.error && <ESToast open={!!closeMeta.error} message={'Failed to entry arena'} />}
+      {!!closeMeta.error && <ESToast open={!!closeMeta.error} message={t('common:error.close_arena_failed')} resetMeta={resetCloseMeta} />}
     </Box>
   )
 }

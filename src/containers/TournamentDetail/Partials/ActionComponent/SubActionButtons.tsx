@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import { TournamentDetail } from '@services/tournament.service'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
 import Participants from '@containers/TournamentDetail/Participants'
 import { ROLE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
@@ -12,9 +12,7 @@ interface Props {
 
 const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
-
-  // console.log('tournament', tournament)
+  const { t } = useTranslation(['common'])
 
   const myRole = tournament.attributes.my_role
   const status = tournament.attributes.status
@@ -31,17 +29,17 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
               <>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    参加メンバー
+                    {t('common:tournament.participants')}
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    グループチャット
+                    {t('common:tournament.group_chat')}
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    対戦表
+                    {t('common:tournament.brackets')}
                   </ESButton>
                 </Box>
               </>
@@ -52,13 +50,13 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                 </Box>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    グループチャット
+                    {t('common:tournament.group_chat')}
                   </ESButton>
                 </Box>
                 {isRecruitmentClosed && isModerator && (
                   <Box className={classes.actionButton}>
                     <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                      対戦表
+                      {t('common:tournament.brackets')}
                     </ESButton>
                   </Box>
                 )}
@@ -71,12 +69,12 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
               <>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    参加メンバー
+                    {t('common:tournament.participants')}
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
                   <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    対戦表
+                    {t('common:tournament.brackets')}
                   </ESButton>
                 </Box>
               </>
