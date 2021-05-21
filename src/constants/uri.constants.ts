@@ -18,6 +18,7 @@ export const URI = {
   REPORT_REASONS: '/v1/report_reasons',
   BLOCK: '/v2/blocks',
   UNBLOCK: '/v2/blocks/unblock',
+  BLOCKED_USERS: 'v2/blocks/users',
   NG_WORDS: '/v1/ng_words',
   GET_PREFECTURES: 'v2/areas',
   USER_SETTINGS: '/v2/users/settings',

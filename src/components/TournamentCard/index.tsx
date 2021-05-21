@@ -21,39 +21,6 @@ const StyledAvatarGroup = withStyles({
   },
 })(AvatarGroup)
 
-const useStyles = makeStyles(() => ({
-  card: {
-    width: 240,
-  },
-  organizer: {
-    fontSize: 10,
-  },
-  chip: {
-    height: 15,
-    backgroundColor: Colors.grey[400],
-  },
-  chipPrimary: {
-    height: 20,
-    backgroundColor: Colors.primary,
-  },
-  mediaOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-  },
-  blurOverlay: {
-    backgroundColor: Colors.black_opacity[70],
-  },
-  firstIcon: {
-    width: 19.56,
-    height: 15.4,
-  },
-}))
-
 const TYPES = {
   LIST: 'tournaments_list',
   HISTORY: 'tournaments_list_for_participants',
@@ -161,3 +128,36 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 }
 
 export default TournamentCard
+
+const useStyles = makeStyles(() => ({
+  card: {
+    width: 240,
+  },
+  organizer: {
+    fontSize: 10,
+  },
+  chip: {
+    height: 15,
+    backgroundColor: Colors.grey[400],
+  },
+  chipPrimary: {
+    height: 20,
+    backgroundColor: Colors.primary,
+  },
+  mediaOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+  },
+  blurOverlay: {
+    backgroundColor: Colors.black_opacity[70],
+  },
+  firstIcon: {
+    width: 19.56,
+    height: 15.4,
+  },
+}))

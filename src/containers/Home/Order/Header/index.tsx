@@ -16,7 +16,7 @@ export const Header: React.FC<Props> = ({ onCancel, onDone }) => {
     <AppBar className={classes.appBar} position="static">
       <Toolbar className={classes.toolbar}>
         <Typography variant="h2">{t('common:home.home')}</Typography>
-        <Box display="flex">
+        <Box display="flex" className={classes.actionWrap}>
           <Link underline={'none'} onClick={onCancel} className={classes.link}>
             <Typography className={classes.cancel}>{t('common:common.cancel')}</Typography>
           </Link>
@@ -46,5 +46,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     cursor: 'pointer',
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionWrap: {
+      display: 'none',
+    },
   },
 }))
