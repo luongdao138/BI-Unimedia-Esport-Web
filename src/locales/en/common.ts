@@ -302,6 +302,19 @@ export default {
     message: 'メッセージの受信設定',
     block: 'ブロックしたユーザー',
   },
+  service_info: {
+    title: 'サービス情報',
+    enterprise_info: '企業情報（NTTe-Sports）',
+    faq: 'FAQ',
+    inquiry: 'お問い合わせ',
+  },
+  inquiry: {
+    title: 'お問い合わせ',
+    subject: '件名',
+    desc: '本文',
+    desc_placeholder: 'お問い合わせ内容を入力してください',
+    send: '送信する',
+  },
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',

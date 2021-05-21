@@ -7,4 +7,5 @@ export enum SETTINGS_ACTION_TYPE {
   UPDATE_MESSAGE_SETTINGS = 'settings/updateMessageSettings',
   GET_BLOCKED_USERS = 'settings/getBlockedUsers',
   CLEAR_BLOCKED_USERS = 'settings/clearBlockedUsers',
+  CREATE_INQUIRY = 'settings/createInquiry',
 }
