@@ -6,23 +6,25 @@ import * as selectors from '@store/tournament/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'
-import { RecommendedUsers } from '@services/tournament.service'
+import { RecommendedUsers, Meta as RecommendedMeta } from '@services/tournament.service'
 
 const getMeta = createMetaSelector(actions.getRecommendedUsersByName)
 
 const useOrganizerSearch = (): {
   meta: Meta
-  getRecommendedUsersByName: (keyword: string) => void
+  getRecommendedUsersByName: (keyword: string, page: number) => void
   recommendedUsers: RecommendedUsers[]
+  page: RecommendedMeta
 } => {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getMeta)
+  const page = useAppSelector(selectors.getRecommendedUsersMeta)
   const recommendedUsers = useAppSelector(selectors.getRecommendedUsers)
 
   const getRecommendedUsersByName = useCallback(
-    _.debounce((keyword: string) => {
+    _.debounce((keyword: string, page: number) => {
       if (keyword !== '') {
-        dispatch(actions.getRecommendedUsersByName({ keyword, page: 1 }))
+        dispatch(actions.getRecommendedUsersByName({ keyword, page: page }))
       } else {
         dispatch(actions.clearRecommendedUsers())
       }
@@ -40,6 +42,7 @@ const useOrganizerSearch = (): {
     meta,
     getRecommendedUsersByName,
     recommendedUsers,
+    page,
   }
 }
 

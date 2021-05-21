@@ -18,6 +18,7 @@ import { TournamentCreateParams } from '@services/tournament.service'
 import useCommonData from './useCommonData'
 import useTournamentCreate from './useTournamentCreate'
 import ESLoader from '@components/FullScreenLoader'
+import _ from 'lodash'
 
 const TournamentCreate: React.FC = () => {
   const { hardwares, prefectures, user } = useCommonData()
@@ -26,6 +27,7 @@ const TournamentCreate: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const [hasError, setError] = useState(false)
   const [tournamentData, updateData] = useState<TournamentCreateParams>(TournamentHelper.defaultDetails(!user ? 0 : user.id))
 
   const saveState = (data) => {
@@ -43,8 +45,8 @@ const TournamentCreate: React.FC = () => {
     submit(data)
   }
 
-  const buttonActive = () => {
-    return tournamentData.title !== ''
+  const handleError = (errors) => {
+    setError(!_.isEmpty(errors))
   }
 
   return (
@@ -69,16 +71,16 @@ const TournamentCreate: React.FC = () => {
           </ESTabs>
         </Box>
         <Box py={4}>
-          {tab == 0 && <StepOne data={tournamentData} saveState={saveState} hardwares={hardwares} />}
-          {tab == 1 && <StepTwo data={tournamentData} saveState={saveState} />}
-          {tab == 2 && <StepThree data={tournamentData} saveState={saveState} prefectures={prefectures} />}
-          {tab == 3 && <StepFour data={tournamentData} saveState={saveState} user={user} />}
+          {tab == 0 && <StepOne data={tournamentData} saveState={saveState} hardwares={hardwares} handleError={handleError} />}
+          {tab == 1 && <StepTwo data={tournamentData} saveState={saveState} handleError={handleError} />}
+          {tab == 2 && <StepThree data={tournamentData} saveState={saveState} prefectures={prefectures} handleError={handleError} />}
+          {tab == 3 && <StepFour data={tournamentData} saveState={saveState} user={user} handleError={handleError} />}
         </Box>
       </Box>
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit} disabled={!buttonActive()}>
+            <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit} disabled={hasError}>
               {t('common:tournament_create.submit')}
             </ButtonPrimary>
           </Box>

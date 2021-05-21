@@ -21,9 +21,10 @@ type Props = {
   data: TournamentCreateParams
   saveState: (data: FormProps) => void
   user: UserLoginResponse
+  handleError: (error) => void
 }
 
-const StepFour: React.FC<Props> = ({ data, saveState, user }) => {
+const StepFour: React.FC<Props> = ({ data, saveState, user, handleError }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
@@ -37,7 +38,7 @@ const StepFour: React.FC<Props> = ({ data, saveState, user }) => {
       }),
   })
 
-  const { handleChange, values, errors, touched, setFieldValue } = useFormik<FormProps>({
+  const { handleChange, values, errors, touched, setFieldValue, validateForm } = useFormik<FormProps>({
     initialValues: {
       owner_id: data.owner_id,
       co_organizers: data.co_organizers,
@@ -50,8 +51,16 @@ const StepFour: React.FC<Props> = ({ data, saveState, user }) => {
   })
 
   useEffect(() => {
+    validateForm()
+  }, [])
+
+  useEffect(() => {
     saveState(values)
   }, [values])
+
+  useEffect(() => {
+    handleError(errors)
+  }, [errors])
 
   return (
     <Box pb={9}>

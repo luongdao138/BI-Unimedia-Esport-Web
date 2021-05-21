@@ -29,9 +29,10 @@ type Props = {
   data: TournamentCreateParams
   saveState: (data: FormProps) => void
   prefectures: GetPrefecturesResponse
+  handleError: (error) => void
 }
 
-const StepThree: React.FC<Props> = ({ data, saveState, prefectures }) => {
+const StepThree: React.FC<Props> = ({ data, saveState, prefectures, handleError }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
@@ -79,7 +80,7 @@ const StepThree: React.FC<Props> = ({ data, saveState, prefectures }) => {
       .test('ng-check', 'ng word', (address) => CommonHelper.matchNgWords(store, address).length == 0),
   })
 
-  const { handleChange, values, errors, touched } = useFormik<FormProps>({
+  const { handleChange, values, errors, touched, validateForm } = useFormik<FormProps>({
     initialValues: {
       acceptance_start_date: data.acceptance_start_date,
       acceptance_end_date: data.acceptance_end_date,
@@ -100,8 +101,16 @@ const StepThree: React.FC<Props> = ({ data, saveState, prefectures }) => {
   })
 
   useEffect(() => {
+    validateForm()
+  }, [])
+
+  useEffect(() => {
     saveState(values)
   }, [values])
+
+  useEffect(() => {
+    handleError(errors)
+  }, [errors])
 
   return (
     <Box pb={9}>

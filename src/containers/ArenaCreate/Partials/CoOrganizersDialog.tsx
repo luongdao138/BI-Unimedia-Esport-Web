@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Theme, Box, Typography, makeStyles } from '@material-ui/core'
+import { Theme, Box, Typography, makeStyles, DialogContent, Dialog } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
-import Dialog from '@material-ui/core/Dialog'
 import { useTranslation } from 'react-i18next'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import BlankLayout from '@layouts/BlankLayout'
@@ -16,6 +15,7 @@ import ESCheckbox from '@components/Checkbox'
 import ESAvatar from '@components/Avatar'
 import ESLoader from '@components/Loader'
 import ESSlider from '@components/Slider'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 interface Props {
   values: RecommendedUsers[]
@@ -27,7 +27,7 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
-  const { getRecommendedUsersByName, meta, recommendedUsers } = useOrganizerSearch()
+  const { getRecommendedUsersByName, meta, recommendedUsers, page } = useOrganizerSearch()
   const [selectedUsers, setSelectedUsers] = useState(values)
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
 
   const handleChange = (e) => {
     setKeyword(e.target.value)
-    getRecommendedUsersByName(e.target.value)
+    getRecommendedUsersByName(e.target.value, 1)
   }
 
   const handleCheckbox = (user: RecommendedUsers) => {
@@ -51,6 +51,12 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
       setSelectedUsers(selectedUsers.filter((selectedUser) => selectedUser.id !== user.id))
     } else {
       setSelectedUsers([...selectedUsers, user])
+    }
+  }
+
+  const loadMore = () => {
+    if (page && page.current_page !== page.total_pages) {
+      getRecommendedUsersByName(keyword, page.current_page + 1)
     }
   }
 
@@ -75,89 +81,103 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
       </ButtonBase>
 
       <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
-        <Box className={classes.dialog}>
-          <BlankLayout>
-            <Box pt={7.5} pb={9} className={classes.topContainer}>
-              <Box py={2} display="flex" flexDirection="row" alignItems="center">
-                <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
-                  <Icon className="fa fa-arrow-left" fontSize="small" />
-                </IconButton>
-                <Box pl={2}>
-                  <Typography variant="h2">{t('common:tournament_create.co_orgonizer')}</Typography>
-                </Box>
-              </Box>
-
-              <Box>
-                <Box pt={8} px={8} className={classes.container}>
-                  <ESInput value={keyword} onChange={handleChange} fullWidth />
-                  <Box pt={1} pb={4}>
-                    <Typography variant="body2" className={classes.hint}>
-                      {t('common:tournament_create.user_hint')}
-                    </Typography>
+        <DialogContent id="scrollableDiv" className={classes.noPadding}>
+          <Box className={classes.dialog}>
+            <BlankLayout>
+              <Box pt={7.5} pb={9} className={classes.topContainer}>
+                <Box py={2} display="flex" flexDirection="row" alignItems="center">
+                  <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
+                    <Icon className="fa fa-arrow-left" fontSize="small" />
+                  </IconButton>
+                  <Box pl={2}>
+                    <Typography variant="h2">{t('common:tournament_create.co_orgonizer')}</Typography>
                   </Box>
                 </Box>
 
-                {meta.pending && (
-                  <Box pt={12} textAlign="center">
-                    <ESLoader />
-                  </Box>
-                )}
-
-                {meta.loaded && recommendedUsers.length === 0 && (
-                  <Box pt={12} textAlign="center">
-                    <Typography color="textSecondary">{t('common:tournament_create.not_found')}</Typography>
-                  </Box>
-                )}
-
-                {!meta.pending &&
-                  recommendedUsers.map((user, idx) => (
-                    <Box display="flex" flexDirection="row" key={idx} py={2}>
-                      <ESCheckbox checked={!!_.find(selectedUsers, { id: user.id })} onChange={() => handleCheckbox(user)} />
-                      <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
-                      <Box display="flex" flexDirection="column" pl={1} justifyContent="center">
-                        <Typography className={classes.oneLine} variant="h2">
-                          {user.attributes.nickname}
-                        </Typography>
-                        <Typography variant="body2" className={classes.userCode}>
-                          @{user.attributes.user_code}
-                        </Typography>
-                      </Box>
+                <Box>
+                  <Box pt={8} px={8} className={classes.container}>
+                    <ESInput value={keyword} onChange={handleChange} fullWidth />
+                    <Box pt={1} pb={4}>
+                      <Typography variant="body2" className={classes.hint}>
+                        {t('common:tournament_create.user_hint')}
+                      </Typography>
                     </Box>
-                  ))}
-              </Box>
+                  </Box>
 
-              <Box className={classes.blankSpace}></Box>
+                  {meta.loaded && recommendedUsers.length === 0 && (
+                    <Box pt={12} textAlign="center">
+                      <Typography color="textSecondary">{t('common:tournament_create.not_found')}</Typography>
+                    </Box>
+                  )}
 
-              <Box className={classes.stickyFooter}>
-                {selectedUsers.length > 0 && (
-                  <BlankLayout>
-                    <ESSlider
-                      navigation={false}
-                      width={64}
-                      disableResponsiveWidth
-                      items={selectedUsers.map((user, i) => (
-                        <Box className={classes.innerWrap} key={i}>
-                          <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
-                          <IconButton className={classes.remove} onClick={() => handleCheckbox(user)} disableRipple>
-                            <Icon className={`fa fa-times ${classes.iconSmall}`} fontSize="small" />
-                          </IconButton>
+                  {meta.pending && (
+                    <Box textAlign="center">
+                      <ESLoader />
+                    </Box>
+                  )}
+
+                  <InfiniteScroll
+                    className={classes.container}
+                    dataLength={recommendedUsers.length}
+                    next={loadMore}
+                    hasMore={page && page.current_page !== page.total_pages}
+                    loader={
+                      <Box textAlign="center">
+                        <ESLoader />
+                      </Box>
+                    }
+                    scrollableTarget="scrollableDiv"
+                  >
+                    {recommendedUsers.map((user, idx) => (
+                      <Box display="flex" flexDirection="row" key={idx} py={2}>
+                        <ESCheckbox checked={!!_.find(selectedUsers, { id: user.id })} onChange={() => handleCheckbox(user)} />
+                        <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
+                        <Box display="flex" flexDirection="column" pl={1} justifyContent="center">
+                          <Typography className={classes.oneLine} variant="h2">
+                            {user.attributes.nickname}
+                          </Typography>
+                          <Typography variant="body2" className={classes.userCode}>
+                            @{user.attributes.user_code}
+                          </Typography>
                         </Box>
-                      ))}
-                    />
-                  </BlankLayout>
-                )}
+                      </Box>
+                    ))}
+                  </InfiniteScroll>
+                </Box>
 
-                <Box className={classes.nextBtnHolder}>
-                  <Box maxWidth={280} className={classes.buttonContainer}>
-                    <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={selectedUsers.length === 0}>
-                      {t('common:tournament_create.decide')}
-                    </ButtonPrimary>
+                <Box className={classes.blankSpace}></Box>
+
+                <Box className={classes.stickyFooter}>
+                  {selectedUsers.length > 0 && (
+                    <BlankLayout>
+                      <ESSlider
+                        navigation={false}
+                        width={64}
+                        disableResponsiveWidth
+                        items={selectedUsers.map((user, i) => (
+                          <Box className={classes.innerWrap} key={i}>
+                            <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
+                            <IconButton className={classes.remove} onClick={() => handleCheckbox(user)} disableRipple>
+                              <Icon className={`fa fa-times ${classes.iconSmall}`} fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        ))}
+                      />
+                    </BlankLayout>
+                  )}
+
+                  <Box className={classes.nextBtnHolder}>
+                    <Box maxWidth={280} className={classes.buttonContainer}>
+                      <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={selectedUsers.length === 0}>
+                        {t('common:tournament_create.decide')}
+                      </ButtonPrimary>
+                    </Box>
                   </Box>
                 </Box>
               </Box>
-            </Box>
-          </BlankLayout>
-        </Box>
+            </BlankLayout>
+          </Box>
+        </DialogContent>
       </Dialog>
     </>
   )
@@ -166,7 +186,9 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
     backgroundColor: Colors.grey[100],
-    height: '100%',
+  },
+  noPadding: {
+    padding: 0,
   },
   oneLine: {
     wordBreak: 'break-word',
