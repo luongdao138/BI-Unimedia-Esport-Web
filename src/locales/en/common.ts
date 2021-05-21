@@ -261,6 +261,9 @@ export default {
     join_nickname: 'エントリーネーム',
     join_nickname_setting: 'エントリーネームの設定',
     join_nickname_setting_desc: '次の画面でエントリーネームを変更できます',
+    participants: '参加メンバー',
+    group_chat: 'グループチャット',
+    brackets: '対戦表',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
