@@ -155,8 +155,8 @@ const SideMenu: React.FC = () => {
             </ListItem>
           </Link>
           <LoginRequired>
-            <Link href={ESRoutes.TOURNAMENTS}>
-              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.TOURNAMENTS)}>
+            <Link href={ESRoutes.ARENA}>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-trophy" />
                 </ListItemIcon>

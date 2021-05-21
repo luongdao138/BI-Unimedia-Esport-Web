@@ -1,6 +1,6 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/tournament.service'
-import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE } from './types'
+import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS } from './types'
 import * as types from './types'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
@@ -182,6 +182,38 @@ export const setParticipant = createAsyncThunk<void, services.SetParticipantPara
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.setParticipant(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUsersResponse, services.RecommendedUsersParams>(
+  types.GET_RECOMMENDED_USERS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendedUsersByName(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
+
+export const createTournament = createAsyncThunk<void, services.TournamentFormParams>(
+  types.CREATE_TOURNAMENT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.createTournament(param)
       return res
     } catch (error) {
       if (!error.response) {
