@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { makeStyles, Box, Typography } from '@material-ui/core'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
+import ImageUploader from './ImageUploader'
 import { currentUserId } from '@store/auth/selectors'
 import { messages } from '@store/socket/selectors'
 import { ChatSuggestionList } from '@components/Chat/types/chat.types'
@@ -11,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import moment from 'moment'
 import Loader from '@components/Loader'
+import { ACTIONS } from '@components/Chat/constants'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -79,10 +81,19 @@ const users: ChatSuggestionList[] = [
   },
 ]
 
+export interface UploadStateType {
+  id: string | null
+  uploading: boolean
+}
+
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
+  const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
+
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
+
+  const ref = useRef<{ handleUpload: () => void }>(null)
 
   const userId = useAppSelector(currentUserId)
   const data = useAppSelector(messages)
@@ -113,6 +124,14 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     }
     dispatch(socketActions.sendMessage(payload))
   }
+  const handlePressActionButton = (type: number) => {
+    if (type === ACTIONS.IMAGE_UPLOAD)
+      if (ref.current && !uploadMeta.uploading) {
+        const uploaderClientId = uuidv4()
+        setMeta({ id: uploaderClientId, uploading: false })
+        ref.current.handleUpload()
+      }
+  }
 
   const renderLoader = () => {
     if (data === undefined) {
@@ -123,6 +142,26 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       )
     }
     return null
+  }
+
+  const imageEventHandler = (url: string, isPending: boolean) => {
+    const currentTimestamp = moment().valueOf()
+    const payload = {
+      action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+      roomId: roomId,
+      createdAt: currentTimestamp,
+      userId: userId,
+      msg: url,
+      clientId: uploadMeta.id,
+      type: CHAT_MESSAGE_TYPE.IMAGE,
+    }
+    if (isPending) {
+      setMeta({ ...uploadMeta, uploading: true })
+      dispatch(socketActions.messagePending(payload))
+    } else {
+      dispatch(socketActions.socketSend(payload))
+      setMeta({ id: null, uploading: false })
+    }
   }
 
   return (
@@ -148,8 +187,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         </Box>
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea onPressSend={handlePress} users={users} />
+        <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
       </Box>
+      <ImageUploader ref={ref} roomId={roomId} onResponse={imageEventHandler} onImageSelected={imageEventHandler} />
     </Box>
   )
 }
@@ -157,6 +197,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
 const useStyles = makeStyles(() => ({
   header: {
     padding: 24,
+  },
+  dropZone: {
+    display: 'none',
   },
   loaderBox: {
     width: 20,

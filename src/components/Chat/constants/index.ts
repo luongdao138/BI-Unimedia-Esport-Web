@@ -13,9 +13,13 @@ export const regex = {
   mention: /((.)\[to=([^[]*)])/gi,
 }
 
+export enum ACTIONS {
+  IMAGE_UPLOAD = 1,
+}
+
 export const TOOLBAR_ACTIONS = [
   {
     icon: 'fas fa-image',
-    type: 1,
+    type: ACTIONS.IMAGE_UPLOAD,
   },
 ]

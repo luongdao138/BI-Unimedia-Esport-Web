@@ -129,7 +129,7 @@ const SideMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.menu}>
-        <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE)}>
+        <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}>
           <Box className={classes.userInfo}>
             <ProfileAvatar size={80} src={userProfile?.attributes?.avatar_url ? userProfile.attributes.avatar_url : '/images/avatar.png'} />
             {isAuthenticated && (

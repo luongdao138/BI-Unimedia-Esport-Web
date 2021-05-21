@@ -15,6 +15,11 @@ export const socketActions = {
       dispatch(socketCreators.socketSend(payload))
     }
   },
+  messagePending: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      dispatch(socketCreators.messagePending(payload))
+    }
+  },
   sendMessage: (payload: SocketPayload) => {
     return (dispatch: AppDispatch) => {
       Promise.resolve(dispatch(socketCreators.messagePending(payload))).then(() => dispatch(socketCreators.socketSend(payload)))
