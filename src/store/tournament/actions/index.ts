@@ -247,3 +247,30 @@ export const setScore = createAsyncThunk<void, services.SetScoreParams>(types.SE
     return rejectWithValue(error.response.data)
   }
 })
+
+export const randomizeTournament = createAsyncThunk<void, string>(types.RANDOMIZE_TOURNAMENT, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.randomizeTournament(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
+export const freezeTournament = createAsyncThunk<services.TournamentDetailResponse, string>(
+  types.FREEZE_TOURNAMENT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.freezeTournament(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

@@ -119,4 +119,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.clearRecommendedUsers, (state) => {
     state.recommendedUsers = []
   })
+  builder.addCase(actions.freezeTournament.fulfilled, (state, action) => {
+    state.tournamentDetail = action.payload.data
+  })
 })

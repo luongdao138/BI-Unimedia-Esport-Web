@@ -46,6 +46,8 @@ export const URI = {
   CHECK_ENTRY_STATUS: '/v2/tournaments/:id/check_entry_status',
   TOURNAMENT_DETAIL: '/v2/tournaments/details/:id',
   TOURNAMENTS_PARTICIPANTS: 'v1/tournaments/:id/participants',
+  TOURNAMENTS_RANDOMIZE_PARTICIPANTS: '/v2/tournaments/:id/randomize_participants',
+  TOURNAMENTS_FREEZE_PARTICIPANTS: '/v2/tournaments/:id/freeze_participants',
   COMMUNITY_FOLLOWERS_TOPICS: '/v2/communities/???',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',

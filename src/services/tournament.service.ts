@@ -392,3 +392,13 @@ export const setScore = async (params: SetScoreParams): Promise<void> => {
   const { data } = await api.post<void>(URI.TOURNAMENTS_SET_SCORE.replace(/:id/gi, params.hash_key), params)
   return data
 }
+
+export const randomizeTournament = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_RANDOMIZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const freezeTournament = async (hash_key: string): Promise<TournamentDetailResponse> => {
+  const { data } = await api.post<TournamentDetailResponse>(URI.TOURNAMENTS_FREEZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
