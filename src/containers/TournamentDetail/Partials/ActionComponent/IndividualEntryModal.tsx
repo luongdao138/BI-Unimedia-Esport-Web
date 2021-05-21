@@ -70,19 +70,19 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       <Box className={classes.actionButton}>
         {tournament.attributes.is_entered ? (
           <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-            エントリーを辞退する
+            {t('common:tournament.unjoin')}
           </ESButton>
         ) : (
           <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            エントリーする
+            {t('common:tournament.join')}
           </ButtonPrimary>
         )}
       </Box>
 
       <StickyActionModal
         open={open}
-        returnText={'エントリーする'}
-        actionButtonText={'この内容でエントリーする'}
+        returnText={t('common:tournament.join')}
+        actionButtonText={t('common:tournament.join_with_this')}
         actionButtonDisabled={!isValid}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleSubmit}
@@ -97,8 +97,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
               <ESInput
                 id="nickname"
                 autoFocus
-                placeholder={'Inser your name'}
-                labelPrimary={'エントリーネーム'}
+                labelPrimary={t('common:tournament.join_nickname')}
                 fullWidth
                 value={values.nickname}
                 onChange={handleChange}
@@ -111,8 +110,8 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       </StickyActionModal>
 
       {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
-      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={'Failed to entry arena'} />}
-      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={'Failed to leave arena'} />}
+      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} />}
+      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} />}
     </Box>
   )
 }

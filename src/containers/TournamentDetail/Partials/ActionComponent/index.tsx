@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import React from 'react'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import IndividualEntryModal from './IndividualEntryModal'
 import CloseRecruitmentModal from './CloseRecruitmentModal'
 import TeamEntryModal from './TeamEntryModal'
@@ -21,7 +21,7 @@ interface Props {
 const ActionComponent: React.FC<Props> = (props) => {
   const { children, tournament, userProfile } = props
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
 
   const isTeam = tournament.attributes.participant_type > 1
   const status = tournament.attributes.status
@@ -35,7 +35,11 @@ const ActionComponent: React.FC<Props> = (props) => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
     const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
 
-    const arenaStatus = isRecruiting ? 'エントリー期間' : isRecruitmentClosed || isInProgress ? '開催期間' : ''
+    const arenaStatus = isRecruiting
+      ? t('common:tournament.entry_period')
+      : isRecruitmentClosed || isInProgress
+      ? t('common:tournament.holding_period')
+      : ''
 
     return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
   }
