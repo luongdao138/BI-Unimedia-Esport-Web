@@ -94,7 +94,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
               </ThemeProvider>
             </Box>
             <Box pb={5} pt={1} textAlign="center">
-              <Typography variant="body1">勝者を選択してください</Typography>
+              <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
             </Box>
             <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
               {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
@@ -113,7 +113,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
             <Box className={classes.nextBtnHolder}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth disabled={!match?.winner} onClick={() => onScoreEntered(match)}>
-                  {'決定する'}
+                  {t('common:tournament_create.decide')}
                 </ButtonPrimary>
               </Box>
             </Box>

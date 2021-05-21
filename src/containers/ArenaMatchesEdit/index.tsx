@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
 import { AppBar, Container, Box, IconButton, Theme, Toolbar, Typography } from '@material-ui/core'
@@ -9,19 +9,54 @@ import SelectParticipantModal from '../TournamentDetail/Partials/SelectParticipa
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
+import { useTranslation } from 'react-i18next'
+import ESToast from '@components/Toast'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
 const ArenaMatches: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { matches, setParticipant, fetchMatches, setMeta, roundTitles, meta: matchesMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const [selectedMatch, setSelectedMatch] = useState()
+  const [adsf, asdfasdf] = useState(false)
+  const [adsf1, asdfasdf1] = useState(false)
+  const [data, setData] = useState<any>()
+
+  useEffect(() => {
+    if (tournament) {
+      setData(TournamentHelper.getDetailData(tournament))
+    }
+  }, [tournament])
 
   const onMatchClick = (match) => {
     if (match && match.round_no == 0 && !tournament.attributes.is_freezed) setSelectedMatch(match)
   }
+
+  const actionButtons = () => {
+    if (!data) return
+    if (!data.memberSelectable) return
+    const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
+    return (
+      <Box className={classes.stickyFooter}>
+        <Box className={classes.nextBtnHolder}>
+          <Box maxWidth={280} className={classes.buttonContainer}>
+            {freezable ? (
+              <ButtonPrimary type="submit" round fullWidth onClick={() => asdfasdf(true)}>
+                {t('common:arena.freeze_button')}
+              </ButtonPrimary>
+            ) : (
+              <RandomizeDialog onAction={() => alert('selectedMatch')} />
+            )}
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
+
   return (
     <div className={classes.root}>
-      {matches && tournament && (
+      {matches && tournament && data && (
         <>
           <AppBar className={classes.appbar}>
             <Container maxWidth="lg">
@@ -84,24 +119,27 @@ const ArenaMatches: React.FC = () => {
                   setSelectedMatch(undefined)
                 }}
               />
-              <Box className={classes.blankSpace}></Box>
+              {data.memberSelectable && <Box className={classes.blankSpace}></Box>}
             </Container>
           </div>
-          {true && (
-            <Box className={classes.stickyFooter}>
-              <Box className={classes.nextBtnHolder}>
-                <Box maxWidth={280} className={classes.buttonContainer}>
-                  <ButtonPrimary type="submit" round fullWidth onClick={() => alert('selectedMatch')}>
-                    {'対戦結果を編集する'}
-                  </ButtonPrimary>
-                  <RandomizeDialog tournament={tournament} handleClose={() => alert('selectedMatch')} />
-                </Box>
-              </Box>
-            </Box>
-          )}
+          {actionButtons()}
         </>
       )}
       <ESLoader open={meta.pending || matchesMeta.pending} />
+      {adsf && (
+        <ESToast
+          open={adsf}
+          message={t('common:arena.randomize_success')} //resetMeta={resetMeta}
+          onClose={() => asdfasdf(false)}
+        />
+      )}
+      {adsf1 && (
+        <ESToast
+          open={adsf1}
+          message={t('common:arena.freeze_success')} //resetMeta={resetMeta}
+          onClose={() => asdfasdf1(false)}
+        />
+      )}
     </div>
   )
 }

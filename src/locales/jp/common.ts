@@ -99,6 +99,7 @@ export default {
     },
     no_data: '対象データありません',
     dash: '-',
+    cancel: 'キャンセル',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -244,6 +245,24 @@ export default {
     vs: 'VS',
     match_result: '対戦結果',
     edit_match_result: '対戦結果を編集する',
+  },
+  arena: {
+    randomize_button: 'ランダムに配置する',
+    freeze_button: 'トーナメント表を確定する',
+    randomize_success: 'ユーザーを配置しました',
+    freeze_success: 'トーナメント表が確定しました',
+    dialog: {
+      randomize_title: 'ユーザーをランダムに配置します',
+      randomize_desc: '現在エントリーしているユーザーをトーナメント表の空欄になっている枠へランダムに配置します',
+      randomize_sub1: '※エントリーしているユーザー数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。',
+      randomize_sub2: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+      randomize_warn: 'この時点ではまだエントリー表は確定しません',
+      deploy_button: '配置する',
+    },
+    no_match_result: '対戦結果が出ていません',
+    edit_match_result: '対戦結果を編集する',
+    win: 'WIN',
+    please_select_winner: '勝者を選択してください',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

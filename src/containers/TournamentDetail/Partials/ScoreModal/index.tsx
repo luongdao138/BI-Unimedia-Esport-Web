@@ -74,7 +74,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
       <Box paddingX={3} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
         {winner ? (
           <ThemeProvider theme={theme}>
-            <Typography variant="caption">{'WIN'}</Typography>
+            <Typography variant="caption">{t('common:arena.win')}</Typography>
           </ThemeProvider>
         ) : (
           <Box pt={14.5}></Box>
@@ -125,7 +125,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
             </Box>
             {!match?.winner && (
               <Box pt={3} textAlign="center">
-                <Typography variant="body1">対戦結果が出ていません</Typography>
+                <Typography variant="body1">{t('common:arena.no_match_result')}</Typography>
               </Box>
             )}
 
@@ -137,7 +137,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
               <Box className={classes.nextBtnHolder}>
                 <Box maxWidth={280} className={classes.buttonContainer}>
                   <ButtonPrimary type="submit" round fullWidth onClick={() => setEditingMatch(selectedMatch)}>
-                    {'対戦結果を編集する'}
+                    {t('common:arena.edit_match_result')}
                   </ButtonPrimary>
                 </Box>
               </Box>
