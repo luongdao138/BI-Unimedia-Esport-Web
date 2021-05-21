@@ -11,6 +11,9 @@ import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import moment from 'moment'
 import Loader from '@components/Loader'
+import { useDropzone } from 'react-dropzone'
+import { getPreSignedUrl, upload } from '@services/image.service'
+import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -80,6 +83,14 @@ const users: ChatSuggestionList[] = [
 ]
 
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
+  const dropZone = useDropzone({
+    noClick: true,
+    noKeyboard: true,
+    multiple: false,
+    accept: 'image/*',
+    onDrop: (files) => handleFile(files),
+  })
+
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
@@ -99,6 +110,49 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     }
   }, [userId, roomId])
 
+  const handleFile = (files: File[]) => {
+    const file = files[0]
+    const reader = new FileReader()
+    if (file) {
+      // eslint-disable-next-line no-console
+      imageProcess(file).then((result) => {
+        result
+      })
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const imageProcess = async (file: File) => {
+    const params = {
+      type: UPLOADER_TYPE.CHAT,
+      room: roomId as string,
+      fileName: file.name,
+      contentType: file.type,
+      action_type: ACTION_TYPE.CREATE,
+    }
+
+    const res = await getPreSignedUrl(params)
+    const fileUrl = res.file_url
+    const signedUrl = res.url
+    await upload(file, signedUrl)
+
+    const currentTimestamp = moment().valueOf()
+    const clientId = uuidv4()
+
+    const payload = {
+      action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+      roomId: roomId,
+      createdAt: currentTimestamp,
+      userId: userId,
+      msg: URL.createObjectURL(file),
+      clientId: clientId,
+      type: CHAT_MESSAGE_TYPE.IMAGE,
+    }
+    dispatch(socketActions.messagePending(payload))
+    payload.msg = fileUrl
+    dispatch(socketActions.socketSend(payload))
+  }
+
   const handlePress = (text: string) => {
     const currentTimestamp = moment().valueOf()
     const clientId = uuidv4()
@@ -113,7 +167,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     }
     dispatch(socketActions.sendMessage(payload))
   }
-
+  const handlePressActionButton = (_type: number) => {
+    dropZone.open()
+  }
   const renderLoader = () => {
     if (data === undefined) {
       return (
@@ -148,8 +204,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         </Box>
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea onPressSend={handlePress} users={users} />
+        <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
       </Box>
+      <div {...dropZone.getRootProps({ className: classes.dropZone })}>
+        <input {...dropZone.getInputProps()} />
+      </div>
     </Box>
   )
 }
@@ -157,6 +216,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
 const useStyles = makeStyles(() => ({
   header: {
     padding: 24,
+  },
+  dropZone: {
+    display: 'none',
   },
   loaderBox: {
     width: 20,
