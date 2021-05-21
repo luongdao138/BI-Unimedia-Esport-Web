@@ -19,10 +19,15 @@ export type Meta = {
 
 export type TopicFollowersResponse = {
   data: Array<FollowersTopicResponse>
+  meta: Meta
 }
 
 export type FollowersTopicResponse = {
   attributes: any
+}
+
+export type TopicFollowersParams = {
+  page?: number
 }
 
 export const communityList = async (): Promise<CommunityListResponse> => {
@@ -30,7 +35,7 @@ export const communityList = async (): Promise<CommunityListResponse> => {
   return data
 }
 
-export const getTopicFollowers = async (): Promise<TopicFollowersResponse> => {
-  const { data } = await api.post<TopicFollowersResponse>(URI.TOPICS_FOLLOWERS)
+export const getTopicFollowers = async (params: TopicFollowersParams): Promise<TopicFollowersResponse> => {
+  const { data } = await api.post<TopicFollowersResponse>(URI.TOPICS_FOLLOWERS, params)
   return data
 }

@@ -15,6 +15,7 @@ type StateType = {
   recommendations: Array<any>
   nicknames2?: Array<Nickname2>
   recommendedEvent: Array<CommonResponse>
+  recommendedEventMeta: Meta
 }
 
 const initialState: StateType = {
@@ -26,6 +27,7 @@ const initialState: StateType = {
   recommendations: [],
   nicknames2: [],
   recommendedEvent: [],
+  recommendedEventMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -93,7 +95,12 @@ export default createReducer(initialState, (builder) => {
   })
 
   builder.addCase(actions.getRecommendedEvent.fulfilled, (state, action) => {
-    state.recommendedEvent = action.payload.data
+    let tmpRecommendedEvent = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpRecommendedEvent = state.recommendedEvent.concat(action.payload.data)
+    }
+    state.recommendedEvent = tmpRecommendedEvent
+    state.recommendedEventMeta = action.payload.meta
   })
 
   builder.addCase(blockUser.fulfilled, (state) => {

@@ -1,28 +1,33 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Grid, Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import EventCard from '@components/EventCard'
 import useRecommended from './useRecommended'
+import ESLoader from '@components/Loader'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const EventRecommendedContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { handleClick, recommendedEventList, getRecommendedEventList } = useRecommended()
+  const { handleClick, recommendedEventList, pages, getRecommendedEventList, resetMeta } = useRecommended()
+  const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
-    getRecommendedEventList()
+    getRecommendedEventList({
+      page: 1,
+    })
+    return () => resetMeta()
   }, [])
 
-  const renderList = () => {
-    if (recommendedEventList.length !== 0) {
-      return recommendedEventList.map((event, i) => (
-        <Grid key={i} item xs={6} md={4}>
-          <EventCard event={event} />
-        </Grid>
-      ))
+  const fetchMoreData = () => {
+    if (pages.current_page >= pages.total_pages) {
+      setHasMore(false)
+      return
     }
-    return null
+    getRecommendedEventList({
+      page: pages.current_page + 1,
+    })
   }
 
   return (
@@ -35,8 +40,29 @@ const EventRecommendedContainer: React.FC = () => {
           {t('common:event.recommended_event_list')}
         </Typography>
       </Box>
-      <Grid container className={classes.container}>
-        {renderList()}
+      <Grid container className={(classes.container, 'scroll-bar', 'card-container')}>
+        <InfiniteScroll
+          dataLength={recommendedEventList.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={
+            <div className={classes.loaderCenter}>
+              <ESLoader />
+            </div>
+          }
+          height={600}
+          endMessage={
+            <Box textAlign="center" width="100%" my={3}>
+              <Typography>{t('common:infinite_scroll.message')}</Typography>
+            </Box>
+          }
+        >
+          {recommendedEventList.map((event, i) => (
+            <Grid key={i} item xs={6} md={4}>
+              <EventCard event={event} />
+            </Grid>
+          ))}
+        </InfiniteScroll>
       </Grid>
     </>
   )
@@ -46,6 +72,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+  },
+  loaderCenter: {
+    width: '100%',
+    textAlign: 'center',
   },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,

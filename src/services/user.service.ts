@@ -174,7 +174,7 @@ export type GameEditParams = {
 
 export type RecommendedEventResponse = {
   data: Array<CommonResponse>
-  meta: PaginationResponse
+  meta: Meta
 }
 
 export type ResultsResponse = {
@@ -189,11 +189,8 @@ export type HomeSettingsResponse = {
   home_settings: string[]
 }
 
-export type PaginationResponse = {
-  current_page: number
-  total_pages: number
-  total_count: number
-  per_page: number
+export type RecommendedEventParams = {
+  page?: number
 }
 
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
@@ -241,8 +238,8 @@ export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse>
   return data
 }
 
-export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> => {
-  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT)
+export const getRecommendedEvent = async (params: RecommendedEventParams): Promise<RecommendedEventResponse> => {
+  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT, params)
   return data
 }
 

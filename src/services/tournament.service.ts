@@ -24,6 +24,7 @@ export type Meta = {
 
 export type TournamentFollowersResponse = {
   data: Array<FollowersResponse>
+  meta: Meta
 }
 
 export type FollowersResponse = {
@@ -32,6 +33,7 @@ export type FollowersResponse = {
 
 export type TournamentResultsResponse = {
   data: Array<ResultsResponse>
+  meta: Meta
 }
 
 export type ResultsResponse = {
@@ -40,10 +42,23 @@ export type ResultsResponse = {
 
 export type RecruitingTournamentResponse = {
   data: Array<RecruitingResponse>
+  meta: Meta
 }
 
 export type RecruitingResponse = {
   attributes: any
+}
+
+export type TournamentResultsParams = {
+  page?: number
+}
+
+export type TournamentFollowersParams = {
+  page?: number
+}
+
+export type RecruitingTournamentParams = {
+  page?: number
 }
 
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
@@ -51,17 +66,17 @@ export const tournamentSearch = async (params: TournamentSearchParams): Promise<
   return data
 }
 
-export const getTournamentFollowers = async (): Promise<TournamentFollowersResponse> => {
-  const { data } = await api.post<TournamentFollowersResponse>(URI.TOURNAMENT_FOLLOWERS)
+export const getTournamentFollowers = async (params: TournamentFollowersParams): Promise<TournamentFollowersResponse> => {
+  const { data } = await api.post<TournamentFollowersResponse>(URI.TOURNAMENT_FOLLOWERS, params)
   return data
 }
 
-export const getTournamentResults = async (): Promise<TournamentResultsResponse> => {
-  const { data } = await api.post<TournamentResultsResponse>(URI.TOURNAMENT_RESULTS)
+export const getTournamentResults = async (params: TournamentResultsParams): Promise<TournamentResultsResponse> => {
+  const { data } = await api.post<TournamentResultsResponse>(URI.TOURNAMENT_RESULTS, params)
   return data
 }
 
-export const getRecruitingTournaments = async (): Promise<RecruitingTournamentResponse> => {
-  const { data } = await api.get<RecruitingTournamentResponse>(URI.RECRUITING_TOURNAMENT)
+export const getRecruitingTournaments = async (params: RecruitingTournamentParams): Promise<RecruitingTournamentResponse> => {
+  const { data } = await api.get<RecruitingTournamentResponse>(URI.RECRUITING_TOURNAMENT, { params })
   return data
 }
