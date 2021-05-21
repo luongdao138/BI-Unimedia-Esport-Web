@@ -11,6 +11,11 @@ export const PARTICIPATION_TYPES = [
   { label: '10on10', value: 10 },
 ]
 
+export const RULES = [
+  { label: 'トーナメント', value: 'single' },
+  { label: 'バトルロイヤル', value: 'battle_royale' },
+]
+
 export const RULE = {
   SINGLE: 'single',
   BATTLE_ROYALE: 'battle_royale',
@@ -19,6 +24,11 @@ export const RULE = {
 export const PARTICIPANT_TYPE = {
   HOME: 'home',
   GUEST: 'guest',
+}
+
+export const T_TYPE = {
+  PUBLIC: 't_public',
+  PRIVATE: 't_private',
 }
 
 export const STATUS = {

@@ -10,6 +10,7 @@ import {
   SuggestedTeamMembersResponse,
   TournamentMatchResponse,
   RecruitingResponse,
+  RecommendedUsers,
 } from '@services/tournament.service'
 
 type StateType = {
@@ -26,6 +27,8 @@ type StateType = {
   interestedsMeta?: Meta
   tournamentMatches: TournamentMatchResponse
   recruitingTournaments: Array<RecruitingResponse>
+  recommendedUsers?: Array<RecommendedUsers>
+  recommendedUsersMeta?: Meta
 }
 
 const initialState: StateType = {
@@ -37,6 +40,7 @@ const initialState: StateType = {
   tournamentInteresteds: [],
   tournamentMatches: { matches: [], third_place_match: [] },
   recruitingTournaments: [],
+  recommendedUsers: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -97,5 +101,17 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
     state.recruitingTournaments = action.payload.data
+  })
+  builder.addCase(actions.getRecommendedUsersByName.fulfilled, (state, action) => {
+    let _recommendedUsers = action.payload.data
+    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+      _recommendedUsers = state.recommendedUsers.concat(action.payload.data)
+    }
+
+    state.recommendedUsers = _recommendedUsers
+    state.recommendedUsersMeta = action.payload.links?.meta
+  })
+  builder.addCase(actions.clearRecommendedUsers, (state) => {
+    state.recommendedUsers = []
   })
 })

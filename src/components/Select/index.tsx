@@ -1,4 +1,4 @@
-import { Select, SelectProps, FormControl, FormHelperText, Typography, withStyles, OutlinedInput } from '@material-ui/core'
+import { Select, SelectProps, FormControl, FormHelperText, Box, Typography, withStyles, OutlinedInput } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
@@ -18,14 +18,16 @@ const ESSelect: React.FC<SelectProps & Props> = ({ size = 'big', helperText, lab
   return (
     <FormControl fullWidth={rest.fullWidth} className={classes.formPadding}>
       {label && (
-        <label htmlFor={rest.id} className={classes.labelMargin}>
-          {label}
+        <Box display="flex" alignItems="center" pb={1}>
+          <label htmlFor={rest.id} className={classes.labelMargin}>
+            {label}
+          </label>
           {required && (
             <Typography component="span" className={classes.required}>
               {t('common:common.required')}
             </Typography>
           )}
-        </label>
+        </Box>
       )}
       <Select
         variant="outlined"
@@ -60,17 +62,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   formPadding: {
     paddingTop: theme.spacing(1),
   },
-  labelMargin: (props: { isBig?: boolean }) => ({
+  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
     fontWeight: props.isBig ? 'bold' : 'normal',
     fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
-    color: theme.palette.text.primary,
-    paddingBottom: theme.spacing(1),
   }),
   required: {
     backgroundColor: Colors.primary,
     borderRadius: 2,
     paddingLeft: theme.spacing(1 / 2),
     paddingRight: theme.spacing(1 / 2),
+    height: 16,
     fontSize: 10,
     marginLeft: theme.spacing(1),
     color: Colors.white,
