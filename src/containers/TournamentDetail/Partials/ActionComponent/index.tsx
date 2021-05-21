@@ -83,11 +83,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     backgroundColor: theme.palette.common.black,
     borderRadius: 4,
-    height: 36,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     color: Colors.grey[300],
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
   },
 }))
 
