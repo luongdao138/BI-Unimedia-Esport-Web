@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Theme, Box, Typography, makeStyles } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -23,6 +23,12 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange }) => {
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
   const [gameTitles, setGameTitles] = useState(values)
+
+  useEffect(() => {
+    if (open === true) {
+      setGameTitles(values)
+    }
+  }, [open])
 
   const onGameChange = (games: GameTitle['attributes'][]) => {
     setGameTitles(games)
@@ -67,7 +73,7 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange }) => {
             </Box>
 
             <Box pt={8} className={classes.container}>
-              <GameSelector values={gameTitles} onChange={onGameChange} />
+              <GameSelector values={gameTitles} onChange={onGameChange} single />
             </Box>
           </Box>
 
