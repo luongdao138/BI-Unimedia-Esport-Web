@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import { TournamentDetail } from '@services/tournament.service'
+import TeamItem from '../TeamItem'
 
 interface InterestedListProps {
   tournament: TournamentDetail
@@ -21,6 +22,7 @@ interface InterestedListProps {
 const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handleClose, onSelect }) => {
   const data = tournament.attributes
   const hash_key = data.hash_key
+  const isTeam = data.participant_type > 1
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
 
@@ -48,14 +50,16 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
 
   const participantData = (participant) => {
     const _user = participant.attributes.user
+    const teamName = isTeam ? participant.attributes.team.data.attributes.name : ''
     return {
       avatar: participant.attributes.avatar_url,
       user: {
         ..._user,
         role: 'participant',
         name: participant.attributes.name,
-        pid: participant.id,
+        team_name: teamName,
       },
+      pid: participant.id,
     }
   }
 
@@ -68,12 +72,12 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">ユーザーを選ぶ{t('common:tournament.participant.back')}</Typography>
+              <Typography variant="h2">{t('common:tournament.select_user')}</Typography>
             </Box>
           </Box>
           {meta.loaded && !interesteds.length && (
             <div className={classes.loaderCenter}>
-              <Typography>{'nodata'}</Typography>
+              <Typography>{t('common:common.no_data')}</Typography>
             </div>
           )}
           <InfiniteScroll
@@ -89,15 +93,26 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
             }
             height={600}
           >
-            {interesteds.map((participant, i) => (
-              <UserListItem
-                data={userData(participant)}
-                key={i}
-                handleClick={() => {
-                  onSelect(participantData(participant))
-                }}
-              />
-            ))}
+            {isTeam
+              ? interesteds.map((participant, i) => (
+                  <TeamItem
+                    name={participant.attributes.team.data.attributes.name}
+                    avatar={participant.attributes.avatar_url}
+                    key={i}
+                    handleClick={() => {
+                      onSelect(participantData(participant))
+                    }}
+                  />
+                ))
+              : interesteds.map((participant, i) => (
+                  <UserListItem
+                    data={userData(participant)}
+                    key={i}
+                    handleClick={() => {
+                      onSelect(participantData(participant))
+                    }}
+                  />
+                ))}
           </InfiniteScroll>
         </Box>
       </BlankLayout>

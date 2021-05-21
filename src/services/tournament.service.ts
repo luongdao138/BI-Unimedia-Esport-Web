@@ -174,7 +174,8 @@ export type EntryStatusResponse = {
 export type TournamentMatchParticipant = {
   id: number
   role: 'admin' | 'participant' | 'interested' | 'co_organizer'
-  name: string
+  name?: string
+  team_name?: string
   pid: number
   nickname: string
   user_code: string
@@ -298,6 +299,14 @@ export type RecommendedUsersParams = {
   hash_key?: string
 }
 
+export type SetScoreParams = {
+  hash_key?: string
+  match_id: number
+  score_home: number
+  score_guest: number
+  winner: string
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -319,7 +328,7 @@ export const getRecruitingTournaments = async (): Promise<RecruitingTournamentRe
 }
 
 export const getTournamentDetail = async (hash_key: string): Promise<TournamentDetailResponse> => {
-  const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
+  const { data } = await api.get<TournamentDetailResponse>(URI.TOURNAMENT_DETAIL.replace(/:id/gi, hash_key))
   return data
 }
 
@@ -370,5 +379,10 @@ export const getRecommendedUsersByName = async (params: RecommendedUsersParams):
 
 export const createTournament = async (params: TournamentFormParams): Promise<void> => {
   const { data } = await api.post<void>(URI.TOURNAMENTS_CREATE, params)
+  return data
+}
+
+export const setScore = async (params: SetScoreParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_SET_SCORE.replace(/:id/gi, params.hash_key), params)
   return data
 }

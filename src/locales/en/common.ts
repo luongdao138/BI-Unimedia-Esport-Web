@@ -97,6 +97,8 @@ export default {
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
     },
+    no_data: '対象データありません',
+    dash: '-',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -235,6 +237,13 @@ export default {
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',
+    select_user: 'ユーザーを選ぶ',
+    set_participants: '設定する',
+    unset_participants: 'サブボタン',
+    match_setting: '試合設定',
+    vs: 'VS',
+    match_result: '対戦結果',
+    edit_match_result: '対戦結果を編集する',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

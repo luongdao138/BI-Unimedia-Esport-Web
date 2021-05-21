@@ -67,7 +67,13 @@ const defaultDetails = (user_id: number): any => {
 }
 
 const formatDate = (date: string): string => {
-  return moment(date).format('YYYY年MM月DD日')
+  return moment.utc(date).format('YYYY年MM月DD日')
+}
+
+const getRemainingDate = (date: string): number => {
+  const endDate = moment(moment(date).format('YYYY-MM-DD'))
+  const nowDate = moment()
+  return endDate.diff(nowDate, 'days')
 }
 
 export const TournamentHelper = {
@@ -77,4 +83,5 @@ export const TournamentHelper = {
   defaultDetails,
   getTypeValue,
   checkStatus,
+  getRemainingDate,
 }

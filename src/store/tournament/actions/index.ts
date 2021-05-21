@@ -223,3 +223,15 @@ export const createTournament = createAsyncThunk<void, services.TournamentFormPa
     }
   }
 )
+
+export const setScore = createAsyncThunk<void, services.SetScoreParams>(types.SET_TOURNAMENT_SCORE, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.setScore(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
