@@ -282,6 +282,9 @@ export default {
     cancel: 'キャンセル',
     ok: 'ログアウト',
   },
+  account_settings: {
+    title: 'アカウント設定',
+  },
   my_page_settings: {
     title: 'マイページの情報公開範囲',
     tournament_title: '大会履歴',
