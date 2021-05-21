@@ -299,6 +299,12 @@ export default {
   security_settings: {
     title: 'セキュリティ',
   },
+  service_info: {
+    title: 'サービス情報',
+    enterprise_info: '企業情報（NTTe-Sports）',
+    faq: 'FAQ',
+    inquiry: 'お問い合わせ',
+  },
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
