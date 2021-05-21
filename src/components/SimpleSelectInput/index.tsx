@@ -14,9 +14,10 @@ interface SelectInputProps {
   selectedItem: SuggestedTeamMembersResponse
   items: SuggestedTeamMembersResponse[]
   onItemsSelected: (selectedItems: SuggestedTeamMembersResponse, index) => void
+  onScrollEnd: () => void
 }
 
-const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ label, index, selectedItem, items, onItemsSelected }) => {
+const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ label, index, selectedItem, items, onItemsSelected, onScrollEnd }) => {
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
@@ -77,7 +78,7 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({ label, index, selecte
           onScroll: (event: React.SyntheticEvent) => {
             const listboxNode = event.currentTarget
             if (listboxNode.scrollTop + listboxNode.clientHeight === listboxNode.scrollHeight) {
-              // console.log('Reach the end of suggestions')
+              onScrollEnd()
             }
           },
         }}

@@ -16,6 +16,11 @@ export const RULES = [
   { label: 'バトルロイヤル', value: 'battle_royale' },
 ]
 
+export const T_TYPES = [
+  { label: '公開', value: 0 },
+  { label: '限定公開', value: 1 },
+]
+
 export const RULE = {
   SINGLE: 'single',
   BATTLE_ROYALE: 'battle_royale',

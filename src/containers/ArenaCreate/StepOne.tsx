@@ -33,9 +33,10 @@ type Props = {
   data: TournamentCreateParams
   saveState: (data: FormProps) => void
   hardwares: HardwareResponse
+  handleError: (error) => void
 }
 
-const StepOne: React.FC<Props> = ({ data, saveState, hardwares }) => {
+const StepOne: React.FC<Props> = ({ data, saveState, hardwares, handleError }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
@@ -56,7 +57,7 @@ const StepOne: React.FC<Props> = ({ data, saveState, hardwares }) => {
     game_hardware_id: Yup.number().min(1, t('common:common.error')).integer(t('common:common.integer')),
   })
 
-  const { handleChange, values, errors, touched, setFieldValue } = useFormik<FormProps>({
+  const { handleChange, values, errors, touched, setFieldValue, validateForm } = useFormik<FormProps>({
     initialValues: {
       title: data.title,
       overview: data.overview,
@@ -75,6 +76,14 @@ const StepOne: React.FC<Props> = ({ data, saveState, hardwares }) => {
   useEffect(() => {
     saveState(values)
   }, [values])
+
+  useEffect(() => {
+    validateForm()
+  }, [])
+
+  useEffect(() => {
+    handleError(errors)
+  }, [errors])
 
   const handleImageUpload = (file: File) => {
     setUploading(true)

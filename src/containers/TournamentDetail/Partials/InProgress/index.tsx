@@ -1,7 +1,7 @@
 import React from 'react'
 import { TournamentDetail } from '@services/tournament.service'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'
 import { UserProfile } from '@services/user.service'
@@ -13,7 +13,7 @@ interface InProgressProps {
 
 const InProgress: React.FC<InProgressProps> = (props) => {
   const classes = useStyles()
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   // const { tournament } = props
   const currentRoundNumber = 2 // TODO
 
@@ -21,7 +21,9 @@ const InProgress: React.FC<InProgressProps> = (props) => {
     <ActionComponent {...props}>
       <Box className={classes.body}>
         <Box display="flex" flexDirection="row">
-          <Typography className={classes.roundInfoText}>{`${currentRoundNumber}回戦目 対戦中`}</Typography>
+          <Typography className={classes.roundInfoText}>
+            {t('common:tournament.current_round', { round_number: currentRoundNumber })}
+          </Typography>
         </Box>
         <img className={classes.logo} src={`/images/round${currentRoundNumber}.svg`} />
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline"></Box>

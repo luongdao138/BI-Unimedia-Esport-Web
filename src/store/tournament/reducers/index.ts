@@ -10,8 +10,10 @@ import {
   SuggestedTeamMembersResponse,
   TournamentMatchResponse,
   RecruitingResponse,
+  TournamentStatus,
   RecommendedUsers,
 } from '@services/tournament.service'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -70,6 +72,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.is_entered = false
+  })
+  builder.addCase(actions.closeTournament.fulfilled, (state) => {
+    state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
   })
   builder.addCase(actions.getTournamentParticipants.fulfilled, (state, action) => {
     let _participants = action.payload.data

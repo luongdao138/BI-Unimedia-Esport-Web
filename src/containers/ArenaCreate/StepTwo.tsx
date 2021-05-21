@@ -10,7 +10,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { useStore } from 'react-redux'
 import { TournamentCreateParams } from '@services/tournament.service'
-import { PARTICIPATION_TYPES, RULES } from '@constants/tournament.constants'
+import { PARTICIPATION_TYPES, RULES, T_TYPES } from '@constants/tournament.constants'
 
 type FormProps = {
   rule: string
@@ -26,9 +26,10 @@ type FormProps = {
 type Props = {
   data: TournamentCreateParams
   saveState: (data: FormProps) => void
+  handleError: (error) => void
 }
 
-const StepTwo: React.FC<Props> = ({ data, saveState }) => {
+const StepTwo: React.FC<Props> = ({ data, saveState, handleError }) => {
   const { t } = useTranslation(['common'])
   const store = useStore()
   const classes = useStyles()
@@ -44,7 +45,7 @@ const StepTwo: React.FC<Props> = ({ data, saveState }) => {
     rule: Yup.string().required(t('common:common.error')),
   })
 
-  const { handleChange, values, errors, touched, setFieldValue } = useFormik<FormProps>({
+  const { handleChange, values, errors, touched, setFieldValue, validateForm } = useFormik<FormProps>({
     initialValues: {
       rule: data.rule,
       t_type: data.t_type,
@@ -62,8 +63,16 @@ const StepTwo: React.FC<Props> = ({ data, saveState }) => {
   })
 
   useEffect(() => {
+    validateForm()
+  }, [])
+
+  useEffect(() => {
     saveState(values)
   }, [values])
+
+  useEffect(() => {
+    handleError(errors)
+  }, [errors])
 
   return (
     <Box pb={9}>
@@ -72,7 +81,7 @@ const StepTwo: React.FC<Props> = ({ data, saveState }) => {
           className={classes.selectWidth}
           name="rule"
           value={values.rule}
-          onChange={(val) => setFieldValue('rule', !val ? 0 : val)}
+          onChange={handleChange}
           label={t('common:tournament_create.holding_format')}
           required={true}
           size="small"
@@ -99,13 +108,18 @@ const StepTwo: React.FC<Props> = ({ data, saveState }) => {
           className={classes.selectWidth}
           name="t_type"
           value={TournamentHelper.getTypeValue(values.t_type)}
-          onChange={handleChange}
-          label={t('common:tournament_create.holding_format')}
+          onChange={(e) => {
+            setFieldValue('t_type', TournamentHelper.getTypeEnum(e.target.value))
+          }}
+          label={t('common:tournament_create.public_or_private')}
           required={true}
           size="small"
         >
-          <option value={0}>{t('common:tournament_create.public')}</option>
-          <option value={1}>{t('common:tournament_create.private')}</option>
+          {T_TYPES.map((type, index) => (
+            <option key={type.value + index} value={type.value}>
+              {type.label}
+            </option>
+          ))}
         </ESSelect>
       </Box>
       <Box pb={1}>

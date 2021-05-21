@@ -30,6 +30,13 @@ const getTypeValue = (t_type: string): number => {
   return 0
 }
 
+const getTypeEnum = (type: unknown): string => {
+  if (Number(type) === 0) return T_TYPE.PUBLIC
+  if (Number(type) === 1) return T_TYPE.PRIVATE
+
+  return ''
+}
+
 const checkStatus = (status: string, targetStatus: string): boolean => {
   const statuses = ['ready', 'recruiting', 'recruitment_closed', 'ready_to_start', 'in_progress', 'completed', 'cancelled']
   const index = statuses.indexOf(status)
@@ -163,4 +170,5 @@ export const TournamentHelper = {
   checkTarget,
   getDetailData,
   checkParticipantsSelected,
+  getTypeEnum,
 }
