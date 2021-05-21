@@ -56,12 +56,12 @@ const ActionComponent: React.FC<Props> = (props) => {
 
       {isRecruitmentClosed && isModerator && (
         <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-          <Typography color="primary">{`大会開始前に対戦表を確定してください`}</Typography>
+          <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
           <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
             <Typography variant="body2">
-              {`締め切りまであと`}
-              <ESLink onClick={() => {}}>{'対戦表'}</ESLink>
-              {`が確定していない場合はエントリーが無効となるのでご注意ください`}
+              {t('common:tournament.until_deadline')}
+              <ESLink onClick={() => {}}>{t('common:tournament.brackets')}</ESLink>
+              {t('common:tournament.confirm_brackets_desc_tail')}
             </Typography>
           </Box>
         </Box>

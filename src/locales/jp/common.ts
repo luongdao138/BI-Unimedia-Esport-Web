@@ -266,6 +266,8 @@ export default {
     brackets: '対戦表',
     until_deadline: '締め切りまであと',
     current_round: '{{round_number}}回戦目 対戦中',
+    confirm_brackets: '大会開始前に対戦表を確定してください',
+    confirm_brackets_desc_tail: 'が確定していない場合はエントリーが無効となるのでご注意ください',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
