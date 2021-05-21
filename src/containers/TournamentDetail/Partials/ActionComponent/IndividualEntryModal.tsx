@@ -29,7 +29,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const classes = useStyles()
   const store = useStore()
   const [open, setOpen] = useState(false)
-  const { join, leave, joinMeta, leaveMeta } = useEntry()
+  const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -110,8 +110,8 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       </StickyActionModal>
 
       {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
-      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} />}
-      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} />}
+      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetJoinMeta} />}
+      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetLeaveMeta} />}
     </Box>
   )
 }

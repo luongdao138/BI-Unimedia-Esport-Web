@@ -23,7 +23,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const { close, closeMeta } = useEntry()
+  const { close, closeMeta, resetCloseMeta } = useEntry()
 
   useEffect(() => {
     if (closeMeta.loaded || closeMeta.error) {
@@ -82,7 +82,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
       </ESModal>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
-      {!!closeMeta.error && <ESToast open={!!closeMeta.error} message={t('common:error.close_arena_failed')} />}
+      {!!closeMeta.error && <ESToast open={!!closeMeta.error} message={t('common:error.close_arena_failed')} resetMeta={resetCloseMeta} />}
     </Box>
   )
 }

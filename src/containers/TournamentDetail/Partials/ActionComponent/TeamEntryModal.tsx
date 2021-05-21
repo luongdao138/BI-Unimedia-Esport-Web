@@ -44,7 +44,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
-  const { join, leave, joinMeta, leaveMeta } = useEntry()
+  const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
   const [teamMemberItems, setTeamMemberItems] = useState(suggestedTeamMembers)
 
   useEffect(() => {
@@ -298,8 +298,8 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       </StickyActionModal>
 
       {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
-      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetMeta} />}
-      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetMeta} />}
+      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetJoinMeta} />}
+      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetLeaveMeta} />}
     </Box>
   )
 }
