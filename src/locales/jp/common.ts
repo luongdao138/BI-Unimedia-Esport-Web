@@ -264,6 +264,8 @@ export default {
     participants: '参加メンバー',
     group_chat: 'グループチャット',
     brackets: '対戦表',
+    until_deadline: '締め切りまであと',
+    current_round: '{{round_number}}回戦目 対戦中',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
