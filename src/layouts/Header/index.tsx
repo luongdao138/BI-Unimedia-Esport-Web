@@ -26,7 +26,7 @@ import RegisterByEmailContainer from '@containers/RegisterByEmail'
 import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
-import TournamentCreateContainer from '@containers/TournamentCreate'
+import ArenaCreateContainer from '@containers/ArenaCreate'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import React, { useEffect } from 'react'
 import { Box } from '@material-ui/core'
@@ -154,8 +154,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <RegisterProfileContainer />
       case ESRoutes.USER_SETTINGS:
         return <UserSettingsContainer />
-      case ESRoutes.TOURNAMENT_CREATE:
-        return <TournamentCreateContainer />
+      case ESRoutes.ARENA_CREATE:
+        return <ArenaCreateContainer />
       default:
         break
     }

@@ -51,7 +51,7 @@ const TournamentCreate: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2} display="flex" flexDirection="row" alignItems="center">
-          <IconButton className={classes.iconButtonBg} onClick={() => navigateScreen(ESRoutes.TOURNAMENTS)}>
+          <IconButton className={classes.iconButtonBg} onClick={() => navigateScreen(ESRoutes.ARENA)}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
           <Box pl={2}>
