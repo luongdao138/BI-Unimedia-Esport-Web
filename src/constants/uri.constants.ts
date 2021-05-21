@@ -19,7 +19,7 @@ export const URI = {
   BLOCK: '/v2/blocks',
   UNBLOCK: '/v2/blocks/unblock',
   NG_WORDS: '/v1/ng_words',
-  GET_PREFECTURES: 'v2/areas',
+  GET_PREFECTURES: '/v2/areas',
   USER_SETTINGS: '/v2/users/settings',
   USER_FEATURES: '/v2/user_features',
   GAME_TITLES_ALL: '/v2/game_titles_all',
@@ -63,4 +63,7 @@ export const URI = {
   TOURNAMENT_RESULTS: '/v2/users/followings_tournament_result',
   RECRUITMENT_FOLLOWERS: '/v2/users/followings_recruitment',
   RECRUITING_TOURNAMENT: '/v2/tournaments/public_recruiting',
+  GAME_HARDWARES: '/v2/game_hardwares',
+  TOURNAMENTS_USERS: '/v1/tournaments/users',
+  TOURNAMENTS_CREATE: '/v1/tournaments',
 }

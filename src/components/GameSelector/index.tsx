@@ -19,7 +19,7 @@ import SelectedGames from './SelectedGames'
 import { Box } from '@material-ui/core'
 
 type GameTitleItem = GameTitle['attributes']
-export type GameSelectorProps = { values: GameTitleItem[]; onChange: (games: GameTitleItem[]) => void }
+export type GameSelectorProps = { values: GameTitleItem[]; onChange: (games: GameTitleItem[]) => void; single?: boolean }
 
 const GameSelector: React.FC<GameSelectorProps> = (props) => {
   const classes = useStyles()
@@ -33,7 +33,9 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
     clearGames()
   }
   const handleAdd = (game: GameTitleItem) => {
-    if (!_.some(props.values, game)) {
+    if (props.single) {
+      props.onChange([game])
+    } else if (!_.some(props.values, game)) {
       props.onChange([game, ...props.values])
     }
   }
@@ -63,6 +65,10 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
       <SelectedGames games={props.values} handleRemove={handleRemove} />
     </Box>
   )
+}
+
+GameSelector.defaultProps = {
+  single: false,
 }
 
 export default GameSelector
