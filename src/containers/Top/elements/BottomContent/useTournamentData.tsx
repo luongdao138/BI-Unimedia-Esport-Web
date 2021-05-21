@@ -8,7 +8,7 @@ const useTournamentData = () => {
   const dispatch = useAppDispatch()
 
   const recruitingTournaments = useAppSelector(selectors.getRecruitingTournaments)
-  const getRecruitingTournaments = () => dispatch(actions.getRecruitingTournaments())
+  const getRecruitingTournaments = () => dispatch(actions.getRecruitingTournaments({ page: 1 }))
 
   return { recruitingTournaments, getRecruitingTournaments }
 }

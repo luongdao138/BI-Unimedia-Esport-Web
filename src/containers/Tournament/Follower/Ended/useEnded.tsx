@@ -1,6 +1,8 @@
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import tournament from '@store/tournament'
+import { clearMetaData } from '@store/metadata/actions'
+import { TournamentResultsParams } from '@services/tournament.service'
 
 const { selectors, actions } = tournament
 
@@ -11,9 +13,11 @@ const useEnded = () => {
   const handleClick = () => handleReturn()
 
   const tournamentResults = useAppSelector(selectors.getTournamentResults)
-  const getTournamentResults = () => dispatch(actions.getTournamentResults())
+  const pages = useAppSelector(selectors.getTournamentResultsMeta)
+  const getTournamentResults = (params: TournamentResultsParams) => dispatch(actions.getTournamentResults(params))
+  const resetMeta = () => dispatch(clearMetaData(actions.getTournamentResults.typePrefix))
 
-  return { handleClick, tournamentResults, getTournamentResults }
+  return { handleClick, tournamentResults, getTournamentResults, pages, resetMeta }
 }
 
 export default useEnded
