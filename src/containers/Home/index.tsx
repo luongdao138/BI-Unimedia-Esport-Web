@@ -13,9 +13,6 @@ import useEventData from './useEventData'
 import { Box } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
 import useTopicData from './useTopicData'
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
-import { WEBSYNC_PREFIX } from '@constants/sync.constants'
-import { useAppDispatch } from '@store/hooks'
 import { HOME_SETTINGS } from '@constants/common.constants'
 
 const HomeContainer: React.FC = () => {
@@ -24,18 +21,11 @@ const HomeContainer: React.FC = () => {
   const { recommendedEventList, getRecommendedEventList } = useEventData()
   const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
   const { followersTopicList, getFollowersTopicList } = useTopicData()
-  const dispatch = useAppDispatch()
 
   useEffect(() => {
     getUserProfile()
     getUserRecommendations()
     getRecruitmentRecommendations()
-    dispatch({
-      type: `${WEBSOCKET_PREFIX}:CONNECT`,
-    })
-    dispatch({
-      type: `${WEBSYNC_PREFIX}:CONNECT`,
-    })
     getRecommendedEventList()
     getRecruitmentFollow()
     getTournamentFollowers()
@@ -43,22 +33,22 @@ const HomeContainer: React.FC = () => {
     getFollowersTopicList()
   }, [])
 
-  const renderItem = (value: string) => {
+  const renderItem = (value: string, index: number) => {
     switch (value) {
       case HOME_SETTINGS.RECOMMENDED_USER:
-        return <RecommendedUser users={recommendedUsers} />
+        return <RecommendedUser users={recommendedUsers} key={index} />
       case HOME_SETTINGS.RECOMMENDED_RECRUITMENT:
-        return <RecommendedRecruitment data={recommendedRecruitments} />
+        return <RecommendedRecruitment data={recommendedRecruitments} key={index} />
       case HOME_SETTINGS.RECOMMENDED_EVENT:
-        return <RecommendedEvent data={recommendedEventList} />
+        return <RecommendedEvent data={recommendedEventList} key={index} />
       case HOME_SETTINGS.RECRUITMENT_FOLLOW:
-        return <RecruitmentFollow data={recruitmentFollow} />
+        return <RecruitmentFollow data={recruitmentFollow} key={index} />
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
-        return <TournamentFollow data={tournamentFollowers} />
+        return <TournamentFollow data={tournamentFollowers} key={index} />
       case HOME_SETTINGS.TOURNAMENT_RESULT:
-        return <TournamentResult data={tournamentResults} />
+        return <TournamentResult data={tournamentResults} key={index} />
       case HOME_SETTINGS.TOPIC_FOLLOW:
-        return <TopicFollow data={followersTopicList} />
+        return <TopicFollow data={followersTopicList} key={index} />
       default:
         return ''
     }
@@ -67,8 +57,8 @@ const HomeContainer: React.FC = () => {
   return (
     <>
       <Header />
-      {homeSettings.map((value) => {
-        return renderItem(value)
+      {homeSettings.map((value, index) => {
+        return renderItem(value, index)
       })}
       <Box marginBottom={9} />
     </>

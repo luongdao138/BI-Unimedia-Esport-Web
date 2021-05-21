@@ -129,7 +129,7 @@ const SideMenu: React.FC = () => {
   return (
     <>
       <Box className={classes.menu}>
-        <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE)}>
+        <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}>
           <Box className={classes.userInfo}>
             <ProfileAvatar size={80} src={userProfile?.attributes?.avatar_url ? userProfile.attributes.avatar_url : '/images/avatar.png'} />
             {isAuthenticated && (
@@ -146,7 +146,7 @@ const SideMenu: React.FC = () => {
         </Box>
 
         <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-          <Link href={ESRoutes.HOME}>
+          <Link href={ESRoutes.HOME} passHref>
             <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
               <ListItemIcon className={classes.icon}>
                 <Icon fontSize="small" className="fa fa-home" />
@@ -155,7 +155,7 @@ const SideMenu: React.FC = () => {
             </ListItem>
           </Link>
           <LoginRequired>
-            <Link href={ESRoutes.TOURNAMENTS}>
+            <Link href={ESRoutes.TOURNAMENTS} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.TOURNAMENTS)}>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-trophy" />
@@ -183,7 +183,7 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem>
-          <Link href={ESRoutes.SETTINGS}>
+          <Link href={ESRoutes.SETTINGS} passHref>
             <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
               <ListItemIcon className={classes.icon}>
                 <Icon fontSize="small" className="fa fa-cog" />

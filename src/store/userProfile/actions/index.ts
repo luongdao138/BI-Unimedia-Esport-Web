@@ -176,11 +176,11 @@ export const getRecommendations = createAsyncThunk<services.RecommendationsRespo
   }
 )
 
-export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventResponse>(
+export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventResponse, services.RecommendedEventParams>(
   USER_PROFILE_ACTION_TYPE.RECOMMENDED_EVENT,
-  async (_params, { rejectWithValue }) => {
+  async (param, { rejectWithValue }) => {
     try {
-      const res = await services.getRecommendedEvent()
+      const res = await services.getRecommendedEvent(param)
       return res
     } catch (error) {
       if (!error.response) {

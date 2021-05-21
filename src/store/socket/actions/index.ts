@@ -1,20 +1,48 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { AppDispatch } from '@store/store'
+import _ from 'lodash'
+
+interface SocketPayload {
+  action: CHAT_ACTION_TYPE
+  userId?: number
+  [x: string]: any
+}
 
 export const socketActions = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  socketSend: (payload: object) => {
+  socketSend: (payload: SocketPayload) => {
     return (dispatch: AppDispatch) => {
       dispatch(socketCreators.socketSend(payload))
+    }
+  },
+  messagePending: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      dispatch(socketCreators.messagePending(payload))
+    }
+  },
+  sendMessage: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      Promise.resolve(dispatch(socketCreators.messagePending(payload))).then(() => dispatch(socketCreators.socketSend(payload)))
+    }
+  },
+  initRoomLoad: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      Promise.resolve(dispatch(socketCreators.cleanRoom())).then(() => dispatch(socketCreators.socketSend(payload)))
     }
   },
 }
 
 export const socketCreators = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  socketSend: (payload: object) => ({
+  socketSend: (payload: SocketPayload) => ({
     type: `${WEBSOCKET_PREFIX}:SEND`,
     payload: payload,
+  }),
+  messagePending: (payload: SocketPayload) => ({
+    type: CHAT_ACTION_TYPE.MESSAGE_PENDING,
+    data: _.omit(_.assign(payload, { sent: false }), ['action']),
+  }),
+
+  cleanRoom: () => ({
+    type: CHAT_ACTION_TYPE.CLEAN_ROOM,
   }),
 }

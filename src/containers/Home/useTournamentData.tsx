@@ -9,8 +9,8 @@ const useTournamentData = () => {
 
   const tournamentFollowers = useAppSelector(selectors.getTournamentFollowers)
   const tournamentResults = useAppSelector(selectors.getTournamentResults)
-  const getTournamentFollowers = () => dispatch(actions.getTournamentFollowers())
-  const getTournamentResults = () => dispatch(actions.getTournamentResults())
+  const getTournamentFollowers = () => dispatch(actions.getTournamentFollowers({ page: 1 }))
+  const getTournamentResults = () => dispatch(actions.getTournamentResults({ page: 1 }))
 
   return { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults }
 }

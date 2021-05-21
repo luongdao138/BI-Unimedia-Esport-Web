@@ -282,11 +282,28 @@ export default {
     cancel: 'キャンセル',
     ok: 'ログアウト',
   },
-  user_security_settings: {
+  my_page_settings: {
     title: 'マイページの情報公開範囲',
     tournament_title: '大会履歴',
     activity_title: 'アクティビティ',
     profile_title: 'プロフィール',
+  },
+  message_settings: {
+    title: 'メッセージの受信設定',
+    receive_messages_from_anyone: '誰からでもメッセージを受け取る',
+    receive_invitations_from_anyone: '誰からでもメッセージグループの招待を受け取る',
+  },
+  block_settings: {
+    title: 'ブロックしたユーザー',
+  },
+  security_settings: {
+    title: 'セキュリティ',
+  },
+  service_info: {
+    title: 'サービス情報',
+    enterprise_info: '企業情報（NTTe-Sports）',
+    faq: 'FAQ',
+    inquiry: 'お問い合わせ',
   },
   settings: {
     title: '設定',

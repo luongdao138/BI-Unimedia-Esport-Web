@@ -1,4 +1,4 @@
-import { Mention, MentionsInput } from 'react-mentions'
+import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions'
 
 import { ChatSuggestionList } from '../types/chat.types'
 import classNames from './mention.module.css'
@@ -12,14 +12,15 @@ interface ComposerProps {
     index: number,
     focused: boolean
   ) => React.ReactNode
-  onChange: (value: string) => void
+  onChange: OnChangeHandlerFunc
   placeholder: string
   msg?: string
   users: ChatSuggestionList[]
   onAdd?: (id: string | number, display: string) => void
+  onKeyPress?: (e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => void
 }
 
-const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, placeholder, users, onAdd }) => {
+const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, placeholder, users, onAdd, onKeyPress }) => {
   return (
     <div>
       <div
@@ -35,6 +36,7 @@ const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, pl
         spellCheck={false}
         suggestionsPortalHost={container}
         placeholder={placeholder}
+        onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => onKeyPress(e)}
         style={{
           suggestions: {
             position: 'absolute',
@@ -43,9 +45,7 @@ const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, pl
           },
         }}
         classNames={classNames}
-        onChange={({ target: { value } }) => {
-          onChange(value)
-        }}
+        onChange={onChange}
       >
         <Mention
           trigger="@"

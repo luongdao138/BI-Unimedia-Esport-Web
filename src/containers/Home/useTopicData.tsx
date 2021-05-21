@@ -8,7 +8,7 @@ const useTopicData = () => {
   const dispatch = useAppDispatch()
 
   const followersTopicList = useAppSelector(selectors.getTopicFollowersList)
-  const getFollowersTopicList = () => dispatch(actions.getTopicFollowers())
+  const getFollowersTopicList = () => dispatch(actions.getTopicFollowers({ page: 1 }))
 
   return { followersTopicList, getFollowersTopicList }
 }

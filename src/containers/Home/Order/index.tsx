@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from '@material-ui/core'
+import { Box, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { DndContext } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -30,10 +30,15 @@ const HomeOrderContainer: React.FC = () => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   grow: { position: 'relative' },
   dragWrap: {
     marginBottom: 320,
+  },
+  [theme.breakpoints.down('sm')]: {
+    dragWrap: {
+      marginBottom: theme.spacing(10),
+    },
   },
 }))
 

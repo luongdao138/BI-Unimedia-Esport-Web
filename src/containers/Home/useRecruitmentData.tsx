@@ -9,8 +9,8 @@ const useRecruitmentData = () => {
 
   const recommendedRecruitments = useAppSelector(selectors.getRecommendations)
   const recruitmentFollow = useAppSelector(selectors.getRecruitmentFollowers)
-  const getRecruitmentRecommendations = () => dispatch(actions.getRecommendations())
-  const getRecruitmentFollow = () => dispatch(actions.getRecruitmentFollowers())
+  const getRecruitmentRecommendations = () => dispatch(actions.getRecommendations({ page: 1 }))
+  const getRecruitmentFollow = () => dispatch(actions.getRecruitmentFollowers({ page: 1 }))
 
   return { recommendedRecruitments, getRecruitmentRecommendations, recruitmentFollow, getRecruitmentFollow }
 }
