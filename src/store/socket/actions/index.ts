@@ -15,9 +15,14 @@ export const socketActions = {
       dispatch(socketCreators.socketSend(payload))
     }
   },
-  sendMessage: (payload: any) => {
+  sendMessage: (payload: SocketPayload) => {
     return (dispatch: AppDispatch) => {
       Promise.resolve(dispatch(socketCreators.messagePending(payload))).then(() => dispatch(socketCreators.socketSend(payload)))
+    }
+  },
+  initRoomLoad: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      Promise.resolve(dispatch(socketCreators.cleanRoom())).then(() => dispatch(socketCreators.socketSend(payload)))
     }
   },
 }
@@ -27,8 +32,12 @@ export const socketCreators = {
     type: `${WEBSOCKET_PREFIX}:SEND`,
     payload: payload,
   }),
-  messagePending: (payload: any) => ({
+  messagePending: (payload: SocketPayload) => ({
     type: CHAT_ACTION_TYPE.MESSAGE_PENDING,
     data: _.omit(_.assign(payload, { sent: false }), ['action']),
+  }),
+
+  cleanRoom: () => ({
+    type: CHAT_ACTION_TYPE.CLEAN_ROOM,
   }),
 }

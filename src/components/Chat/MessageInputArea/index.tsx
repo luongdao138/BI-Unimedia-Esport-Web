@@ -1,4 +1,4 @@
-import { useState, useMemo, ReactNode } from 'react'
+import React, { useState, useMemo, ReactNode } from 'react'
 import { Box, Icon, IconButton, makeStyles } from '@material-ui/core'
 import Composer from '@components/Chat/Composer'
 import { useTranslation } from 'react-i18next'
@@ -44,8 +44,9 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
     setText(newValue)
   }
 
-  const send = () => {
-    onPressSend ? onPressSend(text) : undefined
+  const send = (e: React.MouseEvent) => {
+    onPressSend ? onPressSend(text.trim()) : undefined
+    e.preventDefault()
     setText('')
   }
 
@@ -63,8 +64,8 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
 
   const handleKeyPress = (evt: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => {
     if (evt.key === 'Enter' && evt.shiftKey === false) {
+      onPressSend ? onPressSend(text.trim()) : undefined
       evt.preventDefault()
-      onPressSend ? onPressSend(text) : undefined
     }
   }
 
@@ -99,10 +100,13 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     display: 'flex',
     flexShrink: 0,
+    maxWidth: '100%',
   },
   input: {
     position: 'relative',
     flexGrow: 1,
+    maxWidth: 533,
+    width: '100%',
   },
   send: {
     '&:hover $icon': {

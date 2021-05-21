@@ -65,6 +65,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         messages: pending,
       }
 
+    case CHAT_ACTION_TYPE.CLEAN_ROOM:
+      return {
+        ...state,
+        messages: undefined,
+      }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
