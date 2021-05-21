@@ -10,6 +10,7 @@ import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import moment from 'moment'
+import Loader from '@components/Loader'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -94,7 +95,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         userId: userId,
         lastKey: null,
       }
-      dispatch(socketActions.socketSend(payload))
+      dispatch(socketActions.initRoomLoad(payload))
     }
   }, [userId, roomId])
 
@@ -113,24 +114,38 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     dispatch(socketActions.sendMessage(payload))
   }
 
+  const renderLoader = () => {
+    if (data === undefined) {
+      return (
+        <Box className={classes.loaderBox}>
+          <Loader />
+        </Box>
+      )
+    }
+    return null
+  }
+
   return (
     <Box className={classes.room}>
+      <Box className={classes.header}>{roomId}</Box>
       <Box className={classes.list}>
-        <Box className={classes.header}>{roomId}</Box>
-        {!_.isEmpty(data) &&
-          _.isArray(data) &&
-          data.map((value, index) => {
-            return (
-              <Box
-                style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: value.sent ? '#555' : '#212121', display: 'block' }}
-                key={index}
-              >
-                <Typography color="textSecondary" noWrap={false} variant="body2">
-                  {value.msg}
-                </Typography>
-              </Box>
-            )
-          })}
+        {renderLoader()}
+        <Box className={`${classes.content} scroll-bar`}>
+          {!_.isEmpty(data) &&
+            _.isArray(data) &&
+            data.map((value, index) => {
+              return (
+                <Box
+                  style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: value.sent ? '#555' : '#212121', display: 'block' }}
+                  key={index}
+                >
+                  <Typography color="textSecondary" noWrap={true} variant="body2">
+                    {value.msg}
+                  </Typography>
+                </Box>
+              )
+            })}
+        </Box>
       </Box>
       <Box className={classes.input}>
         <MessageInputArea onPressSend={handlePress} users={users} />
@@ -142,6 +157,44 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
 const useStyles = makeStyles(() => ({
   header: {
     padding: 24,
+  },
+  loaderBox: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+    },
+  },
+  content: {
+    flexDirection: 'column-reverse',
+    height: '100%',
+    display: 'flex',
+    overflow: 'hidden',
+    overflowY: 'auto',
+    padding: 20,
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+      visibility: 'visible',
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      opacity: 1,
+      visibility: 'visible',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+      opacity: 1,
+      visibility: 'visible',
+    },
   },
   room: {
     display: 'flex',
@@ -155,13 +208,13 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     minHeight: '1.25em',
     position: 'relative',
-    padding: 20,
   },
   input: {
     padding: 9,
     position: 'relative',
     flexGrow: 1,
     width: '100%',
+    maxWidth: '100%',
     background: '#101010',
   },
 }))
