@@ -6,22 +6,24 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
-import { TournamentCreateParams } from '@services/tournament.service'
+import { TournamentCreateParams, RecommendedUsers } from '@services/tournament.service'
 import CoOrganizersDialog from './Partials/CoOrganizersDialog'
 import { Colors } from '@theme/colors'
+import { UserLoginResponse } from '@services/auth.service'
 
 type FormProps = {
   owner_id: number
-  co_organizers: string[]
+  co_organizers: RecommendedUsers[]
   organizer_name: string
 }
 
 type Props = {
   data: TournamentCreateParams
   saveState: (data: FormProps) => void
+  user: UserLoginResponse
 }
 
-const StepFour: React.FC<Props> = ({ data, saveState }) => {
+const StepFour: React.FC<Props> = ({ data, saveState, user }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
@@ -57,11 +59,11 @@ const StepFour: React.FC<Props> = ({ data, saveState }) => {
         <Box pb={1}>
           <Typography className={classes.labelColor}>{t('common:tournament_create.organizer')}</Typography>
         </Box>
-        <Typography className={classes.hintColor}>わたなべ</Typography>
+        <Typography className={classes.hintColor}>{user.nickname}</Typography>
       </Box>
       <Box pb={4}>
         <CoOrganizersDialog
-          value={values.co_organizers}
+          values={values.co_organizers}
           onChange={(value) => {
             setFieldValue('co_organizers', value)
           }}

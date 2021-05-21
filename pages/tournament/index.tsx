@@ -4,7 +4,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 
-const TournamentsPage: PageWithLayoutType = () => {
+const TournamentPage: PageWithLayoutType = () => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
@@ -22,6 +22,6 @@ const TournamentsPage: PageWithLayoutType = () => {
   )
 }
 
-TournamentsPage.Layout = MainLayout
+TournamentPage.Layout = MainLayout
 
-export default TournamentsPage
+export default TournamentPage

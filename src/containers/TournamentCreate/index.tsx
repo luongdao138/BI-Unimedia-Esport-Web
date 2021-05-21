@@ -8,8 +8,6 @@ import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-import { getAuth } from '@store/auth/selectors'
-import { useAppSelector } from '@store/hooks'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { ESRoutes } from '@constants/route.constants'
 import StepOne from './StepOne'
@@ -17,12 +15,16 @@ import StepTwo from './StepTwo'
 import StepThree from './StepThree'
 import StepFour from './StepFour'
 import { TournamentCreateParams } from '@services/tournament.service'
+import useCommonData from './useCommonData'
+import useTournamentCreate from './useTournamentCreate'
+import ESLoader from '@components/FullScreenLoader'
 
 const TournamentCreate: React.FC = () => {
+  const { hardwares, prefectures, user } = useCommonData()
+  const { submit, meta } = useTournamentCreate()
   const { navigateScreen } = useReturnHref()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const user = useAppSelector(getAuth)
   const [tab, setTab] = useState(0)
   const [tournamentData, updateData] = useState<TournamentCreateParams>(TournamentHelper.defaultDetails(!user ? 0 : user.id))
 
@@ -30,6 +32,19 @@ const TournamentCreate: React.FC = () => {
     updateData((prevState: TournamentCreateParams) => {
       return { ...prevState, ...data }
     })
+  }
+
+  const handleSubmit = () => {
+    const data = {
+      ...tournamentData,
+      co_organizers: tournamentData.co_organizers.map((co) => parseInt(co.id)),
+      game_title_id: tournamentData.game_title_id[0].id,
+    }
+    submit(data)
+  }
+
+  const buttonActive = () => {
+    return tournamentData.title !== ''
   }
 
   return (
@@ -54,21 +69,22 @@ const TournamentCreate: React.FC = () => {
           </ESTabs>
         </Box>
         <Box py={4}>
-          {tab == 0 && <StepOne data={tournamentData} saveState={saveState} />}
+          {tab == 0 && <StepOne data={tournamentData} saveState={saveState} hardwares={hardwares} />}
           {tab == 1 && <StepTwo data={tournamentData} saveState={saveState} />}
-          {tab == 2 && <StepThree data={tournamentData} saveState={saveState} />}
-          {tab == 3 && <StepFour data={tournamentData} saveState={saveState} />}
+          {tab == 2 && <StepThree data={tournamentData} saveState={saveState} prefectures={prefectures} />}
+          {tab == 3 && <StepFour data={tournamentData} saveState={saveState} user={user} />}
         </Box>
       </Box>
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth>
+            <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit} disabled={!buttonActive()}>
               {t('common:tournament_create.submit')}
             </ButtonPrimary>
           </Box>
         </Box>
       </Box>
+      <ESLoader open={meta.pending} />
     </>
   )
 }

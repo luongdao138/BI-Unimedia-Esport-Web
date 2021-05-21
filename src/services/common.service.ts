@@ -5,10 +5,36 @@ import { URI } from '@constants/uri.constants'
 export type GetPrefecturesParams = {}
 
 export type GetPrefecturesResponse = {
-  data: any
+  data: [
+    {
+      id: string
+      type: string
+      attributes: {
+        area: string
+      }
+    }
+  ]
 }
 
-export const getPrefectures = async (params: GetPrefecturesParams): Promise<GetPrefecturesResponse> => {
-  const { data } = await api.get<GetPrefecturesResponse>(URI.GET_PREFECTURES, { params })
+export type HardwareResponse = {
+  data: [
+    {
+      id: string
+      type: string
+      attributes: {
+        id: number
+        name: string
+      }
+    }
+  ]
+}
+
+export const getPrefectures = async (): Promise<GetPrefecturesResponse> => {
+  const { data } = await api.get<GetPrefecturesResponse>(URI.GET_PREFECTURES)
+  return data
+}
+
+export const getHardwares = async (): Promise<HardwareResponse> => {
+  const { data } = await api.get<HardwareResponse>(URI.GAME_HARDWARES)
   return data
 }

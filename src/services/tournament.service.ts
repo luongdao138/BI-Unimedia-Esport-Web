@@ -128,7 +128,40 @@ export type TournamentCreateParams = {
   owner_id: number
   organizer_name: string
   cover_image_url: string
-  co_organizers: string[]
+  co_organizers: RecommendedUsers[]
+  t_type: 't_public' | 't_private'
+  participant_type: number
+  status: string
+  rule: string
+}
+
+export type TournamentFormParams = {
+  title: string
+  overview: string
+  game_title_id: number
+  game_hardware_id: number
+  has_third_place: boolean
+  max_participants: number
+  terms_of_participation: string
+  acceptance_start_date: string
+  acceptance_end_date: string
+  start_date: string
+  end_date: string
+  area_id: number
+  area_name: string
+  address: string
+  has_prize: boolean
+  retain_history: boolean
+  prize_amount: string
+  notes: string
+  owner_id: number
+  organizer_name: string
+  cover_image_url: string
+  co_organizers: number[]
+  t_type: 't_public' | 't_private'
+  participant_type: number
+  status: string
+  rule: string
 }
 
 export type TournamentDetailResponse = {
@@ -238,6 +271,33 @@ export type SetParticipantParams = {
   type: string
 }
 
+export type RecommendedUsersResponse = {
+  data: Array<RecommendedUsers>
+  links?: {
+    links: any
+    meta: Meta
+  }
+}
+
+export type RecommendedUsers = {
+  id: 'string'
+  type: 'user_list'
+  attributes: {
+    user_code: string
+    nickname: string
+    nickname2: null | string
+    avatar: null | string
+    features: Feature[] | null
+    game_titles: GameTitle['attributes'][] | null
+  }
+}
+
+export type RecommendedUsersParams = {
+  page: number
+  keyword: string
+  hash_key?: string
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -300,5 +360,15 @@ export const getTournamentMatches = async (hash_key: string): Promise<Tournament
 
 export const setParticipant = async (params: SetParticipantParams): Promise<void> => {
   const { data } = await api.put<void>(URI.TOURNAMENTS_SET_PARTICIPANT.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
+export const getRecommendedUsersByName = async (params: RecommendedUsersParams): Promise<RecommendedUsersResponse> => {
+  const { data } = await api.get<RecommendedUsersResponse>(URI.TOURNAMENTS_USERS, { params })
+  return data
+}
+
+export const createTournament = async (params: TournamentFormParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_CREATE, params)
   return data
 }

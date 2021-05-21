@@ -1,4 +1,4 @@
-import { PARTICIPATION_TYPES, RULE } from '@constants/tournament.constants'
+import { PARTICIPATION_TYPES, RULE, T_TYPE } from '@constants/tournament.constants'
 import moment from 'moment'
 
 const participantTypeText = (participant_type: number): string => {
@@ -22,13 +22,28 @@ const ruleText = (rule: string): string => {
   return ruleText
 }
 
+const getTypeValue = (t_type: string): number => {
+  if (String(t_type) === T_TYPE.PRIVATE) return 1
+
+  return 0
+}
+
+const checkStatus = (status: string, targetStatus: string): boolean => {
+  const statuses = ['ready', 'recruiting', 'recruitment_closed', 'ready_to_start', 'in_progress', 'completed', 'cancelled']
+  const index = statuses.indexOf(status)
+  const targetIndex = statuses.indexOf(targetStatus)
+
+  return index < targetIndex
+}
+
 const defaultDetails = (user_id: number): any => {
   return {
     title: '',
     overview: '',
     game_title_id: [],
     game_hardware_id: -1,
-    has_third_place: false,
+    has_third_place: true,
+    participant_type: 0,
     max_participants: 0,
     terms_of_participation: '',
     acceptance_start_date: undefined,
@@ -41,6 +56,7 @@ const defaultDetails = (user_id: number): any => {
     has_prize: true,
     retain_history: true,
     t_type: 't_public',
+    rule: '',
     prize_amount: '',
     notes: '',
     owner_id: user_id,
@@ -59,4 +75,6 @@ export const TournamentHelper = {
   ruleText,
   formatDate,
   defaultDetails,
+  getTypeValue,
+  checkStatus,
 }

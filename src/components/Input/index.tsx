@@ -20,7 +20,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   required = false,
   ...rest
 }) => {
-  const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big' })
+  const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big', isNumber: rest.type === 'number' })
   const { t } = useTranslation(['common'])
 
   return (
@@ -40,7 +40,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
           {labelSecondary}
         </Box>
       )}
-      <OutlinedInput classes={{ root: classes.root }} margin="dense" {...rest} />
+      <OutlinedInput classes={{ root: classes.root, inputMarginDense: classes.numberAlign }} margin="dense" {...rest} />
       {helperText && <FormHelperText error>{helperText}</FormHelperText>}
     </FormControl>
   )
@@ -66,11 +66,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
   },
-  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
+  numberAlign: (props: { hasSecondary?: boolean; isBig?: boolean; isNumber?: boolean }) => ({
+    textAlign: props.isNumber ? 'right' : 'left',
+  }),
+  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean; isNumber?: boolean }) => ({
     fontWeight: props.isBig ? 'bold' : 'normal',
     fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
   }),
-  labelPrimaryContainer: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
+  labelPrimaryContainer: (props: { hasSecondary?: boolean; isBig?: boolean; isNumber?: boolean }) => ({
     width: props.hasSecondary ? '50%' : '100%',
   }),
   required: {

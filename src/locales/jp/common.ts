@@ -89,6 +89,14 @@ export default {
     yes: 'あり',
     no: 'なし',
     man: '人',
+    integer: '数字のみ入力してください。',
+    validation: {
+      acceptance_dates: 'エントリー開始日時はエントリー終了日時より前にしてください',
+      acceptance_end_start_date: 'エントリー終了日時は開始日時より前にしてください',
+      start_end_date: '開始日時は終了日時より前にしてください',
+      min_date: '日時は現在の日時より後でなければなりません',
+      prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
+    },
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -270,6 +278,11 @@ export default {
     organizer_name: '主催',
     submit: 'この内容で作成する',
     decide: '決定する',
+    public: '公開',
+    private: '限定公開',
+    co_orgonizer: '共同管理者を選ぶ',
+    user_hint: '指定できるのは相互フォローユーザーのみです',
+    not_found: '一致するユーザーは見つかりませんでした',
   },
   search: {
     search: '検索',
