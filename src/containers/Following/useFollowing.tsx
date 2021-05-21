@@ -1,27 +1,30 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import followingStore from '@store/following'
-import authStore from '@store/auth'
-import { FollowingParams } from '@services/following.service'
+import followStore from '@store/follow'
+import { FollowersParams, FollowResponse, Meta as Pages } from '@services/follow.service'
+import { Meta } from '@store/metadata/actions/types'
 
-const { selectors, actions } = followingStore
-const frag = authStore
-const authSelector = frag.selectors
+const { selectors, actions } = followStore
 const getMeta = createMetaSelector(actions.following)
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useFollowing = () => {
+const useFollowing = (): {
+  following: Array<FollowResponse>
+  page: Pages
+  meta: Meta
+  resetMeta: () => void
+  clearFollowing: () => void
+  fetchFollowing: (param: FollowersParams) => void
+} => {
   const dispatch = useAppDispatch()
   const following = useAppSelector(selectors.getFollowing)
   const page = useAppSelector(selectors.getFollowingMeta)
   const meta = useAppSelector(getMeta)
-  const currentUser = useAppSelector(authSelector.getAuth)
-  const fetchFollowing = (param: FollowingParams) => dispatch(actions.following(param))
+  const fetchFollowing = (param: FollowersParams) => dispatch(actions.following(param))
   const clearFollowing = () => dispatch(actions.clearFollowing())
   const resetMeta = () => dispatch(clearMetaData(actions.following.typePrefix))
 
-  return { clearFollowing, currentUser, following, fetchFollowing, resetMeta, meta, page }
+  return { following, page, meta, resetMeta, clearFollowing, fetchFollowing }
 }
 
 export default useFollowing

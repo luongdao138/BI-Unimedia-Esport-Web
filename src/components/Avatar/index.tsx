@@ -32,7 +32,7 @@ const ESAvatar: React.FC<Props> = (props) => {
 
   return (
     <Avatar classes={classes} {...props}>
-      {props.alt.toUpperCase().charAt(0)}
+      {props.alt ? props.alt.toUpperCase().charAt(0) : 'A'}
     </Avatar>
   )
 }
