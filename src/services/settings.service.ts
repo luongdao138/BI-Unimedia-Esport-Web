@@ -138,3 +138,23 @@ export const getBlockedUsers = async (params: BlockedUsersParams): Promise<Block
   const { data } = await api.get<BlockedUsersResponse>(URI.BLOCKED_USERS, { params })
   return data
 }
+
+export type NotificationSettingsResponse = {
+  data: NotificationSettings[]
+}
+
+export type NotificationSettings = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    name: string
+    ord: number
+    status: boolean
+  }
+}
+
+export const getNotificationSettings = async (): Promise<NotificationSettingsResponse> => {
+  const { data } = await api.get<NotificationSettingsResponse>(URI.NOTIFICATION_SETTINGS)
+  return data
+}

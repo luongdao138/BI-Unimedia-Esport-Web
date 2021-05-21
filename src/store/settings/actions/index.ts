@@ -108,4 +108,21 @@ export const getBlockedUsers = createAsyncThunk<services.BlockedUsersResponse, s
   }
 )
 
+export const getNotificationSettings = createAsyncThunk<services.NotificationSettingsResponse>(
+  SETTINGS_ACTION_TYPE.GET_NOTIFICATION_SETTINGS,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getNotificationSettings()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearNotificationSettings = createAction(SETTINGS_ACTION_TYPE.CLEAR_NOTIFICATION_SETTINGS)
+
 export const clearBlockedUsers = createAction(SETTINGS_ACTION_TYPE.CLEAR_BLOCKED_USERS)
