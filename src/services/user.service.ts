@@ -187,6 +187,25 @@ export type HomeSettingsResponse = {
   home_settings: string[]
 }
 
+export type FollowResponse = {
+  data: {
+    id: number | string
+    type: 'user'
+    attributes: {
+      followers: number
+      following: number
+    }
+  }
+}
+
+export type UnFollowResponse = {
+  success: 'success'
+}
+
+export type FollowParams = {
+  user_code: string
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -239,5 +258,15 @@ export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> =
 
 export const updateHomeSettings = async (params: HomeSettingsParams): Promise<HomeSettingsResponse> => {
   const { data } = await api.post<HomeSettingsResponse>(URI.HOME_SETTINGS, params)
+  return data
+}
+
+export const follow = async (params: FollowParams): Promise<FollowResponse> => {
+  const { data } = await api.put(URI.FOLLOW, params)
+  return data
+}
+
+export const unfollow = async (params: FollowParams): Promise<UnFollowResponse> => {
+  const { data } = await api.put(URI.UNFOLLOW, params)
   return data
 }

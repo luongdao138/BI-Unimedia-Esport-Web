@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Grid, Typography, Box, ButtonBase } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import ESButton from '@components/Button'
-import * as services from '@services/search.service'
+import * as services from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
@@ -30,7 +30,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
   const follow = async () => {
     setLoading(true)
     try {
-      await services.follow({ user_id: Number(data.id) })
+      await services.follow({ user_code: data.user_code })
       if (mounted) {
         setFollowed(true)
         setLoading(false)
@@ -45,7 +45,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
   const unfollow = async () => {
     setLoading(true)
     try {
-      await services.unfollow({ user_id: Number(data.id) })
+      await services.unfollow({ user_code: data.user_code })
       if (mounted) {
         setFollowed(false)
         setLoading(false)

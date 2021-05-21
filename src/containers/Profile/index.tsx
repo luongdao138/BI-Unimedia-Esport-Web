@@ -36,6 +36,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
   const [openReport, setOpenReport] = useState(false)
+  const [disable, toggleDisable] = useState(false)
   const { blockUser, blockMeta } = useBlock()
   const { unblockUser, unblockMeta } = useUnblock()
 
@@ -43,13 +44,19 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
 
   const raw_code = router.query.user_code || []
 
-  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange } = useUserData(raw_code)
+  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState } = useUserData(raw_code)
 
   useEffect(() => {
     if (isOthers) {
       getMemberProfile(userCode)
     }
   }, [raw_code])
+
+  useEffect(() => {
+    if (isOthers) {
+      toggleDisable(false)
+    }
+  }, [profile])
 
   useEffect(() => {
     if (meta.error) {
@@ -63,6 +70,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
 
   const cover = profile?.attributes?.cover_url ?? '/images/cover.png'
   const avatar = profile?.attributes?.avatar_url ? profile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
+  const isFollowing = profile.attributes.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
 
@@ -92,12 +100,15 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                <ESButton variant="outlined" round className={classes.marginRight}>
-                  {t('common:profile.inbox')}
-                </ESButton>
-                <ESButton variant="outlined" round className={classes.marginRight}>
-                  {t('common:profile.follow_as')}
-                </ESButton>
+                {isFollowing ? (
+                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                    {t('common:profile.following')}
+                  </ESButton>
+                ) : (
+                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                    {t('common:profile.follow_as')}
+                  </ESButton>
+                )}
                 <ESMenu>
                   {profile.attributes.is_blocked ? (
                     <ESMenuItem onClick={() => unblockUser({ block_type: 'user', target_id: Number(profile.id) })}>

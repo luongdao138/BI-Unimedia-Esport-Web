@@ -72,6 +72,14 @@ export default createReducer(initialState, (builder) => {
     state.activityLogsMeta = action.payload.meta
   })
 
+  builder.addCase(actions.follow.fulfilled, (state, _action) => {
+    if (state.lastSeenUserData) state.lastSeenUserData.attributes.is_following = true
+  })
+
+  builder.addCase(actions.unfollow.fulfilled, (state, _action) => {
+    if (state.lastSeenUserData) state.lastSeenUserData.attributes.is_following = false
+  })
+
   builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
     state.nicknames2 = action.payload.data.attributes.nicknames
   })
