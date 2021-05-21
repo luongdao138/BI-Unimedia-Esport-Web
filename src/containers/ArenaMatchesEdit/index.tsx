@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Container, Box, IconButton, Theme, Toolbar, Typography } from '@material-ui/core'
+import ButtonPrimary from '@components/ButtonPrimary'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import SelectParticipantModal from '../TournamentDetail/Partials/SelectParticipantModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
+import RandomizeDialog from './Partials/RandomizeDialog'
 
 const ArenaMatches: React.FC = () => {
   const classes = useStyles()
@@ -82,8 +84,21 @@ const ArenaMatches: React.FC = () => {
                   setSelectedMatch(undefined)
                 }}
               />
+              <Box className={classes.blankSpace}></Box>
             </Container>
           </div>
+          {true && (
+            <Box className={classes.stickyFooter}>
+              <Box className={classes.nextBtnHolder}>
+                <Box maxWidth={280} className={classes.buttonContainer}>
+                  <ButtonPrimary type="submit" round fullWidth onClick={() => alert('selectedMatch')}>
+                    {'対戦結果を編集する'}
+                  </ButtonPrimary>
+                  <RandomizeDialog tournament={tournament} handleClose={() => alert('selectedMatch')} />
+                </Box>
+              </Box>
+            </Box>
+          )}
         </>
       )}
       <ESLoader open={meta.pending || matchesMeta.pending} />
@@ -93,7 +108,7 @@ const ArenaMatches: React.FC = () => {
 
 export default ArenaMatches
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -118,5 +133,30 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
+  },
+  blankSpace: {
+    height: 169,
+  },
+  [theme.breakpoints.down('sm')]: {
+    blankSpace: {
+      height: theme.spacing(15),
+    },
+  },
+  stickyFooter: {
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.9)',
+  },
+  nextBtnHolder: {
+    display: 'flex',
+    marginBottom: theme.spacing(11),
+    marginTop: theme.spacing(3),
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
   },
 }))

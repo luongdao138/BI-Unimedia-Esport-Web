@@ -1,5 +1,6 @@
 import { PARTICIPATION_TYPES, RULE } from '@constants/tournament.constants'
 import moment from 'moment'
+import _ from 'lodash'
 
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
@@ -32,9 +33,16 @@ const getRemainingDate = (date: string): number => {
   return endDate.diff(nowDate, 'days')
 }
 
+const checkTarget = (targetIds: Array<number>, target: number): boolean => {
+  if (!targetIds || !target || _.isEmpty(targetIds)) return false
+
+  return targetIds.includes(Number(target))
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
   formatDate,
   getRemainingDate,
+  checkTarget,
 }

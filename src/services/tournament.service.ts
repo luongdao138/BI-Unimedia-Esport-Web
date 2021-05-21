@@ -136,6 +136,7 @@ export type TournamentMatchItem = {
   home_avatar: null | string
   guest_user: TournamentMatchParticipant | null
   guest_avatar: null | string
+  is_fixed_score: boolean
 }
 
 export type TournamentMatchRound = TournamentMatchItem[]

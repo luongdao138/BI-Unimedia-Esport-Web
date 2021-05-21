@@ -39,6 +39,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
 
   useEffect(() => {
     setMatch(selectedMatch)
+    setRefresh(false)
   }, [selectedMatch])
 
   useEffect(() => {

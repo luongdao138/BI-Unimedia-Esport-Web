@@ -9,18 +9,20 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
 import ESModal from '@components/Modal'
 import { PARTICIPANT_TYPE, STATUS, ROLE } from '@constants/tournament.constants'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Meta } from '@store/metadata/actions/types'
 import ScoreEdit from './ScoreEdit'
 
 interface ScoreModalProps {
   meta: Meta
+  targetIds: Array<number>
   tournament: TournamentDetail
   selectedMatch: TournamentMatchItem
   handleClose: (refresh: boolean) => void
   handleSetScore: (params: SetScoreParams) => void
 }
 
-const ScoreModal: React.FC<ScoreModalProps> = ({ meta, tournament, selectedMatch, handleClose, handleSetScore }) => {
+const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, selectedMatch, handleClose, handleSetScore }) => {
   const data = tournament.attributes
   const isTeam = data.participant_type > 1
   const { t } = useTranslation(['common'])
@@ -31,10 +33,10 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, tournament, selectedMatch
   const [targetMatch, setTargetMatch] = useState<TournamentMatchItem | undefined>()
 
   const isAdmin = data.my_role === ROLE.ADMIN || data.my_role === ROLE.CO_ORGANIZER
-  const ownScoreEditable = false
-  // !selectedMatch.is_fixed_score &&
-  // (TournamentHelper.checkTarget(targetIds, selectedMatch.home_user?.id) ||
-  //   TournamentHelper.checkTarget(targetIds, selectedMatch.guest_user?.id));
+  const ownScoreEditable =
+    !selectedMatch.is_fixed_score &&
+    (TournamentHelper.checkTarget(targetIds, selectedMatch.home_user?.id) ||
+      TournamentHelper.checkTarget(targetIds, selectedMatch.guest_user?.id))
   const statusAvailable = data.status === STATUS.IN_PROGRESS || data.status === STATUS.COMPLETED
   const isAutowin = !!selectedMatch.winner && (!selectedMatch.home_user || !selectedMatch.guest_user)
   let scoreEditable = false
@@ -47,6 +49,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, tournament, selectedMatch
 
   useEffect(() => {
     setMatch(selectedMatch)
+    setRefresh(false)
   }, [selectedMatch])
 
   useEffect(() => {

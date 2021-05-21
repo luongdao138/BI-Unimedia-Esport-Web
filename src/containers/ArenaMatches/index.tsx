@@ -7,16 +7,41 @@ import ESLoader from '@components/FullScreenLoader'
 import ScoreModal from '@containers/TournamentDetail/Partials/ScoreModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import _ from 'lodash'
 
 const ArenaMatches: React.FC = () => {
   const classes = useStyles()
   const { matches, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
+  const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
 
   const onMatchClick = (match) => {
     if (!match) return
     else setScoreMatch(match)
+  }
+
+  const scoreDialog = () => {
+    if (!scoreMatch || !tournament) return
+
+    const data = tournament.attributes
+    const isTeam = data.participant_type > 1
+    const teamIds = _.map(data.my_info, (team: any) => team.team_id)
+    const targetIds = isTeam ? teamIds : [Number(userProfile?.id)]
+    return (
+      <ScoreModal
+        targetIds={targetIds}
+        meta={scoreMeta}
+        tournament={tournament}
+        selectedMatch={scoreMatch}
+        handleSetScore={(params) => setScore({ ...params, hash_key: tournament.attributes.hash_key })}
+        handleClose={(refresh) => {
+          if (refresh) fetchMatches()
+          setScoreMatch(undefined)
+        }}
+      />
+    )
   }
   return (
     <div className={classes.root}>
@@ -73,18 +98,7 @@ const ArenaMatches: React.FC = () => {
                   </Bracket.Round>
                 ))}
               </Bracket.Container>
-              {scoreMatch && (
-                <ScoreModal
-                  meta={scoreMeta}
-                  tournament={tournament}
-                  selectedMatch={scoreMatch}
-                  handleSetScore={(params) => setScore({ ...params, hash_key: tournament.attributes.hash_key })}
-                  handleClose={(refresh) => {
-                    if (refresh) fetchMatches()
-                    setScoreMatch(undefined)
-                  }}
-                />
-              )}
+              {scoreDialog()}
             </Container>
           </div>
         </>
