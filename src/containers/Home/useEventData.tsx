@@ -8,7 +8,7 @@ const useEventData = () => {
   const dispatch = useAppDispatch()
 
   const recommendedEventList = useAppSelector(selectors.getRecommendedEvent)
-  const getRecommendedEventList = () => dispatch(actions.getRecommendedEvent())
+  const getRecommendedEventList = () => dispatch(actions.getRecommendedEvent({ page: 1 }))
 
   return { recommendedEventList, getRecommendedEventList }
 }

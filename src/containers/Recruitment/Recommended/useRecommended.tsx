@@ -1,6 +1,8 @@
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import recruitment from '@store/recruitment'
+import { clearMetaData } from '@store/metadata/actions'
+import { RecommendationsParams } from '@services/recruitment.service'
 
 const { selectors, actions } = recruitment
 
@@ -11,9 +13,11 @@ const useRecommended = () => {
   const handleClick = () => handleReturn()
 
   const recommendedRecruitments = useAppSelector(selectors.getRecommendations)
-  const getRecruitmentRecommendations = () => dispatch(actions.getRecommendations())
+  const pages = useAppSelector(selectors.getRecommendationsMeta)
+  const getRecruitmentRecommendations = (params: RecommendationsParams) => dispatch(actions.getRecommendations(params))
+  const resetMeta = () => dispatch(clearMetaData(actions.getRecommendations.typePrefix))
 
-  return { recommendedRecruitments, getRecruitmentRecommendations, handleClick }
+  return { recommendedRecruitments, getRecruitmentRecommendations, handleClick, pages, resetMeta }
 }
 
 export default useRecommended

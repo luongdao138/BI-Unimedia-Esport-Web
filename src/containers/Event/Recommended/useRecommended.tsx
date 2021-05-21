@@ -1,6 +1,8 @@
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfile from '@store/userProfile'
+import { clearMetaData } from '@store/metadata/actions'
+import { RecommendedEventParams } from '@services/user.service'
 
 const { selectors, actions } = userProfile
 
@@ -11,9 +13,11 @@ const useRecommended = () => {
   const handleClick = () => handleReturn()
 
   const recommendedEventList = useAppSelector(selectors.getRecommendedEvent)
-  const getRecommendedEventList = () => dispatch(actions.getRecommendedEvent())
+  const pages = useAppSelector(selectors.getRecommendedEventMeta)
+  const getRecommendedEventList = (params: RecommendedEventParams) => dispatch(actions.getRecommendedEvent(params))
+  const resetMeta = () => dispatch(clearMetaData(actions.getRecommendedEvent.typePrefix))
 
-  return { handleClick, recommendedEventList, getRecommendedEventList }
+  return { handleClick, recommendedEventList, pages, getRecommendedEventList, resetMeta }
 }
 
 export default useRecommended

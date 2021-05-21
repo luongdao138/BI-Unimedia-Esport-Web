@@ -17,11 +17,11 @@ export const getCommunityList = createAsyncThunk<services.CommunityListResponse>
   }
 )
 
-export const getTopicFollowers = createAsyncThunk<services.TopicFollowersResponse>(
+export const getTopicFollowers = createAsyncThunk<services.TopicFollowersResponse, services.TopicFollowersParams>(
   COMMUNITY_ACTION_TYPE.GET_FOLLOWERS_TOPIC_LIST,
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getTopicFollowers()
+      const res = await services.getTopicFollowers(params)
       return res
     } catch (error) {
       if (!error.response) {
