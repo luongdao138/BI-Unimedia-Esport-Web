@@ -13,9 +13,6 @@ import useEventData from './useEventData'
 import { Box } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
 import useTopicData from './useTopicData'
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
-import { WEBSYNC_PREFIX } from '@constants/sync.constants'
-import { useAppDispatch } from '@store/hooks'
 import { HOME_SETTINGS } from '@constants/common.constants'
 
 const HomeContainer: React.FC = () => {
@@ -24,18 +21,11 @@ const HomeContainer: React.FC = () => {
   const { recommendedEventList, getRecommendedEventList } = useEventData()
   const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
   const { followersTopicList, getFollowersTopicList } = useTopicData()
-  const dispatch = useAppDispatch()
 
   useEffect(() => {
     getUserProfile()
     getUserRecommendations()
     getRecruitmentRecommendations()
-    dispatch({
-      type: `${WEBSOCKET_PREFIX}:CONNECT`,
-    })
-    dispatch({
-      type: `${WEBSYNC_PREFIX}:CONNECT`,
-    })
     getRecommendedEventList()
     getRecruitmentFollow()
     getTournamentFollowers()

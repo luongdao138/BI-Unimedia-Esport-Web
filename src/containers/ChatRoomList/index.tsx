@@ -50,7 +50,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
       return (
         <AutoSizer className="scroll-bar">
           {({ height, width }) => (
-            <List itemSize={66} itemCount={listData.length} height={height} width={width} itemData={listData}>
+            <List overscanCount={10} itemSize={66} itemCount={listData.length} height={height} width={width} itemData={listData}>
               {Row}
             </List>
           )}

@@ -37,9 +37,9 @@ const ESBlockSettings: React.FC = () => {
 
       <InfiniteScroll
         scrollableTarget={'test'}
-        dataLength={0}
+        dataLength={blockedUsers.length}
         next={fetchMoreData}
-        hasMore={hasMore}
+        hasMore={hasMore && blockedUsers.length > 0}
         height={500}
         loader={
           <div className={classes.loaderCenter}>
