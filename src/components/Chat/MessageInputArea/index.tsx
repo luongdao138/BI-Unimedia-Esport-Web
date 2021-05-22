@@ -66,6 +66,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
     if (evt.key === 'Enter' && evt.shiftKey === false) {
       onPressSend ? onPressSend(text.trim()) : undefined
       evt.preventDefault()
+      setText('')
     }
   }
 
