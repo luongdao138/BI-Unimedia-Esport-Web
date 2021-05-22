@@ -154,6 +154,13 @@ export type NotificationSettings = {
   }
 }
 
+export type NotificationSettingsParam = {
+  ntypes: {
+    id: number
+    status: boolean
+  }[]
+}
+
 export const getNotificationSettings = async (): Promise<NotificationSettingsResponse> => {
   const { data } = await api.get<NotificationSettingsResponse>(URI.NOTIFICATION_SETTINGS)
   return data

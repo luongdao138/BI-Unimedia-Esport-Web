@@ -4,7 +4,6 @@ import { v1 as uuidv1 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
 import notificationStore from '@store/notification'
-import { getNotificationBadge } from '@store/notification/actions'
 const DEVICE_ID = uuidv1()
 let socket: any = null
 const notificationActions = notificationStore.actions
@@ -26,7 +25,7 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
   if (message && message.action !== undefined && message.action !== null) {
     switch (message.action) {
       case AppSyncActionType.NOTIFICATION:
-        store.dispatch(getNotificationBadge())
+        store.dispatch(notificationActions.getNotificationBadge())
         store.dispatch(notificationActions.notifications({ page: 1 }))
         break
       default:
