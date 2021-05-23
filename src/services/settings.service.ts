@@ -139,7 +139,6 @@ export const getBlockedUsers = async (params: BlockedUsersParams): Promise<Block
   return data
 }
 
-<<<<<<< src/services/settings.service.ts
 export type NotificationSettingsResponse = {
   data: NotificationSettings[]
 }
