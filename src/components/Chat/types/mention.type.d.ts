@@ -77,7 +77,18 @@ type Part = {
   data?: MentionData
 }
 
+type PartRender = {
+  text: string
+
+  partType?: any
+
+  data?: MentionData
+
+  index: number
+}
+
 export type {
+  PartRender,
   Suggestion,
   MentionData,
   CharactersDiffChange,

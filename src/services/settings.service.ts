@@ -139,6 +139,7 @@ export const getBlockedUsers = async (params: BlockedUsersParams): Promise<Block
   return data
 }
 
+<<<<<<< src/services/settings.service.ts
 export type NotificationSettingsResponse = {
   data: NotificationSettings[]
 }
@@ -168,5 +169,19 @@ export const getNotificationSettings = async (): Promise<NotificationSettingsRes
 
 export const updateNotificationSettings = async (params: NotificationSettingsParam): Promise<NotificationSettingsResponse> => {
   const { data } = await api.put<NotificationSettingsResponse>(URI.NOTIFICATION_UPDATE_SETTINGS, params)
+  return data
+}
+
+export type InquiryParams = {
+  description: string
+  title: string
+}
+
+export type InquiryResponse = {
+  attributes: any
+}
+
+export const createInquiry = async (params: InquiryParams): Promise<InquiryResponse> => {
+  const { data } = await api.post<InquiryResponse>(URI.INQUIRY, params)
   return data
 }

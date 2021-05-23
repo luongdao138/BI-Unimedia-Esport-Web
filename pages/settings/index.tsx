@@ -44,7 +44,7 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.SERVICE_INFO_SETTINGS)
           }}
         >
           <SettingsRowItem key="service_info" title={t('settings.service_info')} showSwitch={false} />

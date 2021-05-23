@@ -30,5 +30,7 @@ export const ESRoutes = {
   MY_PAGE_SETTINGS: '/settings/security_settings/my_page',
   MESSAGE_SETTINGS: '/settings/security_settings/message',
   BLOCK_SETTINGS: '/settings/security_settings/block',
+  SERVICE_INFO_SETTINGS: '/settings/service_info',
+  INQUIRY_SETTINGS: '/settings/service_info/inquiry',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
 }

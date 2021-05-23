@@ -10,4 +10,5 @@ export enum SETTINGS_ACTION_TYPE {
   GET_BLOCKED_USERS = 'settings/getBlockedUsers',
   CLEAR_BLOCKED_USERS = 'settings/clearBlockedUsers',
   CLEAR_NOTIFICATION_SETTINGS = 'settings/clearNotificationSettings',
+  CREATE_INQUIRY = 'settings/createInquiry',
 }

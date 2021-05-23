@@ -305,14 +305,19 @@ export default {
   notification_settings: {
     title: '通知設定',
     settings_select_all: '一括設定',
-    follow: 'フォロー',
-    receive_message: 'メッセージの受信',
-    reply_to_comment: 'コメントへの返信',
-    reply_to_comment_community: 'コメントへの返信（コミュニティ）',
-    system_notification_community: 'コミュニティに関するシステム通知',
-    system_notification_tournament: '大会に関するシステム通知',
-    system_notification_recruitment: '募集に関するシステム通知',
-    system_notification: '運営からのお知らせ',
+  },
+  service_info: {
+    title: 'サービス情報',
+    enterprise_info: '企業情報（NTTe-Sports）',
+    faq: 'FAQ',
+    inquiry: 'お問い合わせ',
+  },
+  inquiry: {
+    title: 'お問い合わせ',
+    subject: '件名',
+    desc: '本文',
+    desc_placeholder: 'お問い合わせ内容を入力してください',
+    send: '送信する',
   },
   settings: {
     title: '設定',
