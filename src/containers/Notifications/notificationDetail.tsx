@@ -4,7 +4,10 @@ import React, { useEffect } from 'react'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 import { useRouter } from 'next/router'
 import useSmartTime from '@utils/hooks/useSmartTime'
+import * as notificationActions from '@store/notification/actions'
+
 import _ from 'lodash'
+import { useAppDispatch } from '@store/hooks'
 interface Props {
   id: any
 }
@@ -12,10 +15,12 @@ interface Props {
 const NotificationDetail: React.FC<Props> = ({ id }) => {
   const classes = useStyles()
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const { notificationDetail, fetchNotificationDetail, clearNotificationDetail } = useNotificationDetail()
   useEffect(() => {
     if (id) {
       fetchNotificationDetail(id)
+      dispatch(notificationActions.getNotificationBadge())
     }
     return function () {
       clearNotificationDetail()

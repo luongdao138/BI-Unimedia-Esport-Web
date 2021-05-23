@@ -165,3 +165,8 @@ export const getNotificationSettings = async (): Promise<NotificationSettingsRes
   const { data } = await api.get<NotificationSettingsResponse>(URI.NOTIFICATION_SETTINGS)
   return data
 }
+
+export const updateNotificationSettings = async (params: NotificationSettingsParam): Promise<NotificationSettingsResponse> => {
+  const { data } = await api.put<NotificationSettingsResponse>(URI.NOTIFICATION_UPDATE_SETTINGS, params)
+  return data
+}

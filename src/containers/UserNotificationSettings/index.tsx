@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 const ESNotificationSettings = () => {
   const { t } = useTranslation('common')
-  const { notificationSettings } = useNotificationSettings()
+  const { notificationSettings, updateNotificationSettings } = useNotificationSettings()
 
   const [state, setState] = useState<{ id: number; name: string; status: boolean }[]>([])
   const [checkAll, setCheckAll] = useState(false)
@@ -22,6 +22,14 @@ const ESNotificationSettings = () => {
       }
     }
   }, [notificationSettings])
+
+  useEffect(() => {
+    if (_.some(state, ['status', false])) {
+      setCheckAll(false)
+    } else {
+      setCheckAll(true)
+    }
+  }, [state])
 
   const handleChange = (index: number) => {
     const tmp = state.map((s, i) => {
@@ -50,11 +58,8 @@ const ESNotificationSettings = () => {
   }
 
   useEffect(() => {
-    if (notificationSettings) {
-      if (!_.isEqual(notificationSettings, state)) {
-        // console.log(state)
-      }
-    }
+    const updateSettingsParam = { ntypes: state }
+    updateNotificationSettings(updateSettingsParam)
   }, [state])
 
   return (

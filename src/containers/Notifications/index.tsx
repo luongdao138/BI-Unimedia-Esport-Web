@@ -63,7 +63,7 @@ const NotificationContainer: React.FC = () => {
       setHasMore(false)
       return
     }
-    fetchNotifications({ page: page.current_page + 1 })
+    fetchNotifications({ page: Number(page.current_page) + Number(1) })
   }
 
   useEffect(() => {
