@@ -10,12 +10,13 @@ export interface ImageUploaderRef {
 interface ImageUploaderProps {
   onResponse: (presignedUrl: string, isPending: boolean) => void
   onImageSelected?: (localUrl: string, isPending: boolean) => void
+  onError?: (error: any) => void
   ref: Ref<ImageUploaderRef>
   roomId: string | string[]
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef, ImageUploaderProps>(
-  ({ onResponse, onImageSelected, roomId }, ref) => {
+  ({ onResponse, onImageSelected, onError, roomId }, ref) => {
     useImperativeHandle(ref, () => ({
       handleUpload: () => {
         dropZone.open()
@@ -34,9 +35,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
       const reader = new FileReader()
       if (file) {
         // eslint-disable-next-line no-console
-        imageProcess(file).then((result) => {
-          result
-        })
+        imageProcess(file)
+          .then((result) => {
+            result
+          })
+          .catch((e) => {
+            onError(e)
+          })
         reader.readAsDataURL(file)
       }
     }
@@ -56,7 +61,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
       const signedUrl = res.url
       await upload(file, signedUrl)
 
-      onResponse && onResponse(fileUrl, false)
+      onResponse && onResponse(`https://${fileUrl}`, false)
     }
 
     return (
