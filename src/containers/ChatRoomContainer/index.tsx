@@ -13,6 +13,7 @@ import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import TextMessage from '@components/Chat/elements/TextMessage'
+import PhotoMessage from '@components/Chat/elements/PhotoMessage'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -116,7 +117,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
                   style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: value.sent ? '#555' : '#212121', display: 'block' }}
                   key={index}
                 >
-                  <TextMessage members={users} text={value.msg} />
+                  {value.type === CHAT_MESSAGE_TYPE.IMAGE ? (
+                    <PhotoMessage currentMessage={value.msg} />
+                  ) : (
+                    <TextMessage members={users} text={value.msg} />
+                  )}
                 </Box>
               )
             })}
