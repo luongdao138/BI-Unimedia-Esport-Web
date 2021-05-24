@@ -4,7 +4,7 @@ import PageWithLayoutType from '@constants/page'
 
 const NotificationsPage: PageWithLayoutType = () => {
   return (
-    <MainLayout footer={false}>
+    <MainLayout footer={true}>
       <NotificationContainer />
     </MainLayout>
   )
