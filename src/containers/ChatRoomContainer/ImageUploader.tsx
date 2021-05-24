@@ -2,6 +2,7 @@ import React, { forwardRef, Ref, useImperativeHandle } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { getPreSignedUrl, upload } from '@services/image.service'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
+import _ from 'lodash'
 
 export interface ImageUploaderRef {
   handleUpload: () => void
@@ -57,11 +58,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
       onImageSelected && onImageSelected(URL.createObjectURL(file), true)
 
       const res = await getPreSignedUrl(params)
-      const fileUrl = res.file_url
+      const fileUrl = res.file_url as string
       const signedUrl = res.url
       await upload(file, signedUrl)
-
-      onResponse && onResponse(`https://${fileUrl}`, false)
+      let imageFineUrl = ''
+      if (_.isString(fileUrl)) {
+        const httpPrefix = 'https://'
+        imageFineUrl = fileUrl.startsWith(httpPrefix) ? fileUrl : `https://${fileUrl}`
+      }
+      onResponse && onResponse(imageFineUrl, false)
     }
 
     return (
