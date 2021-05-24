@@ -31,7 +31,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'exeLABをはじめる',
+    start_exelab: 'eXeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -56,7 +56,7 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
-    intro_hint1: 'exeLABをお楽しみいただくには',
+    intro_hint1: 'eXeLABをお楽しみいただくには',
     intro_hint2: 'ログインが必要です',
   },
   register: {
@@ -282,7 +282,7 @@ export default {
     title: 'QRコードは株式会社デンソーウェーブの商標登録です',
   },
   logout_screen: {
-    title: 'exeLABからログアウトしますか？',
+    title: 'eXeLABからログアウトしますか？',
     desc: 'いつでもログインし直すことができます。',
     cancel: 'キャンセル',
     ok: 'ログアウト',
@@ -314,6 +314,24 @@ export default {
     my_page: 'マイページの情報公開範囲',
     message: 'メッセージの受信設定',
     block: 'ブロックしたユーザー',
+  },
+  notification_settings: {
+    title: '通知設定',
+    settings_select_all: '一括設定',
+  },
+  service_info: {
+    title: 'サービス情報',
+    enterprise_info: '企業情報（NTTe-Sports）',
+    faq: 'FAQ',
+    inquiry: 'お問い合わせ',
+  },
+  inquiry: {
+    title: 'お問い合わせ',
+    subject: '件名',
+    email: 'メールアドレス',
+    desc: '本文',
+    desc_placeholder: 'お問い合わせ内容を入力してください',
+    send: '送信する',
   },
   settings: {
     title: '設定',

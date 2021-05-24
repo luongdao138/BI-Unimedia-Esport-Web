@@ -9,6 +9,8 @@ export enum USER_PROFILE_ACTION_TYPE {
   PROFILE_UPDATE = 'profile/profileUpdate',
   PROFILE_IMAGE = 'profile/profileImage',
   GAME_EDIT = 'profile/gameEdit',
+  FOLLOW = 'profile/follow',
+  UNFOLLOW = 'profile/unfollow',
   RECOMMENDED_EVENT = 'user/recommended_event',
   UPDATE_HOME_SETTINGS = 'user/update_home_settings',
 }

@@ -30,7 +30,7 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.USER_NOTIFICATION_SETTINGS)
           }}
         >
           <SettingsRowItem key="notification_settings" title={t('settings.notification_settings')} showSwitch={false} />
@@ -44,28 +44,28 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.SERVICE_INFO_SETTINGS)
           }}
         >
           <SettingsRowItem key="service_info" title={t('settings.service_info')} showSwitch={false} />
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.TERMS)
           }}
         >
           <SettingsRowItem key="terms" title={t('settings.terms')} showSwitch={false} />
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.PRIVACY)
           }}
         >
           <SettingsRowItem key="personal_info" title={t('settings.personal_info')} showSwitch={false} />
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.COMMERCIAL)
           }}
         >
           <SettingsRowItem key="commercial_transaction" title={t('settings.commercial_transaction')} showSwitch={false} />
