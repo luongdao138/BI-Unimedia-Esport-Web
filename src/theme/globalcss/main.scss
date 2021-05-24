@@ -418,6 +418,10 @@
     visibility: visible;
   }
 }
+.card-container .infinite-scroll-component {
+  display: flex;
+  flex-wrap: wrap;
+}
 .header-first-column {
   flex: 0 0 260px;
   height: 100%;

@@ -174,7 +174,9 @@ export type GameEditParams = {
 
 export type RecommendedEventResponse = {
   data: Array<CommonResponse>
+  meta: Meta
 }
+
 export type ResultsResponse = {
   attributes: any
 }
@@ -185,6 +187,29 @@ export type HomeSettingsParams = {
 
 export type HomeSettingsResponse = {
   home_settings: string[]
+}
+
+export type FollowResponse = {
+  data: {
+    id: number | string
+    type: 'user'
+    attributes: {
+      followers: number
+      following: number
+    }
+  }
+}
+
+export type UnFollowResponse = {
+  success: 'success'
+}
+
+export type FollowParams = {
+  user_code: string
+}
+
+export type RecommendedEventParams = {
+  page?: number
 }
 
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
@@ -232,12 +257,22 @@ export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse>
   return data
 }
 
-export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> => {
-  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT)
+export const getRecommendedEvent = async (params: RecommendedEventParams): Promise<RecommendedEventResponse> => {
+  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT, params)
   return data
 }
 
 export const updateHomeSettings = async (params: HomeSettingsParams): Promise<HomeSettingsResponse> => {
   const { data } = await api.post<HomeSettingsResponse>(URI.HOME_SETTINGS, params)
+  return data
+}
+
+export const follow = async (params: FollowParams): Promise<FollowResponse> => {
+  const { data } = await api.put(URI.FOLLOW, params)
+  return data
+}
+
+export const unfollow = async (params: FollowParams): Promise<UnFollowResponse> => {
+  const { data } = await api.put(URI.UNFOLLOW, params)
   return data
 }

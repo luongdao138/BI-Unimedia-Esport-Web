@@ -138,3 +138,17 @@ export const getBlockedUsers = async (params: BlockedUsersParams): Promise<Block
   const { data } = await api.get<BlockedUsersResponse>(URI.BLOCKED_USERS, { params })
   return data
 }
+
+export type InquiryParams = {
+  description: string
+  title: string
+}
+
+export type InquiryResponse = {
+  attributes: any
+}
+
+export const createInquiry = async (params: InquiryParams): Promise<InquiryResponse> => {
+  const { data } = await api.post<InquiryResponse>(URI.INQUIRY, params)
+  return data
+}

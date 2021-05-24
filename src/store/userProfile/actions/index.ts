@@ -59,6 +59,36 @@ export const profileImage = createAsyncThunk<services.ProfileImageParams, servic
   }
 )
 
+export const follow = createAsyncThunk<services.FollowResponse, services.FollowParams>(
+  USER_PROFILE_ACTION_TYPE.FOLLOW,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.follow(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const unfollow = createAsyncThunk<services.UnFollowResponse, services.FollowParams>(
+  USER_PROFILE_ACTION_TYPE.UNFOLLOW,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.unfollow(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(
   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
   async (param, { rejectWithValue }) => {
@@ -146,11 +176,11 @@ export const getRecommendations = createAsyncThunk<services.RecommendationsRespo
   }
 )
 
-export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventResponse>(
+export const getRecommendedEvent = createAsyncThunk<services.RecommendedEventResponse, services.RecommendedEventParams>(
   USER_PROFILE_ACTION_TYPE.RECOMMENDED_EVENT,
-  async (_params, { rejectWithValue }) => {
+  async (param, { rejectWithValue }) => {
     try {
-      const res = await services.getRecommendedEvent()
+      const res = await services.getRecommendedEvent(param)
       return res
     } catch (error) {
       if (!error.response) {

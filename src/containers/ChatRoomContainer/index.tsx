@@ -103,6 +103,12 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     }
   }
 
+  const imageErrorHandler = (error: any) => {
+    // eslint-disable-next-line no-console
+    console.log(error)
+    setMeta({ ...uploadMeta, uploading: false })
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header}>{roomId}</Box>
@@ -130,7 +136,13 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       <Box className={classes.input}>
         <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
       </Box>
-      <ImageUploader ref={ref} roomId={roomId} onResponse={imageEventHandler} onImageSelected={imageEventHandler} />
+      <ImageUploader
+        ref={ref}
+        roomId={roomId}
+        onResponse={imageEventHandler}
+        onImageSelected={imageEventHandler}
+        onError={imageErrorHandler}
+      />
     </Box>
   )
 }

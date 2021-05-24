@@ -24,6 +24,7 @@ const useUserData = (
   getCommunityList: () => void
   getMemberProfile: (userCode: string) => void
   profileImageChange: (file: File, user_id: number, type: number) => void
+  setFollowState: () => void
 } => {
   const authSelectors = auth.selectors
   const myUserCode = useAppSelector(authSelectors.getUserCode)
@@ -85,6 +86,18 @@ const useUserData = (
       console.log('useUserData.tsx 44 getPreSignedUrl failed', error)
     }
   }
+
+  const setFollowState = async () => {
+    if (profile) {
+      const params = { user_code: userCode }
+      console.log('useUserData.tsx 94 ', profile.attributes?.is_following)
+      if (profile.attributes?.is_following) {
+        dispatch(userActions.unfollow(params))
+      } else {
+        dispatch(userActions.follow(params))
+      }
+    }
+  }
   // const resetCommunityMeta = () => dispatch(clearMetaData(communityActions.getCommunityList.typePrefix))
   // const resetUserMeta = () => dispatch(clearMetaData(userActions.getMemberProfile.typePrefix))
   return {
@@ -97,6 +110,7 @@ const useUserData = (
     getCommunityList,
     getMemberProfile,
     profileImageChange,
+    setFollowState,
   }
 }
 

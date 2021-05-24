@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 14,
   },
   headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
     color: Colors.white,
     display: 'inline-block',
   },
