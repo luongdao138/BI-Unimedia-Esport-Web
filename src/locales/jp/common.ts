@@ -270,6 +270,7 @@ export default {
     confirm_brackets: '大会開始前に対戦表を確定してください',
     confirm_brackets_desc_tail: 'が確定していない場合はエントリーが無効となるのでご注意ください',
     results: '大会結果',
+    summary: '大会の総括',
   },
   arena: {
     randomize_button: 'ランダムに配置する',

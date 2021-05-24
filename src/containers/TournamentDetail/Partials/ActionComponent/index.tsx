@@ -12,6 +12,7 @@ import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/tournament.service'
 import { UserProfile } from '@services/user.service'
 import ESLink from '@components/Link'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 interface Props {
   tournament: TournamentDetail
@@ -30,6 +31,7 @@ const ActionComponent: React.FC<Props> = (props) => {
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
   const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
+  const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
 
   const buildArenaPeriodValue = () => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
@@ -74,6 +76,14 @@ const ActionComponent: React.FC<Props> = (props) => {
           {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
         </>
       )}
+
+      {isModerator && isCompleted && (
+        <Box className={classes.actionButton}>
+          <ButtonPrimary round fullWidth onClick={() => {}}>
+            {t('common:tournament.summary')}
+          </ButtonPrimary>
+        </Box>
+      )}
     </Box>
   )
 }
@@ -94,6 +104,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
+  },
+  actionButton: {
+    marginTop: theme.spacing(3),
+    width: '100%',
+    margin: '0 auto',
+    maxWidth: theme.spacing(35),
   },
 }))
 
