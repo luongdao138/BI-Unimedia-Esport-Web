@@ -106,18 +106,20 @@ const NotificationContainer: React.FC = () => {
             xs={12}
             key={i}
             onClick={() => {
-              switch (notification.attributes.ntype_id) {
-                case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
-                  dispatch(notificationActions.getNotificationDetail({ id: notification.id }))
-                  router.push(`/profile/${notification.attributes.user_code}`)
-                  break
-                }
-                case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
-                  router.push(`/notifications/${notification.id}`)
-                  break
-                }
-                default: {
-                  break
+              if (notification.attributes) {
+                switch (notification.attributes.ntype_id) {
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
+                    dispatch(notificationActions.getNotificationDetail({ id: notification.id }))
+                    router.push(`/profile/${notification.attributes.user_code}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
+                    router.push(`/notifications/${notification.id}`)
+                    break
+                  }
+                  default: {
+                    break
+                  }
                 }
               }
             }}
