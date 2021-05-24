@@ -82,6 +82,7 @@
     "@types/react-virtualized": "^9.21.11",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.3",
+    "@types/resize-observer-browser": "^0.1.5",
     "@types/svg-sprite-loader": "3.9.1",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "4.14.2",

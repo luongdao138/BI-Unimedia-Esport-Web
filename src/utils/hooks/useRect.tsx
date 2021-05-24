@@ -9,12 +9,6 @@ type RectResult = {
   width: number
 }
 
-export interface ResizeObserver {
-  observe(target: Element): void
-  unobserve(target: Element): void
-  disconnect(): void
-}
-
 export const useRect = (ref: React.RefObject<any>): RectResult => {
   const [rect, setRect] = useState(getRect(ref ? ref.current : null))
 
@@ -36,16 +30,16 @@ export const useRect = (ref: React.RefObject<any>): RectResult => {
     handleResize()
 
     if (typeof ResizeObserver === 'function') {
-      let resizeOb = new ResizeObserver(() => handleResize())
-      resizeOb.observe(element)
+      let resizeObserver = new ResizeObserver(() => handleResize())
+      resizeObserver.observe(element)
 
       return () => {
-        if (!resizeOb) {
+        if (!resizeObserver) {
           return
         }
 
-        resizeOb.disconnect()
-        resizeOb = null
+        resizeObserver.disconnect()
+        resizeObserver = null
       }
     } else {
       // Browser support, remove freely
