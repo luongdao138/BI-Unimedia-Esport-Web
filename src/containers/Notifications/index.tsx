@@ -9,8 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
-import * as notificationActions from '@store/notification/actions'
-import { useAppDispatch } from '@store/hooks'
+import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 
 const useStyles = makeStyles((theme) => ({
   loaderCenter: {
@@ -56,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
-  const dispatch = useAppDispatch()
+  const { fetchNotificationDetail } = useNotificationDetail()
   const { t } = useTranslation(['common'])
   const [hasMore, setHasMore] = useState(true)
   const { notifications, fetchNotifications, page } = useNotificationList()
@@ -109,7 +108,7 @@ const NotificationContainer: React.FC = () => {
               if (notification.attributes) {
                 switch (notification.attributes.ntype_id) {
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
-                    dispatch(notificationActions.getNotificationDetail({ id: notification.id }))
+                    fetchNotificationDetail(Number(notification.id))
                     router.push(`/profile/${notification.attributes.user_code}`)
                     break
                   }
