@@ -10,6 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 export interface ESFollowersProps {
   user_code?: string
@@ -46,7 +47,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
         <Box display="flex" className={classes.rowContainer}>
           <Typography>{t('common:followers.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
-            <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
+            <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : 0}</Typography>
           </Box>
           <Typography>{t('common:followers.th')}</Typography>
         </Box>

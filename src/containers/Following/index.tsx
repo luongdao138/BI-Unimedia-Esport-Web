@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import useFollowing from './useFollowing'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 export interface ESFollowingProps {
   user_code: string
@@ -45,7 +46,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
         <Box display="flex" className={classes.rowContainer}>
           <Typography>{t('common:following.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
-            <Typography className={classes.count}>{page ? page.total_count : 0}</Typography>
+            <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : 0}</Typography>
           </Box>
           <Typography>{t('common:following.th')}</Typography>
         </Box>
