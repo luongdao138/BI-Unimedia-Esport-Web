@@ -140,7 +140,7 @@ export const getBlockedUsers = async (params: BlockedUsersParams): Promise<Block
 }
 
 export type InquiryParams = {
-  description: string
+  content: string
   title: string
   email: string
 }

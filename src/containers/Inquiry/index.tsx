@@ -27,12 +27,12 @@ const ESInquiry: React.FC = () => {
       })
       .max(100, t('common.too_long'))
       .required(),
-    description: Yup.string().required().max(1000, t('common.too_long')),
+    content: Yup.string().required().max(1000, t('common.too_long')),
   })
 
   const formik = useFormik<InquiryParams>({
     initialValues: {
-      description: '',
+      content: '',
       title: '',
       email: '',
     },
@@ -71,39 +71,38 @@ const ESInquiry: React.FC = () => {
 
           <Box mt={1} height={210}>
             <Input
-              id="description"
-              name="description"
-              value={formik.values.description}
+              id="content"
+              name="content"
+              value={formik.values.content}
               onChange={formik.handleChange}
               labelPrimary={t('inquiry.desc')}
               placeholder={t('inquiry.desc_placeholder')}
               required
               fullWidth
-              error={!!formik.errors.description}
+              error={!!formik.errors.content}
               multiline
               rows={8}
             />
           </Box>
-          <Box mt={1} height={210}>
+          <Box mt={1}>
             <Input
               id="email"
               name="email"
               value={formik.values.email}
               onChange={formik.handleChange}
               labelPrimary={t('inquiry.email')}
-              placeholder={t('inquiry.email')}
               required
               fullWidth
               error={!!formik.errors.email}
               rows={8}
             />
           </Box>
-          <Box mt={1} display="flex" justifyContent="center">
+          <Box mt={3} display="flex" justifyContent="center">
             <ButtonPrimary round type="submit" disabled={meta.pending}>
               {t('inquiry.send')}
             </ButtonPrimary>
           </Box>
-          <Box mt={4}></Box>
+          <Box mt={3}></Box>
         </form>
       </Box>
     </div>
