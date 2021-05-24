@@ -142,6 +142,7 @@ export const getBlockedUsers = async (params: BlockedUsersParams): Promise<Block
 export type InquiryParams = {
   description: string
   title: string
+  email: string
 }
 
 export type InquiryResponse = {

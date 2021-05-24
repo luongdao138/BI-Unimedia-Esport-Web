@@ -305,6 +305,14 @@ export default {
     faq: 'FAQ',
     inquiry: 'お問い合わせ',
   },
+  inquiry: {
+    title: 'お問い合わせ',
+    subject: '件名',
+    email: 'メールアドレス',
+    desc: '本文',
+    desc_placeholder: 'お問い合わせ内容を入力してください',
+    send: '送信する',
+  },
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
