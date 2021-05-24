@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useLayoutEffect, useCallback, useState } from 'react'
 
 type RectResult = {
@@ -36,7 +37,9 @@ export function useRect<T extends HTMLElement>(ref: React.RefObject<T>): RectRes
 
     handleResize()
 
+    // @ts-ignore
     if (typeof ResizeObserver === 'function') {
+      // @ts-ignore
       let resizeObserver: any = new ResizeObserver(() => handleResize())
       resizeObserver.observe(element)
       return () => {
