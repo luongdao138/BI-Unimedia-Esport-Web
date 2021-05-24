@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
@@ -13,78 +13,96 @@ import StepOne from './StepOne'
 import StepTwo from './StepTwo'
 import StepThree from './StepThree'
 import StepFour from './StepFour'
-import { TournamentCreateParams } from '@services/tournament.service'
 import useCommonData from './useCommonData'
 import useTournamentCreate from './useTournamentCreate'
 import ESLoader from '@components/FullScreenLoader'
 import _ from 'lodash'
+import { useFormik } from 'formik'
+import { FormType } from './FormModel/FormType'
+import { getInitialValues } from './FormModel/InitialValues'
+import { getValidationScheme } from './FormModel/ValidationScheme'
+import * as Yup from 'yup'
+import { useStore } from 'react-redux'
 
 const TournamentCreate: React.FC = () => {
+  const store = useStore()
   const { hardwares, prefectures, user } = useCommonData()
   const { submit, meta } = useTournamentCreate()
   const { handleReturn } = useReturnHref()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [tab, setTab] = useState(0)
-  const [hasError, setError] = useState(false)
-  const [tournamentData, updateData] = useState<TournamentCreateParams>(TournamentHelper.defaultDetails(!user ? 0 : user.id))
+  const [hasError, setError] = useState(true)
+  const isFirstRun = useRef(true)
+  const tournamentData = TournamentHelper.defaultDetails(!user ? 0 : user.id)
 
-  const saveState = (data) => {
-    updateData((prevState: TournamentCreateParams) => {
-      return { ...prevState, ...data }
-    })
-  }
+  const formik = useFormik<FormType>({
+    initialValues: getInitialValues(tournamentData),
+    validationSchema: Yup.object(getValidationScheme(store, tournamentData)),
+    onSubmit: (values) => {
+      const tempValues = Object.values(values)
+      const _data = Object.assign({}, ...tempValues)
+      const data = {
+        ..._data,
+        co_organizers: _data.co_organizers.map((co) => parseInt(co.id)),
+        game_title_id: _data.game_title_id[0].id,
+      }
+      submit(data)
+    },
+  })
 
-  const handleSubmit = () => {
-    const data = {
-      ...tournamentData,
-      co_organizers: tournamentData.co_organizers.map((co) => parseInt(co.id)),
-      game_title_id: tournamentData.game_title_id[0].id,
+  useEffect(() => {
+    formik.validateForm()
+  }, [])
+
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false
+      return
+    } else {
+      setError(!_.isEmpty(formik.errors))
     }
-    submit(data)
-  }
-
-  const handleError = (errors) => {
-    setError(!_.isEmpty(errors))
-  }
+  }, [formik.errors])
 
   return (
     <>
-      <Box pt={7.5} pb={9} className={classes.topContainer}>
-        <Box py={2} display="flex" flexDirection="row" alignItems="center">
-          <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
-            <Icon className="fa fa-arrow-left" fontSize="small" />
-          </IconButton>
-          <Box pl={2}>
-            <Typography variant="h2">{t('common:tournament_create.title')}</Typography>
+      <form onSubmit={formik.handleSubmit}>
+        <Box pt={7.5} pb={9} className={classes.topContainer}>
+          <Box py={2} display="flex" flexDirection="row" alignItems="center">
+            <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
+              <Icon className="fa fa-arrow-left" fontSize="small" />
+            </IconButton>
+            <Box pl={2}>
+              <Typography variant="h2">{t('common:tournament_create.title')}</Typography>
+            </Box>
           </Box>
-        </Box>
-        <Box className={classes.spacingBorder} />
+          <Box className={classes.spacingBorder} />
 
-        <Box pt={8} className={classes.container}>
-          <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-            <ESTab className={classes.tabMin} label={t('common:tournament_create.tab1')} value={0} />
-            <ESTab className={classes.tabMin} label={t('common:tournament_create.tab2')} value={1} />
-            <ESTab className={classes.tabMin} label={t('common:tournament_create.tab3')} value={2} />
-            <ESTab className={classes.tabMin} label={t('common:tournament_create.tab4')} value={3} />
-          </ESTabs>
-        </Box>
-        <Box py={4}>
-          {tab == 0 && <StepOne data={tournamentData} saveState={saveState} hardwares={hardwares} handleError={handleError} />}
-          {tab == 1 && <StepTwo data={tournamentData} saveState={saveState} handleError={handleError} />}
-          {tab == 2 && <StepThree data={tournamentData} saveState={saveState} prefectures={prefectures} handleError={handleError} />}
-          {tab == 3 && <StepFour data={tournamentData} saveState={saveState} user={user} handleError={handleError} />}
-        </Box>
-      </Box>
-      <Box className={classes.stickyFooter}>
-        <Box className={classes.nextBtnHolder}>
-          <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit} disabled={hasError}>
-              {t('common:tournament_create.submit')}
-            </ButtonPrimary>
+          <Box pt={8} className={classes.container}>
+            <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+              <ESTab className={classes.tabMin} label={t('common:tournament_create.tab1')} value={0} />
+              <ESTab className={classes.tabMin} label={t('common:tournament_create.tab2')} value={1} />
+              <ESTab className={classes.tabMin} label={t('common:tournament_create.tab3')} value={2} />
+              <ESTab className={classes.tabMin} label={t('common:tournament_create.tab4')} value={3} />
+            </ESTabs>
+          </Box>
+          <Box py={4}>
+            {tab == 0 && <StepOne formik={formik} hardwares={hardwares} />}
+            {tab == 1 && <StepTwo formik={formik} />}
+            {tab == 2 && <StepThree formik={formik} prefectures={prefectures} />}
+            {tab == 3 && <StepFour formik={formik} user={user} />}
           </Box>
         </Box>
-      </Box>
+        <Box className={classes.stickyFooter}>
+          <Box className={classes.nextBtnHolder}>
+            <Box maxWidth={280} className={classes.buttonContainer}>
+              <ButtonPrimary type="submit" round fullWidth disabled={hasError}>
+                {t('common:tournament_create.submit')}
+              </ButtonPrimary>
+            </Box>
+          </Box>
+        </Box>
+      </form>
       <ESLoader open={meta.pending} />
     </>
   )
