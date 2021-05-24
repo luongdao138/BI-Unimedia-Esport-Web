@@ -36,16 +36,16 @@ export const useRect = (ref: React.RefObject<any>): RectResult => {
     handleResize()
 
     if (typeof ResizeObserver === 'function') {
-      let resizeObserver = new ResizeObserver(() => handleResize())
-      resizeObserver.observe(element)
+      let resizeOb = new ResizeObserver(() => handleResize())
+      resizeOb.observe(element)
 
       return () => {
-        if (!resizeObserver) {
+        if (!resizeOb) {
           return
         }
 
-        resizeObserver.disconnect()
-        resizeObserver = null
+        resizeOb.disconnect()
+        resizeOb = null
       }
     } else {
       // Browser support, remove freely
