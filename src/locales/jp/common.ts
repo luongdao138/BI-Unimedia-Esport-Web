@@ -2,7 +2,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
-    start_exelab: 'exeLABをはじめる',
+    start_exelab: 'eXeLABをはじめる',
     is: 'は',
     top_title: `すべてのゲーマーとそのファンのための
 コミュニケーションサービスです。`,
@@ -27,7 +27,7 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
-    intro_hint1: 'exeLABをお楽しみいただくには',
+    intro_hint1: 'eXeLABをお楽しみいただくには',
     intro_hint2: 'ログインが必要です',
   },
   register: {
@@ -277,7 +277,7 @@ export default {
     title: 'QRコードは株式会社デンソーウェーブの商標登録です',
   },
   logout_screen: {
-    title: 'exeLABからログアウトしますか？',
+    title: 'eXeLABからログアウトしますか？',
     desc: 'いつでもログインし直すことができます。',
     cancel: 'キャンセル',
     ok: 'ログアウト',
