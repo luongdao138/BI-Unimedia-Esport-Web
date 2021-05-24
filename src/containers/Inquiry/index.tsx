@@ -28,11 +28,11 @@ const ESInquiry: React.FC = () => {
   const validationSchema = Yup.object().shape({
     title: Yup.string().required().max(100, t('common.too_long')),
     email: Yup.string()
-      .test('email-validation', t('common.error'), (value) => {
+      .test('email-validation', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
       .max(100, t('common.too_long'))
-      .required(),
+      .required(t('inquiry.error.email')),
     content: Yup.string().required().max(1000, t('common.too_long')),
   })
 
@@ -58,8 +58,8 @@ const ESInquiry: React.FC = () => {
     <div>
       <HeaderWithButton title={t('service_info.inquiry')} />
       {showSuccess ? (
-        <Box display="flex" justifyContent="center">
-          <Box mt={2} width={494}>
+        <Box>
+          <Box mt={2}>
             <Typography className={classes.wrap} paragraph={true}>
               {t('inquiry.success_message')}
             </Typography>
@@ -77,9 +77,9 @@ const ESInquiry: React.FC = () => {
           </Box>
         </Box>
       ) : (
-        <Box display="flex" justifyContent="center">
+        <Box>
           <form className={classes.root} onSubmit={handleSubmit}>
-            <Box mt={2} width={494} bgcolor={showPreview ? Colors.black : null} borderRadius={4} padding={3}>
+            <Box mt={2} bgcolor={showPreview ? Colors.black : null} borderRadius={4} padding={3} margin={3}>
               <Input
                 id="title"
                 name="title"
@@ -157,6 +157,7 @@ const ESInquiry: React.FC = () => {
                 </Button>
               </Box>
             ) : null}
+            <Box mt={3}></Box>
           </form>
         </Box>
       )}
