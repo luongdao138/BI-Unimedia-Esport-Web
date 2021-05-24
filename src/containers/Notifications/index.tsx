@@ -1,16 +1,16 @@
-import { Box, Grid, Icon, IconButton, Typography } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import useNotificationList from './useNotificationList'
 import NotificationListItem from './notificationItem'
 import ESLoader from '@components/Loader'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
-import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 import { FixedSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
+import HeaderWithButton from '@components/HeaderWithButton'
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
@@ -75,15 +75,8 @@ const NotificationContainer: React.FC = () => {
   const itemCount = hasNextPage ? notifications.length + 1 : notifications.length
 
   return (
-    <div className={classes.wrap}>
-      <Box className={classes.header}>
-        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
-          <Icon className={`fa fa-arrow-left ${classes.icon}`} />
-        </IconButton>
-        <Typography variant="body1" className={classes.headerTitle}>
-          {t('common:notification.title')}
-        </Typography>
-      </Box>
+    <div>
+      <HeaderWithButton title={t('common:notification.title')} />
       <Box className={(classes.container, 'scroll-bar')}>
         <InfiniteLoader isItemLoaded={(index: number) => index < notifications.length} itemCount={itemCount} loadMoreItems={loadMore}>
           {({ onItemsRendered, ref }) => (
@@ -92,7 +85,7 @@ const NotificationContainer: React.FC = () => {
               width={'100%'}
               itemCount={notifications.length}
               itemData={notifications}
-              itemSize={100}
+              itemSize={110}
               onItemsRendered={onItemsRendered}
               ref={ref}
             >
@@ -112,53 +105,14 @@ const NotificationContainer: React.FC = () => {
   )
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
-    height: 'calc(100vh - 60px)',
+    height: 800,
     padding: 24,
     paddingTop: 16,
     paddingBottom: 0,
     display: 'flex',
     flexWrap: 'wrap',
-  },
-  loaderCenter: {
-    textAlign: 'center',
-  },
-  icon: {
-    fontSize: 12,
-    color: theme.palette.text.primary,
-  },
-  iconButton: {
-    backgroundColor: theme.palette.text.secondary,
-    marginRight: 14,
-  },
-  headerTitle: {
-    color: Colors.white,
-    display: 'inline-block',
-  },
-  create: {
-    marginLeft: 'auto',
-  },
-  wrap: {
-    height: 'calc(100vh - 60px)',
-    overflow: 'auto',
-    scrollbarWidth: 'none' /* Firefox */,
-    '&::-webkit-scrollbar': {
-      width: 0,
-      height: 0,
-    },
-  },
-  header: {
-    padding: 16,
-    width: '100%',
-    position: 'sticky',
-    background: Colors.black,
-    zIndex: 10,
-    left: 0,
-    top: 0,
-    right: 0,
-    height: 60,
-    borderBottom: '1px solid #212121',
   },
 }))
 
