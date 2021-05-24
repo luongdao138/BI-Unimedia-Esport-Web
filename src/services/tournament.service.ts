@@ -106,6 +106,64 @@ export type TournamentDetail = {
   }
 }
 
+export type TournamentCreateParams = {
+  title: string
+  overview: string
+  game_title_id: GameTitle['attributes'][]
+  game_hardware_id: number
+  has_third_place: boolean
+  max_participants: number
+  terms_of_participation: string
+  acceptance_start_date: string
+  acceptance_end_date: string
+  start_date: string
+  end_date: string
+  area_id: number
+  area_name: string
+  address: string
+  has_prize: boolean
+  retain_history: boolean
+  prize_amount: string
+  notes: string
+  owner_id: number
+  organizer_name: string
+  cover_image_url: string
+  co_organizers: RecommendedUsers[]
+  t_type: 't_public' | 't_private'
+  participant_type: number
+  status: string
+  rule: string
+}
+
+export type TournamentFormParams = {
+  title: string
+  overview: string
+  game_title_id: number
+  game_hardware_id: number
+  has_third_place: boolean
+  max_participants: number
+  terms_of_participation: string
+  acceptance_start_date: string
+  acceptance_end_date: string
+  start_date: string
+  end_date: string
+  area_id: number
+  area_name: string
+  address: string
+  has_prize: boolean
+  retain_history: boolean
+  prize_amount: string
+  notes: string
+  owner_id: number
+  organizer_name: string
+  cover_image_url: string
+  co_organizers: number[]
+  t_type: 't_public' | 't_private'
+  participant_type: number
+  status: string
+  rule: string
+}
+
 export type TournamentDetailResponse = {
   data: TournamentDetail
 }
@@ -136,6 +194,7 @@ export type TournamentMatchItem = {
   home_avatar: null | string
   guest_user: TournamentMatchParticipant | null
   guest_avatar: null | string
+  is_fixed_score: boolean
 }
 
 export type TournamentMatchRound = TournamentMatchItem[]
@@ -213,7 +272,6 @@ export type SetParticipantParams = {
   participant_id: number | null
   type: string
 }
-
 export type PlacementItem = {
   id: number
   user_id: number
@@ -234,6 +292,40 @@ export type ArenaWinners = Record<string, PlacementItem[]>
 
 export type GetArenaWinnersResponse = {
   matches: ArenaWinners
+}
+export type RecommendedUsersResponse = {
+  data: Array<RecommendedUsers>
+  links?: {
+    links: any
+    meta: Meta
+  }
+}
+
+export type RecommendedUsers = {
+  id: 'string'
+  type: 'user_list'
+  attributes: {
+    user_code: string
+    nickname: string
+    nickname2: null | string
+    avatar: null | string
+    features: Feature[] | null
+    game_titles: GameTitle['attributes'][] | null
+  }
+}
+
+export type RecommendedUsersParams = {
+  page: number
+  keyword: string
+  hash_key?: string
+}
+
+export type SetScoreParams = {
+  hash_key?: string
+  match_id: number
+  score_home: number
+  score_guest: number
+  winner: string
 }
 
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
@@ -257,7 +349,7 @@ export const getRecruitingTournaments = async (): Promise<RecruitingTournamentRe
 }
 
 export const getTournamentDetail = async (hash_key: string | string[]): Promise<TournamentDetailResponse> => {
-  const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
+  const { data } = await api.get<TournamentDetailResponse>(URI.TOURNAMENT_DETAIL.replace(/:id/gi, String(hash_key)))
   return data
 }
 
@@ -281,6 +373,11 @@ export const leaveTournament = async (hash_key: string): Promise<void> => {
   return data
 }
 
+export const closeTournament = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.CLOSE_TOURNAMENT.replace(/:id/gi, hash_key))
+  return data
+}
+
 export const getEntryStatus = async (hash_key: string): Promise<EntryStatusResponse> => {
   const { data } = await api.get<EntryStatusResponse>(URI.CHECK_ENTRY_STATUS.replace(/:id/gi, hash_key))
   return data
@@ -300,8 +397,31 @@ export const setParticipant = async (params: SetParticipantParams): Promise<void
   const { data } = await api.put<void>(URI.TOURNAMENTS_SET_PARTICIPANT.replace(/:id/gi, params.hash_key), params)
   return data
 }
-
 export const getArenaWinners = async (params: string | string[]): Promise<GetArenaWinnersResponse> => {
-  const { data } = await api.get<GetWinnersResponse>(URI.TOURNAMENTS_WINNERS.replace(/:id/gi, String(params)))
+  const { data } = await api.get<GetArenaWinnersResponse>(URI.TOURNAMENTS_WINNERS.replace(/:id/gi, String(params)))
+  return data
+}
+export const getRecommendedUsersByName = async (params: RecommendedUsersParams): Promise<RecommendedUsersResponse> => {
+  const { data } = await api.get<RecommendedUsersResponse>(URI.TOURNAMENTS_USERS, { params })
+  return data
+}
+
+export const createTournament = async (params: TournamentFormParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_CREATE, params)
+  return data
+}
+
+export const setScore = async (params: SetScoreParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_SET_SCORE.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
+export const randomizeTournament = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_RANDOMIZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const freezeTournament = async (hash_key: string): Promise<TournamentDetailResponse> => {
+  const { data } = await api.post<TournamentDetailResponse>(URI.TOURNAMENTS_FREEZE_PARTICIPANTS.replace(/:id/gi, hash_key))
   return data
 }

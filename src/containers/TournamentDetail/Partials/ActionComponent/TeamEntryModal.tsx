@@ -5,7 +5,6 @@ import ESButton from '@components/Button'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Colors } from '@theme/colors'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -23,6 +22,8 @@ import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
 import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
+import ESToast from '@components/Toast'
+import ESLoader from '@components/FullScreenLoader'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -43,14 +44,27 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
-  const { join, leave } = useEntry()
+  const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
+  const [teamMemberItems, setTeamMemberItems] = useState(suggestedTeamMembers)
+
+  useEffect(() => {
+    setTeamMemberItems(suggestedTeamMembers)
+  }, [suggestedTeamMembers])
+
+  useEffect(() => {
+    if (joinMeta.loaded || joinMeta.error) {
+      setOpen(false)
+      reset()
+      handleClose()
+    }
+  }, [joinMeta.loaded, joinMeta.error])
 
   const membersValidationSchema = Yup.object().shape({
     user_id: Yup.number().required(),
     name: Yup.string().required(),
     user_code: Yup.string().required(),
     nickname: Yup.string()
-      .required('Name is required')
+      .required(t('common:common.error'))
       .max(40, t('common:common.too_long'))
       .test('name', 'at_least', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
@@ -84,9 +98,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         const filtered = _.filter(values.members, (member) => member.user_id !== values.id)
         const data = _.map(filtered, ({ user_id, nickname }) => ({ user_id, name: nickname }))
         join({ hash_key: tournament.attributes.hash_key, data: { ...values, members: data } })
-        setOpen(false)
-        reset()
-        handleClose()
       }
     },
   })
@@ -164,7 +175,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       if (i === 0) {
         elements.push(
           <Box key={i} my={2}>
-            <ESLabel label={`メンバー${i + 1}（あなた）`} size="small" />
+            <ESLabel label={`${t('common:member')}${i + 1}（${t('common:you')}）`} size="small" />
             <Typography>{userProfile ? userProfile.attributes.nickname : ''}</Typography>
           </Box>
         )
@@ -172,11 +183,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         elements.push(
           <Box key={i} my={2}>
             <ESSimpleSelectInput
-              label={`メンバー${i + 1}`}
+              label={`${t('common:member')}${i + 1}`}
               index={i}
               selectedItem={teamMembers[i] ? teamMembers[i] : null}
-              items={suggestedTeamMembers}
+              items={teamMemberItems}
               onItemsSelected={handleSelectedMembers}
+              onScrollEnd={() => {
+                // setTeamMemberItems([...teamMemberItems, ...teamMemberItems])
+              }}
             />
           </Box>
         )
@@ -202,7 +216,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       </BlackBox>
 
       <Box className={classes.formContainer}>
-        <ESLabel label={'アイコン'} required />
+        <ESLabel label={t('common:icon')} required />
         <Box m={1} />
         <ESTeamIconUploader src="/images/avatar.png" editable onChange={handleImageUpload} isUploading={isUploading} />
 
@@ -210,8 +224,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         <ESInput
           id="team_name"
           autoFocus
-          placeholder={'Inser your team name'}
-          labelPrimary={'チーム名'}
+          labelPrimary={t('common:team_name')}
           fullWidth
           required
           value={values.team_name}
@@ -221,7 +234,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         />
 
         <Box mt={4} />
-        <ESLabel label={'エントリーメンバー'} required />
+        <ESLabel label={t('common:tournament.entry_members')} required />
 
         {renderMembersSelector()}
       </Box>
@@ -235,19 +248,12 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       elements.push(
         <Box key={i} my={2}>
           <Box>
-            <Typography>{`メンバー${i + 1}${i === 0 ? '（あなた）' : ''}`}</Typography>
+            <Typography>{`${t('common:member')}${i + 1}${i === 0 ? `（${t('common:you')}）` : ''}`}</Typography>
             <Typography>{values.members[i].name}</Typography>
             <Typography>{`${t('common:common.at')}${values.members[i].user_code}`}</Typography>
           </Box>
           <Box mt={2} />
-          <ESInput
-            id={`members.${i}.nickname`}
-            autoFocus
-            placeholder={'Inser your name'}
-            fullWidth
-            value={values.members[i].nickname}
-            onChange={handleChange}
-          />
+          <ESInput id={`members.${i}.nickname`} autoFocus fullWidth value={values.members[i].nickname} onChange={handleChange} />
         </Box>
       )
     }
@@ -258,7 +264,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const nicknameChangeForm = () => (
     <Box>
       <Box className={classes.formContainer}>
-        <ESLabel label={'エントリーネーム'} required />
+        <ESLabel label={t('common:tournament.join_nickname')} required />
 
         {renderMembersNicknameChanger()}
       </Box>
@@ -270,56 +276,35 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       <Box className={classes.actionButton}>
         {tournament.attributes.is_entered ? (
           <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-            エントリーを辞退する
+            {t('common:tournament.unjoin')}
           </ESButton>
         ) : (
           <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            エントリーする
+            {t('common:tournament.join')}
           </ButtonPrimary>
         )}
       </Box>
 
       <StickyActionModal
         open={open}
-        returnText={step === FINAL_STEP ? 'エントリーネームの設定' : 'エントリーする'}
-        actionButtonText={step === FINAL_STEP ? '次へ' : '次へ'}
+        returnText={step === FINAL_STEP ? t('common:tournament.join_nickname_setting') : t('common:tournament.join')}
+        actionButtonText={step === FINAL_STEP ? t('common:next') : t('common:next')}
         actionButtonDisabled={!isValid}
-        actionHintText={'次の画面でエントリーネームを変更できます'}
+        actionHintText={t('common:tournament.join_nickname_setting_desc')}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
         <form onSubmit={handleActionButton}>{step === FINAL_STEP ? nicknameChangeForm() : teamCreateForm()}</form>
       </StickyActionModal>
+
+      {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
+      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetJoinMeta} />}
+      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetLeaveMeta} />}
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  iconButtonBg: {
-    backgroundColor: `${Colors.grey[200]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[200]}80`,
-    },
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    background: Colors.black,
-    borderTop: `1px solid #ffffff30`,
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    // width:
-    // width: '100%',
-    // margin: '0 auto',
-  },
   formContainer: {
     width: '100%',
     flexDirection: 'column',
@@ -328,29 +313,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
   },
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-    topContainer: {
-      paddingTop: 0,
-    },
-  },
   actionButton: {
     marginTop: theme.spacing(3),
     width: '100%',
     margin: '0 auto',
     maxWidth: theme.spacing(35),
-  },
-  required: {
-    backgroundColor: Colors.primary,
-    borderRadius: 2,
-    paddingLeft: theme.spacing(1 / 2),
-    paddingRight: theme.spacing(1 / 2),
-    fontSize: 10,
-    marginLeft: theme.spacing(1),
-    color: Colors.white,
   },
 }))
 

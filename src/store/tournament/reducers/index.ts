@@ -11,7 +11,10 @@ import {
   TournamentMatchResponse,
   RecruitingResponse,
   ArenaWinners,
+  TournamentStatus,
+  RecommendedUsers,
 } from '@services/tournament.service'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -28,6 +31,8 @@ type StateType = {
   tournamentMatches: TournamentMatchResponse
   recruitingTournaments: Array<RecruitingResponse>
   arenaWinners: ArenaWinners
+  recommendedUsers?: Array<RecommendedUsers>
+  recommendedUsersMeta?: Meta
 }
 
 const initialState: StateType = {
@@ -40,6 +45,7 @@ const initialState: StateType = {
   tournamentMatches: { matches: [], third_place_match: [] },
   arenaWinners: {},
   recruitingTournaments: [],
+  recommendedUsers: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -69,6 +75,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.is_entered = false
+  })
+  builder.addCase(actions.closeTournament.fulfilled, (state) => {
+    state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
   })
   builder.addCase(actions.getTournamentParticipants.fulfilled, (state, action) => {
     let _participants = action.payload.data
@@ -103,5 +112,20 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getArenaWinners.fulfilled, (state, action) => {
     state.arenaWinners = action.payload.matches
+  })
+  builder.addCase(actions.getRecommendedUsersByName.fulfilled, (state, action) => {
+    let _recommendedUsers = action.payload.data
+    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+      _recommendedUsers = state.recommendedUsers.concat(action.payload.data)
+    }
+
+    state.recommendedUsers = _recommendedUsers
+    state.recommendedUsersMeta = action.payload.links?.meta
+  })
+  builder.addCase(actions.clearRecommendedUsers, (state) => {
+    state.recommendedUsers = []
+  })
+  builder.addCase(actions.freezeTournament.fulfilled, (state, action) => {
+    state.tournamentDetail = action.payload.data
   })
 })

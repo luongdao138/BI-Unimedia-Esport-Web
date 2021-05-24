@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     '& span': {
       fontSize: 22,
-      marginLeft: 4,
+      marginLeft: -4,
     },
   },
 }))

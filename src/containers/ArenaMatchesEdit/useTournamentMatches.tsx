@@ -6,9 +6,12 @@ import * as selectors from '@store/tournament/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { SetParticipantParams, TournamentMatchRound } from '@services/tournament.service'
 import { Meta } from '@store/metadata/actions/types'
+import { clearMetaData } from '@store/metadata/actions'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
 const setParticipantMeta = createMetaSelector(actions.setParticipant)
+const _randomizeMeta = createMetaSelector(actions.randomizeTournament)
+const _freezeMeta = createMetaSelector(actions.freezeTournament)
 
 type RoundTitles = { matches: string[]; third_place_match: string[] }
 
@@ -19,13 +22,18 @@ const useTournamentMatches = (): {
   setMeta: Meta
   fetchMatches: () => void
   setParticipant: (params: SetParticipantParams) => void
+  randomize: (params: string) => void
+  freeze: (params: string) => void
+  randomizeMeta: Meta
+  freezeMeta: Meta
+  resetRandomizeMeta: () => void
+  resetFreezeMeta: () => void
   roundTitles: RoundTitles
 } => {
   const { query } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
-  const setMeta = useAppSelector(setParticipantMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
   useEffect(() => {
     fetchMatches()
@@ -58,7 +66,30 @@ const useTournamentMatches = (): {
   }
 
   const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
-  return { matches, third_place_match, meta, setParticipant, fetchMatches, roundTitles, setMeta }
+  const randomize = (param: string) => dispatch(actions.randomizeTournament(param))
+  const freeze = (param: string) => dispatch(actions.freezeTournament(param))
+
+  const setMeta = useAppSelector(setParticipantMeta)
+  const randomizeMeta = useAppSelector(_randomizeMeta)
+  const freezeMeta = useAppSelector(_freezeMeta)
+
+  const resetRandomizeMeta = () => dispatch(clearMetaData(actions.randomizeTournament.typePrefix))
+  const resetFreezeMeta = () => dispatch(clearMetaData(actions.freezeTournament.typePrefix))
+  return {
+    matches,
+    third_place_match,
+    meta,
+    setParticipant,
+    fetchMatches,
+    roundTitles,
+    setMeta,
+    randomize,
+    freeze,
+    randomizeMeta,
+    freezeMeta,
+    resetRandomizeMeta,
+    resetFreezeMeta,
+  }
 }
 
 export default useTournamentMatches

@@ -1,6 +1,6 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/tournament.service'
-import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE } from './types'
+import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS } from './types'
 import * as types from './types'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
@@ -117,6 +117,18 @@ export const leaveTournament = createAsyncThunk<void, string>(types.LEAVE_TOURNA
   }
 })
 
+export const closeTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNAMENT, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.closeTournament(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
 export const getTournamentParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
   types.GET_TOURNAMENT_PARTICIPANTS,
   async (param, { rejectWithValue }) => {
@@ -191,12 +203,81 @@ export const setParticipant = createAsyncThunk<void, services.SetParticipantPara
     }
   }
 )
-
 export const getArenaWinners = createAsyncThunk<services.GetArenaWinnersResponse, string | string[]>(
   types.SET_TOURNAMENT_PARTICIPANT,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.getArenaWinners(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUsersResponse, services.RecommendedUsersParams>(
+  types.GET_RECOMMENDED_USERS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getRecommendedUsersByName(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
+
+export const createTournament = createAsyncThunk<void, services.TournamentFormParams>(
+  types.CREATE_TOURNAMENT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.createTournament(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const setScore = createAsyncThunk<void, services.SetScoreParams>(types.SET_TOURNAMENT_SCORE, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.setScore(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
+export const randomizeTournament = createAsyncThunk<void, string>(types.RANDOMIZE_TOURNAMENT, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.randomizeTournament(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
+export const freezeTournament = createAsyncThunk<services.TournamentDetailResponse, string>(
+  types.FREEZE_TOURNAMENT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.freezeTournament(param)
       return res
     } catch (error) {
       if (!error.response) {

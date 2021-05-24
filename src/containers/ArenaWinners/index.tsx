@@ -207,6 +207,9 @@ const useStyles = makeStyles((theme) => ({
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       WebkitTextStroke: '1px #FFFF65',
+      '& span': {
+        marginLeft: -4,
+      },
     },
     '&$second': {
       fontFamily: 'Futura Hv BT',

@@ -11,6 +11,16 @@ export const PARTICIPATION_TYPES = [
   { label: '10on10', value: 10 },
 ]
 
+export const RULES = [
+  { label: 'トーナメント', value: 'single' },
+  { label: 'バトルロイヤル', value: 'battle_royale' },
+]
+
+export const T_TYPES = [
+  { label: '公開', value: 0 },
+  { label: '限定公開', value: 1 },
+]
+
 export const RULE = {
   SINGLE: 'single',
   BATTLE_ROYALE: 'battle_royale',
@@ -21,12 +31,34 @@ export const PARTICIPANT_TYPE = {
   GUEST: 'guest',
 }
 
+export const T_TYPE = {
+  PUBLIC: 't_public',
+  PRIVATE: 't_private',
+}
+
+export const STATUS = {
+  READY: 'ready',
+  RECRUITING: 'recruiting',
+  RECRUITMENT_CLOSED: 'recruitment_closed',
+  READY_TO_START: 'ready_to_start',
+  IN_PROGRESS: 'in_progress',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+}
+
 export const ROLE = {
   ADMIN: 'admin',
   CO_ORGANIZER: 'co_organizer',
   PARTICIPANT: 'participant',
   INTERESTED: 'interested',
 }
-export const STATUS = {
+
+export const TOURNAMENT_STATUS = {
+  IN_PROGRESS: 'in_progress',
+  CANCELLED: 'cancelled',
+  COMPLETED: 'completed',
+  READY: 'ready',
+  READY_TO_START: 'ready_to_start',
   RECRUITING: 'recruiting',
+  RECRUITMENT_CLOSED: 'recruitment_closed',
 }

@@ -111,5 +111,12 @@ export default createMuiTheme({
         paddingRight: 24,
       },
     },
+    MuiDialogContent: {
+      root: {
+        '&:first-child': {
+          paddingTop: 0,
+        },
+      },
+    },
   },
 })

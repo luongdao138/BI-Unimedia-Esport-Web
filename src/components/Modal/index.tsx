@@ -1,11 +1,20 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Dialog } from '@material-ui/core'
+import Slide from '@material-ui/core/Slide'
+import { TransitionProps } from '@material-ui/core/transitions'
 
 export interface ESDialogProps {
   open: boolean
   handleClose?: () => void
 }
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children?: React.ReactElement<any, any> },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="left" ref={ref} {...props} />
+})
 
 const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
   const classes = useStyles()
@@ -13,6 +22,7 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
   return (
     <Dialog
       fullScreen
+      TransitionComponent={Transition}
       aria-labelledby="modal"
       open={open}
       onClose={handleClose}

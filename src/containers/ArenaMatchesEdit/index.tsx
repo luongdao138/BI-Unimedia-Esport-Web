@@ -1,25 +1,79 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Container, Box, IconButton, Theme, Toolbar, Typography } from '@material-ui/core'
+import ButtonPrimary from '@components/ButtonPrimary'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import SelectParticipantModal from '../TournamentDetail/Partials/SelectParticipantModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
+import RandomizeDialog from './Partials/RandomizeDialog'
+import { useTranslation } from 'react-i18next'
+import ESToast from '@components/Toast'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
 const ArenaMatches: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { matches, setParticipant, fetchMatches, setMeta, roundTitles, meta: matchesMeta } = useTournamentMatches()
+  const {
+    matches,
+    setParticipant,
+    freeze,
+    randomize,
+    fetchMatches,
+    roundTitles,
+    meta: matchesMeta,
+    setMeta,
+    randomizeMeta,
+    resetRandomizeMeta,
+    freezeMeta,
+    resetFreezeMeta,
+  } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const [selectedMatch, setSelectedMatch] = useState()
+  const [data, setData] = useState<any>()
+
+  useEffect(() => {
+    if (tournament) {
+      setData(TournamentHelper.getDetailData(tournament))
+    }
+  }, [tournament])
+
+  useEffect(() => {
+    if (randomizeMeta.loaded) {
+      fetchMatches()
+    }
+  }, [randomizeMeta.loaded])
 
   const onMatchClick = (match) => {
-    if (match && match.round_no == 0) setSelectedMatch(match)
+    if (match && match.round_no == 0 && !tournament.attributes.is_freezed) setSelectedMatch(match)
   }
+
+  const actionButtons = () => {
+    if (!data || !matches || !matchesMeta.loaded) return
+    if (!data.memberSelectable) return
+    const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
+    return (
+      <Box className={classes.stickyFooter}>
+        <Box className={classes.nextBtnHolder}>
+          <Box maxWidth={280} className={classes.buttonContainer}>
+            {freezable ? (
+              <ButtonPrimary type="submit" round fullWidth onClick={() => freeze(tournament.attributes.hash_key)}>
+                {t('common:arena.freeze_button')}
+              </ButtonPrimary>
+            ) : (
+              <RandomizeDialog onAction={() => randomize(tournament.attributes.hash_key)} />
+            )}
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
+
   return (
     <div className={classes.root}>
-      {matches && tournament && (
+      {matches && tournament && data && (
         <>
           <AppBar className={classes.appbar}>
             <Container maxWidth="lg">
@@ -38,21 +92,37 @@ const ArenaMatches: React.FC = () => {
                   <Bracket.Round key={rid} roundNo={rid}>
                     <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
 
-                    {round.map((match, mid) => (
-                      <Bracket.Match
-                        onClick={() => onMatchClick(match)}
-                        key={mid}
-                        headerText={`${rid + 1}-${mid + 1}`}
-                        editable
-                        winner={match.winner}
-                        participant1={
-                          match.home_user ? { avatar: match.home_avatar, label: match.home_user.name, score: match.score_home } : null
-                        }
-                        participant2={
-                          match.guest_user ? { avatar: match.guest_avatar, label: match.guest_user.name, score: match.score_guest } : null
-                        }
-                      />
-                    ))}
+                    {round.map((match, mid) => {
+                      const data = tournament.attributes
+                      const isTeam = data.participant_type > 1
+                      return (
+                        <Bracket.Match
+                          onClick={() => onMatchClick(match)}
+                          key={mid}
+                          headerText={`${rid + 1}-${mid + 1}`}
+                          editable
+                          winner={match.winner}
+                          participant1={
+                            match.home_user
+                              ? {
+                                  avatar: match.home_avatar,
+                                  label: isTeam ? match.home_user.team_name : match.home_user.name,
+                                  score: match.score_home,
+                                }
+                              : null
+                          }
+                          participant2={
+                            match.guest_user
+                              ? {
+                                  avatar: match.guest_avatar,
+                                  label: isTeam ? match.guest_user.team_name : match.guest_user.name,
+                                  score: match.score_guest,
+                                }
+                              : null
+                          }
+                        />
+                      )
+                    })}
                   </Bracket.Round>
                 ))}
               </Bracket.Container>
@@ -66,18 +136,30 @@ const ArenaMatches: React.FC = () => {
                   setSelectedMatch(undefined)
                 }}
               />
+              {data.memberSelectable && <Box className={classes.blankSpace}></Box>}
             </Container>
           </div>
+          {actionButtons()}
         </>
       )}
-      <ESLoader open={meta.pending || matchesMeta.pending} />
+      <ESLoader open={meta.pending || matchesMeta.pending || randomizeMeta.pending || freezeMeta.pending} />
+
+      {/* success */}
+      {randomizeMeta.loaded && (
+        <ESToast open={randomizeMeta.loaded} message={t('common:arena.randomize_success')} resetMeta={resetRandomizeMeta} />
+      )}
+      {freezeMeta.loaded && <ESToast open={freezeMeta.loaded} message={t('common:arena.freeze_success')} resetMeta={resetFreezeMeta} />}
+
+      {/* error */}
+      {!!randomizeMeta.error && <ESToast open={!!randomizeMeta.error} message={t('common:error.failed')} resetMeta={resetRandomizeMeta} />}
+      {!!freezeMeta.error && <ESToast open={!!freezeMeta.error} message={t('common:error.failed')} resetMeta={resetFreezeMeta} />}
     </div>
   )
 }
 
 export default ArenaMatches
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -102,5 +184,30 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
+  },
+  blankSpace: {
+    height: 169,
+  },
+  [theme.breakpoints.down('sm')]: {
+    blankSpace: {
+      height: theme.spacing(15),
+    },
+  },
+  stickyFooter: {
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.9)',
+  },
+  nextBtnHolder: {
+    display: 'flex',
+    marginBottom: theme.spacing(11),
+    marginTop: theme.spacing(3),
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
   },
 }))

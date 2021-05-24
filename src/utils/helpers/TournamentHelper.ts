@@ -1,5 +1,7 @@
-import { PARTICIPATION_TYPES, RULE } from '@constants/tournament.constants'
+import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import moment from 'moment'
+import _ from 'lodash'
+import { TournamentDetail, TournamentMatchRound } from '@services/tournament.service'
 
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
@@ -22,6 +24,57 @@ const ruleText = (rule: string): string => {
   return ruleText
 }
 
+const getTypeValue = (t_type: string): number => {
+  if (String(t_type) === T_TYPE.PRIVATE) return 1
+
+  return 0
+}
+
+const getTypeEnum = (type: unknown): string => {
+  if (Number(type) === 0) return T_TYPE.PUBLIC
+  if (Number(type) === 1) return T_TYPE.PRIVATE
+
+  return ''
+}
+
+const checkStatus = (status: string, targetStatus: string): boolean => {
+  const statuses = ['ready', 'recruiting', 'recruitment_closed', 'ready_to_start', 'in_progress', 'completed', 'cancelled']
+  const index = statuses.indexOf(status)
+  const targetIndex = statuses.indexOf(targetStatus)
+
+  return index < targetIndex
+}
+
+const defaultDetails = (user_id: number): any => {
+  return {
+    title: '',
+    overview: '',
+    game_title_id: [],
+    game_hardware_id: -1,
+    has_third_place: true,
+    participant_type: 0,
+    max_participants: 0,
+    terms_of_participation: '',
+    acceptance_start_date: undefined,
+    acceptance_end_date: undefined,
+    start_date: undefined,
+    end_date: undefined,
+    area_id: 1,
+    area_name: '',
+    address: '',
+    has_prize: true,
+    retain_history: true,
+    t_type: 't_public',
+    rule: '',
+    prize_amount: '',
+    notes: '',
+    owner_id: user_id,
+    organizer_name: '',
+    cover_image_url: null,
+    co_organizers: [],
+  }
+}
+
 const formatDate = (date: string): string => {
   return moment.utc(date).format('YYYY年MM月DD日')
 }
@@ -32,9 +85,90 @@ const getRemainingDate = (date: string): number => {
   return endDate.diff(nowDate, 'days')
 }
 
+const checkTarget = (targetIds: Array<number>, target: number): boolean => {
+  if (!targetIds || !target || _.isEmpty(targetIds)) return false
+
+  return targetIds.includes(Number(target))
+}
+
+const checkRoles = (roles, role): boolean => {
+  if (!roles || !role || _.isEmpty(roles)) return false
+
+  return roles.includes(role)
+}
+
+const getDetailData = (tournament: TournamentDetail): any => {
+  const _data = { ...tournament.attributes }
+  const isTeam = _data.participant_type > 1
+  const isAdmin = _data.my_role === ROLE.ADMIN || _data.my_role === ROLE.CO_ORGANIZER
+  const showStatus = isAdmin ? TOURNAMENT_STATUS.RECRUITING : TOURNAMENT_STATUS.READY_TO_START
+  const noEntry = _data.participant_count == 0 && _data.interested_count == 0
+  const scoreEnterable = _data.status === TOURNAMENT_STATUS.IN_PROGRESS || _data.status === TOURNAMENT_STATUS.COMPLETED
+  const joinedCount = _data.interested_count + _data.participant_count
+  const maxCapacity = _data.is_freezed
+    ? _data.participant_count
+    : checkStatus(_data.status, TOURNAMENT_STATUS.RECRUITMENT_CLOSED) || joinedCount > _data.max_participants
+    ? _data.max_participants
+    : joinedCount
+  const memberSelectable =
+    isAdmin &&
+    (_data.status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || (_data.status === TOURNAMENT_STATUS.IN_PROGRESS && !_data.is_freezed))
+  const isBattleRoyale = _data.rule === RULE.BATTLE_ROYALE
+  const teamIds = _.map(_data.my_info, (team: any) => team.team_id)
+  const teamRoles = isTeam ? _.map(_data.my_info, (team: any) => team.role) : undefined
+  const ownEnterable = isTeam ? checkRoles(teamRoles, ROLE.PARTICIPANT) : _data.my_role === ROLE.PARTICIPANT
+
+  return {
+    ...tournament.attributes,
+    id: tournament.id,
+    showMatch: !checkStatus(_data.status, showStatus),
+    isTeam,
+    isAdmin,
+    noEntry,
+    scoreEnterable,
+    maxCapacity,
+    memberSelectable,
+    isBattleRoyale,
+    teamIds,
+    teamRoles,
+    ownEnterable,
+  }
+}
+
+const checkParticipantsSelected = (bracketData: TournamentMatchRound[], interested_count: number, max_participants: number): boolean => {
+  let selected = true
+  const matches = bracketData[0]
+  let p_ids: any = []
+
+  _.forEach(matches, (match) => {
+    p_ids.push(match.home_user)
+    p_ids.push(match.guest_user)
+    if (match.home_user === null && match.guest_user === null) {
+      selected = false
+      return false
+    } else return true
+  })
+
+  p_ids = _.compact(p_ids)
+  const max_capacity = matches.length * 2 > max_participants ? max_participants : matches.length * 2
+  if (interested_count >= max_capacity) {
+    if (p_ids.length != max_capacity) selected = false
+  } else {
+    if (p_ids.length != interested_count) selected = false
+  }
+  return selected
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
   formatDate,
+  defaultDetails,
+  getTypeValue,
+  checkStatus,
   getRemainingDate,
+  checkTarget,
+  getDetailData,
+  checkParticipantsSelected,
+  getTypeEnum,
 }
