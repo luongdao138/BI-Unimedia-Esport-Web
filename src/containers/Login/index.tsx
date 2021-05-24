@@ -26,6 +26,7 @@ import ESLoader from '@components/FullScreenLoader'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ESCheckbox from '@components/Checkbox'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import i18n from '@locales/i18n'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
@@ -88,8 +89,8 @@ const LoginContainer: React.FC = () => {
               <Box>
                 <ESInput
                   id="email"
-                  placeholder={t('common:login.email_placeholder')}
-                  labelPrimary={t('common:login.email_label_primary')}
+                  placeholder={i18n.t('common:login.email_placeholder')}
+                  labelPrimary={i18n.t('common:login.email_label_primary')}
                   labelSecondary={
                     <Typography color="textPrimary" gutterBottom={false} variant="body2">
                       {t('common:login.email_label_secondary')}
