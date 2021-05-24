@@ -35,5 +35,8 @@ export const ESRoutes = {
   TERMS: '/settings/terms',
   PRIVACY: '/settings/privacy',
   COMMERCIAL: '/settings/commercial',
+  USER_ACCOUNT_SETTINGS: '/settings/account',
+  USER_ACCOUNT_SETTINGS_PASSWORD: '/settings/account/password',
+  USER_ACCOUNT_SETTINGS_CHANGE_EMAIL: '/settings/account/change-email',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
 }
