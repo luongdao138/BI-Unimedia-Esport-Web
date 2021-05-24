@@ -269,6 +269,7 @@ export default {
     current_round: '{{round_number}}回戦目 対戦中',
     confirm_brackets: '大会開始前に対戦表を確定してください',
     confirm_brackets_desc_tail: 'が確定していない場合はエントリーが無効となるのでご注意ください',
+    results: '大会結果',
   },
   arena: {
     randomize_button: 'ランダムに配置する',

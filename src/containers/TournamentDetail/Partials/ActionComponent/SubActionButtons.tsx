@@ -18,70 +18,93 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const status = tournament.attributes.status
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
   const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
+  const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
 
   return (
     <Box className={classes.body}>
       <Box className={classes.actionButtonContainer}>
-        {tournament.attributes.is_entered || isModerator ? (
+        {isCompleted ? (
           <>
-            {isInProgress ? (
-              <>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    {t('common:tournament.participants')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    {t('common:tournament.group_chat')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    {t('common:tournament.brackets')}
-                  </ESButton>
-                </Box>
-              </>
-            ) : (
-              <>
-                <Box className={classes.actionButton}>
-                  <Participants detail={tournament} />
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    {t('common:tournament.group_chat')}
-                  </ESButton>
-                </Box>
-                {isRecruitmentClosed && isModerator && (
-                  <Box className={classes.actionButton}>
-                    <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                      {t('common:tournament.brackets')}
-                    </ESButton>
-                  </Box>
-                )}
-              </>
-            )}
+            <Box className={classes.actionButton}>
+              <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                {t('common:tournament.participants')}
+              </ESButton>
+            </Box>
+            <Box className={classes.actionButton}>
+              <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                {t('common:tournament.brackets')}
+              </ESButton>
+            </Box>
+            <Box className={classes.actionButton}>
+              <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                {t('common:tournament.results')}
+              </ESButton>
+            </Box>
           </>
         ) : (
           <>
-            {isInProgress ? (
+            {tournament.attributes.is_entered || isModerator ? (
               <>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    {t('common:tournament.participants')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={() => {}}>
-                    {t('common:tournament.brackets')}
-                  </ESButton>
-                </Box>
+                {isInProgress ? (
+                  <>
+                    <Box className={classes.actionButton}>
+                      <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                        {t('common:tournament.participants')}
+                      </ESButton>
+                    </Box>
+                    <Box className={classes.actionButton}>
+                      <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                        {t('common:tournament.group_chat')}
+                      </ESButton>
+                    </Box>
+                    <Box className={classes.actionButton}>
+                      <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                        {t('common:tournament.brackets')}
+                      </ESButton>
+                    </Box>
+                  </>
+                ) : (
+                  <>
+                    <Box className={classes.actionButton}>
+                      <Participants detail={tournament} />
+                    </Box>
+                    <Box className={classes.actionButton}>
+                      <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                        {t('common:tournament.group_chat')}
+                      </ESButton>
+                    </Box>
+                    {isRecruitmentClosed && isModerator && (
+                      <Box className={classes.actionButton}>
+                        <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                          {t('common:tournament.brackets')}
+                        </ESButton>
+                      </Box>
+                    )}
+                  </>
+                )}
               </>
             ) : (
-              <Box className={classes.actionButton}>
-                <Participants detail={tournament} />
-              </Box>
+              <>
+                {isInProgress ? (
+                  <>
+                    <Box className={classes.actionButton}>
+                      <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                        {t('common:tournament.participants')}
+                      </ESButton>
+                    </Box>
+                    <Box className={classes.actionButton}>
+                      <ESButton variant="outlined" fullWidth onClick={() => {}}>
+                        {t('common:tournament.brackets')}
+                      </ESButton>
+                    </Box>
+                  </>
+                ) : (
+                  <Box className={classes.actionButton}>
+                    <Participants detail={tournament} />
+                  </Box>
+                )}
+              </>
             )}
           </>
         )}
@@ -102,7 +125,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: theme.spacing(2),
   },
   actionButton: {
     width: theme.spacing(20),
