@@ -26,7 +26,8 @@
       "@store/*": ["./src/store/*"],
       "@theme/*": ["./src/theme/*"],
       "@utils/*": ["./src/utils/*"],
-      "@layouts/*": ["./src/layouts/*"]
+      "@layouts/*": ["./src/layouts/*"],
+      "@locales/*": ["./src/locales/*"]
     },
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
