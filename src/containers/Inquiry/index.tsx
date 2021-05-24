@@ -30,7 +30,7 @@ const ESInquiry: React.FC = () => {
     content: Yup.string().required().max(1000, t('common.too_long')),
   })
 
-  const formik = useFormik<InquiryParams>({
+  const { handleChange, values, handleSubmit, errors, resetForm, touched } = useFormik<InquiryParams>({
     initialValues: {
       content: '',
       title: '',
@@ -44,7 +44,7 @@ const ESInquiry: React.FC = () => {
 
   useEffect(() => {
     if (meta.loaded) {
-      formik.resetForm()
+      resetForm()
       router.back()
     }
   }, [meta.loaded])
@@ -53,19 +53,20 @@ const ESInquiry: React.FC = () => {
     <div>
       <HeaderWithButton title={t('service_info.inquiry')} />
       <Box display="flex" justifyContent="center">
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Box mt={2} width={494}>
             <Input
               id="title"
               name="title"
-              value={formik.values.title}
+              value={values.title}
               fullWidth
               size="big"
-              onChange={formik.handleChange}
+              onChange={handleChange}
               labelPrimary={t('inquiry.subject')}
               placeholder=""
               required
-              error={!!formik.errors.title}
+              helperText={touched.title && errors.title}
+              error={touched.title && !!errors.title}
             />
           </Box>
 
@@ -73,13 +74,14 @@ const ESInquiry: React.FC = () => {
             <Input
               id="content"
               name="content"
-              value={formik.values.content}
-              onChange={formik.handleChange}
+              value={values.content}
+              onChange={handleChange}
               labelPrimary={t('inquiry.desc')}
               placeholder={t('inquiry.desc_placeholder')}
               required
               fullWidth
-              error={!!formik.errors.content}
+              helperText={touched.content && errors.content}
+              error={touched.content && !!errors.content}
               multiline
               rows={8}
             />
@@ -88,12 +90,13 @@ const ESInquiry: React.FC = () => {
             <Input
               id="email"
               name="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
+              value={values.email}
+              onChange={handleChange}
               labelPrimary={t('inquiry.email')}
               required
               fullWidth
-              error={!!formik.errors.email}
+              helperText={touched.email && errors.email}
+              error={touched.email && !!errors.email}
               rows={8}
             />
           </Box>
