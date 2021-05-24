@@ -9,6 +9,12 @@ type RectResult = {
   width: number
 }
 
+export interface ResizeObserver {
+  observe(target: Element): void
+  unobserve(target: Element): void
+  disconnect(): void
+}
+
 export const useRect = (ref: React.RefObject<any>): RectResult => {
   const [rect, setRect] = useState(getRect(ref ? ref.current : null))
 
