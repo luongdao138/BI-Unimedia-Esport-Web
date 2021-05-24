@@ -469,6 +469,35 @@
   width: 100%;
 }
 
+.list-container {
+  height: 100%;
+  width: 100%;
+  display: flex !important;
+  margin-right: 8px !important;
+  flex: 1 1 0%;
+  min-height: 0;
+  scrollbar-color: #222 transparent;
+  scrollbar-width: thin;
+}
+
+.list-container > div {
+  height: 100%;
+  margin-top: auto !important;
+  flex: 1 1 auto;
+}
+.list-container::-webkit-scrollbar {
+  width: 6px;
+  padding: 2px;
+  padding-right: 2px;
+}
+.list-container::-webkit-scrollbar-track {
+  padding-left: 1px;
+}
+.list-container::-webkit-scrollbar-thumb {
+  background-color: #222;
+  border-radius: 6px;
+}
+
 @media (max-width: 1200px) {
   .aside-left {
     width: 200px;
