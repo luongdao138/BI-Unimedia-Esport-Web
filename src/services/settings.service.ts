@@ -172,8 +172,9 @@ export const updateNotificationSettings = async (params: NotificationSettingsPar
 }
 
 export type InquiryParams = {
-  description: string
+  content: string
   title: string
+  email: string
 }
 
 export type InquiryResponse = {

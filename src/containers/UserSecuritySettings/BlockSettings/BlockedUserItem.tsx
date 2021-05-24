@@ -16,7 +16,7 @@ const BlockedUserItem: React.FC<Props> = ({ data }) => {
   return (
     <div>
       <Box margin={2} display="flex" justifyContent="space-between">
-        <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
+        <Box display="flex" overflow="hidden" className={classes.wrap}>
           <ESAvatar alt={user.nickname} src={user.avatar} />
           <Box overflow="hidden" textOverflow="ellipsis" ml={1} display="flex" flexDirection="column" justifyContent="center" width="100%">
             <Typography noWrap style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 14 }}>
@@ -34,7 +34,7 @@ const BlockedUserItem: React.FC<Props> = ({ data }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  notificationWrap: {
+  wrap: {
     width: '100%',
     padding: theme.spacing(2),
     background: Colors.black_opacity[80],
