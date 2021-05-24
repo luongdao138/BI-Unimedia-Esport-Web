@@ -1,16 +1,32 @@
-import { makeStyles, Theme, Box, Typography, IconButton, Icon } from '@material-ui/core'
+import ButtonPrimary from '@components/ButtonPrimary'
+import { makeStyles, Theme, Box, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
+import { SNS } from '@constants/common.constants'
 
 export interface SettingsItemProps {
   title?: string
   disabled?: boolean
   value: string
   invisible?: boolean
-  url?: string
+  route?: string
+  onChangeEmail?: () => void
+  onChangePassword?: () => void
+  password?: boolean
 }
 
-const SettingsItem: React.FC<SettingsItemProps> = ({ title, disabled, value, invisible, url }) => {
+const SettingsItem: React.FC<SettingsItemProps> = ({
+  title,
+  disabled,
+  value,
+  invisible,
+  route,
+  onChangeEmail,
+  onChangePassword,
+  password,
+}) => {
   const classes = useStyles()
+  const { t } = useTranslation('common')
 
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
@@ -21,11 +37,34 @@ const SettingsItem: React.FC<SettingsItemProps> = ({ title, disabled, value, inv
           </Typography>
         </Box>
         <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '*************' : value}</Typography>
-        {url && (
-          <IconButton className={classes.iconButton} disableRipple size="small">
-            <Icon className={`fas fa-edit ${classes.icon}`} />
-          </IconButton>
-        )}
+        {route &&
+          (password ? (
+            <Box className={classes.buttonWrap}>
+              <ButtonPrimary
+                round
+                gradient={false}
+                size="small"
+                disabled={route === SNS ? true : false}
+                onClick={onChangeEmail}
+                className={classes.button}
+              >
+                {t('common.change')}
+              </ButtonPrimary>
+            </Box>
+          ) : (
+            <Box className={classes.buttonWrap}>
+              <ButtonPrimary
+                round
+                gradient={false}
+                size="small"
+                disabled={route === SNS ? true : false}
+                onClick={onChangePassword}
+                className={classes.button}
+              >
+                {t('common.change')}
+              </ButtonPrimary>
+            </Box>
+          ))}
       </Box>
     </Box>
   )
@@ -60,15 +99,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   disabled: {
     color: Colors.white_opacity['30'],
   },
-  iconButton: {
+  buttonWrap: {
     position: 'absolute',
-    right: 10,
+    right: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     top: '50%',
     transform: 'translateY(-50%)',
   },
-  icon: {
-    fontSize: 14,
-    color: Colors.white_opacity['70'],
+  button: {
+    '&.MuiButtonBase-root.button-primary': {
+      padding: 11,
+      height: 36,
+    },
   },
 }))
 
