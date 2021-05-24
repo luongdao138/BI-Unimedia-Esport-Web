@@ -278,12 +278,31 @@ export class DropdownDate extends React.Component<IProps, IState> {
   handleDateChange = (type: DropdownComponent, value: number) => {
     if (this.props.onDateChange) {
       let { selectedYear, selectedMonth, selectedDay } = this.state
+      const { endYear, endMonth, endDay } = this.state
+
       if (type === DropdownComponent.year) {
         selectedYear = value
       } else if (type === DropdownComponent.month) {
         selectedMonth = value
       } else if (type === DropdownComponent.day) {
         selectedDay = value
+      }
+
+      if (selectedYear === endYear) {
+        if (selectedMonth > endMonth) {
+          selectedMonth = endMonth
+        } else if (selectedMonth === endMonth && selectedDay > endDay) {
+          selectedDay = 1
+        }
+      }
+
+      let _daysInMonth = daysInMonth[selectedMonth]
+      if (selectedYear % 4 === 0 && selectedMonth === 1) {
+        _daysInMonth++
+      }
+
+      if (selectedDay > _daysInMonth) {
+        selectedDay = 1
       }
 
       if (selectedYear !== -1 && selectedMonth !== -1 && selectedDay !== -1) {
