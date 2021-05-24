@@ -63,7 +63,7 @@ export const getRecruitingTournaments = createAsyncThunk<services.RecruitingTour
   }
 )
 
-export const getTournamentDetail = createAsyncThunk<services.TournamentDetailResponse, string>(
+export const getTournamentDetail = createAsyncThunk<services.TournamentDetailResponse, string | string[]>(
   types.GET_TOURNAMENT_DETAIL,
   async (param, { rejectWithValue }) => {
     try {
@@ -182,6 +182,21 @@ export const setParticipant = createAsyncThunk<void, services.SetParticipantPara
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.setParticipant(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getArenaWinners = createAsyncThunk<services.GetArenaWinnersResponse, string | string[]>(
+  types.SET_TOURNAMENT_PARTICIPANT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getArenaWinners(param)
       return res
     } catch (error) {
       if (!error.response) {

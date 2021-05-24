@@ -10,6 +10,7 @@ import {
   SuggestedTeamMembersResponse,
   TournamentMatchResponse,
   RecruitingResponse,
+  ArenaWinners,
 } from '@services/tournament.service'
 
 type StateType = {
@@ -26,6 +27,7 @@ type StateType = {
   interestedsMeta?: Meta
   tournamentMatches: TournamentMatchResponse
   recruitingTournaments: Array<RecruitingResponse>
+  arenaWinners: ArenaWinners
 }
 
 const initialState: StateType = {
@@ -36,6 +38,7 @@ const initialState: StateType = {
   suggestedTeamMembers: [],
   tournamentInteresteds: [],
   tournamentMatches: { matches: [], third_place_match: [] },
+  arenaWinners: {},
   recruitingTournaments: [],
 }
 
@@ -97,5 +100,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
     state.recruitingTournaments = action.payload.data
+  })
+  builder.addCase(actions.getArenaWinners.fulfilled, (state, action) => {
+    state.arenaWinners = action.payload.matches
   })
 })

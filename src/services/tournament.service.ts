@@ -214,6 +214,28 @@ export type SetParticipantParams = {
   type: string
 }
 
+export type PlacementItem = {
+  id: number
+  user_id: number
+  position: number
+  name: string
+  avatar: null | string
+  team?: {
+    name: string
+  }
+  user?: {
+    id: number
+    nickname: string
+    user_code: string
+    bio: null | string
+  }
+}
+export type ArenaWinners = Record<string, PlacementItem[]>
+
+export type GetArenaWinnersResponse = {
+  matches: ArenaWinners
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -234,7 +256,7 @@ export const getRecruitingTournaments = async (): Promise<RecruitingTournamentRe
   return data
 }
 
-export const getTournamentDetail = async (hash_key: string): Promise<TournamentDetailResponse> => {
+export const getTournamentDetail = async (hash_key: string | string[]): Promise<TournamentDetailResponse> => {
   const { data } = await api.get<TournamentDetailResponse>(`/web/v2/tournaments/${hash_key}/details`)
   return data
 }
@@ -276,5 +298,10 @@ export const getTournamentMatches = async (hash_key: string): Promise<Tournament
 
 export const setParticipant = async (params: SetParticipantParams): Promise<void> => {
   const { data } = await api.put<void>(URI.TOURNAMENTS_SET_PARTICIPANT.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
+export const getArenaWinners = async (params: string | string[]): Promise<GetArenaWinnersResponse> => {
+  const { data } = await api.get<GetWinnersResponse>(URI.TOURNAMENTS_WINNERS.replace(/:id/gi, String(params)))
   return data
 }

@@ -22,6 +22,7 @@ export const Colors = {
   black: '#000000',
   white: '#ffffff',
   white_opacity: {
+    '10': 'rgba(255,255,255,.1)',
     '15': 'rgba(255,255,255,.15)',
     '30': 'rgba(255,255,255,.3)',
     '70': 'rgba(255,255,255,.7)',
