@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, Button } from '@material-ui/core'
+import { Box, Typography, Button, Grid, DialogContent } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
 import useFollowers from './useFollowers'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
-import DialogContent from '@material-ui/core/DialogContent'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { FixedSizeList as List } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
 
 export interface ESFollowersProps {
   user_code?: string
@@ -21,7 +21,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
   const [open, setOpen] = useState(false)
 
   const { t } = useTranslation(['common'])
-  const { clearFollowers, followers, fetchFollowers, page } = useFollowers()
+  const { clearFollowers, followers, fetchFollowers, page, meta } = useFollowers()
   const hasNextPage = page && page.current_page !== page.total_pages
 
   useEffect(() => {
@@ -41,6 +41,18 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
     }
   }
 
+  const Row = (props: { index: number; style: React.CSSProperties; data: any }) => {
+    const { index, style, data } = props
+    const user = data[index]
+    return (
+      <div style={style} key={index}>
+        <UserListItem data={user} isFollowed={user.attributes.is_following} handleClose={() => setOpen(false)} />
+      </div>
+    )
+  }
+
+  const itemCount = hasNextPage ? followers.length + 1 : followers.length
+
   return (
     <div>
       <Button onClick={() => setOpen(true)}>
@@ -53,27 +65,33 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
         </Box>
       </Button>
       <ESDialog open={open} title={t('common:followers.title')} handleClose={() => setOpen(false)}>
-        <DialogContent>
-          <InfiniteScroll
-            dataLength={followers.length}
-            next={loadMore}
-            hasMore={hasNextPage}
-            loader={
-              <div className={classes.loaderCenter}>
+        <DialogContent className={'scroll-bar'}>
+          <InfiniteLoader isItemLoaded={(index: number) => index < followers.length} itemCount={itemCount} loadMoreItems={loadMore}>
+            {({ onItemsRendered, ref }) => (
+              <List
+                height={800}
+                width={'100%'}
+                itemCount={followers.length}
+                itemData={followers}
+                itemSize={66}
+                onItemsRendered={onItemsRendered}
+                ref={ref}
+              >
+                {Row}
+              </List>
+            )}
+          </InfiniteLoader>
+          {meta.pending ? (
+            <Grid item xs={12}>
+              <Box my={4} display="flex" justifyContent="center" alignItems="center">
                 <ESLoader />
-              </div>
-            }
-            height={600}
-            endMessage={
-              <p style={{ textAlign: 'center' }}>
-                <b>{t('common:infinite_scroll.message')}</b>
-              </p>
-            }
-          >
-            {followers.map((user, i) => (
-              <UserListItem data={user} key={i} isFollowed={user.attributes.is_following} handleClose={() => setOpen(false)} />
-            ))}
-          </InfiniteScroll>
+              </Box>
+            </Grid>
+          ) : !hasNextPage ? (
+            <p style={{ textAlign: 'center' }}>
+              <b>{t('common:infinite_scroll.message')}</b>
+            </p>
+          ) : null}
         </DialogContent>
       </ESDialog>
     </div>

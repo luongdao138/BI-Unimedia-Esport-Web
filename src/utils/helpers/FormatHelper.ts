@@ -9,7 +9,7 @@ const kFormatter = (inputNum: number): number | string => {
   */
   const numAbs = Math.abs(inputNum)
   const toFixedNum = 1
-  let result
+  let result: string | number
 
   if (numAbs > 999999) {
     const million = 1000000
