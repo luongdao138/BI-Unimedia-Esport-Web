@@ -8,7 +8,9 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
-import NOTIFICATION_TYPE_SYSTEM from '@store/notification/actions/types'
+import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
+import * as notificationActions from '@store/notification/actions'
+import { useAppDispatch } from '@store/hooks'
 
 const useStyles = makeStyles((theme) => ({
   loaderCenter: {
@@ -54,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const [hasMore, setHasMore] = useState(true)
   const { notifications, fetchNotifications, page } = useNotificationList()
@@ -63,7 +66,7 @@ const NotificationContainer: React.FC = () => {
       setHasMore(false)
       return
     }
-    fetchNotifications({ page: page.current_page + 1 })
+    fetchNotifications({ page: Number(page.current_page) + Number(1) })
   }
 
   useEffect(() => {
@@ -103,8 +106,21 @@ const NotificationContainer: React.FC = () => {
             xs={12}
             key={i}
             onClick={() => {
-              if (notification.attributes.ntype_id == NOTIFICATION_TYPE_SYSTEM) {
-                router.push(`/notifications/${notification.id}`)
+              if (notification.attributes) {
+                switch (notification.attributes.ntype_id) {
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
+                    dispatch(notificationActions.getNotificationDetail({ id: notification.id }))
+                    router.push(`/profile/${notification.attributes.user_code}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
+                    router.push(`/notifications/${notification.id}`)
+                    break
+                  }
+                  default: {
+                    break
+                  }
+                }
               }
             }}
           >

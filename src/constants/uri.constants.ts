@@ -46,6 +46,8 @@ export const URI = {
   NOTIFICATION_LIST: '/v2/notification/own',
   NOTIFICATION_BADGE: '/v2/notification/badge',
   NOTIFICATION_DETAIL: '/v2/notification/detail',
+  NOTIFICATION_SETTINGS: '/v2/notification/settings',
+  NOTIFICATION_UPDATE_SETTINGS: '/v2/notification/settings_update',
   S3_PRESIGNED_URL: '/v2/s3/presigned_url',
   LOGOUT: '/v2/auth/logout',
   USER_RECOMMENDED_EVENT: '/v2/users/recommended_events',

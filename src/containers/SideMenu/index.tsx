@@ -118,7 +118,7 @@ const SideMenu: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const isSelected = (routeName: string): boolean => {
-    return router.pathname === routeName
+    return router.pathname && router.pathname.startsWith(routeName)
   }
 
   const handleModal = (contentType: string) => {

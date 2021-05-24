@@ -30,8 +30,8 @@ import { useContextualRouting } from 'next-use-contextual-routing'
 import React, { useEffect } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
-import { getNotificationBadge } from '@store/notification/actions'
-import { getNotificationBadge as selector } from '@store/notification/selectors'
+import * as notificationActions from '@store/notification/actions'
+import * as notificationSelector from '@store/notification/selectors'
 
 const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
@@ -119,7 +119,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const { handleReturn } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
   const dispatch = useAppDispatch()
-  const badge = useAppSelector(selector)
+  const badge = useAppSelector(notificationSelector.getNotificationBadge)
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -160,7 +160,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(getNotificationBadge())
+      dispatch(notificationActions.getNotificationBadge())
     }
   }, [isAuthenticated])
 
