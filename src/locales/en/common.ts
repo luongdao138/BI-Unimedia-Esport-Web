@@ -302,6 +302,10 @@ export default {
     message: 'メッセージの受信設定',
     block: 'ブロックしたユーザー',
   },
+  notification_settings: {
+    title: '通知設定',
+    settings_select_all: '一括設定',
+  },
   service_info: {
     title: 'サービス情報',
     enterprise_info: '企業情報（NTTe-Sports）',

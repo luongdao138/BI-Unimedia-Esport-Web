@@ -30,7 +30,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
   const follow = async () => {
     setLoading(true)
     try {
-      await services.follow({ user_code: data.user_code })
+      await services.follow({ user_code: user.user_code })
       if (mounted) {
         setFollowed(true)
         setLoading(false)
@@ -45,7 +45,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose }) => {
   const unfollow = async () => {
     setLoading(true)
     try {
-      await services.unfollow({ user_code: data.user_code })
+      await services.unfollow({ user_code: user.user_code })
       if (mounted) {
         setFollowed(false)
         setLoading(false)
