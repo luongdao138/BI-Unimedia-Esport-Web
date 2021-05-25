@@ -21,6 +21,9 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
       case 'recruiting':
         setTab(0)
         break
+      case 'recruitment_closed':
+        setTab(1)
+        break
       case 'ready_to_start':
         setTab(1)
         break
