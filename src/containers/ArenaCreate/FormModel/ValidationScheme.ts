@@ -54,12 +54,20 @@ export const getValidationScheme = (store: StoreType, data: TournamentCreatePara
         .matches(/single|battle_royale/, { excludeEmptyString: false }),
     }),
     stepThree: Yup.object({
-      start_date: Yup.date().required(i18n.t('common:common.required')).min(new Date(), i18n.t('common:common.validation.min_date')),
-      end_date: Yup.date().required(i18n.t('common:common.required')).min(new Date(), i18n.t('common:common.validation.min_date')),
+      start_date: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.required'))
+        .min(new Date(), i18n.t('common:common.validation.min_date')),
+      end_date: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.required'))
+        .min(new Date(), i18n.t('common:common.validation.min_date')),
       acceptance_start_date: Yup.date()
+        .nullable()
         .required(i18n.t('common:common.required'))
         .min(recruitMinDate, i18n.t('common:common.validation.min_date')),
       acceptance_end_date: Yup.date()
+        .nullable()
         .required(i18n.t('common:common.required'))
         .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
       recruit_date: Yup.string().when(['acceptance_start_date'], {
