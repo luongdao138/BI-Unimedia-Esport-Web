@@ -163,7 +163,6 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               value={formik.values.user_email}
               onChange={formik.handleChange}
               labelPrimary={t('user_report.reporter_email')}
-              placeholder={t('user_report.reporter_email_placeholder')}
               fullWidth
               required
               helperText={formik.touched.user_email && formik.errors.user_email}
