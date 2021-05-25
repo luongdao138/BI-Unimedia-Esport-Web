@@ -83,7 +83,8 @@ const formatDate = (date: string): string => {
 const getRemainingDate = (date: string): number => {
   const endDate = moment(moment(date).format('YYYY-MM-DD'))
   const nowDate = moment()
-  return endDate.diff(nowDate, 'days')
+  const days = endDate.diff(nowDate, 'days')
+  return days < 0 ? 0 : days
 }
 
 const checkTarget = (targetIds: Array<number>, target: number): boolean => {
