@@ -8,10 +8,13 @@ import TextMessage from '@components/Chat/elements/TextMessage'
 import PhotoMessage from '@components/Chat/elements/PhotoMessage'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { Colors } from '@theme/colors'
+import Loader from '@components/Loader'
 
 export interface MessageListProps {
   messages: MessageType[]
   users: ChatRoomMemberItem[]
+  onFetchMore?: () => void
+  paginating?: boolean
 }
 
 const cache = new CellMeasurerCache({
@@ -22,9 +25,10 @@ const cache = new CellMeasurerCache({
 const contentRef = React.createRef<HTMLDivElement>()
 
 const MessageList: React.FC<MessageListProps> = (props) => {
-  const { messages, users } = props
+  const { messages, users, onFetchMore, paginating } = props
   const [showScroll, setShowScroll] = useState(false)
   const [isBottom, setBottom] = useState<boolean>(true)
+  const [scrolling, setScrolling] = useState<number>(0)
   const messagesEndRef = useRef<any>(null)
   const contentRect = useRect(contentRef)
   const classes = useStyles()
@@ -34,9 +38,17 @@ const MessageList: React.FC<MessageListProps> = (props) => {
     setTimeout(() => {
       if (isBottom) {
         _scrollToBottom(messages.length)
+      } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
+        messagesEndRef.current.scrollToRow(9)
       }
     }, 10)
   }, [messages])
+
+  useEffect(() => {
+    if (scrolling > 1) {
+      onFetchMore && onFetchMore()
+    }
+  }, [scrolling])
 
   useEffect(() => {
     cache.clearAll()
@@ -57,6 +69,7 @@ const MessageList: React.FC<MessageListProps> = (props) => {
     const bottomThreshold = 1
     if (e.scrollTop <= 0) {
       // handle this later
+      setScrolling(scrolling + 1)
     }
     if (offset < bottomThreshold) {
       setBottom(true)
@@ -77,7 +90,18 @@ const MessageList: React.FC<MessageListProps> = (props) => {
       <CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
         {({ measure }) => (
           <div key={index} onLoad={measure} style={style}>
-            <Box style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: item.sent ? '#555' : '#212121', display: 'block' }}>
+            <Box
+              style={{
+                padding: 10,
+                marginBottom: 5,
+                minHeight: 80,
+                justifyContent: 'center',
+                alignItems: 'center',
+                maxWidth: 'auto',
+                background: item.sent ? '#555' : '#212121',
+                display: 'block',
+              }}
+            >
               {item.type === CHAT_MESSAGE_TYPE.IMAGE ? (
                 <PhotoMessage currentMessage={item.msg} />
               ) : (
@@ -88,6 +112,17 @@ const MessageList: React.FC<MessageListProps> = (props) => {
         )}
       </CellMeasurer>
     )
+  }
+
+  const renderLoader = () => {
+    if (paginating === true) {
+      return (
+        <Box className={classes.loaderBox}>
+          <Loader />
+        </Box>
+      )
+    }
+    return null
   }
 
   return (
@@ -102,6 +137,8 @@ const MessageList: React.FC<MessageListProps> = (props) => {
       >
         <Icon className={`${classes.icon} fa fa-angle-down`} />
       </IconButton>
+      {renderLoader()}
+
       <AutoSizer style={{ flex: 1 }}>
         {({ height, width }) => (
           <List
@@ -136,7 +173,19 @@ const useStyles = makeStyles(() => ({
       background: Colors.white,
     },
   },
-
+  loaderBox: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    zIndex: 100,
+    left: 0,
+    right: 0,
+    top: 10,
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+    },
+  },
   icon: {
     color: Colors.grey[200],
   },
