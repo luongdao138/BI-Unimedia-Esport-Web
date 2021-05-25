@@ -37,7 +37,7 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.PURCHASE_HISTORY)
           }}
         >
           <SettingsRowItem key="purchase_history" title={t('settings.purchase_history')} showSwitch={false} />
