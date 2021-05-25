@@ -332,6 +332,14 @@ export default {
     desc: '本文',
     desc_placeholder: 'お問い合わせ内容を入力してください',
     send: '送信する',
+    next: '決定',
+    go_home: 'ホームへ戻る',
+    success_message: `お問い合わせを受け付けました。
+    順番に回答させていただいておりますのでお待ちいただけますようお願いいたします。`,
+    go_edit: '内容を変更する',
+    error: {
+      email: 'お問い合わせにはメールアドレスの登録が必須となります。',
+    },
   },
   settings: {
     title: '設定',

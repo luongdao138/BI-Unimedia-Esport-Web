@@ -142,7 +142,8 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               placeholder={t('user_report.reason_desc')}
               fullWidth
               required
-              error={!!formik.errors.description}
+              helperText={formik.touched.description && formik.errors.description}
+              error={formik.touched.description && !!formik.errors.description}
               multiline
               rows={4}
             />
@@ -156,7 +157,8 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               placeholder={t('user_report.reporter_email_placeholder')}
               fullWidth
               required
-              error={!!formik.errors.user_email}
+              helperText={formik.touched.user_email && formik.errors.user_email}
+              error={formik.touched.user_email && !!formik.errors.user_email}
             />
             <Box mt={1}></Box>
           </DialogContent>
