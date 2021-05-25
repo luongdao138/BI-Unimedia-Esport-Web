@@ -69,9 +69,9 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {!isRecruitmentClosed && (
+      {isRecruiting && (
         <>
-          {isModerator && isRecruiting && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
+          {isModerator && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
           {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
           {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
         </>
