@@ -11,10 +11,11 @@ interface ArenaAvatarProps {
   nameClass?: string
   nameWhite?: boolean
   win?: boolean
+  size?: 'small' | 'large'
 }
 
-const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, nameWhite, win }) => {
-  const classes = useStyles({ leaf, win })
+const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, nameWhite, win, size }) => {
+  const classes = useStyles({ leaf, win, size })
   return (
     <div className={classes.root}>
       {win && leaf && (
@@ -24,7 +25,7 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
       )}
       {win && !leaf && <Typography className={classes.winText}>WIN</Typography>}
       <div className={`${classes.avatarWrapper} ${win && classes.win}`}>
-        <Avatar src={src} size={120} />
+        <Avatar src={src} size={size === 'large' ? 120 : 80} alt={name} />
       </div>
       <div className={classes.nameWrapper}>
         <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`}>{name}</Typography>
@@ -38,6 +39,7 @@ ArenaAvatar.defaultProps = {
   leaf: false,
   nameWhite: false,
   win: false,
+  size: 'large',
 }
 
 export default ArenaAvatar
@@ -46,32 +48,44 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
+    paddingBottom: 56,
   },
-  avatarWrapper: (props: { win?: boolean; leaf?: boolean }) => ({
+  avatarWrapper: (props: { win?: boolean; leaf?: boolean; size?: string }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 6,
-    background: props.win && 'url(/images/winnerAvatar.svg)',
+    padding: props.size === 'large' ? 6 : 4,
+    background: props.win && (props.size === 'large' ? 'url(/images/winnerAvatar.svg)' : 'url(/images/winnerAvatarSmall.svg)'),
     backgroundRepeat: 'no-repeat',
   }),
-  win: (props: { win?: boolean; leaf?: boolean }) => ({
-    '&:after': {
-      content: "''",
-      position: 'absolute',
-      background: 'url(/images/leaf.svg)',
-      backgroundRepeat: 'no-repeat',
-      height: 95,
-      width: 220,
-      top: 45,
-      left: -47,
-      display: props.leaf ? 'block' : 'none',
-    },
-  }),
+  win: (props: { win?: boolean; leaf?: boolean; size?: string }) => {
+    const size = { w: 162, h: 72 }
+    const largeSize = { w: size.w * 1.5, h: size.h * 1.5 }
+
+    return {
+      '&:after': {
+        content: "''",
+        position: 'absolute',
+        background: 'url(/images/leaf.svg)',
+        backgroundRepeat: 'no-repeat',
+        height: props.size === 'large' ? largeSize.h : size.h,
+        width: props.size === 'large' ? largeSize.w : size.w,
+        top: props.size === 'large' ? 40 : 28,
+        display: props.leaf ? 'block' : 'none',
+        backgroundSize: props.size === 'large' ? `${largeSize.w}px ${largeSize.h}px` : `${size.w}px ${size.h}px`,
+        left: '50%',
+        transform: 'translate(-50%,0%)',
+      },
+    }
+  },
   nameWrapper: {
+    position: 'absolute',
     textAlign: 'center',
+    left: '50%',
     paddingTop: theme.spacing(1),
+    transform: 'translate(-50%,0%)',
+    bottom: 0,
   },
   name: {
     fontSize: 16,
@@ -95,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     '& span': {
-      fontSize: 22,
+      fontSize: '0.8em',
       marginLeft: -4,
     },
   },

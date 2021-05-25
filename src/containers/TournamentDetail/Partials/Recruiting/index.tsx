@@ -16,6 +16,9 @@ const Recruiting: React.FC<RecruitingProps> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { tournament } = props
+  const isTeam = tournament.attributes.participant_type > 1
+  const unit = isTeam ? t('common:common.team') : t('common:common.man')
+  const entryMembersCount = tournament.attributes.interested_count + tournament.attributes.participant_count
 
   return (
     <ActionComponent {...props}>
@@ -31,12 +34,10 @@ const Recruiting: React.FC<RecruitingProps> = (props) => {
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
           <Typography className={classes.entryMembersInfoText}>{t('common:tournament.number_of_entries')}</Typography>
           <Box mr={2} />
-          <Typography className={classes.highlightedNumber}>
-            {tournament.attributes.is_freezed ? tournament.attributes.participant_count : tournament.attributes.interested_count}
-          </Typography>
-          <Typography>{`${t('common:common.man')} / `}</Typography>
+          <Typography className={classes.highlightedNumber}>{entryMembersCount}</Typography>
+          <Typography>{`${unit} /`}&nbsp;</Typography>
           <Typography className={classes.highlightedNumber}>{tournament.attributes.max_participants}</Typography>
-          <Typography>{t('common:common.man')}</Typography>
+          <Typography>{unit}</Typography>
         </Box>
       </Box>
     </ActionComponent>

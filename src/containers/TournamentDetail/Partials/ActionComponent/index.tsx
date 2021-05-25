@@ -39,7 +39,7 @@ const ActionComponent: React.FC<Props> = (props) => {
 
     const arenaStatus = isRecruiting
       ? t('common:tournament.entry_period')
-      : isRecruitmentClosed || isInProgress
+      : isRecruitmentClosed || isInProgress || isCompleted
       ? t('common:tournament.holding_period')
       : ''
 

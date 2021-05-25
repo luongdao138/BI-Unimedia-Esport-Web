@@ -103,6 +103,7 @@ export default {
     no_data: '対象データありません',
     dash: '-',
     cancel: 'キャンセル',
+    team: 'チーム',
   },
   home: {
     exelab: 'eXe LAB事務局',
