@@ -6,6 +6,10 @@ const ArenaMatchesPage: PageWithLayoutType = () => {
   return <ArenaMatches />
 }
 
+PlainLayout.defaultProps = {
+  noFooter: true,
+}
+
 ArenaMatchesPage.Layout = PlainLayout
 
 export default ArenaMatchesPage
