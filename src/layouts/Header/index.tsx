@@ -178,7 +178,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 <div className="hamburger-inner"></div>
               </div>
             </div>
-            <Link href="/">
+            <Link href={isAuthenticated ? '/home' : '/'}>
               <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
             </Link>
             <div className={classes.search + ' search-area'}>
