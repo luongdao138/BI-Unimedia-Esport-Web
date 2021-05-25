@@ -26,14 +26,14 @@ const ESInquiry: React.FC = () => {
   const classes = useStyles()
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required().max(100, t('common.too_long')),
+    title: Yup.string().required(t('common.required')).max(100, t('common.too_long')),
     email: Yup.string()
       .test('email-validation', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
       .max(100, t('common.too_long'))
       .required(t('inquiry.error.email')),
-    content: Yup.string().required().max(1000, t('common.too_long')),
+    content: Yup.string().required(t('common.required')).max(1000, t('common.too_long')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched } = useFormik<InquiryParams>({
@@ -43,8 +43,8 @@ const ESInquiry: React.FC = () => {
       email: '',
     },
     validationSchema,
-    onSubmit(values) {
-      createInquiry(values)
+    onSubmit() {
+      setShowPreview(true)
     },
   })
 
@@ -129,18 +129,18 @@ const ESInquiry: React.FC = () => {
 
             <Box mt={3} display="flex" justifyContent="center">
               {showPreview ? (
-                <ButtonPrimary round type="submit" disabled={meta.pending}>
-                  {t('inquiry.send')}
-                </ButtonPrimary>
-              ) : (
                 <ButtonPrimary
                   round
                   onClick={(e) => {
                     e.preventDefault()
-                    setShowPreview(!showPreview)
+                    createInquiry(values)
                   }}
                 >
                   {t('inquiry.next')}
+                </ButtonPrimary>
+              ) : (
+                <ButtonPrimary round type="submit" disabled={meta.pending}>
+                  {t('inquiry.send')}
                 </ButtonPrimary>
               )}
             </Box>
