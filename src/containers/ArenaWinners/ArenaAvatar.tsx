@@ -28,7 +28,7 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
         <Avatar src={src} size={size === 'large' ? 120 : 80} alt={name} />
       </div>
       <div className={classes.nameWrapper}>
-        <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`}>{'aosjdoasjdoajsdojad'}</Typography>
+        <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`}>{name}</Typography>
         {user_code && <Typography>{user_code}</Typography>}
       </div>
     </div>
