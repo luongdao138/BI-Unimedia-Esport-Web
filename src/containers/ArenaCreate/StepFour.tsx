@@ -1,66 +1,20 @@
-import { useEffect } from 'react'
 import { makeStyles, Typography, Box } from '@material-ui/core'
 import ESInput from '@components/Input'
 import { useTranslation } from 'react-i18next'
-import * as Yup from 'yup'
-import { useFormik } from 'formik'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useStore } from 'react-redux'
-import { TournamentCreateParams, RecommendedUsers } from '@services/tournament.service'
+import { FormikProps } from 'formik'
 import CoOrganizersDialog from './Partials/CoOrganizersDialog'
 import { Colors } from '@theme/colors'
 import { UserLoginResponse } from '@services/auth.service'
-
-type FormProps = {
-  owner_id: number
-  co_organizers: RecommendedUsers[]
-  organizer_name: string
-}
+import { FormType } from './FormModel/FormType'
 
 type Props = {
-  data: TournamentCreateParams
-  saveState: (data: FormProps) => void
+  formik: FormikProps<FormType>
   user: UserLoginResponse
-  handleError: (error) => void
 }
 
-const StepFour: React.FC<Props> = ({ data, saveState, user, handleError }) => {
+const StepFour: React.FC<Props> = ({ formik, user }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const store = useStore()
-  const validationSchema = Yup.object().shape({
-    organizer_name: Yup.string()
-      .required(t('common:common.error'))
-      .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.at_least'))
-      .test('user_code', 'match_ng_word', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
-  })
-
-  const { handleChange, values, errors, touched, setFieldValue, validateForm } = useFormik<FormProps>({
-    initialValues: {
-      owner_id: data.owner_id,
-      co_organizers: data.co_organizers,
-      organizer_name: data.organizer_name,
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      saveState(values)
-    },
-  })
-
-  useEffect(() => {
-    validateForm()
-  }, [])
-
-  useEffect(() => {
-    saveState(values)
-  }, [values])
-
-  useEffect(() => {
-    handleError(errors)
-  }, [errors])
 
   return (
     <Box pb={9}>
@@ -72,22 +26,20 @@ const StepFour: React.FC<Props> = ({ data, saveState, user, handleError }) => {
       </Box>
       <Box pb={4}>
         <CoOrganizersDialog
-          values={values.co_organizers}
-          onChange={(value) => {
-            setFieldValue('co_organizers', value)
-          }}
+          values={formik.values.stepFour.co_organizers}
+          onChange={(value) => formik.setFieldValue('stepFour.co_organizers', value)}
         />
       </Box>
       <Box pb={4}>
         <ESInput
           id="organizer_name"
-          name="organizer_name"
+          name="stepFour.organizer_name"
           labelPrimary={t('common:tournament_create.organizer_name')}
           fullWidth
-          value={values.organizer_name}
-          onChange={handleChange}
-          helperText={touched.organizer_name && errors.organizer_name}
-          error={touched.organizer_name && !!errors.organizer_name}
+          value={formik.values.stepFour.organizer_name}
+          onChange={formik.handleChange}
+          helperText={formik.touched?.stepFour?.organizer_name && formik.errors?.stepFour?.organizer_name}
+          error={formik.touched?.stepFour?.organizer_name && !!formik.errors?.stepFour?.organizer_name}
           size="small"
         />
       </Box>

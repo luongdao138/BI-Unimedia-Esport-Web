@@ -62,7 +62,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   return (
     <div>
       <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
-        {t('common:tournament.entry_members')}
+        {data.is_freezed ? t('common:tournament.participants') : t('common:tournament.entry_members')}
       </ESButton>
       <ESModal open={open} handleClose={handleClose}>
         <BlankLayout>

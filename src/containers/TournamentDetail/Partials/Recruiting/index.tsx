@@ -31,7 +31,9 @@ const Recruiting: React.FC<RecruitingProps> = (props) => {
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
           <Typography className={classes.entryMembersInfoText}>{t('common:tournament.number_of_entries')}</Typography>
           <Box mr={2} />
-          <Typography className={classes.highlightedNumber}>{tournament.attributes.participant_count}</Typography>
+          <Typography className={classes.highlightedNumber}>
+            {tournament.attributes.is_freezed ? tournament.attributes.participant_count : tournament.attributes.interested_count}
+          </Typography>
           <Typography>{`${t('common:common.man')} / `}</Typography>
           <Typography className={classes.highlightedNumber}>{tournament.attributes.max_participants}</Typography>
           <Typography>{t('common:common.man')}</Typography>

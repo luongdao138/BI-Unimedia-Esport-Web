@@ -27,4 +27,7 @@ export const ESRoutes = {
   NOTIFICATIONS: '/notifications',
   USER_SECURITY_SETTINGS: '/settings/user_security_settings',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
+  ARENA_MATCHES_EDIT: '/arena/:id/matches/edit',
+  ARENA_MATCHES: '/arena/:id/matches',
+  ARENA_RESULTS: '/arena/:id/placements',
 }
