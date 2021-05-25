@@ -75,3 +75,5 @@ export const CHAT_CONSTANTS = {
     SECONDARY: '#00000',
   },
 }
+
+export const SNS = 'sns'

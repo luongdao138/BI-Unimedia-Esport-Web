@@ -12,7 +12,7 @@ type StateType = {
 const initialState: StateType = { notifications: [], notificaitonBadge: undefined, notificaitonDetail: undefined }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.notifications.fulfilled, (state, action) => {
+  builder.addCase(actions.getNotifications.fulfilled, (state, action) => {
     let tmpNotifications = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       tmpNotifications = state.notifications.concat(action.payload.data)

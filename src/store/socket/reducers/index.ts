@@ -58,7 +58,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
         pending = [action.data]
       } else {
-        pending = _.concat(action.data, ...state.messages)
+        pending = _.concat([...state.messages], action.data)
       }
       return {
         ...state,

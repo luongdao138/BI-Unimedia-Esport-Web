@@ -16,7 +16,7 @@ const SettingsPage: PageWithLayoutType = () => {
       <Box>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
           }}
         >
           <SettingsRowItem key="account_settings" title={t('settings.account_settings')} showSwitch={false} />

@@ -12,7 +12,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
-import TextMessage from '@components/Chat/elements/TextMessage'
+import MessageList from '@components/Chat/MessageList'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -113,20 +113,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       <Box className={classes.header}>{roomId}</Box>
       <Box className={classes.list}>
         {renderLoader()}
-        <Box className={`${classes.content} scroll-bar`}>
-          {!_.isEmpty(data) &&
-            _.isArray(data) &&
-            data.map((value, index) => {
-              return (
-                <Box
-                  style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: value.sent ? '#555' : '#212121', display: 'block' }}
-                  key={index}
-                >
-                  <TextMessage members={users} text={value.msg} />
-                </Box>
-              )
-            })}
-        </Box>
+        {!_.isEmpty(data) && _.isArray(data) && <MessageList users={users} messages={data} />}
       </Box>
       <Box className={classes.input}>
         <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
