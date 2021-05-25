@@ -287,3 +287,18 @@ export const freezeTournament = createAsyncThunk<services.TournamentDetailRespon
     }
   }
 )
+
+export const summaryTournament = createAsyncThunk<void, services.SummaryParams>(
+  types.SUMMARY_TOURNAMENT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.summaryTournament(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

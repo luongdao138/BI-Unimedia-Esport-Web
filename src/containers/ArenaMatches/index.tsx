@@ -1,21 +1,26 @@
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Container, Box, IconButton, Toolbar, Typography, Theme } from '@material-ui/core'
+import ButtonPrimary from '@components/ButtonPrimary'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ScoreModal from '@containers/TournamentDetail/Partials/ScoreModal'
+import SummaryModal from '@containers/TournamentDetail/Partials/SummaryModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 
 const ArenaMatches: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { matches, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
+  const [showSummaryModal, setShowSummaryModal] = useState(false)
 
   const onMatchClick = (match) => {
     if (!match) return
@@ -43,6 +48,25 @@ const ArenaMatches: React.FC = () => {
       />
     )
   }
+
+  const actionButtons = () => {
+    // if (!data || !matches || !matchesMeta.loaded) return
+    // if (!data.memberSelectable) return
+    // const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
+    return (
+      <Box className={classes.stickyFooter}>
+        <Box className={classes.nextBtnHolder}>
+          <Box maxWidth={280} className={classes.buttonContainer}>
+            <ButtonPrimary type="submit" round fullWidth onClick={() => setShowSummaryModal(true)}>
+              {t('common:arena.freeze_button')}
+            </ButtonPrimary>
+          </Box>
+        </Box>
+        <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
+      </Box>
+    )
+  }
+
   return (
     <div className={classes.root}>
       {matches && tournament && (
@@ -101,6 +125,7 @@ const ArenaMatches: React.FC = () => {
               {scoreDialog()}
             </Container>
           </div>
+          {actionButtons()}
         </>
       )}
       <ESLoader open={meta.pending || matchesMeta.pending} />
@@ -110,7 +135,7 @@ const ArenaMatches: React.FC = () => {
 
 export default ArenaMatches
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -135,5 +160,22 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
+  },
+  stickyFooter: {
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.9)',
+  },
+  nextBtnHolder: {
+    display: 'flex',
+    marginBottom: theme.spacing(11),
+    marginTop: theme.spacing(3),
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    margin: '0 auto',
   },
 }))
