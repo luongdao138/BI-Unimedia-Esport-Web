@@ -1,5 +1,4 @@
 import useArenaWinners from './useArenaWinners'
-import MainLayout from '@layouts/MainLayout'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -16,62 +15,58 @@ const ArenaWinners: React.FC = () => {
   const [showSummary, setShowSummary] = useState(false)
 
   return (
-    <MainLayout footer={false} patternBg={false}>
-      <div className={classes.root}>
-        <div className={classes.coverWrapper}>
-          {arena?.attributes?.cover_image && <img src={arena?.attributes?.cover_image} className={classes.cover} />}
-        </div>
-        <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
-          {arenaWinners['1'] && (
-            <ArenaAvatar
-              src={arenaWinners['1'][0].avatar}
-              name={arenaWinners['1'][0].name}
-              user_code={arenaWinners['1'][0].user?.user_code}
-              win
-              leaf
-              nameWhite
-            />
-          )}
-        </div>
-        <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
-          <div className={classes.summarImageWrapper}>
-            {arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}
-          </div>
-          <Typography>{arena?.attributes?.summary || ''}</Typography>
-        </div>
-        <div className={classes.listContainer}>
-          {Object.keys(arenaWinners).map((key) =>
-            (arenaWinners[key] || []).map((p, idx) => (
-              <div className={classes.listItem} key={idx}>
-                <div className={classes.placementWrapper}>
-                  <p
-                    className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
-                      p.position === 3 && classes.third
-                    }`}
-                  >
-                    {p.position}
-                    {p.position === 1 && <span>st</span>}
-                    {p.position === 2 && <span>nd</span>}
-                    {p.position === 3 && <span>rd</span>}
-                  </p>
-                </div>
-                <Avatar src={p.avatar} />
-                <div className={classes.nameWrapper}>
-                  <Typography variant="h3" component="p">
-                    {p.name}
-                  </Typography>
-                  {p.user && (
-                    <Typography variant="body2" className={classes.user_code}>
-                      {p.user.user_code}
-                    </Typography>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+    <div className={classes.root}>
+      <div className={classes.coverWrapper}>
+        {arena?.attributes?.cover_image && <img src={arena?.attributes?.cover_image} className={classes.cover} />}
       </div>
-    </MainLayout>
+      <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
+        {arenaWinners['1'] && (
+          <ArenaAvatar
+            src={arenaWinners['1'][0].avatar}
+            name={arenaWinners['1'][0].name}
+            user_code={arenaWinners['1'][0].user?.user_code}
+            win
+            leaf
+            nameWhite
+          />
+        )}
+      </div>
+      <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
+        <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
+        <Typography>{arena?.attributes?.summary || ''}</Typography>
+      </div>
+      <div className={classes.listContainer}>
+        {Object.keys(arenaWinners).map((key) =>
+          (arenaWinners[key] || []).map((p, idx) => (
+            <div className={classes.listItem} key={idx}>
+              <div className={classes.placementWrapper}>
+                <p
+                  className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
+                    p.position === 3 && classes.third
+                  }`}
+                >
+                  {p.position}
+                  {p.position === 1 && <span>st</span>}
+                  {p.position === 2 && <span>nd</span>}
+                  {p.position === 3 && <span>rd</span>}
+                </p>
+              </div>
+              <Avatar src={p.avatar} />
+              <div className={classes.nameWrapper}>
+                <Typography variant="h3" component="p">
+                  {p.name}
+                </Typography>
+                {p.user && (
+                  <Typography variant="body2" className={classes.user_code}>
+                    {p.user.user_code}
+                  </Typography>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -141,25 +136,6 @@ const useStyles = makeStyles((theme) => ({
       height: '100%',
     },
   },
-  // wrapperClass: {
-  //   '&:before': {
-  //     content: "''",
-  //     maxWidth: 800,
-  //     backgroundImage: 'url(/images/arena_cover.png)',
-  //     backgroundPositionX: 'center',
-  //     backgroundPositionY: 60,
-  //     backgroundSize: 'cover',
-  //     backgroundRepeatX: 'no-repeat',
-  //     backgroundRepeatY: 'no-repeat',
-  //     backgroundAttachment: 'fixed',
-  //     backgroundOrigin: 'initial',
-  //     backgroundClip: 'initial',
-  //     backgroundColor: 'rgb(33, 33, 33)',
-  //     position: 'absolute',
-  //     width: '100%',
-  //     paddingTop: 490,
-  //   },
-  // },
   listContainer: {
     borderRadius: theme.spacing(0.5),
     border: `1px solid ${Colors.white_opacity['30']}`,

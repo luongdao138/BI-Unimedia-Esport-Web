@@ -6,6 +6,10 @@ const TournamentsPage: PageWithLayoutType = () => {
   return <TournamentDetail />
 }
 
+MainLayout.defaultProps = {
+  footer: false,
+}
+
 TournamentsPage.Layout = MainLayout
 
 export default TournamentsPage
