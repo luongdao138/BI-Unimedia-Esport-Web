@@ -1,10 +1,12 @@
-import { makeStyles, Box, Theme } from '@material-ui/core'
+import { makeStyles, Box, Theme, Typography } from '@material-ui/core'
 import ESInput from '@components/Input'
 import { useTranslation } from 'react-i18next'
 import ESSelect from '@components/Select'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
+import ESInputDatePicker from '@components/InputDatePicker'
+import { Colors } from '@theme/colors'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -18,59 +20,74 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
   return (
     <Box pb={9}>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-end">
-        <ESInput
-          name="stepThree.acceptance_start_date"
-          labelPrimary={t('common:tournament_create.entry_period')}
-          placeholder={t('common:tournament_create.start_date')}
-          fullWidth
-          value={formik.values.stepThree.acceptance_start_date}
-          onChange={formik.handleChange}
-          helperText={formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date}
-          error={formik.touched?.stepThree?.acceptance_start_date && !!formik.errors?.stepThree?.acceptance_start_date}
-          size="small"
-          required
-        />
+        <Box width="100%">
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Typography>{t('common:tournament_create.entry_period')}</Typography>
+            <Typography component="span" className={classes.required}>
+              {t('common:common.required')}
+            </Typography>
+          </Box>
+          <ESInputDatePicker
+            name="stepThree.acceptance_start_date"
+            placeholder={t('common:tournament_create.start_date')}
+            fullWidth
+            value={formik.values.stepThree.acceptance_start_date}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            type="datetime-local"
+            helperText={formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date}
+            error={formik.touched?.stepThree?.acceptance_start_date && !!formik.errors?.stepThree?.acceptance_start_date}
+          />
+        </Box>
         <Box>
           <span className={classes.dashes}>-</span>
         </Box>
-        <ESInput
+        <ESInputDatePicker
           name="stepThree.acceptance_end_date"
-          fullWidth
           placeholder={t('common:tournament_create.end_date')}
+          fullWidth
+          type="datetime-local"
           value={formik.values.stepThree.acceptance_end_date}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date}
           error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}
-          size="small"
-          required
         />
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-end">
-        <ESInput
-          name="stepThree.start_date"
-          labelPrimary={t('common:tournament_create.holding_period')}
-          placeholder={t('common:tournament_create.start_date')}
-          fullWidth
-          value={formik.values.stepThree.start_date}
-          onChange={formik.handleChange}
-          helperText={formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date}
-          error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
-          size="small"
-          required
-        />
+        <Box width="100%">
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Typography>{t('common:tournament_create.holding_period')}</Typography>
+            <Typography component="span" className={classes.required}>
+              {t('common:common.required')}
+            </Typography>
+          </Box>
+          <ESInputDatePicker
+            name="stepThree.start_date"
+            placeholder={t('common:tournament_create.start_date')}
+            fullWidth
+            value={formik.values.stepThree.start_date}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            helperText={formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date}
+            error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
+            type="datetime-local"
+          />
+        </Box>
+
         <Box>
           <span className={classes.dashes}>-</span>
         </Box>
-        <ESInput
+        <ESInputDatePicker
           name="stepThree.end_date"
-          fullWidth
           placeholder={t('common:tournament_create.end_date')}
+          fullWidth
+          type="datetime-local"
           value={formik.values.stepThree.end_date}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date}
           error={formik.touched?.stepThree?.end_date && !!formik.errors?.stepThree?.end_date}
-          size="small"
-          required
         />
       </Box>
       <Box pb={1}>
@@ -82,7 +99,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           required={true}
           size="small"
         >
-          {prefectures?.data.map((prefecture, index) => (
+          {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
               {prefecture.attributes.area}
             </option>
@@ -113,6 +130,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 26,
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
+  },
+  required: {
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+    paddingLeft: theme.spacing(1 / 2),
+    paddingRight: theme.spacing(1 / 2),
+    height: 16,
+    fontSize: 10,
+    marginLeft: theme.spacing(1),
+    color: Colors.white,
   },
 }))
 

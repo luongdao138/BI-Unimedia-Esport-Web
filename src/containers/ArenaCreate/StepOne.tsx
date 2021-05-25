@@ -101,7 +101,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           <option disabled value={-1}>
             {t('common:please_select')}
           </option>
-          {hardwares?.data.map((hardware, key) => (
+          {hardwares?.data?.map((hardware, key) => (
             <option value={hardware.id} key={key}>
               {hardware.attributes.name}
             </option>
