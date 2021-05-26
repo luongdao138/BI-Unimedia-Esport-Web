@@ -56,4 +56,5 @@ export const URI = {
   RECRUITMENT_FOLLOWERS: '/v2/users/followings_recruitment',
   RECRUITING_TOURNAMENT: '/v2/tournaments/public_recruiting',
   HOME_SETTINGS: '/v2/users/home_settings',
+  FRIEND_LIST: '/v1/chats/addable_users',
 }
