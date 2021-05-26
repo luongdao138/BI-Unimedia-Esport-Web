@@ -16,7 +16,7 @@ const SettingsPage: PageWithLayoutType = () => {
       <Box>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
           }}
         >
           <SettingsRowItem key="account_settings" title={t('settings.account_settings')} showSwitch={false} />
@@ -37,7 +37,7 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.PURCHASE_HISTORY)
           }}
         >
           <SettingsRowItem key="purchase_history" title={t('settings.purchase_history')} showSwitch={false} />
@@ -51,21 +51,21 @@ const SettingsPage: PageWithLayoutType = () => {
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.TERMS)
           }}
         >
           <SettingsRowItem key="terms" title={t('settings.terms')} showSwitch={false} />
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.PRIVACY)
           }}
         >
           <SettingsRowItem key="personal_info" title={t('settings.personal_info')} showSwitch={false} />
         </div>
         <div
           onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            router.push(ESRoutes.COMMERCIAL)
           }}
         >
           <SettingsRowItem key="commercial_transaction" title={t('settings.commercial_transaction')} showSwitch={false} />

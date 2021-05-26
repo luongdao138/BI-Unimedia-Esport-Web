@@ -78,10 +78,24 @@ const matchNgWords = (store: StoreType, subject: string) => {
   }
 }
 
+const hasEmail = (email: string): boolean => {
+  if (email == '' || email == undefined) {
+    return false
+  }
+  const suffix = ['@line.me', '@facebook.com', '@privaterelay.appleid.com', '@twitter.com']
+  for (let i = 0; i < suffix.length; i++) {
+    if (email.endsWith(suffix[i]) == true) {
+      return false
+    }
+  }
+  return true
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
   scorePassword,
   userCodeValid,
   matchNgWords,
+  hasEmail,
 }

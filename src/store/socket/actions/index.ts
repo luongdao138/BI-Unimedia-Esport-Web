@@ -30,6 +30,11 @@ export const socketActions = {
       Promise.resolve(dispatch(socketCreators.cleanRoom())).then(() => dispatch(socketCreators.socketSend(payload)))
     }
   },
+  fetchMore: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      Promise.resolve(dispatch(socketCreators.paginating())).then(() => dispatch(socketCreators.socketSend(payload)))
+    }
+  },
 }
 
 export const socketCreators = {
@@ -40,6 +45,10 @@ export const socketCreators = {
   messagePending: (payload: SocketPayload) => ({
     type: CHAT_ACTION_TYPE.MESSAGE_PENDING,
     data: _.omit(_.assign(payload, { sent: false }), ['action']),
+  }),
+
+  paginating: () => ({
+    type: CHAT_ACTION_TYPE.MESSAGE_PAGINATING,
   }),
 
   cleanRoom: () => ({
