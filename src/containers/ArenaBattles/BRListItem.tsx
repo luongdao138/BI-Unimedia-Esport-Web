@@ -5,7 +5,7 @@ import ESInput from '@components/Input'
 import { useState } from 'react'
 
 interface BRListItemProps {
-  index: number
+  index: string
   avatar: string | null
   label: string
   score?: string | null
@@ -22,10 +22,10 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
   return (
     <div className={classes.match}>
       <div className={classes.matchContent}>
-        <div className={classes.matchHeader}>1</div>
+        <div className={classes.matchHeader}>{props.index}</div>
         <div className={classes.participantWrapper}>
           <div className={classes.participant}>
-            <Avatar className={classes.avatar} alt={''} src={props.avatar} />
+            <Avatar className={classes.avatar} alt={props.label} src={props.avatar} />
             <Typography className={classes.label} noWrap={true}>
               {props.label}
             </Typography>
