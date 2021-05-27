@@ -2,33 +2,26 @@ import React from 'react'
 import { Box, makeStyles } from '@material-ui/core'
 
 export interface MessageImageProps {
-  currentMessage?: string
+  msg?: string
+  onLoadImage: () => void
 }
 
 const PhotoMessage: React.FC<MessageImageProps> = (props) => {
   const classes = useStyles()
 
-  const { currentMessage } = props
+  const { msg } = props
 
-  return <Box className={classes.box}>{<img className={classes.img} src={currentMessage} />}</Box>
+  return <Box className={classes.box}>{<img onLoad={() => props.onLoadImage()} className={classes.img} src={msg} />}</Box>
 }
 
 const useStyles = makeStyles(() => ({
   box: {
-    width: '100%',
-    height: '100%',
-    paddingTop: '66.6666%',
-    position: 'relative',
-    display: 'block',
+    width: 140,
+    height: 140,
   },
   img: {
     width: '100%',
     height: '100%',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
     objectFit: 'cover',
   },
 }))
