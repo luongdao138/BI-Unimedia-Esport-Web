@@ -60,7 +60,10 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderSystemMessage = () => {
-    if (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.WELCOME) {
+    if (
+      (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.WELCOME) ||
+      (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.SYSTEM)
+    ) {
       return <SystemMessage text={message} />
     }
     return null
