@@ -16,8 +16,8 @@ const PhotoMessage: React.FC<MessageImageProps> = (props) => {
 
 const useStyles = makeStyles(() => ({
   box: {
-    width: 140,
-    height: 140,
+    width: '100%',
+    height: 200,
   },
   img: {
     width: '100%',
