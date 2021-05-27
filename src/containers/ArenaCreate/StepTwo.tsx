@@ -28,6 +28,9 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           required={true}
           size="small"
         >
+          <option disabled value={-1}>
+            {t('common:please_select')}
+          </option>
           {RULES.map((rule, index) => (
             <option key={index} value={rule.value}>
               {rule.label}
@@ -53,6 +56,9 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           required={true}
           size="small"
         >
+          <option disabled value={-1}>
+            {t('common:please_select')}
+          </option>
           {T_TYPES.map((type, index) => (
             <option key={type.value + index} value={type.value}>
               {type.label}
@@ -70,6 +76,9 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           required={true}
           size="small"
         >
+          <option disabled value={-1}>
+            {t('common:please_select')}
+          </option>
           {PARTICIPATION_TYPES.map((type, index) => (
             <option value={type.value} key={index}>
               {type.label}

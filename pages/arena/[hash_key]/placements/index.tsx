@@ -1,7 +1,15 @@
+import MainLayout from '@layouts/MainLayout'
+import PageWithLayoutType from '@constants/page'
 import ArenaWinners from '@containers/ArenaWinners'
 
-const TournamentsPage: React.FC = () => {
+const ArenaPlacementPage: PageWithLayoutType = () => {
   return <ArenaWinners />
 }
 
-export default TournamentsPage
+MainLayout.defaultProps = {
+  footer: false,
+  patternBg: false,
+}
+ArenaPlacementPage.Layout = MainLayout
+
+export default ArenaPlacementPage
