@@ -70,6 +70,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       aria-labelledby="Followers"
       open={open}
       onClose={handleClose}
+      disableBackdropClick
       BackdropProps={{
         classes: {
           root: classes.backDrop,

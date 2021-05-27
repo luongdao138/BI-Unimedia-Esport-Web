@@ -31,6 +31,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         roomList: action.data.content,
       }
+    case CHAT_ACTION_TYPE.MESSAGE_PAGINATING:
+      return {
+        ...state,
+        paginating: true,
+      }
     case CHAT_ACTION_TYPE.GET_ROOM_MESSAGES:
       if (action.data.content === [] || action.data.content.length === 0) {
         // case when socket error or wrong data return from server
@@ -39,7 +44,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       } else if (state.lastKey != null && state.activeRoom === action.data.chatRoomId) {
         //paginating data merging
         const prevArray = state.messages
-        const temp = _.concat(prevArray, action.data.content)
+        const temp = _.concat(action.data.content, prevArray)
         newMessagesList = temp
         newUsers = state.members
       } else {
@@ -58,7 +63,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
         pending = [action.data]
       } else {
-        pending = _.concat(action.data, ...state.messages)
+        pending = _.concat(state.messages, action.data)
       }
       return {
         ...state,

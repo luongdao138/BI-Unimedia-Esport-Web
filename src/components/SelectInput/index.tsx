@@ -1,11 +1,12 @@
-import { Box, createStyles, makeStyles, Popper, Typography } from '@material-ui/core'
+import { Box, createStyles, makeStyles, Popper, Typography, CircularProgress } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import _ from 'lodash'
 
 type SelectInputItem = {
   id: number
@@ -17,6 +18,8 @@ type SelectInputItem = {
 interface SelectInputProps {
   items: SelectInputItem[]
   onItemsSelected: (selectedItems) => void
+  onSearchInput: (keyword: string) => void
+  loading: boolean
 }
 
 const useStyles = makeStyles((theme) =>
@@ -46,13 +49,25 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
-const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) => {
+const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, loading }) => {
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
+  const inputDebounce = useCallback(
+    _.debounce((keyword: string) => {
+      onSearchInput(keyword)
+    }, 500),
+    []
+  )
 
   const PopperMy = function (props) {
     return <Popper {...props} className={classes.root} style={{ width: 300 }} placement="bottom-start" anchorEl={textRef.current} />
+  }
+
+  const handleChange = (_event, value: string, reason: string) => {
+    if (reason === 'input') {
+      inputDebounce(value)
+    }
   }
 
   return (
@@ -65,7 +80,11 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) =
         filterSelectedOptions
         className={classes.autocomplete}
         noOptionsText={t('common:chat.no_user_available')}
+        disableClearable
+        onInputChange={handleChange}
         onChange={(_, values) => onItemsSelected(values)}
+        onOpen={(_) => onSearchInput('')}
+        loading={loading}
         getOptionSelected={(option, value) => option.id === value.id}
         renderOption={(item) => {
           return (
@@ -86,7 +105,21 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected }) =
             </Box>
           )
         }}
-        renderInput={(params) => <SelectInputTextField {...params} inputRef={textRef} />}
+        renderInput={(params) => (
+          <SelectInputTextField
+            {...params}
+            inputRef={textRef}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
         renderTags={(value, getTagProps) =>
           value.map((item, index) => (
             <ESChip

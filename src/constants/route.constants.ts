@@ -32,6 +32,7 @@ export const ESRoutes = {
   BLOCK_SETTINGS: '/settings/security/block',
   SERVICE_INFO_SETTINGS: '/settings/service_info',
   INQUIRY_SETTINGS: '/settings/service_info/inquiry',
+  PURCHASE_HISTORY: '/settings/purchase_history',
   TERMS: '/settings/terms',
   PRIVACY: '/settings/privacy',
   COMMERCIAL: '/settings/commercial',

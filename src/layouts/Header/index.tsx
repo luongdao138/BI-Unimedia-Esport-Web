@@ -6,6 +6,7 @@ import Icon from '@material-ui/core/Icon'
 import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
+import SearchModal from '@containers/SearchArea/SearchModal'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -31,7 +32,7 @@ import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/Ch
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
 import { useContextualRouting } from 'next-use-contextual-routing'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
 import * as notificationActions from '@store/notification/actions'
@@ -169,6 +170,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         break
     }
   }
+  const [show, setShow] = useState<boolean>(false)
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -190,16 +192,17 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 <div className="hamburger-inner"></div>
               </div>
             </div>
-            <Link href="/">
+            <Link href={isAuthenticated ? '/home' : '/'}>
               <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
             </Link>
             <div className={classes.search + ' search-area'}>
               <SearchArea selectData={searchOptions} onSearch={onSearch} />
             </div>
+            <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <Box className={`${classes.dropDownMenu}`}>
@@ -221,7 +224,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               ) : (
                 <>
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <ESButton variant="contained" color="primary" onClick={openModal}>

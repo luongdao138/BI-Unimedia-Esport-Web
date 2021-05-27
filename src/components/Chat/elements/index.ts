@@ -1,2 +1,7 @@
 export { default as Actions } from './Actions'
 export { default as SuggestionListItem } from './SuggestionListItem'
+export { default as SystemMessage } from './SystemMessage'
+export { default as Bubble } from './Bubble'
+export { default as TextMessage } from './TextMessage'
+export { default as PhotoMessage } from './PhotoMessage'
+export { default as DateTitle } from './DateTitle'
