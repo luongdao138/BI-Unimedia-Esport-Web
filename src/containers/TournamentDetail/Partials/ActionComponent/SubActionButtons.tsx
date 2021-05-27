@@ -145,6 +145,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: theme.spacing(20),
     margin: 8,
   },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column',
+    },
+  },
 }))
 
 export default SubActionButtons
