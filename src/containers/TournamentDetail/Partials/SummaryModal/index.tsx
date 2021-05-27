@@ -15,7 +15,6 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESToast from '@components/Toast'
 import CoverUploader from '@containers/ArenaCreate/Partials/CoverUploader'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
 import { useStore } from 'react-redux'
 
 interface SummaryModalProps {
@@ -31,7 +30,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const [isUploading, setUploading] = useState(false)
   const store = useStore()
   const { summary, summaryMeta, resetSummaryMeta } = useSummary()
-  const { uploadArenaTeamImage } = useUploadImage()
+  const { uploadArenaSummaryImage } = useUploadImage()
   const validationSchema = Yup.object().shape({
     summary: Yup.string()
       .required(t('common:common.error'))
@@ -61,7 +60,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaTeamImage(file, 1, UPLOADER_TYPE.TOURNAMENT_SUMMARY, ACTION_TYPE.CREATE, (imageUrl) => {
+    uploadArenaSummaryImage(file, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })

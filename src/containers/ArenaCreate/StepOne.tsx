@@ -10,7 +10,6 @@ import GameSelectorDialog from './Partials/GameSelectorDialog'
 import ESSelect from '@components/Select'
 import { HardwareResponse } from '@services/common.service'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
 import CoverUploader from './Partials/CoverUploader'
 import { FormType } from './FormModel/FormType'
 
@@ -23,12 +22,12 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [isUploading, setUploading] = useState(false)
-  const { uploadArenaTeamImage } = useUploadImage()
+  const { uploadArenaCoverImage } = useUploadImage()
 
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaTeamImage(file, 1, UPLOADER_TYPE.TOURNAMENT, ACTION_TYPE.CREATE, (imageUrl) => {
+    uploadArenaCoverImage(file, 1, true, (imageUrl) => {
       setUploading(false)
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
     })
