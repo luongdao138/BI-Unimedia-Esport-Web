@@ -22,9 +22,9 @@ const ArenaBattles: React.FC = () => {
       <div className={classes.content}>
         <Container maxWidth="lg">
           <BRListItem
-            index={1}
-            avatar={'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/30/1618455315-30.jpg'}
-            label={'わたなべ 1'}
+            index="1"
+            avatar="https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/30/1618455315-30.jpg"
+            label="わたなべ 1"
             editable={true}
             onChange={(value) => setScore(value)}
             score={score}
