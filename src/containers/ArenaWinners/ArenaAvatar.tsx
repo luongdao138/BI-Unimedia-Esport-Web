@@ -28,8 +28,10 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
         <Avatar src={src} size={size === 'large' ? 120 : 80} alt={name} />
       </div>
       <div className={classes.nameWrapper}>
-        <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`}>{name}</Typography>
-        {user_code && <Typography>{user_code}</Typography>}
+        <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`} noWrap>
+          {name}
+        </Typography>
+        {user_code && <Typography noWrap>{user_code}</Typography>}
       </div>
     </div>
   )
@@ -86,6 +88,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(1),
     transform: 'translate(-50%,0%)',
     bottom: 0,
+    width: 'max-content',
+    maxWidth: theme.spacing(30),
   },
   name: {
     fontSize: 16,
