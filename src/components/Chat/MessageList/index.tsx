@@ -143,6 +143,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
             rowHeight={cache.rowHeight}
             rowRenderer={rowRenderer}
             rowCount={messages.length}
+            className={'list-container'}
             style={{
               outline: 0,
               marginRight: 10,
