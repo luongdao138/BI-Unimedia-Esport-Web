@@ -1,12 +1,11 @@
 import React from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import { Colors } from '@theme/colors'
 
-export interface SystemMessageProps {
+export interface DateTitleProps {
   text?: string
 }
 
-const SystemMessage: React.FC<SystemMessageProps> = (props) => {
+const DateTitle: React.FC<DateTitleProps> = (props) => {
   const classes = useStyles()
 
   const { text } = props
@@ -28,11 +27,11 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
   },
   box: {
-    width: '80%',
+    width: 'auto',
     height: '100%',
     margin: '0 auto',
     borderRadius: 24,
-    background: '#FFFFFF',
+    background: '#FFFFFF26',
     display: 'inline-block',
     textAlign: 'center',
   },
@@ -41,9 +40,8 @@ const useStyles = makeStyles(() => ({
     paddingRight: 16,
     paddingLeft: 16,
     paddingTop: 6,
-    color: Colors.grey[200],
     paddingBottom: 6,
   },
 }))
 
-export default SystemMessage
+export default DateTitle

@@ -10,6 +10,7 @@ export enum CHAT_MESSAGE_TYPE {
   AUDIO = 3,
   VIDEO = 4,
   LINK = 5,
+  DATE = 6,
 }
 
 export enum CHAT_MEMBER_TYPE {
