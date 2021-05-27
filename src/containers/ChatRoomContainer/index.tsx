@@ -134,7 +134,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       <Box className={classes.list}>
         {renderLoader()}
         {!_.isEmpty(data) && _.isArray(data) && (
-          <MessageList paginating={paginating} onFetchMore={onFetchMore} users={users} messages={data} />
+          <MessageList currentUser={userId} paginating={paginating} onFetchMore={onFetchMore} users={users} messages={data} />
         )}
       </Box>
       <Box className={classes.input}>

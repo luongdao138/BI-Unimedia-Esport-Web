@@ -1,31 +1,30 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import { ChatRoomMemberItem, MessageType } from '../types/chat.types'
 import { Box, makeStyles, IconButton, Icon } from '@material-ui/core'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { CellMeasurer, CellMeasurerCache, List } from 'react-virtualized'
+import { CellMeasurer, CellMeasurerCache, List, AutoSizer } from 'react-virtualized'
 import { useRect } from '@utils/hooks/useRect'
-import TextMessage from '@components/Chat/elements/TextMessage'
-import PhotoMessage from '@components/Chat/elements/PhotoMessage'
-import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
+// import Message from '@components/Chat/Message'
 import { Colors } from '@theme/colors'
 import Loader from '@components/Loader'
+import Message from '../Message'
 
 export interface MessageListProps {
   messages: MessageType[]
   users: ChatRoomMemberItem[]
   onFetchMore?: () => void
   paginating?: boolean
+  currentUser: string | number
 }
 
 const cache = new CellMeasurerCache({
-  defaultHeight: 100,
   fixedWidth: true,
+  defaultHeight: 90,
 })
 
 const contentRef = React.createRef<HTMLDivElement>()
 
-const MessageList: React.FC<MessageListProps> = (props) => {
-  const { messages, users, onFetchMore, paginating } = props
+const MessageList = forwardRef((props: MessageListProps, ref) => {
+  const { messages, users, onFetchMore, paginating, currentUser } = props
   const [showScroll, setShowScroll] = useState(false)
   const [isBottom, setBottom] = useState<boolean>(true)
   const [scrolling, setScrolling] = useState<number>(0)
@@ -33,16 +32,24 @@ const MessageList: React.FC<MessageListProps> = (props) => {
   const contentRect = useRect(contentRef)
   const classes = useStyles()
 
+  useImperativeHandle(ref, () => ({
+    triggerScroll: () => {
+      _scrollToBottom(messages.length)
+    },
+  }))
+
   useEffect(() => {
-    cache.clearAll()
     setTimeout(() => {
       if (isBottom) {
         _scrollToBottom(messages.length)
       } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
-        messagesEndRef.current.scrollToRow(9)
+        messagesEndRef.current.recomputeRowHeights()
+        messagesEndRef.current.forceUpdate()
+        messagesEndRef.current.scrollToRow(10)
       }
     }, 10)
-  }, [messages])
+    cache.clearAll()
+  }, [messages.length])
 
   useEffect(() => {
     if (scrolling > 1) {
@@ -52,6 +59,10 @@ const MessageList: React.FC<MessageListProps> = (props) => {
 
   useEffect(() => {
     cache.clearAll()
+    if (messagesEndRef.current != null && messagesEndRef) {
+      messagesEndRef.current.recomputeRowHeights()
+      messagesEndRef.current.forceUpdateGrid()
+    }
   }, [contentRect?.width])
 
   const _scrollToBottom = (position) => {
@@ -84,30 +95,13 @@ const MessageList: React.FC<MessageListProps> = (props) => {
   }
 
   const rowRenderer = ({ index, key, parent, style }) => {
-    const item = messages[index]
+    const data = messages[index]
 
     return (
-      <CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-        {({ measure }) => (
-          <div key={index} onLoad={measure} style={style}>
-            <Box
-              style={{
-                padding: 10,
-                marginBottom: 5,
-                minHeight: 80,
-                justifyContent: 'center',
-                alignItems: 'center',
-                maxWidth: 'auto',
-                background: item.sent ? '#555' : '#212121',
-                display: 'block',
-              }}
-            >
-              {item.type === CHAT_MESSAGE_TYPE.IMAGE ? (
-                <PhotoMessage currentMessage={item.msg} />
-              ) : (
-                <TextMessage members={users} text={item.msg} />
-              )}
-            </Box>
+      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
+        {({ measure, registerChild }) => (
+          <div onLoad={measure} key={index} style={style} ref={registerChild}>
+            <Message onLoadImage={measure} currentMessage={data} users={users} direction={data.userId !== currentUser ? 'left' : 'right'} />
           </div>
         )}
       </CellMeasurer>
@@ -126,7 +120,7 @@ const MessageList: React.FC<MessageListProps> = (props) => {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }} ref={contentRef}>
       <IconButton
         disableRipple
         style={{ display: showScroll ? 'flex' : 'none' }}
@@ -142,12 +136,12 @@ const MessageList: React.FC<MessageListProps> = (props) => {
       <AutoSizer style={{ flex: 1 }}>
         {({ height, width }) => (
           <List
-            onScroll={_onScroll}
             ref={messagesEndRef}
+            onScroll={_onScroll}
+            overscanRowsCount={3}
             deferredMeasurementCache={cache}
             rowHeight={cache.rowHeight}
             rowRenderer={rowRenderer}
-            className={`list-container`}
             rowCount={messages.length}
             style={{
               outline: 0,
@@ -160,7 +154,7 @@ const MessageList: React.FC<MessageListProps> = (props) => {
       </AutoSizer>
     </div>
   )
-}
+})
 
 const useStyles = makeStyles(() => ({
   bottomArrow: {
