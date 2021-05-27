@@ -6,11 +6,11 @@ import search from '@store/search'
 import common from '@store/common'
 import settings from '@store/settings'
 import follow from '@store/follow'
-import following from '@store/following'
 import report from '@store/report'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
 import tournament from '@store/tournament'
+import chat from '@store/chat'
 import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
@@ -23,7 +23,6 @@ const reducer = combineReducers({
   common: common.reducers,
   settings: settings.reducers,
   follow: follow.reducers,
-  following: following.reducers,
   report: report.reducers,
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,
@@ -32,6 +31,7 @@ const reducer = combineReducers({
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
   notification: notification.reducers,
+  chat: chat.reducers,
   socket: socket.reducers,
 })
 export default reducer

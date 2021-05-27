@@ -6,22 +6,27 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 
 interface Props {
-  userId: any
+  userCode: string
 }
 
-const TournamentHistoryContainer: React.FC<Props> = ({ userId }) => {
+const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
   const { tournamentHistories, tournamentHistory, page, meta, resetMeta } = useTournamentHistory()
+  const hasNextPage = page && page.current_page !== page.total_pages
+  useEffect(() => {
+    tournamentHistory({
+      page: 1,
+      user_code: userCode,
+    })
+  }, [userCode])
 
   useEffect(() => {
-    tournamentHistory({ page: 1, user_id: userId })
-
     return () => resetMeta()
   }, [])
 
   const loadMore = () => {
-    if (page && page.current_page !== page.total_pages) {
-      tournamentHistory({ page: page.current_page + 1, user_id: userId })
+    if (hasNextPage) {
+      tournamentHistory({ page: page.current_page + 1, user_code: userCode })
     }
   }
 
@@ -31,7 +36,7 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userId }) => {
         className={classes.container}
         dataLength={tournamentHistories.length}
         next={loadMore}
-        hasMore={page && page.current_page !== page.total_pages}
+        hasMore={hasNextPage}
         loader={null}
       >
         {tournamentHistories.map((tournament, i) => (

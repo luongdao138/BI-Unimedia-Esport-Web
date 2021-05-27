@@ -3,13 +3,13 @@ import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
 
 export type HistorySearchParams = {
-  user_id: number
-  page: number
+  page?: number
+  user_code: string
 }
 
 export type HistorySearchResponse = {
   data: Array<HistoryResponse>
-  links: Links
+  meta: Meta
 }
 
 export type HistoryResponse = {
@@ -38,10 +38,6 @@ export type Nickname2 = {
 
 export type CommonResponse = {
   attributes: any
-}
-
-export type Links = {
-  meta: Meta
 }
 
 export type Meta = {
@@ -114,6 +110,7 @@ export type UserProfile = {
       allow_groups_from_strangers: boolean
     }
     is_deleted?: boolean
+    home_settings?: string[]
   }
 }
 
@@ -177,9 +174,42 @@ export type GameEditParams = {
 
 export type RecommendedEventResponse = {
   data: Array<CommonResponse>
+  meta: Meta
 }
+
 export type ResultsResponse = {
   attributes: any
+}
+
+export type HomeSettingsParams = {
+  home_settings: string[]
+}
+
+export type HomeSettingsResponse = {
+  home_settings: string[]
+}
+
+export type FollowResponse = {
+  data: {
+    id: number | string
+    type: 'user'
+    attributes: {
+      followers: number
+      following: number
+    }
+  }
+}
+
+export type UnFollowResponse = {
+  success: 'success'
+}
+
+export type FollowParams = {
+  user_code: string
+}
+
+export type RecommendedEventParams = {
+  page?: number
 }
 
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
@@ -193,7 +223,7 @@ export const profileUpdate = async (params: ProfileUpdateParams): Promise<Profil
 }
 
 export const tournamentHistorySearch = async (params: HistorySearchParams): Promise<HistorySearchResponse> => {
-  const { data } = await api.get<HistorySearchResponse>(URI.TOURNAMENTS_HISTORY_SEARCH, { params })
+  const { data } = await api.post<HistorySearchResponse>(URI.TOURNAMENTS_HISTORY_SEARCH, params)
   return data
 }
 
@@ -227,7 +257,22 @@ export const gameEdit = async (params: GameEditParams): Promise<ProfileResponse>
   return data
 }
 
-export const getRecommendedEvent = async (): Promise<RecommendedEventResponse> => {
-  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT)
+export const getRecommendedEvent = async (params: RecommendedEventParams): Promise<RecommendedEventResponse> => {
+  const { data } = await api.post<RecommendedEventResponse>(URI.USER_RECOMMENDED_EVENT, params)
+  return data
+}
+
+export const updateHomeSettings = async (params: HomeSettingsParams): Promise<HomeSettingsResponse> => {
+  const { data } = await api.post<HomeSettingsResponse>(URI.HOME_SETTINGS, params)
+  return data
+}
+
+export const follow = async (params: FollowParams): Promise<FollowResponse> => {
+  const { data } = await api.put(URI.FOLLOW, params)
+  return data
+}
+
+export const unfollow = async (params: FollowParams): Promise<UnFollowResponse> => {
+  const { data } = await api.put(URI.UNFOLLOW, params)
   return data
 }

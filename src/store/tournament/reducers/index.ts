@@ -33,6 +33,9 @@ type StateType = {
   arenaWinners: ArenaWinners
   recommendedUsers?: Array<RecommendedUsers>
   recommendedUsersMeta?: Meta
+  tournamentFollowersMeta: Meta
+  tournamentResultsMeta: Meta
+  recruitingTournamentsMeta: Meta
 }
 
 const initialState: StateType = {
@@ -46,6 +49,9 @@ const initialState: StateType = {
   arenaWinners: {},
   recruitingTournaments: [],
   recommendedUsers: [],
+  tournamentFollowersMeta: undefined,
+  tournamentResultsMeta: undefined,
+  recruitingTournamentsMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -59,10 +65,20 @@ export default createReducer(initialState, (builder) => {
     state.searchTournamentsMeta = action.payload.links?.meta
   })
   builder.addCase(actions.getTournamentFollowers.fulfilled, (state, action) => {
-    state.tournamentFollowers = action.payload.data
+    let tmpTournamentFollowers = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpTournamentFollowers = state.tournamentFollowers.concat(action.payload.data)
+    }
+    state.tournamentFollowers = tmpTournamentFollowers
+    state.tournamentFollowersMeta = action.payload.meta
   })
   builder.addCase(actions.getTournamentResults.fulfilled, (state, action) => {
-    state.tournamentResults = action.payload.data
+    let tmpTournamentResults = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpTournamentResults = state.tournamentResults.concat(action.payload.data)
+    }
+    state.tournamentResults = tmpTournamentResults
+    state.tournamentResultsMeta = action.payload.meta
   })
   builder.addCase(actions.getTournamentDetail.fulfilled, (state, action) => {
     state.tournamentDetail = action.payload.data
@@ -110,7 +126,12 @@ export default createReducer(initialState, (builder) => {
     state.tournamentMatches = action.payload
   })
   builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
-    state.recruitingTournaments = action.payload.data
+    let tmpRecruitingTournaments = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpRecruitingTournaments = state.recruitingTournaments.concat(action.payload.data)
+    }
+    state.recruitingTournaments = tmpRecruitingTournaments
+    state.recruitingTournamentsMeta = action.payload.meta
   })
   builder.addCase(actions.getArenaWinners.fulfilled, (state, action) => {
     state.arenaWinners = action.payload.matches

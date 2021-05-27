@@ -1,4 +1,6 @@
 export enum FOLLOWERS_ACTION_TYPE {
-  FOLLOWERS = 'followers',
-  CLEAR_FOLLOWERS = 'followers/clearfollowers',
+  FOLLOWERS = 'followers/getFollowers',
+  CLEAR_FOLLOWERS = 'followers/clearFollowers',
+  FOLLOWING = 'followers/getFollowing',
+  CLEAR_FOLLOWING = 'followers/clearFollowing',
 }

@@ -6,6 +6,7 @@ import Icon from '@material-ui/core/Icon'
 import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
+import SearchModal from '@containers/SearchArea/SearchModal'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -28,11 +29,11 @@ import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import ArenaCreateContainer from '@containers/ArenaCreate'
 import { useContextualRouting } from 'next-use-contextual-routing'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
-import { getNotificationBadge } from '@store/notification/actions'
-import { getNotificationBadge as selector } from '@store/notification/selectors'
+import * as notificationActions from '@store/notification/actions'
+import * as notificationSelector from '@store/notification/selectors'
 
 const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
@@ -120,7 +121,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const { handleReturn } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
   const dispatch = useAppDispatch()
-  const badge = useAppSelector(selector)
+  const badge = useAppSelector(notificationSelector.getNotificationBadge)
 
   const onSearch = (_data: returnItem) => {
     //ignore @typescript-eslint/no-empty-function
@@ -160,10 +161,11 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         break
     }
   }
+  const [show, setShow] = useState<boolean>(false)
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(getNotificationBadge())
+      dispatch(notificationActions.getNotificationBadge())
     }
   }, [isAuthenticated])
 
@@ -181,16 +183,17 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 <div className="hamburger-inner"></div>
               </div>
             </div>
-            <Link href="/">
+            <Link href={isAuthenticated ? '/home' : '/'}>
               <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
             </Link>
             <div className={classes.search + ' search-area'}>
               <SearchArea selectData={searchOptions} onSearch={onSearch} />
             </div>
+            <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <Box className={`${classes.dropDownMenu}`}>
@@ -212,7 +215,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               ) : (
                 <>
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <ESButton variant="contained" color="primary" onClick={openModal}>

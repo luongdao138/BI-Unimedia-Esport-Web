@@ -168,11 +168,10 @@
   font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
     'MS PGothic', sans-serif;
   line-height: 1.75;
-  text-transform: uppercase;
   height: 50px;
   overflow: hidden;
   border: 1px solid #ccc;
-  width: '100%';
+  width: auto;
   border-radius: 6px;
 }
 
@@ -370,8 +369,10 @@
   visibility: visible;
   opacity: 1;
   width: 100%;
+  max-width: 630px;
   flex: 1;
 }
+
 .scroll-bar {
   overflow: overlay;
   ::-webkit-scrollbar {
@@ -415,6 +416,10 @@
     opacity: 1;
     visibility: visible;
   }
+}
+.card-container .infinite-scroll-component {
+  display: flex;
+  flex-wrap: wrap;
 }
 .header-first-column {
   flex: 0 0 260px;
@@ -461,6 +466,36 @@
 
 .infinite-scroll-component__outerdiv {
   width: 100%;
+}
+
+.list-container {
+  height: 100%;
+  width: 100%;
+  display: flex !important;
+  padding-right: 14px !important;
+  padding-left: 10px !important;
+  flex: 1 1 0%;
+  min-height: 0;
+  scrollbar-color: #222 transparent;
+  scrollbar-width: thin;
+}
+
+.list-container > div {
+  height: 100%;
+  margin-top: auto !important;
+  flex: 1 1 auto;
+}
+.list-container::-webkit-scrollbar {
+  width: 6px;
+  padding: 2px;
+  padding-right: 2px;
+}
+.list-container::-webkit-scrollbar-track {
+  padding-left: 1px;
+}
+.list-container::-webkit-scrollbar-thumb {
+  background-color: #222;
+  border-radius: 6px;
 }
 
 @media (max-width: 1200px) {

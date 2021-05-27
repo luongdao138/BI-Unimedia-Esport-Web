@@ -1,38 +1,8 @@
-import { Mention, MentionsInput } from 'react-mentions'
+import { Mention, MentionsInput, OnChangeHandlerFunc } from 'react-mentions'
 
 import { ChatSuggestionList } from '../types/chat.types'
 import classNames from './mention.module.css'
-
-const users: ChatSuggestionList[] = [
-  {
-    userId: 111,
-    display: '@Walter White',
-    nickName: 'Walter White',
-    profile: '',
-    id: '111',
-  },
-  {
-    userId: 321,
-    display: '@Jesse Pinkman',
-    nickName: 'Jesse Pinkman',
-    profile: '',
-    id: '233',
-  },
-  {
-    userId: 321,
-    display: '@Gustavo "Gus" Fring',
-    nickName: 'Gustavo "Gus" Fring',
-    profile: '',
-    id: '321',
-  },
-  {
-    userId: 111,
-    display: '@Saul Goodman',
-    nickName: 'Saul Goodman',
-    profile: '',
-    id: '111',
-  },
-]
+let container
 
 interface ComposerProps {
   renderSuggestion?: (
@@ -42,38 +12,57 @@ interface ComposerProps {
     index: number,
     focused: boolean
   ) => React.ReactNode
-  onChange: (value: string) => void
+  onChange: OnChangeHandlerFunc
+  placeholder: string
   msg?: string
+  users: ChatSuggestionList[]
+  onAdd?: (id: string | number, display: string) => void
+  onKeyPress?: (e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => void
 }
 
-const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg }) => {
+const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, placeholder, users, onAdd, onKeyPress }) => {
   return (
-    <>
-      <div className="advanced">
-        <MentionsInput
-          value={msg}
-          spellCheck={false}
-          classNames={classNames}
-          onChange={({ target: { value } }) => {
-            onChange(value)
+    <div>
+      <div
+        className="advanced"
+        id="advanced"
+        style={{ height: 0, position: 'relative' }}
+        ref={(el) => {
+          container = el
+        }}
+      />
+      <MentionsInput
+        value={msg}
+        spellCheck={false}
+        suggestionsPortalHost={container}
+        placeholder={placeholder}
+        onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => onKeyPress(e)}
+        style={{
+          suggestions: {
+            position: 'absolute',
+            left: 20,
+            top: -20,
+          },
+        }}
+        classNames={classNames}
+        onChange={onChange}
+      >
+        <Mention
+          trigger="@"
+          appendSpaceOnAdd
+          onAdd={onAdd}
+          data={users}
+          className={classNames.mentions__mention}
+          markup="@[to=__id__]"
+          renderSuggestion={renderSuggestion}
+          displayTransform={(id: string, display: string) => {
+            if (id.toString() === display.toString()) {
+              return users.find((x) => x.id === id).display
+            } else return display
           }}
-        >
-          <Mention
-            trigger="@"
-            appendSpaceOnAdd
-            data={users}
-            className={classNames.mentions__mention}
-            markup="@[to=__id__]"
-            renderSuggestion={renderSuggestion}
-            displayTransform={(id: string, display: string) => {
-              if (id.toString() === display.toString()) {
-                return users.find((x) => x.id === id).display
-              } else return display
-            }}
-          />
-        </MentionsInput>
-      </div>
-    </>
+        />
+      </MentionsInput>
+    </div>
   )
 }
 

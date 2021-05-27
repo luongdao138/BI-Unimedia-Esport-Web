@@ -1,6 +1,8 @@
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import tournament from '@store/tournament'
+import { clearMetaData } from '@store/metadata/actions'
+import { RecruitingTournamentParams } from '@services/tournament.service'
 
 const { selectors, actions } = tournament
 
@@ -11,9 +13,11 @@ const useRecruitingData = () => {
   const handleClick = () => handleReturn()
 
   const recruitingTournaments = useAppSelector(selectors.getRecruitingTournaments)
-  const getRecruitingTournaments = () => dispatch(actions.getRecruitingTournaments())
+  const pages = useAppSelector(selectors.getRecruitingTournamentsMeta)
+  const getRecruitingTournaments = (params: RecruitingTournamentParams) => dispatch(actions.getRecruitingTournaments(params))
+  const resetMeta = () => dispatch(clearMetaData(actions.getRecruitingTournaments.typePrefix))
 
-  return { handleClick, recruitingTournaments, getRecruitingTournaments }
+  return { handleClick, recruitingTournaments, getRecruitingTournaments, pages, resetMeta }
 }
 
 export default useRecruitingData

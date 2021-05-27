@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Grid, Typography, Box, ButtonBase, Theme } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import ESButton from '@components/Button'
-import * as services from '@services/search.service'
+import * as services from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
@@ -14,9 +14,10 @@ interface Props {
   data: any
   isFollowed?: boolean
   handleClick?: () => void
+  handleClose?: () => void
 }
 
-const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClick }) => {
+const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -34,7 +35,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClick }) => {
   const follow = async () => {
     setLoading(true)
     try {
-      await services.follow({ user_id: Number(data.id) })
+      await services.follow({ user_code: user.user_code })
       if (mounted) {
         setFollowed(true)
         setLoading(false)
@@ -49,7 +50,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClick }) => {
   const unfollow = async () => {
     setLoading(true)
     try {
-      await services.unfollow({ user_id: Number(data.id) })
+      await services.unfollow({ user_code: user.user_code })
       if (mounted) {
         setFollowed(false)
         setLoading(false)
@@ -61,7 +62,10 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClick }) => {
     }
   }
 
-  const toProfile = () => router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+  const toProfile = () => {
+    if (handleClose) handleClose()
+    router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
+  }
 
   const body = () => {
     return (

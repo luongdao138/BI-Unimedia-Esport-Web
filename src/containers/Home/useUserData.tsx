@@ -8,9 +8,13 @@ const useUserData = () => {
   const dispatch = useAppDispatch()
 
   const recommendedUsers = useAppSelector(selectors.getRecommendations)
+  const userProfile = useAppSelector(selectors.getUserProfile)
+  const homeSettings = userProfile ? userProfile.attributes.home_settings : []
+
+  const getUserProfile = () => dispatch(actions.getUserProfile())
   const getUserRecommendations = () => dispatch(actions.getRecommendations())
 
-  return { recommendedUsers, getUserRecommendations }
+  return { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile }
 }
 
 export default useUserData

@@ -18,11 +18,11 @@ export const tournamentSearch = createAsyncThunk<services.TournamentSearchRespon
   }
 )
 
-export const getTournamentFollowers = createAsyncThunk<services.TournamentFollowersResponse>(
+export const getTournamentFollowers = createAsyncThunk<services.TournamentFollowersResponse, services.TournamentFollowersParams>(
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_FOLLOWERS,
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getTournamentFollowers()
+      const res = await services.getTournamentFollowers(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -33,11 +33,11 @@ export const getTournamentFollowers = createAsyncThunk<services.TournamentFollow
   }
 )
 
-export const getTournamentResults = createAsyncThunk<services.TournamentResultsResponse>(
+export const getTournamentResults = createAsyncThunk<services.TournamentResultsResponse, services.TournamentResultsParams>(
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_RESULTS,
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getTournamentResults()
+      const res = await services.getTournamentResults(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -48,11 +48,11 @@ export const getTournamentResults = createAsyncThunk<services.TournamentResultsR
   }
 )
 
-export const getRecruitingTournaments = createAsyncThunk<services.RecruitingTournamentResponse>(
+export const getRecruitingTournaments = createAsyncThunk<services.RecruitingTournamentResponse, services.RecruitingTournamentParams>(
   TOURNAMENT_ACTION_TYPE.RECRUITING_TOURNAMENT,
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getRecruitingTournaments()
+      const res = await services.getRecruitingTournaments(params)
       return res
     } catch (error) {
       if (!error.response) {

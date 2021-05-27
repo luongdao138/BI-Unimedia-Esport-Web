@@ -7,12 +7,23 @@ export type FollowersParams = {
 }
 
 export type FollowersResponse = {
-  data: Array<UserResponse>
+  data: Array<FollowResponse>
   meta: any
 }
 
-export type UserResponse = {
-  attributes: any
+export type FollowResponse = {
+  attributes: {
+    user_code: string
+    nickname: string
+    nickname2: string
+    avatar: string
+    is_following: true
+    is_followed: false
+    allow_groups_from_strangers: true
+    allow_messages_from_strangers: true
+    blocked_by_me: false
+    blocked_by_user: true
+  }
 }
 
 export type Meta = {
@@ -23,6 +34,11 @@ export type Meta = {
 }
 
 export const followers = async (params: FollowersParams): Promise<FollowersResponse> => {
-  const { data } = await api.post<FollowersResponse>(`${URI.FOLLOWERS}/${params.user_code ? params.user_code : ''}`, params)
+  const { data } = await api.post<FollowersResponse>(URI.FOLLOWERS, params)
+  return data
+}
+
+export const following = async (params: FollowersParams): Promise<FollowersResponse> => {
+  const { data } = await api.post<FollowersResponse>(URI.FOLLOWING, params)
   return data
 }

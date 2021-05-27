@@ -7,7 +7,7 @@ const ButtonPrimary: React.FC<
     size?: 'small' | 'large'
     fullWidth?: boolean
   }
-> = ({ children, classes: _classes, className: _className, ...rest }) => {
+> = ({ children, classes: _classes, className, ...rest }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { round, gradient, size, fullWidth, ...props } = rest
   const roundClass = round ? 'button-primary primary-rounded' : 'button-primary'
@@ -17,7 +17,7 @@ const ButtonPrimary: React.FC<
   const classes = roundClass + gradientClass + sizeClass + widthClass
 
   return (
-    <ButtonBase className={classes} {...props}>
+    <ButtonBase className={`${classes} ${className}`} {...props}>
       <div className="circle"></div>
       <span className="label-primary MuiButton-label">{children}</span>
     </ButtonBase>
@@ -29,5 +29,6 @@ ButtonPrimary.defaultProps = {
   gradient: true,
   size: 'large',
   fullWidth: false,
+  className: '',
 }
 export default ButtonPrimary

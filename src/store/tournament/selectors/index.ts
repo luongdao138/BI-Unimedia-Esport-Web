@@ -6,6 +6,7 @@ const getRoot = (state: RootState) => state.tournament
 export const getSearchTournaments = createSelector(getRoot, (state) => state.searchTournaments)
 export const getSearchTournamentsMeta = createSelector(getRoot, (state) => state.searchTournamentsMeta)
 export const getTournamentFollowers = createSelector(getRoot, (state) => state.tournamentFollowers)
+export const getTournamentFollowersMeta = createSelector(getRoot, (state) => state.tournamentFollowersMeta)
 export const getTournamentResults = createSelector(getRoot, (state) => state.tournamentResults)
 export const getTournamentDetail = createSelector(getRoot, (state) => state.tournamentDetail)
 export const getParticipants = createSelector(getRoot, (state) => state.tournamentParticipants)
@@ -19,3 +20,5 @@ export const getRecruitingTournaments = createSelector(getRoot, (state) => state
 export const getArenaWinners = createSelector(getRoot, (state) => state.arenaWinners)
 export const getRecommendedUsers = createSelector(getRoot, (state) => state.recommendedUsers)
 export const getRecommendedUsersMeta = createSelector(getRoot, (state) => state.recommendedUsersMeta)
+export const getTournamentResultsMeta = createSelector(getRoot, (state) => state.tournamentResultsMeta)
+export const getRecruitingTournamentsMeta = createSelector(getRoot, (state) => state.recruitingTournamentsMeta)

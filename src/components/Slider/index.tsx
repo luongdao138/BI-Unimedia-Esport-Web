@@ -43,6 +43,11 @@ const ESSlide: React.FC<{
 
   return (
     <div className="slideWrap">
+      {title && (
+        <Typography className={classes.containerStart} variant="h3" gutterBottom>
+          {title}
+        </Typography>
+      )}
       <Swiper
         slidesPerView="auto"
         spaceBetween={0}
@@ -61,12 +66,6 @@ const ESSlide: React.FC<{
           swiper.navigation.update()
         }}
       >
-        {title && (
-          <Typography className={classes.containerStart} slot="container-start" variant="h3" gutterBottom>
-            {title}
-          </Typography>
-        )}
-
         {items.map((item, index) => {
           return (
             <SwiperSlide key={index} className={classes.slideWidth}>
@@ -164,7 +163,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: win.localWidth ? win.localWidth : DEFAULT_SLIDE_WIDTH,
   }),
   containerStart: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(3),
   },
 }))
 

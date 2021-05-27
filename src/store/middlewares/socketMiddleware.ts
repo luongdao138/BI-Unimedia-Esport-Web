@@ -1,11 +1,11 @@
-import { WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { v1 as uuidv1 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
 import { socketActions } from '@store/socket/actions'
 
-const DEVICE_ID = uuidv1()
+const DEVICE_ID = uuidv4()
 
 let socket: any = null
 
@@ -14,9 +14,10 @@ const onOpen = (store: StoreType) => (_event: Event) => {
   if (userId) {
     // eslint-disable-next-line no-console
     console.log('connected, end fetching list')
+    store.dispatch({ type: `${WEBSOCKET_PREFIX}:CONNECTED` })
     store.dispatch(
       socketActions.socketSend({
-        action: 'GET_ALL_ROOMS',
+        action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
         userId: userId,
       })
     )

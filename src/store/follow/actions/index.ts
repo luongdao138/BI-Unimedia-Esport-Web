@@ -18,3 +18,20 @@ export const followers = createAsyncThunk<services.FollowersResponse, services.F
 )
 
 export const clearFollowers = createAction(FOLLOWERS_ACTION_TYPE.CLEAR_FOLLOWERS)
+
+export const following = createAsyncThunk<services.FollowersResponse, services.FollowersParams>(
+  FOLLOWERS_ACTION_TYPE.FOLLOWING,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.following(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearFollowing = createAction(FOLLOWERS_ACTION_TYPE.CLEAR_FOLLOWING)
