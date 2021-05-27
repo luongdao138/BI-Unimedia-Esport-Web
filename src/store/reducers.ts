@@ -10,6 +10,7 @@ import report from '@store/report'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
 import tournament from '@store/tournament'
+import chat from '@store/chat'
 import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
@@ -30,6 +31,7 @@ const reducer = combineReducers({
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
   notification: notification.reducers,
+  chat: chat.reducers,
   socket: socket.reducers,
 })
 export default reducer
