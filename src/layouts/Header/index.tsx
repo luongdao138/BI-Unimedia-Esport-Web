@@ -6,6 +6,7 @@ import Icon from '@material-ui/core/Icon'
 import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import SearchArea from '@containers/SearchArea'
+import SearchModal from '@containers/SearchArea/SearchModal'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -27,7 +28,7 @@ import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import { useContextualRouting } from 'next-use-contextual-routing'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
 import * as notificationActions from '@store/notification/actions'
@@ -157,6 +158,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         break
     }
   }
+  const [show, setShow] = useState<boolean>(false)
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -184,10 +186,11 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
             <div className={classes.search + ' search-area'}>
               <SearchArea selectData={searchOptions} onSearch={onSearch} />
             </div>
+            <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
             <div className={classes.toolArea}>
               {isAuthenticated ? (
                 <>
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <Box className={`${classes.dropDownMenu}`}>
@@ -209,7 +212,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               ) : (
                 <>
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <ESButton variant="contained" color="primary" onClick={openModal}>
