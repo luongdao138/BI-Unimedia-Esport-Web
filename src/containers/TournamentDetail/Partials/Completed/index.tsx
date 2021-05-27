@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React from 'react'
-import { ArenaWinners, TournamentDetail } from '@services/tournament.service'
+import React, { useEffect } from 'react'
+import { TournamentDetail } from '@services/tournament.service'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'
 import { UserProfile } from '@services/user.service'
 import ArenaAvatar from '@containers/ArenaWinners/ArenaAvatar'
+import useWinners from '@containers/ArenaWinners/useArenaWinners'
 
 interface CompletedProps {
   tournament: TournamentDetail
   userProfile: UserProfile
-  arenaWinners: ArenaWinners
 }
 
 const Completed: React.FC<CompletedProps> = (props) => {
   const classes = useStyles()
-  const { arenaWinners } = props
+  const { arenaWinners, fetchWinners } = useWinners(false)
+
+  useEffect(() => fetchWinners(), [])
 
   return (
     <ActionComponent {...props}>

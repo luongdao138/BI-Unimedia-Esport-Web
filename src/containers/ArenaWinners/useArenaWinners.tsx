@@ -10,7 +10,9 @@ import { ArenaWinners, TournamentDetail } from '@services/tournament.service'
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
 
-const useWinners = (): { arenaMeta: Meta; winnersMeta: Meta; arenaWinners: ArenaWinners; arena: TournamentDetail } => {
+const useWinners = (
+  isImmediately = true
+): { arenaMeta: Meta; winnersMeta: Meta; arenaWinners: ArenaWinners; arena: TournamentDetail; fetchWinners: () => void } => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const winnersMeta = useAppSelector(getWinnersMeta)
@@ -18,8 +20,10 @@ const useWinners = (): { arenaMeta: Meta; winnersMeta: Meta; arenaWinners: Arena
   const arena = useAppSelector(selectors.getTournamentDetail)
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
 
+  const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
+
   useEffect(() => {
-    if (router.query.hash_key) {
+    if (router.query.hash_key && isImmediately) {
       dispatch(actions.getArenaWinners(router.query.hash_key))
       dispatch(actions.getTournamentDetail(router.query.hash_key))
     }
@@ -30,6 +34,7 @@ const useWinners = (): { arenaMeta: Meta; winnersMeta: Meta; arenaWinners: Arena
     winnersMeta,
     arenaMeta,
     arena,
+    fetchWinners,
   }
 }
 
