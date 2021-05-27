@@ -116,6 +116,8 @@ const ArenaMatches: React.FC = () => {
                                 }
                               : null
                           }
+                          score1={match.score_home}
+                          score2={match.score_guest}
                         />
                       )
                     })}

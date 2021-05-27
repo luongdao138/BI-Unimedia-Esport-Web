@@ -62,7 +62,6 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
             className={classes.pinText}
             type="number"
             min={0}
-            max={9}
             placeholder={t('common:common.zero')}
             pattern="\d*"
             autoComplete="off"

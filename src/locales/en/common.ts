@@ -293,6 +293,7 @@ export default {
     summary: '大会総括',
     summary_title: '大会の総括',
     summary_submit: 'この内容で決定する',
+    copy_toast: '大会詳細URLをコピーしました。',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Grid, Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
@@ -8,6 +9,7 @@ import { TournamentDetail } from '@services/tournament.service'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { CommonResponse } from '@services/user.service'
+import ESToast from '@components/Toast'
 
 interface Props {
   detail: TournamentDetail
@@ -20,6 +22,14 @@ const DetailInfo: React.FC<Props> = ({ detail, extended }) => {
   const data = detail.attributes
   const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
   const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
+  const [showCopyToast, setShowCopyToast] = useState<boolean>(false)
+
+  const handleCopy = () => {
+    if (window.navigator.clipboard) {
+      window.navigator.clipboard.writeText(window.location.toString())
+    }
+    setShowCopyToast(true)
+  }
 
   return (
     <Grid container className={classes.container}>
@@ -30,11 +40,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended }) => {
           </Box>
           {extended && (
             <ESMenu>
-              <ESMenuItem onClick={() => null}>{t('common:tournament.copy_url')}</ESMenuItem>
+              <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
               <ESMenuItem onClick={() => null}>{t('common:tournament.report')}</ESMenuItem>
             </ESMenu>
           )}
         </Box>
+        {showCopyToast && <ESToast open={showCopyToast} message={t('common:arena.copy_toast')} onClose={() => setShowCopyToast(false)} />}
         <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
 
         <Box marginTop={2}>
