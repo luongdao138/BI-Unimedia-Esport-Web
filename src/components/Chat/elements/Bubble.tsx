@@ -53,8 +53,9 @@ const Bubble: React.FC<BubbleProps> = (props) => {
 const useStyles = makeStyles(() => ({
   bubble: (props: { direction: string }) => {
     return {
-      width: '100%',
+      width: 290,
       borderRadius: 16,
+      textAlign: props.direction === 'left' ? 'right' : 'left',
       overflow: 'hidden',
       background: props.direction === 'left' ? Colors.grey[200] : Colors.white,
       borderBottomLeftRadius: props.direction === 'left' ? 0 : 16,
