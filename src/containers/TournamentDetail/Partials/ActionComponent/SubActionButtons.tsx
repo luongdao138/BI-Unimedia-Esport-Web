@@ -18,6 +18,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
 
   const hashKey = tournament.attributes.hash_key
+  const chatRoomId = tournament.attributes.chat_room_id
   const myRole = tournament.attributes.my_role
   const status = tournament.attributes.status
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
@@ -38,7 +39,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   }
 
   const handleGroupChat = () => {
-    // TODO group chat
+    router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
   }
 
   return (

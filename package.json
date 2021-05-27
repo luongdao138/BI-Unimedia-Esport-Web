@@ -26,10 +26,13 @@
     ]
   },
   "dependencies": {
+    "@date-io/moment": "1.x",
     "@material-ui/core": "4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
+    "@material-ui/pickers": "^3.3.10",
     "@reduxjs/toolkit": "1.5.1",
+    "@types/react-mentions": "^4.1.0",
     "axios": "0.21.1",
     "formik": "2.2.6",
     "i18next": "^20.2.2",
@@ -61,7 +64,6 @@
     "reselect": "4.0.0",
     "sass": "1.32.12",
     "swiper": "^6.5.9",
-    "@types/react-mentions": "^4.1.0",
     "uuid": "^8.3.2",
     "webpack": "5.36.1",
     "yup": "0.32.9"

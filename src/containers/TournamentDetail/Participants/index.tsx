@@ -12,21 +12,24 @@ import BlankLayout from '@layouts/BlankLayout'
 import TeamMemberItem from '../Partials/TeamMemberItem'
 import ESButton from '@components/Button'
 import { TournamentDetail } from '@services/tournament.service'
+import { ROLE } from '@constants/tournament.constants'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
 }
 
 const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
+  const { t } = useTranslation(['common'])
   const data = detail.attributes
   const isTeam = data.participant_type > 1
+  const unit = isTeam ? t('common:common.team') : t('common:common.man')
   const hash_key = data.hash_key
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [members, setMembers] = useState([])
 
-  const { t } = useTranslation(['common'])
-  const { participants, getParticipants, resetMeta, page } = useParticipants()
+  const { participants, getParticipants, resetMeta, page, meta } = useParticipants()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -46,6 +49,14 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     }
   }, [open])
 
+  useEffect(() => {
+    setMembers(
+      data.is_freezed
+        ? participants.filter((p) => p.attributes.role === ROLE.PARTICIPANT)
+        : participants.filter((p) => p.attributes.role === ROLE.INTERESTED || p.attributes.role === ROLE.PARTICIPANT)
+    )
+  }, [participants])
+
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
       setHasMore(false)
@@ -56,7 +67,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   const userData = (participant) => {
     const _user = participant.attributes.user
-    return { id: _user.id, attributes: { ..._user, avatar: participant.attributes.avatar_url } }
+    return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
   return (
@@ -80,9 +91,9 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <Typography variant="h3">{t('common:tournament.number_of_entries')}</Typography>
               </Box>
               <Typography variant="h3">
-                {data.participant_count}
-                {t('common:common.man')}/{data.max_participants}
-                {t('common:common.man')}
+                {data.is_freezed ? data.participant_count : data.participant_count + data.interested_count}
+                {unit}/{data.max_participants}
+                {unit}
               </Typography>
               <Box ml={2}>
                 <Icon className="fa fa-upload" fontSize="small" />
@@ -93,9 +104,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
               next={fetchMoreData}
               hasMore={hasMore}
               loader={
-                <div className={classes.loaderCenter}>
-                  <ESLoader />
-                </div>
+                meta.pending && (
+                  <div className={classes.loaderCenter}>
+                    <ESLoader />
+                  </div>
+                )
               }
               height={600}
               endMessage={
@@ -105,8 +118,8 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
               }
             >
               {isTeam
-                ? participants.map((participant, i) => <TeamMemberItem key={`team${i}`} team={participant} />)
-                : participants.map((participant, i) => (
+                ? members.map((participant, i) => <TeamMemberItem key={`team${i}`} team={participant} />)
+                : members.map((participant, i) => (
                     <UserListItem data={userData(participant)} key={i} isFollowed={participant.attributes.is_followed} />
                   ))}
             </InfiniteScroll>

@@ -103,6 +103,7 @@ export default {
     no_data: '対象データありません',
     dash: '-',
     cancel: 'キャンセル',
+    team: 'チーム',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -289,6 +290,10 @@ export default {
     edit_match_result: '対戦結果を編集する',
     win: 'WIN',
     please_select_winner: '勝者を選択してください',
+    summary: '大会総括',
+    summary_title: '大会の総括',
+    summary_submit: 'この内容で決定する',
+    copy_toast: '大会詳細URLをコピーしました。',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

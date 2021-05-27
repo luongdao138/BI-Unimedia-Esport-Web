@@ -69,6 +69,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
   const participantItem = (user, avatar, type) => {
     const _name = isTeam ? user?.team_name : user?.name
     const winner = type == match?.winner
+    const _score = type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home
 
     return (
       <Box paddingX={3} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
@@ -87,7 +88,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         <Box pt={6} display="flex" alignItems="flex-end">
           <ThemeProvider theme={theme}>
             <Box color={winner && Colors.yellow}>
-              <Typography variant="h3">{type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home}</Typography>
+              {_score == undefined || _score == null ? <Box pt={10.2}></Box> : <Typography variant="h3">{_score}</Typography>}
             </Box>
           </ThemeProvider>
         </Box>
@@ -136,7 +137,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
             <Box className={classes.stickyFooter}>
               <Box className={classes.nextBtnHolder}>
                 <Box maxWidth={280} className={classes.buttonContainer}>
-                  <ButtonPrimary type="submit" round fullWidth onClick={() => setEditingMatch(selectedMatch)}>
+                  <ButtonPrimary type="submit" round fullWidth onClick={() => setEditingMatch(match)}>
                     {t('common:arena.edit_match_result')}
                   </ButtonPrimary>
                 </Box>

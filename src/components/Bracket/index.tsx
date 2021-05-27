@@ -46,10 +46,12 @@ interface MatchProps {
   winner: 'home' | 'guest' | null
   participant1: Participant | null
   participant2: Participant | null
+  score1?: number | null
+  score2?: number | null
   onClick?: (e: MouseEvent) => void
 }
 
-const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, editable, winner, ...rest }) => {
+const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, score1, score2, editable, winner, ...rest }) => {
   const classes = useStyles()
   return (
     <div className={classes.match}>
@@ -71,7 +73,7 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, e
               </>
             )}
           </div>
-          <div className={classes.score}>-</div>
+          <div className={classes.score}>{score1 == null || score1 == undefined ? '-' : score1}</div>
           {winner !== null && winner === 'guest' && <div className={classes.backdrop} />}
         </div>
         <div className={classes.participantWrapper}>
@@ -90,7 +92,7 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, e
               </>
             )}
           </div>
-          <div className={classes.score}>-</div>
+          <div className={classes.score}>{score2 == null || score2 == undefined ? '-' : score2}</div>
           {winner !== null && winner === 'home' && <div className={classes.backdrop} />}
         </div>
       </div>

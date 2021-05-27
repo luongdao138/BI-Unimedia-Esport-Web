@@ -26,8 +26,9 @@ const ruleText = (rule: string): string => {
 
 const getTypeValue = (t_type: string): number => {
   if (String(t_type) === T_TYPE.PRIVATE) return 1
+  else if (String(t_type) === T_TYPE.PUBLIC) return 0
 
-  return 0
+  return -1
 }
 
 const getTypeEnum = (type: unknown): string => {
@@ -52,20 +53,20 @@ const defaultDetails = (user_id: number): any => {
     game_title_id: [],
     game_hardware_id: -1,
     has_third_place: true,
-    participant_type: 0,
+    participant_type: -1,
     max_participants: 0,
     terms_of_participation: '',
-    acceptance_start_date: '',
-    acceptance_end_date: '',
-    start_date: '',
-    end_date: '',
+    acceptance_start_date: null,
+    acceptance_end_date: null,
+    start_date: null,
+    end_date: null,
     area_id: 1,
     area_name: '',
     address: '',
     has_prize: true,
     retain_history: true,
-    t_type: 't_public',
-    rule: '',
+    t_type: -1,
+    rule: -1,
     prize_amount: '',
     notes: '',
     owner_id: user_id,
@@ -82,7 +83,8 @@ const formatDate = (date: string): string => {
 const getRemainingDate = (date: string): number => {
   const endDate = moment(moment(date).format('YYYY-MM-DD'))
   const nowDate = moment()
-  return endDate.diff(nowDate, 'days')
+  const days = endDate.diff(nowDate, 'days')
+  return days < 0 ? 0 : days
 }
 
 const checkTarget = (targetIds: Array<number>, target: number): boolean => {

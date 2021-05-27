@@ -29,6 +29,7 @@ const Completed: React.FC<CompletedProps> = (props) => {
               win
               leaf
               nameWhite
+              size="small"
             />
           )}
         </div>
@@ -50,7 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   winnerAvatarWrapper: {
     marginTop: theme.spacing(8),
     transform: 'translate(-0%, -0%)',
-    cursor: 'pointer',
   },
 }))
 

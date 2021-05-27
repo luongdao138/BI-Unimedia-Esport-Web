@@ -240,6 +240,16 @@ export type JoinParams = {
   hash_key: string
 }
 
+export type SummaryParams = {
+  data: Summary
+  hash_key: string
+}
+
+export type Summary = {
+  value: string
+  summary_image_url: string
+}
+
 export type GetSuggestedTeamMembersParams = {
   page: number
   keyword?: string
@@ -423,5 +433,10 @@ export const randomizeTournament = async (hash_key: string): Promise<void> => {
 
 export const freezeTournament = async (hash_key: string): Promise<TournamentDetailResponse> => {
   const { data } = await api.post<TournamentDetailResponse>(URI.TOURNAMENTS_FREEZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const summaryTournament = async (params: SummaryParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.SUMMARY_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
