@@ -30,15 +30,16 @@ export interface ChatSuggestionList extends SuggestionDataItem {
 }
 
 export type MessageType = {
-  msg: string
-  chatRoomId: string
-  sortKey: string
-  userId: number
-  createdAt: number
-  clientId: string
+  title?: string
+  msg?: string
+  chatRoomId?: string
+  sortKey?: string
+  userId?: number
+  createdAt?: number
+  clientId?: string
   type: CHAT_MESSAGE_TYPE
   parentMsg?: null | ParentItem | string
-  sent: boolean
+  sent?: boolean
 }
 
 export type ParentItem = {

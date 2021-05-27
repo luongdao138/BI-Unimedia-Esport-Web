@@ -172,13 +172,14 @@ const useStyles = makeStyles(() => ({
     width: 20,
     height: 20,
     position: 'absolute',
-    zIndex: 100,
+    zIndex: 1000,
     left: 0,
     right: 0,
-    top: 10,
+    top: '-10px',
     margin: '0 auto',
     '& svg': {
       width: '100%',
+      color: 'red',
     },
   },
   icon: {
