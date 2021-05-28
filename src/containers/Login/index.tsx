@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
-import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box, InputAdornment } from '@material-ui/core'
 import * as Yup from 'yup'
 import useLoginByEmail from './useLoginByEmail'
 import { IconButton } from '@material-ui/core'
@@ -27,6 +27,16 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import ESCheckbox from '@components/Checkbox'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import i18n from '@locales/i18n'
+import _ from 'lodash'
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .test('email-validation', i18n.t('common:login.validation.email'), (value) => {
+      return CommonHelper.validateEmail(value)
+    })
+    .required(i18n.t('common:common.required')),
+  password: Yup.string().required(i18n.t('common:common.required')),
+})
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin()
@@ -38,15 +48,9 @@ const LoginContainer: React.FC = () => {
   const classes = useStyles()
   const { loginByEmail, meta, resetMeta, metaReset, resetPasswordMeta, handleClick } = useLoginByEmail()
   const { handleLink } = useReturnHref()
-  const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .test('email-validation', t('common:common.error'), (value) => {
-        return CommonHelper.validateEmail(value)
-      })
-      .required(t('common:common.error')),
-    password: Yup.string().required(t('common:common.error')).min(8, t('common:common.error')),
-  })
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<UserLoginParams>({
+  const [showPassword, setShowPassword] = useState(false)
+
+  const { handleChange, values, handleSubmit, handleBlur, errors, touched } = useFormik<UserLoginParams>({
     initialValues: {
       email: '',
       password: '',
@@ -55,20 +59,67 @@ const LoginContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values, _helpers) => {
       if (checkbox.terms && checkbox.privacy) {
+        resetMetas()
         loginByEmail(values)
       }
     },
   })
 
+  const resetMetas = () => {
+    resetMeta()
+    social.resetMeta()
+  }
+
   const handleChangeCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    resetMetas()
     setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
   }
 
   const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
 
-  const buttonActive = (): boolean => values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== ''
+  const buttonActive = (): boolean => _.isEmpty(errors)
 
   const isCheckboxChecked = (): boolean => checkbox.terms && checkbox.privacy
+
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box pb={8}>
+          <Box pb={20 / 8} textAlign="center">
+            <Typography className={classes.wrap} color="secondary">
+              {i18n.t('common:login.error.title')}
+            </Typography>
+          </Box>
+          <Box pb={1}>
+            <Typography className={classes.wrap}>{i18n.t('common:login.error.detail')}</Typography>
+          </Box>
+          <Typography className={classes.wrap} variant="caption">
+            {i18n.t('common:login.error.hint')}
+          </Typography>
+        </Box>
+      )
+    )
+  }
+
+  const renderSocialError = () => {
+    return (
+      !!social.meta.error && (
+        <Box pb={8}>
+          <Box pb={20 / 8} textAlign="center">
+            <Typography className={classes.wrap} color="secondary">
+              {i18n.t('common:login.error.title2')}
+            </Typography>
+          </Box>
+          <Box pb={1}>
+            <Typography className={classes.wrap}>{i18n.t('common:login.error.detail2')}</Typography>
+          </Box>
+          <Typography className={classes.wrap} variant="caption">
+            {i18n.t('common:login.error.hint2')}
+          </Typography>
+        </Box>
+      )
+    )
+  }
 
   return (
     <>
@@ -83,6 +134,9 @@ const LoginContainer: React.FC = () => {
           <Box pt={1.375} pb={8}>
             <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
           </Box>
+
+          {renderError()}
+          {renderSocialError()}
 
           <Box width="100%" flexDirection="column" alignItems="center">
             <form onSubmit={handleSubmit}>
@@ -100,6 +154,7 @@ const LoginContainer: React.FC = () => {
                   fullWidth
                   value={values.email}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   helperText={touched.email && errors.email}
                   error={touched.email && !!errors.email}
                 />
@@ -109,7 +164,7 @@ const LoginContainer: React.FC = () => {
                 <ESInput
                   id="password"
                   labelPrimary={t('common:login.password_label_primary')}
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   labelSecondary={
                     <Link href={handleLink(ESRoutes.FORGOT_PASSWORD)} as={ESRoutes.FORGOT_PASSWORD} shallow>
                       <a className={classes.noLink}>
@@ -119,15 +174,30 @@ const LoginContainer: React.FC = () => {
                       </a>
                     </Link>
                   }
+                  endAdornment={
+                    <InputAdornment position="end" className={classes.inputContainer}>
+                      <div className={classes.borderLeft}></div>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        size="small"
+                        disableRipple
+                        color="inherit"
+                        onMouseDown={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
                   fullWidth
                   value={values.password}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   helperText={touched.password && errors.password}
                   error={touched.password && !!errors.password}
                 />
               </Box>
 
-              <Box pt={3} flexDirection="column" display="flex">
+              <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
                 <ESCheckbox
                   disableRipple
                   checked={checkbox.terms}
@@ -144,7 +214,7 @@ const LoginContainer: React.FC = () => {
                 />
               </Box>
 
-              <Box pt={6} pb={4} maxWidth={280} className={classes.buttonContainer}>
+              <Box pt={22 / 8} pb={4} maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive() || !isCheckboxChecked()}>
                   {t('common:login.submit')}
                 </ButtonPrimary>
@@ -172,7 +242,6 @@ const LoginContainer: React.FC = () => {
         </Box>
       </Box>
       {meta.pending && <ESLoader open={meta.pending} />}
-      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.login_failed')} resetMeta={resetMeta} />}
       {metaReset.loaded && <ESToast open={metaReset.loaded} message={t('common:error.password_reissue')} resetMeta={resetPasswordMeta} />}
     </>
   )
@@ -201,6 +270,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noLink: {
     textDecoration: 'none',
+  },
+  inputContainer: {
+    position: 'relative',
+    paddingRigth: 7,
+  },
+  borderLeft: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#4B4B4D',
+    position: 'absolute',
+    left: -8,
+  },
+  wrap: {
+    whiteSpace: 'pre-line',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

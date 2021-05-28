@@ -13,6 +13,7 @@ import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
+import { MessageType } from '@components/Chat/types/chat.types'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -25,7 +26,7 @@ export interface UploadStateType {
 
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
-
+  const [reply, setReply] = useState<MessageType | null>(null)
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
@@ -62,7 +63,24 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       clientId: clientId,
       type: CHAT_MESSAGE_TYPE.TEXT,
     }
-    dispatch(socketActions.sendMessage(payload))
+    if (reply === null) {
+      dispatch(socketActions.sendMessage(payload))
+    } else {
+      const replyData = {
+        parentMsg: {
+          msg: reply.msg,
+          chatRoomId: roomId,
+          sortKey: reply.sortKey,
+          userId: reply.userId,
+          groupType: 10,
+          createdAt: '',
+          clientId: reply.clientId,
+          type: reply.type,
+        },
+      }
+      dispatch(socketActions.sendMessage(_.omit(_.assign(payload, replyData))))
+    }
+    setReply(null)
   }
   const handlePressActionButton = (type: number) => {
     if (type === ACTIONS.IMAGE_UPLOAD)
@@ -128,17 +146,34 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setMeta({ ...uploadMeta, uploading: false })
   }
 
+  const onReply = (currentMessage: MessageType) => {
+    setReply(currentMessage)
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header}>{roomId}</Box>
       <Box className={classes.list}>
         {renderLoader()}
         {!_.isEmpty(data) && _.isArray(data) && (
-          <MessageList currentUser={userId} paginating={paginating} onFetchMore={onFetchMore} users={users} messages={data} />
+          <MessageList
+            reply={onReply}
+            currentUser={userId}
+            paginating={paginating}
+            onFetchMore={onFetchMore}
+            users={users}
+            messages={data}
+          />
         )}
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
+        <MessageInputArea
+          reply={reply}
+          onCancelReply={() => setReply(null)}
+          onPressSend={handlePress}
+          users={users}
+          onPressActionButton={handlePressActionButton}
+        />
       </Box>
       <ImageUploader
         ref={ref}

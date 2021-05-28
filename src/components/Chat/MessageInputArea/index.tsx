@@ -4,19 +4,21 @@ import Composer from '@components/Chat/Composer'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { Colors } from '@theme/colors'
-import { ChatSuggestionList } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
 import { parseValue } from '@components/Chat/utils'
 import { regex } from '../constants'
 import useAvailable from '@components/Chat/utils/useAvailable'
-import { Actions, SuggestionListItem } from '@components/Chat/elements'
+import { Actions, SuggestionListItem, ReplyContent } from '@components/Chat/elements'
 import { MentionItem } from 'react-mentions'
 
 export interface MessageInputAreaProps {
   onPressActionButton?: (type: number) => void
-  users: ChatSuggestionList[]
+  users: ChatSuggestionList[] | ChatRoomMemberItem[]
   onPressSend?: (text: string) => void
   text?: string | null
   handleOnPressActions?: ((type: number) => void) | undefined
+  onCancelReply?: () => void
+  reply?: MessageType | null
 }
 
 const partTypes = [
@@ -29,7 +31,7 @@ const partTypes = [
 ]
 
 const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
-  const { onPressSend, users, onPressActionButton } = props
+  const { onPressSend, users, onPressActionButton, onCancelReply, reply } = props
   const [text, setText] = useState<string>('')
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
@@ -70,29 +72,62 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
     }
   }
 
+  const renderReplyPanel = () => {
+    if (reply !== null) {
+      return (
+        <Box className={classes.panel}>
+          <ReplyContent color={Colors.text[200]} replyMessage={reply} members={users} />
+          <IconButton onClick={onCancelReply} disableRipple className={classes.closeButton}>
+            <Icon className={`${classes.iconClose} fa fa-times`} />
+          </IconButton>
+        </Box>
+      )
+    }
+    return null
+  }
+
   return (
-    <Box className={classes.root}>
-      <Actions onPressActions={onPressActionButton} />
-      <Box className={classes.input}>
-        <Composer
-          renderSuggestion={renderSuggestion}
-          users={users}
-          placeholder={t('common:chat.placeholder')}
-          msg={text}
-          onKeyPress={handleKeyPress}
-          onChange={onChangeText}
-        />
+    <>
+      {renderReplyPanel()}
+      <Box className={classes.root}>
+        <Actions onPressActions={onPressActionButton} />
+        <Box className={classes.input}>
+          <Composer
+            renderSuggestion={renderSuggestion}
+            users={users}
+            placeholder={t('common:chat.placeholder')}
+            msg={text}
+            onKeyPress={handleKeyPress}
+            onChange={onChangeText}
+          />
+        </Box>
+        <IconButton disabled={_.isEmpty(text) ? true : false} className={classes.send} onClick={send} disableRipple>
+          <Icon className={`${classes.icon} fas fa-paper-plane`} />
+        </IconButton>
       </Box>
-      <IconButton disabled={_.isEmpty(text) ? true : false} className={classes.send} onClick={send} disableRipple>
-        <Icon className={`${classes.icon} fas fa-paper-plane`} />
-      </IconButton>
-    </Box>
+    </>
   )
 }
 
 MessageInputArea.defaultProps = {}
 
 const useStyles = makeStyles(() => ({
+  panel: {
+    position: 'relative',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 5,
+    zIndex: 100,
+    right: 5,
+    '&:hover': {
+      background: 'transparent',
+    },
+  },
+  iconClose: {
+    color: Colors.text[200],
+    fontSize: '12px',
+  },
   toolbar: {
     flexDirection: 'row',
     display: 'flex',

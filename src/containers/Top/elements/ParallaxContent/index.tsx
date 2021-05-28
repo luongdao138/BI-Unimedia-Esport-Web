@@ -24,7 +24,7 @@ export const ParallaxContent: React.FC = () => {
               <ButtonPrimary
                 round
                 onClick={() => {
-                  router.push(ESRoutes.HOME)
+                  router.push(ESRoutes.TOURNAMENTS)
                 }}
               >
                 {t('common:top.start_exelab')}
