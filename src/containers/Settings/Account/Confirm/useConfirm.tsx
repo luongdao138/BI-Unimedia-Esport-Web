@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import authStore from '@store/auth'
 import { clearMetaData } from '@store/metadata/actions'
 
-const { actions } = userProfile
+const { actions, selectors: userProfileSelectors } = userProfile
 const { selectors } = authStore
 const getChangeEmailConfirmMeta = createMetaSelector(actions.changeEmailConfirm)
 
@@ -17,6 +17,7 @@ const useChangeEmailConfirm = (confirmationCode: string) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
+  const changeEmailSteps = useAppSelector(userProfileSelectors.getChangeEmailSteps)
   const resetMeta = () => dispatch(clearMetaData(actions.changeEmailConfirm.typePrefix))
   const meta = useAppSelector(getChangeEmailConfirmMeta)
   const changeEmailConfirm = (params: services.ChangeEmailConfirmParams) => {
@@ -34,7 +35,13 @@ const useChangeEmailConfirm = (confirmationCode: string) => {
     }
   }, [confirmationCode])
 
-  return { changeEmailConfirm, meta, user }
+  useEffect(() => {
+    if (!changeEmailSteps.step_change) {
+      router.back()
+    }
+  }, [changeEmailSteps.step_change])
+
+  return { changeEmailConfirm, meta, user, changeEmailSteps }
 }
 
 export default useChangeEmailConfirm

@@ -100,6 +100,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.white,
     display: 'inline-block',
   },
+  formWrap: {
+    marginBottom: theme.spacing(4),
+  },
   [theme.breakpoints.down('md')]: {
     header: {
       paddingTop: theme.spacing(2),

@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/user.service'
 import { USER_PROFILE_ACTION_TYPE } from './types'
 
@@ -265,3 +265,5 @@ export const changeEmailConfirm = createAsyncThunk<services.ChangeEmailConfirmRe
     }
   }
 )
+
+export const clearChangeEmailSteps = createAction<services.ChangeEmailSteps>(USER_PROFILE_ACTION_TYPE.CLEAR_CHANGE_EMAIL_STEPS)

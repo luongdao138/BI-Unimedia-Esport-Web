@@ -15,8 +15,9 @@ const useAccount = () => {
   const metaChangeEmailConfirm = useAppSelector(getChangeConfirmMeta)
   const changePasswordMeta = () => dispatch(clearMetaData(actions.changePassword.typePrefix))
   const changeEmailConfirmMeta = () => dispatch(clearMetaData(actions.changeEmailConfirm.typePrefix))
+  const resetSteps = () => dispatch(actions.clearChangeEmailSteps())
 
-  return { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta }
+  return { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta, resetSteps }
 }
 
 export default useAccount

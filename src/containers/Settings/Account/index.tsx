@@ -20,14 +20,17 @@ const AccountSettingsContainer: React.FC = () => {
   const hasEmail = CommonHelper.hasEmail(user?.email)
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
-  const { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta } = useAccount()
+  const { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta, resetSteps } = useAccount()
 
-  const openEmailModal = () =>
+  const openEmailModal = () => {
+    resetSteps()
     router.push(makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD }), ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD, {
       shallow: true,
     })
+  }
 
-  const openPasswordModal = () =>
+  const openPasswordModal = () => {
+    resetSteps()
     router.push(
       makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD }),
       ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD,
@@ -35,6 +38,7 @@ const AccountSettingsContainer: React.FC = () => {
         shallow: true,
       }
     )
+  }
 
   return (
     <>

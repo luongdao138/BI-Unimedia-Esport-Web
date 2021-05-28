@@ -13,7 +13,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { changeEmailConfirm, meta, user } = useChangeEmailConfirm(confirmationCode)
+  const { changeEmailConfirm, meta, user, changeEmailSteps } = useChangeEmailConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -26,6 +26,10 @@ const AccountSettingsConfirmContainer: React.FC = () => {
 
   const buttonActive = (): boolean => {
     return user?.email !== '' && confirmationCode.length === 6 && !meta.error
+  }
+
+  if (!changeEmailSteps.step_change) {
+    return null
   }
 
   return (
