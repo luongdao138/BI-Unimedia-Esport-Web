@@ -59,19 +59,22 @@ const ESInquiry: React.FC = () => {
       <HeaderWithButton title={t('service_info.inquiry')} />
       {showSuccess ? (
         <Box>
-          <Box mt={2}>
+          <Box mt={9}>
             <Typography className={classes.wrap} paragraph={true}>
               {t('inquiry.success_message')}
             </Typography>
-            <Box mt={3} display="flex" justifyContent="center">
-              <ButtonPrimary
-                round
-                onClick={() => {
-                  router.push(ESRoutes.HOME)
-                }}
-              >
-                {t('inquiry.go_home')}
-              </ButtonPrimary>
+            <Box mt={9} display="flex" justifyContent="center">
+              <Box width={220}>
+                <ButtonPrimary
+                  round
+                  fullWidth
+                  onClick={() => {
+                    router.push(ESRoutes.HOME)
+                  }}
+                >
+                  {t('inquiry.go_home')}
+                </ButtonPrimary>
+              </Box>
             </Box>
             <Box mt={3}></Box>
           </Box>
@@ -85,7 +88,6 @@ const ESInquiry: React.FC = () => {
                 name="title"
                 value={values.title}
                 fullWidth
-                size="big"
                 onChange={handleChange}
                 labelPrimary={t('inquiry.subject')}
                 placeholder=""
@@ -93,6 +95,7 @@ const ESInquiry: React.FC = () => {
                 helperText={touched.title && errors.title}
                 error={touched.title && !!errors.title}
                 disabled={showPreview}
+                size="small"
               />
               <Box mt={1}>
                 <Input
@@ -109,6 +112,7 @@ const ESInquiry: React.FC = () => {
                   multiline
                   rows={8}
                   disabled={showPreview}
+                  size="small"
                 />
               </Box>
               <Box mt={1}></Box>
@@ -124,25 +128,29 @@ const ESInquiry: React.FC = () => {
                 error={touched.email && !!errors.email}
                 rows={8}
                 disabled={showPreview}
+                size="small"
               />
             </Box>
 
             <Box mt={3} display="flex" justifyContent="center">
-              {showPreview ? (
-                <ButtonPrimary
-                  round
-                  onClick={(e) => {
-                    e.preventDefault()
-                    createInquiry(values)
-                  }}
-                >
-                  {t('inquiry.send')}
-                </ButtonPrimary>
-              ) : (
-                <ButtonPrimary round type="submit" disabled={meta.pending}>
-                  {t('inquiry.next')}
-                </ButtonPrimary>
-              )}
+              <Box width={220}>
+                {showPreview ? (
+                  <ButtonPrimary
+                    round
+                    fullWidth
+                    onClick={(e) => {
+                      e.preventDefault()
+                      createInquiry(values)
+                    }}
+                  >
+                    {t('inquiry.send')}
+                  </ButtonPrimary>
+                ) : (
+                  <ButtonPrimary round fullWidth type="submit" disabled={meta.pending}>
+                    {t('inquiry.next')}
+                  </ButtonPrimary>
+                )}
+              </Box>
             </Box>
             {showPreview ? (
               <Box mt={3} display="flex" justifyContent="center">
@@ -172,13 +180,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: -12,
     },
   },
+  primary: {
+    '& .MuiButton-label': {
+      textDecorationLine: 'none',
+    },
+  },
   wrap: {
     whiteSpace: 'pre-line',
     margin: theme.spacing(3),
-    padding: theme.spacing(2),
-    color: Colors.white_opacity[70],
+    paddingTop: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(5),
+    color: '#707070',
     background: Colors.black_opacity[70],
-    borderRadius: '6px',
+    borderRadius: '4px',
     border: '1px solid rgba(255, 255, 255, 0.3)',
     cursor: 'pointer',
     '&:hover': {
