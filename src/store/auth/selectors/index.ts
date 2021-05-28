@@ -15,4 +15,6 @@ export const getIsAuthenticated = createSelector(getRoot, (state) => !!state.use
 
 export const getHasEmail = createSelector(getRoot, (state) => !!state.user?.email)
 
+export const getEmail = createSelector(getRoot, (state) => state.user?.email)
+
 export const getIsConfirmed = createSelector(getRoot, (state) => state.user && state.user.updateStep === 3)

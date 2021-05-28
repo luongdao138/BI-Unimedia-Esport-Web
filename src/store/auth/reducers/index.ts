@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import * as actions from '../actions'
+import * as userProfileActions from '../../userProfile/actions'
 import { UserLoginResponse } from '@services/auth.service'
 
 type StateType = {
@@ -35,5 +36,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.logout.fulfilled, (state) => {
       state.user = undefined
+    })
+    .addCase(userProfileActions.changeEmailConfirm.fulfilled, (state, action) => {
+      state.user.email = action.payload.email
     })
 })

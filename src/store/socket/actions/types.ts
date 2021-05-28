@@ -9,4 +9,6 @@ export interface State {
   activeRoom: string | undefined
   chatMembers: ChatRoomMemberItem[]
   socketReady: boolean
+  actionPending: boolean
+  newRoomId?: string
 }

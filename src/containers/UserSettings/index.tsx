@@ -189,7 +189,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: 0,
     width: '100%',
     background: Colors.black,
-    borderTop: `1px solid #ffffff30`,
+    borderTop: `1px solid`,
+    borderTopColor: Colors.text['300'],
   },
   stepperHolder: {
     paddingRight: theme.spacing(12),

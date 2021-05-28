@@ -205,3 +205,63 @@ export const updateHomeSettings = createAsyncThunk<services.HomeSettingsResponse
     }
   }
 )
+
+export const changePassword = createAsyncThunk<services.ChangePasswordResponse, services.ChangePasswordParams>(
+  USER_PROFILE_ACTION_TYPE.CHANGE_PASSWORD,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.changePassword(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const changeEmailCheck = createAsyncThunk<services.ChangeEmailCheckResponse, services.ChangeEmailCheckParams>(
+  USER_PROFILE_ACTION_TYPE.CHANGE_EMAIL_CHECK,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.changeEmailCheck(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const changeEmail = createAsyncThunk<services.ChangeEmailResponse, services.ChangeEmailParams>(
+  USER_PROFILE_ACTION_TYPE.CHANGE_EMAIL,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.changeEmail(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const changeEmailConfirm = createAsyncThunk<services.ChangeEmailConfirmResponse, services.ChangeEmailConfirmParams>(
+  USER_PROFILE_ACTION_TYPE.CHANGE_EMAIL_CONFIRM,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.changeEmailConfirm(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

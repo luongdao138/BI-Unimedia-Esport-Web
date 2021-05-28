@@ -5,5 +5,5 @@ export enum METADATA_ACTION_TYPE {
 export type Meta = {
   pending: boolean
   loaded: boolean
-  error: boolean | Record<string, unknown>
+  error: boolean | Record<string, any>
 }
