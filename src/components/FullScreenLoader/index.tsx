@@ -18,7 +18,7 @@ const FullScreenLoader: React.FC<Props> = ({ open }) => {
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.modal + 1,
     color: '#fff',
   },
 }))
