@@ -18,7 +18,6 @@ import ESSimpleSelectInput from '@components/SimpleSelectInput'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'
 import ESLabel from '@components/Label'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import { ACTION_TYPE, UPLOADER_TYPE } from '@constants/image.constants'
 import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
@@ -203,7 +202,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaTeamImage(file, 1, UPLOADER_TYPE.TEAM, ACTION_TYPE.CREATE, (imageUrl) => {
+    uploadArenaTeamImage(file, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('team_icon_url', imageUrl)
     })
