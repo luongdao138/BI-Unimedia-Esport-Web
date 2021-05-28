@@ -1,16 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { makeStyles, Box, Typography } from '@material-ui/core'
+import Loader from '@components/Loader'
+import MessageInputArea from '@components/Chat/MessageInputArea'
+import { ESRoutes } from '@constants/route.constants'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { getFriendList } from '@store/chat/actions'
 import { friendList } from '@store/chat/selectors'
-import MessageInputArea from '@components/Chat/MessageInputArea'
 import { currentUserId } from '@store/auth/selectors'
 import { members } from '@store/socket/selectors'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import TextMessage from '@components/Chat/elements/TextMessage'
-import ESSelectInput from '@components/SelectInput'
+import ESSelectInput, { SelectInputItem } from '@components/SelectInput'
 import chatStore from '@store/chat'
+import { socketActions } from '@store/socket/actions'
+import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import * as socket from '@store/socket/selectors'
+import { useRouter } from 'next/router'
 
 const { actions } = chatStore
 
@@ -18,12 +23,15 @@ const _getFriendsMeta = createMetaSelector(actions.getFriendList)
 
 const ChatRoomCreateContainer: React.FC = () => {
   const classes = useStyles()
-
+  const router = useRouter()
   const dispatch = useAppDispatch()
   const friends = useAppSelector(friendList)
   const getFriendsMeta = useAppSelector(_getFriendsMeta)
   const userId = useAppSelector(currentUserId)
   const users = useAppSelector(members)
+  const actionPending = useAppSelector(socket.actionPending)
+  const newRoomId = useAppSelector(socket.newRoomId)
+  const [selectedUsers, setSelectedUsers] = useState([] as number[])
 
   useEffect(() => {
     if (userId) {
@@ -31,18 +39,43 @@ const ChatRoomCreateContainer: React.FC = () => {
     }
   }, [userId])
 
+  useEffect(() => {
+    if (_.isString(newRoomId)) {
+      dispatch(socketActions.clearNewRoomId())
+      navigateRoom(newRoomId)
+    }
+  }, [newRoomId])
+
   const handlePress = (text: string) => {
-    text
-  }
-  const handlePressActionButton = (type: number) => {
-    type
+    dispatch(
+      socketActions.createChatRoom({
+        action: CHAT_ACTION_TYPE.CREATE_ROOM,
+        userIds: selectedUsers,
+        firstMsg: text.trim(),
+      })
+    )
   }
 
-  const handleOnUserSelected = (selected) => {
-    selected
+  const navigateRoom = (id: string) => {
+    router.push(`${ESRoutes.MESSAGE}${id}`, undefined, { shallow: true })
+  }
+
+  const handleOnUserSelected = (selected: (string | SelectInputItem)[]) => {
+    const ids = selected.map((item) => (_.isString(item) ? 0 : item.id)) as number[]
+    setSelectedUsers(ids)
   }
   const handleSearchInput = (text: string) => {
     dispatch(getFriendList({ type: 'group', keyword: text }))
+  }
+  const renderLoader = () => {
+    if (actionPending) {
+      return (
+        <Box className={classes.loaderBox}>
+          <Loader />
+        </Box>
+      )
+    }
+    return null
   }
 
   return (
@@ -67,17 +100,11 @@ const ChatRoomCreateContainer: React.FC = () => {
           loading={getFriendsMeta.pending}
         />
       </Box>
-
-      <Box></Box>
       <Box className={classes.list}>
-        <Box className={`${classes.content} scroll-bar`}>
-          <Box style={{ padding: 10, marginBottom: 5, maxWidth: 'auto', background: '#555', display: 'block' }}>
-            <TextMessage members={users} text={'welcome'} />
-          </Box>
-        </Box>
+        <Box className={`${classes.content} scroll-bar`}>{renderLoader()}</Box>
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
+        <MessageInputArea onPressSend={handlePress} users={users} />
       </Box>
     </Box>
   )

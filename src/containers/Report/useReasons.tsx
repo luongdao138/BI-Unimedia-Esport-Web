@@ -6,7 +6,7 @@ import { ReasonsParams } from '@services/report.service'
 
 const { selectors, actions } = reportStore
 
-const getMeta = createMetaSelector(actions.reportReasons)
+const getMeta = createMetaSelector(actions.getReportReasons)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useReasons = () => {
@@ -14,8 +14,8 @@ const useReasons = () => {
   const reasons = useAppSelector(selectors.getReasons)
   const page = useAppSelector(selectors.getReasonsMeta)
   const meta = useAppSelector(getMeta)
-  const fetchReasons = (param: ReasonsParams) => dispatch(actions.reportReasons(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.reportReasons.typePrefix))
+  const fetchReasons = (param: ReasonsParams) => dispatch(actions.getReportReasons(param))
+  const resetMeta = () => dispatch(clearMetaData(actions.getReportReasons.typePrefix))
 
   return { reasons, fetchReasons, resetMeta, meta, page }
 }

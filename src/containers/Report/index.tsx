@@ -57,10 +57,11 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
-      reason_id: -1,
+      reason_id: reasons[0] ? Number(reasons[0].id) : 1,
       report_type: 0,
       user_email: '',
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
       switch (reportType) {
@@ -136,7 +137,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               helperText={formik.touched.reason_id && formik.errors.reason_id}
             >
               {reasons.map((g, idx) => (
-                <FormControlLabel key={idx} value={g.id} control={<Radio required />} label={g.attributes.reason} />
+                <FormControlLabel key={idx} value={Number(g.id)} control={<Radio color="primary" />} label={g.attributes.reason} />
               ))}
             </RadioVertical>
 
@@ -162,7 +163,6 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               value={formik.values.user_email}
               onChange={formik.handleChange}
               labelPrimary={t('user_report.reporter_email')}
-              placeholder={t('user_report.reporter_email_placeholder')}
               fullWidth
               required
               helperText={formik.touched.user_email && formik.errors.user_email}

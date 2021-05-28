@@ -17,13 +17,15 @@ export type ReasonsParams = {
 }
 
 export type ReasonsResponse = {
-  data: Array<ReasonResponse>
+  data: Array<Reason>
   meta: any
 }
 
-export type ReasonResponse = {
-  id: number
-  attributes: any
+export type Reason = {
+  id: string
+  attributes: {
+    reason: string
+  }
 }
 
 export type Meta = {

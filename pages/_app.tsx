@@ -21,6 +21,7 @@ import 'src/locales/i18n'
 import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
+import SimpleReactLightbox from 'simple-react-lightbox'
 
 type Props = AppProps & {
   Component: PageWithLayoutType
@@ -71,10 +72,12 @@ const App = ({ Component, pageProps }: Props) => {
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
       <ThemeProvider theme={theme}>
         <ESLoader open={loader} />
-        <Layout>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </Layout>
+        <SimpleReactLightbox>
+          <Layout>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </Layout>
+        </SimpleReactLightbox>
       </ThemeProvider>
     </PersistGate>
   )
