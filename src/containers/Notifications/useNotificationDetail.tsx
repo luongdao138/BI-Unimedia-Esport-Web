@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import notificationStore from '@store/notification'
-import { NotificationDetailParams } from '@services/notification.service'
 
 const { selectors, actions } = notificationStore
 
@@ -9,7 +8,7 @@ const useNotificationDetail = () => {
   const dispatch = useAppDispatch()
   const notificationDetail = useAppSelector(selectors.getNotificationDetail)
   const clearNotificationDetail = () => dispatch(actions.clearNotificationDetail())
-  const fetchNotificationDetail = (param: NotificationDetailParams) => dispatch(actions.getNotificationDetail(param))
+  const fetchNotificationDetail = (id: number) => dispatch(actions.getNotificationDetail(id))
   return { notificationDetail, fetchNotificationDetail, clearNotificationDetail }
 }
 

@@ -45,22 +45,23 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .test('email-validation', t('common.error'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required(),
-    description: Yup.string().required().max(1000, t('common.too_long')),
+      .required(t('common.required')),
+    description: Yup.string().required(t('common.required')).max(1000, t('common.too_long')),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
       })
-      .required(),
+      .required(t('common.required')),
   })
 
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
-      reason_id: -1,
+      reason_id: reasons[0] ? Number(reasons[0].id) : 1,
       report_type: 0,
       user_email: '',
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
       switch (reportType) {
@@ -93,7 +94,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 
   return (
     <div>
-      <ESDialog title={t('user_report.title')} open={open} handleClose={handleClose}>
+      <ESDialog
+        title={t('user_report.title')}
+        open={open}
+        handleClose={() => {
+          handleClose()
+          formik.resetForm()
+        }}
+      >
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
             {data && (reportType == REPORT_TYPE.USER_LIST || reportType == REPORT_TYPE.CHAT) ? (
@@ -126,9 +134,10 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               onChange={formik.handleChange}
               required
               label={t('user_report.reason')}
+              helperText={formik.touched.reason_id && formik.errors.reason_id}
             >
               {reasons.map((g, idx) => (
-                <FormControlLabel key={idx} value={g.id} control={<Radio />} label={g.attributes.reason} />
+                <FormControlLabel key={idx} value={Number(g.id)} control={<Radio color="primary" />} label={g.attributes.reason} />
               ))}
             </RadioVertical>
 
@@ -142,7 +151,8 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               placeholder={t('user_report.reason_desc')}
               fullWidth
               required
-              error={!!formik.errors.description}
+              helperText={formik.touched.description && formik.errors.description}
+              error={formik.touched.description && !!formik.errors.description}
               multiline
               rows={4}
             />
@@ -153,10 +163,10 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               value={formik.values.user_email}
               onChange={formik.handleChange}
               labelPrimary={t('user_report.reporter_email')}
-              placeholder={t('user_report.reporter_email_placeholder')}
               fullWidth
               required
-              error={!!formik.errors.user_email}
+              helperText={formik.touched.user_email && formik.errors.user_email}
+              error={formik.touched.user_email && !!formik.errors.user_email}
             />
             <Box mt={1}></Box>
           </DialogContent>

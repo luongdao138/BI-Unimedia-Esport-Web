@@ -52,6 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 2,
     paddingLeft: theme.spacing(1 / 2),
     paddingRight: theme.spacing(1 / 2),
+    paddingBottom: theme.spacing(1 / 2),
+    paddingTop: theme.spacing(1 / 2),
     fontSize: 10,
     marginLeft: theme.spacing(1),
     color: Colors.white,

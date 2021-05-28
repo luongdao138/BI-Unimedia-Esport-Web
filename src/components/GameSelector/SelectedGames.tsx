@@ -2,11 +2,13 @@ import { Container, List } from '@material-ui/core'
 import Chip from '@components/Chip'
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
+import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.common.black,
-    borderTop: `1px solid #FFFFFF30`,
+    borderTop: `1px solid`,
+    borderTopColor: Colors.text['300'],
     paddingBottom: theme.spacing(20),
     position: 'fixed',
     left: 0,

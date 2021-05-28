@@ -88,7 +88,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             }}
           />
           <Box className={classes.headerItemsContainer}>
-            <IconButton className={classes.iconButtonBg}>
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <ProfileAvatar
@@ -198,7 +198,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(3),
   },
   iconButtonBg: {
-    backgroundColor: `${Colors.grey[1000]}`,
+    backgroundColor: `${Colors.grey[200]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[200]}80`,
+    },
+    zIndex: 10,
   },
   marginTop20: {
     marginTop: 20,
