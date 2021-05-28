@@ -47,6 +47,11 @@ export type Meta = {
   total_pages: number
 }
 
+export type ChangeEmailSteps = {
+  step_check: boolean
+  step_change: boolean
+}
+
 export type ActivityLog = {
   attributes: {
     action_type: string

@@ -19,7 +19,7 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const store = useStore()
-  const { changeEmail, meta, user } = useChangeEmail()
+  const { changeEmail, meta, user, changeEmailSteps } = useChangeEmail()
 
   const validationSchema = Yup.object().shape({
     new_email: Yup.string().required(t('common.required')).email(t('error.email_invalid')),
@@ -46,13 +46,19 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
+      //TODO error.error_email_4221 translate
       setFieldError('new_email', t('error.error_email_4221'))
     } else if (meta.error && meta.error['code'] === 4222) {
+      //TODO error.error_email_4222 translate
       setFieldError('new_email', t('error.error_email_4222'))
     }
   }, [meta.error])
 
   const buttonActive = (): boolean => values.new_email !== '' && _.isEmpty(errors)
+
+  if (!changeEmailSteps.step_check) {
+    return null
+  }
 
   return (
     <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>
@@ -70,7 +76,7 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
         </Typography>
         <Typography className={classes.currentEmail}>{user.email}</Typography>
       </Box>
-      <Box mt={4} ml={5} className={classes.formWrap}>
+      <Box mt={4} ml={5} className={classes.formWrapBottom}>
         <ESInput
           id="new_email"
           autoFocus
@@ -108,6 +114,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     color: Colors.white_opacity['30'],
   },
+  formWrapBottom: {
+    marginBottom: theme.spacing(4),
+  },
   [theme.breakpoints.down('md')]: {
     header: {
       paddingTop: theme.spacing(2),
@@ -115,6 +124,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     formWrap: {
       marginTop: theme.spacing(4),
       marginLeft: theme.spacing(2),
+    },
+    formWrapBottom: {
+      marginTop: theme.spacing(4),
+      marginLeft: theme.spacing(2),
+      marginBottom: theme.spacing(4),
     },
   },
 }))

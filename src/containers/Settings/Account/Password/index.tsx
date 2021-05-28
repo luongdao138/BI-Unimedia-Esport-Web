@@ -36,6 +36,7 @@ const AccountSettingsPasswordContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
+      // TODO error.error_4221 translate
       setFieldError('current_password', t('error.error_4221'))
     }
   }, [meta.error])
@@ -98,6 +99,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   headerTitle: {
     color: Colors.white,
     display: 'inline-block',
+  },
+  formWrap: {
+    marginBottom: theme.spacing(4),
   },
   [theme.breakpoints.down('md')]: {
     header: {
