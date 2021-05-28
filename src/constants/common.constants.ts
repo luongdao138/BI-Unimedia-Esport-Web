@@ -76,7 +76,6 @@ export const CHAT_CONSTANTS = {
   },
 }
 
-
 export const LIGHTBOX_OPTIONS = {
   settings: {
     overlayColor: 'rgb(0, 0, 0, 0.8)',
@@ -95,4 +94,3 @@ export const LIGHTBOX_OPTIONS = {
 }
 
 export const SNS = 'sns'
-

@@ -8,7 +8,7 @@ const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageT
   if (unsentArray.length === 0 || unsentArray.length < 0) {
     const isMerged = newdata[0] !== undefined ? _.filter(olddata, { sortKey: newdata[0].sortKey }) : []
     if (_.isEmpty(isMerged)) {
-      olddata = _.concat(newdata, olddata)
+      olddata = _.concat(olddata, newdata)
     }
     updatedObj = olddata
   } else {

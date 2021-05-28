@@ -265,6 +265,9 @@ export default {
     back_list: '宛先',
     create_new: '新規作成',
     placeholder: 'メッセージを入力…',
+    copy_content: '内容のコピー',
+    reply_msg: '引用返信',
+    report_chat: '通報',
   },
   notification: {
     title: '通知一覧',
