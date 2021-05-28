@@ -19,7 +19,7 @@ import { ESRoutes } from '@constants/route.constants'
 
 const ESInquiry: React.FC = () => {
   const { t } = useTranslation('common')
-  const { createInquiry, meta } = useInquiry()
+  const { createInquiry, meta, currentUserEmail } = useInquiry()
   const router = useRouter()
   const [showPreview, setShowPreview] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
@@ -40,7 +40,7 @@ const ESInquiry: React.FC = () => {
     initialValues: {
       content: '',
       title: '',
-      email: '',
+      email: currentUserEmail ?? '',
     },
     validationSchema,
     onSubmit() {
