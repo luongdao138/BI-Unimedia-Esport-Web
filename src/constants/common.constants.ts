@@ -76,4 +76,4 @@ export const CHAT_CONSTANTS = {
   },
 }
 
-export const SNS = 'sns'
+export const SNS = 'SNS'

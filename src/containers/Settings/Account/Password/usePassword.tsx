@@ -5,6 +5,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import userProfile from '@store/userProfile'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { ESRoutes } from '@constants/route.constants'
+import { clearMetaData } from '@store/metadata/actions'
 
 const { actions } = userProfile
 const getChangeEmailCheckMeta = createMetaSelector(actions.changeEmailCheck)
@@ -14,6 +15,7 @@ const usePassword = () => {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getChangeEmailCheckMeta)
   const { navigateScreen } = useReturnHref()
+  const resetMeta = () => dispatch(clearMetaData(actions.changeEmailCheck.typePrefix))
 
   const changeEmailCheck = (params: services.ChangeEmailCheckParams) => {
     dispatch(actions.changeEmailCheck(params))
@@ -22,6 +24,7 @@ const usePassword = () => {
   useEffect(() => {
     if (meta.loaded) {
       navigateScreen(ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL)
+      resetMeta()
     }
   }, [meta.loaded])
 

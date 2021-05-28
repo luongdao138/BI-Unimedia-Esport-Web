@@ -6,13 +6,14 @@ import ESStickyFooter from '@components/StickyFooter'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import useChangeEmailConfirm from './useConfirm'
+import ESLoader from '@components/FullScreenLoader'
 
 const AccountSettingsConfirmContainer: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const router = useRouter()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { changeEmailConfirm, meta, user } = useChangeEmailConfirm()
+  const { changeEmailConfirm, meta, user } = useChangeEmailConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -51,11 +52,12 @@ const AccountSettingsConfirmContainer: React.FC = () => {
       <Box mx={4} className={classes.section}>
         <Typography variant="caption">{t('confirm.dont_receive')}</Typography>
       </Box>
-      <Box mx={4} className={classes.section}>
+      <Box mx={4} className={classes.sectionBottom}>
         <Typography variant="caption" className={classes.subtitle}>
           {t('confirm.send_again')}
         </Typography>
       </Box>
+      {meta.pending && <ESLoader open={meta.pending} />}
     </ESStickyFooter>
   )
 }
@@ -82,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   subtitle: {
     color: Colors.white_opacity['30'],
+  },
+  sectionBottom: {
+    marginBottom: theme.spacing(4),
   },
   [theme.breakpoints.down('md')]: {
     header: {

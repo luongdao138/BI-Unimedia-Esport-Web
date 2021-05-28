@@ -46,8 +46,10 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
+      //TODO error.error_email_4221 translate
       setFieldError('new_email', t('error.error_email_4221'))
     } else if (meta.error && meta.error['code'] === 4222) {
+      //TODO error.error_email_4222 translate
       setFieldError('new_email', t('error.error_email_4222'))
     }
   }, [meta.error])
