@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
     return {
       width: 290,
       borderRadius: 16,
-      textAlign: props.direction === 'left' ? 'right' : 'left',
+      textAlign: 'left',
       overflow: 'hidden',
       background: props.direction === 'left' ? Colors.grey[200] : Colors.white,
       borderBottomLeftRadius: props.direction === 'left' ? 0 : 16,
