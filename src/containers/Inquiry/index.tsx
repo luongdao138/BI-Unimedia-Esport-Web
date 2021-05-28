@@ -136,11 +136,11 @@ const ESInquiry: React.FC = () => {
                     createInquiry(values)
                   }}
                 >
-                  {t('inquiry.next')}
+                  {t('inquiry.send')}
                 </ButtonPrimary>
               ) : (
                 <ButtonPrimary round type="submit" disabled={meta.pending}>
-                  {t('inquiry.send')}
+                  {t('inquiry.next')}
                 </ButtonPrimary>
               )}
             </Box>
@@ -152,6 +152,7 @@ const ESInquiry: React.FC = () => {
                     e.preventDefault()
                     setShowPreview(false)
                   }}
+                  className={classes.cancel}
                 >
                   {t('inquiry.go_edit')}
                 </Button>
@@ -184,6 +185,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: 'none',
       background: '#1a1a1a',
     },
+  },
+  cancel: {
+    textDecorationLine: 'underline',
   },
 }))
 
