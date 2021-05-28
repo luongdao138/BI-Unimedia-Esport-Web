@@ -2,18 +2,20 @@ import React, { useState } from 'react'
 import { Header } from '@layouts/Header'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
+import { ESRoutes } from '@constants/route.constants'
 import { Box } from '@material-ui/core'
 import ChatRoomList from '@containers/ChatRoomList'
 import { IconButton, Icon, makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import Button from '@components/Button'
+import { useRouter } from 'next/router'
 
 const MessageLayout: React.FC = ({ children }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [showList, setShowList] = useState<boolean>(false)
   const classes = useStyles()
-
+  const router = useRouter()
   const { t } = useTranslation(['common'])
 
   const toggleDrawer = (open: boolean) => {
@@ -27,6 +29,9 @@ const MessageLayout: React.FC = ({ children }) => {
   const backHandler = (e: React.MouseEvent) => {
     e.preventDefault
     window.history.go(-1)
+  }
+  const navigateRoomCreate = () => {
+    router.push(ESRoutes.MESSAGE_ROOM_CREATE, undefined, { shallow: true })
   }
 
   return (
@@ -61,6 +66,7 @@ const MessageLayout: React.FC = ({ children }) => {
                 className={`room-create-button ${classes.create}`}
                 round
                 startIcon={<Icon style={{ fontSize: 10, color: Colors.white }} className={`fa fa-plus`} />}
+                onClick={() => navigateRoomCreate()}
               >
                 {t('common:chat.create_new')}
               </Button>

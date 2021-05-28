@@ -1,5 +1,4 @@
 import React from 'react'
-import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
@@ -11,21 +10,16 @@ import { WarningRounded } from '@material-ui/icons'
 
 interface RandomizeDialogProps {
   onAction: () => void
+  onClose: () => void
+  open: boolean
 }
 
-const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction }) => {
+const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, open }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const [open, setOpen] = useState(false)
 
   return (
     <Box>
-      <Box className={classes.actionButton}>
-        <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-          {t('common:arena.randomize_button')}
-        </ButtonPrimary>
-      </Box>
-
       <ESModal open={open}>
         <BlankLayout>
           <Box paddingY={16} className={classes.childrenContainer}>
@@ -44,19 +38,12 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction }) => {
 
             <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" paddingTop={18.5}>
               <Box marginX={1} width="100%">
-                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+                <ESButton variant="outlined" round fullWidth size="large" onClick={onClose}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
               <Box marginX={2} width="100%">
-                <ButtonPrimary
-                  round
-                  fullWidth
-                  onClick={() => {
-                    setOpen(false)
-                    onAction()
-                  }}
-                >
+                <ButtonPrimary round fullWidth onClick={onAction}>
                   {t('common:arena.dialog.deploy_button')}
                 </ButtonPrimary>
               </Box>

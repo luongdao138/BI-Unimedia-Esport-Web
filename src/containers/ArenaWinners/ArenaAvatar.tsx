@@ -6,15 +6,16 @@ import { Colors } from '@theme/colors'
 interface ArenaAvatarProps {
   src: null | string
   leaf?: boolean
-  name: string
+  name?: string
   user_code?: string
   nameClass?: string
   nameWhite?: boolean
   win?: boolean
   size?: 'small' | 'large'
+  alt_name?: string
 }
 
-const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, nameWhite, win, size }) => {
+const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, nameWhite, win, size, alt_name }) => {
   const classes = useStyles({ leaf, win, size })
   return (
     <div className={classes.root}>
@@ -25,14 +26,18 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
       )}
       {win && !leaf && <Typography className={classes.winText}>WIN</Typography>}
       <div className={`${classes.avatarWrapper} ${win && classes.win}`}>
-        <Avatar src={src} size={size === 'large' ? 120 : 80} alt={name} />
+        <Avatar src={src} size={size === 'large' ? 120 : 80} alt={alt_name ? alt_name : name} />
       </div>
-      <div className={classes.nameWrapper}>
-        <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`} noWrap>
-          {name}
-        </Typography>
-        {user_code && <Typography noWrap>{user_code}</Typography>}
-      </div>
+      {(name || user_code) && (
+        <div className={classes.nameWrapper}>
+          {name && (
+            <Typography className={`${classes.name} ${nameWhite && classes.nameWhite}`} noWrap>
+              {name}
+            </Typography>
+          )}
+          {user_code && <Typography noWrap>{user_code}</Typography>}
+        </div>
+      )}
     </div>
   )
 }

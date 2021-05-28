@@ -5,13 +5,13 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import BlankLayout from '@layouts/BlankLayout'
 import ESLoader from '@components/FullScreenLoader'
-import ButtonPrimary from '@components/ButtonPrimary'
-import ESAvatar from '@components/Avatar'
 import ESModal from '@components/Modal'
 import { PARTICIPANT_TYPE, STATUS, ROLE } from '@constants/tournament.constants'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Meta } from '@store/metadata/actions/types'
+import ArenaAvatar from '@containers/ArenaWinners/ArenaAvatar'
 import ScoreEdit from './ScoreEdit'
+import ESStickyFooter from '@components/StickyFooter'
 
 interface ScoreModalProps {
   meta: Meta
@@ -73,17 +73,19 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
 
     return (
       <Box paddingX={3} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
-        {winner ? (
-          <ThemeProvider theme={theme}>
-            <Typography variant="caption">{t('common:arena.win')}</Typography>
-          </ThemeProvider>
-        ) : (
-          <Box pt={14.5}></Box>
-        )}
-        <ESAvatar size={120} alt={_name || ''} src={avatar} />
-        <Box pt={1}></Box>
-        <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
-        {!isTeam && <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>}
+        <div className={classes.winnerAvatarWrapper}>
+          <ArenaAvatar alt_name={_name || ''} src={avatar} win={winner} nameWhite />
+        </div>
+        <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center">
+          <Box color={Colors.grey[300]}>
+            <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
+          </Box>
+          {!isTeam && (
+            <Box color={Colors.grey[400]}>
+              <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>
+            </Box>
+          )}
+        </Box>
 
         <Box pt={6} display="flex" alignItems="flex-end">
           <ThemeProvider theme={theme}>
@@ -100,57 +102,52 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
     <ESModal open={!!match}>
       {!!match && (
         <BlankLayout>
-          <Box pt={7.5} className={classes.topContainer}>
-            <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">{t('common:tournament.match_result')}</Typography>
-              </Box>
-            </Box>
-            <Divider />
-            <Box pb={6} pt={3} textAlign="center">
-              <ThemeProvider theme={theme}>
-                <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-              </ThemeProvider>
-            </Box>
-            <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
-              {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
-              <Box display="flex" alignItems="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body2">{t('common:tournament.vs')}</Typography>
-                </ThemeProvider>
-              </Box>
-              {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
-            </Box>
-            {!match?.winner && (
-              <Box pt={3} textAlign="center">
-                <Typography variant="body1">{t('common:arena.no_match_result')}</Typography>
-              </Box>
-            )}
-
-            <Box className={classes.blankSpace}></Box>
-          </Box>
-
-          {scoreEditable && (
-            <Box className={classes.stickyFooter}>
-              <Box className={classes.nextBtnHolder}>
-                <Box maxWidth={280} className={classes.buttonContainer}>
-                  <ButtonPrimary type="submit" round fullWidth onClick={() => setEditingMatch(match)}>
-                    {t('common:arena.edit_match_result')}
-                  </ButtonPrimary>
+          <ESStickyFooter
+            disabled={false}
+            title={t('common:arena.edit_match_result')}
+            onClick={() => setEditingMatch(match)}
+            show={scoreEditable}
+            noScroll
+          >
+            <Box paddingY={7.5} className={classes.topContainer}>
+              <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
+                <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
+                  <Icon className="fa fa-arrow-left" fontSize="small" />
+                </IconButton>
+                <Box pl={2}>
+                  <Typography variant="h2">{t('common:tournament.match_result')}</Typography>
                 </Box>
               </Box>
+              <Divider />
+              <Box pb={6} pt={3} textAlign="center">
+                <ThemeProvider theme={theme}>
+                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
+                </ThemeProvider>
+              </Box>
+              <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
+                {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
+                <Box display="flex" alignItems="center">
+                  <ThemeProvider theme={theme}>
+                    <Typography variant="body2">{t('common:tournament.vs')}</Typography>
+                  </ThemeProvider>
+                </Box>
+                {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
+              </Box>
+              {!match?.winner && (
+                <Box pt={3} textAlign="center">
+                  <Typography variant="body1">{t('common:arena.no_match_result')}</Typography>
+                </Box>
+              )}
             </Box>
-          )}
-          <ScoreEdit
-            meta={meta}
-            tournament={tournament}
-            selectedMatch={editingMatch}
-            onScoreEntered={handleScoreEntered}
-            handleClose={() => setEditingMatch(undefined)}
-          />
+
+            <ScoreEdit
+              meta={meta}
+              tournament={tournament}
+              selectedMatch={editingMatch}
+              onScoreEntered={handleScoreEntered}
+              handleClose={() => setEditingMatch(undefined)}
+            />
+          </ESStickyFooter>
         </BlankLayout>
       )}
       {meta.pending && <ESLoader open={meta.pending} />}
@@ -170,14 +167,6 @@ const theme = createMuiTheme({
         fontSize: 40,
         fontWeight: 'bold',
       },
-      caption: {
-        fontSize: 70,
-        fontWeight: 'bold',
-        fontStyle: 'italic',
-        background: 'linear-gradient(to left, #C3F735, #F4F434)',
-        '-webkit-background-clip': 'text',
-        '-webkit-text-fill-color': 'transparent',
-      },
       h3: {
         fontSize: 70,
         fontWeight: 'bold',
@@ -188,39 +177,20 @@ const theme = createMuiTheme({
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
+  winnerAvatarWrapper: {
+    marginTop: theme.spacing(8),
+    transform: 'translate(-0%, -0%)',
+  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  blankSpace: {
-    height: 169,
-  },
   [theme.breakpoints.down('sm')]: {
     topContainer: {
       paddingTop: 0,
     },
-    blankSpace: {
-      height: theme.spacing(15),
-    },
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.9)',
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    width: '100%',
-    margin: '0 auto',
   },
 }))
 

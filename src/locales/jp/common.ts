@@ -41,6 +41,7 @@ export default {
     no_data: '対象データありません',
     dash: '-',
     team: 'チーム',
+    send: '送信する',
   },
   welcome: 'eXeLABへようこそ',
   top: {
@@ -110,6 +111,13 @@ export default {
     close_arena_failed: 'Failed to close arena',
     join_arena_failed: 'Failed to entry arena',
     leave_arena_failed: 'Failed to leave arena',
+    too_short: '短すぎます。',
+    password_must_match: 'Password must match',
+    error_4221: 'Current password incorrect',
+    email_invalid: '有効なメールアドレスを入力してください',
+    same_email: '現在のメールアドレスと同一のメールアドレスです！違うメールアドレスを入力してください。',
+    error_email_4221: 'New mail not found',
+    error_email_4222: 'New mail duplicated',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -451,6 +459,16 @@ export default {
     general_member: '一般会員',
     delete_account: 'アカウントを削除する',
     change_email_address: 'メールアドレスの変更',
+    current_email: '現在のメールアドレス',
+    new_email: '新しいメールアドレス',
+    confirm_title: `メールアドレスに送信された
+6桁の認証コードを入力してください`,
+    change_password: 'パスワードの変更',
+    current_password: '現在のパスワード',
+    new_password: '新しいパスワード',
+    new_password_re_enter: '新しいパスワード（再入力）',
+    hint: '8文字以上の半角英数字を入力してください',
+    hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
   },
   my_page_settings: {
     title: 'マイページの情報公開範囲',

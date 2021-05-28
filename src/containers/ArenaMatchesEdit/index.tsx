@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, Box, IconButton, Theme, Toolbar, Typography } from '@material-ui/core'
-import ButtonPrimary from '@components/ButtonPrimary'
+import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
+import ESStickyFooter from '@components/StickyFooter'
 import SelectParticipantModal from '../TournamentDetail/Partials/SelectParticipantModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
@@ -12,12 +12,14 @@ import RandomizeDialog from './Partials/RandomizeDialog'
 import { useTranslation } from 'react-i18next'
 import ESToast from '@components/Toast'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import _ from 'lodash'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const {
     matches,
+    third_place_match,
     setParticipant,
     freeze,
     randomize,
@@ -32,6 +34,7 @@ const ArenaMatches: React.FC = () => {
   } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const [selectedMatch, setSelectedMatch] = useState()
+  const [showRandomize, setShowRandomize] = useState(false)
   const [data, setData] = useState<any>()
 
   useEffect(() => {
@@ -50,98 +53,106 @@ const ArenaMatches: React.FC = () => {
     if (match && match.round_no == 0 && !tournament.attributes.is_freezed) setSelectedMatch(match)
   }
 
-  const actionButtons = () => {
-    if (!data || !matches || !matchesMeta.loaded) return
-    if (!data.memberSelectable) return
-    const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
+  const getMatch = (headerText, _match) => {
+    const data = tournament.attributes
+    const isTeam = data.participant_type > 1
+
     return (
-      <Box className={classes.stickyFooter}>
-        <Box className={classes.nextBtnHolder}>
-          <Box maxWidth={280} className={classes.buttonContainer}>
-            {freezable ? (
-              <ButtonPrimary type="submit" round fullWidth onClick={() => freeze(tournament.attributes.hash_key)}>
-                {t('common:arena.freeze_button')}
-              </ButtonPrimary>
-            ) : (
-              <RandomizeDialog onAction={() => randomize(tournament.attributes.hash_key)} />
+      <Bracket.Match
+        onClick={() => onMatchClick(_match)}
+        key={_match.id}
+        headerText={headerText}
+        editable
+        winner={_match.winner}
+        participant1={
+          _match.home_user
+            ? {
+                avatar: _match.home_avatar,
+                label: isTeam ? _match.home_user.team_name : _match.home_user.name,
+                score: _match.score_home,
+              }
+            : null
+        }
+        participant2={
+          _match.guest_user
+            ? {
+                avatar: _match.guest_avatar,
+                label: isTeam ? _match.guest_user.team_name : _match.guest_user.name,
+                score: _match.score_guest,
+              }
+            : null
+        }
+        score1={_match.score_home}
+        score2={_match.score_guest}
+      />
+    )
+  }
+
+  const body = () => {
+    const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
+
+    return (
+      <ESStickyFooter
+        disabled={false}
+        title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
+        onClick={freezable ? () => freeze(tournament.attributes.hash_key) : () => setShowRandomize(true)}
+        show={data.memberSelectable}
+        noScroll
+      >
+        <AppBar className={classes.appbar}>
+          <Container maxWidth="lg">
+            <Toolbar className={classes.toolbar}>
+              <IconButton className={classes.backButton}>
+                <ArrowBack />
+              </IconButton>
+              <Typography variant="h2">{tournament.attributes.title}</Typography>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <div className={classes.content}>
+          <Container maxWidth="lg">
+            <Bracket.Container activeRound={0}>
+              {matches.map((round, rid) => (
+                <Bracket.Round key={rid} roundNo={rid}>
+                  <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
+                  {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
+                </Bracket.Round>
+              ))}
+            </Bracket.Container>
+            {!_.isEmpty(third_place_match) && (
+              <Bracket.Container activeRound={0}>
+                <Bracket.Round key={'3rd'} roundNo={0}>
+                  {getMatch('1-1', third_place_match[0])}
+                </Bracket.Round>
+              </Bracket.Container>
             )}
-          </Box>
-        </Box>
-      </Box>
+            <SelectParticipantModal
+              meta={setMeta}
+              tournament={tournament}
+              selectedMatch={selectedMatch}
+              handleSetParticipant={(params) => setParticipant({ ...params, hash_key: tournament.attributes.hash_key })}
+              handleClose={(refresh) => {
+                if (refresh) fetchMatches()
+                setSelectedMatch(undefined)
+              }}
+            />
+          </Container>
+        </div>
+        <RandomizeDialog
+          open={showRandomize}
+          onClose={() => setShowRandomize(false)}
+          onAction={() => {
+            setShowRandomize(false)
+            randomize(tournament.attributes.hash_key)
+          }}
+        />
+      </ESStickyFooter>
     )
   }
 
   return (
     <div className={classes.root}>
-      {matches && tournament && data && (
-        <>
-          <AppBar className={classes.appbar}>
-            <Container maxWidth="lg">
-              <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.backButton}>
-                  <ArrowBack />
-                </IconButton>
-                <Typography variant="h2">{tournament.attributes.title}</Typography>
-              </Toolbar>
-            </Container>
-          </AppBar>
-          <div className={classes.content}>
-            <Container maxWidth="lg">
-              <Bracket.Container activeRound={0}>
-                {matches.map((round, rid) => (
-                  <Bracket.Round key={rid} roundNo={rid}>
-                    <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
-
-                    {round.map((match, mid) => {
-                      const data = tournament.attributes
-                      const isTeam = data.participant_type > 1
-                      return (
-                        <Bracket.Match
-                          onClick={() => onMatchClick(match)}
-                          key={mid}
-                          headerText={`${rid + 1}-${mid + 1}`}
-                          editable
-                          winner={match.winner}
-                          participant1={
-                            match.home_user
-                              ? {
-                                  avatar: match.home_avatar,
-                                  label: isTeam ? match.home_user.team_name : match.home_user.name,
-                                  score: match.score_home,
-                                }
-                              : null
-                          }
-                          participant2={
-                            match.guest_user
-                              ? {
-                                  avatar: match.guest_avatar,
-                                  label: isTeam ? match.guest_user.team_name : match.guest_user.name,
-                                  score: match.score_guest,
-                                }
-                              : null
-                          }
-                        />
-                      )
-                    })}
-                  </Bracket.Round>
-                ))}
-              </Bracket.Container>
-              <SelectParticipantModal
-                meta={setMeta}
-                tournament={tournament}
-                selectedMatch={selectedMatch}
-                handleSetParticipant={(params) => setParticipant({ ...params, hash_key: tournament.attributes.hash_key })}
-                handleClose={(refresh) => {
-                  if (refresh) fetchMatches()
-                  setSelectedMatch(undefined)
-                }}
-              />
-              {data.memberSelectable && <Box className={classes.blankSpace}></Box>}
-            </Container>
-          </div>
-          {actionButtons()}
-        </>
-      )}
+      {matches && matchesMeta.loaded && data && body()}
       <ESLoader open={meta.pending || matchesMeta.pending || randomizeMeta.pending || freezeMeta.pending} />
 
       {/* success */}
@@ -159,7 +170,7 @@ const ArenaMatches: React.FC = () => {
 
 export default ArenaMatches
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -184,30 +195,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
-  },
-  blankSpace: {
-    height: 169,
-  },
-  [theme.breakpoints.down('sm')]: {
-    blankSpace: {
-      height: theme.spacing(15),
-    },
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.9)',
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    width: '100%',
-    margin: '0 auto',
   },
 }))

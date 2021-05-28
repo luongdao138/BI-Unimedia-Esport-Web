@@ -33,7 +33,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended }) => {
 
   return (
     <Grid container className={classes.container}>
-      <Box display="flex" flex="1" flexDirection="column">
+      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column">
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
           <Box color={Colors.white}>
             <Typography variant="h3">{data.title}</Typography>

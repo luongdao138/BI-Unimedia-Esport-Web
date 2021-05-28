@@ -12,24 +12,37 @@ const SystemMessage: React.FC<SystemMessageProps> = (props) => {
   const { text } = props
 
   return (
-    <Box className={classes.box}>
-      <Typography variant="body2">{text}</Typography>
+    <Box className={classes.section}>
+      <Box className={classes.box}>
+        <Typography className={classes.text} variant="body2">
+          {text}
+        </Typography>
+      </Box>
     </Box>
   )
 }
 
 const useStyles = makeStyles(() => ({
-  box: {
+  section: {
     width: '100%',
+    textAlign: 'center',
+  },
+  box: {
+    width: '80%',
     height: '100%',
-    marginRight: 10,
-    marginleft: 10,
+    margin: '0 auto',
     borderRadius: 24,
-    background: Colors.white,
-    paddding: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
+    background: '#FFFFFF',
+    display: 'inline-block',
+    textAlign: 'center',
+  },
+  text: {
+    display: 'inline-block',
+    paddingRight: 16,
+    paddingLeft: 16,
+    paddingTop: 6,
+    color: Colors.grey[200],
+    paddingBottom: 6,
   },
 }))
 
