@@ -74,7 +74,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     if (messagesEndRef.current != null && messagesEndRef) {
       messagesEndRef.current?.scrollToRow(position - 1)
       setTimeout(() => {
-        messagesEndRef.current.scrollToRow(position - 1)
+        messagesEndRef.current?.scrollToRow(position - 1)
         setShowScroll(false)
         setBottom(true)
       }, 100)
