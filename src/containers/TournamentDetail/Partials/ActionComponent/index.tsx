@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import IndividualEntryModal from './IndividualEntryModal'
 import CloseRecruitmentModal from './CloseRecruitmentModal'
@@ -13,6 +13,7 @@ import { TournamentDetail } from '@services/tournament.service'
 import { UserProfile } from '@services/user.service'
 import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
+import SummaryModal from '@containers/TournamentDetail/Partials/SummaryModal'
 
 interface Props {
   tournament: TournamentDetail
@@ -24,6 +25,7 @@ const ActionComponent: React.FC<Props> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
+  const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
   const isTeam = tournament.attributes.participant_type > 1
   const status = tournament.attributes.status
   const myRole = tournament.attributes.my_role
@@ -82,6 +84,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           <ButtonPrimary round fullWidth onClick={() => {}}>
             {t('common:tournament.summary')}
           </ButtonPrimary>
+          <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
         </Box>
       )}
     </Box>
