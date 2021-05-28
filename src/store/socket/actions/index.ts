@@ -20,6 +20,16 @@ export const socketActions = {
       dispatch(socketCreators.messagePending(payload))
     }
   },
+  createChatRoom: (payload: SocketPayload) => {
+    return (dispatch: AppDispatch) => {
+      Promise.resolve(dispatch(socketCreators.createRoomPending())).then(() => dispatch(socketCreators.socketSend(payload)))
+    }
+  },
+  clearNewRoomId: () => {
+    return (dispatch: AppDispatch) => {
+      dispatch(socketCreators.clearNewRoomId())
+    }
+  },
   sendMessage: (payload: SocketPayload) => {
     return (dispatch: AppDispatch) => {
       Promise.resolve(dispatch(socketCreators.messagePending(payload))).then(() => dispatch(socketCreators.socketSend(payload)))
@@ -46,7 +56,12 @@ export const socketCreators = {
     type: CHAT_ACTION_TYPE.MESSAGE_PENDING,
     data: _.omit(_.assign(payload, { sent: false }), ['action']),
   }),
-
+  createRoomPending: () => ({
+    type: CHAT_ACTION_TYPE.ROOM_CREATE_PENDING,
+  }),
+  clearNewRoomId: () => ({
+    type: CHAT_ACTION_TYPE.CLEAR_NEW_ROOM_ID,
+  }),
   paginating: () => ({
     type: CHAT_ACTION_TYPE.MESSAGE_PAGINATING,
   }),

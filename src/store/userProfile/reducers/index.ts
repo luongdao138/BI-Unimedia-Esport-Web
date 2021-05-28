@@ -118,4 +118,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(unblockUser.fulfilled, (state) => {
     state.lastSeenUserData.attributes.is_blocked = false
   })
+
+  builder.addCase(actions.changeEmailConfirm.fulfilled, (state, action) => {
+    state.data.attributes.email = action.payload.email
+  })
 })

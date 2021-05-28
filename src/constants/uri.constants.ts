@@ -76,5 +76,9 @@ export const URI = {
   TOURNAMENTS_USERS: '/v1/tournaments/users',
   TOURNAMENTS_CREATE: '/v1/tournaments',
   HOME_SETTINGS: '/v2/users/home_settings',
+  USER_CHANGE_PASSWORD: '/v1/users/change_password',
+  USER_EMAIL_CHANGE_CHECK: '/v1/email/check',
+  USER_EMAIL_CHANGE: '/v1/email/change',
+  USER_EMAIL_CHANGE_CONFIRM: '/v1/email/change_confirm',
   FRIEND_LIST: '/v1/chats/addable_users',
 }

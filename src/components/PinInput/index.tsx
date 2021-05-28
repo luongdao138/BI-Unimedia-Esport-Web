@@ -192,6 +192,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   ['@media (max-width: 330px)']: {
     boxWidth: {
       width: 280,
+      maxWidth: '100%',
     },
     pinDefaultStyle: {
       height: 57,

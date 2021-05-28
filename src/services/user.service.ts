@@ -212,6 +212,40 @@ export type RecommendedEventParams = {
   page?: number
 }
 
+export type ChangePasswordParams = {
+  current_password: string
+  new_password: string
+  confirm_new_password: string
+}
+
+export type ChangeEmailCheckParams = {
+  current_password: string
+}
+
+export type ChangeEmailParams = {
+  new_email: string
+}
+
+export type ChangeEmailConfirmParams = {
+  confirmation_code: string
+}
+
+export type ChangePasswordResponse = {
+  status: 'ok'
+}
+
+export type ChangeEmailCheckResponse = {
+  success: 'Current Password Correct'
+}
+
+export type ChangeEmailResponse = {
+  success: 'confirmation code sent'
+}
+
+export type ChangeEmailConfirmResponse = {
+  email: string
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -274,5 +308,25 @@ export const follow = async (params: FollowParams): Promise<FollowResponse> => {
 
 export const unfollow = async (params: FollowParams): Promise<UnFollowResponse> => {
   const { data } = await api.put(URI.UNFOLLOW, params)
+  return data
+}
+
+export const changePassword = async (params: ChangePasswordParams): Promise<ChangePasswordResponse> => {
+  const { data } = await api.post(URI.USER_CHANGE_PASSWORD, params)
+  return data
+}
+
+export const changeEmailCheck = async (params: ChangeEmailCheckParams): Promise<ChangeEmailCheckResponse> => {
+  const { data } = await api.post(URI.USER_EMAIL_CHANGE_CHECK, params)
+  return data
+}
+
+export const changeEmail = async (params: ChangeEmailParams): Promise<ChangeEmailResponse> => {
+  const { data } = await api.post(URI.USER_EMAIL_CHANGE, params)
+  return data
+}
+
+export const changeEmailConfirm = async (params: ChangeEmailConfirmParams): Promise<ChangeEmailConfirmResponse> => {
+  const { data } = await api.post(URI.USER_EMAIL_CHANGE_CONFIRM, params)
   return data
 }

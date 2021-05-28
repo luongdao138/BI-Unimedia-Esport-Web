@@ -96,6 +96,8 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
 const useStyles = makeStyles(() => ({
   content: {
     padding: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   mention: {
     color: Colors.primary,

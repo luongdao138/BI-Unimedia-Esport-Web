@@ -1,4 +1,4 @@
-import AccountSettingsContainer from '@containers/Settings/AccountSettings'
+import AccountSettingsContainer from '@containers/Settings/Account'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 

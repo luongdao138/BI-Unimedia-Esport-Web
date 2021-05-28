@@ -4,37 +4,44 @@ import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
 import { Box } from '@material-ui/core'
+import { useAppSelector } from '@store/hooks'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { SNS } from '@constants/common.constants'
 import ESButton from '@components/Button'
 import SettingsItem from './SettingsItem'
+import authStore from '@store/auth'
 
 const AccountSettingsContainer: React.FC = () => {
   const { t } = useTranslation('common')
-  // const hasEmail = CommonHelper.hasEmail('')
-  const hasEmail = CommonHelper.hasEmail('sample@gmail.com')
+  const { selectors } = authStore
+  const user = useAppSelector(selectors.getAuth)
+  const hasEmail = CommonHelper.hasEmail(user.email)
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
-
-  const openPasswordModal = () =>
-    router.push(makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD }), ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD, {
-      shallow: true,
-    })
 
   const openEmailModal = () =>
     router.push(makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD }), ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD, {
       shallow: true,
     })
 
+  const openPasswordModal = () =>
+    router.push(
+      makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD }),
+      ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD,
+      {
+        shallow: true,
+      }
+    )
+
   return (
     <>
       <HeaderWithButton title={t('account_settings.title')} />
       <Box>
-        <SettingsItem title={t('account_settings.membership_type')} value={'一般会員'} disabled />
-        <SettingsItem title={t('common.user_id')} value={'@exelab_staff'} disabled />
+        <SettingsItem title={t('account_settings.membership_type')} value={t('account_settings.general_member')} disabled />
+        <SettingsItem title={t('common.user_id')} value={user.user_code && '@' + user.user_code} disabled />
         <SettingsItem
           title={t('common.mail_address')}
-          value={hasEmail ? 'sample@gmail.com' : t('account_settings.sns')}
+          value={hasEmail ? user.email : t('account_settings.sns')}
           route={hasEmail ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
         />
