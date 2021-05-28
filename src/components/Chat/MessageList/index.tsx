@@ -7,6 +7,7 @@ import { useRect } from '@utils/hooks/useRect'
 import { Colors } from '@theme/colors'
 import Loader from '@components/Loader'
 import Message from '../Message'
+import _ from 'lodash'
 
 export interface MessageListProps {
   messages: MessageType[]
@@ -115,7 +116,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
               onLoadImage={measure}
               currentMessage={data}
               users={users}
-              direction={data.userId !== currentUser ? 'left' : 'right'}
+              direction={_.get(data, 'userId', null) !== currentUser ? 'left' : 'right'}
             />
           </div>
         )}
