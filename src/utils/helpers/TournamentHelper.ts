@@ -77,7 +77,7 @@ const defaultDetails = (user_id: number): any => {
 }
 
 const formatDate = (date: string): string => {
-  return moment.utc(date).format('YYYY年MM月DD日')
+  return moment.utc(date).format('YYYY年MM月DD日 HH:mm')
 }
 
 const getRemainingDate = (date: string): number => {

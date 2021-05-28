@@ -198,10 +198,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 30,
     height: '71px',
     width: '100%',
+    maxWidth: '1.8em',
     backgroundColor: Colors.black,
     '&[type=number]': {
       '-moz-appearance': 'textfield',
-      '-webkit-user-select': 'none',
+      '-webkit-user-select': 'auto', // 'none' is not working in MacOS Safari, 'auto' is working
     },
     '&::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',

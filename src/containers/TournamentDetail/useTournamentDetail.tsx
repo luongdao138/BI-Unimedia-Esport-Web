@@ -8,14 +8,23 @@ import { Meta } from '@store/metadata/actions/types'
 import * as selectors from '@store/tournament/selectors'
 import * as actions from '@store/tournament/actions'
 import { TournamentDetail } from '@services/tournament.service'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import { UserProfile } from '@services/user.service'
 
 const getMeta = createMetaSelector(actions.getTournamentDetail)
 
-const useTournamentDetail = (): { tournament: TournamentDetail; meta: Meta } => {
-  const { query } = useRouter()
+const useTournamentDetail = (): {
+  tournament: TournamentDetail
+  meta: Meta
+  handleBack: () => void
+  userProfile: UserProfile
+  getUserProfileMeta: Meta
+} => {
+  const { back, query } = useRouter()
   const dispatch = useAppDispatch()
   const tournament = useAppSelector(selectors.getTournamentDetail)
   const meta = useAppSelector(getMeta)
+  const { userProfile, getUserProfileMeta } = useGetProfile()
 
   useEffect(() => {
     if (query.hash_key) {
@@ -35,9 +44,14 @@ const useTournamentDetail = (): { tournament: TournamentDetail; meta: Meta } => 
     }
   }, [])
 
+  const handleBack = () => back()
+
   return {
     tournament,
     meta,
+    handleBack,
+    userProfile,
+    getUserProfileMeta,
   }
 }
 
