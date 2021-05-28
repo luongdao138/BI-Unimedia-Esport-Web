@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { makeStyles, Typography, Box, Theme } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
@@ -21,14 +20,10 @@ type Props = {
 const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const [isUploading, setUploading] = useState(false)
-  const { uploadArenaCoverImage } = useUploadImage()
+  const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
   const handleImageUpload = (file: File) => {
-    setUploading(true)
-
     uploadArenaCoverImage(file, 1, true, (imageUrl) => {
-      setUploading(false)
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
     })
   }
