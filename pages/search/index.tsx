@@ -51,10 +51,10 @@ const SearchPage: PageWithLayoutType = () => {
   return (
     <Grid container className={classes.container}>
       <Box pb={3} display="flex" flexDirection="row" alignItems="center">
-        <IconButton className={classes.iconButtonBg}>
+        <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
-        <Typography variant="h2" noWrap>
+        <Typography variant="h2" className={classes.label}>
           {renderKeyword()}
         </Typography>
       </Box>
@@ -73,6 +73,9 @@ const useStyles = makeStyles(() => ({
   container: {
     padding: 24,
     paddingTop: 16,
+  },
+  label: {
+    wordBreak: 'break-all',
   },
 }))
 

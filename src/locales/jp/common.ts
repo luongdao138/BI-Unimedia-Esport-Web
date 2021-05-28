@@ -59,6 +59,26 @@ export default {
     divider: 'または',
     intro_hint1: 'eXeLABをお楽しみいただくには',
     intro_hint2: 'ログインが必要です',
+    validation: {
+      email: 'メールアドレスが間違っています。',
+      password: 'パスワードが間違っています。',
+    },
+    error: {
+      title: 'ログインできませんでした',
+      detail: `以下の可能性がございます。
+        １. メールアドレスに誤りがある
+        ２. パスワードに誤りがある
+        ３. SNS連携でアカウントを作成している`,
+      hint:
+        '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワードを設定していただくか、しばらく経ってからもう一度ログインしてください。',
+      title2: 'SNSでのログインに失敗しました',
+      detail2: `以下の可能性がございます。
+      １. ダミーテキスト
+      ２. ダミーテキスト
+      ３. ダミーテキスト`,
+      hint2:
+        'ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミー',
+    },
   },
   register: {
     button: 'メールアドレスで登録',
@@ -226,7 +246,7 @@ export default {
   },
   search: {
     search: '検索',
-    search_placeholder: 'キーワード検索',
+    search_placeholder: 'キーワードで探す',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -329,6 +349,9 @@ export default {
   },
   security_settings: {
     title: 'セキュリティ',
+    my_page: 'マイページの情報公開範囲',
+    message: 'メッセージの受信設定',
+    block: 'ブロックしたユーザー',
   },
   notification_settings: {
     title: '通知設定',
@@ -359,7 +382,7 @@ export default {
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
-    security: 'セキュリティ',
+    security_settings: 'セキュリティ',
     notification_settings: '通知設定',
     purchase_history: '購入履歴',
     service_info: 'サービス情報',
