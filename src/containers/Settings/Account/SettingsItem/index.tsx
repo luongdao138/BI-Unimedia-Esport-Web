@@ -31,7 +31,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
       <Box className={classes.settingItemWrap}>
-        <Box overflow="hidden" textOverflow="ellipsis" ml={0} display="flex" flexDirection="column" justifyContent="center">
+        <Box textOverflow="ellipsis" ml={0} display="flex" flexDirection="column" justifyContent="center">
           <Typography className={classes.title} noWrap>
             {title}
           </Typography>
@@ -45,7 +45,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
                 gradient={false}
                 size="small"
                 disabled={route === SNS ? true : false}
-                onClick={onChangeEmail}
+                onClick={onChangePassword}
                 className={classes.button}
               >
                 {t('common.change')}
@@ -58,7 +58,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
                 gradient={false}
                 size="small"
                 disabled={route === SNS ? true : false}
-                onClick={onChangePassword}
+                onClick={onChangeEmail}
                 className={classes.button}
               >
                 {t('common.change')}
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     width: '100%',
     padding: theme.spacing(2),
-    paddingRight: theme.spacing(5),
+    paddingRight: 110,
     position: 'relative',
     background: Colors.black_opacity[80],
     borderRadius: '6px',
@@ -95,6 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   value: {
     color: Colors.white_opacity['70'],
+    wordBreak: 'break-all',
   },
   disabled: {
     color: Colors.white_opacity['30'],

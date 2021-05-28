@@ -27,6 +27,10 @@ import RegisterByEmailContainer from '@containers/RegisterByEmail'
 import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
+import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
+import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
+import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
+import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
@@ -154,6 +158,14 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <RegisterProfileContainer />
       case ESRoutes.USER_SETTINGS:
         return <UserSettingsContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
+        return <AccountSettingsPasswordContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
+        return <AccountSettingsChangeEmailContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM:
+        return <AccountSettingsConfirmContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD:
+        return <AccountSettingsChangePasswordContainer />
       default:
         break
     }

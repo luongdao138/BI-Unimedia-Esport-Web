@@ -39,5 +39,7 @@ export const ESRoutes = {
   USER_ACCOUNT_SETTINGS: '/settings/account',
   USER_ACCOUNT_SETTINGS_PASSWORD: '/settings/account/password',
   USER_ACCOUNT_SETTINGS_CHANGE_EMAIL: '/settings/account/change-email',
+  USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM: '/settings/account/confirm',
+  USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD: '/settings/account/change-password',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
 }
