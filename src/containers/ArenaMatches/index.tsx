@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, Box, IconButton, Toolbar, Typography, Theme } from '@material-ui/core'
-import ButtonPrimary from '@components/ButtonPrimary'
+import { AppBar, Container, IconButton, Toolbar, Typography, Theme } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ScoreModal from '@containers/TournamentDetail/Partials/ScoreModal'
 import SummaryModal from '@containers/TournamentDetail/Partials/SummaryModal'
+import ESStickyFooter from '@components/StickyFooter'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -49,22 +50,11 @@ const ArenaMatches: React.FC = () => {
     )
   }
 
-  const actionButtons = () => {
-    // if (!data || !matches || !matchesMeta.loaded) return
-    // if (!data.memberSelectable) return
-    // const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
-    return (
-      <Box className={classes.stickyFooter}>
-        <Box className={classes.nextBtnHolder}>
-          <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth onClick={() => setShowSummaryModal(true)}>
-              {t('common:arena.freeze_button')}
-            </ButtonPrimary>
-          </Box>
-        </Box>
-        <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
-      </Box>
-    )
+  const showSummary = () => {
+    const data = tournament.attributes
+    const isAdmin = data.my_role === ROLE.ADMIN || data.my_role === ROLE.CO_ORGANIZER
+    const isCompleted = data.status === TOURNAMENT_STATUS.COMPLETED
+    return isAdmin && isCompleted
   }
 
   const getMatch = (headerText, _match) => {
@@ -105,7 +95,13 @@ const ArenaMatches: React.FC = () => {
   return (
     <div className={classes.root}>
       {matches && tournament && (
-        <>
+        <ESStickyFooter
+          disabled={false}
+          title={t('common:arena.freeze_button')}
+          onClick={() => setShowSummaryModal(true)}
+          show={showSummary()}
+          noScroll
+        >
           <AppBar className={classes.appbar}>
             <Container maxWidth="lg">
               <Toolbar className={classes.toolbar}>
@@ -136,8 +132,8 @@ const ArenaMatches: React.FC = () => {
               {scoreDialog()}
             </Container>
           </div>
-          {actionButtons()}
-        </>
+          <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
+        </ESStickyFooter>
       )}
       <ESLoader open={meta.pending || matchesMeta.pending} />
     </div>
