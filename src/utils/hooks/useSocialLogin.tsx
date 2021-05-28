@@ -9,20 +9,23 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 
 const getMeta = createMetaSelector(loginSocial)
 
-const useSocialLogin = (): { meta: Meta; login: (param: LoginSocialParams) => void } => {
+const useSocialLogin = (): { meta: Meta; login: (param: LoginSocialParams) => void; resetMeta: () => void } => {
   const dispatch = useAppDispatch()
   const { handleLogin } = useReturnHref()
   const meta = useAppSelector(getMeta)
   const login = (param) => {
     dispatch(loginSocial(param))
   }
+
+  const resetMeta = () => dispatch(clearMetaData(loginSocial.typePrefix))
+
   useEffect(() => {
     if (meta.loaded) {
       handleLogin()
-      dispatch(clearMetaData(loginSocial.typePrefix))
+      resetMeta()
     }
   }, [meta])
-  return { meta, login }
+  return { meta, login, resetMeta }
 }
 
 export default useSocialLogin

@@ -10,18 +10,18 @@ export const searchOptions = [
     value: searchTypes.USER,
     name: 'ニックネーム・ID',
   },
-  {
-    value: searchTypes.COMMUNITY,
-    name: 'コミュニティ',
-  },
+  // {
+  //   value: searchTypes.COMMUNITY,
+  //   name: 'コミュニティ',
+  // },
   {
     value: searchTypes.TOURNAMENT,
     name: 'アリーナ',
   },
-  {
-    value: searchTypes.RECRUITMENT,
-    name: 'ロビー',
-  },
+  // {
+  //   value: searchTypes.RECRUITMENT,
+  //   name: 'ロビー',
+  // },
 ]
 
 export const GENDER = {
@@ -76,7 +76,6 @@ export const CHAT_CONSTANTS = {
   },
 }
 
-
 export const LIGHTBOX_OPTIONS = {
   settings: {
     overlayColor: 'rgb(0, 0, 0, 0.8)',
@@ -95,4 +94,3 @@ export const LIGHTBOX_OPTIONS = {
 }
 
 export const SNS = 'sns'
-
