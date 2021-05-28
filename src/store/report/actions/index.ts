@@ -17,7 +17,7 @@ export const postReport = createAsyncThunk<services.ReportResponse, services.Rep
   }
 )
 
-export const reportReasons = createAsyncThunk<services.ReasonsResponse, services.ReasonsParams>(
+export const getReportReasons = createAsyncThunk<services.ReasonsResponse, services.ReasonsParams>(
   REPORT_ACTION_TYPE.REPORT_REASONS,
   async (param, { rejectWithValue }) => {
     try {

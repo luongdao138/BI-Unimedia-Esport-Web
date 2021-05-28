@@ -5,17 +5,17 @@ import notificationStore from '@store/notification'
 import { NotificationListParams } from '@services/notification.service'
 
 const { selectors, actions } = notificationStore
-const getUserSearchMeta = createMetaSelector(actions.notifications)
+const getNotificationsMeta = createMetaSelector(actions.getNotifications)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useNotificationList = () => {
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectors.getNotificationList)
-  const page = useAppSelector(selectors.getNotificationListMeta)
-  const meta = useAppSelector(getUserSearchMeta)
-  const fetchNotifications = (param: NotificationListParams) => dispatch(actions.notifications(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.notifications.typePrefix))
-  return { notifications, fetchNotifications, resetMeta, meta, page }
+  const pages = useAppSelector(selectors.getNotificationListMeta)
+  const meta = useAppSelector(getNotificationsMeta)
+  const fetchNotifications = (param: NotificationListParams) => dispatch(actions.getNotifications(param))
+  const resetMeta = () => dispatch(clearMetaData(actions.getNotifications.typePrefix))
+  return { notifications, fetchNotifications, resetMeta, meta, pages }
 }
 
 export default useNotificationList

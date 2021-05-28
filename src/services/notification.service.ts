@@ -41,8 +41,8 @@ export const notificationList = async (params: NotificationListParams): Promise<
   return data
 }
 
-export const getNotificationDetail = async (params: NotificationDetailParams): Promise<NotificationDetailResponse> => {
-  const { data } = await api.get<NotificationDetailResponse>(`${URI.NOTIFICATION_DETAIL}/${params}`)
+export const getNotificationDetail = async (id: number): Promise<NotificationDetailResponse> => {
+  const { data } = await api.get<NotificationDetailResponse>(`${URI.NOTIFICATION_DETAIL}/${id}`)
   return data
 }
 

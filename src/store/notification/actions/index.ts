@@ -2,7 +2,7 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/notification.service'
 import { NOTIFICATION_ACTION_TYPE } from './types'
 
-export const notifications = createAsyncThunk<services.NotificationListResponse, services.NotificationListParams>(
+export const getNotifications = createAsyncThunk<services.NotificationListResponse, services.NotificationListParams>(
   NOTIFICATION_ACTION_TYPE.GET_NOTIFICATION_LIST,
   async (param, { rejectWithValue }) => {
     try {
@@ -32,11 +32,11 @@ export const getNotificationBadge = createAsyncThunk<services.NotificationBadgeR
   }
 )
 
-export const getNotificationDetail = createAsyncThunk<services.NotificationDetailResponse, services.NotificationDetailParams>(
+export const getNotificationDetail = createAsyncThunk<services.NotificationDetailResponse, number>(
   NOTIFICATION_ACTION_TYPE.GET_NOTIFICATION_DETAIL,
-  async (param, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const res = await services.getNotificationDetail(param)
+      const res = await services.getNotificationDetail(id)
       return res
     } catch (error) {
       if (!error.response) {
