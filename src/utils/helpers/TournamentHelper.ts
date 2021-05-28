@@ -24,7 +24,7 @@ const ruleText = (rule: string): string => {
   return ruleText
 }
 
-const getTypeValue = (t_type: string): number => {
+const getTypeValue = (t_type: string | number): number => {
   if (String(t_type) === T_TYPE.PRIVATE) return 1
   else if (String(t_type) === T_TYPE.PUBLIC) return 0
 
@@ -77,7 +77,7 @@ const defaultDetails = (user_id: number): any => {
 }
 
 const formatDate = (date: string): string => {
-  return moment.utc(date).format('YYYY年MM月DD日 HH:mm')
+  return moment(date).format('YYYY/MM/DD HH:mm')
 }
 
 const getRemainingDate = (date: string): number => {

@@ -4,19 +4,19 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { StoreType } from '@store/store'
 import moment from 'moment'
-import { TournamentCreateParams } from '@services/tournament.service'
+import { TournamentDetail } from '@services/tournament.service'
 
-export const getValidationScheme = (store: StoreType, data: TournamentCreateParams): any => {
+export const getValidationScheme = (store: StoreType, data: TournamentDetail): any => {
   let recruitMinDate = new Date()
   let recruitEndMinDate = new Date()
-  if (!!data && !!data.status) {
-    const beforeRecruit = TournamentHelper.checkStatus(data.status, 'recruiting')
-    const beforeRecruitEnd = TournamentHelper.checkStatus(data.status, 'recruitment_closed')
-    if (!beforeRecruit && data.acceptance_start_date) recruitMinDate = new Date(data.acceptance_start_date)
-    if (!beforeRecruitEnd && data.acceptance_end_date) recruitEndMinDate = new Date(data.acceptance_end_date)
+  if (!!data && !!data.attributes.status) {
+    const beforeRecruit = TournamentHelper.checkStatus(data.attributes.status, 'recruiting')
+    const beforeRecruitEnd = TournamentHelper.checkStatus(data.attributes.status, 'recruitment_closed')
+    if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
+    if (!beforeRecruitEnd && data.attributes.acceptance_end_date) recruitEndMinDate = new Date(data.attributes.acceptance_end_date)
   }
 
-  return {
+  return Yup.object({
     stepOne: Yup.object({
       title: Yup.string()
         .required(i18n.t('common:common.required'))
@@ -106,5 +106,5 @@ export const getValidationScheme = (store: StoreType, data: TournamentCreatePara
           return CommonHelper.matchNgWords(store, value).length <= 0
         }),
     }),
-  }
+  })
 }

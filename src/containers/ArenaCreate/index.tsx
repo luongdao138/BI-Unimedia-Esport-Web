@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
 import StepTwo from './StepTwo'
@@ -21,31 +20,32 @@ import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-import * as Yup from 'yup'
 import { useStore } from 'react-redux'
+import { TournamentFormParams } from '@services/tournament.service'
 
 const TournamentCreate: React.FC = () => {
   const store = useStore()
   const { hardwares, prefectures, user } = useCommonData()
-  const { submit, meta } = useTournamentCreate()
+  const { submit, meta, isEdit, arena } = useTournamentCreate()
   const { handleReturn } = useReturnHref()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const [hasError, setError] = useState(true)
   const isFirstRun = useRef(true)
-  const tournamentData = TournamentHelper.defaultDetails(!user ? 0 : user.id)
-
+  const initialValues = getInitialValues(isEdit ? arena : undefined)
   const formik = useFormik<FormType>({
-    initialValues: getInitialValues(tournamentData),
-    validationSchema: Yup.object(getValidationScheme(store, tournamentData)),
+    initialValues: initialValues,
+    validationSchema: getValidationScheme(store, arena),
+    enableReinitialize: true,
     onSubmit: (values) => {
-      const tempValues = Object.values(values)
-      const _data = Object.assign({}, ...tempValues)
-      const data = {
-        ..._data,
-        co_organizers: _data.co_organizers.map((co) => parseInt(co.id)),
-        game_title_id: _data.game_title_id[0].id,
+      const data: TournamentFormParams = {
+        ...values.stepOne,
+        ...values.stepTwo,
+        ...values.stepThree,
+        ...values.stepFour,
+        co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
+        game_title_id: values.stepOne.game_title_id[0].id,
       }
       submit(data)
     },

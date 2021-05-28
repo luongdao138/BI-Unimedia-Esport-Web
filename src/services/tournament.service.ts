@@ -122,48 +122,48 @@ export type TournamentCreateParams = {
   end_date: string
   area_id: number
   area_name: string
-  address: string
+  address?: string
   has_prize: boolean
   retain_history: boolean
   prize_amount: string
   notes: string
-  owner_id: number
+  owner_id?: number
   organizer_name: string
   cover_image_url: string
   co_organizers: RecommendedUsers[]
   t_type: 't_public' | 't_private'
   participant_type: number
-  status: string
+  status?: string
   rule: string
 }
 
 export type TournamentFormParams = {
-  title: string
-  overview: string
-  game_title_id: number
-  game_hardware_id: number
-  has_third_place: boolean
-  max_participants: number
-  terms_of_participation: string
-  acceptance_start_date: string
-  acceptance_end_date: string
-  start_date: string
-  end_date: string
-  area_id: number
-  area_name: string
-  address: string
-  has_prize: boolean
-  retain_history: boolean
-  prize_amount: string
-  notes: string
-  owner_id: number
-  organizer_name: string
-  cover_image_url: string
-  co_organizers: number[]
-  t_type: 't_public' | 't_private'
-  participant_type: number
-  status: string
-  rule: string
+  title?: string
+  overview?: string
+  game_title_id?: number
+  game_hardware_id?: number
+  has_third_place?: boolean
+  max_participants?: number
+  terms_of_participation?: string
+  acceptance_start_date?: string
+  acceptance_end_date?: string
+  start_date?: string
+  end_date?: string
+  area_id?: number
+  area_name?: string
+  address?: string
+  has_prize?: boolean
+  retain_history?: boolean
+  prize_amount?: string
+  notes?: string
+  owner_id?: number
+  organizer_name?: string
+  cover_image_url?: string
+  co_organizers?: number[]
+  t_type?: 't_public' | 't_private' | -1
+  participant_type?: number
+  status?: string
+  rule?: string | -1
 }
 
 export type TournamentDetailResponse = {

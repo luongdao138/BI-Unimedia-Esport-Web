@@ -14,8 +14,8 @@ export type FormType = {
     overview: string
   }
   stepTwo: {
-    rule: string
-    t_type: string
+    rule: string | -1
+    t_type: 't_public' | 't_private' | -1
     has_third_place: boolean
     participant_type: number
     max_participants: number
@@ -36,7 +36,6 @@ export type FormType = {
     start_end_date: string
   }
   stepFour: {
-    owner_id: number
     co_organizers: RecommendedUsers[]
     organizer_name: string
   }

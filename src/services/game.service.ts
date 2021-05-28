@@ -17,9 +17,9 @@ export type GameTitle = {
   attributes: {
     id?: number
     display_name: string
-    short_name: string
-    jp_kana_name: string
-    en_name: string
+    short_name?: string
+    jp_kana_name?: string
+    en_name?: string
   }
 }
 

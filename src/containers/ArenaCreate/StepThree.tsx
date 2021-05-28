@@ -7,7 +7,6 @@ import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import ESInputDatePicker from '@components/InputDatePicker'
 import { Colors } from '@theme/colors'
-import moment from 'moment'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -32,7 +31,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           placeholder={t('common:tournament_create.start_date')}
           fullWidth
           value={formik.values.stepThree.acceptance_start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', moment(date).format('YYYY-MM-DD HH:mm'))}
+          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date) ||
@@ -48,7 +47,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           placeholder={t('common:tournament_create.end_date')}
           fullWidth
           value={formik.values.stepThree.acceptance_end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', moment(date).format('YYYY-MM-DD HH:mm'))}
+          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
@@ -69,7 +68,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           placeholder={t('common:tournament_create.start_date')}
           fullWidth
           value={formik.values.stepThree.start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.start_date', moment(date).format('YYYY-MM-DD HH:mm'))}
+          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date) ||
@@ -85,7 +84,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           placeholder={t('common:tournament_create.end_date')}
           fullWidth
           value={formik.values.stepThree.end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.end_date', moment(date).format('YYYY-MM-DD HH:mm'))}
+          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date

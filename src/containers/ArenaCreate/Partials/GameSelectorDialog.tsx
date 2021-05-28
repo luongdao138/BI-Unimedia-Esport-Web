@@ -50,8 +50,8 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange }) => {
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
           ) : (
-            values.map((item) => (
-              <Box paddingRight={1} key={item.id}>
+            values.map((item, idx) => (
+              <Box paddingRight={1} key={idx}>
                 <Typography>{item.display_name}</Typography>
               </Box>
             ))

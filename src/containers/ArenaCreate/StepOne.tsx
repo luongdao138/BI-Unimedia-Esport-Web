@@ -27,7 +27,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
     })
   }
-
   return (
     <Box pb={9}>
       <Box pb={4}>
@@ -43,6 +42,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           onChange={formik.handleChange}
           helperText={formik.touched?.stepOne?.title && formik.errors?.stepOne?.title}
           error={formik.touched?.stepOne?.title && !!formik.errors?.stepOne?.title}
+          onBlur={formik.handleBlur}
           size="small"
           required
         />
@@ -66,8 +66,9 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           value={formik.values.stepOne.prize_amount}
           onChange={formik.handleChange}
           helperText={formik.touched?.stepOne?.prize_amount && formik.errors?.stepOne?.prize_amount}
-          error={formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
+          error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
           size="small"
+          onBlur={formik.handleBlur}
         />
       </Box>
       <Box pb={4} display="flex" flexDirection="row" color={Colors.secondary}>
@@ -95,7 +96,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           <option disabled value={-1}>
             {t('common:please_select')}
           </option>
-          {hardwares?.data?.map((hardware, key) => (
+          {(hardwares?.data || []).map((hardware, key) => (
             <option value={hardware.id} key={key}>
               {hardware.attributes.name}
             </option>

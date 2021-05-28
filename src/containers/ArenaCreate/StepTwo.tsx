@@ -56,7 +56,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           required={true}
           size="small"
         >
-          <option disabled value={-1}>
+          <option disabled value="-1">
             {t('common:please_select')}
           </option>
           {T_TYPES.map((type, index) => (

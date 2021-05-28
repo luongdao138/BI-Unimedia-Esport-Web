@@ -1,32 +1,33 @@
-import { TournamentCreateParams } from '@services/tournament.service'
+import { TournamentDetail } from '@services/tournament.service'
+import { FormType } from './FormType'
 
-export const getInitialValues = (data: TournamentCreateParams): any => ({
+export const getInitialValues = (data?: TournamentDetail): FormType => ({
   stepOne: {
-    title: data.title,
-    overview: data.overview,
-    cover_image_url: data.cover_image_url,
-    game_hardware_id: data.game_hardware_id,
-    game_title_id: data.game_title_id,
-    has_prize: data.has_prize,
-    prize_amount: data.prize_amount,
+    title: data ? data.attributes.title : '',
+    overview: data ? data.attributes.overview : '',
+    cover_image_url: data ? data.attributes.cover_image : '',
+    game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
+    game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
+    has_prize: data ? data.attributes.has_prize : false,
+    prize_amount: data ? data.attributes.prize_amount : '',
   },
   stepTwo: {
-    rule: data.rule,
-    t_type: data.t_type,
-    has_third_place: data.has_third_place,
-    participant_type: data.participant_type,
-    max_participants: data.max_participants,
-    terms_of_participation: data.terms_of_participation,
-    notes: data.notes,
-    retain_history: data.retain_history,
+    rule: data ? data.attributes.rule : -1,
+    t_type: data ? 't_public' : -1,
+    has_third_place: data ? data.attributes.has_prize : false,
+    participant_type: data ? data.attributes.participant_type : -1,
+    max_participants: data ? data.attributes.max_participants : 2,
+    terms_of_participation: data ? data.attributes.terms_of_participation : '',
+    notes: data ? data.attributes.notes : '',
+    retain_history: data ? data.attributes.retain_history : false,
   },
   stepThree: {
-    acceptance_start_date: data.acceptance_start_date,
-    acceptance_end_date: data.acceptance_end_date,
-    start_date: data.start_date,
-    end_date: data.end_date,
-    area_id: data.area_id,
-    area_name: data.area_name,
+    acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
+    acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
+    start_date: data ? data.attributes.start_date : null,
+    end_date: data ? data.attributes.end_date : null,
+    area_id: data ? data.attributes.area_id : 1,
+    area_name: data ? data.attributes.area_name : '',
     // for cross-fields validations
     acceptance_dates: '',
     recruit_date: '',
@@ -34,8 +35,7 @@ export const getInitialValues = (data: TournamentCreateParams): any => ({
     start_end_date: '',
   },
   stepFour: {
-    owner_id: data.owner_id,
-    co_organizers: data.co_organizers,
-    organizer_name: data.organizer_name,
+    co_organizers: data ? data.attributes.co_organizers.data : [],
+    organizer_name: data ? data.attributes.organizer_name : '',
   },
 })
