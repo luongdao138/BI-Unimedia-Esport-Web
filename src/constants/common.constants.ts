@@ -91,15 +91,4 @@ export const LIGHTBOX_OPTIONS = {
   thumbnails: {
     showThumbnails: false,
   },
-  translations: {
-    autoplayText: 'Play',
-    closeText: 'Close',
-    downloadText: 'ダウンロード',
-    fullscreenText: 'Full screen',
-    nextText: 'Next',
-    pauseText: 'Pause',
-    previousText: 'Previous',
-    thumbnailsText: 'Hide thumbnails',
-    zoomOutText: 'Zoom Out',
-  },
 }
