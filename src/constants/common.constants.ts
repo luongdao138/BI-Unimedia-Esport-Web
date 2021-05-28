@@ -76,4 +76,23 @@ export const CHAT_CONSTANTS = {
   },
 }
 
+
+export const LIGHTBOX_OPTIONS = {
+  settings: {
+    overlayColor: 'rgb(0, 0, 0, 0.8)',
+  },
+  buttons: {
+    backgroundColor: 'transparent',
+    showThumbnailsButton: false,
+    showAutoplayButton: false,
+    showDownloadButton: false,
+    showNextButton: false,
+    showPrevButton: false,
+  },
+  thumbnails: {
+    showThumbnails: false,
+  },
+}
+
 export const SNS = 'sns'
+
