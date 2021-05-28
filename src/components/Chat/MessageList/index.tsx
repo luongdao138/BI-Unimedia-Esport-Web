@@ -175,7 +175,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1000,
     left: 0,
     right: 0,
-    top: '-10px',
+    top: '0px',
     margin: '0 auto',
     '& svg': {
       width: '100%',

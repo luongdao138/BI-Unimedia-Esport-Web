@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Box, makeStyles } from '@material-ui/core'
+import { SRLWrapper } from 'simple-react-lightbox'
+import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 
 export interface MessageImageProps {
   msg?: string
@@ -19,7 +21,11 @@ const PhotoMessage: React.FC<MessageImageProps> = (props) => {
     setSrc(IMG_PLACEHOLDER)
   }
 
-  return <Box className={classes.box}>{<img onLoad={() => props.onLoadImage()} onError={onError} className={classes.img} src={src} />}</Box>
+  return (
+    <SRLWrapper options={LIGHTBOX_OPTIONS}>
+      <Box className={classes.box}>{<img onLoad={() => props.onLoadImage()} onError={onError} className={classes.img} src={src} />}</Box>
+    </SRLWrapper>
+  )
 }
 
 const useStyles = makeStyles(() => ({

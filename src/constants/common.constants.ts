@@ -75,3 +75,31 @@ export const CHAT_CONSTANTS = {
     SECONDARY: '#00000',
   },
 }
+
+export const LIGHTBOX_OPTIONS = {
+  settings: {
+    overlayColor: 'rgb(0, 0, 0, 0.8)',
+  },
+  buttons: {
+    backgroundColor: 'transparent',
+    showThumbnailsButton: false,
+    showAutoplayButton: false,
+    showDownloadButton: false,
+    showNextButton: false,
+    showPrevButton: false,
+  },
+  thumbnails: {
+    showThumbnails: false,
+  },
+  translations: {
+    autoplayText: 'Play',
+    closeText: 'Close',
+    downloadText: 'ダウンロード',
+    fullscreenText: 'Full screen',
+    nextText: 'Next',
+    pauseText: 'Pause',
+    previousText: 'Previous',
+    thumbnailsText: 'Hide thumbnails',
+    zoomOutText: 'Zoom Out',
+  },
+}
