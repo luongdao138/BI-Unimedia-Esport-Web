@@ -16,7 +16,7 @@ import _ from 'lodash'
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { matches, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
+  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
@@ -67,6 +67,41 @@ const ArenaMatches: React.FC = () => {
     )
   }
 
+  const getMatch = (headerText, _match) => {
+    const data = tournament.attributes
+    const isTeam = data.participant_type > 1
+
+    return (
+      <Bracket.Match
+        onClick={() => onMatchClick(_match)}
+        key={_match.id}
+        headerText={headerText}
+        editable
+        winner={_match.winner}
+        participant1={
+          _match.home_user
+            ? {
+                avatar: _match.home_avatar,
+                label: isTeam ? _match.home_user.team_name : _match.home_user.name,
+                score: _match.score_home,
+              }
+            : null
+        }
+        participant2={
+          _match.guest_user
+            ? {
+                avatar: _match.guest_avatar,
+                label: isTeam ? _match.guest_user.team_name : _match.guest_user.name,
+                score: _match.score_guest,
+              }
+            : null
+        }
+        score1={_match.score_home}
+        score2={_match.score_guest}
+      />
+    )
+  }
+
   return (
     <div className={classes.root}>
       {matches && tournament && (
@@ -87,43 +122,17 @@ const ArenaMatches: React.FC = () => {
                 {matches.map((round, rid) => (
                   <Bracket.Round key={rid} roundNo={rid}>
                     <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
-
-                    {round.map((match, mid) => {
-                      const data = tournament.attributes
-                      const isTeam = data.participant_type > 1
-                      return (
-                        <Bracket.Match
-                          onClick={() => onMatchClick(match)}
-                          key={mid}
-                          headerText={`${rid + 1}-${mid + 1}`}
-                          editable
-                          winner={match.winner}
-                          participant1={
-                            match.home_user
-                              ? {
-                                  avatar: match.home_avatar,
-                                  label: isTeam ? match.home_user.team_name : match.home_user.name,
-                                  score: match.score_home,
-                                }
-                              : null
-                          }
-                          participant2={
-                            match.guest_user
-                              ? {
-                                  avatar: match.guest_avatar,
-                                  label: isTeam ? match.guest_user.team_name : match.guest_user.name,
-                                  score: match.score_guest,
-                                }
-                              : null
-                          }
-                          score1={match.score_home}
-                          score2={match.score_guest}
-                        />
-                      )
-                    })}
+                    {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
                   </Bracket.Round>
                 ))}
               </Bracket.Container>
+              {!_.isEmpty(third_place_match) && (
+                <Bracket.Container activeRound={0}>
+                  <Bracket.Round key={'3rd'} roundNo={0}>
+                    {getMatch('1-1', third_place_match[0])}
+                  </Bracket.Round>
+                </Bracket.Container>
+              )}
               {scoreDialog()}
             </Container>
           </div>
