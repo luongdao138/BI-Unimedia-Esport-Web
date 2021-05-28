@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
+import moment from 'moment'
 import { makeStyles, Box, Typography } from '@material-ui/core'
 import Loader from '@components/Loader'
+import ImageUploader from '../ChatRoomContainer/ImageUploader'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { ESRoutes } from '@constants/route.constants'
 import { createMetaSelector } from '@store/metadata/selectors'
@@ -12,14 +14,19 @@ import { members } from '@store/socket/selectors'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import ESSelectInput, { SelectInputItem } from '@components/SelectInput'
 import chatStore from '@store/chat'
+import { v4 as uuidv4 } from 'uuid'
 import { socketActions } from '@store/socket/actions'
-import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { ACTIONS } from '@components/Chat/constants'
+import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import * as socket from '@store/socket/selectors'
 import { useRouter } from 'next/router'
 
 const { actions } = chatStore
 
 const _getFriendsMeta = createMetaSelector(actions.getFriendList)
+interface UploadStateType {
+  uploading: boolean
+}
 
 const ChatRoomCreateContainer: React.FC = () => {
   const classes = useStyles()
@@ -32,7 +39,14 @@ const ChatRoomCreateContainer: React.FC = () => {
   const actionPending = useAppSelector(socket.actionPending)
   const newRoomId = useAppSelector(socket.newRoomId)
   const [selectedUsers, setSelectedUsers] = useState([] as number[])
+  const [roomId, setRoomId] = useState(null as null | string)
+  const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
 
+  const ref = useRef<{ handleUpload: () => void }>(null)
+
+  useEffect(() => {
+    setRoomId(uuidv4())
+  }, [])
   useEffect(() => {
     if (userId) {
       dispatch(getFriendList({ type: 'group' }))
@@ -52,8 +66,42 @@ const ChatRoomCreateContainer: React.FC = () => {
         action: CHAT_ACTION_TYPE.CREATE_ROOM,
         userIds: selectedUsers,
         firstMsg: text.trim(),
+        type: CHAT_MESSAGE_TYPE.TEXT,
       })
     )
+  }
+
+  const handlePressActionButton = (type: number) => {
+    if (type === ACTIONS.IMAGE_UPLOAD)
+      if (ref.current && !uploadMeta.uploading) {
+        setMeta({ uploading: false })
+        ref.current.handleUpload()
+      }
+  }
+
+  const imageErrorHandler = (error: any) => {
+    // eslint-disable-next-line no-console
+    console.log(error)
+    setMeta({ uploading: false })
+  }
+
+  const imageEventHandler = (url: string, isPending: boolean) => {
+    const currentTimestamp = moment().valueOf()
+    currentTimestamp
+    if (isPending) {
+      setMeta({ uploading: true })
+    } else {
+      dispatch(
+        socketActions.createChatRoom({
+          action: CHAT_ACTION_TYPE.CREATE_ROOM,
+          userIds: selectedUsers,
+          firstMsg: url,
+          type: CHAT_MESSAGE_TYPE.IMAGE,
+          roomId: roomId,
+        })
+      )
+      setMeta({ uploading: false })
+    }
   }
 
   const navigateRoom = (id: string) => {
@@ -68,7 +116,7 @@ const ChatRoomCreateContainer: React.FC = () => {
     dispatch(getFriendList({ type: 'group', keyword: text }))
   }
   const renderLoader = () => {
-    if (actionPending) {
+    if (actionPending || uploadMeta.uploading) {
       return (
         <Box className={classes.loaderBox}>
           <Loader />
@@ -104,8 +152,21 @@ const ChatRoomCreateContainer: React.FC = () => {
         <Box className={`${classes.content} scroll-bar`}>{renderLoader()}</Box>
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea onPressSend={handlePress} users={users} />
+        <MessageInputArea
+          onPressSend={handlePress}
+          users={users}
+          onPressActionButton={handlePressActionButton}
+          disabled={actionPending || uploadMeta.uploading || selectedUsers.length === 0}
+        />
       </Box>
+
+      <ImageUploader
+        ref={ref}
+        roomId={roomId}
+        onResponse={imageEventHandler}
+        onImageSelected={imageEventHandler}
+        onError={imageErrorHandler}
+      />
     </Box>
   )
 }

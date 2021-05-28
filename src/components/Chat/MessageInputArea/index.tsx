@@ -17,6 +17,7 @@ export interface MessageInputAreaProps {
   onPressSend?: (text: string) => void
   text?: string | null
   handleOnPressActions?: ((type: number) => void) | undefined
+  disabled?: boolean
 }
 
 const partTypes = [
@@ -29,7 +30,7 @@ const partTypes = [
 ]
 
 const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
-  const { onPressSend, users, onPressActionButton } = props
+  const { onPressSend, users, onPressActionButton, disabled } = props
   const [text, setText] = useState<string>('')
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
@@ -72,7 +73,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
 
   return (
     <Box className={classes.root}>
-      <Actions onPressActions={onPressActionButton} />
+      <Actions onPressActions={onPressActionButton} disabled={disabled} />
       <Box className={classes.input}>
         <Composer
           renderSuggestion={renderSuggestion}
@@ -83,7 +84,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
           onChange={onChangeText}
         />
       </Box>
-      <IconButton disabled={_.isEmpty(text) ? true : false} className={classes.send} onClick={send} disableRipple>
+      <IconButton disabled={disabled === true || _.isEmpty(text) ? true : false} className={classes.send} onClick={send} disableRipple>
         <Icon className={`${classes.icon} fas fa-paper-plane`} />
       </IconButton>
     </Box>
