@@ -34,6 +34,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
         return tempScore > 40
       })
       .required(t('common.error')),
+    //TODO password_must_match translate
     confirm_new_password: Yup.string().test('password-match', t('error.password_must_match'), function (value) {
       return this.parent.new_password === value
     }),
@@ -54,6 +55,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
+      // TODO error.error_4221 translate
       setFieldError('current_password', t('error.error_4221'))
     }
   }, [meta.error])
@@ -132,7 +134,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
         <Typography variant="body2">{t('account_settings.hint')}</Typography>
         <Typography variant="body2">{t('account_settings.hint2')}</Typography>
       </Box>
-      <Box mx={5} className={classes.formWrap}>
+      <Box mx={5} className={classes.formWrapBottom}>
         <ESInput
           id="confirm_new_password"
           placeholder={t('account_settings.new_password_re_enter')}
@@ -185,6 +187,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     overflow: 'scroll',
   },
+  formWrapBottom: {
+    marginBottom: theme.spacing(4),
+  },
   [theme.breakpoints.down('md')]: {
     header: {
       paddingTop: theme.spacing(2),
@@ -193,6 +198,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(4),
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
+    },
+    formWrapBottom: {
+      marginTop: theme.spacing(4),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(4),
     },
     section: {
       marginRight: theme.spacing(2),

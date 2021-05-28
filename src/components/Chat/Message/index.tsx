@@ -2,10 +2,11 @@ import React from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { ChatRoomMemberItem, MessageType } from '../types/chat.types'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
-import { SystemMessage, Bubble, DateTitle } from '../elements'
+import { SystemMessage, Bubble, DateTitle, MessageMenu } from '../elements'
 import Avatar from '@components/Avatar'
 import useSmartTime from '@utils/hooks/useSmartTime'
 import _ from 'lodash'
+import { MENU_ACTIONS } from '../constants'
 
 export interface MessageProps {
   direction: 'left' | 'right'
@@ -13,17 +14,25 @@ export interface MessageProps {
   users: ChatRoomMemberItem[]
   navigateToProfile?: (id: string) => void
   onLoadImage: () => void
+  reply?: (currentMessage: MessageType) => void
+  report?: (currentMessage: MessageType) => void
+  copy?: (currentMessage: MessageType) => void
 }
 
 const Message: React.FC<MessageProps> = (props) => {
   const classes = useStyles()
 
-  const { currentMessage, direction, navigateToProfile } = props
+  const { currentMessage, direction, navigateToProfile, reply, report, copy, users } = props
 
   const message = _.get(currentMessage, 'msg', '')
 
-  const avatar = _.get(currentMessage, 'profile', '')
-  const nickName = _.get(currentMessage, 'nickName', '')
+  const userData = _.find(users, function (o) {
+    return o.userId === currentMessage.userId
+  })
+
+  const avatar = _.get(userData, 'profile', '')
+  const nickName = _.get(userData, 'nickName', '')
+
   const timestamp = _.get(currentMessage, 'createdAt', '')
   const time = useSmartTime(timestamp)
 
@@ -43,12 +52,27 @@ const Message: React.FC<MessageProps> = (props) => {
     return <Bubble onLoadImage={props.onLoadImage} navigateToProfile={navigateToProfile} {...props} />
   }
 
+  const actionHandlers = {
+    [MENU_ACTIONS.COPY_CONTENT]: copy && copy,
+    [MENU_ACTIONS.REPLY_MSG]: reply && reply,
+    [MENU_ACTIONS.REPORT_CHAT]: report && report,
+  }
+
+  const onMenuAction = (type: MENU_ACTIONS) => {
+    const handler = actionHandlers[type]
+
+    if (handler) handler(currentMessage)
+  }
+
   const renderBubbleGroup = () => {
     if (currentMessage && currentMessage.type !== CHAT_MESSAGE_TYPE.DATE && currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME) {
       return (
         <Box className={direction === 'left' ? classes.left : classes.right}>
           {direction === 'left' ? renderAvatar() : null}
           <Box className={direction === 'left' ? classes.wrapperLeft : classes.wrapperRight}>
+            <Box className={direction === 'left' ? classes.menuLeft : classes.menuRight}>
+              <MessageMenu onPressMenuItem={onMenuAction} />
+            </Box>
             {renderBubble()}
             {renderTime()}
           </Box>
@@ -87,6 +111,16 @@ const Message: React.FC<MessageProps> = (props) => {
 }
 
 const useStyles = makeStyles(() => ({
+  menuRight: {
+    position: 'absolute',
+    left: '-28px',
+    bottom: 8,
+  },
+  menuLeft: {
+    position: 'absolute',
+    right: '-28px',
+    bottom: 8,
+  },
   section: {
     width: '100%',
     height: 'auto',
@@ -100,6 +134,7 @@ const useStyles = makeStyles(() => ({
   left: {
     marginRight: 'auto',
     width: 300,
+
     height: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -108,6 +143,7 @@ const useStyles = makeStyles(() => ({
   right: {
     marginLeft: 'auto',
     width: 300,
+
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -121,11 +157,13 @@ const useStyles = makeStyles(() => ({
   },
   wrapperLeft: {
     marginLeft: 16,
+    position: 'relative',
     '& $time': {
       textAlign: 'left',
     },
   },
   wrapperRight: {
+    position: 'relative',
     marginRight: 16,
     '& $time': {
       textAlign: 'right',

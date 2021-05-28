@@ -10,18 +10,18 @@ export const searchOptions = [
     value: searchTypes.USER,
     name: 'ニックネーム・ID',
   },
-  {
-    value: searchTypes.COMMUNITY,
-    name: 'コミュニティ',
-  },
+  // {
+  //   value: searchTypes.COMMUNITY,
+  //   name: 'コミュニティ',
+  // },
   {
     value: searchTypes.TOURNAMENT,
     name: 'アリーナ',
   },
-  {
-    value: searchTypes.RECRUITMENT,
-    name: 'ロビー',
-  },
+  // {
+  //   value: searchTypes.RECRUITMENT,
+  //   name: 'ロビー',
+  // },
 ]
 
 export const GENDER = {
@@ -76,6 +76,7 @@ export const CHAT_CONSTANTS = {
   },
 }
 
+export const SNS = 'SNS'
 
 export const LIGHTBOX_OPTIONS = {
   settings: {
@@ -93,6 +94,3 @@ export const LIGHTBOX_OPTIONS = {
     showThumbnails: false,
   },
 }
-
-export const SNS = 'sns'
-

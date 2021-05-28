@@ -6,16 +6,21 @@ import userProfile from '@store/userProfile'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { ESRoutes } from '@constants/route.constants'
 import authStore from '@store/auth'
+import { clearMetaData } from '@store/metadata/actions'
+import { useRouter } from 'next/router'
 
 const { selectors } = authStore
-const { actions } = userProfile
+const { actions, selectors: userProfileSelectors } = userProfile
 const getChangeEmailMeta = createMetaSelector(actions.changeEmail)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useChangeEmail = () => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getChangeEmailMeta)
+  const changeEmailSteps = useAppSelector(userProfileSelectors.getChangeEmailSteps)
+  const resetMeta = () => dispatch(clearMetaData(actions.changeEmail.typePrefix))
   const { navigateScreen } = useReturnHref()
 
   const changeEmail = (params: services.ChangeEmailParams) => {
@@ -25,10 +30,17 @@ const useChangeEmail = () => {
   useEffect(() => {
     if (meta.loaded) {
       navigateScreen(ESRoutes.USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM)
+      resetMeta()
     }
   }, [meta.loaded])
 
-  return { changeEmail, meta, user }
+  useEffect(() => {
+    if (!changeEmailSteps.step_check) {
+      router.back()
+    }
+  }, [changeEmailSteps.step_check])
+
+  return { changeEmail, meta, user, changeEmailSteps }
 }
 
 export default useChangeEmail

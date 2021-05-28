@@ -59,6 +59,26 @@ export default {
     divider: 'または',
     intro_hint1: 'eXeLABをお楽しみいただくには',
     intro_hint2: 'ログインが必要です',
+    validation: {
+      email: 'メールアドレスが間違っています。',
+      password: 'パスワードが間違っています。',
+    },
+    error: {
+      title: 'ログインできませんでした',
+      detail: `以下の可能性がございます。
+        １. メールアドレスに誤りがある
+        ２. パスワードに誤りがある
+        ３. SNS連携でアカウントを作成している`,
+      hint:
+        '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワードを設定していただくか、しばらく経ってからもう一度ログインしてください。',
+      title2: 'SNSでのログインに失敗しました',
+      detail2: `以下の可能性がございます。
+      １. ダミーテキスト
+      ２. ダミーテキスト
+      ３. ダミーテキスト`,
+      hint2:
+        'ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミー',
+    },
   },
   register: {
     button: 'メールアドレスで登録',
@@ -95,12 +115,12 @@ export default {
     failed: '失敗しました',
     password_reissue: 'パスワードを再発行しました',
     too_short: '短すぎます。',
-    password_must_match: 'Password must match',
-    error_4221: 'Current password incorrect',
+    password_must_match: 'パスワードが一致していません。',
+    error_4221: 'パスワードが一致していません。',
     email_invalid: '有効なメールアドレスを入力してください',
     same_email: '現在のメールアドレスと同一のメールアドレスです！違うメールアドレスを入力してください。',
-    error_email_4221: 'New mail not found',
-    error_email_4222: 'New mail duplicated',
+    error_email_4221: 'メールアドレスが見つかりませんでした',
+    error_email_4222: 'メールアドレスが既に使用されています！',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -226,7 +246,7 @@ export default {
   },
   search: {
     search: '検索',
-    search_placeholder: 'キーワード検索',
+    search_placeholder: 'キーワードで探す',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -265,6 +285,9 @@ export default {
     back_list: '宛先',
     create_new: '新規作成',
     placeholder: 'メッセージを入力…',
+    copy_content: '内容のコピー',
+    reply_msg: '引用返信',
+    report_chat: '通報',
   },
   notification: {
     title: '通知一覧',
@@ -312,6 +335,8 @@ export default {
     new_password_re_enter: '新しいパスワード（再入力）',
     hint: '8文字以上の半角英数字を入力してください',
     hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
+    change_email_success: 'メールアドレスを変更しました',
+    change_password_success: 'パスワードを変更しました',
   },
   my_page_settings: {
     title: 'マイページの情報公開範囲',
@@ -329,6 +354,9 @@ export default {
   },
   security_settings: {
     title: 'セキュリティ',
+    my_page: 'マイページの情報公開範囲',
+    message: 'メッセージの受信設定',
+    block: 'ブロックしたユーザー',
   },
   notification_settings: {
     title: '通知設定',
@@ -359,7 +387,7 @@ export default {
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
-    security: 'セキュリティ',
+    security_settings: 'セキュリティ',
     notification_settings: '通知設定',
     purchase_history: '購入履歴',
     service_info: 'サービス情報',

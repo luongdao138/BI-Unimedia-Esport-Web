@@ -31,6 +31,7 @@ const ESCheckbox: React.FC<CheckboxProps & Props> = ({ label, ...rest }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     marginLeft: 0,
+    marginRight: 0,
   },
   root: {
     paddingTop: theme.spacing(0.625),

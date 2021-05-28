@@ -12,11 +12,12 @@ export interface MessageTextProps {
   navigateToProfile?: (id: string) => void
   numberOfLines?: number
   members: ChatRoomMemberItem[]
-  color?: string
+  color?: string | null
+  contentClass?: string
 }
 
 const TextMessage: React.FC<MessageTextProps> = (props) => {
-  const { text, navigateToProfile, members, color } = props
+  const { text, navigateToProfile, members, color, contentClass, numberOfLines } = props
   const classes = useStyles()
 
   const partTypes = [
@@ -75,7 +76,7 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
     } else {
       return (
         <Typography
-          style={{ color: color }}
+          style={color ? { color: color } : null}
           noWrap={false}
           variant="body1"
           key={`${index}-${data?.trigger ?? 'pattern'}`}
@@ -89,7 +90,9 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
 
   const { parts } = parseValue(text, partTypes)
   return (
-    <Box className={classes.content}>{parts.map(({ text, partType, data }, index) => renderPart({ text, partType, data, index }))}</Box>
+    <Box className={`${classes.content} ${numberOfLines ? classes.wrapOne : ''} ${contentClass ? contentClass : ''}`}>
+      {parts.map(({ text, partType, data }, index) => renderPart({ text, partType, data, index }))}
+    </Box>
   )
 }
 
@@ -114,10 +117,15 @@ const useStyles = makeStyles(() => ({
     color: Colors.grey[100],
     wordBreak: 'break-all',
   },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 }))
 
 TextMessage.defaultProps = {
-  numberOfLines: 0,
+  numberOfLines: null,
   color: Colors.black,
 }
 

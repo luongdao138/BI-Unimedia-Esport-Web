@@ -7,6 +7,7 @@ import { useRect } from '@utils/hooks/useRect'
 import { Colors } from '@theme/colors'
 import Loader from '@components/Loader'
 import Message from '../Message'
+import _ from 'lodash'
 
 export interface MessageListProps {
   messages: MessageType[]
@@ -14,6 +15,9 @@ export interface MessageListProps {
   onFetchMore?: () => void
   paginating?: boolean
   currentUser: string | number
+  reply?: (currentMessage: MessageType) => void
+  report?: (currentMessage: MessageType) => void
+  copy?: (currentMessage: MessageType) => void
 }
 
 const cache = new CellMeasurerCache({
@@ -45,7 +49,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
         messagesEndRef.current.recomputeRowHeights()
         messagesEndRef.current.forceUpdate()
-        messagesEndRef.current.scrollToRow(10)
+        messagesEndRef.current.scrollToRow(5)
       }
     }, 10)
     cache.clearAll()
@@ -65,11 +69,15 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     }
   }, [contentRect?.width])
 
-  const _scrollToBottom = (position) => {
+  const _scrollToBottom = (position: number) => {
+    //https://github.com/bvaughn/react-virtualized/issues/995
     if (messagesEndRef.current != null && messagesEndRef) {
-      messagesEndRef.current.scrollToRow(position)
-      setShowScroll(false)
-      setBottom(true)
+      messagesEndRef.current?.scrollToRow(position - 1)
+      setTimeout(() => {
+        messagesEndRef.current.scrollToRow(position - 1)
+        setShowScroll(false)
+        setBottom(true)
+      }, 100)
     }
   }
 
@@ -101,7 +109,15 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
         {({ measure, registerChild }) => (
           <div onLoad={measure} key={index} style={style} ref={registerChild}>
-            <Message onLoadImage={measure} currentMessage={data} users={users} direction={data.userId !== currentUser ? 'left' : 'right'} />
+            <Message
+              reply={props.reply}
+              report={props.report}
+              copy={props.copy}
+              onLoadImage={measure}
+              currentMessage={data}
+              users={users}
+              direction={_.get(data, 'userId', null) !== currentUser ? 'left' : 'right'}
+            />
           </div>
         )}
       </CellMeasurer>

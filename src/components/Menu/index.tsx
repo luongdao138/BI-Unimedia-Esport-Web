@@ -6,6 +6,8 @@ import { makeStyles } from '@material-ui/core/styles'
 interface MenuProps {
   children: ReactNode
   className?: string
+  disableRipple?: boolean
+  iconClass?: string
 }
 const useStyles = makeStyles(() => ({
   iconButtonBg: {
@@ -19,7 +21,7 @@ const StyledMenu = withStyles({
   },
 })(Menu)
 
-const ESMenu: React.FC<MenuProps> = ({ className, children }) => {
+const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconClass }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const classes = useStyles()
   const handleClick = (event) => {
@@ -32,7 +34,7 @@ const ESMenu: React.FC<MenuProps> = ({ className, children }) => {
 
   return (
     <Box className={className}>
-      <IconButton className={classes.iconButtonBg} onClick={handleClick}>
+      <IconButton className={`${classes.iconButtonBg} ${iconClass ? iconClass : ''}`} disableRipple={disableRipple} onClick={handleClick}>
         <Icon className="fa fa-ellipsis-v" fontSize="small" />
       </IconButton>
       <StyledMenu
@@ -55,6 +57,10 @@ const ESMenu: React.FC<MenuProps> = ({ className, children }) => {
       </StyledMenu>
     </Box>
   )
+}
+
+ESMenu.defaultProps = {
+  disableRipple: false,
 }
 
 export default ESMenu
