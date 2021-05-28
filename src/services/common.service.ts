@@ -17,16 +17,14 @@ export type GetPrefecturesResponse = {
 }
 
 export type HardwareResponse = {
-  data: [
-    {
-      id: string
-      type: string
-      attributes: {
-        id: number
-        name: string
-      }
+  data: Array<{
+    id: string
+    type: string
+    attributes: {
+      id: number
+      name: string
     }
-  ]
+  }>
 }
 
 export const getPrefectures = async (): Promise<GetPrefecturesResponse> => {

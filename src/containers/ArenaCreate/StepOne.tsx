@@ -21,7 +21,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
-
   const handleImageUpload = (file: File) => {
     uploadArenaCoverImage(file, 1, true, (imageUrl) => {
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
