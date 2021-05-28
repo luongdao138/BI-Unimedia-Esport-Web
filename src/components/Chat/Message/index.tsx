@@ -27,7 +27,7 @@ const Message: React.FC<MessageProps> = (props) => {
   const message = _.get(currentMessage, 'msg', '')
 
   const userData = _.find(users, function (o) {
-    return o.userId === currentMessage.userId
+    return o?.userId === currentMessage?.userId
   })
 
   const avatar = _.get(userData, 'profile', '')
