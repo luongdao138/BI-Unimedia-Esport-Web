@@ -8,7 +8,7 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 
-type SelectInputItem = {
+export type SelectInputItem = {
   id: number
   nickName: string
   avatar: string
@@ -17,7 +17,7 @@ type SelectInputItem = {
 
 interface SelectInputProps {
   items: SelectInputItem[]
-  onItemsSelected: (selectedItems) => void
+  onItemsSelected: (selectedItems: (string | SelectInputItem)[]) => void
   onSearchInput: (keyword: string) => void
   loading: boolean
 }

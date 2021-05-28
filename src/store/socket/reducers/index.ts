@@ -14,6 +14,7 @@ const initialState: State = {
   activeRoom: null,
   chatMembers: [],
   socketReady: false,
+  actionPending: false,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -78,13 +79,28 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
-      mergedMsg = ChatHelper.messagesMerge([...oldMessages], newMsg)
+      mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
       result = mergedMsg
       return {
         ...state,
         messages: result,
       }
-
+    case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
+      return {
+        ...state,
+        actionPending: true,
+      }
+    case CHAT_ACTION_TYPE.CREATE_ROOM:
+      return {
+        ...state,
+        actionPending: false,
+        newRoomId: action.data.roomId,
+      }
+    case CHAT_ACTION_TYPE.CLEAR_NEW_ROOM_ID:
+      return {
+        ...state,
+        newRoomId: undefined,
+      }
     case CHAT_ACTION_TYPE.GET_ROOM_MEMBERS:
       return {
         ...state,
