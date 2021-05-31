@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta, ChangeEmailSteps } from '@services/user.service'
+import { TournamentListItem } from '@services/tournament.service'
+import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -8,7 +9,7 @@ import { UPLOADER_TYPE } from '@constants/image.constants'
 type StateType = {
   data: ProfileResponse['data']
   lastSeenUserData: ProfileResponse['data']
-  tournamentHistories?: Array<HistoryResponse>
+  tournamentHistories?: Array<TournamentListItem>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
   activityLogsMeta?: Meta
