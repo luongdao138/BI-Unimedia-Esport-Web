@@ -6,7 +6,6 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import BlackBox from '@components/BlackBox'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
@@ -44,40 +43,32 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
 
       <ESModal open={open}>
         <BlankLayout>
-          <BlackBox>
-            <Box className={classes.childrenContainer}>
-              <Box color={Colors.white} alignItems="center">
-                <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
-                <Typography variant="h2" className={classes.description}>
-                  {t('common:tournament.close_recruitment.dialog_description')}
-                </Typography>
-              </Box>
+          <Box paddingY={16} className={classes.childrenContainer}>
+            <Box pb={4} color={Colors.white} alignItems="center">
+              <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
+            </Box>
+            <Box pb={4}>
+              <Typography variant="h2">{t('common:tournament.close_recruitment.dialog_description')}</Typography>
+            </Box>
 
-              <Box>
-                <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
-                    {t('common:cancel')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ButtonPrimary
-                    round
-                    fullWidth
-                    onClick={() => {
-                      close(tournament.attributes.hash_key)
-                    }}
-                  >
-                    {t('common:tournament.close_recruitment.confirm')}
-                  </ButtonPrimary>
-                </Box>
+            <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" paddingTop={18.5}>
+              <Box marginX={1} width="100%">
+                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+                  {t('common:common.cancel')}
+                </ESButton>
               </Box>
-
-              <Box display="flex" flexDirection="row" alignItems="center" color="#F7F560">
-                <WarningRounded fontSize="small" />
-                <Typography variant="body2">{t('common:tournament.close_recruitment.warning')}</Typography>
+              <Box marginX={2} width="100%">
+                <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
+                  {t('common:tournament.close_recruitment.confirm')}
+                </ButtonPrimary>
               </Box>
             </Box>
-          </BlackBox>
+
+            <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
+              <WarningRounded fontSize="small" />
+              <Typography variant="body2">{t('common:tournament.close_recruitment.warning')}</Typography>
+            </Box>
+          </Box>
         </BlankLayout>
       </ESModal>
 
@@ -88,24 +79,36 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[200]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[200]}80`,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  },
+  childrenContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  description: {
+    marginTop: theme.spacing(3),
+    textAlign: 'center',
+  },
   actionButton: {
     marginTop: theme.spacing(3),
     width: '100%',
     margin: '0 auto',
     maxWidth: theme.spacing(35),
-  },
-  childrenContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  description: {
-    textAlign: 'center',
   },
 }))
 
