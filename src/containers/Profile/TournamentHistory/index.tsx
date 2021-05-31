@@ -40,11 +40,13 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
         hasMore={hasNextPage}
         loader={null}
       >
-        {tournamentHistories.map((tournament: TournamentListItem, i: number) => (
-          <Grid key={i} item xs={6} md={4}>
-            <TournamentCard tournament={tournament} />
-          </Grid>
-        ))}
+        {tournamentHistories.length > 0
+          ? tournamentHistories.map((tournament: TournamentListItem, i: number) => (
+              <Grid key={i} item xs={6} md={4}>
+                <TournamentCard tournament={tournament} />
+              </Grid>
+            ))
+          : null}
       </InfiniteScroll>
       {meta.pending && (
         <Grid item xs={12}>
