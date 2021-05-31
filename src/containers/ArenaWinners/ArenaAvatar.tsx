@@ -25,7 +25,7 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
         </Typography>
       )}
       {win && !leaf && <Typography className={classes.winText}>WIN</Typography>}
-      <div className={`${classes.avatarWrapper} ${win && classes.win}`}>
+      <div className={`${classes.avatarWrapper} ${win && classes.win} ${win && classes.winSvg}`}>
         <Avatar src={src} size={size === 'large' ? 120 : 80} alt={alt_name ? alt_name : name} />
       </div>
       {(name || user_code) && (
@@ -74,7 +74,6 @@ const useStyles = makeStyles((theme) => ({
       '&:after': {
         content: "''",
         position: 'absolute',
-        background: 'url(/images/leaf.svg)',
         backgroundRepeat: 'no-repeat',
         height: props.size === 'large' ? largeSize.h : size.h,
         width: props.size === 'large' ? largeSize.w : size.w,
@@ -85,6 +84,11 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translate(-50%,0%)',
       },
     }
+  },
+  winSvg: {
+    '&:after': {
+      background: 'url(/images/leaf.svg)',
+    },
   },
   nameWrapper: {
     position: 'absolute',
