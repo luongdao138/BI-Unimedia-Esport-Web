@@ -33,9 +33,11 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
 
   const handleOnChange = (type: string, e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const _val = e.target.value
+    const _val = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+    if (_val > 99999 || _val < 0) return
+
     const _match = { ...match }
-    type == PARTICIPANT_TYPE.GUEST ? (_match.score_guest = Number(_val)) : (_match.score_home = Number(_val))
+    type == PARTICIPANT_TYPE.GUEST ? (_match.score_guest = _val) : (_match.score_home = _val)
     setMatch(_match)
   }
 
