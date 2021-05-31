@@ -58,7 +58,7 @@ const ArenaWinners: React.FC = () => {
                 </Typography>
                 {p.user && (
                   <Typography variant="body2" className={classes.user_code}>
-                    {p.user.user_code}
+                    {`@${p.user.user_code}`}
                   </Typography>
                 )}
               </div>
