@@ -33,9 +33,10 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const data = tournament.type === TYPES.HISTORY ? tournament.attributes.tournament : tournament.attributes
   const attr = tournament.attributes
   const cover = data.cover ? data.cover : '/images/avatar.png'
-  const organizer = data.organizer?.nickname ? data.organizer.nickname : ''
+  // const organizer = data.organizer?.nickname ? data.organizer.nickname : ''
   const startDate = new Date(data.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
-
+  // console.log(data)
+  // console.log(attr)
   return (
     <ESCard>
       <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
@@ -48,7 +49,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             alignItems="flex-end"
             padding={1}
           >
-            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer.nickname} />
+            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
             <Chip
               className={classes.chipPrimary}
               size="small"
@@ -83,7 +84,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         <Box color={Colors.white}>
           <Typography>{data.title}</Typography>
         </Box>
-        <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${organizer}`}</Typography>
+        <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${attr.organizer_name}`}</Typography>
         <Box display="flex" flexDirection="row" mt={1} alignItems="center">
           <ESChip
             className={classes.chip}
