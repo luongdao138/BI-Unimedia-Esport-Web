@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/search.service'
 import { SEARCH_ACTION_TYPE } from './types'
 
@@ -16,3 +16,5 @@ export const userSearch = createAsyncThunk<services.UserSearchResponse, services
     }
   }
 )
+
+export const setSearchParams = createAction<services.SearchParams>(SEARCH_ACTION_TYPE.SET_SEARCH_PARAMS)
