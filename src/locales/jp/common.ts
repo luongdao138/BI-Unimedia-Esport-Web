@@ -288,6 +288,13 @@ export default {
     copy_content: '内容のコピー',
     reply_msg: '引用返信',
     report_chat: '通報',
+    room_options: {
+      member_list: 'メンバー一覧',
+      add_member: 'メンバーの追加',
+      change_room_name: 'グループ名を変更',
+      change_img: 'アイコンを変更',
+      exit: '退出する',
+    },
   },
   notification: {
     title: '通知一覧',
