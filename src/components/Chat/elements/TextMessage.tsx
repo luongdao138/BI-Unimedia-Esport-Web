@@ -100,7 +100,7 @@ const useStyles = makeStyles(() => ({
     wordBreak: 'break-all',
   },
   url: {
-    color: Colors.secondary,
+    color: '#8e47ff',
     cursor: 'pointer',
     wordBreak: 'break-all',
   },
