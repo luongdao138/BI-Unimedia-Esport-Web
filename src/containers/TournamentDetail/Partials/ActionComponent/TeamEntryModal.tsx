@@ -60,12 +60,9 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   const membersValidationSchema = Yup.object().shape({
     user_id: Yup.number().required(),
-    name: Yup.string().required(),
-    user_code: Yup.string().required(),
-    nickname: Yup.string()
-      .required(t('common:common.error'))
-      .max(40, t('common:common.too_long'))
-      .test('name', 'at_least', function (value) {
+    name: Yup.string()
+      .required()
+      .test('name', 'ng_word', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
   })
@@ -76,7 +73,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     team_name: Yup.string()
       .required(t('common:common.error'))
       .max(40, t('common:common.too_long'))
-      .test('team_name', 'at_least', function (value) {
+      .test('team_name', 'ng_word', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     team_icon_url: Yup.string().required(),
