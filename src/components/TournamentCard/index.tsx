@@ -35,8 +35,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const cover = data.cover ? data.cover : '/images/avatar.png'
   // const organizer = data.organizer?.nickname ? data.organizer.nickname : ''
   const startDate = new Date(data.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
-  // console.log(data)
-  // console.log(attr)
+
   return (
     <ESCard>
       <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
