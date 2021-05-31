@@ -4,6 +4,7 @@ import useTournamentHistory from './useTournamentHistory'
 import TournamentCard from '@components/TournamentCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
+import { TournamentListItem } from '@services/tournament.service'
 
 interface Props {
   userCode: string
@@ -39,7 +40,7 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
         hasMore={hasNextPage}
         loader={null}
       >
-        {tournamentHistories.map((tournament, i) => (
+        {tournamentHistories.map((tournament: TournamentListItem, i: number) => (
           <Grid key={i} item xs={6} md={4}>
             <TournamentCard tournament={tournament} />
           </Grid>
