@@ -270,11 +270,12 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   return (
     <Box>
       <Box className={classes.actionButton}>
-        {tournament.attributes.is_entered ? (
+        {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && (
           <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
             {t('common:tournament.unjoin')}
           </ESButton>
-        ) : (
+        )}
+        {tournament.attributes.my_role === null && (
           <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
             {t('common:tournament.join')}
           </ButtonPrimary>

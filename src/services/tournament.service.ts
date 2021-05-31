@@ -44,6 +44,7 @@ export type ResultsResponse = {
 
 export type TournamentStatus = 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
 export type TournamentRule = 'single' | 'double' | 'battle_royale'
+export type ArenaRole = 'admin' | 'participant' | 'interested' | 'co_organizer'
 export type TournamentDetail = {
   id: string
   type: 'tournament_details'
@@ -100,7 +101,7 @@ export type TournamentDetail = {
     summary_image: null | string
     interested_count: number
     participant_count: number
-    my_role: null | string
+    my_role: null | ArenaRole
     my_info: []
     my_position: null | string
     hash_key: string
@@ -175,7 +176,7 @@ export type EntryStatusResponse = {
 }
 export type TournamentMatchParticipant = {
   id: number
-  role: 'admin' | 'participant' | 'interested' | 'co_organizer'
+  role: ArenaRole
   name?: string
   team_name?: string
   pid: number

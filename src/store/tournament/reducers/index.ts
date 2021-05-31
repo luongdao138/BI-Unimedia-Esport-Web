@@ -89,10 +89,12 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.joinTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count++
     state.tournamentDetail.attributes.is_entered = true
+    state.tournamentDetail.attributes.my_role = 'interested'
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
     state.tournamentDetail.attributes.is_entered = false
+    state.tournamentDetail.attributes.my_role = null
   })
   builder.addCase(actions.closeTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
