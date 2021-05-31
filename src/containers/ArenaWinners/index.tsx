@@ -75,6 +75,7 @@ export default ArenaWinners
 const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
+    paddingBottom: theme.spacing(3),
   },
   coverWrapper: {
     position: 'sticky',
@@ -146,6 +147,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     background: Colors.black_opacity['70'],
     position: 'relative',
+    zIndex: 3000,
   },
   listItem: {
     height: 66,
