@@ -10,7 +10,6 @@ import { SNS } from '@constants/common.constants'
 import ESButton from '@components/Button'
 import SettingsItem from './SettingsItem'
 import authStore from '@store/auth'
-import ESToast from '@components/Toast'
 import useAccount from './useAccount'
 
 const AccountSettingsContainer: React.FC = () => {
@@ -20,7 +19,7 @@ const AccountSettingsContainer: React.FC = () => {
   const hasEmail = CommonHelper.hasEmail(user?.email)
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
-  const { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta, resetSteps } = useAccount()
+  const { resetSteps } = useAccount()
 
   const openEmailModal = () => {
     resetSteps()
@@ -64,16 +63,6 @@ const AccountSettingsContainer: React.FC = () => {
       <Box my={4} display="flex" justifyContent="center">
         <ESButton variant="outlined">{t('account_settings.delete_account')}</ESButton>
       </Box>
-      {metaChangePassword.loaded && (
-        <ESToast open={metaChangePassword.loaded} message={t('account_settings.change_password_success')} resetMeta={changePasswordMeta} />
-      )}
-      {metaChangeEmailConfirm.loaded && (
-        <ESToast
-          open={metaChangeEmailConfirm.loaded}
-          message={t('account_settings.change_email_success')}
-          resetMeta={changeEmailConfirmMeta}
-        />
-      )}
     </>
   )
 }
