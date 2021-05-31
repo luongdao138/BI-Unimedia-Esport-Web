@@ -136,7 +136,15 @@ export default createReducer(initialState, (builder) => {
     state.recruitingTournamentsMeta = action.payload.meta
   })
   builder.addCase(actions.getArenaWinners.fulfilled, (state, action) => {
-    state.arenaWinners = action.payload.matches
+    const places = Object.keys(action.payload.matches)
+    const matches = Object.assign({}, action.payload.matches)
+    for (const p of places) {
+      matches[p] = matches[p].map((i) => ({
+        ...i,
+        name: i.team ? i.team.name : i.name,
+      }))
+    }
+    state.arenaWinners = matches
   })
   builder.addCase(actions.getRecommendedUsersByName.fulfilled, (state, action) => {
     let _recommendedUsers = action.payload.data
