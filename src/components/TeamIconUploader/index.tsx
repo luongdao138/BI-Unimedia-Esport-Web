@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar, Box } from '@material-ui/core'
+import { Avatar, Box, Typography } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import { useDropzone } from 'react-dropzone'
+import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
 
 type ProfileAvatarProps = {
   editable?: boolean
@@ -17,6 +19,7 @@ const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ editable, size, src,
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [localSrc, setLocalSrc] = useState<string | ArrayBuffer>('')
+  const { t } = useTranslation()
 
   const dropZoneConfig = {
     accept: 'image/*',
@@ -50,8 +53,13 @@ const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ editable, size, src,
     <div className={classes.root}>
       {editable ? (
         <label htmlFor="cover-upload" className={classes.touch}>
-          <Avatar className={classes.avatar} src={localSrc.toString() || '/images/avatar.png'} />
-          {drag && !isUploading ? <Camera fontSize="large" className={classes.camera} /> : null}
+          <Avatar className={classes.avatar} src={localSrc.toString() || '/images/avatar-black.png'} />
+          {!isUploading ? (
+            <div className={classes.camera}>
+              <Camera fontSize="large" />
+              <Typography>{t('common:common.select_an_image')}</Typography>
+            </div>
+          ) : null}
           {drag || isUploading ? <div className={classes.backdrop} /> : null}
           <div
             {...getRootProps()}
@@ -72,9 +80,24 @@ const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ editable, size, src,
               <ESLoader />
             </Box>
           ) : null}
+          <div className={classes.dashed}>
+            <svg viewBox="0 0 120 120">
+              <circle
+                width="120"
+                height="120"
+                cx="60"
+                cy="60"
+                r="59"
+                strokeDasharray="4, 4"
+                fill="transparent"
+                stroke={Colors.white_opacity[30]}
+                strokeWidth="1"
+              />
+            </svg>
+          </div>
         </label>
       ) : (
-        <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} style={size && { width: size, height: size }} />
+        <Avatar className={classes.avatar} src={src ?? '/images/avatar-black.png'} style={size && { width: size, height: size }} />
       )}
     </div>
   )
@@ -89,6 +112,7 @@ export default ESTeamIconUploader
 
 const useStyles = makeStyles(() => ({
   root: {
+    position: 'relative',
     display: 'block',
   },
   avatar: {
@@ -96,8 +120,15 @@ const useStyles = makeStyles(() => ({
     width: 120,
     height: 120,
   },
+  dashed: {
+    position: 'absolute',
+    top: 0,
+    zIndex: 31,
+    width: 120,
+    height: 120,
+  },
   touch: {
-    zIndex: 30,
+    zIndex: 32,
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
@@ -112,6 +143,8 @@ const useStyles = makeStyles(() => ({
   },
   camera: {
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     position: 'absolute',
     zIndex: 50,
   },
