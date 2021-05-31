@@ -49,7 +49,7 @@ export default {
     apple: 'Appleでログイン',
   },
   login: {
-    email_placeholder: 'exelab@sample.co.jp',
+    email_placeholder: 'exelab@exelab.jp',
     email_label_primary: 'メールアドレス',
     email_label_secondary: 'メールアドレスがわからない場合',
     password_label_primary: 'パスワード',
@@ -90,11 +90,19 @@ export default {
     terms: '利用規約に同意する',
     privacy: '個人情報保護方針に同意する',
     footer_link: 'アカウントをお持ちの方',
+    error: {
+      title: '登録に失敗しました',
+      detail: `以下の可能性がございます。
+      １. ダミーテキスト
+      ２. ダミーテキスト
+      ３. 同じアカウントですでにSNS連携での新規登録を行なっている(ダミー)`,
+      hint: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
+    },
   },
   register_by_email: {
     email: 'メールアドレス',
     forgot_password: 'パスワードをお忘れの場合',
-    email_placeholder: 'exelab@sample.co.jp',
+    email_placeholder: 'exelab@exelab.jp',
     password: 'パスワード',
     hint: '8文字以上の半角英数字を入力してください',
     hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',

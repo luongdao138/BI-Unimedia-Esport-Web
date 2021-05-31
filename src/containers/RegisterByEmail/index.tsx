@@ -37,7 +37,7 @@ const RegisterByEmailContainer: React.FC = () => {
       .required(t('common:common.error')),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserLoginParams>({
+  const { handleChange, values, handleSubmit, errors, touched, setFieldValue } = useFormik<services.UserLoginParams>({
     initialValues: {
       email: '',
       password: '',
@@ -76,11 +76,6 @@ const RegisterByEmailContainer: React.FC = () => {
                 autoFocus
                 placeholder={t('common:register_by_email.email_placeholder')}
                 labelPrimary={t('common:register_by_email.email')}
-                labelSecondary={
-                  <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                    {t('common:register_by_email.forgot_password')}
-                  </Typography>
-                }
                 fullWidth
                 value={values.email}
                 onChange={handleChange}
@@ -96,24 +91,22 @@ const RegisterByEmailContainer: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 labelSecondary={<ESStrengthMeter value={score} />}
                 endAdornment={
-                  <InputAdornment position="end">
+                  <InputAdornment position="end" className={classes.inputContainer}>
+                    <div className={classes.borderLeft}></div>
                     <IconButton
                       aria-label="toggle password visibility"
                       size="small"
                       disableRipple
+                      color="inherit"
                       onMouseDown={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <Icon className="fas fa-eye" fontSize="small" />
-                      ) : (
-                        <Icon className="fas fa-eye-slash" fontSize="small" />
-                      )}
+                      {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
                     </IconButton>
                   </InputAdornment>
                 }
                 fullWidth
                 value={values.password}
-                onChange={handleChange}
+                onChange={(e) => setFieldValue('password', CommonHelper.validatePassword(e.target.value))}
                 helperText={touched.password && errors.password}
                 error={touched.password && !!errors.password}
               />
@@ -164,6 +157,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+  },
+  inputContainer: {
+    position: 'relative',
+    paddingRigth: 7,
+  },
+  borderLeft: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#4B4B4D',
+    position: 'absolute',
+    left: -8,
   },
   [theme.breakpoints.down('sm')]: {
     container: {

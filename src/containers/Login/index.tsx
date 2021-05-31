@@ -106,15 +106,13 @@ const LoginContainer: React.FC = () => {
       !!social.meta.error && (
         <Box pb={8}>
           <Box pb={20 / 8} textAlign="center">
-            <Typography className={classes.wrap} color="secondary">
-              {i18n.t('common:login.error.title2')}
-            </Typography>
+            <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
           </Box>
           <Box pb={1}>
-            <Typography className={classes.wrap}>{i18n.t('common:login.error.detail2')}</Typography>
+            <Typography className={classes.detail}>{i18n.t('common:register.error.detail')}</Typography>
           </Box>
-          <Typography className={classes.wrap} variant="caption">
-            {i18n.t('common:login.error.hint2')}
+          <Typography className={classes.hint} variant="caption">
+            {i18n.t('common:register.error.hint')}
           </Typography>
         </Box>
       )
@@ -282,8 +280,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     left: -8,
   },
-  wrap: {
+  hint: {
+    color: Colors.white_opacity[30],
+  },
+  detail: {
     whiteSpace: 'pre-line',
+    color: Colors.white_opacity[70],
   },
   [theme.breakpoints.down('sm')]: {
     container: {
