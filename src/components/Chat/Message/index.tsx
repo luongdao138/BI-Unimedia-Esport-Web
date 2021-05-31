@@ -64,7 +64,7 @@ const Message: React.FC<MessageProps> = (props) => {
   const onMenuAction = (type: MENU_ACTIONS) => {
     const handler = actionHandlers[type]
 
-    if (handler && type === MENU_ACTIONS.REPORT_CHAT) {
+    if (type === MENU_ACTIONS.REPORT_CHAT) {
       const data = {
         attributes: {
           nickname: nickName,

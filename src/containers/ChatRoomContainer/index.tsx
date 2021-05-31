@@ -199,6 +199,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           target_id={Number(reportData.target_id)}
           data={reportData.data}
           open={reporting}
+          members={users}
           handleClose={() => setReporting(false)}
         />
       ) : null}

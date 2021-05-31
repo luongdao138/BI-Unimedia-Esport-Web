@@ -116,20 +116,22 @@ const ESInquiry: React.FC = () => {
                 />
               </Box>
               <Box mt={1}></Box>
-              <Input
-                id="email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                labelPrimary={t('inquiry.email')}
-                required
-                fullWidth
-                helperText={touched.email && errors.email}
-                error={touched.email && !!errors.email}
-                rows={8}
-                disabled={showPreview}
-                size="small"
-              />
+              {currentUserEmail ? null : (
+                <Input
+                  id="email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  labelPrimary={t('inquiry.email')}
+                  required
+                  fullWidth
+                  helperText={touched.email && errors.email}
+                  error={touched.email && !!errors.email}
+                  rows={8}
+                  disabled={showPreview}
+                  size="small"
+                />
+              )}
             </Box>
 
             <Box mt={3} display="flex" justifyContent="center">
