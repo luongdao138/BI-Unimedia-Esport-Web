@@ -15,7 +15,6 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
-import LoginRequired from '@containers/LoginRequired'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -154,16 +153,14 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:home.home')} />
             </ListItem>
           </Link>
-          <LoginRequired>
-            <Link href={ESRoutes.TOURNAMENTS} passHref>
-              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.TOURNAMENTS)}>
-                <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-trophy" />
-                </ListItemIcon>
-                <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
-              </ListItem>
-            </Link>
-          </LoginRequired>
+          <Link href={ESRoutes.TOURNAMENTS} passHref>
+            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.TOURNAMENTS)}>
+              <ListItemIcon className={classes.icon}>
+                <Icon fontSize="small" className="fa fa-trophy" />
+              </ListItemIcon>
+              <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
+            </ListItem>
+          </Link>
           {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-university" />

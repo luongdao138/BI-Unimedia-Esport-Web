@@ -24,22 +24,22 @@ const RegisterProfileContainer: React.FC = () => {
       .required(t('common:common.error'))
       .max(50, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
-      .test('user_code', 'at_least', function (value) {
+      .test('user_code', t('common:common.user_code_invalid'), function (value) {
         return CommonHelper.userCodeValid(value)
       })
-      .test('user_code', 'at_least', function (value) {
+      .test('user_code', t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
       .required(t('common:common.error'))
       .max(50, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
-      .test('nickname', 'at_least', function (value) {
+      .test('nickname', t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserProfileParams>({
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<services.UserProfileParams>({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -90,6 +90,7 @@ const RegisterProfileContainer: React.FC = () => {
                 fullWidth
                 value={values.user_code}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 helperText={touched.user_code && errors.user_code}
                 error={touched.user_code && !!errors.user_code}
               />
@@ -111,6 +112,7 @@ const RegisterProfileContainer: React.FC = () => {
                 fullWidth
                 value={values.nickname}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 helperText={touched.nickname && errors.nickname}
                 error={touched.nickname && !!errors.nickname}
               />

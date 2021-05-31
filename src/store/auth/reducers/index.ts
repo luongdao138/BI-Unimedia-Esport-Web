@@ -21,6 +21,9 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.registerByEmail.fulfilled, (state, action) => {
       state.user = action.payload
     })
+    .addCase(actions.resendConfirmation.fulfilled, (state, action) => {
+      state.user = action.payload
+    })
     .addCase(actions.forgotPassword.fulfilled, (state, action) => {
       state.user = action.payload
     })
