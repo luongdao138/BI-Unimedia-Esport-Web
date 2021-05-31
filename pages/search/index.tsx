@@ -7,24 +7,21 @@ import { searchTypes } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
-import _ from 'lodash'
 import PageWithLayoutType from '@constants/page'
+import useSearch from '@containers/Search/useSearch'
 
 const SearchPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-  const [type, setType] = useState<number>()
-  const [keyword, setKeyword] = useState<string>('')
+  const { searchType, searchKeyword } = useSearch()
+  const [type, setType] = useState<number>(searchType)
+  const [keyword, setKeyword] = useState<string>(searchKeyword)
 
   useEffect(() => {
-    if (!_.isEmpty(router.query)) {
-      const _type = router.query.type ? Number(router.query.type) : searchTypes.USER
-      setType(_type)
-      const _keyword = router.query.keyword ? router.query.keyword.toString() : ''
-      setKeyword(_keyword)
-    }
-  }, [router.query])
+    setType(searchType)
+    setKeyword(searchKeyword)
+  }, [searchType, searchKeyword])
 
   const renderSwitch = () => {
     switch (type) {

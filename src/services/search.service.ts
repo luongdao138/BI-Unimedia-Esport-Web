@@ -26,6 +26,11 @@ export type FollowParams = {
   user_id: number
 }
 
+export type SearchParams = {
+  type: number
+  keyword: string
+}
+
 export const userSearch = async (params: UserSearchParams): Promise<UserSearchResponse> => {
   const { data } = await api.post<UserSearchResponse>(URI.USERS_SEARCH, params)
   return data
