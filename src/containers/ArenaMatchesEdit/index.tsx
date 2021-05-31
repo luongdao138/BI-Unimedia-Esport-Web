@@ -11,12 +11,14 @@ import useTournamentDetail from '../TournamentDetail/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
 import { useTranslation } from 'react-i18next'
 import ESToast from '@components/Toast'
+import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const router = useRouter()
   const {
     matches,
     third_place_match,
@@ -102,7 +104,7 @@ const ArenaMatches: React.FC = () => {
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
             <Toolbar className={classes.toolbar}>
-              <IconButton className={classes.backButton}>
+              <IconButton className={classes.backButton} onClick={() => router.back()}>
                 <ArrowBack />
               </IconButton>
               <Typography variant="h2">{tournament.attributes.title}</Typography>

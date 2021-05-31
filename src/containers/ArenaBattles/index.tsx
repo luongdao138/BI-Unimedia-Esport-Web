@@ -3,16 +3,18 @@ import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui
 import { ArrowBack } from '@material-ui/icons'
 import BRListItem from './BRListItem'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const ArenaBattles: React.FC = () => {
   const [score, setScore] = useState('')
   const classes = useStyles()
+  const router = useRouter()
   return (
     <>
       <AppBar className={classes.appbar}>
         <Container maxWidth="lg">
           <Toolbar className={classes.toolbar}>
-            <IconButton className={classes.backButton}>
+            <IconButton className={classes.backButton} onClick={() => router.back()}>
               <ArrowBack />
             </IconButton>
             <Typography variant="h2">第1回 exeCUP -STREET FIGHTER V CE部門-</Typography>
