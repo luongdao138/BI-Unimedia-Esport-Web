@@ -57,21 +57,21 @@ const DetailInfo: React.FC<Props> = ({ detail, extended }) => {
         </Box>
 
         <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={extended ? 2 : 3}>
-          <Typography>#{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
-          <Box ml={3}>
+          <Box mr={3}>
+            <Typography>#{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
+          </Box>
+          <Box mr={3}>
             <Typography>#{TournamentHelper.participantTypeText(data.participant_type)}</Typography>
           </Box>
-          <Box ml={3}>
+          <Box mr={3}>
             <Typography>#{TournamentHelper.ruleText(data.rule)}</Typography>
           </Box>
           {!!data.has_prize && (
-            <Box ml={3}>
+            <Box mr={3}>
               <Typography>#{t('common:tournament.has_prize_true')}</Typography>
             </Box>
           )}
-          <Box ml={3}>
-            <Typography>#{hardware}</Typography>
-          </Box>
+          <Typography>#{hardware}</Typography>
         </Box>
         {extended && (
           <>

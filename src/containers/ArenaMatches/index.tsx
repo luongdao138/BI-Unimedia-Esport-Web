@@ -116,7 +116,7 @@ const ArenaMatches: React.FC = () => {
           </AppBar>
           <div className={classes.content}>
             <div className={classes.bracketWrap}>
-              <Bracket.Container activeRound={0}>
+              <Bracket.Container activeRound={10}>
                 {matches.map((round, rid) => (
                   <Bracket.Round key={rid} roundNo={rid}>
                     <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
