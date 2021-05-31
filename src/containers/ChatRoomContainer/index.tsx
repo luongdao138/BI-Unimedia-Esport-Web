@@ -14,6 +14,9 @@ import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
 import { MessageType } from '@components/Chat/types/chat.types'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
+import { ESReportProps } from '@containers/Report'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -27,6 +30,8 @@ export interface UploadStateType {
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
   const [reply, setReply] = useState<MessageType | null>(null)
+  const [reporting, setReporting] = useState<boolean>(false)
+  const [reportData, setReportData] = useState<ESReportProps>(null)
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
@@ -149,6 +154,10 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const onReply = (currentMessage: MessageType) => {
     setReply(currentMessage)
   }
+  const onReport = (reportData: ESReportProps) => {
+    setReportData(reportData)
+    setReporting(true)
+  }
 
   return (
     <Box className={classes.room}>
@@ -158,6 +167,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         {!_.isEmpty(data) && _.isArray(data) && (
           <MessageList
             reply={onReply}
+            report={onReport}
             currentUser={userId}
             paginating={paginating}
             onFetchMore={onFetchMore}
@@ -182,6 +192,16 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         onImageSelected={imageEventHandler}
         onError={imageErrorHandler}
       />
+      {reportData ? (
+        <ESReport
+          msg_body={reportData.msg_body}
+          reportType={REPORT_TYPE.CHAT}
+          target_id={Number(reportData.target_id)}
+          data={reportData.data}
+          open={reporting}
+          handleClose={() => setReporting(false)}
+        />
+      ) : null}
     </Box>
   )
 }
