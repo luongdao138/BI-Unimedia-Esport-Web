@@ -10,9 +10,10 @@ type ProfileAvatarProps = {
   src: string
   isUploading: boolean
   onChange?: (file: File) => void
+  disabled?: boolean
 }
 
-const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false, onChange }) => {
+const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false, onChange, disabled = false }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [localSrc, setLocalSrc] = useState<string | ArrayBuffer>('')
@@ -68,7 +69,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
           }}
           onDragLeave={() => setDrag(false)}
         >
-          <input {...getInputProps()} />
+          <input disabled={disabled} {...getInputProps()} />
         </div>
         {isUploading ? (
           <Box className={classes.loader}>

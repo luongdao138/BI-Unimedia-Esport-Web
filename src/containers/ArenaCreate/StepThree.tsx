@@ -7,13 +7,15 @@ import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import ESInputDatePicker from '@components/InputDatePicker'
 import { Colors } from '@theme/colors'
+import { EditableTypes } from './useTournamentCreate'
 
 type Props = {
   formik: FormikProps<FormType>
   prefectures: GetPrefecturesResponse
+  editables: EditableTypes
 }
 
-const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
+const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
@@ -38,6 +40,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
             formik.errors?.stepThree?.recruit_date
           }
           error={formik.touched?.stepThree?.acceptance_start_date && !!formik.errors?.stepThree?.acceptance_start_date}
+          disabled={!editables.acceptance_start_date}
         />
         <Box mt={1}>
           <span className={classes.dashes}>-</span>
@@ -54,6 +57,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
             formik.errors?.stepThree?.acceptance_dates
           }
           error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}
+          disabled={!editables.acceptance_end_date}
         />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
@@ -75,6 +79,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
             formik.errors?.stepThree?.acceptance_end_start_date
           }
           error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
+          disabled={!editables.start_date}
         />
         <Box mt={1}>
           <span className={classes.dashes}>-</span>
@@ -90,6 +95,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
             (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date
           }
           error={formik.touched?.stepThree?.end_date && !!formik.errors?.stepThree?.end_date}
+          disabled={!editables.end_date}
         />
       </Box>
       <Box pb={1}>
@@ -100,6 +106,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           label={t('common:tournament_create.area')}
           required={true}
           size="small"
+          disabled={!editables.area_id}
         >
           {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
@@ -121,6 +128,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures }) => {
           error={formik.touched?.stepThree?.area_name && !!formik.errors?.stepThree?.area_name}
           size="small"
           required
+          disabled={!editables.area_name}
         />
       </Box>
     </Box>

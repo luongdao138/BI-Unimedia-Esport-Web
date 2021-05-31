@@ -22,11 +22,13 @@ import { getInitialValues } from './FormModel/InitialValues'
 import { getValidationScheme } from './FormModel/ValidationScheme'
 import { useStore } from 'react-redux'
 import { TournamentFormParams } from '@services/tournament.service'
+import { useRouter } from 'next/router'
 
 const TournamentCreate: React.FC = () => {
+  const router = useRouter()
   const store = useStore()
   const { hardwares, prefectures, user } = useCommonData()
-  const { submit, meta, isEdit, arena } = useTournamentCreate()
+  const { submit, update, meta, updateMeta, isEdit, arena, editables } = useTournamentCreate()
   const { handleReturn } = useReturnHref()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -47,7 +49,11 @@ const TournamentCreate: React.FC = () => {
         co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
         game_title_id: values.stepOne.game_title_id[0].id,
       }
-      submit(data)
+      if (isEdit) {
+        update({ hash_key: router.query.hash_key.toString(), data })
+      } else {
+        submit(data)
+      }
     },
   })
 
@@ -87,10 +93,10 @@ const TournamentCreate: React.FC = () => {
             </ESTabs>
           </Box>
           <Box py={4}>
-            {tab == 0 && <StepOne formik={formik} hardwares={hardwares} />}
-            {tab == 1 && <StepTwo formik={formik} />}
-            {tab == 2 && <StepThree formik={formik} prefectures={prefectures} />}
-            {tab == 3 && <StepFour formik={formik} user={user} />}
+            {tab == 0 && <StepOne formik={formik} hardwares={hardwares} editables={editables} />}
+            {tab == 1 && <StepTwo formik={formik} editables={editables} />}
+            {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} />}
+            {tab == 3 && <StepFour formik={formik} user={user} editables={editables} />}
           </Box>
         </Box>
         <Box className={classes.stickyFooter}>
@@ -103,7 +109,7 @@ const TournamentCreate: React.FC = () => {
           </Box>
         </Box>
       </form>
-      <ESLoader open={meta.pending} />
+      <ESLoader open={meta.pending || updateMeta.pending} />
     </>
   )
 }

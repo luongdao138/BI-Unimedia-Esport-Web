@@ -6,13 +6,15 @@ import CoOrganizersDialog from './Partials/CoOrganizersDialog'
 import { Colors } from '@theme/colors'
 import { UserLoginResponse } from '@services/auth.service'
 import { FormType } from './FormModel/FormType'
+import { EditableTypes } from './useTournamentCreate'
 
 type Props = {
   formik: FormikProps<FormType>
   user: UserLoginResponse
+  editables: EditableTypes
 }
 
-const StepFour: React.FC<Props> = ({ formik, user }) => {
+const StepFour: React.FC<Props> = ({ formik, user, editables }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
@@ -41,6 +43,7 @@ const StepFour: React.FC<Props> = ({ formik, user }) => {
           helperText={formik.touched?.stepFour?.organizer_name && formik.errors?.stepFour?.organizer_name}
           error={formik.touched?.stepFour?.organizer_name && !!formik.errors?.stepFour?.organizer_name}
           size="small"
+          disabled={!editables.organizer_name}
         />
       </Box>
     </Box>

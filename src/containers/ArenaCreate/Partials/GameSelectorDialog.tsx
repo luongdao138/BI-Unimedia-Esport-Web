@@ -16,9 +16,10 @@ type GameTitleItem = GameTitle['attributes']
 interface Props {
   values: GameTitleItem[]
   onChange: (games: GameTitleItem[]) => void
+  disabled?: boolean
 }
 
-const GameSelectorDialog: React.FC<Props> = ({ values, onChange }) => {
+const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
@@ -45,7 +46,7 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange }) => {
         <Typography className={classes.labelColor}>{t('common:tournament_create.game')}</Typography>
         <Typography className={classes.required}>{t('common:common.required')}</Typography>
       </Box>
-      <ButtonBase onClick={() => setOpen(true)} className={classes.inputContainer}>
+      <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
@@ -163,5 +164,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
+
+GameSelectorDialog.defaultProps = {
+  disabled: false,
+}
 
 export default GameSelectorDialog

@@ -161,6 +161,22 @@ const checkParticipantsSelected = (bracketData: TournamentMatchRound[], interest
   return selected
 }
 
+const isStatusPassed = (status: string, targetStatus: string): boolean => {
+  const statuses = [
+    TOURNAMENT_STATUS.READY,
+    TOURNAMENT_STATUS.RECRUITING,
+    TOURNAMENT_STATUS.RECRUITMENT_CLOSED,
+    TOURNAMENT_STATUS.READY_TO_START,
+    TOURNAMENT_STATUS.IN_PROGRESS,
+    TOURNAMENT_STATUS.COMPLETED,
+    TOURNAMENT_STATUS.CANCELLED,
+  ]
+  const index = statuses.indexOf(status)
+  const targetIndex = statuses.indexOf(targetStatus)
+
+  return index < targetIndex
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -173,4 +189,5 @@ export const TournamentHelper = {
   getDetailData,
   checkParticipantsSelected,
   getTypeEnum,
+  isStatusPassed,
 }
