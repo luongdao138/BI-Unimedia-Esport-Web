@@ -12,10 +12,11 @@ export interface ReplyContentProps {
   showName?: boolean
   contentClass?: string
   numberOfLines?: number
+  bgColor?: string
 }
 
 const ReplyContent: React.FC<ReplyContentProps> = (props) => {
-  const { replyMessage, members, color, showName, contentClass, numberOfLines } = props
+  const { replyMessage, members, color, showName, contentClass, numberOfLines, bgColor } = props
   const classes = useStyles()
 
   const text = _.get(replyMessage, 'msg', '')
@@ -45,6 +46,7 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
             numberOfLines={numberOfLines}
             color={color ? color : null}
             contentClass={classes.contentText}
+            bgColor={bgColor}
             members={members}
             text={text}
           />

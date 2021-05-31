@@ -15,6 +15,7 @@ export interface MessageTextProps {
   color?: string | null
   contentClass?: string
   textClass?: string
+  bgColor?: string
 }
 
 const TextMessage: React.FC<MessageTextProps> = (props) => {
@@ -132,7 +133,7 @@ const useStyles = makeStyles(() => ({
       insetInlineEnd: 0,
       display: 'block',
       width: '1rem',
-      backgroundColor: Colors.white,
+      backgroundColor: (props: MessageTextProps) => props.bgColor,
       height: '1rem',
       marginTop: '-20px',
     },

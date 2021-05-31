@@ -46,6 +46,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
             showName={false}
             numberOfLines={2}
             replyMessage={currentMessage.parentMsg}
+            bgColor={direction === 'left' ? Colors.grey[200] : Colors.white}
           />
           <Divider className={classes.divider} />
         </>
