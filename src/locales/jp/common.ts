@@ -42,6 +42,7 @@ export default {
     dash: '-',
     team: 'チーム',
     send: '送信する',
+    select_an_image: '画像を選択',
   },
   welcome: 'eXeLABへようこそ',
   top: {
@@ -486,6 +487,9 @@ export default {
   },
   security_settings: {
     title: 'セキュリティ',
+    my_page: 'マイページの情報公開範囲',
+    message: 'メッセージの受信設定',
+    block: 'ブロックしたユーザー',
   },
   notification_settings: {
     title: '通知設定',
@@ -516,7 +520,7 @@ export default {
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
-    security: 'セキュリティ',
+    security_settings: 'セキュリティ',
     notification_settings: '通知設定',
     purchase_history: '購入履歴',
     service_info: 'サービス情報',

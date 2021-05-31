@@ -42,6 +42,7 @@ export default {
     dash: '-',
     team: 'チーム',
     send: '送信する',
+    select_an_image: '画像を選択',
   },
   welcome: 'eXeLABへようこそ',
   top: {
