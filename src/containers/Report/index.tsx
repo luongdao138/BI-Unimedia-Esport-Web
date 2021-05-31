@@ -18,6 +18,9 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import * as Yup from 'yup'
 import { REPORT_TYPE } from '@constants/common.constants'
+import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
+import TextMessage from '@components/Chat/elements/TextMessage'
 
 export interface ESReportProps {
   chat_id?: string
@@ -29,9 +32,11 @@ export interface ESReportProps {
   open?: boolean
   reportType?: number
   handleClose?: () => void
+  members?: any
 }
 
-const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose, members }) => {
+  const classes = useStyles()
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -103,23 +108,29 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         }}
       >
         <form onSubmit={formik.handleSubmit}>
-          <DialogContent>
+          <DialogContent className={classes.dialogContent}>
             {data && (reportType == REPORT_TYPE.USER_LIST || reportType == REPORT_TYPE.CHAT) ? (
               <Grid container spacing={2}>
-                <Grid item>
+                <Grid item sm={2} xs={12}>
                   <ProfileAvatar src={data.attributes.avatar_url} editable={false} />
                 </Grid>
-                <Grid>
+                <Grid item sm={10} xs={12}>
                   <Box mt={4}>
-                    <Typography variant="h2">{data.attributes.nickname}</Typography>
-                    <Typography variant="h2">{data.attributes.user_code}</Typography>
-                    {msg_body && <Typography>{msg_body}</Typography>}
+                    <Typography className={classes.nickname}>{data.attributes.nickname}</Typography>
+                    <Typography className={classes.userCode}>{data.attributes.user_code}</Typography>
+                    {msg_body && CommonHelper.isMediaURL(msg_body) ? (
+                      <Box className={classes.imgBox} height={100} width={100}>
+                        <img src={msg_body} className={classes.img} />
+                      </Box>
+                    ) : (
+                      <TextMessage members={members} text={msg_body} color={Colors.white} />
+                    )}
                   </Box>
                 </Grid>
               </Grid>
             ) : null}
 
-            <Box mt={1}>
+            <Box mt={2}>
               <Typography>{t('user_report.desc_first')}</Typography>
               <Typography>{t('user_report.desc_second')}</Typography>
               <Typography>{t('user_report.desc_third')}</Typography>
@@ -181,5 +192,34 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  message: {
+    marginLeft: 15,
+    fontSize: 14,
+    color: Colors.white,
+  },
+  nickname: {
+    marginLeft: 15,
+    fontSize: 18,
+    color: Colors.white,
+  },
+  userCode: {
+    marginLeft: 15,
+    fontSize: 16,
+    color: Colors.white,
+  },
+  img: { width: '100%', height: 'auto' },
+  imgBox: {
+    margin: 10,
+  },
+  dialogContent: {
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar': {
+      width: 0,
+      height: 0,
+    },
+  },
+}))
 
 export default ESReport

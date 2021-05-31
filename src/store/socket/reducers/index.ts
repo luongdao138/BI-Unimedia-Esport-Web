@@ -76,6 +76,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         messages: undefined,
+        selectedRoomInfo: undefined,
+        newRoomId: undefined,
       }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
@@ -90,6 +92,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         actionPending: true,
+      }
+    case CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE:
+      return {
+        ...state,
+        selectedRoomInfo: action.data.content.room,
       }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
       newRoomList = [...state.roomList]
