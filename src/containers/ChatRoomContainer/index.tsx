@@ -73,6 +73,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       dispatch(socketActions.sendMessage(payload))
     } else {
       const replyData = {
+        parentId: reply.sortKey,
         parentMsg: {
           msg: reply.msg,
           chatRoomId: roomId,
