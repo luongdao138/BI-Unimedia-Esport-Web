@@ -214,7 +214,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       <Box className={classes.formContainer}>
         <ESLabel label={t('common:icon')} required />
         <Box m={1} />
-        <ESTeamIconUploader src="/images/avatar.png" editable onChange={handleImageUpload} isUploading={isUploading} />
+        <ESTeamIconUploader src="/images/avatar-black.png" editable onChange={handleImageUpload} isUploading={isUploading} />
 
         <Box mt={4} />
         <ESInput
