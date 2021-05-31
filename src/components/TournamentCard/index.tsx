@@ -10,43 +10,23 @@ import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
 import { TournamentListItem } from '@services/tournament.service'
 import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
-// import i18n from '@locales/i18n'
+import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+import i18n from '@locales/i18n'
 
 interface Props {
   tournament: TournamentListItem
 }
-
-// const StyledAvatarGroup = withStyles({
-//   avatar: {
-//     width: 20,
-//     height: 20,
-//     fontSize: 12,
-//     color: Colors.white,
-//   },
-// })(AvatarGroup)
-
-// const TYPES = {
-//   LIST: 'tournaments_list',
-//   HISTORY: 'tournaments_list_for_participants',
-// }
-// const STATUS = {
-//   COMPLETED: 'completed',
-//   STARTED: 'started',
-// }
 
 const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
 
-  // const data = tournament.type === TYPES.HISTORY ? tournament.attributes.tournament : tournament.attributes
   const attr = tournament.attributes
   const winner = tournament.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/avatar.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
-  // console.log('index.tsx 45 ', winner)
 
   const getMediaScreen = () => {
     return (
@@ -67,12 +47,11 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               label={
                 <Box color={Colors.white} justifyContent="flex-">
                   <Typography variant="caption">
-                    aaa
-                    {/* {attr.rule === TR.SINGLE
+                    {attr.rule === TR.SINGLE
                       ? i18n.t('common:tournament:rule_single')
                       : attr.rule === TR.DOUBLE
                       ? i18n.t('common:tournament:rule_double')
-                      : i18n.t('common:tournament:rule_battle')} */}
+                      : i18n.t('common:tournament:rule_battle')}
                   </Typography>
                 </Box>
               }

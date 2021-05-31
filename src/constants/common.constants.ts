@@ -57,13 +57,13 @@ export const HOME_SETTINGS = {
 }
 
 export enum TOURNAMENT_STATUS {
-  READY = 'ready', //tournament created but not recruiting
-  RECRUITING = 'recruiting', //RECRUIT -> burtgel
-  RECRUITMENT_CLOSED = 'recruitment_closed',
-  READY_TO_START = 'ready_to_start', //recruitment finished but waiting for start
-  IN_PROGRESS = 'in_progress', //started
-  COMPLETED = 'completed', // finished
-  CANCELLED = 'cancelled',
+  READY = 1, //tournament created but not recruiting
+  RECRUITING = 2, //RECRUIT -> burtgel
+  RECRUITMENT_CLOSED = 3,
+  READY_TO_START = 4, //recruitment finished but waiting for start
+  IN_PROGRESS = 5, //started
+  COMPLETED = 6, // finished
+  CANCELLED = 7,
 }
 
 export enum TOURNAMENT_ROLE {
