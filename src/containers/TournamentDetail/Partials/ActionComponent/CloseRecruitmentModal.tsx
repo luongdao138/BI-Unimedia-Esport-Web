@@ -105,6 +105,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   description: {
+    marginTop: theme.spacing(3),
     textAlign: 'center',
   },
 }))
