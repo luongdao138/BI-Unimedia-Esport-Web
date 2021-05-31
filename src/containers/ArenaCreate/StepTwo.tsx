@@ -7,12 +7,14 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { PARTICIPATION_TYPES, RULES, T_TYPES } from '@constants/tournament.constants'
 import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
+import { EditableTypes } from './useTournamentCreate'
 
 type Props = {
   formik: FormikProps<FormType>
+  editables: EditableTypes
 }
 
-const StepTwo: React.FC<Props> = ({ formik }) => {
+const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
@@ -27,6 +29,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           label={t('common:tournament_create.holding_format')}
           required={true}
           size="small"
+          disabled={!editables.rule}
         >
           <option disabled value={-1}>
             {t('common:please_select')}
@@ -44,6 +47,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           checked={formik.values.stepTwo.has_third_place}
           onChange={() => formik.setFieldValue('stepTwo.has_third_place', !formik.values.stepTwo.has_third_place)}
           label={t('common:tournament_create.has_third_place')}
+          disabled={!editables.has_third_place}
         />
       </Box>
       <Box pb={4}>
@@ -55,6 +59,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           label={t('common:tournament_create.public_or_private')}
           required={true}
           size="small"
+          disabled={!editables.t_type}
         >
           <option disabled value="-1">
             {t('common:please_select')}
@@ -75,6 +80,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           label={t('common:tournament_create.participation')}
           required={true}
           size="small"
+          disabled={!editables.participant_type}
         >
           <option disabled value={-1}>
             {t('common:please_select')}
@@ -97,6 +103,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           helperText={formik.touched?.stepTwo?.max_participants && formik.errors?.stepTwo?.max_participants}
           error={formik.touched?.stepTwo?.max_participants && !!formik.errors?.stepTwo?.max_participants}
           size="small"
+          disabled={!editables.max_participants}
         />
         <Box pl={1}>
           <Typography>{t('common:common.man')}</Typography>
@@ -115,6 +122,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           helperText={formik.touched?.stepTwo?.terms_of_participation && formik.errors?.stepTwo?.terms_of_participation}
           error={formik.touched?.stepTwo?.terms_of_participation && !!formik.errors?.stepTwo?.terms_of_participation}
           size="small"
+          disabled={!editables.terms_of_participation}
         />
       </Box>
       <Box pb={1}>
@@ -131,6 +139,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
           helperText={formik.touched?.stepTwo?.notes && formik.errors?.stepTwo?.notes}
           error={formik.touched?.stepTwo?.notes && !!formik.errors?.stepTwo?.notes}
           size="small"
+          disabled={!editables.notes}
         />
       </Box>
       <ESCheckbox
@@ -138,6 +147,7 @@ const StepTwo: React.FC<Props> = ({ formik }) => {
         checked={formik.values.stepTwo.retain_history}
         onChange={() => formik.setFieldValue('stepTwo.retain_history', !formik.values.stepTwo.retain_history)}
         label={t('common:tournament_create.retain_history')}
+        disabled={!editables.retain_history}
       />
     </Box>
   )

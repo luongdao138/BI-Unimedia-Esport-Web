@@ -47,5 +47,6 @@ export const ESRoutes = {
   ARENA_MATCHES_EDIT: '/arena/:id/matches/edit',
   ARENA_MATCHES: '/arena/:id/matches',
   ARENA_RESULTS: '/arena/:id/placements',
+  ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
 }

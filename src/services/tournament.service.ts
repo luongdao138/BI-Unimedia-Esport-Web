@@ -167,6 +167,11 @@ export type TournamentFormParams = {
   rule?: string | -1
 }
 
+export type UpdateParams = {
+  hash_key: string
+  data: TournamentFormParams
+}
+
 export type TournamentDetailResponse = {
   data: TournamentDetail
 }
@@ -433,6 +438,11 @@ export const getRecommendedUsersByName = async (params: RecommendedUsersParams):
 
 export const createTournament = async (params: TournamentFormParams): Promise<void> => {
   const { data } = await api.post<void>(URI.TOURNAMENTS_CREATE, params)
+  return data
+}
+
+export const updateTournament = async (params: UpdateParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), { params: params.data })
   return data
 }
 

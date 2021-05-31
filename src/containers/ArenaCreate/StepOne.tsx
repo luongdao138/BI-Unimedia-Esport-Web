@@ -11,13 +11,15 @@ import { HardwareResponse } from '@services/common.service'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import CoverUploader from './Partials/CoverUploader'
 import { FormType } from './FormModel/FormType'
+import { EditableTypes } from './useTournamentCreate'
 
 type Props = {
   formik: FormikProps<FormType>
   hardwares: HardwareResponse
+  editables: EditableTypes
 }
 
-const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
+const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
@@ -29,7 +31,12 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
   return (
     <Box pb={9}>
       <Box pb={4}>
-        <CoverUploader src={formik.values.stepOne.cover_image_url} onChange={handleImageUpload} isUploading={isUploading} />
+        <CoverUploader
+          src={formik.values.stepOne.cover_image_url}
+          onChange={handleImageUpload}
+          isUploading={isUploading}
+          disabled={!editables.cover_image}
+        />
       </Box>
       <Box pb={4}>
         <ESInput
@@ -44,6 +51,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           onBlur={formik.handleBlur}
           size="small"
           required
+          disabled={!editables.title}
         />
       </Box>
       <Box pb={3 / 8}>
@@ -54,6 +62,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
             formik.setFieldValue('stepOne.has_prize', !formik.values.stepOne.has_prize)
           }}
           label={t('common:tournament_create.has_prize')}
+          disabled={!editables.has_prize}
         />
       </Box>
       <Box pb={1}>
@@ -68,6 +77,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
           size="small"
           onBlur={formik.handleBlur}
+          disabled={!editables.prize_amount}
         />
       </Box>
       <Box pb={4} display="flex" flexDirection="row" color={Colors.secondary}>
@@ -80,6 +90,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           onChange={(value) => {
             formik.setFieldValue('stepOne.game_title_id', value)
           }}
+          disabled={!editables.game_title}
         />
       </Box>
       <Box pb={4}>
@@ -91,6 +102,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           label={t('common:tournament_create.game_hardware')}
           required={true}
           size="small"
+          disabled={!editables.game_hardware}
         >
           <option disabled value={-1}>
             {t('common:please_select')}
@@ -116,6 +128,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares }) => {
           helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
           error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
           size="small"
+          disabled={!editables.overview}
         />
       </Box>
     </Box>
