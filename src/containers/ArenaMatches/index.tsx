@@ -13,10 +13,12 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
+import { useRouter } from 'next/router'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const router = useRouter()
   const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
@@ -105,7 +107,7 @@ const ArenaMatches: React.FC = () => {
           <AppBar className={classes.appbar}>
             <Container maxWidth="lg">
               <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.backButton}>
+                <IconButton className={classes.backButton} onClick={() => router.back()}>
                   <ArrowBack />
                 </IconButton>
                 <Typography variant="h2">{tournament.attributes.title}</Typography>
@@ -113,7 +115,7 @@ const ArenaMatches: React.FC = () => {
             </Container>
           </AppBar>
           <div className={classes.content}>
-            <Container maxWidth="lg">
+            <div className={classes.bracketWrap}>
               <Bracket.Container activeRound={0}>
                 {matches.map((round, rid) => (
                   <Bracket.Round key={rid} roundNo={rid}>
@@ -130,7 +132,7 @@ const ArenaMatches: React.FC = () => {
                 </Bracket.Container>
               )}
               {scoreDialog()}
-            </Container>
+            </div>
           </div>
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
         </ESStickyFooter>
@@ -167,5 +169,8 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
+  },
+  bracketWrap: {
+    padding: 24,
   },
 }))
