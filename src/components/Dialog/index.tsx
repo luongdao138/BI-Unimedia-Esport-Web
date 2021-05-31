@@ -1,11 +1,11 @@
 import React from 'react'
 import { makeStyles, Theme, withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
+import _ from 'lodash'
 
-import Dialog from '@material-ui/core/Dialog'
+import Dialog, { DialogProps } from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Icon from '@material-ui/core/Icon'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -29,14 +29,21 @@ const styles = (theme: Theme) =>
 const useStyles = makeStyles({
   backDrop: {
     backdropFilter: 'blur(3px)',
-    backgroundColor: 'rgba(0,0,30,0.6)',
+  },
+  customClass: {
+    '& .MuiDialog-container ': {
+      alignItems: 'flex-start',
+    },
   },
 })
 
-export interface ESDialogProps {
+export interface ESDialogProps extends DialogProps {
   title: string
   open: boolean
   handleClose: () => void
+  bkColor?: string
+  alignTop?: boolean
+  fixedFooter?: React.ReactNode
 }
 
 export interface DialogTitleProps extends WithStyles<typeof styles> {
@@ -61,7 +68,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   )
 })
 
-const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children, ...rest }) => {
+const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children, bkColor, alignTop, fixedFooter, ...rest }) => {
   const classes = useStyles()
   return (
     <Dialog
@@ -71,10 +78,13 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       open={open}
       onClose={handleClose}
       disableBackdropClick
+      className={alignTop === true ? classes.customClass : undefined}
       BackdropProps={{
         classes: {
           root: classes.backDrop,
         },
+        style: { backgroundColor: _.isString(bkColor) ? bkColor : 'rgba(0,0,30,0.6)' },
+        children: fixedFooter ? fixedFooter : undefined,
       }}
       PaperProps={{
         style: {
