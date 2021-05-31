@@ -81,7 +81,7 @@ const ActionComponent: React.FC<Props> = (props) => {
 
       {isModerator && isCompleted && (
         <Box className={classes.actionButton}>
-          <ButtonPrimary round fullWidth onClick={() => {}}>
+          <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
             {t('common:tournament.summary')}
           </ButtonPrimary>
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
