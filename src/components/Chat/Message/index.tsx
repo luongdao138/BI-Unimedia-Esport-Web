@@ -6,6 +6,7 @@ import { SystemMessage, Bubble, DateTitle, MessageMenu } from '../elements'
 import Avatar from '@components/Avatar'
 import useSmartTime from '@utils/hooks/useSmartTime'
 import _ from 'lodash'
+import { ESReportProps } from '@containers/Report'
 import { MENU_ACTIONS } from '../constants'
 
 export interface MessageProps {
@@ -15,8 +16,8 @@ export interface MessageProps {
   navigateToProfile?: (id: string) => void
   onLoadImage: () => void
   reply?: (currentMessage: MessageType) => void
-  report?: (currentMessage: MessageType) => void
-  copy?: (currentMessage: MessageType) => void
+  report?: (reportData: ESReportProps) => void
+  copy?: (currrentMessage: MessageType) => void
 }
 
 const Message: React.FC<MessageProps> = (props) => {
@@ -34,6 +35,7 @@ const Message: React.FC<MessageProps> = (props) => {
 
   const avatar = _.get(userData, 'profile', '')
   const nickName = _.get(userData, 'nickName', '')
+  const userCode = _.get(userData, 'userCode', '')
 
   const timestamp = _.get(currentMessage, 'createdAt', '')
   const time = useSmartTime(timestamp)
@@ -57,13 +59,30 @@ const Message: React.FC<MessageProps> = (props) => {
   const actionHandlers = {
     [MENU_ACTIONS.COPY_CONTENT]: copy && copy,
     [MENU_ACTIONS.REPLY_MSG]: reply && reply,
-    [MENU_ACTIONS.REPORT_CHAT]: report && report,
   }
 
   const onMenuAction = (type: MENU_ACTIONS) => {
     const handler = actionHandlers[type]
 
-    if (handler) handler(currentMessage)
+    if (handler && type === MENU_ACTIONS.REPORT_CHAT) {
+      const data = {
+        attributes: {
+          nickname: nickName,
+          avatar_url: avatar,
+          user_code: userCode,
+        },
+      }
+      const reportData: ESReportProps = {
+        data: data,
+        room_id: currentMessage?.chatRoomId,
+        chat_id: currentMessage?.clientId,
+        msg_body: currentMessage?.msg,
+        target_id: currentMessage?.userId,
+      }
+      report(reportData)
+    } else {
+      handler && handler(currentMessage)
+    }
   }
 
   const renderBubbleGroup = () => {

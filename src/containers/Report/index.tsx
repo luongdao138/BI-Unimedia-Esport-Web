@@ -27,7 +27,7 @@ export interface ESReportProps {
   msg_body?: string
   data?: any
   open?: boolean
-  reportType: number
+  reportType?: number
   handleClose?: () => void
 }
 
