@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { Grid, Box, makeStyles } from '@material-ui/core'
 import useTournamentHistory from './useTournamentHistory'
-import TournamentCard from '@components/TournamentCard'
+// import TournamentCard from '@components/TournamentCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
-import { TournamentListItem } from '@services/tournament.service'
+// import { TournamentListItem } from '@services/tournament.service'
 
 interface Props {
   userCode: string
@@ -40,13 +40,13 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
         hasMore={hasNextPage}
         loader={null}
       >
-        {tournamentHistories.length > 0
+        {/* {tournamentHistories.length > 0
           ? tournamentHistories.map((tournament: TournamentListItem, i: number) => (
               <Grid key={i} item xs={6} md={4}>
                 <TournamentCard tournament={tournament} />
               </Grid>
             ))
-          : null}
+          : null} */}
       </InfiniteScroll>
       {meta.pending && (
         <Grid item xs={12}>
