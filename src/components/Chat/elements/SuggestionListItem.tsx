@@ -45,7 +45,9 @@ const useStyles = makeStyles(() => ({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
   },
-  content: {},
+  content: {
+    paddingLeft: 10,
+  },
   name: {
     color: Colors.text[400],
     fontSize: 14,

@@ -14,11 +14,12 @@ export interface MessageTextProps {
   members: ChatRoomMemberItem[]
   color?: string | null
   contentClass?: string
+  textClass?: string
 }
 
 const TextMessage: React.FC<MessageTextProps> = (props) => {
-  const { text, navigateToProfile, members, color, contentClass, numberOfLines } = props
-  const classes = useStyles()
+  const { text, navigateToProfile, members, color, contentClass, numberOfLines, textClass } = props
+  const classes = useStyles(props)
 
   const partTypes = [
     {
@@ -51,47 +52,36 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
         ''
       )
       return (
-        <Typography
-          noWrap={false}
-          variant="body1"
-          onClick={() => onPressProfile(data)}
-          key={`${index}-${data?.trigger ?? 'pattern'}`}
-          className={classes.mention}
-        >
+        <span onClick={() => onPressProfile(data)} key={`${index}-${data?.trigger ?? 'pattern'}`} className={classes.mention}>
           {'@' + name}
-        </Typography>
+        </span>
       )
     } else if (partType && partType.pattern === regex.url) {
       return (
-        <Typography
-          noWrap={false}
-          variant="body1"
-          onClick={() => onPressLink(text)}
-          key={`${index}-${data?.trigger ?? 'pattern'}`}
-          className={classes.url}
-        >
+        <span onClick={() => onPressLink(text)} key={`${index}-${data?.trigger ?? 'pattern'}`} className={classes.url}>
           {text}
-        </Typography>
+        </span>
       )
     } else {
       return (
-        <Typography
-          style={color ? { color: color } : null}
-          noWrap={false}
-          variant="body1"
-          key={`${index}-${data?.trigger ?? 'pattern'}`}
-          className={classes.plain}
-        >
+        <span style={color ? { color: color } : null} key={`${index}-${data?.trigger ?? 'pattern'}`} className={classes.plain}>
           {text}
-        </Typography>
+        </span>
       )
     }
   }
 
   const { parts } = parseValue(text, partTypes)
   return (
-    <Box className={`${classes.content} ${numberOfLines ? classes.wrapOne : ''} ${contentClass ? contentClass : ''}`}>
-      {parts.map(({ text, partType, data }, index) => renderPart({ text, partType, data, index }))}
+    <Box className={`${classes.content}  ${contentClass ? contentClass : ''}`}>
+      <Typography
+        className={`${textClass ? textClass : ''} ${numberOfLines === 1 ? classes.wrapOne : ''} ${
+          numberOfLines > 1 ? classes.multiline : ''
+        }`}
+        variant="body1"
+      >
+        {parts.map(({ text, partType, data }, index) => renderPart({ text, partType, data, index }))}
+      </Typography>
     </Box>
   )
 }
@@ -122,6 +112,31 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
+  multiline: {
+    position: 'relative',
+    maxHeight: 36,
+    overflow: 'hidden',
+    paddingRight: '1rem',
+    '&:before': {
+      position: 'absolute',
+      content: "'...'",
+      insetBlockEnd: 0,
+      insetInlineEnd: 0,
+      display: 'block',
+      color: (props: MessageTextProps) => props.color,
+      fontSize: 14,
+    },
+    '&:after': {
+      content: "''",
+      position: 'absolute',
+      insetInlineEnd: 0,
+      display: 'block',
+      width: '1rem',
+      backgroundColor: Colors.white,
+      height: '1rem',
+      marginTop: '-20px',
+    },
+  },
 }))
 
 TextMessage.defaultProps = {
@@ -129,4 +144,4 @@ TextMessage.defaultProps = {
   color: Colors.black,
 }
 
-export default TextMessage
+export default React.memo(TextMessage)
