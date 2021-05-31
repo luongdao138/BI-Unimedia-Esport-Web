@@ -1,7 +1,7 @@
 import { State } from '../actions/types'
 import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX } from '@constants/socket.constants'
 import { AnyAction } from 'redux'
-import { MessageType, ChatRoomMemberItem } from '@components/Chat/types/chat.types'
+import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import { ChatHelper } from './utils'
 
@@ -14,6 +14,7 @@ const initialState: State = {
   activeRoom: null,
   chatMembers: [],
   socketReady: false,
+  actionPending: false,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -23,6 +24,7 @@ let pending: MessageType[] | undefined
 let oldMessages: MessageType[] | undefined
 let newMsg: MessageType[] | undefined
 let mergedMsg: MessageType[] | undefined
+let newRoomList: ChatDataType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
@@ -30,6 +32,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         roomList: action.data.content,
+      }
+    case CHAT_ACTION_TYPE.MESSAGE_PAGINATING:
+      return {
+        ...state,
+        paginating: true,
       }
     case CHAT_ACTION_TYPE.GET_ROOM_MESSAGES:
       if (action.data.content === [] || action.data.content.length === 0) {
@@ -39,7 +46,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       } else if (state.lastKey != null && state.activeRoom === action.data.chatRoomId) {
         //paginating data merging
         const prevArray = state.messages
-        const temp = _.concat(prevArray, action.data.content)
+        const temp = _.concat(action.data.content, prevArray)
         newMessagesList = temp
         newUsers = state.members
       } else {
@@ -58,7 +65,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
         pending = [action.data]
       } else {
-        pending = _.concat(action.data, ...state.messages)
+        pending = _.concat(state.messages, action.data)
       }
       return {
         ...state,
@@ -73,13 +80,31 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
-      mergedMsg = ChatHelper.messagesMerge([...oldMessages], newMsg)
+      mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
       result = mergedMsg
       return {
         ...state,
         messages: result,
       }
-
+    case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
+      return {
+        ...state,
+        actionPending: true,
+      }
+    case CHAT_ACTION_TYPE.CREATE_ROOM:
+      newRoomList = [...state.roomList]
+      newRoomList.push(action.data.content)
+      return {
+        ...state,
+        actionPending: false,
+        roomList: newRoomList,
+        newRoomId: action.data.content.chatRoomId,
+      }
+    case CHAT_ACTION_TYPE.CLEAR_NEW_ROOM_ID:
+      return {
+        ...state,
+        newRoomId: undefined,
+      }
     case CHAT_ACTION_TYPE.GET_ROOM_MEMBERS:
       return {
         ...state,

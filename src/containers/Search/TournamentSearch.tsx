@@ -5,25 +5,21 @@ import ESLoader from '@components/Loader'
 import TournamentCard from '@components/TournamentCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
-import _ from 'lodash'
+import useSearch from '@containers/Search/useSearch'
 
 const TournamentSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
+  const { searchKeyword } = useSearch()
   const { searchTournaments, tournamentSearch, page, meta, resetMeta } = useTournamentSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
-    if (!_.isEmpty(router.query)) {
-      const _keyword = router.query.keyword ? router.query.keyword.toString() : ''
-      setKeyword(_keyword)
-      tournamentSearch({ page: 1, keyword: _keyword })
-    }
+    setKeyword(searchKeyword)
+    tournamentSearch({ page: 1, keyword: searchKeyword })
 
     return () => resetMeta()
-  }, [router.query])
+  }, [searchKeyword])
 
   const loadMore = () => {
     if (page && page.current_page !== page.total_pages) {

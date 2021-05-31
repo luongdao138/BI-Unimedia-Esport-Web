@@ -13,4 +13,9 @@ export enum USER_PROFILE_ACTION_TYPE {
   UNFOLLOW = 'profile/unfollow',
   RECOMMENDED_EVENT = 'user/recommended_event',
   UPDATE_HOME_SETTINGS = 'user/update_home_settings',
+  CHANGE_PASSWORD = 'user/change_password',
+  CHANGE_EMAIL_CHECK = 'user/change_email_check',
+  CHANGE_EMAIL = 'user/change_email',
+  CHANGE_EMAIL_CONFIRM = 'user/change_email_confirm',
+  CLEAR_CHANGE_EMAIL_STEPS = 'user/clear_change_email_steps',
 }

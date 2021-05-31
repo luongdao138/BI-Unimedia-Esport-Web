@@ -78,10 +78,39 @@ const matchNgWords = (store: StoreType, subject: string) => {
   }
 }
 
+const hasEmail = (email: string): boolean => {
+  if (email == '' || email == undefined) {
+    return false
+  }
+  const suffix = ['@line.me', '@facebook.com', '@privaterelay.appleid.com', '@twitter.com']
+  for (let i = 0; i < suffix.length; i++) {
+    if (email.endsWith(suffix[i]) == true) {
+      return false
+    }
+  }
+  return true
+}
+
+const isMediaURL = (str: string): boolean => {
+  const domain = 'https://s3-ap-northeast-1.amazonaws.com/'
+  const buckets = ['dev-esporst-chat-media', 'stg-esporst-chat-media', 'esporst-chat-media', 'feature-esporst-chat-media']
+  if (str && str.startsWith(domain)) {
+    for (let i = 0; i < buckets.length; i++) {
+      const bucket = buckets[i]
+      if (str.startsWith(domain + bucket)) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
   scorePassword,
   userCodeValid,
   matchNgWords,
+  hasEmail,
+  isMediaURL,
 }

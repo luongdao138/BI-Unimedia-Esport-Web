@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import ListItem from '@material-ui/core/ListItem'
+import Box from '@material-ui/core/Box'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import Avatar from '@components/Avatar'
@@ -16,11 +16,11 @@ interface RoomListItemProps {
 const RoomListItem: React.FC<RoomListItemProps> = ({ item }) => {
   const avatar = _.get(item, 'profile', '')
   const name = _.get(item, 'nickName', '')
-  const usercode = '@' + _.get(item, 'userCode', '')
+  const usercode = _.get(item, 'userCode', '')
   const classes = useStyles()
 
   return (
-    <ListItem className={classes.root}>
+    <Box className={classes.root}>
       <ListItemAvatar>
         <Avatar className={classes.avatar} src={avatar} alt={name} />
       </ListItemAvatar>
@@ -29,10 +29,10 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ item }) => {
           {name}
         </Typography>
         <Typography noWrap={true} className={classes.userCode} variant="body1">
-          {usercode}
+          {_.isEmpty(usercode) ? '' : '@' + usercode}
         </Typography>
       </ListItemText>
-    </ListItem>
+    </Box>
   )
 }
 const useStyles = makeStyles(() => ({
@@ -40,6 +40,10 @@ const useStyles = makeStyles(() => ({
     alignItems: 'flex-start',
     cursor: 'pointer',
     padding: 6,
+    display: 'flex',
+    flexDirection: 'row',
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
   },
   content: {},
   name: {

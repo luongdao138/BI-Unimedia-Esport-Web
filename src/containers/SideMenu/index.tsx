@@ -118,7 +118,7 @@ const SideMenu: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const isSelected = (routeName: string): boolean => {
-    return router.pathname === routeName
+    return router.pathname && router.pathname.startsWith(routeName)
   }
 
   const handleModal = (contentType: string) => {
@@ -164,7 +164,7 @@ const SideMenu: React.FC = () => {
               </ListItem>
             </Link>
           </LoginRequired>
-          <ListItem className={classes.list} button disableRipple>
+          {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-university" />
             </ListItemIcon>
@@ -175,14 +175,14 @@ const SideMenu: React.FC = () => {
               <Icon fontSize="small" className="fa fa-users" />
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.community')} />
-          </ListItem>
+          </ListItem> */}
           <Box paddingBottom={4} />
-          <ListItem className={classes.list} button disableRipple>
+          {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-play-circle" />
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
-          </ListItem>
+          </ListItem> */}
           <Link href={ESRoutes.SETTINGS} passHref>
             <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
               <ListItemIcon className={classes.icon}>

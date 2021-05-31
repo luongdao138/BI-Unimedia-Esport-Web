@@ -6,6 +6,7 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
   const classes = useStyles()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cornerIcon } = rest
+  const IMG_PLACEHOLDER = '/images/img_404.jpg'
 
   return (
     <>
@@ -16,7 +17,7 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
         </div>
       )}
       <Box className={classes.mediaWrap}>
-        <CardMedia className={classes.media} image={rest.image}>
+        <CardMedia className={classes.media} image={rest?.image ? rest.image : IMG_PLACEHOLDER}>
           {children}
         </CardMedia>
       </Box>

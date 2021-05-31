@@ -12,10 +12,12 @@ export interface MessageTextProps {
   navigateToProfile?: (id: string) => void
   numberOfLines?: number
   members: ChatRoomMemberItem[]
+  color?: string | null
+  contentClass?: string
 }
 
 const TextMessage: React.FC<MessageTextProps> = (props) => {
-  const { text, navigateToProfile, members } = props
+  const { text, navigateToProfile, members, color, contentClass, numberOfLines } = props
   const classes = useStyles()
 
   const partTypes = [
@@ -73,7 +75,13 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
       )
     } else {
       return (
-        <Typography noWrap={false} variant="body1" key={`${index}-${data?.trigger ?? 'pattern'}`} className={classes.plain}>
+        <Typography
+          style={color ? { color: color } : null}
+          noWrap={false}
+          variant="body1"
+          key={`${index}-${data?.trigger ?? 'pattern'}`}
+          className={classes.plain}
+        >
           {text}
         </Typography>
       )
@@ -81,26 +89,44 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
   }
 
   const { parts } = parseValue(text, partTypes)
-  return <Box>{parts.map(({ text, partType, data }, index) => renderPart({ text, partType, data, index }))}</Box>
+  return (
+    <Box className={`${classes.content} ${numberOfLines ? classes.wrapOne : ''} ${contentClass ? contentClass : ''}`}>
+      {parts.map(({ text, partType, data }, index) => renderPart({ text, partType, data, index }))}
+    </Box>
+  )
 }
 
 const useStyles = makeStyles(() => ({
+  content: {
+    padding: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
   mention: {
     color: Colors.primary,
     cursor: 'pointer',
     fontWeight: 400,
+    wordBreak: 'break-all',
   },
   url: {
     color: Colors.secondary,
     cursor: 'pointer',
+    wordBreak: 'break-all',
   },
   plain: {
     color: Colors.grey[100],
+    wordBreak: 'break-all',
+  },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 }))
 
 TextMessage.defaultProps = {
-  numberOfLines: 0,
+  numberOfLines: null,
+  color: Colors.black,
 }
 
 export default TextMessage

@@ -2,6 +2,7 @@ import React, { forwardRef, Ref, useImperativeHandle } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { getPreSignedUrl, upload } from '@services/image.service'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
+import _ from 'lodash'
 
 export interface ImageUploaderRef {
   handleUpload: () => void
@@ -10,12 +11,13 @@ export interface ImageUploaderRef {
 interface ImageUploaderProps {
   onResponse: (presignedUrl: string, isPending: boolean) => void
   onImageSelected?: (localUrl: string, isPending: boolean) => void
+  onError?: (error: any) => void
   ref: Ref<ImageUploaderRef>
   roomId: string | string[]
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef, ImageUploaderProps>(
-  ({ onResponse, onImageSelected, roomId }, ref) => {
+  ({ onResponse, onImageSelected, onError, roomId }, ref) => {
     useImperativeHandle(ref, () => ({
       handleUpload: () => {
         dropZone.open()
@@ -34,9 +36,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
       const reader = new FileReader()
       if (file) {
         // eslint-disable-next-line no-console
-        imageProcess(file).then((result) => {
-          result
-        })
+        imageProcess(file)
+          .then((result) => {
+            result
+          })
+          .catch((e) => {
+            onError(e)
+          })
         reader.readAsDataURL(file)
       }
     }
@@ -52,11 +58,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
       onImageSelected && onImageSelected(URL.createObjectURL(file), true)
 
       const res = await getPreSignedUrl(params)
-      const fileUrl = res.file_url
+      const fileUrl = res.file_url as string
       const signedUrl = res.url
       await upload(file, signedUrl)
-
-      onResponse && onResponse(fileUrl, false)
+      let imageFineUrl = ''
+      if (_.isString(fileUrl)) {
+        const httpPrefix = 'https://'
+        imageFineUrl = fileUrl.startsWith(httpPrefix) ? fileUrl : `https://${fileUrl}`
+      }
+      onResponse && onResponse(imageFineUrl, false)
     }
 
     return (

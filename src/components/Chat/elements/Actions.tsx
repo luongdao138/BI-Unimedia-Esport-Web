@@ -5,9 +5,10 @@ import { TOOLBAR_ACTIONS } from '../constants'
 
 export interface ActionsProps {
   onPressActions?: (type: number) => void
+  disabled?: boolean
 }
 
-const Actions: React.FC<ActionsProps> = ({ onPressActions }) => {
+const Actions: React.FC<ActionsProps> = ({ onPressActions, disabled }) => {
   const classes = useStyles()
 
   return (
@@ -22,6 +23,7 @@ const Actions: React.FC<ActionsProps> = ({ onPressActions }) => {
               onPressActions ? onPressActions(value.type) : undefined
             }}
             disableRipple
+            disabled={disabled === true}
           >
             <Icon className={`${classes.icon} ${value.icon}`} />
           </IconButton>
