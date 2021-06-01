@@ -20,8 +20,12 @@ const useReturnHref = () => {
   }
   const handleLogin = () =>
     router.query._UCR_return_href ? router.push(returnHref, undefined, { shallow: true }) : router.push(ESRoutes.HOME)
+  const handleRegister = () =>
+    router.query._UCR_return_href
+      ? router.push(ESRoutes.REGISTER_PROFILE, undefined, { shallow: true })
+      : router.push(ESRoutes.REGISTER_PROFILE)
 
-  return { handleReturn, navigateScreen, handleLink, handleLogin, navigateModal }
+  return { handleReturn, navigateScreen, handleLink, handleLogin, navigateModal, handleRegister }
 }
 
 export default useReturnHref

@@ -18,7 +18,7 @@ export default {
     too_long: '長すぎる',
     at_least: '2文字以上入力してください。',
     contains_ngword: '不適切な文字列が含まれています。',
-    user_code_invalid: 'ユーザーIDには(英数字、_、-）のみ入力可能です。',
+    user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
     save: '保存する',
     cancel: 'キャンセル',
@@ -116,6 +116,8 @@ export default {
     hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
     button: '次へ',
     back: 'メールアドレスで登録',
+    sns: 'SNS連携で登録',
+    duplicated: 'そのIDは既に使用されています',
   },
   register_profile: {
     user_id: 'ユーザーID',

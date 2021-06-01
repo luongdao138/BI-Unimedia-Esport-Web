@@ -20,7 +20,7 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import i18n from '@locales/i18n'
 
 const RegisterContainer: React.FC = () => {
-  const social = useSocialLogin()
+  const social = useSocialLogin('register')
   const [checkbox, setCheckox] = useState({
     terms: false,
     privacy: false,

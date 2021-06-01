@@ -40,7 +40,7 @@ const validationSchema = Yup.object().shape({
 })
 
 const LoginContainer: React.FC = () => {
-  const social = useSocialLogin()
+  const social = useSocialLogin('login')
   const { t } = useTranslation(['common'])
   const [checkbox, setCheckox] = useState({
     terms: false,

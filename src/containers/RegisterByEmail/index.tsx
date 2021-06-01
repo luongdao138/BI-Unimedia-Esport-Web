@@ -124,7 +124,7 @@ const RegisterByEmailContainer: React.FC = () => {
                 }
                 fullWidth
                 value={values.password}
-                onChange={(e) => setFieldValue('password', CommonHelper.validatePassword(e.target.value))}
+                onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
                 onBlur={handleBlur}
                 helperText={touched.password && errors.password}
                 error={touched.password && !!errors.password}

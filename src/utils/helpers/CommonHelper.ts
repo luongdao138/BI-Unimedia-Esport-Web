@@ -6,7 +6,7 @@ const validateEmail = (email: string): boolean => {
   return re.test(String(email).toLowerCase())
 }
 
-const validatePassword = (value: string): string => {
+const replaceSingleByteString = (value: string): string => {
   return value.replace(/[^A-Za-z0-9.!@#$%^&*()_+-=]/g, '')
 }
 
@@ -60,7 +60,7 @@ const scorePassword = (pass: string): number => {
 }
 
 const userCodeValid = (value: string): boolean => {
-  return /^([a-zA-Z0-9_-]+)$/.test(value)
+  return /^([a-zA-Z0-9+_-]+)$/.test(value)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -117,6 +117,6 @@ export const CommonHelper = {
   userCodeValid,
   matchNgWords,
   hasEmail,
-  validatePassword,
+  replaceSingleByteString,
   isMediaURL,
 }

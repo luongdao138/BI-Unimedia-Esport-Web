@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import { useStore } from 'react-redux'
@@ -13,15 +14,16 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
 import useProfile from './useProfile'
 import { isEmpty } from 'lodash'
+import { ERROR_CODE } from '@constants/error.constants'
 
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerProfile, meta, backAction } = useProfile()
+  const { registerProfile, meta, backAction, isSocial } = useProfile()
   const store = useStore()
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
-      .required(t('common:common.error'))
+      .required(t('common:common.required'))
       .max(50, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
       .test('user_code', t('common:common.user_code_invalid'), function (value) {
@@ -31,7 +33,7 @@ const RegisterProfileContainer: React.FC = () => {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
-      .required(t('common:common.error'))
+      .required(t('common:common.required'))
       .max(50, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
       .test('nickname', t('common:common.contains_ngword'), function (value) {
@@ -39,7 +41,9 @@ const RegisterProfileContainer: React.FC = () => {
       }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<services.UserProfileParams>({
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldError, setFieldValue } = useFormik<
+    services.UserProfileParams
+  >({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -47,26 +51,17 @@ const RegisterProfileContainer: React.FC = () => {
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
-      if (!hasMatchNgWord()) {
-        registerProfile(values)
-      }
+      registerProfile(values)
     },
   })
 
-  const hasMatchNgWord = (): boolean =>
-    CommonHelper.matchNgWords(store, values.user_code).length > 0 || CommonHelper.matchNgWords(store, values.nickname).length > 0
+  const buttonActive = (): boolean => isEmpty(errors)
 
-  const buttonActive = (): boolean => {
-    return (
-      values.nickname !== null &&
-      values.user_code !== null &&
-      values.nickname !== '' &&
-      values.user_code !== '' &&
-      values.nickname.length >= 2 &&
-      values.user_code.length >= 2 &&
-      isEmpty(errors)
-    )
-  }
+  useEffect(() => {
+    if (meta.error && meta.error['code'] === ERROR_CODE.USER_CODE_ALREADY_TAKEN) {
+      setFieldError('user_code', t('common:register_by_email.duplicated'))
+    }
+  }, [meta.error])
 
   return (
     <>
@@ -77,7 +72,7 @@ const RegisterProfileContainer: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{t('common:register_by_email.back')}</Typography>
+              <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
             </Box>
           </Box>
 
@@ -89,7 +84,7 @@ const RegisterProfileContainer: React.FC = () => {
                 labelPrimary={t('common:register_profile.user_id')}
                 fullWidth
                 value={values.user_code}
-                onChange={handleChange}
+                onChange={(e) => setFieldValue('user_code', CommonHelper.replaceSingleByteString(e.target.value))}
                 onBlur={handleBlur}
                 helperText={touched.user_code && errors.user_code}
                 error={touched.user_code && !!errors.user_code}
