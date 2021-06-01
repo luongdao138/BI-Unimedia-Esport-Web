@@ -36,6 +36,7 @@ import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
 import * as notificationActions from '@store/notification/actions'
 import * as notificationSelector from '@store/notification/selectors'
+import useSearch from '@containers/Search/useSearch'
 
 const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
@@ -124,13 +125,11 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
   const { handleReturn } = useReturnHref()
   const dispatch = useAppDispatch()
   const badge = useAppSelector(notificationSelector.getNotificationBadge)
+  const { setSearch } = useSearch()
 
   const onSearch = (_data: returnItem) => {
-    //ignore @typescript-eslint/no-empty-function
-    router.push({
-      pathname: '/search',
-      search: `?type=${_data.type}&keyword=${_data.value}`,
-    })
+    setSearch({ type: _data.type, keyword: _data.value })
+    router.push(ESRoutes.SEARCH)
   }
 
   const openModal = () => router.push('#welcome', undefined, { shallow: true })

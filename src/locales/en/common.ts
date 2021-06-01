@@ -246,6 +246,9 @@ export default {
     card_date: '開　催　日',
     organizer: '主催者',
     entry: 'エントリー',
+    rule_single: '個人戦',
+    rule_double: 'トーナメント',
+    rule_battle: 'バトルロイヤル',
     tournament_results: '大会「:key」 の検索結果',
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
@@ -305,6 +308,13 @@ export default {
     copy_content: '内容のコピー',
     reply_msg: '引用返信',
     report_chat: '通報',
+    room_options: {
+      member_list: 'メンバー一覧',
+      add_member: 'メンバーの追加',
+      change_room_name: 'グループ名を変更',
+      change_img: 'アイコンを変更',
+      exit: '退出する',
+    },
   },
   notification: {
     title: '通知一覧',

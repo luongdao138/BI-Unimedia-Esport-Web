@@ -7,6 +7,7 @@ import { useRect } from '@utils/hooks/useRect'
 import { Colors } from '@theme/colors'
 import Loader from '@components/Loader'
 import Message from '../Message'
+import { ESReportProps } from '@containers/Report'
 import _ from 'lodash'
 
 export interface MessageListProps {
@@ -16,7 +17,7 @@ export interface MessageListProps {
   paginating?: boolean
   currentUser: string | number
   reply?: (currentMessage: MessageType) => void
-  report?: (currentMessage: MessageType) => void
+  report?: (reportData: ESReportProps) => void
   copy?: (currentMessage: MessageType) => void
 }
 

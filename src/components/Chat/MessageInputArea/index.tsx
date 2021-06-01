@@ -4,7 +4,7 @@ import Composer from '@components/Chat/Composer'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { Colors } from '@theme/colors'
-import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, ParentItem, MessageType } from '../types/chat.types'
 import { parseValue } from '@components/Chat/utils'
 import { regex } from '../constants'
 import useAvailable from '@components/Chat/utils/useAvailable'
@@ -19,7 +19,7 @@ export interface MessageInputAreaProps {
   handleOnPressActions?: ((type: number) => void) | undefined
   disabled?: boolean
   onCancelReply?: () => void
-  reply?: MessageType | null
+  reply?: ParentItem | null | MessageType
 }
 
 const partTypes = [
@@ -115,6 +115,7 @@ MessageInputArea.defaultProps = {}
 const useStyles = makeStyles(() => ({
   panel: {
     position: 'relative',
+    paddingBottom: 10,
   },
   closeButton: {
     position: 'absolute',
@@ -156,6 +157,9 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     fontSize: 14,
+  },
+  contentText: {
+    padding: 0,
   },
 }))
 

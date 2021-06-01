@@ -11,4 +11,5 @@ export interface State {
   socketReady: boolean
   actionPending: boolean
   newRoomId?: string
+  selectedRoomInfo?: ChatDataType
 }
