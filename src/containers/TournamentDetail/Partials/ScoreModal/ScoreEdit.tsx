@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { TournamentDetail, TournamentMatchItem } from '@services/tournament.service'
-import { Typography, Box, IconButton, Icon, ThemeProvider, createMuiTheme, Divider } from '@material-ui/core'
+import { Typography, Box, IconButton, Icon, ThemeProvider, createMuiTheme, Divider, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -26,6 +26,8 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [match, setMatch] = useState(selectedMatch)
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   useEffect(() => {
     setMatch(selectedMatch)
@@ -54,7 +56,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
           border={`${borderWidth}px solid ${borderColor}`}
           onClick={() => setMatch({ ...match, winner: type })}
         >
-          <ESAvatar size={120} alt={_name || ''} src={avatar} />
+          <ESAvatar size={isMobile ? 100 : 120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
           <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
           {!isTeam && <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>}
@@ -98,12 +100,10 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
               <Box pb={5} pt={1} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
               </Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
+              <Box display="flex" justifyContent="space-between" padding={1}>
                 {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
-                <Box display="flex" alignItems="center">
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="body2">{t('common:tournament.vs')}</Typography>
-                  </ThemeProvider>
+                <Box display="flex" alignItems="center" paddingX={1} height={isMobile ? 220 : 240}>
+                  <Typography className={classes.vsLabel}>{t('common:tournament.vs')}</Typography>
                 </Box>
                 {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
               </Box>
@@ -124,10 +124,6 @@ const theme = createMuiTheme({
         fontWeight: 'bold',
         color: Colors.white,
       },
-      body2: {
-        fontSize: 40,
-        fontWeight: 'bold',
-      },
     },
   },
 })
@@ -139,10 +135,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  [theme.breakpoints.down('sm')]: {
-    topContainer: {
-      paddingTop: 0,
-    },
+  vsLabel: {
+    fontSize: 40,
+    fontWeight: 'bold',
   },
   customRadio: {
     display: 'flex',
@@ -150,6 +145,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 196,
+    height: 240,
     cursor: 'pointer',
     backgroundColor: Colors.black,
     borderRadius: 5,
@@ -184,6 +180,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       outline: 'none',
       border: `1px solid ${Colors.white}`,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    customRadio: {
+      width: 148,
+      height: 220,
+      paddingRight: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+    },
+    topContainer: {
+      paddingTop: 0,
+    },
+    vsLabel: {
+      fontSize: 30,
     },
   },
 }))

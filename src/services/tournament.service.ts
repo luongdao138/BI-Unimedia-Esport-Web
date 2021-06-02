@@ -474,7 +474,7 @@ export const createTournament = async (params: TournamentFormParams): Promise<vo
 }
 
 export const updateTournament = async (params: UpdateParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), { params: params.data })
+  const { data } = await api.post<void>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 
