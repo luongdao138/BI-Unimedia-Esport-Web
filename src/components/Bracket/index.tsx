@@ -76,6 +76,7 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, s
           <div className={classes.score}>{score1 == null || score1 == undefined ? '-' : score1}</div>
           {winner !== null && winner === 'guest' && <div className={classes.backdrop} />}
         </div>
+        <div className={classes.participantDivider} />
         <div className={classes.participantWrapper}>
           <div className={classes.participant}>
             {participant2 ? (
@@ -194,7 +195,7 @@ const useStyles = makeStyles((theme) => ({
       borderLeft: '1px solid #4c4c4c',
       position: 'absolute',
       left: -39,
-      top: '49.5%',
+      top: '50%',
       marginTop: -1,
       marginLeft: -2,
     },
@@ -208,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
       position: 'absolute',
       right: -40,
       width: 41,
-      top: '49.5%',
+      top: '50%',
     },
     '&:nth-child(odd)::after': {
       content: "''",
@@ -220,16 +221,9 @@ const useStyles = makeStyles((theme) => ({
       position: 'absolute',
       right: -40,
       width: 41,
-      bottom: '49%',
-    },
-    '&:nth-child(odd) $matchContent': {
-      marginTop: -17,
-    },
-    '&:nth-child(even) $matchContent': {
-      marginTop: -19,
+      bottom: '50%',
     },
     '& $matchContent': {
-      marginTop: -19,
       '& $backdrop': {
         position: 'absolute',
         width: '100%',
@@ -237,7 +231,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#00000070',
         top: 0,
         left: 0,
-        borderRadius: 3,
+        borderBottomLeftRadius: 4,
+        borderBottomRightRadius: 4,
       },
     },
   },
@@ -246,8 +241,10 @@ const useStyles = makeStyles((theme) => ({
   matchContent: {
     position: 'relative',
     backgroundColor: Colors.black_opacity['30'],
-    borderRadius: theme.spacing(0.5),
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
     border: '1px solid #4c4c4c',
+    // borderTop: 'none',
     width: 232,
     '&::before': {
       content: "''",
@@ -256,17 +253,23 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: '1px solid #4c4c4c',
       marginLeft: -1,
       position: 'absolute',
-      top: '59%',
+      top: '50%',
       left: -40,
     },
   },
   matchHeader: {
+    position: 'absolute',
+    top: -19,
+    left: -1,
     paddingLeft: theme.spacing(1.5),
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    borderTop: '1px solid #4c4c4c',
+    borderLeft: '1px solid #4c4c4c',
+    borderRight: '1px solid #4c4c4c',
     height: 18,
     backgroundColor: Colors.black,
-    width: '100%',
+    width: 232,
     overflow: 'hidden',
     lineHeight: 1.7,
   },
@@ -278,10 +281,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 8,
     paddingBottom: 8,
     position: 'relative',
-    borderTop: '1px solid #4c4c4c',
-
+    // borderTop: '1px solid #4c4c4c',
     color: '#FFFFFF',
   },
+  participantDivider: { height: 1, background: '#4c4c4c' },
   participant: {
     display: 'flex',
     alignItems: 'center',
