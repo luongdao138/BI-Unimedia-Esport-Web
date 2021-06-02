@@ -17,9 +17,10 @@ import ESCheckbox from '@components/Checkbox'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import i18n from '@locales/i18n'
 
 const RegisterContainer: React.FC = () => {
-  const social = useSocialLogin()
+  const social = useSocialLogin('register')
   const [checkbox, setCheckox] = useState({
     terms: false,
     privacy: false,
@@ -38,6 +39,24 @@ const RegisterContainer: React.FC = () => {
     return checkbox.terms && checkbox.privacy
   }
 
+  const renderSocialError = () => {
+    return (
+      !!social.meta.error && (
+        <Box pb={8}>
+          <Box pb={20 / 8} textAlign="center">
+            <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
+          </Box>
+          <Box pb={1}>
+            <Typography className={classes.detail}>{i18n.t('common:register.error.detail')}</Typography>
+          </Box>
+          <Typography className={classes.hint} variant="caption">
+            {i18n.t('common:register.error.hint')}
+          </Typography>
+        </Box>
+      )
+    )
+  }
+
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
@@ -51,12 +70,18 @@ const RegisterContainer: React.FC = () => {
           <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
         </Box>
 
+        {renderSocialError()}
+
         <Box width="100%" flexDirection="column" alignItems="center">
           <Box textAlign="center">
             <Typography className={classes.termsText}>
-              <a onClick={() => true}>{t('common:register.link1')}</a>
+              <a href={ESRoutes.TERMS} target="_blank" rel="noopener noreferrer">
+                {t('common:register.link1')}
+              </a>
               {t('common:register.description1')}
-              <a onClick={() => true}>{t('common:register.link2')}</a>
+              <a href={ESRoutes.PRIVACY} target="_blank" rel="noopener noreferrer">
+                {t('common:register.link2')}
+              </a>
               {t('common:register.description2')}
               <br />
               {t('common:register.description3')}
@@ -127,6 +152,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+  },
+  hint: {
+    color: Colors.white_opacity[30],
+  },
+  detail: {
+    whiteSpace: 'pre-line',
+    color: Colors.white_opacity[70],
   },
   [theme.breakpoints.down('sm')]: {
     container: {

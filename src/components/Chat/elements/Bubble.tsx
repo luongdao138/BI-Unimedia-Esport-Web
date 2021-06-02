@@ -1,10 +1,11 @@
 import React from 'react'
-import { Box, makeStyles } from '@material-ui/core'
+import { Box, makeStyles, Divider } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { ChatRoomMemberItem, MessageType } from '../types/chat.types'
 import { TextMessage, PhotoMessage } from '../elements'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import _ from 'lodash'
+import ReplyContent from './ReplyContent'
 
 export interface BubbleProps {
   direction: 'left' | 'right'
@@ -35,6 +36,25 @@ const Bubble: React.FC<BubbleProps> = (props) => {
     return null
   }
 
+  const renderReplyContent = () => {
+    if (currentMessage.parentMsg !== null && currentMessage && currentMessage.parentMsg) {
+      return (
+        <>
+          <ReplyContent
+            contentClass={classes.replyContent}
+            color={direction === 'left' ? Colors.text[200] : Colors.grey[200]}
+            showName={false}
+            numberOfLines={2}
+            replyMessage={currentMessage.parentMsg}
+            bgColor={direction === 'left' ? Colors.grey[200] : Colors.white}
+          />
+          <Divider className={classes.divider} />
+        </>
+      )
+    }
+    return null
+  }
+
   const renderMessageImage = () => {
     if (props.currentMessage.type === CHAT_MESSAGE_TYPE.IMAGE) {
       return <PhotoMessage onLoadImage={props.onLoadImage} msg={msg} />
@@ -44,6 +64,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
 
   return (
     <Box className={classes.bubble}>
+      {renderReplyContent()}
       {renderMessageText()}
       {renderMessageImage()}
     </Box>
@@ -61,6 +82,12 @@ const useStyles = makeStyles(() => ({
       borderBottomLeftRadius: props.direction === 'left' ? 0 : 16,
       borderBottomRightRadius: props.direction === 'left' ? 16 : 0,
     }
+  },
+  divider: {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  replyContent: {
+    padding: 0,
   },
 }))
 

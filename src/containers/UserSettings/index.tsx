@@ -48,14 +48,14 @@ const UserSettingsContainer: React.FC = () => {
   useEffect(() => {
     if (getUserProfileMeta.loaded) {
       if (!userProfile || userProfile.attributes.update_step !== 1) {
-        router.push(ESRoutes.HOME)
+        // router.push(ESRoutes.HOME)
       }
     }
   }, [getUserProfileMeta.loaded])
 
   useEffect(() => {
     getFeatures()
-    getPrefectures({})
+    getPrefectures()
   }, [])
 
   const onFeatureSelect = (selectedFeatures) => {
@@ -133,7 +133,7 @@ const UserSettingsContainer: React.FC = () => {
               <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
             </TabPanel>
             <TabPanel value={step} index={1}>
-              <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} />
+              <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} maxValue={5} />
             </TabPanel>
             <TabPanel value={step} index={2}>
               <GameSelector values={profile.game_titles} onChange={onGameChange} />

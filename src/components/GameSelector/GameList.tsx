@@ -17,7 +17,7 @@ const GameList: React.FC<GameListProps> = ({ games, handleAdd }) => {
   if (games.length === 0) {
     return (
       <Box pt={8} textAlign="center">
-        <Typography color="textSecondary">一致するゲームは見つかりませんでした</Typography>
+        <Typography color="textSecondary">致するゲームは見つかりませんでした</Typography>
       </Box>
     )
   }

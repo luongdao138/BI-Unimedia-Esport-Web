@@ -5,25 +5,21 @@ import ESLoader from '@components/Loader'
 import UserListItem from '@components/UserItem'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
-import _ from 'lodash'
+import useSearch from '@containers/Search/useSearch'
 
 const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
+  const { searchKeyword } = useSearch()
   const { searchUsers, userSearch, page, meta, resetMeta } = useUserSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
-    if (!_.isEmpty(router.query)) {
-      const keyword = router.query.keyword ? router.query.keyword.toString() : ''
-      setKeyword(keyword)
-      userSearch({ page: 1, keyword: keyword })
-    }
+    setKeyword(searchKeyword)
+    userSearch({ page: 1, keyword: searchKeyword })
 
     return () => resetMeta()
-  }, [router.query])
+  }, [searchKeyword])
 
   const loadMore = () => {
     if (page && page.current_page !== page.total_pages) {

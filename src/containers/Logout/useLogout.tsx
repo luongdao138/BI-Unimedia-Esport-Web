@@ -21,7 +21,7 @@ const useLogout = (handleClose) => {
     if (meta.loaded) {
       handleClose()
       resetMeta()
-      router.push(ESRoutes.TOURNAMENTS)
+      router.push(ESRoutes.ARENA)
     }
   }, [meta.loaded])
 
