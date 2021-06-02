@@ -127,7 +127,8 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   }
 
   return (
-    <ESCard>
+    // eslint-disable-next-line no-console
+    <ESCard onClick={() => console.log('TournamentCard ', attr.hash_key)}>
       <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
         {getMediaScreen()}
       </ESCardMedia>
