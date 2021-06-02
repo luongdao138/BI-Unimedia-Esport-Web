@@ -58,7 +58,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {(attr.status === TS.CANCELLED || attr.status === TS.COMPLETED) && (
+        {attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
