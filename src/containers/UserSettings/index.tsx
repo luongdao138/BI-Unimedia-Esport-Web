@@ -36,6 +36,7 @@ const UserSettingsContainer: React.FC = () => {
   const [step, setStep] = useState(0)
   const [profile, setProfile] = useState<UserProfile['attributes'] | null>(null)
   const [isReview, setReview] = useState(false)
+  const [isValidDate, setValidDate] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const UserSettingsContainer: React.FC = () => {
   useEffect(() => {
     if (getUserProfileMeta.loaded) {
       if (!userProfile || userProfile.attributes.update_step !== 1) {
-        // router.push(ESRoutes.HOME)
+        router.push(ESRoutes.HOME)
       }
     }
   }, [getUserProfileMeta.loaded])
@@ -130,7 +131,7 @@ const UserSettingsContainer: React.FC = () => {
             </Box>
             <Box mt={4} />
             <TabPanel value={step} index={0}>
-              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} handleDateError={setValidDate} />
             </TabPanel>
             <TabPanel value={step} index={1}>
               <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} maxValue={5} />
@@ -147,7 +148,7 @@ const UserSettingsContainer: React.FC = () => {
           <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
             <Box className={classes.nextBtnHolder}>
               <Box className={classes.nextBtn}>
-                <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick}>
+                <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick} disabled={isValidDate}>
                   {step === FINAL_STEP - 1 ? t('common:done') : t('common:next')}
                 </ButtonPrimary>
               </Box>

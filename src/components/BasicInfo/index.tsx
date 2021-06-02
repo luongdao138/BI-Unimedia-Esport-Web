@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
 import ESDatePicker from '@components/DatePicker'
-import { formatDate } from '@components/DatePicker/date-dropdown-helper'
+import moment from 'moment'
 
 export type BasicInfoParams = {
   selectedPrefecture: string
@@ -17,10 +17,12 @@ interface BasicInfoProps {
   profile: any
   prefectures: any
   onDataChange: (data: any) => void
+  handleDateError: (error: boolean) => void
 }
 
-const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChange }) => {
+const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChange, handleDateError }) => {
   const { t } = useTranslation(['common'])
+  const [error, setError] = useState(false)
   const genders = [
     {
       value: GENDER.MALE,
@@ -37,8 +39,21 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
   ]
 
   const { area_id, show_area, sex, show_sex, birth_date, show_birth_date } = profile
+  let initialDate = {
+    year: -1,
+    month: -1,
+    day: -1,
+  }
 
-  const [date, setDate] = useState({ date: null, selectedDate: birth_date ? birth_date : null })
+  if (birth_date) {
+    initialDate = {
+      year: new Date(birth_date).getFullYear(),
+      month: new Date(birth_date).getMonth(),
+      day: new Date(birth_date).getDay(),
+    }
+  }
+
+  const [date, setDate] = useState({ selectedDate: initialDate })
 
   const memoizedPrefectures = useMemo(() => {
     if (prefectures && prefectures.data) {
@@ -71,7 +86,10 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
     onDataChange({
       sex: parseInt(values.selectedGender),
       show_sex: checkboxStates.isShowGender,
-      birth_date: date.selectedDate ? date.selectedDate : null,
+      birth_date:
+        date.selectedDate.year !== -1 && date.selectedDate.month !== -1 && date.selectedDate.day !== -1
+          ? moment(new Date(date.selectedDate.year, date.selectedDate.month, date.selectedDate.day)).format('YYYY-MM-DD')
+          : null,
       show_birth_date: checkboxStates.isShowBirthdate,
       area_id: parseInt(values.selectedPrefecture),
       show_area: checkboxStates.isShowPrefecture,
@@ -131,13 +149,17 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
     <Box marginTop={3}>
       <ESDatePicker
         selectedDate={date.selectedDate}
-        onDateChange={(date) => {
+        onDateChange={(date, error) => {
           if (date === null) {
-            setDate({ date: null, selectedDate: null })
+            setDate({ selectedDate: { year: -1, month: -1, day: -1 } })
           } else {
-            setDate({ date: date, selectedDate: formatDate(date) })
+            setDate({ selectedDate: { year: date.year, month: date.month, day: date.day } })
           }
+          setError(error)
+          handleDateError(error)
         }}
+        hasError={error}
+        helperText="適切な日付を入力してください。"
       />
 
       <ESCheckbox
