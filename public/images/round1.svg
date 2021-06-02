@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90.5" height="52" viewBox="0 0 90.5 52">
+  <g id="Group_7089" data-name="Group 7089" transform="translate(-213 -216)">
+    <g id="Rectangle_2996" data-name="Rectangle 2996" transform="translate(268 251) rotate(90)" stroke="rgba(255,255,255,0.3)" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <g id="Rectangle_3000" data-name="Rectangle 3000" transform="translate(233 230) rotate(90)" stroke="#fff" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <g id="Rectangle_3001" data-name="Rectangle 3001" transform="translate(233 258) rotate(90)" stroke="#fff" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <g id="Rectangle_2997" data-name="Rectangle 2997" transform="translate(268 223.001) rotate(90)" stroke="rgba(255,255,255,0.3)" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <g id="Rectangle_2999" data-name="Rectangle 2999" transform="translate(233 216) rotate(90)" stroke="#fff" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <g id="Rectangle_3002" data-name="Rectangle 3002" transform="translate(233 244) rotate(90)" stroke="#fff" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <g id="Rectangle_2998" data-name="Rectangle 2998" transform="translate(303.5 237.25) rotate(90)" stroke="rgba(255,255,255,0.3)" stroke-width="1">
+      <rect width="10" height="20" rx="3" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="19" rx="2.5" fill="none"/>
+    </g>
+    <path id="Path_16765" data-name="Path 16765" d="M238.5,288.79v-8H267v8" transform="translate(556.79 -10.5) rotate(90)" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <path id="Path_16766" data-name="Path 16766" d="M238.5,288.79v-8h14v8" transform="translate(521.29 -17.499) rotate(90)" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <path id="Path_16767" data-name="Path 16767" d="M238.5,288.79v-8h14v8" transform="translate(521.29 10.501) rotate(90)" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <line id="Line_509" data-name="Line 509" y2="7.5" transform="translate(283.5 242.249) rotate(90)" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <line id="Line_510" data-name="Line 510" y2="7.5" transform="translate(248 228) rotate(90)" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <line id="Line_511" data-name="Line 511" y2="7.5" transform="translate(248 256.001) rotate(90)" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  </g>
+</svg>
