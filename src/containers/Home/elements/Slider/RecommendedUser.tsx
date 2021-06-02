@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
@@ -48,14 +49,16 @@ type userAttributesProps = {
 export const RecommendedUser: React.FC<Props> = ({ users }) => {
   const classes = useStyles()
   const router = useRouter()
+  const { t } = useTranslation(['common'])
+  const USER_LIMIT = 10
 
   return (
     <ESSlider
-      title="おすすめユーザー"
+      title={t('common:home.recommended_user')}
       navigation={false}
       width={84}
       disableResponsiveWidth
-      items={users.map((user, i) => (
+      items={users.slice(0, USER_LIMIT).map((user, i) => (
         <Box key={i}>
           <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>
             <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
