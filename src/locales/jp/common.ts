@@ -17,6 +17,7 @@ export default {
     error: 'エラー文言が入ります',
     too_long: '長すぎる',
     at_least: '2文字以上入力してください。',
+    at_least_8: '8文字以上で入力してください',
     contains_ngword: '不適切な文字列が含まれています。',
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
@@ -44,6 +45,8 @@ export default {
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
+    password_duplicated: 'パスワード再設定できませんでした。',
+    confirmation_expire: '認証できませんでした。',
   },
   welcome: 'eXeLABへようこそ',
   top: {
@@ -159,6 +162,7 @@ export default {
     error_email_4221: 'メールアドレスが見つかりませんでした',
     error_email_4222: 'メールアドレスが既に使用されています！',
     password_failed: 'パスワードポリシーを満たしていません。',
+    invalid_date: '適切な日付を入力してください。',
   },
   home: {
     exelab: 'eXe LAB事務局',

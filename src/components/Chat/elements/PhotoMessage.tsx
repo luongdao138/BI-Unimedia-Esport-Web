@@ -5,15 +5,15 @@ import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 
 export interface MessageImageProps {
   msg?: string
-  onLoadImage: () => void
+  onLoadImage?: () => void
+  size?: number
 }
 
 const IMG_PLACEHOLDER = '/images/img_404.jpg'
 
 const PhotoMessage: React.FC<MessageImageProps> = (props) => {
-  const classes = useStyles()
-
-  const { msg } = props
+  const { msg, size } = props
+  const classes = useStyles(props)
 
   const [src, setSrc] = useState<string>(msg)
 
@@ -23,7 +23,9 @@ const PhotoMessage: React.FC<MessageImageProps> = (props) => {
 
   return (
     <SRLWrapper options={LIGHTBOX_OPTIONS}>
-      <Box className={classes.box}>{<img onLoad={() => props.onLoadImage()} onError={onError} className={classes.img} src={src} />}</Box>
+      <Box className={`${classes.box} ${size ? classes.sizedBox : ''}`}>
+        {<img onLoad={() => props.onLoadImage && props.onLoadImage()} onError={onError} className={classes.img} src={src} />}
+      </Box>
     </SRLWrapper>
   )
 }
@@ -32,11 +34,16 @@ const useStyles = makeStyles(() => ({
   box: {
     width: '100%',
     height: 200,
+    cursor: 'pointer',
   },
   img: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+  },
+  sizedBox: {
+    width: (props: MessageImageProps) => props.size,
+    height: (props: MessageImageProps) => props.size,
   },
 }))
 

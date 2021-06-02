@@ -181,13 +181,16 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         )}
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea
-          reply={reply}
-          onCancelReply={() => setReply(null)}
-          onPressSend={handlePress}
-          users={users}
-          onPressActionButton={handlePressActionButton}
-        />
+        {userId ? (
+          <MessageInputArea
+            reply={reply}
+            currentUser={userId}
+            onCancelReply={() => setReply(null)}
+            onPressSend={handlePress}
+            users={users}
+            onPressActionButton={handlePressActionButton}
+          />
+        ) : null}
       </Box>
       <ImageUploader
         ref={ref}

@@ -4,7 +4,7 @@ import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import { ChatHelper } from './utils'
-
+import { mentionData } from '@components/Chat/constants'
 const initialState: State = {
   roomList: undefined,
   messages: undefined,
@@ -42,7 +42,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       if (action.data.content === [] || action.data.content.length === 0) {
         // case when socket error or wrong data return from server
         newMessagesList = []
-        newUsers = action.data.members
+        const cleanList = action.data.members
+        newUsers = _.concat(cleanList, mentionData.toall)
       } else if (state.lastKey != null && state.activeRoom === action.data.chatRoomId) {
         //paginating data merging
         const prevArray = state.messages
@@ -50,7 +51,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         newMessagesList = temp
         newUsers = state.members
       } else {
-        newUsers = action.data.members
+        const cleanList = action.data.members
+        newUsers = _.concat(cleanList, mentionData.toall)
         newMessagesList = action.data.content
       }
       return {
@@ -107,6 +109,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         roomList: newRoomList,
         newRoomId: action.data.content.chatRoomId,
       }
+    case CHAT_ACTION_TYPE.ROOM_CHANGED:
+      return ChatHelper.changeSingleRoom(state, action.data.content)
     case CHAT_ACTION_TYPE.CLEAR_NEW_ROOM_ID:
       return {
         ...state,
