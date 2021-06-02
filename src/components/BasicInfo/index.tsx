@@ -159,7 +159,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
           handleDateError(error)
         }}
         hasError={error}
-        helperText="適切な日付を入力してください。"
+        helperText={t('common:error.invalid_date')}
       />
 
       <ESCheckbox
