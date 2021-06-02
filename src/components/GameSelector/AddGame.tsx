@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import useAddGame from './useAddGame'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '@locales/i18n'
 
 interface Props {
   genres: GameGenre[]
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 const validationSchema = Yup.object().shape({
-  display_name: Yup.string().required(),
+  display_name: Yup.string().required().max(255, i18n.t('common.too_long')),
   game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
     return value !== -1
   }),
@@ -80,6 +81,7 @@ const AddGame: React.FC<Props> = ({ genres }) => {
           name="display_name"
           value={formik.values.display_name}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           fullWidth
           required
           size="small"
