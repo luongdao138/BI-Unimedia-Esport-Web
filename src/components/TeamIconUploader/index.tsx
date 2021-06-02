@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar, Box, Typography } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import { useDropzone } from 'react-dropzone'
@@ -15,7 +15,7 @@ type ProfileAvatarProps = {
   onChange?: (file: File) => void
 }
 
-const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ editable, size, src, isUploading, onChange }) => {
+const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading, onChange }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [localSrc, setLocalSrc] = useState<string | ArrayBuffer>('')
@@ -51,54 +51,50 @@ const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ editable, size, src,
 
   return (
     <div className={classes.root}>
-      {editable ? (
-        <label htmlFor="cover-upload" className={classes.touch}>
-          <Avatar className={classes.avatar} src={localSrc.toString() || '/images/avatar-black.png'} />
-          {!isUploading ? (
-            <div className={classes.camera}>
-              <Camera fontSize="large" />
-              <Typography>{t('common:common.select_an_image')}</Typography>
-            </div>
-          ) : null}
-          {drag || isUploading ? <div className={classes.backdrop} /> : null}
-          <div
-            {...getRootProps()}
-            className={classes.dropZone}
-            onMouseEnter={() => {
-              if (!isUploading) setDrag(true)
-            }}
-            onMouseLeave={() => setDrag(false)}
-            onDragEnter={() => {
-              if (!isUploading) setDrag(true)
-            }}
-            onDragLeave={() => setDrag(false)}
-          >
-            <input {...getInputProps()} />
+      <label htmlFor="cover-upload" className={classes.touch}>
+        {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
+        {!isUploading ? (
+          <div className={classes.camera}>
+            <Camera fontSize="large" />
+            <Typography>{t('common:common.select_an_image')}</Typography>
           </div>
-          {isUploading ? (
-            <Box className={classes.loader}>
-              <ESLoader />
-            </Box>
-          ) : null}
-          <div className={classes.dashed}>
-            <svg viewBox="0 0 120 120">
-              <circle
-                width="120"
-                height="120"
-                cx="60"
-                cy="60"
-                r="59"
-                strokeDasharray="4, 4"
-                fill="transparent"
-                stroke={Colors.white_opacity[30]}
-                strokeWidth="1"
-              />
-            </svg>
-          </div>
-        </label>
-      ) : (
-        <Avatar className={classes.avatar} src={src ?? '/images/avatar-black.png'} style={size && { width: size, height: size }} />
-      )}
+        ) : null}
+        {drag || isUploading ? <div className={classes.backdrop} /> : null}
+        <div
+          {...getRootProps()}
+          className={classes.dropZone}
+          onMouseEnter={() => {
+            if (!isUploading) setDrag(true)
+          }}
+          onMouseLeave={() => setDrag(false)}
+          onDragEnter={() => {
+            if (!isUploading) setDrag(true)
+          }}
+          onDragLeave={() => setDrag(false)}
+        >
+          <input {...getInputProps()} />
+        </div>
+        {isUploading ? (
+          <Box className={classes.loader}>
+            <ESLoader />
+          </Box>
+        ) : null}
+        <div className={classes.dashed}>
+          <svg viewBox="0 0 120 120">
+            <circle
+              width="120"
+              height="120"
+              cx="60"
+              cy="60"
+              r="59"
+              strokeDasharray="4, 4"
+              fill="transparent"
+              stroke={Colors.white_opacity[30]}
+              strokeWidth="1"
+            />
+          </svg>
+        </div>
+      </label>
     </div>
   )
 }
@@ -115,10 +111,12 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     display: 'block',
   },
-  avatar: {
+  image: {
+    position: 'absolute',
     zIndex: 30,
-    width: 120,
-    height: 120,
+    width: '100%',
+    height: 'auto',
+    objectFit: 'contain',
   },
   dashed: {
     position: 'absolute',
@@ -151,16 +149,17 @@ const useStyles = makeStyles(() => ({
   backdrop: {
     display: 'flex',
     opacity: 0.6,
-    background: '#000',
+    background: '#1A1A1A',
     position: 'absolute',
     height: '100%',
     width: '100%',
+    borderRadius: '50%',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     content: '""',
-    zIndex: 40,
+    zIndex: 30,
   },
   loader: {
     display: 'flex',

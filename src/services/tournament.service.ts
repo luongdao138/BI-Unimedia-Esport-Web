@@ -61,7 +61,7 @@ export type TournamentDetail = {
     chat_room_id: string
     acceptance_start_date: string
     acceptance_end_date: string
-    participant_type: 0 | 1 | 2 | 3
+    participant_type: number
     area_id: number
     area_name: string
     address: string
@@ -227,7 +227,7 @@ export type ParticipantsResponse = {
 }
 
 export type TeamJoin = {
-  id: number | string
+  id?: number | string
   leader_name: string
   team_name: string
   team_icon_url: string
@@ -237,6 +237,8 @@ export type TeamJoin = {
 export type TeamMember = {
   user_id: number
   name: string
+  nickname?: string
+  user_code?: string
 }
 
 export type EntryJoin = {
