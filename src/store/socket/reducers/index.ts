@@ -107,6 +107,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         roomList: newRoomList,
         newRoomId: action.data.content.chatRoomId,
       }
+    case CHAT_ACTION_TYPE.ROOM_CHANGED:
+      return ChatHelper.changeSingleRoom(state, action.data.content)
     case CHAT_ACTION_TYPE.CLEAR_NEW_ROOM_ID:
       return {
         ...state,
