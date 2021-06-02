@@ -14,6 +14,7 @@ export const ESRoutes = {
   PROFILE_EDIT: '/profile/edit',
   GAME_EDIT: '/profile/game',
   TOURNAMENTS: '/tournaments',
+  ARENA: '/arena',
   SETTINGS: '/settings',
   NOT_FOUND: '/404',
   USER_SETTINGS: '/user-settings',

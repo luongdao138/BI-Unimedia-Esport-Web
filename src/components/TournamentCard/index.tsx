@@ -127,8 +127,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   }
 
   return (
-    // eslint-disable-next-line no-console
-    <ESCard onClick={() => console.log('TournamentCard ', attr.hash_key)}>
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.ARENA}/${attr.hash_key}`)}>
       <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
         {getMediaScreen()}
       </ESCardMedia>
@@ -149,6 +148,9 @@ export default TournamentCard
 const useStyles = makeStyles(() => ({
   card: {
     width: 240,
+  },
+  cardHover: {
+    cursor: 'pointer',
   },
   organizer: {
     fontSize: 10,
