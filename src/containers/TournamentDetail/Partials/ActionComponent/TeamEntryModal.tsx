@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { SuggestedTeamMembersResponse, TournamentDetail } from '@services/tournament.service'
+import { SuggestedTeamMembersResponse, TeamJoin, TeamMember, TournamentDetail } from '@services/tournament.service'
 import { useState } from 'react'
 import ESButton from '@components/Button'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
@@ -65,10 +65,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       .test('name', 'ng_word', function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
+    nickname: Yup.string().required(),
+    user_code: Yup.string().required(),
   })
 
   const validationSchema = Yup.object().shape({
-    id: Yup.string().required(),
     leader_name: Yup.string().required(),
     team_name: Yup.string()
       .required(t('common:common.error'))
@@ -80,18 +81,23 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     members: Yup.array().of(membersValidationSchema),
   })
 
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue, setValues } = useFormik({
+  const { values, isValid, handleSubmit, handleChange, setFieldValue, setValues, resetForm, validateForm } = useFormik<TeamJoin>({
     initialValues: {
-      id: userProfile ? userProfile.id : null,
       leader_name: userProfile ? userProfile.attributes.nickname : '',
       team_name: '',
       team_icon_url: '',
-      members: Array(tournament.attributes.participant_type),
+      members: Array.from({ length: tournament.attributes.participant_type }, (_, index) => ({
+        user_id: index === 0 ? Number(userProfile.id) : undefined,
+        name: index === 0 ? userProfile.attributes.nickname : '',
+        nickname: index === 0 ? userProfile.attributes.nickname : '',
+        user_code: index === 0 ? userProfile.attributes.user_code : '',
+      })),
     },
     validationSchema,
+    enableReinitialize: true,
     onSubmit: (values) => {
       if (isValid) {
-        const filtered = _.filter(values.members, (member) => member.user_id !== values.id)
+        const filtered = _.filter(values.members, (member) => member.user_id !== Number(userProfile.id))
         const data = _.map(filtered, ({ user_id, nickname }) => ({ user_id, name: nickname }))
         join({ hash_key: tournament.attributes.hash_key, data: { ...values, members: data } })
       }
@@ -100,23 +106,10 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   useEffect(() => {
     if (open && userProfile) {
+      validateForm()
       teamMembers = Array(tournament.attributes.participant_type)
-
-      for (let i = 0; i < tournament.attributes.participant_type; i++) {
-        let initialValue = { user_id: '', name: '', nickname: '', user_code: '' }
-        if (i === 0) {
-          initialValue = {
-            user_id: userProfile.id,
-            name: userProfile.attributes.nickname,
-            nickname: userProfile.attributes.nickname,
-            user_code: userProfile.attributes.user_code,
-          }
-        }
-
-        values.members[i] = initialValue
-      }
-
-      setFieldValue('members', values.members)
+    } else {
+      resetForm()
     }
   }, [open, userProfile])
 
@@ -144,15 +137,24 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     if (selectedMember) {
       const nickname = selectedMember.attributes.nickname
       const userCode = selectedMember.attributes.user_code
-      const member = { user_id: selectedMember.id, name: nickname, nickname: nickname, user_code: userCode }
+      const member: TeamMember = { user_id: Number(selectedMember.id), name: nickname, nickname: nickname, user_code: userCode }
 
       teamMembers[index] = selectedMember
-      values.members[index] = member
-      setFieldValue('members', values.members)
+
+      const tempMembers = [...values.members]
+      tempMembers[index] = member
+      setFieldValue('members', tempMembers)
     } else {
       teamMembers[index] = null
-      values.members[index] = null
-      setFieldValue('members', values.members)
+
+      const tempMembers = [...values.members]
+      tempMembers[index] = {
+        user_id: undefined,
+        name: '',
+        nickname: '',
+        user_code: '',
+      }
+      setFieldValue('members', tempMembers)
     }
   }
 
@@ -214,7 +216,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       <Box className={classes.formContainer}>
         <ESLabel label={t('common:icon')} required />
         <Box m={1} />
-        <ESTeamIconUploader src="/images/avatar-black.png" editable onChange={handleImageUpload} isUploading={isUploading} />
+        <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
 
         <Box mt={4} />
         <ESInput
@@ -225,8 +227,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
           required
           value={values.team_name}
           onChange={handleChange}
-          helperText={touched.team_name && errors.team_name}
-          error={touched.team_name && !!errors.team_name}
         />
 
         <Box mt={4} />
