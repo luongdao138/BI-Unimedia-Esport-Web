@@ -132,7 +132,8 @@ export const resetPassword = createAsyncThunk<services.UserLoginResponse, servic
       return res
     } catch (error) {
       if (!error.response) {
-        throw error
+        const tempError = { ...error, code: String(error.code) }
+        throw tempError
       }
       return rejectWithValue(error.response.data)
     }
