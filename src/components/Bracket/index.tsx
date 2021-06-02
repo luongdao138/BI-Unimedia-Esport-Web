@@ -153,20 +153,20 @@ const useStyles = makeStyles((theme) => ({
     '& $match': {
       opacity: 1,
     },
-    '& $matchContent': {
+    '& $matchContent$editable': {
       left: 0,
       transition: '0.2s left',
     },
-    '& $matchContent:hover': {
+    '& $matchContent$editable:hover': {
       left: 4,
       transition: '0.2s left',
     },
-    '& $matchContent::before': {
+    '& $matchContent$editable::before': {
       left: -40,
       width: 41,
       transition: '0.2s left, 0.2s width',
     },
-    '& $matchContent:hover::before': {
+    '& $matchContent$editable:hover::before': {
       left: -44,
       width: 44,
     },
