@@ -71,8 +71,8 @@ export class DropdownDate extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     const { startDate, endDate, selectedDate } = props
-    const sDate = startDate ? new Date(startDate) : new Date('1900-01-01')
-    const eDate = endDate ? new Date(endDate) : new Date()
+    const sDate = startDate ? new Date(startDate) : new Date('1941-01-01')
+    const eDate = endDate ? new Date(endDate) : new Date('2011-01-01')
     const selDate = selectedDate ? new Date(selectedDate) : null
     this.state = {
       startYear: sDate.getFullYear(),

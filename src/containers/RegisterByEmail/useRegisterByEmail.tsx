@@ -12,7 +12,7 @@ const getRegisterMeta = createMetaSelector(actions.registerByEmail)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useRegisterByEmail = () => {
-  const { navigateScreen } = useReturnHref()
+  const { navigateScreen, handleReturn } = useReturnHref()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getRegisterMeta)
@@ -21,7 +21,7 @@ const useRegisterByEmail = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerByEmail.typePrefix))
 
-  const backAction = () => navigateScreen(ESRoutes.REGISTER)
+  const backAction = () => handleReturn()
 
   useEffect(() => {
     if (meta.loaded) {

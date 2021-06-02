@@ -8,6 +8,7 @@ export const URI = {
   REGISTER: '/v2/signup/register',
   REGISTER_PROFILE: '/v2/users/settings/stepweb1',
   CONFIRM: '/v2/signup/confirm',
+  RESEND: '/v2/signup/resend_code',
   FORGOT_PASSWORD: '/v2/passwords/forgot',
   FORGOT_CONFIRM: '/v2/passwords/confirm',
   RESET_PASSWORD: '/v2/passwords/reset',
@@ -61,4 +62,5 @@ export const URI = {
   USER_EMAIL_CHANGE: '/v1/email/change',
   USER_EMAIL_CHANGE_CONFIRM: '/v1/email/change_confirm',
   FRIEND_LIST: '/v1/chats/addable_users',
+  WEB_SUPPORT: 'https://support.exelab.jp',
 }

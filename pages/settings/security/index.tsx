@@ -11,35 +11,35 @@ const SecuritySettingsPage: PageWithLayoutType = () => {
   const router = useRouter()
   const { t } = useTranslation('common')
   return (
-    <div>
-      <HeaderWithButton title={t('security_settings.title')} />
-      <Box>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.MY_PAGE_SETTINGS)
-          }}
-        >
-          <SettingsRowItem key="account_settings" title={t('security_settings.my_page')} showSwitch={false} />
-        </div>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.MESSAGE_SETTINGS)
-          }}
-        >
-          <SettingsRowItem key="message" title={t('security_settings.message')} showSwitch={false} />
-        </div>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.BLOCK_SETTINGS)
-          }}
-        >
-          <SettingsRowItem key="block" title={t('security_settings.block')} showSwitch={false} />
-        </div>
-      </Box>
-    </div>
+    <MainLayout loginRequired>
+      <div>
+        <HeaderWithButton title={t('security_settings.title')} />
+        <Box>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.MY_PAGE_SETTINGS)
+            }}
+          >
+            <SettingsRowItem key="account_settings" title={t('security_settings.my_page')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.MESSAGE_SETTINGS)
+            }}
+          >
+            <SettingsRowItem key="message" title={t('security_settings.message')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.BLOCK_SETTINGS)
+            }}
+          >
+            <SettingsRowItem key="block" title={t('security_settings.block')} showSwitch={false} />
+          </div>
+        </Box>
+      </div>
+    </MainLayout>
   )
 }
-
-SecuritySettingsPage.Layout = MainLayout
 
 export default SecuritySettingsPage

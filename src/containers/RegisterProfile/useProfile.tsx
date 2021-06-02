@@ -7,7 +7,7 @@ import { UserProfileParams } from '@services/auth.service'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
 
-const { actions } = authStore
+const { actions, selectors } = authStore
 const getRegisterProfile = createMetaSelector(actions.registerProfile)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -15,6 +15,7 @@ const useProfile = () => {
   const { navigateScreen } = useReturnHref()
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getRegisterProfile)
+  const isSocial = useAppSelector(selectors.getIsSocial)
 
   const registerProfile = (param: UserProfileParams) => dispatch(actions.registerProfile(param))
 
@@ -29,7 +30,7 @@ const useProfile = () => {
     }
   }, [meta.loaded])
 
-  return { registerProfile, resetMeta, meta, backAction }
+  return { registerProfile, resetMeta, meta, backAction, isSocial }
 }
 
 export default useProfile

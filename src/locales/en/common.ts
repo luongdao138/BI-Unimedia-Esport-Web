@@ -18,6 +18,7 @@ export default {
     too_long: '長すぎる',
     at_least: '2文字以上入力してください。',
     contains_ngword: '不適切な文字列が含まれています。',
+    user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
     save: '保存する',
     cancel: 'キャンセル',
@@ -49,7 +50,7 @@ export default {
     apple: 'Appleでログイン',
   },
   login: {
-    email_placeholder: 'exelab@sample.co.jp',
+    email_placeholder: 'sample@exelab.jp',
     email_label_primary: 'メールアドレス',
     email_label_secondary: 'メールアドレスがわからない場合',
     password_label_primary: 'パスワード',
@@ -90,16 +91,33 @@ export default {
     terms: '利用規約に同意する',
     privacy: '個人情報保護方針に同意する',
     footer_link: 'アカウントをお持ちの方',
+    error: {
+      title: '登録に失敗しました',
+      detail: `以下の可能性がございます。
+      １. ダミーテキスト
+      ２. ダミーテキスト
+      ３. 同じアカウントですでにSNS連携での新規登録を行なっている(ダミー)`,
+      hint: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
+      title2: '新規登録に失敗しました',
+      detail2: `以下の可能性がございます。
+      １. メールアドレスに誤りがある(ダミー)
+      ２. パスワードに誤りがある(ダミー)
+      ３. SNS連携ですでにアカウントを作成している(ダミー)`,
+      hint2: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
+    },
+    resend_success: '認証コードメールを再度送信しました。',
   },
   register_by_email: {
     email: 'メールアドレス',
     forgot_password: 'パスワードをお忘れの場合',
-    email_placeholder: 'exelab@sample.co.jp',
+    email_placeholder: 'sample@exelab.jp',
     password: 'パスワード',
     hint: '8文字以上の半角英数字を入力してください',
     hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
     button: '次へ',
     back: 'メールアドレスで登録',
+    sns: 'SNS連携で登録',
+    duplicated: 'そのIDは既に使用されています',
   },
   register_profile: {
     user_id: 'ユーザーID',
@@ -121,6 +139,7 @@ export default {
     same_email: '現在のメールアドレスと同一のメールアドレスです！違うメールアドレスを入力してください。',
     error_email_4221: 'メールアドレスが見つかりませんでした',
     error_email_4222: 'メールアドレスが既に使用されています！',
+    password_failed: 'パスワードポリシーを満たしていません。',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -291,6 +310,13 @@ export default {
     copy_content: '内容のコピー',
     reply_msg: '引用返信',
     report_chat: '通報',
+    room_options: {
+      member_list: 'メンバー一覧',
+      add_member: 'メンバーの追加',
+      change_room_name: 'グループ名を変更',
+      change_img: 'アイコンを変更',
+      exit: '退出する',
+    },
   },
   notification: {
     title: '通知一覧',

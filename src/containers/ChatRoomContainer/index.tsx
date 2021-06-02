@@ -13,6 +13,7 @@ import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
+import RoomHeader from '@components/Chat/RoomHeader/index'
 import { MessageType } from '@components/Chat/types/chat.types'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
@@ -72,6 +73,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       dispatch(socketActions.sendMessage(payload))
     } else {
       const replyData = {
+        parentId: reply.sortKey,
         parentMsg: {
           msg: reply.msg,
           chatRoomId: roomId,
@@ -161,7 +163,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
 
   return (
     <Box className={classes.room}>
-      <Box className={classes.header}>{roomId}</Box>
+      <Box className={classes.header} px={3} py={2}>
+        <RoomHeader roomId={roomId} />
+      </Box>
       <Box className={classes.list}>
         {renderLoader()}
         {!_.isEmpty(data) && _.isArray(data) && (
@@ -209,7 +213,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
 
 const useStyles = makeStyles(() => ({
   header: {
-    padding: 24,
+    borderBottom: '1px solid #212121',
+    height: 68,
   },
   dropZone: {
     display: 'none',
