@@ -104,11 +104,13 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(3),
       paddingBottom: theme.spacing(3),
     },
+  },
+  [theme.breakpoints.down('xs')]: {
     root: {
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
     },
   },
   tabsFixed: {
