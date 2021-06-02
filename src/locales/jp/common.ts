@@ -161,6 +161,7 @@ export default {
     error_email_4221: 'メールアドレスが見つかりませんでした',
     error_email_4222: 'メールアドレスが既に使用されています！',
     password_failed: 'パスワードポリシーを満たしていません。',
+    invalid_date: '適切な日付を入力してください。',
   },
   home: {
     exelab: 'eXe LAB事務局',
