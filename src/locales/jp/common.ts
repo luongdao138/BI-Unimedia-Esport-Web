@@ -9,6 +9,7 @@ export default {
     female: '女性',
     other: 'その他',
     required: '必須',
+    private: '非公開',
     zero: '0',
     see_more: 'もっと見る',
     at: '@',

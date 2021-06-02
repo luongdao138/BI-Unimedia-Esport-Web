@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { withRouter, NextRouter } from 'next/router'
 import { Box, Grid, Typography, IconButton, Icon, Theme } from '@material-ui/core'
-import { useTranslation } from 'react-i18next'
+import i18n from '@locales/i18n'
 import ProfileAvatar from '@components/ProfileAvatar'
 import ProfileCover from '@components/ProfileCover'
 import ESButton from '@components/Button'
@@ -31,9 +31,14 @@ interface WithRouterProps {
 
 type ProfileProps = WithRouterProps
 
+enum TABS {
+  MAIN = 0,
+  TOURNAMENT = 1,
+  ACTIVITY = 2,
+}
+
 const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const classes = useStyles()
-  const { t } = useTranslation(['common'])
   const [tab, setTab] = useState(0)
   const [openReport, setOpenReport] = useState(false)
   const [disable, toggleDisable] = useState(false)
@@ -102,32 +107,32 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               <Box className={classes.menu}>
                 {isFollowing ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
-                    {t('common:profile.following')}
+                    {i18n.t('common:profile.following')}
                   </ESButton>
                 ) : (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
-                    {t('common:profile.follow_as')}
+                    {i18n.t('common:profile.follow_as')}
                   </ESButton>
                 )}
                 <ESMenu>
                   {profile.attributes.is_blocked ? (
                     <ESMenuItem onClick={() => unblockUser({ block_type: 'user', target_id: Number(profile.id) })}>
-                      {t('common:profile.menu_unblock')}
+                      {i18n.t('common:profile.menu_unblock')}
                       {blockMeta.pending ? <ESLoader /> : null}
                     </ESMenuItem>
                   ) : (
                     <ESMenuItem onClick={() => blockUser({ block_type: 'user', target_id: Number(profile.id) })}>
-                      {t('common:profile.menu_block')}
+                      {i18n.t('common:profile.menu_block')}
                       {unblockMeta.pending ? <ESLoader /> : null}
                     </ESMenuItem>
                   )}
 
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:user_report.title')}</ESMenuItem>
+                  <ESMenuItem onClick={handleReportOpen}>{i18n.t('common:user_report.title')}</ESMenuItem>
                 </ESMenu>
               </Box>
             ) : (
               <ESButton variant="outlined" round className={classes.menu} onClick={edit}>
-                {t('common:profile.edit_profile')}
+                {i18n.t('common:profile.edit_profile')}
               </ESButton>
             )}
           </Box>
@@ -152,21 +157,46 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
       </>
     )
   }
+  const getTabs = () => {
+    return (
+      <Box marginY={3}>
+        <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
+          <ESTab label={i18n.t('common:user_profile.profile')} value={0} />
+          <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} />
+          <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} />
+        </ESTabs>
+      </Box>
+    )
+  }
+  const getContent = () => {
+    switch (tab) {
+      case TABS.MAIN:
+        if (!isOthers || profile.attributes.security_settings.show_about)
+          return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
+        break
+      case TABS.TOURNAMENT:
+        if (!isOthers || profile.attributes.security_settings.show_tournament_history)
+          return <TournamentHistoryContainer userCode={userCode} />
+        break
+      case TABS.ACTIVITY:
+        if (!isOthers || profile.attributes.security_settings.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        break
+      default:
+        break
+    }
+    return (
+      <Box className={classes.forbiddenMessageContainer}>
+        <Typography variant="h3">{i18n.t('common:common:private')}</Typography>
+      </Box>
+    )
+  }
 
   return (
     <>
       <Grid container direction="column">
         {getHeader()}
-        <Box marginY={3}>
-          <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-            <ESTab label={t('common:user_profile.profile')} value={0} />
-            <ESTab label={t('common:user_profile.tournament_history')} value={1} />
-            <ESTab label={t('common:user_profile.activity_log')} value={2} />
-          </ESTabs>
-        </Box>
-        {tab == 0 && <ProfileMainContainer userProfile={profile} isOthers={isOthers} />}
-        {tab == 1 && <TournamentHistoryContainer userCode={userCode} />}
-        {tab == 2 && <ActivityLogsContainer userCode={userCode} />}
+        {getTabs()}
+        {getContent()}
       </Grid>
     </>
   )
@@ -225,5 +255,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     paddingLeft: 24,
+  },
+  forbiddenMessageContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
   },
 }))
