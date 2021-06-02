@@ -35,7 +35,7 @@ export const BottomContent: React.FC = () => {
               ))}
             </Grid>
             <Box slot="container-end" display="flex" justifyContent="flex-end">
-              <Link href={ESRoutes.TOURNAMENTS} className={classes.moreLink}>
+              <Link href={ESRoutes.ARENA} className={classes.moreLink}>
                 <Typography>
                   {t('common:common.see_more')}
                   <Icon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />
