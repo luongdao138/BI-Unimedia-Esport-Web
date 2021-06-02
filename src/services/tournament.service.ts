@@ -17,6 +17,7 @@ export type TournamentSearchResponse = {
 export type TournamentListItem = {
   attributes: {
     title: string
+    hash_key: string
     start_date: Date | string
     max_participants: number
     participant_type: number
