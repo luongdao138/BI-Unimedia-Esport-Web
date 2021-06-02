@@ -6,7 +6,7 @@ import { isMentionPartType } from '.'
 const useAvailable = (
   members: ChatSuggestionList[],
   parts: Part[],
-  currentUserId: number
+  currentUserId: number | string
 ): { userData: ChatSuggestionList[]; selected: string[] } => {
   const [userData, setUserData] = useState<ChatSuggestionList[]>([])
   const [selected, setSelected] = useState<string[]>([])
@@ -33,7 +33,7 @@ const useAvailable = (
         members &&
           members
             .map((member) => {
-              if (member?.userId != currentUserId) {
+              if (member?.userId != Number(currentUserId)) {
                 return member
               }
             })
