@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { makeStyles, Theme, Typography, Box, InputAdornment } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
@@ -13,25 +13,26 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
 import useResetPassword from './useResetPassword'
 import ESStrengthMeter from '@components/StrengthMeter'
+import { ERROR_CODE } from '@constants/error.constants'
 
 const ResetPasswordContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { user, resetPassword, meta, backAction } = useResetPassword()
+  const { user, resetPassword, meta, backAction, resetMeta } = useResetPassword()
   const [score, setScore] = useState(0)
-  const [showPassword, setShowPassword] = useState(false)
   const validationSchema = Yup.object().shape({
     password: Yup.string()
-      .test('password-validation', t('common:common.error'), (value) => {
+      .required(t('common:common.error'))
+      .min(8, t('common:common.at_least_8'))
+      .test('password-validation', t('common:error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
         return tempScore > 40
-      })
-      .required(t('common:common.error')),
+      }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserResetPasswordParams>({
+  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserResetPasswordParams>({
     initialValues: {
       email: user?.email,
       confirmation_code: user?.confirmation_code,
@@ -42,6 +43,7 @@ const ResetPasswordContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values) => {
       if (values) {
+        resetMeta()
         const params = {
           ...values,
           password_confirm: values.password,
@@ -52,6 +54,29 @@ const ResetPasswordContainer: React.FC = () => {
   })
 
   const buttonActive = (): boolean => values.password !== '' && score > 40
+
+  const renderErrorText = () => {
+    switch (Number(meta?.error['code'])) {
+      case ERROR_CODE.PASSWORD_ALREADY_USE:
+        return t('common:common.password_duplicated')
+      case ERROR_CODE.CONFIRMATION_CODE_EXPIRED:
+        return t('common:common.confirmation_expire')
+      default:
+        return ''
+    }
+  }
+
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box pb={8}>
+          <Box pb={20 / 8} textAlign="center">
+            <Typography color="secondary">{renderErrorText()}</Typography>
+          </Box>
+        </Box>
+      )
+    )
+  }
 
   return (
     <>
@@ -67,31 +92,17 @@ const ResetPasswordContainer: React.FC = () => {
           </Box>
 
           <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+            {renderError()}
             <Box pb={1}>
               <ESInput
                 id="password"
                 labelPrimary={t('common:register_by_email.password')}
-                type={showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      size="small"
-                      disableRipple
-                      onMouseDown={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <Icon className="fas fa-eye" fontSize="small" />
-                      ) : (
-                        <Icon className="fas fa-eye-slash" fontSize="small" />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
+                type="password"
                 labelSecondary={<ESStrengthMeter value={score} />}
                 fullWidth
                 value={values.password}
-                onChange={handleChange}
+                onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
+                onBlur={handleBlur}
                 helperText={touched.password && errors.password}
                 error={touched.password && !!errors.password}
               />

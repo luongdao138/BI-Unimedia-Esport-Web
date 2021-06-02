@@ -4,6 +4,8 @@ import Avatar from '@components/Avatar/'
 import { MessageType, ParentItem } from '../types/chat.types'
 import _ from 'lodash'
 import TextMessage from './TextMessage'
+import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
+import PhotoMessage from './PhotoMessage'
 
 export interface ReplyContentProps {
   replyMessage: null | ParentItem | string | MessageType
@@ -20,6 +22,7 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
   const classes = useStyles()
 
   const text = _.get(replyMessage, 'msg', '')
+  const type = _.get(replyMessage, 'type', CHAT_MESSAGE_TYPE.TEXT)
 
   const userData = members
     ? _.find(members, function (o) {
@@ -30,6 +33,33 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
   const avatar = _.get(userData, 'profile', '')
   const nickName = _.get(userData, 'nickName', '')
   const isDeleted = _.get(replyMessage, 'isDeleted', false)
+  const renderText = () => {
+    if (type === CHAT_MESSAGE_TYPE.TEXT) {
+      return (
+        <TextMessage
+          textClass={classes.replyText}
+          numberOfLines={numberOfLines}
+          color={color ? color : null}
+          contentClass={classes.contentText}
+          bgColor={bgColor}
+          members={members}
+          text={text}
+        />
+      )
+    }
+    return null
+  }
+
+  const renderPhoto = () => {
+    if (type === CHAT_MESSAGE_TYPE.IMAGE) {
+      return (
+        <Box className={classes.photoHolder}>
+          <PhotoMessage size={30} msg={text} />
+        </Box>
+      )
+    }
+    return null
+  }
 
   return (
     <Box className={`${classes.content} ${contentClass ? contentClass : ''}`}>
@@ -41,17 +71,10 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
         ) : null}
         <ListItemText>
           {showName ? <Typography variant="body2">{nickName}</Typography> : null}
-          <TextMessage
-            textClass={classes.replyText}
-            numberOfLines={numberOfLines}
-            color={color ? color : null}
-            contentClass={classes.contentText}
-            bgColor={bgColor}
-            members={members}
-            text={text}
-          />
+          {renderText()}
         </ListItemText>
       </ListItem>
+      {renderPhoto()}
     </Box>
   )
 }
@@ -59,6 +82,7 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
 const useStyles = makeStyles(() => ({
   content: {
     width: '100%',
+    position: 'relative',
     display: 'block',
   },
   contentText: {
@@ -71,6 +95,22 @@ const useStyles = makeStyles(() => ({
   },
   replyText: {
     fontSize: 12,
+  },
+  imgBox: {
+    width: 80,
+    height: 80,
+    borderRadius: 3,
+  },
+  panelStyle: {
+    paddingRight: 20,
+  },
+  photoHolder: {
+    top: 10,
+    transform: 'none',
+    position: 'absolute',
+    right: 20,
+    borderRadius: 3,
+    overflow: 'hidden',
   },
 }))
 

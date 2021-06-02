@@ -50,7 +50,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
         messagesEndRef.current.recomputeRowHeights()
         messagesEndRef.current.forceUpdate()
-        messagesEndRef.current.scrollToRow(5)
+        messagesEndRef.current.scrollToRow(7)
       }
     }, 10)
     cache.clearAll()
