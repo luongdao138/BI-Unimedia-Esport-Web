@@ -15,7 +15,6 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
-import LoginRequired from '@containers/LoginRequired'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -154,17 +153,15 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:home.home')} />
             </ListItem>
           </Link>
-          <LoginRequired>
-            <Link href={ESRoutes.ARENA}>
-              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
-                <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-trophy" />
-                </ListItemIcon>
-                <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
-              </ListItem>
-            </Link>
-          </LoginRequired>
-          <ListItem className={classes.list} button disableRipple>
+          <Link href={ESRoutes.ARENA} passHref>
+            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
+              <ListItemIcon className={classes.icon}>
+                <Icon fontSize="small" className="fa fa-trophy" />
+              </ListItemIcon>
+              <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
+            </ListItem>
+          </Link>
+          {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-university" />
             </ListItemIcon>
@@ -175,14 +172,14 @@ const SideMenu: React.FC = () => {
               <Icon fontSize="small" className="fa fa-users" />
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.community')} />
-          </ListItem>
+          </ListItem> */}
           <Box paddingBottom={4} />
-          <ListItem className={classes.list} button disableRipple>
+          {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-play-circle" />
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
-          </ListItem>
+          </ListItem> */}
           <Link href={ESRoutes.SETTINGS} passHref>
             <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
               <ListItemIcon className={classes.icon}>

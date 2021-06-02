@@ -60,6 +60,11 @@ export type UserProfileParams = {
   nickname: string
 }
 
+export type UserResendParams = {
+  email: string
+  type: string
+}
+
 export const login = async (params: UserLoginParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.LOGIN, params)
   return data
@@ -77,6 +82,11 @@ export const register = async (params: UserLoginParams): Promise<UserLoginRespon
 
 export const registerConfirm = async (params: UserConfirmParams): Promise<UserLoginResponse> => {
   const { data } = await api.post<UserLoginResponse>(URI.CONFIRM, params)
+  return data
+}
+
+export const resendConfirmation = async (params: UserResendParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.RESEND, params)
   return data
 }
 

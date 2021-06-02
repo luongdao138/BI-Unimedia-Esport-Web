@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { CommonResponse, ProfileResponse, HistoryResponse, Nickname2, Meta } from '@services/user.service'
+import { TournamentListItem } from '@services/tournament.service'
+import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -8,7 +9,7 @@ import { UPLOADER_TYPE } from '@constants/image.constants'
 type StateType = {
   data: ProfileResponse['data']
   lastSeenUserData: ProfileResponse['data']
-  tournamentHistories?: Array<HistoryResponse>
+  tournamentHistories?: Array<TournamentListItem>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
   activityLogsMeta?: Meta
@@ -16,6 +17,7 @@ type StateType = {
   nicknames2?: Array<Nickname2>
   recommendedEvent: Array<CommonResponse>
   recommendedEventMeta: Meta
+  accountSettingsChangeEmailSteps: ChangeEmailSteps
 }
 
 const initialState: StateType = {
@@ -28,6 +30,10 @@ const initialState: StateType = {
   nicknames2: [],
   recommendedEvent: [],
   recommendedEventMeta: undefined,
+  accountSettingsChangeEmailSteps: {
+    step_check: false,
+    step_change: false,
+  },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -121,5 +127,18 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.changeEmailConfirm.fulfilled, (state, action) => {
     state.data.attributes.email = action.payload.email
+  })
+
+  builder.addCase(actions.changeEmailCheck.fulfilled, (state) => {
+    state.accountSettingsChangeEmailSteps.step_check = true
+  })
+
+  builder.addCase(actions.changeEmail.fulfilled, (state) => {
+    state.accountSettingsChangeEmailSteps.step_change = true
+  })
+
+  builder.addCase(actions.clearChangeEmailSteps, (state) => {
+    state.accountSettingsChangeEmailSteps.step_check = false
+    state.accountSettingsChangeEmailSteps.step_change = false
   })
 })

@@ -48,7 +48,19 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
 
   return (
     <div className={classes.root}>
-      <label htmlFor="cover-upload" className={classes.touch}>
+      <label
+        htmlFor="cover-upload"
+        className={classes.touch}
+        {...getRootProps()}
+        onMouseEnter={() => {
+          if (!isUploading) setDrag(true)
+        }}
+        onMouseLeave={() => setDrag(false)}
+        onDragEnter={() => {
+          if (!isUploading) setDrag(true)
+        }}
+        onDragLeave={() => setDrag(false)}
+      >
         {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
         <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
           <Camera fontSize="large" className={classes.camera} />
@@ -57,18 +69,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
         <img src="/images/logo.svg" className={classes.logo} />
         <div className={classes.outerBackdrop} />
         {drag || isUploading ? <div className={classes.backdrop} /> : null}
-        <div
-          {...getRootProps()}
-          className={classes.dropZone}
-          onMouseEnter={() => {
-            if (!isUploading) setDrag(true)
-          }}
-          onMouseLeave={() => setDrag(false)}
-          onDragEnter={() => {
-            if (!isUploading) setDrag(true)
-          }}
-          onDragLeave={() => setDrag(false)}
-        >
+        <div className={classes.dropZone}>
           <input disabled={disabled} {...getInputProps()} />
         </div>
         {isUploading ? (

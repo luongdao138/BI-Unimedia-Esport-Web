@@ -32,7 +32,7 @@ const Toast: React.FC<Props> = ({ open, message, onClose, resetMeta }) => {
       classes={{ anchorOriginTopCenter: classes.snackBarRoot }}
       TransitionComponent={slideTransition}
       open={open}
-      autoHideDuration={4000}
+      autoHideDuration={5000}
       onClose={handleClose}
       message={message}
       aria-describedby="toast"

@@ -115,24 +115,22 @@ const ArenaMatches: React.FC = () => {
             </Container>
           </AppBar>
           <div className={classes.content}>
-            <div className={classes.bracketWrap}>
+            <Bracket.Container activeRound={10}>
+              {matches.map((round, rid) => (
+                <Bracket.Round key={rid} roundNo={rid}>
+                  <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
+                  {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
+                </Bracket.Round>
+              ))}
+            </Bracket.Container>
+            {!_.isEmpty(third_place_match) && (
               <Bracket.Container activeRound={0}>
-                {matches.map((round, rid) => (
-                  <Bracket.Round key={rid} roundNo={rid}>
-                    <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
-                    {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
-                  </Bracket.Round>
-                ))}
+                <Bracket.Round key={'3rd'} roundNo={0}>
+                  {getMatch('1-1', third_place_match[0])}
+                </Bracket.Round>
               </Bracket.Container>
-              {!_.isEmpty(third_place_match) && (
-                <Bracket.Container activeRound={0}>
-                  <Bracket.Round key={'3rd'} roundNo={0}>
-                    {getMatch('1-1', third_place_match[0])}
-                  </Bracket.Round>
-                </Bracket.Container>
-              )}
-              {scoreDialog()}
-            </div>
+            )}
+            {scoreDialog()}
           </div>
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
         </ESStickyFooter>
@@ -144,7 +142,7 @@ const ArenaMatches: React.FC = () => {
 
 export default ArenaMatches
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -160,6 +158,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 0,
   },
   content: {
+    padding: theme.spacing(3),
     paddingTop: 108,
   },
   backButton: {
@@ -169,8 +168,5 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
-  },
-  bracketWrap: {
-    padding: 24,
   },
 }))

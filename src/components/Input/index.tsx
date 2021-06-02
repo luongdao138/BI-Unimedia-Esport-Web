@@ -40,7 +40,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
           {labelSecondary}
         </Box>
       )}
-      <OutlinedInput classes={{ root: classes.root, inputMarginDense: classes.numberAlign }} margin="dense" {...rest} />
+      <OutlinedInput classes={{ root: classes.root, adornedEnd: classes.end }} margin="dense" {...rest} />
       {helperText && <FormHelperText error>{helperText}</FormHelperText>}
     </FormControl>
   )
@@ -85,6 +85,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 10,
     marginLeft: theme.spacing(1),
     color: Colors.white,
+  },
+  end: {
+    paddingRight: theme.spacing(1),
   },
 }))
 

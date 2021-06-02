@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const AccountSettingsPage: PageWithLayoutType = () => {
-  return <AccountSettingsContainer />
+  return (
+    <MainLayout loginRequired>
+      <AccountSettingsContainer />
+    </MainLayout>
+  )
 }
-
-AccountSettingsPage.Layout = MainLayout
 
 export default AccountSettingsPage

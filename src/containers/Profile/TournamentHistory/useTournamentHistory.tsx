@@ -2,13 +2,21 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import userProfile from '@store/userProfile'
-import { HistorySearchParams } from '@services/user.service'
+import { HistorySearchParams, Meta as Page } from '@services/user.service'
+import { TournamentListItem } from '@services/tournament.service'
+import { Meta } from '@store/metadata/actions/types'
 
 const { selectors, actions } = userProfile
 const getTournamentHistorySearchMeta = createMetaSelector(actions.tournamentHistorySearch)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useTournamentHistory = () => {
+const useTournamentHistory = (): {
+  tournamentHistories: Array<TournamentListItem> | []
+  tournamentHistory: (param: HistorySearchParams) => void
+  resetMeta: () => void
+  meta: Meta
+  page: Page
+} => {
   const dispatch = useAppDispatch()
   const tournamentHistories = useAppSelector(selectors.getTourHistories)
   const page = useAppSelector(selectors.getTourHistoriesMeta)

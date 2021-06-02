@@ -112,33 +112,31 @@ const ArenaMatches: React.FC = () => {
           </Container>
         </AppBar>
         <div className={classes.content}>
-          <Container maxWidth="lg">
+          <Bracket.Container activeRound={0}>
+            {matches.map((round, rid) => (
+              <Bracket.Round key={rid} roundNo={rid}>
+                <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
+                {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
+              </Bracket.Round>
+            ))}
+          </Bracket.Container>
+          {!_.isEmpty(third_place_match) && (
             <Bracket.Container activeRound={0}>
-              {matches.map((round, rid) => (
-                <Bracket.Round key={rid} roundNo={rid}>
-                  <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
-                  {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
-                </Bracket.Round>
-              ))}
+              <Bracket.Round key={'3rd'} roundNo={0}>
+                {getMatch('1-1', third_place_match[0])}
+              </Bracket.Round>
             </Bracket.Container>
-            {!_.isEmpty(third_place_match) && (
-              <Bracket.Container activeRound={0}>
-                <Bracket.Round key={'3rd'} roundNo={0}>
-                  {getMatch('1-1', third_place_match[0])}
-                </Bracket.Round>
-              </Bracket.Container>
-            )}
-            <SelectParticipantModal
-              meta={setMeta}
-              tournament={tournament}
-              selectedMatch={selectedMatch}
-              handleSetParticipant={(params) => setParticipant({ ...params, hash_key: tournament.attributes.hash_key })}
-              handleClose={(refresh) => {
-                if (refresh) fetchMatches()
-                setSelectedMatch(undefined)
-              }}
-            />
-          </Container>
+          )}
+          <SelectParticipantModal
+            meta={setMeta}
+            tournament={tournament}
+            selectedMatch={selectedMatch}
+            handleSetParticipant={(params) => setParticipant({ ...params, hash_key: tournament.attributes.hash_key })}
+            handleClose={(refresh) => {
+              if (refresh) fetchMatches()
+              setSelectedMatch(undefined)
+            }}
+          />
         </div>
         <RandomizeDialog
           open={showRandomize}
@@ -172,7 +170,7 @@ const ArenaMatches: React.FC = () => {
 
 export default ArenaMatches
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -188,6 +186,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 0,
   },
   content: {
+    padding: theme.spacing(3),
     paddingTop: 108,
   },
   backButton: {

@@ -17,4 +17,5 @@ export enum USER_PROFILE_ACTION_TYPE {
   CHANGE_EMAIL_CHECK = 'user/change_email_check',
   CHANGE_EMAIL = 'user/change_email',
   CHANGE_EMAIL_CONFIRM = 'user/change_email_confirm',
+  CLEAR_CHANGE_EMAIL_STEPS = 'user/clear_change_email_steps',
 }

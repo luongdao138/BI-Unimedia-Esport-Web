@@ -1,6 +1,7 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
+import { TournamentListItem } from './tournament.service'
 
 export type HistorySearchParams = {
   page?: number
@@ -8,12 +9,8 @@ export type HistorySearchParams = {
 }
 
 export type HistorySearchResponse = {
-  data: Array<HistoryResponse>
+  data: Array<TournamentListItem>
   meta: Meta
-}
-
-export type HistoryResponse = {
-  attributes: any
 }
 
 export type ActivityLogResponse = {
@@ -45,6 +42,11 @@ export type Meta = {
   per_page: number
   total_count: number
   total_pages: number
+}
+
+export type ChangeEmailSteps = {
+  step_check: boolean
+  step_change: boolean
 }
 
 export type ActivityLog = {

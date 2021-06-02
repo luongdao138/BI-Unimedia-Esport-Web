@@ -1,7 +1,7 @@
 import { State } from '../actions/types'
 import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX } from '@constants/socket.constants'
 import { AnyAction } from 'redux'
-import { MessageType, ChatRoomMemberItem } from '@components/Chat/types/chat.types'
+import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import { ChatHelper } from './utils'
 
@@ -24,6 +24,7 @@ let pending: MessageType[] | undefined
 let oldMessages: MessageType[] | undefined
 let newMsg: MessageType[] | undefined
 let mergedMsg: MessageType[] | undefined
+let newRoomList: ChatDataType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
@@ -75,6 +76,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         messages: undefined,
+        selectedRoomInfo: undefined,
+        newRoomId: undefined,
       }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
@@ -90,11 +93,19 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         actionPending: true,
       }
+    case CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE:
+      return {
+        ...state,
+        selectedRoomInfo: action.data.content.room,
+      }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
+      newRoomList = [...state.roomList]
+      newRoomList.push(action.data.content)
       return {
         ...state,
         actionPending: false,
-        newRoomId: action.data.roomId,
+        roomList: newRoomList,
+        newRoomId: action.data.content.chatRoomId,
       }
     case CHAT_ACTION_TYPE.CLEAR_NEW_ROOM_ID:
       return {
