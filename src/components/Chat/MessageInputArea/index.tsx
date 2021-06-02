@@ -116,6 +116,7 @@ const useStyles = makeStyles(() => ({
   panel: {
     position: 'relative',
     paddingBottom: 10,
+    paddingRight: 20,
   },
   closeButton: {
     position: 'absolute',
