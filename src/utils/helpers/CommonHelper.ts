@@ -5,6 +5,11 @@ const validateEmail = (email: string): boolean => {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return re.test(String(email).toLowerCase())
 }
+
+const replaceSingleByteString = (value: string): string => {
+  return value.replace(/[^A-Za-z0-9.!@#$%^&*()_+-=]/g, '')
+}
+
 export const genRanHex = (size: number): string => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
 
 const scorePassword = (pass: string): number => {
@@ -55,7 +60,7 @@ const scorePassword = (pass: string): number => {
 }
 
 const userCodeValid = (value: string): boolean => {
-  return /^([a-zA-Z0-9_-]+)$/.test(value)
+  return /^([a-zA-Z0-9+_-]+)$/.test(value)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -91,6 +96,20 @@ const hasEmail = (email: string): boolean => {
   return true
 }
 
+const isMediaURL = (str: string): boolean => {
+  const domain = 'https://s3-ap-northeast-1.amazonaws.com/'
+  const buckets = ['dev-esporst-chat-media', 'stg-esporst-chat-media', 'esporst-chat-media', 'feature-esporst-chat-media']
+  if (str && str.startsWith(domain)) {
+    for (let i = 0; i < buckets.length; i++) {
+      const bucket = buckets[i]
+      if (str.startsWith(domain + bucket)) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -98,4 +117,6 @@ export const CommonHelper = {
   userCodeValid,
   matchNgWords,
   hasEmail,
+  replaceSingleByteString,
+  isMediaURL,
 }

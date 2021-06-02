@@ -7,9 +7,10 @@ interface Props {
   features: UserFeaturesResponse
   selectedFeatures: any[]
   onSelectChange: (selectedIds) => void
+  maxValue?: number
 }
 
-const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange }) => {
+const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange, maxValue }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
@@ -23,6 +24,7 @@ const TagSelect: React.FC<Props> = ({ selectedFeatures, features, onSelectChange
       onSelectChange(filtered)
     } else {
       tempSelectedFeatures.push({ id: selectedId, feature: selectedFeature.attributes.feature })
+      if (maxValue < tempSelectedFeatures.length) tempSelectedFeatures.splice(maxValue - 1, 1)
       onSelectChange(tempSelectedFeatures)
     }
   }

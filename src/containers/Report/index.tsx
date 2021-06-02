@@ -18,6 +18,9 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import * as Yup from 'yup'
 import { REPORT_TYPE } from '@constants/common.constants'
+import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
+import TextMessage from '@components/Chat/elements/TextMessage'
 
 export interface ESReportProps {
   chat_id?: string
@@ -27,11 +30,13 @@ export interface ESReportProps {
   msg_body?: string
   data?: any
   open?: boolean
-  reportType: number
+  reportType?: number
   handleClose?: () => void
+  members?: any
 }
 
-const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
+const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose, members }) => {
+  const classes = useStyles()
   const { createReport, meta } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -57,10 +62,11 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
-      reason_id: -1,
+      reason_id: reasons[0] ? Number(reasons[0].id) : 1,
       report_type: 0,
       user_email: '',
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
       switch (reportType) {
@@ -102,23 +108,29 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         }}
       >
         <form onSubmit={formik.handleSubmit}>
-          <DialogContent>
+          <DialogContent className={classes.dialogContent}>
             {data && (reportType == REPORT_TYPE.USER_LIST || reportType == REPORT_TYPE.CHAT) ? (
               <Grid container spacing={2}>
-                <Grid item>
+                <Grid item sm={2} xs={12}>
                   <ProfileAvatar src={data.attributes.avatar_url} editable={false} />
                 </Grid>
-                <Grid>
+                <Grid item sm={10} xs={12}>
                   <Box mt={4}>
-                    <Typography variant="h2">{data.attributes.nickname}</Typography>
-                    <Typography variant="h2">{data.attributes.user_code}</Typography>
-                    {msg_body && <Typography>{msg_body}</Typography>}
+                    <Typography className={classes.nickname}>{data.attributes.nickname}</Typography>
+                    <Typography className={classes.userCode}>{data.attributes.user_code}</Typography>
+                    {msg_body && CommonHelper.isMediaURL(msg_body) ? (
+                      <Box className={classes.imgBox} height={100} width={100}>
+                        <img src={msg_body} className={classes.img} />
+                      </Box>
+                    ) : (
+                      <TextMessage members={members} text={msg_body} color={Colors.white} />
+                    )}
                   </Box>
                 </Grid>
               </Grid>
             ) : null}
 
-            <Box mt={1}>
+            <Box mt={2}>
               <Typography>{t('user_report.desc_first')}</Typography>
               <Typography>{t('user_report.desc_second')}</Typography>
               <Typography>{t('user_report.desc_third')}</Typography>
@@ -136,7 +148,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               helperText={formik.touched.reason_id && formik.errors.reason_id}
             >
               {reasons.map((g, idx) => (
-                <FormControlLabel key={idx} value={g.id} control={<Radio required />} label={g.attributes.reason} />
+                <FormControlLabel key={idx} value={Number(g.id)} control={<Radio color="primary" />} label={g.attributes.reason} />
               ))}
             </RadioVertical>
 
@@ -162,7 +174,6 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               value={formik.values.user_email}
               onChange={formik.handleChange}
               labelPrimary={t('user_report.reporter_email')}
-              placeholder={t('user_report.reporter_email_placeholder')}
               fullWidth
               required
               helperText={formik.touched.user_email && formik.errors.user_email}
@@ -181,5 +192,34 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  message: {
+    marginLeft: 15,
+    fontSize: 14,
+    color: Colors.white,
+  },
+  nickname: {
+    marginLeft: 15,
+    fontSize: 18,
+    color: Colors.white,
+  },
+  userCode: {
+    marginLeft: 15,
+    fontSize: 16,
+    color: Colors.white,
+  },
+  img: { width: '100%', height: 'auto' },
+  imgBox: {
+    margin: 10,
+  },
+  dialogContent: {
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar': {
+      width: 0,
+      height: 0,
+    },
+  },
+}))
 
 export default ESReport

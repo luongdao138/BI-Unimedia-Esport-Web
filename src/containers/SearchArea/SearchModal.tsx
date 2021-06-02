@@ -3,10 +3,9 @@ import { OutlinedInput, Box, Select, withStyles, IconButton, Icon, Dialog } from
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '@components/Button'
-import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-import { searchTypes } from '@constants/common.constants'
+import useSearch from '@containers/Search/useSearch'
 
 interface SearchModalProps {
   show: boolean
@@ -27,7 +26,7 @@ interface returnItem {
 
 const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, handleClose }) => {
   const { t } = useTranslation(['common'])
-  const router = useRouter()
+  const { searchType, searchKeyword } = useSearch()
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [option, setOption] = useState<number>(1)
   const [value, setValue] = useState<string>('')
@@ -42,13 +41,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
   }, [value])
 
   useEffect(() => {
-    if (!_.isEmpty(router.query)) {
-      const _keyword = router.query.keyword ? router.query.keyword.toString() : ''
-      const _type = router.query.type ? Number(router.query.type) : searchTypes.USER
-      setOption(_type)
-      setValue(_keyword)
-    }
-  }, [router.query])
+    setOption(searchType)
+    setValue(searchKeyword)
+  }, [searchType, searchKeyword])
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)

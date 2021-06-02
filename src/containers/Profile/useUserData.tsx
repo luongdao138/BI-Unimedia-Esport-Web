@@ -90,7 +90,6 @@ const useUserData = (
   const setFollowState = async () => {
     if (profile) {
       const params = { user_code: userCode }
-      console.log('useUserData.tsx 94 ', profile.attributes?.is_following)
       if (profile.attributes?.is_following) {
         dispatch(userActions.unfollow(params))
       } else {

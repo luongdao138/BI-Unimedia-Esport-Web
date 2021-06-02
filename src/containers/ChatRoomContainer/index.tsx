@@ -13,6 +13,11 @@ import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
+import RoomHeader from '@components/Chat/RoomHeader/index'
+import { MessageType } from '@components/Chat/types/chat.types'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
+import { ESReportProps } from '@containers/Report'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -25,7 +30,9 @@ export interface UploadStateType {
 
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
-
+  const [reply, setReply] = useState<MessageType | null>(null)
+  const [reporting, setReporting] = useState<boolean>(false)
+  const [reportData, setReportData] = useState<ESReportProps>(null)
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
@@ -62,7 +69,25 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       clientId: clientId,
       type: CHAT_MESSAGE_TYPE.TEXT,
     }
-    dispatch(socketActions.sendMessage(payload))
+    if (reply === null) {
+      dispatch(socketActions.sendMessage(payload))
+    } else {
+      const replyData = {
+        parentId: reply.sortKey,
+        parentMsg: {
+          msg: reply.msg,
+          chatRoomId: roomId,
+          sortKey: reply.sortKey,
+          userId: reply.userId,
+          groupType: 10,
+          createdAt: '',
+          clientId: reply.clientId,
+          type: reply.type,
+        },
+      }
+      dispatch(socketActions.sendMessage(_.omit(_.assign(payload, replyData))))
+    }
+    setReply(null)
   }
   const handlePressActionButton = (type: number) => {
     if (type === ACTIONS.IMAGE_UPLOAD)
@@ -128,17 +153,41 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setMeta({ ...uploadMeta, uploading: false })
   }
 
+  const onReply = (currentMessage: MessageType) => {
+    setReply(currentMessage)
+  }
+  const onReport = (reportData: ESReportProps) => {
+    setReportData(reportData)
+    setReporting(true)
+  }
+
   return (
     <Box className={classes.room}>
-      <Box className={classes.header}>{roomId}</Box>
+      <Box className={classes.header} px={3} py={2}>
+        <RoomHeader roomId={roomId} />
+      </Box>
       <Box className={classes.list}>
         {renderLoader()}
         {!_.isEmpty(data) && _.isArray(data) && (
-          <MessageList currentUser={userId} paginating={paginating} onFetchMore={onFetchMore} users={users} messages={data} />
+          <MessageList
+            reply={onReply}
+            report={onReport}
+            currentUser={userId}
+            paginating={paginating}
+            onFetchMore={onFetchMore}
+            users={users}
+            messages={data}
+          />
         )}
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea onPressSend={handlePress} users={users} onPressActionButton={handlePressActionButton} />
+        <MessageInputArea
+          reply={reply}
+          onCancelReply={() => setReply(null)}
+          onPressSend={handlePress}
+          users={users}
+          onPressActionButton={handlePressActionButton}
+        />
       </Box>
       <ImageUploader
         ref={ref}
@@ -147,13 +196,25 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         onImageSelected={imageEventHandler}
         onError={imageErrorHandler}
       />
+      {reportData ? (
+        <ESReport
+          msg_body={reportData.msg_body}
+          reportType={REPORT_TYPE.CHAT}
+          target_id={Number(reportData.target_id)}
+          data={reportData.data}
+          open={reporting}
+          members={users}
+          handleClose={() => setReporting(false)}
+        />
+      ) : null}
     </Box>
   )
 }
 
 const useStyles = makeStyles(() => ({
   header: {
-    padding: 24,
+    borderBottom: '1px solid #212121',
+    height: 68,
   },
   dropZone: {
     display: 'none',

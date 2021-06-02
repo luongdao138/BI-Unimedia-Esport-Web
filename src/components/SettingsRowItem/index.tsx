@@ -17,7 +17,7 @@ const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handl
 
   return (
     <div>
-      <Box margin={2} display="flex" justifyContent="space-between">
+      <Box margin={2} display="flex" justifyContent="space-between" maxHeight={52}>
         <Box display="flex" overflow="hidden" className={classes.wrap}>
           <Box overflow="hidden" textOverflow="ellipsis" ml={0} display="flex" flexDirection="row" justifyContent="" width="100%">
             <Typography noWrap className={classes.title}>
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       background: '#1a1a1a',
     },
   },
-  title: { display: 'flex', alignItems: 'center', color: '#707070', fontWeight: 'bold', fontSize: 14 },
+  title: { display: 'flex', alignItems: 'center', color: Colors.white_opacity[70], fontSize: 14 },
   link: {
     marginTop: 3,
     marginLeft: 8,

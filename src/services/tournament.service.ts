@@ -2,6 +2,7 @@ import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameHardware, GameTitle } from './game.service'
 import { Feature } from './user.service'
+import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 
 export type TournamentSearchParams = {
   page: number
@@ -11,6 +12,37 @@ export type TournamentSearchParams = {
 export type TournamentSearchResponse = {
   data: Array<TournamentResponse>
   links: any
+}
+
+export type TournamentListItem = {
+  attributes: {
+    title: string
+    start_date: Date | string
+    max_participants: number
+    participant_type: number
+    status: TS.READY | TS.RECRUITING | TS.RECRUITMENT_CLOSED | TS.READY_TO_START | TS.IN_PROGRESS | TS.COMPLETED | TS.CANCELLED
+    game_of_title: string
+    cover: null | string
+    organizer_name: string
+    organizer_avatar: string
+    role: 0 | 1 | 2 | 3
+    rule: 0 | 1 | 2
+    position: number
+    team_name: null | string
+    team_avatar: null | string
+    participant_count: number
+    winner: null | {
+      name: string
+      user_code: string
+      profile_image: null | string
+    }
+    participants: Array<ParticipantType>
+  }
+}
+
+export type ParticipantType = {
+  nickname: string
+  profile_image: string | null
 }
 
 export type TournamentResponse = {

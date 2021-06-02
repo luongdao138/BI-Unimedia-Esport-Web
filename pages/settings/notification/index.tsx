@@ -3,9 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import ESNotificationSettings from '@containers/UserNotificationSettings'
 
 const NotificationSettingsPage: PageWithLayoutType = () => {
-  return <ESNotificationSettings />
+  return (
+    <MainLayout loginRequired>
+      <ESNotificationSettings />
+    </MainLayout>
+  )
 }
-
-NotificationSettingsPage.Layout = MainLayout
 
 export default NotificationSettingsPage

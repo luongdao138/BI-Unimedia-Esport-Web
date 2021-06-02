@@ -173,7 +173,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: props.error ? 'rgba(247, 247, 53, 0.1)' : Colors.black,
     '&[type=number]': {
       '-moz-appearance': 'textfield',
-      '-webkit-user-select': 'none',
+      '-webkit-user-select': 'auto',
     },
     '&::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',

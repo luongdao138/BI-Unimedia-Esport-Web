@@ -23,3 +23,9 @@ export const TOOLBAR_ACTIONS = [
     type: ACTIONS.IMAGE_UPLOAD,
   },
 ]
+
+export enum MENU_ACTIONS {
+  COPY_CONTENT = 1,
+  REPLY_MSG = 2,
+  REPORT_CHAT = 3,
+}

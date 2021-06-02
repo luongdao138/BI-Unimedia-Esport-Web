@@ -10,18 +10,18 @@ export const searchOptions = [
     value: searchTypes.USER,
     name: 'ニックネーム・ID',
   },
-  {
-    value: searchTypes.COMMUNITY,
-    name: 'コミュニティ',
-  },
+  // {
+  //   value: searchTypes.COMMUNITY,
+  //   name: 'コミュニティ',
+  // },
   {
     value: searchTypes.TOURNAMENT,
     name: 'アリーナ',
   },
-  {
-    value: searchTypes.RECRUITMENT,
-    name: 'ロビー',
-  },
+  // {
+  //   value: searchTypes.RECRUITMENT,
+  //   name: 'ロビー',
+  // },
 ]
 
 export const GENDER = {
@@ -56,6 +56,29 @@ export const HOME_SETTINGS = {
   TOPIC_FOLLOW: '7',
 }
 
+export enum TOURNAMENT_STATUS {
+  READY = 1, //tournament created but not recruiting
+  RECRUITING = 2, //RECRUIT -> burtgel
+  RECRUITMENT_CLOSED = 3,
+  READY_TO_START = 4, //recruitment finished but waiting for start
+  IN_PROGRESS = 5, //started
+  COMPLETED = 6, // finished
+  CANCELLED = 7,
+}
+
+export enum TOURNAMENT_ROLE {
+  ADMIN = 0,
+  PARTICIPANT = 1,
+  INTERESTED = 2,
+  CO_ORGANIZER = 3,
+}
+
+export enum TOURNAMENT_RULE {
+  SINGLE = 0,
+  DOUBLE = 1,
+  BATTLE_ROYAL = 2,
+}
+
 export enum REPORT_TYPE {
   USER_LIST = 0,
   COMMUNITY = 1,
@@ -76,4 +99,21 @@ export const CHAT_CONSTANTS = {
   },
 }
 
-export const SNS = 'sns'
+export const SNS = 'SNS'
+
+export const LIGHTBOX_OPTIONS = {
+  settings: {
+    overlayColor: 'rgb(0, 0, 0, 0.8)',
+  },
+  buttons: {
+    backgroundColor: 'transparent',
+    showThumbnailsButton: false,
+    showAutoplayButton: false,
+    showDownloadButton: false,
+    showNextButton: false,
+    showPrevButton: false,
+  },
+  thumbnails: {
+    showThumbnails: false,
+  },
+}

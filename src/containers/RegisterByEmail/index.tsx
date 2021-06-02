@@ -13,7 +13,8 @@ import useRegisterByEmail from './useRegisterByEmail'
 import ESStrengthMeter from '@components/StrengthMeter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
-import ESToast from '@components/Toast'
+import _ from 'lodash'
+import i18n from '@locales/i18n'
 
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -28,7 +29,7 @@ const RegisterByEmailContainer: React.FC = () => {
       })
       .required(t('common:common.error')),
     password: Yup.string()
-      .test('password-validation', t('common:common.error'), (value) => {
+      .test('password-validation', t('common:error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
@@ -37,7 +38,7 @@ const RegisterByEmailContainer: React.FC = () => {
       .required(t('common:common.error')),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.UserLoginParams>({
+  const { handleChange, values, handleSubmit, errors, touched, setFieldValue, handleBlur } = useFormik<services.UserLoginParams>({
     initialValues: {
       email: '',
       password: '',
@@ -47,13 +48,28 @@ const RegisterByEmailContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values) => {
       if (values.email && values.password) {
+        resetMeta()
         registerByEmail(values)
       }
     },
   })
 
-  const buttonActive = (): boolean => {
-    return values.email !== '' && CommonHelper.validateEmail(values.email) && values.password !== '' && score > 40
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box pb={8}>
+          <Box pb={20 / 8} textAlign="center">
+            <Typography color="secondary">{i18n.t('common:register.error.title2')}</Typography>
+          </Box>
+          <Box pb={1}>
+            <Typography className={classes.detail}>{i18n.t('common:register.error.detail2')}</Typography>
+          </Box>
+          <Typography className={classes.hint} variant="caption">
+            {i18n.t('common:register.error.hint2')}
+          </Typography>
+        </Box>
+      )
+    )
   }
 
   return (
@@ -70,20 +86,17 @@ const RegisterByEmailContainer: React.FC = () => {
           </Box>
 
           <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+            {renderError()}
             <Box>
               <ESInput
                 id="email"
                 autoFocus
                 placeholder={t('common:register_by_email.email_placeholder')}
                 labelPrimary={t('common:register_by_email.email')}
-                labelSecondary={
-                  <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                    {t('common:register_by_email.forgot_password')}
-                  </Typography>
-                }
                 fullWidth
                 value={values.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 helperText={touched.email && errors.email}
                 error={touched.email && !!errors.email}
               />
@@ -96,24 +109,23 @@ const RegisterByEmailContainer: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 labelSecondary={<ESStrengthMeter value={score} />}
                 endAdornment={
-                  <InputAdornment position="end">
+                  <InputAdornment position="end" className={classes.inputContainer}>
+                    <div className={classes.borderLeft}></div>
                     <IconButton
                       aria-label="toggle password visibility"
                       size="small"
                       disableRipple
+                      color="inherit"
                       onMouseDown={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <Icon className="fas fa-eye" fontSize="small" />
-                      ) : (
-                        <Icon className="fas fa-eye-slash" fontSize="small" />
-                      )}
+                      {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
                     </IconButton>
                   </InputAdornment>
                 }
                 fullWidth
                 value={values.password}
-                onChange={handleChange}
+                onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
+                onBlur={handleBlur}
                 helperText={touched.password && errors.password}
                 error={touched.password && !!errors.password}
               />
@@ -123,10 +135,13 @@ const RegisterByEmailContainer: React.FC = () => {
             <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
           </Box>
         </Box>
+
+        <Box className={classes.blankSpace}></Box>
+
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
             <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!_.isEmpty(errors)}>
                 {t('common:register_by_email.button')}
               </ButtonPrimary>
             </Box>
@@ -134,7 +149,6 @@ const RegisterByEmailContainer: React.FC = () => {
         </Box>
       </form>
       {meta.pending && <ESLoader open={meta.pending} />}
-      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.signup_failed')} resetMeta={resetMeta} />}
     </>
   )
 }
@@ -165,6 +179,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: '0 auto',
   },
+  inputContainer: {
+    position: 'relative',
+    paddingRigth: 7,
+  },
+  borderLeft: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#4B4B4D',
+    position: 'absolute',
+    left: -8,
+  },
+  hint: {
+    color: Colors.white_opacity[30],
+  },
+  detail: {
+    whiteSpace: 'pre-line',
+    color: Colors.white_opacity[70],
+  },
+  blankSpace: {
+    height: 169,
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -172,6 +207,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+    blankSpace: {
+      height: theme.spacing(15),
     },
   },
 }))
