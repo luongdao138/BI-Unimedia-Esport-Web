@@ -1,21 +1,27 @@
 import useArenaWinners from './useArenaWinners'
 
 import { makeStyles } from '@material-ui/core/styles'
+import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography } from '@material-ui/core'
+import { Typography, IconButton } from '@material-ui/core'
 
 import ArenaAvatar from './ArenaAvatar'
 import { useState } from 'react'
 
 const ArenaWinners: React.FC = () => {
-  const { arenaWinners, arena } = useArenaWinners()
+  const { arenaWinners, arena, handleBack } = useArenaWinners()
   const classes = useStyles()
 
   const [showSummary, setShowSummary] = useState(false)
 
   return (
     <div className={classes.root}>
+      <div className={classes.backButtonWrapper}>
+        <IconButton className={classes.backButton} onClick={handleBack}>
+          <ArrowBack />
+        </IconButton>
+      </div>
       <div className={classes.coverWrapper}>
         {arena?.attributes?.cover_image && <img src={arena?.attributes?.cover_image} className={classes.cover} />}
       </div>
@@ -76,6 +82,19 @@ const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
     paddingBottom: theme.spacing(3),
+  },
+  backButton: {
+    backgroundColor: '#4D4D4D',
+    padding: 7,
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    },
+  },
+  backButtonWrapper: {
+    position: 'absolute',
+    paddingLeft: theme.spacing(3),
+    paddingTop: theme.spacing(3),
+    zIndex: 1,
   },
   coverWrapper: {
     position: 'sticky',

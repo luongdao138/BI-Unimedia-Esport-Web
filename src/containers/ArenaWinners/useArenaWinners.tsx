@@ -12,7 +12,14 @@ const getArenaMeta = createMetaSelector(actions.getTournamentDetail)
 
 const useWinners = (
   isImmediately = true
-): { arenaMeta: Meta; winnersMeta: Meta; arenaWinners: ArenaWinners; arena: TournamentDetail; fetchWinners: () => void } => {
+): {
+  arenaMeta: Meta
+  winnersMeta: Meta
+  arenaWinners: ArenaWinners
+  arena: TournamentDetail
+  fetchWinners: () => void
+  handleBack: () => void
+} => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const winnersMeta = useAppSelector(getWinnersMeta)
@@ -29,12 +36,15 @@ const useWinners = (
     }
   }, [router.query.hash_key])
 
+  const handleBack = () => router.push(router.asPath.replace('/placements', ''))
+
   return {
     arenaWinners,
     winnersMeta,
     arenaMeta,
     arena,
     fetchWinners,
+    handleBack,
   }
 }
 
