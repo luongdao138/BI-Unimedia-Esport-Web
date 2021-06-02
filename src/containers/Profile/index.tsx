@@ -157,8 +157,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     <>
       <Grid container direction="column">
         {getHeader()}
-        <Box margin={3}>
-          <ESTabs value={tab} onChange={(_, v) => setTab(v)}>
+        <Box marginY={3}>
+          <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
             <ESTab label={t('common:user_profile.profile')} value={0} />
             <ESTab label={t('common:user_profile.tournament_history')} value={1} />
             <ESTab label={t('common:user_profile.activity_log')} value={2} />
@@ -219,5 +219,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   relative: {
     position: 'relative',
+  },
+  tabs: {
+    borderBottomColor: Colors.text[300],
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+    paddingLeft: 24,
   },
 }))
