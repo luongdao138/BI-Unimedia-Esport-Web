@@ -49,7 +49,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
     initialDate = {
       year: new Date(birth_date).getFullYear(),
       month: new Date(birth_date).getMonth(),
-      day: new Date(birth_date).getDay(),
+      day: Number(moment(new Date(birth_date)).format('DD')),
     }
   }
 
