@@ -68,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 5,
     paddingTop: 10,
     color: theme.palette.text.primary,
+    margin: '0 auto',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    maxWidth: 80,
   },
   usercode: {
     color: theme.palette.text.secondary,
