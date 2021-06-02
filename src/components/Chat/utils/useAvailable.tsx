@@ -3,8 +3,12 @@ import { ChatSuggestionList } from '../types/chat.types'
 import { Part } from '../types/mention.type'
 import { isMentionPartType } from '.'
 
-const useAvailable = (members: ChatSuggestionList[], parts: Part[]): string[] => {
-  // const [available, setAvailable] = useState<ChatSuggestionList[]>([])
+const useAvailable = (
+  members: ChatSuggestionList[],
+  parts: Part[],
+  currentUserId: number
+): { userData: ChatSuggestionList[]; selected: string[] } => {
+  const [userData, setUserData] = useState<ChatSuggestionList[]>([])
   const [selected, setSelected] = useState<string[]>([])
 
   const addToSelected = (parts: Part[]) => {
@@ -23,12 +27,32 @@ const useAvailable = (members: ChatSuggestionList[], parts: Part[]): string[] =>
 
     //     setAvailable(filtered)
   }
+  const filterPlainData = () => {
+    if (currentUserId) {
+      setUserData(
+        members &&
+          members
+            .map((member) => {
+              if (member?.userId != currentUserId) {
+                return member
+              }
+            })
+            .filter((i) => i)
+      )
+    }
+  }
 
   useEffect(() => {
     addToSelected(parts)
   }, [parts, members])
 
-  return selected
+  useEffect(() => {
+    if (currentUserId) {
+      filterPlainData()
+    }
+  }, [members, currentUserId])
+
+  return { userData, selected }
 }
 
 export default useAvailable

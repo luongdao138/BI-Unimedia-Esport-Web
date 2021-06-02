@@ -20,6 +20,7 @@ export interface MessageInputAreaProps {
   disabled?: boolean
   onCancelReply?: () => void
   reply?: ParentItem | null | MessageType
+  currentUser: number
 }
 
 const partTypes = [
@@ -32,12 +33,12 @@ const partTypes = [
 ]
 
 const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
-  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled } = props
+  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser } = props
   const [text, setText] = useState<string>('')
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
 
-  const selected = useAvailable(users, parts)
+  const { selected, userData } = useAvailable(users, parts, currentUser)
 
   const classes = useStyles()
 
@@ -95,7 +96,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
         <Box className={classes.input}>
           <Composer
             renderSuggestion={renderSuggestion}
-            users={users}
+            users={userData}
             placeholder={t('common:chat.placeholder')}
             msg={text}
             onKeyPress={handleKeyPress}
