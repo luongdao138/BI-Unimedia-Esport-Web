@@ -117,3 +117,5 @@ export const LIGHTBOX_OPTIONS = {
     showThumbnails: false,
   },
 }
+
+export const SLIDE_LIMIT = 5

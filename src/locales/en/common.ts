@@ -56,6 +56,7 @@ export default {
 今後も拡張されていく様々な機能を通して、ゲーマー同士やファンとの交流を広げていきます。`,
     download_app_version: 'アプリ版のダウンロードはこちら',
     recruiting_tournament: '募集中の大会',
+    no_recruiting_tournament: '現在予定している大会はありません。',
   },
   button: {
     twitter: 'Twitterでログイン',
@@ -178,6 +179,14 @@ export default {
     tournament_result: 'フォローしている人がエントリーしていた大会結果',
     change_order: '並び順を変更する',
     recommended_user: 'おすすめユーザー',
+    terms_of_use: '利用規約',
+    handling_of_personal_information: '個人情報の取り扱いについて',
+    notation_commercial: '特定商取引に関する表記',
+    help_center: 'ヘルプセンター',
+    contact_us: 'お問い合わせ',
+    copyright_symbol: '© ',
+    copyright_text: ' NTTe-Sports',
+    download_app_version: 'アプリ版ダウンロードはこちら',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
@@ -261,6 +270,7 @@ export default {
   please_select: '選択してください',
   user: {
     user_results: 'ニックネーム・ID「:key」 の検索結果',
+    user_results_all: 'ニックネーム・IDの検索結果',
   },
   tournament: {
     card_date: '開　催　日',
@@ -298,6 +308,7 @@ export default {
     rule_double: 'トーナメント',
     rule_battle: 'バトルロイヤル',
     tournament_results: '大会「:key」 の検索結果',
+    tournament_results_all: '大会の検索結果',
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',

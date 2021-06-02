@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
+import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography, ButtonBase } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -81,6 +81,18 @@ const useStyles = makeStyles((theme) => ({
   logout: {
     position: 'absolute',
     bottom: 70,
+  },
+  buttonWrap: {
+    paddingTop: theme.spacing(2),
+  },
+  appDesc: {
+    display: 'block',
+    paddingBottom: theme.spacing(1),
+  },
+  google_app_stores: {
+    width: 135,
+    maxWidth: '100%',
+    paddingBottom: theme.spacing(1),
   },
 }))
 
@@ -203,6 +215,17 @@ const SideMenu: React.FC = () => {
               </ListItem>
             </>
           )}
+          <Box className={classes.buttonWrap}>
+            <Typography variant="caption" className={classes.appDesc}>
+              {t('common:home.download_app_version')}
+            </Typography>
+            <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
+              <img className={classes.google_app_stores} src="/images/appstore.png" />
+            </ButtonBase>
+            <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
+              <img className={classes.google_app_stores} src="/images/googleplay.png" />
+            </ButtonBase>
+          </Box>
         </List>
 
         {isAuthenticated && (
