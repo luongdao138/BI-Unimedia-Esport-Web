@@ -20,7 +20,7 @@ export interface MessageInputAreaProps {
   disabled?: boolean
   onCancelReply?: () => void
   reply?: ParentItem | null | MessageType
-  currentUser: number
+  currentUser?: number
 }
 
 const partTypes = [
