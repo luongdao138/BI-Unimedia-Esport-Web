@@ -4,7 +4,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { StoreType } from '@store/store'
 import moment from 'moment'
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 
 export const getValidationScheme = (store: StoreType, data: TournamentDetail): any => {
   let recruitMinDate = new Date()

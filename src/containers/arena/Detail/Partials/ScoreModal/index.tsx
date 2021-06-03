@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SetScoreParams, TournamentDetail, TournamentMatchItem } from '@services/tournament.service'
+import { SetScoreParams, TournamentDetail, TournamentMatchItem } from '@services/arena.service'
 import {
   Typography,
   Box,

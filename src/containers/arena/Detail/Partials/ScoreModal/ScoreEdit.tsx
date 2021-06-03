@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
-import { TournamentDetail, TournamentMatchItem } from '@services/tournament.service'
+import { TournamentDetail, TournamentMatchItem } from '@services/arena.service'
 import { Typography, Box, IconButton, Icon, ThemeProvider, createMuiTheme, Divider, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'

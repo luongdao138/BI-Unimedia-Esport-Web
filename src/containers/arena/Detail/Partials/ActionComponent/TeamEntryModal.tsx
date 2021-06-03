@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { SuggestedTeamMembersResponse, TeamJoin, TeamMember, TournamentDetail } from '@services/tournament.service'
+import { SuggestedTeamMembersResponse, TeamJoin, TeamMember, TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
 import ESButton from '@components/Button'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'

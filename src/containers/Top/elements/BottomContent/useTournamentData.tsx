@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import tournament from '@store/tournament'
+import tournament from '@store/arena'
 
 const { selectors, actions } = tournament
 

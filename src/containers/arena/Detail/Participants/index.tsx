@@ -11,7 +11,7 @@ import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import TeamMemberItem from '../Partials/TeamMemberItem'
 import ESButton from '@components/Button'
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 import { ROLE } from '@constants/tournament.constants'
 
 export interface ParticipantsProps {

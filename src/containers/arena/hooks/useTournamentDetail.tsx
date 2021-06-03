@@ -5,9 +5,9 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import { Meta } from '@store/metadata/actions/types'
 
-import * as selectors from '@store/tournament/selectors'
-import * as actions from '@store/tournament/actions'
-import { TournamentDetail } from '@services/tournament.service'
+import * as selectors from '@store/arena/selectors'
+import * as actions from '@store/arena/actions'
+import { TournamentDetail } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { UserProfile } from '@services/user.service'
 

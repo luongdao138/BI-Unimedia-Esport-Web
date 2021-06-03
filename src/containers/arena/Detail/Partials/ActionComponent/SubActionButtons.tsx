@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Box, makeStyles, Theme } from '@material-ui/core'
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
 import Participants from '@containers/arena/Detail/Participants'

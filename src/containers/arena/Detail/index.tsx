@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import useTournamentDetail from '../hooks/useTournamentDetail'
 import TournamentDetailHeader from '@components/TournamentDetailHeader'
-import { TournamentStatus } from '@services/tournament.service'
+import { TournamentStatus } from '@services/arena.service'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useEffect } from 'react'
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'

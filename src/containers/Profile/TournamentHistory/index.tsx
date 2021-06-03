@@ -4,7 +4,7 @@ import useTournamentHistory from './useTournamentHistory'
 import TournamentCard from '@components/TournamentCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
-import { TournamentListItem } from '@services/tournament.service'
+import { TournamentListItem } from '@services/arena.service'
 
 interface Props {
   userCode: string

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 import { Typography, Box, makeStyles, Theme, IconButton, Icon, Divider } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'

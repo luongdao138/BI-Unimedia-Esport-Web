@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import * as selectors from '@store/tournament/selectors'
-import * as actions from '@store/tournament/actions'
+import * as selectors from '@store/arena/selectors'
+import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
-import { ArenaWinners, TournamentDetail } from '@services/tournament.service'
+import { ArenaWinners, TournamentDetail } from '@services/arena.service'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
 const getArenaMeta = createMetaSelector(actions.getTournamentDetail)

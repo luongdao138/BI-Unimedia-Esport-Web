@@ -5,7 +5,7 @@ import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import { SuggestedTeamMembersResponse } from '@services/tournament.service'
+import { SuggestedTeamMembersResponse } from '@services/arena.service'
 import ESLabel from '@components/Label'
 
 interface SelectInputProps {

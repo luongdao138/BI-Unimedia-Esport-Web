@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import * as actions from '@store/tournament/actions'
-import { JoinParams } from '@services/tournament.service'
+import * as actions from '@store/arena/actions'
+import { JoinParams } from '@services/arena.service'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'

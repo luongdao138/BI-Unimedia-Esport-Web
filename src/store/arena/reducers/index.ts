@@ -13,7 +13,7 @@ import {
   ArenaWinners,
   TournamentStatus,
   RecommendedUsers,
-} from '@services/tournament.service'
+} from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 type StateType = {

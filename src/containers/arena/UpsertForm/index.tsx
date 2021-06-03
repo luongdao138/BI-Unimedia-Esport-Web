@@ -21,7 +21,7 @@ import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
 import { getValidationScheme } from './FormModel/ValidationScheme'
 import { useStore } from 'react-redux'
-import { TournamentFormParams } from '@services/tournament.service'
+import { TournamentFormParams } from '@services/arena.service'
 import { useRouter } from 'next/router'
 
 const TournamentCreate: React.FC = () => {

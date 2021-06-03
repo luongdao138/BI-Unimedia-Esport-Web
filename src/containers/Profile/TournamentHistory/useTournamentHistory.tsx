@@ -3,7 +3,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import userProfile from '@store/userProfile'
 import { HistorySearchParams, Meta as Page } from '@services/user.service'
-import { TournamentListItem } from '@services/tournament.service'
+import { TournamentListItem } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 
 const { selectors, actions } = userProfile

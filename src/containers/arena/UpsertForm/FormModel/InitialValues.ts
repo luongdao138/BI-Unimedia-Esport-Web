@@ -1,4 +1,4 @@
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 import { FormType } from './FormType'
 
 export const getInitialValues = (data?: TournamentDetail): FormType => ({

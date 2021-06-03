@@ -1,5 +1,5 @@
 import { GameTitle } from '@services/game.service'
-import { RecommendedUsers } from '@services/tournament.service'
+import { RecommendedUsers } from '@services/arena.service'
 
 type GameTitleItem = GameTitle['attributes']
 

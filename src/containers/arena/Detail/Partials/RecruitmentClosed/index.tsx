@@ -1,5 +1,5 @@
 import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
-import { TournamentDetail } from '@services/tournament.service'
+import { TournamentDetail } from '@services/arena.service'
 import { UserProfile } from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'

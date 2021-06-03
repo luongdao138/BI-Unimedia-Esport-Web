@@ -1,5 +1,5 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
-import * as services from '@services/tournament.service'
+import * as services from '@services/arena.service'
 import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS } from './types'
 import * as types from './types'
 
