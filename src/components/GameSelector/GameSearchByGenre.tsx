@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
     listItemSecondary: {
       right: theme.spacing(2),
     },
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
   },
 }))
 
@@ -56,7 +60,7 @@ const GameSearchByGenre: React.FC<Props> = ({ genres, children, clearGames }) =>
   return (
     <Box pt={4}>
       {selectedGenre ? (
-        <Box px={5}>
+        <Box px={5} className={classes.container}>
           <Button onClick={handleUnselect} startIcon={<ChevronLeft />}>
             {`${t('common:profile.favorite_game.genre')}${selectedGenre.attributes.name}`}
           </Button>

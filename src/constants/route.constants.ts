@@ -1,4 +1,5 @@
 export const ESRoutes = {
+  TOP: '/',
   WELCOME: '/welcome',
   HOME: '/home',
   HOME_ORDER: '/home/order',
@@ -13,7 +14,7 @@ export const ESRoutes = {
   PROFILE: '/profile',
   PROFILE_EDIT: '/profile/edit',
   GAME_EDIT: '/profile/game',
-  TOURNAMENTS: '/tournaments',
+  ARENA: '/arena',
   SETTINGS: '/settings',
   NOT_FOUND: '/404',
   USER_SETTINGS: '/user-settings',
@@ -25,6 +26,7 @@ export const ESRoutes = {
   TOURNAMENT_FOLLOWER_ENTERING: '/tournament/follower/entering',
   TOURNAMENT_FOLLOWER_ENDED: '/tournament/follower/ended',
   TOPIC_FOLLOWER: '/topic/follower',
+  ARENA_CREATE: '/arena/create',
   NOTIFICATIONS: '/notifications',
   USER_NOTIFICATION_SETTINGS: '/settings/notification',
   USER_SECURITY_SETTINGS: '/settings/security',
@@ -43,5 +45,10 @@ export const ESRoutes = {
   USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM: '/settings/account/confirm',
   USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD: '/settings/account/change-password',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
+  ARENA_MATCHES_EDIT: '/arena/:id/matches/edit',
+  ARENA_MATCHES: '/arena/:id/matches',
+  ARENA_RESULTS: '/arena/:id/placements',
+  ARENA_DETAIL: '/arena/:id',
+  GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
 }

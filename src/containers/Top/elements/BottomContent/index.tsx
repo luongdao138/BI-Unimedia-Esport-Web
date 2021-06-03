@@ -26,23 +26,29 @@ export const BottomContent: React.FC = () => {
               {t('common:top.recruiting_tournament')}
             </Typography>
           </Grid>
-          <Box className={classes.bottomInnerContent}>
-            <Grid container spacing={0}>
-              {recruitingTournaments.map((tournament, i) => (
-                <Grid key={i} item xs={6} sm={6} md={4} xl={4}>
-                  <TournamentCardRecruiting tournament={tournament} />
-                </Grid>
-              ))}
-            </Grid>
-            <Box slot="container-end" display="flex" justifyContent="flex-end">
-              <Link href={ESRoutes.TOURNAMENTS} className={classes.moreLink}>
-                <Typography>
-                  {t('common:common.see_more')}
-                  <Icon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />
-                </Typography>
-              </Link>
+          {recruitingTournaments.length > 0 ? (
+            <Box className={classes.bottomInnerContent}>
+              <Grid container spacing={0}>
+                {recruitingTournaments.map((tournament, i) => (
+                  <Grid key={i} item xs={6} sm={6} md={4} xl={4}>
+                    <TournamentCardRecruiting tournament={tournament} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Box slot="container-end" display="flex" justifyContent="flex-end">
+                <Link href={ESRoutes.ARENA} className={classes.moreLink}>
+                  <Typography>
+                    {t('common:common.see_more')}
+                    <Icon classes={{ root: classes.moreIcon }} className="fas fa-chevron-right" fontSize="small" />
+                  </Typography>
+                </Link>
+              </Box>
             </Box>
-          </Box>
+          ) : (
+            <Box width="100%" className={classes.noRecruitingTournamentText}>
+              <Typography align="center">{t('common:top.no_recruiting_tournament')}</Typography>
+            </Box>
+          )}
           <Grid item xs={12} className={classes.button}>
             <ButtonPrimary
               round
@@ -91,10 +97,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     textAlign: 'center',
   },
+  noRecruitingTournamentText: {
+    marginBottom: 317,
+  },
   [theme.breakpoints.down('sm')]: {
     bottomContent: {
       paddingTop: theme.spacing(10),
       paddingBottom: theme.spacing(6),
+    },
+    noRecruitingTournamentText: {
+      marginBottom: 97,
     },
   },
 }))

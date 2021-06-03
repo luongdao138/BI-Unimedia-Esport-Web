@@ -9,7 +9,7 @@ type ProfileAvatarProps = {
   editable?: boolean
   size?: number
   src: string
-  onChange?: (files: File) => void
+  onChange?: (file: File) => void
 }
 
 const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, onChange }) => {

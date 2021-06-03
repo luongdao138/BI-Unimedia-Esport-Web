@@ -7,31 +7,40 @@ export type Props = {
   disabled: boolean
   title: string
   onClick: () => void
+  show?: boolean
+  noScroll?: boolean
 }
 
-const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children }) => {
+const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, noScroll }) => {
   const classes = useStyles()
 
   return (
-    <Box className={classes.wrapper}>
+    <Box className={`${show ? classes.wrapper : classes.wrapper2} ${!noScroll && classes.scroll}`}>
       {children}
-      <Box className={classes.stickyFooter}>
-        <Box className={classes.nextBtnHolder}>
-          <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth disabled={disabled} onClick={onClick}>
-              {title}
-            </ButtonPrimary>
+      {show && (
+        <Box className={classes.stickyFooter}>
+          <Box className={classes.nextBtnHolder}>
+            <Box maxWidth={280} className={classes.buttonContainer}>
+              <ButtonPrimary type="submit" round fullWidth disabled={disabled} onClick={onClick}>
+                {title}
+              </ButtonPrimary>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  scroll: {
+    overflow: 'scroll',
+  },
   wrapper: {
     marginBottom: 163,
-    overflow: 'scroll',
+  },
+  wrapper2: {
+    marginBottom: 0,
   },
   stickyFooter: {
     position: 'fixed',
@@ -62,6 +71,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 ESStickyFooter.defaultProps = {
   disabled: false,
   title: '',
+  show: true,
+  noScroll: false,
 }
 
 export default ESStickyFooter

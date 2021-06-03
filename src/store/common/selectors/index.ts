@@ -4,3 +4,5 @@ import { RootState } from '@store/store'
 const getRoot = (state: RootState) => state.common
 
 export const getPrefectures = createSelector(getRoot, (state) => state.prefectures)
+
+export const getHardwares = createSelector(getRoot, (state) => state.hardwares)

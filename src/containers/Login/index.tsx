@@ -28,6 +28,7 @@ import ESCheckbox from '@components/Checkbox'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
+import { URI } from '@constants/uri.constants'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -39,7 +40,7 @@ const validationSchema = Yup.object().shape({
 })
 
 const LoginContainer: React.FC = () => {
-  const social = useSocialLogin()
+  const social = useSocialLogin('login')
   const { t } = useTranslation(['common'])
   const [checkbox, setCheckox] = useState({
     terms: false,
@@ -86,14 +87,12 @@ const LoginContainer: React.FC = () => {
       !!meta.error && (
         <Box pb={8}>
           <Box pb={20 / 8} textAlign="center">
-            <Typography className={classes.wrap} color="secondary">
-              {i18n.t('common:login.error.title')}
-            </Typography>
+            <Typography color="secondary">{i18n.t('common:login.error.title')}</Typography>
           </Box>
           <Box pb={1}>
-            <Typography className={classes.wrap}>{i18n.t('common:login.error.detail')}</Typography>
+            <Typography className={classes.detail}>{i18n.t('common:login.error.detail')}</Typography>
           </Box>
-          <Typography className={classes.wrap} variant="caption">
+          <Typography className={classes.hint} variant="caption">
             {i18n.t('common:login.error.hint')}
           </Typography>
         </Box>
@@ -106,15 +105,13 @@ const LoginContainer: React.FC = () => {
       !!social.meta.error && (
         <Box pb={8}>
           <Box pb={20 / 8} textAlign="center">
-            <Typography className={classes.wrap} color="secondary">
-              {i18n.t('common:login.error.title2')}
-            </Typography>
+            <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
           </Box>
           <Box pb={1}>
-            <Typography className={classes.wrap}>{i18n.t('common:login.error.detail2')}</Typography>
+            <Typography className={classes.detail}>{i18n.t('common:register.error.detail')}</Typography>
           </Box>
-          <Typography className={classes.wrap} variant="caption">
-            {i18n.t('common:login.error.hint2')}
+          <Typography className={classes.hint} variant="caption">
+            {i18n.t('common:register.error.hint')}
           </Typography>
         </Box>
       )
@@ -146,9 +143,11 @@ const LoginContainer: React.FC = () => {
                   placeholder={i18n.t('common:login.email_placeholder')}
                   labelPrimary={i18n.t('common:login.email_label_primary')}
                   labelSecondary={
-                    <Typography color="textPrimary" gutterBottom={false} variant="body2">
-                      {t('common:login.email_label_secondary')}
-                      <FilterNoneIcon fontSize="inherit" className={classes.iconMargin} />
+                    <Typography color="textPrimary" gutterBottom={false} variant="body2" className={classes.link}>
+                      <a href={URI.WEB_SUPPORT} target="_blank" rel="noopener noreferrer">
+                        {t('common:login.email_label_secondary')}
+                        <FilterNoneIcon fontSize="inherit" className={classes.iconMargin} />
+                      </a>
                     </Typography>
                   }
                   fullWidth
@@ -282,8 +281,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     left: -8,
   },
-  wrap: {
+  hint: {
+    color: Colors.white_opacity[30],
+  },
+  detail: {
     whiteSpace: 'pre-line',
+    color: Colors.white_opacity[70],
+  },
+  link: {
+    '& > a': {
+      color: Colors.white_opacity[70],
+      cursor: 'pointer',
+      textDecoration: 'none',
+    },
   },
   [theme.breakpoints.down('sm')]: {
     container: {

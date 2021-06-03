@@ -27,6 +27,21 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.forgotConfirm.fulfilled, (state, action) => {
       state.user = action.payload
     })
+    .addCase(actions.resetPassword.fulfilled, (state, action) => {
+      const newUser = _.pick(action.payload, [
+        'id',
+        'email',
+        'nickname',
+        'avatar_url',
+        'updateStep',
+        'user_code',
+        'accessToken',
+        'refreshToken',
+        'is_social',
+        'sign_in_count',
+      ])
+      state.user = { ...state.user, ...newUser }
+    })
     .addCase(actions.registerConfirm.fulfilled, (state, action) => {
       state.user = action.payload
     })

@@ -27,11 +27,11 @@ import RegisterByEmailContainer from '@containers/RegisterByEmail'
 import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
+import ArenaCreateContainer from '@containers/ArenaCreate'
 import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
-import { useContextualRouting } from 'next-use-contextual-routing'
 import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
@@ -116,14 +116,14 @@ interface returnItem {
 interface headerProps {
   toggleDrawer: (open: boolean) => void
   open: boolean
+  loginRequired?: boolean
 }
 
-export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
+export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequired }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const { handleReturn } = useReturnHref()
-  const { makeContextualHref } = useContextualRouting()
   const dispatch = useAppDispatch()
   const badge = useAppSelector(notificationSelector.getNotificationBadge)
   const { setSearch } = useSearch()
@@ -133,10 +133,13 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     router.push(ESRoutes.SEARCH)
   }
 
-  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+  const openModal = () => router.push('#welcome', undefined, { shallow: true })
 
   const renderContent = () => {
-    switch (router.query.pathName) {
+    const path = router.asPath.split('#')
+    const modalPath = '/' + path[path.length - 1]
+
+    switch (modalPath) {
       case ESRoutes.LOGIN:
         return <LoginContainer />
       case ESRoutes.WELCOME:
@@ -157,6 +160,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <RegisterProfileContainer />
       case ESRoutes.USER_SETTINGS:
         return <UserSettingsContainer />
+      case ESRoutes.ARENA_CREATE:
+        return <ArenaCreateContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
         return <AccountSettingsPasswordContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
@@ -166,7 +171,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD:
         return <AccountSettingsChangePasswordContainer />
       default:
-        break
+        return <></>
     }
   }
   const [show, setShow] = useState<boolean>(false)
@@ -176,6 +181,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
       dispatch(notificationActions.getNotificationBadge())
     }
   }, [isAuthenticated])
+
+  useEffect(() => {
+    if (loginRequired && !isAuthenticated) {
+      openModal()
+    }
+  }, [loginRequired])
 
   return (
     <div className={classes.grow}>
@@ -232,7 +243,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               )}
             </div>
-            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
+            <ESModal open={router.asPath.includes('#')} handleClose={handleReturn}>
               <BlankLayout>{renderContent()}</BlankLayout>
             </ESModal>
           </Toolbar>

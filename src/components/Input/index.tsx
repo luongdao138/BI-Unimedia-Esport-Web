@@ -20,21 +20,23 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   required = false,
   ...rest
 }) => {
-  const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big' })
+  const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big', isNumber: rest.type === 'number' })
   const { t } = useTranslation(['common'])
 
   return (
     <FormControl fullWidth={rest.fullWidth}>
       {(labelPrimary || labelSecondary) && (
-        <Box display="flex" justifyContent="space-between" alignItems="center" className={classes.bottomPadding}>
-          <label htmlFor={rest.id} className={classes.labelMargin}>
-            {labelPrimary}
+        <Box display="flex" justifyContent="space-between" alignItems="center" pb={1}>
+          <Box className={classes.labelPrimaryContainer} display="flex" alignItems="center">
+            <label htmlFor={rest.id} className={classes.labelMargin}>
+              {labelPrimary}
+            </label>
             {required && (
               <Typography component="span" className={classes.required}>
                 {t('common:common.required')}
               </Typography>
             )}
-          </label>
+          </Box>
           {labelSecondary}
         </Box>
       )}
@@ -64,19 +66,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
   },
-  bottomPadding: {
-    paddingBottom: theme.spacing(1),
-  },
-  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean }) => ({
+  numberAlign: (props: { hasSecondary?: boolean; isBig?: boolean; isNumber?: boolean }) => ({
+    textAlign: props.isNumber ? 'right' : 'left',
+  }),
+  labelMargin: (props: { hasSecondary?: boolean; isBig?: boolean; isNumber?: boolean }) => ({
     fontWeight: props.isBig ? 'bold' : 'normal',
     fontSize: props.isBig ? theme.typography.h3.fontSize : theme.typography.body1.fontSize,
-    color: theme.palette.text.primary,
+  }),
+  labelPrimaryContainer: (props: { hasSecondary?: boolean; isBig?: boolean; isNumber?: boolean }) => ({
     width: props.hasSecondary ? '50%' : '100%',
   }),
   required: {
     backgroundColor: Colors.primary,
     borderRadius: 2,
-    padding: theme.spacing(1 / 2),
+    paddingLeft: theme.spacing(1 / 2),
+    paddingRight: theme.spacing(1 / 2),
+    height: 16,
     fontSize: 10,
     marginLeft: theme.spacing(1),
     color: Colors.white,

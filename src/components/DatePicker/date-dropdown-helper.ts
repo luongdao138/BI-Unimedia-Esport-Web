@@ -28,6 +28,21 @@ export const numberByMonth = {
   12: 11,
 }
 
+export const daysInMonthSelect = {
+  0: 31,
+  1: 31,
+  2: 31,
+  3: 31,
+  4: 31,
+  5: 31,
+  6: 31,
+  7: 31,
+  8: 31,
+  9: 31,
+  10: 31,
+  11: 31,
+}
+
 export const daysInMonth = {
   0: 31,
   1: 28,
@@ -47,17 +62,4 @@ export const unit = {
   day: 'day',
   month: 'month',
   year: 'year',
-}
-
-export const formatDate = (date) => {
-  // formats a JS date to 'yyyy-mm-dd'
-  const d = new Date(date)
-  let month = '' + (d.getMonth() + 1)
-  let day = '' + d.getDate()
-  const year = d.getFullYear()
-
-  if (month.length < 2) month = '0' + month
-  if (day.length < 2) day = '0' + day
-
-  return [year, month, day].join('-')
 }

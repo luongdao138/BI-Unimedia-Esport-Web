@@ -57,7 +57,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
           badgeContent={unseenCount}
           showZero={false}
         >
-          <Avatar src={roomImg} alt="M" />
+          <Avatar src={roomImg} alt={name} />
         </Badge>
       </ListItemAvatar>
 

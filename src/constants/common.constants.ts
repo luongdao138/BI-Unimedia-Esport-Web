@@ -56,6 +56,29 @@ export const HOME_SETTINGS = {
   TOPIC_FOLLOW: '7',
 }
 
+export enum TOURNAMENT_STATUS {
+  READY = 1, //tournament created but not recruiting
+  RECRUITING = 2, //RECRUIT -> burtgel
+  RECRUITMENT_CLOSED = 3,
+  READY_TO_START = 4, //recruitment finished but waiting for start
+  IN_PROGRESS = 5, //started
+  COMPLETED = 6, // finished
+  CANCELLED = 7,
+}
+
+export enum TOURNAMENT_ROLE {
+  ADMIN = 0,
+  PARTICIPANT = 1,
+  INTERESTED = 2,
+  CO_ORGANIZER = 3,
+}
+
+export enum TOURNAMENT_RULE {
+  SINGLE = 0,
+  DOUBLE = 1,
+  BATTLE_ROYAL = 2,
+}
+
 export enum REPORT_TYPE {
   USER_LIST = 0,
   COMMUNITY = 1,
@@ -95,3 +118,5 @@ export const LIGHTBOX_OPTIONS = {
     showThumbnails: false,
   },
 }
+
+export const SLIDE_LIMIT = 5
