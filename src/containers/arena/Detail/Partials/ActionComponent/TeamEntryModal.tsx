@@ -55,24 +55,25 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   const membersValidationSchema = Yup.object().shape({
     user_id: Yup.number().required(),
-    name: Yup.string()
+    name: Yup.string().required(),
+    nickname: Yup.string()
       .required()
+      .max(40, t('common:common.too_long'))
       .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
-    nickname: Yup.string().required(),
     user_code: Yup.string().required(),
   })
 
   const validationSchema = Yup.object().shape({
     leader_name: Yup.string().required(),
     team_name: Yup.string()
-      .required(t('common:common.error'))
+      .required('')
       .max(40, t('common:common.too_long'))
       .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
     team_icon_url: Yup.string().required(),
     members: Yup.array().of(membersValidationSchema),
   })
 
-  const { values, isValid, handleSubmit, handleChange, setFieldValue, setValues, resetForm, validateForm } = useFormik<TeamJoin>({
+  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue, setValues, resetForm, validateForm } = useFormik<TeamJoin>({
     initialValues: {
       leader_name: userProfile ? userProfile.attributes.nickname : '',
       team_name: '',
@@ -224,6 +225,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
           required
           value={values.team_name}
           onChange={handleChange}
+          helperText={errors.team_name}
         />
 
         <Box mt={4} />
@@ -236,6 +238,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   const renderMembersNicknameChanger = () => {
     const elements = []
+    const errorMessages: any = errors.members ? errors.members : []
 
     for (let i = 0; i < values.members.length; i++) {
       elements.push(
@@ -246,7 +249,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
             <Typography>{`${t('common:common.at')}${values.members[i].user_code}`}</Typography>
           </Box>
           <Box mt={2} />
-          <ESInput id={`members.${i}.nickname`} autoFocus fullWidth value={values.members[i].nickname} onChange={handleChange} />
+          <ESInput
+            id={`members.${i}.nickname`}
+            autoFocus
+            fullWidth
+            value={values.members[i].nickname}
+            onChange={handleChange}
+            helperText={errorMessages.length > 0 && errorMessages[i] && 'nickname' in errorMessages[i] ? errorMessages[i].nickname : ''}
+          />
         </Box>
       )
     }
@@ -282,7 +292,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       <StickyActionModal
         open={open}
         returnText={step === FINAL_STEP ? t('common:tournament.join_nickname_setting') : t('common:tournament.join')}
-        actionButtonText={step === FINAL_STEP ? t('common:next') : t('common:next')}
+        actionButtonText={step === FINAL_STEP ? t('common:tournament.join_with_this') : t('common:next')}
         actionButtonDisabled={!isValid}
         actionHintText={t('common:tournament.join_nickname_setting_desc')}
         onReturnClicked={handleReturn}
