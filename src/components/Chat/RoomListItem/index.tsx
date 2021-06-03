@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -9,7 +10,7 @@ import { ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import Box from '@material-ui/core/Box'
 import { Colors } from '@theme/colors'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import Badge from '@material-ui/core/Badge'
 import 'moment/locale/ja'
 
@@ -20,15 +21,22 @@ interface RoomListItemProps {
   onClick?: (id: string) => void
 }
 
+interface StyleProps {
+  active: boolean
+  expand: boolean
+}
+
 const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onClick }) => {
-  const active = item.unseenCount == 0 ? false : true
+  const active = item.unseenCount === 0 ? false : true
   const date = _.get(item, 'lastMsgAt', +item.createdAt)
   const roomImg = _.get(item, 'roomImg', '')
   const name = _.get(item, 'roomName', '')
   const lastMsg = _.get(item, 'lastMsg', '')
   const unseenCount = _.get(item, 'unseenCount', 0)
+
   const classes = useStyles({ active, expand })
-  const time = useSmartTime(date)
+
+  const time = CommonHelper.staticSmartTime(date)
   const chatRoomId = _.get(item, 'chatRoomId', null)
 
   const clickHandler = (e: React.MouseEvent) => {
@@ -79,42 +87,34 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
   },
 
-  name: (props: { active?: boolean; expand?: boolean }) => {
-    return {
-      color: props.active ? Colors.white : Colors.text[200],
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    }
+  name: {
+    color: (props: StyleProps) => (props.active ? Colors.white : Colors.text[200]),
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 
-  body: (props: { active?: boolean; expand?: boolean }) => {
-    return {
-      color: props.active ? Colors.white : Colors.text[200],
-      fontWeight: props.active ? 600 : 500,
-    }
+  body: {
+    color: (props: StyleProps) => (props.active ? Colors.white : Colors.text[200]),
+    fontWeight: (props) => (props.active ? 600 : 500),
   },
 
-  content: (props: { active?: boolean; expand?: boolean }) => {
-    return {
-      display: 'inline-block',
-      visibility: props.expand ? 'visible' : 'hidden',
-      opacity: props.expand ? '1' : '0',
-      marginTop: 0,
-      width: '100%',
-    }
+  content: {
+    display: 'inline-block',
+    visibility: (props: StyleProps) => (props.expand ? 'visible' : 'hidden'),
+    opacity: (props: StyleProps) => (props.expand ? '1' : '0'),
+    marginTop: 0,
+    width: '100%',
   },
 
-  end: (props: { active?: boolean; expand?: boolean }) => {
-    return {
-      display: props.expand ? 'flex' : 'none',
-      top: 0,
-      bottom: 0,
-      flexDirection: 'column',
-      transform: 'none',
-      paddingTop: 10,
-      paddingBottom: 10,
-    }
+  end: {
+    display: (props: StyleProps) => (props.expand ? 'flex' : 'none'),
+    top: 0,
+    bottom: 0,
+    flexDirection: 'column',
+    transform: 'none',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   countBox: {
     marginBottom: 10,
@@ -136,12 +136,10 @@ const useStyles = makeStyles(() => ({
       visiblity: 'hidden',
     },
   },
-  badgeLeft: (props: { active?: boolean; expand?: boolean }) => {
-    return {
-      '& .MuiBadge-badge': {
-        opacity: props.expand ? 0 : 1,
-      },
-    }
+  badgeLeft: {
+    '& .MuiBadge-badge': {
+      opacity: (props: StyleProps) => (props.expand ? 0 : 1),
+    },
   },
 }))
 
@@ -149,4 +147,4 @@ RoomListItem.defaultProps = {
   selected: false,
 }
 
-export default RoomListItem
+export default memo(RoomListItem)

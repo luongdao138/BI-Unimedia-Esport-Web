@@ -87,6 +87,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         messages: result,
+        roomList: ChatHelper.roomListUpdate(state.roomList, newMsg, state.activeRoom),
       }
     case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
       return {

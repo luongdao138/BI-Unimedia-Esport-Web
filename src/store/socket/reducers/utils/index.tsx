@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { MessageType } from '@components/Chat/types/chat.types'
+import { MessageType, ChatDataType } from '@components/Chat/types/chat.types'
 
 const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageType[] => {
   const unsent = _.filter(olddata, { sent: false })
@@ -27,6 +27,31 @@ const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageT
   return updatedObj
 }
 
+const roomListUpdate = (roomList: ChatDataType[], message: MessageType[], activeRoom: string): ChatDataType[] => {
+  // check if room exist in new msg
+  let updatedRoom: ChatDataType[]
+  const msg = message[0]
+  const hasRoomValue = roomList.find(function (value) {
+    return !!(value.chatRoomId === msg.chatRoomId)
+  })
+
+  if (hasRoomValue && _.isArray(roomList)) {
+    if (activeRoom === msg.chatRoomId) {
+      updatedRoom = _.map(roomList, function (a: ChatDataType) {
+        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.msg } : a
+      })
+    } else {
+      updatedRoom = _.map(roomList, function (a: ChatDataType) {
+        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.msg, unseenCount: a.unseenCount + 1 } : a
+      })
+    }
+  } else {
+    updatedRoom = roomList
+  }
+  return updatedRoom
+}
+
 export const ChatHelper = {
   messagesMerge,
+  roomListUpdate,
 }
