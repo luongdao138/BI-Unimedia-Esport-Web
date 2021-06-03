@@ -54,7 +54,7 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
     if (type === CHAT_MESSAGE_TYPE.IMAGE) {
       return (
         <Box className={classes.photoHolder}>
-          <PhotoMessage size={30} msg={text} />
+          <PhotoMessage status={true} size={30} msg={text} />
         </Box>
       )
     }
