@@ -50,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
   menu: {
     maxWidth: 160,
     width: '100%',
+    position: 'relative',
+    height: '100%',
+    paddingBottom: 112,
+    paddingTop: 203,
   },
   icon: {
     minWidth: 30,
@@ -62,6 +66,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 40,
     flexDirection: 'column',
     paddingBottom: 30,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
   name: {
     paddingBottom: 5,
@@ -100,6 +108,27 @@ const useStyles = makeStyles((theme) => ({
   },
   menuWrap: {
     height: '100%',
+    overflowY: 'auto',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    paddingRight: 24,
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+      visibility: 'visible',
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      opacity: 1,
+      visibility: 'visible',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+      opacity: 1,
+      visibility: 'visible',
+    },
   },
 }))
 
@@ -170,7 +199,7 @@ const SideMenu: React.FC = () => {
           </Box>
         </Box>
 
-        <Box className={`${classes.menuWrap} scroll-bar`}>
+        <Box className={`${classes.menuWrap}`}>
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <Link href={ESRoutes.HOME} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
