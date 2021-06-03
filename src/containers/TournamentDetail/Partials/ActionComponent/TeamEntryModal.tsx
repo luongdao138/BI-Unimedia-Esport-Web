@@ -41,14 +41,9 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
   const [isUploading, setUploading] = useState(false)
-  const { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
+  const { suggestedTeamMembers, meta, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
-  const [teamMemberItems, setTeamMemberItems] = useState(suggestedTeamMembers)
-
-  useEffect(() => {
-    setTeamMemberItems(suggestedTeamMembers)
-  }, [suggestedTeamMembers])
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -62,9 +57,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     user_id: Yup.number().required(),
     name: Yup.string()
       .required()
-      .test('name', 'ng_word', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+      .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
     nickname: Yup.string().required(),
     user_code: Yup.string().required(),
   })
@@ -74,9 +67,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     team_name: Yup.string()
       .required(t('common:common.error'))
       .max(40, t('common:common.too_long'))
-      .test('team_name', 'ng_word', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+      .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
     team_icon_url: Yup.string().required(),
     members: Yup.array().of(membersValidationSchema),
   })
@@ -166,6 +157,10 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     }
   }
 
+  const handleSearchInput = (keyword: string) => {
+    getSuggestedTeamMembers({ page: 1, keyword: keyword, tournament_id: tournament.id })
+  }
+
   const renderMembersSelector = () => {
     const elements = []
 
@@ -184,10 +179,12 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
               label={`${t('common:member')}${i + 1}`}
               index={i}
               selectedItem={teamMembers[i] ? teamMembers[i] : null}
-              items={teamMemberItems}
+              items={suggestedTeamMembers}
+              loading={meta.pending}
+              onSearchInput={handleSearchInput}
               onItemsSelected={handleSelectedMembers}
               onScrollEnd={() => {
-                // setTeamMemberItems([...teamMemberItems, ...teamMemberItems])
+                // TODO if need
               }}
             />
           </Box>
