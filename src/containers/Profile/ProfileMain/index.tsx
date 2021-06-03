@@ -1,5 +1,6 @@
 import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
-import { useTranslation } from 'react-i18next'
+import { orderBy } from 'lodash'
+import i18n from '@locales/i18n'
 import ESChip from '@components/Chip'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
@@ -24,26 +25,39 @@ interface Props {
 const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const classes = useStyles()
   const router = useRouter()
-  const { t } = useTranslation(['common'])
   const gender =
     userProfile.attributes.sex === GENDER.FEMALE
-      ? t('common:common.female')
+      ? i18n.t('common:common.female')
       : userProfile.attributes.sex === GENDER.MALE
-      ? t('common:common.male')
-      : t('common:common.other')
-  const time = CommonHelper.staticSmartTime(userProfile.attributes.birth_date)
+      ? i18n.t('common:common.male')
+      : userProfile.attributes.sex === GENDER.OTHER
+      ? i18n.t('common:common.other')
+      : null
+  const bod = CommonHelper.staticSmartTime(userProfile.attributes.birth_date)
 
   const editGame = () => router.push(ESRoutes.GAME_EDIT)
 
-  return (
-    <>
+  const getTopSection = () => {
+    return (
       <Grid xs={12} item className={classes.headerContainerSecond}>
         <Typography className={classes.marginTop20}>{userProfile.attributes.bio}</Typography>
         <HeaderTags items={userProfile.attributes.features ?? null} />
         <Box display="flex">
-          {userProfile.attributes.area ? <Iconic text={userProfile.attributes.area.area} icon="fas fa-map-marker-alt" /> : null}
-          <Iconic text={gender} icon="fas fa-user" />
-          {time ? <Iconic text={time} icon="fa fa-birthday-cake" /> : null}
+          {userProfile.attributes.area ? (
+            <Iconic
+              text={!isOthers || userProfile.attributes.show_area ? userProfile.attributes.area.area : i18n.t('common:common:private')}
+              icon="fas fa-map-marker-alt"
+            />
+          ) : null}
+          {gender ? (
+            <Iconic text={!isOthers || userProfile.attributes.show_sex ? gender : i18n.t('common:common:private')} icon="fas fa-user" />
+          ) : null}
+          {bod ? (
+            <Iconic
+              text={!isOthers || userProfile.attributes.show_birth_date ? bod : i18n.t('common:common:private')}
+              icon="fa fa-birthday-cake"
+            />
+          ) : null}
         </Box>
         <Box display="flex" className={classes.marginTop20}>
           <ESButtonDiscordCircle className={classes.marginRight} link={userProfile.attributes.discord_link} />
@@ -53,33 +67,47 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           <ESButtonInstagramCircle className={classes.marginRight} link={userProfile.attributes.instagram_link} />
         </Box>
       </Grid>
-      <Grid xs={12} item className={classes.bodyContainer}>
+    )
+  }
+  const getFavoriteGames = () => {
+    const orderedGL = orderBy(userProfile.attributes?.game_titles, ['display_name', 'jp_kana_name'], ['asc'])
+    const SHOW_MAX = 10
+    return (
+      <Grid xs={12} item className={`${classes.bodyContainer} ${classes.marginTop50}`}>
         <Box display="flex" justifyContent="space-between">
           <Box display="flex">
             <Typography variant="h2" className={classes.marginRight20}>
-              {t('common:profile.favorite_game.title')}
+              {i18n.t('common:profile.favorite_game.title')}
             </Typography>
-            <Typography variant="h2">10</Typography>
+            <Typography variant="h2">{orderedGL?.length}</Typography>
           </Box>
           {isOthers ? null : (
             <Box display="flex">
               <ButtonBase onClick={editGame}>
-                <Typography>{t('common:profile.edit')}</Typography>
+                <Typography>{i18n.t('common:profile.edit')}</Typography>
               </ButtonBase>
             </Box>
           )}
         </Box>
         <Box>
-          {userProfile.attributes.game_titles.length > 0
-            ? userProfile.attributes.game_titles.map((g: any, i: number) => {
-                if (i < 10) return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
+          {orderedGL && orderedGL.length > 0
+            ? orderedGL.map((g: any, i: number) => {
+                if (i < SHOW_MAX)
+                  return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
               })
             : null}
         </Box>
         <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
+          <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
           <Icon className={'fa fa-angle-down'} fontSize="small" />
         </Box>
+      </Grid>
+    )
+  }
+
+  const getCommunitySection = () => {
+    return (
+      <Grid xs={12} item className={classes.bodyContainer}>
         <Box display="flex" mt={3}>
           <Grid container>
             <Grid item xs={6} md={4}>
@@ -103,10 +131,18 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           </Grid>
         </Box>
         <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
+          <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
           <Icon className={'fa fa-angle-down'} fontSize="small" />
         </Box>
       </Grid>
+    )
+  }
+
+  return (
+    <>
+      {getTopSection()}
+      {getFavoriteGames()}
+      {getCommunitySection()}
     </>
   )
 }
@@ -119,10 +155,12 @@ const useStyles = makeStyles((theme) => ({
   bodyContainer: {
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
-    marginTop: 50,
   },
   marginTop20: {
     marginTop: 20,
+  },
+  marginTop50: {
+    marginTop: 50,
   },
   marginRight20: {
     marginRight: 20,
