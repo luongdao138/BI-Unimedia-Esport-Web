@@ -50,6 +50,9 @@ export default {
     confirmation_expire: '認証できませんでした。',
   },
   welcome: 'eXeLABへようこそ',
+  messages: {
+    discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
+  },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
     start_exelab: 'eXeLABをはじめる',
