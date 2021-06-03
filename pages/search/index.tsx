@@ -37,9 +37,15 @@ const SearchPage: PageWithLayoutType = () => {
   const renderKeyword = () => {
     switch (type) {
       case searchTypes.USER:
-        return t('common:user.user_results').replace(/:key/gi, keyword)
+        if (keyword) {
+          return t('common:user.user_results').replace(/:key/gi, keyword)
+        }
+        return t('common:user.user_results_all')
       case searchTypes.TOURNAMENT:
-        return t('common:tournament.tournament_results').replace(/:key/gi, keyword)
+        if (keyword) {
+          return t('common:tournament.tournament_results').replace(/:key/gi, keyword)
+        }
+        return t('common:tournament.tournament_results_all')
       default:
         return <></>
     }

@@ -1,21 +1,58 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, makeStyles, DialogContent, Typography, Theme } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { currentUserId } from '@store/auth/selectors'
+import { socketActions } from '@store/socket/actions'
+import _ from 'lodash'
 
 export interface RoomNameEditorProps {
+  roomName: string
   roomId: string | string[]
   open: boolean
   hide: () => void
 }
 
-const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomId, open, hide }) => {
+const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open, hide }) => {
   roomId
   const classes = useStyles()
+  const dispatch = useAppDispatch()
+  const userId = useAppSelector(currentUserId)
+  const [newName, setNewName] = useState('')
   const renderFooter = () => {
     return <Box className={classes.stickyFooter}></Box>
+  }
+
+  useEffect(() => {
+    if (_.isString(roomName)) {
+      setNewName(roomName)
+    }
+  }, [roomName])
+
+  const handleChange = (e) => {
+    setNewName(e.target.value)
+  }
+
+  const onSubmit = () => {
+    dispatch(
+      socketActions.socketSend({
+        userId: userId,
+        action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
+        roomId: roomId,
+        name: newName,
+      })
+    )
+    hide()
+  }
+
+  const isButtonDisabled = () => {
+    if (newName === '') return true
+    if (newName === roomName) return true
+    return false
   }
 
   return (
@@ -33,10 +70,17 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomId, open, hide }) =
             <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります。</Typography>
           </Box>
           <Box mt={6}>
-            <ESInput placeholder="メッセージ名を入力" fullWidth />
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                onSubmit()
+              }}
+            >
+              <ESInput placeholder="メッセージ名を入力" value={newName} fullWidth onChange={handleChange} />
+            </form>
           </Box>
           <Box maxWidth={280} className={classes.buttonBottom}>
-            <ButtonPrimary type="submit" round fullWidth>
+            <ButtonPrimary type="submit" round fullWidth disabled={isButtonDisabled()} onClick={onSubmit}>
               変更する
             </ButtonPrimary>
           </Box>

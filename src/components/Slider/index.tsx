@@ -103,6 +103,8 @@ const ESSlide: React.FC<{
 const useStyles = makeStyles((theme: Theme) => ({
   wrap: {
     paddingLeft: 16,
+    paddingTop: 4,
+    paddingBottom: 4,
   },
   sliderButtonNext: {
     width: 30,

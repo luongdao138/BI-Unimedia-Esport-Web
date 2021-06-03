@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { Header } from '@layouts/Header'
 import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
 
-const PlainLayout: React.FC = ({ children }) => {
+interface PlainLayoutProps {
+  children: ReactNode
+  noFooter: boolean
+}
+
+const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter }) => {
   const [open, setOpen] = useState<boolean>(false)
 
   const toggleDrawer = (open: boolean) => {
@@ -14,12 +19,14 @@ const PlainLayout: React.FC = ({ children }) => {
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
       <div className="plain-main">{children}</div>
-      <Footer dark />
+      {!noFooter && <Footer dark />}
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
     </div>
   )
 }
 
-PlainLayout.defaultProps = {}
+PlainLayout.defaultProps = {
+  noFooter: false,
+}
 
 export default PlainLayout

@@ -5,7 +5,7 @@ import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import ImageUploader from './ImageUploader'
 import { currentUserId } from '@store/auth/selectors'
-import { messages, members, lastKey as key, paginating as paging } from '@store/socket/selectors'
+import { messages, membersSuggest, lastKey as key, paginating as paging } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
@@ -41,7 +41,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
 
   const userId = useAppSelector(currentUserId)
   const data = useAppSelector(messages)
-  const users = useAppSelector(members)
+  const usersWithAll = useAppSelector(membersSuggest)
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
 
@@ -175,19 +175,22 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             currentUser={userId}
             paginating={paginating}
             onFetchMore={onFetchMore}
-            users={users}
+            users={usersWithAll}
             messages={data}
           />
         )}
       </Box>
       <Box className={classes.input}>
-        <MessageInputArea
-          reply={reply}
-          onCancelReply={() => setReply(null)}
-          onPressSend={handlePress}
-          users={users}
-          onPressActionButton={handlePressActionButton}
-        />
+        {userId ? (
+          <MessageInputArea
+            reply={reply}
+            currentUser={userId}
+            onCancelReply={() => setReply(null)}
+            onPressSend={handlePress}
+            users={usersWithAll}
+            onPressActionButton={handlePressActionButton}
+          />
+        ) : null}
       </Box>
       <ImageUploader
         ref={ref}
@@ -203,7 +206,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           target_id={Number(reportData.target_id)}
           data={reportData.data}
           open={reporting}
-          members={users}
+          members={usersWithAll}
           handleClose={() => setReporting(false)}
         />
       ) : null}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, makeStyles, Divider } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { ChatRoomMemberItem, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
 import { TextMessage, PhotoMessage } from '../elements'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import _ from 'lodash'
@@ -10,7 +10,7 @@ import ReplyContent from './ReplyContent'
 export interface BubbleProps {
   direction: 'left' | 'right'
   currentMessage?: MessageType
-  users: ChatRoomMemberItem[]
+  users: ChatRoomMemberItem[] | ChatSuggestionList[]
   navigateToProfile?: (id: string) => void
   onLoadImage: () => void
 }
@@ -21,6 +21,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
   const classes = useStyles({ direction })
 
   const msg = _.get(currentMessage, 'msg', '')
+  const status = _.get(currentMessage, 'sent', false)
 
   const renderMessageText = () => {
     if (currentMessage.type === CHAT_MESSAGE_TYPE.TEXT) {
@@ -57,7 +58,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
 
   const renderMessageImage = () => {
     if (props.currentMessage.type === CHAT_MESSAGE_TYPE.IMAGE) {
-      return <PhotoMessage onLoadImage={props.onLoadImage} msg={msg} />
+      return <PhotoMessage status={status} onLoadImage={props.onLoadImage} msg={msg} />
     }
     return null
   }
@@ -71,7 +72,12 @@ const Bubble: React.FC<BubbleProps> = (props) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  [theme.breakpoints.down('xs')]: {
+    bubble: {
+      width: '200px !important',
+    },
+  },
   bubble: (props: { direction: string }) => {
     return {
       width: 290,
