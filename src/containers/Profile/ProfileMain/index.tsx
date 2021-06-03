@@ -1,4 +1,5 @@
 import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
+import { orderBy } from 'lodash'
 import i18n from '@locales/i18n'
 import ESChip from '@components/Chip'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
@@ -68,17 +69,17 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
       </Grid>
     )
   }
-
-  return (
-    <>
-      {getTopSection()}
-      <Grid xs={12} item className={classes.bodyContainer}>
+  const getFavoriteGames = () => {
+    const orderedGL = orderBy(userProfile.attributes?.game_titles, ['display_name', 'jp_kana_name'], ['asc'])
+    const SHOW_MAX = 10
+    return (
+      <Grid xs={12} item className={`${classes.bodyContainer} ${classes.marginTop50}`}>
         <Box display="flex" justifyContent="space-between">
           <Box display="flex">
             <Typography variant="h2" className={classes.marginRight20}>
               {i18n.t('common:profile.favorite_game.title')}
             </Typography>
-            <Typography variant="h2">10</Typography>
+            <Typography variant="h2">{orderedGL?.length}</Typography>
           </Box>
           {isOthers ? null : (
             <Box display="flex">
@@ -89,9 +90,10 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           )}
         </Box>
         <Box>
-          {userProfile.attributes.game_titles.length > 0
-            ? userProfile.attributes.game_titles.map((g: any, i: number) => {
-                if (i < 10) return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
+          {orderedGL && orderedGL.length > 0
+            ? orderedGL.map((g: any, i: number) => {
+                if (i < SHOW_MAX)
+                  return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
               })
             : null}
         </Box>
@@ -99,6 +101,13 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
           <Icon className={'fa fa-angle-down'} fontSize="small" />
         </Box>
+      </Grid>
+    )
+  }
+
+  const getCommunitySection = () => {
+    return (
+      <Grid xs={12} item className={classes.bodyContainer}>
         <Box display="flex" mt={3}>
           <Grid container>
             <Grid item xs={6} md={4}>
@@ -126,6 +135,14 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           <Icon className={'fa fa-angle-down'} fontSize="small" />
         </Box>
       </Grid>
+    )
+  }
+
+  return (
+    <>
+      {getTopSection()}
+      {getFavoriteGames()}
+      {getCommunitySection()}
     </>
   )
 }
@@ -138,10 +155,12 @@ const useStyles = makeStyles((theme) => ({
   bodyContainer: {
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
-    marginTop: 50,
   },
   marginTop20: {
     marginTop: 20,
+  },
+  marginTop50: {
+    marginTop: 50,
   },
   marginRight20: {
     marginRight: 20,
