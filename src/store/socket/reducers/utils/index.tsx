@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { MessageType } from '@components/Chat/types/chat.types'
+import { MessageType, ChatDataType } from '@components/Chat/types/chat.types'
 import { State } from '@store/socket/actions/types'
 
 const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageType[] => {
@@ -28,6 +28,42 @@ const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageT
   return updatedObj
 }
 
+const roomListUpdate = (roomList: ChatDataType[], message: MessageType[], activeRoom: string): ChatDataType[] => {
+  // check if room exist in new msg
+  let updatedRoom: ChatDataType[]
+  const msg = message[0]
+  const hasRoomValue = roomList.find(function (value) {
+    return !!(value.chatRoomId === msg.chatRoomId)
+  })
+
+  if (hasRoomValue && _.isArray(roomList)) {
+    if (activeRoom === msg.chatRoomId) {
+      updatedRoom = _.map(roomList, function (a: ChatDataType) {
+        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.msg } : a
+      })
+    } else {
+      updatedRoom = _.map(roomList, function (a: ChatDataType) {
+        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.msg, unseenCount: a.unseenCount + 1 } : a
+      })
+    }
+  } else {
+    updatedRoom = roomList
+  }
+  return updatedRoom
+}
+
+const unseenClear = (roomList: ChatDataType[], activeRoom: string): ChatDataType[] => {
+  // check if room exist in new msg
+  let updatedRoom: ChatDataType[]
+  if (_.isArray(roomList)) {
+    updatedRoom = _.map(roomList, function (a: ChatDataType) {
+      return a.chatRoomId === activeRoom ? { ...a, unseenCount: 0 } : a
+    })
+  }
+  return updatedRoom
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const changeSingleRoom = (oldState: State, newRoom: any): State => {
   const clonedList = [...oldState.roomList]
   const index = _.findIndex(clonedList, (item) => item.chatRoomId === newRoom.chatRoomId)
@@ -53,5 +89,7 @@ const changeSingleRoom = (oldState: State, newRoom: any): State => {
 
 export const ChatHelper = {
   messagesMerge,
+  roomListUpdate,
+  unseenClear,
   changeSingleRoom,
 }

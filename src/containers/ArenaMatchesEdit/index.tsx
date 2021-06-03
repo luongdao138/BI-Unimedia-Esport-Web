@@ -175,6 +175,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#212121',
     paddingTop: 60,
     background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
+    width: '100vw',
+    overflow: 'auto',
   },
   appbar: {
     top: 60,

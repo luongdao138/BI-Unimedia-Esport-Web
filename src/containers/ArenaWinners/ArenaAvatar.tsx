@@ -11,12 +11,13 @@ interface ArenaAvatarProps {
   nameClass?: string
   nameWhite?: boolean
   win?: boolean
-  size?: 'small' | 'large'
+  size?: 'small' | 'medium' | 'large'
   alt_name?: string
 }
 
 const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, nameWhite, win, size, alt_name }) => {
   const classes = useStyles({ leaf, win, size })
+  const _size = size === 'large' ? 120 : size === 'small' ? 80 : 100
   return (
     <div className={classes.root}>
       {win && leaf && (
@@ -26,7 +27,7 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
       )}
       {win && !leaf && <Typography className={classes.winText}>WIN</Typography>}
       <div className={`${classes.avatarWrapper} ${win && classes.win} ${win && classes.winSvg}`}>
-        <Avatar src={src} size={size === 'large' ? 120 : 80} alt={alt_name ? alt_name : name} />
+        <Avatar src={src} size={_size} alt={alt_name ? alt_name : name} />
       </div>
       {(name || user_code) && (
         <div className={classes.nameWrapper}>

@@ -21,7 +21,7 @@ const useLogout = (handleClose) => {
     if (meta.loaded) {
       handleClose()
       resetMeta()
-      router.push(ESRoutes.ARENA)
+      router.push(ESRoutes.TOP)
     }
   }, [meta.loaded])
 

@@ -53,7 +53,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
           <ChevronLeftIcon />
         </IconButton>
       </Box>
-      <Box className={classes.root}>
+      <div className={classes.root}>
         <Tabs
           value={tab}
           // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -67,7 +67,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
           <Tab style={{ display: 'none' }} />
         </Tabs>
         <Box>{children}</Box>
-      </Box>
+      </div>
     </>
   )
 }
@@ -86,16 +86,43 @@ const useStyles = makeStyles((theme) => ({
     visibility: 'hidden',
   },
   tabRoot: {
-    minWidth: theme.spacing(10),
     cursor: 'initial',
+    paddingLeft: 0,
+    paddingRight: 0,
+    minWidth: 'fit-content',
+  },
+  [theme.breakpoints.down('lg')]: {
+    flexContainer: {
+      justifyContent: 'space-around',
+      maxWidth: theme.spacing(50),
+      minWidth: theme.spacing(35),
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    tabWrapper: {
+      padding: theme.spacing(1),
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    root: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
   },
   tabsFixed: {
     display: 'flex',
     justifyContent: 'center',
   },
-  flexContainer: {
-    justifyContent: 'space-around',
-    maxWidth: theme.spacing(60),
+  [theme.breakpoints.up('md')]: {
+    flexContainer: {
+      justifyContent: 'space-around',
+      maxWidth: theme.spacing(50),
+      minWidth: theme.spacing(50),
+    },
   },
   backButton: { backgroundColor: `${Colors.grey['200']}80`, margin: 24, marginTop: 16, padding: 6 },
 }))

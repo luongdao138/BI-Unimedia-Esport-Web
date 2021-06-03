@@ -5,7 +5,7 @@ import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
 import { Colors } from '@theme/colors'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   topic: any
@@ -23,7 +23,7 @@ const StyledAvatarGroup = withStyles({
 const TopicCard: React.FC<Props> = ({ topic }) => {
   const classes = useStyles()
   const attr = topic.attributes
-  const time = useSmartTime(attr.created_at)
+  const time = CommonHelper.staticSmartTime(attr.created_at)
 
   return (
     <ESCard>

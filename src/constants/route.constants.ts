@@ -1,4 +1,5 @@
 export const ESRoutes = {
+  TOP: '/',
   WELCOME: '/welcome',
   HOME: '/home',
   HOME_ORDER: '/home/order',

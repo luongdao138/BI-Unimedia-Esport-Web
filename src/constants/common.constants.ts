@@ -112,8 +112,11 @@ export const LIGHTBOX_OPTIONS = {
     showDownloadButton: false,
     showNextButton: false,
     showPrevButton: false,
+    showFullscreenButton: false,
   },
   thumbnails: {
     showThumbnails: false,
   },
 }
+
+export const SLIDE_LIMIT = 5

@@ -1,18 +1,19 @@
 import React from 'react'
-import { Box, makeStyles, Typography } from '@material-ui/core'
-import { ChatRoomMemberItem, MessageType } from '../types/chat.types'
+import { Box, makeStyles, Typography, Icon } from '@material-ui/core'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { SystemMessage, Bubble, DateTitle, MessageMenu } from '../elements'
 import Avatar from '@components/Avatar'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
 import { ESReportProps } from '@containers/Report'
 import { MENU_ACTIONS } from '../constants'
+import { Colors } from '@theme/colors'
 
 export interface MessageProps {
   direction: 'left' | 'right'
   currentMessage?: MessageType
-  users: ChatRoomMemberItem[]
+  users: ChatRoomMemberItem[] | ChatSuggestionList[]
   navigateToProfile?: (id: string) => void
   onLoadImage: () => void
   reply?: (currentMessage: MessageType) => void
@@ -38,7 +39,8 @@ const Message: React.FC<MessageProps> = (props) => {
   const userCode = _.get(userData, 'userCode', '')
 
   const timestamp = _.get(currentMessage, 'createdAt', '')
-  const time = useSmartTime(timestamp)
+  const time = CommonHelper.staticSmartTime(timestamp)
+  const status = _.get(currentMessage, 'sent', false)
 
   const renderAvatar = () => {
     return <Avatar size={36} src={avatar} alt={nickName} />
@@ -85,6 +87,17 @@ const Message: React.FC<MessageProps> = (props) => {
     }
   }
 
+  const renderStatus = () => {
+    if (direction === 'right') {
+      if (status === true) {
+        return <Icon className={`${classes.iconStatus} fa fa-check`} />
+      } else {
+        return <Icon className={`${classes.iconStatus} fa fa-clock`} />
+      }
+    }
+    return null
+  }
+
   const renderBubbleGroup = () => {
     if (currentMessage && currentMessage.type !== CHAT_MESSAGE_TYPE.DATE && currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME) {
       return (
@@ -95,7 +108,10 @@ const Message: React.FC<MessageProps> = (props) => {
               <MessageMenu onPressMenuItem={onMenuAction} />
             </Box>
             {renderBubble()}
-            {renderTime()}
+            <Box flexDirection="row" display="flex" justifyContent={direction === 'left' ? 'flex-start' : 'flex-end'} alignItems="center">
+              {renderTime()}
+              {renderStatus()}
+            </Box>
           </Box>
           {direction === 'right' ? renderAvatar() : null}
         </Box>
@@ -132,6 +148,12 @@ const Message: React.FC<MessageProps> = (props) => {
 }
 
 const useStyles = makeStyles(() => ({
+  iconStatus: {
+    fontSize: 10,
+    marginLeft: 10,
+    marginTop: 4,
+    color: Colors.grey[200],
+  },
   menuRight: {
     position: 'absolute',
     left: '-28px',
@@ -171,6 +193,7 @@ const useStyles = makeStyles(() => ({
   },
   timeText: {
     fontSize: 12,
+    color: Colors.text[300],
   },
   time: {
     height: 15,
