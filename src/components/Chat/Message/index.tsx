@@ -95,6 +95,7 @@ const Message: React.FC<MessageProps> = (props) => {
         return <Icon className={`${classes.iconStatus} fa fa-clock`} />
       }
     }
+    return null
   }
 
   const renderBubbleGroup = () => {
