@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import HeaderWithButton from '@components/HeaderWithButton'
 import { useRouter } from 'next/router'
-import { useContextualRouting } from 'next-use-contextual-routing'
-import { ESRoutes } from '@constants/route.constants'
 import { Box } from '@material-ui/core'
 import { useAppSelector } from '@store/hooks'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -18,25 +16,16 @@ const AccountSettingsContainer: React.FC = () => {
   const user = useAppSelector(selectors.getAuth)
   const hasEmail = CommonHelper.hasEmail(user?.email)
   const router = useRouter()
-  const { makeContextualHref } = useContextualRouting()
   const { resetSteps } = useAccount()
 
   const openEmailModal = () => {
     resetSteps()
-    router.push(makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD }), ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD, {
-      shallow: true,
-    })
+    router.push('#password', undefined, { shallow: true })
   }
 
   const openPasswordModal = () => {
     resetSteps()
-    router.push(
-      makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD }),
-      ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD,
-      {
-        shallow: true,
-      }
-    )
+    router.push('#change-password', undefined, { shallow: true })
   }
 
   return (
@@ -50,6 +39,7 @@ const AccountSettingsContainer: React.FC = () => {
           value={hasEmail ? user.email : t('account_settings.sns')}
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
+          showButton={true}
         />
         <SettingsItem
           title={t('common.password')}
@@ -58,6 +48,7 @@ const AccountSettingsContainer: React.FC = () => {
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangePassword={openPasswordModal}
           password
+          showButton={true}
         />
       </Box>
       <Box my={4} display="flex" justifyContent="center">

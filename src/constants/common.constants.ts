@@ -99,7 +99,7 @@ export const CHAT_CONSTANTS = {
   },
 }
 
-export const SNS = 'SNS'
+export const SNS = 'SNSサインアップ済み'
 
 export const LIGHTBOX_OPTIONS = {
   settings: {
