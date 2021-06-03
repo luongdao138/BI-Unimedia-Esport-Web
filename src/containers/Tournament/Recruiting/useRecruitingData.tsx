@@ -1,8 +1,8 @@
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import tournament from '@store/tournament'
+import tournament from '@store/arena'
 import { clearMetaData } from '@store/metadata/actions'
-import { RecruitingTournamentParams } from '@services/tournament.service'
+import { RecruitingTournamentParams } from '@services/arena.service'
 
 const { selectors, actions } = tournament
 

@@ -14,7 +14,7 @@ const TournamentPage: PageWithLayoutType = () => {
       <ButtonPrimary
         round
         gradient={false}
-        onClick={() => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })}
+        onClick={() => router.push(makeContextualHref({ pathName: '/arena/create' }), '#arena/create', { shallow: true })}
       >
         キャンセル
       </ButtonPrimary>
