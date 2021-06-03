@@ -1,7 +1,7 @@
 import { Typography, Box, Theme, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ESAvatar from '@components/Avatar'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
 interface Props {
   data: any
@@ -10,7 +10,7 @@ interface Props {
 const NotificationListItem: React.FC<Props> = ({ data }) => {
   const notification = data.attributes
   const classes = useStyles()
-  const createdAt = useSmartTime(_.get(notification, 'created_at', ''))
+  const createdAt = CommonHelper.staticSmartTime(_.get(notification, 'created_at', ''))
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>

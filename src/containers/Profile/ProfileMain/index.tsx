@@ -9,12 +9,12 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import CommunityCard from '@components/CommunityCard'
 import HeaderTags from '../Partials/headerTags'
 import Iconic from '../Partials/iconic'
-import useSmartTime from '@utils/hooks/useSmartTime'
 import { GENDER } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { UserProfile } from '@services/user.service'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   userProfile: UserProfile
@@ -31,7 +31,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
       : userProfile.attributes.sex === GENDER.MALE
       ? t('common:common.male')
       : t('common:common.other')
-  const time = useSmartTime(userProfile.attributes.birth_date)
+  const time = CommonHelper.staticSmartTime(userProfile.attributes.birth_date)
 
   const editGame = () => router.push(ESRoutes.GAME_EDIT)
 

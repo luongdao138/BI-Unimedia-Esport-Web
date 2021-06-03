@@ -51,7 +51,19 @@ const roomListUpdate = (roomList: ChatDataType[], message: MessageType[], active
   return updatedRoom
 }
 
+const unseenClear = (roomList: ChatDataType[], activeRoom: string): ChatDataType[] => {
+  // check if room exist in new msg
+  let updatedRoom: ChatDataType[]
+  if (_.isArray(roomList)) {
+    updatedRoom = _.map(roomList, function (a: ChatDataType) {
+      return a.chatRoomId === activeRoom ? { ...a, unseenCount: 0 } : a
+    })
+  }
+  return updatedRoom
+}
+
 export const ChatHelper = {
   messagesMerge,
   roomListUpdate,
+  unseenClear,
 }
