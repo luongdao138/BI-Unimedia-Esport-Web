@@ -62,13 +62,14 @@ const ArenaMatches: React.FC = () => {
   const getMatch = (headerText, _match) => {
     const data = tournament.attributes
     const isTeam = data.participant_type > 1
+    const clickable = _match.home_user || _match.guest_user
 
     return (
       <Bracket.Match
-        onClick={() => onMatchClick(_match)}
+        onClick={() => clickable && onMatchClick(_match)}
         key={_match.id}
         headerText={headerText}
-        editable
+        editable={clickable}
         winner={_match.winner}
         participant1={
           _match.home_user
@@ -147,6 +148,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#212121',
     paddingTop: 60,
     background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
+    width: '100vw',
+    overflow: 'auto',
   },
   appbar: {
     top: 60,

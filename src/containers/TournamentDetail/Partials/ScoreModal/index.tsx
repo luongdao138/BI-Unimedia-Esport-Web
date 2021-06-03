@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { SetScoreParams, TournamentDetail, TournamentMatchItem } from '@services/tournament.service'
-import { Typography, Box, makeStyles, Theme, IconButton, Icon, ThemeProvider, createMuiTheme, Divider } from '@material-ui/core'
+import {
+  Typography,
+  Box,
+  makeStyles,
+  Theme,
+  IconButton,
+  Icon,
+  ThemeProvider,
+  createMuiTheme,
+  Divider,
+  useMediaQuery,
+  useTheme,
+} from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import BlankLayout from '@layouts/BlankLayout'
@@ -40,6 +52,8 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
   const statusAvailable = data.status === STATUS.IN_PROGRESS || data.status === STATUS.COMPLETED
   const isAutowin = !!selectedMatch.winner && (!selectedMatch.home_user || !selectedMatch.guest_user)
   let scoreEditable = false
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   if (statusAvailable && !isAutowin && (isAdmin || ownScoreEditable)) {
     scoreEditable = selectedMatch.is_editable ? true : false
@@ -72,9 +86,16 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
     const _score = type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home
 
     return (
-      <Box paddingX={3} display="flex" flexDirection="column" alignItems="center" justifyContent="space-between">
+      <Box
+        paddingX={3}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="space-between"
+        className={classes.itemWrapper}
+      >
         <div className={classes.winnerAvatarWrapper}>
-          <ArenaAvatar alt_name={_name || ''} src={avatar} win={winner} nameWhite />
+          <ArenaAvatar alt_name={_name || ''} src={avatar} win={winner} size={isMobile ? 'medium' : 'large'} nameWhite />
         </div>
         <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center">
           <Box color={Colors.grey[300]}>
@@ -126,10 +147,8 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
               </Box>
               <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
                 {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
-                <Box display="flex" alignItems="center">
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="body2">{t('common:tournament.vs')}</Typography>
-                  </ThemeProvider>
+                <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>
+                  <Typography className={classes.vsLabel}>{t('common:tournament.vs')}</Typography>
                 </Box>
                 {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
               </Box>
@@ -163,10 +182,6 @@ const theme = createMuiTheme({
         fontWeight: 'bold',
         color: Colors.white,
       },
-      body2: {
-        fontSize: 40,
-        fontWeight: 'bold',
-      },
       h3: {
         fontSize: 70,
         fontWeight: 'bold',
@@ -181,15 +196,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(8),
     transform: 'translate(-0%, -0%)',
   },
+  vsLabel: {
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
+  itemWrapper: {
+    width: 196,
+    height: 240,
+  },
   [theme.breakpoints.down('sm')]: {
+    itemWrapper: {
+      width: 148,
+      height: 220,
+    },
     topContainer: {
       paddingTop: 0,
+    },
+    vsLabel: {
+      fontSize: 30,
     },
   },
 }))
