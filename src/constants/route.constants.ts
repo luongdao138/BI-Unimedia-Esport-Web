@@ -43,7 +43,7 @@ export const ESRoutes = {
   USER_ACCOUNT_SETTINGS_PASSWORD: '/settings/account/password',
   USER_ACCOUNT_SETTINGS_CHANGE_EMAIL: '/settings/account/change-email',
   USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM: '/settings/account/confirm',
-  USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD: '/settings/account/change-password',
+  USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD: '/settings/change-password',
   RECRUITING_TOURNAMENTS: '/tournament/recruiting',
   ARENA_MATCHES_EDIT: '/arena/:id/matches/edit',
   ARENA_MATCHES: '/arena/:id/matches',
