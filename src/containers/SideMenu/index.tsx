@@ -74,6 +74,10 @@ const useStyles = makeStyles((theme) => ({
   },
   usercode: {
     color: theme.palette.text.secondary,
+    margin: '0 auto',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    maxWidth: 80,
   },
   clickable: {
     cursor: 'pointer',
@@ -93,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
     width: 135,
     maxWidth: '100%',
     paddingBottom: theme.spacing(1),
+  },
+  menuWrap: {
+    height: '100%',
   },
 }))
 
@@ -146,7 +153,10 @@ const SideMenu: React.FC = () => {
       <Box className={classes.menu}>
         <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}>
           <Box className={classes.userInfo}>
-            <ProfileAvatar size={80} src={userProfile?.attributes?.avatar_url ? userProfile.attributes.avatar_url : '/images/avatar.png'} />
+            <ProfileAvatar
+              size={80}
+              src={userProfile?.attributes?.avatar_url ? userProfile.attributes.avatar_url : '/images/avatar_o.png'}
+            />
             {isAuthenticated && (
               <Box width="100%" textAlign="center">
                 <Typography variant="h2" className={classes.name}>
@@ -160,24 +170,25 @@ const SideMenu: React.FC = () => {
           </Box>
         </Box>
 
-        <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-          <Link href={ESRoutes.HOME} passHref>
-            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
-              <ListItemIcon className={classes.icon}>
-                <Icon fontSize="small" className="fa fa-home" />
-              </ListItemIcon>
-              <ListItemText className={classes.listText} primary={t('common:home.home')} />
-            </ListItem>
-          </Link>
-          <Link href={ESRoutes.ARENA} passHref>
-            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
-              <ListItemIcon className={classes.icon}>
-                <Icon fontSize="small" className="fa fa-trophy" />
-              </ListItemIcon>
-              <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
-            </ListItem>
-          </Link>
-          {/* <ListItem className={classes.list} button disableRipple>
+        <Box className={`${classes.menuWrap} scroll-bar`}>
+          <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
+            <Link href={ESRoutes.HOME} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-home" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.home')} />
+              </ListItem>
+            </Link>
+            <Link href={ESRoutes.ARENA} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-trophy" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.tournament')} />
+              </ListItem>
+            </Link>
+            {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-university" />
             </ListItemIcon>
@@ -189,44 +200,45 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.community')} />
           </ListItem> */}
-          <Box paddingBottom={4} />
-          {/* <ListItem className={classes.list} button disableRipple>
+            <Box paddingBottom={4} />
+            {/* <ListItem className={classes.list} button disableRipple>
             <ListItemIcon className={classes.icon}>
               <Icon fontSize="small" className="fa fa-play-circle" />
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem> */}
-          <Link href={ESRoutes.SETTINGS} passHref>
-            <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
-              <ListItemIcon className={classes.icon}>
-                <Icon fontSize="small" className="fa fa-cog" />
-              </ListItemIcon>
-              <ListItemText className={classes.listText} primary={t('common:home.settings')} />
-            </ListItem>
-          </Link>
-          {isAuthenticated && (
-            <>
-              <Box paddingBottom={4} />
-              <ListItem className={classes.list} button disableRipple onClick={() => handleModal('qr')}>
+            <Link href={ESRoutes.SETTINGS} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
                 <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-qrcode" />
+                  <Icon fontSize="small" className="fa fa-cog" />
                 </ListItemIcon>
-                <ListItemText className={classes.listText} primary={t('common:qr')} />
+                <ListItemText className={classes.listText} primary={t('common:home.settings')} />
               </ListItem>
-            </>
-          )}
-          <Box className={classes.buttonWrap}>
-            <Typography variant="caption" className={classes.appDesc}>
-              {t('common:home.download_app_version')}
-            </Typography>
-            <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
-              <img className={classes.google_app_stores} src="/images/appstore.png" />
-            </ButtonBase>
-            <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
-              <img className={classes.google_app_stores} src="/images/googleplay.png" />
-            </ButtonBase>
-          </Box>
-        </List>
+            </Link>
+            {isAuthenticated && (
+              <>
+                <Box paddingBottom={4} />
+                <ListItem className={classes.list} button disableRipple onClick={() => handleModal('qr')}>
+                  <ListItemIcon className={classes.icon}>
+                    <Icon fontSize="small" className="fa fa-qrcode" />
+                  </ListItemIcon>
+                  <ListItemText className={classes.listText} primary={t('common:qr')} />
+                </ListItem>
+              </>
+            )}
+            <Box className={classes.buttonWrap}>
+              <Typography variant="caption" className={classes.appDesc}>
+                {t('common:home.download_app_version')}
+              </Typography>
+              <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
+                <img className={classes.google_app_stores} src="/images/appstore.png" />
+              </ButtonBase>
+              <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
+                <img className={classes.google_app_stores} src="/images/googleplay.png" />
+              </ButtonBase>
+            </Box>
+          </List>
+        </Box>
 
         {isAuthenticated && (
           <Box className={classes.logout}>

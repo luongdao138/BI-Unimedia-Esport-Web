@@ -59,7 +59,7 @@ export const URI = {
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',
   USER_RECOMMENDATIONS: '/v2/users/recommendations',
-  RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations',
+  RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations', //TODO skip 2.0
   GAME_UPDATE: '/v2/users/game_titles',
   NOTIFICATION_LIST: '/v2/notification/own',
   NOTIFICATION_BADGE: '/v2/notification/badge',
@@ -68,10 +68,10 @@ export const URI = {
   NOTIFICATION_UPDATE_SETTINGS: '/v2/notification/settings_update',
   S3_PRESIGNED_URL: '/v2/s3/presigned_url',
   LOGOUT: '/v2/auth/logout',
-  USER_RECOMMENDED_EVENT: '/v2/users/recommended_events',
-  TOURNAMENT_FOLLOWERS: '/v2/users/followings_recruitment',
+  USER_RECOMMENDED_EVENT: '/v2/users/recommended_events', //TODO skip 2.0
+  TOURNAMENT_FOLLOWERS: '/v2/users/followings_tournament',
   TOURNAMENT_RESULTS: '/v2/users/followings_tournament_result',
-  RECRUITMENT_FOLLOWERS: '/v2/users/followings_recruitment',
+  RECRUITMENT_FOLLOWERS: '/v2/users/followings_recruitment', //TODO skip 2.0
   RECRUITING_TOURNAMENT: '/v2/tournaments/public_recruiting',
   GAME_HARDWARES: '/v2/game_hardwares',
   TOURNAMENTS_USERS: '/v1/tournaments/users',
