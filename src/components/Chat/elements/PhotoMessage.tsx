@@ -7,6 +7,7 @@ export interface MessageImageProps {
   msg?: string
   onLoadImage?: () => void
   size?: number
+  status: boolean
 }
 
 const IMG_PLACEHOLDER = '/images/img_404.jpg'
@@ -35,6 +36,8 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: 200,
     cursor: 'pointer',
+    opacity: (props: MessageImageProps) => (props.status === true ? 1 : 0.4),
+    transition: 'all 0.5s ease',
   },
   img: {
     width: '100%',
@@ -44,6 +47,9 @@ const useStyles = makeStyles(() => ({
   sizedBox: {
     width: (props: MessageImageProps) => props.size,
     height: (props: MessageImageProps) => props.size,
+  },
+  notSent: {
+    opacity: 0.3,
   },
 }))
 

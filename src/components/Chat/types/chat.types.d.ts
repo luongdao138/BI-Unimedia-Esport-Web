@@ -55,7 +55,7 @@ export type ParentItem = {
 }
 
 export interface ChatRoomMemberItem {
-  chatRoomId: string
+  chatRoomId?: string
   createdAt: number
   display: string
   groupType: number
