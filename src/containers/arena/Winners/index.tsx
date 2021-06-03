@@ -1,23 +1,31 @@
 import useArenaWinners from './useArenaWinners'
-
 import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
 import { Typography, IconButton } from '@material-ui/core'
-
 import ArenaAvatar from './ArenaAvatar'
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const ArenaWinners: React.FC = () => {
   const { arenaWinners, arena, handleBack } = useArenaWinners()
   const classes = useStyles()
-
   const [showSummary, setShowSummary] = useState(false)
+  const [, setUpdate] = useState(false)
+  const winnerListRef = useRef(null)
+  const backButtonRef = useRef(null)
+
+  useEffect(() => {
+    window.onscroll = () => {
+      const winnerListTopOffset = winnerListRef.current.getBoundingClientRect().top
+      const backButtonBottomOffset = backButtonRef.current.getBoundingClientRect().bottom
+      setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
+    }
+  }, [])
 
   return (
     <div className={classes.root}>
-      <div className={classes.backButtonWrapper}>
+      <div ref={backButtonRef} className={classes.backButtonWrapper}>
         <IconButton className={classes.backButton} onClick={handleBack}>
           <ArrowBack />
         </IconButton>
@@ -41,7 +49,7 @@ const ArenaWinners: React.FC = () => {
         <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
         <Typography>{arena?.attributes?.summary || ''}</Typography>
       </div>
-      <div className={classes.listContainer}>
+      <div ref={winnerListRef} className={classes.listContainer}>
         {Object.keys(arenaWinners).map((key) =>
           (arenaWinners[key] || []).map((p, idx) => (
             <div className={classes.listItem} key={idx}>
@@ -166,7 +174,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     background: Colors.black_opacity['70'],
     position: 'relative',
-    zIndex: 3000,
   },
   listItem: {
     height: 66,
