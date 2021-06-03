@@ -9,6 +9,8 @@ import ESButton from '@components/Button'
 import SettingsItem from './SettingsItem'
 import authStore from '@store/auth'
 import useAccount from './useAccount'
+import { useContextualRouting } from 'next-use-contextual-routing'
+import { ESRoutes } from '@constants/route.constants'
 
 const AccountSettingsContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -17,15 +19,24 @@ const AccountSettingsContainer: React.FC = () => {
   const hasEmail = CommonHelper.hasEmail(user?.email)
   const router = useRouter()
   const { resetSteps } = useAccount()
+  const { makeContextualHref } = useContextualRouting()
 
   const openEmailModal = () => {
     resetSteps()
-    router.push('#password', undefined, { shallow: true })
+    router.push(makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD }), ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD, {
+      shallow: true,
+    })
   }
 
   const openPasswordModal = () => {
     resetSteps()
-    router.push('#change-password', undefined, { shallow: true })
+    router.push(
+      makeContextualHref({ pathName: ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD }),
+      ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD,
+      {
+        shallow: true,
+      }
+    )
   }
 
   return (

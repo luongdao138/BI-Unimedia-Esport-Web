@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Header } from '@layouts/Header'
 import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
@@ -10,6 +10,9 @@ import useProfileValid from '@utils/hooks/useProfileValid'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import useMainLayoutMeta from '@utils/hooks/useMainLayoutMeta'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import ESLoader from '@components/FullScreenLoader'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -18,6 +21,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, loginRequired }) => {
+  const router = useRouter()
   const [open, setOpen] = useState<boolean>(false)
   const [expand, setExpand] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -33,9 +37,17 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
     setExpand(state)
   }
 
+  useEffect(() => {
+    if (loginRequired && !isAuthenticated) {
+      router.push(ESRoutes.TOP)
+    }
+  }, [loginRequired])
+
+  if (loginRequired && !isAuthenticated) return <ESLoader open={true} />
+
   return (
     <div className="main-wrapper">
-      <Header open={open} toggleDrawer={toggleDrawer} loginRequired={loginRequired} />
+      <Header open={open} toggleDrawer={toggleDrawer} />
       <aside className="aside-left mui-fixed">
         <SideMenu />
       </aside>
