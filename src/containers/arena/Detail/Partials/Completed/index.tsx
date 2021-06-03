@@ -5,8 +5,8 @@ import { Box, makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'
 import { UserProfile } from '@services/user.service'
-import ArenaAvatar from '@containers/ArenaWinners/ArenaAvatar'
-import useWinners from '@containers/ArenaWinners/useArenaWinners'
+import ArenaAvatar from '@containers/arena/Winners/ArenaAvatar'
+import useWinners from '@containers/arena/Winners/useArenaWinners'
 
 interface CompletedProps {
   tournament: TournamentDetail

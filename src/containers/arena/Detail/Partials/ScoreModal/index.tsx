@@ -21,7 +21,7 @@ import ESModal from '@components/Modal'
 import { PARTICIPANT_TYPE, STATUS, ROLE } from '@constants/tournament.constants'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Meta } from '@store/metadata/actions/types'
-import ArenaAvatar from '@containers/ArenaWinners/ArenaAvatar'
+import ArenaAvatar from '@containers/arena/Winners/ArenaAvatar'
 import ScoreEdit from './ScoreEdit'
 import ESStickyFooter from '@components/StickyFooter'
 

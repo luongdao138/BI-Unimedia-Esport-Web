@@ -13,7 +13,7 @@ import { TournamentDetail } from '@services/tournament.service'
 import { UserProfile } from '@services/user.service'
 import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
-import SummaryModal from '@containers/TournamentDetail/Partials/SummaryModal'
+import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
 
 interface Props {
   tournament: TournamentDetail

@@ -13,7 +13,7 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESToast from '@components/Toast'
-import CoverUploader from '@containers/ArenaCreate/Partials/CoverUploader'
+import CoverUploader from '@containers/arena/UpsertForm/Partials/CoverUploader'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useStore } from 'react-redux'
 
