@@ -13,6 +13,7 @@ import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import Badge from '@material-ui/core/Badge'
 import 'moment/locale/ja'
+import i18n from '@locales/i18n'
 
 interface RoomListItemProps {
   expand?: boolean
@@ -66,7 +67,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
           {name}
         </Typography>
         <Typography noWrap={true} className={classes.body} variant="body1">
-          {lastMsg}
+          {CommonHelper.isMediaURL(lastMsg) ? i18n.t('common:chat.uploaded_image') : lastMsg}
         </Typography>
       </ListItemText>
 

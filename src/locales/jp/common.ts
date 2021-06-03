@@ -489,6 +489,7 @@ export default {
       change_img: 'アイコンを変更',
       exit: '退出する',
     },
+    uploaded_image: '画像がアップロードされました。',
   },
   notification: {
     title: '通知一覧',
