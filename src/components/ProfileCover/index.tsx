@@ -45,7 +45,7 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) 
       {src ? <img src={src} className={classes.image} /> : null}
       {editable ? (
         <>
-          {drag && !update ? <Camera fontSize="large" className={classes.camera} /> : null}
+          {drag && !update ? <Camera fontSize="small" className={classes.camera} /> : null}
           {drag || update ? <div className={classes.backdrop} /> : null}
           <div
             {...getRootProps()}
@@ -115,6 +115,8 @@ const useStyles = makeStyles(() => ({
   camera: {
     display: 'flex',
     position: 'absolute',
+    right: 30,
+    bottom: 30,
     zIndex: 5,
   },
   loader: {
