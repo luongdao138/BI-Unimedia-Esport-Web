@@ -32,6 +32,7 @@ export type TournamentListItem = {
     team_name: null | string
     team_avatar: null | string
     participant_count: number
+    is_single: boolean
     winner: null | {
       name: string
       user_code: string

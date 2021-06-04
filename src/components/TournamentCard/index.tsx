@@ -64,7 +64,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {attr.status === TS.COMPLETED && (
+        {winner && attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -79,8 +79,8 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
                 winner?.user_code ? router.push(`${ESRoutes.PROFILE}/${winner.user_code}`) : null
               }}
               className={classes.marginV}
-              alt="Avatar"
-              src={winner?.profile_image ? winner.profile_image : '/images/avatar.png'}
+              alt={winner?.name}
+              src={winner?.profile_image ? winner.profile_image : attr.is_single ? null : '/images/avatar.png'}
             />
             <Typography variant="caption">{winner?.name}</Typography>
           </Box>
