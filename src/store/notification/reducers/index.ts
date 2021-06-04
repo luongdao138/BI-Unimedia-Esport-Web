@@ -4,12 +4,13 @@ import { NotificationResponse, Meta, NotificationBadgeResponse, NotificationDeta
 
 type StateType = {
   notifications?: Array<NotificationResponse>
+  notificationBarList: Array<NotificationResponse>
   notificationsMeta?: Meta
   notificaitonBadge: NotificationBadgeResponse
   notificaitonDetail: NotificationDetailResponse
 }
 
-const initialState: StateType = { notifications: [], notificaitonBadge: undefined, notificaitonDetail: undefined }
+const initialState: StateType = { notifications: [], notificaitonBadge: undefined, notificaitonDetail: undefined, notificationBarList: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getNotifications.fulfilled, (state, action) => {
@@ -31,5 +32,17 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.clearNotificationDetail, (state) => {
     state.notificaitonDetail = undefined
+  })
+
+  builder.addCase(actions.seenNotificationBadge.fulfilled, (state) => {
+    state.notificaitonBadge = undefined
+  })
+
+  builder.addCase(actions.clearNotificationBadge, (state) => {
+    state.notificaitonBadge = undefined
+  })
+
+  builder.addCase(actions.getNotificationBadgeList.fulfilled, (state, action) => {
+    state.notificationBarList = action.payload.data
   })
 })

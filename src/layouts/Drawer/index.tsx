@@ -35,9 +35,12 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     backdropFilter: 'blur(5px)',
     borderRight: `1px solid ${Colors.text[300]}`,
+    overflow: 'hidden',
   },
   box: {
     width: 184,
-    padding: 24,
+    height: '100%',
+    paddingLeft: 24,
+    paddingRight: 0,
   },
 }))

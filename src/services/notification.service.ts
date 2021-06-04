@@ -5,9 +5,17 @@ export type NotificationListParams = {
   page: number
 }
 
+export type NotificationBarListParams = {
+  page: number
+}
+
 export type NotificationListResponse = {
   data: Array<NotificationResponse>
   meta: any
+}
+
+export type NotificationBarListResponse = {
+  data: Array<NotificationResponse>
 }
 
 export type NotificationResponse = {
@@ -48,5 +56,14 @@ export const getNotificationDetail = async (id: number): Promise<NotificationDet
 
 export const getNotificationBadge = async (): Promise<NotificationBadgeResponse> => {
   const { data } = await api.get<NotificationBadgeResponse>(URI.NOTIFICATION_BADGE)
+  return data
+}
+
+export const getNotificationBarList = async (): Promise<NotificationBarListResponse> => {
+  const { data } = await api.get<NotificationBarListResponse>(URI.NOTIFICATION_BADGE_LIST)
+  return data
+}
+export const seenNotificationBadge = async (): Promise<void> => {
+  const { data } = await api.put<void>(URI.NOTIFICATION_BADGE_SEEN)
   return data
 }

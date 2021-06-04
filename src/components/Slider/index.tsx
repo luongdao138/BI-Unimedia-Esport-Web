@@ -50,6 +50,7 @@ const ESSlide: React.FC<{
       )}
       <Swiper
         slidesPerView="auto"
+        slidesPerGroup={2}
         spaceBetween={0}
         {...props}
         className={classes.wrap}

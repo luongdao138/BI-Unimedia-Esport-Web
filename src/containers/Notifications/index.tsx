@@ -15,7 +15,7 @@ import HeaderWithButton from '@components/HeaderWithButton'
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
   const { fetchNotificationDetail } = useNotificationDetail()
-  const { notifications, fetchNotifications, resetMeta, meta, pages } = useNotificationList()
+  const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages } = useNotificationList()
   const { t } = useTranslation(['common'])
   const router = useRouter()
 
@@ -24,6 +24,7 @@ const NotificationContainer: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    clearNotificationBadge()
     fetchNotifications({
       page: 1,
     })
