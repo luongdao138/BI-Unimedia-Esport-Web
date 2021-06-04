@@ -104,7 +104,7 @@ const useTournamentCreate = (): {
   }, [updateMeta.loaded])
 
   useEffect(() => {
-    if (router.pathname === '/arena/[hash_key]/edit' && router.query.hash_key) {
+    if (router.asPath.endsWith('/edit') && router.query.hash_key) {
       setIsEdit(true)
       dispatch(actions.getTournamentDetail(router.query.hash_key))
     }

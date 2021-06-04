@@ -39,7 +39,10 @@ const useArenaHelper = (
   const isEditable = isModerator && !TournamentHelper.isStatusPassed(status, TOURNAMENT_STATUS.IN_PROGRESS)
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
-  const toEdit = () => router.push(`/arena/${hashKey}/edit`)
+  const toEdit = () =>
+    router.push(makeContextualHref({ hash_key: hashKey }), `/arena/${hashKey}/edit`, {
+      shallow: true,
+    })
 
   const toMatches = () => {
     if (isModerator && isRecruitmentClosed) {

@@ -9,10 +9,15 @@ import InProgress from './Partials/InProgress'
 import Completed from './Partials/Completed'
 import ESLoader from '@components/FullScreenLoader'
 import useArenaHelper from '../hooks/useArenaHelper'
+import BlankLayout from '@layouts/BlankLayout'
+import ESModal from '@components/Modal'
+import { UpsertForm } from '..'
+import { useRouter } from 'next/router'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, entryMeta, userProfile, handleBack } = useTournamentDetail()
   const { toEdit } = useArenaHelper(tournament)
+  const router = useRouter()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
@@ -39,6 +44,11 @@ const TournamentDetail: React.FC = () => {
           <DetailInfo toEdit={toEdit} detail={tournament} extended />
         </>
       )}
+      <ESModal open={router.asPath.endsWith('/edit')}>
+        <BlankLayout>
+          <UpsertForm />
+        </BlankLayout>
+      </ESModal>
     </div>
   )
 }
