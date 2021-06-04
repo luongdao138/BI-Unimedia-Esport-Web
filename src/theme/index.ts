@@ -68,6 +68,13 @@ export default createMuiTheme({
         padding: '6px 15px',
       },
     },
+    MuiButtonBase: {
+      root: {
+        '&.button-primary.primary-small': {
+          fontWeight: 400,
+        },
+      },
+    },
     MuiIcon: {
       root: {
         overflow: 'inherit',

@@ -1,9 +1,9 @@
 import PlainLayout from '@layouts/PlainLayout'
 import PageWithLayoutType from '@constants/page'
-import ArenaMatchesEdit from '@containers/ArenaMatchesEdit'
+import { MatchesEditContainer } from '@containers/arena'
 
 const ArenaMatchEditPage: PageWithLayoutType = () => {
-  return <ArenaMatchesEdit />
+  return <MatchesEditContainer />
 }
 PlainLayout.defaultProps = {
   noFooter: true,

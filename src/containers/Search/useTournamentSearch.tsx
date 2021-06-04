@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import searchStore from '@store/tournament'
-import { TournamentSearchParams } from '@services/tournament.service'
+import searchStore from '@store/arena'
+import { TournamentSearchParams } from '@services/arena.service'
 
 const { selectors, actions } = searchStore
 const getTournamentSearchMeta = createMetaSelector(actions.tournamentSearch)

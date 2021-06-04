@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { TournamentListItem } from '@services/tournament.service'
+import { TournamentListItem } from '@services/arena.service'
 import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'

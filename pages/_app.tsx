@@ -10,7 +10,6 @@ import { authorizationProvider } from '@services/interceptor'
 import ESLoader from '@components/FullScreenLoader'
 import { useRouter } from 'next/router'
 import useNgWords from '@utils/hooks/useNgWords'
-
 import { ThemeProvider } from '@material-ui/core'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import userProfile from '@store/userProfile'
@@ -23,11 +22,18 @@ import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import SimpleReactLightbox from 'simple-react-lightbox'
+import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
 }
+
+type previousRouteProps = {
+  previousRoute: string
+}
+
+export const RouteContext = React.createContext<previousRouteProps>({ previousRoute: '' })
 
 const App = ({ Component, pageProps }: Props) => {
   const [loader, setLoader] = React.useState(false)
@@ -69,17 +75,26 @@ const App = ({ Component, pageProps }: Props) => {
   }, [])
 
   const Layout = Component.Layout ?? React.Fragment
+
+  const { previousRoute } = useRouteUrlHistory()
+
   return (
     <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
-      <ThemeProvider theme={theme}>
-        <ESLoader open={loader} />
-        <SimpleReactLightbox>
-          <Layout>
-            <CssBaseline />
-            <Component {...pageProps} />
-          </Layout>
-        </SimpleReactLightbox>
-      </ThemeProvider>
+      <RouteContext.Provider
+        value={{
+          previousRoute,
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <ESLoader open={loader} />
+          <SimpleReactLightbox>
+            <Layout>
+              <CssBaseline />
+              <Component {...pageProps} />
+            </Layout>
+          </SimpleReactLightbox>
+        </ThemeProvider>
+      </RouteContext.Provider>
     </PersistGate>
   )
 }
