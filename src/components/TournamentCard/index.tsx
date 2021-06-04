@@ -4,11 +4,10 @@ import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
-import ESAvatarGroup from '@components/Avatar/AvatarGroup'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { TournamentListItem } from '@services/tournament.service'
+import { TournamentListItem } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
 import i18n from '@locales/i18n'
@@ -29,6 +28,8 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
 
   const getMediaScreen = () => {
+    const p_type =
+      attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
       <>
         <Box
@@ -47,12 +48,17 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               label={
                 <Box color={Colors.white} justifyContent="flex-">
                   <Typography variant="caption">
-                    {attr.rule === TR.SINGLE
-                      ? i18n.t('common:tournament:rule_single')
-                      : attr.rule === TR.DOUBLE
-                      ? i18n.t('common:tournament:rule_double')
-                      : i18n.t('common:tournament:rule_battle')}
+                    {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')}
                   </Typography>
+                </Box>
+              }
+            />
+            <Chip
+              className={classes.chipPrimary}
+              size="small"
+              label={
+                <Box color={Colors.white} justifyContent="flex-">
+                  <Typography variant="caption">{p_type}</Typography>
                 </Box>
               }
             />
@@ -113,15 +119,21 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
     )
   }
   const getParticipants = () => {
+    const participants = attr.participants
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
-        {attr.participants && attr.participants.length > 0 ? (
-          <ESAvatarGroup max={4}>
-            {attr.participants.map((participant, i) => (
-              <ESAvatar key={`participants${i}`} src={participant.profile_image} alt={participant.nickname} />
-            ))}
-          </ESAvatarGroup>
-        ) : null}
+        {participants && participants.length > 0
+          ? attr.participants.map((participant, i) => (
+              <ESAvatar
+                size={20}
+                key={`participants${i}`}
+                style={{ zIndex: participants.length - i }}
+                className={classes.pAvatar}
+                src={participant.profile_image}
+                alt={participant.nickname}
+              />
+            ))
+          : null}
       </Box>
     )
   }
@@ -164,6 +176,7 @@ const useStyles = makeStyles(() => ({
   },
   chipPrimary: {
     height: 20,
+    marginBottom: 5,
     backgroundColor: Colors.primary,
   },
   mediaOverlay: {
@@ -185,5 +198,8 @@ const useStyles = makeStyles(() => ({
   marginV: {
     marginTop: 5,
     marginBottom: 3,
+  },
+  pAvatar: {
+    marginLeft: -8,
   },
 }))

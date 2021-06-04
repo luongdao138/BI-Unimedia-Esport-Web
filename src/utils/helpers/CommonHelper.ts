@@ -1,4 +1,5 @@
 import { StoreType } from '@store/store'
+import moment from 'moment'
 
 /* eslint-disable no-useless-escape */
 const validateEmail = (email: string): boolean => {
@@ -60,7 +61,7 @@ const scorePassword = (pass: string): number => {
 }
 
 const userCodeValid = (value: string): boolean => {
-  return /^([a-zA-Z0-9+_-]+)$/.test(value)
+  return /^([a-zA-Z0-9_-]+)$/.test(value)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -110,9 +111,22 @@ const isMediaURL = (str: string): boolean => {
   return false
 }
 
+const staticSmartTime = (time: string | number): string => {
+  const timestamp = time
+  const currentDate = moment().startOf('day')
+  const given = moment(timestamp).format('YYYY-MM-DD')
+  const diff = currentDate.diff(given, 'days', false)
+  if (diff > 30) {
+    return moment(timestamp).format('LL')
+  } else {
+    return moment(timestamp).fromNow()
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
+  staticSmartTime,
   scorePassword,
   userCodeValid,
   matchNgWords,

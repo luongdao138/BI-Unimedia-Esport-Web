@@ -101,7 +101,9 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="selectedPrefecture" value={values.selectedPrefecture} onChange={handleChange} fullWidth>
-            <option value="">{t('common:profile.prefectures')}</option>
+            <option value={-1} disabled>
+              {t('common:profile.prefectures')}
+            </option>
             {memoizedPrefectures &&
               memoizedPrefectures.map((item) => (
                 <option key={item.value} value={item.value}>
@@ -126,7 +128,9 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ profile, prefectures, onDataChang
       <Grid container spacing={2}>
         <Grid item xs={8}>
           <ESSelect id="selectedGender" value={values.selectedGender} onChange={handleChange} fullWidth>
-            <option value="">{t('common:profile.gender')}</option>
+            <option value="" disabled>
+              {t('common:profile.gender')}
+            </option>
             {genders.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}

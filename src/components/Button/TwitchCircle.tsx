@@ -29,9 +29,10 @@ interface SocialProps {
 
 const ESButtonTwitchCircle: React.FC<IconButtonProps & SocialProps> = ({ link, onlyIcon, className }) => {
   const disabled = !link || link.length === 0
+  const url = `https://www.twitch.tv/${link}`
   const classes = useStyles({ disabled: onlyIcon ? false : disabled })
   return (
-    <IconButton href={link} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
+    <IconButton href={url} target="_blank" disabled={disabled} classes={{ root: classes.iconRoot }} className={className}>
       <div className="esbutton-hover" />
       <Avatar classes={{ root: classes.root }} className={classes.avatar}>
         <SvgIcon classes={{ root: classes.svgRoot }} viewBox="0 0 15.528 16.237">

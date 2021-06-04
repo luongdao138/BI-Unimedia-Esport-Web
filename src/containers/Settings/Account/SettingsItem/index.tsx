@@ -9,6 +9,7 @@ export interface SettingsItemProps {
   disabled?: boolean
   value: string
   invisible?: boolean
+  showButton?: boolean
   route?: string
   onChangeEmail?: () => void
   onChangePassword?: () => void
@@ -20,6 +21,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
   disabled,
   value,
   invisible,
+  showButton,
   route,
   onChangeEmail,
   onChangePassword,
@@ -37,34 +39,20 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
           </Typography>
         </Box>
         <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '*************' : value}</Typography>
-        {route &&
-          (password ? (
-            <Box className={classes.buttonWrap}>
-              <ButtonPrimary
-                round
-                gradient={false}
-                size="small"
-                disabled={route === SNS ? true : false}
-                onClick={onChangePassword}
-                className={classes.button}
-              >
-                {t('common.change')}
-              </ButtonPrimary>
-            </Box>
-          ) : (
-            <Box className={classes.buttonWrap}>
-              <ButtonPrimary
-                round
-                gradient={false}
-                size="small"
-                disabled={route === SNS ? true : false}
-                onClick={onChangeEmail}
-                className={classes.button}
-              >
-                {t('common.change')}
-              </ButtonPrimary>
-            </Box>
-          ))}
+        {showButton && (
+          <Box className={classes.buttonWrap}>
+            <ButtonPrimary
+              round
+              gradient={false}
+              size="small"
+              disabled={route === SNS ? true : false}
+              onClick={password ? onChangePassword : onChangeEmail}
+              className={classes.button}
+            >
+              {t('common.change')}
+            </ButtonPrimary>
+          </Box>
+        )}
       </Box>
     </Box>
   )
@@ -99,6 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   disabled: {
     color: Colors.white_opacity['30'],
+    wordBreak: 'break-all',
   },
   buttonWrap: {
     position: 'absolute',

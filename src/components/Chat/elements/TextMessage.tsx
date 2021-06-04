@@ -3,7 +3,7 @@ import { parseValue } from '@components/Chat/utils'
 import { MentionData, PartRender } from '@components/Chat/types/mention.type'
 import { Typography, Box, makeStyles } from '@material-ui/core'
 import { regex } from '@components/Chat/constants'
-import { ChatRoomMemberItem } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList } from '../types/chat.types'
 import _ from 'lodash'
 import { Colors } from '@theme/colors'
 
@@ -11,7 +11,7 @@ export interface MessageTextProps {
   text: string
   navigateToProfile?: (id: string) => void
   numberOfLines?: number
-  members: ChatRoomMemberItem[]
+  members: ChatRoomMemberItem[] | ChatSuggestionList[]
   color?: string | null
   contentClass?: string
   textClass?: string

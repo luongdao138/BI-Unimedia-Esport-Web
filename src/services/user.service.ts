@@ -1,7 +1,7 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
-import { TournamentListItem } from './tournament.service'
+import { TournamentListItem } from './arena.service'
 
 export type HistorySearchParams = {
   page?: number

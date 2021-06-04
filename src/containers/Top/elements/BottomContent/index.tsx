@@ -50,12 +50,7 @@ export const BottomContent: React.FC = () => {
             </Box>
           )}
           <Grid item xs={12} className={classes.button}>
-            <ButtonPrimary
-              round
-              onClick={() => {
-                router.push(ESRoutes.HOME)
-              }}
-            >
+            <ButtonPrimary round onClick={() => router.push(ESRoutes.ARENA)}>
               {t('common:top.start_exelab')}
             </ButtonPrimary>
           </Grid>

@@ -4,7 +4,7 @@ import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import { ChatHelper } from './utils'
-import { mentionData } from '@components/Chat/constants'
+
 const initialState: State = {
   roomList: undefined,
   messages: undefined,
@@ -23,7 +23,6 @@ let result: MessageType[] | undefined
 let pending: MessageType[] | undefined
 let oldMessages: MessageType[] | undefined
 let newMsg: MessageType[] | undefined
-let mergedMsg: MessageType[] | undefined
 let newRoomList: ChatDataType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
@@ -42,8 +41,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       if (action.data.content === [] || action.data.content.length === 0) {
         // case when socket error or wrong data return from server
         newMessagesList = []
-        const cleanList = action.data.members
-        newUsers = _.concat(cleanList, mentionData.toall)
+        newUsers = action.data.members
       } else if (state.lastKey != null && state.activeRoom === action.data.chatRoomId) {
         //paginating data merging
         const prevArray = state.messages
@@ -51,8 +49,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         newMessagesList = temp
         newUsers = state.members
       } else {
-        const cleanList = action.data.members
-        newUsers = _.concat(cleanList, mentionData.toall)
+        newUsers = action.data.members
         newMessagesList = action.data.content
       }
       return {
@@ -62,6 +59,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         members: newUsers,
         lastKey: action.data.lastKey,
         paginating: false,
+        roomList: ChatHelper.unseenClear(state.roomList, action.data.chatRoomId),
       }
     case CHAT_ACTION_TYPE.MESSAGE_PENDING:
       if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
@@ -84,11 +82,16 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
-      mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
-      result = mergedMsg
+      if (state.activeRoom != null && state.activeRoom === newMsg[0]['chatRoomId']) {
+        const mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
+        result = mergedMsg
+      } else {
+        result = oldMessages
+      }
       return {
         ...state,
         messages: result,
+        roomList: ChatHelper.roomListUpdate([...state.roomList], newMsg, state.activeRoom),
       }
     case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
       return {

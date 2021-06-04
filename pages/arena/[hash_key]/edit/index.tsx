@@ -1,9 +1,9 @@
 import BlankLayout from '@layouts/BlankLayout'
 import PageWithLayoutType from '@constants/page'
-import ArenaCreateContainer from '@containers/ArenaCreate'
+import { UpsertForm } from '@containers/arena'
 
 const ArenaCreatePage: PageWithLayoutType = () => {
-  return <ArenaCreateContainer />
+  return <UpsertForm />
 }
 
 ArenaCreatePage.Layout = BlankLayout
