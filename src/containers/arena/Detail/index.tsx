@@ -10,7 +10,7 @@ import Completed from './Partials/Completed'
 import ESLoader from '@components/FullScreenLoader'
 
 const TournamentDetail: React.FC = () => {
-  const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
+  const { tournament, meta, entryMeta, userProfile, handleBack } = useTournamentDetail()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
@@ -25,7 +25,7 @@ const TournamentDetail: React.FC = () => {
   return (
     <div>
       <ESLoader open={meta.pending} />
-      {meta.loaded && tournament && (
+      {meta.loaded && entryMeta.loaded && tournament && (
         <>
           <TournamentDetailHeader
             status={tournament?.attributes?.status || 'ready'}
