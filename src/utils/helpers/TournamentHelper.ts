@@ -174,7 +174,7 @@ const isStatusPassed = (status: string, targetStatus: string): boolean => {
   const index = statuses.indexOf(status)
   const targetIndex = statuses.indexOf(targetStatus)
 
-  return index < targetIndex
+  return index >= targetIndex
 }
 
 export const TournamentHelper = {

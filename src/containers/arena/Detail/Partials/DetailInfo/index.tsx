@@ -10,19 +10,22 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { CommonResponse } from '@services/user.service'
 import ESToast from '@components/Toast'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface Props {
   detail: TournamentDetail
   extended?: boolean
+  toEdit: () => void
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, extended }) => {
+const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
   const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
   const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false)
+  const helper = useArenaHelper(detail)
 
   const handleCopy = () => {
     if (window.navigator.clipboard) {
@@ -42,6 +45,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended }) => {
             <ESMenu>
               <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
               <ESMenuItem onClick={() => null}>{t('common:tournament.report')}</ESMenuItem>
+              {helper.isEditable && <ESMenuItem onClick={toEdit}>{'Edit button'}</ESMenuItem>}
             </ESMenu>
           )}
         </Box>

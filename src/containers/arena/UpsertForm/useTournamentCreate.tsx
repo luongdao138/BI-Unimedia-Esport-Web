@@ -7,9 +7,9 @@ import { TournamentDetail, TournamentFormParams, UpdateParams } from '@services/
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
-import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import _ from 'lodash'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import useArenaHelper from '../hooks/useArenaHelper'
 
 const { actions, selectors } = tournamentStore
 const getTournamentMeta = createMetaSelector(actions.createTournament)
@@ -83,6 +83,7 @@ const useTournamentCreate = (): {
     co_organizers: true,
     cover_image: true,
   })
+  const { isEditable } = useArenaHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
   const submit = (params: TournamentFormParams) => dispatch(actions.createTournament(params))
@@ -112,9 +113,7 @@ const useTournamentCreate = (): {
   useEffect(() => {
     if (arena) {
       const _status = arena.attributes.status
-      const myRole = arena.attributes.my_role
-      const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
-      if (!TournamentHelper.isStatusPassed(_status, TOURNAMENT_STATUS.IN_PROGRESS) && isModerator) {
+      if (!isEditable) {
         router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
       }
 

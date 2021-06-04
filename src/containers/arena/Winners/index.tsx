@@ -34,7 +34,7 @@ const ArenaWinners: React.FC = () => {
         {arena?.attributes?.cover_image && <img src={arena?.attributes?.cover_image} className={classes.cover} />}
       </div>
       <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
-        {arenaWinners['1'] && (
+        {arenaWinners['1'] && !!arenaWinners['1'].length && (
           <ArenaAvatar
             src={arenaWinners['1'][0].avatar}
             name={arenaWinners['1'][0].name}

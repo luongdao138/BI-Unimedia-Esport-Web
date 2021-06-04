@@ -8,9 +8,11 @@ import Recruiting from './Partials/Recruiting'
 import InProgress from './Partials/InProgress'
 import Completed from './Partials/Completed'
 import ESLoader from '@components/FullScreenLoader'
+import useArenaHelper from '../hooks/useArenaHelper'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, entryMeta, userProfile, handleBack } = useTournamentDetail()
+  const { toEdit } = useArenaHelper(tournament)
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
@@ -34,7 +36,7 @@ const TournamentDetail: React.FC = () => {
           >
             {actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
-          <DetailInfo detail={tournament} extended />
+          <DetailInfo toEdit={toEdit} detail={tournament} extended />
         </>
       )}
     </div>
