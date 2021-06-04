@@ -7,6 +7,7 @@ import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'
 import InProgress from './Partials/InProgress'
 import Completed from './Partials/Completed'
+import ESLoader from '@components/FullScreenLoader'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -23,7 +24,7 @@ const TournamentDetail: React.FC = () => {
 
   return (
     <div>
-      {meta.pending && '...loading'}
+      <ESLoader open={meta.pending} />
       {meta.loaded && tournament && (
         <>
           <TournamentDetailHeader
