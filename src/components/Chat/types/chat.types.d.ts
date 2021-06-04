@@ -41,6 +41,7 @@ export type MessageType = {
   type: CHAT_MESSAGE_TYPE
   parentMsg?: null | ParentItem | string
   sent?: boolean
+  formattedMsg?: string
 }
 
 export type ParentItem = {
