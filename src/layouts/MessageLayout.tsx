@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Header } from '@layouts/Header'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import Button from '@components/Button'
 import { useRouter } from 'next/router'
+import { RouteContext } from 'pages/_app'
 
 const MessageLayout: React.FC = ({ children }) => {
   const [open, setOpen] = useState<boolean>(false)
@@ -17,6 +18,7 @@ const MessageLayout: React.FC = ({ children }) => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
+  const { previousRoute } = useContext(RouteContext)
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -28,7 +30,7 @@ const MessageLayout: React.FC = ({ children }) => {
 
   const backHandler = (e: React.MouseEvent) => {
     e.preventDefault
-    window.history.go(-1)
+    router.push(previousRoute)
   }
   const navigateRoomCreate = () => {
     router.push(ESRoutes.MESSAGE_ROOM_CREATE, undefined, { shallow: true })
