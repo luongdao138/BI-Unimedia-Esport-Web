@@ -4,14 +4,10 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as actions from '@store/arena/actions'
 import * as selectors from '@store/arena/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { SetParticipantParams, TournamentMatchRound } from '@services/arena.service'
+import { TournamentMatchRound } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
-import { clearMetaData } from '@store/metadata/actions'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
-const setParticipantMeta = createMetaSelector(actions.setParticipant)
-const _randomizeMeta = createMetaSelector(actions.randomizeTournament)
-const _freezeMeta = createMetaSelector(actions.freezeTournament)
 
 type RoundTitles = { matches: string[]; third_place_match: string[] }
 
@@ -19,15 +15,7 @@ const useTournamentMatches = (): {
   matches: TournamentMatchRound[]
   third_place_match: TournamentMatchRound
   meta: Meta
-  setMeta: Meta
   fetchMatches: () => void
-  setParticipant: (params: SetParticipantParams) => void
-  randomize: (params: string) => void
-  freeze: (params: string) => void
-  randomizeMeta: Meta
-  freezeMeta: Meta
-  resetRandomizeMeta: () => void
-  resetFreezeMeta: () => void
   roundTitles: RoundTitles
 } => {
   const { query } = useRouter()
@@ -65,30 +53,12 @@ const useTournamentMatches = (): {
     }
   }
 
-  const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
-  const randomize = (param: string) => dispatch(actions.randomizeTournament(param))
-  const freeze = (param: string) => dispatch(actions.freezeTournament(param))
-
-  const setMeta = useAppSelector(setParticipantMeta)
-  const randomizeMeta = useAppSelector(_randomizeMeta)
-  const freezeMeta = useAppSelector(_freezeMeta)
-
-  const resetRandomizeMeta = () => dispatch(clearMetaData(actions.randomizeTournament.typePrefix))
-  const resetFreezeMeta = () => dispatch(clearMetaData(actions.freezeTournament.typePrefix))
   return {
     matches,
     third_place_match,
     meta,
-    setParticipant,
     fetchMatches,
     roundTitles,
-    setMeta,
-    randomize,
-    freeze,
-    randomizeMeta,
-    freezeMeta,
-    resetRandomizeMeta,
-    resetFreezeMeta,
   }
 }
 

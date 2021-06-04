@@ -203,6 +203,22 @@ export const setParticipant = createAsyncThunk<void, services.SetParticipantPara
     }
   }
 )
+
+export const setParticipants = createAsyncThunk<void, services.SetParticipantsParams>(
+  types.SET_ARENA_PARTICIPANTS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.setParticipants(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const getArenaWinners = createAsyncThunk<services.GetArenaWinnersResponse, string | string[]>(
   types.SET_TOURNAMENT_PARTICIPANT,
   async (param, { rejectWithValue }) => {

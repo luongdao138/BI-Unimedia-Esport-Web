@@ -14,27 +14,24 @@ import ESToast from '@components/Toast'
 import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
+import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
+  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
+  const { tournament, meta } = useTournamentDetail()
   const {
-    matches,
-    third_place_match,
-    setParticipant,
     freeze,
     randomize,
-    fetchMatches,
-    roundTitles,
-    meta: matchesMeta,
-    setMeta,
+    setParticipant,
     randomizeMeta,
     resetRandomizeMeta,
     freezeMeta,
     resetFreezeMeta,
-  } = useTournamentMatches()
-  const { tournament, meta } = useTournamentDetail()
+    setParticipantMeta,
+  } = useModeratorActions()
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [data, setData] = useState<any>()
@@ -128,7 +125,7 @@ const ArenaMatches: React.FC = () => {
             </Bracket.Container>
           )}
           <SelectParticipantModal
-            meta={setMeta}
+            meta={setParticipantMeta}
             tournament={tournament}
             selectedMatch={selectedMatch}
             handleSetParticipant={(params) => setParticipant({ ...params, hash_key: tournament.attributes.hash_key })}

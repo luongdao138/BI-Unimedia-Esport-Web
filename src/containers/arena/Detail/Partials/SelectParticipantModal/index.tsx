@@ -79,6 +79,21 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
     setShowParticipants(true)
   }
 
+  const participantData = (participant) => {
+    const _user = participant.attributes.user
+    const teamName = isTeam ? participant.attributes.team.data.attributes.name : ''
+    return {
+      avatar: participant.attributes.avatar_url,
+      user: {
+        ..._user,
+        role: 'participant',
+        name: participant.attributes.name,
+        team_name: teamName,
+      },
+      pid: participant.id,
+    }
+  }
+
   const participantItem = (user, avatar, type) => {
     const _name = isTeam ? user?.team_name : user?.name
     const emptyParticipant = {
@@ -155,7 +170,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
             tournament={tournament}
             open={showParticipants}
             handleClose={() => setShowParticipants(false)}
-            onSelect={(participant) => selectedHandler(participant, selectedType)}
+            onSelect={(participant) => selectedHandler(participantData(participant), selectedType)}
           />
         </BlankLayout>
       )}
