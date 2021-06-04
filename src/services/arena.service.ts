@@ -50,7 +50,7 @@ export type TournamentResponse = {
   attributes: any
 }
 
-export type Meta = {
+export type PageMeta = {
   current_page: number
   per_page: number
   total_count: number
@@ -59,7 +59,7 @@ export type Meta = {
 
 export type TournamentFollowersResponse = {
   data: Array<FollowersResponse>
-  meta: Meta
+  meta: PageMeta
 }
 
 export type FollowersResponse = {
@@ -68,7 +68,7 @@ export type FollowersResponse = {
 
 export type TournamentResultsResponse = {
   data: Array<ResultsResponse>
-  meta: Meta
+  meta: PageMeta
 }
 
 export type ResultsResponse = {
@@ -252,7 +252,7 @@ export type GetParticipantsParams = {
 
 export type GetParticipantsResponse = {
   data: Array<ParticipantsResponse>
-  meta: Meta
+  meta: PageMeta
 }
 
 export type ParticipantsResponse = {
@@ -313,7 +313,7 @@ export type GetSuggestedTeamMembersResponse = {
 
 export type RecruitingTournamentResponse = {
   data: Array<RecruitingResponse>
-  meta: Meta
+  meta: PageMeta
 }
 
 export type RecruitingResponse = {
@@ -351,7 +351,7 @@ export type RecommendedUsersResponse = {
   data: Array<RecommendedUsers>
   links?: {
     links: any
-    meta: Meta
+    meta: PageMeta
   }
 }
 

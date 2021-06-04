@@ -6,7 +6,7 @@ import * as selectors from '@store/arena/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'
-import { RecommendedUsers, Meta as RecommendedMeta } from '@services/arena.service'
+import { RecommendedUsers, PageMeta } from '@services/arena.service'
 
 const getMeta = createMetaSelector(actions.getRecommendedUsersByName)
 
@@ -14,7 +14,7 @@ const useOrganizerSearch = (): {
   meta: Meta
   getRecommendedUsersByName: (keyword: string, page: number) => void
   recommendedUsers: RecommendedUsers[]
-  page: RecommendedMeta
+  page: PageMeta
 } => {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getMeta)
