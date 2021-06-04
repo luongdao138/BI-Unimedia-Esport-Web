@@ -19,7 +19,6 @@ const MessageLayout: React.FC = ({ children }) => {
   const router = useRouter()
   const { t } = useTranslation(['common'])
   const { previousRoute } = useContext(RouteContext)
-
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
@@ -30,7 +29,11 @@ const MessageLayout: React.FC = ({ children }) => {
 
   const backHandler = (e: React.MouseEvent) => {
     e.preventDefault
-    router.push(previousRoute)
+    if (previousRoute) {
+      router.push(previousRoute)
+    } else {
+      router.push('/home')
+    }
   }
   const navigateRoomCreate = () => {
     router.push(ESRoutes.MESSAGE_ROOM_CREATE, undefined, { shallow: true })

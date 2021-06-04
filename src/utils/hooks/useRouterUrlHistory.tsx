@@ -1,28 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-const EXCEPTIONS = [
-  '/login',
-  '/register ',
-  '/register/by-email',
-  '/register/confirm',
-  '/register/profile',
-  '/user-settings',
-  '/forgot-password',
-  '/forgot-password/confirm',
-  '/forgot-password/reset',
-]
+// const EXCEPTIONS = [] improve later
 
 const useRouteUrlHistory = (): { previousRoute: string } => {
   const [previousRoute, setPreviousRouter] = useState('')
   const router = useRouter()
 
-  const handleBeforeHistoryChange = (url) => {
-    const [nextUrl] = url?.split('?') || []
-
-    if (!(EXCEPTIONS.includes(nextUrl) || EXCEPTIONS.includes(router.asPath)) && nextUrl !== router.asPath) {
-      setPreviousRouter(router.asPath)
-    }
+  const handleBeforeHistoryChange = (_url: string) => {
+    setPreviousRouter(router.asPath)
   }
 
   useEffect(() => {
