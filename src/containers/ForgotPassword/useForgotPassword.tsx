@@ -17,7 +17,7 @@ const useForgotPassword = () => {
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getForgotPasswordMeta)
   const metaConfirm = useAppSelector(getForgotConfirmMeta)
-  const { navigateScreen } = useReturnHref()
+  const { navigateScreen, handleReturn } = useReturnHref()
 
   const forgotPassword = (params: ForgotPasswordParams) => dispatch(actions.forgotPassword(params))
 
@@ -25,7 +25,7 @@ const useForgotPassword = () => {
     dispatch(actions.resetPassword(params))
   }
 
-  const backAction = () => navigateScreen(ESRoutes.LOGIN)
+  const backAction = () => handleReturn()
 
   useEffect(() => {
     if (meta.loaded) {

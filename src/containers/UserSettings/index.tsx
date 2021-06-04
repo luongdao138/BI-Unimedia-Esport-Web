@@ -49,7 +49,7 @@ const UserSettingsContainer: React.FC = () => {
   useEffect(() => {
     if (getUserProfileMeta.loaded) {
       if (!userProfile || userProfile.attributes.update_step !== 1) {
-        router.push(ESRoutes.HOME)
+        // router.push(ESRoutes.HOME)
       }
     }
   }, [getUserProfileMeta.loaded])

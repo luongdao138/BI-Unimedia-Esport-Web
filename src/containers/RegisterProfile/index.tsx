@@ -22,9 +22,9 @@ const RegisterProfileContainer: React.FC = () => {
   const store = useStore()
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
-      .required(t('common:common.required'))
+      .required(t('common:common.user_id_at_least'))
       .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.at_least'))
+      .min(2, t('common:common.user_id_at_least'))
       .test('user_code', t('common:common.user_code_invalid'), function (value) {
         return CommonHelper.userCodeValid(value)
       })
@@ -32,9 +32,9 @@ const RegisterProfileContainer: React.FC = () => {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
-      .required(t('common:common.required'))
+      .required(t('common:common.nickname_at_least'))
       .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.at_least'))
+      .min(2, t('common:common.nickname_at_least'))
       .test('nickname', t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
