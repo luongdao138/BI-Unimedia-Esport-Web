@@ -36,7 +36,7 @@ const useArenaHome = (): {
     tournamentSearch({ page: 1, keyword: '' })
     return () => resetMeta()
   }, [])
-  const handleCreateButton = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '#arena/create', { shallow: true })
+  const handleCreateButton = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   return { arenas, meta, page, loadMore, handleCreateButton }
 }
 
