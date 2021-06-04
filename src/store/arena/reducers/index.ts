@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import {
   TournamentResponse,
-  Meta,
+  PageMeta,
   FollowersResponse,
   ResultsResponse,
   TournamentDetail,
@@ -18,24 +18,24 @@ import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
-  searchTournamentsMeta?: Meta
+  searchTournamentsMeta?: PageMeta
   tournamentFollowers: Array<FollowersResponse>
   tournamentResults: Array<ResultsResponse>
   tournamentDetail?: TournamentDetail
   tournamentParticipants?: Array<ParticipantsResponse>
-  participantsMeta?: Meta
+  participantsMeta?: PageMeta
   suggestedTeamMembers?: Array<SuggestedTeamMembersResponse>
-  suggestedTeamMembersMeta?: Meta
+  suggestedTeamMembersMeta?: PageMeta
   tournamentInteresteds?: Array<ParticipantsResponse>
-  interestedsMeta?: Meta
+  interestedsMeta?: PageMeta
   tournamentMatches: TournamentMatchResponse
   recruitingTournaments: Array<RecruitingResponse>
   arenaWinners: ArenaWinners
   recommendedUsers?: Array<RecommendedUsers>
-  recommendedUsersMeta?: Meta
-  tournamentFollowersMeta: Meta
-  tournamentResultsMeta: Meta
-  recruitingTournamentsMeta: Meta
+  recommendedUsersMeta?: PageMeta
+  tournamentFollowersMeta: PageMeta
+  tournamentResultsMeta: PageMeta
+  recruitingTournamentsMeta: PageMeta
 }
 
 const initialState: StateType = {
