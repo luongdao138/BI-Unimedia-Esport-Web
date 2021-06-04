@@ -4,9 +4,7 @@ import { TournamentDetail } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
 import Participants from '@containers/arena/Detail/Participants'
-import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
-import { useRouter } from 'next/router'
-import { ESRoutes } from '@constants/route.constants'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface Props {
   tournament: TournamentDetail
@@ -14,36 +12,8 @@ interface Props {
 
 const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const classes = useStyles()
-  const router = useRouter()
   const { t } = useTranslation(['common'])
-
-  const hashKey = tournament.attributes.hash_key
-  const chatRoomId = tournament.attributes.chat_room_id
-  const myRole = tournament.attributes.my_role
-  const status = tournament.attributes.status
-  const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
-  const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
-  const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
-  const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
-  const isBattleRoyale = tournament.attributes.rule === RULE.BATTLE_ROYALE
-
-  const handleMatches = () => {
-    if (isModerator && isRecruitmentClosed) {
-      const matchEditRoute = isBattleRoyale ? ESRoutes.ARENA_BATTLES_EDIT : ESRoutes.ARENA_MATCHES_EDIT
-      router.push(matchEditRoute.replace(/:id/gi, hashKey))
-    } else {
-      const matchRoute = isBattleRoyale ? ESRoutes.ARENA_BATTLES : ESRoutes.ARENA_MATCHES
-      router.push(matchRoute.replace(/:id/gi, hashKey))
-    }
-  }
-
-  const handleResults = () => {
-    router.push(ESRoutes.ARENA_RESULTS.replace(/:id/gi, hashKey))
-  }
-
-  const handleGroupChat = () => {
-    router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
-  }
+  const { toGroupChat, toMatches, toResults, isModerator, isInProgress, isCompleted, isRecruitmentClosed } = useArenaHelper(tournament)
 
   return (
     <Box className={classes.body}>
@@ -54,12 +24,12 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
               <Participants detail={tournament} />
             </Box>
             <Box className={classes.actionButton}>
-              <ESButton variant="outlined" fullWidth onClick={handleMatches}>
+              <ESButton variant="outlined" fullWidth onClick={toMatches}>
                 {t('common:tournament.brackets')}
               </ESButton>
             </Box>
             <Box className={classes.actionButton}>
-              <ESButton variant="outlined" fullWidth onClick={handleResults}>
+              <ESButton variant="outlined" fullWidth onClick={toResults}>
                 {t('common:tournament.results')}
               </ESButton>
             </Box>
@@ -74,12 +44,12 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                       <Participants detail={tournament} />
                     </Box>
                     <Box className={classes.actionButton}>
-                      <ESButton variant="outlined" fullWidth onClick={handleGroupChat}>
+                      <ESButton variant="outlined" fullWidth onClick={toGroupChat}>
                         {t('common:tournament.group_chat')}
                       </ESButton>
                     </Box>
                     <Box className={classes.actionButton}>
-                      <ESButton variant="outlined" fullWidth onClick={handleMatches}>
+                      <ESButton variant="outlined" fullWidth onClick={toMatches}>
                         {t('common:tournament.brackets')}
                       </ESButton>
                     </Box>
@@ -90,13 +60,13 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                       <Participants detail={tournament} />
                     </Box>
                     <Box className={classes.actionButton}>
-                      <ESButton variant="outlined" fullWidth onClick={handleGroupChat}>
+                      <ESButton variant="outlined" fullWidth onClick={toGroupChat}>
                         {t('common:tournament.group_chat')}
                       </ESButton>
                     </Box>
                     {isRecruitmentClosed && isModerator && (
                       <Box className={classes.actionButton}>
-                        <ESButton variant="outlined" fullWidth onClick={handleMatches}>
+                        <ESButton variant="outlined" fullWidth onClick={toMatches}>
                           {t('common:tournament.brackets')}
                         </ESButton>
                       </Box>
@@ -112,7 +82,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                       <Participants detail={tournament} />
                     </Box>
                     <Box className={classes.actionButton}>
-                      <ESButton variant="outlined" fullWidth onClick={handleMatches}>
+                      <ESButton variant="outlined" fullWidth onClick={toMatches}>
                         {t('common:tournament.brackets')}
                       </ESButton>
                     </Box>

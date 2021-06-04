@@ -7,17 +7,19 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { AddRounded } from '@material-ui/icons'
+import useArenaHelper from '../hooks/useArenaHelper'
 
 const ArenaHome: React.FC = () => {
   const { t } = useTranslation()
   const classes = useStyles()
-  const { arenas, page, meta, loadMore, handleCreateButton } = useArenaHome()
+  const { arenas, page, meta, loadMore } = useArenaHome()
+  const { toCreate } = useArenaHelper()
 
   return (
     <>
       <div className={classes.header}>
         <Typography variant="h2">アリーナ</Typography>
-        <ButtonPrimary round gradient={false} onClick={handleCreateButton} size="small">
+        <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
           <AddRounded className={classes.addIcon} />
           {t('common:tournament_create.title')}
         </ButtonPrimary>

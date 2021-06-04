@@ -12,10 +12,12 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import { UserProfile } from '@services/user.service'
 
 const getMeta = createMetaSelector(actions.getTournamentDetail)
+const getEntryStatusMeta = createMetaSelector(actions.getEntryStatus)
 
 const useTournamentDetail = (): {
   tournament: TournamentDetail
   meta: Meta
+  entryMeta: Meta
   handleBack: () => void
   userProfile: UserProfile
   getUserProfileMeta: Meta
@@ -24,6 +26,7 @@ const useTournamentDetail = (): {
   const dispatch = useAppDispatch()
   const tournament = useAppSelector(selectors.getTournamentDetail)
   const meta = useAppSelector(getMeta)
+  const entryMeta = useAppSelector(getEntryStatusMeta)
   const { userProfile, getUserProfileMeta } = useGetProfile()
 
   useEffect(() => {
@@ -52,6 +55,7 @@ const useTournamentDetail = (): {
     handleBack,
     userProfile,
     getUserProfileMeta,
+    entryMeta,
   }
 }
 
