@@ -1,9 +1,9 @@
 import PlainLayout from '@layouts/PlainLayout'
 import PageWithLayoutType from '@constants/page'
-import ArenaMatches from '@containers/ArenaMatches'
+import { MatchesContainer } from '@containers/arena'
 
 const ArenaMatchesPage: PageWithLayoutType = () => {
-  return <ArenaMatches />
+  return <MatchesContainer />
 }
 
 PlainLayout.defaultProps = {

@@ -53,6 +53,7 @@ export const URI = {
   TOURNAMENTS_PARTICIPANTS: 'v1/tournaments/:id/participants',
   TOURNAMENTS_RANDOMIZE_PARTICIPANTS: '/v2/tournaments/:id/randomize_participants',
   TOURNAMENTS_FREEZE_PARTICIPANTS: '/v2/tournaments/:id/freeze_participants',
+  ARENA_SET_PARTICIPANTS: 'v2/tournaments/:id/set_participants',
   COMMUNITY_FOLLOWERS_TOPICS: '/v2/communities/???',
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic',
