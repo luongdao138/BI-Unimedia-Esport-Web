@@ -15,6 +15,7 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
+import LoginRequired from '@containers/LoginRequired'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -201,14 +202,16 @@ const SideMenu: React.FC = () => {
 
         <Box className={`${classes.menuWrap}`}>
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-            <Link href={ESRoutes.HOME} passHref>
-              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
-                <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-home" />
-                </ListItemIcon>
-                <ListItemText className={classes.listText} primary={t('common:home.home')} />
-              </ListItem>
-            </Link>
+            <LoginRequired>
+              <Link href={ESRoutes.HOME} passHref>
+                <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.HOME)}>
+                  <ListItemIcon className={classes.icon}>
+                    <Icon fontSize="small" className="fa fa-home" />
+                  </ListItemIcon>
+                  <ListItemText className={classes.listText} primary={t('common:home.home')} />
+                </ListItem>
+              </Link>
+            </LoginRequired>
             <Link href={ESRoutes.ARENA} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.ARENA)}>
                 <ListItemIcon className={classes.icon}>

@@ -48,10 +48,9 @@ interface returnItem {
 interface headerProps {
   toggleDrawer: (open: boolean) => void
   open: boolean
-  loginRequired?: boolean
 }
 
-export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequired }) => {
+export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -112,12 +111,6 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
       dispatch(notificationActions.getNotificationBadge())
     }
   }, [isAuthenticated])
-
-  useEffect(() => {
-    if (loginRequired && !isAuthenticated) {
-      router.push(ESRoutes.TOP)
-    }
-  }, [loginRequired])
 
   return (
     <div className={classes.grow}>
