@@ -1,19 +1,21 @@
-import { Avatar, Typography } from '@material-ui/core'
+import { Avatar, Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import ESInput from '@components/Input'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface BRListItemProps {
   index: string
   avatar: string | null
-  label: string
+  label?: string
   score?: string | null
   editable?: boolean
   onChange?: (score: string) => void
 }
 
 const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [editable, setEditable] = useState(props.editable)
   const handleChange = (e) => {
@@ -25,10 +27,12 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
         <div className={classes.matchHeader}>{props.index}</div>
         <div className={classes.participantWrapper}>
           <div className={classes.participant}>
-            <Avatar className={classes.avatar} alt={props.label} src={props.avatar} />
-            <Typography className={classes.label} noWrap={true}>
-              {props.label}
-            </Typography>
+            <Avatar className={classes.avatar} alt={props.label || ''} src={props.avatar} />
+            <Box color={props.label ? Colors.white : Colors.grey[400]}>
+              <Typography className={classes.label} noWrap={true}>
+                {props.label || t('common:common.not_sure')}
+              </Typography>
+            </Box>
           </div>
           <div className={classes.scoreWrap} onClick={() => setEditable(true)}>
             <ESInput

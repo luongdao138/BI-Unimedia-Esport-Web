@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
 import { makeStyles, Theme, Typography, Box, InputAdornment } from '@material-ui/core'
@@ -36,7 +36,7 @@ const validationSchema = Yup.object().shape({
       return CommonHelper.validateEmail(value)
     })
     .required(i18n.t('common:common.required')),
-  password: Yup.string().required(i18n.t('common:common.required')),
+  password: Yup.string().required(i18n.t('common:common.required')).min(8, i18n.t('common:common.required')),
 })
 
 const LoginContainer: React.FC = () => {
@@ -51,7 +51,7 @@ const LoginContainer: React.FC = () => {
   const { handleLink } = useReturnHref()
   const [showPassword, setShowPassword] = useState(false)
 
-  const { handleChange, values, handleSubmit, handleBlur, errors, touched } = useFormik<UserLoginParams>({
+  const { handleChange, values, handleSubmit, handleBlur, errors, touched, validateForm } = useFormik<UserLoginParams>({
     initialValues: {
       email: '',
       password: '',
@@ -117,6 +117,10 @@ const LoginContainer: React.FC = () => {
       )
     )
   }
+
+  useEffect(() => {
+    validateForm()
+  }, [])
 
   return (
     <>

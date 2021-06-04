@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import HeaderWithButton from '@components/HeaderWithButton'
 import { useRouter } from 'next/router'
-import { useContextualRouting } from 'next-use-contextual-routing'
-import { ESRoutes } from '@constants/route.constants'
 import { Box } from '@material-ui/core'
 import { useAppSelector } from '@store/hooks'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -11,6 +9,8 @@ import ESButton from '@components/Button'
 import SettingsItem from './SettingsItem'
 import authStore from '@store/auth'
 import useAccount from './useAccount'
+import { useContextualRouting } from 'next-use-contextual-routing'
+import { ESRoutes } from '@constants/route.constants'
 
 const AccountSettingsContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -18,8 +18,8 @@ const AccountSettingsContainer: React.FC = () => {
   const user = useAppSelector(selectors.getAuth)
   const hasEmail = CommonHelper.hasEmail(user?.email)
   const router = useRouter()
-  const { makeContextualHref } = useContextualRouting()
   const { resetSteps } = useAccount()
+  const { makeContextualHref } = useContextualRouting()
 
   const openEmailModal = () => {
     resetSteps()
@@ -50,6 +50,7 @@ const AccountSettingsContainer: React.FC = () => {
           value={hasEmail ? user.email : t('account_settings.sns')}
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
+          showButton={true}
         />
         <SettingsItem
           title={t('common.password')}
@@ -58,6 +59,7 @@ const AccountSettingsContainer: React.FC = () => {
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangePassword={openPasswordModal}
           password
+          showButton={true}
         />
       </Box>
       <Box my={4} display="flex" justifyContent="center">

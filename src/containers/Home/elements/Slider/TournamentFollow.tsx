@@ -2,6 +2,7 @@ import ESSlider from '@components/Slider'
 import { ESRoutes } from '@constants/route.constants'
 import { useTranslation } from 'react-i18next'
 import TournamentCardFollow from '@components/TournamentCard/Follow'
+import { SLIDE_LIMIT } from '@constants/common.constants'
 
 interface Props {
   data: any
@@ -15,7 +16,7 @@ export const TournamentFollow: React.FC<Props> = ({ data }) => {
       moreLink={ESRoutes.TOURNAMENT_FOLLOWER_ENTERING}
       navigation
       width={256}
-      items={data.map((tournament, i) => (
+      items={data.slice(0, SLIDE_LIMIT).map((tournament, i: number) => (
         <TournamentCardFollow key={i} tournament={tournament} />
       ))}
     />

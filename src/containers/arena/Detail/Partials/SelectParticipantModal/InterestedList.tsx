@@ -45,22 +45,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
 
   const userData = (participant) => {
     const _user = participant.attributes.user
-    return { id: _user.id, attributes: { ..._user, avatar: participant.attributes.avatar_url } }
-  }
-
-  const participantData = (participant) => {
-    const _user = participant.attributes.user
-    const teamName = isTeam ? participant.attributes.team.data.attributes.name : ''
-    return {
-      avatar: participant.attributes.avatar_url,
-      user: {
-        ..._user,
-        role: 'participant',
-        name: participant.attributes.name,
-        team_name: teamName,
-      },
-      pid: participant.id,
-    }
+    return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
   return (
@@ -100,7 +85,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
                     avatar={participant.attributes.avatar_url}
                     key={i}
                     handleClick={() => {
-                      onSelect(participantData(participant))
+                      onSelect(participant)
                     }}
                   />
                 ))
@@ -109,7 +94,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
                     data={userData(participant)}
                     key={i}
                     handleClick={() => {
-                      onSelect(participantData(participant))
+                      onSelect(participant)
                     }}
                   />
                 ))}

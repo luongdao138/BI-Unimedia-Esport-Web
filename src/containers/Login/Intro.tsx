@@ -11,7 +11,7 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 const IntroContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { handleReturn, navigateModal } = useReturnHref()
+  const { handleReturn, navigateScreen } = useReturnHref()
 
   return (
     <Box pt={7.5} className={classes.topContainer}>
@@ -31,7 +31,7 @@ const IntroContainer: React.FC = () => {
       </Box>
 
       <Box maxWidth={280} className={classes.buttonContainer}>
-        <ButtonPrimary type="submit" round fullWidth onClick={() => navigateModal(ESRoutes.LOGIN)}>
+        <ButtonPrimary type="submit" round fullWidth onClick={() => navigateScreen(ESRoutes.LOGIN)}>
           {t('common:login.submit')}
         </ButtonPrimary>
       </Box>

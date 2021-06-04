@@ -17,6 +17,7 @@ import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
+import { useContextualRouting } from 'next-use-contextual-routing'
 import LoginContainer from '@containers/Login'
 import IntroContainer from '@containers/Login/Intro'
 import ForgotContainer from '@containers/ForgotPassword'
@@ -127,19 +128,17 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
   const dispatch = useAppDispatch()
   const badge = useAppSelector(notificationSelector.getNotificationBadge)
   const { setSearch } = useSearch()
+  const { makeContextualHref } = useContextualRouting()
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
     router.push(ESRoutes.SEARCH)
   }
 
-  const openModal = () => router.push('#welcome', undefined, { shallow: true })
+  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
 
   const renderContent = () => {
-    const path = router.asPath.split('#')
-    const modalPath = '/' + path[path.length - 1]
-
-    switch (modalPath) {
+    switch (router.query.pathName) {
       case ESRoutes.LOGIN:
         return <LoginContainer />
       case ESRoutes.WELCOME:
@@ -184,7 +183,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
 
   useEffect(() => {
     if (loginRequired && !isAuthenticated) {
-      openModal()
+      router.push(ESRoutes.TOP)
     }
   }, [loginRequired])
 
@@ -243,7 +242,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
                 </>
               )}
             </div>
-            <ESModal open={router.asPath.includes('#')} handleClose={handleReturn}>
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
               <BlankLayout>{renderContent()}</BlankLayout>
             </ESModal>
           </Toolbar>

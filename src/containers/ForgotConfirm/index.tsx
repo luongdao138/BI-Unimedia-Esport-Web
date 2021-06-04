@@ -8,12 +8,15 @@ import useForgotConfirm from './useForgotConfirm'
 import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
+import ESToast from '@components/Toast'
 
 const ForgotConfirmContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { user, forgotConfirm, metaConfirm, backAction } = useForgotConfirm(confirmationCode)
+  const { user, forgotConfirm, metaConfirm, backAction, resendConfirmation, metaResend, resetResendMeta } = useForgotConfirm(
+    confirmationCode
+  )
 
   const handleSubmit = () => {
     const params = {
@@ -26,6 +29,10 @@ const ForgotConfirmContainer: React.FC = () => {
 
   const buttonActive = (): boolean => {
     return user?.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
+  }
+
+  const handleResend = () => {
+    if (user?.email) resendConfirmation({ email: user.email, type: 'reset_password' })
   }
 
   return (
@@ -50,9 +57,11 @@ const ForgotConfirmContainer: React.FC = () => {
           <Box py={4} display="flex" alignItems="center" flexDirection="column">
             <ESPinInput error={!!metaConfirm.error} value={confirmationCode} onChange={(value) => setConfirmationCode(value)} />
           </Box>
-          <Typography variant="body2" className={classes.hint}>
-            {t('common:confirm.resend')}
-          </Typography>
+          <Box onClick={handleResend}>
+            <Typography variant="body2" className={classes.resend}>
+              {t('common:confirm.resend')}
+            </Typography>
+          </Box>
         </Box>
 
         <Box pt={12}>
@@ -76,7 +85,8 @@ const ForgotConfirmContainer: React.FC = () => {
           </Box>
         </Box>
       </Box>
-      {metaConfirm.pending && <ESLoader open={metaConfirm.pending} />}
+      <ESLoader open={metaConfirm.pending || metaResend.pending} />
+      {metaResend.loaded && <ESToast open={metaResend.loaded} message={t('common:register.resend_success')} resetMeta={resetResendMeta} />}
     </>
   )
 }
@@ -105,6 +115,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   hint: {
     color: Colors.grey[300],
+  },
+  resend: {
+    color: Colors.grey[300],
+    cursor: 'pointer',
   },
   hintDetail: {
     color: Colors.text[300],

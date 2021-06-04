@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react'
-import { ChatRoomMemberItem, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
 import { Box, makeStyles, IconButton, Icon } from '@material-ui/core'
 import { CellMeasurer, CellMeasurerCache, List, AutoSizer } from 'react-virtualized'
 import { useRect } from '@utils/hooks/useRect'
@@ -12,7 +12,7 @@ import _ from 'lodash'
 
 export interface MessageListProps {
   messages: MessageType[]
-  users: ChatRoomMemberItem[]
+  users: ChatRoomMemberItem[] | ChatSuggestionList[]
   onFetchMore?: () => void
   paginating?: boolean
   currentUser: string | number
@@ -50,7 +50,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
         messagesEndRef.current.recomputeRowHeights()
         messagesEndRef.current.forceUpdate()
-        messagesEndRef.current.scrollToRow(5)
+        messagesEndRef.current.scrollToRow(7)
       }
     }, 10)
     cache.clearAll()

@@ -31,6 +31,7 @@ const ProfileEditContainer: React.FC = () => {
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
+  const [isValidDate, setValidDate] = useState(false)
 
   useEffect(() => {
     if (userProfile) {
@@ -101,7 +102,7 @@ const ProfileEditContainer: React.FC = () => {
               {t('common:profile.basic_info')}
             </Typography>
             <Box paddingX={3}>
-              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} />
+              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} handleDateError={setValidDate} />
             </Box>
             <Typography variant="h3" gutterBottom className={classes.label}>
               {t('common:user_profile.sns')}
@@ -116,7 +117,7 @@ const ProfileEditContainer: React.FC = () => {
       <Box className={classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth disabled={hasError} onClick={handleSubmit}>
+            <ButtonPrimary type="submit" round fullWidth disabled={hasError || isValidDate} onClick={handleSubmit}>
               {t('common:common.save')}
             </ButtonPrimary>
           </Box>

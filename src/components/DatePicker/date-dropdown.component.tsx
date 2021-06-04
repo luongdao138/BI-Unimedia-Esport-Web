@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import * as React from 'react'
-import { monthByNumber, daysInMonth } from './date-dropdown-helper'
+import { monthByNumber, daysInMonthSelect, daysInMonth } from './date-dropdown-helper'
 import ESSelect from '@components/Select'
-import { Grid } from '@material-ui/core'
+import { Grid, Typography, Box } from '@material-ui/core'
 
 export enum DropdownComponent {
   year = 'year',
@@ -13,12 +13,12 @@ export enum DropdownComponent {
 interface IProps {
   startDate?: string
   endDate?: string
-  selectedDate?: string
   order?: DropdownComponent[]
   onMonthChange?: Function
   onDayChange?: Function
   onYearChange?: Function
-  onDateChange?: Function
+  selectedDate: { year: number; month: number; day: number }
+  onDateChange: (date: { year: number; month: number; day: number }, error: boolean) => void
   ids?: {
     year?: string
     month?: string
@@ -51,6 +51,8 @@ interface IProps {
     monthShort?: boolean
     monthCaps?: boolean
   }
+  hasError?: boolean
+  helperText?: string
 }
 
 interface IState {
@@ -63,6 +65,8 @@ interface IState {
   selectedYear: number
   selectedMonth: number
   selectedDay: number
+  hasError: boolean
+  helperText: string
 }
 
 export class DropdownDate extends React.Component<IProps, IState> {
@@ -70,10 +74,10 @@ export class DropdownDate extends React.Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props)
-    const { startDate, endDate, selectedDate } = props
+    const { startDate, endDate, selectedDate, hasError, helperText } = props
+    const { year, month, day } = selectedDate
     const sDate = startDate ? new Date(startDate) : new Date('1941-01-01')
     const eDate = endDate ? new Date(endDate) : new Date('2011-01-01')
-    const selDate = selectedDate ? new Date(selectedDate) : null
     this.state = {
       startYear: sDate.getFullYear(),
       startMonth: sDate.getMonth(),
@@ -81,9 +85,11 @@ export class DropdownDate extends React.Component<IProps, IState> {
       endYear: eDate.getFullYear(),
       endMonth: eDate.getMonth(),
       endDay: eDate.getDate(),
-      selectedYear: selDate ? selDate.getFullYear() : -1,
-      selectedMonth: selDate ? selDate.getMonth() : -1,
-      selectedDay: selDate ? selDate.getDate() : -1,
+      selectedYear: year ? year : -1,
+      selectedMonth: month ? month : -1,
+      selectedDay: day ? day : -1,
+      hasError: hasError,
+      helperText: helperText,
     }
     this.renderParts = {
       year: this.renderYear,
@@ -93,11 +99,11 @@ export class DropdownDate extends React.Component<IProps, IState> {
   }
 
   static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
-    const selDate = nextProps.selectedDate ? new Date(nextProps.selectedDate) : null
+    const selDate = nextProps.selectedDate ? nextProps.selectedDate : null
     const tempSelDate = {
-      selectedYear: selDate ? selDate.getFullYear() : -1,
-      selectedMonth: selDate ? selDate.getMonth() : -1,
-      selectedDay: selDate ? selDate.getDate() : -1,
+      selectedYear: selDate ? selDate.year : -1,
+      selectedMonth: selDate ? selDate.month : -1,
+      selectedDay: selDate ? selDate.day : -1,
     }
     if (tempSelDate.selectedYear !== prevState.selectedYear) {
       return { selectedYear: tempSelDate.selectedYear }
@@ -108,6 +114,9 @@ export class DropdownDate extends React.Component<IProps, IState> {
     if (tempSelDate.selectedDay !== prevState.selectedDay) {
       return { selectedDay: tempSelDate.selectedDay }
     }
+    if (nextProps.hasError !== prevState.hasError) {
+      return { hasError: nextProps.hasError }
+    }
     return null
   }
 
@@ -116,7 +125,7 @@ export class DropdownDate extends React.Component<IProps, IState> {
     const { startYear, endYear } = this.state
     const yearOptions = []
     yearOptions.push(
-      <option key={-1} value="-1" className={classes && classes.yearOptions ? classes.yearOptions : undefined}>
+      <option key={-1} value="-1" disabled className={classes && classes.yearOptions ? classes.yearOptions : undefined}>
         {defaultValues && defaultValues.year ? defaultValues.year : ''}
       </option>
     )
@@ -142,17 +151,10 @@ export class DropdownDate extends React.Component<IProps, IState> {
 
   generateMonthOptions() {
     const { classes, options, defaultValues } = this.props
-    const { startMonth, endMonth, startYear, endYear, selectedYear } = this.state
+    const { startMonth, startYear, selectedYear } = this.state
     let months = []
     if (selectedYear === startYear) {
       for (let i = startMonth; i <= 11; i++) {
-        months.push({
-          value: i,
-          month: monthByNumber[i],
-        })
-      }
-    } else if (selectedYear === endYear) {
-      for (let i = 0; i <= endMonth; i++) {
         months.push({
           value: i,
           month: monthByNumber[i],
@@ -187,7 +189,7 @@ export class DropdownDate extends React.Component<IProps, IState> {
 
     const monthOptions = []
     monthOptions.push(
-      <option key={-1} value="-1" className={classes && classes.monthOptions ? classes.monthOptions : undefined}>
+      <option key={-1} value="-1" disabled className={classes && classes.monthOptions ? classes.monthOptions : undefined}>
         {defaultValues && defaultValues.month ? defaultValues.month : ''}
       </option>
     )
@@ -204,10 +206,10 @@ export class DropdownDate extends React.Component<IProps, IState> {
 
   generateDayOptions() {
     const { classes, defaultValues } = this.props
-    const { startYear, startMonth, startDay, endYear, endMonth, endDay, selectedYear, selectedMonth } = this.state
+    const { startYear, startMonth, startDay, selectedYear, selectedMonth } = this.state
     const dayOptions = []
     dayOptions.push(
-      <option key={-1} value="-1" className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
+      <option key={-1} value="-1" disabled className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
         {defaultValues && defaultValues.day ? defaultValues.day : ''}
       </option>
     )
@@ -215,7 +217,7 @@ export class DropdownDate extends React.Component<IProps, IState> {
     let monthDays
     if (selectedYear === startYear) {
       if (selectedMonth === startMonth) {
-        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonth[selectedMonth] + 1 : daysInMonth[selectedMonth]
+        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonthSelect[selectedMonth] + 1 : daysInMonthSelect[selectedMonth]
         for (let i = startDay; i <= monthDays; i++) {
           dayOptions.push(
             <option key={i} value={i} className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
@@ -224,26 +226,7 @@ export class DropdownDate extends React.Component<IProps, IState> {
           )
         }
       } else {
-        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonth[selectedMonth] + 1 : daysInMonth[selectedMonth]
-        for (let i = 1; i <= monthDays; i++) {
-          dayOptions.push(
-            <option key={i} value={i} className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
-              {i}
-            </option>
-          )
-        }
-      }
-    } else if (selectedYear === endYear) {
-      if (selectedMonth === endMonth) {
-        for (let i = 1; i <= endDay; i++) {
-          dayOptions.push(
-            <option key={i} value={i} className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
-              {i}
-            </option>
-          )
-        }
-      } else {
-        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonth[selectedMonth] + 1 : daysInMonth[selectedMonth]
+        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonthSelect[selectedMonth] + 1 : daysInMonthSelect[selectedMonth]
         for (let i = 1; i <= monthDays; i++) {
           dayOptions.push(
             <option key={i} value={i} className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
@@ -254,7 +237,7 @@ export class DropdownDate extends React.Component<IProps, IState> {
       }
     } else {
       if (selectedMonth) {
-        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonth[selectedMonth] + 1 : daysInMonth[selectedMonth]
+        monthDays = selectedYear % 4 === 0 && selectedMonth === 1 ? daysInMonthSelect[selectedMonth] + 1 : daysInMonthSelect[selectedMonth]
         for (let i = 1; i <= monthDays; i++) {
           dayOptions.push(
             <option key={i} value={i} className={classes && classes.dayOptions ? classes.dayOptions : undefined}>
@@ -278,7 +261,7 @@ export class DropdownDate extends React.Component<IProps, IState> {
   handleDateChange = (type: DropdownComponent, value: number) => {
     if (this.props.onDateChange) {
       let { selectedYear, selectedMonth, selectedDay } = this.state
-      const { endYear, endMonth, endDay } = this.state
+      let error = false
 
       if (type === DropdownComponent.year) {
         selectedYear = value
@@ -288,36 +271,28 @@ export class DropdownDate extends React.Component<IProps, IState> {
         selectedDay = value
       }
 
-      if (selectedYear === endYear) {
-        if (selectedMonth > endMonth) {
-          selectedMonth = endMonth
-        } else if (selectedMonth === endMonth && selectedDay > endDay) {
-          selectedDay = 1
-        }
-      }
-
       let _daysInMonth = daysInMonth[selectedMonth]
       if (selectedYear % 4 === 0 && selectedMonth === 1) {
         _daysInMonth++
       }
 
-      if (selectedDay > _daysInMonth) {
-        selectedDay = 1
+      if (_daysInMonth < selectedDay) {
+        error = true
       }
 
       if (selectedYear !== -1 && selectedMonth !== -1 && selectedDay !== -1) {
-        this.props.onDateChange(new Date(selectedYear, selectedMonth, selectedDay))
+        this.props.onDateChange({ year: selectedYear, month: selectedMonth, day: selectedDay }, error)
       } else if (selectedYear !== -1 && selectedMonth !== -1) {
-        this.props.onDateChange(new Date(selectedYear + '-' + monthByNumber[selectedMonth]))
+        this.props.onDateChange({ year: selectedYear, month: monthByNumber[selectedMonth], day: selectedDay }, error)
       } else if (selectedYear !== -1) {
         this.setState({ selectedMonth: 1, selectedDay: 1 })
-        this.props.onDateChange(new Date(selectedYear + '-01-01'))
+        this.props.onDateChange({ year: selectedYear, month: 0, day: 1 }, error)
       } else if (selectedYear === -1) {
         selectedYear = -1
         selectedMonth = -1
         selectedDay = -1
         this.setState({ selectedYear: -1, selectedMonth: -1, selectedDay: -1 })
-        this.props.onDateChange(null)
+        this.props.onDateChange(null, error)
       }
     }
   }
@@ -377,15 +352,22 @@ export class DropdownDate extends React.Component<IProps, IState> {
     let { order } = this.props
     order = order || [DropdownComponent.year, DropdownComponent.month, DropdownComponent.day]
     return (
-      <Grid container spacing={2}>
-        {order.map((part, index) => {
-          return (
-            <Grid key={index} item xs>
-              {this.renderParts[part]()}
-            </Grid>
-          )
-        })}
-      </Grid>
+      <>
+        <Grid container spacing={2}>
+          {order.map((part, index) => {
+            return (
+              <Grid key={index} item xs>
+                {this.renderParts[part]()}
+              </Grid>
+            )
+          })}
+        </Grid>
+        {this.state.hasError && (
+          <Box pt={1}>
+            <Typography color="secondary">{this.state.helperText}</Typography>
+          </Box>
+        )}
+      </>
     )
   }
 }
