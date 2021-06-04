@@ -15,7 +15,7 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 interface Props {
   detail: TournamentDetail
   extended?: boolean
-  toEdit: () => void
+  toEdit?: () => void
 }
 
 const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
@@ -45,7 +45,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
             <ESMenu>
               <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
               <ESMenuItem onClick={() => null}>{t('common:tournament.report')}</ESMenuItem>
-              {helper.isEditable && <ESMenuItem onClick={toEdit}>{'Edit button'}</ESMenuItem>}
+              {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{'Edit button'}</ESMenuItem>}
             </ESMenu>
           )}
         </Box>
