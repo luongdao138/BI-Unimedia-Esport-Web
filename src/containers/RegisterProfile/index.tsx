@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import { useStore } from 'react-redux'
@@ -19,7 +18,7 @@ import { ERROR_CODE } from '@constants/error.constants'
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerProfile, meta, backAction, isSocial } = useProfile()
+  const { registerProfile, meta, backAction, isSocial, resetMeta } = useProfile()
   const store = useStore()
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
@@ -41,9 +40,7 @@ const RegisterProfileContainer: React.FC = () => {
       }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldError, setFieldValue } = useFormik<
-    services.UserProfileParams
-  >({
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -51,17 +48,23 @@ const RegisterProfileContainer: React.FC = () => {
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
+      resetMeta()
       registerProfile(values)
     },
   })
 
   const buttonActive = (): boolean => isEmpty(errors)
 
-  useEffect(() => {
-    if (meta.error && meta.error['code'] === ERROR_CODE.USER_CODE_ALREADY_TAKEN) {
-      setFieldError('user_code', t('common:register_by_email.duplicated'))
-    }
-  }, [meta.error])
+  const renderError = () => {
+    return (
+      !!meta.error &&
+      meta.error['code'] === ERROR_CODE.USER_CODE_ALREADY_TAKEN && (
+        <Box pb={8} textAlign="center">
+          <Typography color="secondary">{t('common:register_by_email.duplicated')}</Typography>
+        </Box>
+      )
+    )
+  }
 
   return (
     <>
@@ -77,6 +80,7 @@ const RegisterProfileContainer: React.FC = () => {
           </Box>
 
           <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+            {renderError()}
             <Box pb={1}>
               <ESInput
                 id="user_code"
@@ -114,6 +118,9 @@ const RegisterProfileContainer: React.FC = () => {
             </Box>
           </Box>
         </Box>
+
+        <Box className={classes.blankSpace}></Box>
+
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
             <Box maxWidth={280} className={classes.buttonContainer}>
@@ -158,6 +165,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: '0 auto',
   },
+  hint: {
+    color: Colors.white_opacity[30],
+  },
+  detail: {
+    whiteSpace: 'pre-line',
+    color: Colors.white_opacity[70],
+  },
+  blankSpace: {
+    height: 169,
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -165,6 +182,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+    blankSpace: {
+      height: theme.spacing(15),
     },
   },
 }))

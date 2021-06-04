@@ -2,9 +2,11 @@
 export const mentionData = {
   toall: {
     nickName: 'all',
-    userId: '-1',
+    userId: -1,
     memberStatus: 1,
     userCode: 'all',
+    id: '-1',
+    display: '@all',
   },
 }
 

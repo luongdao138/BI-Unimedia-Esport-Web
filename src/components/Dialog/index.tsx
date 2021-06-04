@@ -77,6 +77,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       aria-labelledby="Followers"
       open={open}
       onClose={handleClose}
+      disableScrollLock
       disableBackdropClick
       className={alignTop === true ? classes.customClass : undefined}
       BackdropProps={{

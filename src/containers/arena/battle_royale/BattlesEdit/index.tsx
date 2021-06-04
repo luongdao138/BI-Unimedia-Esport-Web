@@ -96,8 +96,10 @@ const ArenaBattlesEdit: React.FC = () => {
           className={classes.pointer}
           key={i}
           onClick={() => {
-            setShowParticipants(true)
-            setClickIndex(i)
+            if (data.memberSelectable) {
+              setShowParticipants(true)
+              setClickIndex(i)
+            }
           }}
         >
           <BRListItem
