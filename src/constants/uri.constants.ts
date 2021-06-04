@@ -62,7 +62,9 @@ export const URI = {
   RECRUITMENT_RECOMMENDATIONS: '/v2/recruitments/recommendations', //TODO skip 2.0
   GAME_UPDATE: '/v2/users/game_titles',
   NOTIFICATION_LIST: '/v2/notification/own',
+  NOTIFICATION_BADGE_LIST: '/v2/notification/new',
   NOTIFICATION_BADGE: '/v2/notification/badge',
+  NOTIFICATION_BADGE_SEEN: '/v2/notification/seen',
   NOTIFICATION_DETAIL: '/v2/notification/detail',
   NOTIFICATION_SETTINGS: '/v2/notification/settings',
   NOTIFICATION_UPDATE_SETTINGS: '/v2/notification/settings_update',

@@ -14,7 +14,6 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
 import ESButton from '@components/Button'
 import { ESRoutes } from '@constants/route.constants'
-import useReturnHref from '@utils/hooks/useReturnHref'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import LoginContainer from '@containers/Login'
@@ -38,75 +37,7 @@ import NotificationBadgeListContainer from '@containers/Notifications/notificati
 import * as notificationActions from '@store/notification/actions'
 import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
-
-const useStyles = makeStyles((theme) => ({
-  dropDownMenu: {
-    position: 'relative',
-    display: 'inline-block',
-    '&:hover $dropDownContent': {
-      width: 'auto',
-      visiblity: 'visible',
-      opocity: 1,
-      transition: 'all 0.5s ease',
-      height: 'auto',
-      display: 'block',
-    },
-  },
-  dropDownContent: {
-    width: 0,
-    overflow: 'hidden',
-    visiblity: 'hidden',
-    opocity: 0,
-    position: 'absolute',
-    background: 'black',
-    right: 0,
-    height: 0,
-    willChange: 'all',
-  },
-  popover: {
-    pointerEvents: 'none',
-  },
-  paper: {
-    padding: theme.spacing(1),
-  },
-  grow: { flexGrow: 1 },
-  appBar: {
-    background: '#000',
-    borderBottom: 'solid 1px #70707070',
-  },
-  toolbar: {
-    minHeight: 60,
-    justifyContent: 'space-between',
-    paddingLeft: 0,
-    paddingRight: 0,
-  },
-  badge: {
-    fontSize: 4,
-  },
-  icon: {
-    fontSize: 22,
-  },
-  search: {},
-  toolArea: {
-    display: 'flex',
-  },
-  button: {
-    padding: 10,
-  },
-  [theme.breakpoints.down('md')]: {
-    icon: {
-      fontSize: 18,
-    },
-  },
-  [theme.breakpoints.down('xs')]: {
-    icon: {
-      fontSize: 16,
-    },
-    button: {
-      padding: 8,
-    },
-  },
-}))
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 interface returnItem {
   value: string
@@ -127,6 +58,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
   const dispatch = useAppDispatch()
   const badge = useAppSelector(notificationSelector.getNotificationBadge)
   const { setSearch } = useSearch()
+  const { navigateScreen } = useReturnHref()
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
@@ -216,7 +148,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
                     <Icon className={`fa fa-search ${classes.icon}`} />
                   </IconButton>
                   <Box className={`${classes.dropDownMenu}`}>
-                    <IconButton className={classes.button} disableRipple color="inherit">
+                    <IconButton
+                      onClick={() => navigateScreen(ESRoutes.NOTIFICATIONS)}
+                      className={classes.button}
+                      disableRipple
+                      color="inherit"
+                    >
                       <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
                         <Icon className={`fa fa-bell ${classes.icon}`} />
                       </Badge>
@@ -252,3 +189,72 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequire
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  dropDownMenu: {
+    position: 'relative',
+    display: 'inline-block',
+    '&:hover $dropDownContent': {
+      width: 'auto',
+      visiblity: 'visible',
+      opocity: 1,
+      transition: 'all 0.5s ease',
+      height: 'auto',
+      display: 'block',
+    },
+  },
+  dropDownContent: {
+    width: 0,
+    overflow: 'hidden',
+    visiblity: 'hidden',
+    opocity: 0,
+    position: 'absolute',
+    background: 'black',
+    right: 0,
+    height: 0,
+    willChange: 'all',
+  },
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
+  },
+  grow: { flexGrow: 1 },
+  appBar: {
+    background: '#000',
+    borderBottom: 'solid 1px #70707070',
+  },
+  toolbar: {
+    minHeight: 60,
+    justifyContent: 'space-between',
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+  badge: {
+    fontSize: 4,
+  },
+  icon: {
+    fontSize: 22,
+  },
+  search: {},
+  toolArea: {
+    display: 'flex',
+  },
+  button: {
+    padding: 10,
+  },
+  [theme.breakpoints.down('md')]: {
+    icon: {
+      fontSize: 18,
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    icon: {
+      fontSize: 16,
+    },
+    button: {
+      padding: 8,
+    },
+  },
+}))
