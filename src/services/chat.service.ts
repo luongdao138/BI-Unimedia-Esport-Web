@@ -35,6 +35,6 @@ export type GetFriendsResponse = {
 }
 
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
-  const { data } = await api.get<GetFriendsResponse>(URI.FRIEND_LIST, { params })
+  const { data } = await api.post<GetFriendsResponse>(URI.FRIEND_LIST, params)
   return data
 }

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import RoomNameEditor from '@components/Chat/RoomNameEditor'
+import RoomMemberAddView from '@components/Chat/RoomMemberAddView'
 import _ from 'lodash'
 
 export interface RoomHeaderProps {
@@ -52,10 +53,17 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'isAdmin', false)
   }
 
+  const isDirect = () => {
+    return !_.get(roomInfo, 'sortKey', '').startsWith('chat_room')
+  }
+
   return (
     <>
       {hasNoRoomInfo ? null : (
-        <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
+        <>
+          <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
+          <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
+        </>
       )}
       <Box className={classes.row}>
         {hasNoRoomInfo ? null : <Avatar src={roomImg} alt={roomName} size={36} />}
@@ -67,7 +75,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         {hasNoRoomInfo ? null : (
           <ESMenu>
             <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
-            <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+            {!isDirect() ? (
+              <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+            ) : null}
             {isRoomNameMenuShow() ? (
               <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
             ) : null}
