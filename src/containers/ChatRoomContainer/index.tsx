@@ -5,7 +5,7 @@ import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import ImageUploader from './ImageUploader'
 import { currentUserId } from '@store/auth/selectors'
-import { messages, membersSuggest, lastKey as key, paginating as paging } from '@store/socket/selectors'
+import { messages, membersSuggest, availableMembers, lastKey as key, paginating as paging } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
@@ -13,7 +13,7 @@ import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
-import RoomHeader from '@components/Chat/RoomHeader/index'
+import RoomHeader from '@components/Chat/RoomHeader'
 import { MessageType } from '@components/Chat/types/chat.types'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
@@ -42,6 +42,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const userId = useAppSelector(currentUserId)
   const data = useAppSelector(messages)
   const usersWithAll = useAppSelector(membersSuggest)
+  const usersAvailable = useAppSelector(availableMembers)
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
 
@@ -187,7 +188,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             currentUser={userId}
             onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
-            users={usersWithAll}
+            users={usersAvailable}
             onPressActionButton={handlePressActionButton}
           />
         ) : null}

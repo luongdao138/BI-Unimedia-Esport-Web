@@ -4,6 +4,7 @@ import { RootState } from '@store/store'
 import { mentionData } from '@components/Chat/constants'
 import _ from 'lodash'
 import { ChatSuggestionList } from '@components/Chat/types/chat.types'
+import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 const getRoot = (state: RootState) => state.socket
 
@@ -22,6 +23,18 @@ export const membersSuggest = createSelector(getRoot, (state) => {
     withAll = state.members
   } else {
     withAll = _.concat(state.members, mentionData.toall)
+  }
+  return withAll
+})
+export const availableMembers = createSelector(getRoot, (state) => {
+  let withAll: ChatSuggestionList[]
+  if (state.selectedRoomInfo && state.selectedRoomInfo.sortKey.includes('direct')) {
+    withAll = state.members
+  } else {
+    withAll = _.concat(
+      state.members.filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE),
+      mentionData.toall
+    )
   }
   return withAll
 })
