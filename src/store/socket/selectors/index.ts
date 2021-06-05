@@ -33,10 +33,9 @@ export const availableMembers = createSelector(getRoot, (state) => {
   if (state.selectedRoomInfo && state.selectedRoomInfo.sortKey.includes('direct')) {
     withAll = state.members
   } else {
-    withAll = _.concat(
-      state.members.filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE),
-      mentionData.toall
-    )
+    let members = state.members
+    if (_.isArray(members)) members = members.filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE)
+    withAll = _.concat(members, mentionData.toall)
   }
   return withAll
 })
