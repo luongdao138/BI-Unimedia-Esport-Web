@@ -1,9 +1,9 @@
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import TournamentDetail from '@containers/TournamentDetail'
+import { DetailContainer } from '@containers/arena'
 
 const TournamentsPage: PageWithLayoutType = () => {
-  return <TournamentDetail />
+  return <DetailContainer />
 }
 
 MainLayout.defaultProps = {

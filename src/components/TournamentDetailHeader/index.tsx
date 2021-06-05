@@ -1,4 +1,4 @@
-import { TournamentStatus } from '@services/tournament.service'
+import { TournamentStatus } from '@services/arena.service'
 import { Box, Icon, IconButton } from '@material-ui/core'
 import ChevronLeftIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles } from '@material-ui/core/styles'

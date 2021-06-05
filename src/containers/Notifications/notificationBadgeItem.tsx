@@ -1,7 +1,7 @@
 import { Typography, Box, Theme, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ESAvatar from '@components/Avatar'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 interface Props {
   data: any
 }
@@ -22,7 +22,7 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
           <Typography noWrap>{notification.message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
-              {useSmartTime(notification.created_at)}
+              {CommonHelper.staticSmartTime(notification.created_at)}
             </Typography>
           </Box>
         </Box>

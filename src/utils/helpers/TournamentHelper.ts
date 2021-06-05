@@ -1,7 +1,7 @@
 import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { TournamentDetail, TournamentMatchRound } from '@services/tournament.service'
+import { TournamentDetail, TournamentMatchRound } from '@services/arena.service'
 
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
@@ -174,7 +174,7 @@ const isStatusPassed = (status: string, targetStatus: string): boolean => {
   const index = statuses.indexOf(status)
   const targetIndex = statuses.indexOf(targetStatus)
 
-  return index < targetIndex
+  return index >= targetIndex
 }
 
 export const TournamentHelper = {

@@ -22,7 +22,6 @@ let result: MessageType[] | undefined
 let pending: MessageType[] | undefined
 let oldMessages: MessageType[] | undefined
 let newMsg: MessageType[] | undefined
-let mergedMsg: MessageType[] | undefined
 let newRoomList: ChatDataType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
@@ -59,6 +58,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         members: newUsers,
         lastKey: action.data.lastKey,
         paginating: false,
+        roomList: ChatHelper.unseenClear(state.roomList, action.data.chatRoomId),
       }
     case CHAT_ACTION_TYPE.MESSAGE_PENDING:
       if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
@@ -81,11 +81,16 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
-      mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
-      result = mergedMsg
+      if (state.activeRoom != null && state.activeRoom === newMsg[0]['chatRoomId']) {
+        const mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
+        result = mergedMsg
+      } else {
+        result = oldMessages
+      }
       return {
         ...state,
         messages: result,
+        roomList: ChatHelper.roomListUpdate([...state.roomList], newMsg, state.activeRoom),
       }
     case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
       return {

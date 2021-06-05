@@ -8,7 +8,9 @@ import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 const getRoot = (state: RootState) => state.socket
 
-export const getRoomList = createSelector(getRoot, (state) => state.roomList)
+export const getRoomList = createSelector(getRoot, (state) => {
+  return _.orderBy(state.roomList, ['lastMsgAt'], ['desc'])
+})
 export const messages = createSelector(getRoot, (state) => state.messages)
 export const socketReady = createSelector(getRoot, (state) => state.socketReady)
 export const members = createSelector(getRoot, (state) => state.members)

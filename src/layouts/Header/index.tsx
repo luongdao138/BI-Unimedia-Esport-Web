@@ -14,9 +14,9 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
 import ESButton from '@components/Button'
 import { ESRoutes } from '@constants/route.constants'
-import useReturnHref from '@utils/hooks/useReturnHref'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
+import { useContextualRouting } from 'next-use-contextual-routing'
 import LoginContainer from '@containers/Login'
 import IntroContainer from '@containers/Login/Intro'
 import ForgotContainer from '@containers/ForgotPassword'
@@ -27,7 +27,7 @@ import RegisterByEmailContainer from '@containers/RegisterByEmail'
 import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
-import ArenaCreateContainer from '@containers/ArenaCreate'
+import ArenaCreateContainer from '@containers/arena/UpsertForm'
 import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
@@ -38,6 +38,149 @@ import NotificationBadgeListContainer from '@containers/Notifications/notificati
 import * as notificationActions from '@store/notification/actions'
 import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
+import useReturnHref from '@utils/hooks/useReturnHref'
+
+interface returnItem {
+  value: string
+  type: number
+}
+
+interface headerProps {
+  toggleDrawer: (open: boolean) => void
+  open: boolean
+}
+
+export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
+  const router = useRouter()
+  const classes = useStyles()
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { handleReturn } = useReturnHref()
+  const dispatch = useAppDispatch()
+  const badge = useAppSelector(notificationSelector.getNotificationBadge)
+  const { setSearch } = useSearch()
+  const { navigateScreen } = useReturnHref()
+  const { makeContextualHref } = useContextualRouting()
+
+  const onSearch = (_data: returnItem) => {
+    setSearch({ type: _data.type, keyword: _data.value })
+    router.push(ESRoutes.SEARCH)
+  }
+
+  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+
+  const renderContent = () => {
+    switch (router.query.pathName) {
+      case ESRoutes.LOGIN:
+        return <LoginContainer />
+      case ESRoutes.WELCOME:
+        return <IntroContainer />
+      case ESRoutes.FORGOT_PASSWORD:
+        return <ForgotContainer />
+      case ESRoutes.FORGOT_PASSWORD_CONFIRM:
+        return <ForgotConfirmContainer />
+      case ESRoutes.FORGOT_PASSWORD_RESET:
+        return <ResetPasswordContainer />
+      case ESRoutes.REGISTER:
+        return <RegisterContainer />
+      case ESRoutes.REGISTER_BY_EMAIL:
+        return <RegisterByEmailContainer />
+      case ESRoutes.REGISTER_CONFIRM:
+        return <ConfirmContainer />
+      case ESRoutes.REGISTER_PROFILE:
+        return <RegisterProfileContainer />
+      case ESRoutes.USER_SETTINGS:
+        return <UserSettingsContainer />
+      case ESRoutes.ARENA_CREATE:
+        return <ArenaCreateContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
+        return <AccountSettingsPasswordContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
+        return <AccountSettingsChangeEmailContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM:
+        return <AccountSettingsConfirmContainer />
+      case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD:
+        return <AccountSettingsChangePasswordContainer />
+      default:
+        return <></>
+    }
+  }
+  const [show, setShow] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(notificationActions.getNotificationBadge())
+    }
+  }, [isAuthenticated])
+
+  return (
+    <div className={classes.grow}>
+      <AppBar className={classes.appBar} position="fixed">
+        <Container maxWidth="lg" className="header-container">
+          <Toolbar className={classes.toolbar}>
+            <div
+              onClick={() => toggleDrawer(!open)}
+              className={`hamburger hamburger--slider js-hamburger mobile-toggle ${open ? 'is-active' : ''}`}
+              id="toggle"
+            >
+              <div className="hamburger-box">
+                <div className="hamburger-inner"></div>
+              </div>
+            </div>
+            <Link href={isAuthenticated ? '/home' : '/'}>
+              <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
+            </Link>
+            <div className={classes.search + ' search-area'}>
+              <SearchArea selectData={searchOptions} onSearch={onSearch} />
+            </div>
+            <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
+            <div className={classes.toolArea}>
+              {isAuthenticated ? (
+                <>
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                    <Icon className={`fa fa-search ${classes.icon}`} />
+                  </IconButton>
+                  <Box className={`${classes.dropDownMenu}`}>
+                    <IconButton
+                      onClick={() => navigateScreen(ESRoutes.NOTIFICATIONS)}
+                      className={classes.button}
+                      disableRipple
+                      color="inherit"
+                    >
+                      <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
+                        <Icon className={`fa fa-bell ${classes.icon}`} />
+                      </Badge>
+                    </IconButton>
+                    <Box className={classes.dropDownContent}>
+                      <NotificationBadgeListContainer />
+                    </Box>
+                  </Box>
+
+                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                      <Icon className={`fa fa-inbox ${classes.icon}`} />
+                    </Badge>
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                    <Icon className={`fa fa-search ${classes.icon}`} />
+                  </IconButton>
+                  <ESButton variant="contained" color="primary" onClick={openModal}>
+                    ログイン
+                  </ESButton>
+                </>
+              )}
+            </div>
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
+              <BlankLayout>{renderContent()}</BlankLayout>
+            </ESModal>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </div>
+  )
+}
 
 const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
@@ -107,148 +250,3 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }))
-
-interface returnItem {
-  value: string
-  type: number
-}
-
-interface headerProps {
-  toggleDrawer: (open: boolean) => void
-  open: boolean
-  loginRequired?: boolean
-}
-
-export const Header: React.FC<headerProps> = ({ toggleDrawer, open, loginRequired }) => {
-  const router = useRouter()
-  const classes = useStyles()
-  const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const { handleReturn } = useReturnHref()
-  const dispatch = useAppDispatch()
-  const badge = useAppSelector(notificationSelector.getNotificationBadge)
-  const { setSearch } = useSearch()
-
-  const onSearch = (_data: returnItem) => {
-    setSearch({ type: _data.type, keyword: _data.value })
-    router.push(ESRoutes.SEARCH)
-  }
-
-  const openModal = () => router.push('#welcome', undefined, { shallow: true })
-
-  const renderContent = () => {
-    const path = router.asPath.split('#')
-    const modalPath = '/' + path[path.length - 1]
-
-    switch (modalPath) {
-      case ESRoutes.LOGIN:
-        return <LoginContainer />
-      case ESRoutes.WELCOME:
-        return <IntroContainer />
-      case ESRoutes.FORGOT_PASSWORD:
-        return <ForgotContainer />
-      case ESRoutes.FORGOT_PASSWORD_CONFIRM:
-        return <ForgotConfirmContainer />
-      case ESRoutes.FORGOT_PASSWORD_RESET:
-        return <ResetPasswordContainer />
-      case ESRoutes.REGISTER:
-        return <RegisterContainer />
-      case ESRoutes.REGISTER_BY_EMAIL:
-        return <RegisterByEmailContainer />
-      case ESRoutes.REGISTER_CONFIRM:
-        return <ConfirmContainer />
-      case ESRoutes.REGISTER_PROFILE:
-        return <RegisterProfileContainer />
-      case ESRoutes.USER_SETTINGS:
-        return <UserSettingsContainer />
-      case ESRoutes.ARENA_CREATE:
-        return <ArenaCreateContainer />
-      case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
-        return <AccountSettingsPasswordContainer />
-      case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
-        return <AccountSettingsChangeEmailContainer />
-      case ESRoutes.USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM:
-        return <AccountSettingsConfirmContainer />
-      case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD:
-        return <AccountSettingsChangePasswordContainer />
-      default:
-        return <></>
-    }
-  }
-  const [show, setShow] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(notificationActions.getNotificationBadge())
-    }
-  }, [isAuthenticated])
-
-  useEffect(() => {
-    if (loginRequired && !isAuthenticated) {
-      openModal()
-    }
-  }, [loginRequired])
-
-  return (
-    <div className={classes.grow}>
-      <AppBar className={classes.appBar} position="fixed">
-        <Container maxWidth="lg" className="header-container">
-          <Toolbar className={classes.toolbar}>
-            <div
-              onClick={() => toggleDrawer(!open)}
-              className={`hamburger hamburger--slider js-hamburger mobile-toggle ${open ? 'is-active' : ''}`}
-              id="toggle"
-            >
-              <div className="hamburger-box">
-                <div className="hamburger-inner"></div>
-              </div>
-            </div>
-            <Link href={isAuthenticated ? '/home' : '/'}>
-              <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
-            </Link>
-            <div className={classes.search + ' search-area'}>
-              <SearchArea selectData={searchOptions} onSearch={onSearch} />
-            </div>
-            <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
-            <div className={classes.toolArea}>
-              {isAuthenticated ? (
-                <>
-                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
-                    <Icon className={`fa fa-search ${classes.icon}`} />
-                  </IconButton>
-                  <Box className={`${classes.dropDownMenu}`}>
-                    <IconButton className={classes.button} disableRipple color="inherit">
-                      <Badge badgeContent={badge?.badge} color="primary" className={classes.badge}>
-                        <Icon className={`fa fa-bell ${classes.icon}`} />
-                      </Badge>
-                    </IconButton>
-                    <Box className={classes.dropDownContent}>
-                      <NotificationBadgeListContainer />
-                    </Box>
-                  </Box>
-
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
-                    <Badge badgeContent={17} color="primary" className={classes.badge}>
-                      <Icon className={`fa fa-inbox ${classes.icon}`} />
-                    </Badge>
-                  </IconButton>
-                </>
-              ) : (
-                <>
-                  <IconButton onClick={() => setShow(!show)} className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
-                    <Icon className={`fa fa-search ${classes.icon}`} />
-                  </IconButton>
-                  <ESButton variant="contained" color="primary" onClick={openModal}>
-                    ログイン
-                  </ESButton>
-                </>
-              )}
-            </div>
-            <ESModal open={router.asPath.includes('#')} handleClose={handleReturn}>
-              <BlankLayout>{renderContent()}</BlankLayout>
-            </ESModal>
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </div>
-  )
-}

@@ -6,6 +6,7 @@ import Select from '@components/Select'
 import Button from '@components/Button'
 import Toast from '@components/Toast'
 import * as Yup from 'yup'
+import _ from 'lodash'
 
 import useAddGame from './useAddGame'
 import { useEffect, useState } from 'react'
@@ -50,6 +51,11 @@ const AddGame: React.FC<Props> = ({ genres }) => {
     },
   })
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    formik.validateForm()
+  }, [])
+
   useEffect(() => {
     if (meta.loaded) {
       setOpen(true)
@@ -91,12 +97,13 @@ const AddGame: React.FC<Props> = ({ genres }) => {
           fullWidth
           required
           size="small"
-          error={!!formik.errors.display_name}
+          helperText={formik.touched.display_name && formik.errors.display_name}
+          error={formik.touched.display_name && !!formik.errors.display_name}
           labelPrimary={t('profile.favorite_game.title_label')}
         />
         <Box pb={4} />
         <Box textAlign="center">
-          <Button variant="outlined" className={classes.button} type="submit" disabled={meta.pending}>
+          <Button variant="outlined" className={classes.button} type="submit" disabled={!_.isEmpty(formik.errors) || meta.pending}>
             {t('profile.favorite_game.add_button')}
           </Button>
         </Box>

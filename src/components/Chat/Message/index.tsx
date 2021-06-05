@@ -4,7 +4,7 @@ import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/ch
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { SystemMessage, Bubble, DateTitle, MessageMenu } from '../elements'
 import Avatar from '@components/Avatar'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
 import { ESReportProps } from '@containers/Report'
 import { MENU_ACTIONS } from '../constants'
@@ -39,7 +39,7 @@ const Message: React.FC<MessageProps> = (props) => {
   const userCode = _.get(userData, 'userCode', '')
 
   const timestamp = _.get(currentMessage, 'createdAt', '')
-  const time = useSmartTime(timestamp)
+  const time = CommonHelper.staticSmartTime(timestamp)
   const status = _.get(currentMessage, 'sent', false)
 
   const renderAvatar = () => {
@@ -95,6 +95,7 @@ const Message: React.FC<MessageProps> = (props) => {
         return <Icon className={`${classes.iconStatus} fa fa-clock`} />
       }
     }
+    return null
   }
 
   const renderBubbleGroup = () => {

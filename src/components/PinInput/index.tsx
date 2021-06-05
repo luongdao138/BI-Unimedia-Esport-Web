@@ -1,7 +1,7 @@
 import { FC, ReactNode, createRef, ChangeEvent, KeyboardEvent, ClipboardEvent } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { Typography, Box } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
 const BACKSPACE_KEY = 8
@@ -136,13 +136,6 @@ const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value 
     <>
       <Box display="flex" flexDirection="row" justifyContent="center" width={328} className={classes.boxWidth}>
         {pins}
-      </Box>
-      <Box width={328} className={classes.boxWidth} textAlign="left" pt={1}>
-        {error && (
-          <Typography variant="body2" color="secondary">
-            {t('common:error.code_invalid')}
-          </Typography>
-        )}
       </Box>
     </>
   )

@@ -3,7 +3,7 @@ import { Colors } from '@theme/colors'
 import React, { useEffect } from 'react'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 import { useRouter } from 'next/router'
-import useSmartTime from '@utils/hooks/useSmartTime'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 import * as notificationActions from '@store/notification/actions'
 
 import _ from 'lodash'
@@ -27,7 +27,7 @@ const NotificationDetail: React.FC<Props> = ({ id }) => {
     }
   }, [id])
 
-  const createdAt = useSmartTime(_.get(notificationDetail, 'data.attributes.created_at', ''))
+  const createdAt = CommonHelper.staticSmartTime(_.get(notificationDetail, 'data.attributes.created_at', ''))
 
   return (
     <>

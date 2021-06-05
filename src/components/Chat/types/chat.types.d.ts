@@ -13,6 +13,7 @@ export type ChatDataType = {
   groupType: number
   isAdmin: boolean
   blocked?: any[]
+  unfollowed?: any[]
 }
 
 export interface ChatSuggestionList extends SuggestionDataItem {
@@ -40,6 +41,7 @@ export type MessageType = {
   type: CHAT_MESSAGE_TYPE
   parentMsg?: null | ParentItem | string
   sent?: boolean
+  formattedMsg?: string
 }
 
 export type ParentItem = {

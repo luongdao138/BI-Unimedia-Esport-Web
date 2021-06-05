@@ -46,8 +46,11 @@ export default {
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
+    not_sure: '未確定',
     password_duplicated: 'パスワード再設定できませんでした。',
     confirmation_expire: '認証できませんでした。',
+    user_id_at_least: 'ユーザIDは二文字以上としてください',
+    nickname_at_least: 'ニックネームは二文字以上としてください',
   },
   welcome: 'eXeLABへようこそ',
   messages: {
@@ -167,6 +170,7 @@ export default {
     error_email_4222: 'メールアドレスが既に使用されています！',
     password_failed: 'パスワードポリシーを満たしていません。',
     invalid_date: '適切な日付を入力してください。',
+    invalid_confirmation: '認証できませんでした。',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -257,8 +261,8 @@ export default {
     menu_report: '通報',
     following: 'フォロー中',
     followers: 'フォロワー',
-    no_game_selected: 'No game selected',
-    no_tag_selected: 'No tag selected',
+    no_game_selected: '好きなゲームが選択されていません',
+    no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
   },
   gender: {
@@ -312,8 +316,8 @@ export default {
     report: '通報',
     entry_members: 'エントリーメンバー',
     number_of_entries: 'エントリー数',
-    rule_single: '個人戦',
-    rule_double: 'トーナメント',
+    type_single: '個人戦',
+    rule_tournament: 'トーナメント',
     rule_battle: 'バトルロイヤル',
     tournament_results: '大会「:key」 の検索結果',
     tournament_results_all: '大会の検索結果',
@@ -440,7 +444,7 @@ export default {
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
     report: '通報',
-    search_placeholder: 'キーワードで探す',
+    search_placeholder: 'キーワード検索',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -489,6 +493,7 @@ export default {
       change_img: 'アイコンを変更',
       exit: '退出する',
     },
+    uploaded_image: '画像がアップロードされました。',
   },
   notification: {
     title: '通知一覧',

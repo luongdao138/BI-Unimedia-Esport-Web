@@ -1,8 +1,11 @@
 export enum NOTIFICATION_ACTION_TYPE {
   GET_NOTIFICATION_LIST = 'notification/list',
+  GET_NOTIFICATION_BADGE_LIST = 'notification/badge_list',
   GET_NOTIFICATION_BADGE = 'notification/badge',
   GET_NOTIFICATION_DETAIL = 'notification/detail',
   CLEAR_NOTIFICATION = 'notification/clear',
+  CLEAR_NOTIFICATION_BADGE = 'notification/clear_badge',
+  SEEN_NOTIFICATION_BADGE = 'notification/seen_badge',
 
   NOTIFICATION_TYPE_FOLLOW = 1,
   NOTIFICATION_TYPE_FOLLOW_ACTION_FOLLOW = 1,
