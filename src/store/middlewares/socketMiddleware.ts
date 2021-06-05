@@ -32,7 +32,19 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
   const message = JSON.parse(event.data)
 
   if (message && message.action) {
-    store.dispatch({ type: message.action, data: message })
+    if (message.action === CHAT_ACTION_TYPE.REFRESH_MEMBERS) {
+      const userId = store.getState().auth.user?.id
+      if (!userId) return
+      socket.send(
+        JSON.stringify({
+          action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
+          userId: userId,
+          roomId: message.content.roomId,
+        })
+      )
+    } else {
+      store.dispatch({ type: message.action, data: message })
+    }
   } else {
     store.dispatch({
       type: `${WEBSOCKET_PREFIX}:FAILURE`,

@@ -12,7 +12,6 @@ const initialState: State = {
   lastKey: null,
   paginating: false,
   activeRoom: null,
-  chatMembers: [],
   socketReady: false,
   actionPending: false,
 }
@@ -122,12 +121,12 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.GET_ROOM_MEMBERS:
       return {
         ...state,
-        chatMembers: action.data.content,
+        members: action.data.content,
       }
     case CHAT_ACTION_TYPE.REMOVE_MEMBER:
       return {
         ...state,
-        chatMembers: action.data.content,
+        members: action.data.content,
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {
