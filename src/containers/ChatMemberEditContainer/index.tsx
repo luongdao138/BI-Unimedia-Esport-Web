@@ -6,7 +6,7 @@ import { members } from '@store/socket/selectors'
 import { currentUserId } from '@store/auth/selectors'
 import React, { useEffect } from 'react'
 import RoomMemberItem from '@components/Chat/RoomMemberItem/index'
-import { CHAT_ACTION_TYPE, CHAT_MEMBER_STATUS } from '@constants/socket.constants'
+import { CHAT_ACTION_TYPE, CHAT_MEMBER_STATUS, CHAT_MEMBER_TYPE } from '@constants/socket.constants'
 import _ from 'lodash'
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -45,7 +45,7 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) =
     <Box className={classes.room}>
       <List>
         {memberList
-          .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE)
+          .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE && member.memberType !== CHAT_MEMBER_TYPE.CHAT_ADMIN)
           .map((val) => (
             <RoomMemberItem key={val.userId} userCode={val.userCode} id={val.userId} name={val.nickName} onDelete={onItemDelete} />
           ))}

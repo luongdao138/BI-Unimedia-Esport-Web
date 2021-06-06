@@ -86,5 +86,6 @@ export const URI = {
   USER_EMAIL_CHANGE: '/v1/email/change',
   USER_EMAIL_CHANGE_CONFIRM: '/v1/email/change_confirm',
   FRIEND_LIST: '/v2/chats/addable_users',
+  DIRECT_ROOM: '/v2/chats/get_direct_room',
   WEB_SUPPORT: 'https://support.exelab.jp',
 }

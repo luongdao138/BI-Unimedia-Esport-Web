@@ -103,7 +103,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
         action: CHAT_ACTION_TYPE.ADD_MEMBERS,
         roomId: roomId,
         userId: userId,
-        userIds: selectedList.map((item) => `${item.id}`),
+        userIds: selectedList.map((item) => item.id),
       })
     )
     hide()
