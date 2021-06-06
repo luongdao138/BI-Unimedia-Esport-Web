@@ -33,7 +33,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
       : userProfile.attributes.sex === GENDER.OTHER
       ? i18n.t('common:common.other')
       : null
-  const bod = CommonHelper.staticSmartTime(userProfile.attributes.birth_date)
+  const bod = userProfile?.attributes?.birth_date ? CommonHelper.staticSmartTime(userProfile.attributes.birth_date) : null
 
   const editGame = () => router.push(ESRoutes.GAME_EDIT)
 
