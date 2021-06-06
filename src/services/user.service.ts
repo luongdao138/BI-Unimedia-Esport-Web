@@ -59,6 +59,7 @@ export type ActivityLog = {
     target_name: string
     user_avatar_url: string
     user_code: null | number | string
+    hash_key: null | string
     user_id: number
     user_name: string
   }
