@@ -15,7 +15,8 @@ const useUserSearch = () => {
   const meta = useAppSelector(getUserSearchMeta)
   const userSearch = (param: UserSearchParams) => dispatch(actions.userSearch(param))
   const resetMeta = () => dispatch(clearMetaData(actions.userSearch.typePrefix))
-  return { searchUsers, userSearch, resetMeta, meta, page }
+  const resetSearchUsers = () => dispatch(actions.resetSearchUsers())
+  return { searchUsers, userSearch, resetMeta, resetSearchUsers, meta, page }
 }
 
 export default useUserSearch

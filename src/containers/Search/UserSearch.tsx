@@ -11,14 +11,17 @@ const UserSearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { searchKeyword } = useSearch()
-  const { searchUsers, userSearch, page, meta, resetMeta } = useUserSearch()
+  const { searchUsers, userSearch, page, meta, resetMeta, resetSearchUsers } = useUserSearch()
   const [keyword, setKeyword] = useState<string>('')
 
   useEffect(() => {
     setKeyword(searchKeyword)
     userSearch({ page: 1, keyword: searchKeyword })
 
-    return () => resetMeta()
+    return () => {
+      resetSearchUsers()
+      resetMeta()
+    }
   }, [searchKeyword])
 
   const loadMore = () => {
