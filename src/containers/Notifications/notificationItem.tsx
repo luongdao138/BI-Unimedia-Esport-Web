@@ -12,7 +12,7 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
   const classes = useStyles()
   const createdAt = CommonHelper.staticSmartTime(_.get(notification, 'created_at', ''))
   return (
-    <Box margin={2} display="flex" justifyContent="space-between">
+    <Box className={classes.wrap}>
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
         <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
@@ -34,6 +34,10 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  wrap: {
+    margin: theme.spacing(2),
+    marginBottom: 0,
+  },
   notificationWrap: {
     width: '100%',
     padding: theme.spacing(2),
