@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Grid, Container, makeStyles, Box } from '@material-ui/core'
+import { Grid, Container, makeStyles, Box, InputAdornment, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
@@ -77,6 +77,12 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 onChange={handleChange}
                 helperText={touched.facebook_link && errors.facebook_link}
                 error={touched.facebook_link && !!errors.facebook_link}
+                placeholder={'******'}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Typography>https://www.facebook.com/</Typography>
+                  </InputAdornment>
+                }
               />
             </Box>
           </Grid>
@@ -90,6 +96,12 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 onChange={handleChange}
                 helperText={touched.twitter_link && errors.twitter_link}
                 error={touched.twitter_link && !!errors.twitter_link}
+                placeholder={'******'}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Typography>https://twitter.com/</Typography>
+                  </InputAdornment>
+                }
               />
             </Box>
           </Grid>
@@ -103,6 +115,12 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 onChange={handleChange}
                 helperText={touched.twitch_link && errors.twitch_link}
                 error={touched.twitch_link && !!errors.twitch_link}
+                placeholder={'******'}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Typography>https://www.twitch.tv/</Typography>
+                  </InputAdornment>
+                }
               />
             </Box>
           </Grid>
@@ -116,6 +134,12 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 onChange={handleChange}
                 helperText={touched.instagram_link && errors.instagram_link}
                 error={touched.instagram_link && !!errors.instagram_link}
+                placeholder={'******'}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <Typography>https://www.instagram.com/</Typography>
+                  </InputAdornment>
+                }
               />
             </Box>
           </Grid>
