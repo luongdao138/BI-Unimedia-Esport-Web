@@ -5,7 +5,7 @@ import moment from 'moment'
 
 export interface SystemMessageProps {
   text?: string
-  time?: string
+  time?: number | string
 }
 
 const SystemMessage: React.FC<SystemMessageProps> = (props) => {
