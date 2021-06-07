@@ -221,13 +221,16 @@ export type TournamentMatchParticipant = {
   nickname: string
   user_code: string
 }
+
+export type MatchItemType = 'home' | 'guest'
 export type TournamentMatchItem = {
   id: number
   round_no: number
   match_no: number
   score_guest: null | number
   score_home: null | number
-  winner: 'home' | 'guest' | null
+  winner: MatchItemType | null
+  highlight?: MatchItemType
   bracket: string
   is_edited: boolean
   is_editable: boolean
