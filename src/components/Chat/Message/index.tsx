@@ -99,7 +99,12 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderBubbleGroup = () => {
-    if (currentMessage && currentMessage.type !== CHAT_MESSAGE_TYPE.DATE && currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME) {
+    if (
+      currentMessage &&
+      currentMessage.type !== CHAT_MESSAGE_TYPE.DATE &&
+      currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME &&
+      currentMessage.type !== CHAT_MESSAGE_TYPE.SYSTEM
+    ) {
       return (
         <Box className={direction === 'left' ? classes.left : classes.right}>
           {direction === 'left' ? renderAvatar() : null}
@@ -125,7 +130,7 @@ const Message: React.FC<MessageProps> = (props) => {
       (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.WELCOME) ||
       (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.SYSTEM)
     ) {
-      return <SystemMessage text={message} />
+      return <SystemMessage text={message} time={timestamp} />
     }
     return null
   }
