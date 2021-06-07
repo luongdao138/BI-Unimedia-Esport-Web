@@ -10,7 +10,7 @@ import { Colors } from '@theme/colors'
 export interface MessageTextProps {
   text: string
   navigateToProfile?: (id: string) => void
-  numberOfLines?: number
+  numberOfLines?: number | null
   members: ChatRoomMemberItem[] | ChatSuggestionList[]
   color?: string | null
   contentClass?: string
