@@ -6,7 +6,6 @@ import IndividualEntryModal from './IndividualEntryModal'
 import CloseRecruitmentModal from './CloseRecruitmentModal'
 import TeamEntryModal from './TeamEntryModal'
 import SubActionButtons from './SubActionButtons'
-import { ROLE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/arena.service'
@@ -14,6 +13,7 @@ import { UserProfile } from '@services/user.service'
 import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface Props {
   tournament: TournamentDetail
@@ -25,15 +25,9 @@ const ActionComponent: React.FC<Props> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
+  const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed } = useArenaHelper(tournament)
+
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
-  const isTeam = tournament.attributes.participant_type > 1
-  const status = tournament.attributes.status
-  const myRole = tournament.attributes.my_role
-  const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
-  const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
-  const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
-  const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
-  const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
 
   const buildArenaPeriodValue = () => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
@@ -64,7 +58,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
             <Typography variant="body2">
               {t('common:tournament.until_deadline')}
-              <ESLink onClick={() => {}}>{t('common:tournament.brackets')}</ESLink>
+              <ESLink onClick={toMatches}>{t('common:tournament.brackets')}</ESLink>
               {t('common:tournament.confirm_brackets_desc_tail')}
             </Typography>
           </Box>

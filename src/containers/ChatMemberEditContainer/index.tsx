@@ -2,12 +2,12 @@ import Box from '@material-ui/core/Box'
 import { List, makeStyles } from '@material-ui/core'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import { getRoomMembers } from '@store/socket/selectors'
+import { members } from '@store/socket/selectors'
 import { currentUserId } from '@store/auth/selectors'
 import React, { useEffect } from 'react'
 import RoomMemberItem from '@components/Chat/RoomMemberItem/index'
-import { CHAT_ACTION_TYPE, CHAT_MEMBER_STATUS } from '@constants/socket.constants'
-
+import { CHAT_ACTION_TYPE, CHAT_MEMBER_STATUS, CHAT_MEMBER_TYPE } from '@constants/socket.constants'
+import _ from 'lodash'
 interface ChatRoomContainerProps {
   roomId: string | string[]
 }
@@ -15,7 +15,8 @@ interface ChatRoomContainerProps {
 const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const roomMembers = useAppSelector(getRoomMembers)
+  const roomMembers = useAppSelector(members)
+  const memberList = _.isArray(roomMembers) ? roomMembers : []
   const userId = useAppSelector(currentUserId)
   useEffect(() => {
     if (userId && roomId) {
@@ -43,8 +44,8 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) =
   return (
     <Box className={classes.room}>
       <List>
-        {roomMembers
-          .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE)
+        {memberList
+          .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE && member.memberType !== CHAT_MEMBER_TYPE.CHAT_ADMIN)
           .map((val) => (
             <RoomMemberItem key={val.userId} userCode={val.userCode} id={val.userId} name={val.nickName} onDelete={onItemDelete} />
           ))}

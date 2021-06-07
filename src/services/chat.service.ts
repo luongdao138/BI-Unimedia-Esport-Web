@@ -34,7 +34,26 @@ export type GetFriendsResponse = {
   }
 }
 
+export type GetDirectRoomResponse = {
+  content: {
+    sortKey: string
+    chatRoomId: string
+    lastMsgAt: string
+    roomImg: null | string
+    lastMsg: string
+    createdAt: string
+    roomName: string
+    groupType: string
+    lastMsgId: string
+  } | null
+}
+
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
-  const { data } = await api.get<GetFriendsResponse>(URI.FRIEND_LIST, { params })
+  const { data } = await api.post<GetFriendsResponse>(URI.FRIEND_LIST, params)
+  return data
+}
+
+export const getDirectRoom = async (otherMemberId: number): Promise<GetDirectRoomResponse> => {
+  const { data } = await api.get<GetDirectRoomResponse>(`${URI.DIRECT_ROOM}?other_member_id=${otherMemberId}`)
   return data
 }

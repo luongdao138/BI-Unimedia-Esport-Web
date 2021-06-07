@@ -7,9 +7,17 @@ import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'
 import InProgress from './Partials/InProgress'
 import Completed from './Partials/Completed'
+import ESLoader from '@components/FullScreenLoader'
+import useArenaHelper from '../hooks/useArenaHelper'
+import BlankLayout from '@layouts/BlankLayout'
+import ESModal from '@components/Modal'
+import { UpsertForm } from '..'
+import { useRouter } from 'next/router'
 
 const TournamentDetail: React.FC = () => {
-  const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
+  const { tournament, meta, entryMeta, userProfile, handleBack } = useTournamentDetail()
+  const { toEdit } = useArenaHelper(tournament)
+  const router = useRouter()
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
@@ -23,8 +31,8 @@ const TournamentDetail: React.FC = () => {
 
   return (
     <div>
-      {meta.pending && '...loading'}
-      {meta.loaded && tournament && (
+      <ESLoader open={meta.pending} />
+      {meta.loaded && entryMeta.loaded && tournament && (
         <>
           <TournamentDetailHeader
             status={tournament?.attributes?.status || 'ready'}
@@ -33,9 +41,14 @@ const TournamentDetail: React.FC = () => {
           >
             {actionComponent[tournament.attributes.status]}
           </TournamentDetailHeader>
-          <DetailInfo detail={tournament} extended />
+          <DetailInfo toEdit={toEdit} detail={tournament} extended />
         </>
       )}
+      <ESModal open={router.asPath.endsWith('/edit')}>
+        <BlankLayout>
+          <UpsertForm />
+        </BlankLayout>
+      </ESModal>
     </div>
   )
 }

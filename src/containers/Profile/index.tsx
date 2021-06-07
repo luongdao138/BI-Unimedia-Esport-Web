@@ -73,7 +73,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     return null
   }
 
-  const cover = profile?.attributes?.cover_url ?? '/images/cover.png'
+  const cover = profile?.attributes?.cover_url ?? null
   const avatar = profile?.attributes?.avatar_url ? profile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
   const isFollowing = profile.attributes.is_following
 
