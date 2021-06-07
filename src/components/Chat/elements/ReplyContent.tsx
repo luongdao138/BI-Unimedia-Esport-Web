@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography, Box, makeStyles, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import Avatar from '@components/Avatar/'
-import { MessageType, ParentItem } from '../types/chat.types'
+import { ChatRoomMemberItem, MessageType, ParentItem, ChatSuggestionList } from '../types/chat.types'
 import _ from 'lodash'
 import TextMessage from './TextMessage'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
@@ -9,16 +9,17 @@ import PhotoMessage from './PhotoMessage'
 
 export interface ReplyContentProps {
   replyMessage: null | ParentItem | string | MessageType
-  members?: any
+  members?: ChatRoomMemberItem[] | ChatSuggestionList[]
   color: string
   showName?: boolean
   contentClass?: string
   numberOfLines?: number
   bgColor?: string
+  onReplyClick?: (msg: null | ParentItem | string | MessageType) => void
 }
 
 const ReplyContent: React.FC<ReplyContentProps> = (props) => {
-  const { replyMessage, members, color, showName, contentClass, numberOfLines, bgColor } = props
+  const { replyMessage, members, color, showName, contentClass, numberOfLines, bgColor, onReplyClick } = props
   const classes = useStyles()
 
   const text = _.get(replyMessage, 'msg', '')
@@ -61,9 +62,15 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
     return null
   }
 
+  const onClick = () => {
+    if (type === CHAT_MESSAGE_TYPE.IMAGE || type === CHAT_MESSAGE_TYPE.TEXT) {
+      onReplyClick && onReplyClick(replyMessage)
+    }
+  }
+
   return (
     <Box className={`${classes.content} ${contentClass ? contentClass : ''}`}>
-      <ListItem>
+      <ListItem onClick={onClick} style={{ cursor: 'pointer' }}>
         {isDeleted === false ? (
           <ListItemAvatar className={classes.avatar}>
             <Avatar src={avatar} size={30} alt={nickName} />

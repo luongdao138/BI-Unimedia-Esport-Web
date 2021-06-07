@@ -14,10 +14,12 @@ import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
 import RoomHeader from '@components/Chat/RoomHeader'
-import { MessageType } from '@components/Chat/types/chat.types'
+import { MessageType, ParentItem } from '@components/Chat/types/chat.types'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { ESReportProps } from '@containers/Report'
+import MessageModal from '@components/Chat/MessageModal'
+import { Colors } from '@theme/colors'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -28,11 +30,17 @@ export interface UploadStateType {
   uploading: boolean
 }
 
+export interface MessageModalStateProps {
+  open: boolean
+  replyMessage: null | ParentItem | string | MessageType
+}
+
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
   const [reply, setReply] = useState<MessageType | null>(null)
   const [reporting, setReporting] = useState<boolean>(false)
   const [reportData, setReportData] = useState<ESReportProps>(null)
+  const [modalReply, setModalReply] = useState<MessageModalStateProps>({ open: false, replyMessage: null })
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
@@ -162,6 +170,13 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setReporting(true)
   }
 
+  const closeMessageModal = () => {
+    setModalReply({ ...modalReply, open: false })
+  }
+  const handleReplyDetail = (replyMessage: null | ParentItem | string | MessageType) => {
+    setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -176,6 +191,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             currentUser={userId}
             paginating={paginating}
             onFetchMore={onFetchMore}
+            onReplyClick={handleReplyDetail}
             users={usersWithAll}
             messages={data}
           />
@@ -211,6 +227,14 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           handleClose={() => setReporting(false)}
         />
       ) : null}
+      <MessageModal
+        open={modalReply.open}
+        hide={closeMessageModal}
+        replyMessage={modalReply.replyMessage}
+        members={usersWithAll}
+        color={Colors.text[200]}
+        bgColor={'transparent'}
+      />
     </Box>
   )
 }

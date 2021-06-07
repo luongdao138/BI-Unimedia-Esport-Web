@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react'
-import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType, ParentItem } from '../types/chat.types'
 import { Box, makeStyles, IconButton, Icon } from '@material-ui/core'
 import { CellMeasurer, CellMeasurerCache, List, AutoSizer } from 'react-virtualized'
 import { useRect } from '@utils/hooks/useRect'
@@ -19,6 +19,7 @@ export interface MessageListProps {
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
   copy?: (currentMessage: MessageType) => void
+  onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
 }
 
 const cache = new CellMeasurerCache({
@@ -29,7 +30,7 @@ const cache = new CellMeasurerCache({
 const contentRef = React.createRef<HTMLDivElement>()
 
 const MessageList = forwardRef((props: MessageListProps, ref) => {
-  const { messages, users, onFetchMore, paginating, currentUser } = props
+  const { messages, users, onFetchMore, paginating, currentUser, onReplyClick } = props
   const [showScroll, setShowScroll] = useState(false)
   const [isBottom, setBottom] = useState<boolean>(true)
   const [scrolling, setScrolling] = useState<number>(0)
@@ -113,6 +114,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
             <Message
               reply={props.reply}
               report={props.report}
+              onReplyClick={onReplyClick}
               copy={props.copy}
               onLoadImage={measure}
               currentMessage={data}
