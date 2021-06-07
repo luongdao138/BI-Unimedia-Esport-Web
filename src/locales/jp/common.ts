@@ -255,6 +255,8 @@ export default {
     menu_block: 'ブロック',
     menu_unblock: 'ブロックを解除する',
     menu_report: '通報',
+    block_success_message: 'ユーザーをブロックしました',
+
     following: 'フォロー中',
     followers: 'フォロワー',
     no_game_selected: 'No game selected',
