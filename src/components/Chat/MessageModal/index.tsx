@@ -15,7 +15,7 @@ const MessageModal: React.FC<MessageModalProps> = (props) => {
 
   return (
     <Box className={classes.container}>
-      <ESDialog open={open} title="メンバーを追加" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop>
+      <ESDialog open={open} title="" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop>
         <DialogContent>
           <Box className={`${classes.scroll}`}>
             <ReplyContent replyMessage={replyMessage} members={members} bgColor={bgColor} color={color} numberOfLines={null} />
