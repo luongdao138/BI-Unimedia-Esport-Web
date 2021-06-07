@@ -292,7 +292,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('md')]: {
     stickyFooter: {
-      height: theme.spacing(14.5),
+      height: theme.spacing(10),
     },
     buttonBottom: {
       bottom: theme.spacing(5.2),
