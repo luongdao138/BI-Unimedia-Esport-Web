@@ -52,6 +52,7 @@ export default {
   welcome: 'eXeLABへようこそ',
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
+    profile_updated: 'プロフィールを更新しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',

@@ -9,6 +9,8 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import { useTranslation } from 'react-i18next'
 import ESInput from '@components/Input'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useStore } from 'react-redux'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -26,18 +28,39 @@ interface SnsInfoProps {
 
 const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError }) => {
   const classes = useStyles()
+  const store = useStore()
   const { t } = useTranslation(['common'])
   const { instagram_link, facebook_link, twitter_link, twitch_link, discord_link } = profile
 
   const validationSchema = Yup.object().shape({
-    instagram_link: Yup.string().max(250, t('common:common.too_long')),
-    discord_link: Yup.string().max(250, t('common:common.too_long')),
-    facebook_link: Yup.string().max(250, t('common:common.too_long')),
-    twitter_link: Yup.string().max(250, t('common:common.too_long')),
-    twitch_link: Yup.string().max(250, t('common:common.too_long')),
+    instagram_link: Yup.string()
+      .max(250, t('common:common.too_long'))
+      .test('instagram_link', t('common:common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    discord_link: Yup.string()
+      .max(250, t('common:common.too_long'))
+      .test('discord_link', t('common:common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    facebook_link: Yup.string()
+      .max(250, t('common:common.too_long'))
+      .test('facebook_link', t('common:common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    twitter_link: Yup.string()
+      .max(250, t('common:common.too_long'))
+      .test('twitter_link', t('common:common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+    twitch_link: Yup.string()
+      .max(250, t('common:common.too_long'))
+      .test('twitch_link', t('common:common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
   })
 
-  const { handleChange, values, touched, errors } = useFormik<SnsInfoParams>({
+  const { handleChange, values, errors } = useFormik<SnsInfoParams>({
     initialValues: {
       instagram_link: instagram_link ? instagram_link : '',
       facebook_link: facebook_link ? facebook_link : '',
@@ -75,8 +98,8 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 fullWidth
                 value={values.facebook_link}
                 onChange={handleChange}
-                helperText={touched.facebook_link && errors.facebook_link}
-                error={touched.facebook_link && !!errors.facebook_link}
+                helperText={errors.facebook_link}
+                error={!!errors.facebook_link}
                 placeholder={'******'}
                 startAdornment={
                   <InputAdornment position="start">
@@ -94,8 +117,8 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 fullWidth
                 value={values.twitter_link}
                 onChange={handleChange}
-                helperText={touched.twitter_link && errors.twitter_link}
-                error={touched.twitter_link && !!errors.twitter_link}
+                helperText={errors.twitter_link}
+                error={!!errors.twitter_link}
                 placeholder={'******'}
                 startAdornment={
                   <InputAdornment position="start">
@@ -113,8 +136,8 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 fullWidth
                 value={values.twitch_link}
                 onChange={handleChange}
-                helperText={touched.twitch_link && errors.twitch_link}
-                error={touched.twitch_link && !!errors.twitch_link}
+                helperText={errors.twitch_link}
+                error={!!errors.twitch_link}
                 placeholder={'******'}
                 startAdornment={
                   <InputAdornment position="start">
@@ -132,8 +155,8 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 fullWidth
                 value={values.instagram_link}
                 onChange={handleChange}
-                helperText={touched.instagram_link && errors.instagram_link}
-                error={touched.instagram_link && !!errors.instagram_link}
+                helperText={errors.instagram_link}
+                error={!!errors.instagram_link}
                 placeholder={'******'}
                 startAdornment={
                   <InputAdornment position="start">
@@ -151,8 +174,8 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 fullWidth
                 value={values.discord_link}
                 onChange={handleChange}
-                helperText={touched.discord_link && errors.discord_link}
-                error={touched.discord_link && !!errors.discord_link}
+                helperText={errors.discord_link}
+                error={!!errors.discord_link}
               />
             </Box>
           </Grid>
