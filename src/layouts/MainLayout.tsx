@@ -13,6 +13,8 @@ import useMainLayoutMeta from '@utils/hooks/useMainLayoutMeta'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import ESLoader from '@components/FullScreenLoader'
+import { createMetaSelector } from '@store/metadata/selectors'
+import authStore from '@store/auth'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -28,6 +30,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
   useProfileValid()
   const { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta } = useMainLayoutMeta()
   const router = useRouter()
+  const { actions } = authStore
+  const getLogoutMeta = createMetaSelector(actions.logout)
+  const logoutMeta = useAppSelector(getLogoutMeta)
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -42,6 +47,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
       router.push(ESRoutes.TOP)
     }
   }, [loginRequired])
+
+  useEffect(() => {
+    if (logoutMeta.loaded) {
+      router.push(ESRoutes.TOP)
+    }
+  }, [logoutMeta])
 
   if (loginRequired && !isAuthenticated) return <ESLoader open={loginRequired && !isAuthenticated} />
 
