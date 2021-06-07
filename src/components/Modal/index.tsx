@@ -25,6 +25,7 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       TransitionComponent={Transition}
       aria-labelledby="modal"
       open={open}
+      disableScrollLock
       onClose={handleClose}
       BackdropProps={{ classes: { root: classes.backDrop } }}
       PaperProps={{ classes: { root: classes.paper } }}
