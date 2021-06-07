@@ -26,9 +26,9 @@ export const Item: React.FC<Props> = forwardRef(({ id, ...props }, ref: any) => 
       // case HOME_SETTINGS.RECRUITMENT_FOLLOW: //TODO skip 2.0
       //   return t('common:home.recruitment_follow')
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
-        return t('common:home.tournament_follow')
+        return t('common:tournament.follower_entering')
       case HOME_SETTINGS.TOURNAMENT_RESULT:
-        return t('common:home.tournament_result')
+        return t('common:tournament.follower_ended')
       // case HOME_SETTINGS.TOPIC_FOLLOW: //TODO skip 2.0
       //   return t('common:home.topic_follow')
       default:

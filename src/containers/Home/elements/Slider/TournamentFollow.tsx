@@ -12,7 +12,7 @@ export const TournamentFollow: React.FC<Props> = ({ data }) => {
   const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title={t('common:home.tournament_follow')}
+      title={t('common:tournament.follower_entering')}
       moreLink={ESRoutes.TOURNAMENT_FOLLOWER_ENTERING}
       navigation
       width={256}
