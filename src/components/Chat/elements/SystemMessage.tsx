@@ -1,19 +1,25 @@
 import React from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import moment from 'moment'
 
 export interface SystemMessageProps {
   text?: string
+  time?: string
 }
 
 const SystemMessage: React.FC<SystemMessageProps> = (props) => {
   const classes = useStyles()
 
-  const { text } = props
+  const { text, time } = props
+  const formatTime = moment(time).format('HH:mm')
 
   return (
     <Box className={classes.section}>
       <Box className={classes.box}>
+        <Typography className={classes.textTime} variant="body2">
+          {formatTime}
+        </Typography>
         <Typography className={classes.text} variant="body2">
           {text}
         </Typography>
@@ -29,10 +35,11 @@ const useStyles = makeStyles(() => ({
   },
   box: {
     width: '80%',
+    paddingTop: 6,
     height: '100%',
     margin: '0 auto',
     borderRadius: 24,
-    background: '#FFFFFF',
+    background: '#FFFFFF1A',
     display: 'inline-block',
     textAlign: 'center',
   },
@@ -40,9 +47,13 @@ const useStyles = makeStyles(() => ({
     display: 'inline-block',
     paddingRight: 16,
     paddingLeft: 16,
-    paddingTop: 6,
-    color: Colors.grey[200],
+    paddingTop: 2,
+    color: Colors.text[200],
     paddingBottom: 6,
+  },
+  textTime: {
+    color: Colors.text[200],
+    textAlign: 'center',
   },
 }))
 
