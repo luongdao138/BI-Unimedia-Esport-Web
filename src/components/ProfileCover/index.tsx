@@ -41,8 +41,11 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) 
 
   return (
     <div className={classes.root}>
-      <Image height="148" width="116" src="/images/big_logo.png" className={classes.defaultBackground} />
-      {src ? <img src={src} className={classes.image} /> : null}
+      {src ? (
+        <img src={src} className={classes.image} />
+      ) : (
+        <Image height="148" width="116" src="/images/big_logo.png" className={classes.defaultBackground} />
+      )}
       {editable ? (
         <>
           {drag && !update ? <Camera fontSize="small" className={classes.camera} /> : null}

@@ -36,7 +36,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
-      .required(t('common:common.error'))
+      .required(t('common:common.required'))
       .max(50, t('common:common.too_long'))
       .min(2, t('common:common.at_least'))
       .test('nickname', t('common:common.contains_ngword'), function (value) {
