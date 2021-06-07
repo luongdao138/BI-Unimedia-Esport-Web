@@ -13,6 +13,7 @@ import useMainLayoutMeta from '@utils/hooks/useMainLayoutMeta'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import ESLoader from '@components/FullScreenLoader'
+import useLogout from '@containers/Logout/useLogout'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -28,6 +29,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
   useProfileValid()
   const { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta } = useMainLayoutMeta()
   const router = useRouter()
+  useLogout()
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)

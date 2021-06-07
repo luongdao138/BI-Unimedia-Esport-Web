@@ -10,7 +10,7 @@ const { actions } = authStore
 const getLogoutMeta = createMetaSelector(actions.logout)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useLogout = (handleClose) => {
+const useLogout = (handleClose?: () => void) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getLogoutMeta)
@@ -19,7 +19,7 @@ const useLogout = (handleClose) => {
 
   useEffect(() => {
     if (meta.loaded) {
-      handleClose()
+      handleClose && handleClose()
       resetMeta()
       router.push(ESRoutes.TOP)
     }
