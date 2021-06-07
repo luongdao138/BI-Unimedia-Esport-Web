@@ -112,7 +112,6 @@ const useStyles = makeStyles((theme) => ({
     overflowY: 'auto',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
-    paddingRight: 24,
     '&::-webkit-scrollbar': {
       width: 5,
       opacity: 1,
