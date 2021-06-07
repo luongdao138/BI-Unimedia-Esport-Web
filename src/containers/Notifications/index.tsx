@@ -24,11 +24,16 @@ const NotificationContainer: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    clearNotificationBadge()
     fetchNotifications({
       page: 1,
     })
   }, [])
+
+  useEffect(() => {
+    if (meta.loaded) {
+      clearNotificationBadge()
+    }
+  }, [meta.loaded])
 
   const hasNextPage = pages && pages.current_page !== pages.total_pages
 
