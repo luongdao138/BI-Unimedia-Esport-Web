@@ -64,6 +64,10 @@ export default createReducer(initialState, (builder) => {
     state.searchTournaments = searchTournaments
     state.searchTournamentsMeta = action.payload.links?.meta
   })
+  builder.addCase(actions.resetSearchTournaments, (state) => {
+    state.searchTournaments = []
+    state.searchTournamentsMeta = undefined
+  })
   builder.addCase(actions.getTournamentFollowers.fulfilled, (state, action) => {
     let tmpTournamentFollowers = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {

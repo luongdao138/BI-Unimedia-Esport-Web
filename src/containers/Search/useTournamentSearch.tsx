@@ -15,7 +15,8 @@ const useTournamentSearch = () => {
   const meta = useAppSelector(getTournamentSearchMeta)
   const tournamentSearch = (param: TournamentSearchParams) => dispatch(actions.tournamentSearch(param))
   const resetMeta = () => dispatch(clearMetaData(actions.tournamentSearch.typePrefix))
-  return { searchTournaments, tournamentSearch, resetMeta, meta, page }
+  const resetSearchTournaments = () => dispatch(actions.resetSearchTournaments())
+  return { searchTournaments, tournamentSearch, resetMeta, resetSearchTournaments, meta, page }
 }
 
 export default useTournamentSearch
