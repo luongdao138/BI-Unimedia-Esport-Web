@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Box, makeStyles, DialogContent, Typography, Theme, List, CircularProgress } from '@material-ui/core'
+import { Box, makeStyles, DialogContent, Typography, Theme, List, CircularProgress, Badge, IconButton, Icon } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import Avatar from '@components/Avatar'
@@ -127,6 +127,19 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     setSelectedList(newSelectedList)
   }
 
+  const removeFromList = (id: number) => {
+    const deletedArray = _.filter(selectedList, function (n) {
+      return n.id !== Number(id)
+    })
+    setSelectedList(deletedArray)
+    const unselectedArray = _.map(memberList, function (n) {
+      if (n.id === Number(id)) {
+        return { ...n, isSelected: false }
+      } else return n
+    })
+    setMemberList(unselectedArray)
+  }
+
   return (
     <Box className={classes.container}>
       <ESDialog
@@ -155,7 +168,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
               <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
             </form>
           </Box>
-          <Box className={isNoSelected ? classes.list : classes.listShrink}>
+          <Box className={`${isNoSelected ? classes.list : classes.listShrink} ${classes.scroll}`}>
             <List>
               {memberList.map((member) => (
                 <MemberItem
@@ -172,8 +185,23 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
           </Box>
           <Box className={classes.bottomSection} mt={4.25}>
             <Box className={classes.selectedAvatars}>
-              {selectedList.map((member) => (
-                <Avatar key={member.id} src={member.profile} alt={member.nickName} />
+              {selectedList.map((member, index) => (
+                <Badge
+                  className={classes.user}
+                  key={index}
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={
+                    <IconButton onClick={() => removeFromList(member.id)} disableRipple className={classes.closeBtn}>
+                      <Icon className={`fa fa-times ${classes.closeIcon}`} />
+                    </IconButton>
+                  }
+                >
+                  <Avatar key={member.id} src={member.profile} alt={member.nickName} />
+                </Badge>
               ))}
             </Box>
             <Box maxWidth={280} className={classes.buttonBottom}>
@@ -192,8 +220,25 @@ RoomMemberAddView.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {},
+  user: {
+    marginRight: 5,
+    marginLeft: 5,
+    '&:first-child': {
+      marginLeft: 0,
+    },
+  },
   nameInfoMsg: {
     textAlign: 'center',
+  },
+  closeBtn: {
+    background: 'rgba(77,77,77, 0.8)',
+    padding: 8,
+    '&:hover': {
+      background: 'rgba(77,77,77, 0.8)',
+    },
+  },
+  closeIcon: {
+    fontSize: 12,
   },
   list: {
     overflow: 'auto',
@@ -204,6 +249,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     overflowX: 'hidden',
     height: 'calc(100vh - 501px)',
+  },
+  scroll: {
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
   },
   stickyFooter: {
     position: 'fixed',
@@ -230,7 +292,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('md')]: {
     stickyFooter: {
-      height: theme.spacing(14.5),
+      height: theme.spacing(10),
     },
     buttonBottom: {
       bottom: theme.spacing(5.2),
