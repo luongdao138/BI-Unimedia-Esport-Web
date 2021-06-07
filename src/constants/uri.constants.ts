@@ -54,9 +54,8 @@ export const URI = {
   TOURNAMENTS_RANDOMIZE_PARTICIPANTS: '/v2/tournaments/:id/randomize_participants',
   TOURNAMENTS_FREEZE_PARTICIPANTS: '/v2/tournaments/:id/freeze_participants',
   ARENA_SET_PARTICIPANTS: 'v2/tournaments/:id/set_participants',
-  COMMUNITY_FOLLOWERS_TOPICS: '/v2/communities/???',
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
-  TOPICS_FOLLOWERS: '/v2/users/followings_topic',
+  TOPICS_FOLLOWERS: '/v2/users/followings_topic', //TODO skip 2.0
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',
   USER_RECOMMENDATIONS: '/v2/users/recommendations',
