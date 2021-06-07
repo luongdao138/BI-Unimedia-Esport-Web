@@ -20,10 +20,11 @@ export type TagSelectDialogParams = {
 interface TagSelectDialogProps {
   selected: any
   features: any
+  max?: number
   onFeatureSelect: (data: any) => void
 }
 
-const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, onFeatureSelect }) => {
+const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, onFeatureSelect, max }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
@@ -61,7 +62,13 @@ const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, o
                       </Box>
                     </Box>
 
-                    <TagSelect features={features} selectedFeatures={selected} onSelectChange={onFeatureSelect} />
+                    <TagSelect
+                      features={features}
+                      selectedFeatures={selected}
+                      onSelectChange={(data: any) => {
+                        if ((max && selected.length < max) || max === undefined || data.length <= max) onFeatureSelect(data)
+                      }}
+                    />
 
                     <Box className={classes.blankSpace}></Box>
                   </Box>

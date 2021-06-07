@@ -18,6 +18,8 @@ export const tournamentSearch = createAsyncThunk<services.TournamentSearchRespon
   }
 )
 
+export const resetSearchTournaments = createAction(SEARCH_ACTION_TYPE.RESET_SEARCH_TOURNAMENTS)
+
 export const getTournamentFollowers = createAsyncThunk<services.TournamentFollowersResponse, services.TournamentFollowersParams>(
   TOURNAMENT_ACTION_TYPE.TOURNAMENT_FOLLOWERS,
   async (params, { rejectWithValue }) => {

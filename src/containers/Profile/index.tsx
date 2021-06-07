@@ -21,6 +21,7 @@ import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
+import ESToast from '@components/Toast'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -44,6 +45,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [disable, toggleDisable] = useState(false)
   const { blockUser, blockMeta } = useBlock()
   const { unblockUser, unblockMeta } = useUnblock()
+  const [blocked, setBlocked] = useState(false)
+  const [showToast, setShow] = useState(false)
 
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
 
@@ -62,6 +65,12 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
       toggleDisable(false)
     }
   }, [profile])
+
+  useEffect(() => {
+    if (blocked && !blockMeta.pending) {
+      setShow(true)
+    }
+  }, [blockMeta])
 
   useEffect(() => {
     if (meta.error) {
@@ -105,6 +114,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
+                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                  <Icon className={`fas fa-inbox ${classes.inbox}`} />
+                </ESButton>
                 {isFollowing ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.following')}
@@ -116,12 +128,22 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                 )}
                 <ESMenu>
                   {profile.attributes.is_blocked ? (
-                    <ESMenuItem onClick={() => unblockUser({ block_type: 'user', target_id: Number(profile.id) })}>
+                    <ESMenuItem
+                      onClick={() => {
+                        unblockUser({ block_type: 'user', target_id: Number(profile.id) })
+                        setBlocked(false)
+                      }}
+                    >
                       {i18n.t('common:profile.menu_unblock')}
                       {blockMeta.pending ? <ESLoader /> : null}
                     </ESMenuItem>
                   ) : (
-                    <ESMenuItem onClick={() => blockUser({ block_type: 'user', target_id: Number(profile.id) })}>
+                    <ESMenuItem
+                      onClick={() => {
+                        blockUser({ block_type: 'user', target_id: Number(profile.id) })
+                        setBlocked(true)
+                      }}
+                    >
                       {i18n.t('common:profile.menu_block')}
                       {unblockMeta.pending ? <ESLoader /> : null}
                     </ESMenuItem>
@@ -197,6 +219,16 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         {getHeader()}
         {getTabs()}
         {getContent()}
+        {showToast && (
+          <ESToast
+            open={showToast}
+            message={i18n.t('common:profile.block_success_message')}
+            onClose={() => {
+              setBlocked(false)
+              setShow(false)
+            }}
+          />
+        )}
       </Grid>
     </>
   )
@@ -260,5 +292,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+  },
+  inbox: {
+    color: Colors.white,
+    fontSize: '24px',
   },
 }))

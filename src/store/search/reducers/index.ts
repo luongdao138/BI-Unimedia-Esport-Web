@@ -27,4 +27,9 @@ export default createReducer(initialState, (builder) => {
     state.type = action.payload.type
     state.keyword = action.payload.keyword
   })
+
+  builder.addCase(actions.resetSearchUsers, (state) => {
+    state.searchUsers = []
+    state.searchUsersMeta = undefined
+  })
 })

@@ -3,7 +3,7 @@ import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
-import { useTranslation } from 'react-i18next'
+import i18n from '@locales/i18n'
 import useProfileEdit from './useProfileEdit'
 import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
@@ -20,7 +20,6 @@ import { useRouter } from 'next/router'
 import _ from 'lodash'
 
 const ProfileEditContainer: React.FC = () => {
-  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
 
@@ -31,6 +30,7 @@ const ProfileEditContainer: React.FC = () => {
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
+  const [showSuccessToast, setSuccess] = useState(false)
   const [isValidDate, setValidDate] = useState(false)
 
   useEffect(() => {
@@ -47,8 +47,9 @@ const ProfileEditContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
+      setSuccess(true)
       resetMeta()
-      router.push(ESRoutes.PROFILE)
+      setTimeout(() => router.push(ESRoutes.PROFILE), 2000)
     }
   }, [meta.loaded])
 
@@ -85,27 +86,27 @@ const ProfileEditContainer: React.FC = () => {
           <IconButton className={classes.iconButtonBg} onClick={() => router.push(ESRoutes.PROFILE)}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
-          <Box pl={2}>{<Typography variant="h2">{t('common:user_profile.edit_profile')}</Typography>}</Box>
+          <Box pl={2}>{<Typography variant="h2">{i18n.t('common:user_profile.edit_profile')}</Typography>}</Box>
         </Box>
 
         {profile && getUserProfileMeta.loaded && (
           <Box>
             <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:register_profile.nickname')}
+              {i18n.t('common:register_profile.nickname')}
             </Typography>
             <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} handleError={handleError} />
             <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:profile.tag')}
+              {i18n.t('common:profile.tag')}
             </Typography>
-            <TagSelectDialog selected={profile.features} features={features} onFeatureSelect={onFeatureSelect} />
+            <TagSelectDialog selected={profile.features} features={features} onFeatureSelect={onFeatureSelect} max={5} />
             <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:profile.basic_info')}
+              {i18n.t('common:profile.basic_info')}
             </Typography>
             <Box paddingX={3}>
               <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} handleDateError={setValidDate} />
             </Box>
             <Typography variant="h3" gutterBottom className={classes.label}>
-              {t('common:user_profile.sns')}
+              {i18n.t('common:user_profile.sns')}
             </Typography>
             <SnsInfo profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
           </Box>
@@ -118,13 +119,22 @@ const ProfileEditContainer: React.FC = () => {
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
             <ButtonPrimary type="submit" round fullWidth disabled={hasError || isValidDate} onClick={handleSubmit}>
-              {t('common:common.save')}
+              {i18n.t('common:common.save')}
             </ButtonPrimary>
           </Box>
         </Box>
       </Box>
       <ESLoader open={getUserProfileMeta.pending || meta.pending} />
-      {!!meta.error && <ESToast open={!!meta.error} message={t('common:error.failed')} resetMeta={resetMeta} />}
+      {!!meta.error && <ESToast open={!!meta.error} message={i18n.t('common:error.failed')} resetMeta={resetMeta} />}
+      {showSuccessToast && (
+        <ESToast
+          open={showSuccessToast}
+          message={i18n.t('common:messages.profile_updated')}
+          onClose={() => {
+            setSuccess(false)
+          }}
+        />
+      )}
     </>
   )
 }
