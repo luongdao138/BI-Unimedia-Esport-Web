@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import Avatar from '../Avatar'
 import { Typography } from '@material-ui/core'
+import { MatchItemType } from '@services/arena.service'
 
 interface BracketContainerProps {
   children?: ReactNode
@@ -43,15 +44,26 @@ type Participant = {
 interface MatchProps {
   editable: boolean
   headerText?: string
-  winner: 'home' | 'guest' | null
+  winner: MatchItemType | null
   participant1: Participant | null
   participant2: Participant | null
   score1?: number | null
   score2?: number | null
+  highlightLabel?: MatchItemType
   onClick?: (e: MouseEvent) => void
 }
 
-const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, score1, score2, editable, winner, ...rest }) => {
+const Match: React.FC<MatchProps> = ({
+  headerText,
+  participant1,
+  participant2,
+  score1,
+  score2,
+  editable,
+  winner,
+  highlightLabel,
+  ...rest
+}) => {
   const classes = useStyles()
   return (
     <div className={classes.match}>
@@ -61,8 +73,12 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, s
           <div className={classes.participant}>
             {participant1 ? (
               <>
-                <Avatar className={classes.avatar} alt={participant1.label} src={participant1.avatar} />
-                <Typography className={classes.label} noWrap={true}>
+                <Avatar
+                  className={`${classes.avatar} ${winner === 'home' ? classes.avatarWinner : ''}`}
+                  alt={participant1.label}
+                  src={participant1.avatar}
+                />
+                <Typography className={`${classes.label} ${highlightLabel === 'home' ? classes.labelHighlight : ''}`} noWrap={true}>
                   {participant1.label}
                 </Typography>
               </>
@@ -73,7 +89,9 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, s
               </>
             )}
           </div>
-          <div className={classes.score}>{score1 == null || score1 == undefined ? '-' : score1}</div>
+          <div className={`${classes.score} ${winner === 'home' ? classes.scoreWinner : ''}`}>
+            {score1 == null || score1 == undefined ? '-' : score1}
+          </div>
           {winner !== null && winner === 'guest' && <div className={classes.backdrop} />}
         </div>
         <div className={classes.participantDivider} />
@@ -81,8 +99,12 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, s
           <div className={classes.participant}>
             {participant2 ? (
               <>
-                <Avatar className={classes.avatar} alt={participant2.label} src={participant2.avatar} />
-                <Typography className={classes.label} noWrap={true}>
+                <Avatar
+                  className={`${classes.avatar} ${winner === 'guest' ? classes.avatarWinner : ''}`}
+                  alt={participant2.label}
+                  src={participant2.avatar}
+                />
+                <Typography className={`${classes.label} ${highlightLabel === 'guest' ? classes.labelHighlight : ''}`} noWrap={true}>
                   {participant2.label}
                 </Typography>
               </>
@@ -93,7 +115,9 @@ const Match: React.FC<MatchProps> = ({ headerText, participant1, participant2, s
               </>
             )}
           </div>
-          <div className={classes.score}>{score2 == null || score2 == undefined ? '-' : score2}</div>
+          <div className={`${classes.score} ${winner === 'guest' ? classes.scoreWinner : ''}`}>
+            {score2 == null || score2 == undefined ? '-' : score2}
+          </div>
           {winner !== null && winner === 'home' && <div className={classes.backdrop} />}
         </div>
       </div>
@@ -304,15 +328,24 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 4,
     paddingRight: 4,
   },
+  scoreWinner: {
+    color: Colors.yellow,
+  },
   avatar: {
     height: 26,
     width: 26,
     marginRight: 12,
     fontSize: 16,
   },
+  avatarWinner: {
+    border: `2px solid ${Colors.yellow}`,
+  },
   label: {
     width: 150,
     textAlign: 'start',
+  },
+  labelHighlight: {
+    color: Colors.yellow,
   },
   noLabel: {
     color: '#FFFFFF30',
