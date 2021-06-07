@@ -19,18 +19,18 @@ export const Item: React.FC<Props> = forwardRef(({ id, ...props }, ref: any) => 
     switch (id) {
       case HOME_SETTINGS.RECOMMENDED_USER:
         return t('common:home.recommended_user')
-      case HOME_SETTINGS.RECOMMENDED_RECRUITMENT:
-        return t('common:home.recommended_recruitment')
-      case HOME_SETTINGS.RECOMMENDED_EVENT:
-        return t('common:home.recommended_event')
-      case HOME_SETTINGS.RECRUITMENT_FOLLOW:
-        return t('common:home.recruitment_follow')
+      // case HOME_SETTINGS.RECOMMENDED_RECRUITMENT: //TODO skip 2.0
+      //   return t('common:home.recommended_recruitment')
+      // case HOME_SETTINGS.RECOMMENDED_EVENT: //TODO skip 2.0
+      //   return t('common:home.recommended_event')
+      // case HOME_SETTINGS.RECRUITMENT_FOLLOW: //TODO skip 2.0
+      //   return t('common:home.recruitment_follow')
       case HOME_SETTINGS.TOURNAMENT_FOLLOW:
         return t('common:home.tournament_follow')
       case HOME_SETTINGS.TOURNAMENT_RESULT:
         return t('common:home.tournament_result')
-      case HOME_SETTINGS.TOPIC_FOLLOW:
-        return t('common:home.topic_follow')
+      // case HOME_SETTINGS.TOPIC_FOLLOW: //TODO skip 2.0
+      //   return t('common:home.topic_follow')
       default:
         return ''
     }

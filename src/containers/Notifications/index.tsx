@@ -10,11 +10,12 @@ import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { ESRoutes } from '@constants/route.constants'
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
   const { fetchNotificationDetail } = useNotificationDetail()
-  const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages } = useNotificationList()
+  const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages, seenNotificationBadge } = useNotificationList()
   const { t } = useTranslation(['common'])
   const router = useRouter()
 
@@ -64,12 +65,29 @@ const NotificationContainer: React.FC = () => {
               if (notification.attributes) {
                 switch (notification.attributes.ntype_id) {
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
+                    seenNotificationBadge()
                     fetchNotificationDetail(Number(notification.id))
-                    router.push(`/profile/${notification.attributes.user_code}`)
+                    router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
                     break
                   }
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
-                    router.push(`/notifications/${notification.id}`)
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.NOTIFICATIONS}/${notification.id}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_ADMIN: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.NOTIFICATIONS}/${notification.id}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_TOURNAMENT: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.ARENA_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_MESSAGE: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.GROUP_CHAT.replace(/:id/gi, notification.attributes.room_id)}`)
                     break
                   }
                   default: {

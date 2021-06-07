@@ -1,7 +1,7 @@
 import ESSlider from '@components/Slider'
 import { ESRoutes } from '@constants/route.constants'
 import { useTranslation } from 'react-i18next'
-import TournamentCardFollow from '@components/TournamentCard/Follow'
+import TournamentCardFollow from '@components/TournamentCard'
 import { SLIDE_LIMIT } from '@constants/common.constants'
 
 interface Props {
