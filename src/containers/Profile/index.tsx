@@ -47,12 +47,19 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const { unblockUser, unblockMeta } = useUnblock()
   const [blocked, setBlocked] = useState(false)
   const [showToast, setShow] = useState(false)
+  const [offset, setOffset] = useState(0)
 
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
 
   const raw_code = router.query.user_code || []
 
   const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState } = useUserData(raw_code)
+
+  useEffect(() => {
+    window.onscroll = () => {
+      setOffset(window.pageYOffset)
+    }
+  }, [])
 
   useEffect(() => {
     if (isOthers) {
@@ -101,10 +108,18 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER)
             }}
           />
-          <Box className={classes.headerItemsContainer}>
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
+          {offset > 150 ? (
+            <Box className={classes.backContainer} style={{ top: offset }}>
+              <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+            </Box>
+          ) : (
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
+          )}
+          <Box className={classes.headerItemsContainer}>
             <ProfileAvatar
               src={avatar}
               editable={!isOthers}
@@ -249,29 +264,47 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(1),
   },
   headerContainerSecond: {
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
+  backContainer: {
+    position: 'absolute',
+    width: '100%',
+    paddingLeft: theme.spacing(3),
+    paddingTop: 3,
+    paddingBottom: 3,
+    backgroundColor: Colors.grey[100],
+    zIndex: 100,
+  },
+  iconButtonBg2: {
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+  },
   iconButtonBg: {
+    position: 'absolute',
+    marginLeft: theme.spacing(3),
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-    zIndex: 10,
+    zIndex: 100,
   },
   marginTop20: {
     marginTop: 20,
   },
   menu: {
     position: 'absolute',
-    top: 200,
+    bottom: theme.spacing(1),
     display: 'flex',
     right: theme.spacing(1),
     flexDirection: 'row',

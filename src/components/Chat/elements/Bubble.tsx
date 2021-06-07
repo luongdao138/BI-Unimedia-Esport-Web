@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, makeStyles, Divider } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType, ParentItem } from '../types/chat.types'
 import { TextMessage, PhotoMessage } from '../elements'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import _ from 'lodash'
@@ -13,10 +13,11 @@ export interface BubbleProps {
   users: ChatRoomMemberItem[] | ChatSuggestionList[]
   navigateToProfile?: (id: string) => void
   onLoadImage: () => void
+  onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
 }
 
 const Bubble: React.FC<BubbleProps> = (props) => {
-  const { users, currentMessage, navigateToProfile, direction } = props
+  const { users, currentMessage, navigateToProfile, direction, onReplyClick } = props
 
   const classes = useStyles({ direction })
 
@@ -45,7 +46,9 @@ const Bubble: React.FC<BubbleProps> = (props) => {
             contentClass={classes.replyContent}
             color={direction === 'left' ? Colors.text[200] : Colors.grey[200]}
             showName={false}
+            onReplyClick={onReplyClick}
             numberOfLines={2}
+            members={users}
             replyMessage={currentMessage.parentMsg}
             bgColor={direction === 'left' ? Colors.grey[200] : Colors.white}
           />

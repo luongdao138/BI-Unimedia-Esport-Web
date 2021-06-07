@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import { useRouter } from 'next/router'
+import { TournamentMatchItem } from '@services/arena.service'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -59,10 +60,10 @@ const ArenaMatches: React.FC = () => {
     return isAdmin && isCompleted
   }
 
-  const getMatch = (headerText, _match) => {
+  const getMatch = (headerText: string, _match: TournamentMatchItem) => {
     const data = tournament.attributes
     const isTeam = data.participant_type > 1
-    const clickable = _match.home_user || _match.guest_user
+    const clickable = !!_match.home_user || !!_match.guest_user
 
     return (
       <Bracket.Match
@@ -71,6 +72,7 @@ const ArenaMatches: React.FC = () => {
         headerText={headerText}
         editable={clickable}
         winner={_match.winner}
+        highlightLabel={_match.highlight}
         participant1={
           _match.home_user
             ? {
