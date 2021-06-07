@@ -2,6 +2,8 @@ import { Typography, Box, Theme, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ESAvatar from '@components/Avatar'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
+
 interface Props {
   data: any
 }
@@ -12,7 +14,11 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-        <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+        {notification.ntype_id === NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW ? (
+          <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+        ) : (
+          <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
+        )}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
           <Box color={Colors.white}>
             <Typography variant="caption" noWrap>

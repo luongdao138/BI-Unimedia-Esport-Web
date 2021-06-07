@@ -188,8 +188,6 @@ export default {
     recommended_event: 'おすすめイベント',
     recruitment_follow: 'フォローしている人の募集',
     topic_follow: 'フォローしている人の書き込みトピック',
-    tournament_follow: 'フォローしている人がエントリーしている大会',
-    tournament_result: 'フォローしている人がエントリーしていた大会結果',
     change_order: '並び順を変更する',
     recommended_user: 'おすすめユーザー',
     terms_of_use: '利用規約',

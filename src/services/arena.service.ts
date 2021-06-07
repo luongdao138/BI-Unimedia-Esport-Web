@@ -416,7 +416,7 @@ export const getTournamentFollowers = async (params: TournamentFollowersParams):
 }
 
 export const getTournamentResults = async (params: TournamentResultsParams): Promise<TournamentResultsResponse> => {
-  const { data } = await api.post<TournamentResultsResponse>(URI.TOURNAMENT_RESULTS, params)
+  const { data } = await api.get<TournamentResultsResponse>(URI.TOURNAMENT_RESULTS, { params })
   return data
 }
 

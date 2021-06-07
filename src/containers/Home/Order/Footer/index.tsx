@@ -44,6 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black,
     borderTop: '1px solid',
     borderTopColor: Colors.white_opacity[30],
+    width: '100%',
+    margin: '0 auto',
   },
   actionCancelButton: {
     maxWidth: '100%',

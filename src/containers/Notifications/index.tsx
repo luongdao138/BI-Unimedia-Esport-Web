@@ -1,4 +1,4 @@
-import { Box, Grid } from '@material-ui/core'
+import { Box, Grid, Theme } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import useNotificationList from './useNotificationList'
 import NotificationListItem from './notificationItem'
@@ -8,14 +8,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
-import { FixedSizeList as List } from 'react-window'
-import InfiniteLoader from 'react-window-infinite-loader'
 import HeaderWithButton from '@components/HeaderWithButton'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { ESRoutes } from '@constants/route.constants'
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
   const { fetchNotificationDetail } = useNotificationDetail()
-  const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages } = useNotificationList()
+  const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages, seenNotificationBadge } = useNotificationList()
   const { t } = useTranslation(['common'])
   const router = useRouter()
 
@@ -45,80 +45,80 @@ const NotificationContainer: React.FC = () => {
     }
   }
 
-  const Row = (props: { index: number; style: React.CSSProperties; data: any }) => {
-    const { index, style, data } = props
-    const notification = data[index]
-    return (
-      <Grid
-        item
-        style={style}
-        xs={12}
-        key={index}
-        onClick={() => {
-          if (notification.attributes) {
-            switch (notification.attributes.ntype_id) {
-              case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
-                fetchNotificationDetail(Number(notification.id))
-                router.push(`/profile/${notification.attributes.user_code}`)
-                break
-              }
-              case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
-                router.push(`/notifications/${notification.id}`)
-                break
-              }
-              default: {
-                break
-              }
-            }
-          }
-        }}
-      >
-        <NotificationListItem data={notification} />
-      </Grid>
-    )
-  }
-
-  const itemCount = hasNextPage ? notifications.length + 1 : notifications.length
-
   return (
     <div>
       <HeaderWithButton title={t('common:notification.title')} />
-      <Box className={(classes.container, 'scroll-bar')}>
-        <InfiniteLoader isItemLoaded={(index: number) => index < notifications.length} itemCount={itemCount} loadMoreItems={loadMore}>
-          {({ onItemsRendered, ref }) => (
-            <List
-              height={800}
-              width={'100%'}
-              itemCount={notifications.length}
-              itemData={notifications}
-              itemSize={110}
-              onItemsRendered={onItemsRendered}
-              ref={ref}
-            >
-              {Row}
-            </List>
-          )}
-        </InfiniteLoader>
-        {meta.pending && (
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
+      <InfiniteScroll
+        className={classes.container}
+        dataLength={notifications.length}
+        next={loadMore}
+        hasMore={hasNextPage}
+        loader={null}
+        scrollThreshold="1px"
+      >
+        {notifications.map((notification, index) => (
+          <Grid
+            item
+            xs={12}
+            key={index}
+            onClick={() => {
+              if (notification.attributes) {
+                switch (notification.attributes.ntype_id) {
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
+                    seenNotificationBadge()
+                    fetchNotificationDetail(Number(notification.id))
+                    router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.NOTIFICATIONS}/${notification.id}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_ADMIN: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.NOTIFICATIONS}/${notification.id}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_TOURNAMENT: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.ARENA_DETAIL.replace(/:id/gi, notification.attributes.hash_key)}`)
+                    break
+                  }
+                  case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_MESSAGE: {
+                    seenNotificationBadge()
+                    router.push(`${ESRoutes.GROUP_CHAT.replace(/:id/gi, notification.attributes.room_id)}`)
+                    break
+                  }
+                  default: {
+                    break
+                  }
+                }
+              }
+            }}
+          >
+            <NotificationListItem data={notification} />
           </Grid>
-        )}
-      </Box>
+        ))}
+      </InfiniteScroll>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </div>
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    height: 800,
-    padding: 24,
-    paddingTop: 16,
-    paddingBottom: 0,
     display: 'flex',
     flexWrap: 'wrap',
+    '& > div:last-child > div': {
+      marginBottom: theme.spacing(2),
+    },
   },
 }))
 
