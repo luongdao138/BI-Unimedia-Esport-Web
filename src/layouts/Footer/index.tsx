@@ -155,8 +155,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: theme.spacing(1),
     },
     listBorder: {
-      paddingRight: theme.spacing(1),
-      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(3),
+      paddingLeft: theme.spacing(3),
     },
     footer: {
       paddingBottom: theme.spacing(1),
