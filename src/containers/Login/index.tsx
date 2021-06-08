@@ -47,7 +47,7 @@ const LoginContainer: React.FC = () => {
     privacy: false,
   })
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta, metaReset, resetPasswordMeta, handleClick } = useLoginByEmail()
+  const { loginByEmail, meta, resetMeta, metaReset, resetPasswordMeta, handleClick } = useLoginByEmail(social.resetMeta())
   const { handleLink } = useReturnHref()
   const [showPassword, setShowPassword] = useState(false)
 

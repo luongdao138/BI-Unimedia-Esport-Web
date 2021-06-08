@@ -2,7 +2,7 @@
 import api from './api'
 import { StoreType } from '../store/store'
 import { URI } from '@constants/uri.constants'
-import { loginByEmail } from '@store/auth/actions'
+import { loginByEmail, logout } from '@store/auth/actions'
 
 let subscribers: Function[] = []
 
@@ -68,7 +68,7 @@ export const authorizationProvider = (store: StoreType): void => {
           return retryRequest
         } else if (response.code === 401 && response.message === 'Invalid token') {
           // Refresh token expired or token Invalid
-          // store.dispatch(authActionCreators.logout())
+          store.dispatch({ type: logout.fulfilled.toString() })
         }
         return Promise.reject(response)
       } else if (error.response && error.response.status === 404 && error.response.data.error === 'disabled') {
