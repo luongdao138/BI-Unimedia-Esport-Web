@@ -42,6 +42,25 @@ const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value 
     setValues()
   }
 
+  const handleOnKeyPress = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
+    const charCode = typeof e.which == 'undefined' ? e.keyCode : e.which
+    const charStr = String.fromCharCode(charCode)
+    if (!charStr.match(/^[0-9]+$/)) {
+      e.preventDefault()
+    } else {
+      e.preventDefault()
+      if (numberOfPins - 1 > index) {
+        inputRefs[index + 1].current.focus()
+      }
+
+      if (inputRefs[index].current.value !== null) {
+        inputRefs[index].current.value = e.key.substr(e.key.length - 1)
+      }
+
+      setValues()
+    }
+  }
+
   // trigger input special keys which is backspace, arrows etc
   const onKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.keyCode) {
@@ -126,6 +145,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value 
           value={values[index] || ''}
           onChange={(e) => handleOnChange(index, e)}
           onKeyDown={(e) => onKeyDown(index, e)}
+          onKeyPress={(e) => handleOnKeyPress(index, e)}
           onPaste={(e) => onPaste(e)}
         />
       </div>
