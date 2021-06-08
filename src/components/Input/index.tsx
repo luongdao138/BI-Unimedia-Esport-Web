@@ -58,9 +58,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&.Mui-disabled': {
       backgroundColor: 'transparent',
+      color: Colors.white_opacity['30'],
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: 'transparent',
       },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      padding: 0,
+      paddingBottom: theme.spacing(1),
     },
     '& :-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
