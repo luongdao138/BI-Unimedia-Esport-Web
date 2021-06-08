@@ -4,13 +4,11 @@ import useNotificationList from './useNotificationList'
 import NotificationBadgeItem from './notificationBadgeItem'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
 import { useRouter } from 'next/router'
-import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 import { ESRoutes } from '@constants/route.constants'
 
 const NotificationBadgeListContainer: React.FC = () => {
   const { badgeNotifications, fetchBadgeNotifications, seenNotificationBadge } = useNotificationList()
   const router = useRouter()
-  const { fetchNotificationDetail } = useNotificationDetail()
 
   useEffect(() => {
     fetchBadgeNotifications()
@@ -21,7 +19,6 @@ const NotificationBadgeListContainer: React.FC = () => {
       switch (notification.attributes.ntype_id) {
         case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
           seenNotificationBadge()
-          fetchNotificationDetail(Number(notification.id))
           router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
           break
         }

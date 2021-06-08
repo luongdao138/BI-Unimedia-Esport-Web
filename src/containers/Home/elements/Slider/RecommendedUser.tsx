@@ -61,7 +61,7 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
       items={users.slice(0, USER_LIMIT).map((user, i) => (
         <Box key={i}>
           <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>
-            <ESAvatar className={classes.avatar} src={user.attributes.avatar} />
+            <ESAvatar alt={user.attributes.nickname} className={classes.avatar} src={user.attributes.avatar} />
             <Typography variant="caption" className={classes.name}>
               {user.attributes.nickname}
             </Typography>
