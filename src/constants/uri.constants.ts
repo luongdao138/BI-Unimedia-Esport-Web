@@ -36,7 +36,6 @@ export const URI = {
   INQUIRY: '/v2/users/inquiries',
   COMMUNITY_LIST: '/v1/communities/list',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
-  RECOMMENDED_USERS: '/v1/recommended_users',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
   TOURNAMENTS_INTERESTEDS: '/v2/tournaments/:id/interested',

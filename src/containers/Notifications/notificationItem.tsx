@@ -16,7 +16,6 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
   return (
     <Box className={classes.wrap}>
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-        {notification.ntype_id}
         {notification.ntype_id === NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW ? (
           <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
         ) : (

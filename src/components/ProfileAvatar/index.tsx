@@ -3,16 +3,18 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, Box } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
+import ESAvatar from '@components/Avatar'
 import { useDropzone } from 'react-dropzone'
 
 type ProfileAvatarProps = {
   editable?: boolean
   size?: number
   src: string
+  alt?: string
   onChange?: (file: File) => void
 }
 
-const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, onChange }) => {
+const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, src, onChange }) => {
   const classes = useStyles()
   const [update, setUpdate] = useState<boolean>(false)
   const [drag, setDrag] = useState<boolean>(false)
@@ -67,7 +69,7 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, on
           ) : null}
         </label>
       ) : (
-        <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} style={size && { width: size, height: size }} />
+        <ESAvatar className={classes.avatar} alt={alt} src={src} style={size && { width: size, height: size }} />
       )}
     </div>
   )
