@@ -5,21 +5,24 @@ import PageWithLayoutType from '@constants/page'
 import ChatRoomCreateContainer from '@containers/ChatRoomCreateContainer'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
+import useDirectCheck from '@containers/ChatRoomCreateContainer/useDirectCheck'
 
 const DirectCreate: PageWithLayoutType = () => {
   const router = useRouter()
   const { id } = router.query
-  const singleUser = null
-  const roomId = null
+  const { checkRoom, roomMeta, singleUserData, redirectRoomData } = useDirectCheck()
+  const singleUser = singleUserData
+  const roomId = redirectRoomData
 
   useEffect(() => {
-    if (id) {
+    if (id && _.isString(id)) {
       // dispatch backend
+      checkRoom(id)
     }
   }, [id])
 
   useEffect(() => {
-    if (roomId !== null) {
+    if (roomId !== null && roomMeta.loaded && !roomMeta.pending && !roomMeta.error) {
       // dispatch backend
       router.push(`${ESRoutes.MESSAGE}${roomId}`, undefined, { shallow: true })
     }

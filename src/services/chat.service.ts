@@ -48,15 +48,15 @@ export type GetDirectRoomResponse = {
   } | null
 }
 
+export type DmUserData = {
+  id: number
+  user_code: string
+  nickname: string
+}
+
 export type CheckChatResponse = {
-  data: {
-    roomId: string
-    userData: {
-      nickName: string
-      id: number
-      userCode: string
-    }
-  }
+  user: DmUserData | null
+  roomId: string | null
 }
 
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
@@ -70,6 +70,6 @@ export const getDirectRoom = async (otherMemberId: number): Promise<GetDirectRoo
 }
 
 export const directRoomCheck = async (userCode: string): Promise<CheckChatResponse> => {
-  const { data } = await api.post<CheckChatResponse>(URI.CHECK_DIRECT, userCode)
+  const { data } = await api.get<CheckChatResponse>(`${URI.CHECK_DIRECT}/${userCode}`)
   return data
 }

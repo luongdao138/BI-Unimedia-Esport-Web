@@ -16,6 +16,7 @@ import ESSelectInput, { SelectInputItem } from '@components/SelectInput'
 import chatStore from '@store/chat'
 import { v4 as uuidv4 } from 'uuid'
 import { socketActions } from '@store/socket/actions'
+import ESChip from '@components/Chip'
 import { ACTIONS } from '@components/Chat/constants'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import * as socket from '@store/socket/selectors'
@@ -63,7 +64,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
 
   useEffect(() => {
     if (singleUser) {
-      setSelectedUsers([singleUser])
+      setSelectedUsers([singleUser.id])
     }
   }, [singleUser])
 
@@ -210,7 +211,9 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
           <Typography variant="h2">宛先</Typography>
         </Box>
         {dm ? (
-          <Box>{singleUser.nickName}</Box>
+          <Box>
+            <ESChip size="small" label={singleUser.nickname} />
+          </Box>
         ) : (
           <ESSelectInput
             items={
