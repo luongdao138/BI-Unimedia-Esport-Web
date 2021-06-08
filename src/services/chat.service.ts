@@ -56,7 +56,7 @@ export type DmUserData = {
 
 export type CheckChatResponse = {
   user: DmUserData | null
-  roomId: string | null
+  room: string | null
 }
 
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
