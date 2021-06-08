@@ -25,11 +25,18 @@ import { getDirectRoom } from '@services/chat.service'
 const { actions } = chatStore
 
 const _getFriendsMeta = createMetaSelector(actions.getFriendList)
+
+export interface ChatRoomCreateContainerProps {
+  dm?: boolean
+  singleUser?: any
+}
+
 interface UploadStateType {
   uploading: boolean
 }
 
-const ChatRoomCreateContainer: React.FC = () => {
+const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) => {
+  const { dm, singleUser } = props
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -53,6 +60,12 @@ const ChatRoomCreateContainer: React.FC = () => {
       dispatch(getFriendList({ type: 'group' }))
     }
   }, [userId])
+
+  useEffect(() => {
+    if (singleUser) {
+      setSelectedUsers([singleUser])
+    }
+  }, [singleUser])
 
   useEffect(() => {
     if (_.isString(newRoomId)) {
@@ -196,21 +209,25 @@ const ChatRoomCreateContainer: React.FC = () => {
         <Box>
           <Typography variant="h2">宛先</Typography>
         </Box>
-        <ESSelectInput
-          items={
-            _.isArray(friends)
-              ? friends.map((friend) => ({
-                  id: parseInt(friend.id),
-                  nickName: friend.attributes.nickname,
-                  avatar: friend.attributes.avatar,
-                  userCode: friend.attributes.user_code,
-                }))
-              : []
-          }
-          onItemsSelected={handleOnUserSelected}
-          onSearchInput={handleSearchInput}
-          loading={getFriendsMeta.pending}
-        />
+        {dm ? (
+          <Box>{singleUser.nickName}</Box>
+        ) : (
+          <ESSelectInput
+            items={
+              _.isArray(friends)
+                ? friends.map((friend) => ({
+                    id: parseInt(friend.id),
+                    nickName: friend.attributes.nickname,
+                    avatar: friend.attributes.avatar,
+                    userCode: friend.attributes.user_code,
+                  }))
+                : []
+            }
+            onItemsSelected={handleOnUserSelected}
+            onSearchInput={handleSearchInput}
+            loading={getFriendsMeta.pending}
+          />
+        )}
       </Box>
       <Box className={classes.list}>
         <Box className={`${classes.content} scroll-bar`}>{renderLoader()}</Box>
