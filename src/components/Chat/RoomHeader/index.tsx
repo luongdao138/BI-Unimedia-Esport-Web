@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Avatar from '@components/Avatar'
 import { useEffect } from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -12,6 +11,7 @@ import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import RoomNameEditor from '@components/Chat/RoomNameEditor'
 import RoomMemberAddView from '@components/Chat/RoomMemberAddView'
+import RoomImgView from '@components/Chat/RoomImgView'
 import _ from 'lodash'
 
 export interface RoomHeaderProps {
@@ -66,7 +66,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         </>
       )}
       <Box className={classes.row}>
-        {hasNoRoomInfo ? null : <Avatar src={roomImg} alt={roomName} size={36} />}
+        {hasNoRoomInfo ? null : (
+          <RoomImgView userId={userId} roomId={roomId as string} roomImg={roomImg} roomName={roomName} isAdmin={isRoomNameMenuShow()} />
+        )}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true}>
             {roomName}
