@@ -87,4 +87,5 @@ export const URI = {
   FRIEND_LIST: '/v2/chats/addable_users',
   DIRECT_ROOM: '/v2/chats/get_direct_room',
   WEB_SUPPORT: 'https://support.exelab.jp',
+  CHECK_DIRECT: '/v2/chats/user_and_room',
 }

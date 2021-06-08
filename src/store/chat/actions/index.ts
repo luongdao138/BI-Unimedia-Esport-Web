@@ -17,3 +17,18 @@ export const getFriendList = createAsyncThunk<services.GetFriendsResponse, servi
     }
   }
 )
+
+export const directRoomCheck = createAsyncThunk<services.CheckChatResponse, string>(
+  MESSAGE_ACTION_TYPE.DIRECT_ROOM_CHECK,
+  async (userCode, { rejectWithValue }) => {
+    try {
+      const res = await services.directRoomCheck(userCode)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
