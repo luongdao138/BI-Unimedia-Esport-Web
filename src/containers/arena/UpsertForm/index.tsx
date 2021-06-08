@@ -164,7 +164,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(-3),
     },
   },
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('md')]: {
     formContainer: {
       marginLeft: theme.spacing(5),
       marginRight: theme.spacing(5),
