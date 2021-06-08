@@ -16,19 +16,17 @@ const DirectCreate: PageWithLayoutType = () => {
 
   useEffect(() => {
     if (id && _.isString(id)) {
-      // dispatch backend
       checkRoom(id)
     }
   }, [id])
 
   useEffect(() => {
     if (roomId !== null && roomMeta.loaded && !roomMeta.pending && !roomMeta.error) {
-      // dispatch backend
       router.push(`${ESRoutes.MESSAGE}${roomId}`, undefined, { shallow: true })
     }
   }, [roomId])
 
-  // meta.success, meta.error check with response
+  // Loader error msg refactor needed
 
   return <>{_.isEmpty(singleUser) ? <div>Loading</div> : <ChatRoomCreateContainer dm={true} singleUser={singleUser} />}</>
 }
