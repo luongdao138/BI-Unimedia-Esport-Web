@@ -1,0 +1,248 @@
+import { useState, useCallback, useEffect } from 'react'
+import { Box, Typography, Slider } from '@material-ui/core'
+import getCroppedImg from './Partials/cropImage'
+import ESDialog from '@components/Dialog'
+import ESButton from '@components/Button'
+import Avatar from '@components/Avatar'
+import { useDropzone } from 'react-dropzone'
+import Cropper from 'react-easy-crop'
+import { CameraAlt as Camera } from '@material-ui/icons'
+import ESLoader from '@components/Loader'
+import { makeStyles } from '@material-ui/core/styles'
+
+interface AvatarSelectorProps {
+  src?: string
+  cancel: () => void
+  onUpdate: (file: File, blob: any) => void
+}
+
+const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }) => {
+  const classes = useStyles()
+  const [rawFile, setRawFile] = useState<null | File>(null)
+  const [file, setFile] = useState<any>(null)
+  const [fileLocation, setFileLocation] = useState<string | null>(null)
+  const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+  const [zoom, setZoom] = useState<number>(1)
+  const [uploading, setUploading] = useState<boolean>(false)
+  const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
+
+  useEffect(() => {
+    return setUploading(false)
+  }, [])
+
+  useEffect(() => {
+    setFileLocation(src)
+  }, [src])
+
+  const dropZoneConfig = {
+    accept: 'image/*',
+    onDrop: (files: any) => handleChange(files),
+  }
+  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+
+  const handleChange = (files: Array<File>) => {
+    const f = files[0]
+    const reader = new FileReader()
+    if (f) {
+      setRawFile(f)
+      reader.onload = (e) => {
+        const img = document.createElement('img')
+        img.src = e.target.result as string
+        img.onload = function () {
+          const width = img.naturalWidth || img.width
+          const height = img.naturalHeight || img.height
+          if (height > width) {
+            setFit('horizontal-cover')
+          } else if (width > height) {
+            setFit('vertical-cover')
+          } else {
+            setFit('contain')
+          }
+        }
+        setFile(reader.result)
+      }
+      reader.readAsDataURL(f)
+    }
+  }
+
+  const reset = () => {
+    setFile(null)
+    setFileLocation(src)
+  }
+
+  const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }, [])
+
+  const update = useCallback(async () => {
+    try {
+      setUploading(true)
+      const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
+      onUpdate(rawFile, croppedImage)
+    } catch (e) {
+      console.error(e)
+    }
+  }, [croppedAreaPixels])
+
+  return (
+    <ESDialog open={true} title={'Avatar Selector'} handleClose={() => null} alignTop={true}>
+      <Box className={classes.container}>
+        <Typography className={classes.title}>{'Select Avatar'}</Typography>
+        <Box className={classes.cropContainer}>
+          {file ? (
+            <Cropper
+              image={file}
+              style={{
+                containerStyle: { width: 300, height: 200, position: 'relative' },
+              }}
+              crop={crop}
+              zoom={zoom}
+              objectFit={fitType}
+              aspect={1}
+              cropShape="round"
+              showGrid={false}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          ) : (
+            <label htmlFor="cover-upload" className={classes.touch}>
+              <Avatar className={classes.avatar} src={fileLocation ?? '/images/avatar.png'} />
+              <Camera fontSize="large" className={classes.camera} />
+              <div className={classes.backdrop} />
+              <div {...getRootProps()} className={classes.dropZone}>
+                <input {...getInputProps()} />
+              </div>
+            </label>
+          )}
+        </Box>
+        {file ? (
+          <Box className={classes.controls}>
+            <Slider
+              value={zoom}
+              min={1}
+              max={3}
+              step={0.1}
+              aria-labelledby="Zoom"
+              onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
+            />
+          </Box>
+        ) : null}
+        <Typography className={classes.description}>
+          {
+            '堀風稿モ運行ール王奪月マム池機更ずろクは少常セ描時イてつ雄身なをゆ毎石ロ快災盗画ル。定スゅが演出スノヤ東沢へ上聞ヤニ観欠ゃ会来オメナリ長続ゆを傑9作ケワ政原リノナ倉薬テイキ選両木懲ケチ個掲れク然思みぜトめ旅猪録ねすぐ書近く多析ぜにろや。 '
+          }
+        </Typography>
+        <Box>
+          <ESButton onClick={update} variant="outlined" size="medium" round>
+            UPDATE
+          </ESButton>
+          <ESButton onClick={cancel} variant="outlined" size="medium" round>
+            CANCEL
+          </ESButton>
+          <ESButton onClick={reset} variant="outlined" size="medium" round>
+            RESET
+          </ESButton>
+        </Box>
+
+        {uploading ? (
+          <Box className={classes.loader}>
+            <ESLoader />
+          </Box>
+        ) : null}
+      </Box>
+    </ESDialog>
+  )
+}
+
+export default AvatarSelector
+
+const WH = 200
+const useStyles = makeStyles(() => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    minHeight: 400,
+    marginTop: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    marginTop: 40,
+    marginBottom: 40,
+  },
+  description: {
+    marginTop: 40,
+    marginBottom: 120,
+  },
+  image: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  dropZone: {
+    display: 'flex',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 60,
+  },
+  cropContainer: {
+    position: 'relative',
+    display: 'flex',
+    height: WH,
+    width: WH,
+  },
+  controls: {
+    width: '50%',
+    margin: 20,
+  },
+  touch: {
+    zIndex: 30,
+    display: 'flex',
+    position: 'relative',
+    overflow: 'hidden',
+    width: WH,
+    height: WH,
+    borderRadius: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+  avatar: {
+    zIndex: 30,
+    width: WH,
+    height: WH,
+  },
+  camera: {
+    display: 'flex',
+    position: 'absolute',
+    zIndex: 50,
+  },
+  backdrop: {
+    display: 'flex',
+    opacity: 0.6,
+    background: '#000',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    content: '""',
+    zIndex: 40,
+  },
+  loader: {
+    display: 'flex',
+    position: 'absolute',
+    zIndex: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}))
