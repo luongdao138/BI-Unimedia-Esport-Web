@@ -22,6 +22,6 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.directRoomCheck.fulfilled, (state, action) => {
     const userData = action.payload.user
     state.singleUser = userData
-    state.redirectDm = action.payload.room
+    state.redirectDm = action.payload.roomId
   })
 })
