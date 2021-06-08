@@ -111,7 +111,7 @@ const useTournamentCreate = (): {
   }, [router])
 
   useEffect(() => {
-    if (arena) {
+    if (arena && router.asPath.endsWith('/edit') && router.query.hash_key) {
       const _status = arena.attributes.status
       if (!isEditable) {
         router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
@@ -137,7 +137,7 @@ const useTournamentCreate = (): {
       }
       setEditables(_editables)
     }
-  }, [arena])
+  }, [arena, router])
 
   return { submit, update, updateMeta, meta, isEdit, arena, editables }
 }

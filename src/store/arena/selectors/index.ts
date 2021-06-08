@@ -17,13 +17,15 @@ export const getSuggestedTeamMembers = createSelector(getRoot, (state) => state.
 export const getSuggestedTeamMembersMeta = createSelector(getRoot, (state) => state.suggestedTeamMembersMeta)
 export const getInteresteds = createSelector(getRoot, (state) => state.tournamentInteresteds)
 export const getInterestedsMeta = createSelector(getRoot, (state) => state.interestedsMeta)
-export const getTournamentMatches = createSelector(getRoot, getUserId, (state, id) => {
+export const getTournamentMatches = createSelector(getRoot, getUserId, (state, myId) => {
+  const isTeam = state.tournamentDetail?.attributes.participant_type > 1
+  const ids = isTeam ? (state.tournamentDetail?.attributes.my_info || []).map((a) => a.team_id) : [myId]
   const matches = state.tournamentMatches.matches.map((round) =>
     round.map((match) => {
-      if (match.home_user && match.home_user.id === id) {
+      if (match.home_user && ids.includes(match.home_user.id)) {
         const highlight: MatchItemType = 'home'
         return { ...match, highlight }
-      } else if (match.guest_user && match.guest_user.id === id) {
+      } else if (match.guest_user && ids.includes(match.guest_user.id)) {
         const highlight: MatchItemType = 'guest'
         return { ...match, highlight }
       }
@@ -31,10 +33,10 @@ export const getTournamentMatches = createSelector(getRoot, getUserId, (state, i
     })
   )
   const third_place_match = state.tournamentMatches.third_place_match.map((match) => {
-    if (match.home_user && match.home_user.id === id) {
+    if (match.home_user && ids.includes(match.home_user.id)) {
       const highlight: MatchItemType = 'home'
       return { ...match, highlight }
-    } else if (match.guest_user && match.guest_user.id === id) {
+    } else if (match.guest_user && ids.includes(match.guest_user.id)) {
       const highlight: MatchItemType = 'guest'
       return { ...match, highlight }
     }
