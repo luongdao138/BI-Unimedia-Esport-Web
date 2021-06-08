@@ -103,7 +103,7 @@ const TournamentCreate: React.FC = () => {
           <Box className={classes.nextBtnHolder}>
             <Box maxWidth={280} className={classes.buttonContainer}>
               <ButtonPrimary type="submit" round fullWidth disabled={hasError}>
-                {t('common:tournament_create.submit')}
+                {t('common:tournament_create.check_content')}
               </ButtonPrimary>
             </Box>
           </Box>
@@ -162,6 +162,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     tabs: {
       marginLeft: theme.spacing(-3),
       marginRight: theme.spacing(-3),
+    },
+    nextBtnHolder: {
+      marginBottom: theme.spacing(3),
     },
   },
   [theme.breakpoints.up('md')]: {
