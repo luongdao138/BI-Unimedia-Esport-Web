@@ -392,7 +392,6 @@ export default {
     title: '大会を作成する',
     name: '大会名',
     has_prize: '副賞あり',
-    prize_placeholder: '副賞の内容',
     hint: '副賞提供は各種法令を遵守した形で実施されますよう十分ご注意ください',
     game: 'ゲーム',
     game_hardware: 'ゲームハード',
@@ -401,8 +400,14 @@ export default {
     holding_format: '開催形式',
     has_third_place: '3位決定トーナメントあり',
     participation: '参加形式',
-    participation_term: '参加条件やルールなど',
+    participation_term: '参加条件・ルール',
+    participation_term_placeholder: 'キーワードを設けて、実施する大会を他ユーザーに見つけてもらいやすくすることができます。',
     precautions: '注意事項など',
+    precautions_placeholder: `大会実施にむけて参加者に周知したいことなどを入力できます。
+
+例）
+この大会の主旨は初心者同士で練習することにあります。
+煽りや誹謗中傷などはしないようにしましょう！`,
     retain_history: '戦績を保存する',
     people: '人',
     entry_period: 'エントリー期間',
@@ -421,7 +426,16 @@ export default {
     co_orgonizer: '共同管理者を選ぶ',
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
-    public_or_private: '公開設定',
+    public_or_private: '大会公開設定',
+    title_placeholder: '○○文字まで入力することができます。',
+    overview_placeholder: `大会の概要などを任意で入力することができます。
+
+例）
+初心者同士で盛り上がれ！
+楽しく練習しましょう〜の会です。`,
+    prize_placeholder: '副賞を設ける場合はその内容を入力してください。',
+    max_participants: '参加枠数',
+    max_participants_placeholder: '○○○人上限',
   },
   search: {
     search: '検索',

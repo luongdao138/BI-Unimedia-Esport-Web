@@ -92,7 +92,7 @@ const TournamentCreate: React.FC = () => {
               <ESTab className={classes.tabMin} label={t('common:tournament_create.tab4')} value={3} />
             </ESTabs>
           </Box>
-          <Box py={4}>
+          <Box py={4} className={classes.formContainer}>
             {tab == 0 && <StepOne formik={formik} hardwares={hardwares} editables={editables} />}
             {tab == 1 && <StepTwo formik={formik} editables={editables} />}
             {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} />}
@@ -162,6 +162,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     tabs: {
       marginLeft: theme.spacing(-3),
       marginRight: theme.spacing(-3),
+    },
+  },
+  [theme.breakpoints.up('sm')]: {
+    formContainer: {
+      marginLeft: theme.spacing(5),
+      marginRight: theme.spacing(5),
     },
   },
 }))
