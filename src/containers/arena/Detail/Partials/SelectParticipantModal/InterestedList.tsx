@@ -9,12 +9,13 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
-import { TournamentDetail, MatchParticipant } from '@services/arena.service'
+import { TournamentDetail } from '@services/arena.service'
 import ESButton from '@components/Button'
 import TeamMemberItem from '../TeamMemberItem'
+import _ from 'lodash'
 
 interface InterestedListProps {
-  selectedParticipant?: MatchParticipant
+  pid?: number
   tournament: TournamentDetail
   open: boolean
   handleClose: () => void
@@ -22,7 +23,7 @@ interface InterestedListProps {
   handleUnset: () => void
 }
 
-const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, tournament, open, handleClose, onSelect, handleUnset }) => {
+const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, handleClose, onSelect, handleUnset }) => {
   const data = tournament.attributes
   const hash_key = data.hash_key
   const isTeam = data.participant_type > 1
@@ -33,7 +34,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, to
   const { interesteds, getInteresteds, resetMeta, page, meta } = useInteresteds()
 
   useEffect(() => {
-    if (open) getInteresteds({ page: 1, hash_key: hash_key })
+    if (open) getInteresteds({ page: 1, hash_key: hash_key, p_id: pid })
 
     return () => resetMeta()
   }, [open])
@@ -51,6 +52,29 @@ const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, to
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
+  const deselectBtn = () => {
+    return (
+      <Box width={100} display="flex" justifyContent="center" alignItems="center">
+        <ESButton onClick={handleUnset}>{t('common:tournament.deselect')}</ESButton>
+      </Box>
+    )
+  }
+
+  const selectedItem = () => {
+    if (!pid || !interesteds || interesteds.length < 1) return
+
+    const selected = _.find(interesteds, (p) => p.id == pid)
+    if (!selected) return
+    return isTeam ? (
+      <TeamMemberItem team={selected} rightItem={deselectBtn()} />
+    ) : (
+      <Box display="flex" flexDirection="row" alignItems="space-between" justifyContent="space-between">
+        <UserListItem data={userData(selected)} />
+        {deselectBtn()}
+      </Box>
+    )
+  }
+
   return (
     <ESModal open={open} handleClose={handleClose}>
       <BlankLayout>
@@ -63,19 +87,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, to
               <Typography variant="h2">{t('common:tournament.select_user')}</Typography>
             </Box>
           </Box>
-          {selectedParticipant && (
-            <Box display="flex" flexDirection="row" alignItems="space-between">
-              <UserListItem
-                data={{
-                  id: selectedParticipant.user.id,
-                  attributes: { ...selectedParticipant.user, nickname: selectedParticipant.user.name, avatar: selectedParticipant.avatar },
-                }}
-              />
-              <Box width={150} display="flex" justifyContent="center" alignItems="center">
-                <ESButton onClick={handleUnset}>{t('common:tournament.deselect')}</ESButton>
-              </Box>
-            </Box>
-          )}
+          {selectedItem()}
           <Divider />
           {meta.loaded && !interesteds.length && (
             <div className={classes.loaderCenter}>
@@ -96,7 +108,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, to
             height={600}
           >
             {isTeam
-              ? interesteds.map((participant, i) => (
+              ? _.filter(interesteds, (p) => p.id != pid).map((participant, i) => (
                   <TeamMemberItem
                     key={`team${i}`}
                     team={participant}
@@ -105,7 +117,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, to
                     }}
                   />
                 ))
-              : interesteds.map((participant, i) => (
+              : _.filter(interesteds, (p) => p.id != pid).map((participant, i) => (
                   <UserListItem
                     data={userData(participant)}
                     key={i}

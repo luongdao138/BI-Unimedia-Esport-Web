@@ -252,6 +252,7 @@ export type GetParticipantsParams = {
   page: number
   hash_key: string
   role?: string
+  p_id?: number
 }
 
 export type GetParticipantsResponse = {

@@ -46,7 +46,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
   const [refresh, setRefresh] = useState<boolean>(false)
   const [targetParticipant, setTargetParticipant] = useState<MatchParticipant | undefined>()
   const [selectedType, setSelectedType] = useState<string | undefined>()
-  const [selectedParticipant, setSelectedParticipant] = useState<MatchParticipant | undefined>()
+  const [selectedPid, setSelectedPid] = useState<number | undefined>()
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
@@ -76,25 +76,9 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
 
   const handleSelect = (type) => {
     if (type == PARTICIPANT_TYPE.HOME) {
-      setSelectedParticipant(
-        match.home_user
-          ? {
-              avatar: match.home_avatar,
-              user: match.home_user,
-              pid: match.home_user.pid,
-            }
-          : undefined
-      )
+      setSelectedPid(match.home_user ? match.home_user.pid : undefined)
     } else if (type == PARTICIPANT_TYPE.GUEST) {
-      setSelectedParticipant(
-        match.guest_user
-          ? {
-              avatar: match.guest_avatar,
-              user: match.guest_user,
-              pid: match.guest_user.pid,
-            }
-          : undefined
-      )
+      setSelectedPid(match.guest_user ? match.guest_user.pid : undefined)
     }
     setSelectedType(type)
     setShowParticipants(true)
@@ -117,11 +101,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
 
   const participantItem = (user, avatar, type) => {
     const _name = isTeam ? user?.team_name : user?.name
-    // const emptyParticipant = {
-    //   avatar: null,
-    //   user: null,
-    //   pid: null,
-    // }
+
     return (
       <Box
         paddingRight={1}
@@ -173,7 +153,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
             <Box className={classes.blankSpace}></Box>
           </Box>
           <InterestedList
-            selectedParticipant={selectedParticipant}
+            pid={selectedPid}
             handleUnset={() =>
               selectedHandler(
                 {
