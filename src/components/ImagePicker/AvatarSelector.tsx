@@ -86,7 +86,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
   }, [croppedAreaPixels])
 
   return (
-    <ESDialog open={true} title={'Avatar Selector'} handleClose={() => null} alignTop={true}>
+    <ESDialog open={true} title={'Avatar Selector'} handleClose={() => null} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Typography className={classes.title}>{'Select Avatar'}</Typography>
         <Box className={classes.cropContainer}>
@@ -129,11 +129,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
             />
           </Box>
         ) : null}
-        <Typography className={classes.description}>
-          {
-            '堀風稿モ運行ール王奪月マム池機更ずろクは少常セ描時イてつ雄身なをゆ毎石ロ快災盗画ル。定スゅが演出スノヤ東沢へ上聞ヤニ観欠ゃ会来オメナリ長続ゆを傑9作ケワ政原リノナ倉薬テイキ選両木懲ケチ個掲れク然思みぜトめ旅猪録ねすぐ書近く多析ぜにろや。 '
-          }
-        </Typography>
+        <Typography className={classes.description}>{'test test test test test test test'}</Typography>
         <Box>
           <ESButton onClick={update} variant="outlined" size="medium" round>
             UPDATE
