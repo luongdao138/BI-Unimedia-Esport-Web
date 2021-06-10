@@ -28,7 +28,6 @@ const useResetPassword = () => {
   useEffect(() => {
     if (meta.loaded) {
       router.push(ESRoutes.HOME)
-      resetMeta()
     }
   }, [meta.loaded])
 
