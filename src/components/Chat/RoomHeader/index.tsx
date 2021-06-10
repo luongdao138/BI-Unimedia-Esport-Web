@@ -75,17 +75,19 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
           </Typography>
         </Box>
         {hasNoRoomInfo ? null : (
-          <ESMenu>
-            <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
-            {!isDirect() ? (
-              <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-            ) : null}
-            {isRoomNameMenuShow() ? (
-              <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
-            ) : null}
-            <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
-            <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
-          </ESMenu>
+          <Box className={classes.menu}>
+            <ESMenu>
+              <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+              {!isDirect() ? (
+                <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+              ) : null}
+              {isRoomNameMenuShow() ? (
+                <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
+              ) : null}
+              <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+              <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+            </ESMenu>
+          </Box>
         )}
       </Box>
     </>
@@ -99,9 +101,18 @@ const useStyles = makeStyles(() => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
+    position: 'relative',
+    paddingLeft: 40,
+    justifyContent: 'center',
+    height: 36,
   },
   roomName: {
     overflow: 'hidden',
+  },
+  menu: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
 }))
 
