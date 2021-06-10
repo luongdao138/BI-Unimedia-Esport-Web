@@ -411,6 +411,12 @@ export type MatchParticipant = {
   pid?: number | null
 }
 
+export interface CreateTournamentResponse {
+  hash_key: string
+}
+
+export type UpdateTournamentResponse = void
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data
@@ -495,13 +501,13 @@ export const getRecommendedUsersByName = async (params: RecommendedUsersParams):
   return data
 }
 
-export const createTournament = async (params: TournamentFormParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.TOURNAMENTS_CREATE, params)
+export const createTournament = async (params: TournamentFormParams): Promise<CreateTournamentResponse> => {
+  const { data } = await api.post<CreateTournamentResponse>(URI.TOURNAMENTS_CREATE, params)
   return data
 }
 
-export const updateTournament = async (params: UpdateParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), params.data)
+export const updateTournament = async (params: UpdateParams): Promise<UpdateTournamentResponse> => {
+  const { data } = await api.post<UpdateTournamentResponse>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 
