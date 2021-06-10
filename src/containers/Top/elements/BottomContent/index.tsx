@@ -2,17 +2,18 @@ import { useEffect } from 'react'
 import { Typography, Box, Grid, makeStyles, Theme, Link, Icon } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { useTranslation } from 'react-i18next'
-import TournamentCardRecruiting from '@components/TournamentCard/Recruiting'
+import TournamentCardRecruiting from '@components/TournamentCard'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useTournamentData from './useTournamentData'
+import ESLoader from '@components/FullScreenLoader'
 
 export const BottomContent: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const router = useRouter()
-  const { recruitingTournaments, getRecruitingTournaments } = useTournamentData()
+  const { recruitingTournaments, getRecruitingTournaments, meta } = useTournamentData()
   useEffect(() => {
     getRecruitingTournaments()
   }, [])
@@ -45,17 +46,15 @@ export const BottomContent: React.FC = () => {
               </Box>
             </Box>
           ) : (
-            <Box width="100%" className={classes.noRecruitingTournamentText}>
-              <Typography align="center">{t('common:top.no_recruiting_tournament')}</Typography>
-            </Box>
+            meta.loaded && (
+              <Box width="100%" className={classes.noRecruitingTournamentText}>
+                <Typography align="center">{t('common:top.no_recruiting_tournament')}</Typography>
+              </Box>
+            )
           )}
+          {meta.pending && <ESLoader open={meta.pending} />}
           <Grid item xs={12} className={classes.button}>
-            <ButtonPrimary
-              round
-              onClick={() => {
-                router.push(ESRoutes.HOME)
-              }}
-            >
+            <ButtonPrimary round onClick={() => router.push(ESRoutes.ARENA)}>
               {t('common:top.start_exelab')}
             </ButtonPrimary>
           </Grid>

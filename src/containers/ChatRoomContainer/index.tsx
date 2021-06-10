@@ -5,7 +5,7 @@ import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import ImageUploader from './ImageUploader'
 import { currentUserId } from '@store/auth/selectors'
-import { messages, membersSuggest, lastKey as key, paginating as paging } from '@store/socket/selectors'
+import { messages, membersSuggest, availableMembers, lastKey as key, paginating as paging } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
@@ -13,11 +13,13 @@ import moment from 'moment'
 import Loader from '@components/Loader'
 import { ACTIONS } from '@components/Chat/constants'
 import MessageList from '@components/Chat/MessageList'
-import RoomHeader from '@components/Chat/RoomHeader/index'
-import { MessageType } from '@components/Chat/types/chat.types'
+import RoomHeader from '@components/Chat/RoomHeader'
+import { MessageType, ParentItem } from '@components/Chat/types/chat.types'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { ESReportProps } from '@containers/Report'
+import MessageModal from '@components/Chat/MessageModal'
+import { Colors } from '@theme/colors'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -28,11 +30,17 @@ export interface UploadStateType {
   uploading: boolean
 }
 
+export interface MessageModalStateProps {
+  open: boolean
+  replyMessage: null | ParentItem | string | MessageType
+}
+
 const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
   const [reply, setReply] = useState<MessageType | null>(null)
   const [reporting, setReporting] = useState<boolean>(false)
   const [reportData, setReportData] = useState<ESReportProps>(null)
+  const [modalReply, setModalReply] = useState<MessageModalStateProps>({ open: false, replyMessage: null })
   const classes = useStyles()
 
   const dispatch = useAppDispatch()
@@ -42,6 +50,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const userId = useAppSelector(currentUserId)
   const data = useAppSelector(messages)
   const usersWithAll = useAppSelector(membersSuggest)
+  const usersAvailable = useAppSelector(availableMembers)
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
 
@@ -161,6 +170,13 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setReporting(true)
   }
 
+  const closeMessageModal = () => {
+    setModalReply({ ...modalReply, open: false })
+  }
+  const handleReplyDetail = (replyMessage: null | ParentItem | string | MessageType) => {
+    setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -175,6 +191,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             currentUser={userId}
             paginating={paginating}
             onFetchMore={onFetchMore}
+            onReplyClick={handleReplyDetail}
             users={usersWithAll}
             messages={data}
           />
@@ -187,7 +204,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             currentUser={userId}
             onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
-            users={usersWithAll}
+            users={usersAvailable}
             onPressActionButton={handlePressActionButton}
           />
         ) : null}
@@ -210,6 +227,14 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           handleClose={() => setReporting(false)}
         />
       ) : null}
+      <MessageModal
+        open={modalReply.open}
+        hide={closeMessageModal}
+        replyMessage={modalReply.replyMessage}
+        members={usersWithAll}
+        color={Colors.text[200]}
+        bgColor={'transparent'}
+      />
     </Box>
   )
 }

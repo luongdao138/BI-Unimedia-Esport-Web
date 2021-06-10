@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Grid, Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
-import TournamentCardRecruiting from '@components/TournamentCard/Recruiting'
+import TournamentCardRecruiting from '@components/TournamentCard'
 import useRecruitingData from './useRecruitingData'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
@@ -10,8 +10,7 @@ import ESLoader from '@components/Loader'
 const RecruitingContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { handleClick, recruitingTournaments, getRecruitingTournaments, pages, resetMeta } = useRecruitingData()
-  const [hasMore, setHasMore] = useState(true)
+  const { handleClick, recruitingTournaments, getRecruitingTournaments, pages, meta, resetMeta } = useRecruitingData()
 
   useEffect(() => {
     getRecruitingTournaments({
@@ -20,14 +19,14 @@ const RecruitingContainer: React.FC = () => {
     return () => resetMeta()
   }, [])
 
-  const fetchMoreData = () => {
-    if (pages.current_page >= pages.total_pages) {
-      setHasMore(false)
-      return
+  const hasNextPage = pages && pages.current_page !== pages.total_pages
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      getRecruitingTournaments({
+        page: pages.current_page + 1,
+      })
     }
-    getRecruitingTournaments({
-      page: pages.current_page + 1,
-    })
   }
 
   return (
@@ -40,30 +39,27 @@ const RecruitingContainer: React.FC = () => {
           {t('common:tournament.recruiting_tournament_list')}
         </Typography>
       </Box>
-      <Grid container className={(classes.container, 'scroll-bar', 'card-container')}>
-        <InfiniteScroll
-          dataLength={recruitingTournaments.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={
-            <div className={classes.loaderCenter}>
-              <ESLoader />
-            </div>
-          }
-          height={600}
-          endMessage={
-            <Box textAlign="center" width="100%" my={3}>
-              <Typography>{t('common:infinite_scroll.message')}</Typography>
-            </Box>
-          }
-        >
-          {recruitingTournaments.map((tournament, i) => (
-            <Grid key={i} item xs={6} md={4}>
-              <TournamentCardRecruiting tournament={tournament} />
-            </Grid>
-          ))}
-        </InfiniteScroll>
-      </Grid>
+      <InfiniteScroll
+        className={classes.container}
+        dataLength={recruitingTournaments.length}
+        next={loadMore}
+        hasMore={hasNextPage}
+        loader={null}
+        scrollThreshold="1px"
+      >
+        {recruitingTournaments.map((tournament, i) => (
+          <Grid key={i} item xs={6} md={4}>
+            <TournamentCardRecruiting tournament={tournament} />
+          </Grid>
+        ))}
+      </InfiniteScroll>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </>
   )
 }
@@ -72,6 +68,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   loaderCenter: {
     width: '100%',

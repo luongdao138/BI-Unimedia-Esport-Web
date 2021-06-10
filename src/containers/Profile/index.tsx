@@ -21,6 +21,7 @@ import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
+import ESToast from '@components/Toast'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -44,12 +45,21 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [disable, toggleDisable] = useState(false)
   const { blockUser, blockMeta } = useBlock()
   const { unblockUser, unblockMeta } = useUnblock()
+  const [blocked, setBlocked] = useState(false)
+  const [showToast, setShow] = useState(false)
+  const [offset, setOffset] = useState(0)
 
   // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
 
   const raw_code = router.query.user_code || []
 
   const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState } = useUserData(raw_code)
+
+  useEffect(() => {
+    window.onscroll = () => {
+      setOffset(window.pageYOffset)
+    }
+  }, [])
 
   useEffect(() => {
     if (isOthers) {
@@ -64,6 +74,12 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }, [profile])
 
   useEffect(() => {
+    if (blocked && !blockMeta.pending) {
+      setShow(true)
+    }
+  }, [blockMeta])
+
+  useEffect(() => {
     if (meta.error) {
       router.push(ESRoutes.NOT_FOUND)
     }
@@ -73,11 +89,12 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     return null
   }
 
-  const cover = profile?.attributes?.cover_url ?? '/images/cover.png'
+  const cover = profile?.attributes?.cover_url ?? null
   const avatar = profile?.attributes?.avatar_url ? profile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
   const isFollowing = profile.attributes.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+  const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${profile.attributes.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -92,10 +109,21 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER)
             }}
           />
-          <Box className={classes.headerItemsContainer}>
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
+          {offset > 150 ? (
+            <Box className={classes.backContainer} style={{ top: offset }}>
+              <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Typography variant="h2" className={classes.wrapOne}>
+                {profile.attributes.nickname}
+              </Typography>
+            </Box>
+          ) : (
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
+          )}
+          <Box className={classes.headerItemsContainer}>
             <ProfileAvatar
               src={avatar}
               editable={!isOthers}
@@ -105,6 +133,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
+                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
+                  <Icon className={`fas fa-inbox ${classes.inbox}`} />
+                </ESButton>
                 {isFollowing ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.following')}
@@ -116,12 +147,22 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                 )}
                 <ESMenu>
                   {profile.attributes.is_blocked ? (
-                    <ESMenuItem onClick={() => unblockUser({ block_type: 'user', target_id: Number(profile.id) })}>
+                    <ESMenuItem
+                      onClick={() => {
+                        unblockUser({ block_type: 'user', target_id: Number(profile.id) })
+                        setBlocked(false)
+                      }}
+                    >
                       {i18n.t('common:profile.menu_unblock')}
                       {blockMeta.pending ? <ESLoader /> : null}
                     </ESMenuItem>
                   ) : (
-                    <ESMenuItem onClick={() => blockUser({ block_type: 'user', target_id: Number(profile.id) })}>
+                    <ESMenuItem
+                      onClick={() => {
+                        blockUser({ block_type: 'user', target_id: Number(profile.id) })
+                        setBlocked(true)
+                      }}
+                    >
                       {i18n.t('common:profile.menu_block')}
                       {unblockMeta.pending ? <ESLoader /> : null}
                     </ESMenuItem>
@@ -139,8 +180,10 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         </Box>
         <Grid item xs={12} className={classes.headerContainerSecond}>
           <Box mb={2}>
-            <Typography variant="h2">{profile.attributes.nickname}</Typography>
-            <Typography>@{userCode}</Typography>
+            <Typography variant="h2" className={classes.wrapOne}>
+              {profile.attributes.nickname}
+            </Typography>
+            <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
             <ESFollowers user_code={isOthers ? userCode : null} />
@@ -171,15 +214,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.MAIN:
-        if (!isOthers || profile.attributes.security_settings.show_about)
-          return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
+        if (!isOthers || profile.attributes.show_about) return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
         break
       case TABS.TOURNAMENT:
-        if (!isOthers || profile.attributes.security_settings.show_tournament_history)
-          return <TournamentHistoryContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_tournament_history) return <TournamentHistoryContainer userCode={userCode} />
         break
       case TABS.ACTIVITY:
-        if (!isOthers || profile.attributes.security_settings.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
         break
       default:
         break
@@ -197,6 +238,16 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         {getHeader()}
         {getTabs()}
         {getContent()}
+        {showToast && (
+          <ESToast
+            open={showToast}
+            message={i18n.t('common:profile.block_success_message')}
+            onClose={() => {
+              setBlocked(false)
+              setShow(false)
+            }}
+          />
+        )}
       </Grid>
     </>
   )
@@ -217,29 +268,51 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(1),
   },
   headerContainerSecond: {
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
+  backContainer: {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingLeft: theme.spacing(3),
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: Colors.black,
+    zIndex: 100,
+  },
+  iconButtonBg2: {
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+    marginRight: 20,
+  },
   iconButtonBg: {
+    position: 'absolute',
+    marginLeft: theme.spacing(3),
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-    zIndex: 10,
+    zIndex: 100,
   },
   marginTop20: {
     marginTop: 20,
   },
   menu: {
     position: 'absolute',
-    top: 200,
+    bottom: theme.spacing(1),
     display: 'flex',
     right: theme.spacing(1),
     flexDirection: 'row',
@@ -260,5 +333,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+  },
+  inbox: {
+    color: Colors.white,
+    fontSize: '24px',
+  },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 }))

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
+import LoginRequired from '@containers/LoginRequired'
 
 const SettingsPage: PageWithLayoutType = () => {
   const router = useRouter()
@@ -14,34 +15,36 @@ const SettingsPage: PageWithLayoutType = () => {
     <div>
       <HeaderWithButton title={t('settings.title')} />
       <Box>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
-          }}
-        >
-          <SettingsRowItem key="account_settings" title={t('settings.account_settings')} showSwitch={false} />
-        </div>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.USER_SECURITY_SETTINGS)
-          }}
-        >
-          <SettingsRowItem key="security" title={t('settings.security_settings')} showSwitch={false} />
-        </div>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.USER_NOTIFICATION_SETTINGS)
-          }}
-        >
-          <SettingsRowItem key="notification_settings" title={t('settings.notification_settings')} showSwitch={false} />
-        </div>
-        <div
-          onClick={() => {
-            router.push(ESRoutes.PURCHASE_HISTORY)
-          }}
-        >
-          <SettingsRowItem key="purchase_history" title={t('settings.purchase_history')} showSwitch={false} />
-        </div>
+        <LoginRequired>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
+            }}
+          >
+            <SettingsRowItem key="account_settings" title={t('settings.account_settings')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.USER_SECURITY_SETTINGS)
+            }}
+          >
+            <SettingsRowItem key="security" title={t('settings.security_settings')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.USER_NOTIFICATION_SETTINGS)
+            }}
+          >
+            <SettingsRowItem key="notification_settings" title={t('settings.notification_settings')} showSwitch={false} />
+          </div>
+          <div
+            onClick={() => {
+              router.push(ESRoutes.PURCHASE_HISTORY)
+            }}
+          >
+            <SettingsRowItem key="purchase_history" title={t('settings.purchase_history')} showSwitch={false} />
+          </div>
+        </LoginRequired>
         <div
           onClick={() => {
             router.push(ESRoutes.SERVICE_INFO_SETTINGS)

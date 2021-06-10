@@ -5,27 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { ACTIVITY_ACTION_TYPE } from '@constants/common.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { ActivityLog } from '@services/user.service'
 
 interface Props {
-  activity: any
+  activity: ActivityLog
 }
-
-const useStyles = makeStyles(() => ({
-  targetText: {
-    textDecoration: 'underline',
-  },
-  chip: {
-    maxWidth: '100%',
-    backgroundColor: Colors.black,
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  btnContainer: {
-    width: '100%',
-  },
-}))
 
 const ActivityItem: React.FC<Props> = ({ activity }) => {
   const router = useRouter()
@@ -107,10 +91,10 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
           // TODO: target detail
           break
         case ACTIVITY_ACTION_TYPE.TOURNAMENT_CREATE:
-          // TODO: target detail
+          router.push(`${ESRoutes.ARENA}/${data.hash_key}`)
           break
         case ACTIVITY_ACTION_TYPE.TOURNAMENT_JOIN:
-          // TODO: target detail
+          router.push(`${ESRoutes.ARENA}/${data.hash_key}`)
           break
         default:
           break
@@ -143,3 +127,20 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
 }
 
 export default ActivityItem
+
+const useStyles = makeStyles(() => ({
+  targetText: {
+    textDecoration: 'underline',
+  },
+  chip: {
+    maxWidth: '100%',
+    backgroundColor: Colors.black,
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  btnContainer: {
+    width: '100%',
+  },
+}))

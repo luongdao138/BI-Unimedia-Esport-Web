@@ -3,7 +3,7 @@ import MainLayout from '@layouts/MainLayout'
 
 const ProfilePage: React.FC = () => {
   return (
-    <MainLayout>
+    <MainLayout loginRequired>
       <ProfileContainer />
     </MainLayout>
   )

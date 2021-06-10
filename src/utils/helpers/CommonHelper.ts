@@ -61,7 +61,7 @@ const scorePassword = (pass: string): number => {
 }
 
 const userCodeValid = (value: string): boolean => {
-  return /^([a-zA-Z0-9+_-]+)$/.test(value)
+  return /^([a-zA-Z0-9_-]+)$/.test(value)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -123,6 +123,63 @@ const staticSmartTime = (time: string | number): string => {
   }
 }
 
+const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): Array<number> => {
+  const searchStrLen = searchStr.length
+  if (searchStrLen == 0) {
+    return []
+  }
+  let startIndex = 0
+  let index = 0
+  const indices = [] as number[]
+  if (!caseSensitive) {
+    str = str.toLowerCase()
+    searchStr = searchStr.toLowerCase()
+  }
+  while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+    indices.push(index)
+    startIndex = index + searchStrLen
+  }
+  return indices
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const cutLinksIntoPieces = (textMain: string) => {
+  const urlRegex = /(\b(https?):\/\/[^\s]+)/gim
+  const text = textMain.replace(urlRegex, (url) => `<a>${url}</a>`)
+  const aTagBegins = getIndicesOf('<a>', text)
+  const aTagEnds = getIndicesOf('</a>', text)
+  const separations = [] as {
+    text: string
+    type: 'text' | 'link'
+  }[]
+
+  if (aTagBegins.length > 0) {
+    separations.push({ text: text.slice(0, aTagBegins[0]), type: 'text' })
+  } else {
+    separations.push({ text: text.slice(0, aTagBegins[0]), type: 'text' })
+    return separations
+  }
+  let spliceEnd = 0
+  for (let i = 0; i < aTagBegins.length; i++) {
+    if (aTagEnds.length > i) {
+      spliceEnd = aTagEnds[i] + '</a>'.length
+      const aTagged = text.slice(aTagBegins[i], spliceEnd)
+      separations.push({
+        text: aTagged.slice(3, aTagged.length - 4),
+        type: 'link',
+      })
+      if (i + 1 < aTagBegins.length) {
+        separations.push({
+          text: text.slice(spliceEnd, aTagBegins[i + 1]),
+          type: 'text',
+        })
+      }
+    }
+  }
+  separations.push({ text: text.slice(spliceEnd), type: 'text' })
+  return separations
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -133,4 +190,6 @@ export const CommonHelper = {
   hasEmail,
   replaceSingleByteString,
   isMediaURL,
+  cutLinksIntoPieces,
+  getIndicesOf,
 }

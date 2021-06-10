@@ -16,19 +16,28 @@ import ESSelectInput, { SelectInputItem } from '@components/SelectInput'
 import chatStore from '@store/chat'
 import { v4 as uuidv4 } from 'uuid'
 import { socketActions } from '@store/socket/actions'
+import ESChip from '@components/Chip'
 import { ACTIONS } from '@components/Chat/constants'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import * as socket from '@store/socket/selectors'
 import { useRouter } from 'next/router'
+import { getDirectRoom } from '@services/chat.service'
 
 const { actions } = chatStore
 
 const _getFriendsMeta = createMetaSelector(actions.getFriendList)
+
+export interface ChatRoomCreateContainerProps {
+  dm?: boolean
+  singleUser?: any
+}
+
 interface UploadStateType {
   uploading: boolean
 }
 
-const ChatRoomCreateContainer: React.FC = () => {
+const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) => {
+  const { dm, singleUser } = props
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -54,13 +63,36 @@ const ChatRoomCreateContainer: React.FC = () => {
   }, [userId])
 
   useEffect(() => {
+    if (singleUser) {
+      setSelectedUsers([singleUser.id])
+    }
+  }, [singleUser])
+
+  useEffect(() => {
     if (_.isString(newRoomId)) {
       dispatch(socketActions.clearNewRoomId())
       navigateRoom(newRoomId)
     }
   }, [newRoomId])
 
-  const handlePress = (text: string) => {
+  const isDirect = () => {
+    return selectedUsers.length === 1
+  }
+
+  const createRoomByImg = (url) => {
+    dispatch(
+      socketActions.createChatRoom({
+        action: CHAT_ACTION_TYPE.CREATE_ROOM,
+        userIds: selectedUsers,
+        firstMsg: url,
+        type: CHAT_MESSAGE_TYPE.IMAGE,
+        roomId: roomId,
+      })
+    )
+    setMeta({ uploading: false })
+  }
+
+  const createRoomByText = (text) => {
     dispatch(
       socketActions.createChatRoom({
         action: CHAT_ACTION_TYPE.CREATE_ROOM,
@@ -69,6 +101,33 @@ const ChatRoomCreateContainer: React.FC = () => {
         type: CHAT_MESSAGE_TYPE.TEXT,
       })
     )
+  }
+
+  const handlePress = (text: string) => {
+    if (isDirect()) {
+      getDirectRoom(selectedUsers[0]).then((result) => {
+        if (result.content) {
+          const currentTimestamp = moment().valueOf()
+          const clientId = uuidv4()
+          const payload = {
+            action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+            roomId: result.content.chatRoomId,
+            createdAt: currentTimestamp,
+            userId: userId,
+            msg: text.trim(),
+            clientId: clientId,
+            type: CHAT_MESSAGE_TYPE.TEXT,
+          }
+          dispatch(socketActions.sendMessage(payload))
+          dispatch(socketActions.clearNewRoomId())
+          navigateRoom(result.content.chatRoomId)
+        } else {
+          createRoomByText(text)
+        }
+      })
+    } else {
+      createRoomByText(text)
+    }
   }
 
   const handlePressActionButton = (type: number) => {
@@ -91,16 +150,35 @@ const ChatRoomCreateContainer: React.FC = () => {
     if (isPending) {
       setMeta({ uploading: true })
     } else {
-      dispatch(
-        socketActions.createChatRoom({
-          action: CHAT_ACTION_TYPE.CREATE_ROOM,
-          userIds: selectedUsers,
-          firstMsg: url,
-          type: CHAT_MESSAGE_TYPE.IMAGE,
-          roomId: roomId,
-        })
-      )
-      setMeta({ uploading: false })
+      if (isDirect()) {
+        getDirectRoom(selectedUsers[0])
+          .then((result) => {
+            if (result.content) {
+              const currentTimestamp = moment().valueOf()
+              const clientId = uuidv4()
+              const payload = {
+                action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+                roomId: result.content.chatRoomId,
+                createdAt: currentTimestamp,
+                userId: userId,
+                msg: url,
+                clientId: clientId,
+                type: CHAT_MESSAGE_TYPE.IMAGE,
+              }
+              dispatch(socketActions.sendMessage(payload))
+              dispatch(socketActions.clearNewRoomId())
+              setMeta({ uploading: false })
+              navigateRoom(result.content.chatRoomId)
+            } else {
+              createRoomByImg(url)
+            }
+          })
+          .catch((_e) => {
+            setMeta({ uploading: false })
+          })
+      } else {
+        createRoomByImg(url)
+      }
     }
   }
 
@@ -132,21 +210,27 @@ const ChatRoomCreateContainer: React.FC = () => {
         <Box>
           <Typography variant="h2">宛先</Typography>
         </Box>
-        <ESSelectInput
-          items={
-            _.isArray(friends)
-              ? friends.map((friend) => ({
-                  id: parseInt(friend.id),
-                  nickName: friend.attributes.nickname,
-                  avatar: friend.attributes.avatar,
-                  userCode: friend.attributes.user_code,
-                }))
-              : []
-          }
-          onItemsSelected={handleOnUserSelected}
-          onSearchInput={handleSearchInput}
-          loading={getFriendsMeta.pending}
-        />
+        {dm ? (
+          <Box>
+            <ESChip size="small" label={singleUser.nickname} />
+          </Box>
+        ) : (
+          <ESSelectInput
+            items={
+              _.isArray(friends)
+                ? friends.map((friend) => ({
+                    id: parseInt(friend.id),
+                    nickName: friend.attributes.nickname,
+                    avatar: friend.attributes.avatar,
+                    userCode: friend.attributes.user_code,
+                  }))
+                : []
+            }
+            onItemsSelected={handleOnUserSelected}
+            onSearchInput={handleSearchInput}
+            loading={getFriendsMeta.pending}
+          />
+        )}
       </Box>
       <Box className={classes.list}>
         <Box className={`${classes.content} scroll-bar`}>{renderLoader()}</Box>

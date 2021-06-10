@@ -3,6 +3,8 @@ import { Colors } from '@theme/colors'
 import ESAvatar from '@components/Avatar'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
+import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
+
 interface Props {
   data: any
 }
@@ -12,9 +14,13 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
   const classes = useStyles()
   const createdAt = CommonHelper.staticSmartTime(_.get(notification, 'created_at', ''))
   return (
-    <Box margin={2} display="flex" justifyContent="space-between">
+    <Box className={classes.wrap}>
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-        <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+        {notification.ntype_id === NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW ? (
+          <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+        ) : (
+          <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
+        )}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
           <Box color={Colors.white}>
             <Typography variant="caption" noWrap>
@@ -34,6 +40,10 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  wrap: {
+    margin: theme.spacing(2),
+    marginBottom: 0,
+  },
   notificationWrap: {
     width: '100%',
     padding: theme.spacing(2),

@@ -23,7 +23,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
   const attr = tournament.attributes
   const winner = tournament.attributes.winner
-  const cover = attr.cover ? attr.cover : '/images/avatar.png'
+  const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
 
@@ -64,7 +64,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {attr.status === TS.COMPLETED && (
+        {winner && attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -79,8 +79,8 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
                 winner?.user_code ? router.push(`${ESRoutes.PROFILE}/${winner.user_code}`) : null
               }}
               className={classes.marginV}
-              alt="Avatar"
-              src={winner?.profile_image ? winner.profile_image : '/images/avatar.png'}
+              alt={winner?.name}
+              src={winner?.profile_image ? winner.profile_image : attr.is_single ? null : '/images/avatar.png'}
             />
             <Typography variant="caption">{winner?.name}</Typography>
           </Box>
@@ -91,23 +91,23 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
   const getTitle = () => {
     return (
-      <Box color={Colors.white}>
-        <Typography>{attr.title}</Typography>
+      <Box color={Colors.white} className={classes.titleContainer}>
+        <Typography className={classes.title}>{attr.title}</Typography>
       </Box>
     )
   }
   const getInfoRow = (value: string) => {
     return <Typography className={classes.organizer}>{value}</Typography>
   }
-  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number) => {
+  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
     return (
-      <Box display="flex" flexDirection="row" mt={1} alignItems="center">
+      <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center">
         <ESChip
           className={classes.chip}
           size="small"
           label={
             <Box color={Colors.white}>
-              <Typography variant="caption">{chipLabel}</Typography>
+              <Typography variant="overline">{chipLabel}</Typography>
             </Box>
           }
         />
@@ -123,16 +123,18 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
         {participants && participants.length > 0
-          ? attr.participants.map((participant, i) => (
-              <ESAvatar
-                size={20}
-                key={`participants${i}`}
-                style={{ zIndex: participants.length - i }}
-                className={classes.pAvatar}
-                src={participant.profile_image}
-                alt={participant.nickname}
-              />
-            ))
+          ? attr.participants
+              .slice(0, 3)
+              .map((participant, i) => (
+                <ESAvatar
+                  size={20}
+                  key={`participants${i}`}
+                  style={{ zIndex: participants.length - i }}
+                  className={classes.pAvatar}
+                  src={participant.profile_image}
+                  alt={participant.nickname}
+                />
+              ))
           : null}
       </Box>
     )
@@ -140,7 +142,10 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
   return (
     <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.ARENA}/${attr.hash_key}`)}>
-      <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
+      <ESCardMedia
+        cornerIcon={<Icon className={attr.rule === TR.BATTLE_ROYAL ? 'fas fa-university' : 'fas fa-trophy'} fontSize="small" />}
+        image={cover}
+      >
         {getMediaScreen()}
       </ESCardMedia>
       <ESCardContent>
@@ -148,7 +153,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         {getInfoRow(attr.game_of_title)}
         {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)}
         {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.entry'), attr.participant_count, `/${attr.max_participants}`)}
+        {getChippedRow(t('common:tournament.entry'), attr.participant_count, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -157,22 +162,29 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
 export default TournamentCard
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     width: 240,
   },
   cardHover: {
     cursor: 'pointer',
   },
+  titleContainer: {
+    height: 42,
+  },
   organizer: {
     fontSize: 10,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
   chip: {
     height: 15,
     backgroundColor: Colors.grey[400],
   },
   avatarContainer: {
-    height: 25,
+    height: 20,
+    marginTop: theme.spacing(2),
   },
   chipPrimary: {
     height: 20,
@@ -185,8 +197,6 @@ const useStyles = makeStyles(() => ({
     left: 0,
     right: 0,
     bottom: 0,
-    width: '100%',
-    height: '100%',
   },
   blurOverlay: {
     backgroundColor: Colors.black_opacity[70],
@@ -201,5 +211,14 @@ const useStyles = makeStyles(() => ({
   },
   pAvatar: {
     marginLeft: -8,
+  },
+  title: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordWrap: 'break-word',
+    minHeight: 42,
   },
 }))

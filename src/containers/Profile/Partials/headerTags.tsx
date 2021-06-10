@@ -1,14 +1,6 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
+import ESChip from '@components/Chip'
 import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles(() => ({
-  marginTop8: {
-    marginTop: 8,
-  },
-  marginRight: {
-    marginRight: 8,
-  },
-}))
 
 interface TagsProps {
   items: Array<Feature> | null
@@ -19,18 +11,23 @@ type Feature = { id: number; feature: string }
 const HeaderTags: React.FC<TagsProps> = ({ items }) => {
   const classes = useStyles()
   return (
-    <Box display="flex" className={classes.marginTop8}>
+    <Box display="flex" className={classes.tagContainer}>
       {items.length > 0 && items !== null
-        ? items.map((item: Feature, index: number) => {
-            return (
-              <Typography key={`key-${index}`} className={classes.marginRight}>
-                #{item.feature}
-              </Typography>
-            )
+        ? items.map((item: Feature, i: number) => {
+            return <ESChip key={i} className={classes.marginRight} label={item.feature} />
           })
         : null}
     </Box>
   )
 }
-
 export default HeaderTags
+
+const useStyles = makeStyles(() => ({
+  tagContainer: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  marginRight: {
+    marginRight: 8,
+  },
+}))

@@ -1,7 +1,7 @@
 import ESSlider from '@components/Slider'
 import { ESRoutes } from '@constants/route.constants'
 import { useTranslation } from 'react-i18next'
-import TournamentCardFollow from '@components/TournamentCard/Follow'
+import TournamentCardFollow from '@components/TournamentCard'
 import { SLIDE_LIMIT } from '@constants/common.constants'
 
 interface Props {
@@ -12,7 +12,7 @@ export const TournamentFollow: React.FC<Props> = ({ data }) => {
   const { t } = useTranslation(['common'])
   return (
     <ESSlider
-      title={t('common:home.tournament_follow')}
+      title={t('common:tournament.follower_entering')}
       moreLink={ESRoutes.TOURNAMENT_FOLLOWER_ENTERING}
       navigation
       width={256}

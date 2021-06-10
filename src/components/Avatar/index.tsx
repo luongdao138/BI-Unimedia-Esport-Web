@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     }
     return {
       backgroundColor,
-      fontSize: 33,
+      fontSize: Math.round((props.size * 33) / 50),
       width: props.size,
       height: props.size,
       border: props.src ? 'none' : '1px solid rgba(255,255,255,0.15)',

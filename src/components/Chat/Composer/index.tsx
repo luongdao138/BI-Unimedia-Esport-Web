@@ -40,8 +40,9 @@ const Composer: React.FC<ComposerProps> = ({ renderSuggestion, onChange, msg, pl
         style={{
           suggestions: {
             position: 'absolute',
-            left: 20,
+            left: 0,
             top: -20,
+            right: 0,
           },
         }}
         classNames={classNames}

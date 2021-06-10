@@ -1,5 +1,6 @@
 export enum SEARCH_ACTION_TYPE {
   TOURNAMENT_SEARCH = 'tournament/tournamentSearch',
+  RESET_SEARCH_TOURNAMENTS = 'tournament/resetSearchTournaments',
 }
 export enum TOURNAMENT_ACTION_TYPE {
   TOURNAMENT_FOLLOWERS = 'tournament/tournamentFollowers',

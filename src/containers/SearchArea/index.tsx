@@ -130,6 +130,9 @@ const useStyles = makeStyles(() => ({
     height: 37.6,
     borderBottomLeftRadius: 'unset',
     borderTopLeftRadius: 'unset',
+    '& > .MuiButton-label': {
+      minWidth: 60,
+    },
   },
   closeIcon: {
     color: '#888',

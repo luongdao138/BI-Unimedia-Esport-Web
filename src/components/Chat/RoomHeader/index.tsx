@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Avatar from '@components/Avatar'
 import { useEffect } from 'react'
 import { Box, makeStyles, Typography } from '@material-ui/core'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -11,6 +10,8 @@ import { useTranslation } from 'react-i18next'
 import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import RoomNameEditor from '@components/Chat/RoomNameEditor'
+import RoomMemberAddView from '@components/Chat/RoomMemberAddView'
+import RoomImgView from '@components/Chat/RoomImgView'
 import _ from 'lodash'
 
 export interface RoomHeaderProps {
@@ -52,28 +53,41 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'isAdmin', false)
   }
 
+  const isDirect = () => {
+    return !_.get(roomInfo, 'sortKey', '').startsWith('chat_room')
+  }
+
   return (
     <>
       {hasNoRoomInfo ? null : (
-        <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
+        <>
+          <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
+          <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
+        </>
       )}
       <Box className={classes.row}>
-        {hasNoRoomInfo ? null : <Avatar src={roomImg} alt={roomName} size={36} />}
+        {hasNoRoomInfo ? null : (
+          <RoomImgView userId={userId} roomId={roomId as string} roomImg={roomImg} roomName={roomName} isAdmin={isRoomNameMenuShow()} />
+        )}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true}>
             {roomName}
           </Typography>
         </Box>
         {hasNoRoomInfo ? null : (
-          <ESMenu>
-            <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
-            <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-            {isRoomNameMenuShow() ? (
-              <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
-            ) : null}
-            <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
-            <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
-          </ESMenu>
+          <Box className={classes.menu}>
+            <ESMenu>
+              <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+              {!isDirect() ? (
+                <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+              ) : null}
+              {isRoomNameMenuShow() ? (
+                <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
+              ) : null}
+              <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+              <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+            </ESMenu>
+          </Box>
         )}
       </Box>
     </>
@@ -87,9 +101,18 @@ const useStyles = makeStyles(() => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
     alignItems: 'center',
+    position: 'relative',
+    paddingLeft: 40,
+    justifyContent: 'center',
+    height: 36,
   },
   roomName: {
     overflow: 'hidden',
+  },
+  menu: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
 }))
 

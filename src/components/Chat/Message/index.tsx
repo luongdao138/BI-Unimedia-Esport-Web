@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, makeStyles, Typography, Icon } from '@material-ui/core'
-import { ChatRoomMemberItem, ChatSuggestionList, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList, MessageType, ParentItem } from '../types/chat.types'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { SystemMessage, Bubble, DateTitle, MessageMenu } from '../elements'
 import Avatar from '@components/Avatar'
@@ -19,12 +19,13 @@ export interface MessageProps {
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
   copy?: (currrentMessage: MessageType) => void
+  onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
 }
 
 const Message: React.FC<MessageProps> = (props) => {
   const classes = useStyles()
 
-  const { currentMessage, direction, navigateToProfile, reply, report, copy, users } = props
+  const { currentMessage, direction, navigateToProfile, reply, report, copy, users, onReplyClick } = props
 
   const message = _.get(currentMessage, 'msg', '')
 
@@ -55,7 +56,7 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderBubble = () => {
-    return <Bubble onLoadImage={props.onLoadImage} navigateToProfile={navigateToProfile} {...props} />
+    return <Bubble onReplyClick={onReplyClick} onLoadImage={props.onLoadImage} navigateToProfile={navigateToProfile} {...props} />
   }
 
   const actionHandlers = {
@@ -99,7 +100,12 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderBubbleGroup = () => {
-    if (currentMessage && currentMessage.type !== CHAT_MESSAGE_TYPE.DATE && currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME) {
+    if (
+      currentMessage &&
+      currentMessage.type !== CHAT_MESSAGE_TYPE.DATE &&
+      currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME &&
+      currentMessage.type !== CHAT_MESSAGE_TYPE.SYSTEM
+    ) {
       return (
         <Box className={direction === 'left' ? classes.left : classes.right}>
           {direction === 'left' ? renderAvatar() : null}
@@ -125,7 +131,7 @@ const Message: React.FC<MessageProps> = (props) => {
       (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.WELCOME) ||
       (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.SYSTEM)
     ) {
-      return <SystemMessage text={message} />
+      return <SystemMessage text={message} time={timestamp} />
     }
     return null
   }

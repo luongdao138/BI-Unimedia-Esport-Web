@@ -8,6 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 
 const RecruitmentFollowerContainer: React.FC = () => {
+  // TODO skip WEB 2.0
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { recommendedFollowers, getRecruitmentFollowers, handleClick, pages, resetMeta } = useFollower()

@@ -39,11 +39,13 @@ const roomListUpdate = (roomList: ChatDataType[], message: MessageType[], active
   if (hasRoomValue && _.isArray(roomList)) {
     if (activeRoom === msg.chatRoomId) {
       updatedRoom = _.map(roomList, function (a: ChatDataType) {
-        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.msg } : a
+        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg } : a
       })
     } else {
       updatedRoom = _.map(roomList, function (a: ChatDataType) {
-        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.msg, unseenCount: a.unseenCount + 1 } : a
+        return a.chatRoomId === msg.chatRoomId
+          ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg, unseenCount: a.unseenCount + 1 }
+          : a
       })
     }
   } else {
@@ -78,7 +80,7 @@ const changeSingleRoom = (oldState: State, newRoom: any): State => {
     return {
       ...oldState,
       roomList: clonedList,
-      selectedRoomInfo: { ...oldState.selectedRoomInfo, roomName: newRoom.roomName, roomImg: newRoom.Img },
+      selectedRoomInfo: { ...oldState.selectedRoomInfo, roomName: newRoom.roomName, roomImg: newRoom.roomImg },
     }
   }
   return {

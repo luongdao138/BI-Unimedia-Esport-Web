@@ -27,7 +27,7 @@ const RegisterContainer: React.FC = () => {
   })
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { handleLink, navigateScreen } = useReturnHref()
+  const { handleLink, navigateScreen, handleReturn } = useReturnHref()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
@@ -60,7 +60,7 @@ const RegisterContainer: React.FC = () => {
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
-        <IconButton className={classes.iconButtonBg} onClick={() => navigateScreen(ESRoutes.LOGIN)}>
+        <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
       </Box>

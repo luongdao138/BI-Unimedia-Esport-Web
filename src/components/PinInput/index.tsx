@@ -1,7 +1,7 @@
 import { FC, ReactNode, createRef, ChangeEvent, KeyboardEvent, ClipboardEvent } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { Typography, Box } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
 const BACKSPACE_KEY = 8
@@ -40,6 +40,25 @@ const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value 
     }
 
     setValues()
+  }
+
+  const handleOnKeyPress = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
+    const charCode = typeof e.which == 'undefined' ? e.keyCode : e.which
+    const charStr = String.fromCharCode(charCode)
+    if (!charStr.match(/^[0-9]+$/)) {
+      e.preventDefault()
+    } else {
+      e.preventDefault()
+      if (numberOfPins - 1 > index) {
+        inputRefs[index + 1].current.focus()
+      }
+
+      if (inputRefs[index].current.value !== null) {
+        inputRefs[index].current.value = e.key.substr(e.key.length - 1)
+      }
+
+      setValues()
+    }
   }
 
   // trigger input special keys which is backspace, arrows etc
@@ -126,6 +145,7 @@ const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value 
           value={values[index] || ''}
           onChange={(e) => handleOnChange(index, e)}
           onKeyDown={(e) => onKeyDown(index, e)}
+          onKeyPress={(e) => handleOnKeyPress(index, e)}
           onPaste={(e) => onPaste(e)}
         />
       </div>
@@ -136,13 +156,6 @@ const PinInput: FC<Props> = ({ numberOfPins = 6, onChange, error = false, value 
     <>
       <Box display="flex" flexDirection="row" justifyContent="center" width={328} className={classes.boxWidth}>
         {pins}
-      </Box>
-      <Box width={328} className={classes.boxWidth} textAlign="left" pt={1}>
-        {error && (
-          <Typography variant="body2" color="secondary">
-            {t('common:error.code_invalid')}
-          </Typography>
-        )}
       </Box>
     </>
   )

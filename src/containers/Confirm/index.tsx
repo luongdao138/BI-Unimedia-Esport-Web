@@ -14,7 +14,9 @@ const ConfirmContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { user, registerConfirm, metaConfirm, backAction, resendConfirmation, metaResend, resetResendMeta } = useConfirm(confirmationCode)
+  const { user, registerConfirm, resetMeta, metaConfirm, backAction, resendConfirmation, metaResend, resetResendMeta } = useConfirm(
+    confirmationCode
+  )
 
   const handleSubmit = () => {
     const params = {
@@ -29,7 +31,18 @@ const ConfirmContainer: React.FC = () => {
   }
 
   const handleResend = () => {
+    resetMeta()
     if (user?.email) resendConfirmation({ email: user.email, type: 'register' })
+  }
+
+  const renderError = () => {
+    return (
+      !!metaConfirm.error && (
+        <Box pb={8}>
+          <Typography color="secondary">{t('common:error.invalid_confirmation')}</Typography>
+        </Box>
+      )
+    )
   }
 
   return (
@@ -45,6 +58,7 @@ const ConfirmContainer: React.FC = () => {
         </Box>
 
         <Box width="100%" px={5} pt={12} flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
+          {renderError()}
           <Typography variant="h3" className={classes.hint}>
             {t('common:confirm.sent')}
           </Typography>

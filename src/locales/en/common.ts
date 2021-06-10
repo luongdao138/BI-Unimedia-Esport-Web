@@ -49,10 +49,13 @@ export default {
     not_sure: '未確定',
     password_duplicated: 'パスワード再設定できませんでした。',
     confirmation_expire: '認証できませんでした。',
+    user_id_at_least: 'ユーザIDは二文字以上としてください',
+    nickname_at_least: 'ニックネームは二文字以上としてください',
   },
   welcome: 'eXeLABへようこそ',
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
+    profile_updated: 'プロフィールを更新しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -168,6 +171,7 @@ export default {
     error_email_4222: 'メールアドレスが既に使用されています！',
     password_failed: 'パスワードポリシーを満たしていません。',
     invalid_date: '適切な日付を入力してください。',
+    invalid_confirmation: '認証できませんでした。',
   },
   home: {
     exelab: 'eXe LAB事務局',
@@ -184,8 +188,6 @@ export default {
     recommended_event: 'おすすめイベント',
     recruitment_follow: 'フォローしている人の募集',
     topic_follow: 'フォローしている人の書き込みトピック',
-    tournament_follow: 'フォローしている人がエントリーしている大会',
-    tournament_result: 'フォローしている人がエントリーしていた大会結果',
     change_order: '並び順を変更する',
     recommended_user: 'おすすめユーザー',
     terms_of_use: '利用規約',
@@ -256,10 +258,11 @@ export default {
     menu_block: 'ブロック',
     menu_unblock: 'ブロックを解除する',
     menu_report: '通報',
+    block_success_message: 'ユーザーをブロックしました',
     following: 'フォロー中',
     followers: 'フォロワー',
-    no_game_selected: 'No game selected',
-    no_tag_selected: 'No tag selected',
+    no_game_selected: '好きなゲームが選択されていません',
+    no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
   },
   gender: {
@@ -457,7 +460,7 @@ export default {
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
     report: '通報',
-    search_placeholder: 'キーワードで探す',
+    search_placeholder: 'キーワード検索',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -507,6 +510,7 @@ export default {
       exit: '退出する',
     },
     uploaded_image: '画像がアップロードされました。',
+    placeholder_dm: 'メッセージ権限がありません',
   },
   notification: {
     title: '通知一覧',

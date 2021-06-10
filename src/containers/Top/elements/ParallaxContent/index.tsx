@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3),
     margin: '0 auto',
     width: '100%',
+    height: 740,
   },
   parallaxContent: {
     marginTop: 212,
