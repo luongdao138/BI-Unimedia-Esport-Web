@@ -1,4 +1,4 @@
-import React, { useState, useMemo, ReactNode } from 'react'
+import React, { useMemo, ReactNode } from 'react'
 import { Box, Icon, IconButton, makeStyles } from '@material-ui/core'
 import Composer from '@components/Chat/Composer'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +21,7 @@ export interface MessageInputAreaProps {
   onCancelReply?: () => void
   reply?: ParentItem | null | MessageType
   currentUser?: string | number
+  onChange: (text: string) => void
 }
 
 const partTypes = [
@@ -33,8 +34,7 @@ const partTypes = [
 ]
 
 const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
-  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser } = props
-  const [text, setText] = useState<string>('')
+  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser, text, onChange } = props
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
 
@@ -45,13 +45,12 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
 
   const onChangeText = (_event: { target: { value: string } }, newValue: string, _newPlainTextValue: string, _mentions: MentionItem[]) => {
-    setText(newValue)
+    onChange(newValue)
   }
 
   const send = (e: React.MouseEvent) => {
     onPressSend ? onPressSend(text.trim()) : undefined
     e.preventDefault()
-    setText('')
   }
 
   const renderSuggestion = (
@@ -66,12 +65,12 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
     }
   }
 
-  const handleKeyPress = (evt: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => {
-    if (evt.key === 'Enter' && evt.shiftKey === false) {
-      onPressSend ? onPressSend(text.trim()) : undefined
-      evt.preventDefault()
-      setText('')
-    }
+  const handleKeyPress = (_evt: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => {
+    // if (evt.key === 'Enter' && evt.shiftKey === false) {
+    //   onPressSend ? onPressSend(text.trim()) : undefined
+    //   evt.preventDefault()
+    //   setText('')
+    // }
   }
 
   const renderReplyPanel = () => {
