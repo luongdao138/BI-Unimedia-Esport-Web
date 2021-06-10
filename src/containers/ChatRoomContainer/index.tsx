@@ -187,7 +187,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
   }
 
-  const onChange = (text: string) => {
+  const _onChange = (text: string) => {
     setText(text)
   }
 
@@ -216,7 +216,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           <MessageInputArea
             reply={reply}
             text={text}
-            onChange={onChange}
+            onChangeInput={_onChange}
             currentUser={userId}
             onCancelReply={() => setReply(null)}
             onPressSend={handlePress}

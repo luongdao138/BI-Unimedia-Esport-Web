@@ -21,7 +21,7 @@ export interface MessageInputAreaProps {
   onCancelReply?: () => void
   reply?: ParentItem | null | MessageType
   currentUser?: string | number
-  onChange: (text: string) => void
+  onChangeInput?: (text: string) => void
 }
 
 const partTypes = [
@@ -34,7 +34,7 @@ const partTypes = [
 ]
 
 const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
-  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser, text, onChange } = props
+  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser, text, onChangeInput } = props
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
 
@@ -45,7 +45,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
 
   const onChangeText = (_event: { target: { value: string } }, newValue: string, _newPlainTextValue: string, _mentions: MentionItem[]) => {
-    onChange(newValue)
+    onChangeInput && onChangeInput(newValue)
   }
 
   const send = (e: React.MouseEvent) => {
