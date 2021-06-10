@@ -129,7 +129,12 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatar: {},
+  avatar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
   camera: {
     position: 'absolute',
     left: 0,
@@ -180,6 +185,7 @@ const useStyles = makeStyles(() => ({
       opacity: 0.2,
       display: 'block',
       transition: 'all 0.3s ease',
+      lineHeight: 100,
     },
     '&:hover $camera': {
       display: 'block',
