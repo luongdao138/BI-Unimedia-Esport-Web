@@ -26,7 +26,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ item }) => {
       </ListItemAvatar>
       <ListItemText className={classes.content}>
         <Typography noWrap={true} className={classes.name} variant="body2">
-          {name}
+          {name}asdasdsadasdasdasdsadasadasd
         </Typography>
         <Typography noWrap={true} className={classes.userCode} variant="body1">
           {_.isEmpty(usercode) ? '' : '@' + usercode}
@@ -35,7 +35,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ item }) => {
     </Box>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
@@ -60,6 +60,17 @@ const useStyles = makeStyles(() => ({
   avatar: {
     width: 50,
     height: 50,
+  },
+  [theme.breakpoints.down('sm')]: {
+    name: {
+      color: Colors.white,
+      fontSize: 14,
+      fontWeight: 500,
+    },
+    userCode: {
+      fontSize: 12,
+      color: Colors.text[200],
+    },
   },
 }))
 
