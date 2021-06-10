@@ -136,7 +136,7 @@ export type TournamentDetail = {
     interested_count: number
     participant_count: number
     my_role: null | ArenaRole
-    my_info: []
+    my_info: { team_id: number }[]
     my_position: null | string
     hash_key: string
     is_entered?: boolean

@@ -48,6 +48,17 @@ export type GetDirectRoomResponse = {
   } | null
 }
 
+export type DmUserData = {
+  id: number
+  user_code: string
+  nickname: string
+}
+
+export type CheckChatResponse = {
+  user: DmUserData | null
+  roomId: string | null
+}
+
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
   const { data } = await api.post<GetFriendsResponse>(URI.FRIEND_LIST, params)
   return data
@@ -55,5 +66,10 @@ export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsRes
 
 export const getDirectRoom = async (otherMemberId: number): Promise<GetDirectRoomResponse> => {
   const { data } = await api.get<GetDirectRoomResponse>(`${URI.DIRECT_ROOM}?other_member_id=${otherMemberId}`)
+  return data
+}
+
+export const directRoomCheck = async (userCode: string): Promise<CheckChatResponse> => {
+  const { data } = await api.get<CheckChatResponse>(`${URI.CHECK_DIRECT}/${userCode}`)
   return data
 }
