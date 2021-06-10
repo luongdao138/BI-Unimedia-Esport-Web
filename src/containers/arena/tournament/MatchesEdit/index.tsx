@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Container, IconButton, Toolbar, Typography, Box } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ESStickyFooter from '@components/StickyFooter'
@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -93,10 +94,22 @@ const ArenaMatches: React.FC = () => {
     return (
       <ESStickyFooter
         disabled={false}
-        title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
-        onClick={freezable ? () => freeze(tournament.attributes.hash_key) : () => setShowRandomize(true)}
         show={data.memberSelectable}
         noScroll
+        content={
+          <Box className={classes.actionButtonContainer}>
+            <Box className={classes.actionButton}>
+              <ButtonPrimary type="submit" round fullWidth onClick={() => setShowRandomize(true)}>
+                {t('common:arena.randomize_button')}
+              </ButtonPrimary>
+            </Box>
+            <Box className={classes.actionButton}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => freeze(tournament.attributes.hash_key)}>
+                {t('common:arena.freeze_button')}
+              </ButtonPrimary>
+            </Box>
+          </Box>
+        }
       >
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
@@ -194,6 +207,20 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 16,
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    },
+  },
+  actionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  actionButton: {
+    width: theme.spacing(35),
+    margin: 8,
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column',
     },
   },
 }))
