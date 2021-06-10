@@ -51,6 +51,11 @@ export default {
     confirmation_expire: '認証できませんでした。',
     user_id_at_least: 'ユーザIDは二文字以上としてください',
     nickname_at_least: 'ニックネームは二文字以上としてください',
+    info: `アカウントの削除はお問い合わせフォームから承ります。
+    件名に「アカウント削除」と記入し、本文に理由を添えて送信をお願いします。`,
+    confirm_title: '注文をキャンセルします',
+    confirm_back: '戻る',
+    confirm_ok: 'キャンセルする',
   },
   welcome: 'eXeLABへようこそ',
   messages: {

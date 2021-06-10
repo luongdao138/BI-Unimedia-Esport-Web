@@ -24,7 +24,7 @@ const ForgotPasswordContainer: React.FC = () => {
       .required(t('common:common.error')),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.ForgotPasswordParams>({
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<services.ForgotPasswordParams>({
     initialValues: {
       email: '',
     },
@@ -63,6 +63,7 @@ const ForgotPasswordContainer: React.FC = () => {
                 fullWidth
                 value={values.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 helperText={touched.email && errors.email}
                 error={touched.email && !!errors.email}
               />
