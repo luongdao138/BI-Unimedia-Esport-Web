@@ -501,6 +501,7 @@ export default {
       exit: '退出する',
     },
     uploaded_image: '画像がアップロードされました。',
+    placeholder_dm: 'メッセージ権限がありません',
   },
   notification: {
     title: '通知一覧',
