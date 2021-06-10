@@ -26,7 +26,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ item }) => {
       </ListItemAvatar>
       <ListItemText className={classes.content}>
         <Typography noWrap={true} className={classes.name} variant="body2">
-          {name}asdasdsadasdasdasdsadasadasd
+          {name}
         </Typography>
         <Typography noWrap={true} className={classes.userCode} variant="body1">
           {_.isEmpty(usercode) ? '' : '@' + usercode}

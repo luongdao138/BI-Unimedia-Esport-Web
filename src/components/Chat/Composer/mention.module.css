@@ -47,6 +47,8 @@
   box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 1px 3px 0 rgb(0 0 0 / 12%);
   overflow: auto;
   max-height: 250px;
+  max-width: 330px;
+  width: 100%;
 }
 
 .mentions__suggestions__list::-webkit-scrollbar {
@@ -70,7 +72,7 @@
 } */
 
 .mentions__suggestions__item--focused {
-  background-color: #cee4e5;
+  background-color: #eee;
 }
 
 .mentions__mention {
