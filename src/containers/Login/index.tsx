@@ -12,7 +12,6 @@ import FilterNoneIcon from '@material-ui/icons/FilterNone'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
-import ESToast from '@components/Toast'
 import ESButtonTwitter from '@components/Button/Twitter'
 import ESButtonGoogle from '@components/Button/Google'
 import ESButtonLine from '@components/Button/Line'
@@ -47,7 +46,7 @@ const LoginContainer: React.FC = () => {
     privacy: false,
   })
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta, metaReset, resetPasswordMeta, handleClick } = useLoginByEmail()
+  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail(social.resetMeta())
   const { handleLink } = useReturnHref()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -245,7 +244,6 @@ const LoginContainer: React.FC = () => {
         </Box>
       </Box>
       {meta.pending && <ESLoader open={meta.pending} />}
-      {metaReset.loaded && <ESToast open={metaReset.loaded} message={t('common:error.password_reissue')} resetMeta={resetPasswordMeta} />}
     </>
   )
 }

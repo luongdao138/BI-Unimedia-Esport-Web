@@ -27,11 +27,13 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           {t('common:common.required')}
         </Typography>
       </Box>
-      <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start">
+      <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
           name="stepThree.acceptance_start_date"
           placeholder={t('common:tournament_create.start_date')}
           fullWidth
+          multiline
+          rows={2}
           value={formik.values.stepThree.acceptance_start_date}
           onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toString())}
           onBlur={formik.handleBlur}
@@ -49,6 +51,8 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           name="stepThree.acceptance_end_date"
           placeholder={t('common:tournament_create.end_date')}
           fullWidth
+          multiline
+          rows={2}
           value={formik.values.stepThree.acceptance_end_date}
           onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toString())}
           onBlur={formik.handleBlur}
@@ -66,11 +70,13 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           {t('common:common.required')}
         </Typography>
       </Box>
-      <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start">
+      <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
           name="stepThree.start_date"
           placeholder={t('common:tournament_create.start_date')}
           fullWidth
+          multiline
+          rows={2}
           value={formik.values.stepThree.start_date}
           onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
           onBlur={formik.handleBlur}
@@ -88,6 +94,8 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           name="stepThree.end_date"
           placeholder={t('common:tournament_create.end_date')}
           fullWidth
+          multiline
+          rows={2}
           value={formik.values.stepThree.end_date}
           onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
           onBlur={formik.handleBlur}

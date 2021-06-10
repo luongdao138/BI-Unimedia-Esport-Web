@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
+import ESAvatar from '@components/Avatar'
 import AvatarSelector from '@components/ImagePicker/AvatarSelector'
 
 type ProfileAvatarProps = {
@@ -9,9 +9,10 @@ type ProfileAvatarProps = {
   size?: number
   src: string
   onChange?: (file: File, blob: any) => void
+  alt?: string
 }
 
-const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, onChange }) => {
+const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, src, onChange }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [setAvatar, toggleSetAvatar] = useState<boolean>(false)
@@ -22,7 +23,7 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, src, on
 
   return (
     <div className={classes.root}>
-      <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} style={size && { width: size, height: size }} />
+      <ESAvatar className={classes.avatar} alt={alt} src={src} style={size && { width: size, height: size }} />
       {editable ? (
         <label htmlFor="cover-upload" className={classes.touch} onClick={() => toggleSetAvatar(true)}>
           {drag ? <Camera fontSize="large" className={classes.camera} /> : null}

@@ -80,7 +80,7 @@ const changeSingleRoom = (oldState: State, newRoom: any): State => {
     return {
       ...oldState,
       roomList: clonedList,
-      selectedRoomInfo: { ...oldState.selectedRoomInfo, roomName: newRoom.roomName, roomImg: newRoom.Img },
+      selectedRoomInfo: { ...oldState.selectedRoomInfo, roomName: newRoom.roomName, roomImg: newRoom.roomImg },
     }
   }
   return {
