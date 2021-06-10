@@ -208,15 +208,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.MAIN:
-        if (!isOthers || profile.attributes.security_settings.show_about)
-          return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
+        if (!isOthers || profile.attributes.show_about) return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
         break
       case TABS.TOURNAMENT:
-        if (!isOthers || profile.attributes.security_settings.show_tournament_history)
-          return <TournamentHistoryContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_tournament_history) return <TournamentHistoryContainer userCode={userCode} />
         break
       case TABS.ACTIVITY:
-        if (!isOthers || profile.attributes.security_settings.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
         break
       default:
         break

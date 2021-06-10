@@ -83,7 +83,7 @@ export type UserProfile = {
     show_area?: boolean
     show_birth_date?: boolean
     nickname2?: string
-    icon?: string | null
+    // icon?: string | null
     template_id?: number | null
     is_following?: boolean
     is_followed?: boolean
@@ -95,23 +95,15 @@ export type UserProfile = {
     cover_url?: string | null
     update_step: number
     area_id?: number
-    area?: null | {
-      id?: number
-      area?: string
-      status?: number
-      created_at?: string
-      updated_at?: string
-    }
+    area: string
     features?: Feature[]
     game_titles?: GameTitle['attributes'][]
-    template?: null
-    security_settings?: {
-      show_tournament_history: boolean
-      show_activity_logs: boolean
-      show_about: boolean
-      allow_messages_from_strangers: boolean
-      allow_groups_from_strangers: boolean
-    }
+    // template?: null
+    show_tournament_history: boolean
+    show_activity_logs: boolean
+    show_about: boolean
+    allow_messages_from_strangers: boolean
+    allow_groups_from_strangers: boolean
     is_deleted?: boolean
     home_settings?: string[]
   }
