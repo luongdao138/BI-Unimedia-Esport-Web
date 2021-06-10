@@ -36,7 +36,6 @@ export const URI = {
   INQUIRY: '/v2/users/inquiries',
   COMMUNITY_LIST: '/v1/communities/list',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
-  RECOMMENDED_USERS: '/v1/recommended_users',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
   TOURNAMENTS_INTERESTEDS: '/v2/tournaments/:id/interested',
@@ -87,4 +86,5 @@ export const URI = {
   FRIEND_LIST: '/v2/chats/addable_users',
   DIRECT_ROOM: '/v2/chats/get_direct_room',
   WEB_SUPPORT: 'https://support.exelab.jp',
+  CHECK_DIRECT: '/v2/chats/user_and_chat_room',
 }

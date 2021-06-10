@@ -7,14 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import NOTIFICATION_ACTION_TYPES from '@store/notification/actions/types'
-import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
 import HeaderWithButton from '@components/HeaderWithButton'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { ESRoutes } from '@constants/route.constants'
 
 const NotificationContainer: React.FC = () => {
   const classes = useStyles()
-  const { fetchNotificationDetail } = useNotificationDetail()
   const { notifications, fetchNotifications, clearNotificationBadge, resetMeta, meta, pages, seenNotificationBadge } = useNotificationList()
   const { t } = useTranslation(['common'])
   const router = useRouter()
@@ -66,7 +64,6 @@ const NotificationContainer: React.FC = () => {
                 switch (notification.attributes.ntype_id) {
                   case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW: {
                     seenNotificationBadge()
-                    fetchNotificationDetail(Number(notification.id))
                     router.push(`${ESRoutes.PROFILE}/${notification.attributes.user_code}`)
                     break
                   }

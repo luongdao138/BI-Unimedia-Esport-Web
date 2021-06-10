@@ -79,12 +79,14 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 auto',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+    whiteSpace: 'nowrap',
     maxWidth: 80,
   },
   usercode: {
     color: theme.palette.text.secondary,
     margin: '0 auto',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     overflow: 'hidden',
     maxWidth: 80,
   },
@@ -184,6 +186,7 @@ const SideMenu: React.FC = () => {
           <Box className={classes.userInfo}>
             <ProfileAvatar
               size={80}
+              alt={userProfile?.attributes?.nickname}
               src={userProfile?.attributes?.avatar_url ? userProfile.attributes.avatar_url : '/images/avatar_o.png'}
             />
             {isAuthenticated && (
