@@ -91,7 +91,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
   const getTitle = () => {
     return (
-      <Box color={Colors.white}>
+      <Box color={Colors.white} className={classes.titleContainer}>
         <Typography className={classes.title}>{attr.title}</Typography>
       </Box>
     )
@@ -169,6 +169,9 @@ const useStyles = makeStyles((theme) => ({
   cardHover: {
     cursor: 'pointer',
   },
+  titleContainer: {
+    height: 42,
+  },
   organizer: {
     fontSize: 10,
     textOverflow: 'ellipsis',
@@ -215,6 +218,7 @@ const useStyles = makeStyles((theme) => ({
     WebkitLineClamp: 2,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    wordWrap: 'break-word',
     minHeight: 42,
   },
 }))
