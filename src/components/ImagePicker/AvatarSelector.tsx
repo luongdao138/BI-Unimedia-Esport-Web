@@ -16,6 +16,8 @@ interface AvatarSelectorProps {
   onUpdate: (file: File, blob: any) => void
 }
 
+const WH = 200
+
 const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }) => {
   const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
@@ -25,6 +27,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
+  const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: WH, height: WH })
   const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
 
   useEffect(() => {
@@ -41,6 +44,34 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
   }
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
+  const calcDimensions = (width: number, height: number) => {
+    let h = height,
+      w = width
+    if (w <= h && w < WH) {
+      const gap = WH / w
+      w = WH
+      h = h * gap
+    } else if (h < w && h < WH) {
+      const gap = WH / h
+      h = WH
+      w = w * gap
+    } else if (h > WH && w > WH) {
+      let gap = 0
+      if (h > w) {
+        gap = w / WH
+        w = WH
+        h = h / gap
+      } else {
+        gap = h / WH
+        h = WH
+        w = w / gap
+      }
+    }
+    setMediaDimensions({ height: h, width: w })
+    // console.log('AvatarSelector.tsx 61 height: ' + height + ' width: ' + width)
+    // console.log('AvatarSelector.tsx 61 h: ' + h + ' w: ' + w)
+  }
+
   const handleChange = (files: Array<File>) => {
     const f = files[0]
     const reader = new FileReader()
@@ -52,6 +83,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
         img.onload = function () {
           const width = img.naturalWidth || img.width
           const height = img.naturalHeight || img.height
+          calcDimensions(width, height)
           if (height > width) {
             setFit('horizontal-cover')
           } else if (width > height) {
@@ -86,7 +118,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
   }, [croppedAreaPixels])
 
   return (
-    <ESDialog open={true} title={'Avatar Selector'} handleClose={() => null} bkColor={'#2C2C2C'} alignTop={true}>
+    <ESDialog open={true} title={'Avatar Selector'} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Typography className={classes.title}>{'Select Avatar'}</Typography>
         <Box className={classes.cropContainer}>
@@ -94,7 +126,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
             <Cropper
               image={file}
               style={{
-                containerStyle: { width: 300, height: 200, position: 'relative' },
+                containerStyle: { width: WH, height: WH, position: 'relative' },
+                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
               }}
               crop={crop}
               zoom={zoom}
@@ -154,7 +187,6 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
 
 export default AvatarSelector
 
-const WH = 200
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
