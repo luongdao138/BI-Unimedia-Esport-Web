@@ -27,7 +27,10 @@ const useConfirm = (confirmationCode: string) => {
 
   const resetResendMeta = () => dispatch(clearMetaData(actions.resendConfirmation.typePrefix))
 
-  const backAction = () => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+  const backAction = () => {
+    navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+    resetMeta()
+  }
 
   useEffect(() => {
     if (metaConfirm.loaded) {

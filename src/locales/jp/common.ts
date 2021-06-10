@@ -49,6 +49,7 @@ export default {
     not_sure: '未確定',
     password_duplicated: 'パスワード再設定できませんでした。',
     confirmation_expire: '認証できませんでした。',
+    sns_reset_password_error: 'パスワードの再設定出来ませんでした。',
     user_id_at_least: 'ユーザIDは二文字以上としてください',
     nickname_at_least: 'ニックネームは二文字以上としてください',
     info: `アカウントの削除はお問い合わせフォームから承ります。
@@ -150,6 +151,7 @@ export default {
     back: 'メールアドレスで登録',
     sns: 'SNS連携で登録',
     duplicated: 'そのIDは既に使用されています',
+    enter_password_again: '新しいパスワードを再度入力してください',
   },
   register_profile: {
     user_id: 'ユーザーID',

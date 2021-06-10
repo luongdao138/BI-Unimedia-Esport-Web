@@ -8,7 +8,6 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { selectors, actions } = authStore
 const getLoginMeta = createMetaSelector(actions.loginByEmail)
-const getResetPasswordMeta = createMetaSelector(actions.resetPassword)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLoginByEmail = (resetSocialMeta: void) => {
@@ -16,10 +15,8 @@ const useLoginByEmail = (resetSocialMeta: void) => {
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getLoginMeta)
-  const metaReset = useAppSelector(getResetPasswordMeta)
   const loginByEmail = (param: UserLoginParams) => dispatch(actions.loginByEmail(param))
   const resetMeta = () => dispatch(clearMetaData(actions.loginByEmail.typePrefix))
-  const resetPasswordMeta = () => dispatch(clearMetaData(actions.resetPassword.typePrefix))
   const handleClick = () => {
     resetSocialMeta
     resetMeta()
@@ -33,7 +30,7 @@ const useLoginByEmail = (resetSocialMeta: void) => {
     }
   }, [meta.loaded])
 
-  return { user, loginByEmail, resetMeta, meta, handleClick, metaReset, resetPasswordMeta }
+  return { user, loginByEmail, resetMeta, meta, handleClick }
 }
 
 export default useLoginByEmail
