@@ -20,24 +20,24 @@ export const Footer: React.FC<FooterProps> = ({ dark }) => {
   return (
     <div className={dark ? classes.footerDark : classes.footer}>
       <List component="nav" aria-labelledby="footer-list" disablePadding className={classes.root}>
-        <Link href={ESRoutes.TERMS} underline={'none'}>
+        <Link href={ESRoutes.TERMS} underline={'none'} target="_blank">
           <ListItem className={downMd ? classes.list : classes.listBorder} button disableRipple>
             <ListItemText className={classes.listText}>{t('common:home.terms_of_use')}</ListItemText>
           </ListItem>
         </Link>
-        <Link href={ESRoutes.PRIVACY} underline={'none'}>
+        <Link href={ESRoutes.PRIVACY} underline={'none'} target="_blank">
           <ListItem className={downMd ? classes.list : classes.listBorder} button disableRipple>
             <ListItemText className={classes.listText}>{t('common:home.handling_of_personal_information')}</ListItemText>
           </ListItem>
         </Link>
-        <Link href={ESRoutes.COMMERCIAL} underline={'none'}>
+        <Link href={ESRoutes.COMMERCIAL} underline={'none'} target="_blank">
           <ListItem className={downMd ? classes.listLast : classes.listBorder} button disableRipple>
             <ListItemText className={classes.listText}>{t('common:home.notation_commercial')}</ListItemText>
           </ListItem>
         </Link>
         {downMd ? (
           <Box className={classes.innerWrap}>
-            <Link href="#" underline={'none'} target="_blank">
+            <Link href="#" underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.contact_us')}</ListItemText>
               </ListItem>
@@ -50,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ dark }) => {
           </Box>
         ) : (
           <>
-            <Link href="#" underline={'none'} target="_blank">
+            <Link href="#" underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.contact_us')}</ListItemText>
               </ListItem>
