@@ -24,10 +24,10 @@ const RegisterByEmailContainer: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false)
   const validationSchema = Yup.object().shape({
     email: Yup.string()
-      .test('email-validation', t('common:common.error'), (value) => {
+      .test('email-validation', t('common:login.validation.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required(t('common:common.error')),
+      .required(t('common:common.required')),
     password: Yup.string()
       .test('password-validation', t('common:error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
@@ -35,7 +35,7 @@ const RegisterByEmailContainer: React.FC = () => {
         setScore(tempScore)
         return tempScore > 40
       })
-      .required(t('common:common.error')),
+      .required(t('common:common.required')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, setFieldValue, handleBlur } = useFormik<services.UserLoginParams>({

@@ -20,7 +20,7 @@ const ConfirmContainer: React.FC = () => {
 
   const handleSubmit = () => {
     const params = {
-      email: user.email,
+      email: user?.email,
       confirmation_code: confirmationCode,
     }
     registerConfirm(params)
