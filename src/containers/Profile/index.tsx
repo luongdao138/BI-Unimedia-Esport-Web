@@ -94,6 +94,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const isFollowing = profile.attributes.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+  const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${profile.attributes.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -129,7 +130,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
                   <Icon className={`fas fa-inbox ${classes.inbox}`} />
                 </ESButton>
                 {isFollowing ? (
@@ -208,15 +209,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.MAIN:
-        if (!isOthers || profile.attributes.security_settings.show_about)
-          return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
+        if (!isOthers || profile.attributes.show_about) return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
         break
       case TABS.TOURNAMENT:
-        if (!isOthers || profile.attributes.security_settings.show_tournament_history)
-          return <TournamentHistoryContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_tournament_history) return <TournamentHistoryContainer userCode={userCode} />
         break
       case TABS.ACTIVITY:
-        if (!isOthers || profile.attributes.security_settings.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
         break
       default:
         break
