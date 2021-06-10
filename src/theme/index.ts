@@ -52,6 +52,9 @@ export default createMuiTheme({
     caption: {
       fontSize: 12,
     },
+    overline: {
+      fontSize: 10,
+    },
   },
   overrides: {
     MuiButton: {
