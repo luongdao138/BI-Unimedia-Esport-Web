@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SetParticipantParams, TournamentDetail, TournamentMatchItem } from '@services/arena.service'
+import { SetParticipantParams, TournamentDetail, TournamentMatchItem, MatchParticipant } from '@services/arena.service'
 import {
   Typography,
   Box,
@@ -15,12 +15,11 @@ import {
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import BlankLayout from '@layouts/BlankLayout'
-import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
 import ESModal from '@components/Modal'
 import InterestedList from './InterestedList'
-import { PARTICIPANT_TYPE } from '@constants/tournament.constants'
+import { PARTICIPANT_TYPE, ROLE } from '@constants/tournament.constants'
 import { Meta } from '@store/metadata/actions/types'
 
 interface SelectParticipantModalProps {
@@ -45,8 +44,9 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
   const [match, setMatch] = useState(selectedMatch)
   const [showParticipants, setShowParticipants] = useState<boolean>(false)
   const [refresh, setRefresh] = useState<boolean>(false)
-  const [targetParticipant, setTargetParticipant] = useState<any | undefined>()
+  const [targetParticipant, setTargetParticipant] = useState<MatchParticipant | undefined>()
   const [selectedType, setSelectedType] = useState<string | undefined>()
+  const [selectedParticipant, setSelectedParticipant] = useState<MatchParticipant | undefined>()
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
@@ -75,6 +75,27 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
   }
 
   const handleSelect = (type) => {
+    if (type == PARTICIPANT_TYPE.HOME) {
+      setSelectedParticipant(
+        match.home_user
+          ? {
+              avatar: match.home_avatar,
+              user: match.home_user,
+              pid: match.home_user.pid,
+            }
+          : undefined
+      )
+    } else if (type == PARTICIPANT_TYPE.GUEST) {
+      setSelectedParticipant(
+        match.guest_user
+          ? {
+              avatar: match.guest_avatar,
+              user: match.guest_user,
+              pid: match.guest_user.pid,
+            }
+          : undefined
+      )
+    }
     setSelectedType(type)
     setShowParticipants(true)
   }
@@ -86,7 +107,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
       avatar: participant.attributes.avatar_url,
       user: {
         ..._user,
-        role: 'participant',
+        role: ROLE.PARTICIPANT,
         name: participant.attributes.name,
         team_name: teamName,
       },
@@ -96,11 +117,11 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
 
   const participantItem = (user, avatar, type) => {
     const _name = isTeam ? user?.team_name : user?.name
-    const emptyParticipant = {
-      avatar: null,
-      user: null,
-      pid: null,
-    }
+    // const emptyParticipant = {
+    //   avatar: null,
+    //   user: null,
+    //   pid: null,
+    // }
     return (
       <Box
         paddingRight={1}
@@ -116,24 +137,9 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
         {!isTeam && <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>}
 
         <Box pt={6} display="flex" alignItems="flex-end">
-          {!user ? (
-            <ButtonPrimary disabled={meta.pending} size="small" round={false} gradient={false} onClick={() => handleSelect(type)}>
-              {t('common:tournament.set_participants')}
-            </ButtonPrimary>
-          ) : (
-            <ButtonPrimary
-              disabled={meta.pending}
-              size="small"
-              round={false}
-              gradient={false}
-              onClick={() => {
-                setSelectedType(type)
-                selectedHandler(emptyParticipant, type)
-              }}
-            >
-              {t('common:tournament.unset_participants')}
-            </ButtonPrimary>
-          )}
+          <ButtonPrimary disabled={meta.pending} size="small" round={false} gradient={false} onClick={() => handleSelect(type)}>
+            {t('common:tournament.set_participants')}
+          </ButtonPrimary>
         </Box>
       </Box>
     )
@@ -167,6 +173,17 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
             <Box className={classes.blankSpace}></Box>
           </Box>
           <InterestedList
+            selectedParticipant={selectedParticipant}
+            handleUnset={() =>
+              selectedHandler(
+                {
+                  avatar: null,
+                  user: null,
+                  pid: null,
+                },
+                selectedType
+              )
+            }
             tournament={tournament}
             open={showParticipants}
             handleClose={() => setShowParticipants(false)}
@@ -174,7 +191,6 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
           />
         </BlankLayout>
       )}
-      {meta.pending && <ESLoader open={meta.pending} />}
     </ESModal>
   )
 }

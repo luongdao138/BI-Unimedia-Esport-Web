@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Grid, Typography, Box, ButtonBase, withStyles } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import MuiAccordion from '@material-ui/core/Accordion'
@@ -10,6 +11,7 @@ import { CommonResponse } from '@services/user.service'
 
 interface Props {
   team: CommonResponse
+  handleClick?: () => void
 }
 
 const Accordion = withStyles({
@@ -18,17 +20,28 @@ const Accordion = withStyles({
   },
 })(MuiAccordion)
 
-const TeamMemberItem: React.FC<Props> = ({ team }) => {
+const TeamMemberItem: React.FC<Props> = ({ team, handleClick }) => {
   const data = team.attributes.team.data.attributes
   const members = data.members
+  const [expanded, setExpanded] = useState<boolean>(false)
 
   const userData = (member) => {
     return { id: member.user_id, attributes: { ...member, avatar: member.image_url } }
   }
   return (
     <Grid item xs={12}>
-      <Accordion square>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <Accordion expanded={expanded} square>
+        <AccordionSummary
+          expandIcon={
+            <ExpandMoreIcon
+              onClick={(e) => {
+                e.stopPropagation()
+                setExpanded(!expanded)
+              }}
+            />
+          }
+          onClick={() => handleClick && handleClick()}
+        >
           <Box display="flex" overflow="hidden">
             <ButtonBase>
               <ESAvatar alt={data.name} src={data.team_avatar} />

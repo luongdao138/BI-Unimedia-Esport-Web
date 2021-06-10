@@ -323,7 +323,7 @@ export default {
     recruiting_tournament_list: '募集中の大会一覧',
     select_user: 'ユーザーを選ぶ',
     set_participants: '設定する',
-    unset_participants: 'サブボタン',
+    deselect: '選択を解除',
     match_setting: '試合設定',
     vs: 'VS',
     match_result: '対戦結果',

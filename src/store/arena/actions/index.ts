@@ -220,7 +220,7 @@ export const setParticipants = createAsyncThunk<void, services.SetParticipantsPa
 )
 
 export const getArenaWinners = createAsyncThunk<services.GetArenaWinnersResponse, string | string[]>(
-  types.SET_TOURNAMENT_PARTICIPANT,
+  types.GET_ARENA_WINNERS,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.getArenaWinners(param)

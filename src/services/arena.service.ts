@@ -404,6 +404,12 @@ export type RecruitingTournamentParams = {
   page?: number
 }
 
+export type MatchParticipant = {
+  avatar?: string | null
+  user?: TournamentMatchParticipant | null
+  pid?: number | null
+}
+
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
   const { data } = await api.post<TournamentSearchResponse>(URI.TOURNAMENTS_SEARCH, params)
   return data

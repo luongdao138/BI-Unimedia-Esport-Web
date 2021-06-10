@@ -89,7 +89,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           rows={5}
           id="terms_of_participation"
           name="stepTwo.terms_of_participation"
-          label={t('common:tournament_create.participation_term')}
+          labelPrimary={t('common:tournament_create.participation_term')}
           placeholder={t('common:tournament_create.participation_term_placeholder')}
           fullWidth
           value={formik.values.stepTwo.terms_of_participation}

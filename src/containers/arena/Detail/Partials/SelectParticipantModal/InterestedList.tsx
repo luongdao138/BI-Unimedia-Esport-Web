@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, Divider } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
 import useInteresteds from './useInteresteds'
@@ -9,17 +9,20 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
-import { TournamentDetail } from '@services/arena.service'
-import TeamItem from '../TeamItem'
+import { TournamentDetail, MatchParticipant } from '@services/arena.service'
+import ESButton from '@components/Button'
+import TeamMemberItem from '../TeamMemberItem'
 
 interface InterestedListProps {
+  selectedParticipant?: MatchParticipant
   tournament: TournamentDetail
   open: boolean
   handleClose: () => void
   onSelect: (participant) => void
+  handleUnset: () => void
 }
 
-const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handleClose, onSelect }) => {
+const InterestedList: React.FC<InterestedListProps> = ({ selectedParticipant, tournament, open, handleClose, onSelect, handleUnset }) => {
   const data = tournament.attributes
   const hash_key = data.hash_key
   const isTeam = data.participant_type > 1
@@ -60,6 +63,20 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
               <Typography variant="h2">{t('common:tournament.select_user')}</Typography>
             </Box>
           </Box>
+          {selectedParticipant && (
+            <Box display="flex" flexDirection="row" alignItems="space-between">
+              <UserListItem
+                data={{
+                  id: selectedParticipant.user.id,
+                  attributes: { ...selectedParticipant.user, nickname: selectedParticipant.user.name, avatar: selectedParticipant.avatar },
+                }}
+              />
+              <Box width={150} display="flex" justifyContent="center" alignItems="center">
+                <ESButton onClick={handleUnset}>{t('common:tournament.deselect')}</ESButton>
+              </Box>
+            </Box>
+          )}
+          <Divider />
           {meta.loaded && !interesteds.length && (
             <div className={classes.loaderCenter}>
               <Typography>{t('common:common.no_data')}</Typography>
@@ -80,10 +97,9 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
           >
             {isTeam
               ? interesteds.map((participant, i) => (
-                  <TeamItem
-                    name={participant.attributes.team.data.attributes.name}
-                    avatar={participant.attributes.avatar_url}
-                    key={i}
+                  <TeamMemberItem
+                    key={`team${i}`}
+                    team={participant}
                     handleClick={() => {
                       onSelect(participant)
                     }}
@@ -113,6 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   loaderCenter: {
+    paddingTop: theme.spacing(2),
     textAlign: 'center',
   },
   [theme.breakpoints.down('sm')]: {
