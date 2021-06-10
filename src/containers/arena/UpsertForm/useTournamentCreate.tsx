@@ -86,22 +86,20 @@ const useTournamentCreate = (): {
   const { isEditable } = useArenaHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
-  const submit = (params: TournamentFormParams) => dispatch(actions.createTournament(params))
-  const update = (params: UpdateParams) => dispatch(actions.updateTournament(params))
-
-  useEffect(() => {
-    if (meta.loaded) {
+  const submit = async (params: TournamentFormParams) => {
+    const resultAction = await dispatch(actions.createTournament(params))
+    if (actions.createTournament.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(ESRoutes.ARENA)
+      router.push(`${ESRoutes.ARENA}/${resultAction.payload.hash_key}`)
     }
-  }, [meta.loaded])
-
-  useEffect(() => {
-    if (updateMeta.loaded) {
+  }
+  const update = async (params: UpdateParams) => {
+    const resultAction = await dispatch(actions.updateTournament(params))
+    if (actions.updateTournament.fulfilled.match(resultAction)) {
       resetUpdateMeta()
-      router.push(ESRoutes.ARENA)
+      router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
     }
-  }, [updateMeta.loaded])
+  }
 
   useEffect(() => {
     if (router.asPath.endsWith('/edit') && router.query.hash_key) {
