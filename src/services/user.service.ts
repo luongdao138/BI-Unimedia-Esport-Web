@@ -83,14 +83,9 @@ export type UserProfile = {
     show_area?: boolean
     show_birth_date?: boolean
     nickname2?: string
-    // icon?: string | null
-    template_id?: number | null
     is_following?: boolean
     is_followed?: boolean
     is_blocked?: boolean
-    blocked_by_user?: boolean
-    followers?: number
-    following?: number
     avatar_url?: string | null
     cover_url?: string | null
     update_step: number
@@ -98,7 +93,6 @@ export type UserProfile = {
     area: string
     features?: Feature[]
     game_titles?: GameTitle['attributes'][]
-    // template?: null
     show_tournament_history: boolean
     show_activity_logs: boolean
     show_about: boolean

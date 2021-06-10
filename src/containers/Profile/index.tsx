@@ -94,6 +94,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const isFollowing = profile.attributes.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+  const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${profile.attributes.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -129,7 +130,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
                   <Icon className={`fas fa-inbox ${classes.inbox}`} />
                 </ESButton>
                 {isFollowing ? (
