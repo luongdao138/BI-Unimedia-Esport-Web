@@ -107,7 +107,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
           size="small"
           label={
             <Box color={Colors.white}>
-              <Typography variant="caption">{chipLabel}</Typography>
+              <Typography variant="overline">{chipLabel}</Typography>
             </Box>
           }
         />
