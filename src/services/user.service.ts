@@ -82,6 +82,7 @@ export type UserProfile = {
     show_sex?: boolean
     show_area?: boolean
     show_birth_date?: boolean
+    is_direct_chat_available?: boolean
     nickname2?: string
     is_following?: boolean
     is_followed?: boolean
