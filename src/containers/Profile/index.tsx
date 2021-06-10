@@ -133,9 +133,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
-                  <Icon className={`fas fa-inbox ${classes.inbox}`} />
-                </ESButton>
+                {profile.attributes?.is_direct_chat_available ? (
+                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
+                    <Icon className={`fas fa-inbox ${classes.inbox}`} />
+                  </ESButton>
+                ) : null}
                 {isFollowing ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.following')}
