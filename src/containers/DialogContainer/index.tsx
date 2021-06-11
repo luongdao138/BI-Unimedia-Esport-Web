@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import _ from 'lodash'
 import { Colors } from '@theme/colors'
 import { ActionButtons } from '@store/common/actions/types'
+import i18n from '@locales/i18n'
 
 const DialogContent = withStyles((theme) => ({
   root: {
@@ -31,7 +32,7 @@ const ConfirmContainer: React.FC = () => {
   const dispatch = useAppDispatch()
   const dialog = useAppSelector(selectors.getDialog)
   const removeDialog = () => dispatch(actions.removeDialog())
-  const title = _.get(dialog, 'title', '確認メッセージ')
+  const title = _.get(dialog, 'title', i18n.t('common:dialog.default_title'))
   const buttons = _.get(dialog, 'actions', [])
 
   const handleAction = (type: string) => {
@@ -75,7 +76,7 @@ const ConfirmContainer: React.FC = () => {
                 </Typography>
               ) : null}
             </Box>
-            <Box className={classes.actionBox}>{_.isEmpty(buttons) && buttons.map((a, index) => renderButton(a, index))}</Box>
+            <Box className={classes.actionBox}>{buttons && buttons.map((a, index) => renderButton(a, index))}</Box>
           </DialogContent>
         </Dialog>
       ) : null}

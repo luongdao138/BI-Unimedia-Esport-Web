@@ -628,4 +628,9 @@ export default {
     personal_info: '個人情報の取扱について',
     commercial_transaction: '特定商取引に関する表記',
   },
+  dialog: {
+    ng_word_warning: 'NGワード：などのエラーメッセージ',
+    confirm: "了解'",
+    default_title: '確認メッセージ',
+  },
 }
