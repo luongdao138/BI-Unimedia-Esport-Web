@@ -62,14 +62,15 @@ const AccountSettingsPasswordContainer: React.FC = () => {
           fullWidth
           type={showPassword ? 'text' : 'password'}
           endAdornment={
-            <InputAdornment position="end">
+            <InputAdornment position="end" className={classes.inputContainer}>
+              <div className={classes.borderLeft}></div>
               <IconButton
                 aria-label="toggle password visibility"
                 size="small"
                 disableRipple
                 onMouseDown={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <Icon className="fas fa-eye" fontSize="small" /> : <Icon className="fas fa-eye-slash" fontSize="small" />}
+                {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
               </IconButton>
             </InputAdornment>
           }
@@ -111,6 +112,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(4),
       marginLeft: theme.spacing(2),
     },
+  },
+  inputContainer: {
+    position: 'relative',
+    paddingRigth: 7,
+  },
+  borderLeft: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#4B4B4D',
+    position: 'absolute',
+    left: -8,
   },
 }))
 
