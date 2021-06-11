@@ -600,6 +600,16 @@ export default {
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',
     help_purchase: '購入に心当たりがない',
+    item: 'アイテム',
+    classification: '区分',
+    ticket: 'チケット',
+    quantity: '数量',
+    total_fee: '合計金額',
+    tax: '消費税',
+    payment: '支払金額',
+    canceled: 'キャンセル済み',
+    cancel_requested: 'キャンセル処理中',
+    cancel_request: '注文をキャンセル'
   },
   inquiry: {
     title: 'お問い合わせ',

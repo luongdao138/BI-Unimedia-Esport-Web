@@ -9,7 +9,7 @@ import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
 import ESButton from '@components/Button'
 import { PAYMENT_STATUS } from '@constants/common.constants'
-
+import DialogContainer from '@containers/DialogContainer'
 interface Props {
   id: any
 }
@@ -34,6 +34,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       <HeaderWithButton title={t('common:notification.title')} />
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
+          <DialogContainer/>
           <Box padding={2} margin={2} className={classes.wrap}>
             <Typography variant={'caption'}>{purchase_datetime}</Typography>
             <Box display="flex">
@@ -60,52 +61,52 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             </Box>
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>アイテム</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.item')}</Typography>
                 <Typography>{purchaseHistoryDetail.data.attributes.description}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>区分</Typography>
-                <Typography>チケット</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.classification')}</Typography>
+                <Typography>{t('common:purchase_history.ticket')}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>金額</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.price')}</Typography>
                 <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>数量</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.quantity')}</Typography>
                 <Typography>1</Typography>
               </Box>
             </Box>
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>合計金額</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.total_fee')}</Typography>
                 <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>消費税</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.tax')}</Typography>
                 <Typography>¥{purchaseHistoryDetail.data.attributes.tax}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>支払金額</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.payment')}</Typography>
                 <Typography color="primary">
                   ¥{purchaseHistoryDetail.data.attributes.price + purchaseHistoryDetail.data.attributes.tax}
                   {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
-                    ? `(キャンセル済み)`
+                    ? `(${t('common:purchase_history.canceled')})`
                     : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
-                    ? `(キャンセル処理中)`
+                    ? `(${t('common:purchase_history.cancel_requested')})`
                     : ''}
                 </Typography>
               </Box>
             </Box>
-            {/*{purchaseHistoryDetail.data.attributes.is_cancellable &&*/}
-            {/*!purchaseHistoryDetail.data.attributes.cancel_req_datetime &&*/}
-            {/*!purchaseHistoryDetail.data.attributes.cancelled_datetime && (*/}
+            {purchaseHistoryDetail.data.attributes.is_cancellable &&
+            !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
+            !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
             <>
               <Box my={4} display="flex" justifyContent="center">
-                <ESButton variant="outlined">注文をキャンセル</ESButton>
+                <ESButton variant="outlined">{t('common:purchase_history.cancel_request')}</ESButton>
               </Box>
             </>
-            {/*)}*/}
+            )}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
