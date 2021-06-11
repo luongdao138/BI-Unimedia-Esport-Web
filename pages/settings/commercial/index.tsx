@@ -5,6 +5,7 @@ import { Theme, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import React from 'react'
+import Linkify from 'react-linkify'
 
 const CommercialPage: PageWithLayoutType = () => {
   const { t } = useTranslation('commercial')
@@ -12,9 +13,17 @@ const CommercialPage: PageWithLayoutType = () => {
   return (
     <div>
       <HeaderWithButton title={t('title')} />
-      <Typography className={classes.wrap} paragraph={true}>
-        {t('text')}
-      </Typography>
+      <Linkify
+        componentDecorator={(decoratedHref, decoratedText, key) => (
+          <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
+            {decoratedText}
+          </a>
+        )}
+      >
+        <Typography className={classes.wrap} paragraph={true}>
+          {t('text')}
+        </Typography>
+      </Linkify>
     </div>
   )
 }
@@ -28,11 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black_opacity[70],
     borderRadius: '6px',
     border: '1px solid rgba(255, 255, 255, 0.3)',
-    cursor: 'pointer',
-    '&:hover': {
-      boxShadow: 'none',
-      background: '#1a1a1a',
-    },
+  },
+  link: {
+    color: Colors.secondary,
+    textDecoration: 'none',
   },
 }))
 
