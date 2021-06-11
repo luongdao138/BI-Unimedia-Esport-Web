@@ -120,3 +120,9 @@ export const LIGHTBOX_OPTIONS = {
 }
 
 export const SLIDE_LIMIT = 5
+
+export const PAYMENT_STATUS = {
+  PURCHASED: 1,
+  CANCEL_REQUESTED: 3,
+  CANCELLED: 4,
+}

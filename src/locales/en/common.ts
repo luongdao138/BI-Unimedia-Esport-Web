@@ -592,6 +592,7 @@ export default {
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',
     help_purchase: '購入に心当たりがない',
+    item: 'アイテム',
   },
   inquiry: {
     title: 'お問い合わせ',

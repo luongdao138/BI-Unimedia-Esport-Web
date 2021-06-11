@@ -8,6 +8,7 @@ import usePurchaseHistoryDetail from '@containers/PurchaseHistory/usePurchaseHis
 import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
 import ESButton from '@components/Button'
+import { PAYMENT_STATUS } from '@constants/common.constants'
 
 interface Props {
   id: any
@@ -45,7 +46,13 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.status')}</Typography>
-              <Typography>購入済み</Typography>
+              <Typography>
+                {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
+                  ? 'キャンセル済み'
+                  : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
+                  ? 'キャンセル処理中'
+                  : '購入済み'}
+              </Typography>
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.payment_method')}</Typography>
@@ -54,7 +61,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>アイテム</Typography>
-                <Typography>動画配信サービス</Typography>
+                <Typography>{purchaseHistoryDetail.data.attributes.description}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>区分</Typography>
@@ -62,7 +69,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>金額</Typography>
-                <Typography>¥0</Typography>
+                <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>数量</Typography>
@@ -72,20 +79,33 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>合計金額</Typography>
-                <Typography>¥0</Typography>
+                <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>消費税</Typography>
-                <Typography>¥0</Typography>
+                <Typography>¥{purchaseHistoryDetail.data.attributes.tax}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>支払金額</Typography>
-                <Typography>¥0</Typography>
+                <Typography color="primary">
+                  ¥{purchaseHistoryDetail.data.attributes.price + purchaseHistoryDetail.data.attributes.tax}
+                  {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
+                    ? `(キャンセル済み)`
+                    : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
+                    ? `(キャンセル処理中)`
+                    : ''}
+                </Typography>
               </Box>
             </Box>
-            <Box my={4} display="flex" justifyContent="center">
-              <ESButton variant="outlined">注文をキャンセル</ESButton>
-            </Box>
+            {/*{purchaseHistoryDetail.data.attributes.is_cancellable &&*/}
+            {/*!purchaseHistoryDetail.data.attributes.cancel_req_datetime &&*/}
+            {/*!purchaseHistoryDetail.data.attributes.cancelled_datetime && (*/}
+            <>
+              <Box my={4} display="flex" justifyContent="center">
+                <ESButton variant="outlined">注文をキャンセル</ESButton>
+              </Box>
+            </>
+            {/*)}*/}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
