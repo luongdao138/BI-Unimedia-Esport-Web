@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import HeaderWithButton from '@components/HeaderWithButton'
 import { useTranslation } from 'react-i18next'
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, withStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import usePurchaseHistoryDetail from '@containers/PurchaseHistory/usePurchaseHistoryDetail'
@@ -10,18 +10,57 @@ import LinkIcon from '@components/SettingsRowItem/LinkIcon'
 import ESButton from '@components/Button'
 import { PAYMENT_STATUS } from '@constants/common.constants'
 import DialogContainer from '@containers/DialogContainer'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { useAppDispatch } from '@store/hooks'
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import { ActionButtons } from '@store/common/actions/types'
+import ButtonPrimary from '@components/ButtonPrimary'
+
+
 interface Props {
   id: any
 }
 
 const PurchaseDetail: React.FC<Props> = ({ id }) => {
-  const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
+  const [open, setOpen] = React.useState(false);
   const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail } = usePurchaseHistoryDetail()
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const DialogContent = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(3),
+      display: 'block',
+      background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
+      width: '100%',
+      '&:first-child': {
+        padding: theme.spacing(3),
+      },
+    },
+  }))(MuiDialogContent)
+
 
   useEffect(() => {
     if (id) {
       fetchPurchaseHistoryDetail(id)
+      // dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
     }
     return function () {
       clearPurchaseHistoryDetail()
@@ -34,6 +73,34 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       <HeaderWithButton title={t('common:notification.title')} />
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
+          <div>
+            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+              Open alert dialog
+            </Button>
+            <Dialog
+              maxWidth={'md'}
+              fullWidth
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <Box className={classes.container}>
+                  <Typography className={classes.dialogTitle}>
+                    注文をキャンセルします
+                  </Typography>
+                  <Typography className={classes.message} gutterBottom>
+                    キャンセルを行なった後に再利用する場合は再度ご購入が必要です。
+                  </Typography>
+                </Box>
+                <Box className={classes.actionBox}>
+                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false}>戻る</ButtonPrimary>
+                  <ButtonPrimary size="small" className={classes.actionBtn}>キャンセルする</ButtonPrimary>
+                </Box>
+              </DialogContent>
+            </Dialog>
+          </div>
           <DialogContainer/>
           <Box padding={2} margin={2} className={classes.wrap}>
             <Typography variant={'caption'}>{purchase_datetime}</Typography>
@@ -144,6 +211,30 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    width: '100%',
+    display: 'block',
+  },
+  dialogTitle: {
+    color: Colors.white,
+    textAlign: 'center',
+    paddingBottom: 56,
+    fontSize: 24,
+    fontWeight: 'bold'
+  },
+  message: {
+    color: Colors.text[200],
+    textAlign: 'center',
+  },
+  actionBox: {
+    marginTop: 100,
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  actionBtn: {
+    width: 200,
+    margin: 16
+  },
   wrap: {
     color: Colors.white_opacity[70],
     backgroundColor: Colors.black,
