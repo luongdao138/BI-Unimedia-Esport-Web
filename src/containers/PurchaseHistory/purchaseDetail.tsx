@@ -43,16 +43,16 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.vendor')}</Typography>
-              <Typography>NTTe-Sports</Typography>
+              <Typography>{t('common:purchase_history.vendor_name')}</Typography>
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.status')}</Typography>
               <Typography>
                 {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
-                  ? 'キャンセル済み'
+                  ? `${t('common:purchase_history.canceled')}`
                   : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
-                  ? 'キャンセル処理中'
-                  : '購入済み'}
+                  ? `${t('common:purchase_history.cancel_requested')}`
+                  : `${t('common:purchase_history.purchased')}`}
               </Typography>
             </Box>
             <Box display="flex">

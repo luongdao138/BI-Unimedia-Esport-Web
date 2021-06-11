@@ -591,6 +591,7 @@ export default {
     title: '購入履歴',
     order_id: '購入ID',
     vendor: '販売元',
+    vendor_name: 'NTTe-Sports',
     ticket_name: 'アイテム',
     type: '区分',
     price: '金額',
@@ -609,7 +610,8 @@ export default {
     payment: '支払金額',
     canceled: 'キャンセル済み',
     cancel_requested: 'キャンセル処理中',
-    cancel_request: '注文をキャンセル'
+    cancel_request: '注文をキャンセル',
+    purchased: '購入済み'
   },
   inquiry: {
     title: 'お問い合わせ',
