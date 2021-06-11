@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/common.service'
-import { COMMON_ACTION_TYPE } from './types'
+import { COMMON_ACTION_TYPE, Dialog } from './types'
 
 export const getPrefectures = createAsyncThunk<services.GetPrefecturesResponse>(
   COMMON_ACTION_TYPE.GET_PREFECTURES,
@@ -32,8 +32,9 @@ export const getHardwares = createAsyncThunk<services.HardwareResponse>(
   }
 )
 
-export const showDialog = createAction<string>('dialog/addDialog')
-export const removeDialog = createAction<string>('dialog/removeDialog')
+export const showDialog = createAction<Dialog>('dialog/addDialog')
+export const actionDialog = createAction<string>('dialog/actionDialog')
+export const removeDialog = createAction('dialog/removeDialog')
 
 export const addToast = createAction<string>('toast/addToast')
 export const removeToast = createAction<string>('toast/removeToast')

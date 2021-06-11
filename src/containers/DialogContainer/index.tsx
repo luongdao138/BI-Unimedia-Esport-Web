@@ -1,69 +1,116 @@
-import { Typography, IconButton, withStyles } from '@material-ui/core'
+import { Typography, withStyles, makeStyles, Box } from '@material-ui/core'
 import React from 'react'
-import Button from '@material-ui/core/Button'
+import ButtonPrimary from '@components/ButtonPrimary'
+import Button from '@components/Button'
 import Dialog from '@material-ui/core/Dialog'
-import CloseIcon from '@material-ui/icons/Close'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MuiDialogContent from '@material-ui/core/DialogContent'
-import MuiDialogActions from '@material-ui/core/DialogActions'
+import * as selectors from '@store/common/selectors'
+import * as actions from '@store/common/actions'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import _ from 'lodash'
+import { Colors } from '@theme/colors'
+import { ActionButtons } from '@store/common/actions/types'
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
+    display: 'block',
+    background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
+    width: '100%',
+    '&:first-child': {
+      padding: theme.spacing(3),
+    },
   },
 }))(MuiDialogContent)
 
-const DialogActions = withStyles((theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions)
-
 const ConfirmContainer: React.FC = () => {
-  const [open, setOpen] = React.useState(false)
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
   const handleClose = () => {
-    setOpen(false)
+    removeDialog()
+  }
+  const classes = useStyles()
+  const dispatch = useAppDispatch()
+  const dialog = useAppSelector(selectors.getDialog)
+  const removeDialog = () => dispatch(actions.removeDialog())
+  const title = _.get(dialog, 'title', '確認メッセージ')
+  const buttons = _.get(dialog, 'actions', [])
+
+  const handleAction = (type: string) => {
+    dispatch(actions.actionDialog(type))
+    handleClose()
+  }
+
+  const renderButton = (a: ActionButtons, index: number) => {
+    if (a.type === 'primary') {
+      return (
+        <ButtonPrimary size={'small'} key={index} onClick={() => handleAction(a.action)}>
+          {a.name}
+        </ButtonPrimary>
+      )
+    } else {
+      return (
+        <Button size="medium" className={classes.secondButton} round={true} key={index} onClick={() => handleAction(a.action)}>
+          {a.name}
+        </Button>
+      )
+    }
   }
 
   return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <MuiDialogTitle disableTypography>
-          <Typography variant="h6">aweadssad</Typography>
-          <IconButton aria-label="close" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </MuiDialogTitle>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus,
-            porta ac consectetur ac, vestibulum at eros.
-          </Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus
-            dolor auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed
-            odio dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <>
+      {dialog ? (
+        <Dialog fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={dialog ? true : false}>
+          <DialogContent>
+            <Box className={classes.container}>
+              <Typography className={classes.title} variant="h2">
+                {title}
+              </Typography>
+              {dialog.message ? (
+                <Typography className={classes.message} gutterBottom>
+                  {dialog.message}
+                </Typography>
+              ) : null}
+              {dialog.actionMsg ? (
+                <Typography className={classes.actionMessage} gutterBottom>
+                  {dialog.actionMsg}
+                </Typography>
+              ) : null}
+            </Box>
+            <Box className={classes.actionBox}>{_.isEmpty(buttons) && buttons.map((a, index) => renderButton(a, index))}</Box>
+          </DialogContent>
+        </Dialog>
+      ) : null}
+    </>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  container: {
+    width: '100%',
+    display: 'block',
+  },
+  title: {
+    color: Colors.white,
+    textAlign: 'center',
+    paddingBottom: 10,
+  },
+  message: {
+    color: Colors.text[200],
+    textAlign: 'center',
+  },
+  actionMessage: {
+    color: Colors.secondary,
+    textAlign: 'center',
+  },
+  secondButton: {
+    borderRadius: 25,
+    height: 38,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  actionBox: {
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+}))
 
 export default ConfirmContainer

@@ -120,3 +120,9 @@ export const LIGHTBOX_OPTIONS = {
 }
 
 export const SLIDE_LIMIT = 5
+
+export const NG_WORD_DIALOG_CONFIG = {
+  message: 'aa',
+  actionMsg: 'NGワード：などのエラーメッセージ',
+  actions: [{ name: '了解', action: 'confirm', type: 'primary' }],
+}
