@@ -4,6 +4,7 @@ import HeaderWithButton from '@components/HeaderWithButton'
 import { Theme, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import Linkify from 'react-linkify'
 
 const TermsPage: PageWithLayoutType = () => {
   const { t } = useTranslation('terms')
@@ -12,9 +13,17 @@ const TermsPage: PageWithLayoutType = () => {
   return (
     <div>
       <HeaderWithButton title={t('title')} />
-      <Typography className={classes.wrap} paragraph={true}>
-        {t('text')}
-      </Typography>
+      <Linkify
+        componentDecorator={(decoratedHref, decoratedText, key) => (
+          <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
+            {decoratedText}
+          </a>
+        )}
+      >
+        <Typography className={classes.wrap} paragraph={true}>
+          {t('text')}
+        </Typography>
+      </Linkify>
     </div>
   )
 }
@@ -33,6 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: 'none',
       background: '#1a1a1a',
     },
+  },
+  link: {
+    color: Colors.secondary,
+    textDecoration: 'none',
   },
 }))
 

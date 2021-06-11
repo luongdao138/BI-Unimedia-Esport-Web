@@ -94,6 +94,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const isFollowing = profile.attributes.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+  const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${profile.attributes.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -113,6 +114,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
+              <Typography variant="h2" className={classes.wrapOne}>
+                {profile.attributes.nickname}
+              </Typography>
             </Box>
           ) : (
             <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
@@ -129,9 +133,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
-                  <Icon className={`fas fa-inbox ${classes.inbox}`} />
-                </ESButton>
+                {profile.attributes?.is_direct_chat_available ? (
+                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
+                    <Icon className={`fas fa-inbox ${classes.inbox}`} />
+                  </ESButton>
+                ) : null}
                 {isFollowing ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.following')}
@@ -176,8 +182,10 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         </Box>
         <Grid item xs={12} className={classes.headerContainerSecond}>
           <Box mb={2}>
-            <Typography variant="h2">{profile.attributes.nickname}</Typography>
-            <Typography>@{userCode}</Typography>
+            <Typography variant="h2" className={classes.wrapOne}>
+              {profile.attributes.nickname}
+            </Typography>
+            <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
             <ESFollowers user_code={isOthers ? userCode : null} />
@@ -208,15 +216,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.MAIN:
-        if (!isOthers || profile.attributes.security_settings.show_about)
-          return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
+        if (!isOthers || profile.attributes.show_about) return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
         break
       case TABS.TOURNAMENT:
-        if (!isOthers || profile.attributes.security_settings.show_tournament_history)
-          return <TournamentHistoryContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_tournament_history) return <TournamentHistoryContainer userCode={userCode} />
         break
       case TABS.ACTIVITY:
-        if (!isOthers || profile.attributes.security_settings.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
         break
       default:
         break
@@ -277,11 +283,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   backContainer: {
     position: 'absolute',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     width: '100%',
     paddingLeft: theme.spacing(3),
-    paddingTop: 3,
-    paddingBottom: 3,
-    backgroundColor: Colors.grey[100],
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: Colors.black,
     zIndex: 100,
   },
   iconButtonBg2: {
@@ -289,6 +298,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: Colors.grey[200],
     },
+    marginRight: 20,
   },
   iconButtonBg: {
     position: 'absolute',
@@ -329,5 +339,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   inbox: {
     color: Colors.white,
     fontSize: '24px',
+  },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 }))

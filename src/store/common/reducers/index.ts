@@ -1,14 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { v4 as uuidv4 } from 'uuid'
 import * as actions from '../actions'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 
 type StateType = {
   prefectures?: GetPrefecturesResponse
   hardwares?: HardwareResponse
+  toasts: { uuid: string; message: string; severity: 'success' | 'error' | 'warning' | 'info' }[]
   dialogs: { message: string; severity: 'success' | 'error' | 'warning' | 'info' }
 }
 
-const initialState: StateType = { prefectures: undefined, hardwares: undefined, dialogs: undefined }
+const initialState: StateType = { prefectures: undefined, hardwares: undefined, toasts: [], dialogs: undefined }
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -19,9 +21,18 @@ export default createReducer(initialState, (builder) => {
       state.hardwares = action.payload
     })
     .addCase(actions.addToast, (state, action) => {
+      state.toasts = [...state.toasts, { message: action.payload, severity: 'success', uuid: uuidv4() }]
+    })
+    .addCase(actions.removeToast, (state, action) => {
+      state.toasts = state.toasts.filter((t) => t.uuid !== action.payload)
+    })
+    .addCase(actions.cleanToasts, (state) => {
+      state.toasts = []
+    })
+    .addCase(actions.showDialog, (state, action) => {
       state.dialogs = { message: action.payload, severity: 'success' }
     })
-    .addCase(actions.removeToast, (state) => {
+    .addCase(actions.removeDialog, (state) => {
       state.dialogs = undefined
     })
 })

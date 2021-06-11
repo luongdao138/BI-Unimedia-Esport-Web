@@ -42,7 +42,7 @@ const UserSettingsContainer: React.FC = () => {
   useEffect(() => {
     if (userProfile) {
       const profileData = userProfile.attributes
-      setProfile({ ...profileData, area_id: profileData.area ? profileData.area.id : -1 })
+      setProfile({ ...profileData, area_id: profileData.area_id ? profileData.area_id : -1 })
     }
   }, [userProfile])
 

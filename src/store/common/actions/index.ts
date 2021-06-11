@@ -32,5 +32,9 @@ export const getHardwares = createAsyncThunk<services.HardwareResponse>(
   }
 )
 
-export const addToast = createAction<string>('dialog/addDialog')
-export const removeToast = createAction<string>('dialog/removeDialog')
+export const showDialog = createAction<string>('dialog/addDialog')
+export const removeDialog = createAction<string>('dialog/removeDialog')
+
+export const addToast = createAction<string>('toast/addToast')
+export const removeToast = createAction<string>('toast/removeToast')
+export const cleanToasts = createAction('toast/cleanToasts')

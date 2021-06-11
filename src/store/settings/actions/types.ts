@@ -11,4 +11,8 @@ export enum SETTINGS_ACTION_TYPE {
   CLEAR_BLOCKED_USERS = 'settings/clearBlockedUsers',
   CLEAR_NOTIFICATION_SETTINGS = 'settings/clearNotificationSettings',
   CREATE_INQUIRY = 'settings/createInquiry',
+  GET_PURCHASE_HISTORY = 'settings/getPurchaseHistory',
+  GET_PURCHASE_HISTORY_DETAIL = 'settings/getPurchaseHistoryDetail',
+  CLEAR_PURCHASE_HISTORY = 'settings/clearPurchaseHistory',
+  CLEAR_PURCHASE_HISTORY_DETAIL = 'settings/clearPurchaseHistoryDetail',
 }

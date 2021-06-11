@@ -18,13 +18,13 @@ const ForgotPasswordContainer: React.FC = () => {
   const { forgotPassword, meta, backAction } = useForgotPassword()
   const validationSchema = Yup.object().shape({
     email: Yup.string()
-      .test('email-validation', t('common:common.error'), (value) => {
+      .test('email-validation', t('common:login.validation.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required(t('common:common.error')),
+      .required(t('common:common.required')),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<services.ForgotPasswordParams>({
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<services.ForgotPasswordParams>({
     initialValues: {
       email: '',
     },
@@ -63,6 +63,7 @@ const ForgotPasswordContainer: React.FC = () => {
                 fullWidth
                 value={values.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 helperText={touched.email && errors.email}
                 error={touched.email && !!errors.email}
               />
