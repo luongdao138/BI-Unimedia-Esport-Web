@@ -23,6 +23,7 @@ import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
 import SimpleReactLightbox from 'simple-react-lightbox'
 import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
+import ToastContainer from '@containers/ToastContainer'
 
 type Props = AppProps & {
   Component: PageWithLayoutType
@@ -87,6 +88,7 @@ const App = ({ Component, pageProps }: Props) => {
       >
         <ThemeProvider theme={theme}>
           <ESLoader open={loader} />
+          <ToastContainer />
           <SimpleReactLightbox>
             <Layout>
               <CssBaseline />

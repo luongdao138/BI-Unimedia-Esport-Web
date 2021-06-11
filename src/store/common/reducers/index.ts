@@ -1,13 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { v4 as uuidv4 } from 'uuid'
 import * as actions from '../actions'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 
 type StateType = {
   prefectures?: GetPrefecturesResponse
   hardwares?: HardwareResponse
+  toasts: { uuid: string; message: string; severity: 'success' | 'error' | 'warning' | 'info' }[]
 }
 
-const initialState: StateType = { prefectures: undefined, hardwares: undefined }
+const initialState: StateType = { prefectures: undefined, hardwares: undefined, toasts: [] }
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -16,5 +18,14 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.getHardwares.fulfilled, (state, action) => {
       state.hardwares = action.payload
+    })
+    .addCase(actions.addToast, (state, action) => {
+      state.toasts = [...state.toasts, { message: action.payload, severity: 'success', uuid: uuidv4() }]
+    })
+    .addCase(actions.removeToast, (state, action) => {
+      state.toasts = state.toasts.filter((t) => t.uuid !== action.payload)
+    })
+    .addCase(actions.cleanToasts, (state) => {
+      state.toasts = []
     })
 })
