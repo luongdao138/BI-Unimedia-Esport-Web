@@ -144,6 +144,7 @@ const ArenaBattlesEdit: React.FC = () => {
           open={showParticipants}
           handleClose={() => setShowParticipants(false)}
           onSelect={(participant) => selectedHandler(participant)}
+          handleUnset={() => null}
         />
         <RandomizeDialog
           open={showRandomize}
