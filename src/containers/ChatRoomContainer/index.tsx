@@ -104,7 +104,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       setText('')
       setReply(null)
     } else {
-      //toast or warning msg
+      //
     }
   }
 
