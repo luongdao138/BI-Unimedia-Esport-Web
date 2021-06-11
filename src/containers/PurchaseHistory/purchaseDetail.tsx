@@ -9,19 +9,8 @@ import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
 import ESButton from '@components/Button'
 import { PAYMENT_STATUS } from '@constants/common.constants'
-import DialogContainer from '@containers/DialogContainer'
-import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
-import { useAppDispatch } from '@store/hooks'
-
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent'
-import { ActionButtons } from '@store/common/actions/types'
 import ButtonPrimary from '@components/ButtonPrimary'
 
 
@@ -30,7 +19,6 @@ interface Props {
 }
 
 const PurchaseDetail: React.FC<Props> = ({ id }) => {
-  const dispatch = useAppDispatch()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false);
@@ -60,7 +48,6 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
   useEffect(() => {
     if (id) {
       fetchPurchaseHistoryDetail(id)
-      // dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
     }
     return function () {
       clearPurchaseHistoryDetail()
@@ -74,9 +61,9 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
           <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+            <ESButton variant="outlined" color="primary" onClick={handleClickOpen}>
               Open alert dialog
-            </Button>
+            </ESButton>
             <Dialog
               maxWidth={'md'}
               fullWidth
@@ -88,20 +75,23 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
               <DialogContent>
                 <Box className={classes.container}>
                   <Typography className={classes.dialogTitle}>
-                    注文をキャンセルします
+                    {t('common:purchase_history.cancel_order_title')}
                   </Typography>
                   <Typography className={classes.message} gutterBottom>
-                    キャンセルを行なった後に再利用する場合は再度ご購入が必要です。
+                    {t('common:purchase_history.cancel_order_msg')}
                   </Typography>
                 </Box>
                 <Box className={classes.actionBox}>
-                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false}>戻る</ButtonPrimary>
-                  <ButtonPrimary size="small" className={classes.actionBtn}>キャンセルする</ButtonPrimary>
+                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false}>
+                    {t('common:purchase_history.dialog_close')}
+                  </ButtonPrimary>
+                  <ButtonPrimary size="small" className={classes.actionBtn}>
+                    {t('common:purchase_history.cancel_submit')}
+                  </ButtonPrimary>
                 </Box>
               </DialogContent>
             </Dialog>
           </div>
-          <DialogContainer/>
           <Box padding={2} margin={2} className={classes.wrap}>
             <Typography variant={'caption'}>{purchase_datetime}</Typography>
             <Box display="flex">

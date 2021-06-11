@@ -611,7 +611,11 @@ export default {
     canceled: 'キャンセル済み',
     cancel_requested: 'キャンセル処理中',
     cancel_request: '注文をキャンセル',
-    purchased: '購入済み'
+    purchased: '購入済み',
+    cancel_order_title: '注文をキャンセルします',
+    cancel_order_msg: 'キャンセルを行なった後に再利用する場合は再度ご購入が必要です。',
+    dialog_close: '戻る',
+    cancel_submit: 'キャンセルする'
   },
   inquiry: {
     title: 'お問い合わせ',
