@@ -105,6 +105,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 40,
     justifyContent: 'center',
     height: 36,
+    paddingRight: 40,
   },
   roomName: {
     overflow: 'hidden',
