@@ -38,5 +38,4 @@ yarn-error.log*
 .idea/*
 
 /test/pages/__snapshots__/
-yarn.lock
 package-lock.json

@@ -1,5 +1,10 @@
 import * as actions from '../actions'
-import { UserFeaturesResponse, NotificationSettingsResponse } from '@services/settings.service'
+import {
+  UserFeaturesResponse,
+  NotificationSettingsResponse,
+  PurchaseHistoryResponse,
+  PurchaseHistoryDetailResponse,
+} from '@services/settings.service'
 import { MyPageSettingsResponse, MessageSettingsResponse, UserResponse, Meta } from '@services/settings.service'
 import { createReducer } from '@reduxjs/toolkit'
 
@@ -8,6 +13,9 @@ type StateType = {
   securitySettings: MyPageSettingsResponse['data']['attributes']
   messageSettings: MessageSettingsResponse['data']['attributes']
   notificationSettings: NotificationSettingsResponse['data']
+  purchaseHistory: PurchaseHistoryResponse['data']
+  purchaseHistoryDetail: PurchaseHistoryDetailResponse
+  purchaseHistoryMeta?: Meta
   blockedUsers: Array<UserResponse>
   blockedUsersMeta?: Meta
 }
@@ -18,6 +26,8 @@ const initialState: StateType = {
   messageSettings: undefined,
   blockedUsers: [],
   notificationSettings: [],
+  purchaseHistory: [],
+  purchaseHistoryDetail: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -43,5 +53,19 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.getNotificationSettings.fulfilled, (state, action) => {
       state.notificationSettings = action.payload.data
+    })
+    .addCase(actions.getPurchaseHistory.fulfilled, (state, action) => {
+      let tmpPurchaseHistory = action.payload.data
+      if (action.payload.links.meta != undefined && action.payload.links.meta.current_page > 1) {
+        tmpPurchaseHistory = state.purchaseHistory.concat(action.payload.data)
+      }
+      state.purchaseHistory = tmpPurchaseHistory
+      state.purchaseHistoryMeta = action.payload.links.meta
+    })
+    .addCase(actions.getPurchaseHistoryDetail.fulfilled, (state, action) => {
+      state.purchaseHistoryDetail = action.payload
+    })
+    .addCase(actions.clearPurchaseHistoryDetail, (state) => {
+      state.purchaseHistoryDetail = undefined
     })
 })
