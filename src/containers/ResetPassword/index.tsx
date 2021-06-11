@@ -22,13 +22,20 @@ const ResetPasswordContainer: React.FC = () => {
   const [score, setScore] = useState(0)
   const validationSchema = Yup.object().shape({
     password: Yup.string()
-      .required(t('common:common.error'))
+      .required(t('common:common.required'))
       .min(8, t('common:common.at_least_8'))
       .test('password-validation', t('common:error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
         return tempScore > 40
+      }),
+    password_confirm: Yup.string()
+      .required(t('common:common.required'))
+      .min(8, t('common:common.at_least_8'))
+      .when('password', {
+        is: (val) => (val && val.length > 0 ? true : false),
+        then: Yup.string().oneOf([Yup.ref('password')], t('common:error.password_must_match')),
       }),
   })
 
@@ -44,16 +51,12 @@ const ResetPasswordContainer: React.FC = () => {
     onSubmit: (values) => {
       if (values) {
         resetMeta()
-        const params = {
-          ...values,
-          password_confirm: values.password,
-        }
-        resetPassword(params)
+        resetPassword(values)
       }
     },
   })
 
-  const buttonActive = (): boolean => values.password !== '' && score > 40
+  const buttonActive = (): boolean => values.password !== '' && score > 40 && values.password === values.password_confirm
 
   const renderErrorText = () => {
     switch (Number(meta?.error['code'])) {
@@ -62,7 +65,7 @@ const ResetPasswordContainer: React.FC = () => {
       case ERROR_CODE.CONFIRMATION_CODE_EXPIRED:
         return t('common:common.confirmation_expire')
       default:
-        return ''
+        return t('common:common.sns_reset_password_error')
     }
   }
 
@@ -110,8 +113,25 @@ const ResetPasswordContainer: React.FC = () => {
 
             <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
             <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
+
+            <Box pt={4}>
+              <ESInput
+                id="password_confirm"
+                labelPrimary={t('common:register_by_email.enter_password_again')}
+                type="password"
+                fullWidth
+                value={values.password_confirm}
+                onChange={(e) => setFieldValue('password_confirm', CommonHelper.replaceSingleByteString(e.target.value))}
+                onBlur={handleBlur}
+                helperText={touched.password_confirm && errors.password_confirm}
+                error={touched.password_confirm && !!errors.password_confirm}
+              />
+            </Box>
           </Box>
         </Box>
+
+        <Box className={classes.blankSpace}></Box>
+
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
             <Box maxWidth={280} className={classes.buttonContainer}>
@@ -156,6 +176,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: '0 auto',
   },
+  blankSpace: {
+    height: 169,
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -163,6 +186,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+    blankSpace: {
+      height: theme.spacing(15),
     },
   },
 }))

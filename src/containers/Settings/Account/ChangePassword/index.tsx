@@ -82,18 +82,15 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           fullWidth
           type={showCurrentPassword ? 'text' : 'password'}
           endAdornment={
-            <InputAdornment position="end">
+            <InputAdornment position="end" className={classes.inputContainer}>
+              <div className={classes.borderLeft}></div>
               <IconButton
                 aria-label="toggle password visibility"
                 size="small"
                 disableRipple
                 onMouseDown={() => setShowCurrentPassword(!showCurrentPassword)}
               >
-                {showCurrentPassword ? (
-                  <Icon className="fas fa-eye" fontSize="small" />
-                ) : (
-                  <Icon className="fas fa-eye-slash" fontSize="small" />
-                )}
+                {showCurrentPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
               </IconButton>
             </InputAdornment>
           }
@@ -113,14 +110,15 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           onBlur={handleBlur}
           type={showPassword ? 'text' : 'password'}
           endAdornment={
-            <InputAdornment position="end">
+            <InputAdornment position="end" className={classes.inputContainer}>
+              <div className={classes.borderLeft}></div>
               <IconButton
                 aria-label="toggle new password visibility"
                 size="small"
                 disableRipple
                 onMouseDown={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <Icon className="fas fa-eye" fontSize="small" /> : <Icon className="fas fa-eye-slash" fontSize="small" />}
+                {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
               </IconButton>
             </InputAdornment>
           }
@@ -143,18 +141,15 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           onBlur={handleBlur}
           type={showPasswordRepeat ? 'text' : 'password'}
           endAdornment={
-            <InputAdornment position="end">
+            <InputAdornment position="end" className={classes.inputContainer}>
+              <div className={classes.borderLeft}></div>
               <IconButton
                 aria-label="toggle confirm new password visibility"
                 size="small"
                 disableRipple
                 onMouseDown={() => setShowPasswordRepeat(!showPasswordRepeat)}
               >
-                {showPasswordRepeat ? (
-                  <Icon className="fas fa-eye" fontSize="small" />
-                ) : (
-                  <Icon className="fas fa-eye-slash" fontSize="small" />
-                )}
+                {showPasswordRepeat ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
               </IconButton>
             </InputAdornment>
           }
@@ -209,6 +204,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2),
       marginLeft: theme.spacing(2),
     },
+  },
+  inputContainer: {
+    position: 'relative',
+    paddingRigth: 7,
+  },
+  borderLeft: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#4B4B4D',
+    position: 'absolute',
+    left: -8,
   },
 }))
 

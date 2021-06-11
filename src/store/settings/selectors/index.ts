@@ -11,3 +11,6 @@ export const getBlockedUsersMeta = createSelector(getRoot, (state) => state.bloc
 export const getNotificationSetting = createSelector(getRoot, (state) =>
   state.notificationSettings.map((s) => ({ id: Number(s.id), name: s.attributes.name, status: s.attributes.status }))
 )
+export const getPurchaseHistory = createSelector(getRoot, (state) => state.purchaseHistory)
+export const getPurchaseHistoryMeta = createSelector(getRoot, (state) => state.purchaseHistoryMeta)
+export const getPurchaseHistoryDetail = createSelector(getRoot, (state) => state.purchaseHistoryDetail)

@@ -20,8 +20,10 @@ const useAuthenticated = () => {
       router.push(profilePath)
     } else if (pathname === profilePath && isConfirmed) {
       router.push(ESRoutes.HOME)
+    } else if (pathname === profilePath && isRegistered) {
+      router.push(ESRoutes.USER_SETTINGS)
     }
-  }, [isAuth, isRegistered])
+  }, [isAuth, isRegistered, pathname])
 
   return { isAuth }
 }

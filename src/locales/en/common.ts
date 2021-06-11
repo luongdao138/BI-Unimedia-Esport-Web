@@ -49,8 +49,14 @@ export default {
     not_sure: '未確定',
     password_duplicated: 'パスワード再設定できませんでした。',
     confirmation_expire: '認証できませんでした。',
+    sns_reset_password_error: 'パスワードの再設定出来ませんでした。',
     user_id_at_least: 'ユーザIDは二文字以上としてください',
     nickname_at_least: 'ニックネームは二文字以上としてください',
+    info: `アカウントの削除はお問い合わせフォームから承ります。
+    件名に「アカウント削除」と記入し、本文に理由を添えて送信をお願いします。`,
+    confirm_title: '注文をキャンセルします',
+    confirm_back: '戻る',
+    confirm_ok: 'キャンセルする',
   },
   welcome: 'eXeLABへようこそ',
   messages: {
@@ -145,6 +151,7 @@ export default {
     back: 'メールアドレスで登録',
     sns: 'SNS連携で登録',
     duplicated: 'そのIDは既に使用されています',
+    enter_password_again: '新しいパスワードを再度入力してください',
   },
   register_profile: {
     user_id: 'ユーザーID',
@@ -597,6 +604,20 @@ export default {
     faq: 'FAQ',
     inquiry: 'お問い合わせ',
   },
+  purchase_history: {
+    title: '購入履歴',
+    order_id: '購入ID',
+    vendor: '販売元',
+    ticket_name: 'アイテム',
+    type: '区分',
+    price: '金額',
+    status: 'ステータス',
+    payment_method: '支払い方法',
+    questions: 'よくあるお問い合わせ',
+    about_purchase_status: '購入ステータスについて',
+    about_cancellation: 'キャンセルについて',
+    help_purchase: '購入に心当たりがない',
+  },
   inquiry: {
     title: 'お問い合わせ',
     subject: '件名',
@@ -623,5 +644,10 @@ export default {
     terms: '利用規約',
     personal_info: '個人情報の取扱について',
     commercial_transaction: '特定商取引に関する表記',
+  },
+  dialog: {
+    ng_word_warning: 'NGワード：などのエラーメッセージ',
+    confirm: "了解'",
+    default_title: '確認メッセージ',
   },
 }

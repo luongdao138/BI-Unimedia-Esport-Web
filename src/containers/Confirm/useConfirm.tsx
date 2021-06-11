@@ -13,7 +13,7 @@ const getResendMeta = createMetaSelector(actions.resendConfirmation)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useConfirm = (confirmationCode: string) => {
-  const { navigateScreen } = useReturnHref()
+  const { navigateScreen, handleReturn } = useReturnHref()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const metaConfirm = useAppSelector(getRegisterConfirmMeta)
@@ -27,7 +27,10 @@ const useConfirm = (confirmationCode: string) => {
 
   const resetResendMeta = () => dispatch(clearMetaData(actions.resendConfirmation.typePrefix))
 
-  const backAction = () => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+  const backAction = () => {
+    handleReturn()
+    resetMeta()
+  }
 
   useEffect(() => {
     if (metaConfirm.loaded) {
