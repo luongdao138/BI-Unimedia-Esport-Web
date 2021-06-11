@@ -7,6 +7,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import usePurchaseHistoryDetail from '@containers/PurchaseHistory/usePurchaseHistoryDetail'
 import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
+import ESButton from '@components/Button'
 
 interface Props {
   id: any
@@ -50,6 +51,41 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
               <Typography className={classes.title}>{t('common:purchase_history.payment_method')}</Typography>
               <Typography>-</Typography>
             </Box>
+            <Box padding={2} my={2} className={classes.detailWrap}>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>アイテム</Typography>
+                <Typography>動画配信サービス</Typography>
+              </Box>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>区分</Typography>
+                <Typography>チケット</Typography>
+              </Box>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>金額</Typography>
+                <Typography>¥0</Typography>
+              </Box>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>数量</Typography>
+                <Typography>1</Typography>
+              </Box>
+            </Box>
+            <Box padding={2} my={2} className={classes.detailWrap}>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>合計金額</Typography>
+                <Typography>¥0</Typography>
+              </Box>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>消費税</Typography>
+                <Typography>¥0</Typography>
+              </Box>
+              <Box display="flex" my={1}>
+                <Typography className={classes.title}>支払金額</Typography>
+                <Typography>¥0</Typography>
+              </Box>
+            </Box>
+            <Box my={4} display="flex" justifyContent="center">
+              <ESButton variant="outlined">注文をキャンセル</ESButton>
+            </Box>
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
@@ -89,16 +125,11 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
 const useStyles = makeStyles((theme) => ({
   wrap: {
     color: Colors.white_opacity[70],
-    cursor: 'pointer',
     backgroundColor: Colors.black,
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 4,
     borderColor: Colors.white_opacity[30],
-    '&:hover': {
-      boxShadow: 'none',
-      background: Colors.black_opacity[70],
-    },
   },
   title: {
     width: 127,
@@ -119,6 +150,11 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.white,
     marginTop: 1,
     marginLeft: 8,
+  },
+  detailWrap: {
+    color: Colors.white_opacity[70],
+    backgroundColor: Colors.white_opacity[10],
+    borderRadius: 4,
   },
 }))
 
