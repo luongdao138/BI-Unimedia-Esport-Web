@@ -6,7 +6,7 @@ import { ESRoutes } from '@constants/route.constants'
 const useReturnHref = () => {
   const router = useRouter()
   const { returnHref, makeContextualHref } = useContextualRouting()
-  const handleReturn = () => (router.query._UCR_return_href ? router.push(returnHref, undefined, { shallow: true }) : router.back())
+  const handleReturn = () => router.back()
   const navigateScreen = (pathName: string) => {
     return router.query._UCR_return_href
       ? router.push(makeContextualHref({ pathName }), pathName, { shallow: true })
