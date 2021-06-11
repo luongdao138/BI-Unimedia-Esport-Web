@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/common.service'
 import { COMMON_ACTION_TYPE } from './types'
 
@@ -31,3 +31,7 @@ export const getHardwares = createAsyncThunk<services.HardwareResponse>(
     }
   }
 )
+
+export const addToast = createAction<string>('toast/addToast')
+export const removeToast = createAction<string>('toast/removeToast')
+export const cleanToasts = createAction('toast/cleanToasts')
