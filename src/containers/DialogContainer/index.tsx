@@ -77,7 +77,7 @@ const ConfirmContainer: React.FC = () => {
               ) : null}
             </Box>
             <Box className={classes.actionBox}>
-              {_.isArray(buttons) && _.isEmpty(buttons) ? buttons.map((a: ActionButtons, index: number) => renderButton(a, index)) : null}
+              {_.isArray(buttons) ? (buttons as any[]).map((a: ActionButtons, index: number) => renderButton(a, index)) : null}
             </Box>
           </DialogContent>
         </Dialog>
