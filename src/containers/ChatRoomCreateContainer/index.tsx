@@ -22,6 +22,9 @@ import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants
 import * as socket from '@store/socket/selectors'
 import { useRouter } from 'next/router'
 import { getDirectRoom } from '@services/chat.service'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 
 const { actions } = chatStore
 
@@ -51,6 +54,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   const [roomId, setRoomId] = useState(null as null | string)
   const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
   const [text, setText] = useState<string>('')
+  const checkNgWord = useCheckNgWord()
 
   const ref = useRef<{ handleUpload: () => void }>(null)
 
@@ -105,29 +109,34 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   }
 
   const handlePress = (text: string) => {
-    if (isDirect()) {
-      getDirectRoom(selectedUsers[0]).then((result) => {
-        if (result.content) {
-          const currentTimestamp = moment().valueOf()
-          const clientId = uuidv4()
-          const payload = {
-            action: CHAT_ACTION_TYPE.SEND_MESSAGE,
-            roomId: result.content.chatRoomId,
-            createdAt: currentTimestamp,
-            userId: userId,
-            msg: text.trim(),
-            clientId: clientId,
-            type: CHAT_MESSAGE_TYPE.TEXT,
+    if (_.isEmpty(checkNgWord(text))) {
+      if (isDirect()) {
+        getDirectRoom(selectedUsers[0]).then((result) => {
+          if (result.content) {
+            const currentTimestamp = moment().valueOf()
+            const clientId = uuidv4()
+            const payload = {
+              action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+              roomId: result.content.chatRoomId,
+              createdAt: currentTimestamp,
+              userId: userId,
+              msg: text.trim(),
+              clientId: clientId,
+              type: CHAT_MESSAGE_TYPE.TEXT,
+            }
+            dispatch(socketActions.sendMessage(payload))
+            dispatch(socketActions.clearNewRoomId())
+            navigateRoom(result.content.chatRoomId)
+          } else {
+            createRoomByText(text)
           }
-          dispatch(socketActions.sendMessage(payload))
-          dispatch(socketActions.clearNewRoomId())
-          navigateRoom(result.content.chatRoomId)
-        } else {
-          createRoomByText(text)
-        }
-      })
+        })
+      } else {
+        createRoomByText(text)
+      }
+      setText('')
     } else {
-      createRoomByText(text)
+      dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
     }
   }
 
