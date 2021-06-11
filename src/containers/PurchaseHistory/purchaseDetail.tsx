@@ -61,9 +61,6 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
           <div>
-            <ESButton variant="outlined" color="primary" onClick={handleClickOpen}>
-              Open alert dialog
-            </ESButton>
             <Dialog
               maxWidth={'md'}
               fullWidth
@@ -160,7 +157,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
             <>
               <Box my={4} display="flex" justifyContent="center">
-                <ESButton variant="outlined">{t('common:purchase_history.cancel_request')}</ESButton>
+                <ESButton variant="outlined" onClick={handleClickOpen}>{t('common:purchase_history.cancel_request')}</ESButton>
               </Box>
             </>
             )}
