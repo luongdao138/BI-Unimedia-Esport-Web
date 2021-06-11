@@ -50,6 +50,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   const [selectedUsers, setSelectedUsers] = useState([] as number[])
   const [roomId, setRoomId] = useState(null as null | string)
   const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
+  const [text, setText] = useState<string>('')
 
   const ref = useRef<{ handleUpload: () => void }>(null)
 
@@ -204,6 +205,10 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
     return null
   }
 
+  const onChange = (text: string) => {
+    setText(text)
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.memberSelectContainer} px={2.5} py={1.5}>
@@ -238,7 +243,9 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
       <Box className={classes.input}>
         <MessageInputArea
           onPressSend={handlePress}
+          text={text}
           users={users}
+          onChangeInput={onChange}
           onPressActionButton={handlePressActionButton}
           disabled={actionPending || uploadMeta.uploading || selectedUsers.length === 0}
           reply={null}
