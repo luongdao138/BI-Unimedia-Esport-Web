@@ -8,6 +8,7 @@ import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import ImageUploader from '@containers/ChatRoomContainer/ImageUploader'
 import { socketActions } from '@store/socket/actions'
 import ESLoader from '@components/Loader'
+import { CameraAlt as Camera } from '@material-ui/icons'
 
 export interface RoomImgViewProps {
   userId: number
@@ -58,6 +59,40 @@ const RoomImgView: React.FC<RoomImgViewProps> = ({ userId, roomId, roomImg, room
     }
   }
 
+  const renderAvatar = () => {
+    if (!uploadMeta.uploading) {
+      if (isAdmin) {
+        return (
+          <Box className={classes.avatarHolderEdit} onClick={onAvatarClick}>
+            <Box className={classes.avatarBox}>
+              <Avatar
+                src={roomImg}
+                alt={roomName}
+                size={36}
+                className={classes.avatar}
+                style={isAdmin ? { cursor: 'pointer' } : undefined}
+              />
+              <Camera fontSize="default" className={classes.camera} />
+            </Box>
+          </Box>
+        )
+      } else {
+        return (
+          <Box className={classes.avatarHolder}>
+            <Avatar src={roomImg} alt={roomName} size={36} className={classes.avatar} />
+          </Box>
+        )
+      }
+    }
+    return (
+      <Box className={classes.loaderHolder}>
+        <Box className={classes.loaderBox}>
+          <ESLoader />
+        </Box>
+      </Box>
+    )
+  }
+
   return (
     <>
       <ImageUploader
@@ -67,23 +102,101 @@ const RoomImgView: React.FC<RoomImgViewProps> = ({ userId, roomId, roomImg, room
         onImageSelected={imageEventHandler}
         onError={imageErrorHandler}
       />
-      {uploadMeta.uploading ? (
-        <Box className={classes.loader}>
-          <ESLoader />
-        </Box>
-      ) : null}
-      <Avatar src={roomImg} alt={roomName} size={36} onClick={onAvatarClick} style={isAdmin ? { cursor: 'pointer' } : undefined} />
+      {renderAvatar()}
     </>
   )
 }
 
 const useStyles = makeStyles(() => ({
-  loader: {
+  loaderBox: {
+    width: 18,
+    height: 18,
+    margin: '0 auto',
+    '& svg': {
+      width: '100%',
+      height: '100%',
+    },
+  },
+  loaderHolder: {
     position: 'absolute',
-    zIndex: 4,
+    left: 0,
+    top: 0,
+    overflow: 'hidden',
+    borderRadius: '100%',
     width: 36,
-    background: '#000000d4',
-    marginTop: 1,
+    height: 36,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatar: {
+    textAlign: 'center',
+  },
+  camera: {
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    right: 0,
+    margin: '0 auto',
+    transform: 'translateY(-50%)',
+    display: 'none',
+  },
+  avatarHolder: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    overflow: 'hidden',
+    background: '#4d4d4d',
+    borderRadius: '100%',
+  },
+  avatarHolderEdit: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    borderRadius: '100%',
+
+    zIndex: 100,
+    width: 36,
+    height: 36,
+    '&:hover $avatarBox': {
+      width: 100,
+      height: 100,
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
+    },
+    '&:hover $avatarBox:before': {
+      width: 100,
+      height: 100,
+      background: 'rgba(77, 77, 77, 0.8)',
+      content: '',
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      right: 0,
+      display: 'block',
+      bottom: 0,
+    },
+    '&:hover $avatar': {
+      width: 100,
+      height: 100,
+      opacity: 0.2,
+      display: 'block',
+      transition: 'all 0.3s ease',
+      lineHeight: 4,
+    },
+    '&:hover $camera': {
+      display: 'block',
+      transition: 'all 0.5s ease',
+    },
+  },
+  avatarBox: {
+    width: 36,
+    height: 36,
+    willChange: 'auto',
+    overflow: 'hidden',
+    position: 'relative',
+    background: '#4d4d4d',
+    borderRadius: '100%',
   },
 }))
 

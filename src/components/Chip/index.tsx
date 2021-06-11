@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     width: 18,
     height: 18,
   },
+  labelSmall: {
+    paddingRight: theme.spacing(0.5),
+    paddingLeft: theme.spacing(0.5),
+  },
 }))
 
 const ESChip: React.FC<ChipProps> = ({ classes: _classes, ...rest }) => {

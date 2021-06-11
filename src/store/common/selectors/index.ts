@@ -6,3 +6,7 @@ const getRoot = (state: RootState) => state.common
 export const getPrefectures = createSelector(getRoot, (state) => state.prefectures)
 
 export const getHardwares = createSelector(getRoot, (state) => state.hardwares)
+
+export const getToasts = createSelector(getRoot, (state) => state.toasts)
+
+export const getDialog = createSelector(getRoot, (state) => state.dialog)
