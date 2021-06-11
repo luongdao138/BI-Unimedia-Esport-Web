@@ -412,6 +412,7 @@ export default {
 この大会の主旨は初心者同士で練習することにあります。
 煽りや誹謗中傷などはしないようにしましょう！`,
     retain_history: '戦績を保存する',
+    retain_history_short: '戦績',
     people: '人',
     entry_period: 'エントリー期間',
     start_date: '開始日時',

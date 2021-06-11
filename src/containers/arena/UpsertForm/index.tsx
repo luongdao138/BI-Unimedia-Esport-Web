@@ -85,12 +85,14 @@ const TournamentCreate: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{t('common:tournament_create.title')}</Typography>
+              <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
+                {t('common:tournament_create.title')}
+              </Typography>
             </Box>
           </Box>
-          <Box className={classes.spacingBorder} />
+          {isConfirm ? null : <Box className={classes.spacingBorder} />}
           {isConfirm ? (
-            <Confirm values={formik.values} hardwares={hardwares.data || []} />
+            <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} />
           ) : (
             <>
               <Box pt={8} className={classes.container}>
@@ -142,6 +144,9 @@ const TournamentCreate: React.FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   confirmButton: {},
   footerButton: {
+    marginBottom: theme.spacing(1),
+    width: 'fit-content',
+    alignSelf: 'center',
     minWidth: `220px !important`,
     paddingLeft: `${theme.spacing(4)}px !important`,
     paddingRight: `${theme.spacing(4)}px !important`,
@@ -164,9 +169,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     background: Colors.black,
     borderTop: `1px solid #ffffff30`,
+    textAlign: 'center',
   },
   nextBtnHolder: {
     display: 'flex',
+    flexDirection: 'row',
     marginBottom: theme.spacing(11),
     marginTop: theme.spacing(3),
     justifyContent: 'center',
@@ -196,6 +203,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(-3),
     },
     nextBtnHolder: {
+      flexDirection: 'column-reverse',
       marginBottom: theme.spacing(3),
     },
   },
