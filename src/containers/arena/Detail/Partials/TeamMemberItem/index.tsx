@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Grid, Typography, Box, ButtonBase, withStyles } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import MuiAccordion from '@material-ui/core/Accordion'
@@ -10,6 +11,8 @@ import { CommonResponse } from '@services/user.service'
 
 interface Props {
   team: CommonResponse
+  handleClick?: () => void
+  rightItem?: JSX.Element
 }
 
 const Accordion = withStyles({
@@ -18,27 +21,46 @@ const Accordion = withStyles({
   },
 })(MuiAccordion)
 
-const TeamMemberItem: React.FC<Props> = ({ team }) => {
+const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
   const data = team.attributes.team.data.attributes
   const members = data.members
+  const [expanded, setExpanded] = useState<boolean>(false)
 
   const userData = (member) => {
-    return { id: member.user_id, attributes: { ...member, avatar: member.image_url } }
+    return { id: member.user_id, attributes: { ...member, nickname: member.name, avatar: member.image_url } }
   }
   return (
     <Grid item xs={12}>
-      <Accordion square>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Box display="flex" overflow="hidden">
-            <ButtonBase>
-              <ESAvatar alt={data.name} src={data.team_avatar} />
-            </ButtonBase>
-            <Box color={Colors.white} overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" alignItems="center">
-              <Typography variant="h3" noWrap>
-                {data.name}
-              </Typography>
+      <Accordion expanded={expanded} square>
+        <AccordionSummary
+          expandIcon={
+            <ExpandMoreIcon
+              onClick={(e) => {
+                e.stopPropagation()
+                setExpanded(!expanded)
+              }}
+            />
+          }
+          onClick={() => handleClick && handleClick()}
+        >
+          <Grid item xs={12}>
+            <Box display="flex" overflow="hidden">
+              <ButtonBase>
+                <ESAvatar alt={data.name} src={data.team_avatar || team.attributes.avatar_url} />
+              </ButtonBase>
+              <Box color={Colors.white} overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" alignItems="center">
+                <Typography variant="h3" noWrap>
+                  {data.name}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
+            <Box flexShrink={0} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+              <Box color={Colors.white} overflow="hidden" textOverflow="ellipsis" ml={3} display="flex" alignItems="center">
+                <Typography variant="h3">{'team'}</Typography>
+              </Box>
+              {rightItem && rightItem}
+            </Box>
+          </Grid>
         </AccordionSummary>
         <AccordionDetails>
           <Box ml={6} display="flex" flex={1} flexDirection="column">

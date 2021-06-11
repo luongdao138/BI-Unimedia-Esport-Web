@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, Divider } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
 import useInteresteds from './useInteresteds'
@@ -10,16 +10,20 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import { TournamentDetail } from '@services/arena.service'
-import TeamItem from '../TeamItem'
+import ESButton from '@components/Button'
+import TeamMemberItem from '../TeamMemberItem'
+import _ from 'lodash'
 
 interface InterestedListProps {
+  pid?: number
   tournament: TournamentDetail
   open: boolean
   handleClose: () => void
   onSelect: (participant) => void
+  handleUnset: () => void
 }
 
-const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handleClose, onSelect }) => {
+const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, handleClose, onSelect, handleUnset }) => {
   const data = tournament.attributes
   const hash_key = data.hash_key
   const isTeam = data.participant_type > 1
@@ -30,7 +34,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
   const { interesteds, getInteresteds, resetMeta, page, meta } = useInteresteds()
 
   useEffect(() => {
-    if (open) getInteresteds({ page: 1, hash_key: hash_key })
+    if (open) getInteresteds({ page: 1, hash_key: hash_key, p_id: pid })
 
     return () => resetMeta()
   }, [open])
@@ -48,6 +52,29 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
+  const deselectBtn = () => {
+    return (
+      <Box width={100} display="flex" justifyContent="center" alignItems="center">
+        <ESButton onClick={handleUnset}>{t('common:tournament.deselect')}</ESButton>
+      </Box>
+    )
+  }
+
+  const selectedItem = () => {
+    if (!pid || !interesteds || interesteds.length < 1) return
+
+    const selected = _.find(interesteds, (p) => p.id == pid)
+    if (!selected) return
+    return isTeam ? (
+      <TeamMemberItem team={selected} rightItem={deselectBtn()} />
+    ) : (
+      <Box display="flex" flexDirection="row" alignItems="space-between" justifyContent="space-between">
+        <UserListItem data={userData(selected)} />
+        {deselectBtn()}
+      </Box>
+    )
+  }
+
   return (
     <ESModal open={open} handleClose={handleClose}>
       <BlankLayout>
@@ -60,6 +87,8 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
               <Typography variant="h2">{t('common:tournament.select_user')}</Typography>
             </Box>
           </Box>
+          {selectedItem()}
+          <Divider />
           {meta.loaded && !interesteds.length && (
             <div className={classes.loaderCenter}>
               <Typography>{t('common:common.no_data')}</Typography>
@@ -79,17 +108,16 @@ const InterestedList: React.FC<InterestedListProps> = ({ tournament, open, handl
             height={600}
           >
             {isTeam
-              ? interesteds.map((participant, i) => (
-                  <TeamItem
-                    name={participant.attributes.team.data.attributes.name}
-                    avatar={participant.attributes.avatar_url}
-                    key={i}
+              ? _.filter(interesteds, (p) => p.id != pid).map((participant, i) => (
+                  <TeamMemberItem
+                    key={`team${i}`}
+                    team={participant}
                     handleClick={() => {
                       onSelect(participant)
                     }}
                   />
                 ))
-              : interesteds.map((participant, i) => (
+              : _.filter(interesteds, (p) => p.id != pid).map((participant, i) => (
                   <UserListItem
                     data={userData(participant)}
                     key={i}
@@ -113,6 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   loaderCenter: {
+    paddingTop: theme.spacing(2),
     textAlign: 'center',
   },
   [theme.breakpoints.down('sm')]: {
