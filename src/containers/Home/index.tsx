@@ -14,6 +14,9 @@ import { Box } from '@material-ui/core'
 import useTournamentData from './useTournamentData'
 // import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
+import ESToast from '@components/Toast'
+import useResetPassword from './useResetPassword'
+import i18n from '@locales/i18n'
 
 const HomeContainer: React.FC = () => {
   const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile } = useUserData()
@@ -21,6 +24,7 @@ const HomeContainer: React.FC = () => {
   // const { recommendedEventList, getRecommendedEventList } = useEventData()
   const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
   // const { followersTopicList, getFollowersTopicList } = useTopicData()
+  const { metaReset, resetPasswordMeta } = useResetPassword()
 
   useEffect(() => {
     getUserProfile()
@@ -61,6 +65,9 @@ const HomeContainer: React.FC = () => {
         return renderItem(value, index)
       })}
       <Box marginBottom={9} />
+      {metaReset.loaded && (
+        <ESToast open={metaReset.loaded} message={i18n.t('common:error.password_reissue')} resetMeta={resetPasswordMeta} />
+      )}
     </>
   )
 }

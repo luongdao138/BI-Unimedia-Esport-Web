@@ -35,7 +35,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ item }) => {
     </Box>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
@@ -60,6 +60,17 @@ const useStyles = makeStyles(() => ({
   avatar: {
     width: 50,
     height: 50,
+  },
+  [theme.breakpoints.down('sm')]: {
+    name: {
+      color: Colors.white,
+      fontSize: 14,
+      fontWeight: 500,
+    },
+    userCode: {
+      fontSize: 12,
+      color: Colors.text[200],
+    },
   },
 }))
 

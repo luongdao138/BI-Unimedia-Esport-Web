@@ -12,7 +12,6 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import useMainLayoutMeta from '@utils/hooks/useMainLayoutMeta'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import ESLoader from '@components/FullScreenLoader'
 import useLogout from '@containers/Logout/useLogout'
 
 interface MainLayoutProps {
@@ -45,7 +44,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
     }
   }, [loginRequired])
 
-  if (loginRequired && !isAuthenticated) return <ESLoader open={loginRequired && !isAuthenticated} />
+  if (loginRequired && !isAuthenticated) return null
 
   return (
     <div className="main-wrapper">

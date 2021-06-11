@@ -20,6 +20,7 @@ import { REPORT_TYPE } from '@constants/common.constants'
 import { ESReportProps } from '@containers/Report'
 import MessageModal from '@components/Chat/MessageModal'
 import { Colors } from '@theme/colors'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -41,7 +42,10 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [reporting, setReporting] = useState<boolean>(false)
   const [reportData, setReportData] = useState<ESReportProps>(null)
   const [modalReply, setModalReply] = useState<MessageModalStateProps>({ open: false, replyMessage: null })
+  const [text, setText] = useState<string>('')
   const classes = useStyles()
+
+  const checkNgWord = useCheckNgWord()
 
   const dispatch = useAppDispatch()
 
@@ -67,37 +71,43 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   }, [userId, roomId])
 
   const handlePress = (text: string) => {
-    const currentTimestamp = moment().valueOf()
-    const clientId = uuidv4()
-    const payload = {
-      action: CHAT_ACTION_TYPE.SEND_MESSAGE,
-      roomId: roomId,
-      createdAt: currentTimestamp,
-      userId: userId,
-      msg: text,
-      clientId: clientId,
-      type: CHAT_MESSAGE_TYPE.TEXT,
-    }
-    if (reply === null) {
-      dispatch(socketActions.sendMessage(payload))
-    } else {
-      const replyData = {
-        parentId: reply.sortKey,
-        parentMsg: {
-          msg: reply.msg,
-          chatRoomId: roomId,
-          sortKey: reply.sortKey,
-          userId: reply.userId,
-          groupType: 10,
-          createdAt: '',
-          clientId: reply.clientId,
-          type: reply.type,
-        },
+    if (_.isEmpty(checkNgWord(text))) {
+      const currentTimestamp = moment().valueOf()
+      const clientId = uuidv4()
+      const payload = {
+        action: CHAT_ACTION_TYPE.SEND_MESSAGE,
+        roomId: roomId,
+        createdAt: currentTimestamp,
+        userId: userId,
+        msg: text,
+        clientId: clientId,
+        type: CHAT_MESSAGE_TYPE.TEXT,
       }
-      dispatch(socketActions.sendMessage(_.omit(_.assign(payload, replyData))))
+      if (reply === null) {
+        dispatch(socketActions.sendMessage(payload))
+      } else {
+        const replyData = {
+          parentId: reply.sortKey,
+          parentMsg: {
+            msg: reply.msg,
+            chatRoomId: roomId,
+            sortKey: reply.sortKey,
+            userId: reply.userId,
+            groupType: 10,
+            createdAt: '',
+            clientId: reply.clientId,
+            type: reply.type,
+          },
+        }
+        dispatch(socketActions.sendMessage(_.omit(_.assign(payload, replyData))))
+      }
+      setText('')
+      setReply(null)
+    } else {
+      //toast or warning msg
     }
-    setReply(null)
   }
+
   const handlePressActionButton = (type: number) => {
     if (type === ACTIONS.IMAGE_UPLOAD)
       if (ref.current && !uploadMeta.uploading) {
@@ -177,6 +187,10 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
   }
 
+  const _onChange = (text: string) => {
+    setText(text)
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -201,6 +215,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         {userId ? (
           <MessageInputArea
             reply={reply}
+            text={text}
+            onChangeInput={_onChange}
             currentUser={userId}
             onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
