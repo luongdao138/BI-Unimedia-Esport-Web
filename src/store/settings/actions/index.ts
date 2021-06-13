@@ -189,4 +189,19 @@ export const getPurchaseHistoryDetail = createAsyncThunk<services.PurchaseHistor
   }
 )
 
+export const cancelPurchase = createAsyncThunk<services.PurchaseHistoryDetailResponse, string>(
+  SETTINGS_ACTION_TYPE.CANCEL_PURCHASE,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.cancelPurchase(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const clearPurchaseHistoryDetail = createAction(SETTINGS_ACTION_TYPE.CLEAR_PURCHASE_HISTORY_DETAIL)

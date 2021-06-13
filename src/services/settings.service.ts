@@ -252,3 +252,9 @@ export const getPurchaseHistoryDetail = async (id: string): Promise<PurchaseHist
   const { data } = await api.get<PurchaseHistoryDetailResponse>(URI.PURCHASE_HISTORY_DETAIL.replace(/:id/gi, id))
   return data
 }
+
+export const cancelPurchase = async (id: string): Promise<PurchaseHistoryDetailResponse> => {
+  const { data } = await api.post<PurchaseHistoryDetailResponse>(URI.PURCHASE_CANCEL.replace(/:id/gi, id))
+  return data
+}
+

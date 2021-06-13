@@ -12,7 +12,8 @@ import { PAYMENT_STATUS } from '@constants/common.constants'
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
-
+import * as actions from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 
 interface Props {
   id: any
@@ -22,13 +23,22 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false);
-  const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail } = usePurchaseHistoryDetail()
+  const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase } = usePurchaseHistoryDetail()
+  const dispatch = useAppDispatch()
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    if(purchaseHistoryDetail.data && purchaseHistoryDetail.data.id){
+      cancelPurchase(`${purchaseHistoryDetail.data.id}`)
+      dispatch(actions.addToast(`${t('common:purchase_history.cancel_msg')}`))
+    }
     setOpen(false);
   };
 
@@ -61,14 +71,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
           <div>
-            <Dialog
-              maxWidth={'md'}
-              fullWidth
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
+            <Dialog maxWidth={'md'} fullWidth open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
               <DialogContent>
                 <Box className={classes.container}>
                   <Typography className={classes.dialogTitle}>
@@ -79,10 +82,10 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
                   </Typography>
                 </Box>
                 <Box className={classes.actionBox}>
-                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false}>
+                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
                     {t('common:purchase_history.dialog_close')}
                   </ButtonPrimary>
-                  <ButtonPrimary size="small" className={classes.actionBtn}>
+                  <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
                     {t('common:purchase_history.cancel_submit')}
                   </ButtonPrimary>
                 </Box>
