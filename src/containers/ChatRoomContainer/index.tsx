@@ -21,6 +21,8 @@ import { ESReportProps } from '@containers/Report'
 import MessageModal from '@components/Chat/MessageModal'
 import { Colors } from '@theme/colors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -104,7 +106,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       setText('')
       setReply(null)
     } else {
-      //toast or warning msg
+      dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
     }
   }
 

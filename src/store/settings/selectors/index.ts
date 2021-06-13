@@ -14,3 +14,4 @@ export const getNotificationSetting = createSelector(getRoot, (state) =>
 export const getPurchaseHistory = createSelector(getRoot, (state) => state.purchaseHistory)
 export const getPurchaseHistoryMeta = createSelector(getRoot, (state) => state.purchaseHistoryMeta)
 export const getPurchaseHistoryDetail = createSelector(getRoot, (state) => state.purchaseHistoryDetail)
+export const cancelPurchase = createSelector(getRoot, (state) => state.cancelPurchase)

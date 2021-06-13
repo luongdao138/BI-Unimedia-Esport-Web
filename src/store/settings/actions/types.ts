@@ -13,6 +13,7 @@ export enum SETTINGS_ACTION_TYPE {
   CREATE_INQUIRY = 'settings/createInquiry',
   GET_PURCHASE_HISTORY = 'settings/getPurchaseHistory',
   GET_PURCHASE_HISTORY_DETAIL = 'settings/getPurchaseHistoryDetail',
+  CANCEL_PURCHASE = 'settings/cancelPurchase',
   CLEAR_PURCHASE_HISTORY = 'settings/clearPurchaseHistory',
   CLEAR_PURCHASE_HISTORY_DETAIL = 'settings/clearPurchaseHistoryDetail',
 }

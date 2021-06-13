@@ -17,7 +17,7 @@ const useForgotConfirm = (confirmationCode: string) => {
   const user = useAppSelector(selectors.getAuth)
   const metaConfirm = useAppSelector(getForgotConfirm)
   const metaResend = useAppSelector(getResendMeta)
-  const { navigateScreen } = useReturnHref()
+  const { navigateScreen, handleReturn } = useReturnHref()
 
   const forgotConfirm = (params: UserConfirmParams) => dispatch(actions.forgotConfirm(params))
 
@@ -27,7 +27,7 @@ const useForgotConfirm = (confirmationCode: string) => {
 
   const resetResendMeta = () => dispatch(clearMetaData(actions.resendConfirmation.typePrefix))
 
-  const backAction = () => navigateScreen(ESRoutes.FORGOT_PASSWORD)
+  const backAction = () => handleReturn()
 
   useEffect(() => {
     if (metaConfirm.loaded) {
@@ -41,12 +41,6 @@ const useForgotConfirm = (confirmationCode: string) => {
       resetMeta()
     }
   }, [confirmationCode])
-
-  useEffect(() => {
-    if (user === undefined) {
-      navigateScreen(ESRoutes.FORGOT_PASSWORD)
-    }
-  }, [])
 
   return {
     user,
