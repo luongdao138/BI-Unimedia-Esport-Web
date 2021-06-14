@@ -43,7 +43,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   )
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   sidebarCont: {
     width: 290, //
     height: 'calc(100vh - 61px)',
