@@ -4,6 +4,7 @@ import { Icon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ChatRoomList from '@containers/ChatRoomList'
+import { useRouter } from 'next/router'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -14,6 +15,7 @@ interface ChatSideBarProps {
 const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
   const { t } = useTranslation(['common'])
+  const router = useRouter()
   return (
     <Box
       className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}
@@ -25,7 +27,12 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
           <Typography className={classes.headerTitle} variant={'body1'}>
             {t('common:chat.title')}
           </Typography>
-          <Icon className={`fas fa-inbox ${classes.headerIcon}`} />
+          <Icon
+            onClick={() => {
+              router.push('/message')
+            }}
+            className={`fas fa-inbox ${classes.headerIcon}`}
+          />
         </Box>
         <Box className={classes.inner}>
           <ChatRoomList expand={expand} />
@@ -36,7 +43,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   )
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   sidebarCont: {
     width: 290, //
     height: 'calc(100vh - 61px)',
@@ -79,9 +86,15 @@ const useStyles = makeStyles({
   headerIcon: {
     color: Colors.white,
     fontSize: '18px',
+    cursor: 'pointer',
     paddingLeft: '14px',
   },
-})
+  [theme.breakpoints.down('lg')]: {
+    sidebarCont: {
+      width: 260,
+    },
+  },
+}))
 
 ChatSideBar.defaultProps = {}
 
