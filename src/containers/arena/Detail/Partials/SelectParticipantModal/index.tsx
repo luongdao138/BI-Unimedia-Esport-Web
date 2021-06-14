@@ -94,6 +94,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
         role: ROLE.PARTICIPANT,
         name: participant.attributes.name,
         team_name: teamName,
+        pid: participant.id,
       },
       pid: participant.id,
     }

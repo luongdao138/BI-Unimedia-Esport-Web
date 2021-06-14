@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme, IconButton, Icon } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
@@ -37,12 +37,19 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
       <ESModal open={open}>
         <BlankLayout>
-          <Box paddingY={16} className={classes.childrenContainer}>
-            <Box pb={4} color={Colors.white} alignItems="center">
+          <Box paddingBottom={16} paddingTop={8} className={classes.childrenContainer}>
+            <Box py={2}>
+              <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+            </Box>
+            <Box pb={4} pt={12} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:tournament.unjoin_dialog.dialog_title')}</Typography>
             </Box>
             <Box pb={4}>
-              <Typography variant="h2">{t('common:tournament.unjoin_dialog.dialog_description')}</Typography>
+              <Typography variant="h2" className={classes.description}>
+                {t('common:tournament.unjoin_dialog.dialog_description')}
+              </Typography>
             </Box>
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
@@ -83,7 +90,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   description: {
-    marginTop: theme.spacing(3),
     textAlign: 'center',
   },
   button: {
