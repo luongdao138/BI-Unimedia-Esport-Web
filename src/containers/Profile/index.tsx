@@ -299,6 +299,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: Colors.grey[200],
     },
     marginRight: 20,
+    marginTop: 5,
   },
   iconButtonBg: {
     position: 'absolute',
