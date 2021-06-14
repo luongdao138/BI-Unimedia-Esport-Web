@@ -5,7 +5,14 @@ import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import ImageUploader from './ImageUploader'
 import { currentUserId } from '@store/auth/selectors'
-import { messages, membersSuggest, availableMembers, lastKey as key, paginating as paging } from '@store/socket/selectors'
+import {
+  messages,
+  membersSuggest,
+  availableMembers,
+  lastKey as key,
+  paginating as paging,
+  hasError as hasErrorSelector,
+} from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
@@ -23,6 +30,7 @@ import { Colors } from '@theme/colors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import i18n from '@locales/i18n'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -59,6 +67,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const usersAvailable = useAppSelector(availableMembers)
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
+  const hasError = useAppSelector(hasErrorSelector)
 
   useEffect(() => {
     if (userId && roomId) {
@@ -193,6 +202,17 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setText(text)
   }
 
+  const renderErroMesage = () => {
+    if (hasError && _.isEmpty(data)) {
+      return (
+        <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
+          {i18n.t('common:chat.room_not_found')}
+        </Box>
+      )
+    }
+    return null
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -200,7 +220,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       </Box>
       <Box className={classes.list}>
         {renderLoader()}
-        {!_.isEmpty(data) && _.isArray(data) && (
+        {renderErroMesage()}
+        {!hasError && !_.isEmpty(data) && _.isArray(data) && (
           <MessageList
             reply={onReply}
             report={onReport}
@@ -213,8 +234,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           />
         )}
       </Box>
-      <Box className={classes.input}>
-        {userId ? (
+
+      {userId && !hasError && data ? (
+        <Box className={classes.input}>
           <MessageInputArea
             reply={reply}
             text={text}
@@ -225,8 +247,9 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             users={usersAvailable}
             onPressActionButton={handlePressActionButton}
           />
-        ) : null}
-      </Box>
+        </Box>
+      ) : null}
+
       <ImageUploader
         ref={ref}
         roomId={roomId}
