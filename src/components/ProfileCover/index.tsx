@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { makeStyles, Box } from '@material-ui/core'
 import Image from 'next/image'
 import { CameraAlt as Camera } from '@material-ui/icons'
+import CoverSelector from '@components/ImagePicker/CoverSelector'
 import ESLoader from '@components/Loader'
 import { useDropzone } from 'react-dropzone'
 import { Colors } from '@theme/colors'
@@ -9,37 +10,70 @@ import { Colors } from '@theme/colors'
 type ProfileCoverProps = {
   editable?: boolean
   src: string
-  onChange?: (files: File) => void
+  onChange?: (file: File, blob: any) => void
 }
 
 const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) => {
   const classes = useStyles()
-  const [update, setUpdate] = useState<boolean>(false)
+  const [setCover, toggleSetCover] = useState<boolean>(false)
   const [drag, setDrag] = useState<boolean>(false)
-  const dropZoneConfig = {
-    accept: 'image/*',
-    onDrop: (files: any) => handleChange(files),
-  }
-  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  // const dropZoneConfig = {
+  //   accept: 'image/*',
+  //   onDrop: (files: any) => handleChange(files),
+  // }
+  // const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
-    setUpdate(false)
+    toggleSetCover(false)
   }, [src])
 
-  const handleChange = (files: Array<File>) => {
-    setUpdate(true)
-    setDrag(false)
-    const file = files[0]
-    const reader = new FileReader()
-    if (file) {
-      if (onChange) {
-        onChange(file)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  // const handleChange = (files: Array<File>) => {
+  //   // setUpdate(true)
+  //   setDrag(false)
+  //   const file = files[0]
+  //   const reader = new FileReader()
+  //   if (file) {
+  //     if (onChange) {
+  //       onChange(file)
+  //     }
+  //     reader.readAsDataURL(file)
+  //   }
+  // }
 
   return (
+    // <div className={classes.root}>
+    // {src ? (
+    //   <img src={src} className={classes.image} />
+    // ) : (
+    //   <Image height="148" width="116" src="/images/big_logo.png" className={classes.defaultBackground} />
+    // )}
+    //   {editable ? (
+    //     <>
+    //       {drag && !update ? <Camera fontSize="small" className={classes.camera} /> : null}
+    //       {drag || update ? <div className={classes.backdrop} /> : null}
+    //       <div
+    //         {...getRootProps()}
+    //         className={classes.dropZone}
+    //         onMouseEnter={() => {
+    //           if (!update) setDrag(true)
+    //         }}
+    //         onMouseLeave={() => setDrag(false)}
+    //         onDragEnter={() => {
+    //           if (!update) setDrag(true)
+    //         }}
+    //         onDragLeave={() => setDrag(false)}
+    //       >
+    //         <input {...getInputProps()} />
+    //       </div>
+    //       {update ? (
+    //         <Box className={classes.loader}>
+    //           <ESLoader />
+    //         </Box>
+    //       ) : null}
+    //     </>
+    //   ) : null}
+    // </div>
+
     <div className={classes.root}>
       {src ? (
         <img src={src} className={classes.image} />
@@ -47,29 +81,20 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) 
         <Image height="148" width="116" src="/images/big_logo.png" className={classes.defaultBackground} />
       )}
       {editable ? (
-        <>
-          {drag && !update ? <Camera fontSize="small" className={classes.camera} /> : null}
-          {drag || update ? <div className={classes.backdrop} /> : null}
+        <label htmlFor="cover-upload" onClick={() => toggleSetCover(true)}>
+          {drag ? <div className={classes.backdrop} /> : null}
+          {drag ? <Camera fontSize="small" className={classes.camera} /> : null}
           <div
-            {...getRootProps()}
             className={classes.dropZone}
-            onMouseEnter={() => {
-              if (!update) setDrag(true)
-            }}
+            onMouseEnter={() => setDrag(true)}
             onMouseLeave={() => setDrag(false)}
-            onDragEnter={() => {
-              if (!update) setDrag(true)
-            }}
+            onDragEnter={() => setDrag(true)}
             onDragLeave={() => setDrag(false)}
-          >
-            <input {...getInputProps()} />
-          </div>
-          {update ? (
-            <Box className={classes.loader}>
-              <ESLoader />
-            </Box>
-          ) : null}
-        </>
+          ></div>
+        </label>
+      ) : null}
+      {setCover ? (
+        <CoverSelector src={src} cancel={() => toggleSetCover(false)} onUpdate={(file: File, blob: any) => onChange(file, blob)} />
       ) : null}
     </div>
   )
@@ -132,10 +157,15 @@ const useStyles = makeStyles(() => ({
   dropZone: {
     display: 'flex',
     position: 'absolute',
+    left: 0,
+    top: 0,
     height: '100%',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 6,
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
 }))

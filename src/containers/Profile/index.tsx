@@ -105,8 +105,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           <ProfileCover
             src={cover}
             editable={!isOthers}
-            onChange={(f: File) => {
-              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER)
+            onChange={(f: File, blob: any) => {
+              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER, blob)
             }}
           />
           {offset > 150 ? (

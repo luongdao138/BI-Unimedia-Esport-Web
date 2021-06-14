@@ -62,6 +62,7 @@ export default {
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
     profile_updated: 'プロフィールを更新しました',
+    image_update: 'ツマミを操作することで、画像のリサイズを行えます。\nまた、ドラッグで位置を調整させることができます。',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -81,6 +82,7 @@ export default {
     line: 'LINEでログイン',
     facebook: 'Facebookでログイン',
     apple: 'Appleでログイン',
+    use: '適用',
   },
   login: {
     email_placeholder: 'sample@exelab.jp',
@@ -259,6 +261,8 @@ export default {
     },
     edit: '編集',
     edit_profile: 'プロフィールを編集する',
+    update_image: '画像の編集',
+    reset: '画像をリセットする',
     read_more: 'もっとみる',
     follow_as: 'フォローする',
     inbox: 'inbox',
@@ -616,7 +620,7 @@ export default {
     cancel_order_msg: 'キャンセルを行なった後に再利用する場合は再度ご購入が必要です。',
     dialog_close: '戻る',
     cancel_submit: 'キャンセルする',
-    cancel_msg: 'アイテムの購入をキャンセルしました'
+    cancel_msg: 'アイテムの購入をキャンセルしました',
   },
   inquiry: {
     title: 'お問い合わせ',
