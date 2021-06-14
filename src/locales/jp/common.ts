@@ -502,6 +502,8 @@ export default {
     },
     uploaded_image: '画像がアップロードされました。',
     placeholder_dm: 'メッセージ権限がありません',
+    delete_member: 'グループから除外',
+    toast_delete_member: 'メンバーを除外しました。',
   },
   notification: {
     title: '通知一覧',

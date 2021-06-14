@@ -5,8 +5,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Badge from '@material-ui/core/Badge'
 import Avatar from '@components/Avatar'
-import IconButton from '@material-ui/core/IconButton'
-import DeleteIcon from '@material-ui/icons/Delete'
+import Button from '@components/Button'
+import i18n from '@locales/i18n'
 
 interface RoomMemberItemProps {
   id: number
@@ -30,13 +30,11 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           <Avatar alt="M" />
         </Badge>
       </ListItemAvatar>
-
       <ListItemText primary={name} secondary={userCode} />
-
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(id)}>
-          <DeleteIcon />
-        </IconButton>
+        <Button variant="outlined" onClick={() => onDelete(id)} round>
+          {i18n.t('common:chat.delete_member')}
+        </Button>
       </ListItemSecondaryAction>
     </ListItem>
   )

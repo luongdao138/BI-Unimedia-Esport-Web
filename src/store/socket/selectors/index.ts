@@ -7,6 +7,8 @@ import { ChatSuggestionList } from '@components/Chat/types/chat.types'
 import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 const getRoot = (state: RootState) => state.socket
+const currentUserId = (state: RootState) => state.auth.user.id
+const memberSelector = (state: RootState) => state.socket.members
 
 export const getRoomList = createSelector(getRoot, (state) => {
   return _.orderBy(state.roomList, ['lastMsgAt'], ['desc'])
@@ -38,4 +40,11 @@ export const availableMembers = createSelector(getRoot, (state) => {
     withAll = _.concat(members, mentionData.toall)
   }
   return withAll
+})
+
+export const membersFilterSelf = createSelector(memberSelector, currentUserId, (members, current) => {
+  const filtered = _.filter(members, function (o) {
+    return o.userId !== current
+  })
+  return filtered
 })

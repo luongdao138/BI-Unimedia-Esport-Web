@@ -13,6 +13,7 @@ import RoomNameEditor from '@components/Chat/RoomNameEditor'
 import RoomMemberAddView from '@components/Chat/RoomMemberAddView'
 import RoomImgView from '@components/Chat/RoomImgView'
 import _ from 'lodash'
+import ChatMemberEditContainer from '@containers/ChatMemberEditContainer'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -63,6 +64,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         <>
           <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
+          <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
         </>
       )}
       <Box className={classes.row}>
