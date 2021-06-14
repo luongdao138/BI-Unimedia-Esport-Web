@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
@@ -20,6 +20,8 @@ interface CloseRecruitmentModalProps {
 const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const [open, setOpen] = useState(false)
   const { close, closeMeta } = useEntry()
 
@@ -31,7 +33,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
 
   return (
     <Box>
-      <Box className={classes.actionButton}>
+      <Box className={classes.button}>
         <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
           {t('common:tournament.close_recruitment.button_text')}
         </ButtonPrimary>
@@ -50,13 +52,13 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
               <Typography variant="h2">{t('common:tournament.close_recruitment.dialog_description')}</Typography>
             </Box>
 
-            <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" paddingTop={18.5}>
-              <Box marginX={1} width="100%">
-                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+              <Box className={classes.actionButton}>
+                <ESButton variant={!isMobile ? 'outlined' : 'text'} round fullWidth size="large" onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
-              <Box marginX={2} width="100%">
+              <Box className={classes.actionButton}>
                 <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
                   {t('common:tournament.close_recruitment.confirm')}
                 </ButtonPrimary>
@@ -83,12 +85,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-  },
   childrenContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -102,11 +98,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     textAlign: 'center',
   },
-  actionButton: {
+  button: {
     marginTop: theme.spacing(3),
     width: '100%',
     margin: '0 auto',
     maxWidth: theme.spacing(35),
+  },
+  actionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButton: {
+    width: theme.spacing(35),
+    margin: 8,
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    actionButtonContainer: {
+      flexDirection: 'column-reverse',
+    },
   },
 }))
 

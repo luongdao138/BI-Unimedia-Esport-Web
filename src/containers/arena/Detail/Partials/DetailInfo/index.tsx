@@ -49,9 +49,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
           </Box>
           {extended && (
             <ESMenu>
+              {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{t('common:arena.edit_arena_info')}</ESMenuItem>}
               <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
               <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
-              {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{'Edit button'}</ESMenuItem>}
             </ESMenu>
           )}
         </Box>

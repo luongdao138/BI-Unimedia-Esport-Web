@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import ESButton from '@components/Button'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -16,6 +15,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
+import UnjoinModal from './UnjoinModal'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -28,7 +28,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const classes = useStyles()
   const store = useStore()
   const [open, setOpen] = useState(false)
-  const { join, leave, joinMeta, leaveMeta } = useEntry()
+  const { join, joinMeta } = useEntry()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -68,9 +68,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     <Box>
       <Box className={classes.actionButton}>
         {tournament.attributes.is_entered ? (
-          <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-            {t('common:tournament.unjoin')}
-          </ESButton>
+          <UnjoinModal tournament={tournament} />
         ) : (
           <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
             {t('common:tournament.join')}
@@ -108,7 +106,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         </form>
       </StickyActionModal>
 
-      {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
+      {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
     </Box>
   )
 }
