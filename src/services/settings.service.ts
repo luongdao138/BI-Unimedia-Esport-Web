@@ -185,3 +185,76 @@ export const createInquiry = async (params: InquiryParams): Promise<InquiryRespo
   const { data } = await api.post<InquiryResponse>(URI.INQUIRY, params)
   return data
 }
+
+export type PurchaseHistoryParams = {
+  page: number
+}
+
+export type PurchaseHistoryResponse = {
+  links?: any
+  data: PurchaseHistory[]
+}
+
+export type PurchaseHistoryDetailResponse = {
+  data: {
+    id: string
+    type: string
+    attributes: {
+      id: number
+      order_id: string
+      price: number
+      tax: number
+      purchase_datetime: string
+      cancel_req_datetime: string
+      cancelled_datetime: string
+      gmo_payment_status: string
+      payment_type: string
+      status: boolean
+      history_id: number
+      title: string
+      description: string
+      is_cancellable?: boolean
+      cancel_possible_day?: number
+      history_status?: number
+    }
+  }
+}
+
+export type PurchaseHistory = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    order_id: string
+    price: number
+    tax: number
+    purchase_datetime: string
+    cancel_req_datetime: string
+    cancelled_datetime: string
+    gmo_payment_status: string
+    payment_type: string
+    status: boolean
+    history_id: number
+    title: string
+    description: string
+    is_cancellable?: boolean
+    cancel_possible_day?: number
+    history_status?: number
+  }
+}
+
+export const getPurchaseHistory = async (params: PurchaseHistoryParams): Promise<PurchaseHistoryResponse> => {
+  const { data } = await api.get<PurchaseHistoryResponse>(URI.PURCHASE_HISTORY, { params })
+  return data
+}
+
+export const getPurchaseHistoryDetail = async (id: string): Promise<PurchaseHistoryDetailResponse> => {
+  const { data } = await api.get<PurchaseHistoryDetailResponse>(URI.PURCHASE_HISTORY_DETAIL.replace(/:id/gi, id))
+  return data
+}
+
+export const cancelPurchase = async (id: string): Promise<PurchaseHistoryDetailResponse> => {
+  const { data } = await api.post<PurchaseHistoryDetailResponse>(URI.PURCHASE_CANCEL.replace(/:id/gi, id))
+  return data
+}
+

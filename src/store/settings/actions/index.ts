@@ -156,3 +156,52 @@ export const createInquiry = createAsyncThunk<services.InquiryResponse, services
     }
   }
 )
+
+export const getPurchaseHistory = createAsyncThunk<services.PurchaseHistoryResponse, services.PurchaseHistoryParams>(
+  SETTINGS_ACTION_TYPE.GET_PURCHASE_HISTORY,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getPurchaseHistory(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearPurchaseHistory = createAction(SETTINGS_ACTION_TYPE.CLEAR_PURCHASE_HISTORY)
+
+export const getPurchaseHistoryDetail = createAsyncThunk<services.PurchaseHistoryDetailResponse, string>(
+  SETTINGS_ACTION_TYPE.GET_PURCHASE_HISTORY_DETAIL,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getPurchaseHistoryDetail(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const cancelPurchase = createAsyncThunk<services.PurchaseHistoryDetailResponse, string>(
+  SETTINGS_ACTION_TYPE.CANCEL_PURCHASE,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.cancelPurchase(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearPurchaseHistoryDetail = createAction(SETTINGS_ACTION_TYPE.CLEAR_PURCHASE_HISTORY_DETAIL)

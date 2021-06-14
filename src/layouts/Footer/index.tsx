@@ -37,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ dark }) => {
         </Link>
         {downMd ? (
           <Box className={classes.innerWrap}>
-            <Link href="#" underline={'none'}>
+            <Link href={ESRoutes.INQUIRY_SETTINGS} underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.contact_us')}</ListItemText>
               </ListItem>
@@ -50,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ dark }) => {
           </Box>
         ) : (
           <>
-            <Link href="#" underline={'none'}>
+            <Link href={ESRoutes.INQUIRY_SETTINGS} underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.contact_us')}</ListItemText>
               </ListItem>

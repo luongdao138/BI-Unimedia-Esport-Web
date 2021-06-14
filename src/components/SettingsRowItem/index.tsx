@@ -17,7 +17,7 @@ const SettingsRowItem: React.FC<SettingsRowItemProps> = ({ title, checked, handl
 
   return (
     <div>
-      <Box margin={2} display="flex" justifyContent="space-between" maxHeight={52}>
+      <Box margin={2} display="flex" justifyContent="space-between" maxHeight={66}>
         <Box display="flex" overflow="hidden" className={classes.wrap}>
           <Box overflow="hidden" textOverflow="ellipsis" ml={0} display="flex" flexDirection="row" justifyContent="" width="100%">
             <Typography noWrap className={classes.title}>
