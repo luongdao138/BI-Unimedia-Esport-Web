@@ -468,6 +468,11 @@ export const closeTournament = async (hash_key: string): Promise<void> => {
   return data
 }
 
+export const cancelTournament = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.CANCEL_TOURNAMENT.replace(/:id/gi, hash_key))
+  return data
+}
+
 export const getEntryStatus = async (hash_key: string): Promise<EntryStatusResponse> => {
   const { data } = await api.get<EntryStatusResponse>(URI.CHECK_ENTRY_STATUS.replace(/:id/gi, hash_key))
   return data

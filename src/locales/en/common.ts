@@ -394,6 +394,14 @@ export default {
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
   },
+  tournament_cancel: {
+    confirm_cancel_btn: '大会を中止する',
+    cancel_title: '大会を中止しますか？',
+    cancel_detail1: '中止した大会は復元することはできません。',
+    cancel_detail2: '大会の中止は、メンバーに通知されます。',
+    cancel_button: '中止する',
+    cancel_t: 'キャンセル',
+  },
   tournament_create: {
     tab1: '大会概要',
     tab2: '開催形式',
@@ -633,7 +641,7 @@ export default {
     cancel_order_msg: 'キャンセルを行なった後に再利用する場合は再度ご購入が必要です。',
     dialog_close: '戻る',
     cancel_submit: 'キャンセルする',
-    cancel_msg: 'アイテムの購入をキャンセルしました'
+    cancel_msg: 'アイテムの購入をキャンセルしました',
   },
   inquiry: {
     title: 'お問い合わせ',

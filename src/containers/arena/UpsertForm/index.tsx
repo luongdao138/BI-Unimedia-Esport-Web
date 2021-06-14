@@ -23,6 +23,7 @@ import { getValidationScheme } from './FormModel/ValidationScheme'
 import { useStore } from 'react-redux'
 import { TournamentFormParams } from '@services/arena.service'
 import { useRouter } from 'next/router'
+import CancelDialog from './Partials/CancelDialog'
 
 import Confirm from './Confirm'
 
@@ -76,6 +77,16 @@ const TournamentCreate: React.FC = () => {
   const handleSetConfirm = () => setIsConfirm(true)
   const handleUnsetConfirm = () => setIsConfirm(false)
 
+  const renderEditButton = () => {
+    return (
+      <Box>
+        <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
+          内容を確認する
+        </ButtonPrimary>
+        <CancelDialog hashKey={`${router.query.hash_key}`} />
+      </Box>
+    )
+  }
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
@@ -113,7 +124,7 @@ const TournamentCreate: React.FC = () => {
           )}
         </Box>
         <Box className={classes.stickyFooter}>
-          <Box className={classes.nextBtnHolder}>
+          <Box className={classes.nextBtnHolder} style={isEdit ? { marginBottom: 34 } : undefined}>
             {isConfirm ? (
               <>
                 <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={classes.footerButton}>
@@ -123,6 +134,8 @@ const TournamentCreate: React.FC = () => {
                   この内容で作成する
                 </ButtonPrimary>
               </>
+            ) : isEdit ? (
+              renderEditButton()
             ) : (
               <ButtonPrimary
                 onClick={handleSetConfirm}
