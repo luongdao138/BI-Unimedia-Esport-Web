@@ -13,7 +13,6 @@ import ESStickyFooter from '@components/StickyFooter'
 import { useTranslation } from 'react-i18next'
 import RandomizeDialog from '@containers/arena/tournament/MatchesEdit/Partials/RandomizeDialog'
 import ESLoader from '@components/FullScreenLoader'
-import ESToast from '@components/Toast'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 
 const ArenaBattlesEdit: React.FC = () => {
@@ -23,17 +22,7 @@ const ArenaBattlesEdit: React.FC = () => {
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, meta: participantsMeta, getParticipants, resetMeta } = useParticipants()
-  const {
-    freeze,
-    randomize,
-    setParticipants,
-    randomizeMeta,
-    resetRandomizeMeta,
-    freezeMeta,
-    resetFreezeMeta,
-    setParticipantsMeta,
-    resetParticipantsMeta,
-  } = useModeratorActions()
+  const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
 
   const [data, setData] = useState<any>()
   const [showParticipants, setShowParticipants] = useState<boolean>(false)
@@ -164,19 +153,6 @@ const ArenaBattlesEdit: React.FC = () => {
       <ESLoader
         open={detailMeta.pending || participantsMeta.pending || randomizeMeta.pending || freezeMeta.pending || setParticipantsMeta.pending}
       />
-
-      {/* success */}
-      {randomizeMeta.loaded && (
-        <ESToast open={randomizeMeta.loaded} message={t('common:arena.randomize_success')} resetMeta={resetRandomizeMeta} />
-      )}
-      {freezeMeta.loaded && <ESToast open={freezeMeta.loaded} message={t('common:arena.freeze_success')} resetMeta={resetFreezeMeta} />}
-
-      {/* error */}
-      {!!randomizeMeta.error && <ESToast open={!!randomizeMeta.error} message={t('common:error.failed')} resetMeta={resetRandomizeMeta} />}
-      {!!freezeMeta.error && <ESToast open={!!freezeMeta.error} message={t('common:error.failed')} resetMeta={resetFreezeMeta} />}
-      {!!setParticipantsMeta.error && (
-        <ESToast open={!!setParticipantsMeta.error} message={t('common:error.failed')} resetMeta={resetParticipantsMeta} />
-      )}
     </>
   )
 }

@@ -633,7 +633,7 @@ export default {
     cancel_order_msg: 'キャンセルを行なった後に再利用する場合は再度ご購入が必要です。',
     dialog_close: '戻る',
     cancel_submit: 'キャンセルする',
-    cancel_msg: 'アイテムの購入をキャンセルしました'
+    cancel_msg: 'アイテムの購入をキャンセルしました',
   },
   inquiry: {
     title: 'お問い合わせ',

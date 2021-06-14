@@ -11,7 +11,6 @@ import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import ESToast from '@components/Toast'
 
 interface CloseRecruitmentModalProps {
   tournament: TournamentDetail
@@ -22,7 +21,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const { close, closeMeta, resetCloseMeta } = useEntry()
+  const { close, closeMeta } = useEntry()
 
   useEffect(() => {
     if (closeMeta.loaded || closeMeta.error) {
@@ -73,7 +72,6 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
       </ESModal>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
-      {!!closeMeta.error && <ESToast open={!!closeMeta.error} message={t('common:error.close_arena_failed')} resetMeta={resetCloseMeta} />}
     </Box>
   )
 }

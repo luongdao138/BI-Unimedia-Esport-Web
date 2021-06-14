@@ -21,7 +21,6 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
-import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
 
 interface TeamEntryModalProps {
@@ -43,7 +42,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, meta, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
-  const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
+  const { join, leave, joinMeta, leaveMeta } = useEntry()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -302,8 +301,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       </StickyActionModal>
 
       {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
-      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetJoinMeta} />}
-      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetLeaveMeta} />}
     </Box>
   )
 }
