@@ -400,6 +400,14 @@ export default {
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
   },
+  tournament_cancel: {
+    confirm_cancel_btn: '大会を中止する',
+    cancel_title: '大会を中止しますか？',
+    cancel_detail1: '中止した大会は復元することはできません。',
+    cancel_detail2: '大会の中止は、メンバーに通知されます。',
+    cancel_button: '中止する',
+    cancel_t: 'キャンセル',
+  },
   tournament_create: {
     tab1: '大会概要',
     tab2: '開催形式',
