@@ -60,7 +60,7 @@ export const getGameByGenreId = async (genreId: number): Promise<GameTitleRespon
 }
 
 export const getGameByTitle = async (keyword: string): Promise<GameTitleResponse> => {
-  const { data } = await api.get<GameTitleResponse>(`${URI.GAME_TITLES}?name=${keyword}`)
+  const { data } = await api.get<GameTitleResponse>(`${URI.GAME_TITLES}?keyword=${keyword}`)
   return data
 }
 

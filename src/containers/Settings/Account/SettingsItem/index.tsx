@@ -38,7 +38,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
             {title}
           </Typography>
         </Box>
-        <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '*************' : value}</Typography>
+        <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '************' : value}</Typography>
         {showButton && (
           <Box className={classes.buttonWrap}>
             <ButtonPrimary
