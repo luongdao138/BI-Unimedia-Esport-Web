@@ -46,7 +46,7 @@ const LoginContainer: React.FC = () => {
     privacy: false,
   })
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail(social.resetMeta())
+  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
   const { handleLink } = useReturnHref()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -71,7 +71,6 @@ const LoginContainer: React.FC = () => {
   }
 
   const handleChangeCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    resetMetas()
     setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
   }
 
