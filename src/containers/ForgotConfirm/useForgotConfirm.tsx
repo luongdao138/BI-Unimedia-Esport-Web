@@ -9,7 +9,7 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { selectors, actions } = authStore
 const getForgotConfirm = createMetaSelector(actions.forgotConfirm)
-const getResendMeta = createMetaSelector(actions.resendConfirmation)
+const getResendMeta = createMetaSelector(actions.forgotResend)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useForgotConfirm = (confirmationCode: string) => {
@@ -21,11 +21,11 @@ const useForgotConfirm = (confirmationCode: string) => {
 
   const forgotConfirm = (params: UserConfirmParams) => dispatch(actions.forgotConfirm(params))
 
-  const resendConfirmation = (params: UserResendParams) => dispatch(actions.resendConfirmation(params))
+  const resendConfirmation = (params: UserResendParams) => dispatch(actions.forgotResend(params))
 
   const resetMeta = () => dispatch(clearMetaData(actions.forgotConfirm.typePrefix))
 
-  const resetResendMeta = () => dispatch(clearMetaData(actions.resendConfirmation.typePrefix))
+  const resetResendMeta = () => dispatch(clearMetaData(actions.forgotResend.typePrefix))
 
   const backAction = () => handleReturn()
 

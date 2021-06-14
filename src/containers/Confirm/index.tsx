@@ -32,7 +32,7 @@ const ConfirmContainer: React.FC = () => {
 
   const handleResend = () => {
     resetMeta()
-    if (user?.email) resendConfirmation({ email: user.email, type: 'register' })
+    if (user?.email) resendConfirmation({ email: user.email })
   }
 
   const renderError = () => {
