@@ -11,6 +11,8 @@ import _ from 'lodash'
 import { CommonResponse } from '@services/user.service'
 import ESToast from '@components/Toast'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
 
 interface Props {
   detail: TournamentDetail
@@ -25,6 +27,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
   const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
   const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
   const [showCopyToast, setShowCopyToast] = useState<boolean>(false)
+  const [openReport, setOpenReport] = useState(false)
   const helper = useArenaHelper(detail)
 
   const handleCopy = () => {
@@ -33,6 +36,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
     }
     setShowCopyToast(true)
   }
+
+  const handleReportOpen = () => setOpenReport(true)
 
   return (
     <Grid container className={classes.container}>
@@ -44,7 +49,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
           {extended && (
             <ESMenu>
               <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
-              <ESMenuItem onClick={() => null}>{t('common:tournament.report')}</ESMenuItem>
+              <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
               {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{'Edit button'}</ESMenuItem>}
             </ESMenu>
           )}
@@ -227,6 +232,13 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
           </>
         )}
       </Box>
+      <ESReport
+        reportType={REPORT_TYPE.TOURNAMENT}
+        target_id={Number(detail.id)}
+        data={detail}
+        open={openReport}
+        handleClose={() => setOpenReport(false)}
+      />
     </Grid>
   )
 }
