@@ -57,9 +57,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
           <div className="content">{loginRequired ? isAuthenticated && children : children}</div>
           {footer ? <Footer /> : ''}
         </div>
-        <aside className="aside-right">
-          <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} />
-        </aside>
+        <aside className="aside-right">{loginRequired ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>
       </main>
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
       {metaChangePassword.loaded && (
