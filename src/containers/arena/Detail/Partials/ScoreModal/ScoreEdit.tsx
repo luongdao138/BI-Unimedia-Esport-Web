@@ -56,7 +56,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
           border={`${borderWidth}px solid ${borderColor}`}
           onClick={() => setMatch({ ...match, winner: type })}
         >
-          <ESAvatar size={isMobile ? 100 : 120} alt={_name || ''} src={avatar} />
+          <ESAvatar className={`${avatar ? '' : classes.pinkBg}`} size={isMobile ? 100 : 120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
           <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
           {!isTeam && <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>}
@@ -181,6 +181,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       outline: 'none',
       border: `1px solid ${Colors.white}`,
     },
+  },
+  pinkBg: {
+    backgroundColor: '#8E47FF',
   },
   [theme.breakpoints.down('sm')]: {
     customRadio: {

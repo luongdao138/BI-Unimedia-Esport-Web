@@ -54,7 +54,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
 
   const deselectBtn = () => {
     return (
-      <Box width={100} display="flex" justifyContent="center" alignItems="center">
+      <Box width={120} display="flex" justifyContent="center" alignItems="center">
         <ESButton onClick={handleUnset}>{t('common:tournament.deselect')}</ESButton>
       </Box>
     )
