@@ -11,4 +11,5 @@ export interface State {
   actionPending: boolean
   newRoomId?: string
   selectedRoomInfo?: ChatDataType
+  error: string | undefined
 }
