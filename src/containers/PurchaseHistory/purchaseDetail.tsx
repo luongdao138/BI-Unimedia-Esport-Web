@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import HeaderWithButton from '@components/HeaderWithButton'
 import { useTranslation } from 'react-i18next'
-import { Box, makeStyles, Typography, withStyles } from '@material-ui/core'
+import { Link, Box, makeStyles, Typography, withStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import usePurchaseHistoryDetail from '@containers/PurchaseHistory/usePurchaseHistoryDetail'
@@ -100,7 +100,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.vendor')}</Typography>
-              <Typography>{t('common:purchase_history.vendor_name')}</Typography>
+              <Typography>{purchaseHistoryDetail.data.attributes.vendor_name}</Typography>
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.status')}</Typography>
@@ -108,8 +108,8 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
                 {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
                   ? `${t('common:purchase_history.canceled')}`
                   : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
-                  ? `${t('common:purchase_history.cancel_requested')}`
-                  : `${t('common:purchase_history.purchased')}`}
+                    ? `${t('common:purchase_history.cancel_requested')}`
+                    : `${t('common:purchase_history.purchased')}`}
               </Typography>
             </Box>
             <Box display="flex">
@@ -150,47 +150,47 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
                   {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
                     ? `(${t('common:purchase_history.canceled')})`
                     : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
-                    ? `(${t('common:purchase_history.cancel_requested')})`
-                    : ''}
+                      ? `(${t('common:purchase_history.cancel_requested')})`
+                      : ''}
                 </Typography>
               </Box>
             </Box>
             {purchaseHistoryDetail.data.attributes.is_cancellable &&
             !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
             !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
-            <>
-              <Box my={4} display="flex" justifyContent="center">
-                <ESButton variant="outlined" onClick={handleClickOpen}>{t('common:purchase_history.cancel_request')}</ESButton>
-              </Box>
-            </>
+              <>
+                <Box my={4} display="flex" justifyContent="center">
+                  <ESButton variant="outlined" onClick={handleClickOpen}>{t('common:purchase_history.cancel_request')}</ESButton>
+                </Box>
+              </>
             )}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
-            <Box>
+            <Link href="https://support.exelab.jp/hc/ja/articles/900004907626" underline={'none'} target="_blank">
               <Typography className={classes.questions}>
                 {t('common:purchase_history.about_purchase_status')}{' '}
                 <div className={classes.link}>
                   <LinkIcon />
                 </div>
               </Typography>
-            </Box>
-            <Box>
+            </Link>
+            <Link href="https://support.exelab.jp/hc/ja/articles/900005549443" underline={'none'} target="_blank">
               <Typography className={classes.questions}>
                 {t('common:purchase_history.about_cancellation')}{' '}
                 <div className={classes.link}>
                   <LinkIcon />
                 </div>
               </Typography>
-            </Box>
-            <Box>
+            </Link>
+            <Link href="#" underline={'none'} target="_blank">
               <Typography className={classes.questions}>
                 {t('common:purchase_history.help_purchase')}{' '}
                 <div className={classes.link}>
                   <LinkIcon />
                 </div>
               </Typography>
-            </Box>
+            </Link>
           </Box>
         </div>
       ) : (

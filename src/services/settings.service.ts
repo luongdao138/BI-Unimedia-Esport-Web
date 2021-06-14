@@ -213,6 +213,7 @@ export type PurchaseHistoryDetailResponse = {
       history_id: number
       title: string
       description: string
+      vendor_name: string
       is_cancellable?: boolean
       cancel_possible_day?: number
       history_status?: number
@@ -237,6 +238,7 @@ export type PurchaseHistory = {
     history_id: number
     title: string
     description: string
+    vendor_name: string
     is_cancellable?: boolean
     cancel_possible_day?: number
     history_status?: number
