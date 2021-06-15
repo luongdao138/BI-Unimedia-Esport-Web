@@ -54,6 +54,7 @@ export type ParentItem = {
   clientId: string
   type: CHAT_MESSAGE_TYPE
   isDeleted: boolean
+  parentMsgDeletedText?: string
 }
 
 export interface ChatRoomMemberItem {

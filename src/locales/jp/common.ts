@@ -505,6 +505,7 @@ export default {
     delete_member: 'グループから除外',
     toast_delete_member: 'メンバーを除外しました。',
     room_not_found: 'ルームが見つかりませんでした。',
+    delete_chat: '通報',
   },
   notification: {
     title: '通知一覧',
