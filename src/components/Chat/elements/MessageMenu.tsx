@@ -26,7 +26,7 @@ const MessageMenu: React.FC<MessageMenuProps> = ({ onPressMenuItem, isMe }) => {
     return null
   }
 
-  const rendePersonMenu = () => {
+  const renderPersonMenu = () => {
     if (isMe) {
       return (
         <ESMenu disableRipple iconClass={classes.menuIcon}>
@@ -40,7 +40,7 @@ const MessageMenu: React.FC<MessageMenuProps> = ({ onPressMenuItem, isMe }) => {
 
   return (
     <>
-      {rendePersonMenu()}
+      {renderPersonMenu()}
       {renderOtherPersonMenu()}
     </>
   )
