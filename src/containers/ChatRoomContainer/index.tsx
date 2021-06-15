@@ -186,6 +186,18 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const onReply = (currentMessage: MessageType) => {
     setReply(currentMessage)
   }
+
+  const onDelete = (currentMessage: MessageType) => {
+    if (currentMessage && currentMessage.sortKey) {
+      const params = {
+        sortKey: currentMessage.sortKey,
+        roomId: currentMessage.chatRoomId,
+        userId: userId,
+        action: CHAT_ACTION_TYPE.DELETE_MESSAGE,
+      }
+      dispatch(socketActions.socketSend(params))
+    }
+  }
   const onReport = (reportData: ESReportProps) => {
     setReportData(reportData)
     setReporting(true)
@@ -227,6 +239,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             report={onReport}
             currentUser={userId}
             paginating={paginating}
+            delete={onDelete}
             onFetchMore={onFetchMore}
             onReplyClick={handleReplyDetail}
             users={usersWithAll}
