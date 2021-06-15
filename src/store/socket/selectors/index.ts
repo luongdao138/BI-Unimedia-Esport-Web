@@ -7,7 +7,7 @@ import { ChatSuggestionList } from '@components/Chat/types/chat.types'
 import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 const getRoot = (state: RootState) => state.socket
-const currentUserId = (state: RootState) => state.auth.user.id
+const currentUserId = (state: RootState) => state.auth?.user?.id
 const memberSelector = (state: RootState) => state.socket.members
 const errorSelector = (state: RootState) => state.socket.error
 
