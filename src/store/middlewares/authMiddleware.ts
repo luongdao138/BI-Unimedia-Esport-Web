@@ -8,6 +8,5 @@ export const authMiddleware: Middleware = (store: StoreType) => (next: AppDispat
   if (types.includes(action.type)) {
     store.dispatch(getUserProfile())
   }
-
   return next(action)
 }
