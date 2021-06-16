@@ -90,7 +90,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleCl
             </Typography>
           </Box>
         </Box>
-        {followed !== undefined && userProfile.id != data.id && (
+        {followed !== undefined && userProfile?.id != data.id && (
           <Box flexShrink={0}>
             {followed ? (
               <ESButton disabled={isLoading} onClick={unfollow} variant="contained" color="primary" size="medium" round>

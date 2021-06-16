@@ -8,7 +8,7 @@ export type UserSearchParams = {
 
 export type UserSearchResponse = {
   data: Array<UserResponse>
-  links: any
+  meta: Meta
 }
 
 export type UserResponse = {

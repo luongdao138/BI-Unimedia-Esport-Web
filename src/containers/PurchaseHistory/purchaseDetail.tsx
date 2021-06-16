@@ -9,7 +9,7 @@ import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
 import ESButton from '@components/Button'
 import { PAYMENT_STATUS } from '@constants/common.constants'
-import Dialog from '@material-ui/core/Dialog';
+import Dialog from '@material-ui/core/Dialog'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
 import * as actions from '@store/common/actions'
@@ -22,25 +22,25 @@ interface Props {
 const PurchaseDetail: React.FC<Props> = ({ id }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
   const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase } = usePurchaseHistoryDetail()
   const dispatch = useAppDispatch()
 
   const handleClickOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleSubmit = () => {
-    if(purchaseHistoryDetail.data && purchaseHistoryDetail.data.id){
+    if (purchaseHistoryDetail.data && purchaseHistoryDetail.data.id) {
       cancelPurchase(`${purchaseHistoryDetail.data.id}`)
       dispatch(actions.addToast(`${t('common:purchase_history.cancel_msg')}`))
     }
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const DialogContent = withStyles((theme) => ({
     root: {
@@ -53,7 +53,6 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       },
     },
   }))(MuiDialogContent)
-
 
   useEffect(() => {
     if (id) {
@@ -71,12 +70,17 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
           <div>
-            <Dialog maxWidth={'md'} fullWidth open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
+            <Dialog
+              maxWidth={'md'}
+              fullWidth
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
               <DialogContent>
                 <Box className={classes.container}>
-                  <Typography className={classes.dialogTitle}>
-                    {t('common:purchase_history.cancel_order_title')}
-                  </Typography>
+                  <Typography className={classes.dialogTitle}>{t('common:purchase_history.cancel_order_title')}</Typography>
                   <Typography className={classes.message} gutterBottom>
                     {t('common:purchase_history.cancel_order_msg')}
                   </Typography>
@@ -108,8 +112,8 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
                 {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
                   ? `${t('common:purchase_history.canceled')}`
                   : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
-                    ? `${t('common:purchase_history.cancel_requested')}`
-                    : `${t('common:purchase_history.purchased')}`}
+                  ? `${t('common:purchase_history.cancel_requested')}`
+                  : `${t('common:purchase_history.purchased')}`}
               </Typography>
             </Box>
             <Box display="flex">
@@ -150,20 +154,22 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
                   {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
                     ? `(${t('common:purchase_history.canceled')})`
                     : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
-                      ? `(${t('common:purchase_history.cancel_requested')})`
-                      : ''}
+                    ? `(${t('common:purchase_history.cancel_requested')})`
+                    : ''}
                 </Typography>
               </Box>
             </Box>
             {purchaseHistoryDetail.data.attributes.is_cancellable &&
-            !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
-            !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
-              <>
-                <Box my={4} display="flex" justifyContent="center">
-                  <ESButton variant="outlined" onClick={handleClickOpen}>{t('common:purchase_history.cancel_request')}</ESButton>
-                </Box>
-              </>
-            )}
+              !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
+              !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
+                <>
+                  <Box my={4} display="flex" justifyContent="center">
+                    <ESButton variant="outlined" onClick={handleClickOpen}>
+                      {t('common:purchase_history.cancel_request')}
+                    </ESButton>
+                  </Box>
+                </>
+              )}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
@@ -210,7 +216,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     paddingBottom: 56,
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   message: {
     color: Colors.text[200],
@@ -219,11 +225,11 @@ const useStyles = makeStyles((theme) => ({
   actionBox: {
     marginTop: 100,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   actionBtn: {
     width: 200,
-    margin: 16
+    margin: 16,
   },
   wrap: {
     color: Colors.white_opacity[70],
