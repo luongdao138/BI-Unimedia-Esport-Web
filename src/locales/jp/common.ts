@@ -452,6 +452,7 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
+    search_count: '検索結果 :key件',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
@@ -620,7 +621,7 @@ export default {
     cancel_order_msg: 'キャンセルを行なった後に再利用する場合は再度ご購入が必要です。',
     dialog_close: '戻る',
     cancel_submit: 'キャンセルする',
-    cancel_msg: 'アイテムの購入をキャンセルしました'
+    cancel_msg: 'アイテムの購入をキャンセルしました',
   },
   inquiry: {
     title: 'お問い合わせ',

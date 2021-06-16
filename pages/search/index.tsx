@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import UserSearchContainer from '@containers/Search/UserSearch'
 import TournamentSearchContainer from '@containers/Search/TournamentSearch'
-import { Grid, Box, makeStyles, Typography, IconButton, Icon } from '@material-ui/core'
+import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import MainLayout from '@layouts/MainLayout'
 import { searchTypes } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
@@ -52,26 +52,32 @@ const SearchPage: PageWithLayoutType = () => {
   }
 
   return (
-    <Grid container className={classes.container}>
-      <Box pb={3} display="flex" flexDirection="row" alignItems="center">
+    <Box>
+      <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
         <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
-          <Icon className="fa fa-arrow-left" fontSize="small" />
+          <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
         </IconButton>
         <Typography variant="h2" className={classes.label}>
           {renderKeyword()}
         </Typography>
       </Box>
-      {renderSwitch()}
-    </Grid>
+      <Box p={3}>
+        <Box pt={1} pb={2}>
+          <Typography variant="body2">{t('common:search.search_count').replace(/:key/gi, keyword)}</Typography>
+        </Box>
+        {renderSwitch()}
+      </Box>
+    </Box>
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
-    backgroundColor: `${Colors.grey[1000]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[1000]}80`,
-    },
+    backgroundColor: `${Colors.grey[200]}80`,
+    marginRight: theme.spacing(2),
+  },
+  icon: {
+    fontSize: 12,
   },
   container: {
     padding: 24,
@@ -79,6 +85,7 @@ const useStyles = makeStyles(() => ({
   },
   label: {
     wordBreak: 'break-all',
+    fontWeight: 'bold',
   },
 }))
 
