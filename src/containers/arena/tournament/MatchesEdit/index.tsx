@@ -10,7 +10,6 @@ import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
 import { useTranslation } from 'react-i18next'
-import ESToast from '@components/Toast'
 import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
@@ -23,16 +22,7 @@ const ArenaMatches: React.FC = () => {
   const router = useRouter()
   const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
-  const {
-    freeze,
-    randomize,
-    setParticipant,
-    randomizeMeta,
-    resetRandomizeMeta,
-    freezeMeta,
-    resetFreezeMeta,
-    setParticipantMeta,
-  } = useModeratorActions()
+  const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [data, setData] = useState<any>()
@@ -164,16 +154,6 @@ const ArenaMatches: React.FC = () => {
     <div className={classes.root}>
       {matches && matchesMeta.loaded && data && body()}
       <ESLoader open={meta.pending || matchesMeta.pending || randomizeMeta.pending || freezeMeta.pending} />
-
-      {/* success */}
-      {randomizeMeta.loaded && (
-        <ESToast open={randomizeMeta.loaded} message={t('common:arena.randomize_success')} resetMeta={resetRandomizeMeta} />
-      )}
-      {freezeMeta.loaded && <ESToast open={freezeMeta.loaded} message={t('common:arena.freeze_success')} resetMeta={resetFreezeMeta} />}
-
-      {/* error */}
-      {!!randomizeMeta.error && <ESToast open={!!randomizeMeta.error} message={t('common:error.failed')} resetMeta={resetRandomizeMeta} />}
-      {!!freezeMeta.error && <ESToast open={!!freezeMeta.error} message={t('common:error.failed')} resetMeta={resetFreezeMeta} />}
     </div>
   )
 }

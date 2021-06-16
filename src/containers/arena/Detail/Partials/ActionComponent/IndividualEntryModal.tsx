@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import ESButton from '@components/Button'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -15,8 +14,8 @@ import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
 import useEntry from './useEntry'
-import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
+import UnjoinModal from './UnjoinModal'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -29,7 +28,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const classes = useStyles()
   const store = useStore()
   const [open, setOpen] = useState(false)
-  const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
+  const { join, joinMeta } = useEntry()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -69,9 +68,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     <Box>
       <Box className={classes.actionButton}>
         {tournament.attributes.is_entered ? (
-          <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-            {t('common:tournament.unjoin')}
-          </ESButton>
+          <UnjoinModal tournament={tournament} />
         ) : (
           <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
             {t('common:tournament.join')}
@@ -109,9 +106,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         </form>
       </StickyActionModal>
 
-      {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
-      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetJoinMeta} />}
-      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetLeaveMeta} />}
+      {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
     </Box>
   )
 }
