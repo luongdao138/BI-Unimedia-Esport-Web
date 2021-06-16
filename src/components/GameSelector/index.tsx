@@ -45,7 +45,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   return (
     <Box mb={4}>
       <Tabs value={tab} onChange={handleChangeTab} className={classes.tab}>
-        <Tab label={t('common:profile.favorite_game.title')} value={0} />
+        <Tab label={t('common:profile.favorite_game.search_title')} value={0} />
         <Tab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
         <Tab label={t('common:profile.favorite_game.create_new')} value={2} />
       </Tabs>
