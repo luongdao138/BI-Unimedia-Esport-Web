@@ -61,12 +61,7 @@ const SearchPage: PageWithLayoutType = () => {
           {renderKeyword()}
         </Typography>
       </Box>
-      <Box p={3}>
-        <Box pt={1} pb={2}>
-          <Typography variant="body2">{t('common:search.search_count').replace(/:key/gi, keyword)}</Typography>
-        </Box>
-        {renderSwitch()}
-      </Box>
+      <Box p={3}>{renderSwitch()}</Box>
     </Box>
   )
 }

@@ -452,7 +452,6 @@ export default {
     copy_url: '大会URLのコピー',
     report: '通報',
     search_placeholder: 'キーワード検索',
-    search_count: '検索結果 :key件',
   },
   user_profile: {
     edit_profile: 'プロフィールを編集',
