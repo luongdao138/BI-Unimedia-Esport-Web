@@ -59,14 +59,8 @@ const RegisterByEmailContainer: React.FC = () => {
       !!meta.error && (
         <Box pb={8}>
           <Box pb={20 / 8} textAlign="center">
-            <Typography color="secondary">{i18n.t('common:register.error.title2')}</Typography>
+            <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
           </Box>
-          <Box pb={1}>
-            <Typography className={classes.detail}>{i18n.t('common:register.error.detail2')}</Typography>
-          </Box>
-          <Typography className={classes.hint} variant="caption">
-            {i18n.t('common:register.error.hint2')}
-          </Typography>
         </Box>
       )
     )
