@@ -14,6 +14,7 @@ import RoomMemberAddView from '@components/Chat/RoomMemberAddView'
 import RoomImgView from '@components/Chat/RoomImgView'
 import _ from 'lodash'
 import ChatMemberEditContainer from '@containers/ChatMemberEditContainer'
+import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -49,13 +50,39 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
       )
   }, [roomId, userId])
 
-  const isRoomNameMenuShow = () => {
-    if (!_.get(roomInfo, 'sortKey', '').startsWith('chat_room')) return false
+  const isAdmin = () => {
     return _.get(roomInfo, 'isAdmin', false)
   }
 
   const isDirect = () => {
-    return !_.get(roomInfo, 'sortKey', '').startsWith('chat_room')
+    return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
+  }
+
+  const renderMenu = () => {
+    if (!hasNoRoomInfo && !isDirect()) {
+      return (
+        <Box className={classes.menu}>
+          <ESMenu>
+            <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+            {!isDirect() ? (
+              <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+            ) : null}
+            {renderRoomNameChange()}
+            <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+            <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+          </ESMenu>
+        </Box>
+      )
+    }
+    return null
+  }
+
+  const renderRoomNameChange = () => {
+    // tour & req & direct & !admin rooms cant change name
+    if (!isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
+    }
+    return null
   }
 
   return (
@@ -69,28 +96,20 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
       )}
       <Box className={classes.row}>
         {hasNoRoomInfo ? null : (
-          <RoomImgView userId={userId} roomId={roomId as string} roomImg={roomImg} roomName={roomName} isAdmin={isRoomNameMenuShow()} />
+          <RoomImgView
+            userId={userId}
+            roomId={roomId as string}
+            roomImg={roomImg}
+            roomName={roomName}
+            isAdmin={isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM}
+          />
         )}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true}>
             {roomName}
           </Typography>
         </Box>
-        {hasNoRoomInfo ? null : (
-          <Box className={classes.menu}>
-            <ESMenu>
-              <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
-              {!isDirect() ? (
-                <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-              ) : null}
-              {isRoomNameMenuShow() ? (
-                <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
-              ) : null}
-              <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
-              <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
-            </ESMenu>
-          </Box>
-        )}
+        {renderMenu()}
       </Box>
     </>
   )
