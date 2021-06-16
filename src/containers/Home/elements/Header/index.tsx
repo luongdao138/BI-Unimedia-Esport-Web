@@ -34,7 +34,7 @@ export const Header: React.FC = () => {
       <AppBar className={classes.appBar} position="static">
         <Toolbar className={classes.toolbar}>
           <Typography variant="h2">{t('common:home.home')}</Typography>
-          <ESMenu>
+          <ESMenu hover>
             <LoginRequired>
               <ESMenuItem onClick={() => router.push(ESRoutes.HOME_ORDER)}>{t('common:home.change_order')}</ESMenuItem>
               <ESMenuItem onClick={() => router.push('/tournaments')}>コミュニティを作る</ESMenuItem>

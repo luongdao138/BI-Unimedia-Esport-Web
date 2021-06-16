@@ -8,6 +8,7 @@ interface MenuProps {
   className?: string
   disableRipple?: boolean
   iconClass?: string
+  hover?: boolean
 }
 const useStyles = makeStyles(() => ({
   iconButtonBg: {
@@ -21,9 +22,10 @@ const StyledMenu = withStyles({
   },
 })(Menu)
 
-const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconClass }) => {
+const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconClass, hover }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const classes = useStyles()
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -33,7 +35,7 @@ const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconC
   }
 
   return (
-    <Box className={className}>
+    <Box className={className} onMouseEnter={hover && handleClick} onMouseLeave={hover && handleClose}>
       <IconButton className={`${classes.iconButtonBg} ${iconClass ? iconClass : ''}`} disableRipple={disableRipple} onClick={handleClick}>
         <Icon className="fa fa-ellipsis-v" fontSize="small" />
       </IconButton>

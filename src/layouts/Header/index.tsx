@@ -163,7 +163,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                     </Box>
                   </Box>
 
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
+                  <IconButton
+                    className={`visible-mobile ${classes.button}`}
+                    disableRipple
+                    color="inherit"
+                    onClick={() => navigateScreen(ESRoutes.MESSAGE)}
+                  >
                     <Badge badgeContent={17} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-inbox ${classes.icon}`} />
                     </Badge>
