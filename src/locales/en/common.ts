@@ -320,6 +320,7 @@ export default {
     game: 'ゲーム',
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
+    copy_shared_url: '共有URLをコピー',
     report: '通報',
     entry_members: 'エントリーメンバー',
     number_of_entries: 'エントリー数',
