@@ -58,7 +58,6 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
   useEffect(() => {
     if (roomInfo && roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
-      console.warn('im here')
       dispatch(getMessageTournamentDetail(roomInfo.chatRoomId as string))
     }
   }, [roomInfo])
