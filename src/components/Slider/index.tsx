@@ -7,19 +7,22 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 SwiperCore.use([Navigation])
 
+const SMALL_WIDTH = 84
+
 const ESSlide: React.FC<{
   items: ReactElement[]
   title?: string
   moreLink?: string
-  width?: number
   navigation?: boolean
-}> = ({ items, navigation, ...rest }) => {
+  slidesPerView?: number | 'auto'
+  breakpoints?: any
+}> = ({ items, navigation, slidesPerView, breakpoints, ...rest }) => {
   const { t } = useTranslation(['common'])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { title, moreLink, width, ...props } = rest
+  const { title, moreLink, ...props } = rest
 
-  const classes = useStyles()
+  const classes = useStyles({ slidesPerView })
   const prevRef = useRef(null)
   const nextRef = useRef(null)
 
@@ -31,17 +34,12 @@ const ESSlide: React.FC<{
         </Typography>
       )}
       <Swiper
-        slidesPerView={2.1}
+        slidesPerView={slidesPerView}
         slidesPerGroup={1}
         spaceBetween={0}
         {...props}
         className={classes.wrap}
-        breakpoints={{
-          '767': {
-            slidesPerView: 3.1,
-            slidesPerGroup: 2,
-          },
-        }}
+        breakpoints={breakpoints}
         onInit={(swiper) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -56,7 +54,11 @@ const ESSlide: React.FC<{
         }}
       >
         {items.map((item, index) => {
-          return <SwiperSlide key={index}>{item}</SwiperSlide>
+          return (
+            <SwiperSlide key={index} className={classes.slideWidth}>
+              {item}
+            </SwiperSlide>
+          )
         })}
 
         {navigation && (
@@ -144,9 +146,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   moreIcon: {
     marginLeft: theme.spacing(0.5),
   },
+  slideWidth: (win: { slidesPerView: number | 'auto' }) => ({
+    maxWidth: win.slidesPerView === 'auto' ? SMALL_WIDTH : 'none',
+  }),
   containerStart: {
     marginLeft: theme.spacing(3),
   },
 }))
+
+ESSlide.defaultProps = {
+  slidesPerView: 2.1,
+}
 
 export default ESSlide

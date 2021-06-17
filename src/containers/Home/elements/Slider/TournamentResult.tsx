@@ -15,7 +15,12 @@ export const TournamentResult: React.FC<Props> = ({ data }) => {
       title={t('common:tournament.follower_ended')}
       moreLink={ESRoutes.TOURNAMENT_FOLLOWER_ENDED}
       navigation
-      width={256}
+      breakpoints={{
+        '767': {
+          slidesPerView: 3.1,
+          slidesPerGroup: 2,
+        },
+      }}
       items={data.slice(0, SLIDE_LIMIT).map((tournament, i: number) => (
         <TournamentCardResult key={i} tournament={tournament} />
       ))}
