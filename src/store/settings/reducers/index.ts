@@ -16,6 +16,7 @@ type StateType = {
   purchaseHistory: PurchaseHistoryResponse['data']
   purchaseHistoryDetail: PurchaseHistoryDetailResponse
   purchaseHistoryMeta?: Meta
+  cancelPurchase: PurchaseHistoryDetailResponse
   blockedUsers: Array<UserResponse>
   blockedUsersMeta?: Meta
 }
@@ -28,6 +29,7 @@ const initialState: StateType = {
   notificationSettings: [],
   purchaseHistory: [],
   purchaseHistoryDetail: undefined,
+  cancelPurchase: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -64,6 +66,9 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.getPurchaseHistoryDetail.fulfilled, (state, action) => {
       state.purchaseHistoryDetail = action.payload
+    })
+    .addCase(actions.cancelPurchase.fulfilled, (state, action) => {
+      state.cancelPurchase = action.payload
     })
     .addCase(actions.clearPurchaseHistoryDetail, (state) => {
       state.purchaseHistoryDetail = undefined

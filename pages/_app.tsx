@@ -25,6 +25,7 @@ import SimpleReactLightbox from 'simple-react-lightbox'
 import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
+import Head from 'next/head'
 
 type Props = AppProps & {
   Component: PageWithLayoutType
@@ -81,13 +82,16 @@ const App = ({ Component, pageProps }: Props) => {
   const { previousRoute } = useRouteUrlHistory()
 
   return (
-    <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
+    <PersistGate persistor={persistStore(store)}>
       <RouteContext.Provider
         value={{
           previousRoute,
         }}
       >
         <ThemeProvider theme={theme}>
+          <Head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+          </Head>
           <ESLoader open={loader} />
           <ToastContainer />
           <DialogContainer />

@@ -11,20 +11,24 @@ interface Props {
 const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
   const notification = data.attributes
   const classes = useStyles()
+  const renderAvatar = () => {
+    switch(notification.ntype_id) {
+      case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM || NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_ADMIN:
+        return <ESAvatar src={'/images/avatar.png'} />
+      case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW:
+        return <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+      default:
+        return <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
+    }
+  }
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-        {notification.ntype_id === NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW ? (
-          <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
-        ) : (
-          <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
-        )}
+        {renderAvatar()}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
-          <Box color={Colors.white}>
-            <Typography variant="caption" noWrap>
-              {notification.nickname}
-            </Typography>
-          </Box>
+          <Typography variant="caption" noWrap className={classes.title}>
+            {notification.nickname}
+          </Typography>
           <Typography noWrap>{notification.message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
@@ -48,6 +52,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: 'none',
       background: '#1a1a1a',
     },
+  },
+  title: {
+    color: Colors.white,
   },
 }))
 

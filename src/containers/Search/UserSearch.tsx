@@ -34,9 +34,11 @@ const UserSearchContainer: React.FC = () => {
     <Grid container>
       {!!page && (
         <Grid item xs={12}>
-          <Typography variant="caption" gutterBottom>
-            {`${t('common:common.search_results')} ${page?.total_count}${t('common:common.total')}`}
-          </Typography>
+          <Box pt={1} pb={2}>
+            <Typography variant="caption" gutterBottom>
+              {`${t('common:common.search_results')} ${page?.total_count}${t('common:common.total')}`}
+            </Typography>
+          </Box>
         </Grid>
       )}
       <InfiniteScroll

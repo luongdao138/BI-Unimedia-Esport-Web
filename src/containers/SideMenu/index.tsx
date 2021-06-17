@@ -187,7 +187,7 @@ const SideMenu: React.FC = () => {
             <ProfileAvatar
               size={80}
               alt={userProfile?.attributes?.nickname}
-              src={userProfile?.attributes?.avatar_url ? userProfile.attributes.avatar_url : '/images/avatar_o.png'}
+              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
             />
             {isAuthenticated && (
               <Box width="100%" textAlign="center">

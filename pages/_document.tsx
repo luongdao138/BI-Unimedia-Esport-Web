@@ -3,15 +3,30 @@ import React, { ReactElement } from 'react'
 import { ServerStyleSheets } from '@material-ui/core/styles'
 
 type Props = unknown
-
 class Document extends NextDocument<Props> {
   render(): ReactElement {
+    const GA_TRACKING_ID = process.env.GA_TRACKING_ID
     return (
       <Html>
         <Head>
           <link rel="shortcut icon" href="/favicon.png" key="shortcutIcon" />
           <link rel="manifest" href="/manifest.json" />
           <link href="/fonts/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"></link>
+
+          {/* Global Site Tag (gtag.js) - Google Analytics */}
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+            }}
+          />
         </Head>
         <body>
           <Main />

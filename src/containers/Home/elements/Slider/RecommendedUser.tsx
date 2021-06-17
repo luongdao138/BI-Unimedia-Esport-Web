@@ -57,7 +57,6 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
       title={t('common:home.recommended_user')}
       navigation={false}
       width={84}
-      disableResponsiveWidth
       items={users.slice(0, USER_LIMIT).map((user, i) => (
         <Box key={i}>
           <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>

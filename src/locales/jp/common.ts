@@ -98,20 +98,15 @@ export default {
       password: 'パスワードが間違っています。',
     },
     error: {
-      title: 'ログインできませんでした',
+      title: 'ログインできませんでした。',
       detail: `以下の可能性がございます。
-        １. メールアドレスに誤りがある
-        ２. パスワードに誤りがある
-        ３. SNS連携でアカウントを作成している`,
+      1、メールアドレスに誤りがある
+      2、パスワードに誤りがある
+      3、SNS連携でアカウントを作成している
+      `,
       hint:
-        '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワードを設定していただくか、しばらく経ってからもう一度ログインしてください。',
-      title2: 'SNSでのログインに失敗しました',
-      detail2: `以下の可能性がございます。
-      １. ダミーテキスト
-      ２. ダミーテキスト
-      ３. ダミーテキスト`,
-      hint2:
-        'ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミー',
+        '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワード再設定いただくか、しばらくたってからもう一度ログインしてください。',
+      title2: 'ログインに失敗しました',
     },
   },
   register: {
@@ -138,7 +133,7 @@ export default {
       ３. SNS連携ですでにアカウントを作成している(ダミー)`,
       hint2: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
     },
-    resend_success: '認証コードメールを再度送信しました。',
+    resend_success: '認証コードメール再度送信しました。',
   },
   register_by_email: {
     email: 'メールアドレス',
@@ -146,7 +141,7 @@ export default {
     email_placeholder: 'sample@exelab.jp',
     password: 'パスワード',
     hint: '8文字以上の半角英数字を入力してください',
-    hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
+    hint2: 'パスワードは英大文字、英小文字、数字を一文字以上使用してください',
     button: '次へ',
     back: 'メールアドレスで登録',
     sns: 'SNS連携で登録',
@@ -156,8 +151,8 @@ export default {
   register_profile: {
     user_id: 'ユーザーID',
     nickname: 'ニックネーム',
-    hint: 'ユーザーIDはあとから変更ができません',
-    hint2: '半角英数字、”+_-”が使用できます',
+    hint: 'ユーザーIDは後から変更できません',
+    hint2: '半角英数字+"_"+"-"を使用できます',
   },
   error: {
     login_failed: 'ログインに失敗しました。',
@@ -250,12 +245,14 @@ export default {
       add_button: '追加する',
       title: '好きなゲーム',
       title_label: 'ゲーム名',
+      search_title: 'キーワードで探す',
       search_by_keyword: 'キーワードで探す',
       search_by_genre: 'ジャンルから探す',
       create_new: '新しく作る',
       genre: 'ジャンル：',
       genre_label: 'ゲームジャンル',
       add_success: 'ゲームを新しく追加しました',
+      no_result: '一致するゲームは見つかりませんでした',
     },
     edit: '編集',
     edit_profile: 'プロフィールを編集する',
@@ -512,8 +509,8 @@ export default {
   },
   confirm: {
     sent: 'メールアドレスに送信された',
-    verification_code: '6桁の認証コードを送信しました',
-    resend: '認証コードを再送する',
+    verification_code: '6桁の認証コードを入力してください',
+    resend: '認証コードを再送信する',
     dont_receive: '認証コードが届かない場合',
     send_again: '入力したメールアドレスに誤りがある可能性があります。前の画面に戻り、もう一度送信してください。',
   },
@@ -595,6 +592,7 @@ export default {
     title: '購入履歴',
     order_id: '購入ID',
     vendor: '販売元',
+    vendor_name: 'NTTe-Sports',
     ticket_name: 'アイテム',
     type: '区分',
     price: '金額',
@@ -604,6 +602,22 @@ export default {
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',
     help_purchase: '購入に心当たりがない',
+    item: 'アイテム',
+    classification: '区分',
+    ticket: 'チケット',
+    quantity: '数量',
+    total_fee: '合計金額',
+    tax: '消費税',
+    payment: '支払金額',
+    canceled: 'キャンセル済み',
+    cancel_requested: 'キャンセル処理中',
+    cancel_request: '注文をキャンセル',
+    purchased: '購入済み',
+    cancel_order_title: '注文をキャンセルします',
+    cancel_order_msg: 'キャンセルを行なった後に再利用する場合は再度ご購入が必要です。',
+    dialog_close: '戻る',
+    cancel_submit: 'キャンセルする',
+    cancel_msg: 'アイテムの購入をキャンセルしました',
   },
   inquiry: {
     title: 'お問い合わせ',

@@ -213,6 +213,7 @@ export type PurchaseHistoryDetailResponse = {
       history_id: number
       title: string
       description: string
+      vendor_name: string
       is_cancellable?: boolean
       cancel_possible_day?: number
       history_status?: number
@@ -237,6 +238,7 @@ export type PurchaseHistory = {
     history_id: number
     title: string
     description: string
+    vendor_name: string
     is_cancellable?: boolean
     cancel_possible_day?: number
     history_status?: number
@@ -250,5 +252,10 @@ export const getPurchaseHistory = async (params: PurchaseHistoryParams): Promise
 
 export const getPurchaseHistoryDetail = async (id: string): Promise<PurchaseHistoryDetailResponse> => {
   const { data } = await api.get<PurchaseHistoryDetailResponse>(URI.PURCHASE_HISTORY_DETAIL.replace(/:id/gi, id))
+  return data
+}
+
+export const cancelPurchase = async (id: string): Promise<PurchaseHistoryDetailResponse> => {
+  const { data } = await api.post<PurchaseHistoryDetailResponse>(URI.PURCHASE_CANCEL.replace(/:id/gi, id))
   return data
 }

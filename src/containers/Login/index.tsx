@@ -6,7 +6,6 @@ import * as Yup from 'yup'
 import useLoginByEmail from './useLoginByEmail'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
-import Image from 'next/image'
 import ESInput from '@components/Input'
 import FilterNoneIcon from '@material-ui/icons/FilterNone'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -24,18 +23,13 @@ import { ESRoutes } from '@constants/route.constants'
 import ESLoader from '@components/FullScreenLoader'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ESCheckbox from '@components/Checkbox'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
 import { URI } from '@constants/uri.constants'
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .test('email-validation', i18n.t('common:login.validation.email'), (value) => {
-      return CommonHelper.validateEmail(value)
-    })
-    .required(i18n.t('common:common.required')),
-  password: Yup.string().required(i18n.t('common:common.required')).min(8, i18n.t('common:common.required')),
+  email: Yup.string().required(i18n.t('common:common.required')),
+  password: Yup.string().required(i18n.t('common:common.required')),
 })
 
 const LoginContainer: React.FC = () => {
@@ -46,7 +40,7 @@ const LoginContainer: React.FC = () => {
     privacy: false,
   })
   const classes = useStyles()
-  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail(social.resetMeta())
+  const { loginByEmail, meta, resetMeta, handleClick } = useLoginByEmail()
   const { handleLink } = useReturnHref()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -71,11 +65,13 @@ const LoginContainer: React.FC = () => {
   }
 
   const handleChangeCheckBox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    resetMetas()
     setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
   }
 
-  const handleSocialLogin = (params) => social.login({ ...params, type: 'login' })
+  const handleSocialLogin = (params) => {
+    resetMetas()
+    social.login({ ...params, type: 'login' })
+  }
 
   const buttonActive = (): boolean => _.isEmpty(errors)
 
@@ -104,14 +100,8 @@ const LoginContainer: React.FC = () => {
       !!social.meta.error && (
         <Box pb={8}>
           <Box pb={20 / 8} textAlign="center">
-            <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
+            <Typography color="secondary">{i18n.t('common:login.error.title2')}</Typography>
           </Box>
-          <Box pb={1}>
-            <Typography className={classes.detail}>{i18n.t('common:register.error.detail')}</Typography>
-          </Box>
-          <Typography className={classes.hint} variant="caption">
-            {i18n.t('common:register.error.hint')}
-          </Typography>
         </Box>
       )
     )
@@ -132,7 +122,7 @@ const LoginContainer: React.FC = () => {
 
         <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center" className={classes.container}>
           <Box pt={1.375} pb={8}>
-            <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
+            <img src="/images/lp_exelab_logo.svg" width="116" height="148" />
           </Box>
 
           {renderError()}
@@ -159,6 +149,7 @@ const LoginContainer: React.FC = () => {
                   onBlur={handleBlur}
                   helperText={touched.email && errors.email}
                   error={touched.email && !!errors.email}
+                  autoFocus
                 />
               </Box>
 
