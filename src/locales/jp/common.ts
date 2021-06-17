@@ -464,6 +464,15 @@ export default {
     max_participants: '参加枠数',
     max_participants_placeholder: '○○○人上限',
   },
+  arenaSearchFilters: {
+    all: 'すべて',
+    beforeEvent: '開催前',
+    recruiting: 'エントリー中',
+    inProgress: '開催中',
+    completed: '終了',
+    joined: 'あなたがエントリーした大会',
+    organized: 'あなたが開催者の大会',
+  },
   search: {
     search: '検索',
     tournament_id: '大会ID：',
