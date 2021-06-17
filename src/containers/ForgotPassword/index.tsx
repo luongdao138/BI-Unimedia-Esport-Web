@@ -57,7 +57,6 @@ const ForgotPasswordContainer: React.FC = () => {
             <Box>
               <ESInput
                 id="email"
-                autoFocus
                 placeholder={t('common:register_by_email.email_placeholder')}
                 labelPrimary={t('common:forgot_password.email')}
                 fullWidth

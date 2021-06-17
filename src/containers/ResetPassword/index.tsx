@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box, InputAdornment } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
@@ -20,6 +20,9 @@ const ResetPasswordContainer: React.FC = () => {
   const classes = useStyles()
   const { user, resetPassword, meta, backAction, resetMeta } = useResetPassword()
   const [score, setScore] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordSecond, setShowPasswordSecond] = useState(false)
+
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .required(t('common:common.required'))
@@ -100,7 +103,21 @@ const ResetPasswordContainer: React.FC = () => {
               <ESInput
                 id="password"
                 labelPrimary={t('common:register_by_email.password')}
-                type="password"
+                endAdornment={
+                  <InputAdornment position="end" className={classes.inputContainer}>
+                    <div className={classes.borderLeft}></div>
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      size="small"
+                      disableRipple
+                      color="inherit"
+                      onMouseDown={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                type={showPassword ? 'text' : 'password'}
                 labelSecondary={<ESStrengthMeter value={score} />}
                 fullWidth
                 value={values.password}
@@ -118,8 +135,22 @@ const ResetPasswordContainer: React.FC = () => {
               <ESInput
                 id="password_confirm"
                 labelPrimary={t('common:register_by_email.enter_password_again')}
-                type="password"
+                type={showPasswordSecond ? 'text' : 'password'}
                 fullWidth
+                endAdornment={
+                  <InputAdornment position="end" className={classes.inputContainer}>
+                    <div className={classes.borderLeft}></div>
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      size="small"
+                      disableRipple
+                      color="inherit"
+                      onMouseDown={() => setShowPasswordSecond(!showPasswordSecond)}
+                    >
+                      {showPasswordSecond ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                    </IconButton>
+                  </InputAdornment>
+                }
                 value={values.password_confirm}
                 onChange={(e) => setFieldValue('password_confirm', CommonHelper.replaceSingleByteString(e.target.value))}
                 onBlur={handleBlur}
@@ -178,6 +209,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blankSpace: {
     height: 169,
+  },
+  inputContainer: {
+    position: 'relative',
+    paddingRigth: 7,
+  },
+  borderLeft: {
+    width: 1,
+    height: 24,
+    backgroundColor: '#4B4B4D',
+    position: 'absolute',
+    left: -8,
   },
   [theme.breakpoints.down('sm')]: {
     container: {

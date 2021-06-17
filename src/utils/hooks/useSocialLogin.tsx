@@ -6,12 +6,13 @@ import { clearMetaData } from '@store/metadata/actions'
 import { Meta } from '@store/metadata/actions/types'
 import { useEffect } from 'react'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import { ESRoutes } from '@constants/route.constants'
 
 const getMeta = createMetaSelector(loginSocial)
 
 const useSocialLogin = (type: string): { meta: Meta; login: (param: LoginSocialParams) => void; resetMeta: () => void } => {
   const dispatch = useAppDispatch()
-  const { handleLogin, handleRegister } = useReturnHref()
+  const { handleLogin, navigateScreen } = useReturnHref()
   const meta = useAppSelector(getMeta)
   const login = (param) => {
     dispatch(loginSocial(param))
@@ -22,7 +23,7 @@ const useSocialLogin = (type: string): { meta: Meta; login: (param: LoginSocialP
   useEffect(() => {
     if (meta.loaded) {
       if (type === 'login') handleLogin()
-      if (type === 'register') handleRegister()
+      if (type === 'register') navigateScreen(ESRoutes.REGISTER_PROFILE)
 
       resetMeta()
     }
