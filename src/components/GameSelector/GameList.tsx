@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
 import Chip from '@components/Chip'
 import { Box, Typography } from '@material-ui/core'
+import i18n from '@locales/i18n'
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -17,7 +18,7 @@ const GameList: React.FC<GameListProps> = ({ games, handleAdd }) => {
   if (games.length === 0) {
     return (
       <Box pt={8} textAlign="center">
-        <Typography color="textSecondary">致するゲームは見つかりませんでした</Typography>
+        <Typography color="textSecondary">{i18n.t('common:profile.favorite_game.no_result')}</Typography>
       </Box>
     )
   }

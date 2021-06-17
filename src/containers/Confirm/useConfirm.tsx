@@ -9,11 +9,11 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { selectors, actions } = authStore
 const getRegisterConfirmMeta = createMetaSelector(actions.registerConfirm)
-const getResendMeta = createMetaSelector(actions.resendConfirmation)
+const getResendMeta = createMetaSelector(actions.signUpResend)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useConfirm = (confirmationCode: string) => {
-  const { navigateScreen } = useReturnHref()
+  const { navigateScreen, handleReturn } = useReturnHref()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const metaConfirm = useAppSelector(getRegisterConfirmMeta)
@@ -21,14 +21,14 @@ const useConfirm = (confirmationCode: string) => {
 
   const registerConfirm = (params: UserConfirmParams) => dispatch(actions.registerConfirm(params))
 
-  const resendConfirmation = (params: UserResendParams) => dispatch(actions.resendConfirmation(params))
+  const resendConfirmation = (params: UserResendParams) => dispatch(actions.signUpResend(params))
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerConfirm.typePrefix))
 
-  const resetResendMeta = () => dispatch(clearMetaData(actions.resendConfirmation.typePrefix))
+  const resetResendMeta = () => dispatch(clearMetaData(actions.signUpResend.typePrefix))
 
   const backAction = () => {
-    navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+    handleReturn()
     resetMeta()
   }
 

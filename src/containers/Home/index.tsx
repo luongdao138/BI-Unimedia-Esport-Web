@@ -17,9 +17,10 @@ import { HOME_SETTINGS } from '@constants/common.constants'
 import ESToast from '@components/Toast'
 import useResetPassword from './useResetPassword'
 import i18n from '@locales/i18n'
+import ESLoader from '@components/FullScreenLoader'
 
 const HomeContainer: React.FC = () => {
-  const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile } = useUserData()
+  const { recommendedUsers, getUserRecommendations, homeSettings, getUserProfile, metaHomeSettings } = useUserData()
   // const { recruitmentFollow, getRecruitmentFollow } = uesRecruitmentData()
   // const { recommendedEventList, getRecommendedEventList } = useEventData()
   const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
@@ -64,6 +65,7 @@ const HomeContainer: React.FC = () => {
       {homeSettings.map((value, index) => {
         return renderItem(value, index)
       })}
+      {metaHomeSettings.pending && <ESLoader open={metaHomeSettings.pending} />}
       <Box marginBottom={9} />
       {metaReset.loaded && (
         <ESToast open={metaReset.loaded} message={i18n.t('common:error.password_reissue')} resetMeta={resetPasswordMeta} />

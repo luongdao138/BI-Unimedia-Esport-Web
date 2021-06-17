@@ -32,7 +32,7 @@ const ForgotConfirmContainer: React.FC = () => {
   }
 
   const handleResend = () => {
-    if (user?.email) resendConfirmation({ email: user.email, type: 'reset_password' })
+    if (user?.email) resendConfirmation({ email: user.email })
   }
 
   return (

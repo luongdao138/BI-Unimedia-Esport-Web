@@ -10,15 +10,16 @@ const { selectors, actions } = authStore
 const getLoginMeta = createMetaSelector(actions.loginByEmail)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useLoginByEmail = (resetSocialMeta: void) => {
+const useLoginByEmail = () => {
   const { handleReturn, handleLogin } = useReturnHref()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getLoginMeta)
   const loginByEmail = (param: UserLoginParams) => dispatch(actions.loginByEmail(param))
   const resetMeta = () => dispatch(clearMetaData(actions.loginByEmail.typePrefix))
+  const resetSocialMeta = () => dispatch(clearMetaData(actions.loginSocial.typePrefix))
   const handleClick = () => {
-    resetSocialMeta
+    resetSocialMeta()
     resetMeta()
     handleReturn()
   }

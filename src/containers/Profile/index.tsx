@@ -85,16 +85,17 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     }
   }, [meta.error])
 
-  if (profile === null || profile === undefined) {
+  const attr = profile?.attributes
+  if (profile == null || profile == undefined || attr == null || attr == undefined) {
     return null
   }
 
-  const cover = profile?.attributes?.cover_url ?? null
-  const avatar = profile?.attributes?.avatar_url ? profile.attributes.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
-  const isFollowing = profile.attributes.is_following
+  const cover = attr.cover_url ?? null
+  const avatar = attr.avatar_url ? attr.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
+  const isFollowing = attr.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
-  const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${profile.attributes.user_code}`)
+  const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${attr.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -115,7 +116,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Typography variant="h2" className={classes.wrapOne}>
-                {profile.attributes.nickname}
+                {attr.nickname}
               </Typography>
             </Box>
           ) : (
@@ -133,7 +134,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                {profile.attributes?.is_direct_chat_available ? (
+                {attr.is_direct_chat_available ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
                     <Icon className={`fas fa-inbox ${classes.inbox}`} />
                   </ESButton>
@@ -148,7 +149,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                   </ESButton>
                 )}
                 <ESMenu>
-                  {profile.attributes.is_blocked ? (
+                  {attr.is_blocked ? (
                     <ESMenuItem
                       onClick={() => {
                         unblockUser({ block_type: 'user', target_id: Number(profile.id) })
@@ -183,7 +184,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         <Grid item xs={12} className={classes.headerContainerSecond}>
           <Box mb={2}>
             <Typography variant="h2" className={classes.wrapOne}>
-              {profile.attributes.nickname}
+              {attr.nickname}
             </Typography>
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>

@@ -8,7 +8,8 @@ export const URI = {
   REGISTER: '/v2/signup/register',
   REGISTER_PROFILE: '/v2/users/settings/stepweb1',
   CONFIRM: '/v2/signup/confirm',
-  RESEND: '/v2/signup/resend_code',
+  SIGNUP_RESEND: '/v2/signup/register/resend_code',
+  FORGOT_RESEND: '/v2/signup/reset_password/resend_code',
   FORGOT_PASSWORD: '/v2/passwords/forgot',
   FORGOT_CONFIRM: '/v2/passwords/confirm',
   RESET_PASSWORD: '/v2/passwords/reset',
@@ -90,4 +91,5 @@ export const URI = {
   PURCHASE_HISTORY: '/v1/purchases/histories',
   PURCHASE_HISTORY_DETAIL: '/v1/purchases/:id/details',
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
+  PURCHASE_CANCEL: '/v2/purchases/:id/cancel',
 }

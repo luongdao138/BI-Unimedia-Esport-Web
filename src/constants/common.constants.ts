@@ -123,6 +123,12 @@ export const LIGHTBOX_OPTIONS = {
 
 export const SLIDE_LIMIT = 5
 
+export const PAYMENT_STATUS = {
+  PURCHASED: 1,
+  CANCEL_REQUESTED: 3,
+  CANCELLED: 4,
+}
+
 export const NG_WORD_DIALOG_CONFIG = {
   actionMsg: i18n.t('common:dialog.ng_word_warning'),
   actions: [{ name: i18n.t('common:dialog.confirm'), action: 'confirm', type: 'primary' }],

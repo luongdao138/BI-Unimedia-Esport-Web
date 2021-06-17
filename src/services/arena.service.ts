@@ -11,7 +11,14 @@ export type TournamentSearchParams = {
 
 export type TournamentSearchResponse = {
   data: Array<TournamentResponse>
-  links: any
+  meta: Meta
+}
+
+export type Meta = {
+  current_page: number
+  per_page: number
+  total_count: number
+  total_pages: number
 }
 
 export type TournamentListItem = {
