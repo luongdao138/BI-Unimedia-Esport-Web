@@ -38,6 +38,7 @@ import * as notificationActions from '@store/notification/actions'
 import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import { unseenCount } from '@store/socket/selectors'
 
 interface returnItem {
   value: string
@@ -59,6 +60,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const { setSearch } = useSearch()
   const { navigateScreen } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
+  const chatCount = useAppSelector(unseenCount)
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
@@ -111,14 +113,6 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     }
   }, [isAuthenticated])
 
-  useEffect(() => {
-    if (router.query.pathName) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-  }, [router.query.pathName])
-
   return (
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="fixed">
@@ -162,8 +156,13 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                     </Box>
                   </Box>
 
-                  <IconButton className={`visible-mobile ${classes.button}`} disableRipple color="inherit">
-                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                  <IconButton
+                    onClick={() => router.push(ESRoutes.MESSAGE)}
+                    className={`visible-mobile ${classes.button}`}
+                    disableRipple
+                    color="inherit"
+                  >
+                    <Badge badgeContent={chatCount} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-inbox ${classes.icon}`} />
                     </Badge>
                   </IconButton>
@@ -179,7 +178,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               )}
             </div>
-            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn} disableScrollLock={false}>
               <BlankLayout>{renderContent()}</BlankLayout>
             </ESModal>
           </Toolbar>

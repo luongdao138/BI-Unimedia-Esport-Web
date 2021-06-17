@@ -59,6 +59,12 @@ export type CheckChatResponse = {
   roomId: string | null
 }
 
+export type MessageTournamentResponse = {
+  hash_key: string
+  is_freezed: boolean
+  role: any
+}
+
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
   const { data } = await api.post<GetFriendsResponse>(URI.FRIEND_LIST, params)
   return data
@@ -71,5 +77,10 @@ export const getDirectRoom = async (otherMemberId: number): Promise<GetDirectRoo
 
 export const directRoomCheck = async (userCode: string): Promise<CheckChatResponse> => {
   const { data } = await api.get<CheckChatResponse>(`${URI.CHECK_DIRECT}/${userCode}`)
+  return data
+}
+
+export const getMessageTournamentDetail = async (roomId: string): Promise<MessageTournamentResponse> => {
+  const { data } = await api.get<MessageTournamentResponse>(`${URI.MESSAGE_TOURNAMENT_ID}/${roomId}`)
   return data
 }

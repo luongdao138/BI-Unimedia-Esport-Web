@@ -13,14 +13,21 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
   const notification = data.attributes
   const classes = useStyles()
   const createdAt = CommonHelper.staticSmartTime(_.get(notification, 'created_at', ''))
+  const renderAvatar = () => {
+    switch (notification.ntype_id) {
+      case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM || NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_ADMIN:
+        return <ESAvatar src={'/images/avatar.png'} />
+      case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW:
+        return <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
+      default:
+        return <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
+    }
+  }
+
   return (
     <Box className={classes.wrap}>
       <Box display="flex" overflow="hidden" className={classes.notificationWrap}>
-        {notification.ntype_id === NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW ? (
-          <ESAvatar alt={notification.nickname} src={notification.avatar_url} />
-        ) : (
-          <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
-        )}
+        {renderAvatar()}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
           <Box color={Colors.white}>
             <Typography variant="caption" noWrap>

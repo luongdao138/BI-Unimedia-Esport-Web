@@ -1,18 +1,41 @@
 import React from 'react'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { Item } from './../Item'
+import { Typography, Box, IconButton, Icon } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { Colors } from '@theme/colors'
 
 export type Props = {
-  id: any
+  name: string
 }
 
-export const SortableItem: React.FC<Props> = (props) => {
-  const { attributes, listeners, transform, transition, setNodeRef } = useSortable({ id: props.id })
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  }
+export const SortableItem: React.FC<Props> = ({ name }) => {
+  const classes = useStyles()
 
-  return <Item id={props.id} ref={setNodeRef} style={style} {...attributes} {...listeners} />
+  return (
+    <Box mb={3} className={classes.dragItemWrap}>
+      <IconButton className={classes.iconButton}>
+        <Icon className="fas fa-bars" fontSize="small" />
+      </IconButton>
+      <Typography variant="h3" className={classes.dragTitle}>
+        {name}
+      </Typography>
+    </Box>
+  )
 }
+
+const useStyles = makeStyles(() => ({
+  dragItemWrap: {
+    display: 'flex',
+    height: 40,
+    alignItems: 'center',
+    '&:hover': {
+      background: Colors.white_opacity[30],
+      cursor: 'grab',
+    },
+  },
+  iconButton: {
+    color: Colors.white_opacity[30],
+  },
+  dragTitle: {
+    color: Colors.white_opacity[70],
+  },
+}))

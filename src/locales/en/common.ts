@@ -498,6 +498,7 @@ export default {
     toast_delete_member: 'メンバーを除外しました。',
     room_not_found: 'ルームが見つかりませんでした。',
     delete_chat: '通報',
+    see_tournament: '該当の大会をみる',
   },
   notification: {
     title: '通知一覧',
