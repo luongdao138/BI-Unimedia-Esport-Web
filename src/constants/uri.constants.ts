@@ -89,4 +89,5 @@ export const URI = {
   CHECK_DIRECT: '/v2/chats/user_and_chat_room',
   PURCHASE_HISTORY: '/v1/purchases/histories',
   PURCHASE_HISTORY_DETAIL: '/v1/purchases/:id/details',
+  MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
 }
