@@ -112,14 +112,6 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     }
   }, [isAuthenticated])
 
-  useEffect(() => {
-    if (router.query.pathName) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-  }, [router.query.pathName])
-
   return (
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="fixed">
@@ -185,7 +177,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               )}
             </div>
-            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn} disableScrollLock={false}>
               <BlankLayout>{renderContent()}</BlankLayout>
             </ESModal>
           </Toolbar>
