@@ -152,7 +152,6 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
                     <BlankLayout>
                       <ESSlider
                         navigation={false}
-                        width={64}
                         items={selectedUsers.map((user, i) => (
                           <Box className={classes.innerWrap} key={i}>
                             <ESAvatar className={classes.avatar} src={user.attributes.avatar} />

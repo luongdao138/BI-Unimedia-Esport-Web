@@ -29,7 +29,6 @@ export const RecommendedRecruitment: React.FC<Props> = ({ data }) => {
       title={t('common:home.recommended_recruitment')}
       navigation
       moreLink={ESRoutes.RECRUITMENT_RECOMMENDED}
-      width={256}
       items={data.map((recruitment, i) => (
         <RecruitmentCard key={i} recruitment={recruitment} />
       ))}
