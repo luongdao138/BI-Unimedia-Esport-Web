@@ -12,7 +12,7 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
   const notification = data.attributes
   const classes = useStyles()
   const renderAvatar = () => {
-    switch(notification.ntype_id) {
+    switch (notification.ntype_id) {
       case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM || NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_ADMIN:
         return <ESAvatar src={'/images/avatar.png'} />
       case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW:

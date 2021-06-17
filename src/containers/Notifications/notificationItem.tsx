@@ -14,7 +14,7 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
   const classes = useStyles()
   const createdAt = CommonHelper.staticSmartTime(_.get(notification, 'created_at', ''))
   const renderAvatar = () => {
-    switch(notification.ntype_id) {
+    switch (notification.ntype_id) {
       case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_SYSTEM || NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_ADMIN:
         return <ESAvatar src={'/images/avatar.png'} />
       case NOTIFICATION_ACTION_TYPES.NOTIFICATION_TYPE_FOLLOW:
