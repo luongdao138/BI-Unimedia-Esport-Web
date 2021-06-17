@@ -4,16 +4,58 @@ import ESLoader from '@components/Loader'
 import TournamentCard from '@components/TournamentCard'
 import ButtonPrimary from '@components/ButtonPrimary'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { TournamentFilterOption } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { AddRounded } from '@material-ui/icons'
+import ESChip from '@components/Chip'
 import useArenaHelper from '../hooks/useArenaHelper'
+import { useState } from 'react'
 
 const ArenaHome: React.FC = () => {
   const { t } = useTranslation()
   const classes = useStyles()
-  const { arenas, page, meta, loadMore } = useArenaHome()
+  const { arenas, page, meta, loadMore, onFilterChange } = useArenaHome()
   const { toCreate } = useArenaHelper()
+  const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
+
+  const onFilter = (filter: TournamentFilterOption) => {
+    if (selectedFilter !== filter) {
+      onFilterChange(filter)
+    }
+    setSelectedFilter(filter)
+  }
+
+  const defaultFilterOptions = [
+    {
+      type: TournamentFilterOption.all,
+      label: t('common:arenaSearchFilters.all'),
+    },
+    {
+      type: TournamentFilterOption.beforeEvent,
+      label: t('common:arenaSearchFilters.beforeEvent'),
+    },
+    {
+      type: TournamentFilterOption.recruiting,
+      label: t('common:arenaSearchFilters.recruiting'),
+    },
+    {
+      type: TournamentFilterOption.inProgress,
+      label: t('common:arenaSearchFilters.inProgress'),
+    },
+    {
+      type: TournamentFilterOption.completed,
+      label: t('common:arenaSearchFilters.completed'),
+    },
+    {
+      type: TournamentFilterOption.joined,
+      label: t('common:arenaSearchFilters.joined'),
+    },
+    {
+      type: TournamentFilterOption.organized,
+      label: t('common:arenaSearchFilters.organized'),
+    },
+  ]
 
   return (
     <>
@@ -25,6 +67,17 @@ const ArenaHome: React.FC = () => {
         </ButtonPrimary>
       </div>
       <Grid container className={classes.content}>
+        <Box className={classes.filters}>
+          {defaultFilterOptions.map((option) => (
+            <ESChip
+              key={option.type}
+              color={option.type === selectedFilter ? 'primary' : undefined}
+              className={classes.filterChip}
+              label={option.label}
+              onClick={() => onFilter(option.type)}
+            />
+          ))}
+        </Box>
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={arenas.length}
@@ -62,10 +115,21 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(3),
     marginBottom: theme.spacing(3),
     backgroundColor: Colors.black,
-    borderBottom: `1px solid ${Colors.white_opacity['30']}`,
     '& .MuiButtonBase-root.button-primary': {
       padding: '12px 16px',
     },
+  },
+  filters: {
+    maxWidth: 500,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 8,
+  },
+  filterChip: {
+    maxWidth: 'none',
+    marginBottom: 16,
+    marginRight: 16,
   },
   addIcon: {
     position: 'relative',

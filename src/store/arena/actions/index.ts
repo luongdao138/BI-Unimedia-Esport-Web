@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/arena.service'
-import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS } from './types'
+import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS, CLEAR_TOURNAMENT_RESULT } from './types'
 import * as types from './types'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
@@ -263,6 +263,7 @@ export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUs
 )
 
 export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
+export const clearTournamentResult = createAction(CLEAR_TOURNAMENT_RESULT)
 
 export const createTournament = createAsyncThunk<services.CreateTournamentResponse, services.TournamentFormParams>(
   types.CREATE_TOURNAMENT,

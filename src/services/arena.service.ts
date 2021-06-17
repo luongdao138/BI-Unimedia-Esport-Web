@@ -4,9 +4,20 @@ import { GameHardware, GameTitle } from './game.service'
 import { Feature } from './user.service'
 import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 
+export enum TournamentFilterOption {
+  all = 'all',
+  beforeEvent = 'before_event',
+  recruiting = 'recruiting',
+  inProgress = 'in_progress',
+  completed = 'completed',
+  joined = 'joined',
+  organized = 'organized',
+}
+
 export type TournamentSearchParams = {
   page: number
   keyword: string
+  filter?: TournamentFilterOption
 }
 
 export type TournamentSearchResponse = {
