@@ -584,6 +584,9 @@
   .chat-wrapper.show-list .room-create-button {
     display: flex;
   }
+  .chat-wrapper.show-list .header-first-column {
+    flex: 0 0 180px;
+  }
 }
 
 @media (max-width: 960px) {
