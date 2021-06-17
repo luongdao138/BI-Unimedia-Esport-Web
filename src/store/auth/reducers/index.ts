@@ -6,9 +6,10 @@ import { UserLoginResponse } from '@services/auth.service'
 
 type StateType = {
   user?: UserLoginResponse
+  confirmType?: 'register' | 'forgot'
 }
 
-const initialState: StateType = { user: undefined }
+const initialState: StateType = { user: undefined, confirmType: undefined }
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -20,9 +21,11 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.registerByEmail.fulfilled, (state, action) => {
       state.user = action.payload
+      state.confirmType = 'register'
     })
     .addCase(actions.forgotPassword.fulfilled, (state, action) => {
       state.user = action.payload
+      state.confirmType = 'forgot'
     })
     .addCase(actions.forgotConfirm.fulfilled, (state, action) => {
       state.user = action.payload
