@@ -39,6 +39,7 @@ import * as notificationActions from '@store/notification/actions'
 import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import { unseenCount } from '@store/socket/selectors'
 
 interface returnItem {
   value: string
@@ -60,6 +61,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const { setSearch } = useSearch()
   const { navigateScreen } = useReturnHref()
   const { makeContextualHref } = useContextualRouting()
+  const chatCount = useAppSelector(unseenCount)
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
@@ -156,12 +158,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                   </Box>
 
                   <IconButton
+                    onClick={() => router.push(ESRoutes.MESSAGE)}
                     className={`visible-mobile ${classes.button}`}
                     disableRipple
                     color="inherit"
-                    onClick={() => navigateScreen(ESRoutes.MESSAGE)}
                   >
-                    <Badge badgeContent={17} color="primary" className={classes.badge}>
+                    <Badge badgeContent={chatCount} color="primary" className={classes.badge}>
                       <Icon className={`fa fa-inbox ${classes.icon}`} />
                     </Badge>
                   </IconButton>
