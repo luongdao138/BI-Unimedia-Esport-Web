@@ -7,7 +7,7 @@ import { TransitionProps } from '@material-ui/core/transitions'
 export interface ESDialogProps {
   open: boolean
   handleClose?: () => void
-  disableScrollLock: boolean
+  disableScrollLock?: boolean
 }
 
 const Transition = React.forwardRef(function Transition(
