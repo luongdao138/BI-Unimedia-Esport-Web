@@ -82,7 +82,7 @@ const App = ({ Component, pageProps }: Props) => {
   const { previousRoute } = useRouteUrlHistory()
 
   return (
-    <PersistGate persistor={persistStore(store)} loading={<div>Loading</div>}>
+    <PersistGate persistor={persistStore(store)}>
       <RouteContext.Provider
         value={{
           previousRoute,
