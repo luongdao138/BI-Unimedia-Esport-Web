@@ -141,7 +141,7 @@ export default createReducer(initialState, (builder) => {
     state.accountSettingsChangeEmailSteps.step_check = false
     state.accountSettingsChangeEmailSteps.step_change = false
   })
-  
+
   builder.addCase(actions.clearHomeSettings, (state) => {
     state.data.attributes.home_settings = []
   })
