@@ -70,7 +70,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
   }
 
-  const hasPermission = !_.get(tournament, 'is_freezed', false)
+  const hasPermission = !_.get(tournament, 'is_freezed', true)
 
   const memberAddItem = () => {
     if (!isDirect() && hasPermission && isAdmin()) {

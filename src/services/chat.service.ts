@@ -61,8 +61,8 @@ export type CheckChatResponse = {
 
 export type MessageTournamentResponse = {
   hash_key: string
-  status: string
-  role: string
+  is_freezed: boolean
+  role: any
 }
 
 export const getFriends = async (params: GetFriendsParam): Promise<GetFriendsResponse> => {
