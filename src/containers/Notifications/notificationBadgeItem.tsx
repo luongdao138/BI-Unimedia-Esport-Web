@@ -20,11 +20,9 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
           <ESAvatar src={notification.avatar_url || '/images/avatar.png'} />
         )}
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center" width="100%">
-          <Box color={Colors.white}>
-            <Typography variant="caption" noWrap>
-              {notification.nickname}
-            </Typography>
-          </Box>
+          <Typography variant="caption" noWrap className={classes.title}>
+            {notification.nickname}
+          </Typography>
           <Typography noWrap>{notification.message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
@@ -48,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: 'none',
       background: '#1a1a1a',
     },
+  },
+  title: {
+    color: Colors.white,
   },
 }))
 
