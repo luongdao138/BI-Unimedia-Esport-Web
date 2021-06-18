@@ -91,7 +91,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }
 
   const cover = attr.cover_url ?? null
-  const avatar = attr.avatar_url ? attr.avatar_url : isOthers ? '/images/avatar_o.png' : '/images/avatar.png'
   const isFollowing = attr.is_following
 
   const edit = () => router.push(ESRoutes.PROFILE_EDIT)
@@ -126,8 +125,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           )}
           <Box className={classes.headerItemsContainer}>
             <ProfileAvatar
-              src={avatar}
+              src={attr.avatar_url}
               editable={!isOthers}
+              alt={attr.nickname}
               onChange={(f: File) => {
                 isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR)
               }}
