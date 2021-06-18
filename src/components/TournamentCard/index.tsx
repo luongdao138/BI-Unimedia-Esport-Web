@@ -163,9 +163,6 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 export default TournamentCard
 
 const useStyles = makeStyles((theme) => ({
-  card: {
-    width: 240,
-  },
   cardHover: {
     cursor: 'pointer',
   },

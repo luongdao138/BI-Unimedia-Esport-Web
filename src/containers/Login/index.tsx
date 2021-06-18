@@ -134,7 +134,11 @@ const LoginContainer: React.FC = () => {
                 <ESInput
                   id="email"
                   placeholder={i18n.t('common:login.email_placeholder')}
-                  labelPrimary={i18n.t('common:login.email_label_primary')}
+                  labelPrimary={
+                    <Box className={classes.labelPrimaryContainer} display="flex" alignItems="center">
+                      <label className={classes.labelMargin}>{i18n.t('common:login.email_label_primary')}</label>
+                    </Box>
+                  }
                   labelSecondary={
                     <Typography color="textPrimary" gutterBottom={false} variant="body2" className={classes.link}>
                       <a href={URI.WEB_SUPPORT} target="_blank" rel="noopener noreferrer">
@@ -295,6 +299,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     topContainer: {
       paddingTop: 0,
     },
+  },
+  labelMargin: {
+    fontWeight: 'bold',
+    fontSize: theme.typography.h3.fontSize,
+  },
+  labelPrimaryContainer: {
+    width: '40%',
   },
 }))
 

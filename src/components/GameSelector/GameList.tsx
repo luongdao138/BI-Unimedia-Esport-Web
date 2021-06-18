@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
-import Chip from '@components/Chip'
+import ESChip from '@components/Chip'
 import { Box, Typography } from '@material-ui/core'
 import i18n from '@locales/i18n'
 
@@ -11,9 +11,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-type GameListProps = { games: GameTitle['attributes'][]; handleAdd: (game: GameTitle['attributes']) => void }
+type GameListProps = {
+  games: GameTitle['attributes'][]
+  selectedGames: GameTitle['attributes'][]
+  handleAdd: (game: GameTitle['attributes']) => void
+}
 
-const GameList: React.FC<GameListProps> = ({ games, handleAdd }) => {
+const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) => {
   const classes = useStyles()
   if (games.length === 0) {
     return (
@@ -22,10 +26,19 @@ const GameList: React.FC<GameListProps> = ({ games, handleAdd }) => {
       </Box>
     )
   }
+
+  const checkIsSelected = (id: number) => selectedGames.find((g) => g.id === id)
+
   return (
     <>
       {games.map((g, idx) => (
-        <Chip key={idx} label={g.display_name} className={classes.chip} onClick={() => handleAdd(g)} />
+        <ESChip
+          key={idx}
+          className={classes.chip}
+          label={g.display_name}
+          onClick={() => handleAdd(g)}
+          color={checkIsSelected(g.id) ? 'primary' : 'default'}
+        />
       ))}
     </>
   )
