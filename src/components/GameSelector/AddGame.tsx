@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import { Box, makeStyles } from '@material-ui/core'
-import { CreateGameTitleParams, GameGenre } from '@services/game.service'
+import { CreateGameTitleParams, GameGenre, GameTitle } from '@services/game.service'
 import Input from '@components/Input'
 import Select from '@components/Select'
 import Button from '@components/Button'
@@ -16,6 +16,7 @@ import { useStore } from 'react-redux'
 
 interface Props {
   genres: GameGenre[]
+  handleAdd: (game: GameTitle['attributes']) => void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -31,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const AddGame: React.FC<Props> = ({ genres }) => {
+const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const store = useStore()
-  const { createGame, meta } = useAddGame()
+  const { createGame, meta, createdGame } = useAddGame()
 
   const validationSchema = Yup.object().shape({
     display_name: Yup.string()
@@ -67,6 +68,7 @@ const AddGame: React.FC<Props> = ({ genres }) => {
     if (meta.loaded) {
       setOpen(true)
       formik.resetForm()
+      handleAdd(createdGame)
     }
   }, [meta.loaded])
 
