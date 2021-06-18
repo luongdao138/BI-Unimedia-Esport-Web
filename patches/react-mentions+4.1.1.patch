@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-mentions/dist/react-mentions.cjs.dev.js b/node_modules/react-mentions/dist/react-mentions.cjs.dev.js
+index eae1657..1637a74 100644
+--- a/node_modules/react-mentions/dist/react-mentions.cjs.dev.js
++++ b/node_modules/react-mentions/dist/react-mentions.cjs.dev.js
+@@ -1540,7 +1540,7 @@ function (_React$Component) {
+ 
+         case KEY.RETURN:
+           {
+-            _this.selectFocused();
++            // _this.selectFocused();
+ 
+             return;
+           }
