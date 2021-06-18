@@ -66,6 +66,12 @@ const TournamentCreate: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    if (arena) {
+      formik.validateForm()
+    }
+  }, [arena])
+
+  useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false
       return

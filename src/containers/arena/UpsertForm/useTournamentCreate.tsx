@@ -10,6 +10,8 @@ import { Meta } from '@store/metadata/actions/types'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import _ from 'lodash'
 import useArenaHelper from '../hooks/useArenaHelper'
+import * as commonActions from '@store/common/actions'
+import { useTranslation } from 'react-i18next'
 
 const { actions, selectors } = tournamentStore
 const getTournamentMeta = createMetaSelector(actions.createTournament)
@@ -51,6 +53,7 @@ const useTournamentCreate = (): {
   arena: TournamentDetail
   editables: EditableTypes
 } => {
+  const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getTournamentMeta)
@@ -91,6 +94,8 @@ const useTournamentCreate = (): {
     if (actions.createTournament.fulfilled.match(resultAction)) {
       resetMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.payload.hash_key}`)
+
+      dispatch(commonActions.addToast(t('common:arena.create_success')))
     }
   }
   const update = async (params: UpdateParams) => {
@@ -98,6 +103,7 @@ const useTournamentCreate = (): {
     if (actions.updateTournament.fulfilled.match(resultAction)) {
       resetUpdateMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
+      dispatch(commonActions.addToast(t('common:arena.update_success')))
     }
   }
 

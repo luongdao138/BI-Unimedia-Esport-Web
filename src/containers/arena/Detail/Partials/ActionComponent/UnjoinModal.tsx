@@ -91,6 +91,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   description: {
     textAlign: 'center',
+    fontSize: 18,
+    color: Colors.white,
   },
   button: {
     marginTop: theme.spacing(3),
@@ -115,6 +117,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     actionButtonContainer: {
       flexDirection: 'column-reverse',
+    },
+    title: {
+      fontSize: 20,
+    },
+    desc: {
+      fontSize: 14,
     },
   },
 }))

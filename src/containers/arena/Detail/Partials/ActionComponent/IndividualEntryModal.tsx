@@ -16,6 +16,7 @@ import { useStore } from 'react-redux'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
 import UnjoinModal from './UnjoinModal'
+import LoginRequired from '@containers/LoginRequired'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -66,15 +67,17 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
 
   return (
     <Box>
-      <Box className={classes.actionButton}>
-        {tournament.attributes.is_entered ? (
-          <UnjoinModal tournament={tournament} />
-        ) : (
-          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            {t('common:tournament.join')}
-          </ButtonPrimary>
-        )}
-      </Box>
+      <LoginRequired>
+        <Box className={classes.actionButton}>
+          {tournament.attributes.is_entered ? (
+            <UnjoinModal tournament={tournament} />
+          ) : (
+            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+              {t('common:tournament.join')}
+            </ButtonPrimary>
+          )}
+        </Box>
+      </LoginRequired>
 
       <StickyActionModal
         open={open}

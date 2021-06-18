@@ -12,7 +12,9 @@ import { CommonResponse } from '@services/user.service'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
-import { useAppDispatch } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 
 interface Props {
@@ -30,6 +32,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
   const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
   const [openReport, setOpenReport] = useState(false)
   const helper = useArenaHelper(detail)
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
 
   const handleCopy = () => {
     if (window.navigator.clipboard) {
@@ -51,7 +54,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
             <ESMenu>
               {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{t('common:arena.edit_arena_info')}</ESMenuItem>}
               <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
-              <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
+              <LoginRequired>
+                <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
+              </LoginRequired>
             </ESMenu>
           )}
         </Box>
@@ -232,13 +237,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
           </>
         )}
       </Box>
-      <ESReport
-        reportType={REPORT_TYPE.TOURNAMENT}
-        target_id={Number(detail.id)}
-        data={detail}
-        open={openReport}
-        handleClose={() => setOpenReport(false)}
-      />
+      {isAuthenticated && (
+        <ESReport
+          reportType={REPORT_TYPE.TOURNAMENT}
+          target_id={Number(detail.id)}
+          data={detail}
+          open={openReport}
+          handleClose={() => setOpenReport(false)}
+        />
+      )}
     </Grid>
   )
 }

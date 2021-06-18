@@ -29,7 +29,9 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
               <Typography className={classes.title}>{t('common:arena.dialog.randomize_title')}</Typography>
             </Box>
             <Box pb={4}>
-              <Typography variant="h2">{t('common:arena.dialog.randomize_desc')}</Typography>
+              <Typography variant="h2" className={classes.desc}>
+                {t('common:arena.dialog.randomize_desc')}
+              </Typography>
             </Box>
             <Typography variant="caption" gutterBottom>
               {t('common:arena.dialog.randomize_sub1')}
@@ -78,6 +80,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  desc: {
+    fontSize: 18,
+    color: Colors.white,
+  },
   actionButtonContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -95,6 +101,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     actionButtonContainer: {
       flexDirection: 'column-reverse',
+    },
+    title: {
+      fontSize: 20,
+    },
+    desc: {
+      fontSize: 14,
     },
   },
 }))

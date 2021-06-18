@@ -22,6 +22,7 @@ import useEntry from './useEntry'
 import _ from 'lodash'
 import ESLoader from '@components/FullScreenLoader'
 import UnjoinModal from './UnjoinModal'
+import LoginRequired from '@containers/LoginRequired'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -275,14 +276,16 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   return (
     <Box>
-      <Box className={classes.actionButton}>
-        {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && <UnjoinModal tournament={tournament} />}
-        {tournament.attributes.my_role === null && (
-          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            {t('common:tournament.join')}
-          </ButtonPrimary>
-        )}
-      </Box>
+      <LoginRequired>
+        <Box className={classes.actionButton}>
+          {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && <UnjoinModal tournament={tournament} />}
+          {tournament.attributes.my_role === null && (
+            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+              {t('common:tournament.join')}
+            </ButtonPrimary>
+          )}
+        </Box>
+      </LoginRequired>
 
       <StickyActionModal
         open={open}

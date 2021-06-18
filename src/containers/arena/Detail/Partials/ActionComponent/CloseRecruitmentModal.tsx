@@ -49,7 +49,9 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
               <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
             </Box>
             <Box pb={4}>
-              <Typography variant="h2">{t('common:tournament.close_recruitment.dialog_description')}</Typography>
+              <Typography variant="h2" className={classes.desc}>
+                {t('common:tournament.close_recruitment.dialog_description')}
+              </Typography>
             </Box>
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
@@ -98,6 +100,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     textAlign: 'center',
   },
+  desc: {
+    fontSize: 18,
+    color: Colors.white,
+  },
   button: {
     marginTop: theme.spacing(3),
     width: '100%',
@@ -121,6 +127,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     actionButtonContainer: {
       flexDirection: 'column-reverse',
+    },
+    title: {
+      fontSize: 20,
+    },
+    desc: {
+      fontSize: 14,
     },
   },
 }))
