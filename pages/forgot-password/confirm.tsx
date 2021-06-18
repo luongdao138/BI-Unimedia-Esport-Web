@@ -1,9 +1,9 @@
-import ForgotConfirmContainer from '@containers/ForgotConfirm'
+import ConfirmContainer from '@containers/Confirm'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
 import PageWithLayoutType from '@constants/page'
 
 const ForgotConfirmPage: PageWithLayoutType = () => {
-  return <ForgotConfirmContainer />
+  return <ConfirmContainer />
 }
 
 ForgotConfirmPage.Layout = AuthenticationLayout

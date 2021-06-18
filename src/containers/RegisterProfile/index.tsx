@@ -40,7 +40,7 @@ const RegisterProfileContainer: React.FC = () => {
       }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
+  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -85,7 +85,6 @@ const RegisterProfileContainer: React.FC = () => {
               <Box pb={1}>
                 <ESInput
                   id="user_code"
-                  autoFocus
                   labelPrimary={t('common:register_profile.user_id')}
                   fullWidth
                   value={values.user_code}
@@ -111,7 +110,7 @@ const RegisterProfileContainer: React.FC = () => {
                   labelPrimary={t('common:register_profile.nickname')}
                   fullWidth
                   value={values.nickname}
-                  onChange={handleChange}
+                  onChange={(e) => setFieldValue('nickname', CommonHelper.replaceSingleByteString(e.target.value))}
                   onBlur={handleBlur}
                   helperText={touched.nickname && errors.nickname}
                   error={touched.nickname && !!errors.nickname}

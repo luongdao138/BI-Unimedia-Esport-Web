@@ -153,7 +153,6 @@ const LoginContainer: React.FC = () => {
                   onBlur={handleBlur}
                   helperText={touched.email && errors.email}
                   error={touched.email && !!errors.email}
-                  autoFocus
                 />
               </Box>
 
@@ -221,7 +220,7 @@ const LoginContainer: React.FC = () => {
 
           <Box pb={8} className={classes.linkContainer}>
             <Link href={handleLink(ESRoutes.REGISTER)} as={ESRoutes.REGISTER} shallow>
-              <a>{t('common:login.register')}</a>
+              <a onClick={resetMetas}>{t('common:login.register')}</a>
             </Link>
           </Box>
 

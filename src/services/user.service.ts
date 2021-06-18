@@ -49,6 +49,8 @@ export type ChangeEmailSteps = {
   step_change: boolean
 }
 
+export type ClearHomeSettings = string[]
+
 export type ActivityLog = {
   attributes: {
     action_type: string

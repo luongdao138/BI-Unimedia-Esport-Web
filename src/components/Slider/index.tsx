@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect, useState } from 'react'
+import React, { ReactElement, useRef } from 'react'
 import { Typography, Box, Link, Theme, Icon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -7,37 +7,22 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 SwiperCore.use([Navigation])
 
-const DEFAULT_SLIDE_WIDTH = 191
+const SMALL_WIDTH = 84
 
 const ESSlide: React.FC<{
   items: ReactElement[]
   title?: string
   moreLink?: string
-  width?: number
   navigation?: boolean
-  disableResponsiveWidth?: boolean
-}> = ({ items, navigation, disableResponsiveWidth, ...rest }) => {
+  slidesPerView?: number | 'auto'
+  breakpoints?: any
+}> = ({ items, navigation, slidesPerView, breakpoints, ...rest }) => {
   const { t } = useTranslation(['common'])
-  const [localWidth, setLocalWidth] = useState<number>(DEFAULT_SLIDE_WIDTH)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { title, moreLink, width, ...props } = rest
+  const { title, moreLink, ...props } = rest
 
-  useEffect(() => {
-    if (window) {
-      handleLoad()
-    }
-  }, [])
-
-  const handleLoad = () => {
-    if (window.innerWidth <= 767 && !disableResponsiveWidth) {
-      setLocalWidth(DEFAULT_SLIDE_WIDTH)
-    } else {
-      setLocalWidth(width)
-    }
-  }
-
-  const classes = useStyles({ localWidth })
+  const classes = useStyles({ slidesPerView })
   const prevRef = useRef(null)
   const nextRef = useRef(null)
 
@@ -49,11 +34,12 @@ const ESSlide: React.FC<{
         </Typography>
       )}
       <Swiper
-        slidesPerView="auto"
-        slidesPerGroup={2}
+        slidesPerView={slidesPerView}
+        slidesPerGroup={1}
         spaceBetween={0}
         {...props}
         className={classes.wrap}
+        breakpoints={breakpoints}
         onInit={(swiper) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -160,12 +146,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   moreIcon: {
     marginLeft: theme.spacing(0.5),
   },
-  slideWidth: (win: { localWidth: number }) => ({
-    maxWidth: win.localWidth ? win.localWidth : DEFAULT_SLIDE_WIDTH,
+  slideWidth: (win: { slidesPerView: number | 'auto' }) => ({
+    maxWidth: win.slidesPerView === 'auto' ? SMALL_WIDTH : 'none',
   }),
   containerStart: {
     marginLeft: theme.spacing(3),
   },
 }))
+
+ESSlide.defaultProps = {
+  slidesPerView: 2.1,
+}
 
 export default ESSlide

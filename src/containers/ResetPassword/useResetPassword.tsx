@@ -23,7 +23,10 @@ const useResetPassword = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.resetPassword.typePrefix))
 
-  const backAction = () => navigateScreen(ESRoutes.FORGOT_PASSWORD)
+  const backAction = () => {
+    resetMeta()
+    navigateScreen(ESRoutes.FORGOT_PASSWORD)
+  }
 
   useEffect(() => {
     if (meta.loaded) {

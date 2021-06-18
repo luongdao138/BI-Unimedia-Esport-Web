@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
-import Image from 'next/image'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
@@ -33,7 +32,10 @@ const RegisterContainer: React.FC = () => {
     setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
   }
 
-  const handleSocialLogin = (params) => social.login({ ...params, type: 'register' })
+  const handleSocialLogin = (params) => {
+    social.resetMeta()
+    social.login({ ...params, type: 'register' })
+  }
 
   const buttonActive = (): boolean => {
     return checkbox.terms && checkbox.privacy
@@ -42,16 +44,8 @@ const RegisterContainer: React.FC = () => {
   const renderSocialError = () => {
     return (
       !!social.meta.error && (
-        <Box pb={8}>
-          <Box pb={20 / 8} textAlign="center">
-            <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
-          </Box>
-          <Box pb={1}>
-            <Typography className={classes.detail}>{i18n.t('common:register.error.detail')}</Typography>
-          </Box>
-          <Typography className={classes.hint} variant="caption">
-            {i18n.t('common:register.error.hint')}
-          </Typography>
+        <Box pb={8} textAlign="center">
+          <Typography color="secondary">{i18n.t('common:register.error.title')}</Typography>
         </Box>
       )
     )
@@ -60,14 +54,20 @@ const RegisterContainer: React.FC = () => {
   return (
     <Box pt={7.5} pb={9} className={classes.topContainer}>
       <Box py={2}>
-        <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
+        <IconButton
+          className={classes.iconButtonBg}
+          onClick={() => {
+            social.resetMeta()
+            handleReturn()
+          }}
+        >
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
       </Box>
 
       <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center" className={classes.container}>
         <Box pt={1.375} pb={6}>
-          <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
+          <img src="/images/lp_exelab_logo.svg" width="116" height="148" />
         </Box>
 
         {renderSocialError()}
@@ -101,7 +101,15 @@ const RegisterContainer: React.FC = () => {
         </Box>
 
         <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
-          <ButtonPrimary round fullWidth onClick={() => navigateScreen(ESRoutes.REGISTER_BY_EMAIL)} disabled={!buttonActive()}>
+          <ButtonPrimary
+            round
+            fullWidth
+            onClick={() => {
+              social.resetMeta()
+              navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+            }}
+            disabled={!buttonActive()}
+          >
             {t('common:register.button')}
           </ButtonPrimary>
         </Box>
@@ -120,7 +128,7 @@ const RegisterContainer: React.FC = () => {
 
         <Box pt={4} className={classes.linkContainer}>
           <Link href={handleLink(ESRoutes.LOGIN)} as={ESRoutes.LOGIN} shallow>
-            <a>{t('common:register.footer_link')}</a>
+            <a onClick={() => social.resetMeta()}>{t('common:register.footer_link')}</a>
           </Link>
         </Box>
       </Box>
@@ -152,13 +160,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
-  },
-  hint: {
-    color: Colors.white_opacity[30],
-  },
-  detail: {
-    whiteSpace: 'pre-line',
-    color: Colors.white_opacity[70],
   },
   [theme.breakpoints.down('sm')]: {
     container: {

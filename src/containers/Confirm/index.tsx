@@ -14,9 +14,18 @@ const ConfirmContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { user, registerConfirm, resetMeta, metaConfirm, backAction, resendConfirmation, metaResend, resetResendMeta } = useConfirm(
-    confirmationCode
-  )
+  const {
+    user,
+    registerConfirm,
+    resetMeta,
+    metaConfirm,
+    metaForgot,
+    backAction,
+    resendConfirmation,
+    metaResend,
+    metaResendForgot,
+    resetResendMeta,
+  } = useConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -27,7 +36,7 @@ const ConfirmContainer: React.FC = () => {
   }
 
   const buttonActive = (): boolean => {
-    return user?.email !== '' && confirmationCode.length === 6 && !metaConfirm.error
+    return user?.email !== '' && confirmationCode.length === 6 && (!metaConfirm.error || !metaForgot.error)
   }
 
   const handleResend = () => {
@@ -37,7 +46,7 @@ const ConfirmContainer: React.FC = () => {
 
   const renderError = () => {
     return (
-      !!metaConfirm.error && (
+      (!!metaConfirm.error || !!metaForgot.error) && (
         <Box pb={8}>
           <Typography color="secondary">{t('common:error.invalid_confirmation')}</Typography>
         </Box>
@@ -67,7 +76,11 @@ const ConfirmContainer: React.FC = () => {
               {t('common:confirm.verification_code')}
             </Typography>
             <Box py={4} display="flex" alignItems="center" flexDirection="column">
-              <ESPinInput error={!!metaConfirm.error} value={confirmationCode} onChange={(value) => setConfirmationCode(value)} />
+              <ESPinInput
+                error={!!metaConfirm.error || !!metaForgot.error}
+                value={confirmationCode}
+                onChange={(value) => setConfirmationCode(value)}
+              />
             </Box>
 
             <Box onClick={handleResend}>
@@ -90,8 +103,14 @@ const ConfirmContainer: React.FC = () => {
         </Box>
       </ESStickyFooter>
 
-      <ESLoader open={metaConfirm.pending || metaResend.pending} />
-      {metaResend.loaded && <ESToast open={metaResend.loaded} message={t('common:register.resend_success')} resetMeta={resetResendMeta} />}
+      <ESLoader open={metaConfirm.pending || metaResend.pending || metaForgot.pending || metaResendForgot.pending} />
+      {(metaResend.loaded || metaResendForgot.loaded) && (
+        <ESToast
+          open={metaResend.loaded || metaResendForgot.loaded}
+          message={t('common:register.resend_success')}
+          resetMeta={resetResendMeta}
+        />
+      )}
     </>
   )
 }
