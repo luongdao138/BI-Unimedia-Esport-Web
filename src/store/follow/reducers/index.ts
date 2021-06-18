@@ -42,7 +42,6 @@ export default createReducer(initialState, (builder) => {
         state.following.filter((user) => {
           if (user.attributes.user_code === action.payload) {
             user.attributes.is_following = true
-            return true
           }
         })
       }
