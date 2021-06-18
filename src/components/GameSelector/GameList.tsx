@@ -1,13 +1,17 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
 import ESChip from '@components/Chip'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Container, List, Typography } from '@material-ui/core'
 import i18n from '@locales/i18n'
 
 const useStyles = makeStyles((theme) => ({
   chip: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
+  },
+  listContainer: {
+    maxHeight: 330,
+    overflowY: 'auto',
   },
 }))
 
@@ -31,15 +35,21 @@ const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) 
 
   return (
     <>
-      {games.map((g, idx) => (
-        <ESChip
-          key={idx}
-          className={classes.chip}
-          label={g.display_name}
-          onClick={() => handleAdd(g)}
-          color={checkIsSelected(g.id) ? 'primary' : 'default'}
-        />
-      ))}
+      {games.length > 0 && (
+        <Container maxWidth="md" className={classes.listContainer}>
+          <List>
+            {games.map((g, idx) => (
+              <ESChip
+                key={idx}
+                className={classes.chip}
+                label={g.display_name}
+                onClick={() => handleAdd(g)}
+                color={checkIsSelected(g.id) ? 'primary' : 'default'}
+              />
+            ))}
+          </List>
+        </Container>
+      )}
     </>
   )
 }
