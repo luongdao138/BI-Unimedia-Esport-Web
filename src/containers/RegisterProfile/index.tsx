@@ -110,7 +110,7 @@ const RegisterProfileContainer: React.FC = () => {
                   labelPrimary={t('common:register_profile.nickname')}
                   fullWidth
                   value={values.nickname}
-                  onChange={(e) => setFieldValue('nickname', CommonHelper.replaceSingleByteString(e.target.value))}
+                  onChange={(e) => setFieldValue('nickname', CommonHelper.replaceWhiteSpace(e.target.value))}
                   onBlur={handleBlur}
                   helperText={touched.nickname && errors.nickname}
                   error={touched.nickname && !!errors.nickname}

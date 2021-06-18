@@ -15,7 +15,7 @@ import useTournamentData from './useTournamentData'
 // import useTopicData from './useTopicData'
 import { HOME_SETTINGS } from '@constants/common.constants'
 import ESToast from '@components/Toast'
-import useResetPassword from './useResetPassword'
+import useResetPassword from '@containers/ResetPassword/useResetPassword'
 import i18n from '@locales/i18n'
 import ESLoader from '@components/FullScreenLoader'
 
@@ -25,7 +25,7 @@ const HomeContainer: React.FC = () => {
   // const { recommendedEventList, getRecommendedEventList } = useEventData()
   const { tournamentFollowers, tournamentResults, getTournamentFollowers, getTournamentResults } = useTournamentData()
   // const { followersTopicList, getFollowersTopicList } = useTopicData()
-  const { metaReset, resetPasswordMeta } = useResetPassword()
+  const { meta, resetMeta } = useResetPassword()
 
   useEffect(() => {
     getUserProfile()
@@ -67,9 +67,7 @@ const HomeContainer: React.FC = () => {
       })}
       {metaHomeSettings.pending && <ESLoader open={metaHomeSettings.pending} />}
       <Box marginBottom={9} />
-      {metaReset.loaded && (
-        <ESToast open={metaReset.loaded} message={i18n.t('common:error.password_reissue')} resetMeta={resetPasswordMeta} />
-      )}
+      {meta.loaded && <ESToast open={meta.loaded} message={i18n.t('common:error.password_reissue')} resetMeta={resetMeta} />}
     </>
   )
 }
