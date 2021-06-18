@@ -321,6 +321,7 @@ export default {
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
     copy_shared_url: '共有URLをコピー',
+    cover_upload_select_img: '画像を選択する',
     report: '通報',
     entry_members: 'エントリーメンバー',
     number_of_entries: 'エントリー数',
@@ -464,6 +465,8 @@ export default {
     prize_placeholder: '副賞を設ける場合はその内容を入力してください。',
     max_participants: '参加枠数',
     max_participants_placeholder: '○○○人上限',
+    comfirm_title: 'この内容で作成しますか？',
+    check_content_button: '内容を確認する',
   },
   arenaSearchFilters: {
     all: 'すべて',

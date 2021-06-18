@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Avatar from '@components/Avatar'
 import { Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
 
 interface ArenaAvatarProps {
   src: null | string
@@ -17,7 +18,9 @@ interface ArenaAvatarProps {
 
 const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, nameWhite, win, size, alt_name }) => {
   const classes = useStyles({ leaf, win, size })
+  const { t } = useTranslation(['common'])
   const _size = size === 'large' ? 120 : size === 'small' ? 80 : 100
+
   return (
     <div className={classes.root}>
       {win && leaf && (
@@ -25,7 +28,7 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
           1<span>st</span>
         </Typography>
       )}
-      {win && !leaf && <Typography className={classes.winText}>WIN</Typography>}
+      {win && !leaf && <Typography className={classes.winText}>{t('common:arena.win')}</Typography>}
       <div className={`${classes.avatarWrapper} ${win && classes.win} ${win && classes.winSvg}`}>
         <Avatar className={`${src ? '' : classes.pinkBg}`} src={src} size={_size} alt={alt_name ? alt_name : name} />
       </div>
