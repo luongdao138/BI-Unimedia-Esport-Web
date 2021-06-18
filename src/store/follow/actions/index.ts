@@ -34,4 +34,11 @@ export const following = createAsyncThunk<services.FollowersResponse, services.F
   }
 )
 
+export const increaseFollowing = createAsyncThunk<string, string>(FOLLOWERS_ACTION_TYPE.FOLLOWING_INCREASE, (param) => {
+  return param
+})
+export const decreaseFollowing = createAsyncThunk<string, string>(FOLLOWERS_ACTION_TYPE.FOLLOWING_DECREASE, (param) => {
+  return param
+})
+
 export const clearFollowing = createAction(FOLLOWERS_ACTION_TYPE.CLEAR_FOLLOWING)

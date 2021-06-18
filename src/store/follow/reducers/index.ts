@@ -37,4 +37,25 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.clearFollowing, (state) => {
       state.following = []
     })
+    .addCase(actions.increaseFollowing.fulfilled, (state, action) => {
+      if (state.following) {
+        state.following.filter((user) => {
+          if (user.attributes.user_code === action.payload) {
+            user.attributes.is_following = true
+            return true
+          }
+        })
+      }
+      if (state.followingMeta) state.followingMeta.total_count = state.followingMeta.total_count + 1
+    })
+    .addCase(actions.decreaseFollowing.fulfilled, (state, action) => {
+      if (state.following) {
+        state.following.filter((user) => {
+          if (user.attributes.user_code === action.payload) {
+            user.attributes.is_following = false
+          }
+        })
+      }
+      if (state.followingMeta && state.followingMeta.total_count > 0) state.followingMeta.total_count = state.followingMeta.total_count - 1
+    })
 })

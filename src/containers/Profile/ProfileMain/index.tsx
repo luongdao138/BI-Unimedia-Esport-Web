@@ -132,7 +132,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
             </Grid>
           </Grid>
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
           <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
           <Icon className={'fa fa-angle-down'} fontSize="small" />
         </Box>

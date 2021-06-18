@@ -11,16 +11,22 @@ import _ from 'lodash'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { FixedSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
+import { FollowResponse } from '@services/follow.service'
 
 export interface ESFollowingProps {
   user_code: string
+}
+
+enum FOLLOWING_STATE_CHANGE_TYPE {
+  FOLLOW = 1,
+  UNFOLLOW = 0,
 }
 
 const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
   const [open, setOpen] = useState(false)
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { clearFollowing, following, fetchFollowing, page, meta } = useFollowing()
+  const { clearFollowing, following, fetchFollowing, increaseFollowing, decreaseFollowing, page, meta } = useFollowing()
   const hasNextPage = page && page.current_page !== page.total_pages
 
   useEffect(() => {
@@ -40,12 +46,25 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
     }
   }
 
-  const Row = (props: { index: number; style: React.CSSProperties; data: any }) => {
+  const changeFollowingCount = (type: number, user_code: string) => {
+    if (type === FOLLOWING_STATE_CHANGE_TYPE.FOLLOW) {
+      increaseFollowing(user_code)
+    } else if (type === FOLLOWING_STATE_CHANGE_TYPE.UNFOLLOW) {
+      decreaseFollowing(user_code)
+    }
+  }
+
+  const Row = (props: { index: number; style: React.CSSProperties; data: Array<FollowResponse> }) => {
     const { index, style, data } = props
     const user = data[index]
     return (
       <div style={style} key={index}>
-        <UserListItem data={user} isFollowed={user.attributes.is_following} handleClose={() => setOpen(false)} />
+        <UserListItem
+          data={user}
+          isFollowed={user.attributes.is_following}
+          handleClose={() => setOpen(false)}
+          changeFollowState={(type: number) => changeFollowingCount(type, user.attributes.user_code)}
+        />
       </div>
     )
   }
