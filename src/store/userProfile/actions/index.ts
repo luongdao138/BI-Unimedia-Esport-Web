@@ -134,10 +134,8 @@ export const getNicknames = createAsyncThunk(USER_PROFILE_ACTION_TYPE.PROFILE_NI
 export const profileEdit = createAsyncThunk<services.ProfileResponse, services.ProfileEditParams>(
   USER_PROFILE_ACTION_TYPE.PROFILE_EDIT,
   async (param, { rejectWithValue }) => {
-    console.log('index.ts 137 ', param)
     try {
       const res = await services.profileEdit(param)
-      console.log('index.ts 140 ', res)
       return res
     } catch (error) {
       if (!error.response) {
