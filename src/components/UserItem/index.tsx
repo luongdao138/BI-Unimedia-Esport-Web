@@ -15,9 +15,15 @@ interface Props {
   isFollowed?: boolean
   handleClick?: () => void
   handleClose?: () => void
+  changeFollowState?: (type: number) => void
 }
 
-const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick }) => {
+enum FOLLOWING_STATE_CHANGE_TYPE {
+  FOLLOW = 1,
+  UNFOLLOW = 0,
+}
+
+const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick, changeFollowState }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -39,6 +45,9 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleCl
       if (mounted) {
         setFollowed(true)
         setLoading(false)
+        if (changeFollowState) {
+          changeFollowState(FOLLOWING_STATE_CHANGE_TYPE.FOLLOW)
+        }
       }
     } catch (error) {
       if (mounted) {
@@ -54,6 +63,9 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleCl
       if (mounted) {
         setFollowed(false)
         setLoading(false)
+        if (changeFollowState) {
+          changeFollowState(FOLLOWING_STATE_CHANGE_TYPE.UNFOLLOW)
+        }
       }
     } catch (error) {
       if (mounted) {
