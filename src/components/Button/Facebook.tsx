@@ -88,6 +88,7 @@ const FacebookButton: React.FC<FacebookButtonProps> = ({ onSuccess, ...rest }) =
   return (
     <FacebookLogin
       appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
+      xfbml={true}
       isMobile={isMobile}
       disableMobileRedirect={isMobile}
       callback={handleResponse}
