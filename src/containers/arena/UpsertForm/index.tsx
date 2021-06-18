@@ -81,7 +81,7 @@ const TournamentCreate: React.FC = () => {
     return (
       <Box>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          内容を確認する
+          {t('common:tournament_create.check_content_button')}
         </ButtonPrimary>
         <CancelDialog hashKey={`${router.query.hash_key}`} />
       </Box>
@@ -128,10 +128,10 @@ const TournamentCreate: React.FC = () => {
             {isConfirm ? (
               <>
                 <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={classes.footerButton}>
-                  キャンセル
+                  {t('common:common.cancel')}
                 </ButtonPrimary>
                 <ButtonPrimary type="submit" round disabled={hasError} className={classes.footerButton}>
-                  この内容で作成する
+                  {t('common:tournament_create.submit')}
                 </ButtonPrimary>
               </>
             ) : isEdit ? (
@@ -143,7 +143,7 @@ const TournamentCreate: React.FC = () => {
                 className={`${classes.footerButton} ${classes.confirmButton}`}
                 disabled={hasError}
               >
-                内容を確認する
+                {t('common:tournament_create.check_content_button')}
               </ButtonPrimary>
             )}
           </Box>

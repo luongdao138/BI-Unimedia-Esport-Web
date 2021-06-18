@@ -87,7 +87,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
   return (
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={8} />
-      <Typography variant="h2">この内容で作成しますか？</Typography>
+      <Typography variant="h2">{t('common:tournament_create.comfirm_title')}</Typography>
       <Box pb={4.25} />
       <Box>
         <img src={values.stepOne.cover_image_url} className={classes.coverImg}></img>
@@ -99,7 +99,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.has_prize')}
-        value={values.stepOne.has_prize ? 'あり' : 'なし'}
+        value={values.stepOne.has_prize ? t('common:common.yes') : t('common:common.no')}
         disabled={true}
         fullWidth
       />
@@ -132,7 +132,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.retain_history_short')}
-        value={values.stepTwo.retain_history ? 'あり' : 'なし'}
+        value={values.stepTwo.retain_history ? t('common:common.yes') : t('common:common.no')}
         multiline
         disabled={true}
         fullWidth
