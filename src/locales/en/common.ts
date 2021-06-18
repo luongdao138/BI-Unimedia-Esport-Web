@@ -392,6 +392,12 @@ export default {
     edit_arena_info: '大会情報の編集',
     create_success: '大会が作成されました',
     update_success: '大会内容が編集されました',
+    temporary: 'Temporary',
+    matches: {
+      final_game: '決勝戦',
+      semi_final: '準決勝戦',
+      round: '回戦',
+    },
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

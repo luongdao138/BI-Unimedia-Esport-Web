@@ -13,7 +13,6 @@ import BlankLayout from '@layouts/BlankLayout'
 import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
-// import { Box, Typography } from '@material-ui/core'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -45,11 +44,6 @@ const TournamentDetail: React.FC = () => {
           <DetailInfo toEdit={toEdit} detail={tournament} extended />
         </>
       )}
-      {/* {meta.error && !tournament ? (
-        <Box mt={4} style={{ textAlign: 'center' }}>
-          <Typography style={{ color: '#ffffff9c' }}>このページは無効化されました。</Typography>
-        </Box>
-      ) : null} */}
       <ESModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
           <UpsertForm />

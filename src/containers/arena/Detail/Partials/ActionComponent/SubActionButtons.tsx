@@ -47,7 +47,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                     </Box>
                     <Box className={classes.actionButton}>
                       <ActionLabelButton
-                        actionLabel={isFreezed ? undefined : 'Temporary'}
+                        actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
                         variant="outlined"
                         fullWidth
                         onClick={toGroupChat}
@@ -68,7 +68,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                     </Box>
                     <Box className={classes.actionButton}>
                       <ActionLabelButton
-                        actionLabel={isFreezed ? undefined : 'Temporary'}
+                        actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
                         variant="outlined"
                         fullWidth
                         onClick={toGroupChat}
