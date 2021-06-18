@@ -320,6 +320,7 @@ export default {
     game: 'ゲーム',
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
+    copy_shared_url: '共有URLをコピー',
     report: '通報',
     entry_members: 'エントリーメンバー',
     number_of_entries: 'エントリー数',
@@ -465,6 +466,15 @@ export default {
     prize_placeholder: '副賞を設ける場合はその内容を入力してください。',
     max_participants: '参加枠数',
     max_participants_placeholder: '○○○人上限',
+  },
+  arenaSearchFilters: {
+    all: 'すべて',
+    beforeEvent: '開催前',
+    recruiting: 'エントリー中',
+    inProgress: '開催中',
+    completed: '終了',
+    joined: 'あなたがエントリーした大会',
+    organized: 'あなたが開催者の大会',
   },
   search: {
     search: '検索',
