@@ -36,7 +36,7 @@ const TournamentDetail: React.FC = () => {
         <>
           <TournamentDetailHeader
             status={tournament?.attributes?.status || 'ready'}
-            cover={tournament?.attributes?.cover_image}
+            cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
             onHandleBack={handleBack}
           >
             {actionComponent[tournament.attributes.status]}
