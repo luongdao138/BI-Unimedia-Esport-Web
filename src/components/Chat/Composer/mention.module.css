@@ -32,6 +32,7 @@
   border-radius: 24px;
   background-color: #101010 !important;
   padding-right: 30px;
+  resize: 'auto';
 }
 
 .mentions__suggestions__list {

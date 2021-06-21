@@ -1,4 +1,4 @@
-import React, { useMemo, ReactNode } from 'react'
+import React, { useMemo, ReactNode, Ref, useImperativeHandle, useState, forwardRef } from 'react'
 import { Box, Icon, IconButton, makeStyles } from '@material-ui/core'
 import Composer from '@components/Chat/Composer'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +11,10 @@ import useAvailable from '@components/Chat/utils/useAvailable'
 import { Actions, SuggestionListItem, ReplyContent } from '@components/Chat/elements'
 import { MentionItem } from 'react-mentions'
 
+export interface ClearInputrRef {
+  clearInput: () => void
+}
+
 export interface MessageInputAreaProps {
   onPressActionButton?: (type: number) => void
   users: ChatSuggestionList[] | ChatRoomMemberItem[]
@@ -21,7 +25,7 @@ export interface MessageInputAreaProps {
   onCancelReply?: () => void
   reply?: ParentItem | null | MessageType
   currentUser?: string | number
-  onChangeInput?: (text: string) => void
+  ref: Ref<ClearInputrRef>
 }
 
 const partTypes = [
@@ -33,8 +37,14 @@ const partTypes = [
   },
 ]
 
-const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
-  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser, text, onChangeInput } = props
+const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputrRef, MessageInputAreaProps>((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    clearInput: () => {
+      setText('')
+    },
+  }))
+  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser } = props
+  const [text, setText] = useState<string>('')
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
 
@@ -45,11 +55,12 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
 
   const onChangeText = (_event: { target: { value: string } }, newValue: string, _newPlainTextValue: string, _mentions: MentionItem[]) => {
-    onChangeInput && onChangeInput(newValue)
+    setText(newValue)
   }
 
   const send = (e: React.MouseEvent) => {
     onPressSend ? onPressSend(text.trim()) : undefined
+    setText('')
     e.preventDefault()
   }
 
@@ -108,7 +119,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = (props) => {
       </Box>
     </>
   )
-}
+})
 
 MessageInputArea.defaultProps = {}
 
@@ -164,4 +175,4 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default MessageInputArea
+export default React.memo(MessageInputArea)

@@ -62,6 +62,7 @@ export default {
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
     profile_updated: 'プロフィールを更新しました',
+    game_updated: '好きなゲームを更新しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -73,7 +74,7 @@ export default {
 今後も拡張されていく様々な機能を通して、ゲーマー同士やファンとの交流を広げていきます。`,
     download_app_version: 'アプリ版のダウンロードはこちら',
     recruiting_tournament: '募集中の大会',
-    no_recruiting_tournament: '現在予定している大会はありません。',
+    no_recruiting_tournament: '現在予定されている大会はありません',
   },
   button: {
     twitter: 'Twitterでログイン',
@@ -121,11 +122,6 @@ export default {
     footer_link: 'アカウントをお持ちの方',
     error: {
       title: '登録に失敗しました',
-      detail: `以下の可能性がございます。
-      １. ダミーテキスト
-      ２. ダミーテキスト
-      ３. 同じアカウントですでにSNS連携での新規登録を行なっている(ダミー)`,
-      hint: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
       title2: '新規登録に失敗しました',
       detail2: `以下の可能性がございます。
       １. メールアドレスに誤りがある(ダミー)
@@ -268,6 +264,7 @@ export default {
     no_game_selected: '好きなゲームが選択されていません',
     no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
+    discord_placeholder: 'ユーザー名#0000を入力してください',
   },
   gender: {
     male: '男性',

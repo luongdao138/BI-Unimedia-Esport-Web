@@ -2,6 +2,7 @@ import React, { ReactNode, useState } from 'react'
 import { Header } from '@layouts/Header'
 import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
+import useProfileValid from '@utils/hooks/useProfileValid'
 
 interface PlainLayoutProps {
   children: ReactNode
@@ -10,6 +11,7 @@ interface PlainLayoutProps {
 
 const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter }) => {
   const [open, setOpen] = useState<boolean>(false)
+  useProfileValid()
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)

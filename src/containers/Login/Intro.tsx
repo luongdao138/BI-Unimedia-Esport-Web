@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+    marginBottom: theme.spacing(3),
   },
   middleText: {
     fontSize: 24,

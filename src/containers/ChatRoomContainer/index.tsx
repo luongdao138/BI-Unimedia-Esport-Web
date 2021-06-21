@@ -52,7 +52,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [reporting, setReporting] = useState<boolean>(false)
   const [reportData, setReportData] = useState<ESReportProps>(null)
   const [modalReply, setModalReply] = useState<MessageModalStateProps>({ open: false, replyMessage: null })
-  const [text, setText] = useState<string>('')
   const classes = useStyles()
 
   const checkNgWord = useCheckNgWord()
@@ -60,6 +59,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const dispatch = useAppDispatch()
 
   const ref = useRef<{ handleUpload: () => void }>(null)
+  const inputRef = useRef<{ clearInput: () => void }>(null)
 
   const userId = useAppSelector(currentUserId)
   const data = useAppSelector(messages)
@@ -112,8 +112,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         }
         dispatch(socketActions.sendMessage(_.omit(_.assign(payload, replyData))))
       }
-      setText('')
       setReply(null)
+      if (inputRef.current) inputRef.current.clearInput()
     } else {
       dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
     }
@@ -210,10 +210,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
   }
 
-  const _onChange = (text: string) => {
-    setText(text)
-  }
-
   const renderErroMesage = () => {
     if (hasError && _.isEmpty(data)) {
       return (
@@ -247,13 +243,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           />
         )}
       </Box>
-
       {userId && !hasError && data ? (
         <Box className={classes.input}>
           <MessageInputArea
+            ref={inputRef}
             reply={reply}
-            text={text}
-            onChangeInput={_onChange}
             currentUser={userId}
             onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
@@ -262,7 +256,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           />
         </Box>
       ) : null}
-
       <ImageUploader
         ref={ref}
         roomId={roomId}

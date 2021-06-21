@@ -63,7 +63,7 @@ const App = ({ Component, pageProps }: Props) => {
       jssStyles.parentElement?.removeChild(jssStyles)
     }
 
-    if (store.getState().auth.user) {
+    if (store.getState().auth.user?.accessToken) {
       store.dispatch(userProfile.actions.getUserProfile())
     }
 

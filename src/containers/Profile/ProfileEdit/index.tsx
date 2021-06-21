@@ -4,8 +4,9 @@ import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
+import * as actions from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 import useProfileEdit from './useProfileEdit'
-import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
 import ButtonPrimary from '@components/ButtonPrimary'
 import BasicInfo from '@components/BasicInfo'
@@ -22,6 +23,7 @@ import _ from 'lodash'
 const ProfileEditContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const { features, getFeatures } = useSettings()
   const { prefectures, getPrefectures } = useGetPrefectures()
@@ -30,7 +32,6 @@ const ProfileEditContainer: React.FC = () => {
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
-  const [showSuccessToast, setSuccess] = useState(false)
   const [isValidDate, setValidDate] = useState(false)
 
   useEffect(() => {
@@ -47,9 +48,11 @@ const ProfileEditContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
-      setSuccess(true)
       resetMeta()
-      setTimeout(() => router.push(ESRoutes.PROFILE), 2000)
+      dispatch(actions.addToast(i18n.t('common:messages.profile_updated')))
+      router.push(ESRoutes.PROFILE)
+    } else if (meta.error) {
+      dispatch(actions.addToast(i18n.t('common:error.failed')))
     }
   }, [meta.loaded])
 
@@ -125,16 +128,6 @@ const ProfileEditContainer: React.FC = () => {
         </Box>
       </Box>
       <ESLoader open={getUserProfileMeta.pending || meta.pending} />
-      {!!meta.error && <ESToast open={!!meta.error} message={i18n.t('common:error.failed')} resetMeta={resetMeta} />}
-      {showSuccessToast && (
-        <ESToast
-          open={showSuccessToast}
-          message={i18n.t('common:messages.profile_updated')}
-          onClose={() => {
-            setSuccess(false)
-          }}
-        />
-      )}
     </>
   )
 }

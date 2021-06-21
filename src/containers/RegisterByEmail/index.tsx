@@ -11,10 +11,10 @@ import * as services from '@services/auth.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useRegisterByEmail from './useRegisterByEmail'
 import ESStrengthMeter from '@components/StrengthMeter'
-import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
+import ESStickyFooter from '@components/StickyFooter'
 
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -68,80 +68,73 @@ const RegisterByEmailContainer: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <Box pt={7.5} pb={9} className={classes.topContainer}>
-          <Box py={2} display="flex" flexDirection="row" alignItems="center">
-            <IconButton className={classes.iconButtonBg} onClick={backAction}>
-              <Icon className="fa fa-arrow-left" fontSize="small" />
-            </IconButton>
-            <Box pl={2}>
-              <Typography variant="h2">{t('common:register_by_email.back')}</Typography>
+      <ESStickyFooter disabled={!_.isEmpty(errors)} title={t('common:register_by_email.button')} onClick={handleSubmit} noScroll>
+        <form onSubmit={handleSubmit}>
+          <Box pt={7.5} pb={9} className={classes.topContainer}>
+            <Box py={2} display="flex" flexDirection="row" alignItems="center">
+              <IconButton className={classes.iconButtonBg} onClick={backAction}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Box pl={2}>
+                <Typography variant="h2">{t('common:register_by_email.back')}</Typography>
+              </Box>
+            </Box>
+
+            <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+              {renderError()}
+              <Box>
+                <ESInput
+                  id="email"
+                  autoFocus
+                  placeholder={t('common:register_by_email.email_placeholder')}
+                  labelPrimary={t('common:register_by_email.email')}
+                  fullWidth
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  helperText={touched.email && errors.email}
+                  error={touched.email && !!errors.email}
+                />
+              </Box>
+
+              <Box pt={3} pb={1}>
+                <ESInput
+                  id="password"
+                  labelPrimary={t('common:register_by_email.password')}
+                  type={showPassword ? 'text' : 'password'}
+                  labelSecondary={<ESStrengthMeter value={score} />}
+                  endAdornment={
+                    <InputAdornment position="end" className={classes.inputContainer}>
+                      <div className={classes.borderLeft}></div>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        size="small"
+                        disableRipple
+                        color="inherit"
+                        onMouseDown={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  fullWidth
+                  value={values.password}
+                  onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
+                  onBlur={handleBlur}
+                  helperText={touched.password && errors.password}
+                  error={touched.password && !!errors.password}
+                />
+              </Box>
+
+              <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
+              <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
             </Box>
           </Box>
 
-          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
-            {renderError()}
-            <Box>
-              <ESInput
-                id="email"
-                autoFocus
-                placeholder={t('common:register_by_email.email_placeholder')}
-                labelPrimary={t('common:register_by_email.email')}
-                fullWidth
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                helperText={touched.email && errors.email}
-                error={touched.email && !!errors.email}
-              />
-            </Box>
+          <Box className={classes.blankSpace}></Box>
+        </form>
+      </ESStickyFooter>
 
-            <Box pt={3} pb={1}>
-              <ESInput
-                id="password"
-                labelPrimary={t('common:register_by_email.password')}
-                type={showPassword ? 'text' : 'password'}
-                labelSecondary={<ESStrengthMeter value={score} />}
-                endAdornment={
-                  <InputAdornment position="end" className={classes.inputContainer}>
-                    <div className={classes.borderLeft}></div>
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      size="small"
-                      disableRipple
-                      color="inherit"
-                      onMouseDown={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                fullWidth
-                value={values.password}
-                onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
-                onBlur={handleBlur}
-                helperText={touched.password && errors.password}
-                error={touched.password && !!errors.password}
-              />
-            </Box>
-
-            <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
-            <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
-          </Box>
-        </Box>
-
-        <Box className={classes.blankSpace}></Box>
-
-        <Box className={classes.stickyFooter}>
-          <Box className={classes.nextBtnHolder}>
-            <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!_.isEmpty(errors)}>
-                {t('common:register_by_email.button')}
-              </ButtonPrimary>
-            </Box>
-          </Box>
-        </Box>
-      </form>
       {meta.pending && <ESLoader open={meta.pending} />}
     </>
   )
@@ -153,25 +146,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    background: Colors.black,
-    borderTop: `1px solid`,
-    borderTopColor: Colors.text['300'],
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    width: '100%',
-    margin: '0 auto',
   },
   inputContainer: {
     position: 'relative',

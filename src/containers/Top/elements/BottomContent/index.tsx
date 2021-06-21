@@ -85,6 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 100,
     margin: '0 auto',
     maxWidth: 755,
+    width: '100%',
   },
   moreLink: {
     marginTop: theme.spacing(1),

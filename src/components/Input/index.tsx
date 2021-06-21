@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 export type InputProps = {
   helperText?: string
-  labelPrimary?: string
+  labelPrimary?: string | ReactElement
   labelSecondary?: ReactElement
   required?: boolean
   size?: 'big' | 'small'
@@ -27,16 +27,19 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
     <FormControl fullWidth={rest.fullWidth}>
       {(labelPrimary || labelSecondary) && (
         <Box display="flex" justifyContent="space-between" alignItems="center" pb={1}>
-          <Box className={classes.labelPrimaryContainer} display="flex" alignItems="center">
-            <label htmlFor={rest.id} className={classes.labelMargin}>
-              {labelPrimary}
-            </label>
-            {required && (
-              <Typography component="span" className={classes.required}>
-                {t('common:common.required')}
-              </Typography>
-            )}
-          </Box>
+          {typeof labelPrimary === 'string' && (
+            <Box className={classes.labelPrimaryContainer} display="flex" alignItems="center">
+              <label htmlFor={rest.id} className={classes.labelMargin}>
+                {labelPrimary}
+              </label>
+              {required && (
+                <Typography component="span" className={classes.required}>
+                  {t('common:common.required')}
+                </Typography>
+              )}
+            </Box>
+          )}
+          {typeof labelPrimary === 'object' && labelPrimary}
           {labelSecondary}
         </Box>
       )}

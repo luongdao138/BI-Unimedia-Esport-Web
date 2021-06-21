@@ -14,6 +14,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import Badge from '@material-ui/core/Badge'
 import 'moment/locale/ja'
 import i18n from '@locales/i18n'
+import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
+import Icon from '@material-ui/core/Icon'
 
 interface RoomListItemProps {
   expand?: boolean
@@ -34,6 +36,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
   const name = _.get(item, 'roomName', '')
   const lastMsg = _.get(item, 'lastMsg', '')
   const unseenCount = _.get(item, 'unseenCount', 0)
+  const groupType = _.get(item, 'groupType', 0)
 
   const classes = useStyles({ active, expand })
 
@@ -47,19 +50,31 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
     }
   }
 
+  const renderIcon = () => {
+    if (groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
+      return <Icon className={`${classes.smallIcon} fas fa-trophy`}></Icon>
+    } else if (groupType === CHAT_ROOM_TYPE.RECRUITMENT) {
+      return <Icon className={`${classes.smallIcon} fas fa-university`}></Icon>
+    }
+    return null
+  }
+
   return (
     <ListItem className={classes.root} selected={selected} onClick={clickHandler}>
-      <ListItemAvatar>
-        <Badge
-          className={classes.badgeLeft}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          color="primary"
-          overlap="circle"
-          badgeContent={unseenCount}
-          showZero={false}
-        >
-          <Avatar src={roomImg} alt={name} />
-        </Badge>
+      <ListItemAvatar className={classes.avatarItem}>
+        <>
+          {renderIcon()}
+          <Badge
+            className={classes.badgeLeft}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            color="primary"
+            overlap="circle"
+            badgeContent={unseenCount}
+            showZero={false}
+          >
+            <Avatar src={roomImg} alt={name} />
+          </Badge>
+        </>
       </ListItemAvatar>
 
       <ListItemText className={classes.content}>
@@ -86,6 +101,12 @@ const useStyles = makeStyles(() => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
+    height: 70,
+    paddingLeft: 5,
+    '&:hover': {
+      background: 'rgba(255,255,255, 0.1)',
+      transition: 'all 0.2s ease',
+    },
   },
 
   name: {
@@ -141,6 +162,18 @@ const useStyles = makeStyles(() => ({
     '& .MuiBadge-badge': {
       opacity: (props: StyleProps) => (props.expand ? 0 : 1),
     },
+  },
+  avatarItem: {
+    position: 'relative',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  smallIcon: {
+    position: 'absolute',
+    fontSize: 9,
+    color: Colors.text[200],
+    top: 0,
+    left: 0,
   },
 }))
 

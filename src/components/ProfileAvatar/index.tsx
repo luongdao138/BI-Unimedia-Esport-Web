@@ -40,12 +40,11 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, sr
       reader.readAsDataURL(file)
     }
   }
-
   return (
     <div className={classes.root}>
       {editable ? (
         <label htmlFor="cover-upload" className={classes.touch}>
-          <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} />
+          <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} alt={alt} />
           {drag && !update ? <Camera fontSize="large" className={classes.camera} /> : null}
           {drag || update ? <div className={classes.backdrop} /> : null}
           <div

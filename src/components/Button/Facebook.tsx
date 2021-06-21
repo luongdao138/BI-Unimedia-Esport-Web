@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 import { LoginSocialParams } from '@services/auth.service'
+import { isMobile } from 'react-device-detect'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -83,9 +84,13 @@ const FacebookButton: React.FC<FacebookButtonProps> = ({ onSuccess, ...rest }) =
   const handleResponse = async (response: ReactFacebookLoginInfo) => {
     !!onSuccess && onSuccess({ social_channel: 'facebook', access_token: response.accessToken })
   }
+
   return (
     <FacebookLogin
       appId={process.env.NEXT_PUBLIC_FACEBOOK_APP_ID}
+      xfbml={true}
+      isMobile={isMobile}
+      disableMobileRedirect={isMobile}
       callback={handleResponse}
       render={(renderProps) => <ESButtonFacebook {...rest} onClick={renderProps.onClick} />}
     />
