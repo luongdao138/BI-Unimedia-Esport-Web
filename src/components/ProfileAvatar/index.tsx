@@ -38,7 +38,12 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, sr
         </label>
       ) : null}
       {setAvatar ? (
-        <AvatarSelector src={src} cancel={() => toggleSetAvatar(false)} onUpdate={(file: File, blob: any) => onChange(file, blob)} />
+        <AvatarSelector
+          src={src}
+          alt={alt}
+          cancel={() => toggleSetAvatar(false)}
+          onUpdate={(file: File, blob: any) => onChange(file, blob)}
+        />
       ) : null}
     </div>
   )

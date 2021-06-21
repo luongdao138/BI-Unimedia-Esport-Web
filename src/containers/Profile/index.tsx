@@ -127,6 +127,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <ProfileAvatar
               src={attr.avatar_url}
               editable={!isOthers}
+              alt={attr.nickname}
               onChange={(f: File, blob: any) => {
                 isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR, blob)
               }}
