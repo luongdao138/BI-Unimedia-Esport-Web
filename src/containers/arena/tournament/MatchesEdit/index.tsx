@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Container, IconButton, Toolbar, Typography, Box } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ESStickyFooter from '@components/StickyFooter'
@@ -10,11 +10,11 @@ import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
 import { useTranslation } from 'react-i18next'
-import ESToast from '@components/Toast'
 import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -22,16 +22,7 @@ const ArenaMatches: React.FC = () => {
   const router = useRouter()
   const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
-  const {
-    freeze,
-    randomize,
-    setParticipant,
-    randomizeMeta,
-    resetRandomizeMeta,
-    freezeMeta,
-    resetFreezeMeta,
-    setParticipantMeta,
-  } = useModeratorActions()
+  const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [data, setData] = useState<any>()
@@ -93,10 +84,22 @@ const ArenaMatches: React.FC = () => {
     return (
       <ESStickyFooter
         disabled={false}
-        title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
-        onClick={freezable ? () => freeze(tournament.attributes.hash_key) : () => setShowRandomize(true)}
         show={data.memberSelectable}
         noScroll
+        content={
+          <Box className={classes.actionButtonContainer}>
+            <Box className={classes.actionButton}>
+              <ButtonPrimary type="submit" round fullWidth onClick={() => setShowRandomize(true)}>
+                {t('common:arena.randomize_button')}
+              </ButtonPrimary>
+            </Box>
+            <Box className={classes.actionButton}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => freeze(tournament.attributes.hash_key)}>
+                {t('common:arena.freeze_button')}
+              </ButtonPrimary>
+            </Box>
+          </Box>
+        }
       >
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
@@ -151,16 +154,6 @@ const ArenaMatches: React.FC = () => {
     <div className={classes.root}>
       {matches && matchesMeta.loaded && data && body()}
       <ESLoader open={meta.pending || matchesMeta.pending || randomizeMeta.pending || freezeMeta.pending} />
-
-      {/* success */}
-      {randomizeMeta.loaded && (
-        <ESToast open={randomizeMeta.loaded} message={t('common:arena.randomize_success')} resetMeta={resetRandomizeMeta} />
-      )}
-      {freezeMeta.loaded && <ESToast open={freezeMeta.loaded} message={t('common:arena.freeze_success')} resetMeta={resetFreezeMeta} />}
-
-      {/* error */}
-      {!!randomizeMeta.error && <ESToast open={!!randomizeMeta.error} message={t('common:error.failed')} resetMeta={resetRandomizeMeta} />}
-      {!!freezeMeta.error && <ESToast open={!!freezeMeta.error} message={t('common:error.failed')} resetMeta={resetFreezeMeta} />}
     </div>
   )
 }
@@ -194,6 +187,20 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 16,
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    },
+  },
+  actionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  actionButton: {
+    width: theme.spacing(35),
+    margin: 8,
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column',
     },
   },
 }))

@@ -1,9 +1,12 @@
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { SetParticipantParams, SetParticipantsParams } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'
+import * as commonActions from '@store/common/actions'
+import { useTranslation } from 'react-i18next'
 
 const _setParticipantMeta = createMetaSelector(actions.setParticipant)
 const _setParticipantsMeta = createMetaSelector(actions.setParticipants)
@@ -24,6 +27,7 @@ const useModeratorActions = (): {
   resetRandomizeMeta: () => void
   resetFreezeMeta: () => void
 } => {
+  const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
 
   const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
@@ -40,6 +44,30 @@ const useModeratorActions = (): {
   const resetParticipantsMeta = () => dispatch(clearMetaData(actions.setParticipants.typePrefix))
   const resetRandomizeMeta = () => dispatch(clearMetaData(actions.randomizeTournament.typePrefix))
   const resetFreezeMeta = () => dispatch(clearMetaData(actions.freezeTournament.typePrefix))
+
+  useEffect(() => {
+    if (randomizeMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.randomize_success')))
+      resetRandomizeMeta()
+    }
+  }, [randomizeMeta.loaded])
+
+  useEffect(() => {
+    if (freezeMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.freeze_success')))
+      resetFreezeMeta()
+    }
+  }, [freezeMeta.loaded])
+
+  useEffect(() => {
+    if (!!freezeMeta.error || !!randomizeMeta.error || !!setParticipantsMeta.error) {
+      dispatch(commonActions.addToast(t('common:error.failed')))
+      resetFreezeMeta()
+      resetRandomizeMeta()
+      resetParticipantsMeta()
+    }
+  }, [freezeMeta.error, randomizeMeta.error, setParticipantsMeta.error])
+
   return {
     setParticipant,
     setParticipants,
