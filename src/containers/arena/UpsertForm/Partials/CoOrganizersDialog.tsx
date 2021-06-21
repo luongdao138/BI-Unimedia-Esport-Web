@@ -172,6 +172,7 @@ const CoOrganizersDialog: React.FC<Props> = ({ values, onChange }) => {
                   {selectedUsers.length > 0 && (
                     <BlankLayout>
                       <ESSlider
+                        slidesPerView={'auto'}
                         navigation={false}
                         items={selectedUsers.map((user, i) => (
                           <Box className={classes.innerWrap} key={i}>
@@ -223,7 +224,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-word',
   },
   innerWrap: {
-    width: 98,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
