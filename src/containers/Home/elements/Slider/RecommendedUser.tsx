@@ -43,7 +43,7 @@ type userProps = {
 type userAttributesProps = {
   user_code: string
   nickname: string
-  avatar: string
+  avatar_url: string
 }
 
 export const RecommendedUser: React.FC<Props> = ({ users }) => {
@@ -56,12 +56,11 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
     <ESSlider
       title={t('common:home.recommended_user')}
       navigation={false}
-      width={84}
-      disableResponsiveWidth
+      slidesPerView={'auto'}
       items={users.slice(0, USER_LIMIT).map((user, i) => (
         <Box key={i}>
           <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>
-            <ESAvatar alt={user.attributes.nickname} className={classes.avatar} src={user.attributes.avatar} />
+            <ESAvatar alt={user.attributes.nickname} className={classes.avatar} src={user.attributes.avatar_url} />
             <Typography variant="caption" className={classes.name}>
               {user.attributes.nickname}
             </Typography>

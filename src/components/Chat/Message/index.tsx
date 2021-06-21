@@ -18,6 +18,7 @@ export interface MessageProps {
   onLoadImage: () => void
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
+  onDelete?: (currentMessage: MessageType) => void
   copy?: (currrentMessage: MessageType) => void
   onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
 }
@@ -25,7 +26,7 @@ export interface MessageProps {
 const Message: React.FC<MessageProps> = (props) => {
   const classes = useStyles()
 
-  const { currentMessage, direction, navigateToProfile, reply, report, copy, users, onReplyClick } = props
+  const { currentMessage, direction, onDelete, navigateToProfile, reply, report, copy, users, onReplyClick } = props
 
   const message = _.get(currentMessage, 'msg', '')
 
@@ -62,6 +63,7 @@ const Message: React.FC<MessageProps> = (props) => {
   const actionHandlers = {
     [MENU_ACTIONS.COPY_CONTENT]: copy && copy,
     [MENU_ACTIONS.REPLY_MSG]: reply && reply,
+    [MENU_ACTIONS.DELETE_MESSAGE]: onDelete && onDelete,
   }
 
   const onMenuAction = (type: MENU_ACTIONS) => {
@@ -111,7 +113,7 @@ const Message: React.FC<MessageProps> = (props) => {
           {direction === 'left' ? renderAvatar() : null}
           <Box className={direction === 'left' ? classes.wrapperLeft : classes.wrapperRight}>
             <Box className={direction === 'left' ? classes.menuLeft : classes.menuRight}>
-              <MessageMenu onPressMenuItem={onMenuAction} />
+              <MessageMenu isMe={direction === 'left' ? false : true} onPressMenuItem={onMenuAction} />
             </Box>
             {renderBubble()}
             <Box flexDirection="row" display="flex" justifyContent={direction === 'left' ? 'flex-start' : 'flex-end'} alignItems="center">

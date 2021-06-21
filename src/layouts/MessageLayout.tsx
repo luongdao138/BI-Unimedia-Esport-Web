@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Header } from '@layouts/Header'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
@@ -8,6 +8,8 @@ import ChatRoomList from '@containers/ChatRoomList'
 import { IconButton, Icon, makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
 import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
@@ -19,6 +21,7 @@ const MessageLayout: React.FC = ({ children }) => {
   const router = useRouter()
   const { t } = useTranslation(['common'])
   const { previousRoute } = useContext(RouteContext)
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
@@ -38,6 +41,12 @@ const MessageLayout: React.FC = ({ children }) => {
   const navigateRoomCreate = () => {
     router.push(ESRoutes.MESSAGE_ROOM_CREATE, undefined, { shallow: true })
   }
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push(ESRoutes.TOP)
+    }
+  }, [])
 
   return (
     <div className="main-wrapper">

@@ -13,16 +13,36 @@ export interface MessageMenuProps {
 const MessageMenu: React.FC<MessageMenuProps> = ({ onPressMenuItem, isMe }) => {
   const classes = useStyles()
 
+  const renderOtherPersonMenu = () => {
+    if (!isMe) {
+      return (
+        <ESMenu disableRipple iconClass={classes.menuIcon}>
+          <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.COPY_CONTENT)}>{i18n.t('common:chat.copy_content')}</ESMenuItem>
+          <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.REPLY_MSG)}>{i18n.t('common:chat.reply_msg')}</ESMenuItem>
+          <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.REPORT_CHAT)}>{i18n.t('common:chat.report_chat')}</ESMenuItem>
+        </ESMenu>
+      )
+    }
+    return null
+  }
+
+  const renderPersonMenu = () => {
+    if (isMe) {
+      return (
+        <ESMenu disableRipple iconClass={classes.menuIcon}>
+          <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.COPY_CONTENT)}>{i18n.t('common:chat.copy_content')}</ESMenuItem>
+          <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.DELETE_MESSAGE)}>{i18n.t('common:chat.delete_chat')}</ESMenuItem>
+        </ESMenu>
+      )
+    }
+    return null
+  }
+
   return (
-    <ESMenu disableRipple iconClass={classes.menuIcon}>
-      <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.COPY_CONTENT)}>{i18n.t('common:chat.copy_content')}</ESMenuItem>
-      <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.REPLY_MSG)}>{i18n.t('common:chat.reply_msg')}</ESMenuItem>
-      {isMe === false ? (
-        <ESMenuItem onClick={() => onPressMenuItem(MENU_ACTIONS.REPORT_CHAT)}>{i18n.t('common:chat.report_chat')}</ESMenuItem>
-      ) : (
-        ''
-      )}
-    </ESMenu>
+    <>
+      {renderPersonMenu()}
+      {renderOtherPersonMenu()}
+    </>
   )
 }
 

@@ -149,7 +149,7 @@ const UserSettingsContainer: React.FC = () => {
             <Box className={classes.nextBtnHolder}>
               <Box className={classes.nextBtn}>
                 <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick} disabled={isValidDate}>
-                  {step === FINAL_STEP - 1 ? t('common:done') : t('common:next')}
+                  {step === FINAL_STEP - 1 || step === FINAL_STEP - 2 ? t('common:done') : t('common:next')}
                 </ButtonPrimary>
               </Box>
             </Box>

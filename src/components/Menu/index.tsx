@@ -24,6 +24,7 @@ const StyledMenu = withStyles({
 const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconClass }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const classes = useStyles()
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }

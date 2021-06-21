@@ -2,11 +2,9 @@ import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
-
 import Tabs from '../Tabs'
 import Tab from '../Tab'
 import TabPanel from '../TabPanel'
-
 import GameSearchByGenre from './GameSearchByGenre'
 import GameSearchByTitle from './GameSearchByTitle'
 import AddGame from './AddGame'
@@ -27,7 +25,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   const { t } = useTranslation(['common'])
   const { genres } = useGameGenre()
   const { games, clearGames } = useGameTitles()
-  const filteredGames = _.differenceBy(games, props.values, 'id')
+
   const handleChangeTab = (_, v) => {
     setTab(v)
     clearGames()
@@ -45,22 +43,22 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   return (
     <Box mb={4}>
       <Tabs value={tab} onChange={handleChangeTab} className={classes.tab}>
-        <Tab label={t('common:profile.favorite_game.title')} value={0} />
+        <Tab label={t('common:profile.favorite_game.search_title')} value={0} />
         <Tab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
         <Tab label={t('common:profile.favorite_game.create_new')} value={2} />
       </Tabs>
       <TabPanel value={tab} index={0}>
         <GameSearchByTitle>
-          <GameList games={filteredGames} handleAdd={handleAdd} />
+          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} />
         </GameSearchByTitle>
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <GameSearchByGenre genres={genres} clearGames={clearGames}>
-          <GameList games={filteredGames} handleAdd={handleAdd} />
+          <GameList games={games} selectedGames={props.values} handleAdd={handleAdd} />
         </GameSearchByGenre>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <AddGame genres={genres} />
+        <AddGame genres={genres} handleAdd={handleAdd} />
       </TabPanel>
       <SelectedGames games={props.values} handleRemove={handleRemove} />
     </Box>

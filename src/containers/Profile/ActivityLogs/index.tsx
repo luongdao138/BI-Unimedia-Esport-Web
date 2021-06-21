@@ -34,7 +34,7 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
     }
   }
   return (
-    <Box className={(classes.container, 'scroll-bar')}>
+    <Grid className={(classes.container, 'scroll-bar')} container>
       <InfiniteScroll
         className={classes.container}
         dataLength={activityLogs.length}
@@ -54,7 +54,7 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
           </Box>
         </Grid>
       )}
-    </Box>
+    </Grid>
   )
 }
 

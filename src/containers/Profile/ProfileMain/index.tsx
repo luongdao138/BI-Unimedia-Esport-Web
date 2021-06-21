@@ -25,52 +25,54 @@ interface Props {
 const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const classes = useStyles()
   const router = useRouter()
+
+  const attr = userProfile?.attributes
+  if (userProfile == null || attr == null || attr == undefined) {
+    return null
+  }
+
   const gender =
-    userProfile.attributes.sex === GENDER.FEMALE
+    isOthers && !attr.show_sex
+      ? i18n.t('common:common:private')
+      : attr.sex === GENDER.FEMALE
       ? i18n.t('common:common.female')
-      : userProfile.attributes.sex === GENDER.MALE
+      : attr.sex === GENDER.MALE
       ? i18n.t('common:common.male')
-      : userProfile.attributes.sex === GENDER.OTHER
+      : attr.sex === GENDER.OTHER
       ? i18n.t('common:common.other')
       : null
-  const bod = userProfile?.attributes?.birth_date ? CommonHelper.staticSmartTime(userProfile.attributes.birth_date) : null
+  const bod =
+    isOthers && !attr.show_birth_date
+      ? i18n.t('common:common:private')
+      : attr.birth_date
+      ? CommonHelper.staticSmartTime(attr.birth_date)
+      : null
+  const area = isOthers && !attr.show_area ? i18n.t('common:common:private') : attr.area ? attr.area : null
 
   const editGame = () => router.push(ESRoutes.GAME_EDIT)
 
   const getTopSection = () => {
     return (
       <Grid xs={12} item className={classes.headerContainerSecond}>
-        <Typography className={classes.marginTop20}>{userProfile.attributes.bio}</Typography>
-        <HeaderTags items={userProfile.attributes.features ?? null} />
+        <Typography className={classes.marginTop20}>{attr.bio}</Typography>
+        <HeaderTags items={attr.features ?? null} />
         <Box display="flex">
-          {userProfile.attributes.area ? (
-            <Iconic
-              text={!isOthers || userProfile.attributes.show_area ? userProfile.attributes.area : i18n.t('common:common:private')}
-              icon="fas fa-map-marker-alt"
-            />
-          ) : null}
-          {gender ? (
-            <Iconic text={!isOthers || userProfile.attributes.show_sex ? gender : i18n.t('common:common:private')} icon="fas fa-user" />
-          ) : null}
-          {bod ? (
-            <Iconic
-              text={!isOthers || userProfile.attributes.show_birth_date ? bod : i18n.t('common:common:private')}
-              icon="fa fa-birthday-cake"
-            />
-          ) : null}
+          {area ? <Iconic text={area} icon="fas fa-map-marker-alt" /> : null}
+          {gender ? <Iconic text={gender} icon="fas fa-user" /> : null}
+          {bod ? <Iconic text={bod} icon="fa fa-birthday-cake" /> : null}
         </Box>
         <Box display="flex" className={classes.marginTop20}>
-          <ESButtonDiscordCircle className={classes.marginRight} link={userProfile.attributes.discord_link} />
-          <ESButtonFacebookCircle className={classes.marginRight} link={userProfile.attributes.facebook_link} />
-          <ESButtonTwitterCircle className={classes.marginRight} link={userProfile.attributes.twitter_link} />
-          <ESButtonTwitchCircle className={classes.marginRight} link={userProfile.attributes.twitch_link} />
-          <ESButtonInstagramCircle className={classes.marginRight} link={userProfile.attributes.instagram_link} />
+          <ESButtonDiscordCircle className={classes.marginRight} link={attr.discord_link} />
+          <ESButtonFacebookCircle className={classes.marginRight} link={attr.facebook_link} />
+          <ESButtonTwitterCircle className={classes.marginRight} link={attr.twitter_link} />
+          <ESButtonTwitchCircle className={classes.marginRight} link={attr.twitch_link} />
+          <ESButtonInstagramCircle className={classes.marginRight} link={attr.instagram_link} />
         </Box>
       </Grid>
     )
   }
   const getFavoriteGames = () => {
-    const orderedGL = orderBy(userProfile.attributes?.game_titles, ['display_name', 'jp_kana_name'], ['asc'])
+    const orderedGL = orderBy(attr.game_titles, ['display_name', 'jp_kana_name'], ['asc'])
     const SHOW_MAX = 10
     return (
       <Grid xs={12} item className={`${classes.bodyContainer} ${classes.marginTop50}`}>
@@ -130,7 +132,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
             </Grid>
           </Grid>
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+        <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
           <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
           <Icon className={'fa fa-angle-down'} fontSize="small" />
         </Box>

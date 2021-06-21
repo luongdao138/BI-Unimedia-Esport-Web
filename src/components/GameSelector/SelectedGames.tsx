@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    maxHeight: 140,
+    maxHeight: 190,
     overflowY: 'auto',
   },
   chip: {

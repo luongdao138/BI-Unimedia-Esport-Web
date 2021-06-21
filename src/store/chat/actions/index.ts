@@ -32,3 +32,18 @@ export const directRoomCheck = createAsyncThunk<services.CheckChatResponse, stri
     }
   }
 )
+
+export const getMessageTournamentDetail = createAsyncThunk<services.MessageTournamentResponse, string>(
+  MESSAGE_ACTION_TYPE.GET_TOURNAMENT_DETAIL,
+  async (roomId, { rejectWithValue }) => {
+    try {
+      const res = await services.getMessageTournamentDetail(roomId)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

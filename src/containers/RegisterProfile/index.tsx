@@ -9,11 +9,11 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import ButtonPrimary from '@components/ButtonPrimary'
 import ESLoader from '@components/FullScreenLoader'
 import useProfile from './useProfile'
 import { isEmpty } from 'lodash'
 import { ERROR_CODE } from '@constants/error.constants'
+import ESStickyFooter from '@components/StickyFooter'
 
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -40,7 +40,7 @@ const RegisterProfileContainer: React.FC = () => {
       }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
+  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -68,69 +68,61 @@ const RegisterProfileContainer: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <Box pt={7.5} pb={9} className={classes.topContainer}>
-          <Box py={2} display="flex" flexDirection="row" alignItems="center">
-            <IconButton className={classes.iconButtonBg} onClick={backAction}>
-              <Icon className="fa fa-arrow-left" fontSize="small" />
-            </IconButton>
-            <Box pl={2}>
-              <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
-            </Box>
-          </Box>
-
-          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
-            {renderError()}
-            <Box pb={1}>
-              <ESInput
-                id="user_code"
-                autoFocus
-                labelPrimary={t('common:register_profile.user_id')}
-                fullWidth
-                value={values.user_code}
-                onChange={(e) => setFieldValue('user_code', CommonHelper.replaceSingleByteString(e.target.value))}
-                onBlur={handleBlur}
-                helperText={touched.user_code && errors.user_code}
-                error={touched.user_code && !!errors.user_code}
-              />
+      <ESStickyFooter disabled={!buttonActive()} title={t('common:register_by_email.button')} onClick={handleSubmit} noScroll>
+        <form onSubmit={handleSubmit}>
+          <Box pt={7.5} pb={9} className={classes.topContainer}>
+            <Box py={2} display="flex" flexDirection="row" alignItems="center">
+              <IconButton className={classes.iconButtonBg} onClick={backAction}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Box pl={2}>
+                <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
+              </Box>
             </Box>
 
-            <Box>
-              <Box display="flex" flexDirection="row" pb={1}>
-                <Icon className={`fa fa-exclamation-triangle ${classes.iconMargin}`} fontSize="small" />
-                <Typography variant="body2">{t('common:register_profile.hint')}</Typography>
+            <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+              {renderError()}
+              <Box pb={1}>
+                <ESInput
+                  id="user_code"
+                  labelPrimary={t('common:register_profile.user_id')}
+                  fullWidth
+                  value={values.user_code}
+                  onChange={(e) => setFieldValue('user_code', CommonHelper.replaceSingleByteString(e.target.value))}
+                  onBlur={handleBlur}
+                  helperText={touched.user_code && errors.user_code}
+                  error={touched.user_code && !!errors.user_code}
+                />
               </Box>
 
-              <Typography variant="body2">{t('common:register_profile.hint2')}</Typography>
-            </Box>
+              <Box>
+                <Box display="flex" flexDirection="row" pb={1}>
+                  <Icon className={`fa fa-exclamation-triangle ${classes.iconMargin}`} fontSize="small" />
+                  <Typography variant="body2">{t('common:register_profile.hint')}</Typography>
+                </Box>
 
-            <Box pt={3} pb={1}>
-              <ESInput
-                id="nickname"
-                labelPrimary={t('common:register_profile.nickname')}
-                fullWidth
-                value={values.nickname}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                helperText={touched.nickname && errors.nickname}
-                error={touched.nickname && !!errors.nickname}
-              />
-            </Box>
-          </Box>
-        </Box>
+                <Typography variant="body2">{t('common:register_profile.hint2')}</Typography>
+              </Box>
 
-        <Box className={classes.blankSpace}></Box>
-
-        <Box className={classes.stickyFooter}>
-          <Box className={classes.nextBtnHolder}>
-            <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!buttonActive()}>
-                {t('common:register_by_email.button')}
-              </ButtonPrimary>
+              <Box pt={3} pb={1}>
+                <ESInput
+                  id="nickname"
+                  labelPrimary={t('common:register_profile.nickname')}
+                  fullWidth
+                  value={values.nickname}
+                  onChange={(e) => setFieldValue('nickname', CommonHelper.replaceWhiteSpace(e.target.value))}
+                  onBlur={handleBlur}
+                  helperText={touched.nickname && errors.nickname}
+                  error={touched.nickname && !!errors.nickname}
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </form>
+
+          <Box className={classes.blankSpace}></Box>
+        </form>
+      </ESStickyFooter>
+
       {meta.pending && <ESLoader open={meta.pending} />}
     </>
   )
@@ -145,25 +137,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconMargin: {
     marginRight: theme.spacing(1 / 2),
-  },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    background: Colors.black,
-    borderTop: `1px solid`,
-    borderTopColor: Colors.text['300'],
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    width: '100%',
-    margin: '0 auto',
   },
   hint: {
     color: Colors.white_opacity[30],

@@ -14,7 +14,12 @@ export const RecruitmentFollow: React.FC<Props> = ({ data }) => {
       title={t('common:home.recruitment_follow')}
       moreLink={ESRoutes.RECRUITMENT_FOLLOWER}
       navigation
-      width={256}
+      breakpoints={{
+        '767': {
+          slidesPerView: 3.1,
+          slidesPerGroup: 2,
+        },
+      }}
       items={data.map((recruitment, i) => (
         <RecruitmentCard key={i} recruitment={recruitment} />
       ))}

@@ -62,7 +62,6 @@ export type UserProfileParams = {
 
 export type UserResendParams = {
   email: string
-  type: string
 }
 
 export const login = async (params: UserLoginParams): Promise<UserLoginResponse> => {
@@ -85,8 +84,13 @@ export const registerConfirm = async (params: UserConfirmParams): Promise<UserLo
   return data
 }
 
-export const resendConfirmation = async (params: UserResendParams): Promise<UserLoginResponse> => {
-  const { data } = await api.post<UserLoginResponse>(URI.RESEND, params)
+export const signUpResend = async (params: UserResendParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.SIGNUP_RESEND, params)
+  return data
+}
+
+export const forgotResend = async (params: UserResendParams): Promise<UserLoginResponse> => {
+  const { data } = await api.post<UserLoginResponse>(URI.FORGOT_RESEND, params)
   return data
 }
 

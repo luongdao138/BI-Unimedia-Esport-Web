@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { MessageType, ChatDataType } from '@components/Chat/types/chat.types'
 import { State } from '@store/socket/actions/types'
+import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 
 const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageType[] => {
   const unsent = _.filter(olddata, { sent: false })
@@ -89,9 +90,38 @@ const changeSingleRoom = (oldState: State, newRoom: any): State => {
   }
 }
 
+const deleteMessage = (olddata: MessageType[], newdata: any[]): MessageType[] => {
+  if (olddata && olddata[0] && newdata && newdata[0]) {
+    const sortKey = newdata[0].sortKey
+    const replaceText = newdata[0].parentMsgDeletedText
+    const deleteFrom: any = olddata
+    const roomId = newdata[0].chatRoomId
+
+    const messagesRoom = olddata[0].chatRoomId
+    let updatedObj
+    if (roomId == messagesRoom) {
+      updatedObj = _.remove(deleteFrom, function (item: any) {
+        return item.sortKey != sortKey
+      }).map((item) => {
+        if (item.parentMsg != null && !item.parentMsg.isDeleted) {
+          item.parentMsg.msg = replaceText
+          item.parentMsg.isDeleted = true
+          item.parentMsg.type = CHAT_MESSAGE_TYPE.TEXT
+        }
+        return item
+      })
+    } else {
+      updatedObj = olddata
+    }
+    return updatedObj
+  }
+  return olddata
+}
+
 export const ChatHelper = {
   messagesMerge,
   roomListUpdate,
   unseenClear,
   changeSingleRoom,
+  deleteMessage,
 }

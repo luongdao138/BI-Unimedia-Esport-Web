@@ -98,7 +98,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
                 </Box>
                 <Box color={Colors.black}>
                   <Typography variant="body2" noWrap>
-                    {`${t('common.at')}${item.userCode}`}
+                    {`${t('common:common.at')}${item.userCode}`}
                   </Typography>
                 </Box>
               </Box>

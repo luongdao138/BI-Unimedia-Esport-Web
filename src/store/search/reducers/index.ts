@@ -15,12 +15,12 @@ const initialState: StateType = { searchUsers: [], type: searchTypes.USER, keywo
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.userSearch.fulfilled, (state, action) => {
     let tmpSearchUsers = action.payload.data
-    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       tmpSearchUsers = state.searchUsers.concat(action.payload.data)
     }
 
     state.searchUsers = tmpSearchUsers
-    state.searchUsersMeta = action.payload.links?.meta
+    state.searchUsersMeta = action.payload.meta
   })
 
   builder.addCase(actions.setSearchParams, (state, action) => {

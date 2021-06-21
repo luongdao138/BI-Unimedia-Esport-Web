@@ -19,6 +19,7 @@ export interface MessageListProps {
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
   copy?: (currentMessage: MessageType) => void
+  delete?: (currentMessage: MessageType) => void
   onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
 }
 
@@ -115,6 +116,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
               reply={props.reply}
               report={props.report}
               onReplyClick={onReplyClick}
+              onDelete={props.delete}
               copy={props.copy}
               onLoadImage={measure}
               currentMessage={data}

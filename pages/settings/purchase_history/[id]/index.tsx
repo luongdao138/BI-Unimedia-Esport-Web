@@ -10,7 +10,7 @@ const PurchaseHistoryDetail: PageWithLayoutType = () => {
 
   return (
     <MainLayout footer={false}>
-      <PurchaseDetail id={Number(id)} />
+      <PurchaseDetail id={String(id)} />
     </MainLayout>
   )
 }
