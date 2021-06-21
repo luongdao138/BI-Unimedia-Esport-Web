@@ -105,8 +105,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           <ProfileCover
             src={cover}
             editable={!isOthers}
-            onChange={(f: File) => {
-              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER)
+            onChange={(f: File, blob: any) => {
+              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER, blob)
             }}
           />
           {offset > 150 ? (
@@ -127,9 +127,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <ProfileAvatar
               src={attr.avatar_url}
               editable={!isOthers}
-              alt={attr.nickname}
-              onChange={(f: File) => {
-                isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR)
+              onChange={(f: File, blob: any) => {
+                isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR, blob)
               }}
             />
             {isOthers ? (
@@ -300,6 +299,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: Colors.grey[200],
     },
     marginRight: 20,
+    marginTop: 5,
   },
   iconButtonBg: {
     position: 'absolute',

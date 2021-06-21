@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/arena.service'
-import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS } from './types'
+import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS, CLEAR_TOURNAMENT_RESULT } from './types'
 import * as types from './types'
 
 export const tournamentSearch = createAsyncThunk<services.TournamentSearchResponse, services.TournamentSearchParams>(
@@ -131,6 +131,18 @@ export const closeTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNA
   }
 })
 
+export const cancelTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNAMENT, async (param, { rejectWithValue }) => {
+  try {
+    const res = await services.cancelTournament(param)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
+
 export const getTournamentParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
   types.GET_TOURNAMENT_PARTICIPANTS,
   async (param, { rejectWithValue }) => {
@@ -222,7 +234,7 @@ export const setParticipants = createAsyncThunk<void, services.SetParticipantsPa
 )
 
 export const getArenaWinners = createAsyncThunk<services.GetArenaWinnersResponse, string | string[]>(
-  types.SET_TOURNAMENT_PARTICIPANT,
+  types.GET_ARENA_WINNERS,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.getArenaWinners(param)
@@ -251,8 +263,9 @@ export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUs
 )
 
 export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
+export const clearTournamentResult = createAction(CLEAR_TOURNAMENT_RESULT)
 
-export const createTournament = createAsyncThunk<void, services.TournamentFormParams>(
+export const createTournament = createAsyncThunk<services.CreateTournamentResponse, services.TournamentFormParams>(
   types.CREATE_TOURNAMENT,
   async (param, { rejectWithValue }) => {
     try {
@@ -267,7 +280,7 @@ export const createTournament = createAsyncThunk<void, services.TournamentFormPa
   }
 )
 
-export const updateTournament = createAsyncThunk<void, services.UpdateParams>(
+export const updateTournament = createAsyncThunk<services.UpdateTournamentResponse, services.UpdateParams>(
   types.UPDATE_TOURNAMENT,
   async (param, { rejectWithValue }) => {
     try {

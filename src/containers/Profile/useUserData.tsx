@@ -23,7 +23,7 @@ const useUserData = (
   communityMeta: Meta
   getCommunityList: () => void
   getMemberProfile: (userCode: string) => void
-  profileImageChange: (file: File, user_id: number, type: number) => void
+  profileImageChange: (file: File, user_id: number, type: number, blob?: any) => void
   setFollowState: () => void
 } => {
   const authSelectors = auth.selectors
@@ -61,7 +61,7 @@ const useUserData = (
   // const progressListener = (progress: number) => {
   //   console.log('progressListener ', progress)
   // }
-  const profileImageChange = async (file: File, user_id: number, type: number) => {
+  const profileImageChange = async (file: File, user_id: number, type: number, blob?: any) => {
     const params = {
       type: type,
       fileName: file.name,
@@ -73,7 +73,7 @@ const useUserData = (
       const res = await getPreSignedUrl(params)
       const file_url = res.file_url
       const signed_url = res.url
-      const u_res = await upload(file, signed_url)
+      const u_res = await upload(blob ? blob : file, signed_url, undefined)
       if (u_res === RESPONSE_STATUS.SUCCESS) {
         const params = {
           user_id: user_id,

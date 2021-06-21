@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
 import * as actions from '../actions'
-import { Dialog } from '../actions/types'
+import { Dialog, NotFoundType } from '../actions/types'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 
 type StateType = {
@@ -10,9 +10,17 @@ type StateType = {
   toasts: { uuid: string; message: string; severity: 'success' | 'error' | 'warning' | 'info' }[]
   dialog: Dialog | undefined
   action: string | null
+  notFound: NotFoundType | null
 }
 
-const initialState: StateType = { prefectures: undefined, hardwares: undefined, toasts: [], dialog: undefined, action: null }
+const initialState: StateType = {
+  prefectures: undefined,
+  hardwares: undefined,
+  toasts: [],
+  dialog: undefined,
+  action: null,
+  notFound: null,
+}
 
 export default createReducer(initialState, (builder) => {
   builder
@@ -40,5 +48,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.actionDialog, (state, action) => {
       state.action = action.payload
+    })
+    .addCase(actions.setNotFound, (state, action) => {
+      state.notFound = action.payload.notFound
     })
 })

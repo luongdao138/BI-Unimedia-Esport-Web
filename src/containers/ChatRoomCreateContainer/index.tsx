@@ -25,6 +25,7 @@ import { getDirectRoom } from '@services/chat.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import i18n from '@locales/i18n'
 
 const { actions } = chatStore
 
@@ -214,6 +215,16 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
     }
     return null
   }
+  const renderHolder = () => {
+    if (!actionPending || !uploadMeta.uploading) {
+      return (
+        <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
+          {i18n.t('common:chat.select_destination')}
+        </Box>
+      )
+    }
+    return null
+  }
 
   return (
     <Box className={classes.room}>
@@ -244,7 +255,10 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
         )}
       </Box>
       <Box className={classes.list}>
-        <Box className={`${classes.content} scroll-bar`}>{renderLoader()}</Box>
+        <Box className={`${classes.content} scroll-bar`}>
+          {renderLoader()}
+          {renderHolder()}
+        </Box>
       </Box>
       <Box className={classes.input}>
         <MessageInputArea

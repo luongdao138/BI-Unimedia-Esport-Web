@@ -5,11 +5,14 @@ import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
 import ChatSideBar from '@containers/ChatSideBar'
 import useProfileValid from '@utils/hooks/useProfileValid'
-import { useAppSelector } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useLogout from '@containers/Logout/useLogout'
+import * as selectors from '@store/common/selectors'
+import NotFoundView from '@components/NotFoundView'
+import { setNotFound } from '@store/common/actions/index'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -21,6 +24,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
   const [open, setOpen] = useState<boolean>(false)
   const [expand, setExpand] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const dispatch = useAppDispatch()
+  const notFound = useAppSelector(selectors.getNotFound)
   useProfileValid()
   const router = useRouter()
   useLogout()
@@ -39,8 +44,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
     }
   }, [loginRequired])
 
+  useEffect(() => {
+    dispatch(setNotFound({ notFound: null }))
+  }, [router.pathname])
+
   if (loginRequired && !isAuthenticated) return null
 
+  const renderContent = () => {
+    return loginRequired ? isAuthenticated && children : children
+  }
+  const showContent = notFound === null
   return (
     <div className="main-wrapper">
       <Header open={open} toggleDrawer={toggleDrawer} />
@@ -49,7 +62,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
       </aside>
       <main role="main" className={patternBg ? 'main' : 'main no-pattern'}>
         <div className="content-wrapper">
-          <div className="content">{loginRequired ? isAuthenticated && children : children}</div>
+          {showContent ? null : <NotFoundView notFoundType={notFound} />}
+          <div className="content" style={showContent ? undefined : { display: 'none' }}>
+            {renderContent()}
+          </div>
           {footer ? <Footer /> : ''}
         </div>
         <aside className="aside-right">{loginRequired ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>
