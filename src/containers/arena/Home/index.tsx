@@ -10,6 +10,7 @@ import { Colors } from '@theme/colors'
 import { AddRounded } from '@material-ui/icons'
 import ESChip from '@components/Chip'
 import useArenaHelper from '../hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
 import { useState } from 'react'
 
 const ArenaHome: React.FC = () => {
@@ -61,10 +62,13 @@ const ArenaHome: React.FC = () => {
     <>
       <div className={classes.header}>
         <Typography variant="h2">アリーナ</Typography>
-        <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
-          <AddRounded className={classes.addIcon} />
-          {t('common:tournament_create.title')}
-        </ButtonPrimary>
+
+        <LoginRequired>
+          <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
+            <AddRounded className={classes.addIcon} />
+            {t('common:tournament_create.title')}
+          </ButtonPrimary>
+        </LoginRequired>
       </div>
       <Grid container className={classes.content}>
         <Box className={classes.filters}>
