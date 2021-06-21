@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
 import UserListItem from '@components/UserItem'
-import { Box, Typography, Button, Grid, DialogContent } from '@material-ui/core'
+import { Box, Typography, Button, DialogContent } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import useFollowing from './useFollowing'
@@ -72,7 +72,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
   const itemCount = hasNextPage ? following.length + 1 : following.length
 
   return (
-    <div>
+    <>
       <Button onClick={() => setOpen(true)}>
         <Box display="flex" className={classes.rowContainer}>
           <Typography>{t('common:following.title')}</Typography>
@@ -83,10 +83,11 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
         </Box>
       </Button>
       <ESDialog title={t('common:following.title')} open={open} handleClose={() => setOpen(false)}>
-        <DialogContent className={'scroll-bar'}>
+        <DialogContent>
           <InfiniteLoader isItemLoaded={(index: number) => index < following.length} itemCount={itemCount} loadMoreItems={loadMore}>
             {({ onItemsRendered, ref }) => (
               <List
+                className={classes.scroll}
                 height={800}
                 width={'100%'}
                 itemCount={following.length}
@@ -99,20 +100,19 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
               </List>
             )}
           </InfiniteLoader>
-          {meta.pending ? (
-            <Grid item xs={12}>
-              <Box my={4} display="flex" justifyContent="center" alignItems="center">
-                <ESLoader />
-              </Box>
-            </Grid>
-          ) : !hasNextPage ? (
+          {/* {following.length > 0 && page.total_pages > 0 && !hasNextPage ? (
             <p style={{ textAlign: 'center' }}>
               <b>{t('common:infinite_scroll.message')}</b>
             </p>
+          ) : null} */}
+          {meta.pending ? (
+            <Box className={classes.loader}>
+              <ESLoader />
+            </Box>
           ) : null}
         </DialogContent>
       </ESDialog>
-    </div>
+    </>
   )
 }
 
@@ -133,7 +133,35 @@ const useStyles = makeStyles(() => ({
     fontSize: 24,
     color: Colors.white,
   },
-  loaderCenter: {
-    textAlign: 'center',
+  scroll: {
+    overflow: 'overlay',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 0,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      color: 'red',
+      opacity: 0,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      opacity: 0,
+      borderRadius: 6,
+    },
+  },
+  loader: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
 }))
