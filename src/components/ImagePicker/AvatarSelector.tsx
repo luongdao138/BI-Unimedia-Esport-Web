@@ -1,28 +1,57 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Box, Typography, Slider } from '@material-ui/core'
+import { Box, Typography, Slider, Link } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
 import ESDialog from '@components/Dialog'
-import ESButton from '@components/Button'
-import Avatar from '@components/Avatar'
+import ButtonPrimary from '@components/ButtonPrimary'
+import ESAvatar from '@components/Avatar'
 import { useDropzone } from 'react-dropzone'
 import Cropper from 'react-easy-crop'
-import { CameraAlt as Camera } from '@material-ui/icons'
+import i18n from '@locales/i18n'
+import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 
 interface AvatarSelectorProps {
   src?: string
+  alt: string
   cancel: () => void
   onUpdate: (file: File, blob: any) => void
 }
 
+const ImageSlider = withStyles({
+  root: {
+    color: '#E11AD4',
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    marginTop: -10,
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  track: {
+    height: 4,
+    borderRadius: 2,
+  },
+  rail: {
+    height: 4,
+    borderRadius: 2,
+    color: '#FFFFFF30',
+  },
+})(Slider)
+
 const WH = 200
 
-const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }) => {
+const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpdate }) => {
   const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
-  const [fileLocation, setFileLocation] = useState<string | null>(null)
+  // const [fileLocation, setFileLocation] = useState<string | null>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
@@ -34,9 +63,9 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
     return setUploading(false)
   }, [])
 
-  useEffect(() => {
-    setFileLocation(src)
-  }, [src])
+  // useEffect(() => {
+  //   setFileLocation(src)
+  // }, [src])
 
   const dropZoneConfig = {
     accept: 'image/*',
@@ -100,7 +129,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
 
   const reset = () => {
     setFile(null)
-    setFileLocation(src)
+    // setFileLocation(src)
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -118,9 +147,9 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
   }, [croppedAreaPixels])
 
   return (
-    <ESDialog open={true} title={'Avatar Selector'} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
+    <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
-        <Typography className={classes.title}>{'Select Avatar'}</Typography>
+        <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
         <Box className={classes.cropContainer}>
           {file ? (
             <Cropper
@@ -141,7 +170,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
             />
           ) : (
             <label htmlFor="cover-upload" className={classes.touch}>
-              <Avatar className={classes.avatar} src={fileLocation ?? '/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} src={src ?? '/images/avatar.png'} alt={alt} />
               <Camera fontSize="large" className={classes.camera} />
               <div className={classes.backdrop} />
               <div {...getRootProps()} className={classes.dropZone}>
@@ -152,7 +181,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
         </Box>
         {file ? (
           <Box className={classes.controls}>
-            <Slider
+            <RectIcon fontSize="small" className={classes.rect} />
+            <ImageSlider
               value={zoom}
               min={1}
               max={3}
@@ -160,20 +190,21 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, cancel, onUpdate }
               aria-labelledby="Zoom"
               onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
             />
+            <RectIcon fontSize="small" className={classes.rect2} />
           </Box>
         ) : null}
-        <Typography className={classes.description}>{'test test test test test test test'}</Typography>
+        <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
-          <ESButton onClick={update} variant="outlined" size="medium" round>
-            UPDATE
-          </ESButton>
-          <ESButton onClick={cancel} variant="outlined" size="medium" round>
-            CANCEL
-          </ESButton>
-          <ESButton onClick={reset} variant="outlined" size="medium" round>
-            RESET
-          </ESButton>
+          <ButtonPrimary round gradient={false} onClick={cancel}>
+            {i18n.t('common:common.cancel')}
+          </ButtonPrimary>
+          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}>
+            {i18n.t('common:button.use')}
+          </ButtonPrimary>
         </Box>
+        <Link className={classes.link} onClick={reset}>
+          {i18n.t('common:profile.reset')}
+        </Link>
 
         {uploading ? (
           <Box className={classes.loader}>
@@ -204,6 +235,7 @@ const useStyles = makeStyles(() => ({
   description: {
     marginTop: 40,
     marginBottom: 120,
+    maxWidth: 400,
   },
   image: {
     marginTop: 20,
@@ -225,8 +257,12 @@ const useStyles = makeStyles(() => ({
     width: WH,
   },
   controls: {
+    display: 'flex',
+    flexDirection: 'row',
     width: '50%',
-    margin: 20,
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   touch: {
     zIndex: 30,
@@ -272,5 +308,22 @@ const useStyles = makeStyles(() => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  link: {
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    marginTop: 20,
+    cursor: 'pointer',
+    textDecoration: 'underline',
+  },
+  rect: {
+    color: '#FFFFFF30',
+    marginRight: 10,
+  },
+  rect2: {
+    color: '#FFFFFF30',
+    marginLeft: 10,
   },
 }))
