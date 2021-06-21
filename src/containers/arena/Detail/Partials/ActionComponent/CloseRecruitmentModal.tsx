@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
@@ -11,7 +12,7 @@ import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-
+import UserSlashIcon from '@components/UserSlashIcon'
 interface CloseRecruitmentModalProps {
   tournament: TournamentDetail
   handleClose: () => void
@@ -34,12 +35,9 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
   return (
     <Box>
       <Box className={classes.button}>
-        <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+        <ButtonPrimaryOutlined onClick={() => setOpen(true)} leadingIcon={<UserSlashIcon />}>
           {t('common:tournament.close_recruitment.button_text')}
-        </ButtonPrimary>
-      </Box>
-      <Box className={classes.description}>
-        <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
+        </ButtonPrimaryOutlined>
       </Box>
 
       <ESModal open={open}>

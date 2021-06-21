@@ -10,11 +10,11 @@ const LoginRequired: React.FC = ({ children }) => {
   const { makeContextualHref } = useContextualRouting()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
 
-  const handleAuthenticated = (onClick: () => void) => {
+  const handleAuthenticated = (onClick?: () => void) => {
     if (!isAuthenticated) {
       router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
     } else {
-      onClick()
+      if (onClick) onClick()
     }
   }
 
