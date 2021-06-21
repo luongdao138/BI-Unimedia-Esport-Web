@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography, ButtonBase } from '@material-ui/core'
+import { Box, List, ListItem as MuiListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
