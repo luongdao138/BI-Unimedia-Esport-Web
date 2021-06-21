@@ -251,6 +251,7 @@ const useStyles = makeStyles(() => ({
   description: {
     marginTop: 40,
     marginBottom: 120,
+    maxWidth: 400,
   },
   cropContainer: {
     position: 'relative',
