@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     top: 0,
     left: 0,
-    zIndex: 1,
+    zIndex: 3,
   },
   triangle: {
     width: 0,

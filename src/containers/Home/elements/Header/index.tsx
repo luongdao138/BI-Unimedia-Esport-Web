@@ -37,7 +37,6 @@ export const Header: React.FC = () => {
           <ESMenu>
             <LoginRequired>
               <ESMenuItem onClick={() => router.push(ESRoutes.HOME_ORDER)}>{t('common:home.change_order')}</ESMenuItem>
-              <ESMenuItem onClick={() => router.push('/tournaments')}>コミュニティを作る</ESMenuItem>
             </LoginRequired>
           </ESMenu>
         </Toolbar>
