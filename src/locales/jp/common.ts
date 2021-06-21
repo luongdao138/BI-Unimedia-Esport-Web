@@ -504,6 +504,8 @@ export default {
     room_not_found: 'ルームが見つかりませんでした。',
     delete_chat: '通報',
     see_tournament: '該当の大会をみる',
+    lets_start: 'メッセージを入力',
+    select_destination: '宛先を選んでください',
   },
   notification: {
     title: '通知一覧',
