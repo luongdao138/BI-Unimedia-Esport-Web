@@ -13,25 +13,23 @@ const DividerWithMiddleText: React.FC<Props> = ({ text, marginSpace }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: (props: { marginSpace?: string }) => ({
+  root: {
     display: 'flex',
     alignItems: 'center',
     textAlign: 'center',
     fontSize: 16,
-
     '&:before, &:after': {
       content: "''",
       flex: 1,
       borderTop: `1px solid ${Colors.white}30`,
     },
     '&:before': {
-      marginRight: props.marginSpace || 13,
+      marginRight: 13,
     },
     '&:after': {
-      marginLeft: props.marginSpace || 13,
+      marginLeft: 13,
     },
-  }),
-
+  },
   [theme.breakpoints.down('sm')]: {
     root: {
       marginLeft: '-24px',
