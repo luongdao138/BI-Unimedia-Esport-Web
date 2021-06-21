@@ -63,6 +63,7 @@ export default {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
     profile_updated: 'プロフィールを更新しました',
     image_update: 'ツマミを操作することで、画像のリサイズを行えます。\nまた、ドラッグで位置を調整させることができます。',
+    game_updated: '好きなゲームを更新しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -267,6 +268,7 @@ export default {
     no_game_selected: '好きなゲームが選択されていません',
     no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
+    discord_placeholder: 'ユーザー名#0000を入力してください',
   },
   gender: {
     male: '男性',
