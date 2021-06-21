@@ -67,7 +67,26 @@ const ActionComponent: React.FC<Props> = (props) => {
 
       {isRecruiting && (
         <>
-          {isModerator && <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />}
+          {isModerator ? (
+            <Box>
+              <Box className={classes.buttonHolder}>
+                <Box minWidth={260} className={classes.buttonLeft}>
+                  <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />
+                </Box>
+                <Box minWidth={256} className={classes.buttonRight}>
+                  {isTeam ? (
+                    <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
+                  ) : (
+                    <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
+                  )}
+                </Box>
+              </Box>
+
+              <Box className={classes.description}>
+                <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
+              </Box>
+            </Box>
+          ) : null}
           {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
           {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
         </>
@@ -107,6 +126,33 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: '0 auto',
     maxWidth: theme.spacing(35),
+  },
+  description: {
+    marginTop: theme.spacing(3),
+    textAlign: 'center',
+  },
+  buttonHolder: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  buttonLeft: {
+    marginRight: theme.spacing(1),
+  },
+  buttonRight: {
+    marginLeft: theme.spacing(1),
+  },
+  [theme.breakpoints.down('sm')]: {
+    buttonHolder: {
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 0,
+    },
+    buttonLeft: {
+      marginRight: 0,
+    },
+    buttonRight: {
+      marginLeft: 0,
+    },
   },
 }))
 

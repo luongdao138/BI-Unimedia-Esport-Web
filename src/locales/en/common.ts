@@ -268,6 +268,7 @@ export default {
     no_game_selected: '好きなゲームが選択されていません',
     no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
+    no_communities: 'おすすめコミュニティは存在しません',
     discord_placeholder: 'ユーザー名#0000を入力してください',
   },
   gender: {
