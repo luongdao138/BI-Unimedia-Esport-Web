@@ -260,7 +260,7 @@ const SideMenu: React.FC = () => {
                 </ListItem>
               </>
             )}
-            <Box className={classes.buttonWrap}>
+            {/* <Box className={classes.buttonWrap}>
               <Typography variant="caption" className={classes.appDesc}>
                 {t('common:home.download_app_version')}
               </Typography>
@@ -270,7 +270,7 @@ const SideMenu: React.FC = () => {
               <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
                 <img className={classes.google_app_stores} src="/images/googleplay.png" />
               </ButtonBase>
-            </Box>
+            </Box> */}
           </List>
         </Box>
 
