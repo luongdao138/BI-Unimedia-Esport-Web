@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { makeStyles, Box } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import Image from 'next/image'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import CoverSelector from '@components/ImagePicker/CoverSelector'
-import ESLoader from '@components/Loader'
-import { useDropzone } from 'react-dropzone'
+// import ESLoader from '@components/Loader'
+// import { useDropzone } from 'react-dropzone'
 import { Colors } from '@theme/colors'
 
 type ProfileCoverProps = {
