@@ -9,7 +9,7 @@ const NotificaionDetail: PageWithLayoutType = () => {
   const { id } = router.query
 
   return (
-    <MainLayout footer={false}>
+    <MainLayout>
       <NotificationDetail id={id} />
     </MainLayout>
   )

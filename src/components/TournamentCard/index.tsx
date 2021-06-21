@@ -181,7 +181,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chip: {
     height: 15,
-    backgroundColor: Colors.grey[400],
+    backgroundColor: Colors.white_opacity[20],
   },
   avatarContainer: {
     height: 20,
