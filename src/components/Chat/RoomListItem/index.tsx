@@ -101,6 +101,12 @@ const useStyles = makeStyles(() => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
+    height: 70,
+    paddingLeft: 5,
+    '&:hover': {
+      background: 'rgba(255,255,255, 0.1)',
+      transition: 'all 0.2s ease',
+    },
   },
 
   name: {
@@ -159,9 +165,8 @@ const useStyles = makeStyles(() => ({
   },
   avatarItem: {
     position: 'relative',
-    paddingLeft: 5,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   smallIcon: {
     position: 'absolute',
