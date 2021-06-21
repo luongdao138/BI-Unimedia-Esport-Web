@@ -14,6 +14,8 @@ const initialState: State = {
   activeRoom: null,
   socketReady: false,
   actionPending: false,
+  selectedRoomInfo: undefined,
+  error: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -23,6 +25,7 @@ let pending: MessageType[] | undefined
 let oldMessages: MessageType[] | undefined
 let newMsg: MessageType[] | undefined
 let newRoomList: ChatDataType[] | undefined
+let deleted: MessageType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
@@ -59,6 +62,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         lastKey: action.data.lastKey,
         paginating: false,
         roomList: ChatHelper.unseenClear(state.roomList, action.data.chatRoomId),
+        error: _.get(action.data, 'error', undefined),
       }
     case CHAT_ACTION_TYPE.MESSAGE_PENDING:
       if (_.isArray(state.messages) && _.isEmpty(state.messages)) {
@@ -77,6 +81,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         messages: undefined,
         selectedRoomInfo: undefined,
         newRoomId: undefined,
+        error: undefined,
       }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
@@ -100,7 +105,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE:
       return {
         ...state,
-        selectedRoomInfo: action.data.content.room,
+        selectedRoomInfo: _.get(action.data, 'content.room', undefined),
       }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
       newRoomList = [...state.roomList]
@@ -127,6 +132,18 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         members: action.data.content,
+      }
+
+    case CHAT_ACTION_TYPE.MESSAGE_DELETED:
+      if (!_.isEmpty(state.messages)) {
+        const deletedMsg = ChatHelper.deleteMessage([...state.messages], action.data.content)
+        deleted = deletedMsg
+      } else {
+        deleted = state.messages
+      }
+      return {
+        ...state,
+        messages: deleted,
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {

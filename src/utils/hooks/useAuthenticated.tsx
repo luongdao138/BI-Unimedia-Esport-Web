@@ -16,7 +16,7 @@ const useAuthenticated = () => {
   useEffect(() => {
     if (!isAuth) {
       router.push(ESRoutes.LOGIN)
-    } else if (isAuth && !isRegistered) {
+    } else if (isAuth && !isRegistered && pathname !== profilePath) {
       router.push(profilePath)
     } else if (pathname === profilePath && isConfirmed) {
       router.push(ESRoutes.HOME)

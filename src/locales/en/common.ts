@@ -62,6 +62,8 @@ export default {
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
     profile_updated: 'プロフィールを更新しました',
+    image_update: 'ツマミを操作することで、画像のリサイズを行えます。\nまた、ドラッグで位置を調整させることができます。',
+    game_updated: '好きなゲームを更新しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -73,7 +75,7 @@ export default {
 今後も拡張されていく様々な機能を通して、ゲーマー同士やファンとの交流を広げていきます。`,
     download_app_version: 'アプリ版のダウンロードはこちら',
     recruiting_tournament: '募集中の大会',
-    no_recruiting_tournament: '現在予定している大会はありません。',
+    no_recruiting_tournament: '現在予定されている大会はありません',
   },
   button: {
     twitter: 'Twitterでログイン',
@@ -81,6 +83,7 @@ export default {
     line: 'LINEでログイン',
     facebook: 'Facebookでログイン',
     apple: 'Appleでログイン',
+    use: '適用',
   },
   login: {
     email_placeholder: 'sample@exelab.jp',
@@ -98,20 +101,15 @@ export default {
       password: 'パスワードが間違っています。',
     },
     error: {
-      title: 'ログインできませんでした',
+      title: 'ログインできませんでした。',
       detail: `以下の可能性がございます。
-        １. メールアドレスに誤りがある
-        ２. パスワードに誤りがある
-        ３. SNS連携でアカウントを作成している`,
+      1、メールアドレスに誤りがある
+      2、パスワードに誤りがある
+      3、SNS連携でアカウントを作成している
+      `,
       hint:
-        '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワードを設定していただくか、しばらく経ってからもう一度ログインしてください。',
-      title2: 'SNSでのログインに失敗しました',
-      detail2: `以下の可能性がございます。
-      １. ダミーテキスト
-      ２. ダミーテキスト
-      ３. ダミーテキスト`,
-      hint2:
-        'ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミー',
+        '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワード再設定いただくか、しばらくたってからもう一度ログインしてください。',
+      title2: 'ログインに失敗しました',
     },
   },
   register: {
@@ -126,11 +124,6 @@ export default {
     footer_link: 'アカウントをお持ちの方',
     error: {
       title: '登録に失敗しました',
-      detail: `以下の可能性がございます。
-      １. ダミーテキスト
-      ２. ダミーテキスト
-      ３. 同じアカウントですでにSNS連携での新規登録を行なっている(ダミー)`,
-      hint: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
       title2: '新規登録に失敗しました',
       detail2: `以下の可能性がございます。
       １. メールアドレスに誤りがある(ダミー)
@@ -138,7 +131,7 @@ export default {
       ３. SNS連携ですでにアカウントを作成している(ダミー)`,
       hint2: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
     },
-    resend_success: '認証コードメールを再度送信しました。',
+    resend_success: '認証コードメール再度送信しました。',
   },
   register_by_email: {
     email: 'メールアドレス',
@@ -146,7 +139,7 @@ export default {
     email_placeholder: 'sample@exelab.jp',
     password: 'パスワード',
     hint: '8文字以上の半角英数字を入力してください',
-    hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
+    hint2: 'パスワードは英大文字、英小文字、数字を一文字以上使用してください',
     button: '次へ',
     back: 'メールアドレスで登録',
     sns: 'SNS連携で登録',
@@ -156,8 +149,8 @@ export default {
   register_profile: {
     user_id: 'ユーザーID',
     nickname: 'ニックネーム',
-    hint: 'ユーザーIDはあとから変更ができません',
-    hint2: '半角英数字、”+_-”が使用できます',
+    hint: 'ユーザーIDは後から変更できません',
+    hint2: '半角英数字+"_"+"-"を使用できます',
   },
   error: {
     login_failed: 'ログインに失敗しました。',
@@ -250,15 +243,19 @@ export default {
       add_button: '追加する',
       title: '好きなゲーム',
       title_label: 'ゲーム名',
+      search_title: 'キーワードで探す',
       search_by_keyword: 'キーワードで探す',
       search_by_genre: 'ジャンルから探す',
       create_new: '新しく作る',
       genre: 'ジャンル：',
       genre_label: 'ゲームジャンル',
       add_success: 'ゲームを新しく追加しました',
+      no_result: '一致するゲームは見つかりませんでした',
     },
     edit: '編集',
     edit_profile: 'プロフィールを編集する',
+    update_image: '画像の編集',
+    reset: '画像をリセットする',
     read_more: 'もっとみる',
     follow_as: 'フォローする',
     inbox: 'inbox',
@@ -271,6 +268,7 @@ export default {
     no_game_selected: '好きなゲームが選択されていません',
     no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
+    discord_placeholder: 'ユーザー名#0000を入力してください',
   },
   gender: {
     male: '男性',
@@ -554,14 +552,21 @@ export default {
     },
     uploaded_image: '画像がアップロードされました。',
     placeholder_dm: 'メッセージ権限がありません',
+    delete_member: 'グループから除外',
+    toast_delete_member: 'メンバーを除外しました。',
+    room_not_found: 'ルームが見つかりませんでした。',
+    delete_chat: '通報',
+    see_tournament: '該当の大会をみる',
+    lets_start: 'メッセージを入力',
+    select_destination: '宛先を選んでください',
   },
   notification: {
     title: '通知一覧',
   },
   confirm: {
     sent: 'メールアドレスに送信された',
-    verification_code: '6桁の認証コードを送信しました',
-    resend: '認証コードを再送する',
+    verification_code: '6桁の認証コードを入力してください',
+    resend: '認証コードを再送信する',
     dont_receive: '認証コードが届かない場合',
     send_again: '入力したメールアドレスに誤りがある可能性があります。前の画面に戻り、もう一度送信してください。',
   },

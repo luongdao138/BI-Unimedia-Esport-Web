@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2,
+    WebkitLineClamp: 3,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     marginLeft: 66,

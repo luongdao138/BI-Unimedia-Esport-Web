@@ -13,6 +13,11 @@ import RoomNameEditor from '@components/Chat/RoomNameEditor'
 import RoomMemberAddView from '@components/Chat/RoomMemberAddView'
 import RoomImgView from '@components/Chat/RoomImgView'
 import _ from 'lodash'
+import ChatMemberEditContainer from '@containers/ChatMemberEditContainer'
+import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
+import { getMessageTournamentDetail } from '@store/chat/actions'
+import { tournamentDetail } from '@store/chat/selectors'
+import { useRouter } from 'next/router'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -36,6 +41,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const roomName = _.get(roomInfo, 'roomName', '')
   const hasNoRoomInfo = roomInfo === undefined
   const roomImg = _.get(roomInfo, 'roomImg')
+  const tournament = useAppSelector(tournamentDetail)
+
+  const router = useRouter()
 
   useEffect(() => {
     if (roomId && userId)
@@ -48,13 +56,65 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
       )
   }, [roomId, userId])
 
-  const isRoomNameMenuShow = () => {
-    if (!_.get(roomInfo, 'sortKey', '').startsWith('chat_room')) return false
+  useEffect(() => {
+    if (roomInfo && roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
+      dispatch(getMessageTournamentDetail(roomInfo.chatRoomId as string))
+    }
+  }, [roomInfo])
+
+  const isAdmin = () => {
     return _.get(roomInfo, 'isAdmin', false)
   }
 
   const isDirect = () => {
-    return !_.get(roomInfo, 'sortKey', '').startsWith('chat_room')
+    return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
+  }
+
+  const hasPermission = !_.get(tournament, 'is_freezed', true)
+
+  const memberAddItem = () => {
+    if (!isDirect() && hasPermission && isAdmin()) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+    }
+    return null
+  }
+
+  const renderMenu = () => {
+    if (!hasNoRoomInfo && !isDirect()) {
+      if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
+        return <>{tournament ? <MenuItems /> : null}</>
+      } else {
+        return <MenuItems />
+      }
+    }
+    return null
+  }
+
+  const renderTournamentDetailItem = () => {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && tournament) {
+      return <ESMenuItem onClick={() => router.push(`/arena/${tournament.hash_key}`)}>{t('common:chat.see_tournament')}</ESMenuItem>
+    }
+  }
+
+  const MenuItems = () => (
+    <Box className={classes.menu}>
+      <ESMenu>
+        <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+        {memberAddItem()}
+        {renderRoomNameChange()}
+        {renderTournamentDetailItem()}
+        <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+        <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+      </ESMenu>
+    </Box>
+  )
+
+  const renderRoomNameChange = () => {
+    // tour & req & direct & !admin rooms cant change name
+    if (!isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
+    }
+    return null
   }
 
   return (
@@ -63,32 +123,25 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         <>
           <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
+          <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
         </>
       )}
       <Box className={classes.row}>
         {hasNoRoomInfo ? null : (
-          <RoomImgView userId={userId} roomId={roomId as string} roomImg={roomImg} roomName={roomName} isAdmin={isRoomNameMenuShow()} />
+          <RoomImgView
+            userId={userId}
+            roomId={roomId as string}
+            roomImg={roomImg}
+            roomName={roomName}
+            isAdmin={isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM}
+          />
         )}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true}>
             {roomName}
           </Typography>
         </Box>
-        {hasNoRoomInfo ? null : (
-          <Box className={classes.menu}>
-            <ESMenu>
-              <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
-              {!isDirect() ? (
-                <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-              ) : null}
-              {isRoomNameMenuShow() ? (
-                <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
-              ) : null}
-              <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
-              <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
-            </ESMenu>
-          </Box>
-        )}
+        {renderMenu()}
       </Box>
     </>
   )

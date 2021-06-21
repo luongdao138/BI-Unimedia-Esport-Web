@@ -1,76 +1,45 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Avatar, Box } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
-import ESLoader from '@components/Loader'
 import ESAvatar from '@components/Avatar'
-import { useDropzone } from 'react-dropzone'
+import AvatarSelector from '@components/ImagePicker/AvatarSelector'
 
 type ProfileAvatarProps = {
   editable?: boolean
   size?: number
   src: string
+  onChange?: (file: File, blob: any) => void
   alt?: string
-  onChange?: (file: File) => void
 }
 
 const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, src, onChange }) => {
   const classes = useStyles()
-  const [update, setUpdate] = useState<boolean>(false)
   const [drag, setDrag] = useState<boolean>(false)
-  const dropZoneConfig = {
-    accept: 'image/*',
-    onDrop: (files: any) => handleChange(files),
-  }
-  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  const [setAvatar, toggleSetAvatar] = useState<boolean>(false)
 
   useEffect(() => {
-    setUpdate(false)
+    toggleSetAvatar(false)
   }, [src])
-
-  const handleChange = (files: Array<File>) => {
-    setUpdate(true)
-    setDrag(false)
-    const file = files[0]
-    const reader = new FileReader()
-    if (file) {
-      if (onChange) {
-        onChange(file)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
 
   return (
     <div className={classes.root}>
+      <ESAvatar className={classes.avatar} alt={alt} src={src} style={size && { width: size, height: size }} />
       {editable ? (
-        <label htmlFor="cover-upload" className={classes.touch}>
-          <Avatar className={classes.avatar} src={src ?? '/images/avatar.png'} />
-          {drag && !update ? <Camera fontSize="large" className={classes.camera} /> : null}
-          {drag || update ? <div className={classes.backdrop} /> : null}
+        <label htmlFor="cover-upload" className={classes.touch} onClick={() => toggleSetAvatar(true)}>
+          {drag ? <Camera fontSize="large" className={classes.camera} /> : null}
+          {drag ? <div className={classes.backdrop} /> : null}
           <div
-            {...getRootProps()}
             className={classes.dropZone}
-            onMouseEnter={() => {
-              if (!update) setDrag(true)
-            }}
+            onMouseEnter={() => setDrag(true)}
             onMouseLeave={() => setDrag(false)}
-            onDragEnter={() => {
-              if (!update) setDrag(true)
-            }}
+            onDragEnter={() => setDrag(true)}
             onDragLeave={() => setDrag(false)}
-          >
-            <input {...getInputProps()} />
-          </div>
-          {update ? (
-            <Box className={classes.loader}>
-              <ESLoader />
-            </Box>
-          ) : null}
+          ></div>
         </label>
-      ) : (
-        <ESAvatar className={classes.avatar} alt={alt} src={src} style={size && { width: size, height: size }} />
-      )}
+      ) : null}
+      {setAvatar ? (
+        <AvatarSelector src={src} cancel={() => toggleSetAvatar(false)} onUpdate={(file: File, blob: any) => onChange(file, blob)} />
+      ) : null}
     </div>
   )
 }
@@ -83,6 +52,7 @@ export default ESProfileAvatar
 const useStyles = makeStyles(() => ({
   root: {
     display: 'block',
+    position: 'relative',
   },
   avatar: {
     zIndex: 30,
@@ -92,7 +62,8 @@ const useStyles = makeStyles(() => ({
   touch: {
     zIndex: 30,
     display: 'flex',
-    position: 'relative',
+    position: 'absolute',
+    top: 0,
     overflow: 'hidden',
     width: 120,
     height: 120,
@@ -121,13 +92,6 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     content: '""',
     zIndex: 40,
-  },
-  loader: {
-    display: 'flex',
-    position: 'absolute',
-    zIndex: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   dropZone: {
     display: 'flex',

@@ -17,12 +17,12 @@ export type FollowResponse = {
     nickname: string
     nickname2: string
     avatar: string
-    is_following: true
-    is_followed: false
-    allow_groups_from_strangers: true
-    allow_messages_from_strangers: true
-    blocked_by_me: false
-    blocked_by_user: true
+    is_following: boolean
+    is_followed: boolean
+    allow_groups_from_strangers: boolean
+    allow_messages_from_strangers: boolean
+    blocked_by_me: boolean
+    blocked_by_user: boolean
   }
 }
 

@@ -2,14 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Header } from '@layouts/Header'
 import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
-import ESToast from '@components/Toast'
-import { useTranslation } from 'react-i18next'
 import SideMenu from '@containers/SideMenu'
 import ChatSideBar from '@containers/ChatSideBar'
 import useProfileValid from '@utils/hooks/useProfileValid'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
-import useMainLayoutMeta from '@utils/hooks/useMainLayoutMeta'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useLogout from '@containers/Logout/useLogout'
@@ -29,9 +26,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)
-  const { t } = useTranslation('common')
   useProfileValid()
-  const { metaChangePassword, changePasswordMeta, metaChangeEmailConfirm, changeEmailConfirmMeta } = useMainLayoutMeta()
   const router = useRouter()
   useLogout()
 
@@ -76,16 +71,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
         <aside className="aside-right">{loginRequired ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>
       </main>
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
-      {metaChangePassword.loaded && (
-        <ESToast open={metaChangePassword.loaded} message={t('account_settings.change_password_success')} resetMeta={changePasswordMeta} />
-      )}
-      {metaChangeEmailConfirm.loaded && (
-        <ESToast
-          open={metaChangeEmailConfirm.loaded}
-          message={t('account_settings.change_email_success')}
-          resetMeta={changeEmailConfirmMeta}
-        />
-      )}
     </div>
   )
 }

@@ -7,6 +7,8 @@ import NotFoundView from '@components/NotFoundView'
 import { setNotFound } from '@store/common/actions/index'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { useRouter } from 'next/router'
+import useProfileValid from '@utils/hooks/useProfileValid'
+
 interface PlainLayoutProps {
   children: ReactNode
   noFooter: boolean
@@ -14,6 +16,7 @@ interface PlainLayoutProps {
 
 const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter }) => {
   const [open, setOpen] = useState<boolean>(false)
+  useProfileValid()
 
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)

@@ -1,20 +1,22 @@
 import { useFormik } from 'formik'
 import { Box, makeStyles } from '@material-ui/core'
-import { CreateGameTitleParams, GameGenre } from '@services/game.service'
+import { CreateGameTitleParams, GameGenre, GameTitle } from '@services/game.service'
 import Input from '@components/Input'
 import Select from '@components/Select'
 import Button from '@components/Button'
 import Toast from '@components/Toast'
 import * as Yup from 'yup'
 import _ from 'lodash'
-
 import useAddGame from './useAddGame'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useStore } from 'react-redux'
 
 interface Props {
   genres: GameGenre[]
+  handleAdd: (game: GameTitle['attributes']) => void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -29,17 +31,23 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }))
-const validationSchema = Yup.object().shape({
-  display_name: Yup.string().required().max(255, i18n.t('common.too_long')),
-  game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
-    return value !== -1
-  }),
-})
 
-const AddGame: React.FC<Props> = ({ genres }) => {
+const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const { createGame, meta } = useAddGame()
+  const store = useStore()
+  const { createGame, meta, createdGame } = useAddGame()
+
+  const validationSchema = Yup.object().shape({
+    display_name: Yup.string()
+      .required(i18n.t('common:common.error'))
+      .max(60, i18n.t('common:common.too_long'))
+      .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+    game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
+      return value !== -1
+    }),
+  })
+
   const formik = useFormik<CreateGameTitleParams>({
     initialValues: {
       display_name: '',
@@ -60,8 +68,11 @@ const AddGame: React.FC<Props> = ({ genres }) => {
     if (meta.loaded) {
       setOpen(true)
       formik.resetForm()
+      handleAdd(createdGame)
     }
   }, [meta.loaded])
+
+  const isInitial = formik.values.display_name === '' || formik.values.game_genre_id === -1
 
   return (
     <Box pt={4} px={5} className={classes.container}>
@@ -103,7 +114,12 @@ const AddGame: React.FC<Props> = ({ genres }) => {
         />
         <Box pb={4} />
         <Box textAlign="center">
-          <Button variant="outlined" className={classes.button} type="submit" disabled={!_.isEmpty(formik.errors) || meta.pending}>
+          <Button
+            variant="outlined"
+            className={classes.button}
+            type="submit"
+            disabled={!_.isEmpty(formik.errors) || meta.pending || isInitial}
+          >
             {t('profile.favorite_game.add_button')}
           </Button>
         </Box>
