@@ -13,6 +13,8 @@ import TeamMemberItem from '../Partials/TeamMemberItem'
 import ESButton from '@components/Button'
 import { TournamentDetail } from '@services/arena.service'
 import { ROLE } from '@constants/tournament.constants'
+import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -20,6 +22,7 @@ export interface ParticipantsProps {
 
 const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
   const data = detail.attributes
   const isTeam = data.participant_type > 1
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
@@ -70,6 +73,13 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
+  const handleCopy = () => {
+    if (window.navigator.clipboard) {
+      window.navigator.clipboard.writeText(window.location.toString())
+    }
+    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+  }
+
   return (
     <div>
       <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
@@ -87,16 +97,34 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
               </Box>
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
-              <Box mr={2}>
-                <Typography variant="h3">{t('common:tournament.number_of_entries')}</Typography>
-              </Box>
-              <Typography variant="h3">
-                {data.is_freezed ? data.participant_count : data.participant_count + data.interested_count}
-                {unit}/{data.max_participants}
-                {unit}
-              </Typography>
-              <Box ml={2}>
-                <Icon className="fa fa-upload" fontSize="small" />
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" flexDirection="row" alignItems="flex-end">
+                  <Box mr={2}>
+                    <Typography variant="h3" className={classes.countLabel}>
+                      {t('common:tournament.number_of_entries')}
+                    </Typography>
+                  </Box>
+                  <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
+                    {data.is_freezed ? data.participant_count : data.participant_count + data.interested_count}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel}>
+                    {unit}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
+                    /
+                  </Typography>
+
+                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
+                    {data.max_participants}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel}>
+                    {unit}
+                  </Typography>
+                </Box>
+                <Box mt={2} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                  <Icon className="fa fa-link" fontSize="small" style={{ marginRight: 20, fontSize: 14, paddingTop: 3 }} />
+                  <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+                </Box>
               </Box>
             </Box>
             <InfiniteScroll
@@ -139,6 +167,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loaderCenter: {
     textAlign: 'center',
+  },
+  countLabel: {
+    marginLeft: 2,
+    fontWeight: 400,
+  },
+  urlCopy: {
+    cursor: 'pointer',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

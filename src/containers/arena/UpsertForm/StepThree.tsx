@@ -22,6 +22,48 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
   return (
     <Box pb={9}>
       <Box display="flex" flexDirection="row" alignItems="center">
+        <Typography>{t('common:tournament_create.holding_period')}</Typography>
+        <Typography component="span" className={classes.required}>
+          {t('common:common.required')}
+        </Typography>
+      </Box>
+      <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
+        <ESInputDatePicker
+          name="stepThree.start_date"
+          placeholder={t('common:tournament_create.start_date')}
+          fullWidth
+          multiline
+          rows={2}
+          value={formik.values.stepThree.start_date}
+          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
+          onBlur={formik.handleBlur}
+          helperText={
+            (formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date) ||
+            formik.errors?.stepThree?.acceptance_end_start_date
+          }
+          error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
+          disabled={!editables.start_date}
+        />
+        <Box mt={1}>
+          <span className={classes.dashes}>-</span>
+        </Box>
+        <ESInputDatePicker
+          name="stepThree.end_date"
+          placeholder={t('common:tournament_create.end_date')}
+          fullWidth
+          multiline
+          rows={2}
+          value={formik.values.stepThree.end_date}
+          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
+          onBlur={formik.handleBlur}
+          helperText={
+            (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date
+          }
+          error={formik.touched?.stepThree?.end_date && !!formik.errors?.stepThree?.end_date}
+          disabled={!editables.end_date}
+        />
+      </Box>
+      <Box display="flex" flexDirection="row" alignItems="center">
         <Typography>{t('common:tournament_create.entry_period')}</Typography>
         <Typography component="span" className={classes.required}>
           {t('common:common.required')}
@@ -64,49 +106,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           disabled={!editables.acceptance_end_date}
         />
       </Box>
-      <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{t('common:tournament_create.holding_period')}</Typography>
-        <Typography component="span" className={classes.required}>
-          {t('common:common.required')}
-        </Typography>
-      </Box>
-      <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
-        <ESInputDatePicker
-          name="stepThree.start_date"
-          placeholder={t('common:tournament_create.start_date')}
-          fullWidth
-          multiline
-          rows={2}
-          value={formik.values.stepThree.start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
-          onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date) ||
-            formik.errors?.stepThree?.acceptance_end_start_date
-          }
-          error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
-          disabled={!editables.start_date}
-        />
-        <Box mt={1}>
-          <span className={classes.dashes}>-</span>
-        </Box>
-        <ESInputDatePicker
-          name="stepThree.end_date"
-          placeholder={t('common:tournament_create.end_date')}
-          fullWidth
-          multiline
-          rows={2}
-          value={formik.values.stepThree.end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
-          onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date
-          }
-          error={formik.touched?.stepThree?.end_date && !!formik.errors?.stepThree?.end_date}
-          disabled={!editables.end_date}
-        />
-      </Box>
-      <Box pb={1}>
+      <Box pb={1} width={200}>
         <ESSelect
           name="stepThree.area_id"
           value={formik.values.stepThree.area_id}
@@ -114,6 +114,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           label={t('common:tournament_create.area')}
           required={true}
           size="small"
+          fullWidth
           disabled={!editables.area_id}
         >
           {prefectures?.data?.map((prefecture, index) => (
@@ -126,10 +127,10 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
       <Box>
         <ESInput
           multiline
-          rows={2}
+          rows={5}
           name="stepThree.area_name"
           fullWidth
-          placeholder={t('common:tournament_create.area_name')}
+          placeholder={t('common:tournament_create.area_name_placeholder')}
           value={formik.values.stepThree.area_name}
           onChange={formik.handleChange}
           helperText={formik.touched?.stepThree?.area_name && formik.errors?.stepThree?.area_name}

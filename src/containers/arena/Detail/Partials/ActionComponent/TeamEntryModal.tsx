@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { SuggestedTeamMembersResponse, TeamJoin, TeamMember, TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import ESButton from '@components/Button'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -21,8 +20,9 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
-import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
+import UnjoinModal from './UnjoinModal'
+import LoginRequired from '@containers/LoginRequired'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -43,7 +43,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, meta, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const { uploadArenaTeamImage } = useUploadImage()
-  const { join, leave, joinMeta, leaveMeta, resetJoinMeta, resetLeaveMeta } = useEntry()
+  const { join, joinMeta } = useEntry()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -79,10 +79,10 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       team_name: '',
       team_icon_url: '',
       members: Array.from({ length: tournament.attributes.participant_type }, (_, index) => ({
-        user_id: index === 0 ? Number(userProfile.id) : undefined,
-        name: index === 0 ? userProfile.attributes.nickname : '',
-        nickname: index === 0 ? userProfile.attributes.nickname : '',
-        user_code: index === 0 ? userProfile.attributes.user_code : '',
+        user_id: index === 0 ? Number(userProfile?.id) : undefined,
+        name: index === 0 ? userProfile?.attributes.nickname : '',
+        nickname: index === 0 ? userProfile?.attributes.nickname : '',
+        user_code: index === 0 ? userProfile?.attributes.user_code : '',
       })),
     },
     validationSchema,
@@ -276,18 +276,16 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   return (
     <Box>
-      <Box className={classes.actionButton}>
-        {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && (
-          <ESButton variant="outlined" round fullWidth size="large" onClick={() => leave(tournament.attributes.hash_key)}>
-            {t('common:tournament.unjoin')}
-          </ESButton>
-        )}
-        {tournament.attributes.my_role === null && (
-          <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-            {t('common:tournament.join')}
-          </ButtonPrimary>
-        )}
-      </Box>
+      <LoginRequired>
+        <Box className={classes.actionButton}>
+          {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && <UnjoinModal tournament={tournament} />}
+          {tournament.attributes.my_role === null && (
+            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+              {t('common:tournament.join')}
+            </ButtonPrimary>
+          )}
+        </Box>
+      </LoginRequired>
 
       <StickyActionModal
         open={open}
@@ -301,9 +299,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         <form onSubmit={handleActionButton}>{step === FINAL_STEP ? nicknameChangeForm() : teamCreateForm()}</form>
       </StickyActionModal>
 
-      {(joinMeta.pending || leaveMeta.pending) && <ESLoader open={joinMeta.pending || leaveMeta.pending} />}
-      {!!joinMeta.error && <ESToast open={!!joinMeta.error} message={t('common:error.join_arena_failed')} resetMeta={resetJoinMeta} />}
-      {!!leaveMeta.error && <ESToast open={!!leaveMeta.error} message={t('common:error.leave_arena_failed')} resetMeta={resetLeaveMeta} />}
+      {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
     </Box>
   )
 }

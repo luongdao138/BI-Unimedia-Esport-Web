@@ -21,7 +21,10 @@ const useRegisterByEmail = () => {
 
   const resetMeta = () => dispatch(clearMetaData(actions.registerByEmail.typePrefix))
 
-  const backAction = () => handleReturn()
+  const backAction = () => {
+    resetMeta()
+    handleReturn()
+  }
 
   useEffect(() => {
     if (meta.loaded) {

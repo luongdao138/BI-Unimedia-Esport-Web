@@ -10,6 +10,8 @@ import { Meta } from '@store/metadata/actions/types'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import _ from 'lodash'
 import useArenaHelper from '../hooks/useArenaHelper'
+import * as commonActions from '@store/common/actions'
+import { useTranslation } from 'react-i18next'
 
 const { actions, selectors } = tournamentStore
 const getTournamentMeta = createMetaSelector(actions.createTournament)
@@ -51,6 +53,7 @@ const useTournamentCreate = (): {
   arena: TournamentDetail
   editables: EditableTypes
 } => {
+  const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getTournamentMeta)
@@ -86,22 +89,23 @@ const useTournamentCreate = (): {
   const { isEditable } = useArenaHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
-  const submit = (params: TournamentFormParams) => dispatch(actions.createTournament(params))
-  const update = (params: UpdateParams) => dispatch(actions.updateTournament(params))
-
-  useEffect(() => {
-    if (meta.loaded) {
+  const submit = async (params: TournamentFormParams) => {
+    const resultAction = await dispatch(actions.createTournament(params))
+    if (actions.createTournament.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(ESRoutes.ARENA)
-    }
-  }, [meta.loaded])
+      router.push(`${ESRoutes.ARENA}/${resultAction.payload.hash_key}`)
 
-  useEffect(() => {
-    if (updateMeta.loaded) {
-      resetUpdateMeta()
-      router.push(ESRoutes.ARENA)
+      dispatch(commonActions.addToast(t('common:arena.create_success')))
     }
-  }, [updateMeta.loaded])
+  }
+  const update = async (params: UpdateParams) => {
+    const resultAction = await dispatch(actions.updateTournament(params))
+    if (actions.updateTournament.fulfilled.match(resultAction)) {
+      resetUpdateMeta()
+      router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
+      dispatch(commonActions.addToast(t('common:arena.update_success')))
+    }
+  }
 
   useEffect(() => {
     if (router.asPath.endsWith('/edit') && router.query.hash_key) {

@@ -4,7 +4,6 @@ import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ButtonPrimary from '@components/ButtonPrimary'
-import Image from 'next/image'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
 
@@ -22,7 +21,7 @@ const IntroContainer: React.FC = () => {
       </Box>
 
       <Box pt={60 / 8} display="flex" justifyContent="center">
-        <Image height="148" width="116" src="/images/big_logo.png" alt="logo" />
+        <img src="/images/lp_exelab_logo.svg" width="166" height="212" />
       </Box>
 
       <Box pt={8} pb={9} textAlign="center">
@@ -49,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+    marginBottom: theme.spacing(3),
   },
   middleText: {
     fontSize: 24,

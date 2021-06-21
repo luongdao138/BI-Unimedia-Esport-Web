@@ -11,6 +11,10 @@ const replaceSingleByteString = (value: string): string => {
   return value.replace(/[^A-Za-z0-9.!@#$%^&*()_+-=]/g, '')
 }
 
+const replaceWhiteSpace = (value: string): string => {
+  return value.replace(/^\s+/g, '')
+}
+
 export const genRanHex = (size: number): string => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
 
 const scorePassword = (pass: string): number => {
@@ -192,4 +196,5 @@ export const CommonHelper = {
   isMediaURL,
   cutLinksIntoPieces,
   getIndicesOf,
+  replaceWhiteSpace,
 }

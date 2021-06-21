@@ -21,7 +21,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       margin={2}
       className={classes.wrap}
       onClick={() => {
-        router.push(`${ESRoutes.PURCHASE_HISTORY}/${data.attributes.history_id}`)
+        router.push(`${ESRoutes.PURCHASE_HISTORY}/${data.attributes.order_id}`)
       }}
     >
       <Typography variant={'caption'}>{time}</Typography>
@@ -31,7 +31,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.vendor')}</Typography>
-        <Typography>NTTe-Sports</Typography>
+        <Typography>{data.attributes.vendor_name}</Typography>
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.ticket_name')}</Typography>

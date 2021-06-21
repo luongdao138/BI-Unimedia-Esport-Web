@@ -7,7 +7,7 @@ const TournamentsPage: PageWithLayoutType = () => {
 }
 
 MainLayout.defaultProps = {
-  footer: false,
+  footer: true,
 }
 
 TournamentsPage.Layout = MainLayout

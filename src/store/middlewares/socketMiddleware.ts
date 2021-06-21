@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
 import { socketActions } from '@store/socket/actions'
+import { logout } from '@store/auth/actions'
 
 const DEVICE_ID = uuidv4()
 
@@ -72,6 +73,7 @@ export const webSocketMiddle: Middleware = (store: StoreType) => (next: AppDispa
   }
 
   const disconnect = () => {
+    // store.dispatch({ type: 'toast/addToast', payload: 'disconnected' })
     closeExisting()
     socket = null
   }
@@ -88,6 +90,7 @@ export const webSocketMiddle: Middleware = (store: StoreType) => (next: AppDispa
     [`${WEBSOCKET_PREFIX}:CONNECT`]: connect,
     [`${WEBSOCKET_PREFIX}:DISCONNECT`]: disconnect,
     [`${WEBSOCKET_PREFIX}:SEND`]: send,
+    [logout.fulfilled.type]: disconnect,
   }
 
   const handler = actionHandlers[action.type]

@@ -64,11 +64,26 @@ export const registerConfirm = createAsyncThunk<services.UserLoginResponse, serv
   }
 )
 
-export const resendConfirmation = createAsyncThunk<services.UserLoginResponse, services.UserResendParams>(
-  AUTH_ACTION_TYPE.RESEND_CONFIRMATION,
+export const signUpResend = createAsyncThunk<services.UserLoginResponse, services.UserResendParams>(
+  AUTH_ACTION_TYPE.SIGNUP_RESEND,
   async (resendParams, { rejectWithValue }) => {
     try {
-      const res = await services.resendConfirmation(resendParams)
+      const res = await services.signUpResend(resendParams)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const forgotResend = createAsyncThunk<services.UserLoginResponse, services.UserResendParams>(
+  AUTH_ACTION_TYPE.FORGOT_RESEND,
+  async (resendParams, { rejectWithValue }) => {
+    try {
+      const res = await services.forgotResend(resendParams)
       return res
     } catch (error) {
       if (!error.response) {

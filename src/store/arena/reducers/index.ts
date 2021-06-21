@@ -57,12 +57,12 @@ const initialState: StateType = {
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
     let searchTournaments = action.payload.data
-    if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       searchTournaments = state.searchTournaments.concat(action.payload.data)
     }
 
     state.searchTournaments = searchTournaments
-    state.searchTournamentsMeta = action.payload.links?.meta
+    state.searchTournamentsMeta = action.payload.meta
   })
   builder.addCase(actions.resetSearchTournaments, (state) => {
     state.searchTournaments = []
@@ -161,6 +161,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.clearRecommendedUsers, (state) => {
     state.recommendedUsers = []
+  })
+  builder.addCase(actions.clearTournamentResult, (state) => {
+    state.searchTournaments = []
   })
   builder.addCase(actions.freezeTournament.fulfilled, (state, action) => {
     state.tournamentDetail = action.payload.data

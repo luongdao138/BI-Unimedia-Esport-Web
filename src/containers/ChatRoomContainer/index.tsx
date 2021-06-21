@@ -5,7 +5,14 @@ import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import ImageUploader from './ImageUploader'
 import { currentUserId } from '@store/auth/selectors'
-import { messages, membersSuggest, availableMembers, lastKey as key, paginating as paging } from '@store/socket/selectors'
+import {
+  messages,
+  membersSuggest,
+  availableMembers,
+  lastKey as key,
+  paginating as paging,
+  hasError as hasErrorSelector,
+} from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
@@ -23,6 +30,7 @@ import { Colors } from '@theme/colors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import i18n from '@locales/i18n'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -44,7 +52,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [reporting, setReporting] = useState<boolean>(false)
   const [reportData, setReportData] = useState<ESReportProps>(null)
   const [modalReply, setModalReply] = useState<MessageModalStateProps>({ open: false, replyMessage: null })
-  const [text, setText] = useState<string>('')
   const classes = useStyles()
 
   const checkNgWord = useCheckNgWord()
@@ -52,6 +59,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const dispatch = useAppDispatch()
 
   const ref = useRef<{ handleUpload: () => void }>(null)
+  const inputRef = useRef<{ clearInput: () => void }>(null)
 
   const userId = useAppSelector(currentUserId)
   const data = useAppSelector(messages)
@@ -59,6 +67,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const usersAvailable = useAppSelector(availableMembers)
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
+  const hasError = useAppSelector(hasErrorSelector)
 
   useEffect(() => {
     if (userId && roomId) {
@@ -103,8 +112,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
         }
         dispatch(socketActions.sendMessage(_.omit(_.assign(payload, replyData))))
       }
-      setText('')
       setReply(null)
+      if (inputRef.current) inputRef.current.clearInput()
     } else {
       dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
     }
@@ -177,6 +186,18 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const onReply = (currentMessage: MessageType) => {
     setReply(currentMessage)
   }
+
+  const onDelete = (currentMessage: MessageType) => {
+    if (currentMessage && currentMessage.sortKey) {
+      const params = {
+        sortKey: currentMessage.sortKey,
+        roomId: currentMessage.chatRoomId,
+        userId: userId,
+        action: CHAT_ACTION_TYPE.DELETE_MESSAGE,
+      }
+      dispatch(socketActions.socketSend(params))
+    }
+  }
   const onReport = (reportData: ESReportProps) => {
     setReportData(reportData)
     setReporting(true)
@@ -189,8 +210,15 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
   }
 
-  const _onChange = (text: string) => {
-    setText(text)
+  const renderErroMesage = () => {
+    if (hasError && _.isEmpty(data)) {
+      return (
+        <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
+          {i18n.t('common:chat.room_not_found')}
+        </Box>
+      )
+    }
+    return null
   }
 
   return (
@@ -200,12 +228,14 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       </Box>
       <Box className={classes.list}>
         {renderLoader()}
-        {!_.isEmpty(data) && _.isArray(data) && (
+        {renderErroMesage()}
+        {!hasError && !_.isEmpty(data) && _.isArray(data) && (
           <MessageList
             reply={onReply}
             report={onReport}
             currentUser={userId}
             paginating={paginating}
+            delete={onDelete}
             onFetchMore={onFetchMore}
             onReplyClick={handleReplyDetail}
             users={usersWithAll}
@@ -213,20 +243,19 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           />
         )}
       </Box>
-      <Box className={classes.input}>
-        {userId ? (
+      {userId && !hasError && data ? (
+        <Box className={classes.input}>
           <MessageInputArea
+            ref={inputRef}
             reply={reply}
-            text={text}
-            onChangeInput={_onChange}
             currentUser={userId}
             onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
             users={usersAvailable}
             onPressActionButton={handlePressActionButton}
           />
-        ) : null}
-      </Box>
+        </Box>
+      ) : null}
       <ImageUploader
         ref={ref}
         roomId={roomId}

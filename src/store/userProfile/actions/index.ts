@@ -267,3 +267,4 @@ export const changeEmailConfirm = createAsyncThunk<services.ChangeEmailConfirmRe
 )
 
 export const clearChangeEmailSteps = createAction<services.ChangeEmailSteps>(USER_PROFILE_ACTION_TYPE.CLEAR_CHANGE_EMAIL_STEPS)
+export const clearHomeSettings = createAction<services.ClearHomeSettings>(USER_PROFILE_ACTION_TYPE.CLEAR_HOME_SETTINGS)

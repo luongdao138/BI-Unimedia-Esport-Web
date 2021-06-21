@@ -24,18 +24,16 @@ const ruleText = (rule: string): string => {
   return ruleText
 }
 
-const getTypeValue = (t_type: string | number): number => {
-  if (String(t_type) === T_TYPE.PRIVATE) return 1
-  else if (String(t_type) === T_TYPE.PUBLIC) return 0
+const getTypeValue = (t_type: string | number): boolean => {
+  if (String(t_type) === T_TYPE.PRIVATE) return false
+  else if (String(t_type) === T_TYPE.PUBLIC) return true
 
-  return -1
+  return true
 }
 
-const getTypeEnum = (type: unknown): string => {
-  if (Number(type) === 0) return T_TYPE.PUBLIC
-  if (Number(type) === 1) return T_TYPE.PRIVATE
-
-  return ''
+const onTypeChange = (type: string | number): string => {
+  if (type == T_TYPE.PUBLIC) return T_TYPE.PRIVATE
+  else return T_TYPE.PUBLIC
 }
 
 const checkStatus = (status: string, targetStatus: string): boolean => {
@@ -188,6 +186,6 @@ export const TournamentHelper = {
   checkTarget,
   getDetailData,
   checkParticipantsSelected,
-  getTypeEnum,
+  onTypeChange,
   isStatusPassed,
 }

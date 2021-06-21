@@ -15,7 +15,12 @@ export const TopicFollow: React.FC<Props> = ({ data }) => {
       title={t('common:home.topic_follow')}
       moreLink={ESRoutes.TOPIC_FOLLOWER}
       navigation
-      width={256}
+      breakpoints={{
+        '767': {
+          slidesPerView: 3.1,
+          slidesPerGroup: 2,
+        },
+      }}
       items={data.slice(0, SLIDE_LIMIT).map((topic, i: number) => (
         <TopicCard key={i} topic={topic} />
       ))}

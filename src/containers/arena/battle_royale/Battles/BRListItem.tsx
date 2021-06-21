@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     borderTop: '1px solid #4c4c4c',
 
-    color: '#FFFFFF',
+    color: Colors.white,
   },
   participant: {
     display: 'flex',

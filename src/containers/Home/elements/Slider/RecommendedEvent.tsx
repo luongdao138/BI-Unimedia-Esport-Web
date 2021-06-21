@@ -14,7 +14,6 @@ export const RecommendedEvent: React.FC<Props> = ({ data }) => {
       title={t('common:home.recommended_event')}
       navigation
       moreLink={ESRoutes.EVENT_RECOMMENDED}
-      width={256}
       items={data.map((event, i) => (
         <EventCard key={i} event={event} />
       ))}

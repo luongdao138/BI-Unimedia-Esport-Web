@@ -6,6 +6,7 @@ import * as selectors from '@store/arena/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { TournamentMatchRound } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
+import { useTranslation } from 'react-i18next'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
 
@@ -18,6 +19,7 @@ const useTournamentMatches = (): {
   fetchMatches: () => void
   roundTitles: RoundTitles
 } => {
+  const { t } = useTranslation(['common'])
   const { query } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
@@ -31,16 +33,16 @@ const useTournamentMatches = (): {
       const matchesLength = matches.length
       switch (matchesLength) {
         case 1:
-          setRoundTitles({ ...roundTitles, matches: ['決勝戦'] })
+          setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.final_game')] })
           break
         case 2:
-          setRoundTitles({ ...roundTitles, matches: ['決勝戦', '準決勝戦'] })
+          setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.final_game'), t('common:arena.matches.semi_final')] })
           break
         default: {
           const rounds = Array.from({ length: matchesLength }, (_, i) => i)
-          const matchTitles = rounds.map((r) => `${r + 1}回戦`)
-          matchTitles[matchesLength - 1] = '決勝戦'
-          matchTitles[matchesLength - 2] = '準決勝戦'
+          const matchTitles = rounds.map((r) => `${r + 1}${t('common:arena.matches.round')}`)
+          matchTitles[matchesLength - 1] = t('common:arena.matches.final_game')
+          matchTitles[matchesLength - 2] = t('common:arena.matches.semi_final')
           setRoundTitles({ ...roundTitles, matches: matchTitles })
         }
       }
