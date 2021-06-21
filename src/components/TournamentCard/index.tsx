@@ -41,7 +41,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
           padding={1}
         >
           <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
-          <Box display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Chip
               className={classes.chipPrimary}
               size="small"
@@ -82,7 +82,11 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               alt={winner?.name}
               src={winner?.profile_image ? winner.profile_image : attr.is_single ? null : '/images/avatar.png'}
             />
-            <Typography variant="caption">{winner?.name}</Typography>
+            <Box className={classes.captionTitle}>
+              <Typography noWrap variant="overline">
+                {winner?.name}
+              </Typography>
+            </Box>
           </Box>
         )}
       </>
@@ -196,15 +200,14 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
   },
   blurOverlay: {
-    backgroundColor: Colors.black_opacity[70],
+    backgroundColor: Colors.black_opacity[80],
   },
   firstIcon: {
-    width: 19.56,
-    height: 15.4,
+    marginTop: 21,
+    height: 17.26,
   },
   marginV: {
-    marginTop: 5,
-    marginBottom: 3,
+    marginTop: 8,
   },
   pAvatar: {
     marginLeft: -8,
@@ -217,5 +220,13 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     wordWrap: 'break-word',
     minHeight: 42,
+  },
+  captionTitle: {
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    justifyContent: 'center',
   },
 }))
