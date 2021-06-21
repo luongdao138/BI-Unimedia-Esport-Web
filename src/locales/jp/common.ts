@@ -397,6 +397,7 @@ export default {
       semi_final: '準決勝戦',
       round: '回戦',
     },
+    not_found: 'このページは無効化されました。',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
