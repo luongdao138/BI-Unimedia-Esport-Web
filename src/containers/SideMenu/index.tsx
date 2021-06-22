@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'relative',
     height: '100%',
-    paddingBottom: 112,
+    paddingBottom: 66,
     paddingTop: 203,
   },
   icon: {
@@ -95,10 +95,6 @@ const useStyles = makeStyles((theme) => ({
   },
   clickable: {
     cursor: 'pointer',
-  },
-  logout: {
-    position: 'absolute',
-    bottom: 70,
   },
   buttonWrap: {
     paddingTop: theme.spacing(2),
@@ -174,7 +170,7 @@ const SideMenu: React.FC = () => {
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const theme = useTheme()
-  const downMd = useMediaQuery(theme.breakpoints.down('md'))
+  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -285,7 +281,7 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
           )}
-          {!downMd && <SideFooter />}
+          {!downSm && <SideFooter />}
         </Box>
       </Box>
 
