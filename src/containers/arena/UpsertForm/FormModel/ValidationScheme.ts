@@ -19,25 +19,25 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
   return Yup.object({
     stepOne: Yup.object({
       title: Yup.string()
-        .required(i18n.t('common:common.required'))
+        .required(i18n.t('common:common.input_required'))
         .max(50, i18n.t('common:common.too_long'))
         .min(2, i18n.t('common:common.at_least'))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
       overview: Yup.string()
         .max(190, i18n.t('common:common.too_long'))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
-      game_title_id: Yup.array().min(1, i18n.t('common:common.required')),
-      game_hardware_id: Yup.number().min(1, i18n.t('common:common.required')).integer(i18n.t('common:common.integer')),
+      game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
+      game_hardware_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
       has_prize: Yup.boolean(),
       prize_amount: Yup.string().when('has_prize', {
         is: true,
-        then: Yup.string().required(i18n.t('common:common.required')),
+        then: Yup.string().required(i18n.t('common:common.input_required')),
       }),
     }),
     stepTwo: Yup.object({
       max_participants: Yup.number()
-        .min(2, i18n.t('common:common.required'))
-        .max(128, i18n.t('common:common.required'))
+        .min(2, i18n.t('common:arena.participants_limit'))
+        .max(128, i18n.t('common:arena.participants_limit'))
         .integer(i18n.t('common:common.integer')),
       terms_of_participation: Yup.string()
         .max(190, i18n.t('common:common.too_long'))
@@ -46,29 +46,29 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
         .max(190, i18n.t('common:common.too_long'))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
       participant_type: Yup.number()
-        .min(1, i18n.t('common:common.required'))
+        .min(1, i18n.t('common:common.input_required'))
         .max(10, i18n.t('common:common.too_long'))
         .integer(i18n.t('common:common.integer')),
       rule: Yup.string()
-        .required(i18n.t('common:common.required'))
+        .required(i18n.t('common:common.input_required'))
         .matches(/single|battle_royale/, { excludeEmptyString: false }),
     }),
     stepThree: Yup.object({
       start_date: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.required'))
+        .required(i18n.t('common:common.input_required'))
         .min(new Date(), i18n.t('common:common.validation.min_date')),
       end_date: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.required'))
+        .required(i18n.t('common:common.input_required'))
         .min(new Date(), i18n.t('common:common.validation.min_date')),
       acceptance_start_date: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.required'))
+        .required(i18n.t('common:common.input_required'))
         .min(recruitMinDate, i18n.t('common:common.validation.min_date')),
       acceptance_end_date: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.required'))
+        .required(i18n.t('common:common.input_required'))
         .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
       recruit_date: Yup.string().when(['acceptance_start_date'], {
         is: (acceptance_start_date) => {
@@ -94,7 +94,7 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
         },
         then: Yup.string().required(i18n.t('common:common.validation.start_end_date')),
       }),
-      area_id: Yup.string().required(i18n.t('common:common.required')).max(60, i18n.t('common:common.too_long')),
+      area_id: Yup.string().required(i18n.t('common:common.input_required')).max(60, i18n.t('common:common.too_long')),
       address: Yup.string()
         .max(60, i18n.t('common:common.too_long'))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
