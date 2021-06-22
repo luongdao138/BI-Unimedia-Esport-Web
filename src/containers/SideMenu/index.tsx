@@ -277,19 +277,16 @@ const SideMenu: React.FC = () => {
               </ButtonBase>
             </Box> */}
           </List>
-        </Box>
-
-        {isAuthenticated && (
-          <Box className={classes.logout}>
+          {isAuthenticated && (
             <ListItem className={classes.list} button disableRipple onClick={() => handleModal('logout')}>
               <ListItemIcon className={classes.icon}>
                 <Icon fontSize="small" className="fa fa-sign-out-alt" />
               </ListItemIcon>
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
-            {!downMd && <SideFooter />}
-          </Box>
-        )}
+          )}
+          {!downMd && <SideFooter />}
+        </Box>
       </Box>
 
       <ESModal open={modal} handleClose={() => setModal(false)}>
