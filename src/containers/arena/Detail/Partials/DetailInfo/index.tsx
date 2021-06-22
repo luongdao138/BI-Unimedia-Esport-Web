@@ -9,8 +9,13 @@ import { TournamentDetail } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { CommonResponse } from '@services/user.service'
-import ESToast from '@components/Toast'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import LoginRequired from '@containers/LoginRequired'
+import * as commonActions from '@store/common/actions'
 
 interface Props {
   detail: TournamentDetail
@@ -19,20 +24,24 @@ interface Props {
 }
 
 const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
+  const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
   const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
   const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
-  const [showCopyToast, setShowCopyToast] = useState<boolean>(false)
+  const [openReport, setOpenReport] = useState(false)
   const helper = useArenaHelper(detail)
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
 
   const handleCopy = () => {
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    setShowCopyToast(true)
+    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
   }
+
+  const handleReportOpen = () => setOpenReport(true)
 
   return (
     <Grid container className={classes.container}>
@@ -43,13 +52,14 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
           </Box>
           {extended && (
             <ESMenu>
+              {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{t('common:arena.edit_arena_info')}</ESMenuItem>}
               <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
-              <ESMenuItem onClick={() => null}>{t('common:tournament.report')}</ESMenuItem>
-              {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{'Edit button'}</ESMenuItem>}
+              <LoginRequired>
+                <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
+              </LoginRequired>
             </ESMenu>
           )}
         </Box>
-        {showCopyToast && <ESToast open={showCopyToast} message={t('common:arena.copy_toast')} onClose={() => setShowCopyToast(false)} />}
         <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
 
         <Box marginTop={2}>
@@ -227,6 +237,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
           </>
         )}
       </Box>
+      {isAuthenticated && (
+        <ESReport
+          reportType={REPORT_TYPE.TOURNAMENT}
+          target_id={Number(detail.id)}
+          data={detail}
+          open={openReport}
+          handleClose={() => setOpenReport(false)}
+        />
+      )}
     </Grid>
   )
 }

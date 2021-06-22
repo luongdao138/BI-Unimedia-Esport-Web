@@ -116,7 +116,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   return (
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="fixed">
-        <Container maxWidth="lg" className="header-container">
+        <Container maxWidth="xl" className="header-container">
           <Toolbar className={classes.toolbar}>
             <div
               onClick={() => toggleDrawer(!open)}
@@ -238,6 +238,7 @@ const useStyles = makeStyles((theme) => ({
   search: {},
   toolArea: {
     display: 'flex',
+    width: 140,
   },
   button: {
     padding: 10,
@@ -245,6 +246,9 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down('md')]: {
     icon: {
       fontSize: 18,
+    },
+    toolArea: {
+      width: 'auto',
     },
   },
   [theme.breakpoints.down('xs')]: {

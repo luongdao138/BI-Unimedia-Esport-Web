@@ -25,7 +25,7 @@ const ResetPasswordContainer: React.FC = () => {
 
   const validationSchema = Yup.object().shape({
     password: Yup.string()
-      .required(t('common:common.required'))
+      .required(t('common:common.input_required'))
       .min(8, t('common:common.at_least_8'))
       .test('password-validation', t('common:error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
@@ -34,7 +34,7 @@ const ResetPasswordContainer: React.FC = () => {
         return tempScore > 40
       }),
     password_confirm: Yup.string()
-      .required(t('common:common.required'))
+      .required(t('common:common.input_required'))
       .min(8, t('common:common.at_least_8'))
       .when('password', {
         is: (val) => (val && val.length > 0 ? true : false),

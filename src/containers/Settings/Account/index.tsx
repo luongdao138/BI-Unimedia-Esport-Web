@@ -63,7 +63,14 @@ const AccountSettingsContainer: React.FC = () => {
         />
       </Box>
       <Box my={4} display="flex" justifyContent="center">
-        <ESButton variant="outlined">{t('account_settings.delete_account')}</ESButton>
+        <ESButton
+          variant="outlined"
+          onClick={() => {
+            router.push(ESRoutes.INQUIRY_SETTINGS)
+          }}
+        >
+          {t('account_settings.delete_account')}
+        </ESButton>
       </Box>
     </>
   )

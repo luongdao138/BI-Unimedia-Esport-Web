@@ -105,7 +105,7 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
     <Grid item xs={12}>
       <Box className={classes.container}>
         <ButtonBase onClick={handleTarget}>
-          <Typography className={classes.textLine}>
+          <Typography className={classes.textLine} component="div">
             {actionTitle.prefix}
             <Typography className={classes.targetText} color="primary">
               {target}

@@ -28,7 +28,7 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
 const useStyles = makeStyles(() => ({
   mediaWrap: {
     position: 'relative',
-    height: 120,
+    paddingTop: '50%',
     overflow: 'hidden',
   },
   media: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     top: 0,
     left: 0,
-    zIndex: 1,
+    zIndex: 3,
   },
   triangle: {
     width: 0,

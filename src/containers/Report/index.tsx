@@ -94,6 +94,37 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     },
   })
 
+  const reportInfo = () => {
+    switch (reportType) {
+      case REPORT_TYPE.USER_LIST:
+      case REPORT_TYPE.CHAT:
+        return (
+          <Grid container spacing={2}>
+            <Grid item sm={2} xs={12}>
+              <ProfileAvatar src={attr?.avatar_url} editable={false} alt={attr?.nickname} />
+            </Grid>
+            <Grid item sm={10} xs={12}>
+              <Box mt={4}>
+                <Typography className={classes.nickname}>{attr?.nickname}</Typography>
+                <Typography className={classes.userCode}>{attr?.user_code}</Typography>
+                {msg_body && CommonHelper.isMediaURL(msg_body) ? (
+                  <Box className={classes.imgBox} height={100} width={100}>
+                    <img src={msg_body} className={classes.img} />
+                  </Box>
+                ) : (
+                  <TextMessage members={members} text={msg_body} color={Colors.white} />
+                )}
+              </Box>
+            </Grid>
+          </Grid>
+        )
+      case REPORT_TYPE.TOURNAMENT:
+        return <Typography variant="h2">{data.attributes.title}</Typography>
+      default:
+        break
+    }
+  }
+
   useEffect(() => {
     if (meta.loaded) {
       handleClose()
@@ -117,35 +148,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     >
       <form onSubmit={formik.handleSubmit}>
         <DialogContent className={classes.dialogContent}>
-          {attr && (reportType == REPORT_TYPE.USER_LIST || reportType == REPORT_TYPE.CHAT) ? (
-            <Grid container spacing={2}>
-              <Grid item sm={2} xs={12}>
-                <ProfileAvatar src={attr?.avatar_url} editable={false} alt={attr?.nickname} />
-              </Grid>
-              <Grid item sm={10} xs={12}>
-                <Box mt={4}>
-                  <Typography className={classes.nickname}>{attr?.nickname}</Typography>
-                  <Typography className={classes.userCode}>{attr?.user_code}</Typography>
-                  {msg_body && CommonHelper.isMediaURL(msg_body) ? (
-                    <Box className={classes.imgBox} height={100} width={100}>
-                      <img src={msg_body} className={classes.img} />
-                    </Box>
-                  ) : (
-                    <TextMessage members={members} text={msg_body} color={Colors.white} />
-                  )}
-                </Box>
-              </Grid>
-            </Grid>
-          ) : null}
-
+          {attr && reportInfo()}
           <Box mt={2}>
             <Typography>{t('user_report.desc_first')}</Typography>
             <Typography>{t('user_report.desc_second')}</Typography>
             <Typography>{t('user_report.desc_third')}</Typography>
           </Box>
-
           <Box mt={1}></Box>
-
           <RadioVertical
             id="reason_id"
             name="reason_id"

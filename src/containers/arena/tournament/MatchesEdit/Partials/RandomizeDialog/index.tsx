@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
@@ -17,6 +17,8 @@ interface RandomizeDialogProps {
 const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, open }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   return (
     <Box>
@@ -27,7 +29,9 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
               <Typography className={classes.title}>{t('common:arena.dialog.randomize_title')}</Typography>
             </Box>
             <Box pb={4}>
-              <Typography variant="h2">{t('common:arena.dialog.randomize_desc')}</Typography>
+              <Typography variant="h2" className={classes.desc}>
+                {t('common:arena.dialog.randomize_desc')}
+              </Typography>
             </Box>
             <Typography variant="caption" gutterBottom>
               {t('common:arena.dialog.randomize_sub1')}
@@ -36,13 +40,13 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
               {t('common:arena.dialog.randomize_sub2')}
             </Typography>
 
-            <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" paddingTop={18.5}>
-              <Box marginX={1} width="100%">
-                <ESButton variant="outlined" round fullWidth size="large" onClick={onClose}>
+            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+              <Box className={classes.actionButton}>
+                <ESButton variant={!isMobile ? 'outlined' : 'text'} round fullWidth size="large" onClick={onClose}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
-              <Box marginX={2} width="100%">
+              <Box className={classes.actionButton}>
                 <ButtonPrimary round fullWidth onClick={onAction}>
                   {t('common:arena.dialog.deploy_button')}
                 </ButtonPrimary>
@@ -67,12 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-  },
   childrenContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -81,6 +79,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  desc: {
+    fontSize: 18,
+    color: Colors.white,
+  },
+  actionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButton: {
+    width: theme.spacing(35),
+    margin: 8,
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    actionButtonContainer: {
+      flexDirection: 'column-reverse',
+    },
+    title: {
+      fontSize: 20,
+    },
+    desc: {
+      fontSize: 14,
+    },
   },
 }))
 

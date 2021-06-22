@@ -12,7 +12,6 @@ import ESLoader from '@components/FullScreenLoader'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import ESToast from '@components/Toast'
 import CoverUploader from '@containers/arena/UpsertForm/Partials/CoverUploader'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useStore } from 'react-redux'
@@ -29,7 +28,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const classes = useStyles()
   const [isUploading, setUploading] = useState(false)
   const store = useStore()
-  const { summary, summaryMeta, resetSummaryMeta } = useSummary()
+  const { summary, summaryMeta } = useSummary()
   const { uploadArenaSummaryImage } = useUploadImage()
   const validationSchema = Yup.object().shape({
     summary: Yup.string()
@@ -116,7 +115,6 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
       </ESModal>
 
       {summaryMeta.pending && <ESLoader open={summaryMeta.pending} />}
-      {!!summaryMeta.error && <ESToast open={!!summaryMeta.error} message={t('common:error.failed')} resetMeta={resetSummaryMeta} />}
     </Box>
   )
 }

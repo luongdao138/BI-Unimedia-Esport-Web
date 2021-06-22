@@ -43,6 +43,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           id="title"
           name="stepOne.title"
           labelPrimary={t('common:tournament_create.name')}
+          placeholder={t('common:tournament_create.title_placeholder')}
           fullWidth
           value={formik.values.stepOne.title}
           onChange={formik.handleChange}
@@ -52,6 +53,23 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           size="small"
           required
           disabled={!editables.title}
+        />
+      </Box>
+      <Box pb={4}>
+        <ESInput
+          id="stepOne.overview"
+          name="stepOne.overview"
+          multiline
+          rows={5}
+          labelPrimary={t('common:tournament_create.overview')}
+          placeholder={t('common:tournament_create.overview_placeholder')}
+          fullWidth
+          value={formik.values.stepOne.overview}
+          onChange={formik.handleChange}
+          helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
+          error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
+          size="small"
+          disabled={!editables.overview}
         />
       </Box>
       <Box pb={3 / 8}>
@@ -93,10 +111,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           disabled={!editables.game_title}
         />
       </Box>
-      <Box pb={4}>
+      <Box>
         <ESSelect
           name="stepOne.game_hardware_id"
-          className={classes.selectWidth}
+          fullWidth
           value={formik.values.stepOne.game_hardware_id}
           onChange={formik.handleChange}
           label={t('common:tournament_create.game_hardware')}
@@ -114,23 +132,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           ))}
         </ESSelect>
       </Box>
-      <Box>
-        <ESInput
-          id="stepOne.overview"
-          name="stepOne.overview"
-          multiline
-          rows={4}
-          labelPrimary={t('common:tournament_create.overview')}
-          placeholder={t('common:tournament_create.please_enter')}
-          fullWidth
-          value={formik.values.stepOne.overview}
-          onChange={formik.handleChange}
-          helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
-          error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
-          size="small"
-          disabled={!editables.overview}
-        />
-      </Box>
     </Box>
   )
 }
@@ -138,9 +139,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   iconMargin: {
     marginRight: theme.spacing(1 / 2),
-  },
-  selectWidth: {
-    width: 200,
   },
 }))
 

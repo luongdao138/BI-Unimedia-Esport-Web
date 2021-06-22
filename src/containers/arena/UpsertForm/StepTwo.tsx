@@ -1,10 +1,11 @@
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles } from '@material-ui/core'
 import ESInput from '@components/Input'
 import ESSelect from '@components/Select'
 import ESCheckbox from '@components/Checkbox'
+import ESLabel from '@components/Label'
 import { useTranslation } from 'react-i18next'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-import { PARTICIPATION_TYPES, RULES, T_TYPES } from '@constants/tournament.constants'
+import { PARTICIPATION_TYPES, RULES } from '@constants/tournament.constants'
 import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import { EditableTypes } from './useTournamentCreate'
@@ -31,9 +32,6 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.rule}
         >
-          <option disabled value={-1}>
-            {t('common:please_select')}
-          </option>
           {RULES.map((rule, index) => (
             <option key={index} value={rule.value}>
               {rule.label}
@@ -53,27 +51,6 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
       <Box pb={4}>
         <ESSelect
           className={classes.selectWidth}
-          name="stepTwo.t_type"
-          value={TournamentHelper.getTypeValue(formik.values.stepTwo.t_type)}
-          onChange={(e) => formik.setFieldValue('stepTwo.t_type', TournamentHelper.getTypeEnum(e.target.value))}
-          label={t('common:tournament_create.public_or_private')}
-          required={true}
-          size="small"
-          disabled={!editables.t_type}
-        >
-          <option disabled value="-1">
-            {t('common:please_select')}
-          </option>
-          {T_TYPES.map((type, index) => (
-            <option key={type.value + index} value={type.value}>
-              {type.label}
-            </option>
-          ))}
-        </ESSelect>
-      </Box>
-      <Box pb={1}>
-        <ESSelect
-          className={classes.selectWidth}
           name="stepTwo.participant_type"
           value={formik.values.stepTwo.participant_type}
           onChange={formik.handleChange}
@@ -82,9 +59,6 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.participant_type}
         >
-          <option disabled value={-1}>
-            {t('common:please_select')}
-          </option>
           {PARTICIPATION_TYPES.map((type, index) => (
             <option value={type.value} key={index}>
               {type.label}
@@ -92,11 +66,14 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           ))}
         </ESSelect>
       </Box>
-      <Box pb={1} display="flex" flexDirection="row" alignItems="center" width={122}>
+      <Box pb={4} display="flex" flexDirection="row" alignItems="center" width={122}>
         <ESInput
           id="max_participants"
           type="number"
+          required={true}
           className={classes.input}
+          labelPrimary={t('common:tournament_create.max_participants')}
+          placeholder={t('common:tournament_create.max_participants_placeholder')}
           name="stepTwo.max_participants"
           value={formik.values.stepTwo.max_participants === 0 ? '' : formik.values.stepTwo.max_participants}
           onChange={formik.handleChange}
@@ -105,17 +82,15 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.max_participants}
         />
-        <Box pl={1}>
-          <Typography>{t('common:common.man')}</Typography>
-        </Box>
       </Box>
       <Box pb={4}>
         <ESInput
           multiline
-          rows={4}
+          rows={5}
           id="terms_of_participation"
           name="stepTwo.terms_of_participation"
-          placeholder={t('common:tournament_create.participation_term')}
+          labelPrimary={t('common:tournament_create.participation_term')}
+          placeholder={t('common:tournament_create.participation_term_placeholder')}
           fullWidth
           value={formik.values.stepTwo.terms_of_participation}
           onChange={formik.handleChange}
@@ -125,14 +100,24 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           disabled={!editables.terms_of_participation}
         />
       </Box>
+      <Box pb={4}>
+        <ESLabel label={t('common:tournament_create.public_or_private')} size="small" />
+        <ESCheckbox
+          disableRipple
+          checked={TournamentHelper.getTypeValue(formik.values.stepTwo.t_type)}
+          onChange={() => formik.setFieldValue('stepTwo.t_type', TournamentHelper.onTypeChange(formik.values.stepTwo.t_type))}
+          label={t('common:profile.show')}
+          disabled={!editables.retain_history}
+        />
+      </Box>
       <Box pb={1}>
         <ESInput
           multiline
-          rows={4}
+          rows={5}
           id="notes"
           name="stepTwo.notes"
           labelPrimary={t('common:tournament_create.precautions')}
-          placeholder={t('common:tournament_create.please_enter')}
+          placeholder={t('common:tournament_create.precautions_placeholder')}
           fullWidth
           value={formik.values.stepTwo.notes}
           onChange={formik.handleChange}
