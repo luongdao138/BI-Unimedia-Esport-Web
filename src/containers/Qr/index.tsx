@@ -24,7 +24,7 @@ const QrContainer: React.FC<Props> = ({ handleClose }) => {
         </IconButton>
       </Box>
       <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center">
-        <QRCode value={`exelab:${userCode}`} includeMargin size={300} />
+        <QRCode value={`${userCode}`} includeMargin size={300} />
 
         <Box pt={1} pb={6}>
           <Typography className={classes.qr}>{t('common:qr_screen.title')}</Typography>

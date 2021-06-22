@@ -8,7 +8,7 @@ export default {
     male: '男性',
     female: '女性',
     other: 'その他',
-    required: '必須',
+    required: '入力必須項目です。',
     private: '非公開',
     zero: '0',
     see_more: 'もっと見る',
@@ -224,7 +224,7 @@ export default {
     user_info_title: '通報する内容',
     reason: '通報する理由',
     reason_desc: '詳細・補足',
-    require: '※必須',
+    require: '※入力必須項目です。',
     reporter_email: 'メールアドレスの確認',
     reporter_email_placeholder: 'mail address',
     reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
@@ -274,6 +274,7 @@ export default {
     no_game_selected: '好きなゲームが選択されていません',
     no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
+    no_communities: 'おすすめコミュニティは存在しません',
     discord_placeholder: 'ユーザー名#0000を入力してください',
   },
   gender: {
@@ -653,6 +654,7 @@ export default {
   },
   purchase_history: {
     title: '購入履歴',
+    detail: '履歴詳細',
     order_id: '購入ID',
     vendor: '販売元',
     vendor_name: 'NTTe-Sports',
