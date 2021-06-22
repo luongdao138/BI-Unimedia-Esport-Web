@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Typography, Box, Grid, makeStyles, Theme } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -7,10 +8,24 @@ export const ParallaxContent: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const router = useRouter()
+  const [visibility, setVisibility] = useState<string>('visible')
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const handleScroll = () => {
+    if (window.scrollY >= 1450) {
+      setVisibility('hidden')
+    } else {
+      setVisibility('visible')
+    }
+  }
 
   return (
     <>
-      <div className="parallax">
+      <div className="parallax" style={{ visibility: visibility === 'visible' ? 'visible' : 'hidden' }}>
         <div className="parallax-inner" />
       </div>
       <Box className={classes.innerWrap}>
