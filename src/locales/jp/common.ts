@@ -70,6 +70,7 @@ export default {
     profile_updated: 'プロフィールを更新しました',
     image_update: 'ツマミを操作することで、画像のリサイズを行えます。\nまた、ドラッグで位置を調整させることができます。',
     game_updated: '好きなゲームを更新しました',
+    report_sent: '通報処理が完了しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',

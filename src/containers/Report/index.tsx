@@ -9,6 +9,8 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
 import { useStore } from 'react-redux'
+import * as actions from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 import useReport from './useReport'
 import useReasons from './useReasons'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -36,6 +38,7 @@ export interface ESReportProps {
 const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose, members }) => {
   const classes = useStyles()
   const store = useStore()
+  const dispatch = useAppDispatch()
   const { createReport, meta, userEmail } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -126,10 +129,12 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
   }
 
   useEffect(() => {
-    if (meta.loaded) {
+    if (meta.loaded && !meta.error) {
       handleClose()
-
       formik.resetForm()
+      dispatch(actions.addToast(t('messages.report_sent')))
+    } else if (meta.error) {
+      dispatch(actions.addToast(t('error.failed')))
     }
     if (!open) {
       formik.resetForm()
