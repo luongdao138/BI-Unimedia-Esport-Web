@@ -13,6 +13,7 @@ import {
   ArenaWinners,
   TournamentStatus,
   RecommendedUsers,
+  ParticipantName,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
@@ -36,6 +37,7 @@ type StateType = {
   tournamentFollowersMeta: PageMeta
   tournamentResultsMeta: PageMeta
   recruitingTournamentsMeta: PageMeta
+  selectedParticipant?: ParticipantName
 }
 
 const initialState: StateType = {
@@ -167,5 +169,11 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.freezeTournament.fulfilled, (state, action) => {
     state.tournamentDetail = action.payload.data
+  })
+  builder.addCase(actions.getParticipantName.fulfilled, (state, action) => {
+    state.selectedParticipant = action.payload
+  })
+  builder.addCase(actions.changeParticipantName.fulfilled, (state, action) => {
+    state.selectedParticipant.attributes.name = action.payload.name
   })
 })

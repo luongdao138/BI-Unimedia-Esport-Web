@@ -433,6 +433,35 @@ export type MatchParticipant = {
 export interface CreateTournamentResponse {
   hash_key: string
 }
+export type ParticipantNameResponse = {
+  data: ParticipantName
+}
+
+export type ParticipantName = {
+  id: string
+  type: string
+  attributes: {
+    role: string
+    position: string | null
+    name: string
+    show_history: boolean
+    is_fixed_score: boolean
+    user: {
+      id: number
+      nickname: string
+      user_code: string
+    }
+    team: any | null
+    avatar_url: string
+  }
+}
+
+export type ParticipantNameParams = {
+  data: {
+    name: string
+  }
+  hash_key: string
+}
 
 export type UpdateTournamentResponse = void
 
@@ -553,4 +582,38 @@ export const freezeTournament = async (hash_key: string): Promise<TournamentDeta
 export const summaryTournament = async (params: SummaryParams): Promise<void> => {
   const { data } = await api.post<void>(URI.SUMMARY_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
   return data
+}
+
+export const getParticipantName = async (hash_key: string): Promise<ParticipantName> => {
+  try {
+    const { data } = await api.get<ParticipantName>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, hash_key))
+    return data
+  } catch (e) {
+    // TODO api integration waiting
+    return {
+      id: '2361',
+      type: 'participant',
+      attributes: {
+        role: 'interested',
+        position: null,
+        name: 'Walter White',
+        show_history: true,
+        is_fixed_score: false,
+        user: {
+          id: 1370,
+          nickname: 'Walter White',
+          user_code: 'walt',
+        },
+        team: null,
+        avatar_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/1370/1623308825-1370.jpg',
+      },
+    }
+  }
+}
+
+export const changeParticipantName = async (params: ParticipantNameParams): Promise<{ name: string }> => {
+  await api.post<void>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, params.hash_key), params.data)
+  return {
+    name: params.data.name,
+  }
 }

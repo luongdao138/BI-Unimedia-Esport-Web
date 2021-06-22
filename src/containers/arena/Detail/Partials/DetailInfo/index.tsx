@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { Grid, Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
@@ -21,9 +21,10 @@ interface Props {
   detail: TournamentDetail
   extended?: boolean
   toEdit?: () => void
+  bottomButton?: ReactNode
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
+const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -235,6 +236,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit }) => {
               </Box>
             </Box>
           </>
+        )}
+        {!bottomButton ? null : (
+          <Box textAlign="center" mt={2}>
+            {bottomButton}
+          </Box>
         )}
       </Box>
       {isAuthenticated && (
