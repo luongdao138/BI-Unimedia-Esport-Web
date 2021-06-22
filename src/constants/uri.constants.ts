@@ -89,8 +89,8 @@ export const URI = {
   DIRECT_ROOM: '/v2/chats/get_direct_room',
   WEB_SUPPORT: 'https://support.exelab.jp',
   CHECK_DIRECT: '/v2/chats/user_and_chat_room',
-  PURCHASE_HISTORY: '/v1/purchases/histories',
-  PURCHASE_HISTORY_DETAIL: '/v1/purchases/:id/details',
+  PURCHASE_HISTORY: '/v2/purchases/histories',
+  PURCHASE_HISTORY_DETAIL: '/v2/purchases/:id/details',
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
   PURCHASE_CANCEL: '/v2/purchases/:id/cancel',
 }
