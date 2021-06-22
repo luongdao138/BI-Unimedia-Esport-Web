@@ -88,6 +88,7 @@ export const URI = {
   FRIEND_LIST: '/v2/chats/addable_users',
   DIRECT_ROOM: '/v2/chats/get_direct_room',
   WEB_SUPPORT: 'https://support.exelab.jp',
+  ZENDESK_SUPPORT: 'https://support.exelab.jp/hc/ja',
   CHECK_DIRECT: '/v2/chats/user_and_chat_room',
   PURCHASE_HISTORY: '/v2/purchases/histories',
   PURCHASE_HISTORY_DETAIL: '/v2/purchases/:id/details',

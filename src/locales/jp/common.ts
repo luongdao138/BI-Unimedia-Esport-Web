@@ -58,6 +58,11 @@ export default {
     confirm_back: '戻る',
     confirm_ok: 'キャンセルする',
   },
+  page404: {
+    title: '404',
+    description: 'お探しのページが見つかりませんでした',
+    buttonText: 'TOPへ',
+  },
   welcome: 'eXeLABへようこそ',
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
@@ -111,6 +116,7 @@ export default {
         '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワード再設定いただくか、しばらくたってからもう一度ログインしてください。',
       title2: 'ログインに失敗しました',
     },
+    cannot_login: 'ログインできない方',
   },
   register: {
     button: 'メールアドレスで登録',
