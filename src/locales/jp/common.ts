@@ -562,6 +562,7 @@ export default {
     lets_start: 'メッセージを入力',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
+    chat_copied: 'メッセージ内容をコピーしました。',
   },
   notification: {
     title: '通知一覧',
