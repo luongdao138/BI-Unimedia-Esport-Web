@@ -41,7 +41,7 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg
           <div style={showContent ? undefined : { display: 'none' }}>{children}</div>
         </div>
       </div>
-      {!noFooter && <Footer dark />}
+      {!noFooter && <Footer />}
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
     </div>
   )

@@ -82,6 +82,8 @@ export default {
     download_app_version: 'アプリ版のダウンロードはこちら',
     recruiting_tournament: '募集中の大会',
     no_recruiting_tournament: '現在予定されている大会はありません',
+    footer_download_app: 'アプリ版eXeLAB',
+    footer_twitter_official: 'eXeLAB公式Twitter',
   },
   button: {
     twitter: 'Twitterでログイン',
