@@ -50,3 +50,4 @@ export const getRecommendedUsers = createSelector(getRoot, (state) => state.reco
 export const getRecommendedUsersMeta = createSelector(getRoot, (state) => state.recommendedUsersMeta)
 export const getTournamentResultsMeta = createSelector(getRoot, (state) => state.tournamentResultsMeta)
 export const getRecruitingTournamentsMeta = createSelector(getRoot, (state) => state.recruitingTournamentsMeta)
+export const getParticipant = createSelector(getRoot, (state) => state.selectedParticipant)

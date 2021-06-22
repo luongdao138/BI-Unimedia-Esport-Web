@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme, IconButton, Icon } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
+import LinkButton from '@components/LinkButton'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ESModal from '@components/Modal'
@@ -30,11 +31,8 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
   }, [leaveMeta.loaded, leaveMeta.error])
 
   return (
-    <Box>
-      <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(true)}>
-        {t('common:tournament.unjoin')}
-      </ESButton>
-
+    <Box textAlign="center" mt={2}>
+      <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
       <ESModal open={open}>
         <BlankLayout>
           <Box paddingBottom={16} paddingTop={8} className={classes.childrenContainer}>

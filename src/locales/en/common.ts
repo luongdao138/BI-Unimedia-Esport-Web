@@ -267,6 +267,7 @@ export default {
     reset: '画像をリセットする',
     read_more: 'もっとみる',
     follow_as: 'フォローする',
+    unblock: 'ブロック解除',
     inbox: 'inbox',
     menu_block: 'ブロック',
     menu_unblock: 'ブロックを解除する',
@@ -358,6 +359,10 @@ export default {
     },
     join: 'エントリーする',
     unjoin: 'エントリーを確認',
+    decline_entry: 'エントリーを辞退する',
+    update_entry_nick: 'エントリー情報の更新',
+    check_entry: 'エントリーを確認する',
+    tournament_detail: '大会詳細',
     unjoin_dialog: {
       dialog_title: 'エントリーを辞退しますか？',
       dialog_description: '再度エントリーすることができます。',
