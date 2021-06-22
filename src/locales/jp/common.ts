@@ -557,10 +557,11 @@ export default {
     delete_member: 'グループから除外',
     toast_delete_member: 'メンバーを除外しました。',
     room_not_found: 'ルームが見つかりませんでした。',
-    delete_chat: '通報',
+    delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
     select_destination: '宛先を選んでください',
+    already_member: '既にメンバーです。',
   },
   notification: {
     title: '通知一覧',

@@ -4,6 +4,7 @@ import Avatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { ShortMember } from '.'
 import _ from 'lodash'
+import i18n from '@locales/i18n'
 
 export interface MemberItemProps {
   item: ShortMember
@@ -38,7 +39,7 @@ const MemberItem: React.FC<MemberItemProps> = ({ item, onChange }) => {
             {userCode}
           </Typography>
         </ListItemText>
-        <ListItemSecondaryAction>{isAdded ? '既にメンバーです。' : null}</ListItemSecondaryAction>
+        <ListItemSecondaryAction>{isAdded ? i18n.t('common:chat.already_member') : null}</ListItemSecondaryAction>
       </ListItem>
     </Box>
   )
