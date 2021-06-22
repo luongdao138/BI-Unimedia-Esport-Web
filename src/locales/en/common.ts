@@ -267,6 +267,7 @@ export default {
     reset: '画像をリセットする',
     read_more: 'もっとみる',
     follow_as: 'フォローする',
+    unblock: 'ブロック解除',
     inbox: 'inbox',
     menu_block: 'ブロック',
     menu_unblock: 'ブロックを解除する',
