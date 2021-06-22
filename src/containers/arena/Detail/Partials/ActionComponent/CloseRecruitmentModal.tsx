@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
@@ -11,8 +12,7 @@ import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import ESToast from '@components/Toast'
-
+import UserSlashIcon from '@components/UserSlashIcon'
 interface CloseRecruitmentModalProps {
   tournament: TournamentDetail
   handleClose: () => void
@@ -21,8 +21,10 @@ interface CloseRecruitmentModalProps {
 const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const [open, setOpen] = useState(false)
-  const { close, closeMeta, resetCloseMeta } = useEntry()
+  const { close, closeMeta } = useEntry()
 
   useEffect(() => {
     if (closeMeta.loaded || closeMeta.error) {
@@ -32,13 +34,10 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
 
   return (
     <Box>
-      <Box className={classes.actionButton}>
-        <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+      <Box className={classes.button}>
+        <ButtonPrimaryOutlined onClick={() => setOpen(true)} leadingIcon={<UserSlashIcon />}>
           {t('common:tournament.close_recruitment.button_text')}
-        </ButtonPrimary>
-      </Box>
-      <Box className={classes.description}>
-        <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
+        </ButtonPrimaryOutlined>
       </Box>
 
       <ESModal open={open}>
@@ -48,16 +47,18 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
               <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
             </Box>
             <Box pb={4}>
-              <Typography variant="h2">{t('common:tournament.close_recruitment.dialog_description')}</Typography>
+              <Typography variant="h2" className={classes.desc}>
+                {t('common:tournament.close_recruitment.dialog_description')}
+              </Typography>
             </Box>
 
-            <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%" paddingTop={18.5}>
-              <Box marginX={1} width="100%">
-                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+              <Box className={classes.actionButton}>
+                <ESButton variant={!isMobile ? 'outlined' : 'text'} round fullWidth size="large" onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
-              <Box marginX={2} width="100%">
+              <Box className={classes.actionButton}>
                 <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
                   {t('common:tournament.close_recruitment.confirm')}
                 </ButtonPrimary>
@@ -73,7 +74,6 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
       </ESModal>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
-      {!!closeMeta.error && <ESToast open={!!closeMeta.error} message={t('common:error.close_arena_failed')} resetMeta={resetCloseMeta} />}
     </Box>
   )
 }
@@ -83,12 +83,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
-    },
-  },
-  [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
     },
   },
   childrenContainer: {
@@ -104,11 +98,40 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     textAlign: 'center',
   },
-  actionButton: {
+  desc: {
+    fontSize: 18,
+    color: Colors.white,
+  },
+  button: {
     marginTop: theme.spacing(3),
     width: '100%',
     margin: '0 auto',
     maxWidth: theme.spacing(35),
+  },
+  actionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButton: {
+    width: theme.spacing(35),
+    margin: 8,
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    actionButtonContainer: {
+      flexDirection: 'column-reverse',
+    },
+    title: {
+      fontSize: 20,
+    },
+    desc: {
+      fontSize: 14,
+    },
   },
 }))
 

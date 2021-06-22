@@ -23,7 +23,7 @@ const ESInputDatePicker: React.FC<Props & DateTimePickerProps> = ({ helperText, 
           minutesStep={10}
           clearable
           margin="dense"
-          disablePast
+          disablePast={!rest.disabled}
           initialFocusedDate={start}
           className={classes.noMargin}
           InputProps={{

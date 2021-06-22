@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import userProfile from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
+import { createMetaSelector } from '@store/metadata/selectors'
+import { clearMetaData } from '@store/metadata/actions'
 import { useRouter } from 'next/router'
 import { HomeSettingsParams } from '@services/user.service'
 import { HOME_SETTINGS } from '@constants/common.constants'
@@ -10,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 
 const { selectors, actions } = userProfile
+const getUpdateHomeSettings = createMetaSelector(actions.updateHomeSettings)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useOrderData = () => {
@@ -17,6 +20,7 @@ const useOrderData = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
 
+  const metaUpdateHomeSettings = useAppSelector(getUpdateHomeSettings)
   const userProfile = useAppSelector(selectors.getUserProfile)
   const homeSettings = userProfile ? userProfile.attributes.home_settings : []
 
@@ -54,8 +58,17 @@ const useOrderData = () => {
   }, [userProfile])
 
   useEffect(() => {
-    return () => resetHomeSettings()
+    return () => {
+      resetHomeSettings()
+      dispatch(clearMetaData(actions.updateHomeSettings.typePrefix))
+    }
   }, [])
+
+  useEffect(() => {
+    if (metaUpdateHomeSettings.loaded) {
+      router.push(ESRoutes.HOME)
+    }
+  }, [metaUpdateHomeSettings.loaded])
 
   const { handleReturn } = useReturnHref()
 
@@ -66,7 +79,6 @@ const useOrderData = () => {
       return item.id
     })
     updateHomeSettings({ home_settings: newHomeSettings })
-    router.push(ESRoutes.HOME)
   }
 
   return {

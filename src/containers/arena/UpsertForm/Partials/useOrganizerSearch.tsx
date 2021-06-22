@@ -23,11 +23,7 @@ const useOrganizerSearch = (): {
 
   const getRecommendedUsersByName = useCallback(
     _.debounce((keyword: string, page: number) => {
-      if (keyword !== '') {
-        dispatch(actions.getRecommendedUsersByName({ keyword, page: page }))
-      } else {
-        dispatch(actions.clearRecommendedUsers())
-      }
+      dispatch(actions.getRecommendedUsersByName({ keyword, page: page }))
     }, 500),
     []
   )

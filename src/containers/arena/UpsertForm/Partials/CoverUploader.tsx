@@ -5,6 +5,7 @@ import { CameraAlt as Camera } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import { useDropzone } from 'react-dropzone'
 import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
 
 type ProfileAvatarProps = {
   src: string
@@ -17,6 +18,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [localSrc, setLocalSrc] = useState<string | ArrayBuffer>('')
+  const { t } = useTranslation(['common'])
 
   const dropZoneConfig = {
     accept: 'image/*',
@@ -64,7 +66,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
         {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
         <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
           <Camera fontSize="large" className={classes.camera} />
-          <Typography>画像を選択する</Typography>
+          <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
         </Box>
         <img src="/images/logo.svg" className={classes.logo} />
         <div className={classes.outerBackdrop} />

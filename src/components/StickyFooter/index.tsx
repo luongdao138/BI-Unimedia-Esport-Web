@@ -5,13 +5,14 @@ import ButtonPrimary from '@components/ButtonPrimary'
 
 export type Props = {
   disabled: boolean
-  title: string
-  onClick: () => void
+  title?: string
+  onClick?: () => void
   show?: boolean
   noScroll?: boolean
+  content?: JSX.Element
 }
 
-const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, noScroll }) => {
+const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, noScroll, content }) => {
   const classes = useStyles()
 
   return (
@@ -20,11 +21,15 @@ const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, s
       {show && (
         <Box className={classes.stickyFooter}>
           <Box className={classes.nextBtnHolder}>
-            <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth disabled={disabled} onClick={onClick}>
-                {title}
-              </ButtonPrimary>
-            </Box>
+            {content ? (
+              content
+            ) : (
+              <Box maxWidth={280} className={classes.buttonContainer}>
+                <ButtonPrimary type="submit" round fullWidth disabled={disabled} onClick={() => onClick && onClick()}>
+                  {title || ''}
+                </ButtonPrimary>
+              </Box>
+            )}
           </Box>
         </Box>
       )}

@@ -7,7 +7,7 @@ import ESButtonTwitchCircle from '@components/Button/TwitchCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
-import { useTranslation } from 'react-i18next'
+import i18n from '@locales/i18n'
 import ESInput from '@components/Input'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
@@ -29,33 +29,32 @@ interface SnsInfoProps {
 const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError }) => {
   const classes = useStyles()
   const store = useStore()
-  const { t } = useTranslation(['common'])
   const { instagram_link, facebook_link, twitter_link, twitch_link, discord_link } = profile
 
   const validationSchema = Yup.object().shape({
     instagram_link: Yup.string()
-      .max(250, t('common:common.too_long'))
-      .test('instagram_link', t('common:common.contains_ngword'), function (value) {
+      .max(250, i18n.t('common:common.too_long'))
+      .test('instagram_link', i18n.t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     discord_link: Yup.string()
-      .max(250, t('common:common.too_long'))
-      .test('discord_link', t('common:common.contains_ngword'), function (value) {
+      .max(250, i18n.t('common:common.too_long'))
+      .test('discord_link', i18n.t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     facebook_link: Yup.string()
-      .max(250, t('common:common.too_long'))
-      .test('facebook_link', t('common:common.contains_ngword'), function (value) {
+      .max(250, i18n.t('common:common.too_long'))
+      .test('facebook_link', i18n.t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     twitter_link: Yup.string()
-      .max(250, t('common:common.too_long'))
-      .test('twitter_link', t('common:common.contains_ngword'), function (value) {
+      .max(250, i18n.t('common:common.too_long'))
+      .test('twitter_link', i18n.t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     twitch_link: Yup.string()
-      .max(250, t('common:common.too_long'))
-      .test('twitch_link', t('common:common.contains_ngword'), function (value) {
+      .max(250, i18n.t('common:common.too_long'))
+      .test('twitch_link', i18n.t('common:common.contains_ngword'), function (value) {
         return CommonHelper.matchNgWords(store, value).length <= 0
       }),
   })
@@ -175,6 +174,7 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
                 value={values.discord_link}
                 onChange={handleChange}
                 helperText={errors.discord_link}
+                placeholder={i18n.t('common:profile.discord_placeholder')}
                 error={!!errors.discord_link}
               />
             </Box>

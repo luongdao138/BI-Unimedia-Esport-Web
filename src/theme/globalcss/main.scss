@@ -4,6 +4,7 @@
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
   width: 100%;
   padding-top: 60px;
+  position: relative;
 }
 
 .chat-wrapper {
@@ -317,8 +318,9 @@
 .parallax {
   margin: 0 auto;
   width: 100%;
+  max-width: 100%;
   height: 740px;
-  background: url('/images/lp_image.png') center 60px no-repeat #212121 fixed;
+  background: url('/images/lp_image.png') center 60px no-repeat #212121;
   background-size: cover;
   position: fixed;
   top: 0;

@@ -8,7 +8,7 @@ export default {
     male: '男性',
     female: '女性',
     other: 'その他',
-    required: '必須',
+    required: '入力必須項目です。',
     private: '非公開',
     zero: '0',
     see_more: 'もっと見る',
@@ -62,6 +62,8 @@ export default {
   messages: {
     discord_id_copied: 'Discordタグをクリップボードにコピーしました。',
     profile_updated: 'プロフィールを更新しました',
+    image_update: 'ツマミを操作することで、画像のリサイズを行えます。\nまた、ドラッグで位置を調整させることができます。',
+    game_updated: '好きなゲームを更新しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -73,7 +75,7 @@ export default {
 今後も拡張されていく様々な機能を通して、ゲーマー同士やファンとの交流を広げていきます。`,
     download_app_version: 'アプリ版のダウンロードはこちら',
     recruiting_tournament: '募集中の大会',
-    no_recruiting_tournament: '現在予定している大会はありません。',
+    no_recruiting_tournament: '現在予定されている大会はありません',
   },
   button: {
     twitter: 'Twitterでログイン',
@@ -81,6 +83,7 @@ export default {
     line: 'LINEでログイン',
     facebook: 'Facebookでログイン',
     apple: 'Appleでログイン',
+    use: '適用',
   },
   login: {
     email_placeholder: 'sample@exelab.jp',
@@ -121,11 +124,6 @@ export default {
     footer_link: 'アカウントをお持ちの方',
     error: {
       title: '登録に失敗しました',
-      detail: `以下の可能性がございます。
-      １. ダミーテキスト
-      ２. ダミーテキスト
-      ３. 同じアカウントですでにSNS連携での新規登録を行なっている(ダミー)`,
-      hint: '他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。他にも文言がいるならこの色で。',
       title2: '新規登録に失敗しました',
       detail2: `以下の可能性がございます。
       １. メールアドレスに誤りがある(ダミー)
@@ -220,7 +218,7 @@ export default {
     user_info_title: '通報する内容',
     reason: '通報する理由',
     reason_desc: '詳細・補足',
-    require: '※必須',
+    require: '※入力必須項目です。',
     reporter_email: 'メールアドレスの確認',
     reporter_email_placeholder: 'mail address',
     reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
@@ -256,6 +254,8 @@ export default {
     },
     edit: '編集',
     edit_profile: 'プロフィールを編集する',
+    update_image: '画像の編集',
+    reset: '画像をリセットする',
     read_more: 'もっとみる',
     follow_as: 'フォローする',
     inbox: 'inbox',
@@ -268,6 +268,8 @@ export default {
     no_game_selected: '好きなゲームが選択されていません',
     no_tag_selected: 'タグ選択されていません',
     no_tag_available: 'No tag available',
+    no_communities: 'おすすめコミュニティは存在しません',
+    discord_placeholder: 'ユーザー名#0000を入力してください',
   },
   gender: {
     male: '男性',
@@ -317,6 +319,8 @@ export default {
     game: 'ゲーム',
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
+    copy_shared_url: '共有URLをコピー',
+    cover_upload_select_img: '画像を選択する',
     report: '通報',
     entry_members: 'エントリーメンバー',
     number_of_entries: 'エントリー数',
@@ -330,7 +334,7 @@ export default {
     recruiting_tournament_list: '募集中の大会一覧',
     select_user: 'ユーザーを選ぶ',
     set_participants: '設定する',
-    unset_participants: 'サブボタン',
+    deselect: '選択を解除',
     match_setting: '試合設定',
     vs: 'VS',
     match_result: '対戦結果',
@@ -341,10 +345,15 @@ export default {
       dialog_title: '現在の人数でメンバーを確定しますか？',
       dialog_description: 'エントリー人数と参加枠数の設定に差がある場合、自動的にトーナメントの枠数の最適化を行います',
       confirm: '締め切る',
-      warning: 'エントリー募集の再開はできません',
+      warning: 'エントリーの再開はできません',
     },
     join: 'エントリーする',
-    unjoin: 'エントリーを辞退する',
+    unjoin: 'エントリーを確認',
+    unjoin_dialog: {
+      dialog_title: 'エントリーを辞退しますか？',
+      dialog_description: '再度エントリーすることができます。',
+      decline: '辞退する',
+    },
     join_with_this: 'この内容でエントリーする',
     join_nickname: 'エントリーネーム',
     join_nickname_setting: 'エントリーネームの設定',
@@ -380,6 +389,16 @@ export default {
     summary_title: '大会の総括',
     summary_submit: 'この内容で決定する',
     copy_toast: '大会詳細URLをコピーしました。',
+    edit_arena_info: '大会情報の編集',
+    create_success: '大会が作成されました',
+    update_success: '大会内容が編集されました',
+    temporary: 'Temporary',
+    matches: {
+      final_game: '決勝戦',
+      semi_final: '準決勝戦',
+      round: '回戦',
+    },
+    not_found: 'このページは無効化されました。',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -391,6 +410,14 @@ export default {
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
   },
+  tournament_cancel: {
+    confirm_cancel_btn: '大会を中止する',
+    cancel_title: '大会を中止しますか？',
+    cancel_detail1: '中止した大会は復元することはできません。',
+    cancel_detail2: '大会の中止は、メンバーに通知されます。',
+    cancel_button: '中止する',
+    cancel_t: 'キャンセル',
+  },
   tournament_create: {
     tab1: '大会概要',
     tab2: '開催形式',
@@ -399,7 +426,6 @@ export default {
     title: '大会を作成する',
     name: '大会名',
     has_prize: '副賞あり',
-    prize_placeholder: '副賞の内容',
     hint: '副賞提供は各種法令を遵守した形で実施されますよう十分ご注意ください',
     game: 'ゲーム',
     game_hardware: 'ゲームハード',
@@ -408,27 +434,56 @@ export default {
     holding_format: '開催形式',
     has_third_place: '3位決定トーナメントあり',
     participation: '参加形式',
-    participation_term: '参加条件やルールなど',
+    participation_term: '参加条件・ルール',
+    participation_term_placeholder: 'キーワードを設けて、実施する大会を他ユーザーに見つけてもらいやすくすることができます。',
     precautions: '注意事項など',
+    precautions_placeholder: `大会実施にむけて参加者に周知したいことなどを入力できます。
+
+例）
+この大会の主旨は初心者同士で練習することにあります。
+煽りや誹謗中傷などはしないようにしましょう！`,
     retain_history: '戦績を保存する',
+    retain_history_short: '戦績',
     people: '人',
     entry_period: 'エントリー期間',
-    start_date: '開始日',
-    end_date: '終了日',
+    start_date: '開始日時',
+    end_date: '終了日時',
     holding_period: '開催期間',
     area: '会場',
-    area_name: '会場情報を記載',
+    area_name_placeholder: `会場情報を入力しましょう。
+とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
     organizer: '開催者',
     co_organizer: '共同管理者',
     organizer_name: '主催',
     submit: 'この内容で作成する',
+    check_content: '内容を確認する',
     decide: '決定する',
     public: '公開',
     private: '限定公開',
     co_orgonizer: '共同管理者を選ぶ',
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
-    public_or_private: '公開設定',
+    public_or_private: '大会公開設定',
+    title_placeholder: '○○文字まで入力することができます。',
+    overview_placeholder: `大会の概要などを任意で入力することができます。
+
+例）
+初心者同士で盛り上がれ！
+楽しく練習しましょう〜の会です。`,
+    prize_placeholder: '副賞を設ける場合はその内容を入力してください。',
+    max_participants: '参加枠数',
+    max_participants_placeholder: '○○○人上限',
+    comfirm_title: 'この内容で作成しますか？',
+    check_content_button: '内容を確認する',
+  },
+  arenaSearchFilters: {
+    all: 'すべて',
+    beforeEvent: '開催前',
+    recruiting: 'エントリー中',
+    inProgress: '開催中',
+    completed: '終了',
+    joined: 'あなたがエントリーした大会',
+    organized: 'あなたが開催者の大会',
   },
   search: {
     search: '検索',
@@ -593,6 +648,7 @@ export default {
   },
   purchase_history: {
     title: '購入履歴',
+    detail: '履歴詳細',
     order_id: '購入ID',
     vendor: '販売元',
     vendor_name: 'NTTe-Sports',

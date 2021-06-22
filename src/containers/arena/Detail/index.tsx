@@ -15,7 +15,7 @@ import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
 
 const TournamentDetail: React.FC = () => {
-  const { tournament, meta, entryMeta, userProfile, handleBack } = useTournamentDetail()
+  const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
   const { toEdit } = useArenaHelper(tournament)
   const router = useRouter()
 
@@ -32,11 +32,11 @@ const TournamentDetail: React.FC = () => {
   return (
     <div>
       <ESLoader open={meta.pending} />
-      {meta.loaded && entryMeta.loaded && tournament && (
+      {meta.loaded && tournament && (
         <>
           <TournamentDetailHeader
             status={tournament?.attributes?.status || 'ready'}
-            cover={tournament?.attributes?.cover_image}
+            cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
             onHandleBack={handleBack}
           >
             {actionComponent[tournament.attributes.status]}

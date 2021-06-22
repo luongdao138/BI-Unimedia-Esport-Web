@@ -20,7 +20,6 @@ import { useContextualRouting } from 'next-use-contextual-routing'
 import LoginContainer from '@containers/Login'
 import IntroContainer from '@containers/Login/Intro'
 import ForgotContainer from '@containers/ForgotPassword'
-import ForgotConfirmContainer from '@containers/ForgotConfirm'
 import ResetPasswordContainer from '@containers/ResetPassword'
 import RegisterContainer from '@containers/Register'
 import RegisterByEmailContainer from '@containers/RegisterByEmail'
@@ -79,7 +78,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
       case ESRoutes.FORGOT_PASSWORD:
         return <ForgotContainer />
       case ESRoutes.FORGOT_PASSWORD_CONFIRM:
-        return <ForgotConfirmContainer />
+        return <ConfirmContainer />
       case ESRoutes.FORGOT_PASSWORD_RESET:
         return <ResetPasswordContainer />
       case ESRoutes.REGISTER:
@@ -117,7 +116,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   return (
     <div className={classes.grow}>
       <AppBar className={classes.appBar} position="fixed">
-        <Container maxWidth="lg" className="header-container">
+        <Container maxWidth="xl" className="header-container">
           <Toolbar className={classes.toolbar}>
             <div
               onClick={() => toggleDrawer(!open)}
@@ -239,6 +238,7 @@ const useStyles = makeStyles((theme) => ({
   search: {},
   toolArea: {
     display: 'flex',
+    width: 140,
   },
   button: {
     padding: 10,
