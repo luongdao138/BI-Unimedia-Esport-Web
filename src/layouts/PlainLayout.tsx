@@ -11,10 +11,11 @@ import useProfileValid from '@utils/hooks/useProfileValid'
 
 interface PlainLayoutProps {
   children: ReactNode
-  noFooter: boolean
+  noFooter?: boolean
+  patternBg?: boolean
 }
 
-const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter }) => {
+const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg }) => {
   const [open, setOpen] = useState<boolean>(false)
   useProfileValid()
 
@@ -35,8 +36,10 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter }) => {
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
       {showContent ? null : <NotFoundView notFoundType={notFound} topSpace />}
-      <div className="plain-main" style={showContent ? undefined : { display: 'none' }}>
-        {children}
+      <div className={patternBg ? 'plain-main' : 'plain-main no-pattern'}>
+        <div className="content-wrapper">
+          <div style={showContent ? undefined : { display: 'none' }}>{children}</div>
+        </div>
       </div>
       {!noFooter && <Footer dark />}
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
@@ -46,6 +49,7 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter }) => {
 
 PlainLayout.defaultProps = {
   noFooter: false,
+  patternBg: false,
 }
 
 export default PlainLayout
