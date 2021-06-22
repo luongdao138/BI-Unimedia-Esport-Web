@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
   const downSm = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <div className={classes.footer} style={{ visibility: router.pathname === ESRoutes.TOP || downSm ? 'visible' : 'hidden' }}>
+    <div className={classes.footer} style={{ display: router.pathname === ESRoutes.TOP || downSm ? 'block' : 'none' }}>
       <Box className={classes.footerInner}>
         <Box className={classes.leftSection}>
           <List component="nav" aria-labelledby="footer-list" disablePadding className={classes.root}>
