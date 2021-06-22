@@ -19,6 +19,7 @@ import useLoginByEmail from './useLoginByEmail'
 import LoginForm from './LoginForm'
 import LoginSocialError from './LoginSocialError'
 import LoginError from './LoginError'
+import { URI } from '@constants/uri.constants'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin('login')
