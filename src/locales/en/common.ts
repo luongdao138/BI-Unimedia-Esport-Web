@@ -647,6 +647,7 @@ export default {
   },
   purchase_history: {
     title: '購入履歴',
+    detail: '履歴詳細',
     order_id: '購入ID',
     vendor: '販売元',
     vendor_name: 'NTTe-Sports',
