@@ -19,6 +19,7 @@ import useLoginByEmail from './useLoginByEmail'
 import LoginForm from './LoginForm'
 import LoginSocialError from './LoginSocialError'
 import LoginError from './LoginError'
+import { URI } from '@constants/uri.constants'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin('login')
@@ -81,6 +82,11 @@ const LoginContainer: React.FC = () => {
             <ESButtonLine onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
             <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
             <ESButtonApple onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
+          </Box>
+          <Box pb={4} pt={4} className={classes.linkContainer}>
+            <a href={URI.ZENDESK_SUPPORT} target="_blank" rel="noopener noreferrer">
+              {t('common:login.cannot_login')}
+            </a>
           </Box>
         </Box>
       </Box>

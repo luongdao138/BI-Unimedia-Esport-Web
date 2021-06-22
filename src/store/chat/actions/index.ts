@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/chat.service'
 
 import { MESSAGE_ACTION_TYPE } from './types'
@@ -47,3 +47,5 @@ export const getMessageTournamentDetail = createAsyncThunk<services.MessageTourn
     }
   }
 )
+
+export const resetAddUsers = createAction(MESSAGE_ACTION_TYPE.RESET_ADD_USERS)

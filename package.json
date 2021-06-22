@@ -11,7 +11,8 @@
     "lint": "eslint . --ext ts --ext tsx --ext js",
     "test": "jest -u",
     "test-all": "yarn lint && yarn type-check && yarn test",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "patch-package"
   },
   "husky": {
     "hooks": {

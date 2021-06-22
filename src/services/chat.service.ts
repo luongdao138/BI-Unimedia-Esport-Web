@@ -4,6 +4,7 @@ import { URI } from '@constants/uri.constants'
 export type GetFriendsParam = {
   type: 'dm' | 'group'
   keyword?: string
+  page?: number
 }
 
 export interface FriendItem {
@@ -23,6 +24,13 @@ export interface FriendItem {
   }
 }
 
+export type Meta = {
+  current_page: number
+  per_page: number
+  total_count: number
+  total_pages: number
+}
+
 export type GetFriendsResponse = {
   data: FriendItem[]
   links: {
@@ -31,6 +39,7 @@ export type GetFriendsResponse = {
       next: string
       self: string
     }
+    meta: Meta
   }
 }
 

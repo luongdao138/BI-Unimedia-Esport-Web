@@ -31,7 +31,7 @@ export const BottomContent: React.FC = () => {
             <Box className={classes.bottomInnerContent}>
               <Grid container spacing={0}>
                 {recruitingTournaments.map((tournament, i) => (
-                  <Grid key={i} item xs={6} sm={6} md={4} xl={4}>
+                  <Grid key={i} item xs={12} sm={12} md={4} xl={4}>
                     <TournamentCardRecruiting tournament={tournament} />
                   </Grid>
                 ))}

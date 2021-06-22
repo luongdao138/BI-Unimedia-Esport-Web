@@ -91,6 +91,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
         style: {
           backgroundColor: 'transparent',
           boxShadow: 'none',
+          overflowY: 'hidden',
         },
       }}
       {...rest}

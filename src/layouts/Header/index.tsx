@@ -247,6 +247,9 @@ const useStyles = makeStyles((theme) => ({
     icon: {
       fontSize: 18,
     },
+    toolArea: {
+      width: 'auto',
+    },
   },
   [theme.breakpoints.down('xs')]: {
     icon: {

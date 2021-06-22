@@ -1,5 +1,4 @@
 import { Typography, Box, makeStyles, Grid, ButtonBase } from '@material-ui/core'
-import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { ACTIVITY_ACTION_TYPE } from '@constants/common.constants'
@@ -104,22 +103,15 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
 
   return (
     <Grid item xs={12}>
-      <Box my={1} py={1}>
-        <ButtonBase className={classes.btnContainer} onClick={handleTarget}>
-          <ESChip
-            className={classes.chip}
-            variant="outlined"
-            color="default"
-            label={
-              <Box display="flex" flexDirection="row">
-                <Typography>{actionTitle.prefix}</Typography>
-                <Typography className={classes.targetText} color="primary">
-                  {target}
-                </Typography>
-                <Typography>{actionTitle.suffix}</Typography>
-              </Box>
-            }
-          ></ESChip>
+      <Box className={classes.container}>
+        <ButtonBase onClick={handleTarget}>
+          <Typography className={classes.textLine} component="div">
+            {actionTitle.prefix}
+            <Typography className={classes.targetText} color="primary">
+              {target}
+            </Typography>
+            {actionTitle.suffix}
+          </Typography>
         </ButtonBase>
       </Box>
     </Grid>
@@ -128,19 +120,35 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
 
 export default ActivityItem
 
-const useStyles = makeStyles(() => ({
-  targetText: {
-    textDecoration: 'underline',
-  },
-  chip: {
+const useStyles = makeStyles((theme) => ({
+  container: {
     maxWidth: '100%',
     backgroundColor: Colors.black,
     display: 'flex',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    fontSize: theme.typography.body1.fontSize,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: Colors.grey['200'],
+    color: theme.palette.text.primary,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
-  btnContainer: {
-    width: '100%',
+  textLine: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+  },
+  targetText: {
+    textDecoration: 'underline',
+    flexWrap: 'wrap',
+    wordWrap: 'break-word',
   },
 }))
