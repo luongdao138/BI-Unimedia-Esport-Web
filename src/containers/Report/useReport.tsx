@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
+import { getUserEmail } from '@store/userProfile/selectors'
 import reportStore from '@store/report'
 import { ReportParams } from '@services/report.service'
 import { useEffect } from 'react'
@@ -10,9 +11,10 @@ const { actions } = reportStore
 const getMeta = createMetaSelector(actions.postReport)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useReport = (): { meta: Meta; createReport: (params: ReportParams) => void } => {
+const useReport = (): { meta: Meta; userEmail?: string | null; createReport: (params: ReportParams) => void } => {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getMeta)
+  const userEmail = useAppSelector(getUserEmail)
   const createReport = (param: ReportParams) => dispatch(actions.postReport(param))
 
   useEffect(() => {
@@ -22,6 +24,7 @@ const useReport = (): { meta: Meta; createReport: (params: ReportParams) => void
   }, [])
   return {
     meta,
+    userEmail,
     createReport,
   }
 }
