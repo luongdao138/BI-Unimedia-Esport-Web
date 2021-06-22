@@ -112,7 +112,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }) => {
               detail={tournament}
               bottomButton={
                 <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={() => setOpen(false)}>
-                  {'common:tournament.tournament_detail'}
+                  {t('common:tournament.tournament_detail')}
                 </ESButton>
               }
             />
