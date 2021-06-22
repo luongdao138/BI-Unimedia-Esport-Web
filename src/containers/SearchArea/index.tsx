@@ -178,9 +178,8 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     transition: 'all 0.1s ease-out',
     willChange: 'width',
-    '&:hover &.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      zIndex: 100,
-    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { zIndex: 100 },
+    '&:hover': { zIndex: 100 },
   },
 }))
 export default SearchArea
