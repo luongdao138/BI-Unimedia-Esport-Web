@@ -14,7 +14,6 @@ const BlackBox: React.FC<BlackBoxProps> = ({ children }) => {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3),
     border: `1px solid ${Colors.white_opacity['30']}`,
     borderRadius: theme.spacing(0.5),
     backgroundColor: Colors.black,
