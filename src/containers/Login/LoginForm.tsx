@@ -17,8 +17,8 @@ import _, { NotVoid } from 'lodash'
 import LoginAgreementBox from './LoginAgreementBox'
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required(i18n.t('common:common.required')),
-  password: Yup.string().required(i18n.t('common:common.required')),
+  email: Yup.string().required(i18n.t('common:common.input_required')),
+  password: Yup.string().required(i18n.t('common:common.input_required')),
 })
 
 interface LoginFormProps {
