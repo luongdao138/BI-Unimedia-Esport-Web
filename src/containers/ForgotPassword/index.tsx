@@ -21,7 +21,7 @@ const ForgotPasswordContainer: React.FC = () => {
       .test('email-validation', t('common:login.validation.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required(t('common:common.required')),
+      .required(t('common:common.input_required')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<services.ForgotPasswordParams>({
