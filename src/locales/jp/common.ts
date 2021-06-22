@@ -8,7 +8,7 @@ export default {
     male: '男性',
     female: '女性',
     other: 'その他',
-    required: '必須',
+    required: '入力必須項目です。',
     private: '非公開',
     zero: '0',
     see_more: 'もっと見る',
@@ -57,6 +57,11 @@ export default {
     confirm_title: '注文をキャンセルします',
     confirm_back: '戻る',
     confirm_ok: 'キャンセルする',
+  },
+  page404: {
+    title: '404',
+    description: 'お探しのページが見つかりませんでした',
+    buttonText: 'TOPへ',
   },
   welcome: 'eXeLABへようこそ',
   messages: {
@@ -111,6 +116,7 @@ export default {
         '上記以外でログインできない場合は、アカウントがロックされている可能性がございます。パスワード再設定いただくか、しばらくたってからもう一度ログインしてください。',
       title2: 'ログインに失敗しました',
     },
+    cannot_login: 'ログインできない方',
   },
   register: {
     button: 'メールアドレスで登録',
@@ -218,7 +224,7 @@ export default {
     user_info_title: '通報する内容',
     reason: '通報する理由',
     reason_desc: '詳細・補足',
-    require: '※必須',
+    require: '※入力必須項目です。',
     reporter_email: 'メールアドレスの確認',
     reporter_email_placeholder: 'mail address',
     reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',

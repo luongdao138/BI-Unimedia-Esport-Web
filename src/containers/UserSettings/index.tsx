@@ -19,11 +19,10 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import TabPanel from '@components/TabPanel'
 import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
-import Review from './Review'
 import { ESRoutes } from '@constants/route.constants'
 import { UserProfile } from '@services/user.service'
 
-const FINAL_STEP = 4
+const FINAL_STEP = 3
 
 const UserSettingsContainer: React.FC = () => {
   const classes = useStyles()
@@ -35,7 +34,6 @@ const UserSettingsContainer: React.FC = () => {
   const { profileUpdate, profileUpdateMeta, resetProfileUpdateMeta } = useUpdateProfile()
   const [step, setStep] = useState(0)
   const [profile, setProfile] = useState<UserProfile['attributes'] | null>(null)
-  const [isReview, setReview] = useState(false)
   const [isValidDate, setValidDate] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
 
@@ -77,7 +75,7 @@ const UserSettingsContainer: React.FC = () => {
   const navigate = () => router.push(ESRoutes.HOME)
 
   const handleButtonClick = () => {
-    if (step !== FINAL_STEP - 1) setStep(step + 1)
+    if (step !== FINAL_STEP) setStep(step + 1)
 
     const data = _.pick(profile, ['sex', 'show_sex', 'birth_date', 'show_birth_date', 'area_id', 'show_area'])
 
@@ -95,16 +93,10 @@ const UserSettingsContainer: React.FC = () => {
   }
 
   useEffect(() => {
-    if (profileUpdateMeta.loaded && step === FINAL_STEP - 1) setReview(true)
-    if (profileUpdateMeta.loaded && isReview) navigate()
+    if (profileUpdateMeta.loaded && step === FINAL_STEP) navigate()
   }, [profileUpdateMeta])
 
   const handleSkip = () => navigate()
-
-  const handleFix = (_step) => {
-    setReview(false)
-    setStep(_step)
-  }
 
   return profile && getUserProfileMeta.loaded ? (
     <>
@@ -112,35 +104,30 @@ const UserSettingsContainer: React.FC = () => {
         <Box pt={2} pb={2} alignItems="center" display="flex">
           <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
             <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
-            {!isReview && <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>}
+            <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
           </Grid>
         </Box>
-
-        {isReview ? (
-          <Review profile={profile} onFixClicked={handleFix} />
-        ) : (
-          <Grid container direction="column" className={classes.contents}>
-            <Box className={classes.stepperHolder}>
-              <Stepper activeStep={step} style={{ padding: 0 }}>
-                {stepsTitles.map((label, idx) => (
-                  <Step key={idx}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            </Box>
-            <Box mt={4} />
-            <TabPanel value={step} index={0}>
-              <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} handleDateError={setValidDate} />
-            </TabPanel>
-            <TabPanel value={step} index={1}>
-              <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} maxValue={5} />
-            </TabPanel>
-            <TabPanel value={step} index={2}>
-              <GameSelector values={profile.game_titles} onChange={onGameChange} />
-            </TabPanel>
-          </Grid>
-        )}
+        <Grid container direction="column" className={classes.contents}>
+          <Box className={classes.stepperHolder}>
+            <Stepper activeStep={step} style={{ padding: 0 }}>
+              {stepsTitles.map((label, idx) => (
+                <Step key={idx}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
+          <Box mt={4} />
+          <TabPanel value={step} index={0}>
+            <BasicInfo profile={profile} prefectures={prefectures} onDataChange={onBasicInfoChanged} handleDateError={setValidDate} />
+          </TabPanel>
+          <TabPanel value={step} index={1}>
+            <TagSelect features={features} selectedFeatures={profile.features} onSelectChange={onFeatureSelect} maxValue={5} />
+          </TabPanel>
+          <TabPanel value={step} index={2}>
+            <GameSelector values={profile.game_titles} onChange={onGameChange} />
+          </TabPanel>
+        </Grid>
 
         <Box mt={36} />
 
@@ -149,7 +136,7 @@ const UserSettingsContainer: React.FC = () => {
             <Box className={classes.nextBtnHolder}>
               <Box className={classes.nextBtn}>
                 <ButtonPrimary color="primary" fullWidth onClick={handleButtonClick} disabled={isValidDate}>
-                  {step === FINAL_STEP - 1 || step === FINAL_STEP - 2 ? t('common:done') : t('common:next')}
+                  {step < FINAL_STEP - 1 ? t('common:next') : t('common:done')}
                 </ButtonPrimary>
               </Box>
             </Box>
