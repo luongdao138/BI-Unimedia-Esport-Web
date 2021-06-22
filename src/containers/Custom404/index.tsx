@@ -28,7 +28,9 @@ const Custom404Container: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {},
+  wrapper: {
+    height: '100vh',
+  },
   text404: {
     fontSize: 160,
     fontFamily: 'Futura Bold',

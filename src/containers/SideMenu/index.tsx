@@ -16,6 +16,9 @@ import BlankLayout from '@layouts/BlankLayout'
 import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
 import LoginRequired from '@containers/LoginRequired'
+import SideFooter from './SideFooter'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -170,6 +173,8 @@ const SideMenu: React.FC = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
+  const theme = useTheme()
+  const downMd = useMediaQuery(theme.breakpoints.down('md'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -272,18 +277,16 @@ const SideMenu: React.FC = () => {
               </ButtonBase>
             </Box> */}
           </List>
-        </Box>
-
-        {isAuthenticated && (
-          <Box className={classes.logout}>
+          {isAuthenticated && (
             <ListItem className={classes.list} button disableRipple onClick={() => handleModal('logout')}>
               <ListItemIcon className={classes.icon}>
                 <Icon fontSize="small" className="fa fa-sign-out-alt" />
               </ListItemIcon>
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
-          </Box>
-        )}
+          )}
+          {!downMd && <SideFooter />}
+        </Box>
       </Box>
 
       <ESModal open={modal} handleClose={() => setModal(false)}>

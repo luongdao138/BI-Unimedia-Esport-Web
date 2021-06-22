@@ -82,6 +82,8 @@ export default {
     download_app_version: 'アプリ版のダウンロードはこちら',
     recruiting_tournament: '募集中の大会',
     no_recruiting_tournament: '現在予定されている大会はありません',
+    footer_download_app: 'アプリ版eXeLAB',
+    footer_twitter_official: 'eXeLAB公式Twitter',
   },
   button: {
     twitter: 'Twitterでログイン',
@@ -565,10 +567,12 @@ export default {
     delete_member: 'グループから除外',
     toast_delete_member: 'メンバーを除外しました。',
     room_not_found: 'ルームが見つかりませんでした。',
-    delete_chat: '通報',
+    delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
     select_destination: '宛先を選んでください',
+    already_member: '既にメンバーです。',
+    chat_copied: 'メッセージ内容をコピーしました。',
   },
   notification: {
     title: '通知一覧',
