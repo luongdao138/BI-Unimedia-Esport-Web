@@ -121,7 +121,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     <>
       {hasNoRoomInfo ? null : (
         <>
-          <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
+          {dialogOpen === MENU.ADD_MEMBER ? (
+            <RoomMemberAddView roomId={roomId as string} open={dialogOpen === MENU.ADD_MEMBER} hide={() => setDialogOpen(null)} />
+          ) : null}
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
           <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
         </>

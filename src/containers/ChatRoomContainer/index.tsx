@@ -31,6 +31,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import i18n from '@locales/i18n'
+import useCopyToClipboard from '@utils/hooks/useCopyToClipboard'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -52,6 +53,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const [reporting, setReporting] = useState<boolean>(false)
   const [reportData, setReportData] = useState<ESReportProps>(null)
   const [modalReply, setModalReply] = useState<MessageModalStateProps>({ open: false, replyMessage: null })
+  const { copy } = useCopyToClipboard(true, i18n.t('common:chat.chat_copied'))
   const classes = useStyles()
 
   const checkNgWord = useCheckNgWord()
@@ -210,6 +212,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     setModalReply({ ...modalReply, replyMessage: replyMessage, open: true })
   }
 
+  const onCopy = (currentMessage: MessageType) => {
+    const text = _.get(currentMessage, 'msg', '')
+    copy(text)
+  }
+
   const renderErroMesage = () => {
     if (hasError && _.isEmpty(data)) {
       return (
@@ -233,6 +240,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           <MessageList
             reply={onReply}
             report={onReport}
+            copy={onCopy}
             currentUser={userId}
             paginating={paginating}
             delete={onDelete}
