@@ -28,16 +28,16 @@ const HomeOrderContainer: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  grow: { position: 'relative' },
+  grow: {},
   dragWrap: {
-    marginBottom: 320,
+    marginBottom: theme.spacing(3),
     '& >div:focus': {
       outline: 'none',
     },
   },
   [theme.breakpoints.down('sm')]: {
     dragWrap: {
-      marginBottom: theme.spacing(10),
+      marginBottom: theme.spacing(3),
     },
   },
 }))

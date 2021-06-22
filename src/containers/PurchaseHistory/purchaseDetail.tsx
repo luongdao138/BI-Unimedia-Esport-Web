@@ -14,12 +14,14 @@ import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
+import { router } from 'next/client'
 
 interface Props {
   id: any
 }
 
-const PurchaseDetail: React.FC<Props> = ({ id }) => {
+const PurchaseDetail: React.FC<Props> = () => {
+  const { id } = router.query
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
@@ -55,7 +57,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
   }))(MuiDialogContent)
 
   useEffect(() => {
-    if (id) {
+    if (id && _.isString(id)) {
       fetchPurchaseHistoryDetail(id)
     }
     return function () {
@@ -66,7 +68,7 @@ const PurchaseDetail: React.FC<Props> = ({ id }) => {
   const purchase_datetime = CommonHelper.staticSmartTime(_.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime', ''))
   return (
     <>
-      <HeaderWithButton title={t('common:notification.title')} />
+      <HeaderWithButton title={t('common:purchase_history.detail')} />
       {purchaseHistoryDetail !== undefined && purchaseHistoryDetail.data !== undefined ? (
         <div>
           <div>
@@ -240,7 +242,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white_opacity[30],
   },
   title: {
-    width: 127,
+    minWidth: 127,
   },
   questionsTitle: {
     fontWeight: 'bold',

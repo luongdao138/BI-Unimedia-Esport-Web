@@ -47,7 +47,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               size="small"
               label={
                 <Box color={Colors.white} justifyContent="flex-">
-                  <Typography variant="caption">
+                  <Typography variant="overline">
                     {attr.rule === TR.BATTLE_ROYAL ? i18n.t('common:tournament:rule_battle') : i18n.t('common:tournament:rule_tournament')}
                   </Typography>
                 </Box>
@@ -58,7 +58,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               size="small"
               label={
                 <Box color={Colors.white} justifyContent="flex-">
-                  <Typography variant="caption">{p_type}</Typography>
+                  <Typography variant="overline">{p_type}</Typography>
                 </Box>
               }
             />
@@ -181,7 +181,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chip: {
     height: 15,
-    backgroundColor: Colors.grey[400],
+    backgroundColor: Colors.white_opacity[20],
   },
   avatarContainer: {
     height: 20,
