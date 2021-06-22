@@ -44,6 +44,7 @@ export const URI = {
   TOURNAMENTS_SET_PARTICIPANT: '/v2/tournaments/:id/set_participant',
   TOURNAMENTS_WINNERS: '/web/v2/tournaments/:id/winners',
   TOURNAMENTS_SET_SCORE: '/v2/tournaments/:id/set_score',
+  TOURNAMENT_PARTICIPANT_NAME: '/v2/tournaments/:id/participant_name',
   JOIN_TOURNAMENT: '/v2/tournaments/:id/join',
   LEAVE_TOURNAMENT: '/v2/tournaments/:id/leave',
   CLOSE_TOURNAMENT: '/v2/tournaments/:id/close_recruitment',
