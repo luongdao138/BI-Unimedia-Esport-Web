@@ -84,17 +84,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   listText: {
     color: Colors.grey[400],
     textDecoration: 'underline',
-    fontSize: 11,
+    '& > span': {
+      fontSize: 12,
+    },
     lineHeight: 1,
   },
   label: {
     color: theme.palette.text.primary,
-    fontSize: 11,
+    '& > span': {
+      fontSize: 12,
+    },
     padding: 0,
   },
   label2: {
     color: Colors.grey[400],
-    fontSize: 11,
+    '& > span': {
+      fontSize: 12,
+    },
   },
   buttonWrap: {
     paddingTop: theme.spacing(2),
