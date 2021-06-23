@@ -14,6 +14,9 @@ import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
+import TeamEntryEditModal from './TeamEntryEditModal'
+import UnjoinModal from './UnjoinModal'
 
 interface Props {
   tournament: TournamentDetail
@@ -24,6 +27,7 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { children, tournament, userProfile } = props
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const [entryModalOpen, setEntryModalOpen] = useState(false)
 
   const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed } = useArenaHelper(tournament)
 
@@ -40,6 +44,31 @@ const ActionComponent: React.FC<Props> = (props) => {
       : ''
 
     return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
+  }
+  const hideEntryModal = () => {
+    setEntryModalOpen(false)
+  }
+  const renderTeamView = () => {
+    return (
+      <Box>
+        <LoginRequired>
+          <Box className={classes.actionButton}>
+            {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' ? (
+              <Box>
+                <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
+                <UnjoinModal tournament={tournament} />
+              </Box>
+            ) : null}
+            {tournament.attributes.my_role === null && (
+              <ButtonPrimary round fullWidth onClick={() => setEntryModalOpen(true)}>
+                {t('common:tournament.join')}
+              </ButtonPrimary>
+            )}
+          </Box>
+        </LoginRequired>
+        {entryModalOpen ? <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={hideEntryModal} /> : null}
+      </Box>
+    )
   }
 
   return (
@@ -75,7 +104,7 @@ const ActionComponent: React.FC<Props> = (props) => {
                 </Box>
                 <Box minWidth={256} className={classes.buttonRight}>
                   {isTeam ? (
-                    <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
+                    renderTeamView()
                   ) : (
                     <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
                   )}
@@ -87,7 +116,7 @@ const ActionComponent: React.FC<Props> = (props) => {
               </Box>
             </Box>
           ) : null}
-          {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+          {!isModerator && isTeam && renderTeamView()}
           {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
         </>
       )}

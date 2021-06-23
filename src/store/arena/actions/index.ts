@@ -378,3 +378,18 @@ export const changeParticipantName = createAsyncThunk<{ name: string }, services
     }
   }
 )
+
+export const getTournamentTeamDetail = createAsyncThunk<services.TournamentTeamDetailResponse, number>(
+  types.GET_TOURNAMENT_TEAM_DETAIL,
+  async (teamId, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentTeamDetail(teamId)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

@@ -463,6 +463,30 @@ export type ParticipantNameParams = {
   hash_key: string
 }
 
+export type TournamentTeamDetail = {
+  id: string
+  type: string
+  attributes: {
+    leader_id: number
+    name: string
+    tournament_id: number
+    members: {
+      id: number
+      user_id: number
+      name: string
+      nickname: string
+      user_code: string
+      image_url: string
+    }[]
+    show_history: boolean
+    team_avatar: string
+  }
+}
+
+export type TournamentTeamDetailResponse = {
+  data: TournamentTeamDetail
+}
+
 export type UpdateTournamentResponse = void
 
 export const tournamentSearch = async (params: TournamentSearchParams): Promise<TournamentSearchResponse> => {
@@ -615,5 +639,45 @@ export const changeParticipantName = async (params: ParticipantNameParams): Prom
   await api.post<void>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, params.hash_key), params.data)
   return {
     name: params.data.name,
+  }
+}
+
+export const getTournamentTeamDetail = async (teamId: number): Promise<TournamentTeamDetailResponse> => {
+  try {
+    const { data } = await api.get<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${teamId}`))
+    return data
+  } catch (e) {
+    return {
+      data: {
+        id: '241',
+        type: 'tournament_team',
+        attributes: {
+          leader_id: 1370,
+          name: 'Walter team',
+          tournament_id: 419,
+          members: [
+            {
+              id: 2366,
+              user_id: 1370,
+              name: 'Walter White',
+              nickname: 'Walter White',
+              user_code: 'walt',
+              image_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/1370/1623308825-1370.jpg',
+            },
+            {
+              id: 2367,
+              user_id: 1375,
+              name: 'Hector Salamanca',
+              nickname: 'Hector Salamanca',
+              user_code: 'magnai',
+              image_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/1375/1621837424-1375.png',
+            },
+          ],
+          show_history: true,
+          team_avatar:
+            'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournament_team_icons/7030ebd9-8d4c-4d40-b323-29c7a5c7e717/1624424589-1370.jpg',
+        },
+      },
+    }
   }
 }

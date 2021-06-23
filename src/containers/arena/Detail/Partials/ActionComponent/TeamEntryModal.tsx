@@ -3,7 +3,6 @@ import { SuggestedTeamMembersResponse, TeamJoin, TeamMember, TournamentDetail } 
 import { useState } from 'react'
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
-import ButtonPrimary from '@components/ButtonPrimary'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -21,13 +20,12 @@ import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
 import ESLoader from '@components/FullScreenLoader'
-import UnjoinModal from './UnjoinModal'
-import LoginRequired from '@containers/LoginRequired'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
   handleClose: () => void
+  isEdit?: boolean
 }
 
 const FINAL_STEP = 1
@@ -38,7 +36,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
-  const [open, setOpen] = useState(false)
   const [step, setStep] = useState(0)
   const [isUploading, setUploading] = useState(false)
   const { suggestedTeamMembers, meta, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
@@ -47,9 +44,8 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      setOpen(false)
-      reset()
       handleClose()
+      reset()
     }
   }, [joinMeta.loaded, joinMeta.error])
 
@@ -97,13 +93,13 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   })
 
   useEffect(() => {
-    if (open && userProfile) {
+    if (userProfile) {
       validateForm()
       teamMembers = Array(tournament.attributes.participant_type)
     } else {
       resetForm()
     }
-  }, [open, userProfile])
+  }, [userProfile])
 
   useEffect(() => {
     getSuggestedTeamMembers({ page: 1, keyword: '', tournament_id: tournament.id })
@@ -121,7 +117,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       setStep(0)
     } else {
       reset()
-      setOpen(false)
+      handleClose()
     }
   }
 
@@ -275,20 +271,9 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   )
 
   return (
-    <Box>
-      <LoginRequired>
-        <Box className={classes.actionButton}>
-          {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && <UnjoinModal tournament={tournament} />}
-          {tournament.attributes.my_role === null && (
-            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-              {t('common:tournament.join')}
-            </ButtonPrimary>
-          )}
-        </Box>
-      </LoginRequired>
-
+    <>
       <StickyActionModal
-        open={open}
+        open={true}
         returnText={step === FINAL_STEP ? t('common:tournament.join_nickname_setting') : t('common:tournament.join')}
         actionButtonText={step === FINAL_STEP ? t('common:tournament.join_with_this') : t('common:next')}
         actionButtonDisabled={!isValid}
@@ -300,7 +285,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       </StickyActionModal>
 
       {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
-    </Box>
+    </>
   )
 }
 

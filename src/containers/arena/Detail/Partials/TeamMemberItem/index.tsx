@@ -8,11 +8,14 @@ import UserListItem from '@components/UserItem'
 import { Colors } from '@theme/colors'
 import { CommonResponse } from '@services/user.service'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import _ from 'lodash'
 
 interface Props {
   team: CommonResponse
   handleClick?: () => void
   rightItem?: JSX.Element
+  yellowTitle?: boolean
 }
 
 const Accordion = withStyles({
@@ -21,7 +24,7 @@ const Accordion = withStyles({
   },
 })(MuiAccordion)
 
-const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
+const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem, yellowTitle }) => {
   const data = team.attributes.team.data.attributes
   const members = data.members
   const [expanded, setExpanded] = useState<boolean>(false)
@@ -29,6 +32,17 @@ const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
 
   const userData = (member) => {
     return { id: member.user_id, attributes: { ...member, nickname: member.name, avatar: member.image_url } }
+  }
+
+  const isYellowTitle = yellowTitle === true
+
+  const { userProfile } = useGetProfile()
+
+  const isMe = (member) => {
+    const myId = _.get(userProfile, 'id', -1)
+    const memberId = _.get(member, 'user_id', -2)
+
+    return `${myId}` === `${memberId}`
   }
 
   return (
@@ -41,7 +55,12 @@ const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
           <AccordionDetails>
             <Box ml={6} display="flex" flex={1} flexDirection="column">
               {members.map((member, i) => (
-                <UserListItem data={userData(member)} key={i} isFollowed={Boolean(member.is_followed)} />
+                <UserListItem
+                  data={userData(member)}
+                  key={i}
+                  isFollowed={Boolean(member.is_followed)}
+                  nicknameYellow={isYellowTitle && isMe(member)}
+                />
               ))}
             </Box>
           </AccordionDetails>
@@ -63,7 +82,7 @@ const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
                   alignItems="center"
                   onClick={handleClick}
                 >
-                  <Typography variant="h3" noWrap>
+                  <Typography variant="h3" noWrap style={isYellowTitle ? { color: Colors.yellow } : undefined}>
                     {data.name}
                   </Typography>
                 </Box>
