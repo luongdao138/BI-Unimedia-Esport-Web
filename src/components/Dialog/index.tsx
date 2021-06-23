@@ -77,7 +77,6 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       aria-labelledby="Followers"
       open={open}
       onClose={handleClose}
-      disableScrollLock
       disableBackdropClick
       className={alignTop === true ? classes.customClass : undefined}
       BackdropProps={{
@@ -94,6 +93,8 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
           overflowY: 'hidden',
         },
       }}
+      onEnter={() => {document.body.style.overflow = 'hidden'}}
+      onExit={() => {document.body.style.overflow = 'unset'}}
       {...rest}
     >
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>
