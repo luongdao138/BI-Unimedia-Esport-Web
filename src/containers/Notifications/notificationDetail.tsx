@@ -2,7 +2,6 @@ import { Typography, Box, makeStyles, Link } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect } from 'react'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
-import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import * as notificationActions from '@store/notification/actions'
 
@@ -15,7 +14,6 @@ interface Props {
 
 const NotificationDetail: React.FC<Props> = ({ id }) => {
   const classes = useStyles()
-  const router = useRouter()
   const dispatch = useAppDispatch()
   const { notificationDetail, fetchNotificationDetail, clearNotificationDetail } = useNotificationDetail()
   useEffect(() => {
