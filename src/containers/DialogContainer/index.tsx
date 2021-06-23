@@ -72,7 +72,7 @@ const ConfirmContainer: React.FC = () => {
               ) : null}
               {dialog.actionMsg ? (
                 <Typography className={classes.actionMessage} gutterBottom>
-                  {dialog.actionMsg}
+                  {dialog.actionMsg} {dialog.actionText ? dialog.actionText : ''}
                 </Typography>
               ) : null}
             </Box>
@@ -94,7 +94,7 @@ const useStyles = makeStyles(() => ({
   title: {
     color: Colors.white,
     textAlign: 'center',
-    paddingBottom: 10,
+    paddingBottom: 30,
   },
   message: {
     color: Colors.text[200],
@@ -103,6 +103,8 @@ const useStyles = makeStyles(() => ({
   actionMessage: {
     color: Colors.secondary,
     textAlign: 'center',
+    paddingBottom: 20,
+    fontSize: 12,
   },
   secondButton: {
     borderRadius: 25,

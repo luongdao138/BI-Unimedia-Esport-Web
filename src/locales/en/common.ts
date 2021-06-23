@@ -724,8 +724,12 @@ export default {
     commercial_transaction: '特定商取引に関する表記',
   },
   dialog: {
-    ng_word_warning: 'NGワード：などのエラーメッセージ',
+    ng_word_warning: '下記項目内にNGワードが含まれています。',
+    ng_word_area_label: 'チェック項目：',
     confirm: "了解'",
     default_title: '確認メッセージ',
+  },
+  ng_word_area: {
+    chat_section: 'メッセージテキストボックス',
   },
 }
