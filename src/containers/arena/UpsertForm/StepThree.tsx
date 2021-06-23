@@ -1,13 +1,13 @@
 import { makeStyles, Box, Theme, Typography } from '@material-ui/core'
-import ESInput from '@components/Input'
-import { useTranslation } from 'react-i18next'
-import ESSelect from '@components/Select'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
-import ESInputDatePicker from '@components/InputDatePicker'
 import { Colors } from '@theme/colors'
 import { EditableTypes } from './useTournamentCreate'
+import ESInputDatePicker from '@components/InputDatePicker'
+import ESFastInput from '@components/FastInput'
+import ESSelect from '@components/Select'
+import i18n from '@locales/i18n'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -16,21 +16,20 @@ type Props = {
 }
 
 const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
-  const { t } = useTranslation(['common'])
   const classes = useStyles()
 
   return (
     <Box pb={9}>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{t('common:tournament_create.holding_period')}</Typography>
+        <Typography>{i18n.t('common:tournament_create.holding_period')}</Typography>
         <Typography component="span" className={classes.required}>
-          {t('common:common.required')}
+          {i18n.t('common:common.required')}
         </Typography>
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
           name="stepThree.start_date"
-          placeholder={t('common:tournament_create.start_date')}
+          placeholder={i18n.t('common:tournament_create.start_date')}
           fullWidth
           multiline
           rows={2}
@@ -49,7 +48,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
         </Box>
         <ESInputDatePicker
           name="stepThree.end_date"
-          placeholder={t('common:tournament_create.end_date')}
+          placeholder={i18n.t('common:tournament_create.end_date')}
           fullWidth
           multiline
           rows={2}
@@ -64,15 +63,15 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
         />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{t('common:tournament_create.entry_period')}</Typography>
+        <Typography>{i18n.t('common:tournament_create.entry_period')}</Typography>
         <Typography component="span" className={classes.required}>
-          {t('common:common.required')}
+          {i18n.t('common:common.required')}
         </Typography>
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
           name="stepThree.acceptance_start_date"
-          placeholder={t('common:tournament_create.start_date')}
+          placeholder={i18n.t('common:tournament_create.start_date')}
           fullWidth
           multiline
           rows={2}
@@ -91,7 +90,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
         </Box>
         <ESInputDatePicker
           name="stepThree.acceptance_end_date"
-          placeholder={t('common:tournament_create.end_date')}
+          placeholder={i18n.t('common:tournament_create.end_date')}
           fullWidth
           multiline
           rows={2}
@@ -111,7 +110,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           name="stepThree.area_id"
           value={formik.values.stepThree.area_id}
           onChange={formik.handleChange}
-          label={t('common:tournament_create.area')}
+          label={i18n.t('common:tournament_create.area')}
           required={true}
           size="small"
           fullWidth
@@ -125,12 +124,12 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
         </ESSelect>
       </Box>
       <Box>
-        <ESInput
+        <ESFastInput
           multiline
           rows={5}
           name="stepThree.area_name"
           fullWidth
-          placeholder={t('common:tournament_create.area_name_placeholder')}
+          placeholder={i18n.t('common:tournament_create.area_name_placeholder')}
           value={formik.values.stepThree.area_name}
           onChange={formik.handleChange}
           helperText={formik.touched?.stepThree?.area_name && formik.errors?.stepThree?.area_name}
@@ -153,8 +152,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   required: {
     backgroundColor: Colors.primary,
     borderRadius: 2,
-    paddingLeft: theme.spacing(1 / 2),
-    paddingRight: theme.spacing(1 / 2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
     height: 16,
     fontSize: 10,
     marginLeft: theme.spacing(1),

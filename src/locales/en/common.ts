@@ -471,7 +471,7 @@ export default {
     co_orgonizer: '共同管理者を選ぶ',
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
-    public_or_private: '公開設定',
+    public_or_private: '大会公開設定',
     title_placeholder: '○○文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Typography } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
-import ESLoader from '@components/Loader'
 import { useDropzone } from 'react-dropzone'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
+import ESLoader from '@components/Loader'
 
 type ProfileAvatarProps = {
   src: string
@@ -84,17 +84,12 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
   )
 }
 
-export default CoverUploader
+export default memo(CoverUploader)
 
 const useStyles = makeStyles(() => ({
   root: {
     display: 'block',
   },
-  // avatar: {
-  //   zIndex: 30,
-  //   height: 120,
-  //   width: '100%',
-  // },
   logoWhite: {
     color: Colors.text[200],
   },
