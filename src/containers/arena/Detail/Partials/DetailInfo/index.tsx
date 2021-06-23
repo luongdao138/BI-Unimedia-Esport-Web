@@ -16,15 +16,19 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
+import ButtonPrimary from '@components/ButtonPrimary'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 interface Props {
   detail: TournamentDetail
   extended?: boolean
+  detailBtn?: boolean
   toEdit?: () => void
   bottomButton?: ReactNode
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton }) => {
+const DetailInfo: React.FC<Props> = ({ detail, extended, detailBtn, toEdit, bottomButton }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -34,6 +38,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
   const [openReport, setOpenReport] = useState(false)
   const helper = useArenaHelper(detail)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const router = useRouter()
 
   const handleCopy = () => {
     if (window.navigator.clipboard) {
@@ -71,23 +76,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           <Typography>{data.overview}</Typography>
         </Box>
 
-        <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={extended ? 2 : 3}>
-          <Box mr={3}>
-            <Typography>#{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
-          </Box>
-          <Box mr={3}>
-            <Typography>#{TournamentHelper.participantTypeText(data.participant_type)}</Typography>
-          </Box>
-          <Box mr={3}>
-            <Typography>#{TournamentHelper.ruleText(data.rule)}</Typography>
-          </Box>
-          {!!data.has_prize && (
-            <Box mr={3}>
-              <Typography>#{t('common:tournament.has_prize_true')}</Typography>
-            </Box>
-          )}
-          <Typography>#{hardware}</Typography>
-        </Box>
         {extended && (
           <>
             {/* rule */}
@@ -113,7 +101,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         )}
 
         {/* entry period */}
-        <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={2}>
+        <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={extended ? 2 : 3}>
           <Box className={classes.label}>
             <Typography>{t('common:tournament.entry_period')}</Typography>
           </Box>
@@ -235,6 +223,35 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{hardware}</Typography>
               </Box>
             </Box>
+            <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={3}>
+              <Box mr={1}>
+                <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
+              </Box>
+              <Box mr={1}>
+                <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
+              </Box>
+              <Box mr={1}>
+                <ESChip label={TournamentHelper.ruleText(data.rule)} />
+              </Box>
+              {!!data.has_prize && (
+                <Box mr={1}>
+                  <ESChip label={t('common:tournament.has_prize_true')} />
+                </Box>
+              )}
+              <ESChip label={hardware} />
+            </Box>
+            {detailBtn && (
+              <Box display="flex" justifyContent="center" marginTop={3}>
+                <ButtonPrimary
+                  size="small"
+                  round={false}
+                  gradient={false}
+                  onClick={() => router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(data.hash_key)))}
+                >
+                  {t('common:arena.to_detail')}
+                </ButtonPrimary>
+              </Box>
+            )}
           </>
         )}
         {!bottomButton ? null : (
@@ -289,6 +306,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 DetailInfo.defaultProps = {
   extended: false,
+  detailBtn: false,
 }
 
 export default DetailInfo
