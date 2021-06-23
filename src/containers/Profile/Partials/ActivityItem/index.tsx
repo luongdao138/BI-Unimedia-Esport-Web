@@ -143,11 +143,12 @@ const useStyles = makeStyles((theme) => ({
   textLine: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     flexWrap: 'wrap',
+    textAlign: 'start',
   },
   targetText: {
     textDecoration: 'underline',
+    textAlign: 'start',
     flexWrap: 'wrap',
     wordWrap: 'break-word',
   },
