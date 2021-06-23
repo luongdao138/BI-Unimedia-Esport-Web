@@ -188,7 +188,8 @@ const useStyles = makeStyles((theme) => ({
   chipPrimary: {
     height: 20,
     marginBottom: 5,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.black_opacity[90],
+    borderRadius: 10,
   },
   mediaOverlay: {
     position: 'absolute',
@@ -234,10 +235,9 @@ const useStyles = makeStyles((theme) => ({
     },
     marginV: {
       height: 30,
-      width: 30
+      width: 30,
     },
   },
 }))
 
 export default TournamentCard
-
