@@ -714,6 +714,6 @@ export default {
     default_title: '確認メッセージ',
   },
   ng_word_area: {
-    chat_section: 'コメント欄',
+    chat_section: 'メッセージテキストボックス',
   },
 }
