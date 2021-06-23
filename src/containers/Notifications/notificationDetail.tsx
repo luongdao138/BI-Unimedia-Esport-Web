@@ -1,4 +1,4 @@
-import { Typography, Box, makeStyles, IconButton, Icon, Link } from '@material-ui/core'
+import { Typography, Box, makeStyles, Link } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect } from 'react'
 import useNotificationDetail from '@containers/Notifications/useNotificationDetail'
@@ -8,6 +8,7 @@ import * as notificationActions from '@store/notification/actions'
 
 import _ from 'lodash'
 import { useAppDispatch } from '@store/hooks'
+import HeaderWithButton from '@components/HeaderWithButton'
 interface Props {
   id: any
 }
@@ -48,16 +49,7 @@ const NotificationDetail: React.FC<Props> = ({ id }) => {
     <>
       {notificationDetail !== undefined && notificationDetail.data !== undefined ? (
         <div>
-          <Box className={classes.header}>
-            <Box className={classes.headerInner}>
-              <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
-                <Icon className={`fa fa-arrow-left ${classes.icon}`} />
-              </IconButton>
-              <Typography variant="body1" className={classes.headerTitle}>
-                {notificationDetail.data.attributes.message}
-              </Typography>
-            </Box>
-          </Box>
+          <HeaderWithButton title={notificationDetail.data.attributes.message} />
           <Box margin={2} marginTop={6}>
             <Box textAlign="right" mb={1}>
               <Typography variant="caption" noWrap>
