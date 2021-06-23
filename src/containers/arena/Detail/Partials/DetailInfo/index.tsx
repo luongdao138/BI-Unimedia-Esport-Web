@@ -76,23 +76,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, detailBtn, toEdit, bott
           <Typography>{data.overview}</Typography>
         </Box>
 
-        <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={extended ? 2 : 3}>
-          <Box mr={3}>
-            <Typography>#{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
-          </Box>
-          <Box mr={3}>
-            <Typography>#{TournamentHelper.participantTypeText(data.participant_type)}</Typography>
-          </Box>
-          <Box mr={3}>
-            <Typography>#{TournamentHelper.ruleText(data.rule)}</Typography>
-          </Box>
-          {!!data.has_prize && (
-            <Box mr={3}>
-              <Typography>#{t('common:tournament.has_prize_true')}</Typography>
-            </Box>
-          )}
-          <Typography>#{hardware}</Typography>
-        </Box>
         {extended && (
           <>
             {/* rule */}
@@ -118,7 +101,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, detailBtn, toEdit, bott
         )}
 
         {/* entry period */}
-        <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={2}>
+        <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={extended ? 2 : 3}>
           <Box className={classes.label}>
             <Typography>{t('common:tournament.entry_period')}</Typography>
           </Box>
