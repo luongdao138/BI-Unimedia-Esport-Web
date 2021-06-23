@@ -16,7 +16,7 @@ import { RouteContext } from 'pages/_app'
 
 const MessageLayout: React.FC = ({ children }) => {
   const [open, setOpen] = useState<boolean>(false)
-  const [showList, setShowList] = useState<boolean>(false)
+  const [showList, setShowList] = useState<boolean>(true)
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
@@ -30,9 +30,11 @@ const MessageLayout: React.FC = ({ children }) => {
     setShowList(open)
   }
 
-  const backHandler = (e: React.MouseEvent) => {
-    e.preventDefault
+  const backHandler = (_e: React.MouseEvent) => {
     if (previousRoute) {
+      if (previousRoute === ESRoutes.MESSAGE) {
+        router.push('/home')
+      }
       router.push(previousRoute)
     } else {
       router.push('/home')
