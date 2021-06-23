@@ -234,10 +234,9 @@ const useStyles = makeStyles((theme) => ({
     },
     marginV: {
       height: 30,
-      width: 30
+      width: 30,
     },
   },
 }))
 
 export default TournamentCard
-

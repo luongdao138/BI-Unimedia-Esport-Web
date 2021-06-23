@@ -93,8 +93,12 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
           overflowY: 'hidden',
         },
       }}
-      onEnter={() => {document.body.style.overflow = 'hidden'}}
-      onExit={() => {document.body.style.overflow = 'unset'}}
+      onEnter={() => {
+        document.body.style.overflow = 'hidden'
+      }}
+      onExit={() => {
+        document.body.style.overflow = 'unset'
+      }}
       {...rest}
     >
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>

@@ -28,8 +28,12 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       onClose={handleClose}
       BackdropProps={{ classes: { root: classes.backDrop } }}
       PaperProps={{ classes: { root: classes.paper } }}
-      onEnter={() => {document.body.style.overflow = 'hidden'}}
-      onExit={() => {document.body.style.overflow = 'unset'}}
+      onEnter={() => {
+        document.body.style.overflow = 'hidden'
+      }}
+      onExit={() => {
+        document.body.style.overflow = 'unset'
+      }}
     >
       {children}
     </Dialog>

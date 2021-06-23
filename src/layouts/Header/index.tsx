@@ -251,10 +251,10 @@ const useStyles = makeStyles((theme) => ({
       width: 'auto',
     },
     dropDownMenu: {
-    '&:hover $dropDownContent': {
-      display: 'none'
+      '&:hover $dropDownContent': {
+        display: 'none',
+      },
     },
-  },
   },
   [theme.breakpoints.down('xs')]: {
     icon: {

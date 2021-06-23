@@ -4,7 +4,6 @@ import React from 'react'
 import PurchaseDetail from '@containers/PurchaseHistory/purchaseDetail'
 
 const PurchaseHistoryDetail: PageWithLayoutType = () => {
-
   return (
     <MainLayout footer={false}>
       <PurchaseDetail />

@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ChatRoomList from '@containers/ChatRoomList'
 import { useRouter } from 'next/router'
+import i18n from '@locales/i18n'
+import { ESRoutes } from '@constants/route.constants'
+import Button from '@components/Button'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -16,6 +19,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
   const { t } = useTranslation(['common'])
   const router = useRouter()
+
   return (
     <Box
       className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}
@@ -27,12 +31,29 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
           <Typography className={classes.headerTitle} variant={'body1'}>
             {t('common:chat.title')}
           </Typography>
-          <Icon
-            onClick={() => {
-              router.push('/message')
-            }}
-            className={`fas fa-inbox ${classes.headerIcon}`}
-          />
+          <>
+            {expand ? (
+              <Button
+                size="small"
+                variant="outlined"
+                className={`room-create-button ${classes.create}`}
+                round
+                onClick={() => {
+                  router.push(ESRoutes.MESSAGE_ROOM_CREATE)
+                }}
+                startIcon={<Icon style={{ fontSize: 10, color: Colors.white }} className={`fa fa-plus`} />}
+              >
+                {i18n.t('common:chat.create_new')}
+              </Button>
+            ) : (
+              <Icon
+                onClick={() => {
+                  router.push('/message')
+                }}
+                className={`fas fa-inbox ${classes.headerIcon}`}
+              />
+            )}
+          </>
         </Box>
         <Box className={classes.inner}>
           <ChatRoomList expand={expand} />
@@ -72,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
   inner: {
     height: '100%',
     position: 'relative',
+  },
+  create: {
+    marginLeft: 'auto',
   },
   header: {
     paddingLeft: 16,
