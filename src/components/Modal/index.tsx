@@ -7,7 +7,6 @@ import { TransitionProps } from '@material-ui/core/transitions'
 export interface ESDialogProps {
   open: boolean
   handleClose?: () => void
-  disableScrollLock?: boolean
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -17,7 +16,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="left" ref={ref} {...props} />
 })
 
-const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children, disableScrollLock }) => {
+const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
   const classes = useStyles()
 
   return (
@@ -26,10 +25,11 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children, disableSc
       TransitionComponent={Transition}
       aria-labelledby="modal"
       open={open}
-      disableScrollLock={disableScrollLock}
       onClose={handleClose}
       BackdropProps={{ classes: { root: classes.backDrop } }}
       PaperProps={{ classes: { root: classes.paper } }}
+      onEnter={() => {document.body.style.overflow = 'hidden'}}
+      onExit={() => {document.body.style.overflow = 'unset'}}
     >
       {children}
     </Dialog>
@@ -46,9 +46,5 @@ const useStyles = makeStyles({
     boxShadow: 'none',
   },
 })
-
-Modal.defaultProps = {
-  disableScrollLock: true,
-}
 
 export default Modal
