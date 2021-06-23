@@ -1,4 +1,5 @@
 import i18n from '@locales/i18n'
+import { Dialog } from '@store/common/actions/types'
 
 export const searchTypes = {
   USER: 1,
@@ -129,7 +130,13 @@ export const PAYMENT_STATUS = {
   CANCELLED: 4,
 }
 
-export const NG_WORD_DIALOG_CONFIG = {
-  actionMsg: i18n.t('common:dialog.ng_word_warning'),
+export const NG_WORD_DIALOG_CONFIG: Dialog = {
+  title: 'NGワードの利用',
+  message: i18n.t('common:dialog.ng_word_warning'),
+  actionMsg: i18n.t('common:dialog.ng_word_area_label'),
   actions: [{ name: i18n.t('common:dialog.confirm'), action: 'confirm', type: 'primary' }],
+}
+
+export const NG_WORD_AREA = {
+  chat_section: i18n.t('common:ng_word_area.chat_section'),
 }

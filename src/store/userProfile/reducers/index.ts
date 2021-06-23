@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { TournamentListItem } from '@services/arena.service'
-import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps } from '@services/user.service'
+import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps, FollowResponse } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -18,6 +18,10 @@ type StateType = {
   recommendedEvent: Array<CommonResponse>
   recommendedEventMeta: Meta
   accountSettingsChangeEmailSteps: ChangeEmailSteps
+  followers?: Array<FollowResponse>
+  followersMeta?: Meta
+  following?: Array<FollowResponse>
+  followingMeta?: Meta
 }
 
 const initialState: StateType = {
@@ -34,6 +38,10 @@ const initialState: StateType = {
     step_check: false,
     step_change: false,
   },
+  followers: [],
+  following: [],
+  followersMeta: undefined,
+  followingMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -142,7 +150,52 @@ export default createReducer(initialState, (builder) => {
     state.accountSettingsChangeEmailSteps.step_change = false
   })
 
-  builder.addCase(actions.clearHomeSettings, (state) => {
-    state.data.attributes.home_settings = []
-  })
+  builder
+    .addCase(actions.clearHomeSettings, (state) => {
+      state.data.attributes.home_settings = []
+    })
+    .addCase(actions.followers.fulfilled, (state, action) => {
+      let tmpFollowers = action.payload.data
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+        tmpFollowers = state.followers.concat(action.payload.data)
+      }
+
+      state.followers = tmpFollowers
+      state.followersMeta = action.payload.meta
+    })
+    .addCase(actions.clearFollowers, (state) => {
+      state.followers = []
+    })
+    .addCase(actions.following.fulfilled, (state, action) => {
+      let tmpFollowing = action.payload.data
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+        tmpFollowing = state.following.concat(action.payload.data)
+      }
+
+      state.following = tmpFollowing
+      state.followingMeta = action.payload.meta
+    })
+    .addCase(actions.clearFollowing, (state) => {
+      state.following = []
+    })
+    .addCase(actions.increaseFollowing.fulfilled, (state, action) => {
+      if (state.following) {
+        state.following.filter((user) => {
+          if (user.attributes.user_code === action.payload) {
+            user.attributes.is_following = true
+          }
+        })
+      }
+      if (state.followingMeta) state.followingMeta.total_count = state.followingMeta.total_count + 1
+    })
+    .addCase(actions.decreaseFollowing.fulfilled, (state, action) => {
+      if (state.following) {
+        state.following.filter((user) => {
+          if (user.attributes.user_code === action.payload) {
+            user.attributes.is_following = false
+          }
+        })
+      }
+      if (state.followingMeta && state.followingMeta.total_count > 0) state.followingMeta.total_count = state.followingMeta.total_count - 1
+    })
 })

@@ -17,3 +17,7 @@ export const getRecommendations = createSelector(getRoot, (state) => state.recom
 export const getRecommendedEvent = createSelector(getRoot, (state) => state.recommendedEvent)
 export const getRecommendedEventMeta = createSelector(getRoot, (state) => state.recommendedEventMeta)
 export const getChangeEmailSteps = createSelector(getRoot, (state) => state.accountSettingsChangeEmailSteps)
+export const getFollowers = createSelector(getRoot, (state) => state.followers)
+export const getFollowersMeta = createSelector(getRoot, (state) => state.followersMeta)
+export const getFollowing = createSelector(getRoot, (state) => state.following)
+export const getFollowingMeta = createSelector(getRoot, (state) => state.followingMeta)
