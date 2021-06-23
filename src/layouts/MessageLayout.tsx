@@ -32,7 +32,7 @@ const MessageLayout: React.FC = ({ children }) => {
 
   const backHandler = (_e: React.MouseEvent) => {
     if (previousRoute) {
-      if (previousRoute === ESRoutes.MESSAGE) {
+      if (previousRoute === ESRoutes.MESSAGE_PATHNAME) {
         router.push('/home')
       }
       router.push(previousRoute)
