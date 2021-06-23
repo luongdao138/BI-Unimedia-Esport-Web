@@ -94,9 +94,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     position: 'relative',
   },
-  create: {
-    marginLeft: 'auto',
-  },
+  create: {},
   header: {
     paddingLeft: 16,
     paddingRight: 16,
