@@ -164,8 +164,6 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   )
 }
 
-export default TournamentCard
-
 const useStyles = makeStyles((theme) => ({
   cardHover: {
     cursor: 'pointer',
@@ -229,4 +227,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  [theme.breakpoints.down('sm')]: {
+    firstIcon: {
+      marginTop: 10,
+      height: 10,
+    },
+    marginV: {
+      height: 30,
+      width: 30
+    },
+  },
 }))
+
+export default TournamentCard
+
