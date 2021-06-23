@@ -5,7 +5,7 @@ import userProfile from '@store/userProfile'
 import search from '@store/search'
 import common from '@store/common'
 import settings from '@store/settings'
-import follow from '@store/follow'
+// import follow from '@store/follow'
 import report from '@store/report'
 import ngWords from '@store/ngWords'
 import community from '@store/community'
@@ -22,7 +22,7 @@ const reducer = combineReducers({
   search: search.reducers,
   common: common.reducers,
   settings: settings.reducers,
-  follow: follow.reducers,
+  // follow: follow.reducers,
   report: report.reducers,
   ngWords: ngWords.reducers,
   userProfile: userProfile.reducers,

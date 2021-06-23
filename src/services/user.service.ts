@@ -181,7 +181,7 @@ export type HomeSettingsResponse = {
   home_settings: string[]
 }
 
-export type FollowResponse = {
+export type FollowActionResponse = {
   data: {
     id: number | string
     type: 'user'
@@ -198,6 +198,31 @@ export type UnFollowResponse = {
 
 export type FollowParams = {
   user_code: string
+}
+
+export type FollowersParams = {
+  page: number
+  user_code?: string
+}
+
+export type FollowersResponse = {
+  data: Array<FollowResponse>
+  meta: any
+}
+
+export type FollowResponse = {
+  attributes: {
+    user_code: string
+    nickname: string
+    nickname2: string
+    avatar: string
+    is_following: boolean
+    is_followed: boolean
+    allow_groups_from_strangers: boolean
+    allow_messages_from_strangers: boolean
+    blocked_by_me: boolean
+    blocked_by_user: boolean
+  }
 }
 
 export type RecommendedEventParams = {
@@ -293,13 +318,23 @@ export const updateHomeSettings = async (params: HomeSettingsParams): Promise<Ho
   return data
 }
 
-export const follow = async (params: FollowParams): Promise<FollowResponse> => {
+export const follow = async (params: FollowParams): Promise<FollowActionResponse> => {
   const { data } = await api.put(URI.FOLLOW, params)
   return data
 }
 
 export const unfollow = async (params: FollowParams): Promise<UnFollowResponse> => {
   const { data } = await api.put(URI.UNFOLLOW, params)
+  return data
+}
+
+export const followers = async (params: FollowersParams): Promise<FollowersResponse> => {
+  const { data } = await api.post<FollowersResponse>(URI.FOLLOWERS, params)
+  return data
+}
+
+export const following = async (params: FollowersParams): Promise<FollowersResponse> => {
+  const { data } = await api.post<FollowersResponse>(URI.FOLLOWING, params)
   return data
 }
 

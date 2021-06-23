@@ -59,7 +59,7 @@ export const profileImage = createAsyncThunk<services.ProfileImageParams, servic
   }
 )
 
-export const follow = createAsyncThunk<services.FollowResponse, services.FollowParams>(
+export const follow = createAsyncThunk<services.FollowActionResponse, services.FollowParams>(
   USER_PROFILE_ACTION_TYPE.FOLLOW,
   async (param, { rejectWithValue }) => {
     try {
@@ -89,11 +89,53 @@ export const unfollow = createAsyncThunk<services.UnFollowResponse, services.Fol
   }
 )
 
+export const followers = createAsyncThunk<services.FollowersResponse, services.FollowersParams>(
+  USER_PROFILE_ACTION_TYPE.FOLLOWERS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.followers(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const clearFollowers = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_FOLLOWERS)
+
+export const following = createAsyncThunk<services.FollowersResponse, services.FollowersParams>(
+  USER_PROFILE_ACTION_TYPE.FOLLOWING,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.following(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const increaseFollowing = createAsyncThunk<string, string>(USER_PROFILE_ACTION_TYPE.FOLLOWING_INCREASE, (param) => {
+  return param
+})
+export const decreaseFollowing = createAsyncThunk<string, string>(USER_PROFILE_ACTION_TYPE.FOLLOWING_DECREASE, (param) => {
+  return param
+})
+
+export const clearFollowing = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_FOLLOWING)
+
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(
   USER_PROFILE_ACTION_TYPE.TOURNAMENT_HISTORY,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.tournamentHistorySearch(param)
+      param.user_code
       return res
     } catch (error) {
       if (!error.response) {
