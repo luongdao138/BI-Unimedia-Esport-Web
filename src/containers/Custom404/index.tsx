@@ -29,23 +29,22 @@ const Custom404Container: React.FC = () => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    height: '100vh',
   },
   text404: {
     fontSize: 160,
     fontFamily: 'Futura Bold',
     color: Colors.white_opacity[30],
-    marginTop: 215,
+    paddingTop: 215,
     lineHeight: '160px',
-    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
   },
   description: {
     color: Colors.white_opacity[30],
   },
   btnWrapper: {
     textAlign: 'center',
-    marginTop: theme.spacing(10),
-    marginBottom: 218,
+    paddingTop: theme.spacing(10),
+    paddingBottom: 218,
     width: 220,
     marginRight: 'auto',
     marginLeft: 'auto',
@@ -57,11 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('md')]: {
     text404: {
       fontSize: 130,
-      marginTop: 120,
+      paddingTop: 120,
       lineHeight: '130px',
     },
     btnWrapper: {
-      marginBottom: 186,
+      paddingBottom: 186,
     },
   },
 }))

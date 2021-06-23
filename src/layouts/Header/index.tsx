@@ -250,6 +250,11 @@ const useStyles = makeStyles((theme) => ({
     toolArea: {
       width: 'auto',
     },
+    dropDownMenu: {
+    '&:hover $dropDownContent': {
+      maxWidth: 315,
+    },
+  },
   },
   [theme.breakpoints.down('xs')]: {
     icon: {
