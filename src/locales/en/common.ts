@@ -577,6 +577,7 @@ export default {
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
+    not_selected_text: 'メッセージを始めましょう',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
     chat_copied: 'メッセージ内容をコピーしました。',
