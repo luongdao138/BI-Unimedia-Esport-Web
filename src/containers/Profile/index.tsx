@@ -49,16 +49,17 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [showToast, setShow] = useState(false)
   const [offset, setOffset] = useState(0)
 
-  // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
-
   const raw_code = router.query.user_code || []
 
-  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState } = useUserData(raw_code)
+  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState, clearMemberProfile } = useUserData(
+    raw_code
+  )
 
   useEffect(() => {
     window.onscroll = () => {
       setOffset(window.pageYOffset)
     }
+    return () => clearMemberProfile()
   }, [])
 
   useEffect(() => {
