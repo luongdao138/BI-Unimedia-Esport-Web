@@ -710,7 +710,7 @@ export default {
   dialog: {
     ng_word_warning: '下記項目内にNGワードが含まれています。',
     ng_word_area_label: 'チェック項目：',
-    confirm: "了解'",
+    confirm: '了解',
     default_title: '確認メッセージ',
   },
   ng_word_area: {
