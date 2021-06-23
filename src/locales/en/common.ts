@@ -581,6 +581,10 @@ export default {
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
     chat_copied: 'メッセージ内容をコピーしました。',
+    member_add_placeholder: 'ユーザー名',
+    member_add_title: 'メンバーを追加',
+    member_add_toast: 'メンバーを追加しました',
+    room_name_placeholder: 'グループ名を入力',
   },
   notification: {
     title: '通知一覧',
