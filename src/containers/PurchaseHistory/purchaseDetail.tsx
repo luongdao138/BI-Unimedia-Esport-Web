@@ -14,15 +14,11 @@ import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
-//import { router } from 'next/client'
+import { useRouter } from 'next/router'
 
-interface Props {
-  id: any
-}
-
-const PurchaseDetail: React.FC<Props> = () => {
-  //const { id } = router.query
-  const id: any = '11'
+const PurchaseDetail: React.FC = () => {
+  const router = useRouter()
+  const id: any = router.query.id
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
@@ -58,13 +54,13 @@ const PurchaseDetail: React.FC<Props> = () => {
   }))(MuiDialogContent)
 
   useEffect(() => {
-    if (id && _.isString(id)) {
+    if (id) {
       fetchPurchaseHistoryDetail(id)
     }
     return function () {
       clearPurchaseHistoryDetail()
     }
-  }, [id])
+  }, [router])
 
   const purchase_datetime = CommonHelper.staticSmartTime(_.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime', ''))
   return (

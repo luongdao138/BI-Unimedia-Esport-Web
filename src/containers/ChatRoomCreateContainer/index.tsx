@@ -24,7 +24,7 @@ import { useRouter } from 'next/router'
 import { getDirectRoom } from '@services/chat.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 
 const { actions } = chatStore
@@ -138,7 +138,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
         if (inputRef.current) inputRef.current.clearInput()
       }
     } else {
-      dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
     }
   }
 

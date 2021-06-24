@@ -70,6 +70,7 @@ export default {
     profile_updated: 'プロフィールを更新しました',
     image_update: 'ツマミを操作することで、画像のリサイズを行えます。\nまた、ドラッグで位置を調整させることができます。',
     game_updated: '好きなゲームを更新しました',
+    report_sent: '通報処理が完了しました',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -576,9 +577,14 @@ export default {
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
+    not_selected_text: 'メッセージを始めましょう',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
     chat_copied: 'メッセージ内容をコピーしました。',
+    member_add_placeholder: 'ユーザー名',
+    member_add_title: 'メンバーを追加',
+    member_add_toast: 'メンバーを追加しました',
+    room_name_placeholder: 'グループ名を入力',
   },
   notification: {
     title: '通知一覧',
@@ -724,8 +730,12 @@ export default {
     commercial_transaction: '特定商取引に関する表記',
   },
   dialog: {
-    ng_word_warning: 'NGワード：などのエラーメッセージ',
-    confirm: "了解'",
+    ng_word_warning: '下記項目内にNGワードが含まれています。',
+    ng_word_area_label: 'チェック項目：',
+    confirm: '了解',
     default_title: '確認メッセージ',
+  },
+  ng_word_area: {
+    chat_section: 'メッセージテキストボックス',
   },
 }

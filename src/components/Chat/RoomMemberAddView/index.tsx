@@ -194,7 +194,13 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 
   return (
     <Box className={classes.container}>
-      <ESDialog open={open} title="メンバーを追加" handleClose={() => onClosing()} bkColor="rgba(0,0,0,0.8)" alignTop>
+      <ESDialog
+        open={open}
+        title={i18n.t('common:chat.member_add_title')}
+        handleClose={() => onClosing()}
+        bkColor="rgba(0,0,0,0.8)"
+        alignTop
+      >
         <DialogContent style={{ padding: 0 }}>
           <Box pt={6}>
             <form
@@ -204,7 +210,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
               }}
             >
               <ESInput
-                placeholder=""
+                placeholder={i18n.t('common:chat.member_add_placeholder')}
                 value={keyword}
                 fullWidth
                 onChange={handleChange}

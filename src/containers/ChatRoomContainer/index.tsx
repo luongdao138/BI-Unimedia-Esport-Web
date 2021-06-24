@@ -29,7 +29,7 @@ import MessageModal from '@components/Chat/MessageModal'
 import { Colors } from '@theme/colors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import useCopyToClipboard from '@utils/hooks/useCopyToClipboard'
 
@@ -117,7 +117,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       setReply(null)
       if (inputRef.current) inputRef.current.clearInput()
     } else {
-      dispatch(showDialog(NG_WORD_DIALOG_CONFIG))
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
     }
   }
 

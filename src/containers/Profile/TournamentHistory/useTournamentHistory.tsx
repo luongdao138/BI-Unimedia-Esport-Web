@@ -13,6 +13,7 @@ const getTournamentHistorySearchMeta = createMetaSelector(actions.tournamentHist
 const useTournamentHistory = (): {
   tournamentHistories: Array<TournamentListItem> | []
   tournamentHistory: (param: HistorySearchParams) => void
+  clearTournamentHistory: () => void
   resetMeta: () => void
   meta: Meta
   page: Page
@@ -22,8 +23,9 @@ const useTournamentHistory = (): {
   const page = useAppSelector(selectors.getTourHistoriesMeta)
   const meta = useAppSelector(getTournamentHistorySearchMeta)
   const tournamentHistory = (param: HistorySearchParams) => dispatch(actions.tournamentHistorySearch(param))
+  const clearTournamentHistory = () => dispatch(actions.clearTournamentHistory())
   const resetMeta = () => dispatch(clearMetaData(actions.tournamentHistorySearch.typePrefix))
-  return { tournamentHistories, tournamentHistory, resetMeta, meta, page }
+  return { tournamentHistories, tournamentHistory, clearTournamentHistory, resetMeta, meta, page }
 }
 
 export default useTournamentHistory

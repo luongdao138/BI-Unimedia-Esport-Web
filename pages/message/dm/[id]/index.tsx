@@ -13,20 +13,21 @@ import Loader from '@components/Loader'
 const DirectCreate: PageWithLayoutType = () => {
   const router = useRouter()
   const { id } = router.query
-  const { checkRoom, roomMeta, singleUserData, redirectRoomData } = useDirectCheck()
+  const { checkRoom, roomMeta, singleUserData, redirectRoomData, resetRoomMeta } = useDirectCheck()
   const singleUser = singleUserData
   const roomId = redirectRoomData
 
   const classes = useStyles()
 
   useEffect(() => {
-    if (id && _.isString(id)) {
-      checkRoom(id)
+    if (id) {
+      resetRoomMeta()
+      checkRoom(id as string)
     }
   }, [id])
 
   useEffect(() => {
-    if (roomId !== null && roomMeta.loaded && !roomMeta.pending && !roomMeta.error) {
+    if (roomId && singleUser && roomMeta.loaded && !roomMeta.pending && !roomMeta.error) {
       router.push(`${ESRoutes.MESSAGE}${roomId}`, undefined, { shallow: true })
     }
   }, [roomId])

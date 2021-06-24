@@ -3,6 +3,7 @@ export enum MESSAGE_ACTION_TYPE {
   DIRECT_ROOM_CHECK = 'chat/directRoomCheck',
   GET_TOURNAMENT_DETAIL = 'chat/tournamentDetail',
   RESET_ADD_USERS = 'chat/resetAddUsers',
+  RESET_DM_ROOM = 'chat/resetDmRoom',
 }
 
 export type PageMeta = {
