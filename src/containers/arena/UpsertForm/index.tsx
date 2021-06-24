@@ -12,7 +12,6 @@ import StepFour from './StepFour'
 import useCommonData from './useCommonData'
 import useTournamentCreate from './useTournamentCreate'
 import ESLoader from '@components/FullScreenLoader'
-import _ from 'lodash'
 import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
@@ -25,6 +24,7 @@ import StepTabs from './StepTabs'
 import Confirm from './Confirm'
 import i18n from '@locales/i18n'
 import ESStickyFooter from '@components/StickyFooter'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
 const TournamentCreate: React.FC = () => {
   const router = useRouter()
@@ -74,7 +74,8 @@ const TournamentCreate: React.FC = () => {
       isFirstRun.current = false
       return
     } else {
-      setError(!_.isEmpty(formik.errors))
+      const isRequiredFieldsValid = TournamentHelper.checkRequiredFields(formik.errors)
+      setError(!isRequiredFieldsValid)
     }
   }, [formik.errors])
 

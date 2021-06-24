@@ -76,6 +76,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           name="stepTwo.max_participants"
           value={formik.values.stepTwo.max_participants === 0 ? '' : formik.values.stepTwo.max_participants}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepTwo?.max_participants && formik.errors?.stepTwo?.max_participants}
           error={formik.touched?.stepTwo?.max_participants && !!formik.errors?.stepTwo?.max_participants}
           size="small"
