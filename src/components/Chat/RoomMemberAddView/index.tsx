@@ -274,7 +274,9 @@ RoomMemberAddView.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {
-    width: 60,
+    width: '100%',
+    paddingLeft: 5,
+    paddingRight: 5,
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
