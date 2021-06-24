@@ -51,7 +51,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderList = () => {
-    if (listData !== undefined) {
+    if (listData !== undefined && !_.isEmpty(listData)) {
       return (
         <AutoSizer className="scroll-bar">
           {({ height, width }) => (
