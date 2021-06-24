@@ -6,6 +6,7 @@ import _ from 'lodash'
 import TextMessage from './TextMessage'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import PhotoMessage from './PhotoMessage'
+import { Colors } from '@theme/colors'
 
 export interface ReplyContentProps {
   replyMessage: null | ParentItem | string | MessageType
@@ -55,6 +56,11 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
     if (type === CHAT_MESSAGE_TYPE.IMAGE) {
       return (
         <Box className={classes.photoHolder}>
+          <Box>
+            <Typography variant="body1" className={classes.imgText}>
+              写真
+            </Typography>
+          </Box>
           <PhotoMessage status={true} size={30} msg={text} />
         </Box>
       )
@@ -97,6 +103,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 0,
     paddingRight: 10,
   },
+  imgText: { color: Colors.grey[200], padding: 5, paddingRight: 10 },
   avatar: {
     minWidth: 40,
   },
@@ -113,6 +120,8 @@ const useStyles = makeStyles(() => ({
   },
   photoHolder: {
     top: 10,
+    display: 'flex',
+    flexDirection: 'row',
     transform: 'none',
     position: 'absolute',
     right: 20,
