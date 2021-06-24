@@ -65,6 +65,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         bkColor="rgba(0,0,0,0.8)"
         alignTop
         fixedFooter={renderFooter()}
+        className="scroll-bar"
       >
         <DialogContent>
           <Box mt={8}>
@@ -108,6 +109,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTopColor: Colors.text['300'],
     height: 162,
   },
+
   buttonBottom: {
     transform: 'translate(-50%, 0px)',
     position: 'fixed',

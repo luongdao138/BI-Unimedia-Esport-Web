@@ -14,6 +14,7 @@ import _ from 'lodash'
 import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 import { useRect } from '@utils/hooks/useRect'
+import ESSlider from '@components/Slider'
 
 export interface RoomMemberAddViewProps {
   roomId: string
@@ -56,7 +57,6 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     if (userId && open) {
       setSelectedList([])
       setMemberList([])
-      getFriends({ type: 'group', keyword: '', page: 1 })
     }
   }, [userId, open])
 
@@ -98,7 +98,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 
   const onSearch = () => {
     cleanFriendsData()
-    getFriends({ type: 'group', keyword: keyword, page: 1 })
+    getFriends({ type: 'group', keyword: keyword, page: 1, per_page: 20 })
   }
 
   const handleChange = (event) => {
@@ -148,7 +148,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
       setHasMore(false)
       return
     }
-    getFriends({ page: page.current_page + 1, keyword: keyword, type: 'group' })
+    getFriends({ page: page.current_page + 1, keyword: keyword, type: 'group', per_page: 20 })
   }
 
   const onClosing = () => {
@@ -163,24 +163,38 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
       <Box className={classes.bottomSection}>
         <Container maxWidth="md" className={classes.horizantalScroller}>
           <Box className={classes.selectedAvatars}>
-            {selectedList.map((member, index) => (
-              <Badge
-                className={classes.user}
-                key={index}
-                overlap="circle"
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                badgeContent={
-                  <IconButton onClick={() => removeFromList(member.id)} disableRipple className={classes.closeBtn}>
-                    <Icon className={`fa fa-times ${classes.closeIcon}`} />
-                  </IconButton>
-                }
-              >
-                <Avatar key={member.id} src={member.profile} alt={member.nickName} />
-              </Badge>
-            ))}
+            <ESSlider
+              containerClass={classes.slider}
+              slidesPerView={'auto'}
+              navigation={false}
+              items={selectedList.map((member, index) => (
+                <Box className={classes.item} key={index}>
+                  <Badge
+                    className={classes.user}
+                    key={index}
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    badgeContent={
+                      <>
+                        <IconButton onClick={() => removeFromList(member.id)} disableRipple className={classes.closeBtn}>
+                          <Icon className={`fa fa-times ${classes.closeIcon}`} />
+                        </IconButton>
+                      </>
+                    }
+                  >
+                    <Avatar key={member.id} src={member.profile} alt={member.nickName} />
+                  </Badge>
+                  <Box className={classes.nameHolder}>
+                    <Typography variant="body2" noWrap={true}>
+                      {member.nickName}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            />
           </Box>
         </Container>
       </Box>
@@ -203,29 +217,22 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
       >
         <DialogContent style={{ padding: 0 }}>
           <Box pt={6}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                onSubmit()
-              }}
-            >
-              <ESInput
-                placeholder={i18n.t('common:chat.member_add_placeholder')}
-                value={keyword}
-                fullWidth
-                onChange={handleChange}
-                endAdornment={
-                  <>
-                    {
-                      <IconButton onClick={onSearch}>
-                        <Icon className={`fa fa-search ${classes.icon}`}></Icon>
-                      </IconButton>
-                    }
-                  </>
-                }
-              />
-              <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
-            </form>
+            <ESInput
+              placeholder={i18n.t('common:chat.member_add_placeholder')}
+              value={keyword}
+              fullWidth
+              onChange={handleChange}
+              endAdornment={
+                <>
+                  {
+                    <IconButton onClick={onSearch}>
+                      <Icon className={`fa fa-search ${classes.icon}`}></Icon>
+                    </IconButton>
+                  }
+                </>
+              }
+            />
+            <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
           </Box>
           {meta.loaded && _.isEmpty(memberList) && (
             <div className={classes.loaderCenter}>
@@ -266,27 +273,30 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 RoomMemberAddView.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
+  item: {
+    width: '100%',
+    paddingLeft: 5,
+    paddingRight: 5,
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  nameHolder: {
+    width: '100%',
+    textAlign: 'center',
+  },
+  slider: {
+    marginTop: 0,
+    '& .swiper-container': {
+      padding: '0 !important',
+    },
+  },
   container: {},
   disableScroll: {},
   horizantalScroller: {
-    paddingBottom: 10,
-    overflowX: 'auto',
-    overflowY: 'hidden',
-    scrollbarColor: '#222 transparent',
-    scrollbarWidth: 'thin',
-    '&::-webkit-scrollbar': {
-      height: 5,
-      opacity: 1,
-      padding: 2,
-    },
-    '&::-webkit-scrollbar-track': {
-      paddingLeft: 1,
-      background: 'rgba(0,0,0,0.5)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
-      borderRadius: 6,
-    },
+    width: '100%',
+    padding: 0,
   },
   user: {
     marginRight: 5,
@@ -350,8 +360,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'auto',
   },
   selectedAvatars: {
-    display: 'flex',
-    flexDirection: 'row',
+    width: '100%',
   },
   bottomSection: {
     // position: 'fixed',

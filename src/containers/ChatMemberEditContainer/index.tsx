@@ -50,9 +50,9 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
   }
 
   return (
-    <ESDialog open={open} title="メンバーを追加" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop>
-      <DialogContent>
-        <Box className={classes.listContainer}>
+    <ESDialog open={open} title="メンバーを追加" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop className={'scroll-bar'}>
+      <DialogContent className={classes.dialogContent}>
+        <Box>
           <List>
             {memberList
               .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE && member.memberType !== CHAT_MEMBER_TYPE.CHAT_ADMIN)
@@ -67,7 +67,7 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
 }
 
 const useStyles = makeStyles(() => ({
-  listContainer: {},
+  dialogContent: {},
 }))
 
 export default ChatMemberEditContainer

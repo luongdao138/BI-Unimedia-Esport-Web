@@ -3,9 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import ChatRoomCreateContainer from '@containers/ChatRoomCreateContainer'
 
 const Room: PageWithLayoutType = () => {
-  return <ChatRoomCreateContainer />
+  return (
+    <MessageLayout defaultListState={false}>
+      <ChatRoomCreateContainer />
+    </MessageLayout>
+  )
 }
-
-Room.Layout = MessageLayout
 
 export default Room
