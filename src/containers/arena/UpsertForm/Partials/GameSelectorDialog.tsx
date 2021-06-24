@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { Theme, Box, Typography, makeStyles } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
-import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
-import ESModal from '@components/Modal'
+import { GameTitle } from '@services/game.service'
 import { useTranslation } from 'react-i18next'
 import GameSelector from '@components/GameSelector'
 import ButtonBase from '@material-ui/core/ButtonBase'
-import BlankLayout from '@layouts/BlankLayout'
-import _ from 'lodash'
-import { GameTitle } from '@services/game.service'
 import ButtonPrimary from '@components/ButtonPrimary'
+import BlankLayout from '@layouts/BlankLayout'
+import Icon from '@material-ui/core/Icon'
+import ESModal from '@components/Modal'
+import _ from 'lodash'
 
 type GameTitleItem = GameTitle['attributes']
 interface Props {
@@ -95,6 +95,12 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
   )
 }
 
+GameSelectorDialog.defaultProps = {
+  disabled: false,
+}
+
+export default memo(GameSelectorDialog)
+
 const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     width: '100%',
@@ -164,9 +170,3 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
-
-GameSelectorDialog.defaultProps = {
-  disabled: false,
-}
-
-export default GameSelectorDialog
