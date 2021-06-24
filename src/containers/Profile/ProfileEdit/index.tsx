@@ -18,6 +18,9 @@ import useGetPrefectures from '@containers/UserSettings/useGetPrefectures'
 import useSettings from '@containers/UserSettings/useSettings'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { showDialog } from '@store/common/actions'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
 
 const ProfileEditContainer: React.FC = () => {
@@ -33,6 +36,7 @@ const ProfileEditContainer: React.FC = () => {
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
   const [isValidDate, setValidDate] = useState(false)
+  const checkNgWord = useCheckNgWord()
 
   useEffect(() => {
     if (userProfile) {
@@ -79,7 +83,20 @@ const ProfileEditContainer: React.FC = () => {
   }
 
   const handleSubmit = () => {
-    profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
+    const checked = checkNgWord([
+      profile.nickname,
+      profile.bio,
+      profile.discord_link,
+      profile.facebook_link,
+      profile.instagram_link,
+      profile.twitch_link,
+      profile.twitter_link,
+    ])
+    if (_.isEmpty(checked)) {
+      profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
+    } else {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+    }
   }
 
   return (

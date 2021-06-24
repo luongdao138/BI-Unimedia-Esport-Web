@@ -5,8 +5,6 @@ import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
 import ESSelect from '@components/Select'
 import ESInput from '@components/Input'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useStore } from 'react-redux'
 
 export type NameInfoParams = {
   nickname: string
@@ -23,25 +21,16 @@ interface NameInfoProps {
 
 const NameInfo: React.FC<NameInfoProps> = ({ profile, nicknameData, onDataChange, handleError }) => {
   const classes = useStyles()
-  const store = useStore()
   const { t } = useTranslation(['common'])
 
   const { nickname, nickname2, bio } = profile
 
   const validationSchema = Yup.object().shape({
-    bio: Yup.string()
-      .max(250, t('common:common.too_long'))
-      .min(2, t('common:common.at_least'))
-      .test('bio', t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    bio: Yup.string().max(250, t('common:common.too_long')).min(2, t('common:common.at_least')),
     nickname: Yup.string()
       .required(t('common:common.input_required'))
       .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.at_least'))
-      .test('nickname', t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+      .min(2, t('common:common.at_least')),
   })
 
   const { handleChange, values, errors } = useFormik<NameInfoParams>({
