@@ -122,10 +122,23 @@ const deleteMessage = (olddata: MessageType[], newdata: DeleteType[]): MessageTy
   return olddata
 }
 
+const onDeleteRoomListUpdate = (roomList: ChatDataType[], deletedMsg: DeleteType[]): ChatDataType[] => {
+  const message = deletedMsg[0]
+  if (message.isLastMsg === true && message && !_.isEmpty(roomList)) {
+    //update room list
+    const newRoomList: ChatDataType[] = _.map(roomList, function (a: ChatDataType) {
+      return a.chatRoomId === message.chatRoomId ? { ...a, lastMsgAt: message.createdAt, lastMsg: message.lastMsgTxt } : a
+    })
+    return newRoomList
+  }
+  return roomList
+}
+
 export const ChatHelper = {
   messagesMerge,
   roomListUpdate,
   unseenClear,
   changeSingleRoom,
   deleteMessage,
+  onDeleteRoomListUpdate,
 }
