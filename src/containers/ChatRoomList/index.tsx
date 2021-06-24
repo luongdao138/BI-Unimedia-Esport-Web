@@ -11,6 +11,7 @@ import Loader from '@components/Loader'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core'
 import { useAppSelector } from '@store/hooks'
+import i18n from '@locales/i18n'
 
 interface ChatRoomListProps {
   expand?: boolean
@@ -39,14 +40,18 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderPlaceHolder = () => {
-    if (_.isEmpty(listData) && listData === []) {
-      return <div>Empty</div>
+    if (_.isEmpty(listData)) {
+      return (
+        <Box height={'100%'} width={'100%'} display="flex" justifyContent="center" alignItems="center">
+          {i18n.t('common:common.no_data')}
+        </Box>
+      )
     }
     return null
   }
 
   const renderList = () => {
-    if (listData !== undefined) {
+    if (listData !== undefined && !_.isEmpty(listData)) {
       return (
         <AutoSizer className="scroll-bar">
           {({ height, width }) => (
@@ -61,10 +66,12 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderLoader = () => {
-    if (listData === undefined) {
+    if (listData == null) {
       return (
-        <Box className={classes.loaderBox}>
-          <Loader />
+        <Box height={'100%'} width={'100%'} display="flex" justifyContent="center" alignItems="center">
+          <Box className={classes.loaderBox}>
+            <Loader />
+          </Box>
         </Box>
       )
     }
@@ -88,10 +95,6 @@ const useStyles = makeStyles(() => ({
   loaderBox: {
     width: 20,
     height: 20,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: '50px',
     margin: '0 auto',
     '& svg': {
       width: '100%',

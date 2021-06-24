@@ -13,7 +13,11 @@ const errorSelector = (state: RootState) => state.socket.error
 const roomList = (state: RootState) => state.socket.roomList
 
 export const getRoomList = createSelector(getRoot, (state) => {
-  return _.orderBy(state.roomList, ['lastMsgAt'], ['desc'])
+  if (state.roomList === undefined) {
+    return undefined
+  } else {
+    return _.orderBy(state.roomList, ['lastMsgAt'], ['desc'])
+  }
 })
 export const messages = createSelector(getRoot, (state) => state.messages)
 export const socketReady = createSelector(getRoot, (state) => state.socketReady)
