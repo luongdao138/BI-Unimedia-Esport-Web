@@ -31,7 +31,7 @@ const ArenaWinners: React.FC = () => {
         </IconButton>
       </div>
       <div className={classes.coverWrapper}>
-        {arena?.attributes?.cover_image && <img src={arena?.attributes?.cover_image} className={classes.cover} />}
+        <img src={'/images/arena_cover.png'} className={classes.cover} />
       </div>
       <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
         {arenaWinners['1'] && !!arenaWinners['1'].length && (
