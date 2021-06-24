@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { MessageType, ChatDataType } from '@components/Chat/types/chat.types'
+import { MessageType, ChatDataType, DeleteType } from '@components/Chat/types/chat.types'
 import { State } from '@store/socket/actions/types'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 
@@ -90,7 +90,7 @@ const changeSingleRoom = (oldState: State, newRoom: any): State => {
   }
 }
 
-const deleteMessage = (olddata: MessageType[], newdata: any[]): MessageType[] => {
+const deleteMessage = (olddata: MessageType[], newdata: DeleteType[]): MessageType[] => {
   if (olddata && olddata[0] && newdata && newdata[0]) {
     const sortKey = newdata[0].sortKey
     const replaceText = newdata[0].parentMsgDeletedText
@@ -100,13 +100,17 @@ const deleteMessage = (olddata: MessageType[], newdata: any[]): MessageType[] =>
     const messagesRoom = olddata[0].chatRoomId
     let updatedObj
     if (roomId == messagesRoom) {
-      updatedObj = _.remove(deleteFrom, function (item: any) {
+      updatedObj = _.filter(deleteFrom, function (item: MessageType) {
         return item.sortKey != sortKey
       }).map((item) => {
-        if (item.parentMsg != null && !item.parentMsg.isDeleted && item.parentMsg.sortKey === sortKey) {
-          item.parentMsg.msg = replaceText
-          item.parentMsg.isDeleted = true
-          item.parentMsg.type = CHAT_MESSAGE_TYPE.TEXT
+        if (item.parentMsg != null && _.isObject(item.parentMsg) && !item.parentMsg.isDeleted && item.parentMsg.sortKey === sortKey) {
+          item = Object.assign({}, item, {
+            parentMsg: {
+              msg: replaceText,
+              isDeleted: true,
+              type: CHAT_MESSAGE_TYPE.TEXT,
+            },
+          })
         }
         return item
       })

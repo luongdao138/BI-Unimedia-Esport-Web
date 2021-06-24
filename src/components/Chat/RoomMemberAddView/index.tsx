@@ -203,29 +203,22 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
       >
         <DialogContent style={{ padding: 0 }}>
           <Box pt={6}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                onSubmit()
-              }}
-            >
-              <ESInput
-                placeholder={i18n.t('common:chat.member_add_placeholder')}
-                value={keyword}
-                fullWidth
-                onChange={handleChange}
-                endAdornment={
-                  <>
-                    {
-                      <IconButton onClick={onSearch}>
-                        <Icon className={`fa fa-search ${classes.icon}`}></Icon>
-                      </IconButton>
-                    }
-                  </>
-                }
-              />
-              <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
-            </form>
+            <ESInput
+              placeholder={i18n.t('common:chat.member_add_placeholder')}
+              value={keyword}
+              fullWidth
+              onChange={handleChange}
+              endAdornment={
+                <>
+                  {
+                    <IconButton onClick={onSearch}>
+                      <Icon className={`fa fa-search ${classes.icon}`}></Icon>
+                    </IconButton>
+                  }
+                </>
+              }
+            />
+            <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
           </Box>
           {meta.loaded && _.isEmpty(memberList) && (
             <div className={classes.loaderCenter}>
