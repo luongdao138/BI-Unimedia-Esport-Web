@@ -55,13 +55,13 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} style={{ marginRight: 10 }}>
         <Box display="flex" className={classes.rowContainer}>
           <Typography>{t('common:followers.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : 0}</Typography>
+            <Typography>{t('common:followers.th')}</Typography>
           </Box>
-          <Typography>{t('common:followers.th')}</Typography>
         </Box>
       </Button>
       <ESDialog title={t('common:followers.title')} open={open} handleClose={() => setOpen(false)}>
@@ -102,14 +102,15 @@ export default ESFollowers
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
-    marginRight: 20,
+    flexWrap: 'wrap',
     alignItems: 'center',
   },
   countContainer: {
     marginLeft: 8,
-    marginRight: 10,
+    alignItems: 'center',
   },
   count: {
+    marginRight: 10,
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white,
