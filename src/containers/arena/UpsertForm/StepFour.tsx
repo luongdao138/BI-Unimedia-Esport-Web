@@ -39,6 +39,7 @@ const StepFour: React.FC<Props> = ({ formik, user, editables }) => {
           fullWidth
           value={formik.values.stepFour.organizer_name}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepFour?.organizer_name && formik.errors?.stepFour?.organizer_name}
           error={formik.touched?.stepFour?.organizer_name && !!formik.errors?.stepFour?.organizer_name}
           size="small"

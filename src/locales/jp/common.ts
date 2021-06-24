@@ -416,6 +416,12 @@ export default {
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
     to_detail: '大会詳細',
+    validation_popup: {
+      title: 'Validation error',
+      message: 'Please provide valid data into corresponding fields',
+      check_item: 'チェック項目：',
+      confirm: '了解',
+    },
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

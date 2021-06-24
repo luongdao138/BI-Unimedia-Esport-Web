@@ -72,6 +72,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           fullWidth
           value={formik.values.stepOne.overview}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
           error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
           size="small"
@@ -97,10 +98,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           fullWidth
           value={formik.values.stepOne.prize_amount}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepOne?.prize_amount && formik.errors?.stepOne?.prize_amount}
           error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
           size="small"
-          onBlur={formik.handleBlur}
           disabled={!editables.prize_amount}
         />
       </Box>

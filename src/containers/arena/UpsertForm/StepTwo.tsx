@@ -94,6 +94,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           fullWidth
           value={formik.values.stepTwo.terms_of_participation}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepTwo?.terms_of_participation && formik.errors?.stepTwo?.terms_of_participation}
           error={formik.touched?.stepTwo?.terms_of_participation && !!formik.errors?.stepTwo?.terms_of_participation}
           size="small"
@@ -121,6 +122,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           fullWidth
           value={formik.values.stepTwo.notes}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepTwo?.notes && formik.errors?.stepTwo?.notes}
           error={formik.touched?.stepTwo?.notes && !!formik.errors?.stepTwo?.notes}
           size="small"

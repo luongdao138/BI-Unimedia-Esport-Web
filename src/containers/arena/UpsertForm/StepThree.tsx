@@ -132,6 +132,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           placeholder={i18n.t('common:tournament_create.area_name_placeholder')}
           value={formik.values.stepThree.area_name}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepThree?.area_name && formik.errors?.stepThree?.area_name}
           error={formik.touched?.stepThree?.area_name && !!formik.errors?.stepThree?.area_name}
           size="small"

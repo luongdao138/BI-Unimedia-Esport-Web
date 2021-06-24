@@ -416,6 +416,12 @@ export default {
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
     to_detail: '大会詳細',
+    validation_popup: {
+      title: 'Validation error',
+      message: 'Please provide valid data into corresponding fields',
+      check_item: 'チェック項目：',
+      confirm: '了解',
+    },
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -577,7 +583,6 @@ export default {
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
-    not_selected_text: 'メッセージを始めましょう',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
     chat_copied: 'メッセージ内容をコピーしました。',

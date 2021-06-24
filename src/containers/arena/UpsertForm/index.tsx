@@ -25,10 +25,19 @@ import Confirm from './Confirm'
 import i18n from '@locales/i18n'
 import ESStickyFooter from '@components/StickyFooter'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import _ from 'lodash'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { ARENA_CREATE_VALIDATION_POPUP, FIELD_TITLES } from './FormModel/field_titles.constants'
+import { getAction } from '@store/common/selectors'
+
+let activeTabIndex = 0
 
 const TournamentCreate: React.FC = () => {
   const router = useRouter()
   const store = useStore()
+  const dispatch = useAppDispatch()
+  const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
   const { submit, update, meta, updateMeta, isEdit, arena, editables } = useTournamentCreate()
   const { handleReturn } = useReturnHref()
@@ -60,6 +69,14 @@ const TournamentCreate: React.FC = () => {
   })
 
   useEffect(() => {
+    if (actionSelector === 'confirm') {
+      setTab(activeTabIndex)
+    }
+  }, [actionSelector])
+
+  useEffect(() => {
+    activeTabIndex = 0
+    setTab(0)
     formik.validateForm()
   }, [])
 
@@ -79,7 +96,30 @@ const TournamentCreate: React.FC = () => {
     }
   }, [formik.errors])
 
-  const handleSetConfirm = () => setIsConfirm(true)
+  const handleSetConfirm = () => {
+    if (_.isEmpty(formik.errors)) {
+      setIsConfirm(true)
+      return
+    }
+
+    let fieldsHasError = []
+    if (_.has(formik.errors, 'stepOne')) {
+      activeTabIndex = 0
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepOne, _.keys(formik.errors.stepOne)))
+    } else if (_.has(formik.errors, 'stepTwo')) {
+      activeTabIndex = 1
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepTwo, _.keys(formik.errors.stepTwo)))
+    } else if (_.has(formik.errors, 'stepThree')) {
+      activeTabIndex = 2
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepThree, _.keys(formik.errors.stepThree)))
+    } else if (_.has(formik.errors, 'stepFour')) {
+      activeTabIndex = 3
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepFour, _.keys(formik.errors.stepFour)))
+    }
+
+    dispatch(showDialog({ ...ARENA_CREATE_VALIDATION_POPUP, actionText: _.isEmpty(fieldsHasError) ? '' : fieldsHasError[0] }))
+  }
+
   const handleUnsetConfirm = () => setIsConfirm(false)
 
   const handleTabChange = useCallback((value) => {
@@ -109,7 +149,7 @@ const TournamentCreate: React.FC = () => {
               <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
-              <ButtonPrimary type="submit" round disabled={hasError} className={classes.footerButton}>
+              <ButtonPrimary type="submit" onClick={() => formik.submitForm()} round disabled={hasError} className={classes.footerButton}>
                 {i18n.t('common:tournament_create.submit')}
               </ButtonPrimary>
             </Box>
