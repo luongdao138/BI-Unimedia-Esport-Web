@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Dialog } from '@material-ui/core'
 import Slide from '@material-ui/core/Slide'
@@ -18,6 +18,11 @@ const Transition = React.forwardRef(function Transition(
 
 const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
   const classes = useStyles()
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
 
   return (
     <Dialog
@@ -28,11 +33,8 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       onClose={handleClose}
       BackdropProps={{ classes: { root: classes.backDrop } }}
       PaperProps={{ classes: { root: classes.paper } }}
-      onEnter={() => {
+      onEntered={() => {
         document.body.style.overflow = 'hidden'
-      }}
-      onExit={() => {
-        document.body.style.overflow = 'unset'
       }}
     >
       {children}
