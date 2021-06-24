@@ -40,17 +40,21 @@ const ESSlide: React.FC<{
         {...props}
         className={classes.wrap}
         breakpoints={breakpoints}
-        onInit={(swiper) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          swiper.params.navigation.prevEl = prevRef.current
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          swiper.params.navigation.nextEl = nextRef.current
-          swiper.navigation.init()
-          swiper.navigation.update()
+        onSwiper={(swiper) => {
+          // Delay execution for the refs to be defined
+          setTimeout(() => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // eslint-disable-next-line no-param-reassign
+            swiper.params.navigation.prevEl = prevRef.current
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // eslint-disable-next-line no-param-reassign
+            swiper.params.navigation.nextEl = nextRef.current
+            swiper.navigation.destroy()
+            swiper.navigation.init()
+            swiper.navigation.update()
+          })
         }}
       >
         {items.map((item, index) => {
@@ -155,7 +159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 ESSlide.defaultProps = {
-  slidesPerView: 2.1,
+  slidesPerView: 1.5,
 }
 
 export default ESSlide
