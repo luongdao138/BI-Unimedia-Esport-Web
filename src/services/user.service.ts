@@ -182,14 +182,7 @@ export type HomeSettingsResponse = {
 }
 
 export type FollowActionResponse = {
-  data: {
-    id: number | string
-    type: 'user'
-    attributes: {
-      followers: number
-      following: number
-    }
-  }
+  data: Array<FollowResponse>
 }
 
 export type UnFollowResponse = {

@@ -76,28 +76,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(2),
   },
   iconText: {
-    color: theme.palette.text.primary,
+    color: Colors.white_opacity[30],
     paddingBottom: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
   },
   listText: {
-    color: Colors.grey[400],
-    textDecoration: 'underline',
+    color: Colors.white_opacity[30],
     '& > span': {
       fontSize: 12,
     },
     lineHeight: 1,
+    marginTop: 0,
+    marginBottom: 0,
   },
   label: {
-    color: theme.palette.text.primary,
+    color: Colors.white_opacity[30],
     '& > span': {
       fontSize: 12,
     },
     padding: 0,
   },
   label2: {
-    color: Colors.grey[400],
+    color: Colors.white_opacity[30],
     '& > span': {
       fontSize: 12,
     },

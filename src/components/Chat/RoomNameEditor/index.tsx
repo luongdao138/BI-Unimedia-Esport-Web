@@ -66,7 +66,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         alignTop
         fixedFooter={renderFooter()}
       >
-        <DialogContent>
+        <DialogContent className={classes.dialogContent}>
           <Box mt={8}>
             <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります。</Typography>
           </Box>
@@ -98,6 +98,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   nameInfoMsg: {
     textAlign: 'center',
   },
+  dialogContent: {
+    overflow: 'hidden',
+    scrollbarWidth: 'none' /* Firefox */,
+    '&::-webkit-scrollbar-track': {
+      '&::-webkit-box-shadow': 'none !important',
+      backgroundColor: 'transparent',
+      width: 0,
+      height: 0,
+    },
+    '&::-webkit-scrollbar': {
+      backgroundColor: 'transparent',
+      width: '3px !important',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'transparent',
+    },
+  },
   stickyFooter: {
     position: 'fixed',
     left: 0,
@@ -108,6 +125,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTopColor: Colors.text['300'],
     height: 162,
   },
+
   buttonBottom: {
     transform: 'translate(-50%, 0px)',
     position: 'fixed',

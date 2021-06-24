@@ -415,6 +415,7 @@ export default {
     },
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
+    to_detail: '大会詳細',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -630,6 +631,10 @@ export default {
     new_email: '新しいメールアドレス',
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
+    delete_confirm_title: '問い合わせフォームでの申請となります。',
+    delete_confirm_msg: 'お問い合わせフォームを開きますか。',
+    delete_confirm_yes: 'はい',
+    delete_confirm_no: 'いいえ',
     change_password: 'パスワードの変更',
     current_password: '現在のパスワード',
     new_password: '新しいパスワード',

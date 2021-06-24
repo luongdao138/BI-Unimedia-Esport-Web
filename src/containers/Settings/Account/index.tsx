@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import HeaderWithButton from '@components/HeaderWithButton'
 import { useRouter } from 'next/router'
-import { Box } from '@material-ui/core'
+import { Box, makeStyles, Typography, withStyles } from '@material-ui/core'
 import { useAppSelector } from '@store/hooks'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { SNS } from '@constants/common.constants'
@@ -11,15 +11,48 @@ import authStore from '@store/auth'
 import useAccount from './useAccount'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
+import React from 'react'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import Dialog from '@material-ui/core/Dialog'
+import ButtonPrimary from '@components/ButtonPrimary'
+import { Colors } from '@theme/colors'
 
 const AccountSettingsContainer: React.FC = () => {
   const { t } = useTranslation('common')
-  const { selectors } = authStore
-  const user = useAppSelector(selectors.getAuth)
-  const hasEmail = CommonHelper.hasEmail(user?.email)
-  const router = useRouter()
   const { resetSteps } = useAccount()
   const { makeContextualHref } = useContextualRouting()
+  const { selectors } = authStore
+  const classes = useStyles()
+  const router = useRouter()
+  const user = useAppSelector(selectors.getAuth)
+  const hasEmail = CommonHelper.hasEmail(user?.email)
+
+  const [open, setOpen] = React.useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleSubmit = () => {
+    router.push(ESRoutes.INQUIRY_SETTINGS)
+    setOpen(false)
+  }
+
+  const DialogContent = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(3),
+      display: 'block',
+      background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
+      width: '100%',
+      '&:first-child': {
+        padding: theme.spacing(3),
+      },
+    },
+  }))(MuiDialogContent)
 
   const openEmailModal = () => {
     resetSteps()
@@ -50,7 +83,7 @@ const AccountSettingsContainer: React.FC = () => {
           value={hasEmail ? user.email : t('account_settings.sns')}
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
-          showButton={true}
+          showButton={!user.is_social}
         />
         <SettingsItem
           title={t('common.password')}
@@ -59,21 +92,70 @@ const AccountSettingsContainer: React.FC = () => {
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangePassword={openPasswordModal}
           password
-          showButton={true}
+          showButton={!user.is_social}
         />
       </Box>
       <Box my={4} display="flex" justifyContent="center">
-        <ESButton
-          variant="outlined"
-          onClick={() => {
-            router.push(ESRoutes.INQUIRY_SETTINGS)
-          }}
-        >
+        <ESButton onClick={handleClickOpen} variant={'outlined'}>
           {t('account_settings.delete_account')}
         </ESButton>
       </Box>
+      <div>
+        <Dialog
+          maxWidth={'md'}
+          fullWidth
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            <Box className={classes.container}>
+              <Typography className={classes.dialogTitle}>{t('account_settings.delete_confirm_title')}</Typography>
+              <Typography className={classes.message} gutterBottom>
+                {t('account_settings.delete_confirm_msg')}
+              </Typography>
+            </Box>
+            <Box className={classes.actionBox}>
+              <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+                {t('account_settings.delete_confirm_no')}
+              </ButtonPrimary>
+              <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+                {t('account_settings.delete_confirm_yes')}
+              </ButtonPrimary>
+            </Box>
+          </DialogContent>
+        </Dialog>
+      </div>
     </>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  container: {
+    width: '100%',
+    display: 'block',
+  },
+  dialogTitle: {
+    color: Colors.white,
+    textAlign: 'center',
+    paddingBottom: 56,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  message: {
+    color: Colors.text[200],
+    textAlign: 'center',
+  },
+  actionBox: {
+    marginTop: 100,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  actionBtn: {
+    width: 200,
+    margin: 16,
+  },
+}))
 
 export default AccountSettingsContainer

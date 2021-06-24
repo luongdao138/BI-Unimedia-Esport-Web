@@ -9,8 +9,6 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import i18n from '@locales/i18n'
 import ESInput from '@components/Input'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useStore } from 'react-redux'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -28,35 +26,14 @@ interface SnsInfoProps {
 
 const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError }) => {
   const classes = useStyles()
-  const store = useStore()
   const { instagram_link, facebook_link, twitter_link, twitch_link, discord_link } = profile
 
   const validationSchema = Yup.object().shape({
-    instagram_link: Yup.string()
-      .max(250, i18n.t('common:common.too_long'))
-      .test('instagram_link', i18n.t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
-    discord_link: Yup.string()
-      .max(250, i18n.t('common:common.too_long'))
-      .test('discord_link', i18n.t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
-    facebook_link: Yup.string()
-      .max(250, i18n.t('common:common.too_long'))
-      .test('facebook_link', i18n.t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
-    twitter_link: Yup.string()
-      .max(250, i18n.t('common:common.too_long'))
-      .test('twitter_link', i18n.t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
-    twitch_link: Yup.string()
-      .max(250, i18n.t('common:common.too_long'))
-      .test('twitch_link', i18n.t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    instagram_link: Yup.string().max(250, i18n.t('common:common.too_long')),
+    discord_link: Yup.string().max(250, i18n.t('common:common.too_long')),
+    facebook_link: Yup.string().max(250, i18n.t('common:common.too_long')),
+    twitter_link: Yup.string().max(250, i18n.t('common:common.too_long')),
+    twitch_link: Yup.string().max(250, i18n.t('common:common.too_long')),
   })
 
   const { handleChange, values, errors } = useFormik<SnsInfoParams>({

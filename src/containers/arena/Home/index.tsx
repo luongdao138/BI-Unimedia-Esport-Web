@@ -33,7 +33,7 @@ const ArenaHome: React.FC = () => {
       label: t('common:arenaSearchFilters.all'),
     },
     {
-      type: TournamentFilterOption.beforeEvent,
+      type: TournamentFilterOption.ready,
       label: t('common:arenaSearchFilters.beforeEvent'),
     },
     {

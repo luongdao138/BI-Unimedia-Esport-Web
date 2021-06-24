@@ -5,7 +5,6 @@ import HeaderWithButton from '@components/HeaderWithButton'
 import useMessageSettings from './useMessageSettings'
 import { useEffect, useState } from 'react'
 import ESLoader from '@components/Loader'
-import _ from 'lodash'
 
 const ESMessageSettings: React.FC = () => {
   const { t } = useTranslation('common')
@@ -27,12 +26,14 @@ const ESMessageSettings: React.FC = () => {
   }
 
   useEffect(() => {
-    if (messageSettings) {
-      if (!_.isEqual(messageSettings, state)) {
-        updateMessageSettings(state)
-      }
+    updateMessageSettings(state)
+  }, [state])
+
+  useEffect(() => {
+    return () => {
+      setState(messageSettings)
     }
-  }, [state.allow_groups_from_strangers, state.allow_messages_from_strangers])
+  }, [])
 
   return (
     <div>

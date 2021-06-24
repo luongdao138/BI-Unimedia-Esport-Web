@@ -34,6 +34,7 @@ export const Colors = {
     '30': 'rgba(0,0,0,.3)',
     '70': 'rgba(0,0,0,.7)',
     '80': 'rgba(0,0,0,.8)',
+    '90': 'rgba(0,0,0,.9)',
   },
   yellow: '#F7F560',
   green: '#2CEBB0',

@@ -1,8 +1,11 @@
 export enum USER_PROFILE_ACTION_TYPE {
   GET_USER_PROFILE = 'profile/getUserProfile',
   GET_MEMBER_PROFILE = 'profile/getMemberProfile',
+  CLEAR_MEMBER_PROFILE = 'profile/clearMemberProfile',
   TOURNAMENT_HISTORY = 'profile/tournamentHistory',
+  CLEAR_TOURNAMENT_HISTORY = 'profile/clearTournamentHistory',
   PROFILE_ACTIVITY_LOG = 'profile/activityLog',
+  CLEAR_ACTIVITY_LOG = 'profile/clearActivityLog',
   PROFILE_NICKNAMES = 'profile/nicknames2',
   PROFILE_EDIT = 'profile/edit',
   RECOMMENDATIONS = 'user/recommendations',

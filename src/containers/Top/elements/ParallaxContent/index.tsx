@@ -59,9 +59,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 auto',
     width: '100%',
     height: 740,
+    display: 'flex',
+    alignItems: 'center',
   },
   parallaxContent: {
-    marginTop: 212,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
