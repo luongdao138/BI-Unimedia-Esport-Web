@@ -5,6 +5,7 @@ import { ACTIVITY_ACTION_TYPE } from '@constants/common.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { ActivityLog } from '@services/user.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface Props {
   activity: ActivityLog
@@ -18,6 +19,8 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
   const data = activity.attributes
   const target = data.target_name != undefined ? data.target_name : null
   const targetId = data.target_id
+
+  const time = CommonHelper.staticSmartTime(data.created_at)
 
   const action = data.action_type
   const actionTitle: { prefix: string; suffix: string } = {
@@ -113,6 +116,9 @@ const ActivityItem: React.FC<Props> = ({ activity }) => {
             {actionTitle.suffix}
           </Typography>
         </ButtonBase>
+        <Box className={classes.secondContainer}>
+          <Typography className={classes.date}>{time}</Typography>
+        </Box>
       </Box>
     </Grid>
   )
@@ -123,12 +129,13 @@ export default ActivityItem
 const useStyles = makeStyles((theme) => ({
   container: {
     maxWidth: '100%',
+    width: '100%',
     backgroundColor: Colors.black,
     display: 'flex',
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    fontSize: theme.typography.body1.fontSize,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     borderRadius: 4,
     borderWidth: 1,
     borderStyle: 'solid',
@@ -151,5 +158,15 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'start',
     flexWrap: 'wrap',
     wordWrap: 'break-word',
+  },
+  date: {
+    whiteSpace: 'nowrap',
+    fontSize: 12,
+    color: Colors.white_opacity[30],
+  },
+  secondContainer: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'flex-end',
   },
 }))
