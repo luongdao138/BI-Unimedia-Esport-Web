@@ -584,6 +584,7 @@ export default {
     member_add_title: 'メンバーを追加',
     member_add_toast: 'メンバーを追加しました',
     room_name_placeholder: 'グループ名を入力',
+    reply_img_text: '写真',
   },
   notification: {
     title: '通知一覧',

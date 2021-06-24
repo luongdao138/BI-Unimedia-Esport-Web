@@ -7,6 +7,7 @@ import TextMessage from './TextMessage'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import PhotoMessage from './PhotoMessage'
 import { Colors } from '@theme/colors'
+import i18n from '@locales/i18n'
 
 export interface ReplyContentProps {
   replyMessage: null | ParentItem | string | MessageType
@@ -58,7 +59,7 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
         <Box className={classes.photoHolder}>
           <Box>
             <Typography variant="body1" className={classes.imgText}>
-              写真
+              {i18n.t('common:chat.reply_img_text')}
             </Typography>
           </Box>
           <PhotoMessage status={true} size={30} msg={text} />
