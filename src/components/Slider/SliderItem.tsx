@@ -4,7 +4,7 @@ import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 
 const useStyles = makeStyles(() => ({
-  itemWrap: {},
+  itemWrap: { marginTop: 0 },
 }))
 
 const ESSlideItem: React.FC = ({ children, ...rest }) => {

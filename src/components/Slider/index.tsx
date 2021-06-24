@@ -16,7 +16,8 @@ const ESSlide: React.FC<{
   navigation?: boolean
   slidesPerView?: number | 'auto'
   breakpoints?: any
-}> = ({ items, navigation, slidesPerView, breakpoints, ...rest }) => {
+  containerClass?: string
+}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, ...rest }) => {
   const { t } = useTranslation(['common'])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,7 +28,7 @@ const ESSlide: React.FC<{
   const nextRef = useRef(null)
 
   return (
-    <div className="slideWrap">
+    <div className={`slideWrap ${containerClass}`}>
       {title && (
         <Typography className={classes.containerStart} variant="h3" gutterBottom>
           {title}
