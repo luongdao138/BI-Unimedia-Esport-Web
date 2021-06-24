@@ -126,6 +126,8 @@ const useStyles = makeStyles(() => ({
     transform: 'none',
     position: 'absolute',
     right: 20,
+    left: 50,
+    justifyContent: 'space-between',
     borderRadius: 3,
     overflow: 'hidden',
   },
