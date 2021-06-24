@@ -11,9 +11,12 @@ interface Props {
 
 const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
-  const { activityLogs, getActivityLogs, pages, meta, resetMeta } = useActivityLogs()
+  const { activityLogs, getActivityLogs, clearActivityLogs, pages, meta, resetMeta } = useActivityLogs()
   useEffect(() => {
-    return () => resetMeta()
+    return () => {
+      resetMeta()
+      clearActivityLogs()
+    }
   }, [])
 
   useEffect(() => {

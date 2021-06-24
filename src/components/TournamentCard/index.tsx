@@ -164,8 +164,6 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   )
 }
 
-export default TournamentCard
-
 const useStyles = makeStyles((theme) => ({
   cardHover: {
     cursor: 'pointer',
@@ -190,7 +188,8 @@ const useStyles = makeStyles((theme) => ({
   chipPrimary: {
     height: 20,
     marginBottom: 5,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.black_opacity[90],
+    borderRadius: 10,
   },
   mediaOverlay: {
     position: 'absolute',
@@ -229,4 +228,16 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  [theme.breakpoints.down('sm')]: {
+    firstIcon: {
+      marginTop: 10,
+      height: 10,
+    },
+    marginV: {
+      height: 30,
+      width: 30,
+    },
+  },
 }))
+
+export default TournamentCard

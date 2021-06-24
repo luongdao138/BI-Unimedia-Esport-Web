@@ -178,7 +178,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                 </>
               )}
             </div>
-            <ESModal open={!!router.query.pathName} handleClose={handleReturn} disableScrollLock={false}>
+            <ESModal open={!!router.query.pathName} handleClose={handleReturn}>
               <BlankLayout>{renderContent()}</BlankLayout>
             </ESModal>
           </Toolbar>
@@ -251,10 +251,10 @@ const useStyles = makeStyles((theme) => ({
       width: 'auto',
     },
     dropDownMenu: {
-    '&:hover $dropDownContent': {
-      maxWidth: 315,
+      '&:hover $dropDownContent': {
+        display: 'none',
+      },
     },
-  },
   },
   [theme.breakpoints.down('xs')]: {
     icon: {

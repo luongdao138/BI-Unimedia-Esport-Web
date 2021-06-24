@@ -17,7 +17,7 @@ const useDirectCheck = (): {
   redirectRoomData: string | null
 } => {
   const dispatch = useAppDispatch()
-  const checkRoom = (userCode: string) => dispatch(actions.directRoomCheck(userCode))
+  const checkRoom = (userCode: string) => dispatch(actions.directRoomCheckChain(userCode))
   const roomMeta = useAppSelector(_chatRoomMeta)
   const singleUserData = useAppSelector(singleUser)
   const redirectRoomData = useAppSelector(redirectDm)

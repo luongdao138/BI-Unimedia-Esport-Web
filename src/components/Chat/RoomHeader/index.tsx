@@ -73,7 +73,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const hasPermission = !_.get(tournament, 'is_freezed', true)
 
   const memberAddItem = () => {
-    if (!isDirect() && hasPermission && isAdmin()) {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
+    } else if (!isDirect() && isAdmin()) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     }
     return null
@@ -96,6 +98,14 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     }
   }
 
+  const renderRoomNameChange = () => {
+    // tour & req & direct & !admin rooms cant change name
+    if (isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
+    }
+    return null
+  }
+
   const MenuItems = () => (
     <Box className={classes.menu}>
       <ESMenu>
@@ -103,19 +113,11 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         {memberAddItem()}
         {renderRoomNameChange()}
         {renderTournamentDetailItem()}
-        <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+        {/* <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem> */}
         <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
       </ESMenu>
     </Box>
   )
-
-  const renderRoomNameChange = () => {
-    // tour & req & direct & !admin rooms cant change name
-    if (!isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
-      return <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_NAME)}>{t('common:chat.room_options.change_room_name')}</ESMenuItem>
-    }
-    return null
-  }
 
   return (
     <>

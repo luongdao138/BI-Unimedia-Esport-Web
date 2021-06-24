@@ -415,6 +415,7 @@ export default {
     },
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
+    to_detail: '大会詳細',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -576,9 +577,14 @@ export default {
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
+    not_selected_text: 'メッセージを始めましょう',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
     chat_copied: 'メッセージ内容をコピーしました。',
+    member_add_placeholder: 'ユーザー名',
+    member_add_title: 'メンバーを追加',
+    member_add_toast: 'メンバーを追加しました',
+    room_name_placeholder: 'グループ名を入力',
   },
   notification: {
     title: '通知一覧',
@@ -724,8 +730,12 @@ export default {
     commercial_transaction: '特定商取引に関する表記',
   },
   dialog: {
-    ng_word_warning: 'NGワード：などのエラーメッセージ',
-    confirm: "了解'",
+    ng_word_warning: '下記項目内にNGワードが含まれています。',
+    ng_word_area_label: 'チェック項目：',
+    confirm: '了解',
     default_title: '確認メッセージ',
+  },
+  ng_word_area: {
+    chat_section: 'メッセージテキストボックス',
   },
 }

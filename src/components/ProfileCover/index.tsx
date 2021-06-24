@@ -3,8 +3,6 @@ import { makeStyles } from '@material-ui/core'
 import Image from 'next/image'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import CoverSelector from '@components/ImagePicker/CoverSelector'
-// import ESLoader from '@components/Loader'
-// import { useDropzone } from 'react-dropzone'
 import { Colors } from '@theme/colors'
 
 type ProfileCoverProps = {
@@ -17,63 +15,12 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) 
   const classes = useStyles()
   const [setCover, toggleSetCover] = useState<boolean>(false)
   const [drag, setDrag] = useState<boolean>(false)
-  // const dropZoneConfig = {
-  //   accept: 'image/*',
-  //   onDrop: (files: any) => handleChange(files),
-  // }
-  // const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
     toggleSetCover(false)
   }, [src])
 
-  // const handleChange = (files: Array<File>) => {
-  //   // setUpdate(true)
-  //   setDrag(false)
-  //   const file = files[0]
-  //   const reader = new FileReader()
-  //   if (file) {
-  //     if (onChange) {
-  //       onChange(file)
-  //     }
-  //     reader.readAsDataURL(file)
-  //   }
-  // }
-
   return (
-    // <div className={classes.root}>
-    // {src ? (
-    //   <img src={src} className={classes.image} />
-    // ) : (
-    //   <Image height="148" width="116" src="/images/big_logo.png" className={classes.defaultBackground} />
-    // )}
-    //   {editable ? (
-    //     <>
-    //       {drag && !update ? <Camera fontSize="small" className={classes.camera} /> : null}
-    //       {drag || update ? <div className={classes.backdrop} /> : null}
-    //       <div
-    //         {...getRootProps()}
-    //         className={classes.dropZone}
-    //         onMouseEnter={() => {
-    //           if (!update) setDrag(true)
-    //         }}
-    //         onMouseLeave={() => setDrag(false)}
-    //         onDragEnter={() => {
-    //           if (!update) setDrag(true)
-    //         }}
-    //         onDragLeave={() => setDrag(false)}
-    //       >
-    //         <input {...getInputProps()} />
-    //       </div>
-    //       {update ? (
-    //         <Box className={classes.loader}>
-    //           <ESLoader />
-    //         </Box>
-    //       ) : null}
-    //     </>
-    //   ) : null}
-    // </div>
-
     <div className={classes.root}>
       {src ? (
         <img src={src} className={classes.image} />
@@ -146,13 +93,6 @@ const useStyles = makeStyles(() => ({
     right: 30,
     bottom: 30,
     zIndex: 5,
-  },
-  loader: {
-    display: 'flex',
-    position: 'absolute',
-    zIndex: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   dropZone: {
     display: 'flex',

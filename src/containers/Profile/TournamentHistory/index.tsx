@@ -12,7 +12,7 @@ interface Props {
 
 const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
   const classes = useStyles()
-  const { tournamentHistories, tournamentHistory, page, meta, resetMeta } = useTournamentHistory()
+  const { tournamentHistories, tournamentHistory, clearTournamentHistory, page, meta, resetMeta } = useTournamentHistory()
   const hasNextPage = page && page.current_page !== page.total_pages
   useEffect(() => {
     tournamentHistory({
@@ -22,7 +22,10 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
   }, [userCode])
 
   useEffect(() => {
-    return () => resetMeta()
+    return () => {
+      resetMeta()
+      clearTournamentHistory()
+    }
   }, [])
 
   const loadMore = () => {

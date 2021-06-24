@@ -11,7 +11,7 @@ import _ from 'lodash'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { FixedSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { FollowResponse } from '@services/follow.service'
+import { FollowResponse } from '@services/user.service'
 
 export interface ESFollowingProps {
   user_code: string

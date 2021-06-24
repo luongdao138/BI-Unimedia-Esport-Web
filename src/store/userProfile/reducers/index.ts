@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { TournamentListItem } from '@services/arena.service'
-import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps } from '@services/user.service'
+import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps, FollowResponse } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -18,12 +18,17 @@ type StateType = {
   recommendedEvent: Array<CommonResponse>
   recommendedEventMeta: Meta
   accountSettingsChangeEmailSteps: ChangeEmailSteps
+  followers?: Array<FollowResponse>
+  followersMeta?: Meta
+  following?: Array<FollowResponse>
+  followingMeta?: Meta
 }
 
 const initialState: StateType = {
   data: undefined,
   lastSeenUserData: undefined,
   tournamentHistories: [],
+  tournamentHistoriesMeta: undefined,
   activityLogs: [],
   activityLogsMeta: undefined,
   recommendations: [],
@@ -34,6 +39,10 @@ const initialState: StateType = {
     step_check: false,
     step_change: false,
   },
+  followers: [],
+  following: [],
+  followersMeta: undefined,
+  followingMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -41,9 +50,13 @@ export default createReducer(initialState, (builder) => {
     state.data = action.payload.data
   })
 
-  builder.addCase(actions.getMemberProfile.fulfilled, (state, action) => {
-    state.lastSeenUserData = action.payload.data
-  })
+  builder
+    .addCase(actions.getMemberProfile.fulfilled, (state, action) => {
+      state.lastSeenUserData = action.payload.data
+    })
+    .addCase(actions.clearMemberProfile, (state) => {
+      state.lastSeenUserData = undefined
+    })
 
   builder.addCase(actions.profileUpdate.fulfilled, (state, action) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
@@ -61,32 +74,34 @@ export default createReducer(initialState, (builder) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
   })
 
-  builder.addCase(actions.tournamentHistorySearch.fulfilled, (state, action) => {
-    let tmpHistories = action.payload.data
-    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpHistories = state.tournamentHistories.concat(action.payload.data)
-    }
+  builder
+    .addCase(actions.tournamentHistorySearch.fulfilled, (state, action) => {
+      let tmpHistories = action.payload.data
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+        tmpHistories = state.tournamentHistories.concat(action.payload.data)
+      }
 
-    state.tournamentHistories = tmpHistories
-    state.tournamentHistoriesMeta = action.payload.meta
-  })
+      state.tournamentHistories = tmpHistories
+      state.tournamentHistoriesMeta = action.payload.meta
+    })
+    .addCase(actions.clearTournamentHistory, (state) => {
+      state.tournamentHistories = []
+      state.tournamentHistoriesMeta = undefined
+    })
 
-  builder.addCase(actions.getActivityLogs.fulfilled, (state, action) => {
-    let tmpActivityLogs = action.payload.data
-    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpActivityLogs = state.activityLogs.concat(action.payload.data)
-    }
-    state.activityLogs = tmpActivityLogs
-    state.activityLogsMeta = action.payload.meta
-  })
-
-  builder.addCase(actions.follow.fulfilled, (state, _action) => {
-    if (state.lastSeenUserData) state.lastSeenUserData.attributes.is_following = true
-  })
-
-  builder.addCase(actions.unfollow.fulfilled, (state, _action) => {
-    if (state.lastSeenUserData) state.lastSeenUserData.attributes.is_following = false
-  })
+  builder
+    .addCase(actions.getActivityLogs.fulfilled, (state, action) => {
+      let tmpActivityLogs = action.payload.data
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+        tmpActivityLogs = state.activityLogs.concat(action.payload.data)
+      }
+      state.activityLogs = tmpActivityLogs
+      state.activityLogsMeta = action.payload.meta
+    })
+    .addCase(actions.clearActivityLogs, (state) => {
+      state.activityLogs = []
+      state.activityLogsMeta = undefined
+    })
 
   builder.addCase(actions.getNicknames.fulfilled, (state, action) => {
     state.nicknames2 = action.payload.data.attributes.nicknames
@@ -141,6 +156,79 @@ export default createReducer(initialState, (builder) => {
     state.accountSettingsChangeEmailSteps.step_check = false
     state.accountSettingsChangeEmailSteps.step_change = false
   })
+
+  builder
+    .addCase(actions.follow.fulfilled, (state, action) => {
+      if (state.lastSeenUserData) {
+        state.lastSeenUserData.attributes.is_following = true
+        const updatedUserItem = state.followers.filter((user) => {
+          if (user.attributes.user_code === state.data?.attributes?.user_code) {
+            user.attributes = action.payload.data[0]?.attributes
+            return true
+          }
+        })
+        if (updatedUserItem.length === 0) {
+          state.followers.push(action.payload.data[0])
+        }
+        if (state.followersMeta) state.followersMeta.total_count = state.followersMeta.total_count + 1
+      }
+    })
+    .addCase(actions.unfollow.fulfilled, (state, _action) => {
+      if (state.lastSeenUserData) {
+        state.lastSeenUserData.attributes.is_following = false
+        const restFollowers = state.followers.filter((user) => {
+          return user.attributes.user_code !== state.data?.attributes?.user_code
+        })
+        state.followers = restFollowers
+        if (state.followersMeta) {
+          state.followersMeta.total_count = state.followersMeta.total_count - 1
+        }
+      }
+    })
+    .addCase(actions.followers.fulfilled, (state, action) => {
+      let tmpFollowers = action.payload.data
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+        tmpFollowers = state.followers.concat(action.payload.data)
+      }
+
+      state.followers = tmpFollowers
+      state.followersMeta = action.payload.meta
+    })
+    .addCase(actions.clearFollowers, (state) => {
+      state.followers = []
+    })
+    .addCase(actions.following.fulfilled, (state, action) => {
+      let tmpFollowing = action.payload.data
+      if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+        tmpFollowing = state.following.concat(action.payload.data)
+      }
+
+      state.following = tmpFollowing
+      state.followingMeta = action.payload.meta
+    })
+    .addCase(actions.clearFollowing, (state) => {
+      state.following = []
+    })
+    .addCase(actions.increaseFollowing.fulfilled, (state, action) => {
+      if (state.following) {
+        state.following.filter((user) => {
+          if (user.attributes.user_code === action.payload) {
+            user.attributes.is_following = true
+          }
+        })
+      }
+      if (state.followingMeta) state.followingMeta.total_count = state.followingMeta.total_count + 1
+    })
+    .addCase(actions.decreaseFollowing.fulfilled, (state, action) => {
+      if (state.following) {
+        state.following.filter((user) => {
+          if (user.attributes.user_code === action.payload) {
+            user.attributes.is_following = false
+          }
+        })
+      }
+      if (state.followingMeta && state.followingMeta.total_count > 0) state.followingMeta.total_count = state.followingMeta.total_count - 1
+    })
 
   builder.addCase(actions.clearHomeSettings, (state) => {
     state.data.attributes.home_settings = []

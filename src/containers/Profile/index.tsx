@@ -49,16 +49,17 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [showToast, setShow] = useState(false)
   const [offset, setOffset] = useState(0)
 
-  // const { userProfile, communityList, getCommunityList, getMemberProfile, resetCommunityMeta, resetUserMeta, userMeta, communityMeta } = useUserData(user_code)
-
   const raw_code = router.query.user_code || []
 
-  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState } = useUserData(raw_code)
+  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState, clearMemberProfile } = useUserData(
+    raw_code
+  )
 
   useEffect(() => {
     window.onscroll = () => {
       setOffset(window.pageYOffset)
     }
+    return () => clearMemberProfile()
   }, [])
 
   useEffect(() => {
@@ -146,7 +147,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     className={classes.marginRight}
                     disabled={disable}
                     onClick={() => {
-                      unblockUser({ block_type: 'user', target_id: Number(profile.id) })
+                      unblockUser({ user_code: attr.user_code })
                       setBlocked(false)
                     }}
                   >
@@ -165,7 +166,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                   {attr.is_blocked ? (
                     <ESMenuItem
                       onClick={() => {
-                        unblockUser({ block_type: 'user', target_id: Number(profile.id) })
+                        unblockUser({ user_code: attr.user_code })
                         setBlocked(false)
                       }}
                     >
@@ -175,7 +176,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                   ) : (
                     <ESMenuItem
                       onClick={() => {
-                        blockUser({ block_type: 'user', target_id: Number(profile.id) })
+                        blockUser({ user_code: attr.user_code })
                         setBlocked(true)
                       }}
                     >

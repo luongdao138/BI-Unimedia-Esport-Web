@@ -25,6 +25,7 @@ const useUserData = (
   getMemberProfile: (userCode: string) => void
   profileImageChange: (file: File, user_id: number, type: number, blob?: any) => void
   setFollowState: () => void
+  clearMemberProfile: () => void
 } => {
   const authSelectors = auth.selectors
   const myUserCode = useAppSelector(authSelectors.getUserCode)
@@ -54,6 +55,7 @@ const useUserData = (
     meta = useAppSelector(getUserMeta)
   }
   const getMemberProfile = () => dispatch(userActions.getMemberProfile(userCode))
+  const clearMemberProfile = () => dispatch(userActions.clearMemberProfile())
   const getCommunityList = () => dispatch(communityActions.getCommunityList())
   const communityList = useAppSelector(communitySelectors.getCommunityList)
   const communityMeta = useAppSelector(getCommunityListMeta)
@@ -110,6 +112,7 @@ const useUserData = (
     getMemberProfile,
     profileImageChange,
     setFollowState,
+    clearMemberProfile,
   }
 }
 

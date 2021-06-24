@@ -71,23 +71,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           <Typography>{data.overview}</Typography>
         </Box>
 
-        <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={extended ? 2 : 3}>
-          <Box mr={3}>
-            <Typography>#{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
-          </Box>
-          <Box mr={3}>
-            <Typography>#{TournamentHelper.participantTypeText(data.participant_type)}</Typography>
-          </Box>
-          <Box mr={3}>
-            <Typography>#{TournamentHelper.ruleText(data.rule)}</Typography>
-          </Box>
-          {!!data.has_prize && (
-            <Box mr={3}>
-              <Typography>#{t('common:tournament.has_prize_true')}</Typography>
-            </Box>
-          )}
-          <Typography>#{hardware}</Typography>
-        </Box>
         {extended && (
           <>
             {/* rule */}
@@ -113,7 +96,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         )}
 
         {/* entry period */}
-        <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={2}>
+        <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={extended ? 2 : 3}>
           <Box className={classes.label}>
             <Typography>{t('common:tournament.entry_period')}</Typography>
           </Box>
@@ -237,6 +220,23 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </Box>
           </>
         )}
+        <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={3}>
+          <Box mr={1}>
+            <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
+          </Box>
+          <Box mr={1}>
+            <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
+          </Box>
+          <Box mr={1}>
+            <ESChip label={TournamentHelper.ruleText(data.rule)} />
+          </Box>
+          {!!data.has_prize && (
+            <Box mr={1}>
+              <ESChip label={t('common:tournament.has_prize_true')} />
+            </Box>
+          )}
+          <ESChip label={hardware} />
+        </Box>
         {!bottomButton ? null : (
           <Box textAlign="center" mt={2}>
             {bottomButton}

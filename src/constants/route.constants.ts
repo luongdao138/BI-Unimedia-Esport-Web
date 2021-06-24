@@ -19,6 +19,7 @@ export const ESRoutes = {
   NOT_FOUND: '/404',
   USER_SETTINGS: '/user-settings',
   MESSAGE: '/message/',
+  MESSAGE_PATHNAME: '/message',
   MESSAGE_ROOM_CREATE: '/message/create',
   RECRUITMENT_RECOMMENDED: '/recruitment/recommended',
   RECRUITMENT_FOLLOWER: '/recruitment/follower',

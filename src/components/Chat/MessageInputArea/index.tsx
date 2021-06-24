@@ -60,7 +60,6 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
 
   const send = (e: React.MouseEvent) => {
     onPressSend ? onPressSend(text.trim()) : undefined
-    setText('')
     e.preventDefault()
   }
 
