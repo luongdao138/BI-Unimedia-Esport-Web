@@ -5,7 +5,6 @@ import HeaderWithButton from '@components/HeaderWithButton'
 import useMyPageSettings from './useMyPageSettings'
 import { useEffect, useState } from 'react'
 import ESLoader from '@components/Loader'
-import _ from 'lodash'
 
 const ESMyPageInfoSettings: React.FC = () => {
   const { t } = useTranslation('common')
@@ -28,12 +27,14 @@ const ESMyPageInfoSettings: React.FC = () => {
   }
 
   useEffect(() => {
-    if (securitySettings) {
-      if (!_.isEqual(securitySettings, state)) {
-        updateSecuritySettings(state)
-      }
+    updateSecuritySettings(state)
+  }, [state])
+
+  useEffect(() => {
+    return () => {
+      setState(securitySettings)
     }
-  }, [state.show_tournament_history, state.show_activity_logs, state.show_about])
+  }, [])
 
   return (
     <div>
