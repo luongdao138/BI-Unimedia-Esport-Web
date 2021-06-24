@@ -631,6 +631,10 @@ export default {
     new_email: '新しいメールアドレス',
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
+    delete_confirm_title: 'アカウント削除はお問い合わせフォームでの申請となります',
+    delete_confirm_msg: 'アカウント削除はお問い合わせフォームでの申請となります',
+    delete_confirm_yes: 'はい',
+    delete_confirm_no: 'いいえ',
     change_password: 'パスワードの変更',
     current_password: '現在のパスワード',
     new_password: '新しいパスワード',
