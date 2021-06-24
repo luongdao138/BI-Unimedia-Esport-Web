@@ -1,12 +1,12 @@
 import { makeStyles, Typography, Box } from '@material-ui/core'
-import ESInput from '@components/Input'
-import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
-import CoOrganizersDialog from './Partials/CoOrganizersDialog'
 import { Colors } from '@theme/colors'
 import { UserLoginResponse } from '@services/auth.service'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useTournamentCreate'
+import CoOrganizersDialog from './Partials/CoOrganizersDialog'
+import ESFastInput from '@components/FastInput'
+import i18n from '@locales/i18n'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -15,14 +15,13 @@ type Props = {
 }
 
 const StepFour: React.FC<Props> = ({ formik, user, editables }) => {
-  const { t } = useTranslation(['common'])
   const classes = useStyles()
 
   return (
     <Box pb={9}>
       <Box pb={4}>
         <Box pb={1}>
-          <Typography className={classes.labelColor}>{t('common:tournament_create.organizer')}</Typography>
+          <Typography className={classes.labelColor}>{i18n.t('common:tournament_create.organizer')}</Typography>
         </Box>
         <Typography className={classes.hintColor}>{user.nickname}</Typography>
       </Box>
@@ -33,13 +32,14 @@ const StepFour: React.FC<Props> = ({ formik, user, editables }) => {
         />
       </Box>
       <Box pb={4}>
-        <ESInput
+        <ESFastInput
           id="organizer_name"
           name="stepFour.organizer_name"
-          labelPrimary={t('common:tournament_create.organizer_name')}
+          labelPrimary={i18n.t('common:tournament_create.organizer_name')}
           fullWidth
           value={formik.values.stepFour.organizer_name}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           helperText={formik.touched?.stepFour?.organizer_name && formik.errors?.stepFour?.organizer_name}
           error={formik.touched?.stepFour?.organizer_name && !!formik.errors?.stepFour?.organizer_name}
           size="small"

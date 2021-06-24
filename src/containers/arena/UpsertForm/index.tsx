@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
-import { useTranslation } from 'react-i18next'
-import ESTabs from '@components/Tabs'
-import ESTab from '@components/Tab'
 import ButtonPrimary from '@components/ButtonPrimary'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
@@ -15,7 +12,6 @@ import StepFour from './StepFour'
 import useCommonData from './useCommonData'
 import useTournamentCreate from './useTournamentCreate'
 import ESLoader from '@components/FullScreenLoader'
-import _ from 'lodash'
 import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
@@ -24,16 +20,27 @@ import { useStore } from 'react-redux'
 import { TournamentFormParams } from '@services/arena.service'
 import { useRouter } from 'next/router'
 import CancelDialog from './Partials/CancelDialog'
-
+import StepTabs from './StepTabs'
 import Confirm from './Confirm'
+import i18n from '@locales/i18n'
+import ESStickyFooter from '@components/StickyFooter'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import _ from 'lodash'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { ARENA_CREATE_VALIDATION_POPUP, FIELD_TITLES } from './FormModel/field_titles.constants'
+import { getAction } from '@store/common/selectors'
+
+let activeTabIndex = 0
 
 const TournamentCreate: React.FC = () => {
   const router = useRouter()
   const store = useStore()
+  const dispatch = useAppDispatch()
+  const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
   const { submit, update, meta, updateMeta, isEdit, arena, editables } = useTournamentCreate()
   const { handleReturn } = useReturnHref()
-  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const [hasError, setError] = useState(true)
@@ -62,6 +69,14 @@ const TournamentCreate: React.FC = () => {
   })
 
   useEffect(() => {
+    if (actionSelector === 'confirm') {
+      setTab(activeTabIndex)
+    }
+  }, [actionSelector])
+
+  useEffect(() => {
+    activeTabIndex = 0
+    setTab(0)
     formik.validateForm()
   }, [])
 
@@ -76,26 +91,84 @@ const TournamentCreate: React.FC = () => {
       isFirstRun.current = false
       return
     } else {
-      setError(!_.isEmpty(formik.errors))
+      const isRequiredFieldsValid = TournamentHelper.checkRequiredFields(formik.errors)
+      setError(!isRequiredFieldsValid)
     }
   }, [formik.errors])
 
-  const handleSetConfirm = () => setIsConfirm(true)
+  const handleSetConfirm = () => {
+    if (_.isEmpty(formik.errors)) {
+      setIsConfirm(true)
+      return
+    }
+
+    let fieldsHasError = []
+    if (_.has(formik.errors, 'stepOne')) {
+      activeTabIndex = 0
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepOne, _.keys(formik.errors.stepOne)))
+    } else if (_.has(formik.errors, 'stepTwo')) {
+      activeTabIndex = 1
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepTwo, _.keys(formik.errors.stepTwo)))
+    } else if (_.has(formik.errors, 'stepThree')) {
+      activeTabIndex = 2
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepThree, _.keys(formik.errors.stepThree)))
+    } else if (_.has(formik.errors, 'stepFour')) {
+      activeTabIndex = 3
+      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepFour, _.keys(formik.errors.stepFour)))
+    }
+
+    dispatch(showDialog({ ...ARENA_CREATE_VALIDATION_POPUP, actionText: _.isEmpty(fieldsHasError) ? '' : fieldsHasError[0] }))
+  }
+
   const handleUnsetConfirm = () => setIsConfirm(false)
+
+  const handleTabChange = useCallback((value) => {
+    setTab(value)
+  }, [])
 
   const renderEditButton = () => {
     return (
-      <Box>
+      <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          {t('common:tournament_create.check_content_button')}
+          {i18n.t('common:tournament_create.check_content_button')}
         </ButtonPrimary>
         <CancelDialog hashKey={`${router.query.hash_key}`} />
       </Box>
     )
   }
+
   return (
-    <>
-      <form onSubmit={formik.handleSubmit}>
+    <ESStickyFooter
+      disabled={false}
+      noScroll
+      noSpacing={isEdit}
+      content={
+        <>
+          {isConfirm ? (
+            <Box className={classes.reviewButtonContainer}>
+              <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
+                {i18n.t('common:common.cancel')}
+              </ButtonPrimary>
+              <ButtonPrimary type="submit" onClick={() => formik.submitForm()} round disabled={hasError} className={classes.footerButton}>
+                {i18n.t('common:tournament_create.submit')}
+              </ButtonPrimary>
+            </Box>
+          ) : isEdit ? (
+            renderEditButton()
+          ) : (
+            <ButtonPrimary
+              onClick={handleSetConfirm}
+              round
+              className={`${classes.footerButton} ${classes.confirmButton}`}
+              disabled={hasError}
+            >
+              {i18n.t('common:tournament_create.check_content_button')}
+            </ButtonPrimary>
+          )}
+        </>
+      }
+    >
+      <>
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
             <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
@@ -103,67 +176,38 @@ const TournamentCreate: React.FC = () => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
-                {t('common:tournament_create.title')}
+                {i18n.t('common:tournament_create.title')}
               </Typography>
             </Box>
           </Box>
-          {isConfirm ? null : <Box className={classes.spacingBorder} />}
-          {isConfirm ? (
-            <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} />
-          ) : (
-            <>
-              <Box pt={8} className={classes.container}>
-                <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-                  <ESTab className={classes.tabMin} label={t('common:tournament_create.tab1')} value={0} />
-                  <ESTab className={classes.tabMin} label={t('common:tournament_create.tab2')} value={1} />
-                  <ESTab className={classes.tabMin} label={t('common:tournament_create.tab3')} value={2} />
-                  <ESTab className={classes.tabMin} label={t('common:tournament_create.tab4')} value={3} />
-                </ESTabs>
-              </Box>
-              <Box py={4} className={classes.formContainer}>
-                {tab == 0 && <StepOne formik={formik} hardwares={hardwares} editables={editables} />}
-                {tab == 1 && <StepTwo formik={formik} editables={editables} />}
-                {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} />}
-                {tab == 3 && <StepFour formik={formik} user={user} editables={editables} />}
-              </Box>
-            </>
-          )}
         </Box>
-        <Box className={classes.stickyFooter}>
-          <Box className={classes.nextBtnHolder} style={isEdit ? { marginBottom: 34 } : undefined}>
+        <form onSubmit={formik.handleSubmit}>
+          <Box>
             {isConfirm ? (
-              <>
-                <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={classes.footerButton}>
-                  {t('common:common.cancel')}
-                </ButtonPrimary>
-                <ButtonPrimary type="submit" round disabled={hasError} className={classes.footerButton}>
-                  {t('common:tournament_create.submit')}
-                </ButtonPrimary>
-              </>
-            ) : isEdit ? (
-              renderEditButton()
+              <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} />
             ) : (
-              <ButtonPrimary
-                onClick={handleSetConfirm}
-                round
-                className={`${classes.footerButton} ${classes.confirmButton}`}
-                disabled={hasError}
-              >
-                {t('common:tournament_create.check_content_button')}
-              </ButtonPrimary>
+              <>
+                <StepTabs tab={tab} onTabChange={handleTabChange} />
+                <Box py={4} className={classes.formContainer}>
+                  {tab == 0 && <StepOne formik={formik} hardwares={hardwares} editables={editables} />}
+                  {tab == 1 && <StepTwo formik={formik} editables={editables} />}
+                  {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} />}
+                  {tab == 3 && <StepFour formik={formik} user={user} editables={editables} />}
+                </Box>
+              </>
             )}
           </Box>
-        </Box>
-      </form>
-      <ESLoader open={meta.pending || updateMeta.pending} />
-    </>
+        </form>
+        <ESLoader open={meta.pending || updateMeta.pending} />
+      </>
+    </ESStickyFooter>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   confirmButton: {},
+  cancelButton: {},
   footerButton: {
-    marginBottom: theme.spacing(1),
     width: 'fit-content',
     alignSelf: 'center',
     minWidth: `220px !important`,
@@ -190,21 +234,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: `1px solid #ffffff30`,
     textAlign: 'center',
   },
-  nextBtnHolder: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: theme.spacing(11),
+  reviewButtonContainer: {},
+  editButtonContainer: {
     marginTop: theme.spacing(3),
-    justifyContent: 'center',
+    marginBottom: theme.spacing(3),
   },
-  tabMin: {
-    minWidth: 56,
-  },
-  tabs: {
-    borderBottom: `1px solid ${Colors.text[300]}`,
-  },
-  spacingBorder: {
-    borderBottom: `1px solid ${Colors.text[300]}`,
+  topContainer: {
+    paddingBottom: 0,
   },
   [theme.breakpoints.down('sm')]: {
     container: {
@@ -213,17 +249,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     topContainer: {
       paddingTop: 0,
     },
-    spacingBorder: {
-      marginLeft: theme.spacing(-3),
-      marginRight: theme.spacing(-3),
-    },
-    tabs: {
-      marginLeft: theme.spacing(-3),
-      marginRight: theme.spacing(-3),
-    },
-    nextBtnHolder: {
+    reviewButtonContainer: {
+      display: 'flex',
       flexDirection: 'column-reverse',
-      marginBottom: theme.spacing(3),
+    },
+    cancelButton: {
+      marginTop: theme.spacing(2),
     },
   },
   [theme.breakpoints.up('md')]: {

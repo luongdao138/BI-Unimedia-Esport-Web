@@ -2,6 +2,8 @@ import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@con
 import moment from 'moment'
 import _ from 'lodash'
 import { TournamentDetail, TournamentMatchRound } from '@services/arena.service'
+import { FormikErrors } from 'formik'
+import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
 
 const participantTypeText = (participant_type: number): string => {
   const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
@@ -175,6 +177,34 @@ const isStatusPassed = (status: string, targetStatus: string): boolean => {
   return index >= targetIndex
 }
 
+const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
+  const { stepOne, stepTwo, stepThree } = errors
+
+  const requiredFieldErrors = []
+  if (stepOne) {
+    requiredFieldErrors.push(stepOne.title)
+    requiredFieldErrors.push(stepOne.game_title_id)
+    requiredFieldErrors.push(stepOne.game_hardware_id)
+  }
+  if (stepTwo) {
+    requiredFieldErrors.push(stepTwo.max_participants)
+  }
+  if (stepThree) {
+    requiredFieldErrors.push(stepThree.start_date)
+    requiredFieldErrors.push(stepThree.end_date)
+    requiredFieldErrors.push(stepThree.acceptance_start_date)
+    requiredFieldErrors.push(stepThree.acceptance_end_date)
+    requiredFieldErrors.push(stepThree.recruit_date)
+    requiredFieldErrors.push(stepThree.acceptance_dates)
+    requiredFieldErrors.push(stepThree.acceptance_end_start_date)
+    requiredFieldErrors.push(stepThree.start_end_date)
+  }
+
+  const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
+
+  return _.isEmpty(filteredErrors)
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -188,4 +218,5 @@ export const TournamentHelper = {
   checkParticipantsSelected,
   onTypeChange,
   isStatusPassed,
+  checkRequiredFields,
 }
