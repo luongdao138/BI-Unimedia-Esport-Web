@@ -62,7 +62,9 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
               {i18n.t('common:chat.reply_img_text')}
             </Typography>
           </Box>
-          <PhotoMessage status={true} size={30} msg={text} />
+          <Box className={classes.photoBox}>
+            <PhotoMessage status={true} size={30} msg={text} />
+          </Box>
         </Box>
       )
     }
@@ -86,9 +88,9 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
         <ListItemText>
           {showName ? <Typography variant="body2">{nickName}</Typography> : null}
           {renderText()}
+          {renderPhoto()}
         </ListItemText>
       </ListItem>
-      {renderPhoto()}
     </Box>
   )
 }
@@ -114,21 +116,18 @@ const useStyles = makeStyles(() => ({
   imgBox: {
     width: 80,
     height: 80,
+  },
+  photoBox: {
     borderRadius: 3,
+    overflow: 'hidden',
   },
   panelStyle: {
     paddingRight: 20,
   },
   photoHolder: {
-    top: 10,
     display: 'flex',
     flexDirection: 'row',
-    transform: 'none',
-    position: 'absolute',
-    right: 20,
-    left: 50,
     justifyContent: 'space-between',
-    borderRadius: 3,
     overflow: 'hidden',
   },
 }))
