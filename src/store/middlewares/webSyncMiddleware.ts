@@ -27,6 +27,7 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
       case AppSyncActionType.NOTIFICATION:
         store.dispatch(notificationActions.getNotificationBadge())
         store.dispatch(notificationActions.getNotifications({ page: 1 }))
+        store.dispatch(notificationActions.getNotificationBadgeList())
         break
       default:
     }
