@@ -94,7 +94,7 @@ const deleteMessage = (olddata: MessageType[], newdata: any[]): MessageType[] =>
   if (olddata && olddata[0] && newdata && newdata[0]) {
     const sortKey = newdata[0].sortKey
     const replaceText = newdata[0].parentMsgDeletedText
-    const deleteFrom: any = olddata
+    const deleteFrom: MessageType[] = olddata
     const roomId = newdata[0].chatRoomId
 
     const messagesRoom = olddata[0].chatRoomId
@@ -103,7 +103,7 @@ const deleteMessage = (olddata: MessageType[], newdata: any[]): MessageType[] =>
       updatedObj = _.remove(deleteFrom, function (item: any) {
         return item.sortKey != sortKey
       }).map((item) => {
-        if (item.parentMsg != null && !item.parentMsg.isDeleted) {
+        if (item.parentMsg != null && !item.parentMsg.isDeleted && item.parentMsg.sortKey === sortKey) {
           item.parentMsg.msg = replaceText
           item.parentMsg.isDeleted = true
           item.parentMsg.type = CHAT_MESSAGE_TYPE.TEXT

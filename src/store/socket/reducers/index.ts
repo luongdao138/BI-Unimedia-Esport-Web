@@ -136,7 +136,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
 
     case CHAT_ACTION_TYPE.MESSAGE_DELETED:
       if (!_.isEmpty(state.messages)) {
-        const deletedMsg = ChatHelper.deleteMessage([...state.messages], action.data.content)
+        const deletedMsg = ChatHelper.deleteMessage(_.cloneDeep(state.messages), action.data.content)
         deleted = deletedMsg
       } else {
         deleted = state.messages
