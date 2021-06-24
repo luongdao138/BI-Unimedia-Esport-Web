@@ -5,6 +5,7 @@ export type GetFriendsParam = {
   type: 'dm' | 'group'
   keyword?: string
   page?: number
+  per_page?: number
 }
 
 export interface FriendItem {
