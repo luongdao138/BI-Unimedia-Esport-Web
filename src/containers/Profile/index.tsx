@@ -139,7 +139,20 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     <Icon className={`fas fa-inbox ${classes.inbox}`} />
                   </ESButton>
                 ) : null}
-                {isFollowing ? (
+                {attr.is_blocked ? (
+                  <ESButton
+                    variant="outlined"
+                    round
+                    className={classes.marginRight}
+                    disabled={disable}
+                    onClick={() => {
+                      unblockUser({ block_type: 'user', target_id: Number(profile.id) })
+                      setBlocked(false)
+                    }}
+                  >
+                    {i18n.t('common:profile.unblock')}
+                  </ESButton>
+                ) : isFollowing ? (
                   <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.following')}
                   </ESButton>

@@ -16,6 +16,7 @@ interface Props {
   handleClick?: () => void
   handleClose?: () => void
   changeFollowState?: (type: number) => void
+  nicknameYellow?: boolean
 }
 
 enum FOLLOWING_STATE_CHANGE_TYPE {
@@ -23,7 +24,7 @@ enum FOLLOWING_STATE_CHANGE_TYPE {
   UNFOLLOW = 0,
 }
 
-const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick, changeFollowState }) => {
+const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick, changeFollowState, nicknameYellow }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -92,7 +93,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleCl
           )}
           <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
             <Box color={Colors.white}>
-              <Typography variant="h3" noWrap>
+              <Typography variant="h3" noWrap style={nicknameYellow === true ? { color: '#F7F560' } : undefined}>
                 {user.nickname}
               </Typography>
             </Box>

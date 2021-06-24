@@ -16,6 +16,9 @@ import BlankLayout from '@layouts/BlankLayout'
 import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
 import LoginRequired from '@containers/LoginRequired'
+import SideFooter from './SideFooter'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'relative',
     height: '100%',
-    paddingBottom: 112,
+    paddingBottom: 66,
     paddingTop: 203,
   },
   icon: {
@@ -92,10 +95,6 @@ const useStyles = makeStyles((theme) => ({
   },
   clickable: {
     cursor: 'pointer',
-  },
-  logout: {
-    position: 'absolute',
-    bottom: 70,
   },
   buttonWrap: {
     paddingTop: theme.spacing(2),
@@ -170,6 +169,8 @@ const SideMenu: React.FC = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
+  const theme = useTheme()
+  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -272,18 +273,16 @@ const SideMenu: React.FC = () => {
               </ButtonBase>
             </Box> */}
           </List>
-        </Box>
-
-        {isAuthenticated && (
-          <Box className={classes.logout}>
+          {isAuthenticated && (
             <ListItem className={classes.list} button disableRipple onClick={() => handleModal('logout')}>
               <ListItemIcon className={classes.icon}>
                 <Icon fontSize="small" className="fa fa-sign-out-alt" />
               </ListItemIcon>
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
-          </Box>
-        )}
+          )}
+          {!downSm && <SideFooter />}
+        </Box>
       </Box>
 
       <ESModal open={modal} handleClose={() => setModal(false)}>
