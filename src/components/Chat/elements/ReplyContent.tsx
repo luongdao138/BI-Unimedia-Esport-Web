@@ -6,6 +6,8 @@ import _ from 'lodash'
 import TextMessage from './TextMessage'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import PhotoMessage from './PhotoMessage'
+import { Colors } from '@theme/colors'
+import i18n from '@locales/i18n'
 
 export interface ReplyContentProps {
   replyMessage: null | ParentItem | string | MessageType
@@ -55,7 +57,14 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
     if (type === CHAT_MESSAGE_TYPE.IMAGE) {
       return (
         <Box className={classes.photoHolder}>
-          <PhotoMessage status={true} size={30} msg={text} />
+          <Box>
+            <Typography variant="body1" className={classes.imgText}>
+              {i18n.t('common:chat.reply_img_text')}
+            </Typography>
+          </Box>
+          <Box className={classes.photoBox}>
+            <PhotoMessage status={true} size={30} msg={text} />
+          </Box>
         </Box>
       )
     }
@@ -79,9 +88,9 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
         <ListItemText>
           {showName ? <Typography variant="body2">{nickName}</Typography> : null}
           {renderText()}
+          {renderPhoto()}
         </ListItemText>
       </ListItem>
-      {renderPhoto()}
     </Box>
   )
 }
@@ -97,6 +106,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 0,
     paddingRight: 10,
   },
+  imgText: { color: Colors.grey[200], padding: 5, paddingRight: 10 },
   avatar: {
     minWidth: 40,
   },
@@ -106,17 +116,18 @@ const useStyles = makeStyles(() => ({
   imgBox: {
     width: 80,
     height: 80,
+  },
+  photoBox: {
     borderRadius: 3,
+    overflow: 'hidden',
   },
   panelStyle: {
     paddingRight: 20,
   },
   photoHolder: {
-    top: 10,
-    transform: 'none',
-    position: 'absolute',
-    right: 20,
-    borderRadius: 3,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     overflow: 'hidden',
   },
 }))

@@ -44,6 +44,21 @@ export type MessageType = {
   formattedMsg?: string
 }
 
+export type DeleteType = {
+  chatRoomId: string
+  clientId: string
+  createdAt: number
+  groupType?: number
+  isLastMsg?: boolean
+  lastMsgTxt?: string | null
+  msg: string
+  parentId?: string
+  parentMsgDeletedText?: string
+  sortKey: string
+  type?: number
+  userId?: number
+}
+
 export type ParentItem = {
   msg: string
   chatRoomId: string
