@@ -90,7 +90,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Typography variant="h2">{t('common:tournament_create.comfirm_title')}</Typography>
       <Box pb={4.25} />
       <Box>
-        <img src={values.stepOne.cover_image_url} className={classes.coverImg}></img>
+        <img src={values.stepOne.cover_image_url} className={classes.coverImg} />
       </Box>
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
@@ -121,14 +121,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <ESInput value={`${values.stepTwo.max_participants}${peopleText}`} disabled={true} fullWidth />
       <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth />
       <Box pb={2} />
-      <ESInput
-        labelPrimary={t('common:tournament_create.precautions')}
-        value={values.stepTwo.notes}
-        multiline
-        // rows={3}
-        disabled={true}
-        fullWidth
-      />
+      <ESInput labelPrimary={t('common:tournament_create.precautions')} value={values.stepTwo.notes} multiline disabled={true} fullWidth />
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.retain_history_short')}
@@ -173,7 +166,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   valueColor: {
     color: '#ffffff4d',
   },
-
   [theme.breakpoints.down('sm')]: {
     viewHolder: {
       marginLeft: 24,

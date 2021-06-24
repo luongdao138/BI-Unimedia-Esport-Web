@@ -47,13 +47,13 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
     <div className={classes.root}>
       <label
         htmlFor="cover-upload"
-        className={classes.touch}
+        className={`${classes.touch} ${disabled && classes.touchDisabled}`}
         onMouseEnter={() => {
-          if (!isUploading) setDrag(true)
+          if (!isUploading && !disabled) setDrag(true)
         }}
         onMouseLeave={() => setDrag(false)}
         onClick={() => {
-          if (!isUploading) setDrag(true)
+          if (!isUploading && !disabled) setOpen(true)
         }}
       >
         {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
@@ -107,6 +107,11 @@ const useStyles = makeStyles(() => ({
     borderRadius: 4,
     '&:hover': {
       cursor: 'pointer',
+    },
+  },
+  touchDisabled: {
+    '&:hover': {
+      cursor: 'default',
     },
   },
   camera: {
