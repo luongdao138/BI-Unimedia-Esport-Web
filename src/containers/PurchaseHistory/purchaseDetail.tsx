@@ -3,7 +3,6 @@ import HeaderWithButton from '@components/HeaderWithButton'
 import { useTranslation } from 'react-i18next'
 import { Link, Box, makeStyles, Typography, withStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import usePurchaseHistoryDetail from '@containers/PurchaseHistory/usePurchaseHistoryDetail'
 import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
@@ -15,10 +14,11 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import { useRouter } from 'next/router'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const PurchaseDetail: React.FC = () => {
   const router = useRouter()
-  const id: any = router.query.id
+  const { id } = router.query
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
@@ -55,21 +55,27 @@ const PurchaseDetail: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchPurchaseHistoryDetail(id)
+      fetchPurchaseHistoryDetail(String(id))
     }
     return function () {
       clearPurchaseHistoryDetail()
     }
   }, [router])
 
-  const date =
-    _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.PURCHASED
-      ? _.get(purchaseHistoryDetail.data.attributes, 'purchase_datetime', +purchaseHistoryDetail.data.attributes.purchase_datetime)
-      : _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.CANCELLED
-      ? _.get(purchaseHistoryDetail.data.attributes, 'cancelled_datetime', +purchaseHistoryDetail.data.attributes.cancelled_datetime)
-      : _.get(purchaseHistoryDetail.data.attributes, 'cancel_req_datetime', +purchaseHistoryDetail.data.attributes.cancel_req_datetime)
+  const purchase_status = _.get(purchaseHistoryDetail, 'data.attributes.status')
+  const purchase_datetime = _.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime')
+  const cancelled_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancelled_datetime')
+  const cancel_req_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancel_req_datetime')
 
-  const time = CommonHelper.staticSmartTime(date)
+  const time = CommonHelper.staticSmartTime(
+    purchase_status == PAYMENT_STATUS.PURCHASED
+      ? purchase_datetime
+      : purchase_status == PAYMENT_STATUS.CANCELLED
+      ? cancelled_datetime
+      : purchase_status == PAYMENT_STATUS.CANCEL_REQUESTED
+      ? cancel_req_datetime
+      : purchase_datetime
+  )
 
   return (
     <>
