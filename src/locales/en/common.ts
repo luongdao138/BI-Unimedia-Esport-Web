@@ -416,6 +416,12 @@ export default {
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
     to_detail: '大会詳細',
+    validation_popup: {
+      title: 'Validation error',
+      message: 'Please provide valid data into corresponding fields',
+      check_item: 'チェック項目：',
+      confirm: '了解',
+    },
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -480,7 +486,7 @@ export default {
     co_orgonizer: '共同管理者を選ぶ',
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
-    public_or_private: '公開設定',
+    public_or_private: '大会公開設定',
     title_placeholder: '○○文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
@@ -577,7 +583,6 @@ export default {
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
     lets_start: 'メッセージを入力',
-    not_selected_text: 'メッセージを始めましょう',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです。',
     chat_copied: 'メッセージ内容をコピーしました。',
@@ -585,6 +590,7 @@ export default {
     member_add_title: 'メンバーを追加',
     member_add_toast: 'メンバーを追加しました',
     room_name_placeholder: 'グループ名を入力',
+    reply_img_text: '写真',
   },
   notification: {
     title: '通知一覧',
@@ -631,8 +637,8 @@ export default {
     new_email: '新しいメールアドレス',
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
-    delete_confirm_title: 'アカウント削除はお問い合わせフォームでの申請となります',
-    delete_confirm_msg: 'アカウント削除はお問い合わせフォームでの申請となります',
+    delete_confirm_title: '問い合わせフォームでの申請となります。',
+    delete_confirm_msg: 'お問い合わせフォームを開きますか。',
     delete_confirm_yes: 'はい',
     delete_confirm_no: 'いいえ',
     change_password: 'パスワードの変更',

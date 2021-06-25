@@ -14,7 +14,7 @@ const HeaderTags: React.FC<TagsProps> = ({ items }) => {
     <Box display="flex" className={classes.tagContainer}>
       {items.length > 0 && items !== null
         ? items.map((item: Feature, i: number) => {
-            return <ESChip key={i} className={classes.marginRight} label={item.feature} />
+            return <ESChip key={i} className={classes.chip} label={item.feature} />
           })
         : null}
     </Box>
@@ -26,8 +26,10 @@ const useStyles = makeStyles(() => ({
   tagContainer: {
     marginTop: 8,
     marginBottom: 8,
+    flexWrap: 'wrap',
   },
-  marginRight: {
+  chip: {
     marginRight: 8,
+    marginBottom: 8,
   },
 }))

@@ -10,9 +10,10 @@ export type Props = {
   show?: boolean
   noScroll?: boolean
   content?: JSX.Element
+  noSpacing?: boolean
 }
 
-const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, noScroll, content }) => {
+const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, noScroll, content, noSpacing }) => {
   const classes = useStyles()
 
   return (
@@ -20,7 +21,7 @@ const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, s
       {children}
       {show && (
         <Box className={classes.stickyFooter}>
-          <Box className={classes.nextBtnHolder}>
+          <Box className={`${classes.nextBtnHolder} ${noSpacing && classes.noSpacing}`}>
             {content ? (
               content
             ) : (
@@ -70,6 +71,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     nextBtnHolder: {
       marginBottom: theme.spacing(5),
     },
+  },
+  noSpacing: {
+    marginBottom: 0,
+    marginTop: 0,
   },
 }))
 

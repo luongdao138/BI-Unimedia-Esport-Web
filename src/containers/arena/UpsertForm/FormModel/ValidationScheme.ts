@@ -36,6 +36,7 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
     }),
     stepTwo: Yup.object({
       max_participants: Yup.number()
+        .required(i18n.t('common:common.input_required'))
         .min(2, i18n.t('common:arena.participants_limit'))
         .max(128, i18n.t('common:arena.participants_limit'))
         .integer(i18n.t('common:common.integer')),

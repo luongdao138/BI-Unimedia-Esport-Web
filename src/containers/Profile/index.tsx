@@ -59,8 +59,21 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     window.onscroll = () => {
       setOffset(window.pageYOffset)
     }
-    return () => clearMemberProfile()
+    return () => {
+      clearMemberProfile()
+    }
   }, [])
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     toggleSticky(tableRef.current.getBoundingClientRect());
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [toggleSticky]);
+  // return { tableRef, isSticky };
 
   useEffect(() => {
     if (isOthers) {
@@ -136,7 +149,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             {isOthers ? (
               <Box className={classes.menu}>
                 {attr.is_direct_chat_available ? (
-                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={dm}>
+                  <ESButton variant="outlined" round className={classes.buttonInbox} disabled={disable} onClick={dm}>
                     <Icon className={`fas fa-inbox ${classes.inbox}`} />
                   </ESButton>
                 ) : null}
@@ -144,7 +157,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                   <ESButton
                     variant="outlined"
                     round
-                    className={classes.marginRight}
+                    className={classes.button}
                     disabled={disable}
                     onClick={() => {
                       unblockUser({ user_code: attr.user_code })
@@ -154,11 +167,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     {i18n.t('common:profile.unblock')}
                   </ESButton>
                 ) : isFollowing ? (
-                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                  <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.following')}
                   </ESButton>
                 ) : (
-                  <ESButton variant="outlined" round className={classes.marginRight} disabled={disable} onClick={setFollowState}>
+                  <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
                     {i18n.t('common:profile.follow_as')}
                   </ESButton>
                 )}
@@ -338,6 +351,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   marginRight: {
     marginRight: 8,
   },
+  button: {
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  buttonInbox: {
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: 0,
+    paddingRight: 0,
+    marginRight: 8,
+  },
   relative: {
     position: 'relative',
   },
@@ -351,10 +377,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 50,
   },
   inbox: {
     color: Colors.white,
-    fontSize: '24px',
+    fontSize: '22px',
+    paddingRight: -5,
+    paddingLeft: -5,
   },
   wrapOne: {
     overflow: 'hidden',
