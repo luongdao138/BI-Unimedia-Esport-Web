@@ -121,6 +121,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
       console.error(e)
     }
   }, [croppedAreaPixels])
+  // console.log('CoverSelector.tsx 124 ', mediaDimensions)
 
   return (
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>

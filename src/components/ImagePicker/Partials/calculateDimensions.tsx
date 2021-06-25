@@ -25,20 +25,14 @@ export const calculateDimensions = (width: number, height: number, S_W: number, 
 }
 export const calculateDimensionsCover = (width: number, height: number, S_W: number, S_H: number): { height: number; width: number } => {
   let h = height,
-    w = width
-
-  if (h > w) {
-    const gap = w / S_W
-    w = S_W
-    h = h / gap
-  } else if (h == w) {
-    const gap = w > S_W ? w / S_W : S_W / w
-    w = S_W
-    h = h * gap
-  } else {
-    const gap = h / S_H
+    w = width,
+    gap = S_W / w
+  w = S_W
+  h = h * gap
+  if (h * 4 < w) {
+    gap = S_H / h
     h = S_H
-    w = w / gap
+    w = w * gap
   }
   return { height: h, width: w }
 }
