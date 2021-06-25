@@ -65,7 +65,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         bkColor="rgba(0,0,0,0.8)"
         alignTop
         fixedFooter={renderFooter()}
-        className="scroll-bar"
+        className={`scroll-bar`}
       >
         <DialogContent>
           <Box mt={8}>
@@ -95,9 +95,16 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
 RoomNameEditor.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {},
+  container: {
+    alignSelf: 'flex-start',
+  },
   nameInfoMsg: {
     textAlign: 'center',
+  },
+  alignTop: {
+    '& .MuiDialog-container ': {
+      alignItems: 'flex-start',
+    },
   },
   stickyFooter: {
     position: 'fixed',
