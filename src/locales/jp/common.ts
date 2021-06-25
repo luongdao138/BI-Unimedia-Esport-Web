@@ -634,7 +634,7 @@ export default {
     delete_account: 'アカウントを削除する',
     change_email_address: 'メールアドレスの変更',
     current_email: '現在のメールアドレス',
-    new_email: '新しいメールアドレス',
+    new_email: 'sample@exelab.jp',
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
     delete_confirm_title: '問い合わせフォームでの申請となります。',
@@ -688,8 +688,8 @@ export default {
     vendor_name: 'NTTe-Sports',
     ticket_name: 'アイテム',
     type: '区分',
-    price: '金額',
-    status: 'ステータス',
+    price: '購入金額',
+    status: '購入ステータス',
     payment_method: '支払い方法',
     questions: 'よくあるお問い合わせ',
     about_purchase_status: '購入ステータスについて',
@@ -711,6 +711,7 @@ export default {
     dialog_close: '戻る',
     cancel_submit: 'キャンセルする',
     cancel_msg: 'アイテムの購入をキャンセルしました',
+    no_data: '購入されたアイテムはありません',
   },
   inquiry: {
     title: 'お問い合わせ',
