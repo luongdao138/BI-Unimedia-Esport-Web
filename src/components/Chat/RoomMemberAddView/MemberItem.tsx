@@ -8,10 +8,10 @@ import i18n from '@locales/i18n'
 
 export interface MemberItemProps {
   item: ShortMember
-  onChange: (id: number) => void
+  onAdd: (item: ShortMember) => void
 }
 
-const MemberItem: React.FC<MemberItemProps> = ({ item, onChange }) => {
+const MemberItem: React.FC<MemberItemProps> = ({ item, onAdd }) => {
   const classes = useStyles()
   const profile = _.get(item, 'profile', null)
   const nickName = _.get(item, 'nickName', '')
@@ -21,7 +21,7 @@ const MemberItem: React.FC<MemberItemProps> = ({ item, onChange }) => {
   const disabledClass = isAdded || isSelected ? classes.disabled : ''
   const handler = () => {
     if (!isAdded) {
-      onChange(item.id)
+      onAdd(item)
     }
   }
 
