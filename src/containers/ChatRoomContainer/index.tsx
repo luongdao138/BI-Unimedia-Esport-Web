@@ -83,6 +83,12 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     }
   }, [userId, roomId])
 
+  useEffect(() => {
+    if (roomId) {
+      setReply(null)
+    }
+  }, [roomId])
+
   const handlePress = (text: string) => {
     if (_.isEmpty(checkNgWord(text))) {
       const currentTimestamp = moment().valueOf()
