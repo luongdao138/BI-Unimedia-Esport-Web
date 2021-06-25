@@ -64,6 +64,17 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     }
   }, [])
 
+  // const toggleSticky = useCallback(
+  //   ({ top, bottom }) => {
+  //     if (top <= 0 && bottom > 2 * 68) {
+  //       !isSticky && setIsSticky(true);
+  //     } else {
+  //       isSticky && setIsSticky(false);
+  //     }
+  //   },
+  //   [isSticky]
+  // );
+
   // useEffect(() => {
   //   const handleScroll = () => {
   //     toggleSticky(tableRef.current.getBoundingClientRect());
@@ -392,3 +403,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
 }))
+
+// NEXT_PUBLIC_API=https://dev-api.exelab.jp
+// NEXT_PUBLIC_APPLE_CLIENT_ID=jp.co.ntt.esportspf.exelab.client
+// NEXT_PUBLIC_APPLE_CALLBACK=https://dev-web.exelab.jp/apple/callback
+// NEXT_PUBLIC_GOOGLE_CLIENT_ID=801641311868-k5a2g1v3u3jksehm70glp50voai2obhk.apps.googleusercontent.com
+// NEXT_PUBLIC_FACEBOOK_APP_ID=285212396003698
+// NEXT_PUBLIC_LINE_CLIENT_ID=1654370114
+// NEXT_PUBLIC_LINE_CALLBACK=https://dev-web.exelab.jp/line/callback
+// TWITTER_APP_ID=f4tB21urDyqvF9k8P9ApqYJ4u
+// TWITTER_CALLBACK=https://dev-web.exelab.jp/twitter/callback
+// NEXT_PUBLIC_CHAT_END_POINT=wss://gumv6neb72.execute-api.ap-northeast-1.amazonaws.com/Prod
+// NEXT_PUBLIC_SYNC_BACKEND_END_POINT=wss://ilz9xr8i2g.execute-api.ap-northeast-1.amazonaws.com/feature
+
+// TWITTER_APP_SECRET=b06Ri80A9OxUBMUEJDqd0KczkJlxvRy3OiY882U0cTve2YLvof
+// LINE_CLIENT_SECRET=6db17199439584245b1354e6dbf3210b
+// GA_TRACKING_ID=G-MXCBYN3D5H
