@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
+import { calculateDimensionsCover } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Image from 'next/image'
@@ -46,8 +47,8 @@ const ImageSlider = withStyles({
   },
 })(Slider)
 
-const S_WIDTH = 600
-const S_HEIGHT = 200
+const STATIC_WIDTH = 600
+const STATIC_HEIGHT = 200
 
 const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
@@ -56,13 +57,19 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
-  const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
-  const { width } = useWindowDimensions(64)
-  const classes = useStyles({ width: width })
+  const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
+  const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
+  const { width: containerWidth } = useWindowDimensions(64)
+  const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
+  const classes = useStyles({ width: dynamicWidth })
 
   useEffect(() => {
     return setUploading(false)
   }, [])
+
+  useEffect(() => {
+    setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
+  }, [containerWidth])
 
   const dropZoneConfig = {
     accept: 'image/*',
@@ -81,12 +88,11 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
         img.onload = function () {
           const w = img.naturalWidth || img.width
           const h = img.naturalHeight || img.height
-          if (h > w) {
+          setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
+          if (h >= w) {
             setFit('horizontal-cover')
           } else if (w > h) {
             setFit('vertical-cover')
-          } else {
-            setFit('contain')
           }
         }
         setFile(reader.result)
@@ -129,7 +135,8 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
               objectFit={fitType}
               aspect={4 / 1}
               style={{
-                containerStyle: { width: width > S_WIDTH ? S_WIDTH : width, height: S_HEIGHT, position: 'relative' },
+                containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
+                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
               }}
               showGrid={false}
               onCropChange={setCrop}
@@ -193,8 +200,8 @@ export interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   imageContainer: {
     display: 'flex',
-    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
-    height: S_HEIGHT,
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -264,16 +271,16 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   cropContainer: {
     position: 'relative',
     display: 'flex',
-    height: S_HEIGHT,
-    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
   },
   touch: {
     zIndex: 30,
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
-    height: S_HEIGHT,
-    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
     borderRadius: '50%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -283,8 +290,8 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
   avatar: {
     zIndex: 30,
-    height: S_HEIGHT,
-    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
   },
 
   backdrop: {

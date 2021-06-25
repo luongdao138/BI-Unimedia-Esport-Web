@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
+import { calculateDimensions } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
@@ -73,33 +74,31 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   }
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
-  const calcDimensions = (width: number, height: number) => {
-    let h = height,
-      w = width
-    if (w <= h && w < WH) {
-      const gap = WH / w
-      w = WH
-      h = h * gap
-    } else if (h < w && h < WH) {
-      const gap = WH / h
-      h = WH
-      w = w * gap
-    } else if (h > WH && w > WH) {
-      let gap = 0
-      if (h > w) {
-        gap = w / WH
-        w = WH
-        h = h / gap
-      } else {
-        gap = h / WH
-        h = WH
-        w = w / gap
-      }
-    }
-    setMediaDimensions({ height: h, width: w })
-    // console.log('AvatarSelector.tsx 61 height: ' + height + ' width: ' + width)
-    // console.log('AvatarSelector.tsx 61 h: ' + h + ' w: ' + w)
-  }
+  // const calcDimensions = (width: number, height: number) => {
+  //   let h = height,
+  //     w = width
+  //   if (w <= h && w < WH) {
+  //     const gap = WH / w
+  //     w = WH
+  //     h = h * gap
+  //   } else if (h < w && h < WH) {
+  //     const gap = WH / h
+  //     h = WH
+  //     w = w * gap
+  //   } else if (h > WH && w > WH) {
+  //     let gap = 0
+  //     if (h > w) {
+  //       gap = w / WH
+  //       w = WH
+  //       h = h / gap
+  //     } else {
+  //       gap = h / WH
+  //       h = WH
+  //       w = w / gap
+  //     }
+  //   }
+  //   setMediaDimensions({ height: h, width: w })
+  // }
 
   const handleChange = (files: Array<File>) => {
     const f = files[0]
@@ -112,7 +111,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
         img.onload = function () {
           const width = img.naturalWidth || img.width
           const height = img.naturalHeight || img.height
-          calcDimensions(width, height)
+          setMediaDimensions(calculateDimensions(width, height, WH, WH))
+          // calcDimensions(width, height)
           if (height > width) {
             setFit('horizontal-cover')
           } else if (width > height) {
