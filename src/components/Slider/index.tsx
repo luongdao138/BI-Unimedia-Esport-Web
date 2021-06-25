@@ -16,7 +16,8 @@ const ESSlide: React.FC<{
   navigation?: boolean
   slidesPerView?: number | 'auto'
   breakpoints?: any
-}> = ({ items, navigation, slidesPerView, breakpoints, ...rest }) => {
+  containerClass?: string
+}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, ...rest }) => {
   const { t } = useTranslation(['common'])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -27,7 +28,7 @@ const ESSlide: React.FC<{
   const nextRef = useRef(null)
 
   return (
-    <div className="slideWrap">
+    <div className={`slideWrap ${containerClass}`}>
       {title && (
         <Typography className={classes.containerStart} variant="h3" gutterBottom>
           {title}
@@ -40,17 +41,27 @@ const ESSlide: React.FC<{
         {...props}
         className={classes.wrap}
         breakpoints={breakpoints}
-        onInit={(swiper) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          swiper.params.navigation.prevEl = prevRef.current
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          swiper.params.navigation.nextEl = nextRef.current
-          swiper.navigation.init()
-          swiper.navigation.update()
+        onSwiper={(swiper) => {
+          // Delay execution for the refs to be defined
+          setTimeout(() => {
+            if (swiper) {
+              if (swiper.params) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                // eslint-disable-next-line no-param-reassign
+                swiper.params.navigation.prevEl = prevRef.current
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                // eslint-disable-next-line no-param-reassign
+                swiper.params.navigation.nextEl = nextRef.current
+              }
+              if (swiper.navigation) {
+                swiper.navigation.destroy()
+                swiper.navigation.init()
+                swiper.navigation.update()
+              }
+            }
+          })
         }}
       >
         {items.map((item, index) => {
@@ -155,7 +166,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 ESSlide.defaultProps = {
-  slidesPerView: 2.1,
+  slidesPerView: 1.5,
 }
 
 export default ESSlide

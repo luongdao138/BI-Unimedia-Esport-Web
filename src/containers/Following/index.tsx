@@ -11,7 +11,7 @@ import _ from 'lodash'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { FixedSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { FollowResponse } from '@services/follow.service'
+import { FollowResponse } from '@services/user.service'
 
 export interface ESFollowingProps {
   user_code: string
@@ -78,8 +78,8 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
           <Typography>{t('common:following.title')}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : 0}</Typography>
+            <Typography>{t('common:following.th')}</Typography>
           </Box>
-          <Typography>{t('common:following.th')}</Typography>
         </Box>
       </Button>
       <ESDialog title={t('common:following.title')} open={open} handleClose={() => setOpen(false)}>
@@ -120,15 +120,15 @@ export default ESFollowing
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
-    fontSize: 14,
-    marginRight: 20,
+    flexWrap: 'wrap',
     alignItems: 'center',
   },
   countContainer: {
     marginLeft: 8,
-    marginRight: 10,
+    alignItems: 'center',
   },
   count: {
+    marginRight: 10,
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white,

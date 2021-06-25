@@ -1,5 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/chat.service'
+import { AppDispatch } from '@store/store'
 
 import { MESSAGE_ACTION_TYPE } from './types'
 
@@ -33,6 +34,11 @@ export const directRoomCheck = createAsyncThunk<services.CheckChatResponse, stri
   }
 )
 
+export const directRoomCheckChain = (userCode: string) => async (dispatch: AppDispatch): Promise<any> => {
+  // await Promise.all([dispatch(resetDmRoom()), dispatch(directRoomCheck(userCode))])
+  Promise.resolve(dispatch(resetDmRoom())).then(() => dispatch(directRoomCheck(userCode)))
+}
+
 export const getMessageTournamentDetail = createAsyncThunk<services.MessageTournamentResponse, string>(
   MESSAGE_ACTION_TYPE.GET_TOURNAMENT_DETAIL,
   async (roomId, { rejectWithValue }) => {
@@ -49,3 +55,4 @@ export const getMessageTournamentDetail = createAsyncThunk<services.MessageTourn
 )
 
 export const resetAddUsers = createAction(MESSAGE_ACTION_TYPE.RESET_ADD_USERS)
+export const resetDmRoom = createAction(MESSAGE_ACTION_TYPE.RESET_DM_ROOM)

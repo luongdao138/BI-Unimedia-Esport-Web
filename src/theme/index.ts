@@ -54,6 +54,7 @@ export default createMuiTheme({
     },
     overline: {
       fontSize: 10,
+      textTransform: 'initial',
     },
   },
   overrides: {

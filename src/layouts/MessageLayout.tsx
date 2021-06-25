@@ -14,9 +14,13 @@ import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
 
-const MessageLayout: React.FC = ({ children }) => {
+interface LayoutProps {
+  defaultListState?: boolean
+}
+
+const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) => {
   const [open, setOpen] = useState<boolean>(false)
-  const [showList, setShowList] = useState<boolean>(false)
+  const [showList, setShowList] = useState<boolean>(defaultListState)
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
@@ -30,16 +34,18 @@ const MessageLayout: React.FC = ({ children }) => {
     setShowList(open)
   }
 
-  const backHandler = (e: React.MouseEvent) => {
-    e.preventDefault
+  const backHandler = (_e: React.MouseEvent) => {
     if (previousRoute) {
+      if (previousRoute === ESRoutes.MESSAGE_PATHNAME) {
+        router.push(ESRoutes.HOME)
+      }
       router.push(previousRoute)
     } else {
-      router.push('/home')
+      router.push(ESRoutes.HOME)
     }
   }
   const navigateRoomCreate = () => {
-    router.push(ESRoutes.MESSAGE_ROOM_CREATE, undefined, { shallow: true })
+    router.push(ESRoutes.MESSAGE_ROOM_CREATE)
   }
 
   useEffect(() => {
@@ -118,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 MessageLayout.defaultProps = {
-  patternBg: true,
+  defaultListState: true,
 }
 
 export default MessageLayout

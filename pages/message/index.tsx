@@ -6,7 +6,7 @@ import i18n from '@locales/i18n'
 const Message: PageWithLayoutType = () => {
   return (
     <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
-      {i18n.t('common:chat.lets_start')}
+      {i18n.t('common:chat.not_selected_text')}
     </Box>
   )
 }

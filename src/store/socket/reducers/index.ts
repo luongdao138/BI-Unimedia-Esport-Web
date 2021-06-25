@@ -26,6 +26,7 @@ let oldMessages: MessageType[] | undefined
 let newMsg: MessageType[] | undefined
 let newRoomList: ChatDataType[] | undefined
 let deleted: MessageType[] | undefined
+let roomListDeleted: ChatDataType[] | undefined
 
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
@@ -136,14 +137,18 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
 
     case CHAT_ACTION_TYPE.MESSAGE_DELETED:
       if (!_.isEmpty(state.messages)) {
-        const deletedMsg = ChatHelper.deleteMessage([...state.messages], action.data.content)
+        const deletedMsg = ChatHelper.deleteMessage(state.messages, action.data.content)
+        const roomList = ChatHelper.onDeleteRoomListUpdate(state.roomList, action.data.content)
+        roomListDeleted = roomList
         deleted = deletedMsg
       } else {
         deleted = state.messages
+        roomListDeleted = state.roomList
       }
       return {
         ...state,
         messages: deleted,
+        roomList: roomListDeleted,
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {
@@ -154,6 +159,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         socketReady: false,
+        roomList: undefined,
+        messages: undefined,
       }
     default:
       return state

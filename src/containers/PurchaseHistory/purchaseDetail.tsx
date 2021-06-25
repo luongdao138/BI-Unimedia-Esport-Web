@@ -14,15 +14,11 @@ import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
-//import { router } from 'next/client'
+import { useRouter } from 'next/router'
 
-interface Props {
-  id: any
-}
-
-const PurchaseDetail: React.FC<Props> = () => {
-  //const { id } = router.query
-  const id: any = '11'
+const PurchaseDetail: React.FC = () => {
+  const router = useRouter()
+  const id: any = router.query.id
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
@@ -58,15 +54,23 @@ const PurchaseDetail: React.FC<Props> = () => {
   }))(MuiDialogContent)
 
   useEffect(() => {
-    if (id && _.isString(id)) {
+    if (id) {
       fetchPurchaseHistoryDetail(id)
     }
     return function () {
       clearPurchaseHistoryDetail()
     }
-  }, [id])
+  }, [router])
 
-  const purchase_datetime = CommonHelper.staticSmartTime(_.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime', ''))
+  const date =
+    _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.PURCHASED
+      ? _.get(purchaseHistoryDetail.data.attributes, 'purchase_datetime', +purchaseHistoryDetail.data.attributes.purchase_datetime)
+      : _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.CANCELLED
+      ? _.get(purchaseHistoryDetail.data.attributes, 'cancelled_datetime', +purchaseHistoryDetail.data.attributes.cancelled_datetime)
+      : _.get(purchaseHistoryDetail.data.attributes, 'cancel_req_datetime', +purchaseHistoryDetail.data.attributes.cancel_req_datetime)
+
+  const time = CommonHelper.staticSmartTime(date)
+
   return (
     <>
       <HeaderWithButton title={t('common:purchase_history.detail')} />
@@ -100,7 +104,7 @@ const PurchaseDetail: React.FC<Props> = () => {
             </Dialog>
           </div>
           <Box padding={2} margin={2} className={classes.wrap}>
-            <Typography variant={'caption'}>{purchase_datetime}</Typography>
+            <Typography variant={'caption'}>{time}</Typography>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.order_id')}</Typography>
               <Typography>{purchaseHistoryDetail.data.attributes.order_id}</Typography>
@@ -121,7 +125,7 @@ const PurchaseDetail: React.FC<Props> = () => {
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.payment_method')}</Typography>
-              <Typography>-</Typography>
+              <Typography>{purchaseHistoryDetail.data.attributes.payment_type}</Typography>
             </Box>
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
@@ -192,7 +196,7 @@ const PurchaseDetail: React.FC<Props> = () => {
                 </div>
               </Typography>
             </Link>
-            <Link href="#" underline={'none'} target="_blank">
+            <Link href="https://support.exelab.jp/hc/ja" underline={'none'} target="_blank">
               <Typography className={classes.questions}>
                 {t('common:purchase_history.help_purchase')}{' '}
                 <div className={classes.link}>

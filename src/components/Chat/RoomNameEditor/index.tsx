@@ -9,6 +9,7 @@ import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { currentUserId } from '@store/auth/selectors'
 import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
+import i18n from '@locales/i18n'
 
 export interface RoomNameEditorProps {
   roomName: string
@@ -43,7 +44,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         userId: userId,
         action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
         roomId: roomId,
-        name: newName,
+        name: newName.trim(),
       })
     )
     hide()
@@ -64,6 +65,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         bkColor="rgba(0,0,0,0.8)"
         alignTop
         fixedFooter={renderFooter()}
+        className="scroll-bar"
       >
         <DialogContent>
           <Box mt={8}>
@@ -76,7 +78,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
                 onSubmit()
               }}
             >
-              <ESInput placeholder="メッセージ名を入力" value={newName} fullWidth onChange={handleChange} />
+              <ESInput placeholder={i18n.t('common:chat.room_name_placeholder')} value={newName} fullWidth onChange={handleChange} />
             </form>
           </Box>
           <Box maxWidth={280} className={classes.buttonBottom}>
@@ -107,6 +109,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTopColor: Colors.text['300'],
     height: 162,
   },
+
   buttonBottom: {
     transform: 'translate(-50%, 0px)',
     position: 'fixed',

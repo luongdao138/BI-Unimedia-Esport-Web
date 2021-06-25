@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles, Theme, withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 import _ from 'lodash'
 
@@ -70,6 +70,11 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
 
 const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children, bkColor, alignTop, fixedFooter, ...rest }) => {
   const classes = useStyles()
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
   return (
     <Dialog
       fullWidth
@@ -77,7 +82,6 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       aria-labelledby="Followers"
       open={open}
       onClose={handleClose}
-      disableScrollLock
       disableBackdropClick
       className={alignTop === true ? classes.customClass : undefined}
       BackdropProps={{
@@ -91,8 +95,10 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
         style: {
           backgroundColor: 'transparent',
           boxShadow: 'none',
-          overflowY: 'hidden',
         },
+      }}
+      onEntered={() => {
+        document.body.style.overflow = 'hidden'
       }}
       {...rest}
     >

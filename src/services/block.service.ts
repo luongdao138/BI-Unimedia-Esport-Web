@@ -2,9 +2,7 @@ import api from './api'
 import { URI } from '@constants/uri.constants'
 
 export type BlockParams = {
-  user_code?: string
-  target_id?: number
-  block_type?: string
+  user_code: string
 }
 
 export type BlockResponse = {
@@ -12,9 +10,7 @@ export type BlockResponse = {
 }
 
 export type UnblockParams = {
-  target_id?: number
-  block_type: string
-  user_code?: string
+  user_code: string
 }
 
 export type UnblockResponse = {

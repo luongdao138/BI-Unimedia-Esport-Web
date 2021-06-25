@@ -1,11 +1,11 @@
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import followStore from '@store/follow'
-import { FollowersParams, FollowResponse, Meta as Pages } from '@services/follow.service'
+import userStore from '@store/userProfile'
+import { FollowersParams, FollowResponse, Meta as Pages } from '@services/user.service'
 import { Meta } from '@store/metadata/actions/types'
 
-const { selectors, actions } = followStore
+const { selectors, actions } = userStore
 const getMeta = createMetaSelector(actions.following)
 
 const useFollowing = (): {

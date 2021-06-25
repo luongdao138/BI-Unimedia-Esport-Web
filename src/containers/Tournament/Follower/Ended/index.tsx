@@ -33,7 +33,7 @@ const FollowerEndedContainer: React.FC = () => {
         <IconButton className={classes.iconButtonBg} onClick={handleClick}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
-        <Typography variant="h2" noWrap>
+        <Typography variant="h2" className={classes.title}>
           {t('common:tournament.follower_ended')}
         </Typography>
       </Box>
@@ -68,6 +68,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(2),
     display: 'flex',
     flexWrap: 'wrap',
+  },
+  title: {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordWrap: 'break-word',
   },
   loaderCenter: {
     width: '100%',

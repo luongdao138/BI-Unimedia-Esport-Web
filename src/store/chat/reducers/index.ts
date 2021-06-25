@@ -3,6 +3,7 @@ import { FriendItem, DmUserData, MessageTournamentResponse } from '@services/cha
 import * as actions from '../actions'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { MESSAGE_ACTION_TYPE, PageMeta } from '../actions/types'
+import { getMemberProfile } from '@store/userProfile/actions'
 
 type State = {
   friendList: FriendItem[] | null
@@ -43,5 +44,13 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(MESSAGE_ACTION_TYPE.RESET_ADD_USERS, (state) => {
     state.friendList = undefined
     state.friendListMeta = undefined
+  })
+  builder.addCase(MESSAGE_ACTION_TYPE.RESET_DM_ROOM, (state) => {
+    state.redirectDm = null
+    state.singleUser = null
+  })
+  builder.addCase(getMemberProfile.fulfilled, (state) => {
+    state.redirectDm = null
+    state.singleUser = null
   })
 })
