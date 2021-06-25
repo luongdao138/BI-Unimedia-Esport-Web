@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Box, Typography, Slider, Link } from '@material-ui/core'
+import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -11,6 +11,7 @@ import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 // import { Colors } from '@theme/colors'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface CoverSelectorProps {
   src?: string
@@ -45,11 +46,10 @@ const ImageSlider = withStyles({
   },
 })(Slider)
 
-const WIDTH = 600
-const HEIGHT = 200
+const S_WIDTH = 600
+const S_HEIGHT = 200
 
 const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) => {
-  const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
@@ -57,6 +57,8 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
   const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
+  const { width } = useWindowDimensions(64)
+  const classes = useStyles({ width: width })
 
   useEffect(() => {
     return setUploading(false)
@@ -77,11 +79,11 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
         const img = document.createElement('img')
         img.src = e.target.result as string
         img.onload = function () {
-          const width = img.naturalWidth || img.width
-          const height = img.naturalHeight || img.height
-          if (height > width) {
+          const w = img.naturalWidth || img.width
+          const h = img.naturalHeight || img.height
+          if (h > w) {
             setFit('horizontal-cover')
-          } else if (width > height) {
+          } else if (w > h) {
             setFit('vertical-cover')
           } else {
             setFit('contain')
@@ -127,8 +129,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
               objectFit={fitType}
               aspect={4 / 1}
               style={{
-                containerStyle: { width: 400, height: 300, position: 'relative' },
-                mediaStyle: { width: 400, height: 200, position: 'relative' },
+                containerStyle: { width: width > S_WIDTH ? S_WIDTH : width, height: S_HEIGHT, position: 'relative' },
               }}
               showGrid={false}
               onCropChange={setCrop}
@@ -185,15 +186,18 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
 
 export default CoverSelector
 
-const useStyles = makeStyles(() => ({
+export interface StyleProps {
+  width: number
+}
+
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
   imageContainer: {
     display: 'flex',
-    width: WIDTH,
-    height: HEIGHT,
+    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
+    height: S_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    // backgroundColor: 'yellow',
   },
   image: {
     width: '100%',
@@ -260,16 +264,16 @@ const useStyles = makeStyles(() => ({
   cropContainer: {
     position: 'relative',
     display: 'flex',
-    height: HEIGHT,
-    width: WIDTH,
+    height: S_HEIGHT,
+    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
   },
   touch: {
     zIndex: 30,
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
-    height: HEIGHT,
-    width: WIDTH,
+    height: S_HEIGHT,
+    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
     borderRadius: '50%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -279,8 +283,8 @@ const useStyles = makeStyles(() => ({
   },
   avatar: {
     zIndex: 30,
-    height: HEIGHT,
-    width: WIDTH,
+    height: S_HEIGHT,
+    width: ({ width }) => (width > S_WIDTH ? S_WIDTH : width),
   },
 
   backdrop: {
