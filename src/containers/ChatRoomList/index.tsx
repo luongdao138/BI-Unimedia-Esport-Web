@@ -40,7 +40,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderPlaceHolder = () => {
-    if (_.isEmpty(listData)) {
+    if (_.isEmpty(listData) && expand) {
       return (
         <Box height={'100%'} width={'100%'} display="flex" justifyContent="center" alignItems="center">
           {i18n.t('common:common.no_data')}
@@ -66,9 +66,9 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderLoader = () => {
-    if (listData == null) {
+    if (listData) {
       return (
-        <Box height={'100%'} width={'100%'} display="flex" justifyContent="center" alignItems="center">
+        <Box height={'100%'} width={expand ? '100%' : 80} display="flex" justifyContent="center" alignItems="center">
           <Box className={classes.loaderBox}>
             <Loader />
           </Box>
