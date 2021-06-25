@@ -3,6 +3,7 @@ import settingsStore from '@store/settings'
 
 const { selectors, actions } = settingsStore
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useSettings = () => {
   const dispatch = useAppDispatch()
 

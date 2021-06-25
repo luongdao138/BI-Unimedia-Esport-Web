@@ -95,17 +95,20 @@ export const getEntryStatus = createAsyncThunk<services.EntryStatusResponse, str
   }
 )
 
-export const joinTournament = createAsyncThunk<void, services.JoinParams>(types.JOIN_TOURNAMENT, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.joinTournament(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
+export const joinTournament = createAsyncThunk<{ team_id: number | null }, services.JoinParams>(
+  types.JOIN_TOURNAMENT,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.joinTournament(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
     }
-    return rejectWithValue(error.response.data)
   }
-})
+)
 
 export const leaveTournament = createAsyncThunk<void, string>(types.LEAVE_TOURNAMENT, async (param, { rejectWithValue }) => {
   try {
@@ -349,7 +352,7 @@ export const summaryTournament = createAsyncThunk<void, services.SummaryParams>(
   }
 )
 
-export const getParticipantName = createAsyncThunk<services.ParticipantName, string>(
+export const getParticipantName = createAsyncThunk<services.ParticipantNameResponse, string>(
   types.GET_PARTICIPANT_NAME,
   async (param, { rejectWithValue }) => {
     try {
@@ -369,6 +372,36 @@ export const changeParticipantName = createAsyncThunk<{ name: string }, services
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.changeParticipantName(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getTournamentTeamDetail = createAsyncThunk<services.TournamentTeamDetailResponse, number>(
+  types.GET_TOURNAMENT_TEAM_DETAIL,
+  async (teamId, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentTeamDetail(teamId)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const updateTournamentTeamDetail = createAsyncThunk<void, services.UpdateTournamentTeamParams>(
+  types.UPDATE_TOURNAMENT_TEAM_DETAIL,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.updateTournamentTeamDetail(param)
       return res
     } catch (error) {
       if (!error.response) {
