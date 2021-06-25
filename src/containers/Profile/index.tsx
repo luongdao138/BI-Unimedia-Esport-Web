@@ -131,7 +131,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             src={cover}
             editable={!isOthers}
             onChange={(f: File, blob: any) => {
-              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER, blob)
+              isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
             }}
           />
           {offset > 150 ? (
@@ -154,7 +154,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               editable={!isOthers}
               alt={attr.nickname}
               onChange={(f: File, blob: any) => {
-                isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR, blob)
+                isOthers ? null : profileImageChange(f, UPLOADER_TYPE.AVATAR, blob)
               }}
             />
             {isOthers ? (
