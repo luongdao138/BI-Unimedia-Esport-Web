@@ -711,6 +711,7 @@ export default {
     dialog_close: '戻る',
     cancel_submit: 'キャンセルする',
     cancel_msg: 'アイテムの購入をキャンセルしました',
+    no_data: '購入されたアイテムはありません',
   },
   inquiry: {
     title: 'お問い合わせ',

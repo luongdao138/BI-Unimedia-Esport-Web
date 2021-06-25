@@ -1,11 +1,15 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import usePurchaseHistoryList from '@containers/PurchaseHistory/usePurchaseHistoryList'
 import PurchaseHistoryItem from '@containers/PurchaseHistory/purchaseHistoryItem'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import ESLoader from '@components/Loader'
+import { makeStyles, Typography } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 
 const ESPurchaseHistory: React.FC = () => {
-  const { purchaseHistory, fetchPurchaseHistory, clearPurchaseHistory, pages } = usePurchaseHistoryList()
-
+  const { purchaseHistory, fetchPurchaseHistory, clearPurchaseHistory, pages, meta } = usePurchaseHistoryList()
+  const classes = useStyles()
+  const { t } = useTranslation(['common'])
   useEffect(() => {
     return () => clearPurchaseHistory()
   }, [])
@@ -28,13 +32,39 @@ const ESPurchaseHistory: React.FC = () => {
 
   return (
     <div>
-      <InfiniteScroll dataLength={purchaseHistory.length} next={loadMore} hasMore={hasNextPage} loader={null} scrollThreshold="1px">
-        {purchaseHistory.map((history, i) => (
-          <PurchaseHistoryItem data={history} key={i} />
-        ))}
-      </InfiniteScroll>
+      {purchaseHistory.length > 0 ? (
+        <InfiniteScroll
+          dataLength={purchaseHistory.length}
+          next={loadMore}
+          hasMore={hasNextPage}
+          loader={
+            meta.pending && (
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            )
+          }
+          scrollThreshold="1px"
+        >
+          {purchaseHistory.map((history, i) => (
+            <PurchaseHistoryItem data={history} key={i} />
+          ))}
+        </InfiniteScroll>
+      ) : (
+        <div className={classes.loaderCenter}>
+          <Typography>{t('common:purchase_history.no_data')}</Typography>
+        </div>
+      )}
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  loaderCenter: {
+    marginTop: theme.spacing(1),
+    width: '100%',
+    textAlign: 'center',
+  },
+}))
 
 export default ESPurchaseHistory
