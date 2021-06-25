@@ -66,7 +66,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   }
 
   const renderLoader = () => {
-    if (listData) {
+    if (listData == null) {
       return (
         <Box height={'100%'} width={expand ? '100%' : 80} display="flex" justifyContent="center" alignItems="center">
           <Box className={classes.loaderBox}>
