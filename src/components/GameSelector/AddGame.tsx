@@ -58,7 +58,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
       if (_.isEmpty(checkNgWord(values.display_name))) {
         createGame(values)
       } else {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.add_game }))
       }
     },
   })

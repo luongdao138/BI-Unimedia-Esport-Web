@@ -52,7 +52,9 @@ const RegisterProfileContainer: React.FC = () => {
       if (_.isEmpty(checked)) {
         registerProfile(values)
       } else {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+        dispatch(
+          showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: `${NG_WORD_AREA.profile_user_code}、 ${NG_WORD_AREA.profile_nickname}` })
+        )
       }
       resetMeta()
     },

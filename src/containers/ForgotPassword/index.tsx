@@ -41,7 +41,7 @@ const ForgotPasswordContainer: React.FC = () => {
         if (_.isEmpty(checkNgWord(values.email))) {
           forgotPassword(values)
         } else {
-          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.forgot_password }))
         }
       }
     },

@@ -57,7 +57,7 @@ const RegisterByEmailContainer: React.FC = () => {
         if (_.isEmpty(checkNgWord(values.email))) {
           registerByEmail(values)
         } else {
-          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.register_by_email }))
         }
         resetMeta()
       }
