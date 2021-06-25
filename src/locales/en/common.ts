@@ -628,7 +628,7 @@ export default {
     delete_account: 'アカウントを削除する',
     change_email_address: 'メールアドレスの変更',
     current_email: '現在のメールアドレス',
-    new_email: '新しいメールアドレス',
+    new_email: 'sample@exelab.jp',
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
     delete_confirm_title: '問い合わせフォームでの申請となります。',
