@@ -255,7 +255,8 @@ const useStyles = makeStyles(() => ({
   },
   cropContainer: {
     position: 'relative',
-    display: 'flex',
+    // display: 'flex',
+    // flex: 1,
     height: HEIGHT,
     width: WIDTH,
   },
