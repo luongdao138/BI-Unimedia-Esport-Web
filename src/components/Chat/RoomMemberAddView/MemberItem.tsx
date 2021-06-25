@@ -1,10 +1,9 @@
 import React from 'react'
-import { ListItemText, Typography, ListItem, ListItemAvatar, makeStyles, Box, ListItemSecondaryAction } from '@material-ui/core'
+import { ListItemText, Typography, ListItem, ListItemAvatar, makeStyles, Box } from '@material-ui/core'
 import Avatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { ShortMember } from '.'
 import _ from 'lodash'
-import i18n from '@locales/i18n'
 
 export interface MemberItemProps {
   item: ShortMember
@@ -16,22 +15,18 @@ const MemberItem: React.FC<MemberItemProps> = ({ item, onAdd }) => {
   const profile = _.get(item, 'profile', null)
   const nickName = _.get(item, 'nickName', '')
   const userCode = _.get(item, 'userCode', '')
-  const isAdded = _.get(item, 'isAdded', false)
-  const isSelected = _.get(item, 'isSelected', false)
-  const disabledClass = isAdded || isSelected ? classes.disabled : ''
+
   const handler = () => {
-    if (!isAdded) {
-      onAdd(item)
-    }
+    onAdd(item)
   }
 
   return (
     <Box className={`${classes.itemHolder} `}>
       <ListItem className={classes.root} onClick={handler}>
-        <ListItemAvatar className={disabledClass}>
+        <ListItemAvatar>
           <Avatar src={profile} alt={nickName} />
         </ListItemAvatar>
-        <ListItemText className={`${classes.content} ${disabledClass}`}>
+        <ListItemText className={`${classes.content}`}>
           <Typography noWrap={true} className={classes.name} variant="body2">
             {nickName}
           </Typography>
@@ -39,7 +34,6 @@ const MemberItem: React.FC<MemberItemProps> = ({ item, onAdd }) => {
             {userCode}
           </Typography>
         </ListItemText>
-        <ListItemSecondaryAction>{isAdded ? i18n.t('common:chat.already_member') : null}</ListItemSecondaryAction>
       </ListItem>
     </Box>
   )
