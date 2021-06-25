@@ -12,9 +12,6 @@ export default async function getCroppedImg(imageSrc, pixelCrop, fileType) {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
-  image.width = image.width / 2
-  image.height = image.height / 2
-
   const maxSize = Math.max(image.width, image.height)
   const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2))
 
@@ -25,7 +22,7 @@ export default async function getCroppedImg(imageSrc, pixelCrop, fileType) {
   ctx.translate(-safeArea / 2, -safeArea / 2)
 
   // draw rotated image and store data.
-  ctx.drawImage(image, safeArea / 2 - image.width, safeArea / 2 - image.height)
+  ctx.drawImage(image, safeArea / 2 - image.width * 0.5, safeArea / 2 - image.height * 0.5)
   const data = ctx.getImageData(0, 0, safeArea, safeArea)
 
   // set canvas width to final desired crop size - this will clear existing context
@@ -35,8 +32,8 @@ export default async function getCroppedImg(imageSrc, pixelCrop, fileType) {
   // paste generated rotate image with correct offsets for x,y crop values.
   ctx.putImageData(
     data,
-    Math.round(0 - safeArea / 2 + image.width - pixelCrop.x),
-    Math.round(0 - safeArea / 2 + image.height - pixelCrop.y)
+    Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
+    Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
   )
 
   // As Base64 string
