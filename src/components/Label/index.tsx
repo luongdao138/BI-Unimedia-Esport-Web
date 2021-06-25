@@ -6,15 +6,16 @@ export type ESLabelProps = {
   label: string
   required?: boolean
   size?: 'normal' | 'small'
+  bold?: boolean
 }
 
-const ESLabel: React.FC<ESLabelProps> = ({ label, required, size }) => {
+const ESLabel: React.FC<ESLabelProps> = ({ label, required, size, bold }) => {
   const classes = useStyles({ isNormal: size === 'normal' })
   const { t } = useTranslation()
 
   return (
     <Box className={classes.container}>
-      <Typography component="span" className={classes.label}>
+      <Typography component="span" className={classes.label} style={bold === true ? { fontWeight: 'bold' } : undefined}>
         {label}
       </Typography>
       {required && (

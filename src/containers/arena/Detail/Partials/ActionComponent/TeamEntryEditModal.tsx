@@ -12,8 +12,9 @@ import ESLoader from '@components/FullScreenLoader'
 import ESButton from '@components/Button'
 import { UserProfile } from '@services/user.service'
 import useTeamDetail from './useTeamDetail'
-import TeamMemberItem from '../TeamMemberItem'
+import TeamMemberItemExpanded from '../TeamMemberItemExpanded'
 import TeamEntryModal from './TeamEntryModal'
+import { TeamMemberSelectItem } from '@store/arena/actions/types'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -29,15 +30,16 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
   const [editMode, setEditMode] = useState(false)
 
   useEffect(() => {
-    if (open) {
-      const teamId = _.get(tournament, 'attributes.my_info[0].team_id')
-      if (_.isNumber(teamId)) {
-        getTeamDetail(teamId)
-      }
-    }
+    if (open) fetch()
   }, [open])
 
   const handleReturn = () => setOpen(false)
+  const fetch = () => {
+    const teamId = _.get(tournament, 'attributes.my_info[0].team_id')
+    if (_.isNumber(teamId)) {
+      getTeamDetail(teamId)
+    }
+  }
 
   const onOpen = () => {
     setOpen(true)
@@ -55,13 +57,39 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
       attributes: { team: { data: { attributes: {} } } },
     }
     const attrs = _.get(teamDetail, 'attributes', {})
+    const leaderId = _.get(attrs, 'leader_id', -1)
+    const members = _.clone(_.get(attrs, 'members', []))
+    const leaderDetail = _.remove(members as any[], (member) => member.user_id === leaderId)
+    if (leaderDetail.length > 0) members.unshift(leaderDetail[0])
 
     team.attributes.team.data.attributes = {
       name: _.get(attrs, 'name', ''),
       team_avatar: _.get(attrs, 'team_avatar'),
-      members: _.get(attrs, 'members', []),
+      members: members,
     }
     return team
+  }
+
+  const getEditInitialData = () => {
+    const attrs = _.get(teamDetail, 'attributes', {})
+    const leaderId = _.get(attrs, 'leader_id', -1)
+    const members = _.clone(_.get(attrs, 'members', []))
+    const leaderDetail = _.remove(members as any[], (member) => member.user_id === leaderId)
+    if (leaderDetail.length > 0) members.unshift(leaderDetail[0])
+    const teamId = _.get(tournament, 'attributes.my_info[0].team_id')
+
+    return {
+      team_id: teamId,
+      team_name: _.get(attrs, 'name', '') as string,
+      team_icon_url: _.get(attrs, 'team_avatar', '') as string,
+      members: members.map((member) => ({
+        id: `${member.user_id}`,
+        nickname: member.nickname,
+        userCode: member.user_code,
+        avatar: member.image_url,
+        name: member.name,
+      })) as TeamMemberSelectItem[],
+    }
   }
 
   return (
@@ -90,11 +118,18 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
             />
           </BlackBox>
           <Box width="100%" flexDirection="column" alignItems="center" pt={4.5}>
-            <TeamMemberItem team={teamData()} handleClick={() => null} yellowTitle />
+            <TeamMemberItemExpanded team={teamData()} handleClick={() => null} yellowTitle hideFollow />
           </Box>
         </form>
         {editMode ? (
-          <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => setEditMode(false)} isEdit />
+          <TeamEntryModal
+            tournament={tournament}
+            userProfile={userProfile}
+            handleClose={() => setEditMode(false)}
+            isEdit
+            initialData={getEditInitialData()}
+            updateDone={() => fetch()}
+          />
         ) : null}
       </StickyActionModal>
 

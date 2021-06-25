@@ -284,19 +284,26 @@ export type ParticipantsResponse = {
   attributes: any
 }
 
-export type TeamJoin = {
-  id?: number | string
-  leader_name: string
-  team_name: string
-  team_icon_url: string
-  members: Array<TeamMember>
+export interface TeamMemberBase {
+  name: string
 }
 
-export type TeamMember = {
+export interface TeamMember extends TeamMemberBase {
   user_id: number
-  name: string
   nickname?: string
   user_code?: string
+}
+
+export interface TeamJoinBase {
+  id?: number | string
+  team_name: string
+  team_icon_url: string
+  members: TeamMemberBase[]
+}
+
+export interface TeamJoin extends TeamJoinBase {
+  leader_name: string
+  members: TeamMember[]
 }
 
 export type EntryJoin = {
@@ -328,7 +335,14 @@ export type GetSuggestedTeamMembersParams = {
 export type SuggestedTeamMembersResponse = {
   id: string
   type: string
-  attributes: any
+  attributes: {
+    avatar: string
+    features: [] | null
+    game_titles: [] | null
+    nickname: string
+    nickname2: string | null
+    user_code: string
+  }
 }
 
 export type GetSuggestedTeamMembersResponse = {
@@ -483,6 +497,19 @@ export type TournamentTeamDetail = {
   }
 }
 
+export type UpdateTournamentTeamParams = {
+  id: string
+  data: {
+    leader_name: string
+    team_name: string
+    team_icon_url: string
+    members: {
+      user_id: string
+      name: string
+    }[]
+  }
+}
+
 export type TournamentTeamDetailResponse = {
   data: TournamentTeamDetail
 }
@@ -524,8 +551,8 @@ export const getTournamentInteresteds = async (params: GetParticipantsParams): P
   return data
 }
 
-export const joinTournament = async (params: JoinParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.JOIN_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
+export const joinTournament = async (params: JoinParams): Promise<{ team_id: number }> => {
+  const { data } = await api.post<{ team_id: number }>(URI.JOIN_TOURNAMENT.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 
@@ -608,31 +635,9 @@ export const summaryTournament = async (params: SummaryParams): Promise<void> =>
   return data
 }
 
-export const getParticipantName = async (hash_key: string): Promise<ParticipantName> => {
-  try {
-    const { data } = await api.get<ParticipantName>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, hash_key))
-    return data
-  } catch (e) {
-    // TODO api integration waiting
-    return {
-      id: '2361',
-      type: 'participant',
-      attributes: {
-        role: 'interested',
-        position: null,
-        name: 'Walter White',
-        show_history: true,
-        is_fixed_score: false,
-        user: {
-          id: 1370,
-          nickname: 'Walter White',
-          user_code: 'walt',
-        },
-        team: null,
-        avatar_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/1370/1623308825-1370.jpg',
-      },
-    }
-  }
+export const getParticipantName = async (hash_key: string): Promise<ParticipantNameResponse> => {
+  const { data } = await api.get<ParticipantNameResponse>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, hash_key))
+  return data
 }
 
 export const changeParticipantName = async (params: ParticipantNameParams): Promise<{ name: string }> => {
@@ -643,41 +648,10 @@ export const changeParticipantName = async (params: ParticipantNameParams): Prom
 }
 
 export const getTournamentTeamDetail = async (teamId: number): Promise<TournamentTeamDetailResponse> => {
-  try {
-    const { data } = await api.get<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${teamId}`))
-    return data
-  } catch (e) {
-    return {
-      data: {
-        id: '241',
-        type: 'tournament_team',
-        attributes: {
-          leader_id: 1370,
-          name: 'Walter team',
-          tournament_id: 419,
-          members: [
-            {
-              id: 2366,
-              user_id: 1370,
-              name: 'Walter White',
-              nickname: 'Walter White',
-              user_code: 'walt',
-              image_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/1370/1623308825-1370.jpg',
-            },
-            {
-              id: 2367,
-              user_id: 1375,
-              name: 'Hector Salamanca',
-              nickname: 'Hector Salamanca',
-              user_code: 'magnai',
-              image_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/1375/1621837424-1375.png',
-            },
-          ],
-          show_history: true,
-          team_avatar:
-            'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournament_team_icons/7030ebd9-8d4c-4d40-b323-29c7a5c7e717/1624424589-1370.jpg',
-        },
-      },
-    }
-  }
+  const { data } = await api.get<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${teamId}`))
+  return data
+}
+
+export const updateTournamentTeamDetail = async (params: UpdateTournamentTeamParams): Promise<void> => {
+  await api.post<TournamentTeamDetailResponse>(URI.TOURNAMENT_TEAMS.replace(/:id/gi, `${params.id}`), params.data)
 }

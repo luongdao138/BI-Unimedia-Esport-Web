@@ -8,6 +8,18 @@ export enum TOURNAMENT_ACTION_TYPE {
   RECRUITING_TOURNAMENT = 'tournament/recruiting',
 }
 
+export interface TeamMemberSelectItem {
+  id: string
+  nickname: string
+  avatar: string
+  userCode: string
+  name?: string
+}
+export interface MemberSelection {
+  item: TeamMemberSelectItem | null
+  index: number
+}
+
 export const GET_TOURNAMENT_DETAIL = 'tournament/getTournamentDetail'
 export const GET_ENTRY_STATUS = 'tournament/getEntryStatus'
 export const JOIN_TOURNAMENT = 'tournament/joinTournament'
@@ -32,3 +44,4 @@ export const SUMMARY_TOURNAMENT = 'tournament/summaryTournament'
 export const GET_PARTICIPANT_NAME = 'tournament/getParticipantName'
 export const CHANGE_PARTICIPANT_NAME = 'tournament/changeParticipantName'
 export const GET_TOURNAMENT_TEAM_DETAIL = 'tournament/getTournamentTeamDetail'
+export const UPDATE_TOURNAMENT_TEAM_DETAIL = 'tournament/updateTournamentTeamDetail'

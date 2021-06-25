@@ -5,18 +5,18 @@ import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import { SuggestedTeamMembersResponse } from '@services/arena.service'
 import ESLabel from '@components/Label'
 import _ from 'lodash'
+import { TeamMemberSelectItem, MemberSelection } from '@store/arena/actions/types'
 
 interface SelectInputProps {
   label?: string
   index?: number
-  selectedItem: SuggestedTeamMembersResponse
-  items: SuggestedTeamMembersResponse[]
+  selectedItem: TeamMemberSelectItem | null
+  items: TeamMemberSelectItem[]
   loading: boolean
   onSearchInput: (keyword: string) => void
-  onItemsSelected: (selectedItems: SuggestedTeamMembersResponse, index) => void
+  onItemSelected: (selectedItem: MemberSelection) => void
   onScrollEnd: () => void
 }
 
@@ -27,13 +27,12 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
   items,
   loading,
   onSearchInput,
-  onItemsSelected,
+  onItemSelected,
   onScrollEnd,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
-
   const inputDebounce = useCallback(
     _.debounce((keyword: string) => {
       onSearchInput(keyword)
@@ -59,35 +58,34 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
       />
     )
   }
-
   return (
     <Box width={1}>
       <Autocomplete
         key={label}
         value={selectedItem}
         options={items}
-        getOptionLabel={(item) => item.attributes.nickname}
+        getOptionLabel={(item) => item.nickname}
         filterSelectedOptions
         noOptionsText={t('common:chat.no_user_available')}
-        onChange={(_, values) => {
-          onItemsSelected(values as SuggestedTeamMembersResponse, index)
+        onChange={(__, values) => {
+          onItemSelected({ index: index, item: values as TeamMemberSelectItem })
         }}
         onInputChange={handleChange}
         loading={loading}
-        getOptionSelected={(option, value) => option.id === value.id}
+        getOptionSelected={(option, value) => `${option.id}` === `${value.id}`}
         renderOption={(item) => {
           return (
             <Box display="flex" overflow="hidden">
-              <ESAvatar alt={item.attributes.nickname} src={item.attributes.avatar} />
+              <ESAvatar alt={item.nickname} src={item.avatar} />
               <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
                 <Box color={Colors.black}>
                   <Typography variant="h3" noWrap>
-                    {item.attributes.nickname}
+                    {item.nickname}
                   </Typography>
                 </Box>
                 <Box color={Colors.black}>
                   <Typography variant="body2" noWrap>
-                    {`${t('common:common.at')}${item.attributes.user_code}`}
+                    {`${t('common:common.at')}${item.userCode}`}
                   </Typography>
                 </Box>
               </Box>
@@ -96,22 +94,25 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
         }}
         renderInput={(params) => (
           <Box>
-            <ESLabel label={label} size="small" />
+            <ESLabel label={label} size="small" bold required />
             <Box m={1} />
-            <SelectInputTextField
-              variant="outlined"
-              {...params}
-              inputRef={textRef}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
-              }}
-            />
+            <Box className={selectedItem ? classes.avatarInputHolder : null}>
+              {selectedItem ? <ESAvatar size={40} src={selectedItem.avatar} alt={selectedItem.nickname} /> : null}
+              <SelectInputTextField
+                variant="outlined"
+                {...params}
+                inputRef={textRef}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            </Box>
           </Box>
         )}
         PopperComponent={PopperMy}
@@ -139,6 +140,12 @@ const useStyles = makeStyles((theme) =>
           backgroundColor: theme.palette.grey['200'],
         },
       },
+    },
+    avatarInputHolder: {
+      display: 'grid',
+      gridTemplateColumns: 'auto 1fr',
+      alignItems: 'center',
+      gridGap: 8,
     },
   })
 )
