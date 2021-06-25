@@ -62,7 +62,15 @@ const PurchaseDetail: React.FC = () => {
     }
   }, [router])
 
-  const purchase_datetime = CommonHelper.staticSmartTime(_.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime', ''))
+  const date =
+    _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.PURCHASED
+      ? _.get(purchaseHistoryDetail.data.attributes, 'purchase_datetime', +purchaseHistoryDetail.data.attributes.purchase_datetime)
+      : _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.CANCELLED
+      ? _.get(purchaseHistoryDetail.data.attributes, 'cancelled_datetime', +purchaseHistoryDetail.data.attributes.cancelled_datetime)
+      : _.get(purchaseHistoryDetail.data.attributes, 'cancel_req_datetime', +purchaseHistoryDetail.data.attributes.cancel_req_datetime)
+
+  const time = CommonHelper.staticSmartTime(date)
+
   return (
     <>
       <HeaderWithButton title={t('common:purchase_history.detail')} />
@@ -96,7 +104,7 @@ const PurchaseDetail: React.FC = () => {
             </Dialog>
           </div>
           <Box padding={2} margin={2} className={classes.wrap}>
-            <Typography variant={'caption'}>{purchase_datetime}</Typography>
+            <Typography variant={'caption'}>{time}</Typography>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.order_id')}</Typography>
               <Typography>{purchaseHistoryDetail.data.attributes.order_id}</Typography>
