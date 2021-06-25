@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import { SuggestedTeamMembersResponse, TeamJoin, TeamMember, TournamentDetail } from '@services/arena.service'
+import { TeamJoinBase, TeamMember, TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
+import { Box, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
-import ButtonPrimary from '@components/ButtonPrimary'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -13,7 +12,6 @@ import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useStore } from 'react-redux'
-import ESSimpleSelectInput from '@components/SimpleSelectInput'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'
 import ESLabel from '@components/Label'
 import useUploadImage from '@utils/hooks/useUploadImage'
@@ -21,50 +19,61 @@ import ESTeamIconUploader from '@components/TeamIconUploader'
 import useEntry from './useEntry'
 import _ from 'lodash'
 import ESLoader from '@components/FullScreenLoader'
-import UnjoinModal from './UnjoinModal'
-import LoginRequired from '@containers/LoginRequired'
+import TeamEntryMemberList from './TeamEntryMemberList'
+import useTeamSelectedMember from './useTeamSelectedMember'
+import { TeamMemberSelectItem, MemberSelection } from '@store/arena/actions/types'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
   handleClose: () => void
+  isEdit?: boolean
+  initialData?: {
+    team_id: string
+    team_name: string
+    team_icon_url: string
+    members: TeamMemberSelectItem[]
+  }
+  updateDone?: () => void
 }
 
-const FINAL_STEP = 1
-
-let teamMembers = []
-
-const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, handleClose }) => {
+const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, handleClose, isEdit, initialData, updateDone }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
-  const [open, setOpen] = useState(false)
-  const [step, setStep] = useState(0)
   const [isUploading, setUploading] = useState(false)
-  const { suggestedTeamMembers, meta, getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
+  const { getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
+  const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
-  const { join, joinMeta } = useEntry()
+  const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
+
+  const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      setOpen(false)
-      reset()
       handleClose()
+      reset()
     }
   }, [joinMeta.loaded, joinMeta.error])
 
+  useEffect(() => {
+    if (updateTeamMeta.loaded || updateTeamMeta.error) {
+      handleClose()
+      if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
+        updateDone()
+      }
+      reset()
+    }
+  }, [updateTeamMeta.loaded, updateTeamMeta.error])
+
   const membersValidationSchema = Yup.object().shape({
-    user_id: Yup.number().required(),
-    name: Yup.string().required(),
-    nickname: Yup.string()
-      .required()
+    name: Yup.string()
+      .required(t('common:common.input_required'))
       .max(40, t('common:common.too_long'))
       .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
-    user_code: Yup.string().required(),
   })
 
   const validationSchema = Yup.object().shape({
-    leader_name: Yup.string().required(),
     team_name: Yup.string()
       .required('')
       .max(40, t('common:common.too_long'))
@@ -73,127 +82,97 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     members: Yup.array().of(membersValidationSchema),
   })
 
-  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue, setValues, resetForm, validateForm } = useFormik<TeamJoin>({
+  const teamSize = _.get(tournament, 'attributes.participant_type', 0)
+  const selectedMembers = teamMemberHook.selectedMembers
+
+  const isMembersComplete = () => {
+    if (teamSize !== selectedMembers.length + 1) return false
+    return selectedMembers.every((item) => _.isObject(item.item))
+  }
+
+  const formik = useFormik<TeamJoinBase>({
     initialValues: {
-      leader_name: userProfile ? userProfile.attributes.nickname : '',
-      team_name: '',
-      team_icon_url: '',
-      members: Array.from({ length: tournament.attributes.participant_type }, (_, index) => ({
-        user_id: index === 0 ? Number(userProfile?.id) : undefined,
-        name: index === 0 ? userProfile?.attributes.nickname : '',
-        nickname: index === 0 ? userProfile?.attributes.nickname : '',
-        user_code: index === 0 ? userProfile?.attributes.user_code : '',
-      })),
+      team_name: isEdit ? initialData.team_name : '',
+      team_icon_url: isEdit ? initialData.team_icon_url : '',
+      members: isEdit
+        ? initialData.members.map((member) => ({ name: member.name }))
+        : Array.from({ length: teamSize }, (__, index) => ({
+            name: index === 0 ? _.get(userProfile, 'attributes.nickname', '') : '',
+          })),
     },
     validationSchema,
     enableReinitialize: true,
-    onSubmit: (values) => {
-      if (isValid) {
-        const filtered = _.filter(values.members, (member) => member.user_id !== Number(userProfile.id))
-        const data = _.map(filtered, ({ user_id, nickname }) => ({ user_id, name: nickname }))
-        join({ hash_key: tournament.attributes.hash_key, data: { ...values, members: data } })
+    onSubmit: () => {
+      if (formik.isValid && isMembersComplete()) {
+        const values = formik.values
+        const newMembers: TeamMember[] = []
+        for (let i = 1; i < values.members.length; i++) {
+          const selected = selectedMembers.find((member) => member.index === i + 1)
+          newMembers.push({
+            user_id: parseInt(selected.item.id),
+            name: values.members[i].name,
+          })
+        }
+        if (isEdit) {
+          updateTeam({
+            id: initialData.team_id,
+            data: {
+              leader_name: _.get(values, 'members[0].name'),
+              team_name: values.team_name,
+              team_icon_url: values.team_icon_url,
+              members: newMembers.map((member) => ({ user_id: `${member.user_id}`, name: member.name })),
+            },
+          })
+        } else {
+          join({
+            hash_key: tournament.attributes.hash_key,
+            data: { ...values, members: newMembers, leader_name: _.get(values, 'members[0].name') },
+          })
+        }
       }
     },
   })
 
   useEffect(() => {
-    if (open && userProfile) {
-      validateForm()
-      teamMembers = Array(tournament.attributes.participant_type)
+    if (userProfile) {
+      formik.validateForm()
     } else {
-      resetForm()
+      formik.resetForm()
     }
-  }, [open, userProfile])
+  }, [userProfile])
+
+  useEffect(() => {
+    if (isEdit && _.isArray(initialData.members)) {
+      const newMemberSelections = [] as MemberSelection[]
+      for (let i = 1; i < initialData.members.length; i++) {
+        const initMember = initialData.members[i]
+        newMemberSelections.push({
+          index: i + 1,
+          item: { ...initMember },
+        })
+      }
+      teamMemberHook.setSelectedMembers(newMemberSelections)
+    }
+  }, [isEdit, initialData])
 
   useEffect(() => {
     getSuggestedTeamMembers({ page: 1, keyword: '', tournament_id: tournament.id })
   }, [])
 
   const reset = () => {
-    setStep(0)
     resetMeta()
-    teamMembers = []
-    setValues({ id: '', leader_name: '', team_name: '', team_icon_url: '', members: [] })
+    resetUpdateTeamMeta()
+    resetJoinMeta()
+    formik.setValues({ id: '', team_name: '', team_icon_url: '', members: [] })
   }
 
   const handleReturn = () => {
-    if (step === FINAL_STEP) {
-      setStep(0)
-    } else {
-      reset()
-      setOpen(false)
-    }
-  }
-
-  const handleSelectedMembers = (selectedMember: SuggestedTeamMembersResponse, index) => {
-    if (selectedMember) {
-      const nickname = selectedMember.attributes.nickname
-      const userCode = selectedMember.attributes.user_code
-      const member: TeamMember = { user_id: Number(selectedMember.id), name: nickname, nickname: nickname, user_code: userCode }
-
-      teamMembers[index] = selectedMember
-
-      const tempMembers = [...values.members]
-      tempMembers[index] = member
-      setFieldValue('members', tempMembers)
-    } else {
-      teamMembers[index] = null
-
-      const tempMembers = [...values.members]
-      tempMembers[index] = {
-        user_id: undefined,
-        name: '',
-        nickname: '',
-        user_code: '',
-      }
-      setFieldValue('members', tempMembers)
-    }
+    reset()
+    handleClose()
   }
 
   const handleActionButton = () => {
-    if (step === FINAL_STEP) {
-      handleSubmit()
-    } else {
-      setStep(1)
-    }
-  }
-
-  const handleSearchInput = (keyword: string) => {
-    getSuggestedTeamMembers({ page: 1, keyword: keyword, tournament_id: tournament.id })
-  }
-
-  const renderMembersSelector = () => {
-    const elements = []
-
-    for (let i = 0; i < values.members.length; i++) {
-      if (i === 0) {
-        elements.push(
-          <Box key={i} my={2}>
-            <ESLabel label={`${t('common:member')}${i + 1}（${t('common:you')}）`} size="small" />
-            <Typography>{userProfile ? userProfile.attributes.nickname : ''}</Typography>
-          </Box>
-        )
-      } else {
-        elements.push(
-          <Box key={i} my={2}>
-            <ESSimpleSelectInput
-              label={`${t('common:member')}${i + 1}`}
-              index={i}
-              selectedItem={teamMembers[i] ? teamMembers[i] : null}
-              items={suggestedTeamMembers}
-              loading={meta.pending}
-              onSearchInput={handleSearchInput}
-              onItemsSelected={handleSelectedMembers}
-              onScrollEnd={() => {
-                // TODO if need
-              }}
-            />
-          </Box>
-        )
-      }
-    }
-
-    return elements
+    formik.handleSubmit()
   }
 
   const handleImageUpload = (file: File) => {
@@ -201,106 +180,74 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
     uploadArenaTeamImage(file, 1, true, (imageUrl) => {
       setUploading(false)
-      setFieldValue('team_icon_url', imageUrl)
+      formik.setFieldValue('team_icon_url', imageUrl)
     })
   }
 
-  const teamCreateForm = () => (
-    <Box mt={6}>
-      <BlackBox>
-        <DetailInfo detail={tournament} />
-      </BlackBox>
-
-      <Box className={classes.formContainer}>
-        <ESLabel label={t('common:icon')} required />
-        <Box m={1} />
-        <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
-
-        <Box mt={4} />
-        <ESInput
-          id="team_name"
-          autoFocus
-          labelPrimary={t('common:team_name')}
-          fullWidth
-          required
-          value={values.team_name}
-          onChange={handleChange}
-          helperText={errors.team_name}
-        />
-
-        <Box mt={4} />
-        <ESLabel label={t('common:tournament.entry_members')} required />
-
-        {renderMembersSelector()}
-      </Box>
-    </Box>
-  )
-
-  const renderMembersNicknameChanger = () => {
-    const elements = []
-    const errorMessages: any = errors.members ? errors.members : []
-
-    for (let i = 0; i < values.members.length; i++) {
-      elements.push(
-        <Box key={i} my={2}>
-          <Box>
-            <Typography>{`${t('common:member')}${i + 1}${i === 0 ? `（${t('common:you')}）` : ''}`}</Typography>
-            <Typography>{values.members[i].name}</Typography>
-            <Typography>{`${t('common:common.at')}${values.members[i].user_code}`}</Typography>
-          </Box>
-          <Box mt={2} />
-          <ESInput
-            id={`members.${i}.nickname`}
-            autoFocus
-            fullWidth
-            value={values.members[i].nickname}
-            onChange={handleChange}
-            helperText={errorMessages.length > 0 && errorMessages[i] && 'nickname' in errorMessages[i] ? errorMessages[i].nickname : ''}
-          />
-        </Box>
-      )
-    }
-
-    return elements
+  const setSelectedMember = (selection: MemberSelection) => {
+    const newMembers = [...formik.values.members]
+    newMembers[selection.index - 1] = { name: selection.item.nickname }
+    formik.setFieldValue(`members`, newMembers)
+    teamMemberHook.setSelectedMember(selection)
   }
 
-  const nicknameChangeForm = () => (
-    <Box>
-      <Box className={classes.formContainer}>
-        <ESLabel label={t('common:tournament.join_nickname')} required />
+  const teamForm = () => {
+    const { values, handleChange, errors } = formik
+    return (
+      <Box mt={6}>
+        <BlackBox>
+          <DetailInfo detail={tournament} />
+        </BlackBox>
 
-        {renderMembersNicknameChanger()}
+        <Box className={classes.formContainer}>
+          <ESLabel label={t('common:icon')} required />
+          <Box m={1} />
+          <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
+
+          <Box mt={4} />
+          <ESInput
+            id="team_name"
+            autoFocus
+            labelPrimary={t('common:team_name')}
+            fullWidth
+            required
+            value={values.team_name}
+            onChange={handleChange}
+            helperText={errors.team_name}
+          />
+
+          <Box mt={4} />
+          <ESLabel label={t('common:tournament.entry_members')} required />
+
+          <TeamEntryMemberList
+            tournament={tournament}
+            userProfile={userProfile}
+            formik={formik}
+            setSelectedMember={setSelectedMember}
+            removeSelectedMember={teamMemberHook.removeSelectedMember}
+            getSelectedMember={teamMemberHook.getSelectedMember}
+            selectedMembers={teamMemberHook.selectedMembers}
+          />
+        </Box>
       </Box>
-    </Box>
-  )
+    )
+  }
 
   return (
-    <Box>
-      <LoginRequired>
-        <Box className={classes.actionButton}>
-          {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' && <UnjoinModal tournament={tournament} />}
-          {tournament.attributes.my_role === null && (
-            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-              {t('common:tournament.join')}
-            </ButtonPrimary>
-          )}
-        </Box>
-      </LoginRequired>
-
+    <>
       <StickyActionModal
-        open={open}
-        returnText={step === FINAL_STEP ? t('common:tournament.join_nickname_setting') : t('common:tournament.join')}
-        actionButtonText={step === FINAL_STEP ? t('common:tournament.join_with_this') : t('common:next')}
-        actionButtonDisabled={!isValid}
-        actionHintText={t('common:tournament.join_nickname_setting_desc')}
+        open={true}
+        returnText={t('common:tournament.join')}
+        actionButtonText={t('common:tournament.join_with_this')}
+        actionButtonDisabled={!formik.isValid || !isMembersComplete()}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
-        <form onSubmit={handleActionButton}>{step === FINAL_STEP ? nicknameChangeForm() : teamCreateForm()}</form>
+        <form onSubmit={handleActionButton}>{teamForm()}</form>
       </StickyActionModal>
 
-      {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
-    </Box>
+      {isPending && <ESLoader open={isPending} />}
+    </>
   )
 }
 

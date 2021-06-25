@@ -93,7 +93,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleCl
           )}
           <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
             <Box color={Colors.white}>
-              <Typography variant="h3" noWrap style={nicknameYellow === true ? { color: '#F7F560' } : undefined}>
+              <Typography variant="h3" noWrap style={nicknameYellow === true ? { color: Colors.yellow } : undefined}>
                 {user.nickname}
               </Typography>
             </Box>
