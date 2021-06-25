@@ -126,6 +126,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
               zoom={zoom}
               objectFit={fitType}
               aspect={4 / 1}
+              style={{
+                containerStyle: { width: 400, height: 300, position: 'relative' },
+                mediaStyle: { width: 400, height: 200, position: 'relative' },
+              }}
               showGrid={false}
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
