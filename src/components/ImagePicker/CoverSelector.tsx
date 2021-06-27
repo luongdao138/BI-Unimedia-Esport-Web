@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Box, Typography, Link, Theme } from '@material-ui/core'
+import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
 // import { calculateDimensionsCover } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
@@ -11,7 +11,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 // import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 // import { Colors } from '@theme/colors'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface CoverSelectorProps {
@@ -20,32 +20,32 @@ interface CoverSelectorProps {
   onUpdate: (file: File, blob: any) => void
 }
 
-// const ImageSlider = withStyles({
-//   root: {
-//     color: '#E11AD4',
-//     height: 8,
-//   },
-//   thumb: {
-//     height: 24,
-//     width: 24,
-//     backgroundColor: '#fff',
-//     border: '2px solid currentColor',
-//     marginTop: -10,
-//     '&:focus, &:hover, &$active': {
-//       boxShadow: 'inherit',
-//     },
-//   },
-//   active: {},
-//   track: {
-//     height: 4,
-//     borderRadius: 2,
-//   },
-//   rail: {
-//     height: 4,
-//     borderRadius: 2,
-//     color: '#FFFFFF30',
-//   },
-// })(Slider)
+const ImageSlider = withStyles({
+  root: {
+    color: '#E11AD4',
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    marginTop: -10,
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  track: {
+    height: 4,
+    borderRadius: 2,
+  },
+  rail: {
+    height: 4,
+    borderRadius: 2,
+    color: '#FFFFFF30',
+  },
+})(Slider)
 
 const STATIC_WIDTH = 600
 const STATIC_HEIGHT = 200
@@ -55,7 +55,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
   const [file, setFile] = useState<any>(null)
   // const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
-  // const [zoom, setZoom] = useState<number>(1)
+  const [zoom, setZoom] = useState<number>(1)
   // const [uploading, setUploading] = useState<boolean>(false)
   // const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
   // const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
@@ -108,7 +108,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
     setFile(null)
     setRawFile(null)
     setCroppedAreaPixels(null)
-    // setZoom(null)
+    setZoom(null)
   }
 
   // const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -130,6 +130,18 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
 
+        <Box className={classes.controls}>
+          {/* <RectIcon fontSize="small" className={classes.rect} /> */}
+          <ImageSlider
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
+          />
+          {/* <RectIcon fontSize="small" className={classes.rect2} /> */}
+        </Box>
         <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
           <ButtonPrimary round gradient={false} onClick={cancel}>
@@ -176,18 +188,18 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
     //       )}
     //     </div>
     //     {file ? (
-    //       <Box className={classes.controls}>
-    //         <RectIcon fontSize="small" className={classes.rect} />
-    //         <ImageSlider
-    //           value={zoom}
-    //           min={1}
-    //           max={3}
-    //           step={0.1}
-    //           aria-labelledby="Zoom"
-    //           onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
-    //         />
-    //         <RectIcon fontSize="small" className={classes.rect2} />
-    //       </Box>
+    // <Box className={classes.controls}>
+    //   <RectIcon fontSize="small" className={classes.rect} />
+    //   <ImageSlider
+    //     value={zoom}
+    //     min={1}
+    //     max={3}
+    //     step={0.1}
+    //     aria-labelledby="Zoom"
+    //     onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
+    //   />
+    //   <RectIcon fontSize="small" className={classes.rect2} />
+    // </Box>
     //     ) : null}
     //     <Typography className={classes.description}>{userAgent}</Typography>
     //     {/* <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography> */}
@@ -249,7 +261,17 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     cursor: 'pointer',
     textDecoration: 'underline',
   },
-  //----------------------------
+  //--------Control--------------------
+  controls: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '60%',
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  //--------------------------
   imageContainer: {
     display: 'flex',
     width: ({ width }) => width,
@@ -283,14 +305,6 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     // width: ({ width }) => width,
     backgroundColor: 'yellow',
     height: STATIC_HEIGHT,
-  },
-  controls: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '50%',
-    marginTop: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   rect: {
     color: '#FFFFFF30',
