@@ -238,6 +238,14 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     position: 'absolute',
     zIndex: 50,
   },
+  cropContainer: {
+    // position: 'relative',
+    display: 'flex',
+    width: STATIC_HEIGHT,
+    // width: ({ width }) => width,
+    backgroundColor: 'yellow',
+    height: STATIC_HEIGHT,
+  },
   controls: {
     display: 'flex',
     flexDirection: 'row',
@@ -272,13 +280,6 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     marginTop: 40,
     marginBottom: 120,
     maxWidth: 400,
-  },
-  cropContainer: {
-    position: 'relative',
-    display: 'flex',
-    width: ({ width }) => width,
-    backgroundColor: 'yellow',
-    height: STATIC_HEIGHT,
   },
   touch: {
     zIndex: 30,
