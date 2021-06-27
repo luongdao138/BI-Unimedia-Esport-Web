@@ -46,7 +46,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         document.body.style.overflow = 'hidden'
       }}
     >
-      <Box>
+      <Box className={classes.container}>
         <Box style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Box>
         <Box style={{ backgroundColor: 'black', height: 400, width: 50 }}></Box>
         <Box style={{ backgroundColor: 'blue', height: 400, width: 50 }}></Box>
@@ -68,12 +68,10 @@ export interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
     display: 'flex',
-    flexDirection: 'column',
     width: '100%',
-    // minHeight: 400,
-    marginTop: 24,
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     backgroundColor: 'gray',
   },
   title: {
