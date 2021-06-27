@@ -287,7 +287,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     width: 200,
     // width: ({ width }) => width,
     backgroundColor: 'yellow',
-    height: 200,
+    height: 400,
   },
   imageContainer: {
     display: 'flex',
