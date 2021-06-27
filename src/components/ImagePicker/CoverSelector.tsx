@@ -63,6 +63,9 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const classes = useStyles({ width: dynamicWidth })
 
+  const userAgent = window.navigator.userAgent
+  // console.log('CoverSelector.tsx 67 ', userAgent)
+
   useEffect(() => {
     return setUploading(false)
   }, [])
@@ -169,7 +172,8 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
             <RectIcon fontSize="small" className={classes.rect2} />
           </Box>
         ) : null}
-        <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
+        <Typography className={classes.description}>{userAgent}</Typography>
+        {/* <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography> */}
         <Box>
           <ButtonPrimary round gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
@@ -273,7 +277,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     position: 'relative',
     display: 'flex',
     width: ({ width }) => width,
-    height: STATIC_HEIGHT,
+    height: 600,
   },
   touch: {
     zIndex: 30,
