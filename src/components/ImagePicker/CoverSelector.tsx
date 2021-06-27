@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Box, Theme, Slider, Link } from '@material-ui/core'
-import ESDialog from '@components/Dialog'
+import { Box, Theme, Slider, Link, Dialog } from '@material-ui/core'
+// import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Crop169 as RectIcon } from '@material-ui/icons'
 import i18n from '@locales/i18n'
@@ -79,7 +79,30 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
   }, [croppedAreaPixels])
 
   return (
-    <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      aria-labelledby="Followers"
+      open={true}
+      onClose={cancel}
+      disableBackdropClick
+      BackdropProps={{
+        classes: {
+          root: classes.backDrop,
+        },
+        style: { backgroundColor: '#2C2C2C' },
+        // children: fixedFooter ? fixedFooter : undefined,
+      }}
+      PaperProps={{
+        style: {
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+        },
+      }}
+      onEntered={() => {
+        document.body.style.overflow = 'hidden'
+      }}
+    >
       <Box className={classes.container}>
         <Box className={classes.cropContainer}></Box>
         <Box className={classes.controls}>
@@ -108,7 +131,9 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
           {i18n.t('common:profile.reset')}
         </Link>
       </Box>
-    </ESDialog>
+    </Dialog>
+    // <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
+    // </ESDialog>
   )
 }
 
