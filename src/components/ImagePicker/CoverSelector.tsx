@@ -108,7 +108,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
     setFile(null)
     setRawFile(null)
     setCroppedAreaPixels(null)
-    setZoom(null)
+    // setZoom(null)
   }
 
   // const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -117,14 +117,13 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
 
   const update = useCallback(async () => {
     try {
-      setUploading(true)
+      // setUploading(true)
       const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
       onUpdate(rawFile, croppedImage)
     } catch (e) {
       console.error(e)
     }
   }, [croppedAreaPixels])
-  // console.log('CoverSelector.tsx 124 ', mediaDimensions)
 
   return (
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
