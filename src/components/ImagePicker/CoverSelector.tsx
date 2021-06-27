@@ -103,7 +103,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         document.body.style.overflow = 'hidden'
       }}
     >
-      <Box className={classes.container}>
+      <>
         <Box className={classes.cropContainer}></Box>
         <Box className={classes.controls}>
           <RectIcon fontSize="small" className={classes.rect} />
@@ -130,7 +130,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         <Link className={classes.link} onClick={reset}>
           {i18n.t('common:profile.reset')}
         </Link>
-      </Box>
+      </>
     </Dialog>
     // <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
     // </ESDialog>
