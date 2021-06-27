@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
-import { Box, Theme, Slider } from '@material-ui/core'
+import { useState, useEffect, useCallback } from 'react'
+import { Box, Theme, Slider, Link } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
+import ButtonPrimary from '@components/ButtonPrimary'
 import { Crop169 as RectIcon } from '@material-ui/icons'
 import i18n from '@locales/i18n'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -45,11 +46,37 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const [zoom, setZoom] = useState<number>(1)
+  // const [rawFile, setRawFile] = useState<null | File>(null)
+  // const [file, setFile] = useState<any>(null)
+  // const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+  const [croppedAreaPixels] = useState(null)
+  // const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const classes = useStyles({ width: dynamicWidth })
 
   useEffect(() => {
     setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
   }, [containerWidth])
+
+  const reset = () => {
+    // setFile(null)
+    // setRawFile(null)
+    // setCroppedAreaPixels(null)
+    setZoom(null)
+  }
+
+  // const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
+  //   setCroppedAreaPixels(croppedAreaPixels)
+  // }, [])
+
+  const update = useCallback(async () => {
+    try {
+      // setUploading(true)
+      // const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
+      // onUpdate(rawFile, croppedImage)
+    } catch (e) {
+      console.error(e)
+    }
+  }, [croppedAreaPixels])
 
   return (
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
@@ -67,6 +94,18 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
           />
           <RectIcon fontSize="small" className={classes.rect2} />
         </Box>
+        <Box>
+          <ButtonPrimary round gradient={false} onClick={cancel}>
+            {i18n.t('common:common.cancel')}
+          </ButtonPrimary>
+          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }}>
+            {/* <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}> */}
+            {i18n.t('common:button.use')}
+          </ButtonPrimary>
+        </Box>
+        <Link className={classes.link} onClick={reset}>
+          {i18n.t('common:profile.reset')}
+        </Link>
       </Box>
     </ESDialog>
   )
