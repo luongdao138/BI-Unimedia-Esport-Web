@@ -1,10 +1,37 @@
 import { useState, useEffect } from 'react'
-import { Box, Theme } from '@material-ui/core'
+import { Box, Theme, Slider } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
+import { Crop169 as RectIcon } from '@material-ui/icons'
 import i18n from '@locales/i18n'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
+const ImageSlider = withStyles({
+  root: {
+    color: '#E11AD4',
+    height: 8,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    marginTop: -10,
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
+  },
+  active: {},
+  track: {
+    height: 4,
+    borderRadius: 2,
+  },
+  rail: {
+    height: 4,
+    borderRadius: 2,
+    color: '#FFFFFF30',
+  },
+})(Slider)
 interface CoverSelectorProps {
   src?: string
   cancel: () => void
@@ -17,6 +44,7 @@ const STATIC_HEIGHT = 200
 const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
+  const [zoom, setZoom] = useState<number>(1)
   const classes = useStyles({ width: dynamicWidth })
 
   useEffect(() => {
@@ -27,6 +55,18 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Box className={classes.cropContainer}></Box>
+        <Box className={classes.controls}>
+          <RectIcon fontSize="small" className={classes.rect} />
+          <ImageSlider
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
+          />
+          <RectIcon fontSize="small" className={classes.rect2} />
+        </Box>
       </Box>
     </ESDialog>
   )
