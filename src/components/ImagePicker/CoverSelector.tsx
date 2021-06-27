@@ -7,7 +7,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 // import Image from 'next/image'
 // import { useDropzone } from 'react-dropzone'
 // import Cropper from 'react-easy-crop'
-// import { Crop169 as RectIcon } from '@material-ui/icons'
+import { Crop169 as RectIcon } from '@material-ui/icons'
 // import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 // import { Colors } from '@theme/colors'
@@ -130,8 +130,9 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
 
+        <Box className={classes.cropContainer}></Box>
         <Box className={classes.controls}>
-          {/* <RectIcon fontSize="small" className={classes.rect} /> */}
+          <RectIcon fontSize="small" className={classes.rect} />
           <ImageSlider
             value={zoom}
             min={1}
@@ -140,7 +141,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
             aria-labelledby="Zoom"
             onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
           />
-          {/* <RectIcon fontSize="small" className={classes.rect2} /> */}
+          <RectIcon fontSize="small" className={classes.rect2} />
         </Box>
         <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
@@ -271,7 +272,23 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     alignItems: 'center',
     backgroundColor: 'black',
   },
-  //--------------------------
+  rect: {
+    color: '#FFFFFF30',
+    marginRight: 10,
+  },
+  rect2: {
+    color: '#FFFFFF30',
+    marginLeft: 10,
+  },
+  //---------Crop and image-----------------
+  cropContainer: {
+    // position: 'relative',
+    // display: 'flex',
+    width: 50,
+    // width: ({ width }) => width,
+    backgroundColor: 'yellow',
+    height: 50,
+  },
   imageContainer: {
     display: 'flex',
     width: ({ width }) => width,
@@ -297,22 +314,6 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     display: 'flex',
     position: 'absolute',
     zIndex: 50,
-  },
-  cropContainer: {
-    // position: 'relative',
-    display: 'flex',
-    width: STATIC_HEIGHT,
-    // width: ({ width }) => width,
-    backgroundColor: 'yellow',
-    height: STATIC_HEIGHT,
-  },
-  rect: {
-    color: '#FFFFFF30',
-    marginRight: 10,
-  },
-  rect2: {
-    color: '#FFFFFF30',
-    marginLeft: 10,
   },
   touch: {
     zIndex: 30,
