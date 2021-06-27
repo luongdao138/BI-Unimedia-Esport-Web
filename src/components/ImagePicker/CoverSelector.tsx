@@ -284,10 +284,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   cropContainer: {
     // position: 'relative',
     // display: 'flex',
-    width: 50,
+    width: 200,
     // width: ({ width }) => width,
     backgroundColor: 'yellow',
-    height: 50,
+    height: 200,
   },
   imageContainer: {
     display: 'flex',
