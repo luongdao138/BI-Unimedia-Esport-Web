@@ -1,38 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Box, Theme, Slider, Link, Dialog } from '@material-ui/core'
-// import ESDialog from '@components/Dialog'
-import ButtonPrimary from '@components/ButtonPrimary'
-import { Crop169 as RectIcon } from '@material-ui/icons'
-import i18n from '@locales/i18n'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { useState, useEffect } from 'react'
+import { Box, Theme, Dialog } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
-const ImageSlider = withStyles({
-  root: {
-    color: '#E11AD4',
-    height: 8,
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    marginTop: -10,
-    '&:focus, &:hover, &$active': {
-      boxShadow: 'inherit',
-    },
-  },
-  active: {},
-  track: {
-    height: 4,
-    borderRadius: 2,
-  },
-  rail: {
-    height: 4,
-    borderRadius: 2,
-    color: '#FFFFFF30',
-  },
-})(Slider)
 interface CoverSelectorProps {
   src?: string
   cancel: () => void
@@ -45,38 +15,11 @@ const STATIC_HEIGHT = 200
 const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
-  const [zoom, setZoom] = useState<number>(1)
-  // const [rawFile, setRawFile] = useState<null | File>(null)
-  // const [file, setFile] = useState<any>(null)
-  // const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-  const [croppedAreaPixels] = useState(null)
-  // const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const classes = useStyles({ width: dynamicWidth })
 
   useEffect(() => {
     setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
   }, [containerWidth])
-
-  const reset = () => {
-    // setFile(null)
-    // setRawFile(null)
-    // setCroppedAreaPixels(null)
-    setZoom(null)
-  }
-
-  // const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
-  //   setCroppedAreaPixels(croppedAreaPixels)
-  // }, [])
-
-  const update = useCallback(async () => {
-    try {
-      // setUploading(true)
-      // const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
-      // onUpdate(rawFile, croppedImage)
-    } catch (e) {
-      console.error(e)
-    }
-  }, [croppedAreaPixels])
 
   return (
     <Dialog
@@ -103,34 +46,13 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         document.body.style.overflow = 'hidden'
       }}
     >
-      <>
-        <Box className={classes.cropContainer}></Box>
-        <Box className={classes.controls}>
-          <RectIcon fontSize="small" className={classes.rect} />
-          <ImageSlider
-            value={zoom}
-            min={1}
-            max={3}
-            step={0.1}
-            aria-labelledby="Zoom"
-            onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
-          />
-          <RectIcon fontSize="small" className={classes.rect2} />
-        </Box>
-        <Box className={classes.cropContainer}></Box>
-        <Box>
-          <ButtonPrimary round gradient={false} onClick={cancel}>
-            {i18n.t('common:common.cancel')}
-          </ButtonPrimary>
-          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }}>
-            {/* <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}> */}
-            {i18n.t('common:button.use')}
-          </ButtonPrimary>
-        </Box>
-        <Link className={classes.link} onClick={reset}>
-          {i18n.t('common:profile.reset')}
-        </Link>
-      </>
+      <Box>
+        <Box style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Box>
+        <Box style={{ backgroundColor: 'black', height: 400, width: 50 }}></Box>
+        <Box style={{ backgroundColor: 'blue', height: 400, width: 50 }}></Box>
+        <Box style={{ backgroundColor: 'green', height: 400, width: 50 }}></Box>
+        <Box style={{ backgroundColor: 'red', height: 400, width: 50 }}></Box>
+      </Box>
     </Dialog>
     // <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
     // </ESDialog>
