@@ -94,6 +94,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
           />
           <RectIcon fontSize="small" className={classes.rect2} />
         </Box>
+        <Box className={classes.cropContainer}></Box>
         <Box>
           <ButtonPrimary round gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
