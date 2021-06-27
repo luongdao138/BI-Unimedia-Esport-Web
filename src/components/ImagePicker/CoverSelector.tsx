@@ -158,20 +158,20 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
             </div>
           )} */}
         </div>
-        {file ? (
-          <Box className={classes.controls}>
-            <RectIcon fontSize="small" className={classes.rect} />
-            <ImageSlider
-              value={zoom}
-              min={1}
-              max={3}
-              step={0.1}
-              aria-labelledby="Zoom"
-              onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
-            />
-            <RectIcon fontSize="small" className={classes.rect2} />
-          </Box>
-        ) : null}
+        {/* {file ? ( */}
+        <Box className={classes.controls}>
+          <RectIcon fontSize="small" className={classes.rect} />
+          <ImageSlider
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
+          />
+          <RectIcon fontSize="small" className={classes.rect2} />
+        </Box>
+        {/* ) : null} */}
         <Typography className={classes.description}>{userAgent}</Typography>
         {/* <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography> */}
         <Box>
