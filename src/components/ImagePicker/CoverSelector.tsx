@@ -131,7 +131,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
         <Box className={classes.cropContainer}>
-          {file ? (
+          {/* {file ? (
             <Cropper
               image={file}
               crop={crop}
@@ -147,16 +147,16 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
               onCropComplete={onCropComplete}
               onZoomChange={setZoom}
             />
-          ) : (
-            <div className={classes.imageContainer}>
-              {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
-              <div className={classes.backdrop} />
-              <Camera fontSize="large" className={classes.camera} />
-              <div {...getRootProps()} className={classes.dropZone}>
-                <input {...getInputProps()} />
-              </div>
+            ) : (
+            )} */}
+          <div className={classes.imageContainer}>
+            {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
+            <div className={classes.backdrop} />
+            <Camera fontSize="large" className={classes.camera} />
+            <div {...getRootProps()} className={classes.dropZone}>
+              <input {...getInputProps()} />
             </div>
-          )}
+          </div>
         </Box>
         {file ? (
           <Box className={classes.controls}>
@@ -192,6 +192,21 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
           </Box>
         ) : null}
       </Box>
+      <Cropper
+        image={file}
+        crop={crop}
+        zoom={zoom}
+        objectFit={fitType}
+        aspect={4 / 1}
+        style={{
+          containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
+          mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+        }}
+        showGrid={false}
+        onCropChange={setCrop}
+        onCropComplete={onCropComplete}
+        onZoomChange={setZoom}
+      />
     </ESDialog>
   )
 }
@@ -274,10 +289,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     maxWidth: 400,
   },
   cropContainer: {
-    position: 'relative',
-    display: 'flex',
-    width: ({ width }) => width,
-    height: 600,
+    // position: 'relative',
+    // display: 'flex',
+    // width: ({ width }) => width,
+    // height: STATIC_HEIGHT,
   },
   touch: {
     zIndex: 30,
