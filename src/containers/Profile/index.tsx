@@ -120,7 +120,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           />
           {/* <StickyTitle onClick={() => null} title={attr.nickname} /> */}
           {offset > 150 ? (
-            <Box className={classes.backContainer} style={{ top: offset }}>
+            <Box className={classes.backContainer} style={{ top: offset + 20 }}>
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
@@ -129,7 +129,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               </Typography>
             </Box>
           ) : (
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 30 }}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           )}
