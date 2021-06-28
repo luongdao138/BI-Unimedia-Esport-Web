@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   snackBarRoot: {
     width: '100%',
-    top: 0,
+    top: 61,
     height: 30,
   },
   message: {
