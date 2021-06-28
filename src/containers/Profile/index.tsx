@@ -8,7 +8,6 @@ import ESButton from '@components/Button'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESMenu from '@components/Menu'
-// import StickyTitle from '@components/StickyTitle'
 import ESMenuItem from '@components/Menu/MenuItem'
 import TournamentHistoryContainer from '@containers/Profile/TournamentHistory'
 import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
@@ -57,9 +56,6 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   )
 
   useEffect(() => {
-    // window.onscroll = () => {
-    //   setOffset(window.pageYOffset)
-    // }
     const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
@@ -118,9 +114,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
             }}
           />
-          {/* <StickyTitle onClick={() => null} title={attr.nickname} /> */}
           {offset > 150 ? (
-            <Box className={classes.backContainer} style={{ top: offset }}>
+            <Box className={classes.backContainer}>
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
@@ -129,7 +124,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               </Typography>
             </Box>
           ) : (
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           )}
@@ -306,7 +301,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(3),
   },
   backContainer: {
-    position: 'absolute',
+    position: 'fixed',
+    top: 60,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -326,7 +322,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 5,
   },
   iconButtonBg: {
-    position: 'absolute',
+    position: 'fixed',
+    top: 70,
     marginLeft: theme.spacing(3),
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
