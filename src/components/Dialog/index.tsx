@@ -30,10 +30,8 @@ const useStyles = makeStyles({
   backDrop: {
     backdropFilter: 'blur(3px)',
   },
-  customClass: {
-    '& .MuiDialog-container ': {
-      alignItems: 'flex-start',
-    },
+  scrollPaper: {
+    alignItems: 'baseline', // default center
   },
 })
 
@@ -81,9 +79,10 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       maxWidth="md"
       aria-labelledby="Followers"
       open={open}
+      classes={{ scrollPaper: alignTop ? classes.scrollPaper : '' }}
       onClose={handleClose}
       disableBackdropClick
-      className={alignTop === true ? classes.customClass : undefined}
+      style={{ alignItems: 'flex-start' }}
       BackdropProps={{
         classes: {
           root: classes.backDrop,

@@ -114,7 +114,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         {renderRoomNameChange()}
         {renderTournamentDetailItem()}
         {/* <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem> */}
-        <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+        {/* <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem> */}
       </ESMenu>
     </Box>
   )

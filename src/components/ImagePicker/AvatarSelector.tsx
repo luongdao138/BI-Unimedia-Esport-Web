@@ -234,7 +234,7 @@ const useStyles = makeStyles(() => ({
   },
   description: {
     marginTop: 40,
-    marginBottom: 120,
+    marginBottom: 100,
     maxWidth: 400,
   },
   image: {
@@ -251,8 +251,6 @@ const useStyles = makeStyles(() => ({
     zIndex: 60,
   },
   cropContainer: {
-    position: 'relative',
-    display: 'flex',
     height: WH,
     width: WH,
   },

@@ -11,8 +11,10 @@ import useAddGame from './useAddGame'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useStore } from 'react-redux'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 
 interface Props {
   genres: GameGenre[]
@@ -35,14 +37,12 @@ const useStyles = makeStyles((theme) => ({
 const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const store = useStore()
+  const dispatch = useAppDispatch()
+  const checkNgWord = useCheckNgWord()
   const { createGame, meta, createdGame } = useAddGame()
 
   const validationSchema = Yup.object().shape({
-    display_name: Yup.string()
-      .required(i18n.t('common:common.error'))
-      .max(60, i18n.t('common:common.too_long'))
-      .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+    display_name: Yup.string().required(i18n.t('common:common.error')).max(60, i18n.t('common:common.too_long')),
     game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
       return value !== -1
     }),
@@ -55,7 +55,11 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
     },
     validationSchema,
     onSubmit(values) {
-      createGame(values)
+      if (_.isEmpty(checkNgWord(values.display_name))) {
+        createGame(values)
+      } else {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.add_game }))
+      }
     },
   })
   const [open, setOpen] = useState(false)
