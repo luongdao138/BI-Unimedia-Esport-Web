@@ -160,7 +160,6 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         socketReady: false,
         roomList: undefined,
-        messages: undefined,
       }
     default:
       return state
