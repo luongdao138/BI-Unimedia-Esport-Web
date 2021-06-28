@@ -15,11 +15,6 @@ export default async function getCroppedImg(imageSrc, pixelCrop, fileType) {
   const maxSize = Math.max(image.width, image.height)
   let safeArea = 2 * ((maxSize / 2) * Math.sqrt(2))
 
-  // const canvasLimitation = await canvas.maxArea({
-  //   usePromise: true,
-  //   useWorker: true,
-  // })
-
   const canvasLimitation = 4096
 
   if (safeArea > canvasLimitation) {
@@ -53,7 +48,14 @@ export default async function getCroppedImg(imageSrc, pixelCrop, fileType) {
   // As a blob
   return new Promise((resolve) => {
     canvas.toBlob((blob) => {
-      resolve(blob)
+      const blobUrl = URL.createObjectURL(blob)
+      resolve({ blob, blobUrl })
     }, fileType)
   })
+
+  // return new Promise(resolve => {
+  //   canvas.toBlob(file => {
+  //     resolve(URL.createObjectURL(file))
+  //   }, 'image/jpeg')
+  // })
 }
