@@ -227,8 +227,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowers user_code={isOthers ? userCode : null} />
             <ESFollowing user_code={isOthers ? userCode : null} />
+            <ESFollowers user_code={isOthers ? userCode : null} />
           </Box>
         </Grid>
         <ESReport
