@@ -1,14 +1,14 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
-// import { calculateDimensionsCover } from './Partials/calculateDimensions'
+import { calculateDimensionsCover } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
-// import Image from 'next/image'
-// import { useDropzone } from 'react-dropzone'
-// import Cropper from 'react-easy-crop'
-import { Crop169 as RectIcon } from '@material-ui/icons'
-// import ESLoader from '@components/Loader'
+import Image from 'next/image'
+import { useDropzone } from 'react-dropzone'
+import Cropper from 'react-easy-crop'
+import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
+import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 // import { Colors } from '@theme/colors'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
@@ -50,15 +50,15 @@ const ImageSlider = withStyles({
 const STATIC_WIDTH = 600
 const STATIC_HEIGHT = 200
 
-const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
+const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
-  // const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+  const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
-  // const [uploading, setUploading] = useState<boolean>(false)
-  // const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
-  // const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
+  const [uploading, setUploading] = useState<boolean>(false)
+  const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
+  const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const classes = useStyles({ width: dynamicWidth })
@@ -67,42 +67,42 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
   // console.log('CoverSelector.tsx 67 ', userAgent)
 
   useEffect(() => {
-    // return setUploading(false)
+    return setUploading(false)
   }, [])
 
   useEffect(() => {
     setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
   }, [containerWidth])
 
-  // const dropZoneConfig = {
-  //   accept: 'image/*',
-  //   onDrop: (files: any) => handleChange(files),
-  // }
-  // const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  const dropZoneConfig = {
+    accept: 'image/*',
+    onDrop: (files: any) => handleChange(files),
+  }
+  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
-  // const handleChange = (files: Array<File>) => {
-  //   const f = files[0]
-  //   const reader = new FileReader()
-  //   if (f) {
-  //     setRawFile(f)
-  //     reader.onload = (e) => {
-  //       const img = document.createElement('img')
-  //       img.src = e.target.result as string
-  //       img.onload = function () {
-  //         const w = img.naturalWidth || img.width
-  //         const h = img.naturalHeight || img.height
-  //         setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
-  //         if (h >= w) {
-  //           setFit('horizontal-cover')
-  //         } else if (w > h) {
-  //           setFit('vertical-cover')
-  //         }
-  //       }
-  //       setFile(reader.result)
-  //     }
-  //     reader.readAsDataURL(f)
-  //   }
-  // }
+  const handleChange = (files: Array<File>) => {
+    const f = files[0]
+    const reader = new FileReader()
+    if (f) {
+      setRawFile(f)
+      reader.onload = (e) => {
+        const img = document.createElement('img')
+        img.src = e.target.result as string
+        img.onload = function () {
+          const w = img.naturalWidth || img.width
+          const h = img.naturalHeight || img.height
+          setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
+          if (h >= w) {
+            setFit('horizontal-cover')
+          } else if (w > h) {
+            setFit('vertical-cover')
+          }
+        }
+        setFile(reader.result)
+      }
+      reader.readAsDataURL(f)
+    }
+  }
 
   const reset = () => {
     setFile(null)
@@ -111,13 +111,13 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
     setZoom(null)
   }
 
-  // const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
-  //   setCroppedAreaPixels(croppedAreaPixels)
-  // }, [])
+  const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }, [])
 
   const update = useCallback(async () => {
     try {
-      // setUploading(true)
+      setUploading(true)
       const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
       onUpdate(rawFile, croppedImage)
     } catch (e) {
@@ -130,19 +130,48 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
 
-        <Box className={classes.cropContainer}></Box>
-        <Box className={classes.controls}>
-          <RectIcon fontSize="small" className={classes.rect} />
-          <ImageSlider
-            value={zoom}
-            min={1}
-            max={3}
-            step={0.1}
-            aria-labelledby="Zoom"
-            onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
-          />
-          <RectIcon fontSize="small" className={classes.rect2} />
+        <Box className={classes.cropContainer}>
+          {file ? (
+            <Cropper
+              image={file}
+              crop={crop}
+              zoom={zoom}
+              objectFit={fitType}
+              aspect={4 / 1}
+              style={{
+                containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
+                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+              }}
+              showGrid={false}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+            />
+          ) : (
+            <div className={classes.imageContainer}>
+              {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
+              <div className={classes.backdrop} />
+              <Camera fontSize="large" className={classes.camera} />
+              <div {...getRootProps()} className={classes.dropZone}>
+                <input {...getInputProps()} />
+              </div>
+            </div>
+          )}
         </Box>
+        {file ? (
+          <Box className={classes.controls}>
+            <RectIcon fontSize="small" className={classes.rect} />
+            <ImageSlider
+              value={zoom}
+              min={1}
+              max={3}
+              step={0.1}
+              aria-labelledby="Zoom"
+              onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
+            />
+            <RectIcon fontSize="small" className={classes.rect2} />
+          </Box>
+        ) : null}
         <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
           <ButtonPrimary round gradient={false} onClick={cancel}>
@@ -155,38 +184,43 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel, onUpdate }) => {
         <Link className={classes.link} onClick={reset}>
           {i18n.t('common:profile.reset')}
         </Link>
+        {uploading ? (
+          <Box className={classes.loader}>
+            <ESLoader />
+          </Box>
+        ) : null}
       </Box>
     </ESDialog>
     // <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
     //   <Box className={classes.container}>
     //     <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
     //     <div className={classes.cropContainer}>
-    //       {file ? (
-    //         <Cropper
-    //           image={file}
-    //           crop={crop}
-    //           zoom={zoom}
-    //           objectFit={fitType}
-    //           aspect={4 / 1}
-    //           style={{
-    //             containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
-    //             mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
-    //           }}
-    //           showGrid={false}
-    //           onCropChange={setCrop}
-    //           onCropComplete={onCropComplete}
-    //           onZoomChange={setZoom}
-    //         />
-    //       ) : (
-    //         <div className={classes.imageContainer}>
-    //           {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
-    //           <div className={classes.backdrop} />
-    //           <Camera fontSize="large" className={classes.camera} />
-    //           <div {...getRootProps()} className={classes.dropZone}>
-    //             <input {...getInputProps()} />
-    //           </div>
-    //         </div>
-    //       )}
+    // {file ? (
+    //   <Cropper
+    //     image={file}
+    //     crop={crop}
+    //     zoom={zoom}
+    //     objectFit={fitType}
+    //     aspect={4 / 1}
+    //     style={{
+    //       containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
+    //       mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+    //     }}
+    //     showGrid={false}
+    //     onCropChange={setCrop}
+    //     onCropComplete={onCropComplete}
+    //     onZoomChange={setZoom}
+    //   />
+    // ) : (
+    //   <div className={classes.imageContainer}>
+    //     {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
+    //     <div className={classes.backdrop} />
+    //     <Camera fontSize="large" className={classes.camera} />
+    //     <div {...getRootProps()} className={classes.dropZone}>
+    //       <input {...getInputProps()} />
+    //     </div>
+    //   </div>
+    // )}
     //     </div>
     //     {file ? (
     // <Box className={classes.controls}>
@@ -236,11 +270,30 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
     width: '100%',
     minHeight: 400,
+    textAlign: 'center',
+    overflow: 'overlay',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 0,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      color: 'red',
+      opacity: 0,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      opacity: 0,
+      borderRadius: 6,
+    },
   },
   title: {
     marginTop: 40,
     marginBottom: 40,
-    margin: 'auto',
   },
   description: {
     marginTop: 40,
@@ -253,7 +306,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     '&:focus': {
       color: '#ffffff9c',
     },
-    marginTop: 20,
+    marginTop: 50,
     marginBottom: 20,
     cursor: 'pointer',
     textDecoration: 'underline',
@@ -266,7 +319,6 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
     margin: 'auto',
   },
   rect: {
@@ -279,12 +331,9 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
   //---------Crop and image-----------------
   cropContainer: {
-    // position: 'relative',
-    // display: 'flex',
-    width: 200,
-    // width: ({ width }) => width,
-    backgroundColor: 'yellow',
-    height: 400,
+    position: 'relative',
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
     margin: 'auto',
   },
   imageContainer: {
@@ -334,17 +383,13 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
 
   backdrop: {
-    display: 'flex',
     opacity: 0.6,
     background: '#000',
     position: 'absolute',
-    height: '100%',
-    width: '100%',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    content: '""',
     zIndex: 40,
   },
   loader: {
