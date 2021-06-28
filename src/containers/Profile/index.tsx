@@ -63,9 +63,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
-    window.addEventListener('gesturechange', handleScroll)
+    window.addEventListener('scroll', handleScroll)
     return () => {
-      window.removeEventListener('gesturechange', handleScroll)
+      window.removeEventListener('scroll', handleScroll)
       clearMemberProfile()
     }
   }, [])
@@ -120,7 +120,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           />
           {/* <StickyTitle onClick={() => null} title={attr.nickname} /> */}
           {offset > 150 ? (
-            <Box className={classes.backContainer} style={{ top: offset + 20 }}>
+            <Box className={classes.backContainer} style={{ top: offset }}>
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
@@ -129,7 +129,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               </Typography>
             </Box>
           ) : (
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 30 }}>
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           )}
