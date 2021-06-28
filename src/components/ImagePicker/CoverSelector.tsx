@@ -10,7 +10,6 @@ import Cropper from 'react-easy-crop'
 import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
-// import { Colors } from '@theme/colors'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
@@ -57,14 +56,11 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
-  const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
+  const [fitType, setFit] = useState<'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
   const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const classes = useStyles({ width: dynamicWidth })
-
-  // const userAgent = window.navigator.userAgent
-  // console.log('CoverSelector.tsx 67 ', userAgent)
 
   useEffect(() => {
     return setUploading(false)
@@ -181,9 +177,11 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
-        <Link className={classes.link} onClick={reset}>
-          {i18n.t('common:profile.reset')}
-        </Link>
+        <Box className={classes.linkContainer}>
+          <Link className={classes.link} onClick={reset}>
+            {i18n.t('common:profile.reset')}
+          </Link>
+        </Box>
         {uploading ? (
           <Box className={classes.loader}>
             <ESLoader />
@@ -191,72 +189,6 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
         ) : null}
       </Box>
     </ESDialog>
-    // <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
-    //   <Box className={classes.container}>
-    //     <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
-    //     <div className={classes.cropContainer}>
-    // {file ? (
-    //   <Cropper
-    //     image={file}
-    //     crop={crop}
-    //     zoom={zoom}
-    //     objectFit={fitType}
-    //     aspect={4 / 1}
-    //     style={{
-    //       containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
-    //       mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
-    //     }}
-    //     showGrid={false}
-    //     onCropChange={setCrop}
-    //     onCropComplete={onCropComplete}
-    //     onZoomChange={setZoom}
-    //   />
-    // ) : (
-    //   <div className={classes.imageContainer}>
-    //     {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
-    //     <div className={classes.backdrop} />
-    //     <Camera fontSize="large" className={classes.camera} />
-    //     <div {...getRootProps()} className={classes.dropZone}>
-    //       <input {...getInputProps()} />
-    //     </div>
-    //   </div>
-    // )}
-    //     </div>
-    //     {file ? (
-    // <Box className={classes.controls}>
-    //   <RectIcon fontSize="small" className={classes.rect} />
-    //   <ImageSlider
-    //     value={zoom}
-    //     min={1}
-    //     max={3}
-    //     step={0.1}
-    //     aria-labelledby="Zoom"
-    //     onChange={(_, zoom) => setZoom(typeof zoom === 'object' ? zoom[0] : zoom)}
-    //   />
-    //   <RectIcon fontSize="small" className={classes.rect2} />
-    // </Box>
-    //     ) : null}
-    //     <Typography className={classes.description}>{userAgent}</Typography>
-    //     {/* <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography> */}
-    // <Box>
-    //   <ButtonPrimary round gradient={false} onClick={cancel}>
-    //     {i18n.t('common:common.cancel')}
-    //   </ButtonPrimary>
-    //   <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}>
-    //     {i18n.t('common:button.use')}
-    //   </ButtonPrimary>
-    // </Box>
-    // <Link className={classes.link} onClick={reset}>
-    //   {i18n.t('common:profile.reset')}
-    // </Link>
-
-    //     {uploading ? (
-    //       <Box className={classes.loader}>
-    //         <ESLoader />
-    //       </Box>
-    //     ) : null}
-    //   </Box>
-    // </ESDialog>
   )
 }
 
@@ -301,13 +233,15 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     maxWidth: 400,
     margin: 'auto',
   },
+  linkContainer: {
+    marginTop: 50,
+    marginBottom: 20,
+  },
   link: {
     color: '#FFFFFF30',
     '&:focus': {
       color: '#ffffff9c',
     },
-    marginTop: 50,
-    marginBottom: 20,
     cursor: 'pointer',
     textDecoration: 'underline',
   },
