@@ -213,11 +213,11 @@ export default {
     message: 'あなたはそれをすべて見ました',
   },
   followers: {
-    title: 'フォロー中',
+    title: 'フォロワー',
     th: '人',
   },
   following: {
-    title: 'フォロワー',
+    title: 'フォロー中',
     th: '人',
   },
   user_report: {
@@ -527,7 +527,7 @@ export default {
     profile: 'プロフィール',
     tournament_history: '大会履歴',
     activity_log: 'アクティビティ',
-    set_two_names: '二つ名を設定するt',
+    set_two_names: '二つ名を設定する',
     self_introduction: '自己紹介',
     tag_edit: 'タグ編集',
     sns: 'SNS',
