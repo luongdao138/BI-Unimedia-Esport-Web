@@ -36,7 +36,6 @@ const AccountSettingsPasswordContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
-      // TODO error.error_4221 translate
       setFieldError('current_password', t('error.error_4221'))
     }
   }, [meta.error])
