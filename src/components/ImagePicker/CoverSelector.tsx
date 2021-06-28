@@ -56,7 +56,16 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         <Grid style={{ backgroundColor: 'green', height: 400, width: 50 }}></Grid>
         <Grid style={{ backgroundColor: 'red', height: 400, width: 50 }}></Grid>
       </div> */}
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+        }}
+      >
         {/* <div className={classes.centerContent}> */}
         <Box style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Box>
         <Box style={{ backgroundColor: 'black', height: 400, width: 50 }}></Box>
