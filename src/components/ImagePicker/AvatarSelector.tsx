@@ -16,7 +16,7 @@ interface AvatarSelectorProps {
   src?: string
   alt: string
   cancel: () => void
-  onUpdate: (file: File, blob: any) => void
+  onUpdate: (file: File, blob: any, blobUrl: string) => void
 }
 
 const ImageSlider = withStyles({
@@ -110,8 +110,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   const update = useCallback(async () => {
     try {
       setUploading(true)
-      const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
-      onUpdate(rawFile, croppedImage)
+      const { blob, blobUrl } = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
+      onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
     }

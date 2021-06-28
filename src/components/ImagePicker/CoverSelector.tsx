@@ -16,7 +16,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 interface CoverSelectorProps {
   src?: string
   cancel: () => void
-  onUpdate: (file: File, blob: any) => void
+  onUpdate: (file: File, blob: any, blobUrl: string) => void
 }
 
 const ImageSlider = withStyles({
@@ -114,8 +114,8 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   const update = useCallback(async () => {
     try {
       setUploading(true)
-      const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
-      onUpdate(rawFile, croppedImage)
+      const { blob, blobUrl } = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
+      onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
     }
