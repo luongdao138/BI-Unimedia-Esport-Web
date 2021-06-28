@@ -31,14 +31,22 @@ const ArenaHome: React.FC = () => {
     {
       type: TournamentFilterOption.all,
       label: t('common:arenaSearchFilters.all'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.beforeEntryAcceptance,
+      label: t('common:arenaSearchFilters.beforeEntryAcceptance'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.entryAcceptance,
+      label: t('common:arenaSearchFilters.entryAccepted'),
+      loginRequired: false,
     },
     {
       type: TournamentFilterOption.ready,
       label: t('common:arenaSearchFilters.beforeEvent'),
-    },
-    {
-      type: TournamentFilterOption.recruiting,
-      label: t('common:arenaSearchFilters.recruiting'),
+      loginRequired: false,
     },
     {
       type: TournamentFilterOption.inProgress,
@@ -47,14 +55,17 @@ const ArenaHome: React.FC = () => {
     {
       type: TournamentFilterOption.completed,
       label: t('common:arenaSearchFilters.completed'),
+      loginRequired: false,
     },
     {
       type: TournamentFilterOption.joined,
       label: t('common:arenaSearchFilters.joined'),
+      loginRequired: true,
     },
     {
       type: TournamentFilterOption.organized,
       label: t('common:arenaSearchFilters.organized'),
+      loginRequired: true,
     },
   ]
 
@@ -72,15 +83,27 @@ const ArenaHome: React.FC = () => {
       </div>
       <Grid container className={classes.content}>
         <Box className={classes.filters}>
-          {defaultFilterOptions.map((option) => (
-            <ESChip
-              key={option.type}
-              color={option.type === selectedFilter ? 'primary' : undefined}
-              className={classes.filterChip}
-              label={option.label}
-              onClick={() => onFilter(option.type)}
-            />
-          ))}
+          {defaultFilterOptions.map((option) =>
+            LoginRequired ? (
+              <LoginRequired>
+                <ESChip
+                  key={option.type}
+                  color={option.type === selectedFilter ? 'primary' : undefined}
+                  className={classes.filterChip}
+                  label={option.label}
+                  onClick={() => onFilter(option.type)}
+                />
+              </LoginRequired>
+            ) : (
+              <ESChip
+                key={option.type}
+                color={option.type === selectedFilter ? 'primary' : undefined}
+                className={classes.filterChip}
+                label={option.label}
+                onClick={() => onFilter(option.type)}
+              />
+            )
+          )}
         </Box>
         <InfiniteScroll
           className={classes.scrollContainer}
@@ -91,7 +114,7 @@ const ArenaHome: React.FC = () => {
           scrollThreshold="1px"
         >
           {arenas.map((tournament, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4}>
+            <Grid key={i} item xs={12} sm={4} md={4} lg={4} xl={3}>
               <TournamentCard tournament={tournament} />
             </Grid>
           ))}
