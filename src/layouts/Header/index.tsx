@@ -222,6 +222,7 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     background: '#000',
     borderBottom: 'solid 1px #70707070',
+    willChange: 'transform',
   },
   toolbar: {
     minHeight: 60,
