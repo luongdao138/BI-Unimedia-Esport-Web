@@ -23,6 +23,7 @@ const useArenaHelper = (
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: () => boolean
+  toDetail: () => void
 } => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -73,6 +74,10 @@ const useArenaHelper = (
     router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
   }
 
+  const toDetail = () => {
+    router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, hashKey))
+  }
+
   return {
     toGroupChat,
     toMatches,
@@ -88,6 +93,7 @@ const useArenaHelper = (
     toEdit,
     toCreate,
     isAdminJoined,
+    toDetail,
   }
 }
 

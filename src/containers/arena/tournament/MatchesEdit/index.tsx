@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography, Box } from '@material-ui/core'
+import { AppBar, Container, IconButton, Toolbar, Typography, Box, Icon } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ESStickyFooter from '@components/StickyFooter'
@@ -10,19 +10,20 @@ import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
 import { useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 import ButtonPrimary from '@components/ButtonPrimary'
+import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
   const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
+  const { toDetail } = useArenaHelper(tournament)
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [data, setData] = useState<any>()
@@ -89,9 +90,12 @@ const ArenaMatches: React.FC = () => {
         content={
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
-              <ButtonPrimary type="submit" round fullWidth onClick={() => setShowRandomize(true)}>
+              <ButtonPrimaryOutlined
+                onClick={() => setShowRandomize(true)}
+                leadingIcon={<Icon className="fas fa-random" fontSize="small" />}
+              >
                 {t('common:arena.randomize_button')}
-              </ButtonPrimary>
+              </ButtonPrimaryOutlined>
             </Box>
             <Box className={classes.actionButton}>
               <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => freeze(tournament.attributes.hash_key)}>
@@ -104,7 +108,7 @@ const ArenaMatches: React.FC = () => {
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
             <Toolbar className={classes.toolbar}>
-              <IconButton className={classes.backButton} onClick={() => router.back()}>
+              <IconButton className={classes.backButton} onClick={() => toDetail()}>
                 <ArrowBack />
               </IconButton>
               <Typography variant="h2">{tournament.attributes.title}</Typography>
@@ -122,7 +126,7 @@ const ArenaMatches: React.FC = () => {
           </Bracket.Container>
           {!_.isEmpty(third_place_match) && (
             <Bracket.Container activeRound={0}>
-              <Bracket.Round key={'3rd'} roundNo={0}>
+              <Bracket.Round key="3rd" roundNo={0}>
                 {getMatch('1-1', third_place_match[0])}
               </Bracket.Round>
             </Bracket.Container>

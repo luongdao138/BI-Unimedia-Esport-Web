@@ -10,8 +10,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import { TournamentDetail } from '@services/arena.service'
-import ESButton from '@components/Button'
 import TeamMemberItem from '../TeamMemberItem'
+import ButtonPrimary from '@components/ButtonPrimary'
 import _ from 'lodash'
 
 interface InterestedListProps {
@@ -52,10 +52,12 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
-  const deselectBtn = () => {
+  const deselectBtn = (handle, label) => {
     return (
-      <Box width={120} display="flex" justifyContent="center" alignItems="center">
-        <ESButton onClick={handleUnset}>{t('common:tournament.deselect')}</ESButton>
+      <Box flexShrink={0} height="100%" display="flex" justifyContent="center" alignItems="center">
+        <ButtonPrimary style={{ padding: '12px' }} size="small" gradient={false} onClick={handle}>
+          {label}
+        </ButtonPrimary>
       </Box>
     )
   }
@@ -66,12 +68,9 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
     const selected = _.find(interesteds, (p) => p.id == pid)
     if (!selected) return
     return isTeam ? (
-      <TeamMemberItem team={selected} rightItem={deselectBtn()} />
+      <TeamMemberItem team={selected} rightItem={deselectBtn(handleUnset, t('common:tournament.deselect'))} />
     ) : (
-      <Box display="flex" flexDirection="row" alignItems="space-between" justifyContent="space-between">
-        <UserListItem data={userData(selected)} />
-        {deselectBtn()}
-      </Box>
+      <UserListItem data={userData(selected)} rightItem={deselectBtn(handleUnset, t('common:tournament.deselect'))} />
     )
   }
 
@@ -121,9 +120,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
                   <UserListItem
                     data={userData(participant)}
                     key={i}
-                    handleClick={() => {
-                      onSelect(participant)
-                    }}
+                    rightItem={deselectBtn(() => onSelect(participant), t('common:arena.choice'))}
                   />
                 ))}
           </InfiniteScroll>
