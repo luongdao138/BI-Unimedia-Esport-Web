@@ -11,7 +11,7 @@ export interface BubbleProps {
   direction: 'left' | 'right'
   currentMessage?: MessageType
   users: ChatRoomMemberItem[] | ChatSuggestionList[]
-  navigateToProfile?: (id: string) => void
+  navigateToProfile?: (code: string) => void
   onLoadImage: () => void
   onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
 }

@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -182,4 +181,4 @@ RoomListItem.defaultProps = {
   selected: false,
 }
 
-export default memo(RoomListItem)
+export default RoomListItem

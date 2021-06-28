@@ -32,9 +32,12 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import useCopyToClipboard from '@utils/hooks/useCopyToClipboard'
+import { NextRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
+  router: NextRouter
 }
 
 export interface UploadStateType {
@@ -47,7 +50,7 @@ export interface MessageModalStateProps {
   replyMessage: null | ParentItem | string | MessageType
 }
 
-const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
+const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
   const [reply, setReply] = useState<MessageType | null>(null)
   const [reporting, setReporting] = useState<boolean>(false)
@@ -234,6 +237,10 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     return null
   }
 
+  const onNavigateToProfile = (code: string) => {
+    router.push(`${ESRoutes.PROFILE}/${code}`)
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -253,6 +260,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             onFetchMore={onFetchMore}
             onReplyClick={handleReplyDetail}
             users={usersWithAll}
+            navigateToProfile={onNavigateToProfile}
             messages={data}
           />
         )}
