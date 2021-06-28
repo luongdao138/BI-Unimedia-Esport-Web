@@ -129,7 +129,7 @@ const UserSettingsContainer: React.FC = () => {
           </TabPanel>
         </Grid>
 
-        <Box mt={36} />
+        <Box mt={164 / 8} className={classes.blankSpace} />
 
         <Box className={classes.stickyFooter}>
           <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
@@ -211,7 +211,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: theme.spacing(5.2),
     },
     blankSpace: {
-      height: theme.spacing(15),
+      marginTop: theme.spacing(118 / 8),
     },
   },
   captionActive: {
