@@ -9,9 +9,18 @@ export type PresignedDataParams = {
   room: string | number
   action_type: number
 }
+export type AvatarPresignedDataParams = {
+  file_name: string
+  content_type: string
+}
 
 export const getPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.S3_PRESIGNED_URL, params)
+  return data
+}
+
+export const getAvatarPreSignedUrl = async (params: AvatarPresignedDataParams): Promise<any> => {
+  const { data } = await api.post<any>(URI.AVATAR_PRESIGNED_URL, params)
   return data
 }
 

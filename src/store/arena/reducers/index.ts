@@ -14,8 +14,10 @@ import {
   TournamentStatus,
   RecommendedUsers,
   ParticipantName,
+  TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import _ from 'lodash'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -25,7 +27,7 @@ type StateType = {
   tournamentDetail?: TournamentDetail
   tournamentParticipants?: Array<ParticipantsResponse>
   participantsMeta?: PageMeta
-  suggestedTeamMembers?: Array<SuggestedTeamMembersResponse>
+  suggestedTeamMembers?: SuggestedTeamMembersResponse[]
   suggestedTeamMembersMeta?: PageMeta
   tournamentInteresteds?: Array<ParticipantsResponse>
   interestedsMeta?: PageMeta
@@ -38,6 +40,7 @@ type StateType = {
   tournamentResultsMeta: PageMeta
   recruitingTournamentsMeta: PageMeta
   selectedParticipant?: ParticipantName
+  selectedTeamDetail?: TournamentTeamDetail
 }
 
 const initialState: StateType = {
@@ -92,10 +95,12 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getEntryStatus.fulfilled, (state, action) => {
     state.tournamentDetail.attributes.is_entered = action.payload.is_entry
   })
-  builder.addCase(actions.joinTournament.fulfilled, (state) => {
+  builder.addCase(actions.joinTournament.fulfilled, (state, action) => {
     state.tournamentDetail.attributes.interested_count++
     state.tournamentDetail.attributes.is_entered = true
     state.tournamentDetail.attributes.my_role = 'interested'
+    if (state.tournamentDetail.attributes.participant_type != 1 && _.isNumber(action.payload.team_id))
+      state.tournamentDetail.attributes.my_info = [{ team_id: action.payload.team_id }]
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
@@ -171,9 +176,12 @@ export default createReducer(initialState, (builder) => {
     state.tournamentDetail = action.payload.data
   })
   builder.addCase(actions.getParticipantName.fulfilled, (state, action) => {
-    state.selectedParticipant = action.payload
+    state.selectedParticipant = action.payload.data
   })
   builder.addCase(actions.changeParticipantName.fulfilled, (state, action) => {
     state.selectedParticipant.attributes.name = action.payload.name
+  })
+  builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
+    state.selectedTeamDetail = action.payload.data
   })
 })

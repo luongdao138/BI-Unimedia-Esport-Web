@@ -45,6 +45,7 @@ export const URI = {
   TOURNAMENTS_WINNERS: '/web/v2/tournaments/:id/winners',
   TOURNAMENTS_SET_SCORE: '/v2/tournaments/:id/set_score',
   TOURNAMENT_PARTICIPANT_NAME: '/v2/tournaments/:id/participant_name',
+  TOURNAMENT_TEAMS: '/v2/tournament_teams/:id',
   JOIN_TOURNAMENT: '/v2/tournaments/:id/join',
   LEAVE_TOURNAMENT: '/v2/tournaments/:id/leave',
   CLOSE_TOURNAMENT: '/v2/tournaments/:id/close_recruitment',
@@ -71,6 +72,7 @@ export const URI = {
   NOTIFICATION_SETTINGS: '/v2/notification/settings',
   NOTIFICATION_UPDATE_SETTINGS: '/v2/notification/settings_update',
   S3_PRESIGNED_URL: '/v2/s3/presigned_url',
+  AVATAR_PRESIGNED_URL: '/v2/avatar_presigned_url',
   LOGOUT: '/v2/auth/logout',
   USER_RECOMMENDED_EVENT: '/v2/users/recommended_events', //TODO skip 2.0
   TOURNAMENT_FOLLOWERS: '/v2/users/followings_tournament',

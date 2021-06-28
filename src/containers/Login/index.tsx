@@ -20,6 +20,7 @@ import LoginForm from './LoginForm'
 import LoginSocialError from './LoginSocialError'
 import LoginError from './LoginError'
 import { URI } from '@constants/uri.constants'
+import LoginAgreementBox from './LoginAgreementBox'
 
 const LoginContainer: React.FC = () => {
   const social = useSocialLogin('login')
@@ -64,7 +65,7 @@ const LoginContainer: React.FC = () => {
           {!!meta.error && <LoginError />}
           {!!social.meta.error && <LoginSocialError />}
 
-          <LoginForm isAgreementChecked={isAgreementChecked} onAgreementChange={setAgreementChecked} onSubmitClicked={handleLoginByEmail} />
+          <LoginForm onSubmitClicked={handleLoginByEmail} />
 
           <Box pb={8} className={classes.linkContainer}>
             <Link href={handleLink(ESRoutes.REGISTER)} as={ESRoutes.REGISTER} shallow>
@@ -76,7 +77,10 @@ const LoginContainer: React.FC = () => {
             <ESDividerWithMiddleText text={t('common:login.divider')} />
           </Box>
 
-          <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
+          <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
+            <Box pb={2}>
+              <LoginAgreementBox onAgreementChange={setAgreementChecked} />
+            </Box>
             <ESButtonTwitter onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
             <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
             <ESButtonLine onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />

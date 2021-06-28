@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Box, Typography, Slider, Link } from '@material-ui/core'
+import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
+import { calculateDimensionsCover } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Image from 'next/image'
@@ -9,13 +10,13 @@ import Cropper from 'react-easy-crop'
 import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
-// import { Colors } from '@theme/colors'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface CoverSelectorProps {
   src?: string
   cancel: () => void
-  onUpdate: (file: File, blob: any) => void
+  onUpdate: (file: File, blob: any, blobUrl: string) => void
 }
 
 const ImageSlider = withStyles({
@@ -45,22 +46,29 @@ const ImageSlider = withStyles({
   },
 })(Slider)
 
-const WIDTH = 600
-const HEIGHT = 200
+const STATIC_WIDTH = 600
+const STATIC_HEIGHT = 200
 
 const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) => {
-  const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
-  const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
+  const [fitType, setFit] = useState<'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
+  const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
+  const { width: containerWidth } = useWindowDimensions(64)
+  const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
+  const classes = useStyles({ width: dynamicWidth })
 
   useEffect(() => {
     return setUploading(false)
   }, [])
+
+  useEffect(() => {
+    setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
+  }, [containerWidth])
 
   const dropZoneConfig = {
     accept: 'image/*',
@@ -77,14 +85,13 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
         const img = document.createElement('img')
         img.src = e.target.result as string
         img.onload = function () {
-          const width = img.naturalWidth || img.width
-          const height = img.naturalHeight || img.height
-          if (height > width) {
+          const w = img.naturalWidth || img.width
+          const h = img.naturalHeight || img.height
+          setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
+          if (h >= w) {
             setFit('horizontal-cover')
-          } else if (width > height) {
+          } else if (w > h) {
             setFit('vertical-cover')
-          } else {
-            setFit('contain')
           }
         }
         setFile(reader.result)
@@ -107,8 +114,8 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   const update = useCallback(async () => {
     try {
       setUploading(true)
-      const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
-      onUpdate(rawFile, croppedImage)
+      const { blob, blobUrl } = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
+      onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
     }
@@ -118,6 +125,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
+
         <Box className={classes.cropContainer}>
           {file ? (
             <Cropper
@@ -126,6 +134,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
               zoom={zoom}
               objectFit={fitType}
               aspect={4 / 1}
+              style={{
+                containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
+                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+              }}
               showGrid={false}
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
@@ -165,10 +177,11 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
-        <Link className={classes.link} onClick={reset}>
-          {i18n.t('common:profile.reset')}
-        </Link>
-
+        <Box className={classes.linkContainer}>
+          <Link className={classes.link} onClick={reset}>
+            {i18n.t('common:profile.reset')}
+          </Link>
+        </Box>
         {uploading ? (
           <Box className={classes.loader}>
             <ESLoader />
@@ -181,15 +194,89 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
 
 export default CoverSelector
 
-const useStyles = makeStyles(() => ({
+export interface StyleProps {
+  width: number
+}
+
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
+  container: {
+    width: '100%',
+    minHeight: 400,
+    textAlign: 'center',
+    overflow: 'overlay',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 0,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      color: 'red',
+      opacity: 0,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      opacity: 0,
+      borderRadius: 6,
+    },
+  },
+  title: {
+    marginTop: 40,
+    marginBottom: 40,
+  },
+  description: {
+    marginTop: 40,
+    marginBottom: 100,
+    maxWidth: 400,
+    margin: 'auto',
+  },
+  linkContainer: {
+    marginTop: 50,
+    marginBottom: 20,
+  },
+  link: {
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'pointer',
+    textDecoration: 'underline',
+  },
+  //--------Control--------------------
+  controls: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '60%',
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 'auto',
+  },
+  rect: {
+    color: '#FFFFFF30',
+    marginRight: 10,
+  },
+  rect2: {
+    color: '#FFFFFF30',
+    marginLeft: 10,
+  },
+  //---------Crop and image-----------------
+  cropContainer: {
+    position: 'relative',
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
+    margin: 'auto',
+  },
   imageContainer: {
     display: 'flex',
-    width: WIDTH,
-    height: HEIGHT,
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    // backgroundColor: 'yellow',
   },
   image: {
     width: '100%',
@@ -204,68 +291,18 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     zIndex: 60,
   },
-  link: {
-    color: '#FFFFFF30',
-    '&:focus': {
-      color: '#ffffff9c',
-    },
-    marginTop: 20,
-    cursor: 'pointer',
-    textDecoration: 'underline',
-  },
   camera: {
     display: 'flex',
     position: 'absolute',
     zIndex: 50,
-  },
-  controls: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '50%',
-    marginTop: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  rect: {
-    color: '#FFFFFF30',
-    marginRight: 10,
-  },
-  rect2: {
-    color: '#FFFFFF30',
-    marginLeft: 10,
-  },
-  //----------------------------
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    minHeight: 400,
-    marginTop: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    marginTop: 40,
-    marginBottom: 40,
-  },
-  description: {
-    marginTop: 40,
-    marginBottom: 120,
-    maxWidth: 400,
-  },
-  cropContainer: {
-    position: 'relative',
-    display: 'flex',
-    height: HEIGHT,
-    width: WIDTH,
   },
   touch: {
     zIndex: 30,
     display: 'flex',
     position: 'relative',
     overflow: 'hidden',
-    height: HEIGHT,
-    width: WIDTH,
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
     borderRadius: '50%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -275,22 +312,18 @@ const useStyles = makeStyles(() => ({
   },
   avatar: {
     zIndex: 30,
-    height: HEIGHT,
-    width: WIDTH,
+    width: ({ width }) => width,
+    height: STATIC_HEIGHT,
   },
 
   backdrop: {
-    display: 'flex',
     opacity: 0.6,
     background: '#000',
     position: 'absolute',
-    height: '100%',
-    width: '100%',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    content: '""',
     zIndex: 40,
   },
   loader: {

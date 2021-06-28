@@ -64,6 +64,17 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     }
   }, [])
 
+  // const toggleSticky = useCallback(
+  //   ({ top, bottom }) => {
+  //     if (top <= 0 && bottom > 2 * 68) {
+  //       !isSticky && setIsSticky(true);
+  //     } else {
+  //       isSticky && setIsSticky(false);
+  //     }
+  //   },
+  //   [isSticky]
+  // );
+
   // useEffect(() => {
   //   const handleScroll = () => {
   //     toggleSticky(tableRef.current.getBoundingClientRect());
@@ -120,7 +131,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             src={cover}
             editable={!isOthers}
             onChange={(f: File, blob: any) => {
-              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER, blob)
+              isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
             }}
           />
           {offset > 150 ? (
@@ -143,7 +154,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               editable={!isOthers}
               alt={attr.nickname}
               onChange={(f: File, blob: any) => {
-                isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR, blob)
+                isOthers ? null : profileImageChange(f, UPLOADER_TYPE.AVATAR, blob)
               }}
             />
             {isOthers ? (
@@ -216,8 +227,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowers user_code={isOthers ? userCode : null} />
             <ESFollowing user_code={isOthers ? userCode : null} />
+            <ESFollowers user_code={isOthers ? userCode : null} />
           </Box>
         </Grid>
         <ESReport

@@ -4,9 +4,10 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Box, makeStyles, Link, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
+import LinkButton from '@components/LinkButton'
 
 interface Props {
   hashKey: string
@@ -30,9 +31,7 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
   return (
     <>
       <Box mt={3}>
-        <Link className={classes.cancelButtonText} onClick={() => setModal(true)}>
-          <Typography>{t('common:tournament_cancel.confirm_cancel_btn')}</Typography>
-        </Link>
+        <LinkButton onClick={() => setModal(true)}>{t('common:tournament_cancel.confirm_cancel_btn')}</LinkButton>
       </Box>
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
@@ -82,13 +81,6 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  cancelButtonText: {
-    color: '#FFFFFF30',
-    '&:focus': {
-      color: '#ffffff9c',
-    },
-    cursor: 'pointer',
-  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {

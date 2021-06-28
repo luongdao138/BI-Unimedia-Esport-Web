@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
+import { PAYMENT_STATUS } from '@constants/common.constants'
 interface Props {
   data: PurchaseHistory
 }
@@ -13,7 +14,13 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation('common')
-  const date = _.get(data.attributes, 'purchase_datetime', +data.attributes.purchase_datetime)
+  const date =
+    _.get(data.attributes, 'status', +data.attributes.status) == PAYMENT_STATUS.PURCHASED
+      ? _.get(data.attributes, 'purchase_datetime', +data.attributes.purchase_datetime)
+      : _.get(data.attributes, 'status', +data.attributes.status) == PAYMENT_STATUS.CANCELLED
+      ? _.get(data.attributes, 'cancelled_datetime', +data.attributes.cancelled_datetime)
+      : _.get(data.attributes, 'cancel_req_datetime', +data.attributes.cancel_req_datetime)
+
   const time = CommonHelper.staticSmartTime(date)
   return (
     <Box
@@ -39,11 +46,22 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.type')}</Typography>
-        <Typography>チケット</Typography>
+        <Typography>{t('purchase_history.ticket')}</Typography>
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.price')}</Typography>
         <Typography>¥{data.attributes.price}</Typography>
+      </Box>
+      <Box display="flex">
+        <Typography className={classes.title}>{t('purchase_history.status')}</Typography>
+        <Typography>
+          ¥{data.attributes.price}
+          {data.attributes.status == PAYMENT_STATUS.CANCELLED
+            ? ` (${t('purchase_history.canceled')})`
+            : data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
+            ? ` (${t('purchase_history.cancel_requested')})`
+            : ''}
+        </Typography>
       </Box>
     </Box>
   )

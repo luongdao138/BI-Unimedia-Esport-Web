@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
+import { calculateDimensions } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
@@ -15,7 +16,7 @@ interface AvatarSelectorProps {
   src?: string
   alt: string
   cancel: () => void
-  onUpdate: (file: File, blob: any) => void
+  onUpdate: (file: File, blob: any, blobUrl: string) => void
 }
 
 const ImageSlider = withStyles({
@@ -51,7 +52,6 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
-  // const [fileLocation, setFileLocation] = useState<string | null>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
@@ -73,34 +73,6 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   }
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
-  const calcDimensions = (width: number, height: number) => {
-    let h = height,
-      w = width
-    if (w <= h && w < WH) {
-      const gap = WH / w
-      w = WH
-      h = h * gap
-    } else if (h < w && h < WH) {
-      const gap = WH / h
-      h = WH
-      w = w * gap
-    } else if (h > WH && w > WH) {
-      let gap = 0
-      if (h > w) {
-        gap = w / WH
-        w = WH
-        h = h / gap
-      } else {
-        gap = h / WH
-        h = WH
-        w = w / gap
-      }
-    }
-    setMediaDimensions({ height: h, width: w })
-    // console.log('AvatarSelector.tsx 61 height: ' + height + ' width: ' + width)
-    // console.log('AvatarSelector.tsx 61 h: ' + h + ' w: ' + w)
-  }
-
   const handleChange = (files: Array<File>) => {
     const f = files[0]
     const reader = new FileReader()
@@ -112,7 +84,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
         img.onload = function () {
           const width = img.naturalWidth || img.width
           const height = img.naturalHeight || img.height
-          calcDimensions(width, height)
+          setMediaDimensions(calculateDimensions(width, height, WH, WH))
           if (height > width) {
             setFit('horizontal-cover')
           } else if (width > height) {
@@ -129,7 +101,6 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
 
   const reset = () => {
     setFile(null)
-    // setFileLocation(src)
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -139,8 +110,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   const update = useCallback(async () => {
     try {
       setUploading(true)
-      const croppedImage = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
-      onUpdate(rawFile, croppedImage)
+      const { blob, blobUrl } = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
+      onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
     }
@@ -202,9 +173,11 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
-        <Link className={classes.link} onClick={reset}>
-          {i18n.t('common:profile.reset')}
-        </Link>
+        <Box className={classes.linkContainer}>
+          <Link className={classes.link} onClick={reset}>
+            {i18n.t('common:profile.reset')}
+          </Link>
+        </Box>
 
         {uploading ? (
           <Box className={classes.loader}>
@@ -220,13 +193,28 @@ export default AvatarSelector
 
 const useStyles = makeStyles(() => ({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
     width: '100%',
     minHeight: 400,
-    marginTop: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
+    textAlign: 'center',
+    overflow: 'overlay',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 0,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      color: 'red',
+      opacity: 0,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      opacity: 0,
+      borderRadius: 6,
+    },
   },
   title: {
     marginTop: 40,
@@ -234,8 +222,9 @@ const useStyles = makeStyles(() => ({
   },
   description: {
     marginTop: 40,
-    marginBottom: 120,
+    marginBottom: 100,
     maxWidth: 400,
+    margin: 'auto',
   },
   image: {
     marginTop: 20,
@@ -251,10 +240,9 @@ const useStyles = makeStyles(() => ({
     zIndex: 60,
   },
   cropContainer: {
-    position: 'relative',
-    display: 'flex',
     height: WH,
     width: WH,
+    margin: 'auto',
   },
   controls: {
     display: 'flex',
@@ -263,6 +251,7 @@ const useStyles = makeStyles(() => ({
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 'auto',
   },
   touch: {
     zIndex: 30,
@@ -308,6 +297,10 @@ const useStyles = makeStyles(() => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  linkContainer: {
+    marginTop: 50,
+    marginBottom: 20,
   },
   link: {
     color: '#FFFFFF30',

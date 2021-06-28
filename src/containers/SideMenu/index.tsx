@@ -63,9 +63,11 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 30,
   },
   userInfo: {
-    width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    width: 128,
     display: 'flex',
     paddingTop: 40,
     flexDirection: 'column',

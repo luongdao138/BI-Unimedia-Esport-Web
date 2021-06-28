@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import store from '@store/arena'
+import { useState } from 'react'
 
 const { selectors, actions } = store
 const getMeta = createMetaSelector(actions.getSuggestedTeamMembers)
@@ -14,7 +15,9 @@ const useSuggestedTeamMembers = () => {
   const meta = useAppSelector(getMeta)
   const getSuggestedTeamMembers = (params) => dispatch(actions.getSuggestedTeamMembers(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getSuggestedTeamMembers.typePrefix))
-  return { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta, meta, page }
+  const [focusIndex, setfocusIndex] = useState(-1)
+
+  return { suggestedTeamMembers, getSuggestedTeamMembers, resetMeta, meta, page, setfocusIndex, focusIndex }
 }
 
 export default useSuggestedTeamMembers

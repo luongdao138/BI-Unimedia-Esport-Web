@@ -32,8 +32,15 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
   ]
 
   const onPressProfile = (data: MentionData) => {
-    if (data && data.userId) {
-      navigateToProfile && navigateToProfile(data.userId)
+    const userCode = _.get(
+      _.find(members, function (o) {
+        return o.id === data.userId
+      }),
+      'userCode',
+      undefined
+    )
+    if (userCode) {
+      navigateToProfile && navigateToProfile(userCode)
     }
   }
 
