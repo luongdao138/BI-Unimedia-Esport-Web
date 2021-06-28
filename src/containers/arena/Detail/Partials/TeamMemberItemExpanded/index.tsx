@@ -4,6 +4,7 @@ import UserListItem from '@components/UserItem'
 import { Colors } from '@theme/colors'
 import { CommonResponse } from '@services/user.service'
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 interface Props {
   team: CommonResponse
@@ -17,6 +18,8 @@ const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem,
   const data = team.attributes.team.data.attributes
   const members = data.members
   const classes = useStyles()
+
+  const { userProfile } = useGetProfile()
 
   const userData = (member) => {
     return { id: member.user_id, attributes: { ...member, nickname: member.name, avatar: member.image_url } }
@@ -63,7 +66,7 @@ const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem,
                 data={userData(member)}
                 key={i}
                 isFollowed={hideFollow === true ? undefined : Boolean(member.is_followed)}
-                nicknameYellow={isYellowTitle && i === 0}
+                nicknameYellow={isYellowTitle && `${userProfile?.id}` === `${member.user_id}`}
               />
             ))}
           </Box>

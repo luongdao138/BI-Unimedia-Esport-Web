@@ -23,14 +23,17 @@ interface IndividualEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
   handleClose: () => void
+  hideUnjoin?: boolean
 }
 
-const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose }) => {
+const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose, hideUnjoin }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
   const [open, setOpen] = useState(false)
   const { join, joinMeta } = useEntry()
+
+  const showUnjoin = !(hideUnjoin === true)
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -73,7 +76,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
           {tournament.attributes.is_entered ? (
             <Box>
               <InidividualEntryEditModal tournament={tournament} />
-              <UnjoinModal tournament={tournament} />
+              {showUnjoin ? <UnjoinModal tournament={tournament} /> : null}
             </Box>
           ) : (
             <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>

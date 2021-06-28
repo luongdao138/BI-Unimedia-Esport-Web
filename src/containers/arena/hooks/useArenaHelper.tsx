@@ -4,6 +4,7 @@ import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import _ from 'lodash'
 
 const useArenaHelper = (
   tournament?: TournamentDetail
@@ -21,6 +22,7 @@ const useArenaHelper = (
   isEditable: boolean
   toEdit: () => void
   toCreate: () => void
+  isAdminJoined: () => boolean
 } => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -37,6 +39,15 @@ const useArenaHelper = (
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isTeam = tournament?.attributes?.participant_type > 1
   const isEditable = isModerator && !TournamentHelper.isStatusPassed(status, TOURNAMENT_STATUS.IN_PROGRESS)
+
+  const isAdminJoined = () => {
+    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    if (!_.isArray(myInfoList)) return false
+    for (const myInfo of myInfoList) {
+      if (_.get(myInfo, 'role', '') === 'interested') return true
+    }
+    return false
+  }
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -76,6 +87,7 @@ const useArenaHelper = (
     isEditable,
     toEdit,
     toCreate,
+    isAdminJoined,
   }
 }
 
