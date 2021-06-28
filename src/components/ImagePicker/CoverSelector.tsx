@@ -60,18 +60,14 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         style={{
           width: '100%',
           height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
         }}
       >
         {/* <div className={classes.centerContent}> */}
-        <Box style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'black', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'blue', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'green', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'red', height: 400, width: 50 }}></Box>
+        <Box style={{ backgroundColor: 'yellow', height: 400, width: 50, margin: 'auto' }}></Box>
+        <Box style={{ backgroundColor: 'black', height: 400, width: 50, margin: 'auto' }}></Box>
+        <Box style={{ backgroundColor: 'blue', height: 400, width: 50, margin: 'auto' }}></Box>
+        <Box style={{ backgroundColor: 'green', height: 400, width: 50, margin: 'auto' }}></Box>
+        <Box style={{ backgroundColor: 'red', height: 400, width: 50, margin: 'auto' }}></Box>
         {/* </div> */}
       </div>
     </Dialog>
