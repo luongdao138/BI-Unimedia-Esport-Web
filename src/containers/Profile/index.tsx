@@ -8,6 +8,7 @@ import ESButton from '@components/Button'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESMenu from '@components/Menu'
+// import StickyTitle from '@components/StickyTitle'
 import ESMenuItem from '@components/Menu/MenuItem'
 import TournamentHistoryContainer from '@containers/Profile/TournamentHistory'
 import ActivityLogsContainer from '@containers/Profile/ActivityLogs'
@@ -56,35 +57,18 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   )
 
   useEffect(() => {
-    window.onscroll = () => {
+    // window.onscroll = () => {
+    //   setOffset(window.pageYOffset)
+    // }
+    const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
+    window.addEventListener('scroll', handleScroll)
     return () => {
+      window.removeEventListener('scroll', handleScroll)
       clearMemberProfile()
     }
   }, [])
-
-  // const toggleSticky = useCallback(
-  //   ({ top, bottom }) => {
-  //     if (top <= 0 && bottom > 2 * 68) {
-  //       !isSticky && setIsSticky(true);
-  //     } else {
-  //       isSticky && setIsSticky(false);
-  //     }
-  //   },
-  //   [isSticky]
-  // );
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     toggleSticky(tableRef.current.getBoundingClientRect());
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [toggleSticky]);
-  // return { tableRef, isSticky };
 
   useEffect(() => {
     if (isOthers) {
@@ -134,6 +118,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
             }}
           />
+          {/* <StickyTitle onClick={() => null} title={attr.nickname} /> */}
           {offset > 150 ? (
             <Box className={classes.backContainer} style={{ top: offset }}>
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
