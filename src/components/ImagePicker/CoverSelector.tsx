@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Box, Theme, Dialog } from '@material-ui/core'
+import { Theme, Dialog, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
@@ -46,13 +46,25 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ cancel }) => {
         document.body.style.overflow = 'hidden'
       }}
     >
-      <Box className={classes.container}>
-        <Box style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'black', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'blue', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'green', height: 400, width: 50 }}></Box>
-        <Box style={{ backgroundColor: 'red', height: 400, width: 50 }}></Box>
-      </Box>
+      <div
+        style={{ width: '100%', height: '100%', textAlign: 'center', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}
+      >
+        GGGG
+        <Grid style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Grid>
+        <Grid style={{ backgroundColor: 'black', height: 400, width: 50 }}></Grid>
+        <Grid style={{ backgroundColor: 'blue', height: 400, width: 50 }}></Grid>
+        <Grid style={{ backgroundColor: 'green', height: 400, width: 50 }}></Grid>
+        <Grid style={{ backgroundColor: 'red', height: 400, width: 50 }}></Grid>
+      </div>
+      {/* <div className={classes.container}>
+        <div className={classes.centerContent}>
+          <Box style={{ backgroundColor: 'yellow', height: 400, width: 50 }}></Box>
+          <Box style={{ backgroundColor: 'black', height: 400, width: 50 }}></Box>
+          <Box style={{ backgroundColor: 'blue', height: 400, width: 50 }}></Box>
+          <Box style={{ backgroundColor: 'green', height: 400, width: 50 }}></Box>
+          <Box style={{ backgroundColor: 'red', height: 400, width: 50 }}></Box>
+        </div>
+      </div> */}
     </Dialog>
     // <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
     // </ESDialog>
@@ -67,12 +79,23 @@ export interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   container: {
-    display: 'flex',
+    // display: 'flex',
     width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
+    height: '100%',
+    display: 'inline',
+    float: 'none',
+    // flexDirection: 'column',
+    // alignItems: 'center',
     // justifyContent: 'center',
     backgroundColor: 'gray',
+  },
+
+  centerContent: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    // position: 'absolute',
+    // left: 0,
+    // right: 0,
   },
   title: {
     marginTop: 40,
