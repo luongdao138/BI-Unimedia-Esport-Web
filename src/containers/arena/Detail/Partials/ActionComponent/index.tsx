@@ -43,7 +43,7 @@ const ActionComponent: React.FC<Props> = (props) => {
       ? t('common:tournament.holding_period')
       : ''
 
-    return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
+    return `${arenaStatus}  ${entryStartDate} ～ ${entryEndDate}`
   }
   const hideEntryModal = () => {
     setEntryModalOpen(false)
