@@ -14,7 +14,6 @@ import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
 import { useEffect, useState } from 'react'
 import _, { NotVoid } from 'lodash'
-import LoginAgreementBox from './LoginAgreementBox'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required(i18n.t('common:common.input_required')),
@@ -22,12 +21,10 @@ const validationSchema = Yup.object().shape({
 })
 
 interface LoginFormProps {
-  isAgreementChecked: boolean
-  onAgreementChange: (value) => void
   onSubmitClicked: (value) => NotVoid
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ isAgreementChecked, onAgreementChange, onSubmitClicked }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSubmitClicked }) => {
   const classes = useStyles()
   const [showPassword, setShowPassword] = useState(false)
 
@@ -37,15 +34,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ isAgreementChecked, onAgreementCh
     initialValues: { email: '', password: '', registration_id: undefined },
     validationSchema,
     onSubmit: (values) => {
-      if (isAgreementChecked) onSubmitClicked(values)
+      onSubmitClicked(values)
     },
   })
 
   useEffect(() => {
     validateForm()
   }, [])
-
-  const isValid = !_.isEmpty(errors) || !isAgreementChecked
 
   return (
     <Box width="100%" flexDirection="column" alignItems="center">
@@ -113,10 +108,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ isAgreementChecked, onAgreementCh
           />
         </Box>
 
-        <LoginAgreementBox onAgreementChange={onAgreementChange} />
-
         <Box pt={22 / 8} pb={4} maxWidth={280} className={classes.buttonContainer}>
-          <ButtonPrimary type="submit" round fullWidth disabled={isValid}>
+          <ButtonPrimary type="submit" round fullWidth disabled={!_.isEmpty(errors)}>
             {i18n.t('common:login.submit')}
           </ButtonPrimary>
         </Box>
