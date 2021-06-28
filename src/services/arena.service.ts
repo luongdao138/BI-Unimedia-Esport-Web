@@ -447,6 +447,11 @@ export type MatchParticipant = {
 export interface CreateTournamentResponse {
   hash_key: string
 }
+
+export type ParticipantNameParam = {
+  hash_key: string
+  pid?: number
+}
 export type ParticipantNameResponse = {
   data: ParticipantName
 }
@@ -635,8 +640,10 @@ export const summaryTournament = async (params: SummaryParams): Promise<void> =>
   return data
 }
 
-export const getParticipantName = async (hash_key: string): Promise<ParticipantNameResponse> => {
-  const { data } = await api.get<ParticipantNameResponse>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, hash_key))
+export const getParticipantName = async (params: ParticipantNameParam): Promise<ParticipantNameResponse> => {
+  const { data } = await api.get<ParticipantNameResponse>(URI.TOURNAMENT_PARTICIPANT_NAME.replace(/:id/gi, params.hash_key), {
+    params: { pid: params.pid },
+  })
   return data
 }
 
