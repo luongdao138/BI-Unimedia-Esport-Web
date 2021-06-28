@@ -63,9 +63,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
-    window.addEventListener('touchmove', handleScroll)
+    window.addEventListener('gesturechange', handleScroll)
     return () => {
-      window.removeEventListener('touchmove', handleScroll)
+      window.removeEventListener('gesturechange', handleScroll)
       clearMemberProfile()
     }
   }, [])
