@@ -79,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.spacing(0.5),
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     backgroundColor: Colors.black,
   },
   tabIndicator: {

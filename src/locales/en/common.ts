@@ -404,7 +404,7 @@ export default {
     summary_title: '大会の総括',
     summary_submit: 'この内容で決定する',
     copy_toast: '大会詳細URLをコピーしました。',
-    edit_arena_info: '大会情報の編集',
+    edit_arena_info: '編集',
     create_success: '大会が作成されました',
     update_success: '大会内容が編集されました',
     temporary: 'Temporary',
@@ -422,6 +422,7 @@ export default {
       check_item: 'チェック項目：',
       confirm: '了解',
     },
+    choice: '選択',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
