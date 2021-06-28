@@ -56,35 +56,15 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   )
 
   useEffect(() => {
-    window.onscroll = () => {
+    const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
+    window.addEventListener('scroll', handleScroll)
     return () => {
+      window.removeEventListener('scroll', handleScroll)
       clearMemberProfile()
     }
   }, [])
-
-  // const toggleSticky = useCallback(
-  //   ({ top, bottom }) => {
-  //     if (top <= 0 && bottom > 2 * 68) {
-  //       !isSticky && setIsSticky(true);
-  //     } else {
-  //       isSticky && setIsSticky(false);
-  //     }
-  //   },
-  //   [isSticky]
-  // );
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     toggleSticky(tableRef.current.getBoundingClientRect());
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [toggleSticky]);
-  // return { tableRef, isSticky };
 
   useEffect(() => {
     if (isOthers) {
@@ -135,7 +115,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             }}
           />
           {offset > 150 ? (
-            <Box className={classes.backContainer} style={{ top: offset }}>
+            <Box className={classes.backContainer}>
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
@@ -144,7 +124,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               </Typography>
             </Box>
           ) : (
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           )}
@@ -321,7 +301,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(3),
   },
   backContainer: {
-    position: 'absolute',
+    position: 'fixed',
+    top: 60,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -341,7 +322,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 5,
   },
   iconButtonBg: {
-    position: 'absolute',
+    position: 'fixed',
+    top: 70,
     marginLeft: theme.spacing(3),
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
