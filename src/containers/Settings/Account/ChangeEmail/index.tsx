@@ -46,10 +46,8 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
-      //TODO error.error_email_4221 translate
       setFieldError('new_email', t('error.error_email_4221'))
     } else if (meta.error && meta.error['code'] === 4222) {
-      //TODO error.error_email_4222 translate
       setFieldError('new_email', t('error.error_email_4222'))
     }
   }, [meta.error])
@@ -80,8 +78,8 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
         <ESInput
           id="new_email"
           autoFocus
-          placeholder={t('account_settings.new_email')}
-          labelPrimary={t('account_settings.new_email')}
+          placeholder={t('account_settings.new_email_placeholder')}
+          labelPrimary={t('account_settings.new_email_title')}
           fullWidth
           onBlur={handleBlur}
           value={values.new_email}
