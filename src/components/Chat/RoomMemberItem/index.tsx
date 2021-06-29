@@ -13,9 +13,10 @@ interface RoomMemberItemProps {
   name: string
   userCode: string
   onDelete: (id: number) => void
+  profile: string
 }
 
-const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onDelete }) => {
+const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onDelete, profile }) => {
   const classes = useStyles()
   return (
     <ListItem onClick={() => null} className={classes.root}>
@@ -27,7 +28,7 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           badgeContent={0}
           showZero={false}
         >
-          <Avatar alt="M" />
+          <Avatar src={profile} alt="M" />
         </Badge>
       </ListItemAvatar>
       <ListItemText primary={name} secondary={userCode} />
