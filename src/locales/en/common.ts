@@ -222,8 +222,8 @@ export default {
   },
   user_report: {
     title: '通報する',
-    desc_first: '通報内容をご確認のうえ必要情報を記載、選択してください',
-    desc_second: 'また、通報いただいた内容は全て運営が確認をいたしますが、その際の対応',
+    desc_first: '通報いただいた内容は全て運営が確認をいたしますが、',
+    desc_second: 'その際の対応及び返信を行わない場合がある旨、予めご了承ください',
     desc_third: '及び返信を行わない場合がある旨、予めご了承ください',
     user_info_title: '通報する内容',
     reason: '通報する理由',
@@ -232,6 +232,7 @@ export default {
     reporter_email: 'メールアドレスの確認',
     reporter_email_placeholder: 'mail address',
     reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
+    email_required_text: '通報にはメールアドレスの登録が必要です',
     btn_text: '通報する',
     title_chat: 'Chat',
     user_report_done: 'User Reported',

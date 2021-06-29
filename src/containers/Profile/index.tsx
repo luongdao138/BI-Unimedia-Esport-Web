@@ -277,7 +277,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }
   const getTabs = () => {
     return (
-      <Grid xs={12}>
+      <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={i18n.t('common:user_profile.profile')} value={0} />
           <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} />
