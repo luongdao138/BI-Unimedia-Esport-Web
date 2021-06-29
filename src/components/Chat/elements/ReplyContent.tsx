@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Typography, Box, makeStyles, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import Avatar from '@components/Avatar/'
 import { ChatRoomMemberItem, MessageType, ParentItem, ChatSuggestionList } from '../types/chat.types'
@@ -137,4 +137,4 @@ ReplyContent.defaultProps = {
   numberOfLines: 1,
 }
 
-export default ReplyContent
+export default memo(ReplyContent)

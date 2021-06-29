@@ -602,6 +602,7 @@ export default {
     member_add_toast: 'メンバーを追加しました',
     room_name_placeholder: 'グループ名を入力',
     reply_img_text: '写真',
+    not_selected_text: 'メッセージを始めましょう',
   },
   notification: {
     title: '通知一覧',

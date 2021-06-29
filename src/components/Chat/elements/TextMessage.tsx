@@ -122,28 +122,9 @@ const useStyles = makeStyles(() => ({
   },
   multiline: {
     position: 'relative',
-    maxHeight: 36,
+    height: 36,
     overflow: 'hidden',
     paddingRight: '1rem',
-    '&:before': {
-      position: 'absolute',
-      content: "'...'",
-      insetBlockEnd: 0,
-      insetInlineEnd: 0,
-      display: 'block',
-      color: (props: MessageTextProps) => props.color,
-      fontSize: 14,
-    },
-    '&:after': {
-      content: "''",
-      position: 'absolute',
-      insetInlineEnd: 0,
-      display: 'block',
-      width: '1rem',
-      backgroundColor: (props: MessageTextProps) => props.bgColor,
-      height: '1rem',
-      marginTop: '-20px',
-    },
   },
 }))
 
