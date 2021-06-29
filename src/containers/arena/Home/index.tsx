@@ -34,18 +34,18 @@ const ArenaHome: React.FC = () => {
       loginRequired: false,
     },
     {
-      type: TournamentFilterOption.beforeEntryAcceptance,
-      label: t('common:arenaSearchFilters.beforeEntryAcceptance'),
-      loginRequired: false,
-    },
-    {
-      type: TournamentFilterOption.entryAcceptance,
-      label: t('common:arenaSearchFilters.entryAccepted'),
-      loginRequired: false,
-    },
-    {
       type: TournamentFilterOption.ready,
-      label: t('common:arenaSearchFilters.beforeEvent'),
+      label: t('common:arenaSearchFilters.ready'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.recruiting,
+      label: t('common:arenaSearchFilters.recruiting'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.beforeStart,
+      label: t('common:arenaSearchFilters.beforeStart'),
       loginRequired: false,
     },
     {
@@ -57,6 +57,9 @@ const ArenaHome: React.FC = () => {
       label: t('common:arenaSearchFilters.completed'),
       loginRequired: false,
     },
+  ]
+
+  const loginRequiredFilterOptions = [
     {
       type: TournamentFilterOption.joined,
       label: t('common:arenaSearchFilters.joined'),
@@ -83,18 +86,19 @@ const ArenaHome: React.FC = () => {
       </div>
       <Grid container className={classes.content}>
         <Box className={classes.filters}>
-          {defaultFilterOptions.map((option) =>
-            LoginRequired ? (
-              <LoginRequired>
-                <ESChip
-                  key={option.type}
-                  color={option.type === selectedFilter ? 'primary' : undefined}
-                  className={classes.filterChip}
-                  label={option.label}
-                  onClick={() => onFilter(option.type)}
-                />
-              </LoginRequired>
-            ) : (
+          {defaultFilterOptions.map((option) => (
+            <ESChip
+              key={option.type}
+              color={option.type === selectedFilter ? 'primary' : undefined}
+              className={classes.filterChip}
+              label={option.label}
+              onClick={() => onFilter(option.type)}
+            />
+          ))}
+        </Box>
+        <Box className={classes.filtersLoginRequired}>
+          {loginRequiredFilterOptions.map((option) => (
+            <LoginRequired key={option.type}>
               <ESChip
                 key={option.type}
                 color={option.type === selectedFilter ? 'primary' : undefined}
@@ -102,8 +106,8 @@ const ArenaHome: React.FC = () => {
                 label={option.label}
                 onClick={() => onFilter(option.type)}
               />
-            )
-          )}
+            </LoginRequired>
+          ))}
         </Box>
         <InfiniteScroll
           className={classes.scrollContainer}
@@ -114,7 +118,7 @@ const ArenaHome: React.FC = () => {
           scrollThreshold="1px"
         >
           {arenas.map((tournament, i) => (
-            <Grid key={i} item xs={12} sm={4} md={4} lg={4} xl={3}>
+            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
               <TournamentCard tournament={tournament} />
             </Grid>
           ))}
@@ -147,11 +151,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   filters: {
-    maxWidth: 500,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  filtersLoginRequired: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 8,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
   },
   filterChip: {
     maxWidth: 'none',

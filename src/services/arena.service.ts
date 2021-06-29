@@ -7,8 +7,8 @@ import { TOURNAMENT_STATUS as TS } from '@constants/common.constants'
 export enum TournamentFilterOption {
   all = 'all',
   ready = 'ready',
-  beforeEntryAcceptance = 'before_entry_acceptance',
-  entryAcceptance = 'entry_acceptance',
+  recruiting = 'recruiting',
+  beforeStart = 'before_start',
   inProgress = 'in_progress',
   completed = 'completed',
   joined = 'joined',

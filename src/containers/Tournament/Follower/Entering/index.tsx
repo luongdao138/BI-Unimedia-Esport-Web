@@ -48,7 +48,7 @@ const FollowerEnteringContainer: React.FC = () => {
         scrollThreshold="1px"
       >
         {tournamentFollowers.map((tournament, i) => (
-          <Grid key={i} item xs={12} sm={4} md={4} lg={4} xl={3}>
+          <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
             <TournamentCardFollow tournament={tournament} />
           </Grid>
         ))}
