@@ -9,6 +9,7 @@ import useChangeEmailConfirm from './useConfirm'
 import ESLoader from '@components/FullScreenLoader'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
+import useConfirm from '@containers/Confirm/useConfirm'
 
 const AccountSettingsConfirmContainer: React.FC = () => {
   const { t } = useTranslation('common')
@@ -17,6 +18,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
   const router = useRouter()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
   const { changeEmailConfirm, meta, user, changeEmailSteps } = useChangeEmailConfirm(confirmationCode)
+  const { resendConfirmation } = useConfirm('')
 
   const handleSubmit = () => {
     const params = {
@@ -28,7 +30,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
   }
 
   const handleResend = () => {
-    // if (user?.email) resendConfirmation({ email: user.email })
+    if (user?.email) resendConfirmation({ email: user.email, type: 'reset_password' })
     dispatch(actions.addToast(`${t('account_settings.sent_resend_code')}`))
   }
 

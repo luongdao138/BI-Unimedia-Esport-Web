@@ -7,6 +7,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { addToast } from '@store/common/actions'
 import i18n from '@locales/i18n'
+import { clearMetaData } from '@store/metadata/actions'
 
 const { actions } = userProfile
 const getChangePasswordMeta = createMetaSelector(actions.changePassword)
@@ -17,6 +18,7 @@ const useChangePassword = () => {
   const router = useRouter()
   const meta = useAppSelector(getChangePasswordMeta)
 
+  const resetMeta = () => dispatch(clearMetaData(actions.changePassword.typePrefix))
   const changePassword = (params: services.ChangePasswordParams) => {
     dispatch(actions.changePassword(params))
     dispatch(addToast(i18n.t('common:chat.member_add_toast')))
@@ -25,6 +27,7 @@ const useChangePassword = () => {
   useEffect(() => {
     if (meta.loaded) {
       router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
+      resetMeta()
     }
   }, [meta.loaded])
 
