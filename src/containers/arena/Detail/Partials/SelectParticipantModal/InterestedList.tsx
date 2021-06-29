@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import { TournamentDetail } from '@services/arena.service'
-import TeamMemberItem from '../TeamMemberItem'
+import TeamMemberItemExpanded from '../TeamMemberItemExpanded'
 import ButtonPrimary from '@components/ButtonPrimary'
 import _ from 'lodash'
 
@@ -68,7 +68,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
     const selected = _.find(interesteds, (p) => p.id == pid)
     if (!selected) return
     return isTeam ? (
-      <TeamMemberItem team={selected} rightItem={deselectBtn(handleUnset, t('common:tournament.deselect'))} />
+      <TeamMemberItemExpanded team={selected} rightItem={deselectBtn(handleUnset, t('common:tournament.deselect'))} hideFollow />
     ) : (
       <UserListItem data={userData(selected)} rightItem={deselectBtn(handleUnset, t('common:tournament.deselect'))} />
     )
@@ -108,13 +108,13 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
           >
             {isTeam
               ? _.filter(interesteds, (p) => p.id != pid).map((participant, i) => (
-                  <TeamMemberItem
-                    key={`team${i}`}
-                    team={participant}
-                    handleClick={() => {
-                      onSelect(participant)
-                    }}
-                  />
+                  <Box py={1} key={`team${i}`}>
+                    <TeamMemberItemExpanded
+                      team={participant}
+                      rightItem={deselectBtn(() => onSelect(participant), t('common:arena.choice'))}
+                      hideFollow
+                    />
+                  </Box>
                 ))
               : _.filter(interesteds, (p) => p.id != pid).map((participant, i) => (
                   <UserListItem
