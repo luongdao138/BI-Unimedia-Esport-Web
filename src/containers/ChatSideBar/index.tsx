@@ -114,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('lg')]: {
     sidebarCont: {
-      width: 260,
+      width: 100,
     },
   },
 }))
