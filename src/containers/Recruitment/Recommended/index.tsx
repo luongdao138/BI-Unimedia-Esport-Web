@@ -56,7 +56,7 @@ const RecruitmentRecommendedContainer: React.FC = () => {
           }
         >
           {recommendedRecruitments.map((recruitment, i) => (
-            <Grid key={i} item xs={12} sm={4} md={4} lg={4} xl={3}>
+            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
               <RecruitmentCard recruitment={recruitment} />
             </Grid>
           ))}

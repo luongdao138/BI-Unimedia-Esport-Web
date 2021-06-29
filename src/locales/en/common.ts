@@ -504,13 +504,13 @@ export default {
   },
   arenaSearchFilters: {
     all: 'すべて',
-    beforeEvent: '開催前',
+    beforeStart: '開催前',
     inProgress: '開催中',
     completed: '終了',
     joined: 'あなたがエントリーした大会',
     organized: 'あなたが開催者の大会',
-    beforeEntryAcceptance: 'エントリー受付前',
-    entryAccepted: 'エントリー受付中',
+    ready: 'エントリー受付前',
+    recruiting: 'エントリー受付中',
   },
   search: {
     search: '検索',

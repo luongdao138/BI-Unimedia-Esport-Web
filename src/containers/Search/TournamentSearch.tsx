@@ -50,7 +50,7 @@ const TournamentSearchContainer: React.FC = () => {
         scrollThreshold="1px"
       >
         {searchTournaments.map((tournament, i) => (
-          <Grid key={i} item xs={12} sm={4} md={4} lg={4} xl={3}>
+          <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
             <TournamentCard tournament={tournament} />
           </Grid>
         ))}
