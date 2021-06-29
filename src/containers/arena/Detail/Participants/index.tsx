@@ -41,7 +41,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   useEffect(() => {
     if (open) {
-      getParticipants({ page: 1, hash_key: hash_key })
+      getParticipants({ page: 1, hash_key: hash_key, role: data.is_freezed ? ROLE.PARTICIPANT : undefined })
     }
 
     return () => {
@@ -50,11 +50,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   }, [open])
 
   useEffect(() => {
-    setMembers(
-      data.is_freezed
-        ? participants.filter((p) => p.attributes.role === ROLE.PARTICIPANT)
-        : participants.filter((p) => p.attributes.role === ROLE.INTERESTED || p.attributes.role === ROLE.PARTICIPANT)
-    )
+    setMembers(participants)
   }, [participants])
 
   const fetchMoreData = () => {
