@@ -37,8 +37,6 @@
   background-color: #101010 !important;
   resize: none !important;
   position: relative;
-  /* left: 3px !important;
-  top: -1px !important; */
 }
 
 .mentions__suggestions__list {
@@ -109,8 +107,7 @@
   .mentions--multiLine .mentions__control,
   .mentions--multiLine .mentions__input {
     max-width: calc(100vw - 96px);
-    /* left: 3px !important;
-    top: -1px !important; */
+    /* Prevent IOS resize input out of container */
   }
 }
 
@@ -122,6 +119,7 @@
     .mentions--multiLine .mentions__input {
       left: 3px !important;
       top: -1px !important;
+      /* Strange bug on IOS X input element positionig not correct relative to parent temp fix */
     }
   }
 }
