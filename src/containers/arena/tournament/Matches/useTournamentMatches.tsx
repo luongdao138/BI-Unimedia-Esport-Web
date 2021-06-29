@@ -7,6 +7,8 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { SetScoreParams, TournamentMatchRound } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { useTranslation } from 'react-i18next'
+import { ESRoutes } from '@constants/route.constants'
+import { getIsAuthenticated } from '@store/auth/selectors'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
 const setScoreMeta = createMetaSelector(actions.setScore)
@@ -23,15 +25,18 @@ const useTournamentMatches = (): {
   roundTitles: RoundTitles
 } => {
   const { t } = useTranslation(['common'])
-  const { query } = useRouter()
+  const { query, push } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
   const scoreMeta = useAppSelector(setScoreMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
+  const isAuth = useAppSelector(getIsAuthenticated)
   useEffect(() => {
-    fetchMatches()
-  }, [query.hash_key])
+    if (!isAuth) {
+      push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
+    } else fetchMatches()
+  }, [query.hash_key, isAuth])
   useEffect(() => {
     if (meta.loaded) {
       const matchesLength = matches.length

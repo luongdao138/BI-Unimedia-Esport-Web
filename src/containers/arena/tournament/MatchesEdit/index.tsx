@@ -9,6 +9,7 @@ import SelectParticipantModal from '../../Detail/Partials/SelectParticipantModal
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
+import FreezeDialog from './Partials/FreezeDialog'
 import { useTranslation } from 'react-i18next'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
@@ -26,6 +27,7 @@ const ArenaMatches: React.FC = () => {
   const { toDetail } = useArenaHelper(tournament)
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
+  const [showFreeze, setShowFreeze] = useState(false)
   const [data, setData] = useState<any>()
 
   useEffect(() => {
@@ -98,7 +100,7 @@ const ArenaMatches: React.FC = () => {
               </ButtonPrimaryOutlined>
             </Box>
             <Box className={classes.actionButton}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => freeze(tournament.attributes.hash_key)}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => setShowFreeze(true)}>
                 {t('common:arena.freeze_button')}
               </ButtonPrimary>
             </Box>
@@ -148,6 +150,15 @@ const ArenaMatches: React.FC = () => {
           onAction={() => {
             setShowRandomize(false)
             randomize(tournament.attributes.hash_key)
+          }}
+        />
+
+        <FreezeDialog
+          open={showFreeze}
+          onClose={() => setShowFreeze(false)}
+          onAction={() => {
+            setShowFreeze(false)
+            freeze(tournament.attributes.hash_key)
           }}
         />
       </ESStickyFooter>
