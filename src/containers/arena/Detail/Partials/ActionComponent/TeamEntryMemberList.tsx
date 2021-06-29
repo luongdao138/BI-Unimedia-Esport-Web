@@ -15,6 +15,7 @@ interface TeamEntryMemberListProps {
   removeSelectedMember: (memberSelection: MemberSelection) => void
   getSelectedMember: (index: number) => TeamMemberSelectItem | null
   selectedMembers: MemberSelection[]
+  isEdit: boolean
 }
 
 const TeamEntryMemberList: React.FC<TeamEntryMemberListProps> = ({
@@ -25,6 +26,7 @@ const TeamEntryMemberList: React.FC<TeamEntryMemberListProps> = ({
   removeSelectedMember,
   getSelectedMember,
   selectedMembers,
+  isEdit,
 }) => {
   const { suggestedTeamMembers, meta, getSuggestedTeamMembers, focusIndex, setfocusIndex } = useSuggestedTeamMembers()
 
@@ -67,6 +69,7 @@ const TeamEntryMemberList: React.FC<TeamEntryMemberListProps> = ({
           onItemSelected={handleMemberSelect}
           loading={focusIndex === index && meta.pending}
           formik={formik}
+          isEdit={isEdit}
         />
       )
     }
