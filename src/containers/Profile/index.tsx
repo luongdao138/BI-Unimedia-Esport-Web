@@ -103,6 +103,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }, [raw_code])
 
   useEffect(() => {
+    setTab(0)
     if (isOthers) {
       toggleDisable(false)
     }
@@ -276,13 +277,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }
   const getTabs = () => {
     return (
-      <Box marginY={3}>
+      <Grid xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={i18n.t('common:user_profile.profile')} value={0} />
           <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} />
           <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} />
         </ESTabs>
-      </Box>
+      </Grid>
     )
   }
   const getContent = () => {
@@ -414,6 +415,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   tabs: {
+    overflow: 'hidden',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',

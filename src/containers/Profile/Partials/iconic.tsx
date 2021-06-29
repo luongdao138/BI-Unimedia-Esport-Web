@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     marginTop: 8,
     marginRight: 20,
     flexWrap: 'wrap',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'flex-start',
   },
 }))
