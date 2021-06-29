@@ -86,7 +86,11 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
           </ListItemAvatar>
         ) : null}
         <ListItemText>
-          {showName ? <Typography variant="body2">{nickName}</Typography> : null}
+          {showName ? (
+            <Typography variant="body2" noWrap={true}>
+              {nickName}
+            </Typography>
+          ) : null}
           {renderText()}
           {renderPhoto()}
         </ListItemText>
