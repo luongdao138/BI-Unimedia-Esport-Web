@@ -26,7 +26,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
       onMouseOver={() => toggleChatBar(true)}
       onMouseLeave={() => toggleChatBar(false)}
     >
-      <Box className={classes.content}>
+      <Box className={classes.contentInner}>
         <Box className={classes.header} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
           <Typography className={classes.headerTitle} variant={'body1'}>
             {t('common:chat.title')}
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 0,
     },
   },
-  content: {
+  contentInner: {
     height: '100%',
     width: 290,
   },
@@ -114,7 +114,10 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('lg')]: {
     sidebarCont: {
-      width: 100,
+      width: '100%',
+    },
+    contentInner: {
+      width: 260,
     },
   },
 }))
