@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { makeStyles, Box } from '@material-ui/core'
+import { makeStyles, Box, IconButton, Icon } from '@material-ui/core'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -34,6 +34,7 @@ import i18n from '@locales/i18n'
 import useCopyToClipboard from '@utils/hooks/useCopyToClipboard'
 import { NextRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import { ReplyContent } from '@components/Chat/elements'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
@@ -241,6 +242,20 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
     router.push(`${ESRoutes.PROFILE}/${code}`)
   }
 
+  const renderReplyPanel = () => {
+    if (reply !== null) {
+      return (
+        <Box className={classes.panel}>
+          <ReplyContent color={Colors.text[200]} replyMessage={reply} members={usersAvailable} />
+          <IconButton onClick={() => setReply(null)} disableRipple className={classes.closeButton}>
+            <Icon className={`${classes.iconClose} fa fa-times`} />
+          </IconButton>
+        </Box>
+      )
+    }
+    return null
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -267,11 +282,10 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       </Box>
       {userId && !hasError && data ? (
         <Box className={classes.input}>
+          {renderReplyPanel()}
           <MessageInputArea
             ref={inputRef}
-            reply={reply}
             currentUser={userId}
-            onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
             users={usersAvailable}
             onPressActionButton={handlePressActionButton}
@@ -374,6 +388,24 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     maxWidth: '100%',
     background: '#101010',
+  },
+  panel: {
+    position: 'relative',
+    paddingBottom: 10,
+    paddingRight: 20,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 5,
+    zIndex: 100,
+    right: 5,
+    '&:hover': {
+      background: 'transparent',
+    },
+  },
+  iconClose: {
+    color: Colors.text[200],
+    fontSize: '12px',
   },
 }))
 

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Avatar, AvatarProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -46,4 +47,4 @@ ESAvatar.defaultProps = {
   alt: '',
 }
 
-export default ESAvatar
+export default memo(ESAvatar)
