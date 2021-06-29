@@ -4,7 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 
 import HeaderWithButton from '@components/HeaderWithButton'
-import Input from '@components/Input'
+import ESInput from '@components/Input'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
+import { useStore } from 'react-redux'
+import _ from 'lodash'
 
 const ESInquiry: React.FC = () => {
   const { t } = useTranslation('common')
@@ -24,19 +26,32 @@ const ESInquiry: React.FC = () => {
   const [showPreview, setShowPreview] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const classes = useStyles()
+  const store = useStore()
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required(t('common.required')).max(100, t('common.too_long')),
+    title: Yup.string()
+      .required(t('inquiry.title_required'))
+      .max(100, t('common.too_long'))
+      .test('content', t('common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
+
     email: Yup.string()
       .test('email-validation', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
       .max(100, t('common.too_long'))
       .required(t('inquiry.error.email')),
-    content: Yup.string().required(t('common.required')).max(1000, t('common.too_long')),
+
+    content: Yup.string()
+      .required(t('inquiry.desc_required'))
+      .max(1000, t('common.too_long'))
+      .test('content', t('common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<InquiryParams>({
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<InquiryParams>({
     initialValues: {
       content: '',
       title: '',
@@ -53,6 +68,10 @@ const ESInquiry: React.FC = () => {
       setShowSuccess(true)
     }
   }, [meta.loaded])
+
+  const buttonActive = (): boolean => {
+    return values.title !== '' && values.content !== '' && _.isEmpty(errors)
+  }
 
   return (
     <div>
@@ -83,7 +102,7 @@ const ESInquiry: React.FC = () => {
         <Box>
           <form className={classes.root} onSubmit={handleSubmit}>
             <Box mt={2} bgcolor={showPreview ? Colors.black : null} borderRadius={4} padding={3} margin={3}>
-              <Input
+              <ESInput
                 id="title"
                 name="title"
                 value={values.title}
@@ -91,6 +110,7 @@ const ESInquiry: React.FC = () => {
                 onChange={handleChange}
                 labelPrimary={t('inquiry.subject')}
                 placeholder=""
+                onBlur={handleBlur}
                 required
                 helperText={touched.title && errors.title}
                 error={touched.title && !!errors.title}
@@ -98,7 +118,7 @@ const ESInquiry: React.FC = () => {
                 size="small"
               />
               <Box mt={1}>
-                <Input
+                <ESInput
                   id="content"
                   name="content"
                   value={values.content}
@@ -116,22 +136,21 @@ const ESInquiry: React.FC = () => {
                 />
               </Box>
               <Box mt={1}></Box>
-              {currentUserEmail ? null : (
-                <Input
-                  id="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  labelPrimary={t('inquiry.email')}
-                  required
-                  fullWidth
-                  helperText={touched.email && errors.email}
-                  error={touched.email && !!errors.email}
-                  rows={8}
-                  disabled={showPreview}
-                  size="small"
-                />
-              )}
+              <ESInput
+                id="email"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                labelPrimary={t('inquiry.email')}
+                required
+                fullWidth
+                helperText={touched.email && errors.email}
+                error={touched.email && !!errors.email}
+                rows={8}
+                disabled={showPreview}
+                readOnly={!!currentUserEmail}
+                size="small"
+              />
             </Box>
 
             <Box mt={3} display="flex" justifyContent="center">
@@ -148,7 +167,7 @@ const ESInquiry: React.FC = () => {
                     {t('inquiry.send')}
                   </ButtonPrimary>
                 ) : (
-                  <ButtonPrimary round fullWidth type="submit" disabled={meta.pending}>
+                  <ButtonPrimary round fullWidth type="submit" disabled={!buttonActive()}>
                     {t('inquiry.next')}
                   </ButtonPrimary>
                 )}
