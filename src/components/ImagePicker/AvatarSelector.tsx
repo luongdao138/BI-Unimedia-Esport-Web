@@ -293,7 +293,10 @@ const useStyles = makeStyles(() => ({
   },
   loader: {
     display: 'flex',
+    width: '100%',
+    height: '100%',
     position: 'absolute',
+    top: 0,
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
