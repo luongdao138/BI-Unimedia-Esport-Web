@@ -29,7 +29,9 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { t } = useTranslation(['common'])
   const [entryModalOpen, setEntryModalOpen] = useState(false)
 
-  const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed } = useArenaHelper(tournament)
+  const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed, isAdminJoined } = useArenaHelper(
+    tournament
+  )
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
 
@@ -48,12 +50,12 @@ const ActionComponent: React.FC<Props> = (props) => {
   const hideEntryModal = () => {
     setEntryModalOpen(false)
   }
-  const renderTeamView = () => {
+  const renderTeamEntry = () => {
     return (
       <Box>
         <LoginRequired>
           <Box className={classes.actionButton}>
-            {tournament.attributes.is_entered && tournament.attributes.my_role === 'interested' ? (
+            {(tournament.attributes.is_entered && tournament.attributes.my_role) === 'interested' ? (
               <Box>
                 <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
                 <UnjoinModal tournament={tournament} />
@@ -66,8 +68,37 @@ const ActionComponent: React.FC<Props> = (props) => {
             )}
           </Box>
         </LoginRequired>
-        {entryModalOpen ? <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={hideEntryModal} /> : null}
       </Box>
+    )
+  }
+
+  const renderAdminTeamEntry = () => {
+    return (
+      <>
+        <Box className={classes.buttonHolder}>
+          <Box minWidth={260} className={classes.buttonLeft}>
+            <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />
+          </Box>
+          <Box minWidth={256} className={classes.buttonRight}>
+            {isTeam ? (
+              <Box className={classes.actionButton}>
+                {isAdminJoined() ? (
+                  <Box>
+                    <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
+                  </Box>
+                ) : (
+                  <ButtonPrimary round fullWidth onClick={() => setEntryModalOpen(true)}>
+                    {t('common:tournament.join')}
+                  </ButtonPrimary>
+                )}
+              </Box>
+            ) : (
+              <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} hideUnjoin={isAdminJoined()} />
+            )}
+          </Box>
+        </Box>
+        {isAdminJoined() ? <UnjoinModal tournament={tournament} /> : null}
+      </>
     )
   }
 
@@ -98,25 +129,14 @@ const ActionComponent: React.FC<Props> = (props) => {
         <>
           {isModerator ? (
             <Box>
-              <Box className={classes.buttonHolder}>
-                <Box minWidth={260} className={classes.buttonLeft}>
-                  <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />
-                </Box>
-                <Box minWidth={256} className={classes.buttonRight}>
-                  {isTeam ? (
-                    renderTeamView()
-                  ) : (
-                    <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
-                  )}
-                </Box>
-              </Box>
-
+              {renderAdminTeamEntry()}
               <Box className={classes.description}>
                 <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
               </Box>
             </Box>
           ) : null}
-          {!isModerator && isTeam && renderTeamView()}
+          {entryModalOpen ? <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={hideEntryModal} /> : null}
+          {!isModerator && isTeam && renderTeamEntry()}
           {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
         </>
       )}

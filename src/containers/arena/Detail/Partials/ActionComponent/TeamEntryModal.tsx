@@ -227,6 +227,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
             removeSelectedMember={teamMemberHook.removeSelectedMember}
             getSelectedMember={teamMemberHook.getSelectedMember}
             selectedMembers={teamMemberHook.selectedMembers}
+            isEdit={isEdit === true}
           />
         </Box>
       </Box>

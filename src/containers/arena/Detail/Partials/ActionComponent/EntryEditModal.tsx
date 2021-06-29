@@ -51,7 +51,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }) => {
 
   useEffect(() => {
     if (open) {
-      getParticipant(_.get(tournament, 'attributes.hash_key', ''))
+      getParticipant(_.get(tournament, 'attributes.hash_key', ''), tournament.attributes.my_info?.id)
     }
   }, [open])
 

@@ -389,7 +389,7 @@ export default {
   arena: {
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
-    randomize_success: 'ユーザーを配置しました',
+    randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     dialog: {
       randomize_title: 'ユーザーをランダムに配置します',
@@ -398,6 +398,12 @@ export default {
       randomize_sub2: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
       randomize_warn: 'この時点ではまだエントリー表は確定しません',
       deploy_button: '配置する',
+      freeze_title: 'トーナメント表を確定する',
+      freeze_desc: '現在の対戦表に登録されているユーザーで対戦表を確定させます。よろしいですか？',
+      freeze_sub1: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+      freeze_sub2:
+        '※エントリーしているユーザーであっても、対戦表に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。',
+      freeze_warn: '確定以降の参加枠の変更はできません。',
     },
     no_match_result: '対戦結果が出ていません',
     edit_match_result: '対戦結果を編集する',
@@ -407,7 +413,7 @@ export default {
     summary_title: '大会の総括',
     summary_submit: 'この内容で決定する',
     copy_toast: '大会詳細URLをコピーしました。',
-    edit_arena_info: '大会情報の編集',
+    edit_arena_info: '編集',
     create_success: '大会が作成されました',
     update_success: '大会内容が編集されました',
     temporary: 'Temporary',
@@ -425,6 +431,7 @@ export default {
       check_item: 'チェック項目：',
       confirm: '了解',
     },
+    choice: '選択',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

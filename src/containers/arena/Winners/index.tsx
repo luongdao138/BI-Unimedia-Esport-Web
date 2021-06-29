@@ -3,11 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography, IconButton } from '@material-ui/core'
+import { Typography, IconButton, Box } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
+import ESButton from '@components/Button'
+import { useTranslation } from 'react-i18next'
 
 const ArenaWinners: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const { arenaWinners, arena, handleBack } = useArenaWinners()
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
@@ -49,6 +52,11 @@ const ArenaWinners: React.FC = () => {
         <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
         <Typography>{arena?.attributes?.summary || ''}</Typography>
       </div>
+      <Box textAlign="center" pb={showSummary ? 4 : 8}>
+        <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={handleBack}>
+          {t('common:tournament.tournament_detail')}
+        </ESButton>
+      </Box>
       <div ref={winnerListRef} className={classes.listContainer}>
         {Object.keys(arenaWinners).map((key) =>
           (arenaWinners[key] || []).map((p, idx) => (
@@ -245,5 +253,13 @@ const useStyles = makeStyles((theme) => ({
   placementWrapper: {
     width: 55,
     marginRight: theme.spacing(1),
+  },
+  bottomButton: {
+    borderRadius: 4,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(7),
+    paddingRight: theme.spacing(7),
+    alignSelf: 'center',
   },
 }))

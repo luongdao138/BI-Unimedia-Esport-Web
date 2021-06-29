@@ -8,13 +8,13 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 
-interface RandomizeDialogProps {
+interface FreezeDialogProps {
   onAction: () => void
   onClose: () => void
   open: boolean
 }
 
-const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, open }) => {
+const FreezeDialog: React.FC<FreezeDialogProps> = ({ onAction, onClose, open }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
@@ -24,18 +24,18 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
         <BlankLayout>
           <Box paddingY={16} className={classes.childrenContainer}>
             <Box pb={4} color={Colors.white} alignItems="center">
-              <Typography className={classes.title}>{t('common:arena.dialog.randomize_title')}</Typography>
+              <Typography className={classes.title}>{t('common:arena.dialog.freeze_title')}</Typography>
             </Box>
             <Box pb={4}>
               <Typography variant="h2" className={classes.desc}>
-                {t('common:arena.dialog.randomize_desc')}
+                {t('common:arena.dialog.freeze_desc')}
               </Typography>
             </Box>
             <Typography variant="caption" gutterBottom>
-              {t('common:arena.dialog.randomize_sub1')}
+              {t('common:arena.dialog.freeze_sub1')}
             </Typography>
             <Typography variant="caption" gutterBottom>
-              {t('common:arena.dialog.randomize_sub2')}
+              {t('common:arena.dialog.freeze_sub2')}
             </Typography>
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
@@ -53,7 +53,7 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
 
             <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
               <WarningRounded fontSize="small" />
-              <Typography variant="body2">{t('common:arena.dialog.randomize_warn')}</Typography>
+              <Typography variant="body2">{t('common:arena.dialog.freeze_warn')}</Typography>
             </Box>
           </Box>
         </BlankLayout>
@@ -109,4 +109,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default RandomizeDialog
+export default FreezeDialog

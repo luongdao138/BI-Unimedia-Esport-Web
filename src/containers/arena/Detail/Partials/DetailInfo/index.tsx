@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react'
-import { Grid, Box, makeStyles, Typography, Theme } from '@material-ui/core'
+import { Grid, Box, makeStyles, Typography, Theme, Icon } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
@@ -16,6 +16,8 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
+import ButtonPrimary from '@components/ButtonPrimary'
+import ESAvatar from '@components/Avatar'
 
 interface Props {
   detail: TournamentDetail
@@ -47,21 +49,34 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
   return (
     <Grid container className={classes.container}>
       <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column">
-        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Box color={Colors.white}>
-            <Typography variant="h3">{data.title}</Typography>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <Box pt={1} color={Colors.white}>
+            <Typography className={classes.title} variant="h3">
+              {data.title}
+            </Typography>
           </Box>
           {extended && (
-            <ESMenu>
-              {helper.isEditable && toEdit && <ESMenuItem onClick={toEdit}>{t('common:arena.edit_arena_info')}</ESMenuItem>}
-              <ESMenuItem onClick={handleCopy}>{t('common:tournament.copy_url')}</ESMenuItem>
-              <LoginRequired>
-                <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
-              </LoginRequired>
-            </ESMenu>
+            <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
+              {helper.isEditable && toEdit && (
+                <ButtonPrimary style={{ padding: '12px 8px' }} size="small" gradient={false} onClick={toEdit}>
+                  {t('common:arena.edit_arena_info')}
+                </ButtonPrimary>
+              )}
+              <ESMenu>
+                <LoginRequired>
+                  <ESMenuItem onClick={handleReportOpen}>{t('common:tournament.report')}</ESMenuItem>
+                </LoginRequired>
+              </ESMenu>
+            </Box>
           )}
         </Box>
-        <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
+        <Box display="flex" flexDirection="row" alignItems="center">
+          <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
+          <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+            <Icon className="fa fa-link" fontSize="small" style={{ marginRight: 20, fontSize: 14, paddingTop: 3 }} />
+            <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+          </Box>
+        </Box>
 
         <Box marginTop={2}>
           <ESChip className={classes.gameChip} label={game} />
@@ -167,7 +182,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.admin_organizer')}</Typography>
               </Box>
               <Box className={classes.value}>
-                <Typography>{data.owner ? data.owner.data.attributes.nickname : ''}</Typography>
+                {data.owner && (
+                  <Box display="flex" flexDirection="row" alignItems="center">
+                    <ESAvatar alt="Avatar" src={data.owner.data.attributes.avatar} />
+                    <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
+                  </Box>
+                )}
               </Box>
             </Box>
 
@@ -181,9 +201,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                   data.co_organizers.data &&
                   data.co_organizers.data.length > 0 &&
                   data.co_organizers.data.map((co: CommonResponse, i) => (
-                    <Typography className={classes.breakWord} key={`co${i}`}>
-                      {co.attributes.nickname}
-                    </Typography>
+                    <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
+                      <ESAvatar alt="Avatar" src={co.attributes.avatar} />
+                      <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
+                    </Box>
                   ))}
               </Box>
             </Box>
@@ -220,23 +241,27 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </Box>
           </>
         )}
-        <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={3}>
-          <Box mr={1}>
-            <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
-          </Box>
-          <Box mr={1}>
-            <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
-          </Box>
-          <Box mr={1}>
-            <ESChip label={TournamentHelper.ruleText(data.rule)} />
-          </Box>
-          {!!data.has_prize && (
-            <Box mr={1}>
-              <ESChip label={t('common:tournament.has_prize_true')} />
+        {!extended && (
+          <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={2}>
+            <Box mt={1} mr={1}>
+              <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
             </Box>
-          )}
-          <ESChip label={hardware} />
-        </Box>
+            <Box mt={1} mr={1}>
+              <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
+            </Box>
+            <Box mt={1} mr={1}>
+              <ESChip label={TournamentHelper.ruleText(data.rule)} />
+            </Box>
+            {!!data.has_prize && (
+              <Box mt={1} mr={1}>
+                <ESChip label={t('common:tournament.has_prize_true')} />
+              </Box>
+            )}
+            <Box mt={1}>
+              <ESChip label={hardware} />
+            </Box>
+          </Box>
+        )}
         {!bottomButton ? null : (
           <Box textAlign="center" mt={2}>
             {bottomButton}
@@ -271,9 +296,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   value: {
     display: 'flex',
     flex: 8,
+    wordBreak: 'break-word',
+  },
+  title: {
+    wordBreak: 'break-word',
   },
   breakWord: {
     wordBreak: 'break-word',
+    marginLeft: theme.spacing(1),
+  },
+  urlCopy: {
+    marginLeft: 20,
+    cursor: 'pointer',
+    color: '#EB5686',
   },
   [theme.breakpoints.down('md')]: {
     label: {

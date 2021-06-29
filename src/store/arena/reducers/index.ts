@@ -100,7 +100,7 @@ export default createReducer(initialState, (builder) => {
     state.tournamentDetail.attributes.is_entered = true
     state.tournamentDetail.attributes.my_role = 'interested'
     if (state.tournamentDetail.attributes.participant_type != 1 && _.isNumber(action.payload.team_id))
-      state.tournamentDetail.attributes.my_info = [{ team_id: action.payload.team_id }]
+      state.tournamentDetail.attributes.my_info = [{ role: 'interested', team_id: action.payload.team_id }]
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
