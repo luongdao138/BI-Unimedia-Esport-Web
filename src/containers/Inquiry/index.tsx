@@ -37,11 +37,14 @@ const ESInquiry: React.FC = () => {
       }),
 
     email: Yup.string()
-      .test('email-validation', t('inquiry.error.email'), (value) => {
+      .required(t('inquiry.email_required'))
+      .max(100, t('common.too_long'))
+      .test('email', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .max(100, t('common.too_long'))
-      .required(t('inquiry.error.email')),
+      .test('content', t('common.contains_ngword'), function (value) {
+        return CommonHelper.matchNgWords(store, value).length <= 0
+      }),
 
     content: Yup.string()
       .required(t('inquiry.desc_required'))
@@ -125,6 +128,7 @@ const ESInquiry: React.FC = () => {
                   onChange={handleChange}
                   labelPrimary={t('inquiry.desc')}
                   placeholder={t('inquiry.desc_placeholder')}
+                  onBlur={handleBlur}
                   required
                   fullWidth
                   helperText={touched.content && errors.content}
@@ -142,13 +146,14 @@ const ESInquiry: React.FC = () => {
                 value={values.email}
                 onChange={handleChange}
                 labelPrimary={t('inquiry.email')}
+                onBlur={handleBlur}
                 required
                 fullWidth
                 helperText={touched.email && errors.email}
                 error={touched.email && !!errors.email}
                 rows={8}
                 disabled={showPreview}
-                readOnly={!!currentUserEmail}
+                // readOnly={!!currentUserEmail}
                 size="small"
               />
             </Box>
