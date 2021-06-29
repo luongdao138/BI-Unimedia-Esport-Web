@@ -5,6 +5,8 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import userProfile from '@store/userProfile'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { addToast } from '@store/common/actions'
+import i18n from '@locales/i18n'
 
 const { actions } = userProfile
 const getChangePasswordMeta = createMetaSelector(actions.changePassword)
@@ -17,6 +19,7 @@ const useChangePassword = () => {
 
   const changePassword = (params: services.ChangePasswordParams) => {
     dispatch(actions.changePassword(params))
+    dispatch(addToast(i18n.t('common:chat.member_add_toast')))
   }
 
   useEffect(() => {

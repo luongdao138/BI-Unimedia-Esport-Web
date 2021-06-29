@@ -281,6 +281,9 @@ export default {
     no_tag_available: 'No tag available',
     no_communities: 'おすすめコミュニティは存在しません',
     discord_placeholder: 'ユーザー名#0000を入力してください',
+    block_confirm_title: '該当ユーザのブロックを解除しても良いですか。',
+    block_confirm_yes: 'はい',
+    block_confirm_no: 'いいえ',
   },
   gender: {
     male: '男性',
@@ -639,8 +642,8 @@ export default {
     new_email_placeholder: 'sample@exelab.jp',
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
-    delete_confirm_title: '問い合わせフォームでの申請となります。',
-    delete_confirm_msg: 'お問い合わせフォームを開きますか。',
+    delete_confirm_title: 'お問い合わせフォームを開きますか。',
+    delete_confirm_msg: 'アカウント削除はお問い合わせフォームでの申請となります。',
     delete_confirm_yes: 'はい',
     delete_confirm_no: 'いいえ',
     change_password: 'パスワードの変更',
@@ -648,9 +651,10 @@ export default {
     new_password: '新しいパスワード',
     new_password_re_enter: '新しいパスワード（再入力）',
     hint: '8文字以上の半角英数字を入力してください',
-    hint2: 'パスワードは英大文字、英小文字、数字を1文字以上使用してください',
+    hint2: 'パスワードは英大文字、英小文字、数字を一文字以上使用してください',
     change_email_success: 'メールアドレスを変更しました',
     change_password_success: 'パスワードを変更しました',
+    sent_resend_code: '認証コードメールを再度送信しました',
   },
   my_page_settings: {
     title: 'マイページの情報公開範囲',
@@ -717,9 +721,11 @@ export default {
   },
   inquiry: {
     title: 'お問い合わせ',
+    title_required: '入力内容が適切ではありません。',
     subject: '件名',
     email: 'メールアドレス',
     desc: '本文',
+    desc_required: '入力内容が適切ではありません',
     desc_placeholder: 'お問い合わせ内容を入力してください',
     send: '送信する',
     next: '決定',
@@ -727,8 +733,9 @@ export default {
     success_message: `お問い合わせを受け付けました。
     順番に回答させていただいておりますのでお待ちいただけますようお願いいたします。`,
     go_edit: '内容を変更する',
+    email_required: 'お問い合わせにはメールアドレスの登録が必須となります。',
     error: {
-      email: 'お問い合わせにはメールアドレスの登録が必須となります。',
+      email: '入力内容が適切ではありません',
     },
   },
   settings: {

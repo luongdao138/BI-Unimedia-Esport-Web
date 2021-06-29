@@ -49,7 +49,11 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
-      changePassword(values)
+      if (values.current_password === values.new_password) {
+        setFieldError('new_password', t('common.password_duplicated'))
+      } else {
+        changePassword(values)
+      }
     },
   })
 
