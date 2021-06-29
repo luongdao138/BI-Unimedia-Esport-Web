@@ -154,11 +154,15 @@ export type TournamentDetail = {
     interested_count: number
     participant_count: number
     my_role: null | ArenaRole
-    my_info: { team_id: number }[]
+    my_info: { team_id: number }[] | any
     my_position: null | string
     hash_key: string
     is_entered?: boolean
   }
+}
+
+export type MyInfo = {
+  id: number
 }
 
 export type TournamentCreateParams = {

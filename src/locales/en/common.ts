@@ -386,7 +386,7 @@ export default {
   arena: {
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
-    randomize_success: 'ユーザーを配置しました',
+    randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     dialog: {
       randomize_title: 'ユーザーをランダムに配置します',
