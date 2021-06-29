@@ -139,6 +139,7 @@ const useStyles = makeStyles(() => ({
       backgroundColor: (props: MessageTextProps) => props.bgColor,
       height: '1rem',
       right: 0,
+      marginTop: '-16px',
     },
   },
 }))
