@@ -9,12 +9,10 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
-import TeamMemberItem from '../Partials/TeamMemberItem'
+import TeamMemberItemExpanded from '../Partials/TeamMemberItemExpanded'
 import ESButton from '@components/Button'
 import { TournamentDetail } from '@services/arena.service'
 import { ROLE } from '@constants/tournament.constants'
-import { useAppDispatch } from '@store/hooks'
-import * as commonActions from '@store/common/actions'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -22,7 +20,6 @@ export interface ParticipantsProps {
 
 const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const { t } = useTranslation(['common'])
-  const dispatch = useAppDispatch()
   const data = detail.attributes
   const isTeam = data.participant_type > 1
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
@@ -73,13 +70,6 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
-  const handleCopy = () => {
-    if (window.navigator.clipboard) {
-      window.navigator.clipboard.writeText(window.location.toString())
-    }
-    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
-  }
-
   return (
     <div>
       <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
@@ -121,36 +111,40 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                     {unit}
                   </Typography>
                 </Box>
-                <Box mt={2} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Icon className="fa fa-link" fontSize="small" style={{ marginRight: 20, fontSize: 14, paddingTop: 3 }} />
-                  <Typography>{t('common:tournament.copy_shared_url')}</Typography>
-                </Box>
               </Box>
             </Box>
-            <InfiniteScroll
-              dataLength={participants.length}
-              next={fetchMoreData}
-              hasMore={hasMore}
-              loader={
-                meta.pending && (
-                  <div className={classes.loaderCenter}>
-                    <ESLoader />
-                  </div>
-                )
-              }
-              height={600}
-              endMessage={
-                <p style={{ textAlign: 'center' }}>
-                  <b>{t('common:infinite_scroll.message')}</b>
-                </p>
-              }
-            >
-              {isTeam
-                ? members.map((participant, i) => <TeamMemberItem key={`team${i}`} team={participant} />)
-                : members.map((participant, i) => (
-                    <UserListItem data={userData(participant)} key={i} isFollowed={participant.attributes.is_followed} />
-                  ))}
-            </InfiniteScroll>
+            <div id="scrollableDiv" style={{ height: 600 }} className={`${classes.scroll} ${classes.list}`}>
+              <InfiniteScroll
+                dataLength={participants.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                scrollableTarget="scrollableDiv"
+                scrollThreshold={0.99}
+                style={{ overflow: 'hidden' }}
+                loader={
+                  meta.pending && (
+                    <div className={classes.loaderCenter}>
+                      <ESLoader />
+                    </div>
+                  )
+                }
+                endMessage={
+                  <p style={{ textAlign: 'center' }}>
+                    <b>{t('common:infinite_scroll.message')}</b>
+                  </p>
+                }
+              >
+                {isTeam
+                  ? members.map((participant, i) => (
+                      <Box key={`team${i}`} py={1}>
+                        <TeamMemberItemExpanded team={participant} />
+                      </Box>
+                    ))
+                  : members.map((participant, i) => (
+                      <UserListItem data={userData(participant)} key={i} isFollowed={participant.attributes.is_followed} />
+                    ))}
+              </InfiniteScroll>
+            </div>
           </Box>
         </BlankLayout>
       </ESModal>
@@ -174,6 +168,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   urlCopy: {
     cursor: 'pointer',
+  },
+  scroll: {
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
+  },
+  list: {
+    overflow: 'auto',
+    overflowX: 'hidden',
   },
   [theme.breakpoints.down('sm')]: {
     container: {
