@@ -62,6 +62,7 @@ export type UserProfileParams = {
 
 export type UserResendParams = {
   email: string
+  type?: string
 }
 
 export const login = async (params: UserLoginParams): Promise<UserLoginResponse> => {
