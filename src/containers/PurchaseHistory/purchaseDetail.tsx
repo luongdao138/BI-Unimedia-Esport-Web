@@ -62,6 +62,9 @@ const PurchaseDetail: React.FC = () => {
     }
   }, [router])
 
+  const price = _.get(purchaseHistoryDetail, 'data.attributes.price')
+  const tax = _.get(purchaseHistoryDetail, 'data.attributes.tax')
+
   const purchase_status = _.get(purchaseHistoryDetail, 'data.attributes.status')
   const purchase_datetime = _.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime')
   const cancelled_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancelled_datetime')
@@ -76,6 +79,10 @@ const PurchaseDetail: React.FC = () => {
       ? cancel_req_datetime
       : purchase_datetime
   )
+
+  const ticket_price = CommonHelper.formatCurrency(price)
+  const ticket_tax = CommonHelper.formatCurrency(tax)
+  const total = CommonHelper.formatCurrency(price + tax)
 
   return (
     <>
@@ -122,16 +129,16 @@ const PurchaseDetail: React.FC = () => {
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.status')}</Typography>
               <Typography>
-                {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
+                {purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCELLED
                   ? `${t('common:purchase_history.canceled')}`
-                  : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
+                  : purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
                   ? `${t('common:purchase_history.cancel_requested')}`
                   : `${t('common:purchase_history.purchased')}`}
               </Typography>
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.payment_method')}</Typography>
-              <Typography>{purchaseHistoryDetail.data.attributes.payment_type}</Typography>
+              <Typography>{t('common:purchase_history.payment_type_gmo')}</Typography>
             </Box>
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
@@ -143,8 +150,8 @@ const PurchaseDetail: React.FC = () => {
                 <Typography>{t('common:purchase_history.ticket')}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>{t('common:purchase_history.price')}</Typography>
-                <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.unit_price')}</Typography>
+                <Typography>{ticket_price}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.quantity')}</Typography>
@@ -154,19 +161,19 @@ const PurchaseDetail: React.FC = () => {
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.total_fee')}</Typography>
-                <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
+                <Typography>{ticket_price}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.tax')}</Typography>
-                <Typography>¥{purchaseHistoryDetail.data.attributes.tax}</Typography>
+                <Typography>{ticket_tax}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>{t('common:purchase_history.payment')}</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.total')}</Typography>
                 <Typography color="primary">
-                  ¥{purchaseHistoryDetail.data.attributes.price + purchaseHistoryDetail.data.attributes.tax}
-                  {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
+                  {total}
+                  {purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCELLED
                     ? `(${t('common:purchase_history.canceled')})`
-                    : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
+                    : purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
                     ? `(${t('common:purchase_history.cancel_requested')})`
                     : ''}
                 </Typography>
