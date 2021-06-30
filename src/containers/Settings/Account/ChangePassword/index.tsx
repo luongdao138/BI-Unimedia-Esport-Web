@@ -27,7 +27,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
 
   const validationSchema = Yup.object().shape({
     current_password: Yup.string()
-      .test('password-validation', t('common.error'), (value) => {
+      .test('password-validation', t('error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
         setCurrenPasswordScore(tempScore)
         return tempScore > 40
@@ -36,7 +36,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
       .min(8, t('error.too_short')),
 
     new_password: Yup.string()
-      .test('password-validation', t('common.error'), (value) => {
+      .test('password-validation', t('error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
