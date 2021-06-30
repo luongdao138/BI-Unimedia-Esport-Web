@@ -49,13 +49,13 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
         <Typography>¥{data.attributes.price}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.status')}</Typography>
+        <Typography className={classes.title}>{t('purchase_history.purchase_status')}</Typography>
         <Typography>
           {data.attributes.status == PAYMENT_STATUS.CANCELLED
             ? ` ¥${data.attributes.price} (${t('purchase_history.canceled')})`
             : data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
             ? `¥${data.attributes.price} (${t('purchase_history.cancel_requested')})`
-            : ''}
+            : `${t('purchase_history.purchased')}`}
         </Typography>
       </Box>
     </Box>

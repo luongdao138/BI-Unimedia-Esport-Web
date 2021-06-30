@@ -24,11 +24,16 @@ const useChangeEmailConfirm = (confirmationCode: string) => {
   const changeEmailConfirm = (params: services.ChangeEmailConfirmParams) => {
     dispatch(actions.changeEmailConfirm(params))
   }
+
   useEffect(() => {
     if (meta.loaded) {
       router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
     }
   }, [meta.loaded])
+
+  useEffect(() => {
+    return () => resetMeta()
+  }, [])
 
   useEffect(() => {
     if (confirmationCode && !!meta.error) {
