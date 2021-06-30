@@ -28,7 +28,6 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
       dispatch(
         socketActions.socketSend({
           action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
-          userId: userId,
           roomId: roomId,
         })
       )
@@ -39,7 +38,6 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
     dispatch(
       socketActions.socketSend({
         action: CHAT_ACTION_TYPE.REMOVE_MEMBER,
-        userId: userId,
         roomId: roomId,
         memberId: `${id}`,
       })

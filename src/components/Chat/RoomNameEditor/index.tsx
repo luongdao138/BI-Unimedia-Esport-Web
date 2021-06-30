@@ -4,9 +4,8 @@ import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { useAppDispatch } from '@store/hooks'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
-import { currentUserId } from '@store/auth/selectors'
 import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
@@ -22,7 +21,6 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   roomId
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const userId = useAppSelector(currentUserId)
   const [newName, setNewName] = useState('')
   const renderFooter = () => {
     return <Box className={classes.stickyFooter}></Box>
@@ -41,7 +39,6 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   const onSubmit = () => {
     dispatch(
       socketActions.socketSend({
-        userId: userId,
         action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
         roomId: roomId,
         name: newName.trim(),

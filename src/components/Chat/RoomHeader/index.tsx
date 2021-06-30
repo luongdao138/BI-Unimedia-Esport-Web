@@ -49,15 +49,15 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (roomId && userId)
+    if (roomId) {
       dispatch(
         socketActions.socketSend({
           action: CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE,
           roomId: roomId,
-          userId: userId,
         })
       )
-  }, [roomId, userId])
+    }
+  }, [roomId])
 
   useEffect(() => {
     if (roomInfo && roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {

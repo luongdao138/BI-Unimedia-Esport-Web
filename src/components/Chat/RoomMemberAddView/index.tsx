@@ -97,7 +97,6 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     socketSend({
       action: CHAT_ACTION_TYPE.ADD_MEMBERS,
       roomId: roomId,
-      userId: userId,
       userIds: selectedList.map((item) => item.id),
     })
     hide()

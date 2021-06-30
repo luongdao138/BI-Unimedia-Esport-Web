@@ -41,7 +41,6 @@ const useRoomImageUploader = (): ReturnType => {
     const payload = {
       action: CHAT_ACTION_TYPE.CHANGE_ROOM_IMG,
       roomId: roomId,
-      userId: userId,
       img: imageFineUrl,
     }
     dispatch(socketActions.socketSend(payload))

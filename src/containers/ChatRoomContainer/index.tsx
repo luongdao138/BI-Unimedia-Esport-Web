@@ -80,7 +80,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       const payload = {
         action: CHAT_ACTION_TYPE.GET_ROOM_MESSAGES,
         roomId: roomId,
-        userId: userId,
         lastKey: null,
       }
       dispatch(socketActions.initRoomLoad(payload))
@@ -101,7 +100,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
         action: CHAT_ACTION_TYPE.SEND_MESSAGE,
         roomId: roomId,
         createdAt: currentTimestamp,
-        userId: userId,
         msg: text,
         clientId: clientId,
         type: CHAT_MESSAGE_TYPE.TEXT,
@@ -175,7 +173,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       action: CHAT_ACTION_TYPE.SEND_MESSAGE,
       roomId: roomId,
       createdAt: currentTimestamp,
-      userId: userId,
       msg: url,
       clientId: uploadMeta.id,
       type: CHAT_MESSAGE_TYPE.IMAGE,
@@ -204,7 +201,6 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       const params = {
         sortKey: currentMessage.sortKey,
         roomId: currentMessage.chatRoomId,
-        userId: userId,
         action: CHAT_ACTION_TYPE.DELETE_MESSAGE,
       }
       dispatch(socketActions.socketSend(params))
