@@ -25,7 +25,7 @@ interface SelectInputProps {
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      marginTop: 5,
+      marginTop: 10,
       '& .MuiAutocomplete-listbox': {
         backgroundColor: theme.palette.common.white,
         border: `0 none`,
