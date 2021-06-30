@@ -18,6 +18,8 @@ import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
+import Linkify from 'react-linkify'
+import { RULE } from '@constants/tournament.constants'
 
 interface Props {
   detail: TournamentDetail
@@ -83,7 +85,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         </Box>
 
         <Box marginTop={2}>
-          <Typography>{data.overview}</Typography>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                {decoratedText}
+              </a>
+            )}
+          >
+            <Typography>{data.overview}</Typography>
+          </Linkify>
         </Box>
 
         {extended && (
@@ -94,7 +104,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.rule_format')}</Typography>
               </Box>
               <Box className={classes.value}>
-                <Typography>{TournamentHelper.ruleText(data.rule)}</Typography>
+                <Typography>
+                  {TournamentHelper.ruleText(data.rule)}
+                  {data.rule === RULE.SINGLE && data.has_third_place ? t('common:arena.third_place') : t('common:arena.no_third_place')}
+                </Typography>
               </Box>
             </Box>
 
@@ -197,15 +210,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.co_organizer')}</Typography>
               </Box>
               <Box className={classes.value} flexDirection="column">
-                {data.co_organizers &&
-                  data.co_organizers.data &&
-                  data.co_organizers.data.length > 0 &&
+                {data.co_organizers && data.co_organizers.data && data.co_organizers.data.length > 0 ? (
                   data.co_organizers.data.map((co: CommonResponse, i) => (
                     <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
                       <ESAvatar alt="Avatar" src={co.attributes.avatar} />
                       <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
                     </Box>
-                  ))}
+                  ))
+                ) : (
+                  <Typography>-</Typography>
+                )}
               </Box>
             </Box>
 
@@ -282,6 +296,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+  },
   container: {
     padding: 24,
   },

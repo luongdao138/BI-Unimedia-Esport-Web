@@ -10,8 +10,6 @@ import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useStore } from 'react-redux'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'
 import ESLabel from '@components/Label'
 import useUploadImage from '@utils/hooks/useUploadImage'
@@ -22,6 +20,10 @@ import ESLoader from '@components/FullScreenLoader'
 import TeamEntryMemberList from './TeamEntryMemberList'
 import useTeamSelectedMember from './useTeamSelectedMember'
 import { TeamMemberSelectItem, MemberSelection } from '@store/arena/actions/types'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useAppDispatch } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -40,12 +42,13 @@ interface TeamEntryModalProps {
 const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, handleClose, isEdit, initialData, updateDone }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const store = useStore()
   const [isUploading, setUploading] = useState(false)
   const { getSuggestedTeamMembers, resetMeta } = useSuggestedTeamMembers()
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
+  const checkNgWord = useCheckNgWord()
+  const dispatch = useAppDispatch()
 
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
@@ -93,17 +96,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [])
 
   const membersValidationSchema = Yup.object().shape({
-    name: Yup.string()
-      .required(t('common:common.input_required'))
-      .max(40, t('common:common.too_long'))
-      .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+    name: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
 
   const validationSchema = Yup.object().shape({
-    team_name: Yup.string()
-      .required('')
-      .max(40, t('common:common.too_long'))
-      .test('ng-check', t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+    team_name: Yup.string().required('').max(40, t('common:common.too_long')),
     team_icon_url: Yup.string().required(),
     members: Yup.array().of(membersValidationSchema),
   })
@@ -172,7 +169,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }
 
   const handleActionButton = () => {
-    formik.handleSubmit()
+    let handle = true
+    if (!_.isEmpty(checkNgWord(formik.values.team_name))) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.team_name }))
+      handle = false
+    }
+    formik.values.members.forEach((member, i) => {
+      if (!_.isEmpty(checkNgWord(member.name))) {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: `メンバー${i + 1}` }))
+        handle = false
+      }
+    })
+    if (handle) formik.handleSubmit()
   }
 
   const handleImageUpload = (file: File) => {

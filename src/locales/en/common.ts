@@ -60,6 +60,7 @@ export default {
     confirm_title: '注文をキャンセルします',
     confirm_back: '戻る',
     confirm_ok: 'キャンセルする',
+    blocking: 'ブロック中',
   },
   page404: {
     title: '404',
@@ -270,6 +271,7 @@ export default {
     update_image: '画像の編集',
     reset: '画像をリセットする',
     read_more: 'もっとみる',
+    collapse: '閉じる',
     follow_as: 'フォローする',
     unblock: 'ブロック解除',
     inbox: 'inbox',
@@ -392,6 +394,8 @@ export default {
     summary: '大会の総括',
   },
   arena: {
+    third_place: '（3位決定戦あり）',
+    no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
@@ -439,6 +443,7 @@ export default {
     },
     choice: '選択',
     double_zero: '00',
+    cancelled: 'この大会は中止されました',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -778,6 +783,8 @@ export default {
     default_desc:
       '“人と人がつながる”ことで、ゲームはもっともっと楽しくなります。つながりが生む新たな体験と発見、そしてたくさんのプレイヤーとシーンを支えるファン達が交差するプラットフォーム。それがeXeLAB（エグゼラボ）です。',
     default_keywords: 'eXeLAB,エグゼラボ,game.ゲーム,ゲーマー,esports,eスポーツ,NTTe-sports,大会運営,ゲーム仲間,募集,コミュニティ',
+    home_top: 'eXeLAB｜ゲームが広がる。仲間ができる。',
     home_title: 'eXeLAB｜ホーム',
+    arena_default_title: 'eXeLAB｜大会',
   },
 }

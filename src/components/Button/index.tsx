@@ -22,15 +22,15 @@ const useStyles = makeStyles(() => ({
       boxShadow: 'none',
     },
   }),
-  outlined: (props: { round?: boolean }) => ({
+  outlined: (props: { round?: boolean; normalColor?: string; hoverColor?: string }) => ({
     borderRadius: props.round ? 25 : 4,
     fontWeight: 'normal',
-    color: Colors.white_opacity[70],
+    color: props.normalColor || Colors.white_opacity[70],
     border: '1px solid',
-    borderColor: Colors.white_opacity[70],
+    borderColor: props.normalColor || Colors.white_opacity[70],
     '&:hover': {
-      background: Colors.white_opacity[30],
-      color: Colors.white,
+      background: props.hoverColor || Colors.white_opacity[30],
+      color: props.normalColor || Colors.white,
     },
     '&.Mui-disabled': {
       color: Colors.white_opacity[30],
@@ -40,11 +40,9 @@ const useStyles = makeStyles(() => ({
   }),
 }))
 
-const ESButton: React.FC<ButtonProps & { gradient?: boolean; round?: boolean; minWidth?: number }> = ({
-  children,
-  classes: _classes,
-  ...rest
-}) => {
+const ESButton: React.FC<
+  ButtonProps & { gradient?: boolean; round?: boolean; minWidth?: number; normalColor?: string; hoverColor?: string }
+> = ({ children, classes: _classes, ...rest }) => {
   const classes = useStyles(rest)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { gradient, round, minWidth, ...props } = rest

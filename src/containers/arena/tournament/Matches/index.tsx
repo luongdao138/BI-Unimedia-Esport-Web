@@ -14,15 +14,22 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import { TournamentMatchItem } from '@services/arena.service'
-import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
+  const {
+    matches,
+    third_place_match,
+    fetchMatches,
+    roundTitles,
+    meta: matchesMeta,
+    setScore,
+    scoreMeta,
+    handleBack,
+  } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
-  const { toDetail } = useArenaHelper(tournament)
   const [scoreMatch, setScoreMatch] = useState()
   const [showSummaryModal, setShowSummaryModal] = useState(false)
 
@@ -110,7 +117,7 @@ const ArenaMatches: React.FC = () => {
           <AppBar className={classes.appbar}>
             <Container maxWidth="lg">
               <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.backButton} onClick={() => toDetail()}>
+                <IconButton className={classes.backButton} onClick={handleBack}>
                   <ArrowBack />
                 </IconButton>
                 <Typography variant="h2">{tournament.attributes.title}</Typography>

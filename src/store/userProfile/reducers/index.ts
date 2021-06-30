@@ -7,8 +7,8 @@ import { blockUser, unblockUser } from '@store/block/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 
 type StateType = {
-  data: ProfileResponse['data']
-  lastSeenUserData: ProfileResponse['data']
+  data?: ProfileResponse['data']
+  lastSeenUserData?: ProfileResponse['data']
   tournamentHistories?: Array<TournamentListItem>
   tournamentHistoriesMeta?: Meta
   activityLogs?: Array<any>
@@ -16,7 +16,7 @@ type StateType = {
   recommendations: Array<any>
   nicknames2?: Array<Nickname2>
   recommendedEvent: Array<CommonResponse>
-  recommendedEventMeta: Meta
+  recommendedEventMeta?: Meta
   accountSettingsChangeEmailSteps: ChangeEmailSteps
   followers?: Array<FollowResponse>
   followersMeta?: Meta
@@ -25,24 +25,17 @@ type StateType = {
 }
 
 const initialState: StateType = {
-  data: undefined,
-  lastSeenUserData: undefined,
   tournamentHistories: [],
-  tournamentHistoriesMeta: undefined,
   activityLogs: [],
-  activityLogsMeta: undefined,
   recommendations: [],
   nicknames2: [],
   recommendedEvent: [],
-  recommendedEventMeta: undefined,
   accountSettingsChangeEmailSteps: {
     step_check: false,
     step_change: false,
   },
   followers: [],
   following: [],
-  followersMeta: undefined,
-  followingMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {

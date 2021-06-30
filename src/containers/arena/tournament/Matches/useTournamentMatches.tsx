@@ -23,9 +23,10 @@ const useTournamentMatches = (): {
   fetchMatches: () => void
   setScore: (params: SetScoreParams) => void
   roundTitles: RoundTitles
+  handleBack: () => void
 } => {
   const { t } = useTranslation(['common'])
-  const { query, push } = useRouter()
+  const { query, push, back } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
@@ -64,8 +65,10 @@ const useTournamentMatches = (): {
     }
   }
 
+  const handleBack = () => back()
+
   const setScore = (param: SetScoreParams) => dispatch(actions.setScore(param))
-  return { matches, third_place_match, meta, fetchMatches, roundTitles, setScore, scoreMeta }
+  return { matches, third_place_match, meta, fetchMatches, roundTitles, setScore, scoreMeta, handleBack }
 }
 
 export default useTournamentMatches

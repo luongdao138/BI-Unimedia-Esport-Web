@@ -96,7 +96,12 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
             onChange={onChangeText}
           />
         </Box>
-        <IconButton disabled={disabled === true || _.isEmpty(text) ? true : false} className={classes.send} onClick={send} disableRipple>
+        <IconButton
+          disabled={disabled === true || _.isEmpty(text.trim()) ? true : false}
+          className={classes.send}
+          onClick={send}
+          disableRipple
+        >
           <Icon className={`${classes.icon} fas fa-paper-plane`} />
         </IconButton>
       </Box>

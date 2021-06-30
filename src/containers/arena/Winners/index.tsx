@@ -3,11 +3,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography, IconButton, Box, Divider } from '@material-ui/core'
+import { Typography, IconButton, Box, Divider, ButtonBase } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
 import { useTranslation } from 'react-i18next'
+import Linkify from 'react-linkify'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -25,6 +26,10 @@ const ArenaWinners: React.FC = () => {
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
   }, [])
+
+  const toEntryDetail = () => {
+    // TODO: open check entry modal
+  }
 
   return (
     <div className={classes.root}>
@@ -60,7 +65,15 @@ const ArenaWinners: React.FC = () => {
       </div>
       <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
         <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
-        <Typography>{arena?.attributes?.summary || ''}</Typography>
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <Typography>{arena?.attributes?.summary || ''}</Typography>
+        </Linkify>
       </div>
       <Box textAlign="center" pb={showSummary ? 4 : 8}>
         <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
@@ -83,7 +96,9 @@ const ArenaWinners: React.FC = () => {
                   {p.position === 3 && <span>rd</span>}
                 </p>
               </div>
-              <Avatar src={p.avatar} />
+              <ButtonBase onClick={toEntryDetail}>
+                <Avatar src={p.avatar} />
+              </ButtonBase>
               <div className={classes.nameWrapper}>
                 <Typography variant="h3" component="p">
                   {p.name}
@@ -105,6 +120,10 @@ const ArenaWinners: React.FC = () => {
 export default ArenaWinners
 
 const useStyles = makeStyles((theme) => ({
+  link: {
+    color: Colors.white,
+    textDecoration: 'underline',
+  },
   root: {
     position: 'relative',
     paddingBottom: theme.spacing(3),

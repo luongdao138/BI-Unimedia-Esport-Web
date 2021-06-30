@@ -73,6 +73,7 @@ const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem,
                 data={userData(member)}
                 key={i}
                 isFollowed={hideFollow === true ? undefined : Boolean(member.is_followed)}
+                isBlocked={Boolean(member.is_blocked)}
                 nicknameYellow={isYellowTitle && `${userProfile?.id}` === `${member.user_id}`}
                 handleClick={memberClick}
               />

@@ -34,7 +34,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const [selectedParticipant, setSelectedParticipant] = useState(null as ParticipantsResponse | null)
   const [members, setMembers] = useState([])
 
-  const { participants, getParticipants, resetMeta, page, meta } = useParticipants()
+  const { participants, getParticipants, resetParticipants, resetMeta, page, meta } = useParticipants()
   const { userProfile } = useGetProfile()
 
   const handleClickOpen = () => {
@@ -48,9 +48,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   useEffect(() => {
     if (open) {
       getParticipants({ page: 1, hash_key: hash_key, role: data.is_freezed ? ROLE.PARTICIPANT : undefined })
+    } else {
+      resetParticipants()
     }
 
     return () => {
+      resetParticipants()
       resetMeta()
     }
   }, [open])
@@ -172,6 +175,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                         isFollowed={participant.attributes.is_followed}
                         nicknameYellow={isMe(participant)}
                         handleClick={() => setSelectedParticipant(participant)}
+                        isBlocked={participant.attributes.is_blocked}
                       />
                     ))}
               </InfiniteScroll>

@@ -3,10 +3,10 @@ import * as actions from '../actions'
 import { NgWordsResponse } from '@services/ngWords.service'
 
 type StateType = {
-  words: NgWordsResponse
+  words?: NgWordsResponse
 }
 
-const initialState: StateType = { words: undefined }
+const initialState: StateType = {}
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getNgWords.fulfilled, (state, action) => {

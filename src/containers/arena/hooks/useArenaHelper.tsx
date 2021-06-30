@@ -14,6 +14,7 @@ const useArenaHelper = (
   toGroupChat: () => void
   isModerator: boolean
   isInProgress: boolean
+  isCancelled: boolean
   isCompleted: boolean
   isRecruitmentClosed: boolean
   isBattleRoyale: boolean
@@ -34,6 +35,7 @@ const useArenaHelper = (
   const status = tournament?.attributes?.status
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
   const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
+  const isCancelled = status === TOURNAMENT_STATUS.CANCELLED
   const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
   const isBattleRoyale = tournament?.attributes?.rule === RULE.BATTLE_ROYALE
@@ -83,6 +85,7 @@ const useArenaHelper = (
     toMatches,
     toResults,
     isInProgress,
+    isCancelled,
     isCompleted,
     isRecruitmentClosed,
     isBattleRoyale,

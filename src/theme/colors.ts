@@ -39,4 +39,8 @@ export const Colors = {
   yellow: '#F7F560',
   green: '#2CEBB0',
   avatar: ['#8E47FF', '#476AFF', '#2CEBB0', '#DCEB2C', '#FF9E1A', '#FF6A1C', '#502298', '#2744BF', '#7D8805', '#981643', '#FF4786'],
+  red: {
+    '10': '#FC5E66',
+    '30': '#FC5E6630',
+  },
 }
