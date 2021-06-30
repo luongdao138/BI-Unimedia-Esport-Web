@@ -25,8 +25,7 @@ import SimpleReactLightbox from 'simple-react-lightbox'
 import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
-import Head from 'next/head'
-
+import ESHead from '@components/ESHead'
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -89,10 +88,7 @@ const App = ({ Component, pageProps }: Props) => {
         }}
       >
         <ThemeProvider theme={theme}>
-          <Head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-            <meta charSet="utf-8" />
-          </Head>
+          <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
           <ESLoader open={loader} />
           <ToastContainer />
           <DialogContainer />
