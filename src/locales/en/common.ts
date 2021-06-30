@@ -441,6 +441,7 @@ export default {
     },
     choice: '選択',
     double_zero: '00',
+    cancelled: 'この大会は中止されました',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

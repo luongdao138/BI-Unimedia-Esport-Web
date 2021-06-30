@@ -6,6 +6,7 @@ import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'
 import InProgress from './Partials/InProgress'
+import Cancelled from './Partials/Cancelled'
 import Completed from './Partials/Completed'
 import ESLoader from '@components/FullScreenLoader'
 import useArenaHelper from '../hooks/useArenaHelper'
@@ -21,7 +22,7 @@ const TournamentDetail: React.FC = () => {
 
   const actionComponent: Record<TournamentStatus, ReactNode> = {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
-    cancelled: <></>,
+    cancelled: <Cancelled tournament={tournament} userProfile={userProfile} />,
     completed: <Completed tournament={tournament} userProfile={userProfile} />, //trophy
     ready: <></>,
     ready_to_start: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass

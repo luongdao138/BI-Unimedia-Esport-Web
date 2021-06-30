@@ -118,6 +118,10 @@ export default createReducer(initialState, (builder) => {
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
   })
+  builder.addCase(actions.resetParticipants, (state) => {
+    state.tournamentParticipants = []
+    state.participantsMeta = undefined
+  })
   builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
     let _suggestedTeamMembers = action.payload.data
     if (action.payload.links != undefined && action.payload.links.meta.current_page > 1) {

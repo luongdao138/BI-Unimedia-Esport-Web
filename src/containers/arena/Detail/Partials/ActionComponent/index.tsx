@@ -29,9 +29,17 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { t } = useTranslation(['common'])
   const [entryModalOpen, setEntryModalOpen] = useState(false)
 
-  const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed, isAdminJoined } = useArenaHelper(
-    tournament
-  )
+  const {
+    toMatches,
+    isModerator,
+    isTeam,
+    isInProgress,
+    isRecruiting,
+    isCompleted,
+    isCancelled,
+    isRecruitmentClosed,
+    isAdminJoined,
+  } = useArenaHelper(tournament)
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
 
@@ -117,7 +125,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        <SubActionButtons tournament={tournament} />
+        {!isCancelled && <SubActionButtons tournament={tournament} />}
       </Box>
 
       {isRecruitmentClosed && isModerator && (

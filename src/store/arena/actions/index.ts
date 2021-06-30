@@ -161,6 +161,8 @@ export const getTournamentParticipants = createAsyncThunk<services.GetParticipan
   }
 )
 
+export const resetParticipants = createAction(types.RESET_TOURNAMENT_PARTICIPANTS)
+
 export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTeamMembersResponse, services.GetSuggestedTeamMembersParams>(
   types.GET_SUGGESTED_TEAM_MEMBERS,
   async (params, { rejectWithValue }) => {

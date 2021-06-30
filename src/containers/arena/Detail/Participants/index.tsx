@@ -29,7 +29,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const [hasMore, setHasMore] = useState(true)
   const [members, setMembers] = useState([])
 
-  const { participants, getParticipants, resetMeta, page, meta } = useParticipants()
+  const { participants, getParticipants, resetParticipants, resetMeta, page, meta } = useParticipants()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -42,9 +42,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   useEffect(() => {
     if (open) {
       getParticipants({ page: 1, hash_key: hash_key, role: data.is_freezed ? ROLE.PARTICIPANT : undefined })
+    } else {
+      resetParticipants()
     }
 
     return () => {
+      resetParticipants()
       resetMeta()
     }
   }, [open])
