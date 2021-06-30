@@ -30,7 +30,7 @@ const ArenaAvatar: React.FC<ArenaAvatarProps> = ({ src, leaf, name, user_code, n
       )}
       {win && !leaf && <Typography className={classes.winText}>{t('common:arena.win')}</Typography>}
       <div className={`${classes.avatarWrapper} ${win && classes.win} ${win && classes.winSvg}`}>
-        <Avatar className={`${src ? '' : classes.pinkBg}`} src={src} size={_size} alt={alt_name ? alt_name : name} />
+        <Avatar src={src} size={_size} alt={alt_name ? alt_name : name} />
       </div>
       {(name || user_code) && (
         <div className={classes.nameWrapper}>
@@ -129,8 +129,5 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '0.8em',
       marginLeft: -4,
     },
-  },
-  pinkBg: {
-    backgroundColor: '#8E47FF',
   },
 }))
