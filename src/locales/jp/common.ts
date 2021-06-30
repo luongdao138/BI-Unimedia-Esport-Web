@@ -423,6 +423,7 @@ export default {
       confirm: '了解',
     },
     choice: '選択',
+    double_zero: '00',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
