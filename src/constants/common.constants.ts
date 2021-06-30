@@ -144,4 +144,6 @@ export const NG_WORD_AREA = {
   forgot_password: i18n.t('common:forgot_password.email'),
   profile_user_code: i18n.t('common:register_profile.user_id'),
   profile_nickname: i18n.t('common:register_profile.nickname'),
+  team_name: i18n.t('common:team_name'),
+  join_nickname: i18n.t('common:tournament.join_nickname'),
 }

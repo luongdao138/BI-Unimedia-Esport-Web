@@ -197,15 +197,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.co_organizer')}</Typography>
               </Box>
               <Box className={classes.value} flexDirection="column">
-                {data.co_organizers &&
-                  data.co_organizers.data &&
-                  data.co_organizers.data.length > 0 &&
+                {data.co_organizers && data.co_organizers.data && data.co_organizers.data.length > 0 ? (
                   data.co_organizers.data.map((co: CommonResponse, i) => (
                     <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
                       <ESAvatar alt="Avatar" src={co.attributes.avatar} />
                       <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
                     </Box>
-                  ))}
+                  ))
+                ) : (
+                  <Typography>-</Typography>
+                )}
               </Box>
             </Box>
 

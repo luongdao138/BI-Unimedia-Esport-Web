@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography, IconButton, Box, Divider } from '@material-ui/core'
+import { Typography, IconButton, Box, Divider, ButtonBase } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
@@ -25,6 +25,10 @@ const ArenaWinners: React.FC = () => {
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
   }, [])
+
+  const toEntryDetail = () => {
+    // TODO: open check entry modal
+  }
 
   return (
     <div className={classes.root}>
@@ -83,7 +87,9 @@ const ArenaWinners: React.FC = () => {
                   {p.position === 3 && <span>rd</span>}
                 </p>
               </div>
-              <Avatar src={p.avatar} />
+              <ButtonBase onClick={toEntryDetail}>
+                <Avatar src={p.avatar} />
+              </ButtonBase>
               <div className={classes.nameWrapper}>
                 <Typography variant="h3" component="p">
                   {p.name}
