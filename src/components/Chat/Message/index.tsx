@@ -15,7 +15,7 @@ export interface MessageProps {
   currentMessage?: MessageType
   users: ChatRoomMemberItem[] | ChatSuggestionList[]
   navigateToProfile?: (code: string) => void
-  onLoadImage: () => void
+  onLoadImage?: () => void
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
   onDelete?: (currentMessage: MessageType) => void
@@ -57,7 +57,14 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderBubble = () => {
-    return <Bubble onReplyClick={onReplyClick} onLoadImage={props.onLoadImage} navigateToProfile={navigateToProfile} {...props} />
+    return (
+      <Bubble
+        onReplyClick={onReplyClick}
+        onLoadImage={props.onLoadImage && props.onLoadImage}
+        navigateToProfile={navigateToProfile}
+        {...props}
+      />
+    )
   }
 
   const actionHandlers = {
@@ -178,23 +185,23 @@ const useStyles = makeStyles(() => ({
     display: 'block',
     position: 'relative',
     paddingTop: 10,
-    marginTop: 20,
+    marginTop: 26,
     paddingBottom: 10,
     //debug only border: '1px dotted grey',
   },
   left: {
     marginRight: 'auto',
     width: 300,
-
     height: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    transform: 'will-change',
   },
   right: {
     marginLeft: 'auto',
     width: 300,
-
+    transform: 'will-change',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',

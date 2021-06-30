@@ -9,6 +9,7 @@ import Loader from '@components/Loader'
 import Message from '../Message'
 import { ESReportProps } from '@containers/Report'
 import _ from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface MessageListProps {
   messages: MessageType[]
@@ -26,7 +27,7 @@ export interface MessageListProps {
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 90,
+  defaultHeight: 100,
 })
 
 const contentRef = React.createRef<HTMLDivElement>()
@@ -55,7 +56,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       }
     }, 10)
     cache.clearAll()
-  }, [messages.length])
+  }, [messages])
 
   useEffect(() => {
     if (scrolling > 1) {
@@ -98,19 +99,19 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
         setShowScroll(false)
       }
     }
-  }, 500)
+  }, 1000)
 
   const _onScroll = (e) => {
     updateValue(e)
   }
 
-  const rowRenderer = ({ index, key, parent, style }) => {
+  const rowRenderer = ({ index, parent, style }) => {
     const data = messages[index]
 
     return (
-      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
+      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} parent={parent} rowIndex={index}>
         {({ measure, registerChild }) => (
-          <div onLoad={measure} key={index} style={style} ref={registerChild}>
+          <div onLoad={measure} key={uuidv4()} style={style} ref={registerChild}>
             <Message
               reply={props.reply}
               report={props.report}
@@ -118,7 +119,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
               onDelete={props.delete}
               navigateToProfile={props.navigateToProfile}
               copy={props.copy}
-              onLoadImage={measure}
               currentMessage={data}
               users={users}
               direction={_.get(data, 'userId', null) !== currentUser ? 'left' : 'right'}
@@ -159,7 +159,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
           <List
             ref={messagesEndRef}
             onScroll={_onScroll}
-            overscanRowsCount={3}
+            overscanRowsCount={10}
             deferredMeasurementCache={cache}
             rowHeight={cache.rowHeight}
             rowRenderer={rowRenderer}
