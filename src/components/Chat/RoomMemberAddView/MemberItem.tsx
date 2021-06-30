@@ -26,12 +26,12 @@ const MemberItem: React.FC<MemberItemProps> = ({ item, onAdd }) => {
         <ListItemAvatar>
           <Avatar src={profile} alt={nickName} />
         </ListItemAvatar>
-        <ListItemText className={`${classes.content}`}>
-          <Typography noWrap={true} className={classes.name} variant="body2">
+        <ListItemText>
+          <Typography noWrap={true} variant="h3">
             {nickName}
           </Typography>
-          <Typography noWrap={true} className={classes.body} variant="body1">
-            {userCode}
+          <Typography noWrap={true} variant="body2">
+            {!_.isEmpty(userCode) ? '@' + userCode : ''}
           </Typography>
         </ListItemText>
       </ListItem>
@@ -46,6 +46,7 @@ const useStyles = makeStyles(() => ({
     height: 70,
     listStyleType: 'none',
     paddingTop: 10,
+    cursor: 'pointer',
     paddingBottom: 10,
   },
   disabled: {
@@ -60,17 +61,6 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
-  body: {
-    color: Colors.text[200],
-    fontWeight: 500,
-  },
-  content: {
-    display: 'inline-block',
-    visibility: 'visible',
-    opacity: '1',
-    marginTop: 0,
-    width: '100%',
   },
 }))
 
