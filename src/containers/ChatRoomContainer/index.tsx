@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { makeStyles, Box, IconButton, Icon } from '@material-ui/core'
+import { makeStyles, Box, IconButton, Icon, Theme } from '@material-ui/core'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -322,10 +322,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   header: {
     borderBottom: '1px solid #212121',
-    height: 68,
+    height: 60,
+    padding: 12,
   },
   dropZone: {
     display: 'none',
@@ -406,6 +407,15 @@ const useStyles = makeStyles(() => ({
   iconClose: {
     color: Colors.text[200],
     fontSize: '12px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    header: {
+      position: 'absolute',
+      top: 0,
+      left: 100,
+      right: 0,
+      zIndex: 1000,
+    },
   },
 }))
 

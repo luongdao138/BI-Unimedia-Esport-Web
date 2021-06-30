@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { selectedRoomInfo } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
@@ -152,7 +152,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
       <Box className={classes.row}>
         {hasNoRoomInfo ? null : <RoomImgView roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />}
         <Box pl={2} className={classes.roomName}>
-          <Typography variant="h2" noWrap={true}>
+          <Typography variant="h2" noWrap={true} className={classes.title}>
             {roomName}
           </Typography>
         </Box>
@@ -164,7 +164,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
 RoomHeader.defaultProps = {}
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   row: {
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
@@ -182,6 +182,14 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     right: 0,
     top: 0,
+  },
+  title: {
+    fontSize: 17,
+  },
+  [theme.breakpoints.down('sm')]: {
+    row: {
+      paddingLeft: 0,
+    },
   },
 }))
 

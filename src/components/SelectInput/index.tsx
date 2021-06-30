@@ -25,10 +25,11 @@ interface SelectInputProps {
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
+      marginTop: 5,
       '& .MuiAutocomplete-listbox': {
         backgroundColor: theme.palette.common.white,
         border: `0 none`,
-        padding: 0,
+        zIndex: 1000,
         margin: 0,
         fontSize: 18,
         '& .MuiAutocomplete-option:hover': {
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) =>
     },
     autocomplete: {
       margin: 0,
-      padding: 0,
+      padding: '0 !important',
     },
   })
 )
@@ -139,7 +140,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
 
 export default ESSelectInput
 
-const CHIP_MAX_WIDTH = 250
+const CHIP_MAX_WIDTH = 150
 const CHIP_ICON_WIDTH = 30
 
 const EllipsisText = (props) => {
