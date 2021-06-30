@@ -60,6 +60,7 @@ export default {
     confirm_title: '注文をキャンセルします',
     confirm_back: '戻る',
     confirm_ok: 'キャンセルする',
+    blocking: 'ブロック中',
   },
   page404: {
     title: '404',

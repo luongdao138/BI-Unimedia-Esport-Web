@@ -137,7 +137,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                       </Box>
                     ))
                   : members.map((participant, i) => (
-                      <UserListItem data={userData(participant)} key={i} isFollowed={participant.attributes.is_followed} />
+                      <UserListItem
+                        data={userData(participant)}
+                        key={i}
+                        isFollowed={participant.attributes.is_followed}
+                        isBlocked={participant.attributes.is_blocked}
+                      />
                     ))}
               </InfiniteScroll>
             </div>
