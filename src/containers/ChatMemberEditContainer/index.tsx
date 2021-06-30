@@ -48,7 +48,14 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
   }
 
   return (
-    <ESDialog open={open} title="メンバーを追加" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop className={'scroll-bar'}>
+    <ESDialog
+      open={open}
+      title={i18n.t('common:chat.member_list_title')}
+      handleClose={() => hide()}
+      bkColor="rgba(0,0,0,0.8)"
+      alignTop
+      className={'scroll-bar'}
+    >
       <DialogContent className={classes.dialogContent}>
         <Box>
           <List>

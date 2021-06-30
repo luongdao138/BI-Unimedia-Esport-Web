@@ -1,12 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemText from '@material-ui/core/ListItemText'
+import { Typography, ListItemSecondaryAction, ListItemAvatar, ListItem, ListItemText } from '@material-ui/core'
 import Badge from '@material-ui/core/Badge'
 import Avatar from '@components/Avatar'
 import Button from '@components/Button'
 import i18n from '@locales/i18n'
+import _ from 'lodash'
 
 interface RoomMemberItemProps {
   id: number
@@ -31,7 +29,14 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           <Avatar src={profile} alt="M" />
         </Badge>
       </ListItemAvatar>
-      <ListItemText primary={name} secondary={userCode} />
+      <ListItemText className={classes.listItem}>
+        <Typography noWrap={true} variant="h3">
+          {name}
+        </Typography>
+        <Typography noWrap={true} variant="body2">
+          {!_.isEmpty(userCode) ? '@' + userCode : ''}
+        </Typography>
+      </ListItemText>
       <ListItemSecondaryAction>
         <Button variant="outlined" onClick={() => onDelete(id)} round>
           {i18n.t('common:chat.delete_member')}
@@ -45,6 +50,9 @@ const useStyles = makeStyles(() => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
+  },
+  listItem: {
+    paddingRight: 140,
   },
 }))
 

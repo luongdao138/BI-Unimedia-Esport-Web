@@ -67,7 +67,6 @@ export const socketCreators = {
   paginating: () => ({
     type: CHAT_ACTION_TYPE.MESSAGE_PAGINATING,
   }),
-
   cleanRoom: () => ({
     type: CHAT_ACTION_TYPE.CLEAN_ROOM,
   }),
