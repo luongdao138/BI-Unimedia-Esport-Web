@@ -146,4 +146,5 @@ export const NG_WORD_AREA = {
   profile_nickname: i18n.t('common:register_profile.nickname'),
   team_name: i18n.t('common:team_name'),
   join_nickname: i18n.t('common:tournament.join_nickname'),
+  summary: i18n.t('common:arena.summary'),
 }
