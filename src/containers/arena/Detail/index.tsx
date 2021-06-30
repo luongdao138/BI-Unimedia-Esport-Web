@@ -36,6 +36,7 @@ const TournamentDetail: React.FC = () => {
       {meta.loaded && tournament && (
         <>
           <TournamentDetailHeader
+            title={tournament?.attributes?.title}
             status={tournament?.attributes?.status || 'ready'}
             cover={tournament?.attributes?.cover_image || '/images/default_card.png'}
             onHandleBack={handleBack}

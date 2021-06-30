@@ -19,6 +19,7 @@ import * as commonActions from '@store/common/actions'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
+import { RULE } from '@constants/tournament.constants'
 
 interface Props {
   detail: TournamentDetail
@@ -103,7 +104,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.rule_format')}</Typography>
               </Box>
               <Box className={classes.value}>
-                <Typography>{TournamentHelper.ruleText(data.rule)}</Typography>
+                <Typography>
+                  {TournamentHelper.ruleText(data.rule)}
+                  {data.rule === RULE.SINGLE && data.has_third_place ? t('common:arena.third_place') : t('common:arena.no_third_place')}
+                </Typography>
               </Box>
             </Box>
 

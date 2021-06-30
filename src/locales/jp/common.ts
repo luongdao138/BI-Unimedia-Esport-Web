@@ -391,6 +391,8 @@ export default {
     summary: '大会の総括',
   },
   arena: {
+    third_place: '（3位決定戦あり）',
+    no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
