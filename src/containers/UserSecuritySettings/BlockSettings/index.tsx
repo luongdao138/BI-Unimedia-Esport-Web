@@ -1,86 +1,67 @@
-import { Grid } from '@material-ui/core'
-import { useTranslation } from 'react-i18next'
-import HeaderWithButton from '@components/HeaderWithButton'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
-import { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import useBlockSettings from './useBlockSettings'
-import { useRouter } from 'next/router'
 import BlockedUserItem from './BlockedUserItem'
+import HeaderWithButton from '@components/HeaderWithButton'
+import { useTranslation } from 'react-i18next'
 
 const ESBlockSettings: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const router = useRouter()
-  const [hasMore, setHasMore] = useState(true)
-  const { clearBlockedUsers, blockedUsers, fetchBlockedUsers, page } = useBlockSettings()
+
+  const { clearBlockedUsers, blockedUsers, fetchBlockedUsers, pages, meta } = useBlockSettings()
 
   useEffect(() => {
-    fetchBlockedUsers({ page: 1 })
-    return function clear() {
-      clearBlockedUsers()
-    }
+    return () => clearBlockedUsers()
   }, [])
 
-  const fetchMoreData = () => {
-    if (page.current_page >= page.total_pages) {
-      setHasMore(false)
-      return
+  useEffect(() => {
+    fetchBlockedUsers({
+      page: 1,
+    })
+  }, [])
+
+  const hasNextPage = pages && pages.current_page !== pages.total_pages
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchBlockedUsers({
+        page: Number(pages.current_page) + 1,
+      })
     }
-    fetchBlockedUsers({ page: page.current_page + 1 })
   }
 
   return (
-    <div className={classes.wrap} id="scroll">
+    <div>
       <HeaderWithButton title={t('block_settings.title')} />
-
       <InfiniteScroll
-        scrollableTarget={'test'}
         dataLength={blockedUsers.length}
-        next={fetchMoreData}
-        hasMore={hasMore && blockedUsers.length > 0}
-        height={500}
+        next={loadMore}
+        hasMore={hasNextPage}
         loader={
-          <div className={classes.loaderCenter}>
-            <ESLoader />
-          </div>
+          meta.pending && (
+            <div className={classes.loaderCenter}>
+              <ESLoader />
+            </div>
+          )
         }
-        endMessage={
-          <p style={{ textAlign: 'center' }}>
-            <b>{t('infinite_scroll.message')}</b>
-          </p>
-        }
+        scrollThreshold="1px"
       >
         {blockedUsers.map((user, i) => (
-          <Grid
-            item
-            xs={12}
-            key={i}
-            onClick={() => {
-              router.push(`/profile/${user.attributes.user_code}`)
-            }}
-          >
-            <BlockedUserItem data={user} key={i} />
-          </Grid>
+          <BlockedUserItem data={user} key={i} />
         ))}
       </InfiniteScroll>
     </div>
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   loaderCenter: {
+    marginTop: theme.spacing(1),
+    width: '100%',
     textAlign: 'center',
-  },
-  wrap: {
-    height: 'calc(100vh - 60px)',
-    overflow: 'auto',
-    scrollbarWidth: 'none' /* Firefox */,
-    '&::-webkit-scrollbar': {
-      width: 0,
-      height: 0,
-    },
   },
 }))
 
