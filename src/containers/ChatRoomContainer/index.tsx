@@ -12,6 +12,7 @@ import {
   lastKey as key,
   paginating as paging,
   hasError as hasErrorSelector,
+  blocked,
 } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
@@ -74,6 +75,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
   const hasError = useAppSelector(hasErrorSelector)
+  const isBlocked = useAppSelector(blocked)
 
   useEffect(() => {
     if (userId && roomId) {
@@ -94,7 +96,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   }, [roomId])
 
   const handlePress = (text: string) => {
-    if (_.isEmpty(checkNgWord(text))) {
+    if (_.isEmpty(checkNgWord(text)) && !isBlocked) {
       const currentTimestamp = moment().valueOf()
       const clientId = uuidv4()
       const payload = {
@@ -285,6 +287,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
           {renderReplyPanel()}
           <MessageInputArea
             ref={inputRef}
+            isBlocked={isBlocked}
             currentUser={userId}
             onPressSend={handlePress}
             users={usersAvailable}

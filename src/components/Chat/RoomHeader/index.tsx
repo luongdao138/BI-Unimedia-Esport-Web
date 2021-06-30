@@ -78,7 +78,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-    } else if (!isDirect() && isAdmin()) {
+    } else if (!isDirect()) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     }
     return null

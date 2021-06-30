@@ -26,7 +26,12 @@ export const lastKey = createSelector(getRoot, (state) => state.lastKey)
 export const paginating = createSelector(getRoot, (state) => state.paginating)
 export const actionPending = createSelector(getRoot, (state) => state.actionPending)
 export const newRoomId = createSelector(getRoot, (state) => state.newRoomId)
+
 export const selectedRoomInfo = createSelector(getRoot, (state) => state.selectedRoomInfo)
+export const blocked = createSelector(getRoot, (state) => {
+  return _.get(state, 'selectedRoomInfo.blocked', false)
+})
+
 export const membersSuggest = createSelector(getRoot, (state) => {
   let withAll: ChatSuggestionList[]
   if (state.selectedRoomInfo && state.selectedRoomInfo.sortKey.includes('direct')) {
