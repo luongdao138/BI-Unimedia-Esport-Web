@@ -60,7 +60,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           <Box className={classes.actionButton}>
             {(tournament.attributes.is_entered && tournament.attributes.my_role) === 'interested' ? (
               <Box>
-                <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
+                <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
                 <UnjoinModal tournament={tournament} />
               </Box>
             ) : null}
@@ -87,7 +87,7 @@ const ActionComponent: React.FC<Props> = (props) => {
               <Box className={classes.actionButton}>
                 {isAdminJoined() ? (
                   <Box>
-                    <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
+                    <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
                   </Box>
                 ) : (
                   <ButtonPrimary round fullWidth onClick={() => setEntryModalOpen(true)}>
