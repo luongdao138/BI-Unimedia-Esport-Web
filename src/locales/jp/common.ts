@@ -730,6 +730,7 @@ export default {
     cancel_submit: 'はい',
     cancel_msg: 'アイテムの購入をキャンセルしました',
     no_data: '購入されたアイテムはありません',
+    period_expired: 'キャンセル処理できませんでした。\n' + 'キャンセル受付期間を超過したため、キャンセル処理できませんでした。',
   },
   inquiry: {
     title: 'お問い合わせ',

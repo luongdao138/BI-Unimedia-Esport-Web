@@ -11,8 +11,6 @@ import { PAYMENT_STATUS } from '@constants/common.constants'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
-import * as actions from '@store/common/actions'
-import { useAppDispatch } from '@store/hooks'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 
@@ -22,8 +20,7 @@ const PurchaseDetail: React.FC = () => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
-  const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase } = usePurchaseHistoryDetail()
-  const dispatch = useAppDispatch()
+  const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase, meta } = usePurchaseHistoryDetail()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -36,7 +33,6 @@ const PurchaseDetail: React.FC = () => {
   const handleSubmit = () => {
     if (purchaseHistoryDetail.data && purchaseHistoryDetail.data.id) {
       cancelPurchase(`${purchaseHistoryDetail.data.id}`)
-      dispatch(actions.addToast(`${t('common:purchase_history.cancel_msg')}`))
     }
     setOpen(false)
   }
@@ -83,6 +79,16 @@ const PurchaseDetail: React.FC = () => {
   const ticket_price = CommonHelper.formatCurrency(price)
   const ticket_tax = CommonHelper.formatCurrency(tax)
   const total = CommonHelper.formatCurrency(price + tax)
+
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box my={4} display="flex" justifyContent="center">
+          <Typography color="secondary">{t('common:purchase_history.period_expired')}</Typography>
+        </Box>
+      )
+    )
+  }
 
   return (
     <>
@@ -179,17 +185,18 @@ const PurchaseDetail: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-            {purchaseHistoryDetail.data.attributes.is_cancellable &&
-              !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
-              !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
-                <>
-                  <Box my={4} display="flex" justifyContent="center">
-                    <ESButton variant="outlined" onClick={handleClickOpen}>
-                      {t('common:purchase_history.cancel_request')}
-                    </ESButton>
-                  </Box>
-                </>
-              )}
+            {/*{purchaseHistoryDetail.data.attributes.is_cancellable &&*/}
+            {/*  !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&*/}
+            {/*  !purchaseHistoryDetail.data.attributes.cancelled_datetime && (*/}
+            <>
+              {renderError()}
+              <Box my={4} display="flex" justifyContent="center">
+                <ESButton variant="outlined" onClick={handleClickOpen}>
+                  {t('common:purchase_history.cancel_request')}
+                </ESButton>
+              </Box>
+            </>
+            {/*)}*/}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
