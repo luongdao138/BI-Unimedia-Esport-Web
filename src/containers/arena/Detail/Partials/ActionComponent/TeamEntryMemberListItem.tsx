@@ -11,6 +11,7 @@ import _ from 'lodash'
 
 interface TeamEntryMemberListProps {
   isLeader?: boolean
+  isEdit?: boolean
   index: number
   suggestedTeamMembers: TeamMemberSelectItem[]
   selectedItem: TeamMemberSelectItem | null
@@ -29,6 +30,7 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
   loading,
   isLeader,
   formik,
+  isEdit,
 }) => {
   const classes = useStyles()
   const nickname = formik.values.members[index - 1].name
@@ -67,20 +69,27 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
   return (
     <>
       <Box mt={4} mb={2}>
-        <Box mt={1}>
-          <ESSimpleSelectInput
-            label={`メンバー${index}`}
-            index={index}
-            selectedItem={selectedItem}
-            items={suggestedTeamMembers}
-            loading={loading}
-            onSearchInput={(keyword) => onSearchInput(keyword, index)}
-            onItemSelected={onItemSelected}
-            onScrollEnd={() => {
-              // TODO if need
-            }}
-          />
-        </Box>
+        {isEdit ? (
+          <Box my={2}>
+            <ESLabel label={`メンバー${index}`} size="small" bold />
+            <Box mt={1}>
+              <Typography className={classes.nameDisabled}>{selectedItem.nickname}</Typography>
+            </Box>
+          </Box>
+        ) : (
+          <Box mt={1}>
+            <ESSimpleSelectInput
+              label={`メンバー${index}`}
+              index={index}
+              selectedItem={selectedItem}
+              items={suggestedTeamMembers}
+              loading={loading}
+              onSearchInput={(keyword) => onSearchInput(keyword, index)}
+              onItemSelected={onItemSelected}
+              onScrollEnd={() => null}
+            />
+          </Box>
+        )}
       </Box>
       <Box my={2}>
         <ESLabel label={`メンバー${index}：エントリーネーム`} size="small" />

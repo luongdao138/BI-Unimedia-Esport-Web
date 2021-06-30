@@ -73,7 +73,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
           <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-            <Icon className="fa fa-link" fontSize="small" style={{ marginRight: 20, fontSize: 14, paddingTop: 3 }} />
+            <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
             <Typography>{t('common:tournament.copy_shared_url')}</Typography>
           </Box>
         </Box>
@@ -309,6 +309,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 20,
     cursor: 'pointer',
     color: '#EB5686',
+  },
+  link: {
+    marginRight: 5,
+    fontSize: 14,
+    paddingTop: 3,
   },
   [theme.breakpoints.down('md')]: {
     label: {
