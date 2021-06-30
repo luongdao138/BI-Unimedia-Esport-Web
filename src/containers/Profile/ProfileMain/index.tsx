@@ -104,14 +104,16 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
               })
             : null}
         </Box>
-        <ButtonBase onClick={() => setMaxFav(readMore ? orderedGL.length : MAX_FAVORITE)} className={classes.readMore}>
-          <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-            <Typography className={classes.marginRight}>
-              {readMore ? i18n.t('common:profile.read_more') : i18n.t('common:profile.collapse')}
-            </Typography>
-            <Icon className={readMore ? 'fa fa-angle-down' : 'fa fa-angle-up'} fontSize="small" />
-          </Box>
-        </ButtonBase>
+        {orderedGL.length > MAX_FAVORITE ? (
+          <ButtonBase onClick={() => setMaxFav(readMore ? orderedGL.length : MAX_FAVORITE)} className={classes.readMore}>
+            <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+              <Typography className={classes.marginRight}>
+                {readMore ? i18n.t('common:profile.read_more') : i18n.t('common:profile.collapse')}
+              </Typography>
+              <Icon className={readMore ? 'fa fa-angle-down' : 'fa fa-angle-up'} fontSize="small" />
+            </Box>
+          </ButtonBase>
+        ) : null}
       </Grid>
     )
   }

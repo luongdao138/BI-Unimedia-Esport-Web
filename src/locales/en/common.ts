@@ -234,6 +234,7 @@ export default {
     reporter_email_confirm: '通報にはメールアドレスの登録が必要となります。',
     email_required_text: '通報にはメールアドレスの登録が必要です',
     btn_text: '通報する',
+    report_menu: '通報',
     title_chat: 'Chat',
     user_report_done: 'User Reported',
     reported: 'Reported!',
