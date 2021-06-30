@@ -772,5 +772,6 @@ export default {
     default_keywords: 'eXeLAB,エグゼラボ,game.ゲーム,ゲーマー,esports,eスポーツ,NTTe-sports,大会運営,ゲーム仲間,募集,コミュニティ',
     home_top: 'eXeLAB',
     home_title: 'eXeLAB｜ホーム',
+    arena_default_title: 'eXeLAB｜大会',
   },
 }
