@@ -22,6 +22,10 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       : _.get(data.attributes, 'cancel_req_datetime', +data.attributes.cancel_req_datetime)
 
   const time = CommonHelper.staticSmartTime(date)
+
+  const price = _.get(data, 'attributes.price')
+  const ticket_price = CommonHelper.formatCurrency(price)
+
   return (
     <Box
       padding={2}
@@ -46,7 +50,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.price')}</Typography>
-        <Typography>¥{data.attributes.price}</Typography>
+        <Typography>{ticket_price}</Typography>
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.purchase_status')}</Typography>
