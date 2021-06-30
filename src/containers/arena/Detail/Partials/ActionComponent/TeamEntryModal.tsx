@@ -69,6 +69,32 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     }
   }, [updateTeamMeta.loaded, updateTeamMeta.error])
 
+  useEffect(() => {
+    if (userProfile) {
+      formik.validateForm()
+    } else {
+      formik.resetForm()
+    }
+  }, [userProfile])
+
+  useEffect(() => {
+    if (isEdit && _.isArray(initialData.members)) {
+      const newMemberSelections = [] as MemberSelection[]
+      for (let i = 1; i < initialData.members.length; i++) {
+        const initMember = initialData.members[i]
+        newMemberSelections.push({
+          index: i + 1,
+          item: { ...initMember },
+        })
+      }
+      teamMemberHook.setSelectedMembers(newMemberSelections)
+    }
+  }, [isEdit, initialData])
+
+  useEffect(() => {
+    getSuggestedTeamMembers({ page: 1, keyword: '', tournament_id: tournament.id })
+  }, [])
+
   const membersValidationSchema = Yup.object().shape({
     name: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
@@ -129,32 +155,6 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       }
     },
   })
-
-  useEffect(() => {
-    if (userProfile) {
-      formik.validateForm()
-    } else {
-      formik.resetForm()
-    }
-  }, [userProfile])
-
-  useEffect(() => {
-    if (isEdit && _.isArray(initialData.members)) {
-      const newMemberSelections = [] as MemberSelection[]
-      for (let i = 1; i < initialData.members.length; i++) {
-        const initMember = initialData.members[i]
-        newMemberSelections.push({
-          index: i + 1,
-          item: { ...initMember },
-        })
-      }
-      teamMemberHook.setSelectedMembers(newMemberSelections)
-    }
-  }, [isEdit, initialData])
-
-  useEffect(() => {
-    getSuggestedTeamMembers({ page: 1, keyword: '', tournament_id: tournament.id })
-  }, [])
 
   const reset = () => {
     resetMeta()

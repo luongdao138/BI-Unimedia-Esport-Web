@@ -172,7 +172,7 @@ export default {
     failed: '失敗しました',
     password_reissue: 'パスワードを再発行しました',
     close_arena_failed: 'Failed to close arena',
-    join_arena_failed: 'Failed to entry arena',
+    join_arena_failed: 'エントリーを完了できませんでした。',
     leave_arena_failed: 'Failed to leave arena',
     too_short: '短すぎます。',
     password_must_match: 'パスワードが一致していません。',
@@ -393,6 +393,7 @@ export default {
     freeze_button: 'トーナメント表を確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
+    join_success: ' エントリー完了しました',
     dialog: {
       randomize_title: 'ユーザーをランダムに配置します',
       randomize_desc: '現在エントリーしているユーザーをトーナメント表の空欄になっている枠へランダムに配置します',

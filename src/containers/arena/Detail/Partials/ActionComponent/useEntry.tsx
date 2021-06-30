@@ -59,6 +59,12 @@ const useEntry = () => {
     }
   }, [updateTeamMeta.error])
 
+  useEffect(() => {
+    if (joinMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.join_success')))
+    }
+  }, [joinMeta.loaded])
+
   return {
     join,
     leave,
