@@ -57,7 +57,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
 
   useEffect(() => {
     if (router && router.query && router.query.active) {
-      setShowList(false)
+      setShowList(true)
     }
   }, [router])
 
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 MessageLayout.defaultProps = {
-  defaultListState: true,
+  defaultListState: false,
   create: false,
 }
 

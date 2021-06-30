@@ -412,7 +412,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     header: {
       position: 'absolute',
       top: 0,
-      left: 100,
+      left: 40,
       right: 0,
       zIndex: 1000,
     },
