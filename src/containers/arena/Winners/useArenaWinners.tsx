@@ -18,6 +18,7 @@ const useWinners = (
   arenaWinners: ArenaWinners
   arena: TournamentDetail
   fetchWinners: () => void
+  toDetail: () => void
   handleBack: () => void
 } => {
   const router = useRouter()
@@ -36,7 +37,8 @@ const useWinners = (
     }
   }, [router.query.hash_key])
 
-  const handleBack = () => router.push(router.asPath.replace('/placements', ''))
+  const toDetail = () => router.push(router.asPath.replace('/placements', ''))
+  const handleBack = () => router.back()
 
   return {
     arenaWinners,
@@ -44,6 +46,7 @@ const useWinners = (
     arenaMeta,
     arena,
     fetchWinners,
+    toDetail,
     handleBack,
   }
 }

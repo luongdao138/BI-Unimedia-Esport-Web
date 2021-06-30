@@ -17,6 +17,7 @@ interface Props {
   handleClose?: () => void
   changeFollowState?: (type: number) => void
   nicknameYellow?: boolean
+  rightItem?: JSX.Element
 }
 
 enum FOLLOWING_STATE_CHANGE_TYPE {
@@ -24,7 +25,7 @@ enum FOLLOWING_STATE_CHANGE_TYPE {
   UNFOLLOW = 0,
 }
 
-const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick, changeFollowState, nicknameYellow }) => {
+const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleClick, changeFollowState, nicknameYellow, rightItem }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
@@ -116,6 +117,7 @@ const UserListItem: React.FC<Props> = ({ data, isFollowed, handleClose, handleCl
             )}
           </Box>
         )}
+        {rightItem && <Box flexShrink={0}>{rightItem}</Box>}
       </>
     )
   }

@@ -34,8 +34,19 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
   }, [open])
 
   const handleReturn = () => setOpen(false)
+
+  const getTeamId = () => {
+    const myInfos = _.get(tournament, 'attributes.my_info', [])
+    if (!_.isArray(myInfos)) return null
+    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === 'interested')
+    if (!info) return null
+    const teamId = _.get(info, 'team_id', null)
+    if (_.isNumber(teamId)) return teamId
+    return null
+  }
+
   const fetch = () => {
-    const teamId = _.get(tournament, 'attributes.my_info[0].team_id')
+    const teamId = getTeamId()
     if (_.isNumber(teamId)) {
       getTeamDetail(teamId)
     }
@@ -76,10 +87,10 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
     const members = _.clone(_.get(attrs, 'members', []))
     const leaderDetail = _.remove(members as any[], (member) => member.user_id === leaderId)
     if (leaderDetail.length > 0) members.unshift(leaderDetail[0])
-    const teamId = _.get(tournament, 'attributes.my_info[0].team_id')
+    const teamId = getTeamId()
 
     return {
-      team_id: teamId,
+      team_id: `${teamId}`,
       team_name: _.get(attrs, 'name', '') as string,
       team_icon_url: _.get(attrs, 'team_avatar', '') as string,
       members: members.map((member) => ({

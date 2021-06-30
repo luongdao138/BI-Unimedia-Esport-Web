@@ -352,7 +352,7 @@ export const summaryTournament = createAsyncThunk<void, services.SummaryParams>(
   }
 )
 
-export const getParticipantName = createAsyncThunk<services.ParticipantNameResponse, string>(
+export const getParticipantName = createAsyncThunk<services.ParticipantNameResponse, services.ParticipantNameParam>(
   types.GET_PARTICIPANT_NAME,
   async (param, { rejectWithValue }) => {
     try {
