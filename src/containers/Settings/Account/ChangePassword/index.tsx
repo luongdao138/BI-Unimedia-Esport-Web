@@ -20,12 +20,21 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
   const router = useRouter()
   const { changePassword, meta } = useChangePassword()
   const [score, setScore] = useState(0)
+  const [scoreCurrentPassword, setCurrenPasswordScore] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showPasswordRepeat, setShowPasswordRepeat] = useState(false)
 
   const validationSchema = Yup.object().shape({
-    current_password: Yup.string().required(t('common.required')).min(8, t('error.too_short')),
+    current_password: Yup.string()
+      .test('password-validation', t('common.error'), (value) => {
+        const tempScore = CommonHelper.scorePassword(value)
+        setCurrenPasswordScore(tempScore)
+        return tempScore > 40
+      })
+      .required(t('common.required'))
+      .min(8, t('error.too_short')),
+
     new_password: Yup.string()
       .test('password-validation', t('common.error'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
@@ -65,7 +74,12 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
   }, [meta.error])
 
   const buttonActive = (): boolean =>
-    values.current_password !== '' && values.new_password !== '' && values.confirm_new_password !== '' && _.isEmpty(errors) && score > 40
+    values.current_password !== '' &&
+    values.new_password !== '' &&
+    values.confirm_new_password !== '' &&
+    _.isEmpty(errors) &&
+    score > 40 &&
+    scoreCurrentPassword > 40
 
   return (
     <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>

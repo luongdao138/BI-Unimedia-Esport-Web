@@ -22,6 +22,7 @@ type StateType = {
   followersMeta?: Meta
   following?: Array<FollowResponse>
   followingMeta?: Meta
+  newEmail: string
 }
 
 const initialState: StateType = {
@@ -43,6 +44,7 @@ const initialState: StateType = {
   following: [],
   followersMeta: undefined,
   followingMeta: undefined,
+  newEmail: '',
 }
 
 export default createReducer(initialState, (builder) => {
@@ -232,5 +234,12 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.clearHomeSettings, (state) => {
     state.data.attributes.home_settings = []
+  })
+
+  builder.addCase(actions.saveNewEmail, (state, action) => {
+    state.newEmail = action.payload
+  })
+  builder.addCase(actions.clearNewEmail, (state) => {
+    state.newEmail = ''
   })
 })
