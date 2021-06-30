@@ -54,6 +54,12 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
     }
   }, [])
 
+  useEffect(() => {
+    if (router && router.query && router.query.active) {
+      setShowList(false)
+    }
+  }, [router])
+
   return (
     <div className="main-wrapper">
       <Header open={open} toggleDrawer={toggleDrawer} />

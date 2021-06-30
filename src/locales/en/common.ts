@@ -271,6 +271,7 @@ export default {
     update_image: '画像の編集',
     reset: '画像をリセットする',
     read_more: 'もっとみる',
+    collapse: '閉じる',
     follow_as: 'フォローする',
     unblock: 'ブロック解除',
     inbox: 'inbox',
@@ -779,6 +780,8 @@ export default {
     default_desc:
       '“人と人がつながる”ことで、ゲームはもっともっと楽しくなります。つながりが生む新たな体験と発見、そしてたくさんのプレイヤーとシーンを支えるファン達が交差するプラットフォーム。それがeXeLAB（エグゼラボ）です。',
     default_keywords: 'eXeLAB,エグゼラボ,game.ゲーム,ゲーマー,esports,eスポーツ,NTTe-sports,大会運営,ゲーム仲間,募集,コミュニティ',
+    home_top: 'eXeLAB｜ゲームが広がる。仲間ができる。',
     home_title: 'eXeLAB｜ホーム',
+    arena_default_title: 'eXeLAB｜大会',
   },
 }
