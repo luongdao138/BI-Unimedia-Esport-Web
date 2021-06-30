@@ -4,16 +4,14 @@ import { Meta } from '@services/recruitment.service'
 
 type StateType = {
   recommendations: Array<any>
-  recommendationsMeta: Meta
+  recommendationsMeta?: Meta
   recruitmentFollowers: Array<any>
-  recruitmentFollowersMeta: Meta
+  recruitmentFollowersMeta?: Meta
 }
 
 const initialState: StateType = {
   recommendations: [],
   recruitmentFollowers: [],
-  recommendationsMeta: undefined,
-  recruitmentFollowersMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {

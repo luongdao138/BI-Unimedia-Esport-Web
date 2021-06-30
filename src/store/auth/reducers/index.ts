@@ -9,7 +9,7 @@ type StateType = {
   confirmType?: 'register' | 'forgot'
 }
 
-const initialState: StateType = { user: undefined, confirmType: undefined }
+const initialState: StateType = {}
 
 export default createReducer(initialState, (builder) => {
   builder

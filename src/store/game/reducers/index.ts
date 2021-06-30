@@ -5,10 +5,10 @@ import * as actions from '../actions'
 type StateType = {
   genres: GameGenreResponse['data']
   games: GameTitle['attributes'][]
-  createdGame: GameTitle['attributes']
+  createdGame?: GameTitle['attributes']
 }
 
-const initialState: StateType = { genres: [], games: [], createdGame: undefined }
+const initialState: StateType = { genres: [], games: [] }
 
 export default createReducer(initialState, (builder) => {
   builder

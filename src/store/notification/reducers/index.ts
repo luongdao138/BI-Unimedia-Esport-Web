@@ -6,11 +6,11 @@ type StateType = {
   notifications?: Array<NotificationResponse>
   notificationBarList: Array<NotificationResponse>
   notificationsMeta?: Meta
-  notificaitonBadge: NotificationBadgeResponse
-  notificaitonDetail: NotificationDetailResponse
+  notificaitonBadge?: NotificationBadgeResponse
+  notificaitonDetail?: NotificationDetailResponse
 }
 
-const initialState: StateType = { notifications: [], notificaitonBadge: undefined, notificaitonDetail: undefined, notificationBarList: [] }
+const initialState: StateType = { notifications: [], notificationBarList: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getNotifications.fulfilled, (state, action) => {

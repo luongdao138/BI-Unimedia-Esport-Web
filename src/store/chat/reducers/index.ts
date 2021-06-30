@@ -9,14 +9,13 @@ type State = {
   friendList: FriendItem[] | null
   singleUser: DmUserData | null
   redirectDm: string | null
-  tournamentDetail: MessageTournamentResponse
+  tournamentDetail?: MessageTournamentResponse
 }
 
 const initialState: State = {
   friendList: null,
   singleUser: null,
   redirectDm: null,
-  tournamentDetail: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
