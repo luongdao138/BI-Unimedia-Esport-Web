@@ -31,6 +31,9 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.rule}
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           {RULES.map((rule, index) => (
             <option key={index} value={rule.value}>
               {rule.label}

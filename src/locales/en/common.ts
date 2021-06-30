@@ -503,7 +503,7 @@ export default {
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
     public_or_private: '大会公開設定',
-    title_placeholder: '○○文字まで入力することができます。',
+    title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
 例）
