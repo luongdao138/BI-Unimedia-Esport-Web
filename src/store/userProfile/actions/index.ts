@@ -313,3 +313,5 @@ export const clearHomeSettings = createAction<services.ClearHomeSettings>(USER_P
 export const clearMemberProfile = createAction<undefined>(USER_PROFILE_ACTION_TYPE.CLEAR_MEMBER_PROFILE)
 export const clearActivityLogs = createAction<undefined>(USER_PROFILE_ACTION_TYPE.CLEAR_ACTIVITY_LOG)
 export const clearTournamentHistory = createAction<undefined>(USER_PROFILE_ACTION_TYPE.CLEAR_TOURNAMENT_HISTORY)
+export const saveNewEmail = createAction<string>(USER_PROFILE_ACTION_TYPE.SAVE_NEW_EMAIL)
+export const clearNewEmail = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_NEW_EMAIL)

@@ -45,21 +45,16 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
         <Typography>{data.attributes.title}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.type')}</Typography>
-        <Typography>{t('purchase_history.ticket')}</Typography>
-      </Box>
-      <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.price')}</Typography>
         <Typography>¥{data.attributes.price}</Typography>
       </Box>
       <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.status')}</Typography>
         <Typography>
-          ¥{data.attributes.price}
           {data.attributes.status == PAYMENT_STATUS.CANCELLED
-            ? ` (${t('purchase_history.canceled')})`
+            ? ` ¥${data.attributes.price} (${t('purchase_history.canceled')})`
             : data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
-            ? ` (${t('purchase_history.cancel_requested')})`
+            ? `¥${data.attributes.price} (${t('purchase_history.cancel_requested')})`
             : ''}
         </Typography>
       </Box>
