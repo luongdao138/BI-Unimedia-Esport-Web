@@ -219,7 +219,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     </ESMenuItem>
                   )}
 
-                  <ESMenuItem onClick={handleReportOpen}>{i18n.t('common:user_report.title')}</ESMenuItem>
+                  <ESMenuItem onClick={handleReportOpen}>{i18n.t('common:user_report.report_menu')}</ESMenuItem>
                 </ESMenu>
               </Box>
             ) : (
