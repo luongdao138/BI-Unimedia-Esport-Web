@@ -20,16 +20,18 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
     stepOne: Yup.object({
       title: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .max(60, i18n.t('common:common.too_long'))
+        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
         .min(2, i18n.t('common:common.at_least'))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
       overview: Yup.string()
-        .max(191, i18n.t('common:common.too_long'))
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
       has_prize: Yup.boolean(),
       prize_amount: Yup.string().when('has_prize', {
         is: true,
-        then: Yup.string().required(i18n.t('common:common.input_required')).max(40, i18n.t('common:common.too_long')),
+        then: Yup.string()
+          .required(i18n.t('common:common.input_required'))
+          .max(40, i18n.t('common:common.validation.char_limit', { char_limit: 40 })),
       }),
       game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
       game_hardware_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
@@ -48,10 +50,10 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
         .max(128, i18n.t('common:arena.participants_limit'))
         .integer(i18n.t('common:common.integer')),
       terms_of_participation: Yup.string()
-        .max(190, i18n.t('common:common.too_long'))
+        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 }))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
       notes: Yup.string()
-        .max(191, i18n.t('common:common.too_long'))
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
     }),
     stepThree: Yup.object({
@@ -73,7 +75,7 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
         .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
       area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
       area_name: Yup.string()
-        .max(60, i18n.t('common:common.too_long'))
+        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
         .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
       // for cross-fields validations
       recruit_date: Yup.string().when(['acceptance_start_date'], {
@@ -103,7 +105,7 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
     }),
     stepFour: Yup.object({
       organizer_name: Yup.string()
-        .max(190, i18n.t('common:common.too_long'))
+        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 }))
         .test('ng-check', i18n.t('common:common.contains_ngword'), function (value) {
           return CommonHelper.matchNgWords(store, value).length <= 0
         }),
