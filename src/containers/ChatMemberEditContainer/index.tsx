@@ -57,7 +57,14 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
             {memberList
               .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE && member.memberType !== CHAT_MEMBER_TYPE.CHAT_ADMIN)
               .map((val) => (
-                <RoomMemberItem key={val.userId} userCode={val.userCode} id={val.userId} name={val.nickName} onDelete={onItemDelete} />
+                <RoomMemberItem
+                  profile={val.profile}
+                  key={val.userId}
+                  userCode={val.userCode}
+                  id={val.userId}
+                  name={val.nickName}
+                  onDelete={onItemDelete}
+                />
               ))}
           </List>
         </Box>
