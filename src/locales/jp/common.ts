@@ -268,6 +268,7 @@ export default {
     update_image: '画像の編集',
     reset: '画像をリセットする',
     read_more: 'もっとみる',
+    collapse: '閉じる',
     follow_as: 'フォローする',
     unblock: 'ブロック解除',
     inbox: 'inbox',
