@@ -19,7 +19,7 @@ import { getMessageTournamentDetail } from '@store/chat/actions'
 import { tournamentDetail } from '@store/chat/selectors'
 import { useRouter } from 'next/router'
 import AvatarSelector from '@components/ImagePicker/AvatarSelector'
-import useRoomImageUploader from './usRoomImageUploader'
+import useRoomImageUploader from './useRoomImageUploader'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -129,10 +129,10 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     </Box>
   )
 
-  const onUpdate = (file, _blob) => {
+  const onUpdate = (file, blob) => {
     if (!isAdmin) return
     if (!uploadMeta.uploading) {
-      imageProcess(file, userId, roomId as string)
+      imageProcess(file, userId, roomId as string, blob)
     }
     setDialogOpen(null)
   }

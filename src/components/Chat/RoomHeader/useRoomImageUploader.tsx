@@ -7,7 +7,7 @@ import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
 
 interface ReturnType {
-  imageProcess: (file: File, userId: number, roomId: string) => void
+  imageProcess: (file: File, userId: number, roomId: string, blob: any) => void
   uploadMeta: UploadStateType
 }
 
@@ -19,7 +19,7 @@ const useRoomImageUploader = (): ReturnType => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
   const dispatch = useAppDispatch()
 
-  const imageProcess = async (file: File, userId: number, roomId: string) => {
+  const imageProcess = async (file: File, _userId: number, roomId: string, blob: any) => {
     setMeta({ uploading: true })
     const params = {
       type: UPLOADER_TYPE.CHAT,
@@ -31,7 +31,7 @@ const useRoomImageUploader = (): ReturnType => {
     const res = await getPreSignedUrl(params)
     const fileUrl = res.file_url as string
     const signedUrl = res.url
-    await upload(file, signedUrl)
+    await upload(blob, signedUrl)
     let imageFineUrl = ''
     if (_.isString(fileUrl)) {
       const httpPrefix = 'https://'
