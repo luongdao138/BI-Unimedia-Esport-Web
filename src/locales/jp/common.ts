@@ -651,10 +651,9 @@ export default {
     confirm_title: `メールアドレスに送信された
 6桁の認証コードを入力してください`,
     delete_confirm_title: 'アカウント削除について',
-    delete_confirm_msg:
-      'アカウントの削除はお問い合わせフォームから承ります。\n' + '件名に「アカウント削除」と記入し、本文に理由を添えて送信をお願いします。',
-    delete_confirm_yes: 'お問い合わせフォームへ',
-    delete_confirm_no: '戻る',
+    delete_confirm_msg: 'アカウント削除はお問い合わせフォームでの申請となります。お問い合わせフォームを開きますか。',
+    delete_confirm_yes: 'はい',
+    delete_confirm_no: 'いいえ',
     change_password: 'パスワードの変更',
     current_password: '現在のパスワード',
     new_password: '新しいパスワード',

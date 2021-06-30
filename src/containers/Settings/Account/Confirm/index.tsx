@@ -42,6 +42,18 @@ const AccountSettingsConfirmContainer: React.FC = () => {
     return null
   }
 
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box pb={8}>
+          <Typography className={classes.errorMsg} color="secondary">
+            {t('error.invalid_confirmation')}
+          </Typography>
+        </Box>
+      )
+    )
+  }
+
   return (
     <ESStickyFooter title={t('common.send')} disabled={!buttonActive()} onClick={handleSubmit}>
       <Box className={classes.header}>
@@ -53,6 +65,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
         </Typography>
       </Box>
       <Box mt={12} mx={4} mb={4} className={classes.formWrap}>
+        {renderError()}
         <Typography variant="h3" className={classes.content}>
           {t('account_settings.confirm_title')}
         </Typography>
@@ -103,6 +116,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sectionBottom: {
     marginBottom: theme.spacing(4),
+  },
+  errorMsg: {
+    textAlign: 'center',
   },
   [theme.breakpoints.down('md')]: {
     header: {
