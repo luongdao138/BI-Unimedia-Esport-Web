@@ -8,6 +8,7 @@ import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
 import { useTranslation } from 'react-i18next'
+import Linkify from 'react-linkify'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -64,7 +65,15 @@ const ArenaWinners: React.FC = () => {
       </div>
       <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
         <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
-        <Typography>{arena?.attributes?.summary || ''}</Typography>
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <Typography>{arena?.attributes?.summary || ''}</Typography>
+        </Linkify>
       </div>
       <Box textAlign="center" pb={showSummary ? 4 : 8}>
         <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
@@ -111,6 +120,10 @@ const ArenaWinners: React.FC = () => {
 export default ArenaWinners
 
 const useStyles = makeStyles((theme) => ({
+  link: {
+    color: Colors.white,
+    textDecoration: 'underline',
+  },
   root: {
     position: 'relative',
     paddingBottom: theme.spacing(3),

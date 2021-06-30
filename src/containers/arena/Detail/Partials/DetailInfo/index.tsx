@@ -18,6 +18,7 @@ import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
+import Linkify from 'react-linkify'
 
 interface Props {
   detail: TournamentDetail
@@ -83,7 +84,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         </Box>
 
         <Box marginTop={2}>
-          <Typography>{data.overview}</Typography>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                {decoratedText}
+              </a>
+            )}
+          >
+            <Typography>{data.overview}</Typography>
+          </Linkify>
         </Box>
 
         {extended && (
@@ -283,6 +292,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+  },
   container: {
     padding: 24,
   },
