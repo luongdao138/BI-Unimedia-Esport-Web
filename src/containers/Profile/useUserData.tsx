@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import community from '@store/community'
@@ -18,6 +17,7 @@ const useUserData = (
   userCode: string
   profile: UserProfile
   isOthers: boolean
+  isAuthenticated: boolean
   meta: Meta
   communityList: CommunityResponse[]
   communityMeta: Meta
@@ -34,6 +34,7 @@ const useUserData = (
   const getCommunityListMeta = createMetaSelector(communityActions.getCommunityList)
   const userSelectors = userProfileStore.selectors
   const userActions = userProfileStore.actions
+  const isAuthenticated = useAppSelector(authSelectors.getIsAuthenticated)
 
   let isOthers = raw_code.length > 0
   let userCode = myUserCode
@@ -81,6 +82,7 @@ const useUserData = (
         dispatch(userActions.profileImage(params))
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log('useUserData.tsx 44 getPreSignedUrl failed', error)
     }
   }
@@ -101,6 +103,7 @@ const useUserData = (
     userCode,
     profile,
     isOthers,
+    isAuthenticated,
     meta,
     communityList,
     communityMeta,

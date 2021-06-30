@@ -26,7 +26,7 @@ import { Colors } from '@theme/colors'
 export interface ESReportProps {
   chat_id?: string
   room_id?: string
-  target_id?: number
+  target_id?: number | string
   user_email?: string
   msg_body?: string
   data?: any
