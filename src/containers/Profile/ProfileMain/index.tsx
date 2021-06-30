@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Box, Grid, Typography, Icon, ButtonBase } from '@material-ui/core'
 import { orderBy } from 'lodash'
 import i18n from '@locales/i18n'
@@ -22,9 +23,12 @@ interface Props {
   isOthers: boolean
 }
 
+const MAX_FAVORITE = 10
+
 const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const classes = useStyles()
   const router = useRouter()
+  const [maxFav, setMaxFav] = useState(MAX_FAVORITE)
 
   const attr = userProfile?.attributes
   if (userProfile == null || attr == null || attr == undefined) {
@@ -73,7 +77,8 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   }
   const getFavoriteGames = () => {
     const orderedGL = orderBy(attr.game_titles, ['display_name', 'jp_kana_name'], ['asc'])
-    const SHOW_MAX = 10
+    const readMore = orderedGL.length > maxFav
+
     return (
       <Grid xs={12} item className={`${classes.bodyContainer} ${classes.marginTop50}`}>
         <Box display="flex" justifyContent="space-between">
@@ -94,15 +99,19 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
         <Box>
           {orderedGL && orderedGL.length > 0
             ? orderedGL.map((g: any, i: number) => {
-                if (i < SHOW_MAX)
+                if (i < maxFav)
                   return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
               })
             : null}
         </Box>
-        <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
-          <Typography className={classes.marginRight}>{i18n.t('common:profile.read_more')}</Typography>
-          <Icon className={'fa fa-angle-down'} fontSize="small" />
-        </Box>
+        <ButtonBase onClick={() => setMaxFav(readMore ? orderedGL.length : MAX_FAVORITE)} className={classes.readMore}>
+          <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
+            <Typography className={classes.marginRight}>
+              {readMore ? i18n.t('common:profile.read_more') : i18n.t('common:profile.collapse')}
+            </Typography>
+            <Icon className={readMore ? 'fa fa-angle-down' : 'fa fa-angle-up'} fontSize="small" />
+          </Box>
+        </ButtonBase>
       </Grid>
     )
   }
@@ -137,11 +146,12 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
       //     <Icon className={'fa fa-angle-down'} fontSize="small" />
       //   </Box>
       // </Grid>
-      <Box display="flex" alignItems="center" justifyContent="center" mt={3} mb={2}>
-        <Typography gutterBottom color="textSecondary">
-          {i18n.t('common:profile.no_communities')}
-        </Typography>
-      </Box>
+      // <Box display="flex" alignItems="center" justifyContent="center" mt={5} pt={3} mb={2} >
+      //   <Typography gutterBottom color="textSecondary">
+      //     {i18n.t('common:profile.no_communities')}
+      //   </Typography>
+      // </Box>
+      null
     )
   }
 
@@ -162,6 +172,9 @@ const useStyles = makeStyles((theme) => ({
   bodyContainer: {
     paddingRight: theme.spacing(3),
     paddingLeft: theme.spacing(3),
+  },
+  readMore: {
+    width: '100%',
   },
   marginTop20: {
     marginTop: 20,
