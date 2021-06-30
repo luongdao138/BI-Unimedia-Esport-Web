@@ -45,7 +45,7 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
       >
         {tournamentHistories.length > 0
           ? (tournamentHistories as TournamentListItem[]).map((tournament: TournamentListItem, i: number) => (
-              <Grid key={i} item xs={12} sm={12} md={4}>
+              <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
                 <TournamentCard tournament={tournament} />
               </Grid>
             ))

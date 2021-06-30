@@ -19,7 +19,7 @@ export const searchOptions = [
   // },
   {
     value: searchTypes.TOURNAMENT,
-    name: 'アリーナ',
+    name: '大会',
   },
   // {
   //   value: searchTypes.RECRUITMENT,

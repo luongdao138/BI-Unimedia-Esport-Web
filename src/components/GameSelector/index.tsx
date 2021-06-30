@@ -41,7 +41,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
     props.onChange(_.differenceBy(props.values, [game], 'id'))
   }
   return (
-    <Box mb={4}>
+    <Box>
       <Tabs value={tab} onChange={handleChangeTab} className={classes.tab}>
         <Tab label={t('common:profile.favorite_game.search_title')} value={0} />
         <Tab label={t('common:profile.favorite_game.search_by_genre')} value={1} />

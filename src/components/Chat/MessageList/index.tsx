@@ -21,6 +21,7 @@ export interface MessageListProps {
   copy?: (currentMessage: MessageType) => void
   delete?: (currentMessage: MessageType) => void
   onReplyClick?: (replyMessage: null | ParentItem | string | MessageType) => void
+  navigateToProfile?: (code: string) => void
 }
 
 const cache = new CellMeasurerCache({
@@ -117,6 +118,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
               report={props.report}
               onReplyClick={onReplyClick}
               onDelete={props.delete}
+              navigateToProfile={props.navigateToProfile}
               copy={props.copy}
               onLoadImage={measure}
               currentMessage={data}

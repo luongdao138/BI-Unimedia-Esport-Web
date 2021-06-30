@@ -14,7 +14,7 @@ export interface MessageProps {
   direction: 'left' | 'right'
   currentMessage?: MessageType
   users: ChatRoomMemberItem[] | ChatSuggestionList[]
-  navigateToProfile?: (id: string) => void
+  navigateToProfile?: (code: string) => void
   onLoadImage: () => void
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
