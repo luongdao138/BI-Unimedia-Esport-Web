@@ -9,7 +9,6 @@ import Loader from '@components/Loader'
 import Message from '../Message'
 import { ESReportProps } from '@containers/Report'
 import _ from 'lodash'
-import { v4 as uuidv4 } from 'uuid'
 
 export interface MessageListProps {
   messages: MessageType[]
@@ -105,13 +104,13 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     updateValue(e)
   }
 
-  const rowRenderer = ({ index, parent, style }) => {
+  const rowRenderer = ({ index, key, parent, style }) => {
     const data = messages[index]
 
     return (
-      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} parent={parent} rowIndex={index}>
+      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
         {({ measure, registerChild }) => (
-          <div onLoad={measure} key={uuidv4()} style={style} ref={registerChild}>
+          <div onLoad={measure} key={key} style={style} ref={registerChild}>
             <Message
               reply={props.reply}
               report={props.report}
