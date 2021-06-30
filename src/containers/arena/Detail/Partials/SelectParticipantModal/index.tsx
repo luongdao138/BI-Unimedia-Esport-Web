@@ -116,11 +116,11 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
           <ESAvatar size={120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
           <Typography noWrap className={classes.label} variant="h3">
-            {_name || t('common:common.dash')}
+            {_name || ''}
           </Typography>
           {!isTeam && (
             <Typography noWrap className={classes.label}>
-              {user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}
+              {user ? `${t('common:common.at')}${user.user_code}` : ''}
             </Typography>
           )}
         </Box>

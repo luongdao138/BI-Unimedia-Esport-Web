@@ -32,13 +32,16 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
   ]
 
   const onPressProfile = (data: MentionData) => {
-    if (data && data.userId) {
-      navigateToProfile && navigateToProfile(data.userId)
+    const userCode = _.get(
+      _.find(members, function (o) {
+        return o.id === data.userId
+      }),
+      'userCode',
+      undefined
+    )
+    if (userCode) {
+      navigateToProfile && navigateToProfile(userCode)
     }
-  }
-
-  const onPressLink = (_link: string) => {
-    ///
   }
 
   const renderPart = (partData: PartRender) => {
@@ -59,9 +62,9 @@ const TextMessage: React.FC<MessageTextProps> = (props) => {
       )
     } else if (partType && partType.pattern === regex.url) {
       return (
-        <span onClick={() => onPressLink(text)} key={`${index}-${data?.trigger ?? 'pattern'}`} className={classes.url}>
+        <a href={text} target="_blank" rel="noopener noreferrer" key={`${index}-${data?.trigger ?? 'pattern'}`} className={classes.url}>
           {text}
-        </span>
+        </a>
       )
     } else {
       return (
@@ -121,21 +124,22 @@ const useStyles = makeStyles(() => ({
     '&:before': {
       position: 'absolute',
       content: "'...'",
-      insetBlockEnd: 0,
-      insetInlineEnd: 0,
       display: 'block',
       color: (props: MessageTextProps) => props.color,
       fontSize: 14,
+      bottom: 0,
+      right: 0,
     },
     '&:after': {
       content: "''",
       position: 'absolute',
-      insetInlineEnd: 0,
+      // insetInlineEnd: 0,
       display: 'block',
       width: '1rem',
       backgroundColor: (props: MessageTextProps) => props.bgColor,
       height: '1rem',
-      marginTop: '-20px',
+      right: 0,
+      marginTop: '-16px',
     },
   },
 }))

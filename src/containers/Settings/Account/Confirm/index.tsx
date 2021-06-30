@@ -7,13 +7,18 @@ import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import useChangeEmailConfirm from './useConfirm'
 import ESLoader from '@components/FullScreenLoader'
+import * as actions from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
+import useConfirm from '@containers/Confirm/useConfirm'
 
 const AccountSettingsConfirmContainer: React.FC = () => {
   const { t } = useTranslation('common')
+  const dispatch = useAppDispatch()
   const classes = useStyles()
   const router = useRouter()
   const [confirmationCode, setConfirmationCode] = useState<string>('')
   const { changeEmailConfirm, meta, user, changeEmailSteps } = useChangeEmailConfirm(confirmationCode)
+  const { resendConfirmation } = useConfirm('')
 
   const handleSubmit = () => {
     const params = {
@@ -22,6 +27,11 @@ const AccountSettingsConfirmContainer: React.FC = () => {
     }
 
     changeEmailConfirm(params)
+  }
+
+  const handleResend = () => {
+    if (user?.email) resendConfirmation({ email: user.email, type: 'reset_password' })
+    dispatch(actions.addToast(`${t('account_settings.sent_resend_code')}`))
   }
 
   const buttonActive = (): boolean => {
@@ -51,7 +61,9 @@ const AccountSettingsConfirmContainer: React.FC = () => {
         <ESPinInput error={!!meta.error} value={confirmationCode} onChange={(value) => setConfirmationCode(value)} />
       </Box>
       <Box mx={4} mb={6} textAlign="center" className={classes.section}>
-        <Typography variant="caption">{t('confirm.resend')}</Typography>
+        <Typography className={classes.resend_code} variant="caption" onClick={handleResend}>
+          {t('confirm.resend')}
+        </Typography>
       </Box>
       <Box mx={4} className={classes.section}>
         <Typography variant="caption">{t('confirm.dont_receive')}</Typography>
@@ -104,6 +116,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2),
       marginLeft: theme.spacing(2),
     },
+  },
+  resend_code: {
+    cursor: 'pointer',
   },
 }))
 

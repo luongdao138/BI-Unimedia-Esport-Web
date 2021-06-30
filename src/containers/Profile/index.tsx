@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { withRouter, NextRouter } from 'next/router'
-import { Box, Grid, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, Grid, Typography, IconButton, Icon, Theme, withStyles } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import ProfileAvatar from '@components/ProfileAvatar'
 import ProfileCover from '@components/ProfileCover'
@@ -25,6 +25,9 @@ import ESToast from '@components/Toast'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import Dialog from '@material-ui/core/Dialog'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 interface WithRouterProps {
   router: NextRouter
@@ -48,6 +51,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [blocked, setBlocked] = useState(false)
   const [showToast, setShow] = useState(false)
   const [offset, setOffset] = useState(0)
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false)
 
   const raw_code = router.query.user_code || []
 
@@ -55,25 +59,42 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     raw_code
   )
 
+  const handleClickOpen = () => {
+    setOpenConfirmDialog(true)
+  }
+
+  const handleClose = () => {
+    setOpenConfirmDialog(false)
+  }
+
+  const handleSubmit = () => {
+    unblockUser({ user_code: attr.user_code })
+    setBlocked(false)
+    setOpenConfirmDialog(false)
+  }
+
+  const DialogContent = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(3),
+      display: 'block',
+      background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
+      width: '100%',
+      '&:first-child': {
+        padding: theme.spacing(3),
+      },
+    },
+  }))(MuiDialogContent)
+
   useEffect(() => {
-    window.onscroll = () => {
+    const handleScroll = () => {
       setOffset(window.pageYOffset)
     }
+    window.addEventListener('scroll', handleScroll)
     return () => {
+      window.removeEventListener('scroll', handleScroll)
       clearMemberProfile()
     }
   }, [])
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     toggleSticky(tableRef.current.getBoundingClientRect());
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [toggleSticky]);
-  // return { tableRef, isSticky };
 
   useEffect(() => {
     if (isOthers) {
@@ -82,6 +103,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }, [raw_code])
 
   useEffect(() => {
+    setTab(0)
     if (isOthers) {
       toggleDisable(false)
     }
@@ -120,11 +142,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             src={cover}
             editable={!isOthers}
             onChange={(f: File, blob: any) => {
-              isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.COVER, blob)
+              isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
             }}
           />
           {offset > 150 ? (
-            <Box className={classes.backContainer} style={{ top: offset }}>
+            <Box className={classes.backContainer}>
               <IconButton onClick={() => router.back()} className={classes.iconButtonBg2}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
@@ -133,7 +155,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               </Typography>
             </Box>
           ) : (
-            <IconButton onClick={() => router.back()} className={classes.iconButtonBg} style={{ top: offset + 10 }}>
+            <IconButton onClick={() => router.back()} className={classes.iconButtonBg}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
           )}
@@ -143,7 +165,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               editable={!isOthers}
               alt={attr.nickname}
               onChange={(f: File, blob: any) => {
-                isOthers ? null : profileImageChange(f, parseInt(profile.id), UPLOADER_TYPE.AVATAR, blob)
+                isOthers ? null : profileImageChange(f, UPLOADER_TYPE.AVATAR, blob)
               }}
             />
             {isOthers ? (
@@ -160,8 +182,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     className={classes.button}
                     disabled={disable}
                     onClick={() => {
-                      unblockUser({ user_code: attr.user_code })
-                      setBlocked(false)
+                      handleClickOpen()
                     }}
                   >
                     {i18n.t('common:profile.unblock')}
@@ -216,8 +237,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowers user_code={isOthers ? userCode : null} />
             <ESFollowing user_code={isOthers ? userCode : null} />
+            <ESFollowers user_code={isOthers ? userCode : null} />
           </Box>
         </Grid>
         <ESReport
@@ -227,18 +248,42 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
           open={openReport}
           handleClose={() => setOpenReport(false)}
         />
+        <div>
+          <Dialog
+            maxWidth={'md'}
+            fullWidth
+            open={openConfirmDialog}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogContent>
+              <Box className={classes.containerDialog}>
+                <Typography className={classes.dialogTitle}>{i18n.t('common:profile.block_confirm_title')}</Typography>
+              </Box>
+              <Box className={classes.actionBox}>
+                <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+                  {i18n.t('common:profile.block_confirm_no')}
+                </ButtonPrimary>
+                <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+                  {i18n.t('common:profile.block_confirm_yes')}
+                </ButtonPrimary>
+              </Box>
+            </DialogContent>
+          </Dialog>
+        </div>
       </>
     )
   }
   const getTabs = () => {
     return (
-      <Box marginY={3}>
+      <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={i18n.t('common:user_profile.profile')} value={0} />
           <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} />
           <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} />
         </ESTabs>
-      </Box>
+      </Grid>
     )
   }
   const getContent = () => {
@@ -310,7 +355,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(3),
   },
   backContainer: {
-    position: 'absolute',
+    position: 'fixed',
+    top: 60,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -330,7 +376,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 5,
   },
   iconButtonBg: {
-    position: 'absolute',
+    position: 'fixed',
+    top: 70,
     marginLeft: theme.spacing(3),
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
@@ -368,6 +415,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   tabs: {
+    overflow: 'hidden',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -390,5 +438,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  containerDialog: {
+    width: '100%',
+    display: 'block',
+  },
+  dialogTitle: {
+    color: Colors.white,
+    textAlign: 'center',
+    paddingBottom: 56,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  message: {
+    color: Colors.text[200],
+    textAlign: 'center',
+  },
+  actionBox: {
+    marginTop: 100,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  actionBtn: {
+    width: 200,
+    margin: 16,
   },
 }))

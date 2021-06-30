@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Typography, Box, makeStyles, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import Avatar from '@components/Avatar/'
 import { ChatRoomMemberItem, MessageType, ParentItem, ChatSuggestionList } from '../types/chat.types'
@@ -86,7 +86,11 @@ const ReplyContent: React.FC<ReplyContentProps> = (props) => {
           </ListItemAvatar>
         ) : null}
         <ListItemText>
-          {showName ? <Typography variant="body2">{nickName}</Typography> : null}
+          {showName ? (
+            <Typography variant="body2" noWrap={true}>
+              {nickName}
+            </Typography>
+          ) : null}
           {renderText()}
           {renderPhoto()}
         </ListItemText>
@@ -137,4 +141,4 @@ ReplyContent.defaultProps = {
   numberOfLines: 1,
 }
 
-export default ReplyContent
+export default memo(ReplyContent)

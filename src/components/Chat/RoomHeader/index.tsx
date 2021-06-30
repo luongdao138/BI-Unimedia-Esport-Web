@@ -18,6 +18,8 @@ import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
 import { getMessageTournamentDetail } from '@store/chat/actions'
 import { tournamentDetail } from '@store/chat/selectors'
 import { useRouter } from 'next/router'
+import AvatarSelector from '@components/ImagePicker/AvatarSelector'
+import useRoomImageUploader from './usRoomImageUploader'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -35,13 +37,14 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const [dialogOpen, setDialogOpen] = useState(null as MENU | null)
-
   const roomInfo = useAppSelector(selectedRoomInfo)
   const userId = useAppSelector(currentUserId)
   const roomName = _.get(roomInfo, 'roomName', '')
   const hasNoRoomInfo = roomInfo === undefined
   const roomImg = _.get(roomInfo, 'roomImg')
   const tournament = useAppSelector(tournamentDetail)
+
+  const { imageProcess, uploadMeta } = useRoomImageUploader()
 
   const router = useRouter()
 
@@ -106,6 +109,13 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return null
   }
 
+  const renderAvatarChange = () => {
+    if (isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+    }
+    return null
+  }
+
   const MenuItems = () => (
     <Box className={classes.menu}>
       <ESMenu>
@@ -113,11 +123,19 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         {memberAddItem()}
         {renderRoomNameChange()}
         {renderTournamentDetailItem()}
-        {/* <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem> */}
-        <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+        {renderAvatarChange()}
+        {/* <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem> */}
       </ESMenu>
     </Box>
   )
+
+  const onUpdate = (file, _blob) => {
+    if (!isAdmin) return
+    if (!uploadMeta.uploading) {
+      imageProcess(file, userId, roomId as string)
+    }
+    setDialogOpen(null)
+  }
 
   return (
     <>
@@ -128,18 +146,11 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
           ) : null}
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
           <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
+          {dialogOpen === MENU.CHANGE_IMG ? <AvatarSelector alt="" cancel={() => setDialogOpen(null)} onUpdate={onUpdate} /> : null}
         </>
       )}
       <Box className={classes.row}>
-        {hasNoRoomInfo ? null : (
-          <RoomImgView
-            userId={userId}
-            roomId={roomId as string}
-            roomImg={roomImg}
-            roomName={roomName}
-            isAdmin={isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM}
-          />
-        )}
+        {hasNoRoomInfo ? null : <RoomImgView roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true}>
             {roomName}

@@ -8,6 +8,7 @@ export enum TournamentFilterOption {
   all = 'all',
   ready = 'ready',
   recruiting = 'recruiting',
+  beforeStart = 'before_start',
   inProgress = 'in_progress',
   completed = 'completed',
   joined = 'joined',

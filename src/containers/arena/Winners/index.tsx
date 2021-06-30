@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography, IconButton, Box } from '@material-ui/core'
+import { Typography, IconButton, Box, Divider } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const { arenaWinners, arena, handleBack } = useArenaWinners()
+  const { arenaWinners, arena, handleBack, toDetail } = useArenaWinners()
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
   const [, setUpdate] = useState(false)
@@ -36,24 +36,34 @@ const ArenaWinners: React.FC = () => {
       <div className={classes.coverWrapper}>
         <img src={'/images/arena_cover.png'} className={classes.cover} />
       </div>
-      <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
-        {arenaWinners['1'] && !!arenaWinners['1'].length && (
-          <ArenaAvatar
-            src={arenaWinners['1'][0].avatar}
-            name={arenaWinners['1'][0].name}
-            user_code={arenaWinners['1'][0].user?.user_code}
-            win
-            leaf
-            nameWhite
-          />
-        )}
+      <div className={classes.topWrapper}>
+        <Box color={Colors.white} textAlign="center" mb={3}>
+          <Typography variant="h3" className={classes.title}>
+            {arena?.attributes?.title || ''}
+          </Typography>
+        </Box>
+        <Divider />
+        <Box position="relative">
+          <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
+            {arenaWinners['1'] && !!arenaWinners['1'].length && (
+              <ArenaAvatar
+                src={arenaWinners['1'][0].avatar}
+                name={arenaWinners['1'][0].name}
+                user_code={arenaWinners['1'][0].user?.user_code}
+                win
+                leaf
+                nameWhite
+              />
+            )}
+          </div>
+        </Box>
       </div>
       <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
         <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
         <Typography>{arena?.attributes?.summary || ''}</Typography>
       </div>
       <Box textAlign="center" pb={showSummary ? 4 : 8}>
-        <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={handleBack}>
+        <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
           {t('common:tournament.tournament_detail')}
         </ESButton>
       </Box>
@@ -133,10 +143,18 @@ const useStyles = makeStyles((theme) => ({
   },
   winnerAvatarWrapper: {
     position: 'absolute',
-    top: 240,
+    top: 155,
     left: '50%',
     transform: 'translate(-50%, -50%)',
     cursor: 'pointer',
+  },
+  topWrapper: {
+    position: 'absolute',
+    width: '100%',
+    top: 80,
+  },
+  title: {
+    wordBreak: 'break-word',
   },
   summary: {
     position: 'relative',

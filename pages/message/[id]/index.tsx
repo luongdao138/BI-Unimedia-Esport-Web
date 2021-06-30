@@ -21,7 +21,7 @@ const Room: PageWithLayoutType = () => {
   const router = useRouter()
   const { id } = router.query
 
-  return <ChatRoomContainer roomId={id} />
+  return <ChatRoomContainer router={router} roomId={id} />
 }
 
 Room.Layout = MessageLayout

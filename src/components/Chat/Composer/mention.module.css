@@ -15,6 +15,8 @@
   overflow: hidden !important;
   max-height: 177px;
   min-height: 38px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .mentions--multiLine .mentions__input {
@@ -27,12 +29,14 @@
   font-weight: 400;
   line-height: 1.4;
   max-height: 177px;
+  max-width: 100%;
+  width: 100%;
   min-height: 38px;
   overflow: hidden !important;
   border-radius: 24px;
   background-color: #101010 !important;
-  padding-right: 30px;
-  resize: 'auto';
+  resize: none !important;
+  position: relative;
 }
 
 .mentions__suggestions__list {
@@ -99,5 +103,23 @@
   .mentions__suggestions__item--focused {
     background-color: transparent;
     background-color: rgba(0, 0, 0, 0.7);
+  }
+  .mentions--multiLine .mentions__control,
+  .mentions--multiLine .mentions__input {
+    max-width: calc(100vw - 96px);
+    /* Prevent IOS resize input out of container */
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+
+  @media (max-width: 720px) {
+    .mentions--multiLine .mentions__control,
+    .mentions--multiLine .mentions__input {
+      left: 3px !important;
+      top: -1px !important;
+      /* Strange bug on IOS X input element positionig not correct relative to parent temp fix */
+    }
   }
 }

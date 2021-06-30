@@ -13,11 +13,7 @@ const useGameSearchByTitle = (): { meta: Meta; getGameByTitle: (keyword: string)
   const meta = useAppSelector(getMeta)
   const getGameByTitle = useCallback(
     _.debounce((keyword: string) => {
-      if (keyword !== '') {
-        dispatch(actions.getGameByTitle(keyword))
-      } else {
-        dispatch(actions.clearGameTitles())
-      }
+      dispatch(actions.getGameByTitle(keyword))
     }, 500),
     []
   )

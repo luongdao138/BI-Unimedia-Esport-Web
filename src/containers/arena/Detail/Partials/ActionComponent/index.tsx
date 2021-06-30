@@ -39,7 +39,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
     const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
 
-    return `${entryStartDate} - ${entryEndDate}`
+    return `${entryStartDate} ～ ${entryEndDate}`
   }
   const buildArenaTitle = () => {
     const arenaStatus = isRecruiting

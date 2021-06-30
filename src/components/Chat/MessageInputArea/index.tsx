@@ -4,11 +4,11 @@ import Composer from '@components/Chat/Composer'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { Colors } from '@theme/colors'
-import { ChatRoomMemberItem, ChatSuggestionList, ParentItem, MessageType } from '../types/chat.types'
+import { ChatRoomMemberItem, ChatSuggestionList } from '../types/chat.types'
 import { parseValue } from '@components/Chat/utils'
 import { regex } from '../constants'
 import useAvailable from '@components/Chat/utils/useAvailable'
-import { Actions, SuggestionListItem, ReplyContent } from '@components/Chat/elements'
+import { Actions, SuggestionListItem } from '@components/Chat/elements'
 import { MentionItem } from 'react-mentions'
 
 export interface ClearInputrRef {
@@ -23,7 +23,6 @@ export interface MessageInputAreaProps {
   handleOnPressActions?: ((type: number) => void) | undefined
   disabled?: boolean
   onCancelReply?: () => void
-  reply?: ParentItem | null | MessageType
   currentUser?: string | number
   ref: Ref<ClearInputrRef>
 }
@@ -43,7 +42,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
       setText('')
     },
   }))
-  const { onPressSend, users, onPressActionButton, onCancelReply, reply, disabled, currentUser } = props
+  const { onPressSend, users, onPressActionButton, disabled, currentUser } = props
   const [text, setText] = useState<string>('')
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
@@ -83,23 +82,8 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
     // }
   }
 
-  const renderReplyPanel = () => {
-    if (reply !== null) {
-      return (
-        <Box className={classes.panel}>
-          <ReplyContent color={Colors.text[200]} replyMessage={reply} members={users} />
-          <IconButton onClick={onCancelReply} disableRipple className={classes.closeButton}>
-            <Icon className={`${classes.iconClose} fa fa-times`} />
-          </IconButton>
-        </Box>
-      )
-    }
-    return null
-  }
-
   return (
     <>
-      {renderReplyPanel()}
       <Box className={classes.root}>
         <Actions onPressActions={onPressActionButton} disabled={disabled} />
         <Box className={classes.input}>
@@ -123,24 +107,6 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
 MessageInputArea.defaultProps = {}
 
 const useStyles = makeStyles(() => ({
-  panel: {
-    position: 'relative',
-    paddingBottom: 10,
-    paddingRight: 20,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 5,
-    zIndex: 100,
-    right: 5,
-    '&:hover': {
-      background: 'transparent',
-    },
-  },
-  iconClose: {
-    color: Colors.text[200],
-    fontSize: '12px',
-  },
   toolbar: {
     flexDirection: 'row',
     display: 'flex',

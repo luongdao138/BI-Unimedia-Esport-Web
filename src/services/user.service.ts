@@ -131,7 +131,7 @@ export type ProfileEditParams = {
 }
 
 export type ProfileImageParams = {
-  user_id: number | string
+  // user_id: number | string
   image_url: string
   file_type: number
 }

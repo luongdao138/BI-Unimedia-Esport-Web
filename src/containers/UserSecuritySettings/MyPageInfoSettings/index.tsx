@@ -1,14 +1,16 @@
-import { Box } from '@material-ui/core'
+import { Box, makeStyles } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import SettingsRowItem from '@components/SettingsRowItem'
 import HeaderWithButton from '@components/HeaderWithButton'
 import useMyPageSettings from './useMyPageSettings'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ESLoader from '@components/Loader'
 
 const ESMyPageInfoSettings: React.FC = () => {
   const { t } = useTranslation('common')
+  const classes = useStyles()
   const { fetchMeta, securitySettings, updateSecuritySettings } = useMyPageSettings()
+  const [isRemote, setIsRemote] = useState<boolean>(false)
 
   const [state, setState] = useState({
     show_tournament_history: false,
@@ -18,6 +20,7 @@ const ESMyPageInfoSettings: React.FC = () => {
 
   useEffect(() => {
     if (securitySettings) {
+      setIsRemote(true)
       setState(securitySettings)
     }
   }, [securitySettings])
@@ -27,7 +30,9 @@ const ESMyPageInfoSettings: React.FC = () => {
   }
 
   useEffect(() => {
-    updateSecuritySettings(state)
+    if (isRemote) {
+      updateSecuritySettings(state)
+    }
   }, [state])
 
   useEffect(() => {
@@ -39,8 +44,6 @@ const ESMyPageInfoSettings: React.FC = () => {
   return (
     <div>
       <HeaderWithButton title={t('my_page_settings.title')} />
-      {fetchMeta.pending && <ESLoader />}
-
       <Box>
         <SettingsRowItem
           key="show_tournament_history"
@@ -67,8 +70,21 @@ const ESMyPageInfoSettings: React.FC = () => {
           showSwitch={true}
         />
       </Box>
+      {fetchMeta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  loaderCenter: {
+    marginTop: theme.spacing(1),
+    width: '100%',
+    textAlign: 'center',
+  },
+}))
 
 export default ESMyPageInfoSettings

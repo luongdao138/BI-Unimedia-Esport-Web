@@ -267,7 +267,6 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
           users={users}
           onPressActionButton={handlePressActionButton}
           disabled={actionPending || uploadMeta.uploading || selectedUsers.length === 0}
-          reply={null}
         />
       </Box>
 

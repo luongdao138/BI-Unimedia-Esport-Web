@@ -49,7 +49,11 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
-      changePassword(values)
+      if (values.current_password === values.new_password) {
+        setFieldError('new_password', t('common.password_duplicated'))
+      } else {
+        changePassword(values)
+      }
     },
   })
 
@@ -70,7 +74,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>
-          {t('account_settings.change_email_address')}
+          {t('account_settings.change_password')}
         </Typography>
       </Box>
       <Box mt={12} mx={5} mb={4} className={classes.formWrap}>
