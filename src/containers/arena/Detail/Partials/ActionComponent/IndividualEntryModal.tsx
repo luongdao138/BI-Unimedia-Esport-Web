@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
-import { useState } from 'react'
-import { Box, makeStyles, Theme } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import ESInput from '@components/Input'
-import ButtonPrimary from '@components/ButtonPrimary'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -13,33 +11,26 @@ import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import InidividualEntryEditModal from './InidividualEntryEditModal'
-import LoginRequired from '@containers/LoginRequired'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
-import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
-  handleClose: () => void
+  onClose: () => void
+  open: boolean
 }
 
-const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose }) => {
+const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
   const { t } = useTranslation(['common'])
-  const classes = useStyles()
-  const [open, setOpen] = useState(false)
   const { join, joinMeta } = useEntry()
-
-  const isReady = tournament?.attributes?.status === TOURNAMENT_STATUS.READY
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      setOpen(false)
-      handleClose()
+      onClose()
     }
   }, [joinMeta.loaded, joinMeta.error])
   const checkNgWord = useCheckNgWord()
@@ -69,30 +60,14 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     if (open) setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
   }, [open])
 
-  const handleReturn = () => setOpen(false)
-
   return (
     <Box>
-      <LoginRequired>
-        <Box className={classes.actionButton}>
-          {tournament.attributes.is_entered ? (
-            <Box>
-              <InidividualEntryEditModal tournament={tournament} me />
-            </Box>
-          ) : (
-            <ButtonPrimary disabled={isReady} round fullWidth onClick={() => setOpen(true)}>
-              {t('common:tournament.join')}
-            </ButtonPrimary>
-          )}
-        </Box>
-      </LoginRequired>
-
       <StickyActionModal
         open={open}
         returnText={t('common:tournament.join')}
         actionButtonText={t('common:tournament.join_with_this')}
         actionButtonDisabled={!isValid}
-        onReturnClicked={handleReturn}
+        onReturnClicked={onClose}
         onActionButtonClicked={handleSubmit}
       >
         <form onSubmit={handleSubmit}>
@@ -121,14 +96,5 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     </Box>
   )
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  actionButton: {
-    marginTop: theme.spacing(3),
-    width: '100%',
-    margin: '0 auto',
-    maxWidth: theme.spacing(35),
-  },
-}))
 
 export default IndividualEntryModal

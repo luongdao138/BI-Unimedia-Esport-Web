@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
-import ButtonPrimary from '@components/ButtonPrimary'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -24,15 +23,15 @@ interface EntryEditModalProps {
   previewMode?: boolean
   initialParticipantId?: string
   me: boolean
-  onClose?: () => void
+  onClose: () => void
+  open: boolean
 }
 
-const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, previewMode, initialParticipantId, me, onClose }) => {
+const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, previewMode, initialParticipantId, me, onClose, open }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
   const { participant, isPending, getParticipant, changeName, changeDone } = useParticipantDetail()
-  const [open, setOpen] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
   const validationSchema = Yup.object().shape({
@@ -65,6 +64,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
 
   useEffect(() => {
     if (open) {
+      setEditMode(false)
       getParticipant(_.get(tournament, 'attributes.hash_key', ''), getPid())
     }
   }, [open])
@@ -77,7 +77,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
   }, [isPreview])
 
   useEffect(() => {
-    setOpen(false)
+    onClose()
     setEditMode(false)
   }, [changeDone])
 
@@ -86,18 +86,6 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
       setFieldValue('nickname', _.get(participant, 'attributes.name', ''))
     }
   }, [participant])
-
-  const handleReturn = () => {
-    if (_.isFunction(onClose)) {
-      onClose()
-    }
-    setOpen(false)
-  }
-
-  const onOpen = () => {
-    setOpen(true)
-    setEditMode(false)
-  }
 
   const onSubmit = (param?) => {
     if (!editMode) {
@@ -120,18 +108,12 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
   }
   return (
     <Box>
-      {isPreview ? null : (
-        <ButtonPrimary round fullWidth onClick={onOpen}>
-          {t('common:tournament.check_entry')}
-        </ButtonPrimary>
-      )}
-
       <StickyActionModal
         open={open || isPreview}
         returnText={t('common:tournament.join')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
         actionButtonDisabled={!isValid}
-        onReturnClicked={handleReturn}
+        onReturnClicked={onClose}
         onActionButtonClicked={onSubmit}
         hideFooter={!me}
       >
@@ -140,7 +122,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={() => setOpen(false)}>
+                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={onClose}>
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }
