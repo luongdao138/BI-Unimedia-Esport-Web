@@ -24,6 +24,14 @@ const styles = (theme: Theme) =>
       color: 'white',
       fontSize: 18,
     },
+    iconButton: {
+      backgroundColor: theme.palette.text.secondary,
+      marginRight: 14,
+    },
+    icon: {
+      fontSize: 12,
+      color: theme.palette.text.primary,
+    },
   })
 
 const useStyles = makeStyles({
@@ -56,8 +64,8 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
     <MuiDialogTitle className={classes.root} {...other}>
       {onClose ? (
         <>
-          <IconButton aria-label="close" onClick={onClose}>
-            <Icon className="fa fa-arrow-left" fontSize="small" />
+          <IconButton className={classes.iconButton} aria-label="close" onClick={onClose}>
+            <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
           </IconButton>
           <span className={classes.dialogTitle}>{children}</span>
         </>
