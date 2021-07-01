@@ -105,7 +105,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: _.get(action.data, 'content.room', undefined),
       }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
-      newRoomList = [...state.roomList]
+      if (state.roomList === undefined) {
+        newRoomList = []
+      } else {
+        newRoomList = [...state.roomList]
+      }
       newRoomList.push(action.data.content)
       return {
         ...state,
