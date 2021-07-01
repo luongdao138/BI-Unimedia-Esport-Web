@@ -135,7 +135,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         members: action.data.content,
       }
-
+    case CHAT_ACTION_TYPE.MEMBER_REMOVED:
+      return {
+        ...state,
+        roomList: ChatHelper.roomListAddRemove(state.roomList, action.data.content.chatRoomId),
+      }
     case CHAT_ACTION_TYPE.MESSAGE_DELETED:
       if (!_.isEmpty(state.messages)) {
         const deletedMsg = ChatHelper.deleteMessage(state.messages, action.data.content)

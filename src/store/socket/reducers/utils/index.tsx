@@ -134,6 +134,16 @@ const onDeleteRoomListUpdate = (roomList: ChatDataType[], deletedMsg: DeleteType
   return roomList
 }
 
+const roomListAddRemove = (roomList: ChatDataType[], roomId: string): ChatDataType[] => {
+  if (roomList !== undefined) {
+    return _.filter(roomList, function (o) {
+      return o.chatRoomId !== roomId
+    })
+  } else {
+    return []
+  }
+}
+
 export const ChatHelper = {
   messagesMerge,
   roomListUpdate,
@@ -141,4 +151,5 @@ export const ChatHelper = {
   changeSingleRoom,
   deleteMessage,
   onDeleteRoomListUpdate,
+  roomListAddRemove,
 }
