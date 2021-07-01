@@ -93,7 +93,7 @@ const TeamEntryMemberList: React.FC<TeamEntryMemberListProps> = ({
         loading={false}
         formik={formik}
       />
-      {renderMembers()}
+      {memberNicknames.length > 0 && renderMembers()}
     </>
   )
 }

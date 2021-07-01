@@ -28,7 +28,7 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 interface TeamEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
-  handleClose: () => void
+  onClose: () => void
   isEdit?: boolean
   initialData?: {
     team_id: string
@@ -37,9 +37,10 @@ interface TeamEntryModalProps {
     members: TeamMemberSelectItem[]
   }
   updateDone?: () => void
+  open: boolean
 }
 
-const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, handleClose, isEdit, initialData, updateDone }) => {
+const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, onClose, open, isEdit, initialData, updateDone }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [isUploading, setUploading] = useState(false)
@@ -54,14 +55,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      handleClose()
+      onClose()
       reset()
     }
   }, [joinMeta.loaded, joinMeta.error])
 
   useEffect(() => {
     if (updateTeamMeta.loaded || updateTeamMeta.error) {
-      handleClose()
+      onClose()
       if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
         updateDone()
       }
@@ -165,7 +166,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   const handleReturn = () => {
     reset()
-    handleClose()
+    onClose()
   }
 
   const handleActionButton = () => {
@@ -245,7 +246,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   return (
     <>
       <StickyActionModal
-        open={true}
+        open={open}
         returnText={t('common:tournament.join')}
         actionButtonText={t('common:tournament.join_with_this')}
         actionButtonDisabled={!formik.isValid || !isMembersComplete()}
