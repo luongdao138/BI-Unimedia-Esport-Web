@@ -100,14 +100,12 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center">
           <Box color={Colors.grey[300]}>
             <Typography className={classes.label} variant="h3">
-              {_name || t('common:common.dash')}
+              {_name || ''}
             </Typography>
           </Box>
           {!isTeam && (
             <Box color={Colors.grey[400]}>
-              <Typography className={classes.label}>
-                {user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}
-              </Typography>
+              <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>
             </Box>
           )}
         </Box>

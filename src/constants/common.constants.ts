@@ -139,9 +139,13 @@ export const NG_WORD_DIALOG_CONFIG: Dialog = {
 
 export const NG_WORD_AREA = {
   chat_section: i18n.t('common:ng_word_area.chat_section'),
+  room_name_title: i18n.t('common:ng_word_area.room_name_title'),
   register_by_email: i18n.t('common:register_by_email.email'),
   add_game: i18n.t('common:profile.favorite_game.title_label'),
   forgot_password: i18n.t('common:forgot_password.email'),
   profile_user_code: i18n.t('common:register_profile.user_id'),
   profile_nickname: i18n.t('common:register_profile.nickname'),
+  team_name: i18n.t('common:team_name'),
+  join_nickname: i18n.t('common:tournament.join_nickname'),
+  summary: i18n.t('common:arena.summary'),
 }

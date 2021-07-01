@@ -9,16 +9,16 @@ import useChangeEmailConfirm from './useConfirm'
 import ESLoader from '@components/FullScreenLoader'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
-import useConfirm from '@containers/Confirm/useConfirm'
+import userProfile from '@store/userProfile'
 
 const AccountSettingsConfirmContainer: React.FC = () => {
   const { t } = useTranslation('common')
   const dispatch = useAppDispatch()
   const classes = useStyles()
   const router = useRouter()
+  const { actions: userProfileActions } = userProfile
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { changeEmailConfirm, meta, user, changeEmailSteps } = useChangeEmailConfirm(confirmationCode)
-  const { resendConfirmation } = useConfirm('')
+  const { changeEmailConfirm, meta, user, changeEmailSteps, newEmail } = useChangeEmailConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -30,7 +30,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
   }
 
   const handleResend = () => {
-    if (user?.email) resendConfirmation({ email: user.email, type: 'reset_password' })
+    if (newEmail) dispatch(userProfileActions.changeEmail({ new_email: newEmail }))
     dispatch(actions.addToast(`${t('account_settings.sent_resend_code')}`))
   }
 
@@ -40,6 +40,18 @@ const AccountSettingsConfirmContainer: React.FC = () => {
 
   if (!changeEmailSteps.step_change) {
     return null
+  }
+
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box pb={8}>
+          <Typography className={classes.errorMsg} color="secondary">
+            {t('error.invalid_confirmation')}
+          </Typography>
+        </Box>
+      )
+    )
   }
 
   return (
@@ -53,6 +65,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
         </Typography>
       </Box>
       <Box mt={12} mx={4} mb={4} className={classes.formWrap}>
+        {renderError()}
         <Typography variant="h3" className={classes.content}>
           {t('account_settings.confirm_title')}
         </Typography>
@@ -103,6 +116,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sectionBottom: {
     marginBottom: theme.spacing(4),
+  },
+  errorMsg: {
+    textAlign: 'center',
   },
   [theme.breakpoints.down('md')]: {
     header: {

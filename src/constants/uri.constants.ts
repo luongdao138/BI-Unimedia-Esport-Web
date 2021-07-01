@@ -42,7 +42,7 @@ export const URI = {
   TOURNAMENTS_INTERESTEDS: '/v2/tournaments/:id/interested',
   TOURNAMENTS_MATCHES: '/v2/tournaments/matches/:id',
   TOURNAMENTS_SET_PARTICIPANT: '/v2/tournaments/:id/set_participant',
-  TOURNAMENTS_WINNERS: '/web/v2/tournaments/:id/winners',
+  TOURNAMENTS_WINNERS: '/v2/tournaments/:id/winners',
   TOURNAMENTS_SET_SCORE: '/v2/tournaments/:id/set_score',
   TOURNAMENT_PARTICIPANT_NAME: '/v2/tournaments/:id/participant_name',
   TOURNAMENT_TEAMS: '/v2/tournament_teams/:id',
@@ -96,5 +96,5 @@ export const URI = {
   PURCHASE_HISTORY: '/v2/purchases/histories',
   PURCHASE_HISTORY_DETAIL: '/v2/purchases/:id/details',
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
-  PURCHASE_CANCEL: '/v2/purchases/:id/cancel',
+  PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
 }

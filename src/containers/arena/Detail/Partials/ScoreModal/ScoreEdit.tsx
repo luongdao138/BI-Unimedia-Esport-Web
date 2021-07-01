@@ -59,20 +59,16 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
           <ESAvatar className={`${avatar ? '' : classes.pinkBg}`} size={isMobile ? 100 : 120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
           <Typography className={classes.label} variant="h3">
-            {_name || t('common:common.dash')}
+            {_name || ''}
           </Typography>
-          {!isTeam && (
-            <Typography className={classes.label}>
-              {user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}
-            </Typography>
-          )}
+          {!isTeam && <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>}
         </Box>
         <Box pt={3} display="flex" alignItems="flex-end">
           <input
             className={classes.pinText}
             type="number"
             min={0}
-            placeholder={t('common:common.zero')}
+            placeholder={t('common:arena.double_zero')}
             pattern="\d*"
             autoComplete="off"
             value={type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home}

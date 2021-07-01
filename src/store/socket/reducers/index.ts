@@ -6,16 +6,11 @@ import _ from 'lodash'
 import { ChatHelper } from './utils'
 
 const initialState: State = {
-  roomList: undefined,
-  messages: undefined,
-  members: undefined,
   lastKey: null,
   paginating: false,
   activeRoom: null,
   socketReady: false,
   actionPending: false,
-  selectedRoomInfo: undefined,
-  error: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -110,7 +105,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: _.get(action.data, 'content.room', undefined),
       }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
-      newRoomList = [...state.roomList]
+      if (state.roomList === undefined) {
+        newRoomList = []
+      } else {
+        newRoomList = [...state.roomList]
+      }
       newRoomList.push(action.data.content)
       return {
         ...state,

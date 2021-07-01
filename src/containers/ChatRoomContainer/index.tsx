@@ -266,7 +266,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       <Box className={classes.list}>
         {renderLoader()}
         {renderErroMesage()}
-        {!hasError && !_.isEmpty(data) && _.isArray(data) && (
+        {!hasError && userId && !_.isEmpty(data) && _.isArray(data) && (
           <MessageList
             reply={onReply}
             report={onReport}
@@ -308,6 +308,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
           reportType={REPORT_TYPE.CHAT}
           target_id={Number(reportData.target_id)}
           data={reportData.data}
+          chat_id={reportData.chat_id}
+          room_id={reportData.room_id}
           open={reporting}
           members={usersWithAll}
           handleClose={() => setReporting(false)}
@@ -415,9 +417,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     header: {
       position: 'absolute',
       top: 0,
-      left: 40,
+      left: 60,
       right: 0,
-      zIndex: 1000,
+      zIndex: 200,
     },
   },
 }))

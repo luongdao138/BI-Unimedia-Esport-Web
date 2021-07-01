@@ -8,16 +8,13 @@ type StateType = {
   prefectures?: GetPrefecturesResponse
   hardwares?: HardwareResponse
   toasts: { uuid: string; message: string; severity: 'success' | 'error' | 'warning' | 'info' }[]
-  dialog: Dialog | undefined
+  dialog?: Dialog
   action: string | null
   notFound: NotFoundType | null
 }
 
 const initialState: StateType = {
-  prefectures: undefined,
-  hardwares: undefined,
   toasts: [],
-  dialog: undefined,
   action: null,
   notFound: null,
 }

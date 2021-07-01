@@ -21,11 +21,11 @@ const useChangePassword = () => {
   const resetMeta = () => dispatch(clearMetaData(actions.changePassword.typePrefix))
   const changePassword = (params: services.ChangePasswordParams) => {
     dispatch(actions.changePassword(params))
-    dispatch(addToast(i18n.t('common:chat.member_add_toast')))
   }
 
   useEffect(() => {
     if (meta.loaded) {
+      dispatch(addToast(i18n.t('common:account_settings.change_password_success')))
       router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
       resetMeta()
     }
