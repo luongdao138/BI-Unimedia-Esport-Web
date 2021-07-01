@@ -303,6 +303,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             }}
           />
         )}
+        <Box mb={3} />
       </Grid>
     </>
   )
