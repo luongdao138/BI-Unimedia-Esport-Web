@@ -13,9 +13,10 @@ interface Props {
   rightItem?: JSX.Element
   yellowTitle?: boolean
   hideFollow?: boolean
+  memberClick?: () => void
 }
 
-const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem, yellowTitle, hideFollow }) => {
+const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem, yellowTitle, hideFollow, memberClick }) => {
   const data = team.attributes.team.data.attributes
   const members = data.members
   const classes = useStyles()
@@ -74,6 +75,7 @@ const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem,
                 isFollowed={hideFollow === true ? undefined : Boolean(member.is_followed)}
                 isBlocked={Boolean(member.is_blocked)}
                 nicknameYellow={isYellowTitle && `${userProfile?.id}` === `${member.user_id}`}
+                handleClick={memberClick}
               />
             ))}
           </Box>

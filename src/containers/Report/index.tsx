@@ -8,11 +8,13 @@ import ProfileAvatar from '@components/ProfileAvatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
-import { useStore } from 'react-redux'
 import * as actions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import useReport from './useReport'
 import useReasons from './useReasons'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
@@ -20,12 +22,11 @@ import * as Yup from 'yup'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import TextMessage from '@components/Chat/elements/TextMessage'
 
 export interface ESReportProps {
   chat_id?: string
   room_id?: string
-  target_id?: number
+  target_id?: number | string
   user_email?: string
   msg_body?: string
   data?: any
@@ -35,10 +36,10 @@ export interface ESReportProps {
   members?: any
 }
 
-const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose, members }) => {
+const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
   const classes = useStyles()
-  const store = useStore()
   const dispatch = useAppDispatch()
+  const checkNgWord = useCheckNgWord()
   const { createReport, meta, userEmail } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -53,16 +54,8 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .test('email-validation', t('common.error'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required(t('common.required'))
-      .test('nickname', t('common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
-    description: Yup.string()
-      .required(t('common.required'))
-      .max(1000, t('common.too_long'))
-      .test('nickname', t('common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+      .required(t('common.required')),
+    description: Yup.string().required(t('common.required')).max(1000, t('common.too_long')),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
@@ -75,25 +68,29 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       description: '',
       reason_id: reasons[0] ? Number(reasons[0].id) : 1,
       report_type: 0,
-      user_email: userEmail ?? '',
+      user_email: userEmail ? (CommonHelper.hasEmail(userEmail) ? userEmail : '') : '',
     },
     enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
-      switch (reportType) {
-        case REPORT_TYPE.CHAT:
-          _.merge(values, { target_id: chat_id })
-          _.merge(values, { chat_id: chat_id })
-          _.merge(values, { room_id: room_id })
-          _.merge(values, { message_body: msg_body })
-          break
-        default:
-          _.merge(values, { target_id: target_id })
-          break
+      const checked = checkNgWord([values.description, CommonHelper.hasEmail(userEmail) ? '' : values.user_email])
+      if (_.isEmpty(checked)) {
+        switch (reportType) {
+          case REPORT_TYPE.CHAT:
+            _.merge(values, { target_id: chat_id })
+            _.merge(values, { chat_id: chat_id })
+            _.merge(values, { room_id: room_id })
+            _.merge(values, { message_body: msg_body })
+            break
+          default:
+            _.merge(values, { target_id: target_id })
+            break
+        }
+        _.merge(values, { report_type: reportType })
+        createReport(values)
+      } else {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
       }
-      _.merge(values, { report_type: reportType })
-
-      createReport(values)
     },
   })
 
@@ -108,6 +105,15 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               <Grid item xs={9} className={classes.nameContainer}>
                 <Typography className={classes.nickname}>{attr?.nickname}</Typography>
                 <Typography className={classes.userCode}>@{attr?.user_code}</Typography>
+                {msg_body && CommonHelper.isMediaURL(msg_body) ? (
+                  <Box className={classes.imgBox}>
+                    <img src={msg_body} className={classes.img} />
+                  </Box>
+                ) : msg_body ? (
+                  <Box className={classes.msgBox}>
+                    <Typography className={classes.msg}>{msg_body}</Typography>
+                  </Box>
+                ) : null}
               </Grid>
             </Grid>
           </Grid>
@@ -146,15 +152,6 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       <form onSubmit={formik.handleSubmit}>
         <DialogContent className={classes.dialogContent}>
           {attr && reportInfo()}
-          <Grid item sm={10} xs={12}>
-            {msg_body && CommonHelper.isMediaURL(msg_body) ? (
-              <Box className={classes.imgBox} height={100} width={100}>
-                <img src={msg_body} className={classes.img} />
-              </Box>
-            ) : (
-              <TextMessage members={members} text={msg_body} color={Colors.white} />
-            )}
-          </Grid>
           <Grid container style={{ marginTop: 24 }}>
             <Hidden xsDown smDown>
               <Box style={{ minWidth: 24 }}></Box>
@@ -232,13 +229,19 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             style={{ width: 280 }}
             type="submit"
             round
-            disabled={(typeof formik.errors != undefined && !_.isEmpty(formik.errors)) || meta.pending}
+            disabled={
+              (typeof formik.errors != undefined && !_.isEmpty(formik.errors)) || meta.pending || _.isEmpty(formik.values.description)
+            }
           >
             {t('user_report.btn_text')}
           </ButtonPrimary>
-          {meta.pending ? <ESLoader /> : null}
         </DialogActions>
       </form>
+      {meta.pending ? (
+        <Box className={classes.loader}>
+          <ESLoader />
+        </Box>
+      ) : null}
     </ESDialog>
   )
 }
@@ -286,9 +289,34 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     color: Colors.grey[400],
   },
-  img: { width: '100%', height: 'auto' },
+  img: {
+    width: 80,
+    height: 'auto',
+    objectFit: 'contain',
+  },
   imgBox: {
-    margin: 10,
+    display: 'flex',
+    maxHeight: 80,
+    width: 80,
+    marginTop: 10,
+    backgroundColor: Colors.grey[400],
+    justifyContent: 'center',
+  },
+  msg: {
+    fontSize: 14,
+    color: Colors.white,
+  },
+  msgBox: {
+    display: 'flex',
+    padding: 2,
+    paddingLeft: 5,
+    marginTop: 5,
+    backgroundColor: '#2C2C2C',
+    alignItems: 'center',
+    // borderStyle: 'solid',
+    // borderColor: Colors.grey[400],
+    // borderRadius: 2,
+    // borderWidth: 0.3,
   },
   dialogContent: {
     overflow: 'hidden',
@@ -320,6 +348,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
     marginLeft: theme.spacing(1),
     color: Colors.white,
+  },
+  loader: {
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    zIndex: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }))
 

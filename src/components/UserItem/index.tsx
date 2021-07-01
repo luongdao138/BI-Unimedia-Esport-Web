@@ -108,18 +108,24 @@ const UserListItem: React.FC<Props> = ({
     router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
   }
 
+  const clickable = !!handleClick
   const body = () => {
     return (
       <>
         <Box display="flex" overflow="hidden">
-          {handleClick ? (
+          <ButtonBase onClick={clickable ? handleClick : toProfile}>
             <ESAvatar alt={user.nickname} src={user.avatar} />
-          ) : (
-            <ButtonBase onClick={toProfile}>
-              <ESAvatar alt={user.nickname} src={user.avatar} />
-            </ButtonBase>
-          )}
-          <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
+          </ButtonBase>
+          <Box
+            overflow="hidden"
+            textOverflow="ellipsis"
+            ml={2}
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            onClick={clickable ? handleClick : undefined}
+            style={clickable ? { cursor: 'pointer' } : undefined}
+          >
             <Box color={Colors.white}>
               <Typography variant="h3" noWrap style={nicknameYellow === true ? { color: Colors.yellow } : undefined}>
                 {user.nickname}
@@ -163,13 +169,7 @@ const UserListItem: React.FC<Props> = ({
 
   return (
     <Grid item xs={12}>
-      {handleClick ? (
-        <ButtonBase className={classes.container} disabled={!handleClick} onClick={handleClick}>
-          {body()}
-        </ButtonBase>
-      ) : (
-        <Box className={classes.container}>{body()}</Box>
-      )}
+      <Box className={classes.container}>{body()}</Box>
     </Grid>
   )
 }

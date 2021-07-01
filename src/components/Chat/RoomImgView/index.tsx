@@ -32,7 +32,7 @@ const RoomImgView: React.FC<RoomImgViewProps> = ({ roomImg, roomName, loading })
   return <>{renderAvatar()}</>
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   loaderBox: {
     width: 18,
     height: 18,
@@ -122,6 +122,11 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     background: '#4d4d4d',
     borderRadius: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    avatarHolder: {
+      display: 'none',
+    },
   },
 }))
 

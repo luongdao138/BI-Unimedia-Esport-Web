@@ -5,6 +5,7 @@ import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import { ArenaWinners, TournamentDetail } from '@services/arena.service'
 
 const getWinnersMeta = createMetaSelector(actions.getArenaWinners)
@@ -27,13 +28,17 @@ const useWinners = (
   const arenaMeta = useAppSelector(getArenaMeta)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
-
+  const { isNotHeld } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
 
   useEffect(() => {
+    if (isNotHeld) toDetail()
+  }, [isNotHeld])
+
+  useEffect(() => {
     if (router.query.hash_key && isImmediately) {
-      dispatch(actions.getArenaWinners(router.query.hash_key))
       dispatch(actions.getTournamentDetail(router.query.hash_key))
+      dispatch(actions.getArenaWinners(router.query.hash_key))
     }
   }, [router.query.hash_key])
 

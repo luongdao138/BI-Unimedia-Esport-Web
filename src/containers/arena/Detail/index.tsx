@@ -33,7 +33,7 @@ const TournamentDetail: React.FC = () => {
   return (
     <div>
       <ESLoader open={meta.pending} />
-      {tournament && (
+      {tournament && meta.loaded && (
         <>
           <TournamentDetailHeader
             title={tournament?.attributes?.title}

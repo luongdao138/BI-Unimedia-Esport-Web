@@ -28,7 +28,6 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
       dispatch(
         socketActions.socketSend({
           action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
-          userId: userId,
           roomId: roomId,
         })
       )
@@ -39,7 +38,6 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
     dispatch(
       socketActions.socketSend({
         action: CHAT_ACTION_TYPE.REMOVE_MEMBER,
-        userId: userId,
         roomId: roomId,
         memberId: `${id}`,
       })
@@ -50,7 +48,14 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
   }
 
   return (
-    <ESDialog open={open} title="メンバーを追加" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop className={'scroll-bar'}>
+    <ESDialog
+      open={open}
+      title={i18n.t('common:chat.member_list_title')}
+      handleClose={() => hide()}
+      bkColor="rgba(0,0,0,0.8)"
+      alignTop
+      className={'scroll-bar'}
+    >
       <DialogContent className={classes.dialogContent}>
         <Box>
           <List>

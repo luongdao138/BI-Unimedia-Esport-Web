@@ -98,7 +98,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
         setShowScroll(false)
       }
     }
-  }, 1000)
+  }, 400)
 
   const _onScroll = (e) => {
     updateValue(e)

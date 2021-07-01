@@ -78,7 +78,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         <Box className={classes.actionButton}>
           {tournament.attributes.is_entered ? (
             <Box>
-              <InidividualEntryEditModal tournament={tournament} />
+              <InidividualEntryEditModal tournament={tournament} me />
               {showUnjoin ? <UnjoinModal tournament={tournament} /> : null}
             </Box>
           ) : (

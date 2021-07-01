@@ -11,13 +11,13 @@ const getMeta = createMetaSelector(actions.getBlockedUsers)
 const useBlockSettings = () => {
   const dispatch = useAppDispatch()
   const blockedUsers = useAppSelector(selectors.getBlockedUsers)
-  const page = useAppSelector(selectors.getBlockedUsersMeta)
+  const pages = useAppSelector(selectors.getBlockedUsersMeta)
   const meta = useAppSelector(getMeta)
   const fetchBlockedUsers = (param: BlockedUsersParams) => dispatch(actions.getBlockedUsers(param))
   const clearBlockedUsers = () => dispatch(actions.clearBlockedUsers())
   const resetMeta = () => dispatch(clearMetaData(actions.getBlockedUsers.typePrefix))
 
-  return { clearBlockedUsers, blockedUsers, fetchBlockedUsers, resetMeta, meta, page }
+  return { clearBlockedUsers, blockedUsers, fetchBlockedUsers, resetMeta, meta, pages }
 }
 
 export default useBlockSettings

@@ -4,7 +4,7 @@ import ChatRoomCreateContainer from '@containers/ChatRoomCreateContainer'
 
 const Room: PageWithLayoutType = () => {
   return (
-    <MessageLayout defaultListState={false}>
+    <MessageLayout defaultListState={false} create={true}>
       <ChatRoomCreateContainer />
     </MessageLayout>
   )

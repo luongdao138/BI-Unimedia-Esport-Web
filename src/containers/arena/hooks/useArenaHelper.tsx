@@ -21,6 +21,7 @@ const useArenaHelper = (
   isRecruiting: boolean
   isTeam: boolean
   isEditable: boolean
+  isNotHeld: boolean
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: () => boolean
@@ -42,6 +43,8 @@ const useArenaHelper = (
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isTeam = tournament?.attributes?.participant_type > 1
   const isEditable = isModerator && !TournamentHelper.isStatusPassed(status, TOURNAMENT_STATUS.IN_PROGRESS)
+  const isFreezed = tournament?.attributes?.is_freezed
+  const isNotHeld = isCompleted && !isFreezed
 
   const isAdminJoined = () => {
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
@@ -93,6 +96,7 @@ const useArenaHelper = (
     isRecruiting,
     isTeam,
     isEditable,
+    isNotHeld,
     toEdit,
     toCreate,
     isAdminJoined,
