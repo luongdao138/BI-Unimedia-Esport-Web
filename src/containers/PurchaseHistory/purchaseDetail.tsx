@@ -174,7 +174,7 @@ const PurchaseDetail: React.FC = () => {
                 <Typography>{ticket_tax}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>{t('common:purchase_history.total')}</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.payment')}</Typography>
                 <Typography color="primary">
                   {total}
                   {purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCELLED
