@@ -26,7 +26,7 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           badgeContent={0}
           showZero={false}
         >
-          <Avatar src={profile} alt="M" />
+          <Avatar src={profile} alt={name} />
         </Badge>
       </ListItemAvatar>
       <ListItemText className={classes.listItem}>
