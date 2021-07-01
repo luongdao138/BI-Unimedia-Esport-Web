@@ -615,6 +615,9 @@ export default {
     not_selected_text: 'メッセージを始めましょう',
     member_list_title: 'メンバー一覧',
     add_submit: '追加する',
+    toast: {
+      room_name_changed: 'グループ名を変更しました',
+    },
   },
   notification: {
     title: '通知一覧',
@@ -783,6 +786,7 @@ export default {
   },
   ng_word_area: {
     chat_section: 'メッセージテキストボックス',
+    room_name_title: 'グループ名',
   },
   page_head: {
     default_desc:
