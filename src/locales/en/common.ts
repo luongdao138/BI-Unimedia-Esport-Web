@@ -754,7 +754,7 @@ export default {
     go_edit: '内容を変更する',
     email_required: 'お問い合わせにはメールアドレスの登録が必須となります。',
     error: {
-      email: '入力内容が適切ではありません',
+      email: '入力内容が適切ではありません。',
     },
   },
   settings: {

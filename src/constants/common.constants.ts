@@ -144,4 +144,7 @@ export const NG_WORD_AREA = {
   forgot_password: i18n.t('common:forgot_password.email'),
   profile_user_code: i18n.t('common:register_profile.user_id'),
   profile_nickname: i18n.t('common:register_profile.nickname'),
+  inquiry_title: i18n.t('common:inquiry.subject'),
+  inquiry_content: i18n.t('common:inquiry.desc'),
+  inquiry_email: i18n.t('common:inquiry.email'),
 }
