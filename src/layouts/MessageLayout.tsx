@@ -8,11 +8,13 @@ import ChatRoomList from '@containers/ChatRoomList'
 import { IconButton, Icon, makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
-import { useAppSelector } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
+import { socketActions } from '@store/socket/actions'
+import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 
 interface LayoutProps {
   defaultListState?: boolean
@@ -26,6 +28,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
   const router = useRouter()
   const { t } = useTranslation(['common'])
   const { previousRoute } = useContext(RouteContext)
+  const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -55,6 +58,12 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
   useEffect(() => {
     if (router && router.query && router.query.active) {
       setShowList(true)
+    } else {
+      dispatch(
+        socketActions.socketSend({
+          action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
+        })
+      )
     }
   }, [router])
 

@@ -42,9 +42,10 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
         })
       )
     } else if (message.action === CHAT_ACTION_TYPE.MEMBER_ADDED) {
-      store.dispatch(
-        socketActions.socketSend({
-          action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
+      socket.send(
+        JSON.stringify({
+          action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
+          roomId: message.content.roomId,
         })
       )
     } else {
