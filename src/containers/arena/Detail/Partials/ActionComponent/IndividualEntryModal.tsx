@@ -11,13 +11,16 @@ import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useStore } from 'react-redux'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
 import UnjoinModal from './UnjoinModal'
 import InidividualEntryEditModal from './InidividualEntryEditModal'
 import LoginRequired from '@containers/LoginRequired'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useAppDispatch } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import _ from 'lodash'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -29,7 +32,6 @@ interface IndividualEntryModalProps {
 const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose, hideUnjoin }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const store = useStore()
   const [open, setOpen] = useState(false)
   const { join, joinMeta } = useEntry()
 
@@ -41,14 +43,11 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       handleClose()
     }
   }, [joinMeta.loaded, joinMeta.error])
+  const checkNgWord = useCheckNgWord()
+  const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string()
-      .required(t('common:common.error'))
-      .max(40, t('common:common.too_long'))
-      .test('nickname', 'at_least', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    nickname: Yup.string().required(t('common:common.error')).max(40, t('common:common.too_long')),
   })
 
   const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
@@ -58,7 +57,11 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     validationSchema,
     onSubmit: (values) => {
       if (values.nickname) {
-        join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
+        if (_.isEmpty(checkNgWord(values.nickname))) {
+          join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
+        } else {
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
+        }
       }
     },
   })
@@ -75,7 +78,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         <Box className={classes.actionButton}>
           {tournament.attributes.is_entered ? (
             <Box>
-              <InidividualEntryEditModal tournament={tournament} />
+              <InidividualEntryEditModal tournament={tournament} me />
               {showUnjoin ? <UnjoinModal tournament={tournament} /> : null}
             </Box>
           ) : (

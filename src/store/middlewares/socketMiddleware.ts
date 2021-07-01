@@ -19,7 +19,6 @@ const onOpen = (store: StoreType) => (_event: Event) => {
     store.dispatch(
       socketActions.socketSend({
         action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
-        userId: userId,
       })
     )
   }
@@ -39,7 +38,6 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
       socket.send(
         JSON.stringify({
           action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
-          userId: userId,
           roomId: message.content.roomId,
         })
       )

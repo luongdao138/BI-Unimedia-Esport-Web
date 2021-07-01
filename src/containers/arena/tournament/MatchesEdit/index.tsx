@@ -16,15 +16,13 @@ import _ from 'lodash'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
-import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
+  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, handleBack } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
-  const { toDetail } = useArenaHelper(tournament)
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [showFreeze, setShowFreeze] = useState(false)
@@ -110,7 +108,7 @@ const ArenaMatches: React.FC = () => {
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
             <Toolbar className={classes.toolbar}>
-              <IconButton className={classes.backButton} onClick={() => toDetail()}>
+              <IconButton className={classes.backButton} onClick={handleBack}>
                 <ArrowBack />
               </IconButton>
               <Typography variant="h2">{tournament.attributes.title}</Typography>

@@ -6,16 +6,11 @@ import _ from 'lodash'
 import { ChatHelper } from './utils'
 
 const initialState: State = {
-  roomList: undefined,
-  messages: undefined,
-  members: undefined,
   lastKey: null,
   paginating: false,
   activeRoom: null,
   socketReady: false,
   actionPending: false,
-  selectedRoomInfo: undefined,
-  error: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -83,6 +78,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: undefined,
         newRoomId: undefined,
         error: undefined,
+        activeRoom: undefined,
       }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages

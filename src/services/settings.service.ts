@@ -209,7 +209,7 @@ export type PurchaseHistoryDetailResponse = {
       cancelled_datetime: string
       gmo_payment_status: string
       payment_type: string
-      status: boolean
+      status: number
       history_id: number
       title: string
       description: string

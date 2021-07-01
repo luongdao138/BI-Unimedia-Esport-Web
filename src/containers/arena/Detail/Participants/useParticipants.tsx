@@ -13,8 +13,9 @@ const useParticipants = () => {
   const page = useAppSelector(selectors.getParticipantsMeta)
   const meta = useAppSelector(getMeta)
   const getParticipants = (param) => dispatch(actions.getTournamentParticipants(param))
+  const resetParticipants = () => dispatch(actions.resetParticipants())
   const resetMeta = () => dispatch(clearMetaData(actions.getTournamentParticipants.typePrefix))
-  return { participants, getParticipants, resetMeta, meta, page }
+  return { participants, getParticipants, resetParticipants, resetMeta, meta, page }
 }
 
 export default useParticipants

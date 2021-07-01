@@ -26,7 +26,7 @@ export interface MessageListProps {
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 90,
+  defaultHeight: 100,
 })
 
 const contentRef = React.createRef<HTMLDivElement>()
@@ -51,13 +51,11 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       if (isBottom) {
         _scrollToBottom(messages.length)
       } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
-        messagesEndRef.current.recomputeRowHeights()
-        messagesEndRef.current.forceUpdate()
         messagesEndRef.current.scrollToRow(7)
       }
     }, 10)
     cache.clearAll()
-  }, [messages.length])
+  }, [messages])
 
   useEffect(() => {
     if (scrolling > 1) {
@@ -67,10 +65,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
 
   useEffect(() => {
     cache.clearAll()
-    if (messagesEndRef.current != null && messagesEndRef) {
-      messagesEndRef.current.recomputeRowHeights()
-      messagesEndRef.current.forceUpdateGrid()
-    }
   }, [contentRect?.width])
 
   const _scrollToBottom = (position: number) => {
@@ -85,7 +79,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     }
   }
 
-  const _onScroll = (e) => {
+  const updateValue = _.debounce((e) => {
     const scrollPos = e.scrollTop + e.clientHeight
     const height = e.scrollHeight
     const offset = Math.abs(height - scrollPos)
@@ -104,6 +98,10 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
         setShowScroll(false)
       }
     }
+  }, 400)
+
+  const _onScroll = (e) => {
+    updateValue(e)
   }
 
   const rowRenderer = ({ index, key, parent, style }) => {
@@ -112,7 +110,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
         {({ measure, registerChild }) => (
-          <div onLoad={measure} key={index} style={style} ref={registerChild}>
+          <div onLoad={measure} key={key} style={style} ref={registerChild}>
             <Message
               reply={props.reply}
               report={props.report}
@@ -120,7 +118,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
               onDelete={props.delete}
               navigateToProfile={props.navigateToProfile}
               copy={props.copy}
-              onLoadImage={measure}
               currentMessage={data}
               users={users}
               direction={_.get(data, 'userId', null) !== currentUser ? 'left' : 'right'}
@@ -161,7 +158,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
           <List
             ref={messagesEndRef}
             onScroll={_onScroll}
-            overscanRowsCount={3}
+            overscanRowsCount={10}
             deferredMeasurementCache={cache}
             rowHeight={cache.rowHeight}
             rowRenderer={rowRenderer}

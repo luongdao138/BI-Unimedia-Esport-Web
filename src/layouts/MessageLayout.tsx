@@ -16,9 +16,10 @@ import { RouteContext } from 'pages/_app'
 
 interface LayoutProps {
   defaultListState?: boolean
+  create?: boolean
 }
 
-const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) => {
+const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, create }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [showList, setShowList] = useState<boolean>(defaultListState)
   const classes = useStyles()
@@ -36,9 +37,6 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
 
   const backHandler = (_e: React.MouseEvent) => {
     if (previousRoute) {
-      if (previousRoute === ESRoutes.MESSAGE_PATHNAME) {
-        router.push(ESRoutes.HOME)
-      }
       router.push(previousRoute)
     } else {
       router.push(ESRoutes.HOME)
@@ -53,6 +51,12 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
       router.push(ESRoutes.TOP)
     }
   }, [])
+
+  useEffect(() => {
+    if (router && router.query && router.query.active) {
+      setShowList(true)
+    }
+  }, [router])
 
   return (
     <div className="main-wrapper">
@@ -71,14 +75,11 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
                 {t('common:chat.title')}
               </Typography>
             </Box>
-            <Box className="header-second-column">
+            <Box className={`header-second-column ${create ? classes.createTrue : null}`}>
               <Box className="mobile-arrow-room">
                 <IconButton className={classes.iconButton} disableRipple onClick={() => toggleRoom(true)}>
                   <Icon className={`fa fa-arrow-left ${classes.icon}`} />
                 </IconButton>
-                <Typography variant="body1" className={classes.headerTitle}>
-                  {t('common:chat.back_list')}
-                </Typography>
               </Box>
               <Button
                 size="small"
@@ -121,10 +122,17 @@ const useStyles = makeStyles((theme) => ({
   create: {
     marginLeft: 'auto',
   },
+  createTrue: {},
+  [theme.breakpoints.down('sm')]: {
+    createTrue: {
+      borderBottom: '0 none',
+    },
+  },
 }))
 
 MessageLayout.defaultProps = {
-  defaultListState: true,
+  defaultListState: false,
+  create: false,
 }
 
 export default MessageLayout

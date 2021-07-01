@@ -1,5 +1,5 @@
 import { TournamentStatus } from '@services/arena.service'
-import { Box, Icon, IconButton } from '@material-ui/core'
+import { Box, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import ChevronLeftIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -8,12 +8,15 @@ import Tabs from '@components/Tabs'
 import Tab from '@components/Tab'
 
 type TournamentHeaderProps = {
+  title: string
   status: TournamentStatus
   cover: string | null
   children?: ReactNode
   onHandleBack: () => void
 }
-const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, cover, onHandleBack }) => {
+const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, children, cover, onHandleBack }) => {
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const [tab, setTab] = useState(4)
   useEffect(() => {
@@ -49,9 +52,20 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ status, children, c
         }}
         mb={3}
       >
-        <IconButton onClick={onHandleBack} className={classes.backButton}>
-          <ChevronLeftIcon />
-        </IconButton>
+        {isMobile ? (
+          <IconButton onClick={onHandleBack} className={classes.backButton}>
+            <ChevronLeftIcon />
+          </IconButton>
+        ) : (
+          <Box className={classes.backContainer}>
+            <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
+              <Icon className="fa fa-arrow-left" fontSize="small" />
+            </IconButton>
+            <Typography variant="h2" className={classes.wrapOne}>
+              {title}
+            </Typography>
+          </Box>
+        )}
       </Box>
       <div className={classes.root}>
         <Tabs
@@ -115,6 +129,33 @@ const useStyles = makeStyles((theme) => ({
   tabsFixed: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  backContainer: {
+    position: 'fixed',
+    top: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingLeft: theme.spacing(3),
+    paddingTop: 5,
+    paddingBottom: 5,
+    backgroundColor: Colors.black,
+    opacity: 0.7,
+    zIndex: 100,
+  },
+  iconButtonBg2: {
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+    marginRight: 20,
+    marginTop: 5,
+  },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   [theme.breakpoints.up('md')]: {
     flexContainer: {

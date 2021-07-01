@@ -3,11 +3,17 @@ import { makeStyles } from '@material-ui/core/styles'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import { Colors } from '@theme/colors'
 import Avatar from '@components/Avatar'
-import { Typography, IconButton, Box, Divider } from '@material-ui/core'
+import { Typography, IconButton, Box, Divider, ButtonBase } from '@material-ui/core'
 import ArenaAvatar from './ArenaAvatar'
 import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
 import { useTranslation } from 'react-i18next'
+import Linkify from 'react-linkify'
+import _ from 'lodash'
+import { PlacementItem } from '@services/arena.service'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/TeamEntryEditModal'
+import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -17,14 +23,50 @@ const ArenaWinners: React.FC = () => {
   const [, setUpdate] = useState(false)
   const winnerListRef = useRef(null)
   const backButtonRef = useRef(null)
+  const [selectedItem, setSelectedItem] = useState(null as PlacementItem | null)
+  const { userProfile } = useGetProfile()
 
   useEffect(() => {
     window.onscroll = () => {
-      const winnerListTopOffset = winnerListRef.current.getBoundingClientRect().top
-      const backButtonBottomOffset = backButtonRef.current.getBoundingClientRect().bottom
+      const winnerListTopOffset = getClientRect(winnerListRef).top
+      const backButtonBottomOffset = getClientRect(backButtonRef).bottom
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
   }, [])
+
+  const getClientRect = (ref) => {
+    if (ref && ref.current) {
+      return ref.current.getBoundingClientRect()
+    }
+    return { top: 0, bottom: 0 }
+  }
+
+  const isTeam = () => {
+    const pType = _.get(arena, 'attributes.participant_type', 0)
+    if (_.isNumber(pType)) {
+      return pType > 1
+    }
+    return false
+  }
+
+  const toEntryDetail = (placementItem: PlacementItem) => {
+    setSelectedItem(placementItem)
+  }
+
+  const getTeamId = (participant: PlacementItem) => {
+    return _.get(participant, 'team.id')
+  }
+
+  const isMyTeam = (participant: PlacementItem) => {
+    const myInfo = _.get(arena, 'attributes.my_info', [])
+    const interestedInfo = myInfo.find((info) => info.role === 'interested')
+    if (!interestedInfo) return false
+    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+  }
+
+  const isMe = (participant: PlacementItem) => {
+    return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
+  }
 
   return (
     <div className={classes.root}>
@@ -60,7 +102,15 @@ const ArenaWinners: React.FC = () => {
       </div>
       <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
         <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
-        <Typography>{arena?.attributes?.summary || ''}</Typography>
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <Typography>{arena?.attributes?.summary || ''}</Typography>
+        </Linkify>
       </div>
       <Box textAlign="center" pb={showSummary ? 4 : 8}>
         <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
@@ -83,7 +133,9 @@ const ArenaWinners: React.FC = () => {
                   {p.position === 3 && <span>rd</span>}
                 </p>
               </div>
-              <Avatar src={p.avatar} />
+              <ButtonBase onClick={() => toEntryDetail(p)}>
+                <Avatar src={p.avatar} />
+              </ButtonBase>
               <div className={classes.nameWrapper}>
                 <Typography variant="h3" component="p">
                   {p.name}
@@ -98,6 +150,24 @@ const ArenaWinners: React.FC = () => {
           ))
         )}
       </div>
+      {!selectedItem ? null : isTeam() ? (
+        <TeamEntryEditModal
+          tournament={arena}
+          userProfile={userProfile}
+          previewMode
+          initialTeamId={`${getTeamId(selectedItem)}`}
+          onClose={() => setSelectedItem(null)}
+          myTeam={isMyTeam(selectedItem)}
+        />
+      ) : (
+        <InidividualEntryEditModal
+          tournament={arena}
+          previewMode
+          initialParticipantId={`${selectedItem.id}`}
+          onClose={() => setSelectedItem(null)}
+          me={isMe(selectedItem)}
+        />
+      )}
     </div>
   )
 }
@@ -105,6 +175,10 @@ const ArenaWinners: React.FC = () => {
 export default ArenaWinners
 
 const useStyles = makeStyles((theme) => ({
+  link: {
+    color: Colors.white,
+    textDecoration: 'underline',
+  },
   root: {
     position: 'relative',
     paddingBottom: theme.spacing(3),

@@ -24,9 +24,9 @@ const ESNotificationSettings = () => {
   }, [notificationSettings])
 
   useEffect(() => {
-    if (_.some(state, ['status', false])) {
+    if (_.every(state, ['status', false])) {
       setCheckAll(false)
-    } else {
+    } else if (_.every(state, ['status', true])) {
       setCheckAll(true)
     }
   }, [state])
@@ -65,7 +65,7 @@ const ESNotificationSettings = () => {
   return (
     <div>
       <HeaderWithButton title={t('notification_settings.title')} />
-      {state.length && (
+      {state.length > 0 && (
         <SettingsRowItem
           title={t('notification_settings.settings_select_all')}
           name="settings_select_all"

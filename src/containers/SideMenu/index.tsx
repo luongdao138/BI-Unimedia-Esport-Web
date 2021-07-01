@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import Icon from '@material-ui/core/Icon'
-import ProfileAvatar from '@components/ProfileAvatar'
+import ESAvatar from '@components/Avatar'
 import { useRouter } from 'next/router'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from '@store/hooks'
@@ -19,148 +19,6 @@ import LoginRequired from '@containers/LoginRequired'
 import SideFooter from './SideFooter'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    backgroundColor: 'transparent',
-  },
-  listText: {
-    fontSize: 16,
-    color: theme.palette.text.primary,
-  },
-  list: {
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 0,
-    paddingBottom: 0,
-    marginBottom: 5,
-    marginTop: 5,
-    borderRight: '2px solid transparent',
-    transition: 'all 0.1s ease-out',
-    '&:hover': {
-      background: 'transparent',
-    },
-    '&:hover $listText': {
-      color: Colors.primary,
-    },
-    '&:hover $icon': {
-      color: Colors.primary,
-    },
-    '$list span': {
-      fontWeight: 500,
-    },
-  },
-  menu: {
-    maxWidth: 165,
-    width: '100%',
-    position: 'relative',
-    height: '100%',
-    paddingBottom: 66,
-    paddingTop: 203,
-  },
-  icon: {
-    minWidth: 30,
-  },
-  userInfo: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    width: 128,
-    display: 'flex',
-    paddingTop: 40,
-    flexDirection: 'column',
-    paddingBottom: 30,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-  name: {
-    paddingBottom: 5,
-    paddingTop: 10,
-    color: theme.palette.text.primary,
-    margin: '0 auto',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    maxWidth: 80,
-  },
-  usercode: {
-    color: theme.palette.text.secondary,
-    margin: '0 auto',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    maxWidth: 80,
-  },
-  clickable: {
-    cursor: 'pointer',
-  },
-  buttonWrap: {
-    paddingTop: theme.spacing(2),
-  },
-  appDesc: {
-    display: 'block',
-    paddingBottom: theme.spacing(1),
-  },
-  google_app_stores: {
-    width: 135,
-    maxWidth: '100%',
-    paddingBottom: theme.spacing(1),
-  },
-  menuWrap: {
-    height: '100%',
-    overflowY: 'auto',
-    scrollbarColor: '#222 transparent',
-    scrollbarWidth: 'thin',
-    '&::-webkit-scrollbar': {
-      width: 5,
-      opacity: 1,
-      padding: 2,
-      visibility: 'visible',
-    },
-    '&::-webkit-scrollbar-track': {
-      paddingLeft: 1,
-      opacity: 1,
-      visibility: 'visible',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
-      borderRadius: 6,
-      opacity: 1,
-      visibility: 'visible',
-    },
-  },
-}))
-
-const ListItem = withStyles({
-  root: {
-    '&$selected': {
-      backgroundColor: 'transparent',
-      color: Colors.primary,
-      borderRight: `2px solid ${Colors.primary}`,
-      '& .MuiListItemIcon-root': {
-        color: Colors.primary,
-      },
-      '& .MuiListItemText-root': {
-        color: Colors.primary,
-      },
-    },
-    '&$selected:hover': {
-      backgroundColor: 'transparent',
-      color: Colors.primary,
-      '& .MuiListItemIcon-root': {
-        color: Colors.primary,
-      },
-      '& .MuiListItemText-root': {
-        color: Colors.primary,
-      },
-    },
-  },
-  selected: {},
-})(MuiListItem)
 
 const SideMenu: React.FC = () => {
   const [modal, setModal] = useState(false)
@@ -187,8 +45,8 @@ const SideMenu: React.FC = () => {
       <Box className={classes.menu}>
         <Box className={classes.clickable} onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}>
           <Box className={classes.userInfo}>
-            <ProfileAvatar
-              size={80}
+            <ESAvatar
+              className={classes.avatar}
               alt={userProfile?.attributes?.nickname}
               src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
             />
@@ -284,4 +142,152 @@ const SideMenu: React.FC = () => {
     </>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  listText: {
+    fontSize: 16,
+    color: theme.palette.text.primary,
+  },
+  list: {
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 0,
+    paddingBottom: 0,
+    marginBottom: 5,
+    marginTop: 5,
+    borderRight: '2px solid transparent',
+    transition: 'all 0.1s ease-out',
+    '&:hover': {
+      background: 'transparent',
+    },
+    '&:hover $listText': {
+      color: Colors.primary,
+    },
+    '&:hover $icon': {
+      color: Colors.primary,
+    },
+    '$list span': {
+      fontWeight: 500,
+    },
+  },
+  menu: {
+    maxWidth: 165,
+    width: '100%',
+    position: 'relative',
+    height: '100%',
+    paddingBottom: 66,
+    paddingTop: 203,
+  },
+  icon: {
+    minWidth: 30,
+  },
+  userInfo: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    width: 128,
+    display: 'flex',
+    paddingTop: 40,
+    flexDirection: 'column',
+    paddingBottom: 30,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  avatar: {
+    zIndex: 30,
+    width: 80,
+    height: 80,
+  },
+  name: {
+    paddingBottom: 5,
+    paddingTop: 10,
+    color: theme.palette.text.primary,
+    margin: '0 auto',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    maxWidth: 80,
+  },
+  usercode: {
+    color: theme.palette.text.secondary,
+    margin: '0 auto',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    maxWidth: 80,
+  },
+  clickable: {
+    cursor: 'pointer',
+  },
+  buttonWrap: {
+    paddingTop: theme.spacing(2),
+  },
+  appDesc: {
+    display: 'block',
+    paddingBottom: theme.spacing(1),
+  },
+  google_app_stores: {
+    width: 135,
+    maxWidth: '100%',
+    paddingBottom: theme.spacing(1),
+  },
+  menuWrap: {
+    height: '100%',
+    overflowY: 'auto',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+      visibility: 'visible',
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      opacity: 1,
+      visibility: 'visible',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+      opacity: 1,
+      visibility: 'visible',
+    },
+  },
+}))
+
+const ListItem = withStyles({
+  root: {
+    '&$selected': {
+      backgroundColor: 'transparent',
+      color: Colors.primary,
+      borderRight: `2px solid ${Colors.primary}`,
+      '& .MuiListItemIcon-root': {
+        color: Colors.primary,
+      },
+      '& .MuiListItemText-root': {
+        color: Colors.primary,
+      },
+    },
+    '&$selected:hover': {
+      backgroundColor: 'transparent',
+      color: Colors.primary,
+      '& .MuiListItemIcon-root': {
+        color: Colors.primary,
+      },
+      '& .MuiListItemText-root': {
+        color: Colors.primary,
+      },
+    },
+  },
+  selected: {},
+})(MuiListItem)
+
 export default SideMenu

@@ -14,12 +14,14 @@ const useArenaHelper = (
   toGroupChat: () => void
   isModerator: boolean
   isInProgress: boolean
+  isCancelled: boolean
   isCompleted: boolean
   isRecruitmentClosed: boolean
   isBattleRoyale: boolean
   isRecruiting: boolean
   isTeam: boolean
   isEditable: boolean
+  isNotHeld: boolean
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: () => boolean
@@ -34,12 +36,15 @@ const useArenaHelper = (
   const status = tournament?.attributes?.status
   const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
   const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
+  const isCancelled = status === TOURNAMENT_STATUS.CANCELLED
   const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
   const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
   const isBattleRoyale = tournament?.attributes?.rule === RULE.BATTLE_ROYALE
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isTeam = tournament?.attributes?.participant_type > 1
   const isEditable = isModerator && !TournamentHelper.isStatusPassed(status, TOURNAMENT_STATUS.IN_PROGRESS)
+  const isFreezed = tournament?.attributes?.is_freezed
+  const isNotHeld = isCompleted && !isFreezed
 
   const isAdminJoined = () => {
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
@@ -83,6 +88,7 @@ const useArenaHelper = (
     toMatches,
     toResults,
     isInProgress,
+    isCancelled,
     isCompleted,
     isRecruitmentClosed,
     isBattleRoyale,
@@ -90,6 +96,7 @@ const useArenaHelper = (
     isRecruiting,
     isTeam,
     isEditable,
+    isNotHeld,
     toEdit,
     toCreate,
     isAdminJoined,

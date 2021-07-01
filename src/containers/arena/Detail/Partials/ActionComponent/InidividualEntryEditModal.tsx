@@ -17,18 +17,24 @@ import _ from 'lodash'
 import ESInput from '@components/Input'
 import { useStore } from 'react-redux'
 import * as Yup from 'yup'
+import { ROLE } from '@constants/tournament.constants'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
+  previewMode?: boolean
+  initialParticipantId?: string
+  me: boolean
+  onClose?: () => void
 }
 
-const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }) => {
+const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, previewMode, initialParticipantId, me, onClose }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
   const { participant, isPending, getParticipant, changeName, changeDone } = useParticipantDetail()
   const [open, setOpen] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const isPreview = previewMode === true
   const validationSchema = Yup.object().shape({
     nickname: Yup.string()
       .required(t('common:common.error'))
@@ -49,11 +55,26 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }
     },
   })
 
+  const getPid = () => {
+    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    if (!_.isArray(myInfoList)) return
+    for (const myInfo of myInfoList) {
+      if (_.get(myInfo, 'role', '') === ROLE.INTERESTED && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
+    }
+  }
+
   useEffect(() => {
     if (open) {
-      getParticipant(_.get(tournament, 'attributes.hash_key', ''), tournament.attributes.my_info?.id)
+      getParticipant(_.get(tournament, 'attributes.hash_key', ''), getPid())
     }
   }, [open])
+
+  useEffect(() => {
+    if (isPreview) {
+      const pId = parseInt(initialParticipantId)
+      getParticipant(_.get(tournament, 'attributes.hash_key', ''), pId)
+    }
+  }, [isPreview])
 
   useEffect(() => {
     setOpen(false)
@@ -66,7 +87,12 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }
     }
   }, [participant])
 
-  const handleReturn = () => setOpen(false)
+  const handleReturn = () => {
+    if (_.isFunction(onClose)) {
+      onClose()
+    }
+    setOpen(false)
+  }
 
   const onOpen = () => {
     setOpen(true)
@@ -94,17 +120,20 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }
   }
   return (
     <Box>
-      <ButtonPrimary round fullWidth onClick={onOpen}>
-        {t('common:tournament.check_entry')}
-      </ButtonPrimary>
+      {isPreview ? null : (
+        <ButtonPrimary round fullWidth onClick={onOpen}>
+          {t('common:tournament.check_entry')}
+        </ButtonPrimary>
+      )}
 
       <StickyActionModal
-        open={open}
+        open={open || isPreview}
         returnText={t('common:tournament.join')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
         actionButtonDisabled={!isValid}
         onReturnClicked={handleReturn}
         onActionButtonClicked={onSubmit}
+        hideFooter={!me}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
@@ -135,14 +164,13 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament }
               </Box>
             </Box>
           ) : (
-            <Box width="100%" flexDirection="column" alignItems="center" pt={4.5}>
-              <UserListItem data={userData(participant)} handleClick={() => null} nicknameYellow />
+            <Box width="100%" flexDirection="column" alignItems="center" pt={4.5} style={isPending ? { display: 'none' } : undefined}>
+              <UserListItem data={userData(participant)} handleClick={() => null} nicknameYellow={me} />
             </Box>
           )}
         </form>
+        {isPending && <ESLoader open={isPending} />}
       </StickyActionModal>
-
-      {isPending && <ESLoader open={isPending} />}
     </Box>
   )
 }

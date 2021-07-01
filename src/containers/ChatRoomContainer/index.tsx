@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { makeStyles, Box, IconButton, Icon } from '@material-ui/core'
+import { makeStyles, Box, IconButton, Icon, Theme } from '@material-ui/core'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -12,6 +12,7 @@ import {
   lastKey as key,
   paginating as paging,
   hasError as hasErrorSelector,
+  blocked,
 } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
@@ -74,6 +75,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
   const hasError = useAppSelector(hasErrorSelector)
+  const isBlocked = useAppSelector(blocked)
 
   useEffect(() => {
     if (userId && roomId) {
@@ -94,7 +96,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   }, [roomId])
 
   const handlePress = (text: string) => {
-    if (_.isEmpty(checkNgWord(text))) {
+    if (_.isEmpty(checkNgWord(text)) && !isBlocked) {
       const currentTimestamp = moment().valueOf()
       const clientId = uuidv4()
       const payload = {
@@ -184,7 +186,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       setMeta({ ...uploadMeta, uploading: true })
       dispatch(socketActions.messagePending(payload))
     } else {
-      dispatch(socketActions.socketSend(payload))
+      dispatch(socketActions.socketSend(_.omit(payload, 'userId')))
       setMeta({ id: null, uploading: false })
     }
   }
@@ -285,6 +287,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
           {renderReplyPanel()}
           <MessageInputArea
             ref={inputRef}
+            isBlocked={isBlocked}
             currentUser={userId}
             onPressSend={handlePress}
             users={usersAvailable}
@@ -305,6 +308,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
           reportType={REPORT_TYPE.CHAT}
           target_id={Number(reportData.target_id)}
           data={reportData.data}
+          chat_id={reportData.chat_id}
+          room_id={reportData.room_id}
           open={reporting}
           members={usersWithAll}
           handleClose={() => setReporting(false)}
@@ -322,10 +327,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   header: {
     borderBottom: '1px solid #212121',
-    height: 68,
+    height: 60,
+    padding: 12,
   },
   dropZone: {
     display: 'none',
@@ -406,6 +412,15 @@ const useStyles = makeStyles(() => ({
   iconClose: {
     color: Colors.text[200],
     fontSize: '12px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    header: {
+      position: 'absolute',
+      top: 0,
+      left: 40,
+      right: 0,
+      zIndex: 1000,
+    },
   },
 }))
 

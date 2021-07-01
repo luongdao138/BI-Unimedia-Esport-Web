@@ -1,4 +1,5 @@
-import { createReducer } from '@reduxjs/toolkit'
+import { createReducer, createAction } from '@reduxjs/toolkit'
+import { HYDRATE } from 'next-redux-wrapper'
 import * as actions from '../actions'
 import {
   TournamentResponse,
@@ -18,6 +19,7 @@ import {
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import _ from 'lodash'
+import { RootState } from '@store/reducers'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -36,9 +38,9 @@ type StateType = {
   arenaWinners: ArenaWinners
   recommendedUsers?: Array<RecommendedUsers>
   recommendedUsersMeta?: PageMeta
-  tournamentFollowersMeta: PageMeta
-  tournamentResultsMeta: PageMeta
-  recruitingTournamentsMeta: PageMeta
+  tournamentFollowersMeta?: PageMeta
+  tournamentResultsMeta?: PageMeta
+  recruitingTournamentsMeta?: PageMeta
   selectedParticipant?: ParticipantName
   selectedTeamDetail?: TournamentTeamDetail
 }
@@ -54,10 +56,9 @@ const initialState: StateType = {
   arenaWinners: {},
   recruitingTournaments: [],
   recommendedUsers: [],
-  tournamentFollowersMeta: undefined,
-  tournamentResultsMeta: undefined,
-  recruitingTournamentsMeta: undefined,
 }
+
+const hydrate = createAction<RootState>(HYDRATE)
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
@@ -98,14 +99,14 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.joinTournament.fulfilled, (state, action) => {
     state.tournamentDetail.attributes.interested_count++
     state.tournamentDetail.attributes.is_entered = true
-    state.tournamentDetail.attributes.my_role = 'interested'
+    // state.tournamentDetail.attributes.my_role = 'interested'
     if (state.tournamentDetail.attributes.participant_type != 1 && _.isNumber(action.payload.team_id))
       state.tournamentDetail.attributes.my_info = [{ role: 'interested', team_id: action.payload.team_id }]
   })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
     state.tournamentDetail.attributes.is_entered = false
-    state.tournamentDetail.attributes.my_role = null
+    // state.tournamentDetail.attributes.my_role = null
   })
   builder.addCase(actions.closeTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
@@ -117,6 +118,10 @@ export default createReducer(initialState, (builder) => {
     }
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
+  })
+  builder.addCase(actions.resetParticipants, (state) => {
+    state.tournamentParticipants = []
+    state.participantsMeta = undefined
   })
   builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
     let _suggestedTeamMembers = action.payload.data
@@ -183,5 +188,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
     state.selectedTeamDetail = action.payload.data
+  })
+  builder.addCase(hydrate, (state, action) => {
+    state.tournamentDetail = action.payload.arena.tournamentDetail
   })
 })

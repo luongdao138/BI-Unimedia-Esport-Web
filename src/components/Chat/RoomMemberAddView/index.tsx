@@ -97,7 +97,6 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     socketSend({
       action: CHAT_ACTION_TYPE.ADD_MEMBERS,
       roomId: roomId,
-      userId: userId,
       userIds: selectedList.map((item) => item.id),
     })
     hide()
@@ -176,7 +175,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
       </Box>
       <Box maxWidth={280} className={classes.buttonBottom}>
         <ButtonPrimary type="submit" disabled={_.isEmpty(selectedList)} round fullWidth onClick={onSubmit}>
-          変更する
+          {i18n.t('common:chat.add_submit')}
         </ButtonPrimary>
       </Box>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
-import { makeStyles, Box, Typography } from '@material-ui/core'
+import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
 import Loader from '@components/Loader'
 import ImageUploader from '../ChatRoomContainer/ImageUploader'
 import MessageInputArea from '@components/Chat/MessageInputArea'
@@ -228,9 +228,11 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
 
   return (
     <Box className={classes.room}>
-      <Box className={classes.memberSelectContainer} px={2.5} py={1.5}>
+      <Box className={classes.memberSelectContainer}>
         <Box>
-          <Typography variant="h2">宛先</Typography>
+          <Typography variant="h2" className={classes.title}>
+            宛先
+          </Typography>
         </Box>
         {dm ? (
           <Box>
@@ -281,13 +283,11 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   )
 }
 
-const useStyles = makeStyles(() => ({
-  header: {
-    padding: 24,
-  },
+const useStyles = makeStyles((theme: Theme) => ({
   dropZone: {
     display: 'none',
   },
+  title: { fontSize: 17 },
   loaderBox: {
     width: 20,
     height: 20,
@@ -353,6 +353,17 @@ const useStyles = makeStyles(() => ({
     borderBottom: '1px solid #212121',
     alignItems: 'center',
     columnGap: 14,
+    padding: '8px 12px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    memberSelectContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      paddingLeft: 60,
+      zIndex: 1000,
+    },
   },
 }))
 

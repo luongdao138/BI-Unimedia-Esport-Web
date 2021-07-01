@@ -25,6 +25,7 @@ export interface MessageInputAreaProps {
   onCancelReply?: () => void
   currentUser?: string | number
   ref: Ref<ClearInputrRef>
+  isBlocked?: boolean
 }
 
 const partTypes = [
@@ -42,7 +43,8 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
       setText('')
     },
   }))
-  const { onPressSend, users, onPressActionButton, disabled, currentUser } = props
+  const { onPressSend, users, onPressActionButton, disabled, currentUser, isBlocked } = props
+
   const [text, setText] = useState<string>('')
 
   const { parts } = useMemo(() => parseValue(text, partTypes), [text, partTypes])
@@ -96,7 +98,12 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
             onChange={onChangeText}
           />
         </Box>
-        <IconButton disabled={disabled === true || _.isEmpty(text) ? true : false} className={classes.send} onClick={send} disableRipple>
+        <IconButton
+          disabled={disabled === true || _.isEmpty(text.trim()) || isBlocked ? true : false}
+          className={classes.send}
+          onClick={send}
+          disableRipple
+        >
           <Icon className={`${classes.icon} fas fa-paper-plane`} />
         </IconButton>
       </Box>
@@ -104,7 +111,9 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
   )
 })
 
-MessageInputArea.defaultProps = {}
+MessageInputArea.defaultProps = {
+  isBlocked: false,
+}
 
 const useStyles = makeStyles(() => ({
   toolbar: {

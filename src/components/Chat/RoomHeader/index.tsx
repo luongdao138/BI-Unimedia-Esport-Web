@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { selectedRoomInfo } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
@@ -19,7 +19,7 @@ import { getMessageTournamentDetail } from '@store/chat/actions'
 import { tournamentDetail } from '@store/chat/selectors'
 import { useRouter } from 'next/router'
 import AvatarSelector from '@components/ImagePicker/AvatarSelector'
-import useRoomImageUploader from './usRoomImageUploader'
+import useRoomImageUploader from './useRoomImageUploader'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -49,15 +49,15 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (roomId && userId)
+    if (roomId) {
       dispatch(
         socketActions.socketSend({
           action: CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE,
           roomId: roomId,
-          userId: userId,
         })
       )
-  }, [roomId, userId])
+    }
+  }, [roomId])
 
   useEffect(() => {
     if (roomInfo && roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
@@ -78,7 +78,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-    } else if (!isDirect() && isAdmin()) {
+    } else if (!isDirect()) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     }
     return null
@@ -129,10 +129,10 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     </Box>
   )
 
-  const onUpdate = (file, _blob) => {
+  const onUpdate = (file, blob) => {
     if (!isAdmin) return
     if (!uploadMeta.uploading) {
-      imageProcess(file, userId, roomId as string)
+      imageProcess(file, userId, roomId as string, blob)
     }
     setDialogOpen(null)
   }
@@ -152,7 +152,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
       <Box className={classes.row}>
         {hasNoRoomInfo ? null : <RoomImgView roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />}
         <Box pl={2} className={classes.roomName}>
-          <Typography variant="h2" noWrap={true}>
+          <Typography variant="h2" noWrap={true} className={classes.title}>
             {roomName}
           </Typography>
         </Box>
@@ -164,7 +164,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
 RoomHeader.defaultProps = {}
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   row: {
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
@@ -182,6 +182,14 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     right: 0,
     top: 0,
+  },
+  title: {
+    fontSize: 17,
+  },
+  [theme.breakpoints.down('sm')]: {
+    row: {
+      paddingLeft: 0,
+    },
   },
 }))
 

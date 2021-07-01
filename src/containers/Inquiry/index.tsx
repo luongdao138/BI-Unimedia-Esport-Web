@@ -78,7 +78,7 @@ const ESInquiry: React.FC = () => {
 
   return (
     <div>
-      <HeaderWithButton title={t('service_info.inquiry')} />
+      {showPreview ? <HeaderWithButton title={t('service_info.inquiry')} /> : <HeaderWithButton title={t('service_info.inquiry')} />}
       {showSuccess ? (
         <Box>
           <Box mt={9}>
