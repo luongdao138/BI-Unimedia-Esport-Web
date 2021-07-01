@@ -5,10 +5,10 @@ import { CommunityResponse, FollowersTopicResponse, Meta } from '@services/commu
 type StateType = {
   my_community_list: Array<CommunityResponse> | null
   topicFollowersList: Array<FollowersTopicResponse> | null
-  topicFollowersListMeta: Meta
+  topicFollowersListMeta?: Meta
 }
 
-const initialState: StateType = { my_community_list: [], topicFollowersList: [], topicFollowersListMeta: undefined }
+const initialState: StateType = { my_community_list: [], topicFollowersList: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {

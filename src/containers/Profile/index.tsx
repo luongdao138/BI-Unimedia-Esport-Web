@@ -19,9 +19,11 @@ import useBlock from './useBlock'
 import useUnblock from './useUnblock'
 import ESFollowers from '@containers/Followers'
 import ESFollowing from '@containers/Following'
+import { useContextualRouting } from 'next-use-contextual-routing'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
 import ESToast from '@components/Toast'
+import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
@@ -47,8 +49,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const [blocked, setBlocked] = useState(false)
   const [showToast, setShow] = useState(false)
   const [offset, setOffset] = useState(0)
+  const { makeContextualHref } = useContextualRouting()
 
-  const raw_code = router.query.user_code || []
+  const raw_code = _.isEmpty(router.query.user_code)
+    ? null
+    : typeof router.query.user_code == 'string'
+    ? router.query.user_code
+    : router.query.user_code[0]
 
   const {
     userCode,
@@ -78,7 +85,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
       if (isOthers) {
         getMemberProfile(userCode)
       } else {
-        if (!isAuthenticated && raw_code.length == 0) {
+        if (!isAuthenticated && raw_code == null) {
           router.push(ESRoutes.NOT_FOUND)
         }
       }
@@ -206,8 +213,13 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       </ESMenuItem>
                     )
                   ) : null}
-
-                  <ESMenuItem onClick={() => (isAuthenticated ? handleReportOpen() : null)}>
+                  <ESMenuItem
+                    onClick={() =>
+                      isAuthenticated
+                        ? handleReportOpen()
+                        : router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+                    }
+                  >
                     {i18n.t('common:user_report.report_menu')}
                   </ESMenuItem>
                 </ESMenu>

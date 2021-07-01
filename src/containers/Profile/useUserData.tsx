@@ -12,7 +12,7 @@ import { CommunityResponse } from '@services/community.service'
 import { Meta } from '@store/metadata/actions/types'
 
 const useUserData = (
-  raw_code: string | Array<string> | []
+  raw_code: string | null
 ): {
   userCode: string
   profile: UserProfile
@@ -36,9 +36,9 @@ const useUserData = (
   const userActions = userProfileStore.actions
   const isAuthenticated = useAppSelector(authSelectors.getIsAuthenticated)
 
-  let isOthers = raw_code.length > 0
+  let isOthers = raw_code !== null
   let userCode = myUserCode
-  if (isOthers && raw_code[0] === myUserCode) {
+  if (isOthers && raw_code === myUserCode) {
     isOthers = false
   }
   const dispatch = useAppDispatch()
@@ -47,7 +47,7 @@ const useUserData = (
   let profile = null
   if (isOthers) {
     const getMemberMeta = createMetaSelector(userActions.getMemberProfile)
-    userCode = raw_code[0]
+    userCode = raw_code
     profile = useAppSelector(userSelectors.getLastSeenUserData)
     meta = useAppSelector(getMemberMeta)
   } else {

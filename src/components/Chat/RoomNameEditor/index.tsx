@@ -9,6 +9,10 @@ import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { addToast } from '@store/common/actions'
 
 export interface RoomNameEditorProps {
   roomName: string
@@ -21,6 +25,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   roomId
   const classes = useStyles()
   const dispatch = useAppDispatch()
+  const checkNgWord = useCheckNgWord()
   const [newName, setNewName] = useState('')
   const renderFooter = () => {
     return <Box className={classes.stickyFooter}></Box>
@@ -37,14 +42,22 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   }
 
   const onSubmit = () => {
-    dispatch(
-      socketActions.socketSend({
-        action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
-        roomId: roomId,
-        name: newName.trim(),
-      })
-    )
-    hide()
+    const name = newName.trim()
+    if (_.isEmpty(checkNgWord(name))) {
+      dispatch(
+        socketActions.socketSend({
+          action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
+          roomId: roomId,
+          name: newName.trim(),
+        })
+      )
+      setTimeout(function () {
+        dispatch(addToast(i18n.t('common:chat.toast.room_name_changed')))
+      }, 1000)
+      hide()
+    } else {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.room_name_title }))
+    }
   }
 
   const isButtonDisabled = () => {
@@ -57,7 +70,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
     <Box className={classes.container}>
       <ESDialog
         open={open}
-        title="メッセージ名の変更"
+        title={i18n.t('common:chat.room_options.change_room_name')}
         handleClose={() => hide()}
         bkColor="rgba(0,0,0,0.8)"
         alignTop

@@ -87,7 +87,13 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
         classes: {
           root: classes.backDrop,
         },
-        style: { backgroundColor: _.isString(bkColor) ? bkColor : 'rgba(0,0,30,0.6)' },
+        style: {
+          backgroundColor: _.isString(bkColor)
+            ? bkColor
+            : window.navigator.userAgent.indexOf('Firefox') != -1
+            ? 'rgba(0,0,30,0.8)'
+            : 'rgba(0,0,30,0.6)',
+        },
         children: fixedFooter ? fixedFooter : undefined,
       }}
       PaperProps={{

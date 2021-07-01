@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme, IconButton, Icon } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, IconButton, Icon } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import LinkButton from '@components/LinkButton'
@@ -19,8 +19,6 @@ interface UnjoinModalProps {
 const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const [open, setOpen] = useState(false)
   const { leave, leaveMeta } = useEntry()
 
@@ -52,7 +50,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
               <Box className={classes.actionButton}>
-                <ESButton variant={!isMobile ? 'outlined' : 'text'} round fullWidth size="large" onClick={() => setOpen(false)}>
+                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>

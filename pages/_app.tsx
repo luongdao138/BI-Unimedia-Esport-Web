@@ -81,26 +81,28 @@ const App = ({ Component, pageProps }: Props) => {
   const { previousRoute } = useRouteUrlHistory()
 
   return (
-    <PersistGate persistor={persistStore(store)}>
-      <RouteContext.Provider
-        value={{
-          previousRoute,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
-          <ESLoader open={loader} />
-          <ToastContainer />
-          <DialogContainer />
-          <SimpleReactLightbox>
-            <Layout>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </Layout>
-          </SimpleReactLightbox>
-        </ThemeProvider>
-      </RouteContext.Provider>
-    </PersistGate>
+    <>
+      <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
+      <PersistGate persistor={persistStore(store)}>
+        <RouteContext.Provider
+          value={{
+            previousRoute,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <ESLoader open={loader} />
+            <ToastContainer />
+            <DialogContainer />
+            <SimpleReactLightbox>
+              <Layout>
+                <CssBaseline />
+                <Component {...pageProps} />
+              </Layout>
+            </SimpleReactLightbox>
+          </ThemeProvider>
+        </RouteContext.Provider>
+      </PersistGate>
+    </>
   )
 }
 export default storeWrapper.withRedux(App)

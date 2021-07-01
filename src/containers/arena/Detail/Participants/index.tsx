@@ -11,8 +11,12 @@ import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import TeamMemberItemExpanded from '../Partials/TeamMemberItemExpanded'
 import ESButton from '@components/Button'
-import { TournamentDetail } from '@services/arena.service'
+import { ParticipantsResponse, TournamentDetail } from '@services/arena.service'
 import { ROLE } from '@constants/tournament.constants'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import _ from 'lodash'
+import TeamEntryEditModal from '../Partials/ActionComponent/TeamEntryEditModal'
+import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEntryEditModal'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -27,9 +31,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [selectedParticipant, setSelectedParticipant] = useState(null as ParticipantsResponse | null)
   const [members, setMembers] = useState([])
 
-  const { participants, getParticipants, resetMeta, page, meta } = useParticipants()
+  const { participants, getParticipants, resetParticipants, resetMeta, page, meta } = useParticipants()
+  const { userProfile } = useGetProfile()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -42,9 +48,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   useEffect(() => {
     if (open) {
       getParticipants({ page: 1, hash_key: hash_key, role: data.is_freezed ? ROLE.PARTICIPANT : undefined })
+    } else {
+      resetParticipants()
     }
 
     return () => {
+      resetParticipants()
       resetMeta()
     }
   }, [open])
@@ -64,6 +73,24 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const userData = (participant) => {
     const _user = participant.attributes.user
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
+  }
+  const getTeamId = (participant: ParticipantsResponse) => {
+    return _.get(participant, 'attributes.team.data.id')
+  }
+
+  const isMyTeam = (participant: ParticipantsResponse) => {
+    const myInfo = _.get(detail, 'attributes.my_info', [])
+    const interestedInfo = myInfo.find((info) => info.role === 'interested')
+    if (!interestedInfo) return false
+    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+  }
+
+  const isMe = (participant: ParticipantsResponse) => {
+    return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
+  }
+
+  const onTeamClick = (participant: ParticipantsResponse) => {
+    setSelectedParticipant(participant)
   }
 
   return (
@@ -109,7 +136,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 </Box>
               </Box>
             </Box>
-            <div id="scrollableDiv" style={{ height: 600 }} className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
               <InfiniteScroll
                 dataLength={participants.length}
                 next={fetchMoreData}
@@ -133,13 +160,43 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 {isTeam
                   ? members.map((participant, i) => (
                       <Box key={`team${i}`} py={1}>
-                        <TeamMemberItemExpanded team={participant} />
+                        <TeamMemberItemExpanded
+                          team={participant}
+                          yellowTitle={isMyTeam(participant)}
+                          handleClick={() => onTeamClick(participant)}
+                          memberClick={() => onTeamClick(participant)}
+                        />
                       </Box>
                     ))
                   : members.map((participant, i) => (
-                      <UserListItem data={userData(participant)} key={i} isFollowed={participant.attributes.is_followed} />
+                      <UserListItem
+                        data={userData(participant)}
+                        key={i}
+                        isFollowed={participant.attributes.is_followed}
+                        nicknameYellow={isMe(participant)}
+                        handleClick={() => setSelectedParticipant(participant)}
+                        isBlocked={participant.attributes.is_blocked}
+                      />
                     ))}
               </InfiniteScroll>
+              {!selectedParticipant ? null : isTeam ? (
+                <TeamEntryEditModal
+                  tournament={detail}
+                  userProfile={userProfile}
+                  previewMode
+                  initialTeamId={getTeamId(selectedParticipant)}
+                  onClose={() => setSelectedParticipant(null)}
+                  myTeam={isMyTeam(selectedParticipant)}
+                />
+              ) : (
+                <InidividualEntryEditModal
+                  tournament={detail}
+                  previewMode
+                  initialParticipantId={`${selectedParticipant.id}`}
+                  onClose={() => setSelectedParticipant(null)}
+                  me={isMe(selectedParticipant)}
+                />
+              )}
             </div>
           </Box>
         </BlankLayout>
