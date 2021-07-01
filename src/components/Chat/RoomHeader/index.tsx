@@ -73,7 +73,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
   }
 
-  const hasPermission = !_.get(tournament, 'is_freezed', true)
+  const hasPermission = !_.get(tournament, 'is_freezed', false)
 
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
