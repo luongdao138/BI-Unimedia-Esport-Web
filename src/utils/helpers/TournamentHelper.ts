@@ -80,13 +80,6 @@ const formatDate = (date: string): string => {
   return moment(date).format('YYYY/MM/DD HH:mm')
 }
 
-const getRemainingDate = (date: string): number => {
-  const endDate = moment(moment(date).format('YYYY-MM-DD'))
-  const nowDate = moment()
-  const days = endDate.diff(nowDate, 'days')
-  return days < 0 ? 0 : days
-}
-
 const checkTarget = (targetIds: Array<number>, target: number): boolean => {
   if (!targetIds || !target || _.isEmpty(targetIds)) return false
 
@@ -212,7 +205,6 @@ export const TournamentHelper = {
   defaultDetails,
   getTypeValue,
   checkStatus,
-  getRemainingDate,
   checkTarget,
   getDetailData,
   checkParticipantsSelected,

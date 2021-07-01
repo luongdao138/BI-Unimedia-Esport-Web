@@ -42,7 +42,7 @@ export const URI = {
   TOURNAMENTS_INTERESTEDS: '/v2/tournaments/:id/interested',
   TOURNAMENTS_MATCHES: '/v2/tournaments/matches/:id',
   TOURNAMENTS_SET_PARTICIPANT: '/v2/tournaments/:id/set_participant',
-  TOURNAMENTS_WINNERS: '/web/v2/tournaments/:id/winners',
+  TOURNAMENTS_WINNERS: '/v2/tournaments/:id/winners',
   TOURNAMENTS_SET_SCORE: '/v2/tournaments/:id/set_score',
   TOURNAMENT_PARTICIPANT_NAME: '/v2/tournaments/:id/participant_name',
   TOURNAMENT_TEAMS: '/v2/tournament_teams/:id',

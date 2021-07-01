@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'
 import { UserProfile } from '@services/user.service'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import RemainingDate from '@containers/arena/Detail/Partials/ActionComponent/RemainingDate'
 
 interface RecruitingProps {
   tournament: TournamentDetail
@@ -23,13 +23,7 @@ const Recruiting: React.FC<RecruitingProps> = (props) => {
   return (
     <ActionComponent {...props}>
       <Box className={classes.body}>
-        <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-          <Typography>{t('common:tournament.until_deadline')}</Typography>
-          <Typography className={classes.highlightedNumber}>
-            {`${TournamentHelper.getRemainingDate(tournament.attributes.acceptance_end_date)}`}
-          </Typography>
-          <Typography>{t('common:common.day')}</Typography>
-        </Box>
+        <RemainingDate tournament={tournament} />
 
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
           <Typography className={classes.entryMembersInfoText}>{t('common:tournament.number_of_entries')}</Typography>

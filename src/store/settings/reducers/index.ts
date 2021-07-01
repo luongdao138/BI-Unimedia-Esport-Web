@@ -10,26 +10,22 @@ import { createReducer } from '@reduxjs/toolkit'
 
 type StateType = {
   userFeatures: UserFeaturesResponse
-  securitySettings: MyPageSettingsResponse['data']['attributes']
-  messageSettings: MessageSettingsResponse['data']['attributes']
+  securitySettings?: MyPageSettingsResponse['data']['attributes']
+  messageSettings?: MessageSettingsResponse['data']['attributes']
   notificationSettings: NotificationSettingsResponse['data']
   purchaseHistory: PurchaseHistoryResponse['data']
-  purchaseHistoryDetail: PurchaseHistoryDetailResponse
+  purchaseHistoryDetail?: PurchaseHistoryDetailResponse
   purchaseHistoryMeta?: Meta
-  cancelPurchase: PurchaseHistoryDetailResponse
+  cancelPurchase?: PurchaseHistoryDetailResponse
   blockedUsers: Array<UserResponse>
   blockedUsersMeta?: Meta
 }
 
 const initialState: StateType = {
   userFeatures: [],
-  securitySettings: undefined,
-  messageSettings: undefined,
   blockedUsers: [],
   notificationSettings: [],
   purchaseHistory: [],
-  purchaseHistoryDetail: undefined,
-  cancelPurchase: undefined,
 }
 
 export default createReducer(initialState, (builder) => {

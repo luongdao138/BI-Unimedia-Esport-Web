@@ -29,9 +29,17 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { t } = useTranslation(['common'])
   const [entryModalOpen, setEntryModalOpen] = useState(false)
 
-  const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed, isAdminJoined } = useArenaHelper(
-    tournament
-  )
+  const {
+    toMatches,
+    isModerator,
+    isTeam,
+    isInProgress,
+    isRecruiting,
+    isCompleted,
+    isCancelled,
+    isRecruitmentClosed,
+    isAdminJoined,
+  } = useArenaHelper(tournament)
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
 
@@ -39,13 +47,16 @@ const ActionComponent: React.FC<Props> = (props) => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
     const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
 
+    return `${entryStartDate} ～ ${entryEndDate}`
+  }
+  const buildArenaTitle = () => {
     const arenaStatus = isRecruiting
       ? t('common:tournament.entry_period')
       : isRecruitmentClosed || isInProgress || isCompleted
       ? t('common:tournament.holding_period')
       : ''
 
-    return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
+    return `${arenaStatus}`
   }
   const hideEntryModal = () => {
     setEntryModalOpen(false)
@@ -57,7 +68,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           <Box className={classes.actionButton}>
             {(tournament.attributes.is_entered && tournament.attributes.my_role) === 'interested' ? (
               <Box>
-                <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
+                <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
                 <UnjoinModal tournament={tournament} />
               </Box>
             ) : null}
@@ -84,7 +95,7 @@ const ActionComponent: React.FC<Props> = (props) => {
               <Box className={classes.actionButton}>
                 {isAdminJoined() ? (
                   <Box>
-                    <TeamEntryEditModal tournament={tournament} userProfile={userProfile} />
+                    <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
                   </Box>
                 ) : (
                   <ButtonPrimary round fullWidth onClick={() => setEntryModalOpen(true)}>
@@ -106,10 +117,15 @@ const ActionComponent: React.FC<Props> = (props) => {
     <Box>
       <Box className={classes.container}>
         <Box className={classes.header}>
-          <Typography variant="body1">{buildArenaPeriodValue()}</Typography>
+          <Box display="flex" className={classes.headerDesc}>
+            <Typography variant="body1" className={classes.headerTitle}>
+              {buildArenaTitle()}
+            </Typography>
+            <Typography variant="body1">{buildArenaPeriodValue()}</Typography>
+          </Box>
         </Box>
         {children}
-        <SubActionButtons tournament={tournament} />
+        {!isCancelled && <SubActionButtons tournament={tournament} />}
       </Box>
 
       {isRecruitmentClosed && isModerator && (
@@ -190,6 +206,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonRight: {
     marginLeft: theme.spacing(1),
   },
+  headerTitle: {
+    paddingRight: theme.spacing(1),
+  },
   [theme.breakpoints.down('sm')]: {
     buttonHolder: {
       display: 'flex',
@@ -201,6 +220,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     buttonRight: {
       marginLeft: 0,
+    },
+    headerDesc: {
+      flexDirection: 'column',
+    },
+    headerTitle: {
+      paddingRight: 0,
     },
   },
 }))

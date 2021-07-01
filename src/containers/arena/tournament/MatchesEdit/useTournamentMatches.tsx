@@ -20,9 +20,10 @@ const useTournamentMatches = (): {
   meta: Meta
   fetchMatches: () => void
   roundTitles: RoundTitles
+  handleBack: () => void
 } => {
   const { t } = useTranslation(['common'])
-  const { query, push } = useRouter()
+  const { query, push, back } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
@@ -60,12 +61,15 @@ const useTournamentMatches = (): {
     }
   }
 
+  const handleBack = () => back()
+
   return {
     matches,
     third_place_match,
     meta,
     fetchMatches,
     roundTitles,
+    handleBack,
   }
 }
 
