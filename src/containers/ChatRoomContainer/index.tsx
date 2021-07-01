@@ -266,7 +266,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
       <Box className={classes.list}>
         {renderLoader()}
         {renderErroMesage()}
-        {!hasError && !_.isEmpty(data) && _.isArray(data) && (
+        {!hasError && userId && !_.isEmpty(data) && _.isArray(data) && (
           <MessageList
             reply={onReply}
             report={onReport}
