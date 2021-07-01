@@ -26,7 +26,7 @@ export interface MessageListProps {
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 100,
+  defaultHeight: 95,
 })
 
 const contentRef = React.createRef<HTMLDivElement>()
@@ -54,6 +54,9 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
         messagesEndRef.current.scrollToRow(7)
       }
     }, 10)
+    if (messagesEndRef.current != null) {
+      messagesEndRef.current.recomputeRowHeights()
+    }
     cache.clearAll()
   }, [messages])
 
@@ -109,8 +112,8 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
 
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
-        {({ measure, registerChild }) => (
-          <div onLoad={measure} key={key} style={style} ref={registerChild}>
+        {({ registerChild }) => (
+          <div key={key} style={style} ref={registerChild}>
             <Message
               reply={props.reply}
               report={props.report}

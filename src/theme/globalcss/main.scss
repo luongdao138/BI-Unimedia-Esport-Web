@@ -399,6 +399,7 @@
   ::-webkit-scrollbar {
     width: 5px;
     opacity: 1;
+    cursor: pointer;
     padding: 2;
     visibility: visible;
   }
@@ -425,6 +426,7 @@
     width: 5px;
     opacity: 0;
     padding: 2;
+    cursor: pointer;
     visibility: hidden;
   }
   ::-webkit-scrollbar-track {
@@ -450,6 +452,7 @@
     opacity: 1;
     padding: 2;
     visibility: visible;
+    cursor: pointer;
   }
   ::-webkit-scrollbar-track {
     padding-left: 1px;
@@ -532,9 +535,10 @@
   flex: 1 1 auto;
 }
 .list-container::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
   padding: 2px;
   padding-right: 2px;
+  cursor: pointer;
 }
 .list-container::-webkit-scrollbar-track {
   padding-left: 1px;

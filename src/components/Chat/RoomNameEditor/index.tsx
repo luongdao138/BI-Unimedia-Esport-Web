@@ -27,9 +27,6 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   const dispatch = useAppDispatch()
   const checkNgWord = useCheckNgWord()
   const [newName, setNewName] = useState('')
-  const renderFooter = () => {
-    return <Box className={classes.stickyFooter}></Box>
-  }
 
   useEffect(() => {
     if (_.isString(roomName)) {
@@ -52,7 +49,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         })
       )
       setTimeout(function () {
-        dispatch(addToast(i18n.t('common:chat.toast.room_name_changed')))
+        dispatch(addToast(i18n.t('common:chat.toast.room_image_success')))
       }, 1000)
       hide()
     } else {
@@ -65,6 +62,16 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
     if (newName === roomName) return true
     return false
   }
+
+  const renderFooter = () => (
+    <div className={classes.stickyFooter}>
+      <Box maxWidth={280} className={classes.buttonBottom}>
+        <ButtonPrimary type="submit" disabled={isButtonDisabled()} round fullWidth onClick={onSubmit}>
+          {i18n.t('common:chat.add_submit')}
+        </ButtonPrimary>
+      </Box>
+    </div>
+  )
 
   return (
     <Box className={classes.container}>
@@ -91,11 +98,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
               <ESInput placeholder={i18n.t('common:chat.room_name_placeholder')} value={newName} fullWidth onChange={handleChange} />
             </form>
           </Box>
-          <Box maxWidth={280} className={classes.buttonBottom}>
-            <ButtonPrimary type="submit" round fullWidth disabled={isButtonDisabled()} onClick={onSubmit}>
-              変更する
-            </ButtonPrimary>
-          </Box>
+          {renderFooter()}
         </DialogContent>
       </ESDialog>
     </Box>
@@ -124,16 +127,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black,
     borderTop: `1px solid`,
     borderTopColor: Colors.text['300'],
-    height: 162,
+    height: 'auto',
   },
 
   buttonBottom: {
-    transform: 'translate(-50%, 0px)',
-    position: 'fixed',
-    left: '50%',
-    bottom: theme.spacing(11),
+    margin: 'auto',
     width: theme.spacing(35),
     minWidth: theme.spacing(18),
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(8),
   },
   [theme.breakpoints.down('md')]: {
     stickyFooter: {

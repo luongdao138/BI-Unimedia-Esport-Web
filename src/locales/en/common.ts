@@ -627,6 +627,7 @@ export default {
     add_submit: '追加する',
     toast: {
       room_name_changed: 'グループ名を変更しました',
+      room_image_success: 'グループアイコンを変更しました',
     },
   },
   notification: {

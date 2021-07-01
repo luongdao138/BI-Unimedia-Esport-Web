@@ -5,6 +5,8 @@ import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
+import { addToast } from '@store/common/actions'
+import i18n from '@locales/i18n'
 
 interface ReturnType {
   imageProcess: (file: File, userId: number, roomId: string, blob: any) => void
@@ -45,6 +47,7 @@ const useRoomImageUploader = (): ReturnType => {
     }
     dispatch(socketActions.socketSend(payload))
     setMeta({ uploading: false })
+    dispatch(addToast(i18n.t('common:chat.toast.room_image_success')))
   }
 
   return { imageProcess, uploadMeta }
