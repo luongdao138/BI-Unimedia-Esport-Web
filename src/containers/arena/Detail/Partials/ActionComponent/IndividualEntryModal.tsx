@@ -16,6 +16,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -27,10 +28,11 @@ interface IndividualEntryModalProps {
 const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
   const { t } = useTranslation(['common'])
   const { join, joinMeta } = useEntry()
+  const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      onClose()
+      handleClose()
     }
   }, [joinMeta.loaded, joinMeta.error])
   const { checkNgWord } = useCheckNgWord()
@@ -57,8 +59,20 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   })
 
   useEffect(() => {
-    if (open) setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
+    if (open) {
+      setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+    }
   }, [open])
+
+  useEffect(() => {
+    return () => resetTitle()
+  }, [])
+
+  const handleClose = () => {
+    resetTitle()
+    onClose()
+  }
 
   return (
     <Box>
@@ -67,7 +81,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         returnText={t('common:tournament.join')}
         actionButtonText={t('common:tournament.join_with_this')}
         actionButtonDisabled={!isValid}
-        onReturnClicked={onClose}
+        onReturnClicked={handleClose}
         onActionButtonClicked={handleSubmit}
       >
         <form onSubmit={handleSubmit}>

@@ -14,6 +14,7 @@ import useTeamDetail from './useTeamDetail'
 import TeamMemberItemExpanded from '../TeamMemberItemExpanded'
 import TeamEntryModal from './TeamEntryModal'
 import { TeamMemberSelectItem } from '@store/arena/actions/types'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -39,13 +40,19 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   const { teamDetail, isPending, getTeamDetail } = useTeamDetail()
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
+  const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
     if (open) {
       setEditMode(false)
       fetch()
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
     }
   }, [open])
+
+  useEffect(() => {
+    return () => resetTitle()
+  }, [])
 
   useEffect(() => {
     if (isPreview) fetch()
@@ -120,6 +127,11 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
     }
   }
 
+  const handleClose = () => {
+    resetTitle()
+    onClose()
+  }
+
   return (
     <Box>
       <StickyActionModal
@@ -127,7 +139,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
         returnText={t('common:tournament.join')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
         actionButtonDisabled={false}
-        onReturnClicked={onClose}
+        onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
         hideFooter={!myTeam}
       >
@@ -136,7 +148,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={onClose}>
+                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={handleClose}>
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }

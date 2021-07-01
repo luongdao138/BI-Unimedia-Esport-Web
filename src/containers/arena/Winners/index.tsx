@@ -155,6 +155,7 @@ const ArenaWinners: React.FC = () => {
           tournament={arena}
           userProfile={userProfile}
           previewMode
+          open={true}
           initialTeamId={`${getTeamId(selectedItem)}`}
           onClose={() => setSelectedItem(null)}
           myTeam={isMyTeam(selectedItem)}
@@ -163,6 +164,7 @@ const ArenaWinners: React.FC = () => {
         <InidividualEntryEditModal
           tournament={arena}
           previewMode
+          open={true}
           initialParticipantId={`${selectedItem.id}`}
           onClose={() => setSelectedItem(null)}
           me={isMe(selectedItem)}

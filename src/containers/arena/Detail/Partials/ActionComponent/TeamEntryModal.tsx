@@ -24,6 +24,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -50,6 +51,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
+  const { resetTitle, changeTitle } = useDocTitle()
 
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
@@ -59,6 +61,12 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       reset()
     }
   }, [joinMeta.loaded, joinMeta.error])
+
+  useEffect(() => {
+    changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+
+    return () => resetTitle()
+  }, [])
 
   useEffect(() => {
     if (updateTeamMeta.loaded || updateTeamMeta.error) {

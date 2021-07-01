@@ -799,5 +799,7 @@ export default {
     arena_matches_title: 'eXeLAB｜対戦表',
     arena_winners_title: 'eXeLAB｜大会結果',
     arena_members_title: 'eXeLAB｜出場メンバー',
+    arena_entry_title: 'eXeLAB｜エントリー',
+    arena_summary_title: 'eXeLAB｜大会総括',
   },
 }

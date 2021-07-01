@@ -148,22 +148,6 @@ const ActionComponent: React.FC<Props> = (props) => {
         </>
       )}
 
-      <TeamEntryEditModal
-        tournament={tournament}
-        userProfile={userProfile}
-        myTeam
-        open={teamEntryEditShow}
-        onClose={() => setTeamEntryEditShow(false)}
-      />
-      <TeamEntryModal tournament={tournament} userProfile={userProfile} open={teamEntryShow} onClose={() => setTeamEntryShow(false)} />
-      <InidividualEntryEditModal tournament={tournament} me open={soloEntryEditShow} onClose={() => setSoloEntryEditShow(false)} />
-      <IndividualEntryModal
-        tournament={tournament}
-        userProfile={userProfile}
-        open={soloEntryShow}
-        onClose={() => setSoloEntryShow(false)}
-      />
-
       {isModerator && isCompleted && !isNotHeld && (
         <Box className={classes.actionButton}>
           <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
@@ -172,6 +156,25 @@ const ActionComponent: React.FC<Props> = (props) => {
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
         </Box>
       )}
+
+      {/* modals */}
+      {teamEntryShow && (
+        <TeamEntryModal tournament={tournament} userProfile={userProfile} open={teamEntryShow} onClose={() => setTeamEntryShow(false)} />
+      )}
+      <TeamEntryEditModal
+        tournament={tournament}
+        userProfile={userProfile}
+        myTeam
+        open={teamEntryEditShow}
+        onClose={() => setTeamEntryEditShow(false)}
+      />
+      <InidividualEntryEditModal tournament={tournament} me open={soloEntryEditShow} onClose={() => setSoloEntryEditShow(false)} />
+      <IndividualEntryModal
+        tournament={tournament}
+        userProfile={userProfile}
+        open={soloEntryShow}
+        onClose={() => setSoloEntryShow(false)}
+      />
     </Box>
   )
 }

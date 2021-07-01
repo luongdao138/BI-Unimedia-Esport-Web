@@ -17,6 +17,7 @@ import ESInput from '@components/Input'
 import { useStore } from 'react-redux'
 import * as Yup from 'yup'
 import { ROLE } from '@constants/tournament.constants'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -34,6 +35,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
   const { participant, isPending, getParticipant, changeName, changeDone } = useParticipantDetail()
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
+  const { resetTitle, changeTitle } = useDocTitle()
   const validationSchema = Yup.object().shape({
     nickname: Yup.string()
       .required(t('common:common.error'))
@@ -66,8 +68,13 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
     if (open) {
       setEditMode(false)
       getParticipant(_.get(tournament, 'attributes.hash_key', ''), getPid())
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
     }
   }, [open])
+
+  useEffect(() => {
+    return () => resetTitle()
+  }, [])
 
   useEffect(() => {
     if (isPreview) {
@@ -106,6 +113,12 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
       },
     }
   }
+
+  const handleClose = () => {
+    resetTitle()
+    onClose()
+  }
+
   return (
     <Box>
       <StickyActionModal
@@ -113,7 +126,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
         returnText={t('common:tournament.join')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
         actionButtonDisabled={!isValid}
-        onReturnClicked={onClose}
+        onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
         hideFooter={!me}
       >
@@ -122,7 +135,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={onClose}>
+                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={handleClose}>
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }
