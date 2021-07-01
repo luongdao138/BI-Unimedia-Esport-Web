@@ -33,7 +33,6 @@ const contentRef = React.createRef<HTMLDivElement>()
 
 const MessageList = forwardRef((props: MessageListProps, ref) => {
   const { messages, users, onFetchMore, paginating, currentUser, onReplyClick } = props
-  const [showScroll, setShowScroll] = useState(false)
   const [isBottom, setBottom] = useState<boolean>(true)
   const [scrolling, setScrolling] = useState<number>(0)
   const messagesEndRef = useRef<any>(null)
@@ -54,9 +53,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
         messagesEndRef.current.scrollToRow(7)
       }
     }, 10)
-    if (messagesEndRef.current != null) {
-      messagesEndRef.current.recomputeRowHeights()
-    }
     cache.clearAll()
   }, [messages])
 
@@ -76,7 +72,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       messagesEndRef.current?.scrollToRow(position - 1)
       setTimeout(() => {
         messagesEndRef.current?.scrollToRow(position - 1)
-        setShowScroll(false)
         setBottom(true)
       }, 100)
     }
@@ -86,7 +81,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     const scrollPos = e.scrollTop + e.clientHeight
     const height = e.scrollHeight
     const offset = Math.abs(height - scrollPos)
-    const bottomThreshold = 1
+    const bottomThreshold = 150
     if (e.scrollTop <= 0) {
       // handle this later
       setScrolling(scrolling + 1)
@@ -95,11 +90,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
       setBottom(true)
     } else if (offset > bottomThreshold) {
       setBottom(false)
-      if (offset > 150) {
-        setShowScroll(true)
-      } else {
-        setShowScroll(false)
-      }
     }
   }, 400)
 
@@ -146,7 +136,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     <div style={{ width: '100%', height: '100%', position: 'relative' }} ref={contentRef}>
       <IconButton
         disableRipple
-        style={{ display: showScroll ? 'flex' : 'none' }}
+        style={{ display: !isBottom ? 'flex' : 'none' }}
         className={classes.bottomArrow}
         onClick={() => _scrollToBottom(messages.length)}
         aria-label="scroll bottom"

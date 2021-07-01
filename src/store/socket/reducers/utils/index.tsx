@@ -29,30 +29,35 @@ const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageT
   return updatedObj
 }
 
-const roomListUpdate = (roomList: ChatDataType[], message: MessageType[], activeRoom: string): ChatDataType[] => {
+const roomListUpdate = (roomList: ChatDataType[] | undefined, message: MessageType[], activeRoom: string): ChatDataType[] => {
   // check if room exist in new msg
-  let updatedRoom: ChatDataType[]
-  const msg = message[0]
-  const hasRoomValue = roomList.find(function (value) {
-    return !!(value.chatRoomId === msg.chatRoomId)
-  })
+  if (roomList !== undefined) {
+    const clonedList = _.cloneDeep(roomList)
+    let updatedRoom: ChatDataType[]
+    const msg = message[0]
+    const hasRoomValue = clonedList.find(function (value) {
+      return !!(value.chatRoomId === msg.chatRoomId)
+    })
 
-  if (hasRoomValue && _.isArray(roomList)) {
-    if (activeRoom === msg.chatRoomId) {
-      updatedRoom = _.map(roomList, function (a: ChatDataType) {
-        return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg } : a
-      })
+    if (hasRoomValue && _.isArray(clonedList)) {
+      if (activeRoom === msg.chatRoomId) {
+        updatedRoom = _.map(clonedList, function (a: ChatDataType) {
+          return a.chatRoomId === msg.chatRoomId ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg } : a
+        })
+      } else {
+        updatedRoom = _.map(clonedList, function (a: ChatDataType) {
+          return a.chatRoomId === msg.chatRoomId
+            ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg, unseenCount: a.unseenCount + 1 }
+            : a
+        })
+      }
     } else {
-      updatedRoom = _.map(roomList, function (a: ChatDataType) {
-        return a.chatRoomId === msg.chatRoomId
-          ? { ...a, lastMsgAt: msg.createdAt, lastMsg: msg.formattedMsg, unseenCount: a.unseenCount + 1 }
-          : a
-      })
+      updatedRoom = roomList
     }
+    return updatedRoom
   } else {
-    updatedRoom = roomList
+    return []
   }
-  return updatedRoom
 }
 
 const unseenClear = (roomList: ChatDataType[], activeRoom: string): ChatDataType[] => {
