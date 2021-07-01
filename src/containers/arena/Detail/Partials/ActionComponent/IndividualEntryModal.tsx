@@ -33,7 +33,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
       onClose()
     }
   }, [joinMeta.loaded, joinMeta.error])
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({

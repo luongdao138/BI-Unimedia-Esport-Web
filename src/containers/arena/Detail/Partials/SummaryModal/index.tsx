@@ -32,7 +32,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const [isUploading, setUploading] = useState(false)
   const { summary, summaryMeta } = useSummary()
   const { uploadArenaSummaryImage } = useUploadImage()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
     summary: Yup.string().required(t('common:common.required')).max(190, t('common:common.too_long')),
@@ -66,7 +66,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaSummaryImage(file, 1, true, (imageUrl) => {
+    uploadArenaSummaryImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })

@@ -39,10 +39,11 @@ export default {
     integer: '数字のみ入力してください。',
     validation: {
       acceptance_dates: 'エントリー開始日時はエントリー終了日時より前にしてください',
-      acceptance_end_start_date: 'エントリー終了日時は開始日時より前にしてください',
-      start_end_date: '開始日時は終了日時より前にしてください',
+      acceptance_end_start_date: 'エントリー終了日時は開催日時より前にしてください',
+      start_end_date: '開催日時は終了日時より前にしてください',
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
+      char_limit: '{{char_limit}}文字以内で入力してください。',
     },
     no_data: '対象データありません',
     dash: '-',
@@ -287,6 +288,9 @@ export default {
     no_tag_available: 'No tag available',
     no_communities: 'おすすめコミュニティは存在しません',
     discord_placeholder: 'ユーザー名#0000を入力してください',
+    block_confirm_title: '該当ユーザのブロックを解除しても良いですか。',
+    block_confirm_yes: 'はい',
+    block_confirm_no: 'いいえ',
   },
   gender: {
     male: '男性',
@@ -433,12 +437,6 @@ export default {
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
     to_detail: '大会詳細',
-    validation_popup: {
-      title: 'Validation error',
-      message: 'Please provide valid data into corresponding fields',
-      check_item: 'チェック項目：',
-      confirm: '了解',
-    },
     choice: '選択',
     double_zero: '00',
     cancelled: 'この大会は中止されました',
@@ -514,7 +512,7 @@ export default {
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
     public_or_private: '大会公開設定',
-    title_placeholder: '○○文字まで入力することができます。',
+    title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
 例）
@@ -797,5 +795,9 @@ export default {
     home_top: 'eXeLAB｜ゲームが広がる。仲間ができる。',
     home_title: 'eXeLAB｜ホーム',
     arena_default_title: 'eXeLAB｜大会',
+    arena_detail_title: 'eXeLAB｜大会情報',
+    arena_matches_title: 'eXeLAB｜対戦表',
+    arena_winners_title: 'eXeLAB｜大会結果',
+    arena_members_title: 'eXeLAB｜出場メンバー',
   },
 }

@@ -54,7 +54,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   const [selectedUsers, setSelectedUsers] = useState([] as number[])
   const [roomId, setRoomId] = useState(null as null | string)
   const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   const ref = useRef<{ handleUpload: () => void }>(null)
   const inputRef = useRef<{ clearInput: () => void }>(null)

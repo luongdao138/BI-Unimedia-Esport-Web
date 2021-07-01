@@ -61,7 +61,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   const { copy } = useCopyToClipboard(true, i18n.t('common:chat.chat_copied'))
   const classes = useStyles()
 
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   const dispatch = useAppDispatch()
 

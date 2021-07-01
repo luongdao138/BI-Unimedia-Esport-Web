@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { RULES, PARTICIPATION_TYPES } from '@constants/tournament.constants'
 import { UserLoginResponse } from '@services/auth.service'
+import _ from 'lodash'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -22,6 +23,7 @@ ESInput.defaultProps = {
 const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
+  const [coOrganizers, setCoOrganizers] = useState('')
   const classes = useStyles()
 
   useEffect(() => {
@@ -49,6 +51,17 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       }
     })
   }, [values.stepTwo.participant_type])
+
+  useEffect(() => {
+    if (values.stepFour.co_organizers) {
+      const organizers = _.chain(values.stepFour.co_organizers)
+        .map((o) => o.attributes.nickname)
+        .join(' ')
+        .value()
+
+      setCoOrganizers(organizers)
+    }
+  }, [values.stepFour.co_organizers])
 
   const formatDate = (label: string, beginDateStr: string, endDateStr: string) => {
     const beginDate = moment(beginDateStr).format('YYYY年MM月DD日')
@@ -90,7 +103,10 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Typography variant="h2">{t('common:tournament_create.comfirm_title')}</Typography>
       <Box pb={4.25} />
       <Box>
-        <img src={values.stepOne.cover_image_url} className={classes.coverImg} />
+        <img
+          src={values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'}
+          className={classes.coverImg}
+        />
       </Box>
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
@@ -136,8 +152,18 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.area')} value={ruleName} disabled={true} fullWidth />
+      {values.stepThree.area_name && <ESInput value={values.stepThree.area_name} disabled={true} fullWidth />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
+      <Box pb={2} />
+      <ESInput labelPrimary={t('common:tournament_create.co_organizer')} value={coOrganizers} disabled={true} fullWidth />
+      <Box pb={2} />
+      <ESInput
+        labelPrimary={t('common:tournament_create.organizer_name')}
+        value={values.stepFour.organizer_name}
+        disabled={true}
+        fullWidth
+      />
       <Box pb={2} />
     </Box>
   )

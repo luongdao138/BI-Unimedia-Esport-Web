@@ -48,7 +48,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
   const isPending = joinMeta.pending || updateTeamMeta.pending
@@ -187,7 +187,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaTeamImage(file, 1, true, (imageUrl) => {
+    uploadArenaTeamImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       formik.setFieldValue('team_icon_url', imageUrl)
     })
