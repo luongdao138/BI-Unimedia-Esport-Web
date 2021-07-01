@@ -786,5 +786,9 @@ export default {
     home_top: 'eXeLAB｜ゲームが広がる。仲間ができる。',
     home_title: 'eXeLAB｜ホーム',
     arena_default_title: 'eXeLAB｜大会',
+    arena_detail_title: 'eXeLAB｜大会情報',
+    arena_matches_title: 'eXeLAB｜対戦表',
+    arena_winners_title: 'eXeLAB｜大会結果',
+    arena_members_title: 'eXeLAB｜出場メンバー',
   },
 }
