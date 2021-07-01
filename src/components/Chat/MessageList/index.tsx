@@ -54,9 +54,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
         messagesEndRef.current.scrollToRow(7)
       }
     }, 10)
-    if (messagesEndRef.current != null) {
-      messagesEndRef.current.recomputeRowHeights()
-    }
     cache.clearAll()
   }, [messages])
 
