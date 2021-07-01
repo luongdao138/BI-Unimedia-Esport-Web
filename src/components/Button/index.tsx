@@ -2,7 +2,7 @@ import { Button, ButtonProps } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   containedPrimary: (props: { gradient?: boolean; round?: boolean; minWidth?: number }) => ({
     minWidth: props.minWidth,
     borderRadius: props.round ? 25 : 4,
@@ -38,6 +38,11 @@ const useStyles = makeStyles(() => ({
       borderColor: Colors.white_opacity[30],
     },
   }),
+  [theme.breakpoints.down('sm')]: {
+    outlined: {
+      padding: '2px 10px',
+    },
+  },
 }))
 
 const ESButton: React.FC<

@@ -190,7 +190,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
         bkColor="rgba(0,0,0,0.8)"
         alignTop
       >
-        <DialogContent style={{ padding: 0 }}>
+        <DialogContent className={classes.dialogContentWrap} style={{ padding: 0 }}>
           <Box pt={6}>
             <ESInput
               placeholder={i18n.t('common:chat.member_add_placeholder')}
@@ -235,6 +235,9 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 RoomMemberAddView.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
+  dialogContentWrap: {
+    padding: 0,
+  },
   item: {
     width: '100%',
     paddingLeft: 5,
@@ -335,6 +338,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(8),
   },
   [theme.breakpoints.down('md')]: {},
+  [theme.breakpoints.down('sm')]: {
+    dialogContentWrap: {
+      padding: '8px 24px',
+    },
+  },
 }))
 
 export default RoomMemberAddView
