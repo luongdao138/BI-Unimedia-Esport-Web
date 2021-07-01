@@ -5,7 +5,6 @@ import _ from 'lodash'
 
 interface SocketPayload {
   action: CHAT_ACTION_TYPE
-  userId?: number
   [x: string]: any
 }
 
@@ -31,8 +30,11 @@ export const socketActions = {
     }
   },
   sendMessage: (payload: SocketPayload) => {
+    const socketPayload = _.omit(payload, 'userId')
     return (dispatch: AppDispatch) => {
-      Promise.resolve(dispatch(socketCreators.messagePending(payload))).then(() => dispatch(socketCreators.socketSend(payload)))
+      Promise.resolve(dispatch(socketCreators.messagePending(payload))).then(() =>
+        dispatch(socketCreators.socketSend(socketPayload as SocketPayload))
+      )
     }
   },
   initRoomLoad: (payload: SocketPayload) => {
@@ -65,7 +67,6 @@ export const socketCreators = {
   paginating: () => ({
     type: CHAT_ACTION_TYPE.MESSAGE_PAGINATING,
   }),
-
   cleanRoom: () => ({
     type: CHAT_ACTION_TYPE.CLEAN_ROOM,
   }),

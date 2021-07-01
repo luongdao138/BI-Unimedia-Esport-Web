@@ -25,7 +25,6 @@ import ESToast from '@components/Toast'
 import { ESRoutes } from '@constants/route.constants'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
-
 interface WithRouterProps {
   router: NextRouter
 }
@@ -51,14 +50,17 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
 
   const raw_code = router.query.user_code || []
 
-  const { userCode, profile, isOthers, meta, getMemberProfile, profileImageChange, setFollowState, clearMemberProfile } = useUserData(
-    raw_code
-  )
-
-  const handleSubmit = () => {
-    unblockUser({ user_code: attr.user_code })
-    setBlocked(false)
-  }
+  const {
+    userCode,
+    profile,
+    isOthers,
+    isAuthenticated,
+    meta,
+    getMemberProfile,
+    profileImageChange,
+    setFollowState,
+    clearMemberProfile,
+  } = useUserData(raw_code)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,10 +74,16 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   }, [])
 
   useEffect(() => {
-    if (isOthers) {
-      getMemberProfile(userCode)
+    if (router.isReady) {
+      if (isOthers) {
+        getMemberProfile(userCode)
+      } else {
+        if (!isAuthenticated && raw_code.length == 0) {
+          router.push(ESRoutes.NOT_FOUND)
+        }
+      }
     }
-  }, [raw_code])
+  }, [router.isReady, raw_code])
 
   useEffect(() => {
     setTab(0)
@@ -145,56 +153,63 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             />
             {isOthers ? (
               <Box className={classes.menu}>
-                {attr.is_direct_chat_available ? (
+                {isAuthenticated && attr.is_direct_chat_available ? (
                   <ESButton variant="outlined" round className={classes.buttonInbox} disabled={disable} onClick={dm}>
                     <Icon className={`fas fa-inbox ${classes.inbox}`} />
                   </ESButton>
                 ) : null}
-                {attr.is_blocked ? (
-                  <ESButton
-                    variant="outlined"
-                    round
-                    className={classes.button}
-                    disabled={disable}
-                    onClick={() => {
-                      handleSubmit()
-                    }}
-                  >
-                    {i18n.t('common:profile.unblock')}
-                  </ESButton>
-                ) : isFollowing ? (
-                  <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
-                    {i18n.t('common:profile.following')}
-                  </ESButton>
-                ) : (
-                  <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
-                    {i18n.t('common:profile.follow_as')}
-                  </ESButton>
-                )}
-                <ESMenu>
-                  {attr.is_blocked ? (
-                    <ESMenuItem
+                {isAuthenticated ? (
+                  attr.is_blocked ? (
+                    <ESButton
+                      variant="outlined"
+                      round
+                      className={classes.button}
+                      disabled={disable}
                       onClick={() => {
                         unblockUser({ user_code: attr.user_code })
                         setBlocked(false)
                       }}
                     >
-                      {i18n.t('common:profile.menu_unblock')}
-                      {blockMeta.pending ? <ESLoader /> : null}
-                    </ESMenuItem>
+                      {i18n.t('common:profile.unblock')}
+                    </ESButton>
+                  ) : isFollowing ? (
+                    <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
+                      {i18n.t('common:profile.following')}
+                    </ESButton>
                   ) : (
-                    <ESMenuItem
-                      onClick={() => {
-                        blockUser({ user_code: attr.user_code })
-                        setBlocked(true)
-                      }}
-                    >
-                      {i18n.t('common:profile.menu_block')}
-                      {unblockMeta.pending ? <ESLoader /> : null}
-                    </ESMenuItem>
-                  )}
+                    <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
+                      {i18n.t('common:profile.follow_as')}
+                    </ESButton>
+                  )
+                ) : null}
+                <ESMenu>
+                  {isAuthenticated ? (
+                    attr.is_blocked ? (
+                      <ESMenuItem
+                        onClick={() => {
+                          unblockUser({ user_code: attr.user_code })
+                          setBlocked(false)
+                        }}
+                      >
+                        {i18n.t('common:profile.menu_unblock')}
+                        {blockMeta.pending ? <ESLoader /> : null}
+                      </ESMenuItem>
+                    ) : (
+                      <ESMenuItem
+                        onClick={() => {
+                          blockUser({ user_code: attr.user_code })
+                          setBlocked(true)
+                        }}
+                      >
+                        {i18n.t('common:profile.menu_block')}
+                        {unblockMeta.pending ? <ESLoader /> : null}
+                      </ESMenuItem>
+                    )
+                  ) : null}
 
-                  <ESMenuItem onClick={handleReportOpen}>{i18n.t('common:user_report.report_menu')}</ESMenuItem>
+                  <ESMenuItem onClick={() => (isAuthenticated ? handleReportOpen() : null)}>
+                    {i18n.t('common:user_report.report_menu')}
+                  </ESMenuItem>
                 </ESMenu>
               </Box>
             ) : (
@@ -216,13 +231,15 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <ESFollowers user_code={isOthers ? userCode : null} />
           </Box>
         </Grid>
-        <ESReport
-          reportType={REPORT_TYPE.USER_LIST}
-          target_id={Number(profile.id)}
-          data={profile}
-          open={openReport}
-          handleClose={() => setOpenReport(false)}
-        />
+        {isAuthenticated ? (
+          <ESReport
+            reportType={REPORT_TYPE.USER_LIST}
+            target_id={userCode}
+            data={profile}
+            open={openReport}
+            handleClose={() => setOpenReport(false)}
+          />
+        ) : null}
       </>
     )
   }
@@ -376,7 +393,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 30,
     marginBottom: 50,
   },
   inbox: {
