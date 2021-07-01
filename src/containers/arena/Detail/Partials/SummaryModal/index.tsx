@@ -59,7 +59,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaSummaryImage(file, 1, true, (imageUrl) => {
+    uploadArenaSummaryImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })

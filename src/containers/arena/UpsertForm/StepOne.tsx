@@ -24,8 +24,8 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   const classes = useStyles()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
-  const handleUpload = useCallback((file: File) => {
-    uploadArenaCoverImage(file, 1, true, (imageUrl) => {
+  const handleUpload = useCallback((file: File, blob: any) => {
+    uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
     })
   }, [])

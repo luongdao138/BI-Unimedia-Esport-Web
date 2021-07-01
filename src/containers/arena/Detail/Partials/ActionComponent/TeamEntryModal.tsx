@@ -178,7 +178,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaTeamImage(file, 1, true, (imageUrl) => {
+    uploadArenaTeamImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       formik.setFieldValue('team_icon_url', imageUrl)
     })
