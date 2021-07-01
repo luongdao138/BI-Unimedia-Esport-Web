@@ -290,7 +290,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'none',
   },
   inputArea: {
-    pointerEvents: 'all',
+    pointerEvents: 'initial',
   },
   title: { fontSize: 17 },
   loaderBox: {
