@@ -55,7 +55,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
             checked={formik.values.stepTwo.has_third_place}
             onChange={() => formik.setFieldValue('stepTwo.has_third_place', !formik.values.stepTwo.has_third_place)}
             label={i18n.t('common:tournament_create.has_third_place')}
-            disabled={!editables.has_third_place}
+            disabled={!editables.rule}
           />
         )}
       </Box>

@@ -91,7 +91,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
             formik.setFieldValue('stepOne.has_prize', !formik.values.stepOne.has_prize)
           }}
           label={i18n.t('common:tournament_create.has_prize')}
-          disabled={!editables.has_prize}
+          disabled={!editables.prize}
         />
       </Box>
       <Box pb={1}>
@@ -107,7 +107,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
             helperText={formik.touched?.stepOne?.prize_amount && formik.errors?.stepOne?.prize_amount}
             error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
             size="small"
-            disabled={!editables.prize_amount}
+            disabled={!editables.prize}
           />
         )}
       </Box>

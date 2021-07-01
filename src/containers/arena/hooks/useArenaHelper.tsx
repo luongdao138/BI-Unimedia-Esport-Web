@@ -3,7 +3,6 @@ import { TournamentDetail } from '@services/arena.service'
 import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 
 const useArenaHelper = (
@@ -42,7 +41,7 @@ const useArenaHelper = (
   const isBattleRoyale = tournament?.attributes?.rule === RULE.BATTLE_ROYALE
   const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
   const isTeam = tournament?.attributes?.participant_type > 1
-  const isEditable = isModerator && !TournamentHelper.isStatusPassed(status, TOURNAMENT_STATUS.IN_PROGRESS)
+  const isEditable = isModerator
   const isFreezed = tournament?.attributes?.is_freezed
   const isNotHeld = isCompleted && !isFreezed
 

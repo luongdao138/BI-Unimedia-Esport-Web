@@ -30,12 +30,9 @@ export type EditableTypes = {
   participant_type: boolean
   area_id: boolean
   area_name: boolean
-  address: boolean
-  has_prize: boolean
-  prize_amount: boolean
+  prize: boolean
   terms_of_participation: boolean
   organizer_name: boolean
-  has_third_place: boolean
   retain_history: boolean
   t_type: boolean
   game_title: boolean
@@ -61,30 +58,30 @@ const useTournamentCreate = (): {
   const arena = useAppSelector(selectors.getTournamentDetail)
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
+    // always editable
+    cover_image: true,
     title: true,
     overview: true,
+    prize: true, // has_prize, prize_amount
+    game_hardware: true,
+    terms_of_participation: true,
+    t_type: true,
     notes: true,
-    rule: true,
+    area_id: true,
+    area_name: true,
+    co_organizers: true,
+    organizer_name: true,
+    // always not editable
+    rule: false, // rule, has_third_place
+    participant_type: false,
+    game_title: false,
+    // conditional editable
     max_participants: true,
+    retain_history: true,
     start_date: true,
     end_date: true,
     acceptance_start_date: true,
     acceptance_end_date: true,
-    participant_type: true,
-    area_id: true,
-    area_name: true,
-    address: true,
-    has_prize: true,
-    prize_amount: true,
-    terms_of_participation: true,
-    organizer_name: true,
-    has_third_place: true,
-    retain_history: true,
-    t_type: true,
-    game_title: true,
-    game_hardware: true,
-    co_organizers: true,
-    cover_image: true,
   })
   const { isEditable } = useArenaHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
@@ -116,27 +113,48 @@ const useTournamentCreate = (): {
 
   useEffect(() => {
     if (arena && router.asPath.endsWith('/edit') && router.query.hash_key) {
-      const _status = arena.attributes.status
       if (!isEditable) {
         router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
+        return
       }
+
+      const _status = arena.attributes.status
 
       let _editables = { ...editables }
 
       if (_status !== TOURNAMENT_STATUS.READY) {
         _editables = _.mapValues(_editables, () => false)
 
-        _editables.notes = true
-        _editables.co_organizers = true
+        // always editable
+        _editables.cover_image = true
+        _editables.title = true
+        _editables.overview = true
+        _editables.prize = true // has_prize, prize_amount
+        _editables.game_hardware = true
+        _editables.terms_of_participation = true
         _editables.t_type = true
+        _editables.notes = true
+        _editables.area_id = true
+        _editables.area_name = true
+        _editables.co_organizers = true
+        _editables.organizer_name = true
+
+        // conditional editable
         if (_status === TOURNAMENT_STATUS.RECRUITING) {
+          _editables.max_participants = true
+          _editables.retain_history = true
+          _editables.acceptance_start_date = true
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
-          _editables.max_participants = true
         } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
           _editables.start_date = true
           _editables.end_date = true
+        } else if (_status === TOURNAMENT_STATUS.IN_PROGRESS) {
+          _editables.start_date = true
+          _editables.end_date = true
+        } else if (_status === TOURNAMENT_STATUS.COMPLETED) {
+          // no change
         }
       }
       setEditables(_editables)

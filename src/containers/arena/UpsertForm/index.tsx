@@ -165,7 +165,7 @@ const TournamentCreate: React.FC = () => {
     <ESStickyFooter
       disabled={false}
       noScroll
-      noSpacing={isEdit}
+      noSpacing={isEdit && !isConfirm}
       content={
         <>
           {isConfirm ? (
