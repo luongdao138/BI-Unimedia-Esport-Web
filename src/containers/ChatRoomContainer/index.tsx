@@ -417,9 +417,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     header: {
       position: 'absolute',
       top: 0,
-      left: 40,
+      left: 60,
       right: 0,
-      zIndex: 1000,
+      zIndex: 200,
     },
   },
 }))
