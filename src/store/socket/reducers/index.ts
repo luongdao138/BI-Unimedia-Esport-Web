@@ -78,6 +78,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: undefined,
         newRoomId: undefined,
         error: undefined,
+        activeRoom: undefined,
       }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages

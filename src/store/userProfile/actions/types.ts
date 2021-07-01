@@ -28,4 +28,6 @@ export enum USER_PROFILE_ACTION_TYPE {
   CLEAR_FOLLOWING = 'followers/clearFollowing',
   FOLLOWING_INCREASE = 'followers/increase',
   FOLLOWING_DECREASE = 'followers/decrease',
+  SAVE_NEW_EMAIL = 'profile/save_new_email',
+  CLEAR_NEW_EMAIL = 'profile/clear_new_email',
 }

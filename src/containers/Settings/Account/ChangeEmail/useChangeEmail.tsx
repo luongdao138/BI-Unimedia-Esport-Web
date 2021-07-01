@@ -25,6 +25,7 @@ const useChangeEmail = () => {
 
   const changeEmail = (params: services.ChangeEmailParams) => {
     dispatch(actions.changeEmail(params))
+    dispatch(actions.saveNewEmail(params.new_email))
   }
 
   useEffect(() => {

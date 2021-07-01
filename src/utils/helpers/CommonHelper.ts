@@ -15,6 +15,14 @@ const replaceWhiteSpace = (value: string): string => {
   return value.replace(/^\s+/g, '')
 }
 
+const formatCurrency = (value: string | number): string => {
+  if (value !== undefined) {
+    return value.toLocaleString('ja', { style: 'currency', currency: 'JPY' })
+  } else {
+    return <string>value
+  }
+}
+
 export const genRanHex = (size: number): string => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
 
 const scorePassword = (pass: string): number => {
@@ -191,6 +199,7 @@ export const CommonHelper = {
   scorePassword,
   userCodeValid,
   matchNgWords,
+  formatCurrency,
   hasEmail,
   replaceSingleByteString,
   isMediaURL,

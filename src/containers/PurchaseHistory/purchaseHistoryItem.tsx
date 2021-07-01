@@ -22,6 +22,10 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       : _.get(data.attributes, 'cancel_req_datetime', +data.attributes.cancel_req_datetime)
 
   const time = CommonHelper.staticSmartTime(date)
+
+  const price = _.get(data, 'attributes.price')
+  const ticket_price = CommonHelper.formatCurrency(price)
+
   return (
     <Box
       padding={2}
@@ -45,22 +49,17 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
         <Typography>{data.attributes.title}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.type')}</Typography>
-        <Typography>{t('purchase_history.ticket')}</Typography>
-      </Box>
-      <Box display="flex">
         <Typography className={classes.title}>{t('purchase_history.price')}</Typography>
-        <Typography>¥{data.attributes.price}</Typography>
+        <Typography>{ticket_price}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.status')}</Typography>
+        <Typography className={classes.title}>{t('purchase_history.purchase_status')}</Typography>
         <Typography>
-          ¥{data.attributes.price}
           {data.attributes.status == PAYMENT_STATUS.CANCELLED
-            ? ` (${t('purchase_history.canceled')})`
+            ? ` ¥${data.attributes.price} (${t('purchase_history.canceled')})`
             : data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
-            ? ` (${t('purchase_history.cancel_requested')})`
-            : ''}
+            ? `¥${data.attributes.price} (${t('purchase_history.cancel_requested')})`
+            : `${t('purchase_history.purchased')}`}
         </Typography>
       </Box>
     </Box>

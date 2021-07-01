@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Icon } from '@material-ui/core'
@@ -8,6 +9,8 @@ import { useRouter } from 'next/router'
 import i18n from '@locales/i18n'
 import { ESRoutes } from '@constants/route.constants'
 import Button from '@components/Button'
+import { socketCreators } from '@store/socket/actions'
+import { useAppDispatch } from '@store/hooks'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -19,6 +22,11 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
   const { t } = useTranslation(['common'])
   const router = useRouter()
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(socketCreators.cleanRoom())
+  }, [])
 
   return (
     <Box
