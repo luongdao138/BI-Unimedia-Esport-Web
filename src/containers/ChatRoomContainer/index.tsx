@@ -308,6 +308,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
           reportType={REPORT_TYPE.CHAT}
           target_id={Number(reportData.target_id)}
           data={reportData.data}
+          chat_id={reportData.chat_id}
+          room_id={reportData.room_id}
           open={reporting}
           members={usersWithAll}
           handleClose={() => setReporting(false)}
