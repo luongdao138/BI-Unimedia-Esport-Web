@@ -17,6 +17,7 @@ import _ from 'lodash'
 import ESInput from '@components/Input'
 import { useStore } from 'react-redux'
 import * as Yup from 'yup'
+import { ROLE } from '@constants/tournament.constants'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -54,9 +55,17 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
     },
   })
 
+  const getPid = () => {
+    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    if (!_.isArray(myInfoList)) return
+    for (const myInfo of myInfoList) {
+      if (_.get(myInfo, 'role', '') === ROLE.INTERESTED && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
+    }
+  }
+
   useEffect(() => {
     if (open) {
-      getParticipant(_.get(tournament, 'attributes.hash_key', ''), tournament.attributes.my_info?.id)
+      getParticipant(_.get(tournament, 'attributes.hash_key', ''), getPid())
     }
   }, [open])
 

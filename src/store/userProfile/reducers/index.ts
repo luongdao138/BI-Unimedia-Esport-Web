@@ -37,8 +37,6 @@ const initialState: StateType = {
   },
   followers: [],
   following: [],
-  followersMeta: undefined,
-  followingMeta: undefined,
   newEmail: '',
 }
 
