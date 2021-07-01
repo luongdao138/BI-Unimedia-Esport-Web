@@ -9,6 +9,7 @@ import ESCheckbox from '@components/Checkbox'
 import ESSelect from '@components/Select'
 import ESLabel from '@components/Label'
 import i18n from '@locales/i18n'
+import { useEffect } from 'react'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -17,6 +18,12 @@ type Props = {
 
 const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   const classes = useStyles()
+
+  useEffect(() => {
+    if (formik.values.stepTwo.rule !== 'single') {
+      formik.setFieldValue('stepTwo.has_third_place', false)
+    }
+  }, [formik.values.stepTwo.rule])
 
   return (
     <Box pb={9}>
@@ -42,13 +49,15 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
         </ESSelect>
       </Box>
       <Box pb={4}>
-        <ESCheckbox
-          disableRipple
-          checked={formik.values.stepTwo.has_third_place}
-          onChange={() => formik.setFieldValue('stepTwo.has_third_place', !formik.values.stepTwo.has_third_place)}
-          label={i18n.t('common:tournament_create.has_third_place')}
-          disabled={!editables.has_third_place}
-        />
+        {formik.values.stepTwo.rule === 'single' && (
+          <ESCheckbox
+            disableRipple
+            checked={formik.values.stepTwo.has_third_place}
+            onChange={() => formik.setFieldValue('stepTwo.has_third_place', !formik.values.stepTwo.has_third_place)}
+            label={i18n.t('common:tournament_create.has_third_place')}
+            disabled={!editables.has_third_place}
+          />
+        )}
       </Box>
       <Box pb={4}>
         <ESSelect

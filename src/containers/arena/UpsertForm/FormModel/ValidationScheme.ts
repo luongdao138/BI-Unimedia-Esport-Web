@@ -1,12 +1,10 @@
 import i18n from '@locales/i18n'
 import * as Yup from 'yup'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-import { StoreType } from '@store/store'
 import moment from 'moment'
 import { TournamentDetail } from '@services/arena.service'
 
-export const getValidationScheme = (store: StoreType, data: TournamentDetail): any => {
+export const getValidationScheme = (data: TournamentDetail): any => {
   let recruitMinDate = new Date()
   let recruitEndMinDate = new Date()
   if (!!data && !!data.attributes.status) {
@@ -21,11 +19,8 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
       title: Yup.string()
         .required(i18n.t('common:common.input_required'))
         .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
-        .min(2, i18n.t('common:common.at_least'))
-        .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
-      overview: Yup.string()
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
-        .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+        .min(2, i18n.t('common:common.at_least')),
+      overview: Yup.string().max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
       has_prize: Yup.boolean(),
       prize_amount: Yup.string().when('has_prize', {
         is: true,
@@ -49,12 +44,8 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
         .min(2, i18n.t('common:arena.participants_limit'))
         .max(128, i18n.t('common:arena.participants_limit'))
         .integer(i18n.t('common:common.integer')),
-      terms_of_participation: Yup.string()
-        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 }))
-        .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
-      notes: Yup.string()
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
-        .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+      terms_of_participation: Yup.string().max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
+      notes: Yup.string().max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
     }),
     stepThree: Yup.object({
       start_date: Yup.date()
@@ -74,9 +65,7 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
         .required(i18n.t('common:common.input_required'))
         .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
       area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
-      area_name: Yup.string()
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
-        .test('ng-check', i18n.t('common:common.contains_ngword'), (value) => CommonHelper.matchNgWords(store, value).length <= 0),
+      area_name: Yup.string().max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
       // for cross-fields validations
       recruit_date: Yup.string().when(['acceptance_start_date'], {
         is: (acceptance_start_date) => {
@@ -104,11 +93,7 @@ export const getValidationScheme = (store: StoreType, data: TournamentDetail): a
       }),
     }),
     stepFour: Yup.object({
-      organizer_name: Yup.string()
-        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 }))
-        .test('ng-check', i18n.t('common:common.contains_ngword'), function (value) {
-          return CommonHelper.matchNgWords(store, value).length <= 0
-        }),
+      organizer_name: Yup.string().max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
     }),
   })
 }

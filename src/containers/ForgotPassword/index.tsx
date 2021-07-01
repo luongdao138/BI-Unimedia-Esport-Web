@@ -22,7 +22,7 @@ const ForgotPasswordContainer: React.FC = () => {
   const classes = useStyles()
   const { forgotPassword, meta, backAction } = useForgotPassword()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .test('email-validation', t('common:login.validation.email'), (value) => {

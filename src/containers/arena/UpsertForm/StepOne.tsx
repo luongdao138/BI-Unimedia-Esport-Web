@@ -4,7 +4,7 @@ import { Colors } from '@theme/colors'
 import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useTournamentCreate'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CoverUploader from './Partials/CoverUploader'
@@ -33,6 +33,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   const handleSelectedGame = useCallback((value) => {
     formik.setFieldValue('stepOne.game_title_id', value)
   }, [])
+
+  useEffect(() => {
+    if (!formik.values.stepOne.has_prize) formik.setFieldValue('stepOne.prize_amount', '')
+  }, [formik.values.stepOne.has_prize])
 
   return (
     <Box pb={9}>
@@ -91,19 +95,21 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         />
       </Box>
       <Box pb={1}>
-        <ESFastInput
-          id="stepOne.prize_amount"
-          name="stepOne.prize_amount"
-          placeholder={i18n.t('common:tournament_create.prize_placeholder')}
-          fullWidth
-          value={formik.values.stepOne.prize_amount}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepOne?.prize_amount && formik.errors?.stepOne?.prize_amount}
-          error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
-          size="small"
-          disabled={!editables.prize_amount}
-        />
+        {formik.values.stepOne.has_prize && (
+          <ESFastInput
+            id="stepOne.prize_amount"
+            name="stepOne.prize_amount"
+            placeholder={i18n.t('common:tournament_create.prize_placeholder')}
+            fullWidth
+            value={formik.values.stepOne.prize_amount}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            helperText={formik.touched?.stepOne?.prize_amount && formik.errors?.stepOne?.prize_amount}
+            error={formik.values.stepOne.has_prize && formik.touched?.stepOne?.prize_amount && !!formik.errors?.stepOne?.prize_amount}
+            size="small"
+            disabled={!editables.prize_amount}
+          />
+        )}
       </Box>
       <Box pb={4} display="flex" flexDirection="row" color={Colors.secondary}>
         <Icon className={`fa fa-exclamation-triangle ${classes.iconMargin}`} fontSize="small" />

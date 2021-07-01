@@ -1,12 +1,4 @@
 import i18n from '@locales/i18n'
-import { Dialog } from '@store/common/actions/types'
-
-export const ARENA_CREATE_VALIDATION_POPUP: Dialog = {
-  title: i18n.t('common:arena.validation_popup.title'),
-  message: i18n.t('common:arena.validation_popup.message'),
-  actionMsg: i18n.t('common:arena.validation_popup.check_item'),
-  actions: [{ name: i18n.t('common:arena.validation_popup.confirm'), action: 'confirm', type: 'primary' }],
-}
 
 export const FIELD_TITLES = {
   stepOne: {
