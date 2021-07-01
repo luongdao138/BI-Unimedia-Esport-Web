@@ -13,7 +13,6 @@ import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import UnjoinModal from './UnjoinModal'
 import InidividualEntryEditModal from './InidividualEntryEditModal'
 import LoginRequired from '@containers/LoginRequired'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -27,16 +26,14 @@ interface IndividualEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
   handleClose: () => void
-  hideUnjoin?: boolean
 }
 
-const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose, hideUnjoin }) => {
+const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const { join, joinMeta } = useEntry()
 
-  const showUnjoin = !(hideUnjoin === true)
   const isReady = tournament?.attributes?.status === TOURNAMENT_STATUS.READY
 
   useEffect(() => {
@@ -81,7 +78,6 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
           {tournament.attributes.is_entered ? (
             <Box>
               <InidividualEntryEditModal tournament={tournament} me />
-              {showUnjoin ? <UnjoinModal tournament={tournament} /> : null}
             </Box>
           ) : (
             <ButtonPrimary disabled={isReady} round fullWidth onClick={() => setOpen(true)}>

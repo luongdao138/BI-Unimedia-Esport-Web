@@ -41,6 +41,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     isRecruitmentClosed,
     isNotHeld,
     isAdminJoined,
+    isEntered,
   } = useArenaHelper(tournament)
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
@@ -95,7 +96,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           <Box minWidth={256} className={classes.buttonRight}>
             {isTeam ? (
               <Box className={classes.actionButton}>
-                {isAdminJoined() ? (
+                {isAdminJoined ? (
                   <Box>
                     <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
                   </Box>
@@ -106,11 +107,10 @@ const ActionComponent: React.FC<Props> = (props) => {
                 )}
               </Box>
             ) : (
-              <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} hideUnjoin={isAdminJoined()} />
+              <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
             )}
           </Box>
         </Box>
-        {isAdminJoined() ? <UnjoinModal tournament={tournament} /> : null}
       </>
     )
   }
@@ -145,19 +145,16 @@ const ActionComponent: React.FC<Props> = (props) => {
 
       {(isRecruiting || isReady) && (
         <>
-          {isModerator ? (
-            <Box>
-              {renderAdminTeamEntry()}
-              {isRecruiting && (
-                <Box className={classes.description}>
-                  <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
-                </Box>
-              )}
-            </Box>
-          ) : null}
+          {isModerator ? <Box>{renderAdminTeamEntry()}</Box> : null}
           {entryModalOpen ? <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={hideEntryModal} /> : null}
           {!isModerator && isTeam && renderTeamEntry()}
           {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+          {isAdminJoined || isEntered ? <UnjoinModal tournament={tournament} /> : null}
+          {isModerator && isRecruiting && (
+            <Box pb={2} className={classes.description}>
+              <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
+            </Box>
+          )}
         </>
       )}
 
