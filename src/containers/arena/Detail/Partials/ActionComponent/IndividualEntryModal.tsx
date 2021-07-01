@@ -21,6 +21,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -36,6 +37,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const { join, joinMeta } = useEntry()
 
   const showUnjoin = !(hideUnjoin === true)
+  const isReady = tournament?.attributes?.status === TOURNAMENT_STATUS.READY
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
@@ -82,7 +84,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
               {showUnjoin ? <UnjoinModal tournament={tournament} /> : null}
             </Box>
           ) : (
-            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
+            <ButtonPrimary disabled={isReady} round fullWidth onClick={() => setOpen(true)}>
               {t('common:tournament.join')}
             </ButtonPrimary>
           )}

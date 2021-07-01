@@ -163,6 +163,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: '0 auto',
   },
+  [theme.breakpoints.down('sm')]: {
+    childrenContainer: {
+      paddingTop: 0,
+    },
+  },
 }))
 
 export default SummaryModal

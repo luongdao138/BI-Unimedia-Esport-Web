@@ -35,6 +35,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     isTeam,
     isInProgress,
     isRecruiting,
+    isReady,
     isCompleted,
     isCancelled,
     isRecruitmentClosed,
@@ -89,7 +90,7 @@ const ActionComponent: React.FC<Props> = (props) => {
       <>
         <Box className={classes.buttonHolder}>
           <Box minWidth={260} className={classes.buttonLeft}>
-            <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />
+            <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={tournament} handleClose={() => {}} />
           </Box>
           <Box minWidth={256} className={classes.buttonRight}>
             {isTeam ? (
@@ -142,14 +143,16 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {isRecruiting && (
+      {(isRecruiting || isReady) && (
         <>
           {isModerator ? (
             <Box>
               {renderAdminTeamEntry()}
-              <Box className={classes.description}>
-                <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
-              </Box>
+              {isRecruiting && (
+                <Box className={classes.description}>
+                  <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
+                </Box>
+              )}
             </Box>
           ) : null}
           {entryModalOpen ? <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={hideEntryModal} /> : null}
