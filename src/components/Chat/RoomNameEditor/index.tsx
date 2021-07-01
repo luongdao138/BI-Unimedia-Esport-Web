@@ -57,7 +57,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
     <Box className={classes.container}>
       <ESDialog
         open={open}
-        title="メッセージ名の変更"
+        title={i18n.t('common:chat.room_options.change_room_name')}
         handleClose={() => hide()}
         bkColor="rgba(0,0,0,0.8)"
         alignTop

@@ -595,7 +595,7 @@ export default {
     room_options: {
       member_list: 'メンバー一覧',
       add_member: 'メンバーの追加',
-      change_room_name: 'グループ名を変更',
+      change_room_name: 'グループ名の変更',
       change_img: 'アイコンを変更',
       exit: '退出する',
     },
