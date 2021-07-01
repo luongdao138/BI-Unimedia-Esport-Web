@@ -407,28 +407,4 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  containerDialog: {
-    width: '100%',
-    display: 'block',
-  },
-  dialogTitle: {
-    color: Colors.white,
-    textAlign: 'center',
-    paddingBottom: 56,
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  message: {
-    color: Colors.text[200],
-    textAlign: 'center',
-  },
-  actionBox: {
-    marginTop: 100,
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  actionBtn: {
-    width: 200,
-    margin: 16,
-  },
 }))

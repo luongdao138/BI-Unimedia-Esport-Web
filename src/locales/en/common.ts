@@ -692,6 +692,7 @@ export default {
   },
   block_settings: {
     title: 'ブロックしたユーザー',
+    unblock_success: '該当のユーザをブロック解除しました',
   },
   security_settings: {
     title: 'セキュリティ',
