@@ -12,6 +12,8 @@ import React, { useEffect } from 'react'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import useUnblock from '@containers/Profile/useUnblock'
 import ESLoader from '@components/Loader'
+import { addToast } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 
 interface Props {
   data: any
@@ -20,6 +22,7 @@ interface Props {
 
 const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
   const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
   const user = data.attributes
   const router = useRouter()
   const classes = useStyles()
@@ -42,6 +45,7 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
   useEffect(() => {
     if (unblockMeta.loaded && unblockMeta.error === false) {
       actionHandler(user.user_code)
+      dispatch(addToast(i18n.t('common:block_settings.unblock_success')))
     }
   }, [unblockMeta])
 
