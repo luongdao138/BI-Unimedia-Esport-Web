@@ -17,6 +17,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useDocTitle from '@utils/hooks/useDocTitle'
 import _ from 'lodash'
 
 interface SummaryModalProps {
@@ -26,6 +27,7 @@ interface SummaryModalProps {
 }
 
 const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClose }) => {
+  const { resetTitle, changeTitle } = useDocTitle()
   const data = tournament.attributes
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -54,12 +56,19 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   })
 
   useEffect(() => {
+    if (open) {
+      changeTitle(t('common:page_head.arena_summary_title'))
+    }
+  }, [open])
+
+  useEffect(() => {
     validateForm()
   }, [])
 
   useEffect(() => {
     if (summaryMeta.loaded || summaryMeta.error) {
       handleClose()
+      resetTitle()
     }
   }, [summaryMeta.loaded, summaryMeta.error])
 
@@ -78,7 +87,13 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
         <BlankLayout>
           <Box paddingY={8} className={classes.childrenContainer}>
             <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+              <IconButton
+                className={classes.iconButtonBg}
+                onClick={() => {
+                  resetTitle()
+                  handleClose()
+                }}
+              >
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
@@ -162,6 +177,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+  },
+  [theme.breakpoints.down('sm')]: {
+    childrenContainer: {
+      paddingTop: 0,
+    },
   },
 }))
 

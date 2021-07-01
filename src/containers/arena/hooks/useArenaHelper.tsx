@@ -21,9 +21,11 @@ const useArenaHelper = (
   isTeam: boolean
   isEditable: boolean
   isNotHeld: boolean
+  isReady: boolean
+  isEntered: boolean
   toEdit: () => void
   toCreate: () => void
-  isAdminJoined: () => boolean
+  isAdminJoined: boolean
   toDetail: () => void
 } => {
   const router = useRouter()
@@ -44,8 +46,10 @@ const useArenaHelper = (
   const isEditable = isModerator
   const isFreezed = tournament?.attributes?.is_freezed
   const isNotHeld = isCompleted && !isFreezed
+  const isReady = status === TOURNAMENT_STATUS.READY
+  const isEntered = tournament?.attributes?.is_entered
 
-  const isAdminJoined = () => {
+  const checkAdminJoined = () => {
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return false
     for (const myInfo of myInfoList) {
@@ -53,6 +57,7 @@ const useArenaHelper = (
     }
     return false
   }
+  const isAdminJoined = checkAdminJoined()
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -96,10 +101,12 @@ const useArenaHelper = (
     isTeam,
     isEditable,
     isNotHeld,
+    isReady,
     toEdit,
     toCreate,
     isAdminJoined,
     toDetail,
+    isEntered,
   }
 }
 

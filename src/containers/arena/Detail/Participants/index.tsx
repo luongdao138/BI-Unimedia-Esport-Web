@@ -184,6 +184,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                   tournament={detail}
                   userProfile={userProfile}
                   previewMode
+                  open={true}
                   initialTeamId={getTeamId(selectedParticipant)}
                   onClose={() => setSelectedParticipant(null)}
                   myTeam={isMyTeam(selectedParticipant)}
@@ -192,6 +193,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <InidividualEntryEditModal
                   tournament={detail}
                   previewMode
+                  open={true}
                   initialParticipantId={`${selectedParticipant.id}`}
                   onClose={() => setSelectedParticipant(null)}
                   me={isMe(selectedParticipant)}

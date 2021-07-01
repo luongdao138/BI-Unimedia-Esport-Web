@@ -24,7 +24,7 @@ const TournamentDetail: React.FC = () => {
     in_progress: <InProgress tournament={tournament} userProfile={userProfile} />, //headset
     cancelled: <Cancelled tournament={tournament} userProfile={userProfile} />,
     completed: <Completed tournament={tournament} userProfile={userProfile} />, //trophy
-    ready: <></>,
+    ready: <Recruiting tournament={tournament} userProfile={userProfile} />,
     ready_to_start: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
     recruiting: <Recruiting tournament={tournament} userProfile={userProfile} />,
     recruitment_closed: <RecruitmentClosed tournament={tournament} userProfile={userProfile} />, //hourglass
