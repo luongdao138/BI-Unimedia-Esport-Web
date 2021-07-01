@@ -445,6 +445,13 @@ export default {
     choice: '選択',
     double_zero: '00',
     cancelled: 'この大会は中止されました',
+    not_held: 'この大会は実施されませんでした',
+    participate_status: {
+      participating: '参加中',
+      loss: '落選',
+      no_entry: '未エントリー',
+      ongoing: '開催中',
+    },
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
