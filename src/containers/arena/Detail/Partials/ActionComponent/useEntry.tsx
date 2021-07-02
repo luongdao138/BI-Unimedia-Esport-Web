@@ -18,7 +18,13 @@ const useEntry = () => {
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const arena = useAppSelector(selectors.getTournamentDetail)
-  const join = (param: JoinParams) => dispatch(actions.joinTournament(param))
+  const join = async (param: JoinParams) => {
+    const resultAction = await dispatch(actions.joinTournament(param))
+    if (actions.joinTournament.fulfilled.match(resultAction)) {
+      dispatch(commonActions.addToast(t('common:arena.join_success')))
+      dispatch(actions.getTournamentDetail(arena.attributes.hash_key))
+    }
+  }
   const updateTeam = (param: UpdateTournamentTeamParams) => dispatch(actions.updateTournamentTeamDetail(param))
   const leave = (param) => dispatch(actions.leaveTournament(param))
   const close = (param) => dispatch(actions.closeTournament(param))
@@ -72,13 +78,6 @@ const useEntry = () => {
       resetUpdateTeamMeta()
     }
   }, [updateTeamMeta.error])
-
-  useEffect(() => {
-    if (joinMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:arena.join_success')))
-      dispatch(actions.getTournamentDetail(arena.attributes.hash_key))
-    }
-  }, [joinMeta.loaded])
 
   return {
     join,

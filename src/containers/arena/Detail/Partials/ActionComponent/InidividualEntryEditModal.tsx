@@ -123,7 +123,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   return (
     <Box>
       <StickyActionModal
-        open={open || isPreview}
+        open={open}
         returnText={t('common:tournament.join')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
         actionButtonDisabled={!isValid}
@@ -186,5 +186,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(7),
   },
 }))
+
+InidividualEntryEditModal.defaultProps = {
+  previewMode: true,
+}
 
 export default InidividualEntryEditModal

@@ -120,7 +120,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           checked={TournamentHelper.getTypeValue(formik.values.stepTwo.t_type)}
           onChange={() => formik.setFieldValue('stepTwo.t_type', TournamentHelper.onTypeChange(formik.values.stepTwo.t_type))}
           label={i18n.t('common:profile.show')}
-          disabled={!editables.retain_history}
+          disabled={!editables.t_type}
         />
       </Box>
       <Box pb={1}>
