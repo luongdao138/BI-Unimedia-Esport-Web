@@ -73,8 +73,8 @@ const useStyles = makeStyles(() => ({
   image: {
     position: 'absolute',
     width: '100%',
-    height: 'auto',
-    objectFit: 'contain',
+    height: '100%',
+    objectFit: 'cover',
   },
   backdrop: {
     opacity: 0.6,

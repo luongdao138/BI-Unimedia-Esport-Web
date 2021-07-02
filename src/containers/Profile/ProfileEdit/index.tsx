@@ -20,7 +20,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { showDialog } from '@store/common/actions'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import _ from 'lodash'
 
 const ProfileEditContainer: React.FC = () => {
@@ -30,25 +30,25 @@ const ProfileEditContainer: React.FC = () => {
 
   const { features, getFeatures } = useSettings()
   const { prefectures, getPrefectures } = useGetPrefectures()
-  const { nicknames2, getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
-  const [nicknameData, setNicknameData] = useState([])
+  // const { nicknames2, getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
+  const { getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
+  // const [nicknameData, setNicknameData] = useState([])
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
   const [isValidDate, setValidDate] = useState(false)
-  const { checkNgWord } = useCheckNgWord()
-
+  const { checkNgWordByField } = useCheckNgWord()
   useEffect(() => {
     if (userProfile) {
       setProfile(userProfile.attributes)
     }
   }, [userProfile])
 
-  useEffect(() => {
-    if (nicknames2) {
-      setNicknameData(nicknames2)
-    }
-  }, [nicknames2])
+  // useEffect(() => {
+  //   if (nicknames2) {
+  //     setNicknameData(nicknames2)
+  //   }
+  // }, [nicknames2])
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
@@ -81,21 +81,20 @@ const ProfileEditContainer: React.FC = () => {
   const handleError = (errors) => {
     setError(!_.isEmpty(errors))
   }
-
   const handleSubmit = () => {
-    const checked = checkNgWord([
-      profile.nickname,
-      profile.bio,
-      profile.discord_link,
-      profile.facebook_link,
-      profile.instagram_link,
-      profile.twitch_link,
-      profile.twitter_link,
-    ])
-    if (_.isEmpty(checked)) {
+    const failedFields = checkNgWordByField({
+      [i18n.t('common:profile.nickname')]: profile.nickname,
+      [i18n.t('common:profile.bio_section')]: profile.bio,
+      [i18n.t('common:profile.discord')]: profile.discord_link,
+      [i18n.t('common:profile.facebook')]: profile.facebook_link,
+      [i18n.t('common:profile.instagram')]: profile.instagram_link,
+      [i18n.t('common:profile.twitch')]: profile.twitch_link,
+      [i18n.t('common:profile.twitter')]: profile.twitter_link,
+    })
+    if (_.isEmpty(failedFields)) {
       profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
     } else {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: failedFields.join(', ') }))
     }
   }
 
@@ -114,7 +113,7 @@ const ProfileEditContainer: React.FC = () => {
             <Typography variant="h3" gutterBottom className={classes.label}>
               {i18n.t('common:register_profile.nickname')}
             </Typography>
-            <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} handleError={handleError} />
+            <NameInfo profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
             <Typography variant="h3" gutterBottom className={classes.label}>
               {i18n.t('common:profile.tag')}
             </Typography>
