@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
-import ESChip from '@components/Chip'
+import ESChip from './Chip'
 import { Box, Container, List, Typography } from '@material-ui/core'
 import i18n from '@locales/i18n'
 
