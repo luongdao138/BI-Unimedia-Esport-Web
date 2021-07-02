@@ -230,7 +230,7 @@ export default {
     desc_second: 'その際の対応及び返信を行わない場合がある旨、予めご了承ください',
     desc_third: '及び返信を行わない場合がある旨、予めご了承ください',
     user_info_title: '通報する内容',
-    reason: '通報する理由',
+    reason: '通報理由',
     reason_desc: '詳細・補足',
     require: '※必須',
     email: 'メールアドレス',
