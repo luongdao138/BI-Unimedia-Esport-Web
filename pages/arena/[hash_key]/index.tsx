@@ -27,4 +27,4 @@ const TournamentsPage: PageWithLayoutType = () => {
   )
 }
 
-export default storeWrapper.withRedux(TournamentsPage)
+export default TournamentsPage

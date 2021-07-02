@@ -52,7 +52,7 @@ const TournamentCreate: React.FC = () => {
 
   const formik = useFormik<FormType>({
     initialValues: initialValues,
-    validationSchema: getValidationScheme(arena),
+    validationSchema: getValidationScheme(arena, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
       const data: TournamentFormParams = {

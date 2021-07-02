@@ -129,7 +129,7 @@ const useTournamentCreate = (): {
       if (_status !== TOURNAMENT_STATUS.READY) {
         _editables = _.mapValues(_editables, () => false)
 
-        // always editable
+        // always editable (default for status COMPLETED)
         _editables.cover_image = true
         _editables.title = true
         _editables.overview = true
@@ -151,14 +151,15 @@ const useTournamentCreate = (): {
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
-        } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
+        } else if (
+          _status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED ||
+          _status === TOURNAMENT_STATUS.READY_TO_START ||
+          _status === TOURNAMENT_STATUS.IN_PROGRESS
+        ) {
+          // max_participants, retain_history,
+          // acceptance_start_date, acceptance_end_date are already false on top
           _editables.start_date = true
           _editables.end_date = true
-        } else if (_status === TOURNAMENT_STATUS.IN_PROGRESS) {
-          _editables.start_date = true
-          _editables.end_date = true
-        } else if (_status === TOURNAMENT_STATUS.COMPLETED) {
-          // no change
         }
       }
       setEditables(_editables)

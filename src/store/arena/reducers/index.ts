@@ -1,5 +1,4 @@
-import { createReducer, createAction } from '@reduxjs/toolkit'
-import { HYDRATE } from 'next-redux-wrapper'
+import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import {
   TournamentResponse,
@@ -18,7 +17,6 @@ import {
   TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
-import { RootState } from '@store/reducers'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -56,8 +54,6 @@ const initialState: StateType = {
   recruitingTournaments: [],
   recommendedUsers: [],
 }
-
-const hydrate = createAction<RootState>(HYDRATE)
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
@@ -182,8 +178,5 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
     state.selectedTeamDetail = action.payload.data
-  })
-  builder.addCase(hydrate, (state, action) => {
-    state.tournamentDetail = action.payload.arena.tournamentDetail
   })
 })
