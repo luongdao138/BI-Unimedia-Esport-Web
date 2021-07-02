@@ -72,7 +72,8 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return
     for (const myInfo of myInfoList) {
-      if (_.get(myInfo, 'role', '') === ROLE.INTERESTED && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
+      const role = _.get(myInfo, 'role', '')
+      if ((role === ROLE.INTERESTED || role === ROLE.PARTICIPANT) && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
     }
   }
 
