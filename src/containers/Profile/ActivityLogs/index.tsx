@@ -7,9 +7,10 @@ import ActivityItem from '../Partials/ActivityItem'
 
 interface Props {
   userCode: string
+  isOthers: boolean
 }
 
-const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
+const ActivityLogsContainer: React.FC<Props> = ({ userCode, isOthers }) => {
   const classes = useStyles()
   const { activityLogs, getActivityLogs, clearActivityLogs, pages, meta, resetMeta } = useActivityLogs()
   useEffect(() => {
@@ -20,20 +21,26 @@ const ActivityLogsContainer: React.FC<Props> = ({ userCode }) => {
   }, [])
 
   useEffect(() => {
-    getActivityLogs({
+    const params = {
       page: 1,
-      user_code: userCode,
-    })
+    }
+    if (isOthers) {
+      params['user_code'] = userCode
+    }
+    getActivityLogs(params)
   }, [userCode])
 
   const hasNextPage = pages && pages.current_page !== pages.total_pages
 
   const loadMore = () => {
     if (hasNextPage) {
-      getActivityLogs({
+      const params = {
         page: pages.current_page + 1,
-        user_code: userCode,
-      })
+      }
+      if (isOthers) {
+        params['user_code'] = userCode
+      }
+      getActivityLogs(params)
     }
   }
   return (
