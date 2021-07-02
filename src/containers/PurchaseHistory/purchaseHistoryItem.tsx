@@ -67,7 +67,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   wrap: {
     color: Colors.white_opacity[70],
     cursor: 'pointer',
@@ -82,7 +82,10 @@ const useStyles = makeStyles(() => ({
     },
   },
   title: {
-    width: 127,
+    minWidth: 127,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 100,
+    },
   },
 }))
 
