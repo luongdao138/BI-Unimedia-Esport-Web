@@ -50,6 +50,7 @@ const useStyles = makeStyles(() => ({
     paddingTop: 2,
     color: Colors.text[200],
     paddingBottom: 6,
+    wordBreak: 'break-all',
   },
   textTime: {
     color: Colors.text[200],
