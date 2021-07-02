@@ -99,12 +99,15 @@ const useStyles = makeStyles((theme) =>
     listItem: {
       padding: 4,
       cursor: 'pointer',
+      '&:hover': {
+        background: '#eee',
+      },
     },
     inputWrapper: {
       maxHeight: 104,
       width: '100%',
-      padding: '1px',
       display: 'flex',
+      padding: 4,
       outline: '0 none',
       flexWrap: 'wrap',
       overflow: 'overlay',

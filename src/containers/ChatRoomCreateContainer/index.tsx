@@ -229,9 +229,9 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   return (
     <Box className={classes.room}>
       <Box className={classes.memberSelectContainer}>
-        <Box className={classes.titlebox}>
+        <Box className={classes.titleBox}>
           <Typography variant="h2" className={classes.title}>
-            宛先
+            {i18n.t('common:chat.destination')}
           </Typography>
         </Box>
         <Box className={classes.inputArea}>
