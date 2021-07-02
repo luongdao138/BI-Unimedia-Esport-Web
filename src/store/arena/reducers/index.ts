@@ -18,7 +18,6 @@ import {
   TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
-import _ from 'lodash'
 import { RootState } from '@store/reducers'
 
 type StateType = {
@@ -96,17 +95,12 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getEntryStatus.fulfilled, (state, action) => {
     state.tournamentDetail.attributes.is_entered = action.payload.is_entry
   })
-  builder.addCase(actions.joinTournament.fulfilled, (state, action) => {
-    state.tournamentDetail.attributes.interested_count++
-    state.tournamentDetail.attributes.is_entered = true
-    // state.tournamentDetail.attributes.my_role = 'interested'
-    if (state.tournamentDetail.attributes.participant_type != 1 && _.isNumber(action.payload.team_id))
-      state.tournamentDetail.attributes.my_info = [{ role: 'interested', team_id: action.payload.team_id }]
-  })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
     state.tournamentDetail.attributes.is_entered = false
-    // state.tournamentDetail.attributes.my_role = null
+    state.tournamentDetail.attributes.my_info = state.tournamentDetail.attributes.my_info.filter((info) => {
+      info.role !== 'interested'
+    })
   })
   builder.addCase(actions.closeTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus

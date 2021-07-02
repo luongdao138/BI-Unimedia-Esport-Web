@@ -38,7 +38,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const { createGame, meta, createdGame } = useAddGame()
 
   const validationSchema = Yup.object().shape({

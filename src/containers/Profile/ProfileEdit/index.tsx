@@ -36,7 +36,7 @@ const ProfileEditContainer: React.FC = () => {
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
   const [isValidDate, setValidDate] = useState(false)
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   useEffect(() => {
     if (userProfile) {

@@ -39,10 +39,11 @@ export default {
     integer: '数字のみ入力してください。',
     validation: {
       acceptance_dates: 'エントリー開始日時はエントリー終了日時より前にしてください',
-      acceptance_end_start_date: 'エントリー終了日時は開始日時より前にしてください',
-      start_end_date: '開始日時は終了日時より前にしてください',
+      acceptance_end_start_date: 'エントリー終了日時は開催日時より前にしてください',
+      start_end_date: '開催日時は終了日時より前にしてください',
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
+      char_limit: '{{char_limit}}文字以内で入力してください。',
     },
     no_data: '対象データありません',
     dash: '-',
@@ -172,9 +173,9 @@ export default {
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
     password_reissue: 'パスワードを再発行しました',
-    close_arena_failed: 'Failed to close arena',
+    close_arena_failed: 'エントリーを締め切れませんでした。',
     join_arena_failed: 'エントリーを完了できませんでした。',
-    leave_arena_failed: 'Failed to leave arena',
+    leave_arena_failed: 'エントリーを辞退できませんでした',
     too_short: '短すぎます。',
     password_must_match: 'パスワードが一致していません。',
     error_4221: '現在のパスワードが間違っています。',
@@ -287,6 +288,9 @@ export default {
     no_tag_available: 'No tag available',
     no_communities: 'おすすめコミュニティは存在しません',
     discord_placeholder: 'ユーザー名#0000を入力してください',
+    block_confirm_title: '該当ユーザのブロックを解除しても良いですか。',
+    block_confirm_yes: 'はい',
+    block_confirm_no: 'いいえ',
   },
   gender: {
     male: '男性',
@@ -399,6 +403,8 @@ export default {
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     join_success: ' エントリー完了しました',
+    leave_success: 'エントリーを辞退しました',
+    close_entry_success: 'エントリーを締め切りました。',
     dialog: {
       randomize_title: 'ユーザーをランダムに配置します',
       randomize_desc: '現在エントリーしているユーザーをトーナメント表の空欄になっている枠へランダムに配置します',
@@ -433,12 +439,6 @@ export default {
     not_found: 'このページは無効化されました。',
     participants_limit: '2~128の数字を入力してください。',
     to_detail: '大会詳細',
-    validation_popup: {
-      title: 'Validation error',
-      message: 'Please provide valid data into corresponding fields',
-      check_item: 'チェック項目：',
-      confirm: '了解',
-    },
     choice: '選択',
     double_zero: '00',
     cancelled: 'この大会は中止されました',
@@ -514,7 +514,7 @@ export default {
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
     public_or_private: '大会公開設定',
-    title_placeholder: '○○文字まで入力することができます。',
+    title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
 例）
@@ -803,5 +803,11 @@ export default {
     home_top: 'eXeLAB｜ゲームが広がる。仲間ができる。',
     home_title: 'eXeLAB｜ホーム',
     arena_default_title: 'eXeLAB｜大会',
+    arena_detail_title: 'eXeLAB｜大会情報',
+    arena_matches_title: 'eXeLAB｜対戦表',
+    arena_winners_title: 'eXeLAB｜大会結果',
+    arena_members_title: 'eXeLAB｜出場メンバー',
+    arena_entry_title: 'eXeLAB｜エントリー',
+    arena_summary_title: 'eXeLAB｜大会総括',
   },
 }

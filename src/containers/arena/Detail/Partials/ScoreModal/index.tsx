@@ -112,7 +112,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
 
         <Box pt={6} display="flex" alignItems="flex-end">
           <ThemeProvider theme={theme}>
-            <Box color={winner && Colors.yellow}>
+            <Box color={winner ? Colors.yellow : Colors.white}>
               {_score == undefined || _score == null ? <Box pt={10.2}></Box> : <Typography variant="h3">{_score}</Typography>}
             </Box>
           </ThemeProvider>

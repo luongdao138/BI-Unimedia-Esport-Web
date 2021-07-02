@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
-import { useState } from 'react'
-import { Box, makeStyles, Theme } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import ESInput from '@components/Input'
-import ButtonPrimary from '@components/ButtonPrimary'
 import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -13,37 +11,31 @@ import { UserProfile } from '@services/user.service'
 import * as Yup from 'yup'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import UnjoinModal from './UnjoinModal'
-import InidividualEntryEditModal from './InidividualEntryEditModal'
-import LoginRequired from '@containers/LoginRequired'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
-  handleClose: () => void
-  hideUnjoin?: boolean
+  onClose: () => void
+  open: boolean
 }
 
-const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, handleClose, hideUnjoin }) => {
+const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
   const { t } = useTranslation(['common'])
-  const classes = useStyles()
-  const [open, setOpen] = useState(false)
   const { join, joinMeta } = useEntry()
-
-  const showUnjoin = !(hideUnjoin === true)
+  const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      setOpen(false)
       handleClose()
     }
   }, [joinMeta.loaded, joinMeta.error])
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
@@ -67,34 +59,29 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   })
 
   useEffect(() => {
-    if (open) setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
+    if (open) {
+      setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+    }
   }, [open])
 
-  const handleReturn = () => setOpen(false)
+  useEffect(() => {
+    return () => resetTitle()
+  }, [])
+
+  const handleClose = () => {
+    resetTitle()
+    onClose()
+  }
 
   return (
     <Box>
-      <LoginRequired>
-        <Box className={classes.actionButton}>
-          {tournament.attributes.is_entered ? (
-            <Box>
-              <InidividualEntryEditModal tournament={tournament} me />
-              {showUnjoin ? <UnjoinModal tournament={tournament} /> : null}
-            </Box>
-          ) : (
-            <ButtonPrimary round fullWidth onClick={() => setOpen(true)}>
-              {t('common:tournament.join')}
-            </ButtonPrimary>
-          )}
-        </Box>
-      </LoginRequired>
-
       <StickyActionModal
         open={open}
         returnText={t('common:tournament.join')}
         actionButtonText={t('common:tournament.join_with_this')}
         actionButtonDisabled={!isValid}
-        onReturnClicked={handleReturn}
+        onReturnClicked={handleClose}
         onActionButtonClicked={handleSubmit}
       >
         <form onSubmit={handleSubmit}>
@@ -123,14 +110,5 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
     </Box>
   )
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  actionButton: {
-    marginTop: theme.spacing(3),
-    width: '100%',
-    margin: '0 auto',
-    maxWidth: theme.spacing(35),
-  },
-}))
 
 export default IndividualEntryModal

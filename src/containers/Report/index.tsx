@@ -39,7 +39,7 @@ export interface ESReportProps {
 const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const { createReport, meta, userEmail } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
