@@ -28,6 +28,9 @@ const useStyles = makeStyles(() => ({
       backgroundColor: '#0f0f0f',
     },
   },
+  disabled: {
+    color: Colors.white_opacity['30'],
+  },
   btn: {
     '&:hover': {
       background: 'transparent',
@@ -39,16 +42,17 @@ const ActionLabelButton: React.FC<ButtonProps & { gradient?: boolean; round?: bo
   children,
   actionLabel,
   onClick,
+  ...rest
 }) => {
   const classes = useStyles()
   return (
     <Box position="relative">
       {actionLabel && (
-        <Box className={classes.floatLabel}>
+        <Box className={`${classes.floatLabel} ${rest.disabled ? classes.disabled : ''}`}>
           <Typography variant="caption">{actionLabel}</Typography>
         </Box>
       )}
-      <ESButton className={actionLabel && classes.btn} variant="outlined" fullWidth onClick={onClick}>
+      <ESButton className={actionLabel && classes.btn} {...rest} variant="outlined" fullWidth onClick={onClick}>
         {children}
       </ESButton>
     </Box>
