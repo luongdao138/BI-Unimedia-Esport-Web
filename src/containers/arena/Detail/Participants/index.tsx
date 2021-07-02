@@ -188,6 +188,10 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                   initialTeamId={getTeamId(selectedParticipant)}
                   onClose={() => setSelectedParticipant(null)}
                   myTeam={isMyTeam(selectedParticipant)}
+                  toDetail={() => {
+                    setSelectedParticipant(null)
+                    setOpen(false)
+                  }}
                 />
               ) : (
                 <InidividualEntryEditModal
@@ -197,6 +201,10 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                   initialParticipantId={`${selectedParticipant.id}`}
                   onClose={() => setSelectedParticipant(null)}
                   me={isMe(selectedParticipant)}
+                  toDetail={() => {
+                    setSelectedParticipant(null)
+                    setOpen(false)
+                  }}
                 />
               )}
             </div>

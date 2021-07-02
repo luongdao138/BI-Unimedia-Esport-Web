@@ -68,6 +68,19 @@ const ArenaWinners: React.FC = () => {
     return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
   }
 
+  const hasWinnersData = () => {
+    if (!arenaWinners) return false
+
+    let hasData = false
+    Object.keys(arenaWinners).forEach((place) => {
+      const placement = arenaWinners[place]
+      if (!!placement && placement.length > 0) {
+        hasData = true
+      }
+    })
+    return hasData
+  }
+
   return (
     <div className={classes.root}>
       <div ref={backButtonRef} className={classes.backButtonWrapper}>
@@ -117,39 +130,41 @@ const ArenaWinners: React.FC = () => {
           {t('common:tournament.tournament_detail')}
         </ESButton>
       </Box>
-      <div ref={winnerListRef} className={classes.listContainer}>
-        {Object.keys(arenaWinners).map((key) =>
-          (arenaWinners[key] || []).map((p, idx) => (
-            <div className={classes.listItem} key={idx}>
-              <div className={classes.placementWrapper}>
-                <p
-                  className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
-                    p.position === 3 && classes.third
-                  }`}
-                >
-                  {p.position}
-                  {p.position === 1 && <span>st</span>}
-                  {p.position === 2 && <span>nd</span>}
-                  {p.position === 3 && <span>rd</span>}
-                </p>
-              </div>
-              <ButtonBase onClick={() => toEntryDetail(p)}>
-                <Avatar src={p.avatar} />
-              </ButtonBase>
-              <div className={classes.nameWrapper}>
-                <Typography variant="h3" component="p">
-                  {p.name}
-                </Typography>
-                {p.user && (
-                  <Typography variant="body2" className={classes.user_code}>
-                    {`@${p.user.user_code}`}
+      {hasWinnersData() && (
+        <div ref={winnerListRef} className={classes.listContainer}>
+          {Object.keys(arenaWinners).map((key) =>
+            (arenaWinners[key] || []).map((p, idx) => (
+              <div className={classes.listItem} key={idx}>
+                <div className={classes.placementWrapper}>
+                  <p
+                    className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
+                      p.position === 3 && classes.third
+                    }`}
+                  >
+                    {p.position}
+                    {p.position === 1 && <span>st</span>}
+                    {p.position === 2 && <span>nd</span>}
+                    {p.position === 3 && <span>rd</span>}
+                  </p>
+                </div>
+                <ButtonBase onClick={() => toEntryDetail(p)}>
+                  <Avatar src={p.avatar} />
+                </ButtonBase>
+                <div className={classes.nameWrapper}>
+                  <Typography variant="h3" component="p">
+                    {p.name}
                   </Typography>
-                )}
+                  {p.user && (
+                    <Typography variant="body2" className={classes.user_code}>
+                      {`@${p.user.user_code}`}
+                    </Typography>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
+            ))
+          )}
+        </div>
+      )}
       {!selectedItem ? null : isTeam() ? (
         <TeamEntryEditModal
           tournament={arena}
@@ -159,6 +174,7 @@ const ArenaWinners: React.FC = () => {
           initialTeamId={`${getTeamId(selectedItem)}`}
           onClose={() => setSelectedItem(null)}
           myTeam={isMyTeam(selectedItem)}
+          toDetail={toDetail}
         />
       ) : (
         <InidividualEntryEditModal
@@ -168,6 +184,7 @@ const ArenaWinners: React.FC = () => {
           initialParticipantId={`${selectedItem.id}`}
           onClose={() => setSelectedItem(null)}
           me={isMe(selectedItem)}
+          toDetail={toDetail}
         />
       )}
     </div>
