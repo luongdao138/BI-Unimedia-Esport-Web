@@ -1,6 +1,5 @@
 import { TournamentStatus } from '@services/arena.service'
 import { Box, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
-import ChevronLeftIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { ReactNode, useEffect, useState } from 'react'
@@ -42,31 +41,26 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
   }, [status])
   return (
     <>
+      <Box className={classes.backContainer}>
+        <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
+          <Icon className="fa fa-arrow-left" fontSize="small" />
+        </IconButton>
+        {!isMobile && (
+          <Typography variant="h2" className={classes.wrapOne}>
+            {title}
+          </Typography>
+        )}
+      </Box>
       <Box
         style={{
           background: `url(${cover})`,
-          height: 188,
+          paddingTop: '56.25%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
         }}
         mb={3}
-      >
-        {isMobile ? (
-          <IconButton onClick={onHandleBack} className={classes.backButton}>
-            <ChevronLeftIcon />
-          </IconButton>
-        ) : (
-          <Box className={classes.backContainer}>
-            <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
-              <Icon className="fa fa-arrow-left" fontSize="small" />
-            </IconButton>
-            <Typography variant="h2" className={classes.wrapOne}>
-              {title}
-            </Typography>
-          </Box>
-        )}
-      </Box>
+      ></Box>
       <div className={classes.root}>
         <Tabs
           value={tab}
@@ -104,28 +98,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 0,
     minWidth: 'fit-content',
   },
-  [theme.breakpoints.down('lg')]: {
-    flexContainer: {
-      justifyContent: 'space-around',
-      maxWidth: theme.spacing(50),
-      minWidth: theme.spacing(35),
-    },
-  },
-  [theme.breakpoints.down('sm')]: {
-    tabWrapper: {
-      padding: theme.spacing(1),
-      paddingTop: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-    },
-  },
-  [theme.breakpoints.down('xs')]: {
-    root: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-  },
   tabsFixed: {
     display: 'flex',
     justifyContent: 'center',
@@ -162,6 +134,32 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-around',
       maxWidth: theme.spacing(50),
       minWidth: theme.spacing(50),
+    },
+  },
+  [theme.breakpoints.down('lg')]: {
+    flexContainer: {
+      justifyContent: 'space-around',
+      maxWidth: theme.spacing(50),
+      minWidth: theme.spacing(35),
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    tabWrapper: {
+      padding: theme.spacing(1),
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+    },
+    backContainer: {
+      position: 'absolute',
+      backgroundColor: 'transparent',
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    root: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
     },
   },
   backButton: { backgroundColor: `${Colors.grey['200']}80`, margin: 24, marginTop: 16, padding: 6 },
