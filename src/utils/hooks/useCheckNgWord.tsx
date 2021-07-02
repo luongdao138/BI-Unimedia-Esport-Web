@@ -5,6 +5,7 @@ import _ from 'lodash'
 const useCheckNgWord = (): {
   checkNgWord: (subject: string | string[]) => string[]
   checkNgWordFields: (fields: any) => string
+  checkNgWordByField: (fields: any) => string[]
 } => {
   const ngWords = useAppSelector(getNgWords)
 
@@ -41,6 +42,18 @@ const useCheckNgWord = (): {
     return [...new Set(checkText.match(regex))] || []
   }
 
+  const checkNgWordByField = (fields: any) => {
+    if (fields === undefined || fields === null || fields.length === 0) return []
+    const regex = getNgWordRegex()
+    if (regex === null) return []
+
+    return Object.keys(
+      _.pickBy(fields, function (value) {
+        return value.match(regex) !== null
+      })
+    )
+  }
+
   const checkNgWordFields = (fields: any) => {
     if (fields === undefined || fields === null || _.isEmpty(fields)) return undefined
 
@@ -53,6 +66,7 @@ const useCheckNgWord = (): {
   return {
     checkNgWord,
     checkNgWordFields,
+    checkNgWordByField,
   }
 }
 
