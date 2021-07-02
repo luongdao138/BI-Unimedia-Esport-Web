@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, useMediaQuery, useTheme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, Icon } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
@@ -12,17 +12,15 @@ import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import UserSlashIcon from '@components/UserSlashIcon'
 interface CloseRecruitmentModalProps {
   tournament: TournamentDetail
+  isRecruiting: boolean
   handleClose: () => void
 }
 
-const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament }) => {
+const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament, isRecruiting }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const [open, setOpen] = useState(false)
   const { close, closeMeta } = useEntry()
 
@@ -35,7 +33,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
   return (
     <Box>
       <Box className={classes.button}>
-        <ButtonPrimaryOutlined onClick={() => setOpen(true)} leadingIcon={<UserSlashIcon />}>
+        <ButtonPrimaryOutlined
+          disabled={!isRecruiting}
+          onClick={() => setOpen(true)}
+          leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}
+        >
           {t('common:tournament.close_recruitment.button_text')}
         </ButtonPrimaryOutlined>
       </Box>
@@ -54,7 +56,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
               <Box className={classes.actionButton}>
-                <ESButton variant={!isMobile ? 'outlined' : 'text'} round fullWidth size="large" onClick={() => setOpen(false)}>
+                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>

@@ -20,14 +20,20 @@ const useChangeEmailConfirm = (confirmationCode: string) => {
   const changeEmailSteps = useAppSelector(userProfileSelectors.getChangeEmailSteps)
   const resetMeta = () => dispatch(clearMetaData(actions.changeEmailConfirm.typePrefix))
   const meta = useAppSelector(getChangeEmailConfirmMeta)
+  const newEmail = useAppSelector(userProfile.selectors.getNewEmail)
   const changeEmailConfirm = (params: services.ChangeEmailConfirmParams) => {
     dispatch(actions.changeEmailConfirm(params))
   }
+
   useEffect(() => {
     if (meta.loaded) {
       router.push(ESRoutes.USER_ACCOUNT_SETTINGS)
     }
   }, [meta.loaded])
+
+  useEffect(() => {
+    return () => resetMeta()
+  }, [])
 
   useEffect(() => {
     if (confirmationCode && !!meta.error) {
@@ -41,7 +47,7 @@ const useChangeEmailConfirm = (confirmationCode: string) => {
     }
   }, [changeEmailSteps.step_change])
 
-  return { changeEmailConfirm, meta, user, changeEmailSteps }
+  return { changeEmailConfirm, meta, user, changeEmailSteps, newEmail }
 }
 
 export default useChangeEmailConfirm

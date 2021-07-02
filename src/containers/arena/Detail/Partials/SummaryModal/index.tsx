@@ -4,17 +4,21 @@ import { Typography, Box, makeStyles, Theme, IconButton, Icon, Divider } from '@
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESInput from '@components/Input'
+import ESFastInput from '@components/FastInput'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import useSummary from './useSummary'
 import ESLoader from '@components/FullScreenLoader'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import CoverUploader from '@containers/arena/UpsertForm/Partials/CoverUploader'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import { useStore } from 'react-redux'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useAppDispatch } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useDocTitle from '@utils/hooks/useDocTitle'
+import _ from 'lodash'
 
 interface SummaryModalProps {
   tournament: TournamentDetail
@@ -23,43 +27,55 @@ interface SummaryModalProps {
 }
 
 const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClose }) => {
+  const { resetTitle, changeTitle } = useDocTitle()
   const data = tournament.attributes
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [isUploading, setUploading] = useState(false)
-  const store = useStore()
   const { summary, summaryMeta } = useSummary()
   const { uploadArenaSummaryImage } = useUploadImage()
+  const { checkNgWord } = useCheckNgWord()
+  const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    summary: Yup.string()
-      .required(t('common:common.error'))
-      .max(190, t('common:common.too_long'))
-      .test('ng-check', 'match_ng_word', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    summary: Yup.string().required(t('common:common.required')).max(190, t('common:common.too_long')),
   })
 
-  const { handleChange, values, errors, touched, setFieldValue, handleSubmit } = useFormik({
+  const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit } = useFormik({
     initialValues: {
-      summary: data.summary,
+      summary: data.summary || '',
       summary_image: data.summary_image,
     },
     validationSchema,
     onSubmit: (values) => {
-      summary({ data: { summary_image_url: values.summary_image, value: values.summary }, hash_key: data.hash_key })
+      if (_.isEmpty(checkNgWord(values.summary))) {
+        summary({ data: { summary_image_url: values.summary_image, value: values.summary }, hash_key: data.hash_key })
+      } else {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.summary }))
+      }
     },
   })
 
   useEffect(() => {
+    if (open) {
+      changeTitle(t('common:page_head.arena_summary_title'))
+    }
+  }, [open])
+
+  useEffect(() => {
+    validateForm()
+  }, [])
+
+  useEffect(() => {
     if (summaryMeta.loaded || summaryMeta.error) {
       handleClose()
+      resetTitle()
     }
   }, [summaryMeta.loaded, summaryMeta.error])
 
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaSummaryImage(file, 1, true, (imageUrl) => {
+    uploadArenaSummaryImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })
@@ -71,7 +87,13 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
         <BlankLayout>
           <Box paddingY={8} className={classes.childrenContainer}>
             <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+              <IconButton
+                className={classes.iconButtonBg}
+                onClick={() => {
+                  resetTitle()
+                  handleClose()
+                }}
+              >
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
@@ -88,23 +110,27 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
             </Box>
 
             <Box width="100%" pb={1}>
-              <ESInput
+              <ESFastInput
                 id="summary"
                 name="summary"
                 labelPrimary={t('common:arena.summary')}
                 fullWidth
+                placeholder={t('common:tournament_create.please_enter')}
                 value={values.summary}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 helperText={touched.summary && errors.summary}
                 error={touched.summary && !!errors.summary}
                 size="small"
+                multiline
+                rows={7}
               />
             </Box>
 
             <Box className={classes.stickyFooter}>
               <Box className={classes.nextBtnHolder}>
                 <Box maxWidth={280} className={classes.buttonContainer}>
-                  <ButtonPrimary type="submit" round fullWidth onClick={() => handleSubmit()}>
+                  <ButtonPrimary type="submit" disabled={!_.isEmpty(errors)} round fullWidth onClick={() => handleSubmit()}>
                     {t('common:arena.summary_submit')}
                   </ButtonPrimary>
                 </Box>
@@ -151,6 +177,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
+  },
+  [theme.breakpoints.down('sm')]: {
+    childrenContainer: {
+      paddingTop: 0,
+    },
   },
 }))
 

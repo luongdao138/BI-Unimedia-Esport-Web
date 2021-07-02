@@ -157,7 +157,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
                   </Box>
 
                   <IconButton
-                    onClick={() => router.push(ESRoutes.MESSAGE)}
+                    onClick={() => router.push(`${ESRoutes.MESSAGE}?active=true`)}
                     className={`visible-mobile ${classes.button}`}
                     disableRipple
                     color="inherit"
@@ -222,6 +222,7 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     background: '#000',
     borderBottom: 'solid 1px #70707070',
+    willChange: 'transform',
   },
   toolbar: {
     minHeight: 60,

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { makeStyles, Box } from '@material-ui/core'
+import { makeStyles, Box, IconButton, Icon, Theme } from '@material-ui/core'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -12,6 +12,7 @@ import {
   lastKey as key,
   paginating as paging,
   hasError as hasErrorSelector,
+  blocked,
 } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE, CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import { v4 as uuidv4 } from 'uuid'
@@ -32,9 +33,13 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 import useCopyToClipboard from '@utils/hooks/useCopyToClipboard'
+import { NextRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import { ReplyContent } from '@components/Chat/elements'
 
 interface ChatRoomContainerProps {
   roomId: string | string[]
+  router: NextRouter
 }
 
 export interface UploadStateType {
@@ -47,7 +52,7 @@ export interface MessageModalStateProps {
   replyMessage: null | ParentItem | string | MessageType
 }
 
-const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
+const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router }) => {
   const [uploadMeta, setMeta] = useState<UploadStateType>({ id: null, uploading: false })
   const [reply, setReply] = useState<MessageType | null>(null)
   const [reporting, setReporting] = useState<boolean>(false)
@@ -56,7 +61,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const { copy } = useCopyToClipboard(true, i18n.t('common:chat.chat_copied'))
   const classes = useStyles()
 
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   const dispatch = useAppDispatch()
 
@@ -70,6 +75,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   const lastKey = useAppSelector(key)
   const paginating = useAppSelector(paging)
   const hasError = useAppSelector(hasErrorSelector)
+  const isBlocked = useAppSelector(blocked)
 
   useEffect(() => {
     if (userId && roomId) {
@@ -90,7 +96,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   }, [roomId])
 
   const handlePress = (text: string) => {
-    if (_.isEmpty(checkNgWord(text))) {
+    if (_.isEmpty(checkNgWord(text)) && !isBlocked) {
       const currentTimestamp = moment().valueOf()
       const clientId = uuidv4()
       const payload = {
@@ -180,7 +186,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       setMeta({ ...uploadMeta, uploading: true })
       dispatch(socketActions.messagePending(payload))
     } else {
-      dispatch(socketActions.socketSend(payload))
+      dispatch(socketActions.socketSend(_.omit(payload, 'userId')))
       setMeta({ id: null, uploading: false })
     }
   }
@@ -234,6 +240,24 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
     return null
   }
 
+  const onNavigateToProfile = (code: string) => {
+    router.push(`${ESRoutes.PROFILE}/${code}`)
+  }
+
+  const renderReplyPanel = () => {
+    if (reply !== null) {
+      return (
+        <Box className={classes.panel}>
+          <ReplyContent color={Colors.text[200]} replyMessage={reply} members={usersAvailable} />
+          <IconButton onClick={() => setReply(null)} disableRipple className={classes.closeButton}>
+            <Icon className={`${classes.iconClose} fa fa-times`} />
+          </IconButton>
+        </Box>
+      )
+    }
+    return null
+  }
+
   return (
     <Box className={classes.room}>
       <Box className={classes.header} px={3} py={2}>
@@ -242,7 +266,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
       <Box className={classes.list}>
         {renderLoader()}
         {renderErroMesage()}
-        {!hasError && !_.isEmpty(data) && _.isArray(data) && (
+        {!hasError && userId && !_.isEmpty(data) && _.isArray(data) && (
           <MessageList
             reply={onReply}
             report={onReport}
@@ -253,17 +277,18 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
             onFetchMore={onFetchMore}
             onReplyClick={handleReplyDetail}
             users={usersWithAll}
+            navigateToProfile={onNavigateToProfile}
             messages={data}
           />
         )}
       </Box>
       {userId && !hasError && data ? (
         <Box className={classes.input}>
+          {renderReplyPanel()}
           <MessageInputArea
             ref={inputRef}
-            reply={reply}
+            isBlocked={isBlocked}
             currentUser={userId}
-            onCancelReply={() => setReply(null)}
             onPressSend={handlePress}
             users={usersAvailable}
             onPressActionButton={handlePressActionButton}
@@ -283,6 +308,8 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
           reportType={REPORT_TYPE.CHAT}
           target_id={Number(reportData.target_id)}
           data={reportData.data}
+          chat_id={reportData.chat_id}
+          room_id={reportData.room_id}
           open={reporting}
           members={usersWithAll}
           handleClose={() => setReporting(false)}
@@ -300,10 +327,11 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   header: {
     borderBottom: '1px solid #212121',
-    height: 68,
+    height: 60,
+    padding: 12,
   },
   dropZone: {
     display: 'none',
@@ -366,6 +394,34 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     maxWidth: '100%',
     background: '#101010',
+    willChange: 'transform',
+  },
+  panel: {
+    position: 'relative',
+    paddingBottom: 10,
+    paddingRight: 20,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 5,
+    zIndex: 100,
+    right: 5,
+    '&:hover': {
+      background: 'transparent',
+    },
+  },
+  iconClose: {
+    color: Colors.text[200],
+    fontSize: '12px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    header: {
+      position: 'absolute',
+      top: 0,
+      left: 60,
+      right: 0,
+      zIndex: 200,
+    },
   },
 }))
 

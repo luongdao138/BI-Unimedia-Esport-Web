@@ -13,14 +13,21 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
-import { useRouter } from 'next/router'
 import { TournamentMatchItem } from '@services/arena.service'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
-  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, setScore, scoreMeta } = useTournamentMatches()
+  const {
+    matches,
+    third_place_match,
+    fetchMatches,
+    roundTitles,
+    meta: matchesMeta,
+    setScore,
+    scoreMeta,
+    handleBack,
+  } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
@@ -110,7 +117,7 @@ const ArenaMatches: React.FC = () => {
           <AppBar className={classes.appbar}>
             <Container maxWidth="lg">
               <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.backButton} onClick={() => router.back()}>
+                <IconButton className={classes.backButton} onClick={handleBack}>
                   <ArrowBack />
                 </IconButton>
                 <Typography variant="h2">{tournament.attributes.title}</Typography>
@@ -164,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     padding: theme.spacing(3),
-    paddingTop: 108,
+    paddingTop: theme.spacing(6),
   },
   backButton: {
     backgroundColor: '#4D4D4D',

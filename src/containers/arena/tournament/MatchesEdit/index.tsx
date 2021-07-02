@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography, Box } from '@material-ui/core'
+import { AppBar, Container, IconButton, Toolbar, Typography, Box, Icon } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ESStickyFooter from '@components/StickyFooter'
@@ -9,22 +9,23 @@ import SelectParticipantModal from '../../Detail/Partials/SelectParticipantModal
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
 import RandomizeDialog from './Partials/RandomizeDialog'
+import FreezeDialog from './Partials/FreezeDialog'
 import { useTranslation } from 'react-i18next'
-import { useRouter } from 'next/router'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 import ButtonPrimary from '@components/ButtonPrimary'
+import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 
 const ArenaMatches: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
-  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta } = useTournamentMatches()
+  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, handleBack } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
+  const [showFreeze, setShowFreeze] = useState(false)
   const [data, setData] = useState<any>()
 
   useEffect(() => {
@@ -89,12 +90,15 @@ const ArenaMatches: React.FC = () => {
         content={
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
-              <ButtonPrimary type="submit" round fullWidth onClick={() => setShowRandomize(true)}>
+              <ButtonPrimaryOutlined
+                onClick={() => setShowRandomize(true)}
+                leadingIcon={<Icon className="fas fa-random" fontSize="small" />}
+              >
                 {t('common:arena.randomize_button')}
-              </ButtonPrimary>
+              </ButtonPrimaryOutlined>
             </Box>
             <Box className={classes.actionButton}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => freeze(tournament.attributes.hash_key)}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => setShowFreeze(true)}>
                 {t('common:arena.freeze_button')}
               </ButtonPrimary>
             </Box>
@@ -104,7 +108,7 @@ const ArenaMatches: React.FC = () => {
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
             <Toolbar className={classes.toolbar}>
-              <IconButton className={classes.backButton} onClick={() => router.back()}>
+              <IconButton className={classes.backButton} onClick={handleBack}>
                 <ArrowBack />
               </IconButton>
               <Typography variant="h2">{tournament.attributes.title}</Typography>
@@ -122,7 +126,7 @@ const ArenaMatches: React.FC = () => {
           </Bracket.Container>
           {!_.isEmpty(third_place_match) && (
             <Bracket.Container activeRound={0}>
-              <Bracket.Round key={'3rd'} roundNo={0}>
+              <Bracket.Round key="3rd" roundNo={0}>
                 {getMatch('1-1', third_place_match[0])}
               </Bracket.Round>
             </Bracket.Container>
@@ -144,6 +148,15 @@ const ArenaMatches: React.FC = () => {
           onAction={() => {
             setShowRandomize(false)
             randomize(tournament.attributes.hash_key)
+          }}
+        />
+
+        <FreezeDialog
+          open={showFreeze}
+          onClose={() => setShowFreeze(false)}
+          onAction={() => {
+            setShowFreeze(false)
+            freeze(tournament.attributes.hash_key)
           }}
         />
       </ESStickyFooter>
@@ -179,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     padding: theme.spacing(3),
-    paddingTop: 108,
+    paddingTop: theme.spacing(6),
   },
   backButton: {
     backgroundColor: '#4D4D4D',

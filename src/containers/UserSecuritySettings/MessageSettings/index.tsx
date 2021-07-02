@@ -1,14 +1,16 @@
-import { Box } from '@material-ui/core'
+import { Box, makeStyles } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import SettingsRowItem from '@components/SettingsRowItem'
 import HeaderWithButton from '@components/HeaderWithButton'
 import useMessageSettings from './useMessageSettings'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ESLoader from '@components/Loader'
 
 const ESMessageSettings: React.FC = () => {
   const { t } = useTranslation('common')
+  const classes = useStyles()
   const { fetchMeta, messageSettings, updateMessageSettings } = useMessageSettings()
+  const [isRemote, setIsRemote] = useState<boolean>(false)
 
   const [state, setState] = useState({
     allow_groups_from_strangers: false,
@@ -17,6 +19,7 @@ const ESMessageSettings: React.FC = () => {
 
   useEffect(() => {
     if (messageSettings) {
+      setIsRemote(true)
       setState(messageSettings)
     }
   }, [messageSettings])
@@ -26,7 +29,9 @@ const ESMessageSettings: React.FC = () => {
   }
 
   useEffect(() => {
-    updateMessageSettings(state)
+    if (isRemote) {
+      updateMessageSettings(state)
+    }
   }, [state])
 
   useEffect(() => {
@@ -38,8 +43,6 @@ const ESMessageSettings: React.FC = () => {
   return (
     <div>
       <HeaderWithButton title={t('message_settings.title')} />
-      {fetchMeta.pending && <ESLoader />}
-
       <Box>
         <SettingsRowItem
           key="allow_messages_from_strangers"
@@ -58,8 +61,21 @@ const ESMessageSettings: React.FC = () => {
           showSwitch={true}
         />
       </Box>
+      {fetchMeta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  loaderCenter: {
+    marginTop: theme.spacing(1),
+    width: '100%',
+    textAlign: 'center',
+  },
+}))
 
 export default ESMessageSettings

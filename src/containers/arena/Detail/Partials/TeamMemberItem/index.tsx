@@ -13,6 +13,7 @@ interface Props {
   team: CommonResponse
   handleClick?: () => void
   rightItem?: JSX.Element
+  yellowTitle?: boolean
 }
 
 const Accordion = withStyles({
@@ -21,7 +22,7 @@ const Accordion = withStyles({
   },
 })(MuiAccordion)
 
-const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
+const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem, yellowTitle }) => {
   const data = team.attributes.team.data.attributes
   const members = data.members
   const [expanded, setExpanded] = useState<boolean>(false)
@@ -30,6 +31,8 @@ const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
   const userData = (member) => {
     return { id: member.user_id, attributes: { ...member, nickname: member.name, avatar: member.image_url } }
   }
+
+  const isYellowTitle = yellowTitle === true
 
   return (
     <Grid item xs={12}>
@@ -40,8 +43,13 @@ const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
           </AccordionSummary>
           <AccordionDetails>
             <Box ml={6} display="flex" flex={1} flexDirection="column">
-              {members.map((member, i) => (
-                <UserListItem data={userData(member)} key={i} isFollowed={Boolean(member.is_followed)} />
+              {members.map((member, i, _) => (
+                <UserListItem
+                  data={userData(member)}
+                  key={i}
+                  isFollowed={Boolean(member.is_followed)}
+                  nicknameYellow={isYellowTitle && i === 0}
+                />
               ))}
             </Box>
           </AccordionDetails>
@@ -63,7 +71,7 @@ const TeamMemberItem: React.FC<Props> = ({ team, handleClick, rightItem }) => {
                   alignItems="center"
                   onClick={handleClick}
                 >
-                  <Typography variant="h3" noWrap>
+                  <Typography variant="h3" noWrap style={isYellowTitle ? { color: Colors.yellow } : undefined}>
                     {data.name}
                   </Typography>
                 </Box>

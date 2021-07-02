@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, makeStyles, DialogContent, Typography, Theme, IconButton, Badge, Icon, Container } from '@material-ui/core'
+import { Box, makeStyles, DialogContent, Typography, Theme, IconButton, Badge, Icon, Container, useTheme } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import Avatar from '@components/Avatar'
@@ -9,12 +9,12 @@ import MemberItem from './MemberItem'
 import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import useMemberAdd from './useMemberAdd'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import _ from 'lodash'
 import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 import { useRect } from '@utils/hooks/useRect'
 import ESSlider from '@components/Slider'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 export interface RoomMemberAddViewProps {
   roomId: string
@@ -27,31 +27,21 @@ export interface ShortMember {
   nickName: string
   userCode: string
   profile: string
-  isSelected: boolean
-  isAdded: boolean
 }
 const contentRef = React.createRef<HTMLDivElement>()
-const layoutConsts = {
-  paperMargin: 32,
-  title: 70,
-  input: 107,
-  bottomSpacing: 34,
-}
 
 const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hide }) => {
-  const classes = useStyles()
   const [memberList, setMemberList] = useState([] as ShortMember[]) // friends in search list
   const [selectedList, setSelectedList] = useState([] as ShortMember[]) // friends who are going to enter the room
-
-  const { roomMembers, resetMeta, friends, getFriends, page, currentUserId, meta, socketSend, cleanFriendsData } = useMemberAdd()
-  const [hasMore, setHasMore] = useState(true)
+  const theme = useTheme()
+  const { roomMembers, resetMeta, friends, getFriends, currentUserId, meta, socketSend, cleanFriendsData } = useMemberAdd()
   const [keyword, setKeyword] = useState('')
   const [bottomGap, setBottomGap] = useState<number>(0)
-
+  const matches = useMediaQuery(theme.breakpoints.up('sm'))
+  const height = matches ? bottomGap + 100 : bottomGap + 68
+  const classes = useStyles()
   const userId = currentUserId
   const contentRect = useRect(contentRef)
-
-  const listHeight = layoutConsts.paperMargin + layoutConsts.input + layoutConsts.title + layoutConsts.bottomSpacing + bottomGap
 
   useEffect(() => {
     if (userId && open) {
@@ -72,33 +62,25 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 
   const filterItems = () => {
     if (_.isArray(friends) && _.isArray(roomMembers)) {
-      const filtered = friends.map((item) => ({
-        id: parseInt(item.id),
-        nickName: item.attributes.nickname,
-        userCode: item.attributes.user_code,
-        profile: item.attributes.avatar,
-        isSelected: !!selectedList.find((selected) => `${selected.id}` === `${item.id}`),
-        isAdded: checkIsAdded(item.id),
-      }))
-      setMemberList(filtered)
+      const filtered = _.filter(friends, (friend) => {
+        const member = roomMembers.find((member) => `${member.id}` === `${friend.id}`)
+        if (!member) return true
+        return member.memberStatus === CHAT_MEMBER_STATUS.INACTIVE
+      })
+      setMemberList(
+        filtered.map((item) => ({
+          id: parseInt(item.id),
+          nickName: item.attributes.nickname,
+          userCode: item.attributes.user_code,
+          profile: item.attributes.avatar,
+        }))
+      )
     }
-  }
-
-  const checkIsAdded = (id: string) => {
-    const exist = roomMembers.find((c) => c.id === id)
-    if (exist && id === exist.id) {
-      if (exist.memberStatus === CHAT_MEMBER_STATUS.INACTIVE) {
-        return false
-      } else {
-        return true
-      }
-    }
-    return false
   }
 
   const onSearch = () => {
     cleanFriendsData()
-    getFriends({ type: 'group', keyword: keyword, page: 1, per_page: 20 })
+    getFriends({ type: 'group', keyword: keyword })
   }
 
   const handleChange = (event) => {
@@ -109,53 +91,40 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     socketSend({
       action: CHAT_ACTION_TYPE.ADD_MEMBERS,
       roomId: roomId,
-      userId: userId,
       userIds: selectedList.map((item) => item.id),
     })
     hide()
   }
 
-  const onItemToggle = (id: number) => {
-    const newList = [...memberList]
-    const index = newList.findIndex((item) => item.id === id)
-    if (index < 0) return
-    const chosenItem = newList[index]
-    chosenItem.isSelected = true
-    setMemberList(newList)
-    const newSelectedList = [...selectedList]
-    const selectedIndex = newSelectedList.findIndex((item) => `${item.id}` === `${chosenItem.id}`)
-    if (selectedIndex < 0) {
-      newSelectedList.push({ ...chosenItem })
-    }
-    setSelectedList(newSelectedList)
+  const onAdd = (data: ShortMember) => {
+    setSelectedList((state) => [...state, data])
   }
 
   const removeFromList = (id: number) => {
-    const deletedArray = _.filter(selectedList, function (n) {
-      return n.id !== Number(id)
-    })
-    setSelectedList(deletedArray)
-    const unselectedArray = _.map(memberList, function (n) {
-      if (n.id === Number(id)) {
-        return { ...n, isSelected: false }
-      } else return n
-    })
-    setMemberList(unselectedArray)
-  }
-
-  const fetchMoreData = () => {
-    if (page.current_page >= page.total_pages) {
-      setHasMore(false)
-      return
-    }
-    getFriends({ page: page.current_page + 1, keyword: keyword, type: 'group', per_page: 20 })
+    setSelectedList(
+      _.filter(selectedList, function (s) {
+        return s.id != id
+      })
+    )
   }
 
   const onClosing = () => {
     hide()
     resetMeta()
     cleanFriendsData()
-    setHasMore(true)
+  }
+
+  const renderLoader = () => {
+    if (friends === undefined && !meta.loaded && meta.pending && !meta.error) {
+      return (
+        <Box height={'100%'} width={'100%'} display="flex" justifyContent="center" alignItems="center">
+          <Box className={classes.loaderBox}>
+            <ESLoader />
+          </Box>
+        </Box>
+      )
+    }
+    return null
   }
 
   const renderFooter = () => (
@@ -200,7 +169,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
       </Box>
       <Box maxWidth={280} className={classes.buttonBottom}>
         <ButtonPrimary type="submit" disabled={_.isEmpty(selectedList)} round fullWidth onClick={onSubmit}>
-          変更する
+          {i18n.t('common:chat.add_submit')}
         </ButtonPrimary>
       </Box>
     </div>
@@ -215,8 +184,8 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
         bkColor="rgba(0,0,0,0.8)"
         alignTop
       >
-        <DialogContent style={{ padding: 0 }}>
-          <Box pt={6}>
+        <DialogContent className={classes.dialogContentWrap} style={{ height: `calc(100vh - ${height}px)` }}>
+          <Box className={classes.inputHolder}>
             <ESInput
               placeholder={i18n.t('common:chat.member_add_placeholder')}
               value={keyword}
@@ -234,32 +203,19 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
             />
             <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
           </Box>
-          {meta.loaded && _.isEmpty(memberList) && (
-            <div className={classes.loaderCenter}>
-              <Typography>{i18n.t('common:common.no_data')}</Typography>
-            </div>
-          )}
+          {renderLoader()}
           {open ? (
-            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`} style={{ height: `calc(100vh - ${listHeight}px)` }}>
-              <InfiniteScroll
-                dataLength={memberList && memberList.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                scrollableTarget="scrollableDiv"
-                scrollThreshold={0.99}
-                style={{ overflow: 'hidden' }}
-                loader={
-                  meta.pending && (
-                    <div className={classes.loaderCenter}>
-                      <ESLoader />
-                    </div>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
+              {_.filter(
+                memberList,
+                ({ id }) =>
+                  !_.includes(
+                    selectedList.map(({ id }) => id),
+                    id
                   )
-                }
-              >
-                {memberList.map((member) => (
-                  <MemberItem key={member.id} item={member} onChange={onItemToggle} />
-                ))}
-              </InfiniteScroll>
+              ).map((member) => (
+                <MemberItem key={member.id} item={member} onAdd={onAdd} />
+              ))}
             </div>
           ) : null}
 
@@ -273,6 +229,24 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 RoomMemberAddView.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
+  dialogContentWrap: {
+    padding: 0,
+    position: 'relative',
+    paddingTop: '100px',
+    overflow: 'hidden',
+  },
+  inputHolder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    flexDirection: 'column',
+    paddingBottom: 30,
+  },
   item: {
     width: '100%',
     paddingLeft: 5,
@@ -331,6 +305,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+    height: '100%',
+    paddingBottom: 30,
   },
   scroll: {
     scrollbarColor: '#222 transparent',
@@ -373,6 +349,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(8),
   },
   [theme.breakpoints.down('md')]: {},
+  [theme.breakpoints.down('sm')]: {
+    dialogContentWrap: {
+      padding: '0px 16px',
+      paddingTop: '100px !important',
+      height: `calc(100vh - ${(props) => props.mobileHeight})`,
+    },
+    inputHolder: {
+      padding: '0 16px',
+    },
+  },
 }))
 
 export default RoomMemberAddView

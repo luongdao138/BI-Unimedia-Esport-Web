@@ -14,6 +14,7 @@ import {
   TournamentStatus,
   RecommendedUsers,
   ParticipantName,
+  TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
@@ -25,7 +26,7 @@ type StateType = {
   tournamentDetail?: TournamentDetail
   tournamentParticipants?: Array<ParticipantsResponse>
   participantsMeta?: PageMeta
-  suggestedTeamMembers?: Array<SuggestedTeamMembersResponse>
+  suggestedTeamMembers?: SuggestedTeamMembersResponse[]
   suggestedTeamMembersMeta?: PageMeta
   tournamentInteresteds?: Array<ParticipantsResponse>
   interestedsMeta?: PageMeta
@@ -34,10 +35,11 @@ type StateType = {
   arenaWinners: ArenaWinners
   recommendedUsers?: Array<RecommendedUsers>
   recommendedUsersMeta?: PageMeta
-  tournamentFollowersMeta: PageMeta
-  tournamentResultsMeta: PageMeta
-  recruitingTournamentsMeta: PageMeta
+  tournamentFollowersMeta?: PageMeta
+  tournamentResultsMeta?: PageMeta
+  recruitingTournamentsMeta?: PageMeta
   selectedParticipant?: ParticipantName
+  selectedTeamDetail?: TournamentTeamDetail
 }
 
 const initialState: StateType = {
@@ -51,9 +53,6 @@ const initialState: StateType = {
   arenaWinners: {},
   recruitingTournaments: [],
   recommendedUsers: [],
-  tournamentFollowersMeta: undefined,
-  tournamentResultsMeta: undefined,
-  recruitingTournamentsMeta: undefined,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -92,15 +91,12 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getEntryStatus.fulfilled, (state, action) => {
     state.tournamentDetail.attributes.is_entered = action.payload.is_entry
   })
-  builder.addCase(actions.joinTournament.fulfilled, (state) => {
-    state.tournamentDetail.attributes.interested_count++
-    state.tournamentDetail.attributes.is_entered = true
-    state.tournamentDetail.attributes.my_role = 'interested'
-  })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
     state.tournamentDetail.attributes.is_entered = false
-    state.tournamentDetail.attributes.my_role = null
+    state.tournamentDetail.attributes.my_info = state.tournamentDetail.attributes.my_info.filter((info) => {
+      info.role !== 'interested'
+    })
   })
   builder.addCase(actions.closeTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
@@ -112,6 +108,10 @@ export default createReducer(initialState, (builder) => {
     }
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
+  })
+  builder.addCase(actions.resetParticipants, (state) => {
+    state.tournamentParticipants = []
+    state.participantsMeta = undefined
   })
   builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
     let _suggestedTeamMembers = action.payload.data
@@ -171,9 +171,12 @@ export default createReducer(initialState, (builder) => {
     state.tournamentDetail = action.payload.data
   })
   builder.addCase(actions.getParticipantName.fulfilled, (state, action) => {
-    state.selectedParticipant = action.payload
+    state.selectedParticipant = action.payload.data
   })
   builder.addCase(actions.changeParticipantName.fulfilled, (state, action) => {
     state.selectedParticipant.attributes.name = action.payload.name
+  })
+  builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
+    state.selectedTeamDetail = action.payload.data
   })
 })

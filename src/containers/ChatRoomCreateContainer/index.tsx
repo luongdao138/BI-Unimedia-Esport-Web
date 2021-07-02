@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import _ from 'lodash'
 import moment from 'moment'
-import { makeStyles, Box, Typography } from '@material-ui/core'
+import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
 import Loader from '@components/Loader'
 import ImageUploader from '../ChatRoomContainer/ImageUploader'
 import MessageInputArea from '@components/Chat/MessageInputArea'
@@ -54,7 +54,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   const [selectedUsers, setSelectedUsers] = useState([] as number[])
   const [roomId, setRoomId] = useState(null as null | string)
   const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   const ref = useRef<{ handleUpload: () => void }>(null)
   const inputRef = useRef<{ clearInput: () => void }>(null)
@@ -228,31 +228,35 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
 
   return (
     <Box className={classes.room}>
-      <Box className={classes.memberSelectContainer} px={2.5} py={1.5}>
-        <Box>
-          <Typography variant="h2">宛先</Typography>
+      <Box className={classes.memberSelectContainer}>
+        <Box className={classes.titleBox}>
+          <Typography variant="h2" className={classes.title}>
+            {i18n.t('common:chat.destination')}
+          </Typography>
         </Box>
-        {dm ? (
-          <Box>
-            <ESChip size="small" label={singleUser.nickname} />
-          </Box>
-        ) : (
-          <ESSelectInput
-            items={
-              _.isArray(friends)
-                ? friends.map((friend) => ({
-                    id: parseInt(friend.id),
-                    nickName: friend.attributes.nickname,
-                    avatar: friend.attributes.avatar,
-                    userCode: friend.attributes.user_code,
-                  }))
-                : []
-            }
-            onItemsSelected={handleOnUserSelected}
-            onSearchInput={handleSearchInput}
-            loading={getFriendsMeta.pending}
-          />
-        )}
+        <Box className={classes.inputArea}>
+          {dm ? (
+            <Box>
+              <ESChip size="small" label={singleUser.nickname} />
+            </Box>
+          ) : (
+            <ESSelectInput
+              items={
+                _.isArray(friends)
+                  ? friends.map((friend) => ({
+                      id: parseInt(friend.id),
+                      nickName: friend.attributes.nickname,
+                      avatar: friend.attributes.avatar,
+                      userCode: friend.attributes.user_code,
+                    }))
+                  : []
+              }
+              onItemsSelected={handleOnUserSelected}
+              onSearchInput={handleSearchInput}
+              loading={getFriendsMeta.pending}
+            />
+          )}
+        </Box>
       </Box>
       <Box className={classes.list}>
         <Box className={`${classes.content} scroll-bar`}>
@@ -267,7 +271,6 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
           users={users}
           onPressActionButton={handlePressActionButton}
           disabled={actionPending || uploadMeta.uploading || selectedUsers.length === 0}
-          reply={null}
         />
       </Box>
 
@@ -282,12 +285,19 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   )
 }
 
-const useStyles = makeStyles(() => ({
-  header: {
-    padding: 24,
-  },
+const useStyles = makeStyles((theme: Theme) => ({
   dropZone: {
     display: 'none',
+  },
+  inputArea: {
+    pointerEvents: 'auto',
+  },
+  title: { fontSize: 17 },
+  titleBox: {
+    height: '40px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loaderBox: {
     width: 20,
@@ -352,8 +362,20 @@ const useStyles = makeStyles(() => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     borderBottom: '1px solid #212121',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     columnGap: 14,
+    padding: '8px 12px',
+  },
+  [theme.breakpoints.down('sm')]: {
+    memberSelectContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      paddingLeft: 60,
+      pointerEvents: 'none',
+      right: 0,
+      zIndex: 1000,
+    },
   },
 }))
 

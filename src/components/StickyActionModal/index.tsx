@@ -15,6 +15,7 @@ type StickyActionModalProps = {
   returnText: string
   onReturnClicked: () => void
   onActionButtonClicked: () => void
+  hideFooter?: boolean
 }
 const StickyActionModal: React.FC<StickyActionModalProps> = ({
   open,
@@ -25,6 +26,7 @@ const StickyActionModal: React.FC<StickyActionModalProps> = ({
   returnText,
   onReturnClicked,
   onActionButtonClicked,
+  hideFooter,
 }) => {
   const classes = useStyles()
 
@@ -44,20 +46,22 @@ const StickyActionModal: React.FC<StickyActionModalProps> = ({
           {children}
         </Box>
 
-        <Box className={classes.stickyFooter}>
-          {actionHintText && (
-            <Box className={classes.hintTextContainer}>
-              <Typography variant="body2">{actionHintText}</Typography>
-            </Box>
-          )}
-          <Box className={classes.actionButtonHolder}>
-            <Box className={classes.buttonContainer}>
-              <ButtonPrimary type="button" round fullWidth disabled={actionButtonDisabled} onClick={onActionButtonClicked}>
-                {actionButtonText}
-              </ButtonPrimary>
+        {hideFooter === true ? null : (
+          <Box className={classes.stickyFooter}>
+            {actionHintText && (
+              <Box className={classes.hintTextContainer}>
+                <Typography variant="body2">{actionHintText}</Typography>
+              </Box>
+            )}
+            <Box className={classes.actionButtonHolder}>
+              <Box className={classes.buttonContainer}>
+                <ButtonPrimary type="button" round fullWidth disabled={actionButtonDisabled} onClick={onActionButtonClicked}>
+                  {actionButtonText}
+                </ButtonPrimary>
+              </Box>
             </Box>
           </Box>
-        </Box>
+        )}
       </BlankLayout>
     </ESModal>
   )

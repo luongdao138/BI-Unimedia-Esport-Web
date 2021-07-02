@@ -7,13 +7,18 @@ import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import useChangeEmailConfirm from './useConfirm'
 import ESLoader from '@components/FullScreenLoader'
+import * as actions from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
+import userProfile from '@store/userProfile'
 
 const AccountSettingsConfirmContainer: React.FC = () => {
   const { t } = useTranslation('common')
+  const dispatch = useAppDispatch()
   const classes = useStyles()
   const router = useRouter()
+  const { actions: userProfileActions } = userProfile
   const [confirmationCode, setConfirmationCode] = useState<string>('')
-  const { changeEmailConfirm, meta, user, changeEmailSteps } = useChangeEmailConfirm(confirmationCode)
+  const { changeEmailConfirm, meta, user, changeEmailSteps, newEmail } = useChangeEmailConfirm(confirmationCode)
 
   const handleSubmit = () => {
     const params = {
@@ -24,12 +29,29 @@ const AccountSettingsConfirmContainer: React.FC = () => {
     changeEmailConfirm(params)
   }
 
+  const handleResend = () => {
+    if (newEmail) dispatch(userProfileActions.changeEmail({ new_email: newEmail }))
+    dispatch(actions.addToast(`${t('account_settings.sent_resend_code')}`))
+  }
+
   const buttonActive = (): boolean => {
     return user?.email !== '' && confirmationCode.length === 6 && !meta.error
   }
 
   if (!changeEmailSteps.step_change) {
     return null
+  }
+
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box pb={8}>
+          <Typography className={classes.errorMsg} color="secondary">
+            {t('error.invalid_confirmation')}
+          </Typography>
+        </Box>
+      )
+    )
   }
 
   return (
@@ -43,6 +65,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
         </Typography>
       </Box>
       <Box mt={12} mx={4} mb={4} className={classes.formWrap}>
+        {renderError()}
         <Typography variant="h3" className={classes.content}>
           {t('account_settings.confirm_title')}
         </Typography>
@@ -51,7 +74,9 @@ const AccountSettingsConfirmContainer: React.FC = () => {
         <ESPinInput error={!!meta.error} value={confirmationCode} onChange={(value) => setConfirmationCode(value)} />
       </Box>
       <Box mx={4} mb={6} textAlign="center" className={classes.section}>
-        <Typography variant="caption">{t('confirm.resend')}</Typography>
+        <Typography className={classes.resend_code} variant="caption" onClick={handleResend}>
+          {t('confirm.resend')}
+        </Typography>
       </Box>
       <Box mx={4} className={classes.section}>
         <Typography variant="caption">{t('confirm.dont_receive')}</Typography>
@@ -92,6 +117,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   sectionBottom: {
     marginBottom: theme.spacing(4),
   },
+  errorMsg: {
+    textAlign: 'center',
+  },
   [theme.breakpoints.down('md')]: {
     header: {
       paddingTop: theme.spacing(2),
@@ -104,6 +132,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(2),
       marginLeft: theme.spacing(2),
     },
+  },
+  resend_code: {
+    cursor: 'pointer',
   },
 }))
 

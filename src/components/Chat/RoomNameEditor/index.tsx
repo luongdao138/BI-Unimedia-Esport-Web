@@ -4,12 +4,15 @@ import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
+import { useAppDispatch } from '@store/hooks'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
-import { currentUserId } from '@store/auth/selectors'
 import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { addToast } from '@store/common/actions'
 
 export interface RoomNameEditorProps {
   roomName: string
@@ -22,11 +25,8 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   roomId
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const userId = useAppSelector(currentUserId)
+  const { checkNgWord } = useCheckNgWord()
   const [newName, setNewName] = useState('')
-  const renderFooter = () => {
-    return <Box className={classes.stickyFooter}></Box>
-  }
 
   useEffect(() => {
     if (_.isString(roomName)) {
@@ -39,15 +39,22 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   }
 
   const onSubmit = () => {
-    dispatch(
-      socketActions.socketSend({
-        userId: userId,
-        action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
-        roomId: roomId,
-        name: newName.trim(),
-      })
-    )
-    hide()
+    const name = newName.trim()
+    if (_.isEmpty(checkNgWord(name))) {
+      dispatch(
+        socketActions.socketSend({
+          action: CHAT_ACTION_TYPE.CHANGE_ROOM_NAME,
+          roomId: roomId,
+          name: newName.trim(),
+        })
+      )
+      setTimeout(function () {
+        dispatch(addToast(i18n.t('common:chat.toast.room_name_changed')))
+      }, 1000)
+      hide()
+    } else {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.room_name_title }))
+    }
   }
 
   const isButtonDisabled = () => {
@@ -56,20 +63,30 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
     return false
   }
 
+  const renderFooter = () => (
+    <div className={classes.stickyFooter}>
+      <Box maxWidth={280} className={classes.buttonBottom}>
+        <ButtonPrimary type="submit" disabled={isButtonDisabled()} round fullWidth onClick={onSubmit}>
+          {i18n.t('common:chat.add_submit')}
+        </ButtonPrimary>
+      </Box>
+    </div>
+  )
+
   return (
     <Box className={classes.container}>
       <ESDialog
         open={open}
-        title="メッセージ名の変更"
+        title={i18n.t('common:chat.room_options.change_room_name')}
         handleClose={() => hide()}
         bkColor="rgba(0,0,0,0.8)"
         alignTop
         fixedFooter={renderFooter()}
-        className="scroll-bar"
+        className={`scroll-bar`}
       >
         <DialogContent>
           <Box mt={8}>
-            <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります。</Typography>
+            <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります</Typography>
           </Box>
           <Box mt={6}>
             <form
@@ -81,11 +98,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
               <ESInput placeholder={i18n.t('common:chat.room_name_placeholder')} value={newName} fullWidth onChange={handleChange} />
             </form>
           </Box>
-          <Box maxWidth={280} className={classes.buttonBottom}>
-            <ButtonPrimary type="submit" round fullWidth disabled={isButtonDisabled()} onClick={onSubmit}>
-              変更する
-            </ButtonPrimary>
-          </Box>
+          {renderFooter()}
         </DialogContent>
       </ESDialog>
     </Box>
@@ -95,9 +108,16 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
 RoomNameEditor.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {},
+  container: {
+    alignSelf: 'flex-start',
+  },
   nameInfoMsg: {
     textAlign: 'center',
+  },
+  alignTop: {
+    '& .MuiDialog-container ': {
+      alignItems: 'flex-start',
+    },
   },
   stickyFooter: {
     position: 'fixed',
@@ -107,16 +127,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black,
     borderTop: `1px solid`,
     borderTopColor: Colors.text['300'],
-    height: 162,
+    height: 'auto',
   },
 
   buttonBottom: {
-    transform: 'translate(-50%, 0px)',
-    position: 'fixed',
-    left: '50%',
-    bottom: theme.spacing(11),
+    margin: 'auto',
     width: theme.spacing(35),
     minWidth: theme.spacing(18),
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(8),
   },
   [theme.breakpoints.down('md')]: {
     stickyFooter: {

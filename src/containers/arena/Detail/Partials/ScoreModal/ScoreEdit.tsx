@@ -58,15 +58,17 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
         >
           <ESAvatar className={`${avatar ? '' : classes.pinkBg}`} size={isMobile ? 100 : 120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
-          <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
-          {!isTeam && <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>}
+          <Typography className={classes.label} variant="h3">
+            {_name || ''}
+          </Typography>
+          {!isTeam && <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>}
         </Box>
-        <Box pt={6} display="flex" alignItems="flex-end">
+        <Box pt={3} display="flex" alignItems="flex-end">
           <input
             className={classes.pinText}
             type="number"
             min={0}
-            placeholder={t('common:common.zero')}
+            placeholder={t('common:arena.double_zero')}
             pattern="\d*"
             autoComplete="off"
             value={type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home}
@@ -92,12 +94,14 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
                 </Box>
               </Box>
               <Divider />
-              <Box pb={6} pt={3} textAlign="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                </ThemeProvider>
-              </Box>
-              <Box pb={5} pt={1} textAlign="center">
+              {!isMobile && (
+                <Box pb={2} pt={3} textAlign="center">
+                  <ThemeProvider theme={theme}>
+                    <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
+                  </ThemeProvider>
+                </Box>
+              )}
+              <Box pb={5} pt={5} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
               </Box>
               <Box display="flex" justifyContent="space-between" padding={1}>
@@ -139,6 +143,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 40,
     fontWeight: 'bold',
   },
+  label: {
+    width: '100%',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    textAlign: 'center',
+  },
   customRadio: {
     display: 'flex',
     flexDirection: 'column',
@@ -160,10 +170,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 30,
-    height: '71px',
+    fontSize: 40,
+    height: 71,
     width: '100%',
-    maxWidth: '1.8em',
+    maxWidth: 88,
     backgroundColor: Colors.black,
     '&[type=number]': {
       '-moz-appearance': 'textfield',
@@ -187,7 +197,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     customRadio: {
-      width: 148,
+      width: 155,
       height: 220,
       paddingRight: theme.spacing(2),
       paddingLeft: theme.spacing(2),
@@ -197,6 +207,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     vsLabel: {
       fontSize: 30,
+    },
+  },
+  [theme.breakpoints.down('xs')]: {
+    customRadio: {
+      width: 133,
     },
   },
 }))

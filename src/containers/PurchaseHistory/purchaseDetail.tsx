@@ -3,7 +3,6 @@ import HeaderWithButton from '@components/HeaderWithButton'
 import { useTranslation } from 'react-i18next'
 import { Link, Box, makeStyles, Typography, withStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import usePurchaseHistoryDetail from '@containers/PurchaseHistory/usePurchaseHistoryDetail'
 import _ from 'lodash'
 import LinkIcon from '@components/SettingsRowItem/LinkIcon'
@@ -12,18 +11,16 @@ import { PAYMENT_STATUS } from '@constants/common.constants'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import ButtonPrimary from '@components/ButtonPrimary'
-import * as actions from '@store/common/actions'
-import { useAppDispatch } from '@store/hooks'
 import { useRouter } from 'next/router'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const PurchaseDetail: React.FC = () => {
   const router = useRouter()
-  const id: any = router.query.id
+  const { id } = router.query
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
-  const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase } = usePurchaseHistoryDetail()
-  const dispatch = useAppDispatch()
+  const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase, meta } = usePurchaseHistoryDetail()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -36,7 +33,6 @@ const PurchaseDetail: React.FC = () => {
   const handleSubmit = () => {
     if (purchaseHistoryDetail.data && purchaseHistoryDetail.data.id) {
       cancelPurchase(`${purchaseHistoryDetail.data.id}`)
-      dispatch(actions.addToast(`${t('common:purchase_history.cancel_msg')}`))
     }
     setOpen(false)
   }
@@ -55,21 +51,44 @@ const PurchaseDetail: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchPurchaseHistoryDetail(id)
+      fetchPurchaseHistoryDetail(String(id))
     }
     return function () {
       clearPurchaseHistoryDetail()
     }
   }, [router])
 
-  const date =
-    _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.PURCHASED
-      ? _.get(purchaseHistoryDetail.data.attributes, 'purchase_datetime', +purchaseHistoryDetail.data.attributes.purchase_datetime)
-      : _.get(purchaseHistoryDetail.data.attributes, 'status', +purchaseHistoryDetail.data.attributes.status) == PAYMENT_STATUS.CANCELLED
-      ? _.get(purchaseHistoryDetail.data.attributes, 'cancelled_datetime', +purchaseHistoryDetail.data.attributes.cancelled_datetime)
-      : _.get(purchaseHistoryDetail.data.attributes, 'cancel_req_datetime', +purchaseHistoryDetail.data.attributes.cancel_req_datetime)
+  const price = _.get(purchaseHistoryDetail, 'data.attributes.price')
+  const tax = _.get(purchaseHistoryDetail, 'data.attributes.tax')
 
-  const time = CommonHelper.staticSmartTime(date)
+  const purchase_status = _.get(purchaseHistoryDetail, 'data.attributes.status')
+  const purchase_datetime = _.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime')
+  const cancelled_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancelled_datetime')
+  const cancel_req_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancel_req_datetime')
+
+  const time = CommonHelper.staticSmartTime(
+    purchase_status == PAYMENT_STATUS.PURCHASED
+      ? purchase_datetime
+      : purchase_status == PAYMENT_STATUS.CANCELLED
+      ? cancelled_datetime
+      : purchase_status == PAYMENT_STATUS.CANCEL_REQUESTED
+      ? cancel_req_datetime
+      : purchase_datetime
+  )
+
+  const ticket_price = CommonHelper.formatCurrency(price)
+  const ticket_tax = CommonHelper.formatCurrency(tax)
+  const total = CommonHelper.formatCurrency(price + tax)
+
+  const renderError = () => {
+    return (
+      !!meta.error && (
+        <Box my={4} display="flex" justifyContent="center">
+          <Typography color="secondary">{t('common:purchase_history.period_expired')}</Typography>
+        </Box>
+      )
+    )
+  }
 
   return (
     <>
@@ -93,10 +112,10 @@ const PurchaseDetail: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box className={classes.actionBox}>
-                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+                  <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
                     {t('common:purchase_history.dialog_close')}
                   </ButtonPrimary>
-                  <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+                  <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
                     {t('common:purchase_history.cancel_submit')}
                   </ButtonPrimary>
                 </Box>
@@ -116,16 +135,16 @@ const PurchaseDetail: React.FC = () => {
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.status')}</Typography>
               <Typography>
-                {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
+                {purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCELLED
                   ? `${t('common:purchase_history.canceled')}`
-                  : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
+                  : purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
                   ? `${t('common:purchase_history.cancel_requested')}`
                   : `${t('common:purchase_history.purchased')}`}
               </Typography>
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.payment_method')}</Typography>
-              <Typography>{purchaseHistoryDetail.data.attributes.payment_type}</Typography>
+              <Typography>{t('common:purchase_history.payment_type_gmo')}</Typography>
             </Box>
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
@@ -137,8 +156,8 @@ const PurchaseDetail: React.FC = () => {
                 <Typography>{t('common:purchase_history.ticket')}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>{t('common:purchase_history.price')}</Typography>
-                <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.unit_price')}</Typography>
+                <Typography>{ticket_price}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.quantity')}</Typography>
@@ -148,19 +167,19 @@ const PurchaseDetail: React.FC = () => {
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.total_fee')}</Typography>
-                <Typography>¥{purchaseHistoryDetail.data.attributes.price}</Typography>
+                <Typography>{ticket_price}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.tax')}</Typography>
-                <Typography>¥{purchaseHistoryDetail.data.attributes.tax}</Typography>
+                <Typography>{ticket_tax}</Typography>
               </Box>
               <Box display="flex" my={1}>
                 <Typography className={classes.title}>{t('common:purchase_history.payment')}</Typography>
                 <Typography color="primary">
-                  ¥{purchaseHistoryDetail.data.attributes.price + purchaseHistoryDetail.data.attributes.tax}
-                  {purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCELLED
+                  {total}
+                  {purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCELLED
                     ? `(${t('common:purchase_history.canceled')})`
-                    : purchaseHistoryDetail.data.attributes.history_status == PAYMENT_STATUS.CANCEL_REQUESTED
+                    : purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
                     ? `(${t('common:purchase_history.cancel_requested')})`
                     : ''}
                 </Typography>
@@ -170,6 +189,7 @@ const PurchaseDetail: React.FC = () => {
               !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
               !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
                 <>
+                  {renderError()}
                   <Box my={4} display="flex" justifyContent="center">
                     <ESButton variant="outlined" onClick={handleClickOpen}>
                       {t('common:purchase_history.cancel_request')}
@@ -233,10 +253,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 100,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  actionBtn: {
-    width: 200,
+  actionBtnClose: {
+    width: '100%',
     margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
   },
   wrap: {
     color: Colors.white_opacity[70],

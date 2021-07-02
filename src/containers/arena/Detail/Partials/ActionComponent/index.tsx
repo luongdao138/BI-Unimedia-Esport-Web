@@ -14,6 +14,10 @@ import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
+import TeamEntryEditModal from './TeamEntryEditModal'
+import UnjoinModal from './UnjoinModal'
+import InidividualEntryEditModal from './InidividualEntryEditModal'
 
 interface Props {
   tournament: TournamentDetail
@@ -25,31 +29,98 @@ const ActionComponent: React.FC<Props> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const { toMatches, isModerator, isTeam, isInProgress, isRecruiting, isCompleted, isRecruitmentClosed } = useArenaHelper(tournament)
+  const {
+    toMatches,
+    isModerator,
+    isTeam,
+    isInProgress,
+    isRecruiting,
+    isReady,
+    isCompleted,
+    isCancelled,
+    isRecruitmentClosed,
+    isNotHeld,
+    isAdminJoined,
+    isEntered,
+  } = useArenaHelper(tournament)
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
+  const [soloEntryEditShow, setSoloEntryEditShow] = useState<boolean>(false)
+  const [soloEntryShow, setSoloEntryShow] = useState<boolean>(false)
+  const [teamEntryShow, setTeamEntryShow] = useState<boolean>(false)
+  const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
 
   const buildArenaPeriodValue = () => {
     const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
     const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
 
+    return `${entryStartDate} ～ ${entryEndDate}`
+  }
+  const buildArenaTitle = () => {
     const arenaStatus = isRecruiting
       ? t('common:tournament.entry_period')
       : isRecruitmentClosed || isInProgress || isCompleted
       ? t('common:tournament.holding_period')
       : ''
 
-    return `${arenaStatus}  ${entryStartDate} - ${entryEndDate}`
+    return `${arenaStatus}`
+  }
+
+  const entryButton = () => {
+    return (
+      <LoginRequired>
+        <Box className={classes.actionButton}>
+          <ButtonPrimary disabled={isReady} round fullWidth onClick={() => (isTeam ? setTeamEntryShow(true) : setSoloEntryShow(true))}>
+            {t('common:tournament.join')}
+          </ButtonPrimary>
+        </Box>
+      </LoginRequired>
+    )
+  }
+
+  const entryEditButton = () => {
+    return (
+      <Box className={classes.actionButton}>
+        <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
+          {t('common:tournament.check_entry')}
+        </ButtonPrimary>
+      </Box>
+    )
+  }
+
+  const renderAdminEntry = () => {
+    return (
+      <Box className={classes.buttonHolder}>
+        <Box minWidth={260} className={classes.buttonLeft}>
+          <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={tournament} handleClose={() => {}} />
+        </Box>
+        <Box minWidth={256} className={classes.buttonRight}>
+          {renderEntry()}
+        </Box>
+      </Box>
+    )
+  }
+
+  const renderEntry = () => {
+    if (isEntered || isAdminJoined) {
+      return entryEditButton()
+    }
+    return entryButton()
   }
 
   return (
     <Box>
       <Box className={classes.container}>
         <Box className={classes.header}>
-          <Typography variant="body1">{buildArenaPeriodValue()}</Typography>
+          <Box display="flex" className={classes.headerDesc}>
+            <Typography variant="body1" className={classes.headerTitle}>
+              {buildArenaTitle()}
+            </Typography>
+            <Typography variant="body1">{buildArenaPeriodValue()}</Typography>
+          </Box>
         </Box>
         {children}
-        <SubActionButtons tournament={tournament} />
+        {!isCancelled && !isNotHeld && <SubActionButtons tournament={tournament} />}
       </Box>
 
       {isRecruitmentClosed && isModerator && (
@@ -65,34 +136,19 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {isRecruiting && (
+      {(isRecruiting || isReady) && (
         <>
-          {isModerator ? (
-            <Box>
-              <Box className={classes.buttonHolder}>
-                <Box minWidth={260} className={classes.buttonLeft}>
-                  <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />
-                </Box>
-                <Box minWidth={256} className={classes.buttonRight}>
-                  {isTeam ? (
-                    <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
-                  ) : (
-                    <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />
-                  )}
-                </Box>
-              </Box>
-
-              <Box className={classes.description}>
-                <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
-              </Box>
+          {isModerator ? renderAdminEntry() : renderEntry()}
+          {isAdminJoined || isEntered ? <UnjoinModal tournament={tournament} /> : null}
+          {isModerator && isRecruiting && (
+            <Box pb={2} className={classes.description}>
+              <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
             </Box>
-          ) : null}
-          {!isModerator && isTeam && <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
-          {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+          )}
         </>
       )}
 
-      {isModerator && isCompleted && (
+      {isModerator && isCompleted && !isNotHeld && (
         <Box className={classes.actionButton}>
           <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
             {t('common:tournament.summary')}
@@ -100,6 +156,25 @@ const ActionComponent: React.FC<Props> = (props) => {
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
         </Box>
       )}
+
+      {/* modals */}
+      {teamEntryShow && (
+        <TeamEntryModal tournament={tournament} userProfile={userProfile} open={teamEntryShow} onClose={() => setTeamEntryShow(false)} />
+      )}
+      <TeamEntryEditModal
+        tournament={tournament}
+        userProfile={userProfile}
+        myTeam
+        open={teamEntryEditShow}
+        onClose={() => setTeamEntryEditShow(false)}
+      />
+      <InidividualEntryEditModal tournament={tournament} me open={soloEntryEditShow} onClose={() => setSoloEntryEditShow(false)} />
+      <IndividualEntryModal
+        tournament={tournament}
+        userProfile={userProfile}
+        open={soloEntryShow}
+        onClose={() => setSoloEntryShow(false)}
+      />
     </Box>
   )
 }
@@ -141,6 +216,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonRight: {
     marginLeft: theme.spacing(1),
   },
+  headerTitle: {
+    paddingRight: theme.spacing(1),
+  },
   [theme.breakpoints.down('sm')]: {
     buttonHolder: {
       display: 'flex',
@@ -152,6 +230,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     buttonRight: {
       marginLeft: 0,
+    },
+    headerDesc: {
+      flexDirection: 'column',
+    },
+    headerTitle: {
+      paddingRight: 0,
     },
   },
 }))

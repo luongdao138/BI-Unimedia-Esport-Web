@@ -11,7 +11,6 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useLogout from '@containers/Logout/useLogout'
 import * as selectors from '@store/common/selectors'
-import NotFoundView from '@components/NotFoundView'
 import { setNotFound } from '@store/common/actions/index'
 
 interface MainLayoutProps {
@@ -48,12 +47,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
     dispatch(setNotFound({ notFound: null }))
   }, [router.pathname])
 
+  useEffect(() => {
+    if (notFound !== null && router.query.hash_key) {
+      router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, `${router.query.hash_key}`))
+    }
+  }, [notFound, router.query.hash_key])
+
   if (loginRequired && !isAuthenticated) return null
 
   const renderContent = () => {
     return loginRequired ? isAuthenticated && children : children
   }
-  const showContent = notFound === null
+
   return (
     <div className="main-wrapper">
       <Header open={open} toggleDrawer={toggleDrawer} />
@@ -62,10 +67,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
       </aside>
       <main role="main" className={patternBg ? 'main' : 'main no-pattern'}>
         <div className="content-wrapper">
-          {showContent ? null : <NotFoundView notFoundType={notFound} />}
-          <div className="content" style={showContent ? undefined : { display: 'none' }}>
-            {renderContent()}
-          </div>
+          <div className="content">{renderContent()}</div>
           {footer ? <Footer /> : ''}
         </div>
         <aside className="aside-right">{isAuthenticated ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>

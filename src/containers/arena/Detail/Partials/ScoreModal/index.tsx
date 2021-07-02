@@ -99,18 +99,20 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         </div>
         <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center">
           <Box color={Colors.grey[300]}>
-            <Typography variant="h3">{_name || t('common:common.dash')}</Typography>
+            <Typography className={classes.label} variant="h3">
+              {_name || ''}
+            </Typography>
           </Box>
           {!isTeam && (
             <Box color={Colors.grey[400]}>
-              <Typography>{user ? `${t('common:common.at')}${user.user_code}` : t('common:common.dash')}</Typography>
+              <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>
             </Box>
           )}
         </Box>
 
         <Box pt={6} display="flex" alignItems="flex-end">
           <ThemeProvider theme={theme}>
-            <Box color={winner && Colors.yellow}>
+            <Box color={winner ? Colors.yellow : Colors.white}>
               {_score == undefined || _score == null ? <Box pt={10.2}></Box> : <Typography variant="h3">{_score}</Typography>}
             </Box>
           </ThemeProvider>
@@ -119,58 +121,65 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
     )
   }
 
-  return (
-    <ESModal open={!!match}>
-      {!!match && (
-        <BlankLayout>
-          <ESStickyFooter
-            disabled={false}
-            title={t('common:arena.edit_match_result')}
-            onClick={() => setEditingMatch(match)}
-            show={scoreEditable}
-            noScroll
-          >
-            <Box paddingY={7.5} className={classes.topContainer}>
-              <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
-                <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
-                  <Icon className="fa fa-arrow-left" fontSize="small" />
-                </IconButton>
-                <Box pl={2}>
-                  <Typography variant="h2">{t('common:tournament.match_result')}</Typography>
-                </Box>
-              </Box>
-              <Divider />
-              <Box pb={6} pt={3} textAlign="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                </ThemeProvider>
-              </Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
-                {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
-                <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>
-                  <Typography className={classes.vsLabel}>{t('common:tournament.vs')}</Typography>
-                </Box>
-                {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
-              </Box>
-              {!match?.winner && (
-                <Box pt={3} textAlign="center">
-                  <Typography variant="body1">{t('common:arena.no_match_result')}</Typography>
-                </Box>
-              )}
-            </Box>
+  const matchName = () => {
+    return `${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`
+  }
 
-            <ScoreEdit
-              meta={meta}
-              tournament={tournament}
-              selectedMatch={editingMatch}
-              onScoreEntered={handleScoreEntered}
-              handleClose={() => setEditingMatch(undefined)}
-            />
-          </ESStickyFooter>
-        </BlankLayout>
-      )}
-      {meta.pending && <ESLoader open={meta.pending} />}
-    </ESModal>
+  return (
+    <>
+      <ESModal open={!!match && !editingMatch}>
+        {!!match && (
+          <BlankLayout>
+            <ESStickyFooter
+              disabled={false}
+              title={t('common:arena.edit_match_result')}
+              onClick={() => setEditingMatch(match)}
+              show={scoreEditable}
+              noScroll
+            >
+              <Box paddingTop={7.5} paddingBottom={10} className={classes.topContainer}>
+                <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
+                  <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
+                    <Icon className="fa fa-arrow-left" fontSize="small" />
+                  </IconButton>
+                  <Box pl={2}>
+                    <Typography variant="h2">{isMobile ? matchName() : t('common:tournament.match_result')}</Typography>
+                  </Box>
+                </Box>
+                <Divider />
+                {!isMobile && (
+                  <Box pb={6} pt={3} textAlign="center">
+                    <ThemeProvider theme={theme}>
+                      <Typography variant="body1">{matchName()}</Typography>
+                    </ThemeProvider>
+                  </Box>
+                )}
+                <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
+                  {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
+                  <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>
+                    <Typography className={classes.vsLabel}>{t('common:tournament.vs')}</Typography>
+                  </Box>
+                  {participantItem(match.guest_user, match.guest_avatar, PARTICIPANT_TYPE.GUEST)}
+                </Box>
+                {!match?.winner && (
+                  <Box pt={3} textAlign="center">
+                    <Typography variant="body1">{t('common:arena.no_match_result')}</Typography>
+                  </Box>
+                )}
+              </Box>
+            </ESStickyFooter>
+          </BlankLayout>
+        )}
+        {meta.pending && <ESLoader open={meta.pending} />}
+      </ESModal>
+      <ScoreEdit
+        meta={meta}
+        tournament={tournament}
+        selectedMatch={editingMatch}
+        onScoreEntered={handleScoreEntered}
+        handleClose={() => setEditingMatch(undefined)}
+      />
+    </>
   )
 }
 
@@ -196,6 +205,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(8),
     transform: 'translate(-0%, -0%)',
   },
+  label: {
+    width: '100%',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    textAlign: 'center',
+  },
   vsLabel: {
     fontSize: 40,
     fontWeight: 'bold',
@@ -212,7 +227,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     itemWrapper: {
-      width: 148,
+      width: 133,
       height: 220,
     },
     topContainer: {

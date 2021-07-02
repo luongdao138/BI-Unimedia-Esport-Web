@@ -52,7 +52,6 @@ const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconC
         open={Boolean(anchorEl)}
         onClose={handleClose}
         onClick={handleClose}
-        disableScrollLock
       >
         {children}
       </StyledMenu>

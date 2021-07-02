@@ -14,8 +14,8 @@ export interface MessageProps {
   direction: 'left' | 'right'
   currentMessage?: MessageType
   users: ChatRoomMemberItem[] | ChatSuggestionList[]
-  navigateToProfile?: (id: string) => void
-  onLoadImage: () => void
+  navigateToProfile?: (code: string) => void
+  onLoadImage?: () => void
   reply?: (currentMessage: MessageType) => void
   report?: (reportData: ESReportProps) => void
   onDelete?: (currentMessage: MessageType) => void
@@ -45,7 +45,11 @@ const Message: React.FC<MessageProps> = (props) => {
   const status = _.get(currentMessage, 'sent', false)
 
   const renderAvatar = () => {
-    return <Avatar size={36} src={avatar} alt={nickName} />
+    return (
+      <Box style={{ cursor: 'pointer' }}>
+        <Avatar onClick={() => navigateToProfile(userCode)} size={36} src={avatar} alt={nickName} />
+      </Box>
+    )
   }
 
   const renderTime = () => {
@@ -57,7 +61,14 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderBubble = () => {
-    return <Bubble onReplyClick={onReplyClick} onLoadImage={props.onLoadImage} navigateToProfile={navigateToProfile} {...props} />
+    return (
+      <Bubble
+        onReplyClick={onReplyClick}
+        onLoadImage={props.onLoadImage && props.onLoadImage}
+        navigateToProfile={navigateToProfile}
+        {...props}
+      />
+    )
   }
 
   const actionHandlers = {
@@ -185,16 +196,16 @@ const useStyles = makeStyles(() => ({
   left: {
     marginRight: 'auto',
     width: 300,
-
     height: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    transform: 'will-change',
   },
   right: {
     marginLeft: 'auto',
     width: 300,
-
+    transform: 'will-change',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',

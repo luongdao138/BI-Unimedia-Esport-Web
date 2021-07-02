@@ -25,8 +25,7 @@ import SimpleReactLightbox from 'simple-react-lightbox'
 import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
-import Head from 'next/head'
-
+import ESHead from '@components/ESHead'
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -82,28 +81,28 @@ const App = ({ Component, pageProps }: Props) => {
   const { previousRoute } = useRouteUrlHistory()
 
   return (
-    <PersistGate persistor={persistStore(store)}>
-      <RouteContext.Provider
-        value={{
-          previousRoute,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <Head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-          </Head>
-          <ESLoader open={loader} />
-          <ToastContainer />
-          <DialogContainer />
-          <SimpleReactLightbox>
-            <Layout>
-              <CssBaseline />
-              <Component {...pageProps} />
-            </Layout>
-          </SimpleReactLightbox>
-        </ThemeProvider>
-      </RouteContext.Provider>
-    </PersistGate>
+    <>
+      <ESHead title={pageProps.title || 'eXeLAB'} desc={pageProps.desc} keywords={pageProps.keywords} image={pageProps.image} />
+      <PersistGate persistor={persistStore(store)}>
+        <RouteContext.Provider
+          value={{
+            previousRoute,
+          }}
+        >
+          <ThemeProvider theme={theme}>
+            <ESLoader open={loader} />
+            <ToastContainer />
+            <DialogContainer />
+            <SimpleReactLightbox>
+              <Layout>
+                <CssBaseline />
+                <Component {...pageProps} />
+              </Layout>
+            </SimpleReactLightbox>
+          </ThemeProvider>
+        </RouteContext.Provider>
+      </PersistGate>
+    </>
   )
 }
 export default storeWrapper.withRedux(App)

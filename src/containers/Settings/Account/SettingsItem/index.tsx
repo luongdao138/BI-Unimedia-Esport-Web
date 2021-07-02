@@ -32,7 +32,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
 
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
-      <Box className={classes.settingItemWrap}>
+      <Box className={showButton ? classes.settingItemWrap : classes.settingItemWrapNoBtn}>
         <Box textOverflow="ellipsis" ml={0} display="flex" flexDirection="column" justifyContent="center">
           <Typography className={classes.title} noWrap>
             {title}
@@ -67,6 +67,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     padding: theme.spacing(2),
     paddingRight: 110,
+    position: 'relative',
+    background: Colors.black_opacity[80],
+    borderRadius: '6px',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    '&:hover': {
+      boxShadow: 'none',
+      background: '#1a1a1a',
+    },
+  },
+  settingItemWrapNoBtn: {
+    overflow: 'hidden',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+    padding: theme.spacing(2),
     position: 'relative',
     background: Colors.black_opacity[80],
     borderRadius: '6px',

@@ -1,23 +1,23 @@
-/* eslint-disable no-console */
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import userProfileStore from '@store/userProfile'
 import community from '@store/community'
 import auth from '@store/auth'
 import { createMetaSelector } from '@store/metadata/selectors'
 // import { clearMetaData } from '@store/metadata/actions'
-import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
+import { UPLOADER_TYPE } from '@constants/image.constants'
 import { RESPONSE_STATUS } from '@constants/common.constants'
-import { getPreSignedUrl, upload } from '@services/image.service'
+import { getAvatarPreSignedUrl, upload } from '@services/image.service'
 import { UserProfile } from '@services/user.service'
 import { CommunityResponse } from '@services/community.service'
 import { Meta } from '@store/metadata/actions/types'
 
 const useUserData = (
-  raw_code: string | Array<string> | []
+  raw_code: string | null
 ): {
   userCode: string
   profile: UserProfile
   isOthers: boolean
+  isAuthenticated: boolean
   meta: Meta
   communityList: CommunityResponse[]
   communityMeta: Meta
@@ -34,10 +34,11 @@ const useUserData = (
   const getCommunityListMeta = createMetaSelector(communityActions.getCommunityList)
   const userSelectors = userProfileStore.selectors
   const userActions = userProfileStore.actions
+  const isAuthenticated = useAppSelector(authSelectors.getIsAuthenticated)
 
-  let isOthers = raw_code.length > 0
+  let isOthers = raw_code !== null
   let userCode = myUserCode
-  if (isOthers && raw_code[0] === myUserCode) {
+  if (isOthers && raw_code === myUserCode) {
     isOthers = false
   }
   const dispatch = useAppDispatch()
@@ -46,7 +47,7 @@ const useUserData = (
   let profile = null
   if (isOthers) {
     const getMemberMeta = createMetaSelector(userActions.getMemberProfile)
-    userCode = raw_code[0]
+    userCode = raw_code
     profile = useAppSelector(userSelectors.getLastSeenUserData)
     meta = useAppSelector(getMemberMeta)
   } else {
@@ -63,28 +64,25 @@ const useUserData = (
   // const progressListener = (progress: number) => {
   //   console.log('progressListener ', progress)
   // }
-  const profileImageChange = async (file: File, user_id: number, type: number, blob?: any) => {
+  const profileImageChange = async (file: File, type: number, blob?: any) => {
     const params = {
-      type: type,
-      fileName: file.name,
-      contentType: file.type,
-      room: user_id,
-      action_type: ACTION_TYPE.UPDATE,
+      file_name: file.name,
+      content_type: file.type,
     }
     try {
-      const res = await getPreSignedUrl(params)
+      const res = await getAvatarPreSignedUrl(params)
       const file_url = res.file_url
       const signed_url = res.url
       const u_res = await upload(blob ? blob : file, signed_url, undefined)
       if (u_res === RESPONSE_STATUS.SUCCESS) {
         const params = {
-          user_id: user_id,
           image_url: 'https://' + file_url,
           file_type: type === UPLOADER_TYPE.AVATAR ? UPLOADER_TYPE.USER_PROFILE : UPLOADER_TYPE.USER_COVER,
         }
         dispatch(userActions.profileImage(params))
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log('useUserData.tsx 44 getPreSignedUrl failed', error)
     }
   }
@@ -105,6 +103,7 @@ const useUserData = (
     userCode,
     profile,
     isOthers,
+    isAuthenticated,
     meta,
     communityList,
     communityMeta,

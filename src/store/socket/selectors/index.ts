@@ -7,7 +7,6 @@ import { ChatSuggestionList } from '@components/Chat/types/chat.types'
 import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
 
 const getRoot = (state: RootState) => state.socket
-const currentUserId = (state: RootState) => state.auth?.user?.id
 const memberSelector = (state: RootState) => state.socket.members
 const errorSelector = (state: RootState) => state.socket.error
 const roomList = (state: RootState) => state.socket.roomList
@@ -26,7 +25,12 @@ export const lastKey = createSelector(getRoot, (state) => state.lastKey)
 export const paginating = createSelector(getRoot, (state) => state.paginating)
 export const actionPending = createSelector(getRoot, (state) => state.actionPending)
 export const newRoomId = createSelector(getRoot, (state) => state.newRoomId)
+
 export const selectedRoomInfo = createSelector(getRoot, (state) => state.selectedRoomInfo)
+export const blocked = createSelector(getRoot, (state) => {
+  return _.isNumber(_.get(state, 'selectedRoomInfo.blocked[0]', false))
+})
+
 export const membersSuggest = createSelector(getRoot, (state) => {
   let withAll: ChatSuggestionList[]
   if (state.selectedRoomInfo && state.selectedRoomInfo.sortKey.includes('direct')) {
@@ -48,11 +52,8 @@ export const availableMembers = createSelector(getRoot, (state) => {
   return withAll
 })
 
-export const membersFilterSelf = createSelector(memberSelector, currentUserId, (members, current) => {
-  const filtered = _.filter(members, function (o) {
-    return o.userId !== current
-  })
-  return filtered
+export const membersFilter = createSelector(memberSelector, (members) => {
+  return members
 })
 
 export const unseenCount = createSelector(roomList, (state) => {

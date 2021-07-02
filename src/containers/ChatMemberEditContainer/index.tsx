@@ -1,7 +1,7 @@
-import { List, makeStyles, DialogContent, Box } from '@material-ui/core'
+import { List, makeStyles, DialogContent, Box, Theme } from '@material-ui/core'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
-import { membersFilterSelf } from '@store/socket/selectors'
+import { membersFilter } from '@store/socket/selectors'
 import { currentUserId } from '@store/auth/selectors'
 import React, { useEffect } from 'react'
 import RoomMemberItem from '@components/Chat/RoomMemberItem/index'
@@ -20,7 +20,7 @@ interface ChatRoomContainerProps {
 const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, open, hide }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const roomMembers = useAppSelector(membersFilterSelf)
+  const roomMembers = useAppSelector(membersFilter)
   const memberList = _.isArray(roomMembers) ? roomMembers : []
   const userId = useAppSelector(currentUserId)
   useEffect(() => {
@@ -28,7 +28,6 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
       dispatch(
         socketActions.socketSend({
           action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
-          userId: userId,
           roomId: roomId,
         })
       )
@@ -39,7 +38,6 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
     dispatch(
       socketActions.socketSend({
         action: CHAT_ACTION_TYPE.REMOVE_MEMBER,
-        userId: userId,
         roomId: roomId,
         memberId: `${id}`,
       })
@@ -50,14 +48,29 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
   }
 
   return (
-    <ESDialog open={open} title="メンバーを追加" handleClose={() => hide()} bkColor="rgba(0,0,0,0.8)" alignTop className={'scroll-bar'}>
+    <ESDialog
+      open={open}
+      title={i18n.t('common:chat.member_list_title')}
+      handleClose={() => hide()}
+      bkColor="rgba(0,0,0,0.8)"
+      alignTop
+      className={'scroll-bar'}
+    >
       <DialogContent className={classes.dialogContent}>
         <Box>
           <List>
             {memberList
-              .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE && member.memberType !== CHAT_MEMBER_TYPE.CHAT_ADMIN)
+              .filter((member) => member.memberStatus === CHAT_MEMBER_STATUS.ACTIVE)
               .map((val) => (
-                <RoomMemberItem key={val.userId} userCode={val.userCode} id={val.userId} name={val.nickName} onDelete={onItemDelete} />
+                <RoomMemberItem
+                  profile={val.profile}
+                  key={val.userId}
+                  userCode={val.userCode}
+                  isAdminOrSelf={val.memberType === CHAT_MEMBER_TYPE.CHAT_ADMIN || val.userId === userId}
+                  id={val.userId}
+                  name={val.nickName}
+                  onDelete={onItemDelete}
+                />
               ))}
           </List>
         </Box>
@@ -66,8 +79,14 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {},
+  [theme.breakpoints.down('sm')]: {
+    dialogContent: {
+      paddingRight: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+    },
+  },
 }))
 
 export default ChatMemberEditContainer

@@ -14,8 +14,13 @@ const useParticipantDetail = () => {
   const getMeta = useAppSelector(_getMeta)
   const changeMeta = useAppSelector(_changeMeta)
 
-  const getParticipant = (hashKey: string) => dispatch(actions.getParticipantName(hashKey))
-  const changeName = (hashKey: string, name: string) => dispatch(actions.changeParticipantName({ hash_key: hashKey, data: { name: name } }))
+  const getParticipant = (hashKey: string, pid?: number) => dispatch(actions.getParticipantName({ hash_key: hashKey, pid: pid }))
+  const changeName = async (hashKey: string, name: string, successCB: () => void) => {
+    const resultAction = await dispatch(actions.changeParticipantName({ hash_key: hashKey, data: { name: name } }))
+    if (actions.changeParticipantName.fulfilled.match(resultAction)) {
+      successCB()
+    }
+  }
   const resetMeta = () => dispatch(clearMetaData(actions.getParticipantName.typePrefix))
   const isPending = getMeta.pending || changeMeta.pending
   const changeDone = changeMeta.loaded || changeMeta.error

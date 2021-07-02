@@ -1,4 +1,3 @@
-import { RULE } from '@constants/tournament.constants'
 import { TournamentDetail } from '@services/arena.service'
 import { FormType } from './FormType'
 
@@ -13,25 +12,25 @@ export const getInitialValues = (data?: TournamentDetail): FormType => ({
     prize_amount: data ? data.attributes.prize_amount : '',
   },
   stepTwo: {
-    rule: data ? data.attributes.rule : RULE.SINGLE,
-    t_type: data ? data.attributes.t_type : 't_public',
+    rule: data ? data.attributes.rule : -1,
     has_third_place: data ? data.attributes.has_third_place : false,
     participant_type: data ? data.attributes.participant_type : 1,
     max_participants: data ? data.attributes.max_participants : 0,
     terms_of_participation: data ? data.attributes.terms_of_participation : '',
+    t_type: data ? data.attributes.t_type : 't_public',
     notes: data ? data.attributes.notes : '',
-    retain_history: data ? data.attributes.retain_history : false,
+    retain_history: data ? data.attributes.retain_history : true,
   },
   stepThree: {
-    acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
-    acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
     start_date: data ? data.attributes.start_date : null,
     end_date: data ? data.attributes.end_date : null,
-    area_id: data ? data.attributes.area_id : 1,
+    acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
+    acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
+    area_id: data ? data.attributes.area_id : -1,
     area_name: data ? data.attributes.area_name : '',
     // for cross-fields validations
-    acceptance_dates: '',
     recruit_date: '',
+    acceptance_dates: '',
     acceptance_end_start_date: '',
     start_end_date: '',
   },

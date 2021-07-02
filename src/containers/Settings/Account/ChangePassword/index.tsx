@@ -20,14 +20,23 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
   const router = useRouter()
   const { changePassword, meta } = useChangePassword()
   const [score, setScore] = useState(0)
+  const [scoreCurrentPassword, setCurrenPasswordScore] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showPasswordRepeat, setShowPasswordRepeat] = useState(false)
 
   const validationSchema = Yup.object().shape({
-    current_password: Yup.string().required(t('common.required')).min(8, t('error.too_short')),
+    current_password: Yup.string()
+      .test('password-validation', t('error.password_failed'), (value) => {
+        const tempScore = CommonHelper.scorePassword(value)
+        setCurrenPasswordScore(tempScore)
+        return tempScore > 40
+      })
+      .required(t('common.required'))
+      .min(8, t('error.too_short')),
+
     new_password: Yup.string()
-      .test('password-validation', t('common.error'), (value) => {
+      .test('password-validation', t('error.password_failed'), (value) => {
         const tempScore = CommonHelper.scorePassword(value)
 
         setScore(tempScore)
@@ -49,19 +58,27 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
-      changePassword(values)
+      if (values.current_password === values.new_password) {
+        setFieldError('new_password', t('common.password_duplicated'))
+      } else {
+        changePassword(values)
+      }
     },
   })
 
   useEffect(() => {
     if (meta.error && meta.error['code'] === 4221) {
-      // TODO error.error_4221 translate
       setFieldError('current_password', t('error.error_4221'))
     }
   }, [meta.error])
 
   const buttonActive = (): boolean =>
-    values.current_password !== '' && values.new_password !== '' && values.confirm_new_password !== '' && _.isEmpty(errors) && score > 40
+    values.current_password !== '' &&
+    values.new_password !== '' &&
+    values.confirm_new_password !== '' &&
+    _.isEmpty(errors) &&
+    score > 40 &&
+    scoreCurrentPassword > 40
 
   return (
     <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>
@@ -70,7 +87,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
         </IconButton>
         <Typography variant="body1" className={classes.headerTitle}>
-          {t('account_settings.change_email_address')}
+          {t('account_settings.change_password')}
         </Typography>
       </Box>
       <Box mt={12} mx={5} mb={4} className={classes.formWrap}>

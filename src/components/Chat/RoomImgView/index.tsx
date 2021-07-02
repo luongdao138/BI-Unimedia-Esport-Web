@@ -1,88 +1,24 @@
-import React, { useState, useRef } from 'react'
+import React from 'react'
 import Avatar from '@components/Avatar'
-import moment from 'moment'
-
 import { makeStyles, Box } from '@material-ui/core'
-import { useAppDispatch } from '@store/hooks'
-import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
-import ImageUploader from '@containers/ChatRoomContainer/ImageUploader'
-import { socketActions } from '@store/socket/actions'
 import ESLoader from '@components/Loader'
-import { CameraAlt as Camera } from '@material-ui/icons'
 
 export interface RoomImgViewProps {
-  userId: number
-  roomId: string
   roomImg: string
   roomName: string
-  isAdmin: boolean
+  loading: boolean
 }
 
-interface UploadStateType {
-  uploading: boolean
-}
-
-const RoomImgView: React.FC<RoomImgViewProps> = ({ userId, roomId, roomImg, roomName, isAdmin }) => {
-  const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
-  const ref = useRef<{ handleUpload: () => void }>(null)
-  const dispatch = useAppDispatch()
+const RoomImgView: React.FC<RoomImgViewProps> = ({ roomImg, roomName, loading }) => {
   const classes = useStyles()
 
-  const imageErrorHandler = (error: any) => {
-    // eslint-disable-next-line no-console
-    console.log(error)
-    setMeta({ uploading: false })
-  }
-
-  const imageEventHandler = (url: string, isPending: boolean) => {
-    const currentTimestamp = moment().valueOf()
-    currentTimestamp
-    if (isPending) {
-      setMeta({ uploading: true })
-    } else {
-      const payload = {
-        action: CHAT_ACTION_TYPE.CHANGE_ROOM_IMG,
-        roomId: roomId,
-        userId: userId,
-        img: url,
-      }
-      dispatch(socketActions.socketSend(payload))
-      setMeta({ uploading: false })
-    }
-  }
-
-  const onAvatarClick = () => {
-    if (!isAdmin) return
-    if (ref.current && !uploadMeta.uploading) {
-      setMeta({ uploading: false })
-      ref.current.handleUpload()
-    }
-  }
-
   const renderAvatar = () => {
-    if (!uploadMeta.uploading) {
-      if (isAdmin) {
-        return (
-          <Box className={classes.avatarHolderEdit} onClick={onAvatarClick}>
-            <Box className={classes.avatarBox}>
-              <Avatar
-                src={roomImg}
-                alt={roomName}
-                size={36}
-                className={classes.avatar}
-                style={isAdmin ? { cursor: 'pointer' } : undefined}
-              />
-              <Camera fontSize="default" className={classes.camera} />
-            </Box>
-          </Box>
-        )
-      } else {
-        return (
-          <Box className={classes.avatarHolder}>
-            <Avatar src={roomImg} alt={roomName} size={36} className={classes.avatar} />
-          </Box>
-        )
-      }
+    if (!loading) {
+      return (
+        <Box className={classes.avatarHolder}>
+          <Avatar src={roomImg} alt={roomName} size={36} className={classes.avatar} />
+        </Box>
+      )
     }
     return (
       <Box className={classes.loaderHolder}>
@@ -93,21 +29,10 @@ const RoomImgView: React.FC<RoomImgViewProps> = ({ userId, roomId, roomImg, room
     )
   }
 
-  return (
-    <>
-      <ImageUploader
-        ref={ref}
-        roomId={roomId}
-        onResponse={imageEventHandler}
-        onImageSelected={imageEventHandler}
-        onError={imageErrorHandler}
-      />
-      {renderAvatar()}
-    </>
-  )
+  return <>{renderAvatar()}</>
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   loaderBox: {
     width: 18,
     height: 18,
@@ -197,6 +122,14 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     background: '#4d4d4d',
     borderRadius: '100%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    avatarHolder: {
+      display: 'none',
+    },
+    loaderHolder: {
+      display: 'none',
+    },
   },
 }))
 

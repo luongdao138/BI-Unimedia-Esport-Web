@@ -8,23 +8,27 @@ import ChatRoomList from '@containers/ChatRoomList'
 import { IconButton, Icon, makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
-import { useAppSelector } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import Button from '@components/Button'
 import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
+import { socketActions } from '@store/socket/actions'
+import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 
 interface LayoutProps {
   defaultListState?: boolean
+  create?: boolean
 }
 
-const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) => {
+const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, create }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [showList, setShowList] = useState<boolean>(defaultListState)
   const classes = useStyles()
   const router = useRouter()
   const { t } = useTranslation(['common'])
   const { previousRoute } = useContext(RouteContext)
+  const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -36,9 +40,6 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
 
   const backHandler = (_e: React.MouseEvent) => {
     if (previousRoute) {
-      if (previousRoute === ESRoutes.MESSAGE_PATHNAME) {
-        router.push(ESRoutes.HOME)
-      }
       router.push(previousRoute)
     } else {
       router.push(ESRoutes.HOME)
@@ -53,6 +54,18 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
       router.push(ESRoutes.TOP)
     }
   }, [])
+
+  useEffect(() => {
+    if (router && router.query && router.query.active) {
+      setShowList(true)
+    } else {
+      dispatch(
+        socketActions.socketSend({
+          action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
+        })
+      )
+    }
+  }, [router])
 
   return (
     <div className="main-wrapper">
@@ -71,14 +84,11 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState }) =>
                 {t('common:chat.title')}
               </Typography>
             </Box>
-            <Box className="header-second-column">
+            <Box className={`header-second-column ${create ? classes.createTrue : null}`}>
               <Box className="mobile-arrow-room">
                 <IconButton className={classes.iconButton} disableRipple onClick={() => toggleRoom(true)}>
                   <Icon className={`fa fa-arrow-left ${classes.icon}`} />
                 </IconButton>
-                <Typography variant="body1" className={classes.headerTitle}>
-                  {t('common:chat.back_list')}
-                </Typography>
               </Box>
               <Button
                 size="small"
@@ -121,10 +131,17 @@ const useStyles = makeStyles((theme) => ({
   create: {
     marginLeft: 'auto',
   },
+  createTrue: {},
+  [theme.breakpoints.down('sm')]: {
+    createTrue: {
+      borderBottom: '0 none',
+    },
+  },
 }))
 
 MessageLayout.defaultProps = {
-  defaultListState: true,
+  defaultListState: false,
+  create: false,
 }
 
 export default MessageLayout

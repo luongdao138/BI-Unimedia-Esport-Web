@@ -135,7 +135,7 @@ export type Meta = {
 }
 
 export const getBlockedUsers = async (params: BlockedUsersParams): Promise<BlockedUsersResponse> => {
-  const { data } = await api.put<BlockedUsersResponse>(URI.BLOCKED_USERS, { params })
+  const { data } = await api.put<BlockedUsersResponse>(URI.BLOCKED_USERS, params)
   return data
 }
 
@@ -209,7 +209,7 @@ export type PurchaseHistoryDetailResponse = {
       cancelled_datetime: string
       gmo_payment_status: string
       payment_type: string
-      status: boolean
+      status: number
       history_id: number
       title: string
       description: string

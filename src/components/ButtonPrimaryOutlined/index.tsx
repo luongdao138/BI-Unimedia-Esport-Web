@@ -5,11 +5,20 @@ import { ReactNode } from 'react'
 const ButtonPrimaryOutlined: React.FC<
   ButtonBaseProps & {
     leadingIcon?: ReactNode
+    disabled?: boolean
   }
-> = ({ children, onClick, leadingIcon }) => {
+> = ({ children, onClick, leadingIcon, disabled }) => {
   const classes = useStyles()
   return (
-    <ESButton variant="outlined" round onClick={onClick} startIcon={leadingIcon} fullWidth className={classes.outlinedPrimary}>
+    <ESButton
+      variant="outlined"
+      round
+      disabled={disabled}
+      onClick={onClick}
+      startIcon={leadingIcon}
+      fullWidth
+      className={classes.outlinedPrimary}
+    >
       {children}
     </ESButton>
   )
@@ -17,6 +26,7 @@ const ButtonPrimaryOutlined: React.FC<
 
 const useStyles = makeStyles((theme) => ({
   outlinedPrimary: {
+    height: 50,
     border: `2px solid ${theme.palette.primary.main}`,
     color: theme.palette.primary.main,
     fontSize: theme.typography.h3.fontSize,
@@ -26,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-ButtonPrimaryOutlined.defaultProps = {}
+ButtonPrimaryOutlined.defaultProps = {
+  disabled: false,
+}
 
 export default ButtonPrimaryOutlined

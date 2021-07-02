@@ -13,6 +13,9 @@ const EXCEPTIONS = [
   '/forgot-password/reset',
   '/message/[id]',
   '/message/create',
+  '/message/dm/[id]',
+  '/message',
+  '/message/',
 ]
 
 const useRouteUrlHistory = (): { previousRoute: string } => {

@@ -1,6 +1,5 @@
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
-import { useStore } from 'react-redux'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -14,12 +13,18 @@ import useProfile from './useProfile'
 import { isEmpty } from 'lodash'
 import { ERROR_CODE } from '@constants/error.constants'
 import ESStickyFooter from '@components/StickyFooter'
+import _ from 'lodash'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { registerProfile, meta, backAction, isSocial, resetMeta } = useProfile()
-  const store = useStore()
+  const dispatch = useAppDispatch()
+  const { checkNgWord } = useCheckNgWord()
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
       .required(t('common:common.user_id_at_least'))
@@ -27,17 +32,11 @@ const RegisterProfileContainer: React.FC = () => {
       .min(2, t('common:common.user_id_at_least'))
       .test('user_code', t('common:common.user_code_invalid'), function (value) {
         return CommonHelper.userCodeValid(value)
-      })
-      .test('user_code', t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
       }),
     nickname: Yup.string()
       .required(t('common:common.nickname_at_least'))
       .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.nickname_at_least'))
-      .test('nickname', t('common:common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+      .min(2, t('common:common.nickname_at_least')),
   })
 
   const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
@@ -48,8 +47,16 @@ const RegisterProfileContainer: React.FC = () => {
     validateOnMount: true,
     validationSchema,
     onSubmit: (values) => {
+      const checked = checkNgWord([values.user_code, values.nickname])
+
+      if (_.isEmpty(checked)) {
+        registerProfile(values)
+      } else {
+        dispatch(
+          showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: `${NG_WORD_AREA.profile_user_code}、 ${NG_WORD_AREA.profile_nickname}` })
+        )
+      }
       resetMeta()
-      registerProfile(values)
     },
   })
 

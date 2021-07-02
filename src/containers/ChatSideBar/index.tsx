@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Icon } from '@material-ui/core'
@@ -8,6 +9,8 @@ import { useRouter } from 'next/router'
 import i18n from '@locales/i18n'
 import { ESRoutes } from '@constants/route.constants'
 import Button from '@components/Button'
+import { socketCreators } from '@store/socket/actions'
+import { useAppDispatch } from '@store/hooks'
 
 interface ChatSideBarProps {
   expand: boolean
@@ -19,14 +22,19 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
   const classes = useStyles(expand)
   const { t } = useTranslation(['common'])
   const router = useRouter()
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(socketCreators.cleanRoom())
+  }, [])
 
   return (
     <Box
       className={`${classes.sidebarCont} ${expand ? 'expanded-sidebar' : ''}`}
-      onMouseEnter={() => toggleChatBar(true)}
+      onMouseOver={() => toggleChatBar(true)}
       onMouseLeave={() => toggleChatBar(false)}
     >
-      <Box className={classes.content}>
+      <Box className={classes.contentInner}>
         <Box className={classes.header} display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
           <Typography className={classes.headerTitle} variant={'body1'}>
             {t('common:chat.title')}
@@ -66,7 +74,7 @@ const ChatSideBar: React.FC<ChatSideBarProps> = ({ toggleChatBar, expand }) => {
 
 const useStyles = makeStyles((theme) => ({
   sidebarCont: {
-    width: 290, //
+    width: '100%', //
     height: 'calc(100vh - 61px)',
     display: 'block',
     paddingBottom: 50,
@@ -87,8 +95,9 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 0,
     },
   },
-  content: {
+  contentInner: {
     height: '100%',
+    width: 290,
   },
   inner: {
     height: '100%',
@@ -113,6 +122,9 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('lg')]: {
     sidebarCont: {
+      width: '100%',
+    },
+    contentInner: {
       width: 260,
     },
   },

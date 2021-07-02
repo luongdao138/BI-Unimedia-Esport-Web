@@ -15,6 +15,10 @@ import ESLoader from '@components/FullScreenLoader'
 import _ from 'lodash'
 import i18n from '@locales/i18n'
 import ESStickyFooter from '@components/StickyFooter'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -22,6 +26,8 @@ const RegisterByEmailContainer: React.FC = () => {
   const { registerByEmail, meta, backAction, resetMeta } = useRegisterByEmail()
   const [score, setScore] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
+  const dispatch = useAppDispatch()
+  const { checkNgWord } = useCheckNgWord()
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .test('email-validation', t('common:login.validation.email'), (value) => {
@@ -48,8 +54,12 @@ const RegisterByEmailContainer: React.FC = () => {
     validationSchema,
     onSubmit: (values) => {
       if (values.email && values.password) {
+        if (_.isEmpty(checkNgWord(values.email))) {
+          registerByEmail(values)
+        } else {
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.register_by_email }))
+        }
         resetMeta()
-        registerByEmail(values)
       }
     },
   })

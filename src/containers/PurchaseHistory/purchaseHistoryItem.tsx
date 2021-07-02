@@ -22,6 +22,10 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       : _.get(data.attributes, 'cancel_req_datetime', +data.attributes.cancel_req_datetime)
 
   const time = CommonHelper.staticSmartTime(date)
+
+  const price = _.get(data, 'attributes.price')
+  const ticket_price = CommonHelper.formatCurrency(price)
+
   return (
     <Box
       padding={2}
@@ -45,17 +49,13 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
         <Typography>{data.attributes.title}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.type')}</Typography>
+        <Typography className={classes.title}>{t('purchase_history.classification')}</Typography>
         <Typography>{t('purchase_history.ticket')}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.price')}</Typography>
-        <Typography>¥{data.attributes.price}</Typography>
-      </Box>
-      <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.status')}</Typography>
+        <Typography className={classes.title}>{t('purchase_history.unit_price')}</Typography>
         <Typography>
-          ¥{data.attributes.price}
+          {ticket_price}
           {data.attributes.status == PAYMENT_STATUS.CANCELLED
             ? ` (${t('purchase_history.canceled')})`
             : data.attributes.status == PAYMENT_STATUS.CANCEL_REQUESTED
@@ -67,7 +67,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   wrap: {
     color: Colors.white_opacity[70],
     cursor: 'pointer',
@@ -82,7 +82,10 @@ const useStyles = makeStyles(() => ({
     },
   },
   title: {
-    width: 127,
+    minWidth: 127,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 100,
+    },
   },
 }))
 

@@ -28,7 +28,7 @@ const DirectCreate: PageWithLayoutType = () => {
 
   useEffect(() => {
     if (roomId && singleUser && roomMeta.loaded && !roomMeta.pending && !roomMeta.error) {
-      router.push(`${ESRoutes.MESSAGE}${roomId}`, undefined, { shallow: true })
+      router.push(`${ESRoutes.MESSAGE}${roomId}`)
     }
   }, [roomId])
 

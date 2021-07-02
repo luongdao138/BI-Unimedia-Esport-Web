@@ -5,7 +5,7 @@ import { TournamentListItem } from './arena.service'
 
 export type HistorySearchParams = {
   page?: number
-  user_code: string
+  user_code?: string
 }
 
 export type HistorySearchResponse = {
@@ -20,7 +20,7 @@ export type ActivityLogResponse = {
 
 export type ActivityLogParams = {
   page?: number
-  user_code: string
+  user_code?: string
 }
 
 export type NicknamesResponse = {
@@ -121,7 +121,7 @@ export type ProfileEditParams = {
   show_area: boolean
   features: number[]
   nickname: string
-  nickname2: string
+  // nickname2: string
   bio: string
   instagram_link: string
   facebook_link: string
@@ -131,7 +131,7 @@ export type ProfileEditParams = {
 }
 
 export type ProfileImageParams = {
-  user_id: number | string
+  // user_id: number | string
   image_url: string
   file_type: number
 }

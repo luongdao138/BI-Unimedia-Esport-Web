@@ -6,16 +6,11 @@ import _ from 'lodash'
 import { ChatHelper } from './utils'
 
 const initialState: State = {
-  roomList: undefined,
-  messages: undefined,
-  members: undefined,
   lastKey: null,
   paginating: false,
   activeRoom: null,
   socketReady: false,
   actionPending: false,
-  selectedRoomInfo: undefined,
-  error: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -41,7 +36,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         paginating: true,
       }
     case CHAT_ACTION_TYPE.GET_ROOM_MESSAGES:
-      if (action.data.content === [] || action.data.content.length === 0) {
+      if (!_.isArray(_.get(action, 'data.content'))) return { ...state }
+      if (action.data.content.length === 0) {
         // case when socket error or wrong data return from server
         newMessagesList = []
         newUsers = action.data.members
@@ -83,11 +79,12 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: undefined,
         newRoomId: undefined,
         error: undefined,
+        activeRoom: undefined,
       }
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
-      if (state.activeRoom != null && state.activeRoom === newMsg[0]['chatRoomId']) {
+      if (state.activeRoom != null && state.activeRoom === _.get(newMsg, '[0].chatRoomId', '')) {
         const mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
         result = mergedMsg
       } else {
@@ -96,7 +93,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         messages: result,
-        roomList: ChatHelper.roomListUpdate([...state.roomList], newMsg, state.activeRoom),
+        roomList: ChatHelper.roomListUpdate(state.roomList, newMsg, state.activeRoom),
       }
     case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
       return {
@@ -109,7 +106,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: _.get(action.data, 'content.room', undefined),
       }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
-      newRoomList = [...state.roomList]
+      if (state.roomList === undefined) {
+        newRoomList = []
+      } else {
+        newRoomList = [...state.roomList]
+      }
       newRoomList.push(action.data.content)
       return {
         ...state,
@@ -134,7 +135,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         members: action.data.content,
       }
-
+    case CHAT_ACTION_TYPE.MEMBER_REMOVED:
+      return {
+        ...state,
+        roomList: ChatHelper.roomListAddRemove(state.roomList, action.data.content.chatRoomId),
+      }
     case CHAT_ACTION_TYPE.MESSAGE_DELETED:
       if (!_.isEmpty(state.messages)) {
         const deletedMsg = ChatHelper.deleteMessage(state.messages, action.data.content)
@@ -160,7 +165,6 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         socketReady: false,
         roomList: undefined,
-        messages: undefined,
       }
     default:
       return state

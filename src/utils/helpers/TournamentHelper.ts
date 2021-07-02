@@ -80,13 +80,6 @@ const formatDate = (date: string): string => {
   return moment(date).format('YYYY/MM/DD HH:mm')
 }
 
-const getRemainingDate = (date: string): number => {
-  const endDate = moment(moment(date).format('YYYY-MM-DD'))
-  const nowDate = moment()
-  const days = endDate.diff(nowDate, 'days')
-  return days < 0 ? 0 : days
-}
-
 const checkTarget = (targetIds: Array<number>, target: number): boolean => {
   if (!targetIds || !target || _.isEmpty(targetIds)) return false
 
@@ -185,8 +178,12 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
     requiredFieldErrors.push(stepOne.title)
     requiredFieldErrors.push(stepOne.game_title_id)
     requiredFieldErrors.push(stepOne.game_hardware_id)
+    if (stepOne.prize_amount) {
+      requiredFieldErrors.push(stepOne.prize_amount)
+    }
   }
   if (stepTwo) {
+    requiredFieldErrors.push(stepTwo.rule)
     requiredFieldErrors.push(stepTwo.max_participants)
   }
   if (stepThree) {
@@ -198,6 +195,7 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
     requiredFieldErrors.push(stepThree.acceptance_dates)
     requiredFieldErrors.push(stepThree.acceptance_end_start_date)
     requiredFieldErrors.push(stepThree.start_end_date)
+    requiredFieldErrors.push(stepThree.area_id)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
@@ -212,7 +210,6 @@ export const TournamentHelper = {
   defaultDetails,
   getTypeValue,
   checkStatus,
-  getRemainingDate,
   checkTarget,
   getDetailData,
   checkParticipantsSelected,

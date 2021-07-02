@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { Box, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { selectedRoomInfo } from '@store/socket/selectors'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
@@ -18,6 +18,8 @@ import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
 import { getMessageTournamentDetail } from '@store/chat/actions'
 import { tournamentDetail } from '@store/chat/selectors'
 import { useRouter } from 'next/router'
+import AvatarSelector from '@components/ImagePicker/AvatarSelector'
+import useRoomImageUploader from './useRoomImageUploader'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -35,7 +37,6 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const [dialogOpen, setDialogOpen] = useState(null as MENU | null)
-
   const roomInfo = useAppSelector(selectedRoomInfo)
   const userId = useAppSelector(currentUserId)
   const roomName = _.get(roomInfo, 'roomName', '')
@@ -43,24 +44,30 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const roomImg = _.get(roomInfo, 'roomImg')
   const tournament = useAppSelector(tournamentDetail)
 
+  const { imageProcess, uploadMeta, hideLoader } = useRoomImageUploader()
+
   const router = useRouter()
 
   useEffect(() => {
-    if (roomId && userId)
+    if (roomId) {
       dispatch(
         socketActions.socketSend({
           action: CHAT_ACTION_TYPE.GET_ROOM_AND_MESSAGE,
           roomId: roomId,
-          userId: userId,
         })
       )
-  }, [roomId, userId])
+    }
+  }, [roomId])
 
   useEffect(() => {
     if (roomInfo && roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
       dispatch(getMessageTournamentDetail(roomInfo.chatRoomId as string))
     }
   }, [roomInfo])
+
+  useEffect(() => {
+    if (roomImg) hideLoader()
+  }, [roomImg])
 
   const isAdmin = () => {
     return _.get(roomInfo, 'isAdmin', false)
@@ -70,12 +77,12 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
   }
 
-  const hasPermission = !_.get(tournament, 'is_freezed', true)
+  const hasPermission = !_.get(tournament, 'is_freezed', false)
 
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-    } else if (!isDirect() && isAdmin()) {
+    } else if (!isDirect()) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     }
     return null
@@ -106,6 +113,13 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return null
   }
 
+  const renderAvatarChange = () => {
+    if (isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem>
+    }
+    return null
+  }
+
   const MenuItems = () => (
     <Box className={classes.menu}>
       <ESMenu>
@@ -113,11 +127,19 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         {memberAddItem()}
         {renderRoomNameChange()}
         {renderTournamentDetailItem()}
-        {/* <ESMenuItem onClick={() => setDialogOpen(MENU.CHANGE_IMG)}>{t('common:chat.room_options.change_img')}</ESMenuItem> */}
-        <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem>
+        {renderAvatarChange()}
+        {/* <ESMenuItem onClick={() => console.error('退出する')}>{t('common:chat.room_options.exit')}</ESMenuItem> */}
       </ESMenu>
     </Box>
   )
+
+  const onUpdate = (file, blob) => {
+    if (!isAdmin) return
+    if (!uploadMeta.uploading) {
+      imageProcess(file, userId, roomId as string, blob)
+    }
+    setDialogOpen(null)
+  }
 
   return (
     <>
@@ -128,20 +150,13 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
           ) : null}
           <RoomNameEditor roomName={roomName} roomId={roomId} open={dialogOpen === MENU.CHANGE_NAME} hide={() => setDialogOpen(null)} />
           <ChatMemberEditContainer roomId={roomId as string} open={dialogOpen === MENU.MEMBER_LIST} hide={() => setDialogOpen(null)} />
+          {dialogOpen === MENU.CHANGE_IMG ? <AvatarSelector alt="" cancel={() => setDialogOpen(null)} onUpdate={onUpdate} /> : null}
         </>
       )}
       <Box className={classes.row}>
-        {hasNoRoomInfo ? null : (
-          <RoomImgView
-            userId={userId}
-            roomId={roomId as string}
-            roomImg={roomImg}
-            roomName={roomName}
-            isAdmin={isAdmin() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM}
-          />
-        )}
+        {hasNoRoomInfo ? null : <RoomImgView roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />}
         <Box pl={2} className={classes.roomName}>
-          <Typography variant="h2" noWrap={true}>
+          <Typography variant="h2" noWrap={true} className={classes.title}>
             {roomName}
           </Typography>
         </Box>
@@ -153,7 +168,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
 RoomHeader.defaultProps = {}
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   row: {
     display: 'grid',
     gridTemplateColumns: 'auto 1fr auto',
@@ -171,6 +186,14 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     right: 0,
     top: 0,
+  },
+  title: {
+    fontSize: 17,
+  },
+  [theme.breakpoints.down('sm')]: {
+    row: {
+      paddingLeft: 0,
+    },
   },
 }))
 

@@ -116,6 +116,9 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           fullWidth
           disabled={!editables.area_id}
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
               {prefecture.attributes.area}

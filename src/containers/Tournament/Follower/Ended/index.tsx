@@ -46,7 +46,7 @@ const FollowerEndedContainer: React.FC = () => {
         scrollThreshold="1px"
       >
         {tournamentResults.map((tournament, i) => (
-          <Grid key={i} item xs={12} sm={12} md={4}>
+          <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
             <TournamentCardResult tournament={tournament} />
           </Grid>
         ))}
