@@ -11,6 +11,7 @@ import i18n from '@locales/i18n'
 interface ReturnType {
   imageProcess: (file: File, userId: number, roomId: string, blob: any) => void
   uploadMeta: UploadStateType
+  hideLoader: () => void
 }
 
 interface UploadStateType {
@@ -46,11 +47,13 @@ const useRoomImageUploader = (): ReturnType => {
       img: imageFineUrl,
     }
     dispatch(socketActions.socketSend(payload))
-    setMeta({ uploading: false })
     dispatch(addToast(i18n.t('common:chat.toast.room_image_success')))
   }
 
-  return { imageProcess, uploadMeta }
+  const hideLoader = () => {
+    setMeta({ uploading: false })
+  }
+  return { imageProcess, uploadMeta, hideLoader }
 }
 
 export default useRoomImageUploader
