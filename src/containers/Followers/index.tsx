@@ -13,15 +13,21 @@ import { FixedSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 
 export interface ESFollowersProps {
-  user_code?: string
+  user_code: string
+  isOthers: boolean
 }
 
-const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
+enum FOLLOWING_STATE_CHANGE_TYPE {
+  FOLLOW = 1,
+  UNFOLLOW = 0,
+}
+
+const ESFollowers: React.FC<ESFollowersProps> = ({ user_code, isOthers }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
 
   const { t } = useTranslation(['common'])
-  const { clearFollowers, followers, fetchFollowers, page, meta } = useFollowers()
+  const { clearFollowers, followers, fetchFollowers, increaseFollowers, decreaseFollowers, page, meta } = useFollowers()
   const hasNextPage = page && page.current_page !== page.total_pages
 
   useEffect(() => {
@@ -41,12 +47,25 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
     }
   }
 
+  const changeFollowingCount = (type: number, user_code: string) => {
+    if (type === FOLLOWING_STATE_CHANGE_TYPE.FOLLOW) {
+      increaseFollowers(user_code, isOthers)
+    } else if (type === FOLLOWING_STATE_CHANGE_TYPE.UNFOLLOW) {
+      decreaseFollowers(user_code, isOthers)
+    }
+  }
+
   const Row = (props: { index: number; style: React.CSSProperties; data: any }) => {
     const { index, style, data } = props
     const user = data[index]
     return (
       <div style={style} key={index}>
-        <UserListItem data={user} isFollowed={user.attributes.is_following} handleClose={() => setOpen(false)} />
+        <UserListItem
+          data={user}
+          isFollowed={user.attributes.is_following}
+          handleClose={() => setOpen(false)}
+          changeFollowState={(type: number) => changeFollowingCount(type, user.attributes.user_code)}
+        />
       </div>
     )
   }
@@ -64,7 +83,7 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code }) => {
           </Box>
         </Box>
       </Button>
-      <ESDialog title={t('common:followers.title')} open={open} handleClose={() => setOpen(false)}>
+      <ESDialog fullWidth={true} title={t('common:followers.title')} open={open} handleClose={() => setOpen(false)}>
         <DialogContent>
           <InfiniteLoader isItemLoaded={(index: number) => index < followers.length} itemCount={itemCount} loadMoreItems={loadMore}>
             {({ onItemsRendered, ref }) => (
