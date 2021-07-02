@@ -189,19 +189,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 />
               </Box>
               <Box mt={4} mb={2}>
-                {userEmail ? (
-                  <>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" pb={1} mb={1}>
-                      <Box style={{ width: '100%' }} display="flex" alignItems="center">
-                        <label className={classes.label}>{t('user_report.reporter_email')}</label>
-                        <Typography component="span" className={classes.required}>
-                          {t('common.required')}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Typography className={classes.staticMail}>{userEmail}</Typography>
-                  </>
-                ) : (
+                {_.isEmpty(formik.values.user_email) ? (
                   <Input
                     id="user_email"
                     name="user_email"
@@ -213,6 +201,18 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                     helperText={formik.errors.user_email}
                     error={!!formik.errors.user_email}
                   />
+                ) : (
+                  <>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" pb={1} mb={1}>
+                      <Box style={{ width: '100%' }} display="flex" alignItems="center">
+                        <label className={classes.label}>{t('user_report.reporter_email')}</label>
+                        <Typography component="span" className={classes.required}>
+                          {t('common.required')}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography className={classes.staticMail}>{userEmail}</Typography>
+                  </>
                 )}
               </Box>
               <label className={classes.label}>{t('user_report.email_required_text')}</label>
