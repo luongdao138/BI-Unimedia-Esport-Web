@@ -10,8 +10,15 @@ import { useTranslation } from 'react-i18next'
 const ESBlockSettings: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-
   const { clearBlockedUsers, blockedUsers, fetchBlockedUsers, pages, meta } = useBlockSettings()
+
+  const actionHandler = (userCode: string) => {
+    if (userCode) {
+      fetchBlockedUsers({
+        page: 1,
+      })
+    }
+  }
 
   useEffect(() => {
     return () => clearBlockedUsers()
@@ -50,7 +57,7 @@ const ESBlockSettings: React.FC = () => {
         scrollThreshold="1px"
       >
         {blockedUsers.map((user, i) => (
-          <BlockedUserItem data={user} key={i} />
+          <BlockedUserItem actionHandler={actionHandler} data={user} key={i} />
         ))}
       </InfiniteScroll>
     </div>

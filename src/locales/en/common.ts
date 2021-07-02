@@ -592,14 +592,14 @@ export default {
     no_user_available: 'No user available',
     back_list: '宛先',
     create_new: '新規作成',
-    placeholder: 'メッセージを入力…',
+    placeholder: 'メッセージを入力',
     copy_content: '内容のコピー',
     reply_msg: '引用返信',
     report_chat: '通報',
     room_options: {
       member_list: 'メンバー一覧',
       add_member: 'メンバーの追加',
-      change_room_name: 'グループ名を変更',
+      change_room_name: 'グループ名の変更',
       change_img: 'アイコンを変更',
       exit: '退出する',
     },
@@ -622,6 +622,10 @@ export default {
     not_selected_text: 'メッセージを始めましょう',
     member_list_title: 'メンバー一覧',
     add_submit: '追加する',
+    toast: {
+      room_name_changed: 'グループ名を変更しました',
+      room_image_success: 'グループアイコンを変更しました',
+    },
   },
   notification: {
     title: '通知一覧',
@@ -696,6 +700,7 @@ export default {
   },
   block_settings: {
     title: 'ブロックしたユーザー',
+    unblock_success: '該当のユーザをブロック解除しました',
   },
   security_settings: {
     title: 'セキュリティ',
@@ -767,7 +772,7 @@ export default {
     go_edit: '内容を変更する',
     email_required: 'お問い合わせにはメールアドレスの登録が必須となります。',
     error: {
-      email: '入力内容が適切ではありません',
+      email: '入力内容が適切ではありません。',
     },
   },
   settings: {
@@ -789,6 +794,7 @@ export default {
   },
   ng_word_area: {
     chat_section: 'メッセージテキストボックス',
+    room_name_title: 'グループ名',
   },
   page_head: {
     default_desc:

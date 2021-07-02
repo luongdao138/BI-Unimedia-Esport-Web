@@ -5,10 +5,13 @@ import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 import { socketActions } from '@store/socket/actions'
 import _ from 'lodash'
+import { addToast } from '@store/common/actions'
+import i18n from '@locales/i18n'
 
 interface ReturnType {
   imageProcess: (file: File, userId: number, roomId: string, blob: any) => void
   uploadMeta: UploadStateType
+  hideLoader: () => void
 }
 
 interface UploadStateType {
@@ -44,10 +47,13 @@ const useRoomImageUploader = (): ReturnType => {
       img: imageFineUrl,
     }
     dispatch(socketActions.socketSend(payload))
-    setMeta({ uploading: false })
+    dispatch(addToast(i18n.t('common:chat.toast.room_image_success')))
   }
 
-  return { imageProcess, uploadMeta }
+  const hideLoader = () => {
+    setMeta({ uploading: false })
+  }
+  return { imageProcess, uploadMeta, hideLoader }
 }
 
 export default useRoomImageUploader

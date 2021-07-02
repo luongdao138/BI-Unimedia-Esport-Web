@@ -112,10 +112,10 @@ const PurchaseDetail: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box className={classes.actionBox}>
-                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+                  <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
                     {t('common:purchase_history.dialog_close')}
                   </ButtonPrimary>
-                  <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+                  <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
                     {t('common:purchase_history.cancel_submit')}
                   </ButtonPrimary>
                 </Box>
@@ -174,7 +174,7 @@ const PurchaseDetail: React.FC = () => {
                 <Typography>{ticket_tax}</Typography>
               </Box>
               <Box display="flex" my={1}>
-                <Typography className={classes.title}>{t('common:purchase_history.total')}</Typography>
+                <Typography className={classes.title}>{t('common:purchase_history.payment')}</Typography>
                 <Typography color="primary">
                   {total}
                   {purchaseHistoryDetail.data.attributes.status == PAYMENT_STATUS.CANCELLED
@@ -185,18 +185,18 @@ const PurchaseDetail: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-            {/*{purchaseHistoryDetail.data.attributes.is_cancellable &&*/}
-            {/*  !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&*/}
-            {/*  !purchaseHistoryDetail.data.attributes.cancelled_datetime && (*/}
-            <>
-              {renderError()}
-              <Box my={4} display="flex" justifyContent="center">
-                <ESButton variant="outlined" onClick={handleClickOpen}>
-                  {t('common:purchase_history.cancel_request')}
-                </ESButton>
-              </Box>
-            </>
-            {/*)}*/}
+            {purchaseHistoryDetail.data.attributes.is_cancellable &&
+              !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
+              !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
+                <>
+                  {renderError()}
+                  <Box my={4} display="flex" justifyContent="center">
+                    <ESButton variant="outlined" onClick={handleClickOpen}>
+                      {t('common:purchase_history.cancel_request')}
+                    </ESButton>
+                  </Box>
+                </>
+              )}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
@@ -253,10 +253,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 100,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  actionBtn: {
-    width: 200,
+  actionBtnClose: {
+    width: '100%',
     margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
   },
   wrap: {
     color: Colors.white_opacity[70],

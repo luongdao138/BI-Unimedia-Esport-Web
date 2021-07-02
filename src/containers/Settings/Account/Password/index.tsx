@@ -11,16 +11,25 @@ import { useFormik } from 'formik'
 import _ from 'lodash'
 import ESLoader from '@components/FullScreenLoader'
 import usePassword from './usePassword'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const AccountSettingsPasswordContainer: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const router = useRouter()
+  const [scoreCurrentPassword, setCurrentPasswordScore] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
   const { changeEmailCheck, meta } = usePassword()
 
   const validationSchema = Yup.object().shape({
-    current_password: Yup.string().required(t('common.required')).min(8, t('error.too_short')),
+    current_password: Yup.string()
+      .test('password-validation', t('error.password_failed'), (value) => {
+        const tempScore = CommonHelper.scorePassword(value)
+        setCurrentPasswordScore(tempScore)
+        return tempScore > 40
+      })
+      .required(t('common.required'))
+      .min(8, t('error.too_short')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldError } = useFormik<services.ChangeEmailCheckParams>({
@@ -40,7 +49,7 @@ const AccountSettingsPasswordContainer: React.FC = () => {
     }
   }, [meta.error])
 
-  const buttonActive = (): boolean => values.current_password !== '' && _.isEmpty(errors)
+  const buttonActive = (): boolean => values.current_password !== '' && _.isEmpty(errors) && scoreCurrentPassword > 40
 
   return (
     <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>

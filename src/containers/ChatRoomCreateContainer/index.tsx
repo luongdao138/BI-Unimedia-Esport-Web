@@ -234,27 +234,29 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
             宛先
           </Typography>
         </Box>
-        {dm ? (
-          <Box>
-            <ESChip size="small" label={singleUser.nickname} />
-          </Box>
-        ) : (
-          <ESSelectInput
-            items={
-              _.isArray(friends)
-                ? friends.map((friend) => ({
-                    id: parseInt(friend.id),
-                    nickName: friend.attributes.nickname,
-                    avatar: friend.attributes.avatar,
-                    userCode: friend.attributes.user_code,
-                  }))
-                : []
-            }
-            onItemsSelected={handleOnUserSelected}
-            onSearchInput={handleSearchInput}
-            loading={getFriendsMeta.pending}
-          />
-        )}
+        <Box className={classes.inputArea}>
+          {dm ? (
+            <Box>
+              <ESChip size="small" label={singleUser.nickname} />
+            </Box>
+          ) : (
+            <ESSelectInput
+              items={
+                _.isArray(friends)
+                  ? friends.map((friend) => ({
+                      id: parseInt(friend.id),
+                      nickName: friend.attributes.nickname,
+                      avatar: friend.attributes.avatar,
+                      userCode: friend.attributes.user_code,
+                    }))
+                  : []
+              }
+              onItemsSelected={handleOnUserSelected}
+              onSearchInput={handleSearchInput}
+              loading={getFriendsMeta.pending}
+            />
+          )}
+        </Box>
       </Box>
       <Box className={classes.list}>
         <Box className={`${classes.content} scroll-bar`}>
@@ -286,6 +288,9 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
 const useStyles = makeStyles((theme: Theme) => ({
   dropZone: {
     display: 'none',
+  },
+  inputArea: {
+    pointerEvents: 'auto',
   },
   title: { fontSize: 17 },
   loaderBox: {
@@ -360,8 +365,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: 0,
       left: 0,
-      right: 0,
       paddingLeft: 60,
+      pointerEvents: 'none',
+      right: 0,
       zIndex: 1000,
     },
   },

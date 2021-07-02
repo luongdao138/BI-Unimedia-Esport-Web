@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from '@material-ui/core'
+import { Box, Typography, Button, IconButton, Icon } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
 import { useTranslation } from 'react-i18next'
@@ -16,8 +16,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Colors } from '@theme/colors'
 import { ESRoutes } from '@constants/route.constants'
-import { useStore } from 'react-redux'
 import _ from 'lodash'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { useAppDispatch } from '@store/hooks'
 
 const ESInquiry: React.FC = () => {
   const { t } = useTranslation('common')
@@ -26,43 +29,44 @@ const ESInquiry: React.FC = () => {
   const [showPreview, setShowPreview] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const classes = useStyles()
-  const store = useStore()
+  const dispatch = useAppDispatch()
+  const checkNgWord = useCheckNgWord()
+  const hasEmail = CommonHelper.hasEmail(currentUserEmail)
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string()
-      .required(t('inquiry.title_required'))
-      .max(100, t('common.too_long'))
-      .test('content', t('common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    title: Yup.string().required(t('inquiry.title_required')).max(100, t('common.too_long')),
 
     email: Yup.string()
       .required(t('inquiry.email_required'))
       .max(100, t('common.too_long'))
       .test('email', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
-      })
-      .test('content', t('common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
       }),
 
-    content: Yup.string()
-      .required(t('inquiry.desc_required'))
-      .max(1000, t('common.too_long'))
-      .test('content', t('common.contains_ngword'), function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    content: Yup.string().required(t('inquiry.desc_required')).max(1000, t('common.too_long')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<InquiryParams>({
     initialValues: {
       content: '',
       title: '',
-      email: currentUserEmail ?? '',
+      email: hasEmail ? currentUserEmail : '',
     },
     validationSchema,
     onSubmit() {
-      setShowPreview(true)
+      const check_title = checkNgWord([values.title])
+      const check_content = checkNgWord([values.content])
+      const check_email = checkNgWord([values.email])
+
+      if (_.isEmpty(check_title) && _.isEmpty(check_content) && _.isEmpty(check_email)) {
+        setShowPreview(true)
+      } else if (!_.isEmpty(check_title)) {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.inquiry_title }))
+      } else if (!_.isEmpty(check_content)) {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.inquiry_content }))
+      } else if (!_.isEmpty(check_email)) {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.inquiry_email }))
+      }
     },
   })
 
@@ -78,7 +82,26 @@ const ESInquiry: React.FC = () => {
 
   return (
     <div>
-      {showPreview ? <HeaderWithButton title={t('service_info.inquiry')} /> : <HeaderWithButton title={t('service_info.inquiry')} />}
+      {showPreview ? (
+        <Box className={classes.header}>
+          <IconButton
+            className={classes.iconButton}
+            disableRipple
+            onClick={(e) => {
+              e.preventDefault()
+              setShowPreview(false)
+            }}
+          >
+            <Icon className={`fa fa-arrow-left ${classes.icon}`} />
+          </IconButton>
+          <Typography variant="body1" className={classes.headerTitle}>
+            {t('service_info.inquiry')}
+          </Typography>
+        </Box>
+      ) : (
+        <HeaderWithButton title={t('service_info.inquiry')} />
+      )}
+
       {showSuccess ? (
         <Box>
           <Box mt={9}>
@@ -103,39 +126,42 @@ const ESInquiry: React.FC = () => {
         </Box>
       ) : (
         <Box>
-          <form className={classes.root} onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <Box mt={2} bgcolor={showPreview ? Colors.black : null} borderRadius={4} padding={3} margin={3}>
-              <ESInput
-                id="title"
-                name="title"
-                value={values.title}
-                fullWidth
-                onChange={handleChange}
-                labelPrimary={t('inquiry.subject')}
-                placeholder=""
-                onBlur={handleBlur}
-                required
-                helperText={touched.title && errors.title}
-                error={touched.title && !!errors.title}
-                disabled={showPreview}
-                size="small"
-              />
+              <Box mt={1}>
+                <ESInput
+                  id="title"
+                  name="title"
+                  value={values.title}
+                  fullWidth
+                  onChange={handleChange}
+                  labelPrimary={t('inquiry.subject')}
+                  placeholder=""
+                  onBlur={handleBlur}
+                  required
+                  helperText={touched.title && errors.title}
+                  error={touched.title && !!errors.title}
+                  disabled={showPreview}
+                  rows={8}
+                  size="small"
+                />
+              </Box>
               <Box mt={1}>
                 <ESInput
                   id="content"
                   name="content"
                   value={values.content}
+                  fullWidth
                   onChange={handleChange}
                   labelPrimary={t('inquiry.desc')}
                   placeholder={t('inquiry.desc_placeholder')}
                   onBlur={handleBlur}
                   required
-                  fullWidth
+                  multiline
                   helperText={touched.content && errors.content}
                   error={touched.content && !!errors.content}
-                  multiline
-                  rows={8}
                   disabled={showPreview}
+                  rows={8}
                   size="small"
                 />
               </Box>
@@ -153,7 +179,7 @@ const ESInquiry: React.FC = () => {
                 error={touched.email && !!errors.email}
                 rows={8}
                 disabled={showPreview}
-                // readOnly={!!currentUserEmail}
+                readOnly={!!hasEmail}
                 size="small"
               />
             </Box>
@@ -201,11 +227,6 @@ const ESInquiry: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& .MuiInputBase-input.Mui-disabled': {
-      marginLeft: -12,
-    },
-  },
   primary: {
     '& .MuiButton-label': {
       textDecorationLine: 'none',
@@ -222,14 +243,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: Colors.black_opacity[70],
     borderRadius: '4px',
     border: '1px solid rgba(255, 255, 255, 0.3)',
-    cursor: 'pointer',
-    '&:hover': {
-      boxShadow: 'none',
-      background: '#1a1a1a',
-    },
   },
   cancel: {
     textDecorationLine: 'underline',
+  },
+  header: {
+    padding: 16,
+    width: '100%',
+    position: 'sticky',
+    background: Colors.black,
+    zIndex: 10,
+    left: 0,
+    top: 0,
+    right: 0,
+    height: 60,
+    borderBottom: '1px solid #212121',
+  },
+  icon: {
+    fontSize: 12,
+    color: theme.palette.text.primary,
+  },
+  iconButton: {
+    backgroundColor: theme.palette.text.secondary,
+    marginRight: 14,
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: Colors.white,
+    display: 'inline-block',
   },
 }))
 

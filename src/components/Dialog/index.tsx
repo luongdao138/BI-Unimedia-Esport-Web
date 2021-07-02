@@ -6,13 +6,13 @@ import Dialog, { DialogProps } from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Icon from '@material-ui/core/Icon'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import { Colors } from '@theme/colors'
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       fontSize: 18,
       margin: 0,
-      padding: theme.spacing(2),
-      left: theme.spacing(2),
+      padding: '32px 0',
     },
     closeButton: {
       position: 'absolute',
@@ -23,17 +23,49 @@ const styles = (theme: Theme) =>
     dialogTitle: {
       color: 'white',
       fontSize: 18,
+      padding: 0,
+    },
+    iconButton: {
+      backgroundColor: Colors.grey[200],
+      marginRight: 14,
+      '&:hover': {
+        backgroundColor: Colors.grey[200],
+      },
+    },
+    icon: {
+      fontSize: 12,
+      color: theme.palette.text.primary,
+    },
+    [theme.breakpoints.down('sm')]: {
+      root: {
+        fontSize: 18,
+        margin: 0,
+        padding: '16px',
+      },
     },
   })
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   backDrop: {
     backdropFilter: 'blur(3px)',
   },
   scrollPaper: {
     alignItems: 'baseline', // default center
+    '& .MuiDialog-paper': {
+      margin: 0,
+      maxHeight: '100%',
+    },
   },
-})
+  [theme.breakpoints.down('sm')]: {
+    scrollPaper: {
+      alignItems: 'baseline', // default center
+      '& .MuiDialog-paper': {
+        margin: 0,
+        width: '100%',
+      },
+    },
+  },
+}))
 
 export interface ESDialogProps extends DialogProps {
   title: string
@@ -56,8 +88,8 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
     <MuiDialogTitle className={classes.root} {...other}>
       {onClose ? (
         <>
-          <IconButton aria-label="close" onClick={onClose}>
-            <Icon className="fa fa-arrow-left" fontSize="small" />
+          <IconButton className={classes.iconButton} aria-label="close" onClick={onClose}>
+            <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
           </IconButton>
           <span className={classes.dialogTitle}>{children}</span>
         </>
@@ -87,7 +119,13 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
         classes: {
           root: classes.backDrop,
         },
-        style: { backgroundColor: _.isString(bkColor) ? bkColor : 'rgba(0,0,30,0.6)' },
+        style: {
+          backgroundColor: _.isString(bkColor)
+            ? bkColor
+            : window.navigator.userAgent.indexOf('Firefox') != -1
+            ? 'rgba(0,0,30,0.8)'
+            : 'rgba(0,0,30,0.6)',
+        },
         children: fixedFooter ? fixedFooter : undefined,
       }}
       PaperProps={{
@@ -96,6 +134,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
           boxShadow: 'none',
         },
       }}
+      className={classes.dialog}
       onEntered={() => {
         document.body.style.overflow = 'hidden'
       }}

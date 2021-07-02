@@ -16,6 +16,7 @@ export interface MessageTextProps {
   contentClass?: string
   textClass?: string
   bgColor?: string
+  preWrap?: boolean
 }
 
 const TextMessage: React.FC<MessageTextProps> = (props) => {
@@ -110,6 +111,7 @@ const useStyles = makeStyles(() => ({
   plain: {
     color: Colors.grey[100],
     wordBreak: 'break-all',
+    whiteSpace: (props: MessageTextProps) => (props.preWrap ? 'pre-wrap' : 'inherit'),
   },
   wrapOne: {
     overflow: 'hidden',
@@ -147,6 +149,7 @@ const useStyles = makeStyles(() => ({
 TextMessage.defaultProps = {
   numberOfLines: null,
   color: Colors.black,
+  preWrap: false,
 }
 
 export default React.memo(TextMessage)

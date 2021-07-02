@@ -41,6 +41,13 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
           roomId: message.content.roomId,
         })
       )
+    } else if (message.action === CHAT_ACTION_TYPE.MEMBER_ADDED) {
+      socket.send(
+        JSON.stringify({
+          action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
+          roomId: message.content.roomId,
+        })
+      )
     } else {
       store.dispatch({ type: message.action, data: message })
     }

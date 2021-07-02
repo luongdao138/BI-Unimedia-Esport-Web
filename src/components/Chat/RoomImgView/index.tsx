@@ -127,6 +127,9 @@ const useStyles = makeStyles((theme) => ({
     avatarHolder: {
       display: 'none',
     },
+    loaderHolder: {
+      display: 'none',
+    },
   },
 }))
 

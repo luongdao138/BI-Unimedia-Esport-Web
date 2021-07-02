@@ -92,7 +92,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       return {
         ...state,
         messages: result,
-        roomList: ChatHelper.roomListUpdate([...state.roomList], newMsg, state.activeRoom),
+        roomList: ChatHelper.roomListUpdate(state.roomList, newMsg, state.activeRoom),
       }
     case CHAT_ACTION_TYPE.ROOM_CREATE_PENDING:
       return {
@@ -105,7 +105,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         selectedRoomInfo: _.get(action.data, 'content.room', undefined),
       }
     case CHAT_ACTION_TYPE.CREATE_ROOM:
-      newRoomList = [...state.roomList]
+      if (state.roomList === undefined) {
+        newRoomList = []
+      } else {
+        newRoomList = [...state.roomList]
+      }
       newRoomList.push(action.data.content)
       return {
         ...state,
@@ -130,7 +134,11 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         members: action.data.content,
       }
-
+    case CHAT_ACTION_TYPE.MEMBER_REMOVED:
+      return {
+        ...state,
+        roomList: ChatHelper.roomListAddRemove(state.roomList, action.data.content.chatRoomId),
+      }
     case CHAT_ACTION_TYPE.MESSAGE_DELETED:
       if (!_.isEmpty(state.messages)) {
         const deletedMsg = ChatHelper.deleteMessage(state.messages, action.data.content)

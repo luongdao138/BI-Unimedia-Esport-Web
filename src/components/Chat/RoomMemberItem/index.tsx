@@ -26,7 +26,7 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           badgeContent={0}
           showZero={false}
         >
-          <Avatar src={profile} alt="M" />
+          <Avatar src={profile} alt={name} />
         </Badge>
       </ListItemAvatar>
       <ListItemText className={classes.listItem}>
@@ -37,7 +37,7 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           {!_.isEmpty(userCode) ? '@' + userCode : ''}
         </Typography>
       </ListItemText>
-      <ListItemSecondaryAction>
+      <ListItemSecondaryAction className={classes.secondaryAction}>
         <Button variant="outlined" onClick={() => onDelete(id)} round>
           {i18n.t('common:chat.delete_member')}
         </Button>
@@ -46,13 +46,22 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
   },
   listItem: {
     paddingRight: 140,
+  },
+  [theme.breakpoints.down('sm')]: {
+    root: {
+      paddingRight: 0,
+      paddingLeft: 0,
+    },
+    secondaryAction: {
+      right: 0,
+    },
   },
 }))
 

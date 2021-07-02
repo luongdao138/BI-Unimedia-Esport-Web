@@ -4,7 +4,7 @@ import Input from '@components/Input'
 import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
 import ESDialog from '@components/Dialog'
-import ProfileAvatar from '@components/ProfileAvatar'
+import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
 import { useFormik } from 'formik'
@@ -63,17 +63,19 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .required(t('common.required')),
   })
 
+  const emailAssigned = CommonHelper.hasEmail(userEmail)
+
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
       reason_id: reasons[0] ? Number(reasons[0].id) : 1,
       report_type: 0,
-      user_email: userEmail ? (CommonHelper.hasEmail(userEmail) ? userEmail : '') : '',
+      user_email: emailAssigned ? userEmail : '',
     },
     enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
-      const checked = checkNgWord([values.description, CommonHelper.hasEmail(userEmail) ? '' : values.user_email])
+      const checked = checkNgWord([values.description, emailAssigned ? '' : values.user_email])
       if (_.isEmpty(checked)) {
         switch (reportType) {
           case REPORT_TYPE.CHAT:
@@ -101,7 +103,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         return (
           <Grid container spacing={2}>
             <Grid item xs={12} className={classes.userInfoContainer}>
-              <ProfileAvatar src={attr?.avatar_url} size={50} editable={false} alt={attr?.nickname} />
+              <Avatar src={attr?.avatar_url} alt={attr?.nickname} />
               <Grid item xs={9} className={classes.nameContainer}>
                 <Typography className={classes.nickname}>{attr?.nickname}</Typography>
                 <Typography className={classes.userCode}>@{attr?.user_code}</Typography>
@@ -189,7 +191,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 />
               </Box>
               <Box mt={4} mb={2}>
-                {userEmail ? (
+                {emailAssigned ? (
                   <>
                     <Box display="flex" justifyContent="space-between" alignItems="center" pb={1} mb={1}>
                       <Box style={{ width: '100%' }} display="flex" alignItems="center">
@@ -313,10 +315,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     backgroundColor: '#2C2C2C',
     alignItems: 'center',
-    // borderStyle: 'solid',
-    // borderColor: Colors.grey[400],
-    // borderRadius: 2,
-    // borderWidth: 0.3,
   },
   dialogContent: {
     overflow: 'hidden',

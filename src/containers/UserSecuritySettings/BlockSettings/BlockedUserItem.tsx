@@ -1,20 +1,65 @@
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, withStyles } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ESMenuItem from '@components/Menu/MenuItem'
 import ESMenu from '@components/Menu'
 import { useRouter } from 'next/router'
+import i18n from '@locales/i18n'
+import ButtonPrimary from '@components/ButtonPrimary'
+import Dialog from '@material-ui/core/Dialog'
+import React, { useEffect } from 'react'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import useUnblock from '@containers/Profile/useUnblock'
+import ESLoader from '@components/Loader'
+import { addToast } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 
 interface Props {
   data: any
+  actionHandler: (userCode: string) => void
 }
 
-const BlockedUserItem: React.FC<Props> = ({ data }) => {
+const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
   const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
   const user = data.attributes
   const router = useRouter()
   const classes = useStyles()
+  const { unblockUser, unblockMeta } = useUnblock()
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false)
+
+  const handleClickOpen = () => {
+    setOpenConfirmDialog(true)
+  }
+
+  const handleClose = () => {
+    setOpenConfirmDialog(false)
+  }
+
+  const handleSubmit = () => {
+    unblockUser({ user_code: user.user_code })
+    setOpenConfirmDialog(false)
+  }
+
+  useEffect(() => {
+    if (unblockMeta.loaded && unblockMeta.error === false) {
+      actionHandler(user.user_code)
+      dispatch(addToast(i18n.t('common:block_settings.unblock_success')))
+    }
+  }, [unblockMeta])
+
+  const DialogContent = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(3),
+      display: 'block',
+      background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
+      width: '100%',
+      '&:first-child': {
+        padding: theme.spacing(3),
+      },
+    },
+  }))(MuiDialogContent)
 
   return (
     <div>
@@ -38,11 +83,37 @@ const BlockedUserItem: React.FC<Props> = ({ data }) => {
           </Box>
           <Box className={classes.menu}>
             <ESMenu>
-              <ESMenuItem onClick={() => console.error('プロフィールを編集')}>{t('common:profile.unblock')}</ESMenuItem>
+              <ESMenuItem onClick={() => handleClickOpen()}>
+                {t('common:profile.unblock')}
+                {unblockMeta.pending ? <ESLoader /> : null}
+              </ESMenuItem>
             </ESMenu>
           </Box>
         </Box>
       </Box>
+      <Dialog
+        disableBackdropClick
+        maxWidth={'md'}
+        fullWidth
+        open={openConfirmDialog}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <Box className={classes.containerDialog}>
+            <Typography className={classes.dialogTitle}>{i18n.t('common:profile.block_confirm_title')}</Typography>
+          </Box>
+          <Box className={classes.actionBox}>
+            <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
+              {i18n.t('common:profile.block_confirm_no')}
+            </ButtonPrimary>
+            <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
+              {i18n.t('common:profile.block_confirm_yes')}
+            </ButtonPrimary>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
@@ -62,6 +133,47 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menu: {
     alignSelf: 'center',
+  },
+  containerDialog: {
+    width: '100%',
+    display: 'block',
+  },
+  dialogTitle: {
+    color: Colors.white,
+    textAlign: 'center',
+    paddingBottom: 56,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  message: {
+    color: Colors.text[200],
+    textAlign: 'center',
+  },
+  actionBox: {
+    marginTop: 100,
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
+  actionBtn: {
+    width: 200,
+    margin: 16,
+  },
+  actionBtnClose: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
   },
 }))
 

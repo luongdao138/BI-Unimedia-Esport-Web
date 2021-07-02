@@ -37,6 +37,25 @@ const useStyles = makeStyles((theme) =>
         },
       },
     },
+    input: {
+      maxHeight: 128,
+      overflow: 'auto',
+      scrollbarColor: '#222 transparent',
+      scrollbarWidth: 'thin',
+      '&::-webkit-scrollbar': {
+        width: 5,
+        opacity: 1,
+        padding: 2,
+      },
+      '&::-webkit-scrollbar-track': {
+        paddingLeft: 1,
+        background: 'rgba(0,0,0,0.5)',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#222',
+        borderRadius: 6,
+      },
+    },
     chip: {
       display: 'flex',
       '& .MuiChip-label': {
@@ -110,6 +129,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
           <SelectInputTextField
             {...params}
             inputRef={textRef}
+            className={classes.input}
             InputProps={{
               ...params.InputProps,
               endAdornment: (

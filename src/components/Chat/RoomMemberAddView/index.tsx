@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, makeStyles, DialogContent, Typography, Theme, IconButton, Badge, Icon, Container } from '@material-ui/core'
+import { Box, makeStyles, DialogContent, Typography, Theme, IconButton, Badge, Icon, Container, useTheme } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import Avatar from '@components/Avatar'
@@ -14,6 +14,7 @@ import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 import { useRect } from '@utils/hooks/useRect'
 import ESSlider from '@components/Slider'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 export interface RoomMemberAddViewProps {
   roomId: string
@@ -28,26 +29,19 @@ export interface ShortMember {
   profile: string
 }
 const contentRef = React.createRef<HTMLDivElement>()
-const layoutConsts = {
-  paperMargin: 32,
-  title: 70,
-  input: 107,
-  bottomSpacing: 34,
-}
 
 const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hide }) => {
-  const classes = useStyles()
   const [memberList, setMemberList] = useState([] as ShortMember[]) // friends in search list
   const [selectedList, setSelectedList] = useState([] as ShortMember[]) // friends who are going to enter the room
-
+  const theme = useTheme()
   const { roomMembers, resetMeta, friends, getFriends, currentUserId, meta, socketSend, cleanFriendsData } = useMemberAdd()
   const [keyword, setKeyword] = useState('')
   const [bottomGap, setBottomGap] = useState<number>(0)
-
+  const matches = useMediaQuery(theme.breakpoints.up('sm'))
+  const height = matches ? bottomGap + 100 : bottomGap + 68
+  const classes = useStyles()
   const userId = currentUserId
   const contentRect = useRect(contentRef)
-
-  const listHeight = layoutConsts.paperMargin + layoutConsts.input + layoutConsts.title + layoutConsts.bottomSpacing + bottomGap
 
   useEffect(() => {
     if (userId && open) {
@@ -190,8 +184,8 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
         bkColor="rgba(0,0,0,0.8)"
         alignTop
       >
-        <DialogContent style={{ padding: 0 }}>
-          <Box pt={6}>
+        <DialogContent className={classes.dialogContentWrap} style={{ height: `calc(100vh - ${height}px)` }}>
+          <Box className={classes.inputHolder}>
             <ESInput
               placeholder={i18n.t('common:chat.member_add_placeholder')}
               value={keyword}
@@ -211,7 +205,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
           </Box>
           {renderLoader()}
           {open ? (
-            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`} style={{ height: `calc(100vh - ${listHeight}px)` }}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
               {_.filter(
                 memberList,
                 ({ id }) =>
@@ -235,6 +229,24 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
 RoomMemberAddView.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
+  dialogContentWrap: {
+    padding: 0,
+    position: 'relative',
+    paddingTop: '100px',
+    overflow: 'hidden',
+  },
+  inputHolder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    flexDirection: 'column',
+    paddingBottom: 30,
+  },
   item: {
     width: '100%',
     paddingLeft: 5,
@@ -293,6 +305,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+    height: '100%',
+    paddingBottom: 30,
   },
   scroll: {
     scrollbarColor: '#222 transparent',
@@ -335,6 +349,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(8),
   },
   [theme.breakpoints.down('md')]: {},
+  [theme.breakpoints.down('sm')]: {
+    dialogContentWrap: {
+      padding: '0px 16px',
+      paddingTop: '100px !important',
+      height: `calc(100vh - ${(props) => props.mobileHeight})`,
+    },
+    inputHolder: {
+      padding: '0 16px',
+    },
+  },
 }))
 
 export default RoomMemberAddView
