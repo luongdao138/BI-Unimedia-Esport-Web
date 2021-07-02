@@ -56,7 +56,7 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
         <AutoSizer>
           {({ height, width }) => (
             <List
-              overscanCount={10}
+              overscanCount={4}
               className={`${classes.list} ${expand ? classes.noHover : ''}`}
               itemSize={70}
               itemCount={listData.length}
