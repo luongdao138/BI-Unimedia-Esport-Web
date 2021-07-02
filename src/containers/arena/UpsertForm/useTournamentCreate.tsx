@@ -147,7 +147,7 @@ const useTournamentCreate = (): {
         if (_status === TOURNAMENT_STATUS.RECRUITING) {
           _editables.max_participants = true
           _editables.retain_history = true
-          _editables.acceptance_start_date = true
+          _editables.acceptance_start_date = false
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
