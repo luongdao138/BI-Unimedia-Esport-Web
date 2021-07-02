@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Grid, Typography, Box, Container, Theme, makeStyles, withStyles, createMuiTheme, StepLabel } from '@material-ui/core'
+import { Typography, Box, Container, Theme, makeStyles, withStyles, createMuiTheme, StepLabel } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Stepper from '@components/Stepper'
 import Step from '@components/Step'
@@ -102,12 +102,16 @@ const UserSettingsContainer: React.FC = () => {
     <>
       <Box className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
-          <Grid container direction="row" justify="space-between" style={{ alignItems: 'center' }}>
-            <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
-            <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
-          </Grid>
+          <Box display="flex" flexDirection="row" alignItems="center" width="100%" style={{ justifyContent: 'spaceBetween' }}>
+            <Box>
+              <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
+            </Box>
+            <Box>
+              <ESButton onClick={handleSkip}>{t('common:skip')}</ESButton>
+            </Box>
+          </Box>
         </Box>
-        <Grid container direction="column" className={classes.contents}>
+        <Box display="flex" flexDirection="column" className={classes.contents}>
           <Box className={classes.stepperHolder}>
             <Stepper activeStep={step} style={{ padding: 0 }}>
               {stepsTitles.map((label, idx) => (
@@ -127,9 +131,9 @@ const UserSettingsContainer: React.FC = () => {
           <TabPanel value={step} index={2}>
             <GameSelector values={profile.game_titles} onChange={onGameChange} />
           </TabPanel>
-        </Grid>
+        </Box>
 
-        <Box mt={164 / 8} className={classes.blankSpace} />
+        <Box mt={36} />
 
         <Box className={classes.stickyFooter}>
           <Container maxWidth="md" className={classes.container} style={{ marginTop: 0 }}>
@@ -209,9 +213,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     nextBtnHolder: {
       marginBottom: theme.spacing(5.2),
-    },
-    blankSpace: {
-      marginTop: theme.spacing(118 / 8),
     },
   },
   captionActive: {

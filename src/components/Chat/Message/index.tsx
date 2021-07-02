@@ -45,7 +45,11 @@ const Message: React.FC<MessageProps> = (props) => {
   const status = _.get(currentMessage, 'sent', false)
 
   const renderAvatar = () => {
-    return <Avatar style={{ cursor: 'pointer' }} onClick={() => navigateToProfile(userCode)} size={36} src={avatar} alt={nickName} />
+    return (
+      <Box style={{ cursor: 'pointer' }}>
+        <Avatar onClick={() => navigateToProfile(userCode)} size={36} src={avatar} alt={nickName} />
+      </Box>
+    )
   }
 
   const renderTime = () => {

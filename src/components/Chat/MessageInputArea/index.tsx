@@ -87,7 +87,7 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
   return (
     <>
       <Box className={classes.root}>
-        <Actions onPressActions={onPressActionButton} disabled={disabled} />
+        <Actions onPressActions={onPressActionButton} disabled={disabled || isBlocked} />
         <Box className={classes.input}>
           <Composer
             renderSuggestion={renderSuggestion}

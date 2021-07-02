@@ -83,13 +83,21 @@ const ESFollowers: React.FC<ESFollowersProps> = ({ user_code, isOthers }) => {
           </Box>
         </Box>
       </Button>
-      <ESDialog fullWidth={true} title={t('common:followers.title')} open={open} handleClose={() => setOpen(false)}>
-        <DialogContent>
+      <ESDialog
+        title={t('common:followers.title')}
+        open={open}
+        handleClose={() => setOpen(false)}
+        classes={{
+          paperFullWidth: classes.dialogFullWidth,
+          paper: classes.dialogPaper,
+        }}
+      >
+        <DialogContent style={{ paddingRight: 0, paddingLeft: 0 }}>
           <InfiniteLoader isItemLoaded={(index: number) => index < followers.length} itemCount={itemCount} loadMoreItems={loadMore}>
             {({ onItemsRendered, ref }) => (
               <List
                 className={classes.scroll}
-                height={800}
+                height={innerHeight - 200}
                 width={'100%'}
                 itemCount={followers.length}
                 itemData={followers}
@@ -133,6 +141,13 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white,
+  },
+  dialogFullWidth: {
+    width: '90%',
+  },
+  dialogPaper: {
+    marginLeft: 24,
+    marginRight: 0,
   },
   scroll: {
     overflow: 'overlay',
