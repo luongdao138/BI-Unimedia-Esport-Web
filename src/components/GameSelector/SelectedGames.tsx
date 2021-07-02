@@ -43,7 +43,7 @@ const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) =>
         <Container maxWidth="md" className={classes.listContainer}>
           <List>
             {games.map((g, idx) => (
-              <Chip key={idx} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
+              <Chip key={idx} isGameList={true} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
             ))}
           </List>
         </Container>
