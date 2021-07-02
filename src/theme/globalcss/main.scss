@@ -421,7 +421,7 @@ body {
 }
 
 .scroll-bar {
-  overflow: overlay;
+  overflow: hidden;
   scrollbar-color: #222 transparent;
   scrollbar-width: thin;
   transform: translateZ(0px);
