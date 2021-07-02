@@ -92,6 +92,7 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
         </Box>
       </Box>
       <Dialog
+        disableBackdropClick
         maxWidth={'md'}
         fullWidth
         open={openConfirmDialog}
@@ -152,6 +153,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 100,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
   actionBtn: {
     width: 200,
