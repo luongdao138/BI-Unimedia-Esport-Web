@@ -42,7 +42,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
 
   const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit } = useFormik({
     initialValues: {
-      summary: data.summary,
+      summary: data.summary || '',
       summary_image: data.summary_image,
     },
     validationSchema,
