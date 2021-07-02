@@ -9,16 +9,20 @@ const useCheckNgWord = (): {
   const ngWords = useAppSelector(getNgWords)
 
   const getNgWordRegex = () => {
-    const words = ngWords.data.map((ngWord) => ngWord.attributes.word)
+    if (ngWords && ngWords.data) {
+      const words = ngWords.data.map((ngWord) => ngWord.attributes.word)
 
-    if (words.length === 0) return null
+      if (words.length === 0) return null
 
-    const regexMetachars = /[(){[*+?.\\^$|]/g
-    for (let i = 0; i < words.length; i++) {
-      words[i] = words[i].replace(regexMetachars, '\\$&')
+      const regexMetachars = /[(){[*+?.\\^$|]/g
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i].replace(regexMetachars, '\\$&')
+      }
+
+      return new RegExp(words.join('|'), 'gi')
     }
 
-    return new RegExp(words.join('|'), 'gi')
+    return null
   }
 
   const checkNgWord = (subject: string | string[]) => {
