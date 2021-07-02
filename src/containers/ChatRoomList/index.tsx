@@ -53,9 +53,17 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
   const renderList = () => {
     if (listData !== undefined && !_.isEmpty(listData)) {
       return (
-        <AutoSizer className="scroll-bar">
+        <AutoSizer>
           {({ height, width }) => (
-            <List overscanCount={10} itemSize={70} itemCount={listData.length} height={height} width={width} itemData={listData}>
+            <List
+              overscanCount={4}
+              className={`${classes.list} ${expand ? classes.noHover : ''}`}
+              itemSize={70}
+              itemCount={listData.length}
+              height={height}
+              width={width}
+              itemData={listData}
+            >
               {Row}
             </List>
           )}
@@ -99,6 +107,32 @@ const useStyles = makeStyles(() => ({
     '& svg': {
       width: '100%',
     },
+  },
+  list: {
+    paddingRight: 10,
+    overflow: 'hidden !important',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&:hover ': {
+      overflow: 'auto !important',
+    },
+    '&::-webkit-scrollbar': {
+      width: 8,
+      padding: 2,
+      paddingRight: 2,
+      cursor: 'pointer',
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
+  },
+  noHover: {
+    overflow: 'auto !important',
   },
 }))
 
