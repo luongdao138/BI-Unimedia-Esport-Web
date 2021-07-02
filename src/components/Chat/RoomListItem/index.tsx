@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
 
   body: {
     color: (props: StyleProps) => (props.active ? Colors.white : Colors.text[200]),
-    fontWeight: (props) => (props.active ? 600 : 500),
+    fontWeight: (props: StyleProps) => (props.active ? 600 : 500),
   },
 
   content: {
