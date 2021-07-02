@@ -28,6 +28,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
     if (currentMessage.type === CHAT_MESSAGE_TYPE.TEXT) {
       return (
         <TextMessage
+          preWrap={true}
           color={direction === 'left' ? Colors.text[200] : Colors.text[400]}
           text={msg}
           members={users}
@@ -96,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   replyContent: {
-    padding: 0,
+    padding: '0 !important',
   },
 }))
 
