@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
       left: 0,
       right: 0,
       width: '100%',
-      height: 2,
+      height: 8,
       top: '50%',
       transform: 'translateY(-50%)',
       display: 'block',
