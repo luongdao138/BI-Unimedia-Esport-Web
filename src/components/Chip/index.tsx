@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.grey['200'],
   }),
   colorPrimary: {
-    backgroundColor: Colors.primary,
+    backgroundColor: `${Colors.primary} !important`,
   },
   clickable: {
     '&:focus': {
