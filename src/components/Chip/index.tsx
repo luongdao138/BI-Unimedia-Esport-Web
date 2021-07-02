@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: props.isGameList ? '100%' : theme.spacing(20),
     borderRadius: 4,
     color: theme.palette.text.primary,
-    backgroundColor: Colors.grey['200'],
+    // backgroundColor: Colors.grey['200'],
   }),
   colorPrimary: {
     backgroundColor: Colors.primary,
