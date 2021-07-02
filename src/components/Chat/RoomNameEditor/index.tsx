@@ -86,7 +86,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
       >
         <DialogContent>
           <Box mt={8}>
-            <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります。</Typography>
+            <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります</Typography>
           </Box>
           <Box mt={6}>
             <form
