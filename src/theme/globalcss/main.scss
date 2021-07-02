@@ -7,8 +7,19 @@
   position: relative;
 }
 
-.body {
+html,
+body {
+  position: fixed;
+  overflow: hidden;
   overscroll-behavior-y: contain;
+}
+
+#__next {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* enables “momentum” (smooth) scrolling */
+  position: 'relative';
 }
 
 .chat-wrapper {
