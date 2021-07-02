@@ -49,7 +49,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         })
       )
       setTimeout(function () {
-        dispatch(addToast(i18n.t('common:chat.toast.room_image_success')))
+        dispatch(addToast(i18n.t('common:chat.toast.room_name_changed')))
       }, 1000)
       hide()
     } else {
