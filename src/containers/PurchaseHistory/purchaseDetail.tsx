@@ -185,18 +185,18 @@ const PurchaseDetail: React.FC = () => {
                 </Typography>
               </Box>
             </Box>
-            {/*{purchaseHistoryDetail.data.attributes.is_cancellable &&*/}
-            {/*  !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&*/}
-            {/*  !purchaseHistoryDetail.data.attributes.cancelled_datetime && (*/}
-            <>
-              {renderError()}
-              <Box my={4} display="flex" justifyContent="center">
-                <ESButton variant="outlined" onClick={handleClickOpen}>
-                  {t('common:purchase_history.cancel_request')}
-                </ESButton>
-              </Box>
-            </>
-            {/*)}*/}
+            {purchaseHistoryDetail.data.attributes.is_cancellable &&
+              !purchaseHistoryDetail.data.attributes.cancel_req_datetime &&
+              !purchaseHistoryDetail.data.attributes.cancelled_datetime && (
+                <>
+                  {renderError()}
+                  <Box my={4} display="flex" justifyContent="center">
+                    <ESButton variant="outlined" onClick={handleClickOpen}>
+                      {t('common:purchase_history.cancel_request')}
+                    </ESButton>
+                  </Box>
+                </>
+              )}
           </Box>
           <Box margin={2} my={4}>
             <Typography className={classes.questionsTitle}>{t('common:purchase_history.questions')}</Typography>
