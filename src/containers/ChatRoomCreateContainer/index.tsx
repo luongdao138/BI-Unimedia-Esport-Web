@@ -229,7 +229,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   return (
     <Box className={classes.room}>
       <Box className={classes.memberSelectContainer}>
-        <Box>
+        <Box className={classes.titlebox}>
           <Typography variant="h2" className={classes.title}>
             宛先
           </Typography>
@@ -293,6 +293,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     pointerEvents: 'auto',
   },
   title: { fontSize: 17 },
+  titleBox: {
+    height: '40px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   loaderBox: {
     width: 20,
     height: 20,
@@ -356,7 +362,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     borderBottom: '1px solid #212121',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     columnGap: 14,
     padding: '8px 12px',
   },
