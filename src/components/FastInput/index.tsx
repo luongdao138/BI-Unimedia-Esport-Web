@@ -12,12 +12,10 @@ export type InputProps = {
 }
 
 const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const [value, setValue] = useState(props.value)
+  const [value, setValue] = useState('')
 
   useEffect(() => {
-    if (_.isEmpty(props.value)) {
-      setValue(props.value)
-    }
+    setValue(String(props.value))
   }, [props.value])
 
   const debouncedChangeHandler = useCallback(
