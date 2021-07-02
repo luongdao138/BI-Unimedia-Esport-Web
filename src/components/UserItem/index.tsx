@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Grid, Typography, Box, ButtonBase, Theme } from '@material-ui/core'
+import { Typography, Box, ButtonBase, Theme } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import ESButton from '@components/Button'
 import * as services from '@services/user.service'
@@ -109,68 +109,70 @@ const UserListItem: React.FC<Props> = ({
   }
 
   const clickable = !!handleClick
-  const body = () => {
-    return (
-      <>
-        <Box display="flex" overflow="hidden">
-          <ButtonBase onClick={clickable ? handleClick : toProfile}>
-            <ESAvatar alt={user.nickname} src={user.avatar} />
-          </ButtonBase>
-          <Box
-            overflow="hidden"
-            textOverflow="ellipsis"
-            ml={2}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            onClick={clickable ? handleClick : undefined}
-            style={clickable ? { cursor: 'pointer' } : undefined}
-          >
-            <Box color={Colors.white}>
-              <Typography variant="h3" noWrap style={nicknameYellow === true ? { color: Colors.yellow } : undefined}>
-                {user.nickname}
-              </Typography>
-            </Box>
-            <Typography variant="caption" noWrap>
-              {t('common:common.at')}
-              {user.user_code}
-            </Typography>
-          </Box>
-        </Box>
-        {followed !== undefined && userProfile?.id != data.id && (
-          <Box flexShrink={0}>
-            {blocked ? (
-              <ESButton
-                disabled={isLoading}
-                onClick={unblock}
-                variant="outlined"
-                size="medium"
-                round
-                normalColor={Colors.red[10]}
-                hoverColor={Colors.red[30]}
-              >
-                {t('common:common.blocking')}
-              </ESButton>
-            ) : followed ? (
-              <ESButton disabled={isLoading} onClick={unfollow} variant="contained" color="primary" size="medium" round>
-                {t('common:home.unfollow')}
-              </ESButton>
-            ) : (
-              <ESButton disabled={isLoading} onClick={follow} variant="outlined" size="medium" round>
-                {t('common:home.follow')}
-              </ESButton>
-            )}
-          </Box>
-        )}
-        {rightItem && <Box flexShrink={0}>{rightItem}</Box>}
-      </>
-    )
-  }
 
   return (
-    <Grid item xs={12}>
-      <Box className={classes.container}>{body()}</Box>
-    </Grid>
+    <Box className={classes.container} pr={2}>
+      <Box display="flex" overflow="hidden">
+        <ButtonBase onClick={clickable ? handleClick : toProfile}>
+          <ESAvatar alt={user.nickname} src={user.avatar} />
+        </ButtonBase>
+        <Box
+          overflow="hidden"
+          textOverflow="ellipsis"
+          ml={2}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          onClick={clickable ? handleClick : undefined}
+          style={clickable ? { cursor: 'pointer' } : undefined}
+        >
+          <Box color={Colors.white}>
+            <Typography variant="h3" noWrap style={nicknameYellow === true ? { color: Colors.yellow } : undefined}>
+              {user.nickname}
+            </Typography>
+          </Box>
+          <Typography variant="caption" noWrap>
+            {t('common:common.at')}
+            {user.user_code}
+          </Typography>
+        </Box>
+      </Box>
+      {followed !== undefined && userProfile?.id != data.id && (
+        <Box flexShrink={0}>
+          {blocked ? (
+            <ESButton
+              disabled={isLoading}
+              onClick={unblock}
+              variant="outlined"
+              className={classes.button}
+              size="medium"
+              round
+              normalColor={Colors.red[10]}
+              hoverColor={Colors.red[30]}
+            >
+              {t('common:common.blocking')}
+            </ESButton>
+          ) : followed ? (
+            <ESButton
+              disabled={isLoading}
+              onClick={unfollow}
+              variant="contained"
+              color="primary"
+              size="medium"
+              round
+              className={classes.button}
+            >
+              {t('common:home.unfollow')}
+            </ESButton>
+          ) : (
+            <ESButton disabled={isLoading} onClick={follow} variant="outlined" size="medium" round className={classes.button}>
+              {t('common:home.follow')}
+            </ESButton>
+          )}
+        </Box>
+      )}
+      {rightItem && <Box flexShrink={0}>{rightItem}</Box>}
+    </Box>
   )
 }
 
@@ -182,6 +184,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'start',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+  },
+  button: {
+    top: '50%',
+    transform: 'translateY(-50%)',
   },
 }))
 
