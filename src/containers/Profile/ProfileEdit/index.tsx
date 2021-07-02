@@ -30,8 +30,7 @@ const ProfileEditContainer: React.FC = () => {
 
   const { features, getFeatures } = useSettings()
   const { prefectures, getPrefectures } = useGetPrefectures()
-  const { nicknames2, getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
-  const [nicknameData, setNicknameData] = useState([])
+  const { getNicknames, profileEdit, meta, resetMeta } = useProfileEdit()
   const { userProfile, getUserProfileMeta } = useGetProfile()
   const [profile, setProfile] = useState(null)
   const [hasError, setError] = useState(false)
@@ -43,12 +42,6 @@ const ProfileEditContainer: React.FC = () => {
       setProfile(userProfile.attributes)
     }
   }, [userProfile])
-
-  useEffect(() => {
-    if (nicknames2) {
-      setNicknameData(nicknames2)
-    }
-  }, [nicknames2])
 
   useEffect(() => {
     if (meta.loaded && !meta.error) {
@@ -114,7 +107,7 @@ const ProfileEditContainer: React.FC = () => {
             <Typography variant="h3" gutterBottom className={classes.label}>
               {i18n.t('common:register_profile.nickname')}
             </Typography>
-            <NameInfo profile={profile} nicknameData={nicknameData} onDataChange={onBasicInfoChanged} handleError={handleError} />
+            <NameInfo profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
             <Typography variant="h3" gutterBottom className={classes.label}>
               {i18n.t('common:profile.tag')}
             </Typography>
