@@ -49,7 +49,7 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
       <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           {_.isEmpty(values) ? (
-            <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
+            <Typography className={classes.hintColor}>{t('common:please_select')}</Typography>
           ) : (
             values.map((item, idx) => (
               <Box paddingRight={1} key={idx}>

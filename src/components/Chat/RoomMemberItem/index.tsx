@@ -10,11 +10,12 @@ interface RoomMemberItemProps {
   id: number
   name: string
   userCode: string
+  isAdminOrSelf: boolean
   onDelete: (id: number) => void
   profile: string
 }
 
-const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onDelete, profile }) => {
+const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, isAdminOrSelf, onDelete, profile }) => {
   const classes = useStyles()
   return (
     <ListItem onClick={() => null} className={classes.root}>
@@ -37,11 +38,13 @@ const RoomMemberItem: React.FC<RoomMemberItemProps> = ({ id, name, userCode, onD
           {!_.isEmpty(userCode) ? '@' + userCode : ''}
         </Typography>
       </ListItemText>
-      <ListItemSecondaryAction className={classes.secondaryAction}>
-        <Button variant="outlined" onClick={() => onDelete(id)} round>
-          {i18n.t('common:chat.delete_member')}
-        </Button>
-      </ListItemSecondaryAction>
+      {!isAdminOrSelf && (
+        <ListItemSecondaryAction className={classes.secondaryAction}>
+          <Button variant="outlined" onClick={() => onDelete(id)} round>
+            {i18n.t('common:chat.delete_member')}
+          </Button>
+        </ListItemSecondaryAction>
+      )}
     </ListItem>
   )
 }

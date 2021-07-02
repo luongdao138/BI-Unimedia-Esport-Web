@@ -25,7 +25,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   roomId
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const [newName, setNewName] = useState('')
 
   useEffect(() => {

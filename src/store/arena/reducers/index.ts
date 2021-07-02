@@ -1,5 +1,4 @@
-import { createReducer, createAction } from '@reduxjs/toolkit'
-import { HYDRATE } from 'next-redux-wrapper'
+import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import {
   TournamentResponse,
@@ -18,8 +17,6 @@ import {
   TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
-import _ from 'lodash'
-import { RootState } from '@store/reducers'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -58,8 +55,6 @@ const initialState: StateType = {
   recommendedUsers: [],
 }
 
-const hydrate = createAction<RootState>(HYDRATE)
-
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
     let searchTournaments = action.payload.data
@@ -96,17 +91,12 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getEntryStatus.fulfilled, (state, action) => {
     state.tournamentDetail.attributes.is_entered = action.payload.is_entry
   })
-  builder.addCase(actions.joinTournament.fulfilled, (state, action) => {
-    state.tournamentDetail.attributes.interested_count++
-    state.tournamentDetail.attributes.is_entered = true
-    // state.tournamentDetail.attributes.my_role = 'interested'
-    if (state.tournamentDetail.attributes.participant_type != 1 && _.isNumber(action.payload.team_id))
-      state.tournamentDetail.attributes.my_info = [{ role: 'interested', team_id: action.payload.team_id }]
-  })
   builder.addCase(actions.leaveTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.interested_count--
     state.tournamentDetail.attributes.is_entered = false
-    // state.tournamentDetail.attributes.my_role = null
+    state.tournamentDetail.attributes.my_info = state.tournamentDetail.attributes.my_info.filter((info) => {
+      info.role !== 'interested'
+    })
   })
   builder.addCase(actions.closeTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
@@ -188,8 +178,5 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
     state.selectedTeamDetail = action.payload.data
-  })
-  builder.addCase(hydrate, (state, action) => {
-    state.tournamentDetail = action.payload.arena.tournamentDetail
   })
 })

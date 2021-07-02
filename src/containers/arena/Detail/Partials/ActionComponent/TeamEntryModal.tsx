@@ -24,11 +24,12 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useDocTitle from '@utils/hooks/useDocTitle'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
   userProfile: UserProfile
-  handleClose: () => void
+  onClose: () => void
   isEdit?: boolean
   initialData?: {
     team_id: string
@@ -37,9 +38,10 @@ interface TeamEntryModalProps {
     members: TeamMemberSelectItem[]
   }
   updateDone?: () => void
+  open: boolean
 }
 
-const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, handleClose, isEdit, initialData, updateDone }) => {
+const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, onClose, open, isEdit, initialData, updateDone }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [isUploading, setUploading] = useState(false)
@@ -47,21 +49,28 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
+  const { resetTitle, changeTitle } = useDocTitle()
 
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
     if (joinMeta.loaded || joinMeta.error) {
-      handleClose()
+      onClose()
       reset()
     }
   }, [joinMeta.loaded, joinMeta.error])
 
   useEffect(() => {
+    changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+
+    return () => resetTitle()
+  }, [])
+
+  useEffect(() => {
     if (updateTeamMeta.loaded || updateTeamMeta.error) {
-      handleClose()
+      onClose()
       if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
         updateDone()
       }
@@ -165,7 +174,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
 
   const handleReturn = () => {
     reset()
-    handleClose()
+    onClose()
   }
 
   const handleActionButton = () => {
@@ -186,7 +195,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const handleImageUpload = (file: File) => {
     setUploading(true)
 
-    uploadArenaTeamImage(file, 1, true, (imageUrl) => {
+    uploadArenaTeamImage(file, undefined, 1, true, (imageUrl) => {
       setUploading(false)
       formik.setFieldValue('team_icon_url', imageUrl)
     })
@@ -245,7 +254,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   return (
     <>
       <StickyActionModal
-        open={true}
+        open={open}
         returnText={t('common:tournament.join')}
         actionButtonText={t('common:tournament.join_with_this')}
         actionButtonDisabled={!formik.isValid || !isMembersComplete()}

@@ -44,7 +44,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const roomImg = _.get(roomInfo, 'roomImg')
   const tournament = useAppSelector(tournamentDetail)
 
-  const { imageProcess, uploadMeta } = useRoomImageUploader()
+  const { imageProcess, uploadMeta, hideLoader } = useRoomImageUploader()
 
   const router = useRouter()
 
@@ -64,6 +64,10 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
       dispatch(getMessageTournamentDetail(roomInfo.chatRoomId as string))
     }
   }, [roomInfo])
+
+  useEffect(() => {
+    if (roomImg) hideLoader()
+  }, [roomImg])
 
   const isAdmin = () => {
     return _.get(roomInfo, 'isAdmin', false)

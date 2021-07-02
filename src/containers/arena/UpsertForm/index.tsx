@@ -16,7 +16,6 @@ import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-import { useStore } from 'react-redux'
 import { TournamentFormParams } from '@services/arena.service'
 import { useRouter } from 'next/router'
 import CancelDialog from './Partials/CancelDialog'
@@ -24,18 +23,19 @@ import StepTabs from './StepTabs'
 import Confirm from './Confirm'
 import i18n from '@locales/i18n'
 import ESStickyFooter from '@components/StickyFooter'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import _ from 'lodash'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
-import { ARENA_CREATE_VALIDATION_POPUP, FIELD_TITLES } from './FormModel/field_titles.constants'
+import { FIELD_TITLES } from './FormModel/field_titles.constants'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { getAction } from '@store/common/selectors'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 
 let activeTabIndex = 0
 
 const TournamentCreate: React.FC = () => {
   const router = useRouter()
-  const store = useStore()
   const dispatch = useAppDispatch()
   const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
@@ -47,9 +47,12 @@ const TournamentCreate: React.FC = () => {
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(isEdit ? arena : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
+
+  const { checkNgWordFields } = useCheckNgWord()
+
   const formik = useFormik<FormType>({
     initialValues: initialValues,
-    validationSchema: getValidationScheme(store, arena),
+    validationSchema: getValidationScheme(arena, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
       const data: TournamentFormParams = {
@@ -97,27 +100,48 @@ const TournamentCreate: React.FC = () => {
   }, [formik.errors])
 
   const handleSetConfirm = () => {
-    if (_.isEmpty(formik.errors)) {
-      setIsConfirm(true)
-      return
-    }
+    const { stepOne, stepTwo, stepThree, stepFour } = formik.values
 
-    let fieldsHasError = []
-    if (_.has(formik.errors, 'stepOne')) {
-      activeTabIndex = 0
-      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepOne, _.keys(formik.errors.stepOne)))
-    } else if (_.has(formik.errors, 'stepTwo')) {
-      activeTabIndex = 1
-      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepTwo, _.keys(formik.errors.stepTwo)))
-    } else if (_.has(formik.errors, 'stepThree')) {
-      activeTabIndex = 2
-      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepThree, _.keys(formik.errors.stepThree)))
-    } else if (_.has(formik.errors, 'stepFour')) {
-      activeTabIndex = 3
-      fieldsHasError = _.values(_.pick(FIELD_TITLES.stepFour, _.keys(formik.errors.stepFour)))
-    }
+    const fieldIdentifier = checkNgWordFields({
+      title: stepOne.title,
+      overview: stepOne.overview,
+      prize_amount: stepOne.prize_amount,
+      terms_of_participation: stepTwo.terms_of_participation,
+      notes: stepTwo.notes,
+      area_name: stepThree.area_name,
+      organizer_name: stepFour.organizer_name,
+    })
 
-    dispatch(showDialog({ ...ARENA_CREATE_VALIDATION_POPUP, actionText: _.isEmpty(fieldsHasError) ? '' : fieldsHasError[0] }))
+    if (fieldIdentifier) {
+      let fieldTitle = ''
+      if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) {
+        activeTabIndex = 0
+        fieldTitle = FIELD_TITLES.stepOne[fieldIdentifier]
+      } else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) {
+        activeTabIndex = 1
+        fieldTitle = FIELD_TITLES.stepTwo[fieldIdentifier]
+      } else if (_.has(FIELD_TITLES.stepThree, fieldIdentifier)) {
+        activeTabIndex = 2
+        fieldTitle = FIELD_TITLES.stepThree[fieldIdentifier]
+      } else if (_.has(FIELD_TITLES.stepFour, fieldIdentifier)) {
+        activeTabIndex = 3
+        fieldTitle = FIELD_TITLES.stepFour[fieldIdentifier]
+      }
+
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: fieldTitle }))
+    } else {
+      if (_.isEmpty(formik.errors)) {
+        setIsConfirm(true)
+        return
+      } else {
+        if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
+        else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
+        else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
+        else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
+
+        setTab(activeTabIndex)
+      }
+    }
   }
 
   const handleUnsetConfirm = () => setIsConfirm(false)
@@ -141,7 +165,7 @@ const TournamentCreate: React.FC = () => {
     <ESStickyFooter
       disabled={false}
       noScroll
-      noSpacing={isEdit}
+      noSpacing={isEdit && !isConfirm}
       content={
         <>
           {isConfirm ? (

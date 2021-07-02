@@ -192,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     padding: theme.spacing(3),
-    paddingTop: 108,
+    paddingTop: theme.spacing(6),
   },
   backButton: {
     backgroundColor: '#4D4D4D',
