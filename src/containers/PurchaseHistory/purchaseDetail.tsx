@@ -112,10 +112,10 @@ const PurchaseDetail: React.FC = () => {
                   </Typography>
                 </Box>
                 <Box className={classes.actionBox}>
-                  <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+                  <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
                     {t('common:purchase_history.dialog_close')}
                   </ButtonPrimary>
-                  <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+                  <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
                     {t('common:purchase_history.cancel_submit')}
                   </ButtonPrimary>
                 </Box>
@@ -253,10 +253,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 100,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  actionBtn: {
-    width: 200,
+  actionBtnClose: {
+    width: '100%',
     margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
   },
   wrap: {
     color: Colors.white_opacity[70],
