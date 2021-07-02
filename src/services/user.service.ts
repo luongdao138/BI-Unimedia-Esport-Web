@@ -121,6 +121,7 @@ export type ProfileEditParams = {
   show_area: boolean
   features: number[]
   nickname: string
+  // nickname2: string
   bio: string
   instagram_link: string
   facebook_link: string

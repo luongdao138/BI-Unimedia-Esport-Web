@@ -3,15 +3,18 @@ import { Grid, Box, Container, makeStyles, Typography, Theme } from '@material-u
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useTranslation } from 'react-i18next'
+// import ESSelect from '@components/Select'
 import ESInput from '@components/Input'
 
 export type NameInfoParams = {
   nickname: string
+  // nickname2: string
   bio: string
 }
 
 interface NameInfoProps {
   profile: any
+  // nicknameData: any
   onDataChange: (data: any) => void
   handleError: (error) => void
 }
@@ -33,6 +36,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
   const { handleChange, values, errors } = useFormik<NameInfoParams>({
     initialValues: {
       nickname: nickname ? nickname : '',
+      // nickname2: nickname2 ? nickname2 : '',
       bio: bio ? bio : '',
     },
     validationSchema,
@@ -42,6 +46,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
   useEffect(() => {
     onDataChange({
       nickname: values.nickname,
+      // nickname2: values.nickname2,
       bio: values.bio.trim(),
     })
   }, [values])
@@ -49,6 +54,24 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
   useEffect(() => {
     handleError(errors)
   }, [errors])
+
+  // const nickname2View = (
+  //   <Box>
+  //     <Grid container spacing={2}>
+  //       <Grid item xs={8}>
+  //         <ESSelect id="nickname2" value={values.nickname2} onChange={handleChange} fullWidth>
+  //           <option value="">{t('common:user_profile.set_two_names')}</option>
+  //           {nicknameData &&
+  //             nicknameData.map((item) => (
+  //               <option key={item.nickname} value={item.nickname}>
+  //                 {item.nickname}
+  //               </option>
+  //             ))}
+  //         </ESSelect>
+  //       </Grid>
+  //     </Grid>
+  //   </Box>
+  // )
 
   const nicknameView = (
     <Box>
@@ -92,6 +115,7 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
   return (
     <Container maxWidth="md" className={classes.container}>
       <form>
+        {/* {nickname2View} */}
         {nicknameView}
         {bioView}
       </form>
