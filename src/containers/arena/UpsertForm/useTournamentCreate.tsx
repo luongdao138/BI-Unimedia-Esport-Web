@@ -72,9 +72,9 @@ const useTournamentCreate = (): {
     co_organizers: true,
     organizer_name: true,
     // always not editable
-    rule: false, // rule, has_third_place
-    participant_type: false,
-    game_title: false,
+    rule: true, // rule, has_third_place
+    participant_type: true,
+    game_title: true,
     // conditional editable
     max_participants: true,
     retain_history: true,
@@ -121,6 +121,10 @@ const useTournamentCreate = (): {
       const _status = arena.attributes.status
 
       let _editables = { ...editables }
+      // always not editable
+      _editables.rule = false // rule, has_third_place
+      _editables.participant_type = false
+      _editables.game_title = false
 
       if (_status !== TOURNAMENT_STATUS.READY) {
         _editables = _.mapValues(_editables, () => false)
