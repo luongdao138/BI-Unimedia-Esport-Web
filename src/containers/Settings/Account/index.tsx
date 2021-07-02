@@ -102,6 +102,7 @@ const AccountSettingsContainer: React.FC = () => {
       </Box>
       <div>
         <Dialog
+          disableBackdropClick
           maxWidth={'md'}
           fullWidth
           open={open}
