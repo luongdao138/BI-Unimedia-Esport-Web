@@ -41,11 +41,23 @@ const useEntry = () => {
   }, [joinMeta.error])
 
   useEffect(() => {
+    if (leaveMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.join_success')))
+    }
+  }, [leaveMeta.loaded])
+
+  useEffect(() => {
     if (leaveMeta.error) {
       dispatch(commonActions.addToast(t('common:error.leave_arena_failed')))
       resetLeaveMeta()
     }
   }, [leaveMeta.error])
+
+  useEffect(() => {
+    if (closeMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.close_entry_success')))
+    }
+  }, [closeMeta.loaded])
 
   useEffect(() => {
     if (closeMeta.error) {
