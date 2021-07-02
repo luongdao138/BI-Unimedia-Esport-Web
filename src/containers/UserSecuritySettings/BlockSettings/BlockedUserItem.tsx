@@ -92,6 +92,7 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
         </Box>
       </Box>
       <Dialog
+        disableBackdropClick
         maxWidth={'md'}
         fullWidth
         open={openConfirmDialog}
@@ -104,10 +105,10 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
             <Typography className={classes.dialogTitle}>{i18n.t('common:profile.block_confirm_title')}</Typography>
           </Box>
           <Box className={classes.actionBox}>
-            <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+            <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
               {i18n.t('common:profile.block_confirm_no')}
             </ButtonPrimary>
-            <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+            <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
               {i18n.t('common:profile.block_confirm_yes')}
             </ButtonPrimary>
           </Box>
@@ -152,10 +153,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 100,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
   actionBtn: {
     width: 200,
     margin: 16,
+  },
+  actionBtnClose: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
   },
 }))
 

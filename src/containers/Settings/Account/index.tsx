@@ -80,7 +80,7 @@ const AccountSettingsContainer: React.FC = () => {
         <SettingsItem title={t('common.user_id')} value={user?.user_code && '@' + user.user_code} disabled />
         <SettingsItem
           title={t('common.mail_address')}
-          value={hasEmail ? user.email : t('account_settings.sns')}
+          value={hasEmail ? user.email : SNS}
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
           showButton={!user.is_social}
@@ -102,6 +102,7 @@ const AccountSettingsContainer: React.FC = () => {
       </Box>
       <div>
         <Dialog
+          disableBackdropClick
           maxWidth={'md'}
           fullWidth
           open={open}
@@ -117,10 +118,10 @@ const AccountSettingsContainer: React.FC = () => {
               </Typography>
             </Box>
             <Box className={classes.actionBox}>
-              <ButtonPrimary size="small" className={classes.actionBtn} gradient={false} onClick={handleClose}>
+              <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
                 {t('account_settings.delete_confirm_no')}
               </ButtonPrimary>
-              <ButtonPrimary size="small" className={classes.actionBtn} onClick={handleSubmit}>
+              <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
                 {t('account_settings.delete_confirm_yes')}
               </ButtonPrimary>
             </Box>
@@ -131,7 +132,7 @@ const AccountSettingsContainer: React.FC = () => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: '100%',
     display: 'block',
@@ -151,10 +152,23 @@ const useStyles = makeStyles(() => ({
     marginTop: 100,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  actionBtn: {
-    width: 200,
+  actionBtnClose: {
+    width: '100%',
     margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
   },
 }))
 

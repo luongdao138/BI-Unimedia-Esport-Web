@@ -1,4 +1,4 @@
-import { List, makeStyles, DialogContent, Box } from '@material-ui/core'
+import { List, makeStyles, DialogContent, Box, Theme } from '@material-ui/core'
 import { socketActions } from '@store/socket/actions'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { membersFilterSelf } from '@store/socket/selectors'
@@ -78,8 +78,14 @@ const ChatMemberEditContainer: React.FC<ChatRoomContainerProps> = ({ roomId, ope
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {},
+  [theme.breakpoints.down('sm')]: {
+    dialogContent: {
+      paddingRight: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+    },
+  },
 }))
 
 export default ChatMemberEditContainer
