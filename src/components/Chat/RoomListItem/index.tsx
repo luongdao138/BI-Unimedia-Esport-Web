@@ -96,7 +96,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
     </ListItem>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
@@ -174,6 +174,13 @@ const useStyles = makeStyles(() => ({
     color: Colors.text[200],
     top: 0,
     left: 0,
+  },
+  [theme.breakpoints.down('sm')]: {
+    root: {
+      '&.Mui-selected': {
+        backgroundColor: 'transparent',
+      },
+    },
   },
 }))
 
