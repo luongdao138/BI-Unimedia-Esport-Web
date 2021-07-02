@@ -8,6 +8,11 @@ export type HistorySearchParams = {
   user_code?: string
 }
 
+export type FollowStateChangeParam = {
+  user_code: string
+  isOthers: boolean
+}
+
 export type HistorySearchResponse = {
   data: Array<TournamentListItem>
   meta: Meta

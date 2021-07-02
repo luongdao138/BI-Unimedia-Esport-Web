@@ -15,6 +15,7 @@ import { FollowResponse } from '@services/user.service'
 
 export interface ESFollowingProps {
   user_code: string
+  isOthers: boolean
 }
 
 enum FOLLOWING_STATE_CHANGE_TYPE {
@@ -22,7 +23,7 @@ enum FOLLOWING_STATE_CHANGE_TYPE {
   UNFOLLOW = 0,
 }
 
-const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
+const ESFollowing: React.FC<ESFollowingProps> = ({ user_code, isOthers }) => {
   const [open, setOpen] = useState(false)
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -48,9 +49,9 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
 
   const changeFollowingCount = (type: number, user_code: string) => {
     if (type === FOLLOWING_STATE_CHANGE_TYPE.FOLLOW) {
-      increaseFollowing(user_code)
+      increaseFollowing(user_code, isOthers)
     } else if (type === FOLLOWING_STATE_CHANGE_TYPE.UNFOLLOW) {
-      decreaseFollowing(user_code)
+      decreaseFollowing(user_code, isOthers)
     }
   }
 
