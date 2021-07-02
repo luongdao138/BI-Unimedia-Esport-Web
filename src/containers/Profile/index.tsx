@@ -354,11 +354,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: Colors.grey[200],
     },
     marginRight: 20,
-    marginTop: 5,
   },
   iconButtonBg: {
     position: 'fixed',
-    top: 70,
+    top: 65,
     marginLeft: theme.spacing(3),
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
