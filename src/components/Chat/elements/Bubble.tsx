@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   replyContent: {
-    padding: 0,
+    padding: '0 !important',
   },
 }))
 
