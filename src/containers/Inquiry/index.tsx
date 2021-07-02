@@ -30,7 +30,7 @@ const ESInquiry: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false)
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const hasEmail = CommonHelper.hasEmail(currentUserEmail)
 
   const validationSchema = Yup.object().shape({
