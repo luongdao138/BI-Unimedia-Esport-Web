@@ -268,6 +268,7 @@ const useStyles = makeStyles((theme) => ({
   },
   nameContainer: {
     marginLeft: 20,
+    paddingRight: 10,
   },
   desc: {
     display: 'flex',
@@ -292,6 +293,9 @@ const useStyles = makeStyles((theme) => ({
   userCode: {
     fontSize: 14,
     color: Colors.text[200],
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
   staticMail: {
     fontSize: 16,
