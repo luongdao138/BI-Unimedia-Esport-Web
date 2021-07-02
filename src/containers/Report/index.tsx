@@ -63,17 +63,19 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .required(t('common.required')),
   })
 
+  const emailAssigned = CommonHelper.hasEmail(userEmail)
+
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
       reason_id: reasons[0] ? Number(reasons[0].id) : 1,
       report_type: 0,
-      user_email: userEmail ? (CommonHelper.hasEmail(userEmail) ? userEmail : '') : '',
+      user_email: emailAssigned ? userEmail : '',
     },
     enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
-      const checked = checkNgWord([values.description, CommonHelper.hasEmail(userEmail) ? '' : values.user_email])
+      const checked = checkNgWord([values.description, emailAssigned ? '' : values.user_email])
       if (_.isEmpty(checked)) {
         switch (reportType) {
           case REPORT_TYPE.CHAT:
@@ -189,19 +191,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 />
               </Box>
               <Box mt={4} mb={2}>
-                {_.isEmpty(formik.values.user_email) ? (
-                  <Input
-                    id="user_email"
-                    name="user_email"
-                    value={formik.values.user_email}
-                    onChange={formik.handleChange}
-                    labelPrimary={t('user_report.reporter_email')}
-                    fullWidth
-                    required
-                    helperText={formik.errors.user_email}
-                    error={!!formik.errors.user_email}
-                  />
-                ) : (
+                {emailAssigned ? (
                   <>
                     <Box display="flex" justifyContent="space-between" alignItems="center" pb={1} mb={1}>
                       <Box style={{ width: '100%' }} display="flex" alignItems="center">
@@ -213,6 +203,18 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                     </Box>
                     <Typography className={classes.staticMail}>{userEmail}</Typography>
                   </>
+                ) : (
+                  <Input
+                    id="user_email"
+                    name="user_email"
+                    value={formik.values.user_email}
+                    onChange={formik.handleChange}
+                    labelPrimary={t('user_report.reporter_email')}
+                    fullWidth
+                    required
+                    helperText={formik.errors.user_email}
+                    error={!!formik.errors.user_email}
+                  />
                 )}
               </Box>
               <label className={classes.label}>{t('user_report.email_required_text')}</label>
