@@ -23,6 +23,7 @@ const useArenaHelper = (
   isNotHeld: boolean
   isReady: boolean
   isEntered: boolean
+  isUnselected: boolean
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: boolean
@@ -48,6 +49,7 @@ const useArenaHelper = (
   const isNotHeld = isCompleted && !isFreezed
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
+  const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
 
   const checkAdminJoined = () => {
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
@@ -102,6 +104,7 @@ const useArenaHelper = (
     isEditable,
     isNotHeld,
     isReady,
+    isUnselected,
     toEdit,
     toCreate,
     isAdminJoined,

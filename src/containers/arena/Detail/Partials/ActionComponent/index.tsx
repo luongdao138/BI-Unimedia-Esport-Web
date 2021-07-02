@@ -18,6 +18,7 @@ import LoginRequired from '@containers/LoginRequired'
 import TeamEntryEditModal from './TeamEntryEditModal'
 import UnjoinModal from './UnjoinModal'
 import InidividualEntryEditModal from './InidividualEntryEditModal'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface Props {
   tournament: TournamentDetail
@@ -136,7 +137,7 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {(isRecruiting || isReady) && (
+      {isRecruiting || isReady ? (
         <>
           {isModerator ? renderAdminEntry() : renderEntry()}
           {isAdminJoined || isEntered ? <UnjoinModal tournament={tournament} /> : null}
@@ -146,6 +147,8 @@ const ActionComponent: React.FC<Props> = (props) => {
             </Box>
           )}
         </>
+      ) : (
+        !TournamentHelper.isStatusPassed(tournament.attributes.status, TOURNAMENT_STATUS.COMPLETED) && renderEntry()
       )}
 
       {isModerator && isCompleted && !isNotHeld && (
