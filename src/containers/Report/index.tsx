@@ -172,7 +172,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
                 value={formik.values.reason_id + ''}
                 onChange={formik.handleChange}
                 required
-                label={t('user_report.reason_desc')}
+                label={t('user_report.reason')}
                 helperText={formik.touched.reason_id && formik.errors.reason_id}
               >
                 {reasons.map((g, idx) => (
