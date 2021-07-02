@@ -24,6 +24,7 @@ interface EntryEditModalProps {
   myTeam: boolean
   open: boolean
   onClose?: () => void
+  toDetail?: () => void
 }
 
 const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
@@ -34,6 +35,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   myTeam,
   open,
   onClose,
+  toDetail,
 }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -148,7 +150,13 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={handleClose}>
+                <ESButton
+                  className={classes.bottomButton}
+                  variant="outlined"
+                  round
+                  size="large"
+                  onClick={toDetail ? toDetail : handleClose}
+                >
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }

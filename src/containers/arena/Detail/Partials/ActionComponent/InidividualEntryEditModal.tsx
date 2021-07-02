@@ -25,14 +25,23 @@ interface EntryEditModalProps {
   initialParticipantId?: string
   me: boolean
   onClose: () => void
+  toDetail?: () => void
   open: boolean
 }
 
-const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, previewMode, initialParticipantId, me, onClose, open }) => {
+const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
+  tournament,
+  previewMode,
+  initialParticipantId,
+  me,
+  onClose,
+  open,
+  toDetail,
+}) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const store = useStore()
-  const { participant, isPending, getParticipant, changeName, changeDone } = useParticipantDetail()
+  const { participant, isPending, getParticipant, changeName } = useParticipantDetail()
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
   const { resetTitle, changeTitle } = useDocTitle()
@@ -51,7 +60,10 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
     validationSchema,
     onSubmit: (_values) => {
       if (values.nickname) {
-        changeName(tournament.attributes.hash_key, values.nickname)
+        changeName(tournament.attributes.hash_key, values.nickname, () => {
+          handleClose()
+          setEditMode(false)
+        })
       }
     },
   })
@@ -65,28 +77,17 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
   }
 
   useEffect(() => {
-    if (open) {
-      setEditMode(false)
-      getParticipant(_.get(tournament, 'attributes.hash_key', ''), getPid())
-      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
-    }
-  }, [open])
-
-  useEffect(() => {
     return () => resetTitle()
   }, [])
 
   useEffect(() => {
-    if (isPreview) {
-      const pId = parseInt(initialParticipantId)
+    if (isPreview && open) {
+      setEditMode(false)
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+      const pId = initialParticipantId ? parseInt(initialParticipantId) : getPid()
       getParticipant(_.get(tournament, 'attributes.hash_key', ''), pId)
     }
-  }, [isPreview])
-
-  useEffect(() => {
-    onClose()
-    setEditMode(false)
-  }, [changeDone])
+  }, [isPreview, open])
 
   useEffect(() => {
     if (participant) {
@@ -135,7 +136,13 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={handleClose}>
+                <ESButton
+                  className={classes.bottomButton}
+                  variant="outlined"
+                  round
+                  size="large"
+                  onClick={toDetail ? toDetail : handleClose}
+                >
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }
