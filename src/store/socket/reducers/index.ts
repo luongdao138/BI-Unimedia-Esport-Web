@@ -36,7 +36,8 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         paginating: true,
       }
     case CHAT_ACTION_TYPE.GET_ROOM_MESSAGES:
-      if (action.data.content === [] || action.data.content.length === 0) {
+      if (!_.isArray(_.get(action, 'data.content'))) return { ...state }
+      if (action.data.content.length === 0) {
         // case when socket error or wrong data return from server
         newMessagesList = []
         newUsers = action.data.members
@@ -83,7 +84,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.SEND_MESSAGE:
       oldMessages = state.messages
       newMsg = action.data.content
-      if (state.activeRoom != null && state.activeRoom === newMsg[0]['chatRoomId']) {
+      if (state.activeRoom != null && state.activeRoom === _.get(newMsg, '[0].chatRoomId', '')) {
         const mergedMsg = ChatHelper.messagesMerge(oldMessages ? [...oldMessages] : [], newMsg)
         result = mergedMsg
       } else {
