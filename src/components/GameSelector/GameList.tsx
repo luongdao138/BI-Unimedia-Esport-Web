@@ -45,6 +45,7 @@ const GameList: React.FC<GameListProps> = ({ games, selectedGames, handleAdd }) 
                 label={g.display_name}
                 onClick={() => handleAdd(g)}
                 color={checkIsSelected(g.id) ? 'primary' : 'default'}
+                isGameList={true}
               />
             ))}
           </List>

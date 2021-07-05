@@ -194,8 +194,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     viewHolder: {
-      marginLeft: 24,
-      marginRight: 24,
+      marginLeft: 0,
+      marginRight: 0,
     },
   },
 }))
