@@ -110,8 +110,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
     paddingLeft: theme.spacing(3),
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
     backgroundColor: Colors.black,
     opacity: 0.7,
     zIndex: 100,
@@ -122,7 +122,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: Colors.grey[200],
     },
     marginRight: 20,
-    marginTop: 5,
   },
   wrapOne: {
     overflow: 'hidden',
@@ -149,10 +148,10 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(3),
       paddingBottom: theme.spacing(3),
     },
-    backContainer: {
-      position: 'absolute',
-      backgroundColor: 'transparent',
-    },
+    // backContainer: {
+    //   position: 'absolute',
+    //   backgroundColor: 'transparent',
+    // },
   },
   [theme.breakpoints.down('xs')]: {
     root: {
@@ -162,7 +161,6 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(2),
     },
   },
-  backButton: { backgroundColor: `${Colors.grey['200']}80`, margin: 24, marginTop: 16, padding: 6 },
 }))
 
 export default TournamentHeader

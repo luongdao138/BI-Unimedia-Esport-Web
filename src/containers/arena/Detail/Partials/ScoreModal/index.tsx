@@ -97,14 +97,14 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         <div className={classes.winnerAvatarWrapper}>
           <ArenaAvatar alt_name={_name || ''} src={avatar} win={winner} size={isMobile ? 'medium' : 'large'} nameWhite />
         </div>
-        <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center">
-          <Box color={Colors.grey[300]}>
+        <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center" width="100%">
+          <Box color={Colors.grey[300]} width="100%">
             <Typography className={classes.label} variant="h3">
               {_name || ''}
             </Typography>
           </Box>
           {!isTeam && (
-            <Box color={Colors.grey[400]}>
+            <Box color={Colors.grey[400]} width="100%">
               <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>
             </Box>
           )}
@@ -207,9 +207,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     width: '100%',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     textAlign: 'center',
+    wordBreak: 'break-word',
   },
   vsLabel: {
     fontSize: 40,

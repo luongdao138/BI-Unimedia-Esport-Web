@@ -147,15 +147,15 @@ const ArenaWinners: React.FC = () => {
                     {p.position === 3 && <span>rd</span>}
                   </p>
                 </div>
-                <ButtonBase onClick={() => toEntryDetail(p)}>
+                <ButtonBase className={classes.itemAvatar} onClick={() => toEntryDetail(p)}>
                   <Avatar src={p.avatar} />
                 </ButtonBase>
                 <div className={classes.nameWrapper}>
-                  <Typography variant="h3" component="p">
+                  <Typography className={classes.breakWord} variant="h3" component="p">
                     {p.name}
                   </Typography>
                   {p.user && (
-                    <Typography variant="body2" className={classes.user_code}>
+                    <Typography variant="body2" className={`${classes.user_code} ${classes.breakWord}`}>
                       {`@${p.user.user_code}`}
                     </Typography>
                   )}
@@ -309,6 +309,9 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.white,
     paddingLeft: theme.spacing(2),
   },
+  breakWord: {
+    wordBreak: 'break-word',
+  },
   user_code: {
     color: Colors.white_opacity['70'],
   },
@@ -364,6 +367,9 @@ const useStyles = makeStyles((theme) => ({
   placementWrapper: {
     width: 55,
     marginRight: theme.spacing(1),
+  },
+  itemAvatar: {
+    width: 40,
   },
   bottomButton: {
     borderRadius: 4,

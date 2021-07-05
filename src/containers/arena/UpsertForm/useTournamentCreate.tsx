@@ -147,18 +147,19 @@ const useTournamentCreate = (): {
         if (_status === TOURNAMENT_STATUS.RECRUITING) {
           _editables.max_participants = true
           _editables.retain_history = true
-          _editables.acceptance_start_date = true
+          _editables.acceptance_start_date = false
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
-        } else if (
-          _status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED ||
-          _status === TOURNAMENT_STATUS.READY_TO_START ||
-          _status === TOURNAMENT_STATUS.IN_PROGRESS
-        ) {
+        } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
           _editables.start_date = true
+          _editables.end_date = true
+        } else if (_status === TOURNAMENT_STATUS.IN_PROGRESS) {
+          // max_participants, retain_history,
+          // acceptance_start_date, acceptance_end_date are already false on top
+          _editables.start_date = false
           _editables.end_date = true
         }
       }
