@@ -69,13 +69,13 @@ const ActionComponent: React.FC<Props> = (props) => {
 
   const entryButton = () => {
     return (
-      <LoginRequired>
-        <Box className={classes.actionButton}>
+      <Box className={classes.actionButton}>
+        <LoginRequired>
           <ButtonPrimary disabled={isReady} round fullWidth onClick={() => (isTeam ? setTeamEntryShow(true) : setSoloEntryShow(true))}>
             {t('common:tournament.join')}
           </ButtonPrimary>
-        </Box>
-      </LoginRequired>
+        </LoginRequired>
+      </Box>
     )
   }
 
