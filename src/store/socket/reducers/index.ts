@@ -36,7 +36,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         paginating: true,
       }
     case CHAT_ACTION_TYPE.GET_ROOM_MESSAGES:
-      // if (!_.isArray(_.get(action, 'data.content'))) return { ...state }
+      if (!_.isArray(_.get(action, 'data.content'))) return { ...state }
       if (action.data.content.length === 0) {
         // case when socket error or wrong data return from server
         newMessagesList = []
