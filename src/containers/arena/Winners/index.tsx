@@ -308,6 +308,7 @@ const useStyles = makeStyles((theme) => ({
   nameWrapper: {
     color: Colors.white,
     paddingLeft: theme.spacing(2),
+    flex: 1,
   },
   breakWord: {
     wordBreak: 'break-word',
