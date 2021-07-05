@@ -81,7 +81,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
     <div className={classes.stickyFooter} ref={contentRef}>
       <Box maxWidth={280} className={classes.buttonBottom}>
         <ButtonPrimary type="submit" disabled={isButtonDisabled()} round fullWidth onClick={onSubmit}>
-          {i18n.t('common:chat.add_submit')}
+          {i18n.t('common:chat.name_change_submit')}
         </ButtonPrimary>
       </Box>
     </div>

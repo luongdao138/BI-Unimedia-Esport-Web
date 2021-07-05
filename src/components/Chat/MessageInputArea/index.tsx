@@ -77,11 +77,10 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
   }
 
   const handleKeyPress = (_evt: React.KeyboardEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLInputElement>) => {
-    // if (evt.key === 'Enter' && evt.shiftKey === false) {
-    //   onPressSend ? onPressSend(text.trim()) : undefined
-    //   evt.preventDefault()
-    //   setText('')
-    // }
+    //  if (evt.key === 'Enter' && evt.shiftKey === false) {
+    //    onPressSend ? onPressSend(text.trim()) : undefined
+    //    evt.preventDefault()
+    //  }
   }
 
   return (
