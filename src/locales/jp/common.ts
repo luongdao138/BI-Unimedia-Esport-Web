@@ -635,6 +635,7 @@ export default {
       room_image_success: 'グループアイコンを変更しました',
     },
     destination: '宛先',
+    name_change_submit: '変更する',
   },
   notification: {
     title: '通知一覧',
