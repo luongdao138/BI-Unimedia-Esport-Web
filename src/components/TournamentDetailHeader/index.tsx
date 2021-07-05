@@ -148,10 +148,10 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(3),
       paddingBottom: theme.spacing(3),
     },
-    backContainer: {
-      position: 'absolute',
-      backgroundColor: 'transparent',
-    },
+    // backContainer: {
+    //   position: 'absolute',
+    //   backgroundColor: 'transparent',
+    // },
   },
   [theme.breakpoints.down('xs')]: {
     root: {
