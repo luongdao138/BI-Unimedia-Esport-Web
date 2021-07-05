@@ -239,8 +239,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowing user_code={isOthers ? userCode : null} />
-            <ESFollowers user_code={isOthers ? userCode : null} />
+            <ESFollowing user_code={isOthers ? userCode : null} isOthers={isOthers} />
+            <ESFollowers user_code={isOthers ? userCode : null} isOthers={isOthers} />
           </Box>
         </Grid>
         {isAuthenticated ? (
@@ -272,10 +272,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         if (!isOthers || profile.attributes.show_about) return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
         break
       case TABS.TOURNAMENT:
-        if (!isOthers || profile.attributes.show_tournament_history) return <TournamentHistoryContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_tournament_history)
+          return <TournamentHistoryContainer userCode={userCode} isOthers={isOthers} />
         break
       case TABS.ACTIVITY:
-        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} isOthers={isOthers} />
         break
       default:
         break

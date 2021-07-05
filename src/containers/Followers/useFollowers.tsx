@@ -14,6 +14,8 @@ const useFollowers = (): {
   meta: Meta
   resetMeta: () => void
   clearFollowers: () => void
+  increaseFollowers: (user_code: string, isOthers: boolean) => void
+  decreaseFollowers: (user_code: string, isOthers: boolean) => void
   fetchFollowers: (param: FollowersParams) => void
 } => {
   const dispatch = useAppDispatch()
@@ -22,9 +24,13 @@ const useFollowers = (): {
   const meta = useAppSelector(getFollowMeta)
   const fetchFollowers = (param: FollowersParams) => dispatch(actions.followers(param))
   const clearFollowers = () => dispatch(actions.clearFollowers())
+  const increaseFollowers = (user_code: string, isOthers: boolean) =>
+    dispatch(actions.increaseFollowers({ user_code: user_code, isOthers: isOthers }))
+  const decreaseFollowers = (user_code: string, isOthers: boolean) =>
+    dispatch(actions.decreaseFollowers({ user_code: user_code, isOthers: isOthers }))
   const resetMeta = () => dispatch(clearMetaData(actions.followers.typePrefix))
 
-  return { followers, page, meta, resetMeta, clearFollowers, fetchFollowers }
+  return { followers, page, meta, resetMeta, clearFollowers, increaseFollowers, decreaseFollowers, fetchFollowers }
 }
 
 export default useFollowers

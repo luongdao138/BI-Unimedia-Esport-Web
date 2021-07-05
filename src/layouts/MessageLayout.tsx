@@ -46,7 +46,11 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
     }
   }
   const navigateRoomCreate = () => {
-    router.push(ESRoutes.MESSAGE_ROOM_CREATE)
+    if (router.pathname == ESRoutes.MESSAGE_ROOM_CREATE) {
+      setShowList(false)
+    } else {
+      router.push(ESRoutes.MESSAGE_ROOM_CREATE)
+    }
   }
 
   useEffect(() => {

@@ -8,17 +8,21 @@ import { TournamentListItem } from '@services/arena.service'
 
 interface Props {
   userCode: string
+  isOthers: boolean
 }
 
-const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
+const TournamentHistoryContainer: React.FC<Props> = ({ userCode, isOthers }) => {
   const classes = useStyles()
   const { tournamentHistories, tournamentHistory, clearTournamentHistory, page, meta, resetMeta } = useTournamentHistory()
   const hasNextPage = page && page.current_page !== page.total_pages
   useEffect(() => {
-    tournamentHistory({
+    const params = {
       page: 1,
-      user_code: userCode,
-    })
+    }
+    if (isOthers) {
+      params['user_code'] = userCode
+    }
+    tournamentHistory(params)
   }, [userCode])
 
   useEffect(() => {
@@ -30,7 +34,13 @@ const TournamentHistoryContainer: React.FC<Props> = ({ userCode }) => {
 
   const loadMore = () => {
     if (hasNextPage) {
-      tournamentHistory({ page: page.current_page + 1, user_code: userCode })
+      const params = {
+        page: page.current_page + 1,
+      }
+      if (isOthers) {
+        params['user_code'] = userCode
+      }
+      tournamentHistory(params)
     }
   }
 

@@ -15,6 +15,7 @@ import { FollowResponse } from '@services/user.service'
 
 export interface ESFollowingProps {
   user_code: string
+  isOthers: boolean
 }
 
 enum FOLLOWING_STATE_CHANGE_TYPE {
@@ -22,7 +23,7 @@ enum FOLLOWING_STATE_CHANGE_TYPE {
   UNFOLLOW = 0,
 }
 
-const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
+const ESFollowing: React.FC<ESFollowingProps> = ({ user_code, isOthers }) => {
   const [open, setOpen] = useState(false)
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -48,9 +49,9 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
 
   const changeFollowingCount = (type: number, user_code: string) => {
     if (type === FOLLOWING_STATE_CHANGE_TYPE.FOLLOW) {
-      increaseFollowing(user_code)
+      increaseFollowing(user_code, isOthers)
     } else if (type === FOLLOWING_STATE_CHANGE_TYPE.UNFOLLOW) {
-      decreaseFollowing(user_code)
+      decreaseFollowing(user_code, isOthers)
     }
   }
 
@@ -82,13 +83,21 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
           </Box>
         </Box>
       </Button>
-      <ESDialog title={t('common:following.title')} open={open} handleClose={() => setOpen(false)}>
-        <DialogContent>
+      <ESDialog
+        title={t('common:following.title')}
+        open={open}
+        handleClose={() => setOpen(false)}
+        classes={{
+          paperFullWidth: classes.dialogFullWidth,
+          paper: classes.dialogPaper,
+        }}
+      >
+        <DialogContent style={{ paddingRight: 0, paddingLeft: 0 }}>
           <InfiniteLoader isItemLoaded={(index: number) => index < following.length} itemCount={itemCount} loadMoreItems={loadMore}>
             {({ onItemsRendered, ref }) => (
               <List
                 className={classes.scroll}
-                height={800}
+                height={innerHeight - 200}
                 width={'100%'}
                 itemCount={following.length}
                 itemData={following}
@@ -132,6 +141,13 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white,
+  },
+  dialogFullWidth: {
+    width: '90%',
+  },
+  dialogPaper: {
+    marginLeft: 24,
+    marginRight: 0,
   },
   scroll: {
     overflow: 'overlay',

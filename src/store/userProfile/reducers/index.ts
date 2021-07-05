@@ -209,22 +209,49 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.increaseFollowing.fulfilled, (state, action) => {
       if (state.following) {
         state.following.filter((user) => {
-          if (user.attributes.user_code === action.payload) {
+          if (user.attributes.user_code === action.payload.user_code) {
             user.attributes.is_following = true
           }
         })
       }
-      if (state.followingMeta) state.followingMeta.total_count = state.followingMeta.total_count + 1
     })
     .addCase(actions.decreaseFollowing.fulfilled, (state, action) => {
       if (state.following) {
-        state.following.filter((user) => {
-          if (user.attributes.user_code === action.payload) {
-            user.attributes.is_following = false
+        if (action.payload.isOthers) {
+          state.following.filter((user) => {
+            if (user.attributes.user_code === action.payload.user_code) {
+              user.attributes.is_following = false
+            }
+          })
+        } else {
+          const restFollowings = state.following.filter((user) => {
+            return user.attributes.user_code !== action.payload.user_code
+          })
+          state.following = restFollowings
+          if (state.followingMeta && state.followingMeta.total_count > 0)
+            state.followingMeta.total_count = state.followingMeta.total_count - 1
+        }
+      }
+    })
+    .addCase(actions.increaseFollowers.fulfilled, (state, action) => {
+      if (state.followers) {
+        state.followers.filter((user) => {
+          if (user.attributes.user_code === action.payload.user_code) {
+            user.attributes.is_following = true
           }
         })
       }
-      if (state.followingMeta && state.followingMeta.total_count > 0) state.followingMeta.total_count = state.followingMeta.total_count - 1
+    })
+    .addCase(actions.decreaseFollowers.fulfilled, (state, action) => {
+      if (state.followers) {
+        if (action.payload.isOthers) {
+          state.followers.filter((user) => {
+            if (user.attributes.user_code === action.payload.user_code) {
+              user.attributes.is_following = false
+            }
+          })
+        }
+      }
     })
 
   builder.addCase(actions.clearHomeSettings, (state) => {

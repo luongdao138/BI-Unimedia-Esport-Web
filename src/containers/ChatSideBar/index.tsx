@@ -109,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 16,
     paddingTop: 10,
     paddingBottom: 6,
+    height: 44,
   },
   headerTitle: {
     color: Colors.white,

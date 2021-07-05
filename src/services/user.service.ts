@@ -5,7 +5,12 @@ import { TournamentListItem } from './arena.service'
 
 export type HistorySearchParams = {
   page?: number
+  user_code?: string
+}
+
+export type FollowStateChangeParam = {
   user_code: string
+  isOthers: boolean
 }
 
 export type HistorySearchResponse = {
@@ -20,7 +25,7 @@ export type ActivityLogResponse = {
 
 export type ActivityLogParams = {
   page?: number
-  user_code: string
+  user_code?: string
 }
 
 export type NicknamesResponse = {

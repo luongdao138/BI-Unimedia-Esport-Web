@@ -58,7 +58,9 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
   const getTopSection = () => {
     return (
       <Grid xs={12} item className={classes.headerContainerSecond}>
-        <Typography className={classes.marginTop20}>{attr.bio}</Typography>
+        <Typography className={classes.marginTop20} style={{ whiteSpace: 'pre-line' }}>
+          {attr.bio}
+        </Typography>
         <HeaderTags items={attr.features ?? null} />
         <Box display="flex">
           {area ? <Iconic text={area} icon="fas fa-map-marker-alt" /> : null}

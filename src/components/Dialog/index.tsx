@@ -111,7 +111,7 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       maxWidth="md"
       aria-labelledby="Followers"
       open={open}
-      classes={{ scrollPaper: alignTop ? classes.scrollPaper : '' }}
+      classes={{ scrollPaper: alignTop ? classes.scrollPaper : '', ...rest.classes }}
       onClose={handleClose}
       disableBackdropClick
       style={{ alignItems: 'flex-start' }}
