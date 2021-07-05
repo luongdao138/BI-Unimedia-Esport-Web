@@ -42,6 +42,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     isRecruitmentClosed,
     isNotHeld,
     isAdminJoined,
+    isTeamLeader,
     isEntered,
   } = useArenaHelper(tournament)
 
@@ -103,7 +104,7 @@ const ActionComponent: React.FC<Props> = (props) => {
   }
 
   const renderEntry = () => {
-    if (isEntered || isAdminJoined) {
+    if ((isEntered && isTeamLeader) || isAdminJoined) {
       return entryEditButton()
     }
     return entryButton()
@@ -140,7 +141,7 @@ const ActionComponent: React.FC<Props> = (props) => {
       {isRecruiting || isReady ? (
         <>
           {isModerator ? renderAdminEntry() : renderEntry()}
-          {isAdminJoined || isEntered ? <UnjoinModal tournament={tournament} /> : null}
+          {isAdminJoined || (isEntered && isTeamLeader) ? <UnjoinModal tournament={tournament} /> : null}
           {isModerator && isRecruiting && (
             <Box pb={2} className={classes.description}>
               <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>

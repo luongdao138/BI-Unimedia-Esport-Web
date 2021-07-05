@@ -27,6 +27,7 @@ const useArenaHelper = (
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: boolean
+  isTeamLeader: boolean
   toDetail: () => void
 } => {
   const router = useRouter()
@@ -52,14 +53,21 @@ const useArenaHelper = (
   const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
 
   const checkAdminJoined = () => {
+    if (!isModerator) return false
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return false
-    for (const myInfo of myInfoList) {
-      if (_.get(myInfo, 'role', '') === 'interested') return true
-    }
-    return false
+
+    return _.some(myInfoList, { role: ROLE.INTERESTED })
   }
   const isAdminJoined = checkAdminJoined()
+
+  const checkTeamLeader = () => {
+    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    if (!_.isArray(myInfoList)) return false
+
+    return _.some(myInfoList, { is_leader: true })
+  }
+  const isTeamLeader = checkTeamLeader()
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -108,6 +116,7 @@ const useArenaHelper = (
     toEdit,
     toCreate,
     isAdminJoined,
+    isTeamLeader,
     toDetail,
     isEntered,
   }

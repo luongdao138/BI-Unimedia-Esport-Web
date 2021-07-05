@@ -10,6 +10,7 @@ import * as actions from '@store/arena/actions'
 import { TournamentDetail } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { UserProfile } from '@services/user.service'
+import { getIsAuthenticated } from '@store/auth/selectors'
 
 const getMeta = createMetaSelector(actions.getTournamentDetail)
 const getEntryStatusMeta = createMetaSelector(actions.getEntryStatus)
@@ -24,6 +25,7 @@ const useTournamentDetail = (): {
 } => {
   const { back, query } = useRouter()
   const dispatch = useAppDispatch()
+  const isAuth = useAppSelector(getIsAuthenticated)
   const tournament = useAppSelector(selectors.getTournamentDetail)
   const meta = useAppSelector(getMeta)
   const entryMeta = useAppSelector(getEntryStatusMeta)
@@ -33,7 +35,7 @@ const useTournamentDetail = (): {
     if (query.hash_key) {
       dispatch(actions.getTournamentDetail(String(query.hash_key)))
     }
-  }, [query.hash_key])
+  }, [query.hash_key, isAuth])
 
   useEffect(() => {
     if (query.hash_key && tournament && userProfile?.id) {
