@@ -134,7 +134,7 @@ export const closeTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNA
   }
 })
 
-export const cancelTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNAMENT, async (param, { rejectWithValue }) => {
+export const cancelTournament = createAsyncThunk<void, string>(types.CANCEL_TOURNAMENT, async (param, { rejectWithValue }) => {
   try {
     const res = await services.cancelTournament(param)
     return res
