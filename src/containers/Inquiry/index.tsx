@@ -37,7 +37,7 @@ const ESInquiry: React.FC = () => {
     title: Yup.string().required(t('inquiry.title_required')).max(100, t('common.too_long')),
 
     email: Yup.string()
-      .required(t('inquiry.email_required'))
+      .required(t('inquiry.error.email'))
       .max(100, t('common.too_long'))
       .test('email', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
