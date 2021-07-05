@@ -7,7 +7,7 @@
   position: relative;
 }
 
-.body {
+body {
   overscroll-behavior-y: contain;
 }
 
@@ -421,7 +421,7 @@
 }
 
 .scroll-bar {
-  overflow: overlay;
+  overflow: hidden;
   scrollbar-color: #222 transparent;
   scrollbar-width: thin;
   transform: translateZ(0px);
@@ -611,8 +611,12 @@
   .chat-wrapper.show-list .room-create-button {
     display: flex;
   }
+  .chat-wrapper.show-list .chat-header {
+    border-bottom: 1px solid #212121;
+  }
   .chat-wrapper.show-list .header-first-column {
     flex: 0 0 180px;
+    border: 0 none;
   }
 }
 

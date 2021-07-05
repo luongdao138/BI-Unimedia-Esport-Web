@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: props.round ? 25 : 4,
     boxShadow: 'none',
     background: Colors.primary,
-    fontWeight: 'bold',
+    fontWeight: 500,
     '&:hover': {
       background: Colors.white,
       backgroundColor: Colors.white,
@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   }),
   [theme.breakpoints.down('sm')]: {
     outlined: {
+      padding: '2px 10px',
+    },
+    containedPrimary: {
       padding: '2px 10px',
     },
   },

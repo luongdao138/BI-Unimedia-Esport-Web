@@ -8,12 +8,14 @@ interface returnType {
 const useCopyToClipboard = (showToast = true, toastMsg = null): returnType => {
   const dispatch = useAppDispatch()
   const copy = (text: string) => {
-    navigator.clipboard.writeText(text).then(
-      () => {
-        if (showToast === true && toastMsg) dispatch(commonActions.addToast(toastMsg))
-      },
-      () => null // do something on fail
-    )
+    if (typeof navigator.clipboard != 'undefined' && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(
+        () => {
+          if (showToast === true && toastMsg) dispatch(commonActions.addToast(toastMsg))
+        },
+        () => null // do something on fail
+      )
+    }
   }
 
   return { copy }

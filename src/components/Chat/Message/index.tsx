@@ -45,7 +45,11 @@ const Message: React.FC<MessageProps> = (props) => {
   const status = _.get(currentMessage, 'sent', false)
 
   const renderAvatar = () => {
-    return <Avatar style={{ cursor: 'pointer' }} onClick={() => navigateToProfile(userCode)} size={36} src={avatar} alt={nickName} />
+    return (
+      <Box style={{ cursor: 'pointer' }}>
+        <Avatar onClick={() => navigateToProfile(userCode)} size={36} src={avatar} alt={nickName} />
+      </Box>
+    )
   }
 
   const renderTime = () => {
@@ -109,12 +113,7 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderBubbleGroup = () => {
-    if (
-      currentMessage &&
-      currentMessage.type !== CHAT_MESSAGE_TYPE.DATE &&
-      currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME &&
-      currentMessage.type !== CHAT_MESSAGE_TYPE.SYSTEM
-    ) {
+    if (currentMessage && currentMessage.type !== CHAT_MESSAGE_TYPE.DATE && currentMessage.type !== CHAT_MESSAGE_TYPE.WELCOME) {
       return (
         <Box className={direction === 'left' ? classes.left : classes.right}>
           {direction === 'left' ? renderAvatar() : null}
@@ -136,10 +135,7 @@ const Message: React.FC<MessageProps> = (props) => {
   }
 
   const renderSystemMessage = () => {
-    if (
-      (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.WELCOME) ||
-      (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.SYSTEM)
-    ) {
+    if (currentMessage && currentMessage.type === CHAT_MESSAGE_TYPE.WELCOME) {
       return <SystemMessage text={message} time={timestamp} />
     }
     return null

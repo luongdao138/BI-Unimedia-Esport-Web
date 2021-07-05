@@ -14,8 +14,8 @@ const useFollowing = (): {
   meta: Meta
   resetMeta: () => void
   clearFollowing: () => void
-  increaseFollowing: (user_code: string) => void
-  decreaseFollowing: (user_code: string) => void
+  increaseFollowing: (user_code: string, isOthers: boolean) => void
+  decreaseFollowing: (user_code: string, isOthers: boolean) => void
   fetchFollowing: (param: FollowersParams) => void
 } => {
   const dispatch = useAppDispatch()
@@ -24,8 +24,10 @@ const useFollowing = (): {
   const meta = useAppSelector(getMeta)
   const fetchFollowing = (param: FollowersParams) => dispatch(actions.following(param))
   const clearFollowing = () => dispatch(actions.clearFollowing())
-  const increaseFollowing = (user_code: string) => dispatch(actions.increaseFollowing(user_code))
-  const decreaseFollowing = (user_code: string) => dispatch(actions.decreaseFollowing(user_code))
+  const increaseFollowing = (user_code: string, isOthers: boolean) =>
+    dispatch(actions.increaseFollowing({ user_code: user_code, isOthers: isOthers }))
+  const decreaseFollowing = (user_code: string, isOthers: boolean) =>
+    dispatch(actions.decreaseFollowing({ user_code: user_code, isOthers: isOthers }))
   const resetMeta = () => dispatch(clearMetaData(actions.following.typePrefix))
 
   return { following, page, meta, resetMeta, clearFollowing, fetchFollowing, increaseFollowing, decreaseFollowing }

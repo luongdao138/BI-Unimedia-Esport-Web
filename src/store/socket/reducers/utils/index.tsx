@@ -15,11 +15,9 @@ const messagesMerge = (olddata: MessageType[], newdata: MessageType[]): MessageT
     updatedObj = olddata
   } else {
     updatedObj = olddata
-    unsentArray.forEach(function (item) {
+    unsentArray.forEach((item) => {
       const indexMsg = _.findIndex(olddata, { clientId: item })
-      const newObj = _.find(newdata, function (chr) {
-        return chr.clientId == item
-      })
+      const newObj = _.find(newdata, (chr) => chr.clientId == item)
       if (newObj) {
         olddata[indexMsg] = _.assign({}, updatedObj[indexMsg], newObj)
         updatedObj = olddata
@@ -71,9 +69,22 @@ const unseenClear = (roomList: ChatDataType[], activeRoom: string): ChatDataType
   return updatedRoom
 }
 
+const roomUpdateWithUnseen = (roomList: ChatDataType[], activeRoom: string): ChatDataType[] => {
+  // check if room exist in new msg
+  let updatedRoom: ChatDataType[]
+  if (_.isArray(roomList) && !_.isEmpty(roomList) && activeRoom !== undefined) {
+    updatedRoom = _.map(roomList, function (a: ChatDataType) {
+      return a.chatRoomId === activeRoom ? { ...a, unseenCount: 0 } : a
+    })
+  } else {
+    updatedRoom = roomList
+  }
+  return updatedRoom
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const changeSingleRoom = (oldState: State, newRoom: any): State => {
-  const clonedList = [...oldState.roomList]
+  const clonedList = _.isArray(oldState.roomList) ? [...oldState.roomList] : []
   const index = _.findIndex(clonedList, (item) => item.chatRoomId === newRoom.chatRoomId)
   if (index > -1) {
     const newRoomItem = { ...clonedList[index] }
@@ -96,18 +107,19 @@ const changeSingleRoom = (oldState: State, newRoom: any): State => {
 }
 
 const deleteMessage = (olddata: MessageType[], newdata: DeleteType[]): MessageType[] => {
-  if (olddata && olddata[0] && newdata && newdata[0]) {
-    const sortKey = newdata[0].sortKey
-    const replaceText = newdata[0].parentMsgDeletedText
-    const deleteFrom: MessageType[] = olddata
-    const roomId = newdata[0].chatRoomId
+  const newDataSingle = _.get(newdata, '[0]')
+  const oldDataSingle = _.get(olddata, '[0]')
 
-    const messagesRoom = olddata[0].chatRoomId
+  if (oldDataSingle && newDataSingle) {
+    const sortKey = newDataSingle.sortKey
+    const replaceText = newDataSingle.parentMsgDeletedText
+    const deleteFrom: MessageType[] = olddata
+    const roomId = newDataSingle.chatRoomId
+
+    const messagesRoom = oldDataSingle.chatRoomId
     let updatedObj
     if (roomId == messagesRoom) {
-      updatedObj = _.filter(deleteFrom, function (item: MessageType) {
-        return item.sortKey != sortKey
-      }).map((item) => {
+      updatedObj = _.filter(deleteFrom, (item: MessageType) => item.sortKey != sortKey).map((item) => {
         if (item.parentMsg != null && _.isObject(item.parentMsg) && !item.parentMsg.isDeleted && item.parentMsg.sortKey === sortKey) {
           item = Object.assign({}, item, {
             parentMsg: {
@@ -157,4 +169,5 @@ export const ChatHelper = {
   deleteMessage,
   onDeleteRoomListUpdate,
   roomListAddRemove,
+  roomUpdateWithUnseen,
 }
