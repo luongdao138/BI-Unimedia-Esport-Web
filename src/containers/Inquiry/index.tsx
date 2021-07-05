@@ -182,9 +182,6 @@ const ESInquiry: React.FC = () => {
                 readOnly={!!hasEmail}
                 size="small"
               />
-              <Typography color="secondary" className={classes.warning}>
-                {t('inquiry.email_required')}
-              </Typography>
             </Box>
 
             <Box mt={3} display="flex" justifyContent="center">
@@ -275,9 +272,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 18,
     color: Colors.white,
     display: 'inline-block',
-  },
-  warning: {
-    marginTop: theme.spacing(1),
   },
 }))
 
