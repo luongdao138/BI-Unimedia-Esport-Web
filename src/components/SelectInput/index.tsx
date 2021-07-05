@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) =>
       padding: 4,
       outline: '0 none',
       flexWrap: 'wrap',
-      overflow: 'overlay',
+      overflow: 'auto',
       scrollbarColor: '#222 transparent',
       scrollbarWidth: 'thin',
       '&::-webkit-scrollbar': {
