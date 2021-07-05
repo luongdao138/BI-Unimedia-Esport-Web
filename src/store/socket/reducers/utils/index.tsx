@@ -84,7 +84,7 @@ const roomUpdateWithUnseen = (roomList: ChatDataType[], activeRoom: string): Cha
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const changeSingleRoom = (oldState: State, newRoom: any): State => {
-  const clonedList = [...oldState.roomList]
+  const clonedList = _.isArray(oldState.roomList) ? [...oldState.roomList] : []
   const index = _.findIndex(clonedList, (item) => item.chatRoomId === newRoom.chatRoomId)
   if (index > -1) {
     const newRoomItem = { ...clonedList[index] }

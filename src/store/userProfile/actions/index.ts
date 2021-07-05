@@ -121,12 +121,31 @@ export const following = createAsyncThunk<services.FollowersResponse, services.F
   }
 )
 
-export const increaseFollowing = createAsyncThunk<string, string>(USER_PROFILE_ACTION_TYPE.FOLLOWING_INCREASE, (param) => {
-  return param
-})
-export const decreaseFollowing = createAsyncThunk<string, string>(USER_PROFILE_ACTION_TYPE.FOLLOWING_DECREASE, (param) => {
-  return param
-})
+export const increaseFollowing = createAsyncThunk<services.FollowStateChangeParam, services.FollowStateChangeParam>(
+  USER_PROFILE_ACTION_TYPE.FOLLOWING_INCREASE,
+  (param) => {
+    return param
+  }
+)
+export const decreaseFollowing = createAsyncThunk<services.FollowStateChangeParam, services.FollowStateChangeParam>(
+  USER_PROFILE_ACTION_TYPE.FOLLOWING_DECREASE,
+  (param) => {
+    return param
+  }
+)
+
+export const increaseFollowers = createAsyncThunk<services.FollowStateChangeParam, services.FollowStateChangeParam>(
+  USER_PROFILE_ACTION_TYPE.FOLLOWERS_INCREASE,
+  (param) => {
+    return param
+  }
+)
+export const decreaseFollowers = createAsyncThunk<services.FollowStateChangeParam, services.FollowStateChangeParam>(
+  USER_PROFILE_ACTION_TYPE.FOLLOWERS_DECREASE,
+  (param) => {
+    return param
+  }
+)
 
 export const clearFollowing = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_FOLLOWING)
 
