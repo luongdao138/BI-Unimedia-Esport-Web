@@ -69,6 +69,19 @@ const unseenClear = (roomList: ChatDataType[], activeRoom: string): ChatDataType
   return updatedRoom
 }
 
+const roomUpdateWithUnseen = (roomList: ChatDataType[], activeRoom: string): ChatDataType[] => {
+  // check if room exist in new msg
+  let updatedRoom: ChatDataType[]
+  if (_.isArray(roomList) && !_.isEmpty(roomList) && activeRoom !== undefined) {
+    updatedRoom = _.map(roomList, function (a: ChatDataType) {
+      return a.chatRoomId === activeRoom ? { ...a, unseenCount: 0 } : a
+    })
+  } else {
+    updatedRoom = roomList
+  }
+  return updatedRoom
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const changeSingleRoom = (oldState: State, newRoom: any): State => {
   const clonedList = _.isArray(oldState.roomList) ? [...oldState.roomList] : []
@@ -156,4 +169,5 @@ export const ChatHelper = {
   deleteMessage,
   onDeleteRoomListUpdate,
   roomListAddRemove,
+  roomUpdateWithUnseen,
 }
