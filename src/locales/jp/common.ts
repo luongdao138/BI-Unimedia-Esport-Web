@@ -762,7 +762,7 @@ export default {
     purchase_history: '購入履歴',
     service_info: 'サービス情報',
     terms: '利用規約',
-    personal_info: '個人情報の取扱について',
+    personal_info: '個人情報の取り扱いについて',
     commercial_transaction: '特定商取引に関する表記',
   },
   dialog: {
