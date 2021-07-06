@@ -180,7 +180,14 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       {i18n.t('common:profile.unblock')}
                     </ESButton>
                   ) : isFollowing ? (
-                    <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
+                    <ESButton
+                      variant="contained"
+                      color="primary"
+                      round
+                      className={classes.button}
+                      disabled={disable}
+                      onClick={setFollowState}
+                    >
                       {i18n.t('common:profile.following')}
                     </ESButton>
                   ) : (

@@ -102,7 +102,14 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
           {orderedGL && orderedGL.length > 0
             ? orderedGL.map((g: any, i: number) => {
                 if (i < maxFav)
-                  return <ESChip key={i} className={`${classes.marginTop20} ${classes.marginRight20}`} label={g.display_name} />
+                  return (
+                    <ESChip
+                      isGameList={true}
+                      key={i}
+                      className={`${classes.marginTop20} ${classes.marginRight20}`}
+                      label={g.display_name}
+                    />
+                  )
               })
             : null}
         </Box>
