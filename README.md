@@ -1,6 +1,4 @@
-# NextJS Typescript Boilerplate
-
-An opinionated boilerplate to kickstart projects using NextJS
+# eXeLAB.jp STEP2.0
 
 **Features**
 
