@@ -48,7 +48,7 @@ const TournamentCreate: React.FC = () => {
   const initialValues = getInitialValues(isEdit ? arena : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
 
-  const { checkNgWordFields } = useCheckNgWord()
+  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
   const formik = useFormik<FormType>({
     initialValues: initialValues,
@@ -112,23 +112,23 @@ const TournamentCreate: React.FC = () => {
       organizer_name: stepFour.organizer_name,
     })
 
-    if (fieldIdentifier) {
-      let fieldTitle = ''
-      if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) {
-        activeTabIndex = 0
-        fieldTitle = FIELD_TITLES.stepOne[fieldIdentifier]
-      } else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) {
-        activeTabIndex = 1
-        fieldTitle = FIELD_TITLES.stepTwo[fieldIdentifier]
-      } else if (_.has(FIELD_TITLES.stepThree, fieldIdentifier)) {
-        activeTabIndex = 2
-        fieldTitle = FIELD_TITLES.stepThree[fieldIdentifier]
-      } else if (_.has(FIELD_TITLES.stepFour, fieldIdentifier)) {
-        activeTabIndex = 3
-        fieldTitle = FIELD_TITLES.stepFour[fieldIdentifier]
-      }
+    const ngFields = checkNgWordByField({
+      [FIELD_TITLES.stepOne.title]: stepOne.title,
+      [FIELD_TITLES.stepOne.overview]: stepOne.overview,
+      [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
+      [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
+      [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
+      [FIELD_TITLES.stepThree.area_name]: stepThree.area_name,
+      [FIELD_TITLES.stepFour.organizer_name]: stepFour.organizer_name,
+    })
 
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: fieldTitle }))
+    if (fieldIdentifier) {
+      if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
+      else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
+      else if (_.has(FIELD_TITLES.stepThree, fieldIdentifier)) activeTabIndex = 2
+      else if (_.has(FIELD_TITLES.stepFour, fieldIdentifier)) activeTabIndex = 3
+
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
     } else {
       if (_.isEmpty(formik.errors)) {
         setIsConfirm(true)
