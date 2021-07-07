@@ -151,11 +151,6 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                     </div>
                   )
                 }
-                endMessage={
-                  <p style={{ textAlign: 'center' }}>
-                    <b>{t('common:infinite_scroll.message')}</b>
-                  </p>
-                }
               >
                 {isTeam
                   ? members.map((participant, i) => (

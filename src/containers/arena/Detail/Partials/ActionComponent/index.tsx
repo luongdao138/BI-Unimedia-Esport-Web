@@ -34,7 +34,6 @@ const ActionComponent: React.FC<Props> = (props) => {
     toMatches,
     isModerator,
     isTeam,
-    isInProgress,
     isRecruiting,
     isReady,
     isCompleted,
@@ -53,17 +52,16 @@ const ActionComponent: React.FC<Props> = (props) => {
   const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
 
   const buildArenaPeriodValue = () => {
-    const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
-    const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
+    const beforeEntry = isReady || isRecruiting
+    const targetStartDate = beforeEntry ? tournament.attributes.acceptance_start_date : tournament.attributes.start_date
+    const targetEndDate = beforeEntry ? tournament.attributes.acceptance_end_date : tournament.attributes.end_date
+    const entryStartDate = TournamentHelper.formatDate(targetStartDate)
+    const entryEndDate = TournamentHelper.formatDate(targetEndDate)
 
     return `${entryStartDate} ～ ${entryEndDate}`
   }
   const buildArenaTitle = () => {
-    const arenaStatus = isRecruiting
-      ? t('common:tournament.entry_period')
-      : isRecruitmentClosed || isInProgress || isCompleted
-      ? t('common:tournament.holding_period')
-      : ''
+    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:tournament.holding_period')
 
     return `${arenaStatus}`
   }

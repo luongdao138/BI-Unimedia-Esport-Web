@@ -154,7 +154,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 196,
-    height: 240,
+    minHeight: 240,
+    height: '100%',
     cursor: 'pointer',
     backgroundColor: Colors.black,
     borderRadius: 5,
@@ -197,7 +198,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     customRadio: {
       width: 155,
-      height: 220,
+      minHeight: 220,
       paddingRight: theme.spacing(2),
       paddingLeft: theme.spacing(2),
     },

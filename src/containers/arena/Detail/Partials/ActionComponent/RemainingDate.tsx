@@ -35,7 +35,7 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
           <Typography className={classes.highlightedNumber}>{days}</Typography>
           <Typography>{t('common:common.day')}</Typography>
         </>
-      ) : hours > 1 ? (
+      ) : hours >= 1 ? (
         <>
           <Typography>{untilDatePrefix}</Typography>
           <Typography className={classes.highlightedNumber}>{hours}</Typography>

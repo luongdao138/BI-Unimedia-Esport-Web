@@ -154,7 +154,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
                     </ThemeProvider>
                   </Box>
                 )}
-                <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
+                <Box display="flex" justifyContent="space-between" padding={1}>
                   {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
                   <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>
                     <Typography className={classes.vsLabel}>{t('common:tournament.vs')}</Typography>
@@ -222,12 +222,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   itemWrapper: {
     width: 196,
-    height: 240,
   },
   [theme.breakpoints.down('sm')]: {
     itemWrapper: {
       width: 133,
-      height: 220,
     },
     topContainer: {
       paddingTop: 0,

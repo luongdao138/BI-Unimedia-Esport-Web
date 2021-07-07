@@ -18,6 +18,7 @@ import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionC
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
   const { arenaWinners, arena, handleBack, toDetail } = useArenaWinners()
+  const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
   const [, setUpdate] = useState(false)
@@ -99,8 +100,12 @@ const ArenaWinners: React.FC = () => {
         </Box>
         <Divider />
         <Box position="relative">
-          <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
-            {arenaWinners['1'] && !!arenaWinners['1'].length && (
+          <div
+            style={!showWinner && { width: '100%' }}
+            className={classes.winnerAvatarWrapper}
+            onClick={() => setShowSummary(!showSummary)}
+          >
+            {showWinner ? (
               <ArenaAvatar
                 src={arenaWinners['1'][0].avatar}
                 name={arenaWinners['1'][0].name}
@@ -109,12 +114,16 @@ const ArenaWinners: React.FC = () => {
                 leaf
                 nameWhite
               />
+            ) : (
+              <Typography variant="h3">{t('common:arena.result_not_decided')}</Typography>
             )}
           </div>
         </Box>
       </div>
-      <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
-        <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
+      <div className={classes.summary}>
+        {arena?.attributes?.summary_image && (
+          <div className={classes.summarImageWrapper}>{<img src={arena.attributes.summary_image} />}</div>
+        )}
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
             <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
@@ -125,7 +134,7 @@ const ArenaWinners: React.FC = () => {
           <Typography>{arena?.attributes?.summary || ''}</Typography>
         </Linkify>
       </div>
-      <Box textAlign="center" pb={showSummary ? 4 : 8}>
+      <Box textAlign="center" pb={4}>
         <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
           {t('common:tournament.tournament_detail')}
         </ESButton>
@@ -235,6 +244,8 @@ const useStyles = makeStyles((theme) => ({
     objectFit: 'cover',
   },
   winnerAvatarWrapper: {
+    // width: '100%',
+    textAlign: 'center',
     position: 'absolute',
     top: 155,
     left: '50%',
@@ -253,15 +264,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
-    marginBottom: theme.spacing(0),
     overflow: 'visible',
-    opacity: 0,
-    height: 0,
-    visibility: 'hidden',
     willChange: 'all',
     transition: 'all 0.225s ease-out',
-  },
-  showSummary: {
     opacity: 1,
     height: 'auto',
     marginBottom: theme.spacing(4),

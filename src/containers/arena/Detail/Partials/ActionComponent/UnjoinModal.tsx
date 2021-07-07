@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, IconButton, Icon } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import LinkButton from '@components/LinkButton'
@@ -34,11 +34,6 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
       <ESModal open={open}>
         <BlankLayout>
           <Box paddingBottom={16} paddingTop={8} className={classes.childrenContainer}>
-            <Box py={2}>
-              <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-            </Box>
             <Box pb={4} pt={12} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:tournament.unjoin_dialog.dialog_title')}</Typography>
             </Box>
@@ -50,7 +45,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
               <Box className={classes.actionButton}>
-                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+                <ESButton className={classes.outlineBtn} variant="outlined" round fullWidth onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
@@ -105,6 +100,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   actionButton: {
     width: theme.spacing(35),
     margin: 8,
+  },
+  outlineBtn: {
+    padding: '12px 22px',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

@@ -201,4 +201,11 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
+  [theme.breakpoints.down('sm')]: {
+    backContainer: {
+      position: 'absolute',
+      backgroundColor: 'transparent',
+      borderBottom: 'none',
+    },
+  },
 }))
