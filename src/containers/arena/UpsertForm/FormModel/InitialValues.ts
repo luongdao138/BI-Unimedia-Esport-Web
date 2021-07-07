@@ -14,7 +14,7 @@ export const getInitialValues = (data?: TournamentDetail): FormType => ({
   stepTwo: {
     rule: data ? data.attributes.rule : -1,
     has_third_place: data ? data.attributes.has_third_place : false,
-    participant_type: data ? data.attributes.participant_type : 1,
+    participant_type: data ? data.attributes.participant_type : -1,
     max_participants: data ? data.attributes.max_participants : 0,
     terms_of_participation: data ? data.attributes.terms_of_participation : '',
     t_type: data ? data.attributes.t_type : 't_public',
