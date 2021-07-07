@@ -83,7 +83,12 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
     <ESModal open={!!match}>
       {!!match && (
         <BlankLayout>
-          <ESStickyFooter disabled={false} title={t('common:tournament_create.decide')} onClick={() => onScoreEntered(match)} noScroll>
+          <ESStickyFooter
+            disabled={!match?.winner}
+            title={t('common:tournament_create.decide')}
+            onClick={() => onScoreEntered(match)}
+            noScroll
+          >
             <Box paddingY={7.5} className={classes.topContainer}>
               <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
                 <IconButton className={classes.iconButtonBg} onClick={() => handleClose()}>

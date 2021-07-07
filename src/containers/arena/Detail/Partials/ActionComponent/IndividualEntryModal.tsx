@@ -40,10 +40,10 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.error')).max(40, t('common:common.too_long')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
 
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       nickname: '',
     },
@@ -87,6 +87,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         onActionButtonClicked={handleSubmit}
       >
         {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+        <Box mt={3} />
         <form onSubmit={handleSubmit}>
           <BlackBox>
             <DetailInfo detail={tournament} />
@@ -101,8 +102,8 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
                 fullWidth
                 value={values.nickname}
                 onChange={handleChange}
-                helperText={touched.nickname && errors.nickname}
-                error={touched.nickname && !!errors.nickname}
+                helperText={errors.nickname}
+                error={!!errors.nickname}
               />
             </Box>
           </Box>

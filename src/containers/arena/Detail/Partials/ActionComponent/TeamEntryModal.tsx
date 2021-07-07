@@ -212,7 +212,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamForm = () => {
     const { values, handleChange, errors } = formik
     return (
-      <Box mt={6}>
+      <Box mt={4}>
         <BlackBox>
           <DetailInfo detail={tournament} />
         </BlackBox>
@@ -262,6 +262,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
+        <Box mt={2} />
         {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
         <form onSubmit={handleActionButton}>{teamForm()}</form>
       </StickyActionModal>

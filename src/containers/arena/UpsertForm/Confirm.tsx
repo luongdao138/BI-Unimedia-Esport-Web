@@ -152,7 +152,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.area')} value={ruleName} disabled={true} fullWidth />
-      {values.stepThree.area_name && <ESInput value={values.stepThree.area_name} disabled={true} fullWidth />}
+      {values.stepThree.address && <ESInput value={values.stepThree.address} disabled={true} fullWidth />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
       <Box pb={2} />

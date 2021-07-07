@@ -6,10 +6,8 @@ interface ServerErrorProps {
 
 const ServerError: React.FC<ServerErrorProps> = ({ message }) => {
   return (
-    <Box pb={8}>
-      <Box pb={20 / 8} textAlign="center">
-        <Typography color="secondary">{message}</Typography>
-      </Box>
+    <Box textAlign="center">
+      <Typography color="secondary">{message}</Typography>
     </Box>
   )
 }

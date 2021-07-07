@@ -41,7 +41,7 @@ const useEntry = () => {
 
   useEffect(() => {
     if (leaveMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:arena.join_success')))
+      dispatch(commonActions.addToast(t('common:arena.leave_success')))
     }
   }, [leaveMeta.loaded])
 

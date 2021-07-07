@@ -27,7 +27,7 @@ export const getInitialValues = (data?: TournamentDetail): FormType => ({
     acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
     acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
     area_id: data ? data.attributes.area_id : -1,
-    area_name: data ? data.attributes.area_name : '',
+    address: data ? data.attributes.address : '',
     // for cross-fields validations
     recruit_date: '',
     acceptance_dates: '',

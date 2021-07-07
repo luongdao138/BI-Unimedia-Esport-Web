@@ -130,17 +130,17 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
         <ESFastInput
           multiline
           rows={5}
-          name="stepThree.area_name"
+          name="stepThree.address"
           fullWidth
           placeholder={i18n.t('common:tournament_create.area_name_placeholder')}
-          value={formik.values.stepThree.area_name}
+          value={formik.values.stepThree.address}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepThree?.area_name && formik.errors?.stepThree?.area_name}
-          error={formik.touched?.stepThree?.area_name && !!formik.errors?.stepThree?.area_name}
+          helperText={formik.touched?.stepThree?.address && formik.errors?.stepThree?.address}
+          error={formik.touched?.stepThree?.address && !!formik.errors?.stepThree?.address}
           size="small"
           required
-          disabled={!editables.area_name}
+          disabled={!editables.address}
         />
       </Box>
     </Box>
