@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react'
-import { Grid, Box, makeStyles, Typography, Theme, Icon } from '@material-ui/core'
+import { Grid, Box, makeStyles, Typography, Theme, Icon, ButtonBase } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
@@ -20,6 +20,8 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
 import { RULE } from '@constants/tournament.constants'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface Props {
   detail: TournamentDetail
@@ -30,6 +32,7 @@ interface Props {
 
 const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton }) => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
@@ -45,6 +48,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
     }
     dispatch(commonActions.addToast(t('common:arena.copy_toast')))
   }
+
+  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
 
@@ -74,10 +79,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center" className={classes.colMin}>
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
-          <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-            <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-            <Typography>{t('common:tournament.copy_shared_url')}</Typography>
-          </Box>
+          {extended && (
+            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+              <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+            </Box>
+          )}
         </Box>
 
         <Box marginTop={2}>
@@ -154,7 +161,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.venue')}</Typography>
               </Box>
               <Box className={classes.value} flexDirection="column">
-                <Typography>{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
+                <Typography>{data.area_name ? data.area_name : '-'}</Typography>
                 <Typography>{data.address}</Typography>
               </Box>
             </Box>
@@ -197,7 +204,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <Box className={classes.value}>
                 {data.owner && (
                   <Box display="flex" flexDirection="row" alignItems="center">
-                    <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
+                    <ButtonBase onClick={() => toProfile(data.owner.data.attributes.user_code)}>
+                      <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
+                    </ButtonBase>
                     <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
                   </Box>
                 )}
@@ -213,7 +222,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 {data.co_organizers && data.co_organizers.data && data.co_organizers.data.length > 0 ? (
                   data.co_organizers.data.map((co: CommonResponse, i) => (
                     <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
-                      <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} />
+                      <ButtonBase onClick={() => toProfile(co.attributes.user_code)}>
+                        <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} />{' '}
+                      </ButtonBase>
                       <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
                     </Box>
                   ))
@@ -304,8 +315,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 24,
   },
   gameChip: {
+    maxWidth: '85vw',
     minWidth: 177,
-    width: 177,
+    justifyContent: 'flex-start',
   },
   label: {
     display: 'flex',

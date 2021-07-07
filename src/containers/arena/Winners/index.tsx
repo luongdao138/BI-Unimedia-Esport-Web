@@ -101,8 +101,7 @@ const ArenaWinners: React.FC = () => {
         <Divider />
         <Box position="relative">
           <div
-            style={!showWinner && { width: '100%' }}
-            className={classes.winnerAvatarWrapper}
+            className={`${classes.winnerAvatarWrapper} ${!showWinner && classes.winnerFull}`}
             onClick={() => setShowSummary(!showSummary)}
           >
             {showWinner ? (
@@ -244,13 +243,15 @@ const useStyles = makeStyles((theme) => ({
     objectFit: 'cover',
   },
   winnerAvatarWrapper: {
-    // width: '100%',
     textAlign: 'center',
     position: 'absolute',
     top: 155,
     left: '50%',
     transform: 'translate(-50%, -50%)',
     cursor: 'pointer',
+  },
+  winnerFull: {
+    width: '100%',
   },
   topWrapper: {
     position: 'absolute',

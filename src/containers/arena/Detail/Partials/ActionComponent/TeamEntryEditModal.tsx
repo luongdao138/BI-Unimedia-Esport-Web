@@ -141,8 +141,8 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
     <Box>
       <StickyActionModal
         open={open || isPreview}
-        returnText={t('common:tournament.join')}
-        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
+        returnText={t('common:arena.entry_information')}
+        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={false}
         onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}

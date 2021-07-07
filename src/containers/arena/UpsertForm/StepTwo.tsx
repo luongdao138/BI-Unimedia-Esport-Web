@@ -70,6 +70,9 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.participant_type}
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           {PARTICIPATION_TYPES.map((type, index) => (
             <option value={type.value} key={index}>
               {type.label}

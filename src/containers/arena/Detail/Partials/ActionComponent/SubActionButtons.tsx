@@ -46,17 +46,19 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                 <Box className={classes.actionButton}>
                   <Participants detail={tournament} />
                 </Box>
-                <Box className={classes.actionButton}>
-                  <ActionLabelButton
-                    actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
-                    variant="outlined"
-                    fullWidth
-                    onClick={toGroupChat}
-                    disabled={chatDisabled}
-                  >
-                    {t('common:tournament.group_chat')}
-                  </ActionLabelButton>
-                </Box>
+                {isModerator && (
+                  <Box className={classes.actionButton}>
+                    <ActionLabelButton
+                      actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
+                      variant="outlined"
+                      fullWidth
+                      onClick={toGroupChat}
+                      disabled={chatDisabled}
+                    >
+                      {t('common:tournament.group_chat')}
+                    </ActionLabelButton>
+                  </Box>
+                )}
               </>
             ) : (
               <>

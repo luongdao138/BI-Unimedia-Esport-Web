@@ -55,6 +55,7 @@ const TournamentCreate: React.FC = () => {
     validationSchema: getValidationScheme(arena, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
+      const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
       const data: TournamentFormParams = {
         ...values.stepOne,
         ...values.stepTwo,
@@ -62,6 +63,7 @@ const TournamentCreate: React.FC = () => {
         ...values.stepFour,
         co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
         game_title_id: values.stepOne.game_title_id[0].id,
+        area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
       }
       if (isEdit) {
         update({ hash_key: router.query.hash_key.toString(), data })
@@ -108,7 +110,7 @@ const TournamentCreate: React.FC = () => {
       prize_amount: stepOne.prize_amount,
       terms_of_participation: stepTwo.terms_of_participation,
       notes: stepTwo.notes,
-      area_name: stepThree.area_name,
+      address: stepThree.address,
       organizer_name: stepFour.organizer_name,
     })
 
@@ -118,7 +120,7 @@ const TournamentCreate: React.FC = () => {
       [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
       [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
       [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
-      [FIELD_TITLES.stepThree.area_name]: stepThree.area_name,
+      [FIELD_TITLES.stepThree.address]: stepThree.address,
       [FIELD_TITLES.stepFour.organizer_name]: stepFour.organizer_name,
     })
 
@@ -200,7 +202,7 @@ const TournamentCreate: React.FC = () => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
-                {i18n.t('common:tournament_create.title')}
+                {isEdit ? i18n.t('common:tournament_create.edit_title') : i18n.t('common:tournament_create.title')}
               </Typography>
             </Box>
           </Box>

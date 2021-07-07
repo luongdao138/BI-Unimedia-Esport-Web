@@ -29,7 +29,7 @@ export type EditableTypes = {
   acceptance_end_date: boolean
   participant_type: boolean
   area_id: boolean
-  area_name: boolean
+  address: boolean
   prize: boolean
   terms_of_participation: boolean
   organizer_name: boolean
@@ -68,7 +68,7 @@ const useTournamentCreate = (): {
     t_type: true,
     notes: true,
     area_id: true,
-    area_name: true,
+    address: true,
     co_organizers: true,
     organizer_name: true,
     // always not editable
@@ -139,7 +139,7 @@ const useTournamentCreate = (): {
         _editables.t_type = true
         _editables.notes = true
         _editables.area_id = true
-        _editables.area_name = true
+        _editables.address = true
         _editables.co_organizers = true
         _editables.organizer_name = true
 

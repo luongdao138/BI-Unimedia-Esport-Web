@@ -184,6 +184,7 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
   }
   if (stepTwo) {
     requiredFieldErrors.push(stepTwo.rule)
+    requiredFieldErrors.push(stepTwo.participant_type)
     requiredFieldErrors.push(stepTwo.max_participants)
   }
   if (stepThree) {

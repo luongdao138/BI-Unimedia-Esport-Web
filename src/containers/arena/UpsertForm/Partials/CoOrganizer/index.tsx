@@ -127,7 +127,7 @@ const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
       </Box>
       <Box maxWidth={280} className={classes.buttonBottom}>
         <ButtonPrimary type="submit" disabled={_.isEmpty(selectedList)} round fullWidth onClick={handleSubmit}>
-          {i18n.t('common:tournament_create.decide')}
+          {i18n.t('common:tournament_create.add')}
         </ButtonPrimary>
       </Box>
     </div>
