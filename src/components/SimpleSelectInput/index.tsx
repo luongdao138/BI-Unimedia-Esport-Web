@@ -66,7 +66,8 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
         options={items}
         getOptionLabel={(item) => item.nickname}
         filterSelectedOptions
-        noOptionsText={t('common:chat.no_user_available')}
+        noOptionsText={t('common:common.no_user_available')}
+        loadingText={t('common:common.loading')}
         onChange={(__, values) => {
           onItemSelected({ index: index, item: values as TeamMemberSelectItem })
         }}
