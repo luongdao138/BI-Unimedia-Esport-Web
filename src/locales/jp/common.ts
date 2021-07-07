@@ -351,7 +351,7 @@ export default {
     game: 'ゲーム',
     game_hardware: 'ゲームハード',
     copy_url: '大会URLのコピー',
-    copy_shared_url: '共有URLをコピーリンク',
+    copy_shared_url: '共有URLをコピー',
     cover_upload_select_img: '画像を選択する',
     report: '通報',
     entry_members: 'エントリーメンバー',
