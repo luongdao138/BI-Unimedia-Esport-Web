@@ -15,17 +15,16 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
 
   const status = tournament.attributes.status
-  const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
-  const isOnHold = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
+  const beforeOnhold = status === TOURNAMENT_STATUS.RECRUITING || status === TOURNAMENT_STATUS.READY
 
   const accEndDate = moment(tournament.attributes.acceptance_end_date)
   const startDate = moment(tournament.attributes.start_date)
-  const targetDate = isRecruiting ? accEndDate : startDate
+  const targetDate = beforeOnhold ? accEndDate : startDate
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
   const hours = targetDate.diff(nowDate, 'hours')
 
-  const untilDatePrefix = isRecruiting ? t('common:tournament.until_deadline') : isOnHold ? t('common:tournament.until_event') : ''
+  const untilDatePrefix = beforeOnhold ? t('common:tournament.until_deadline') : t('common:tournament.until_event')
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
@@ -35,7 +34,7 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
           <Typography className={classes.highlightedNumber}>{days}</Typography>
           <Typography>{t('common:common.day')}</Typography>
         </>
-      ) : hours > 1 ? (
+      ) : hours >= 1 ? (
         <>
           <Typography>{untilDatePrefix}</Typography>
           <Typography className={classes.highlightedNumber}>{hours}</Typography>

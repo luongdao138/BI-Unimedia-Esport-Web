@@ -7,7 +7,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
@@ -42,7 +42,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
         </ButtonPrimaryOutlined>
       </Box>
 
-      <ESModal open={open}>
+      <ESPopup open={open}>
         <BlankLayout>
           <Box paddingY={16} className={classes.childrenContainer}>
             <Box pb={4} color={Colors.white} alignItems="center">
@@ -73,7 +73,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
             </Box>
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
     </Box>

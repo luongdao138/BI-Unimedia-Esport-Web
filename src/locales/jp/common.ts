@@ -63,6 +63,8 @@ export default {
     confirm_ok: 'キャンセルする',
     blocking: 'ブロック中',
     username: 'ユーザー名',
+    loading: '読み込み中...',
+    no_user_available: '一致するデータが見つかりません',
   },
   page404: {
     title: '404',
@@ -458,6 +460,7 @@ export default {
       no_entry: '未エントリー',
       ongoing: '開催中',
     },
+    result_not_decided: '大会結果が決定していません',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
@@ -598,7 +601,7 @@ export default {
   },
   chat: {
     title: 'メッセージ',
-    no_user_available: 'No user available',
+    no_user_available: '一致するデータが見つかりません',
     back_list: '宛先',
     create_new: '新規作成',
     placeholder: 'メッセージを入力',
