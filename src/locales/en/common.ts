@@ -382,7 +382,7 @@ export default {
     join: 'エントリーする',
     unjoin: 'エントリーを確認',
     decline_entry: 'エントリーを辞退する',
-    update_entry_nick: 'エントリー情報の更新',
+    update_entry_info: 'エントリー情報の更新',
     check_entry: 'エントリーを確認する',
     tournament_detail: '大会詳細',
     unjoin_dialog: {
@@ -461,6 +461,8 @@ export default {
       ongoing: '開催中',
     },
     result_not_decided: '大会結果が決定していません',
+    entry_information: 'エントリー情報',
+    update_with_content: 'この内容で更新する',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

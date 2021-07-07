@@ -255,8 +255,8 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     <>
       <StickyActionModal
         open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
+        returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
+        actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
         actionButtonDisabled={!formik.isValid || !isMembersComplete()}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
