@@ -94,13 +94,11 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
                 </Box>
               </Box>
               <Divider />
-              {!isMobile && (
-                <Box pb={2} pt={3} textAlign="center">
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                  </ThemeProvider>
-                </Box>
-              )}
+              <Box pb={2} pt={3} textAlign="center">
+                <ThemeProvider theme={theme}>
+                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
+                </ThemeProvider>
+              </Box>
               <Box pb={5} pt={5} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
               </Box>

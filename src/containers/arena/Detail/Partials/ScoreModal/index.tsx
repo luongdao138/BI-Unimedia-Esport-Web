@@ -24,6 +24,7 @@ import { Meta } from '@store/metadata/actions/types'
 import ArenaAvatar from '@containers/arena/Winners/ArenaAvatar'
 import ScoreEdit from './ScoreEdit'
 import ESStickyFooter from '@components/StickyFooter'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface ScoreModalProps {
   meta: Meta
@@ -54,6 +55,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
   let scoreEditable = false
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const { isModerator } = useArenaHelper(tournament)
 
   if (statusAvailable && !isAutowin && (isAdmin || ownScoreEditable)) {
     scoreEditable = selectedMatch.is_editable ? true : false
@@ -143,17 +145,17 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
                     <Icon className="fa fa-arrow-left" fontSize="small" />
                   </IconButton>
                   <Box pl={2}>
-                    <Typography variant="h2">{isMobile ? matchName() : t('common:tournament.match_result')}</Typography>
+                    <Typography variant="h2">
+                      {isModerator ? t('common:tournament.match_result') : t('common:tournament.match_setting')}
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
-                {!isMobile && (
-                  <Box pb={6} pt={3} textAlign="center">
-                    <ThemeProvider theme={theme}>
-                      <Typography variant="body1">{matchName()}</Typography>
-                    </ThemeProvider>
-                  </Box>
-                )}
+                <Box pb={6} pt={3} textAlign="center">
+                  <ThemeProvider theme={theme}>
+                    <Typography variant="body1">{matchName()}</Typography>
+                  </ThemeProvider>
+                </Box>
                 <Box display="flex" justifyContent="space-between" padding={1}>
                   {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
                   <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>

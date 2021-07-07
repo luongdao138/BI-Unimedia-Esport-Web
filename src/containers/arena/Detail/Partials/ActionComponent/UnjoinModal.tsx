@@ -7,7 +7,7 @@ import ESButton from '@components/Button'
 import LinkButton from '@components/LinkButton'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
@@ -31,7 +31,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
   return (
     <Box textAlign="center" mt={2}>
       <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
-      <ESModal open={open}>
+      <ESPopup open={open}>
         <BlankLayout>
           <Box paddingBottom={16} paddingTop={8} className={classes.childrenContainer}>
             <Box pb={4} pt={12} color={Colors.white} alignItems="center">
@@ -57,7 +57,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
             </Box>
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
 
       {leaveMeta.pending && <ESLoader open={leaveMeta.pending} />}
     </Box>
