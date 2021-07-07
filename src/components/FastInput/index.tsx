@@ -21,7 +21,7 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   const debouncedChangeHandler = useCallback(
     _.debounce((e) => {
       props.onChange(e)
-    }, 500),
+    }, 300),
     []
   )
 

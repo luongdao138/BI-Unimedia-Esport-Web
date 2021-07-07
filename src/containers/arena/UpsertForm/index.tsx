@@ -200,7 +200,7 @@ const TournamentCreate: React.FC = () => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
-                {i18n.t('common:tournament_create.title')}
+                {isEdit ? i18n.t('common:tournament_create.edit_title') : i18n.t('common:tournament_create.title')}
               </Typography>
             </Box>
           </Box>
