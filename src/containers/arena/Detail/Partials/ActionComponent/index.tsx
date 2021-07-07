@@ -106,8 +106,9 @@ const ActionComponent: React.FC<Props> = (props) => {
   const renderEntry = () => {
     if ((isEntered && isTeamLeader) || isAdminJoined) {
       return entryEditButton()
+    } else if (isRecruiting || isReady) {
+      return entryButton()
     }
-    return entryButton()
   }
 
   return (

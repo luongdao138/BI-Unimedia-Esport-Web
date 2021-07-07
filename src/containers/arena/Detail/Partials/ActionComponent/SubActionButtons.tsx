@@ -14,8 +14,11 @@ interface Props {
 const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { toGroupChat, toMatches, toResults, isCompleted, isUnselected, isEntered, isReady, isRecruiting } = useArenaHelper(tournament)
+  const { toGroupChat, toMatches, toResults, isCompleted, isUnselected, isEntered, isReady, isRecruiting, isModerator } = useArenaHelper(
+    tournament
+  )
   const isFreezed = tournament?.attributes?.is_freezed
+  const chatDisabled = (!isEntered || isUnselected) && !isModerator
 
   return (
     <Box className={classes.body}>
@@ -49,7 +52,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                     variant="outlined"
                     fullWidth
                     onClick={toGroupChat}
-                    disabled={!isEntered || isUnselected}
+                    disabled={chatDisabled}
                   >
                     {t('common:tournament.group_chat')}
                   </ActionLabelButton>
@@ -66,7 +69,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                     variant="outlined"
                     fullWidth
                     onClick={toGroupChat}
-                    disabled={!isEntered || isUnselected}
+                    disabled={chatDisabled}
                   >
                     {t('common:tournament.group_chat')}
                   </ActionLabelButton>
