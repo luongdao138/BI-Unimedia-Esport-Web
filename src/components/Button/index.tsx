@@ -1,6 +1,7 @@
 import { Button, ButtonProps } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
+import { isDesktop } from 'react-device-detect'
 
 const useStyles = makeStyles((theme) => ({
   containedPrimary: (props: { gradient?: boolean; round?: boolean; minWidth?: number }) => ({
@@ -9,13 +10,14 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: 'none',
     background: Colors.primary,
     fontWeight: 500,
-    '&:hover': {
-      background: Colors.white,
-      backgroundColor: Colors.white,
-      color: Colors.primary,
-      transition: 'all 0.2s ease-in',
-    },
-
+    '&:hover': isDesktop
+      ? {
+          background: Colors.white,
+          backgroundColor: Colors.white,
+          color: Colors.primary,
+          transition: 'all 0.2s ease-in',
+        }
+      : 'none',
     '&.Mui-disabled': {
       background: '#4D4D4D',
       color: Colors.white_opacity[30],
@@ -28,10 +30,12 @@ const useStyles = makeStyles((theme) => ({
     color: props.normalColor || Colors.white_opacity[70],
     border: '1px solid',
     borderColor: props.normalColor || Colors.white_opacity[70],
-    '&:hover': {
-      background: props.hoverColor || Colors.white_opacity[30],
-      color: props.normalColor || Colors.white,
-    },
+    '&:hover': isDesktop
+      ? {
+          background: props.hoverColor || Colors.white_opacity[30],
+          color: props.normalColor || Colors.white,
+        }
+      : 'none',
     '&.Mui-disabled': {
       color: Colors.white_opacity[30],
       border: '1px solid',
