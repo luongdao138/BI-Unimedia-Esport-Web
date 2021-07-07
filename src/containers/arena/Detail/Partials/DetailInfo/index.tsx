@@ -197,7 +197,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <Box className={classes.value}>
                 {data.owner && (
                   <Box display="flex" flexDirection="row" alignItems="center">
-                    <ESAvatar alt="Avatar" src={data.owner.data.attributes.avatar} />
+                    <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
                     <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
                   </Box>
                 )}
@@ -213,7 +213,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 {data.co_organizers && data.co_organizers.data && data.co_organizers.data.length > 0 ? (
                   data.co_organizers.data.map((co: CommonResponse, i) => (
                     <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
-                      <ESAvatar alt="Avatar" src={co.attributes.avatar} />
+                      <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} />
                       <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
                     </Box>
                   ))

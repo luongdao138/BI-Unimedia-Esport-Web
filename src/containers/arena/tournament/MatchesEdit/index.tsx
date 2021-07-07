@@ -16,6 +16,7 @@ import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import { Colors } from '@theme/colors'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -25,6 +26,7 @@ const ArenaMatches: React.FC = () => {
   const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, handleBack } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
+  const { isModerator } = useArenaHelper(tournament)
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [showFreeze, setShowFreeze] = useState(false)
@@ -43,7 +45,7 @@ const ArenaMatches: React.FC = () => {
   }, [randomizeMeta.loaded])
 
   const onMatchClick = (match) => {
-    if (match && match.round_no == 0 && !tournament.attributes.is_freezed) setSelectedMatch(match)
+    if (match && match.round_no == 0 && isModerator && !tournament.attributes.is_freezed) setSelectedMatch(match)
   }
 
   const getMatch = (headerText, _match) => {
@@ -234,6 +236,11 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
       flexDirection: 'column',
+    },
+    backContainer: {
+      position: 'absolute',
+      backgroundColor: 'transparent',
+      borderBottom: 'none',
     },
   },
 }))

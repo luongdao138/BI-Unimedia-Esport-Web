@@ -460,6 +460,7 @@ export default {
       no_entry: '未エントリー',
       ongoing: '開催中',
     },
+    result_not_decided: '大会結果が決定していません',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',

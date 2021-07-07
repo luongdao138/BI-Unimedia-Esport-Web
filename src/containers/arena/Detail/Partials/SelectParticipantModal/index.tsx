@@ -121,7 +121,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
           {!isTeam && <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>}
         </Box>
 
-        <Box display="flex" alignItems="flex-end">
+        <Box display="flex" alignItems="flex-end" pt={2}>
           <ButtonPrimary
             style={{ padding: '12px 24px' }}
             disabled={meta.pending}
@@ -222,12 +222,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   itemWrapper: {
     width: 196,
-    height: 240,
+    minHeight: 240,
   },
   [theme.breakpoints.down('sm')]: {
     itemWrapper: {
       width: 133,
-      height: 220,
+      minHeight: 220,
     },
     topContainer: {
       paddingTop: 0,
