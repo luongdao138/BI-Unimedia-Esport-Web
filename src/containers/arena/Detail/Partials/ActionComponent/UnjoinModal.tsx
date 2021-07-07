@@ -45,7 +45,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
               <Box className={classes.actionButton}>
-                <ESButton className={classes.outlineBtn} variant="outlined" round fullWidth onClick={() => setOpen(false)}>
+                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: theme.spacing(35),
     margin: 8,
   },
-  outlineBtn: {
+  cancelBtn: {
     padding: '12px 22px',
   },
   [theme.breakpoints.down('sm')]: {

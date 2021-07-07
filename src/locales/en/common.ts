@@ -63,6 +63,8 @@ export default {
     confirm_ok: 'キャンセルする',
     blocking: 'ブロック中',
     username: 'ユーザー名',
+    loading: '読み込み中...',
+    no_user_available: '一致するデータが見つかりません',
   },
   page404: {
     title: '404',
@@ -599,7 +601,7 @@ export default {
   },
   chat: {
     title: 'メッセージ',
-    no_user_available: 'No user available',
+    no_user_available: '一致するデータが見つかりません',
     back_list: '宛先',
     create_new: '新規作成',
     placeholder: 'メッセージを入力',
@@ -795,7 +797,7 @@ export default {
     purchase_history: '購入履歴',
     service_info: 'サービス情報',
     terms: '利用規約',
-    personal_info: '個人情報の取扱について',
+    personal_info: '個人情報の取り扱いについて',
     commercial_transaction: '特定商取引に関する表記',
   },
   dialog: {
