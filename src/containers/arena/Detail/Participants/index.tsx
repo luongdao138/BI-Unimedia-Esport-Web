@@ -156,6 +156,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                   ? members.map((participant, i) => (
                       <Box key={`team${i}`} py={1}>
                         <TeamMemberItemExpanded
+                          hideFollow={isMyTeam(participant) ? true : false}
                           team={participant}
                           yellowTitle={isMyTeam(participant)}
                           handleClick={() => onTeamClick(participant)}
