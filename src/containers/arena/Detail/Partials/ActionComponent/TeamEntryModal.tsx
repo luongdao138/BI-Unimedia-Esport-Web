@@ -25,6 +25,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -56,11 +57,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       onClose()
       reset()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
 
   useEffect(() => {
     changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
@@ -261,6 +262,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
+        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
         <form onSubmit={handleActionButton}>{teamForm()}</form>
       </StickyActionModal>
 

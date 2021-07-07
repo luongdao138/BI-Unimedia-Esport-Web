@@ -17,6 +17,7 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -27,14 +28,14 @@ interface IndividualEntryModalProps {
 
 const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
   const { t } = useTranslation(['common'])
-  const { join, joinMeta } = useEntry()
+  const { join, joinMeta, resetJoinMeta } = useEntry()
   const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       handleClose()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
@@ -70,6 +71,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   }, [])
 
   const handleClose = () => {
+    resetJoinMeta()
     resetTitle()
     onClose()
   }
@@ -84,6 +86,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         onReturnClicked={handleClose}
         onActionButtonClicked={handleSubmit}
       >
+        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
         <form onSubmit={handleSubmit}>
           <BlackBox>
             <DetailInfo detail={tournament} />
