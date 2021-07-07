@@ -19,13 +19,13 @@ const SideFooter: React.FC = () => {
             <ListItemText className={classes.label}>{t('common:top.footer_twitter_official')}</ListItemText>
           </div>
         </Link>
-        <Link href={ESRoutes.TERMS} underline={'none'} target="_blank">
+        <Link href={ESRoutes.TERMS} underline={'none'}>
           <ListItemText className={classes.listText}>{t('common:home.terms_of_use')}</ListItemText>
         </Link>
-        <Link href={ESRoutes.COMMERCIAL} underline={'none'} target="_blank">
+        <Link href={ESRoutes.COMMERCIAL} underline={'none'}>
           <ListItemText className={classes.listText}>{t('common:home.notation_commercial')}</ListItemText>
         </Link>
-        <Link href={ESRoutes.PRIVACY} underline={'none'} target="_blank">
+        <Link href={ESRoutes.PRIVACY} underline={'none'}>
           <ListItemText className={classes.listText}>{t('common:home.handling_of_personal_information')}</ListItemText>
         </Link>
         <Link href="https://support.exelab.jp/hc/ja" underline={'none'} target="_blank">
