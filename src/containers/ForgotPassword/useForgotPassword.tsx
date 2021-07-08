@@ -1,11 +1,12 @@
+import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import authStore from '@store/auth'
-import {
-  ForgotPasswordParams,
-  UserConfirmParams,
-  UserResetPasswordParams,
-} from '@services/auth.service'
+import { ForgotPasswordParams, UserResetPasswordParams } from '@services/auth.service'
+import { clearMetaData } from '@store/metadata/actions'
+import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import Router from 'next/router'
 
 const { selectors, actions } = authStore
 const getForgotPasswordMeta = createMetaSelector(actions.forgotPassword)
@@ -17,25 +18,31 @@ const useForgotPassword = () => {
   const user = useAppSelector(selectors.getAuth)
   const meta = useAppSelector(getForgotPasswordMeta)
   const metaConfirm = useAppSelector(getForgotConfirmMeta)
+  const { navigateScreen, handleReturn } = useReturnHref()
 
-  const forgotPassword = (params: ForgotPasswordParams) =>
+  const forgotPassword = (params: ForgotPasswordParams) => {
     dispatch(actions.forgotPassword(params))
-
-  const forgotConfirm = (params: UserConfirmParams) => {
-    dispatch(actions.forgotConfirm(params))
+    navigateScreen(ESRoutes.FORGOT_PASSWORD_CONFIRM)
+    dispatch(clearMetaData(actions.forgotPassword.typePrefix))
   }
 
   const resetPassword = (params: UserResetPasswordParams) => {
     dispatch(actions.resetPassword(params))
   }
 
+  const backAction = () => handleReturn()
+
+  useEffect(() => {
+    Router.prefetch(ESRoutes.FORGOT_PASSWORD_CONFIRM)
+  }, [])
+
   return {
     user,
     forgotPassword,
-    forgotConfirm,
     resetPassword,
     meta,
     metaConfirm,
+    backAction,
   }
 }
 

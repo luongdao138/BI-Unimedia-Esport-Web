@@ -1,0 +1,187 @@
+import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
+import useArenaHome from './useArenaHome'
+import ESLoader from '@components/Loader'
+import TournamentCard from '@components/TournamentCard'
+import ButtonPrimary from '@components/ButtonPrimary'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { TournamentFilterOption } from '@services/arena.service'
+import { useTranslation } from 'react-i18next'
+import { Colors } from '@theme/colors'
+import { AddRounded } from '@material-ui/icons'
+import ESChip from '@components/Chip'
+import useArenaHelper from '../hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
+import { useState } from 'react'
+
+const ArenaHome: React.FC = () => {
+  const { t } = useTranslation()
+  const classes = useStyles()
+  const { arenas, page, meta, loadMore, onFilterChange } = useArenaHome()
+  const { toCreate } = useArenaHelper()
+  const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
+
+  const onFilter = (filter: TournamentFilterOption) => {
+    if (selectedFilter !== filter) {
+      onFilterChange(filter)
+    }
+    setSelectedFilter(filter)
+  }
+
+  const defaultFilterOptions = [
+    {
+      type: TournamentFilterOption.all,
+      label: t('common:arenaSearchFilters.all'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.ready,
+      label: t('common:arenaSearchFilters.ready'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.recruiting,
+      label: t('common:arenaSearchFilters.recruiting'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.beforeStart,
+      label: t('common:arenaSearchFilters.beforeStart'),
+      loginRequired: false,
+    },
+    {
+      type: TournamentFilterOption.inProgress,
+      label: t('common:arenaSearchFilters.inProgress'),
+    },
+    {
+      type: TournamentFilterOption.completed,
+      label: t('common:arenaSearchFilters.completed'),
+      loginRequired: false,
+    },
+  ]
+
+  const loginRequiredFilterOptions = [
+    {
+      type: TournamentFilterOption.joined,
+      label: t('common:arenaSearchFilters.joined'),
+      loginRequired: true,
+    },
+    {
+      type: TournamentFilterOption.organized,
+      label: t('common:arenaSearchFilters.organized'),
+      loginRequired: true,
+    },
+  ]
+
+  return (
+    <>
+      <div className={classes.header}>
+        <Typography variant="h2">アリーナ</Typography>
+
+        <LoginRequired>
+          <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
+            <AddRounded className={classes.addIcon} />
+            {t('common:tournament_create.title')}
+          </ButtonPrimary>
+        </LoginRequired>
+      </div>
+      <Grid container className={classes.content}>
+        <Box className={classes.filters}>
+          {defaultFilterOptions.map((option) => (
+            <ESChip
+              key={option.type}
+              color={option.type === selectedFilter ? 'primary' : undefined}
+              className={classes.filterChip}
+              label={option.label}
+              onClick={() => onFilter(option.type)}
+            />
+          ))}
+        </Box>
+        <Box className={classes.filtersLoginRequired}>
+          {loginRequiredFilterOptions.map((option) => (
+            <LoginRequired key={option.type}>
+              <ESChip
+                key={option.type}
+                color={option.type === selectedFilter ? 'primary' : undefined}
+                className={classes.filterChip}
+                label={option.label}
+                onClick={() => onFilter(option.type)}
+              />
+            </LoginRequired>
+          ))}
+        </Box>
+        <InfiniteScroll
+          className={classes.scrollContainer}
+          dataLength={arenas.length}
+          next={loadMore}
+          hasMore={page && page.current_page !== page.total_pages}
+          loader={null}
+          scrollThreshold="1px"
+        >
+          {arenas.map((tournament, i) => (
+            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
+              <TournamentCard tournament={tournament} />
+            </Grid>
+          ))}
+        </InfiniteScroll>
+        {meta.pending && (
+          <Grid item xs={12}>
+            <Box my={4} display="flex" justifyContent="center" alignItems="center">
+              <ESLoader />
+            </Box>
+          </Grid>
+        )}
+      </Grid>
+    </>
+  )
+}
+
+const useStyles = makeStyles((theme) => ({
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    backgroundColor: Colors.black,
+    '& .MuiButtonBase-root.button-primary': {
+      padding: '12px 16px',
+    },
+  },
+  filters: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  filtersLoginRequired: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 8,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  filterChip: {
+    maxWidth: 'none',
+    marginBottom: 16,
+    marginRight: 16,
+  },
+  addIcon: {
+    position: 'relative',
+    left: -8,
+  },
+  content: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
+  scrollContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+}))
+
+export default ArenaHome

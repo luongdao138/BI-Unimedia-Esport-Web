@@ -9,15 +9,9 @@
     "at-rule-no-vendor-prefix": true,
     "media-feature-name-no-vendor-prefix": true,
     "declaration-property-value-whitelist": {
-      "/color$/": [
-        "/^\\$|initial|inherit|transparent|currentColor|darken|lighten|rgba/"
-      ],
-      "fill": [
-        "/^\\$|initial|inherit|transparent|currentColor|darken|lighten|rgba/"
-      ],
-      "stroke": [
-        "/^\\$|initial|inherit|transparent|currentColor|darken|lighten|rgba/"
-      ]
+      "/color$/": ["/^\\$|initial|inherit|transparent|currentColor|darken|lighten|rgba/"],
+      "fill": ["/^\\$|initial|inherit|transparent|currentColor|darken|lighten|rgba/"],
+      "stroke": ["/^\\$|initial|inherit|transparent|currentColor|darken|lighten|rgba/"]
     },
     "scss/at-rule-no-unknown": true,
     "scss/media-feature-value-dollar-variable": "always"

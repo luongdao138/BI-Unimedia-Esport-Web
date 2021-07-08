@@ -10,12 +10,13 @@
             "alias": {
               "@components": "./src/components",
               "@containers": "./src/containers",
-              "@common": "./src/common",
               "@store": "./src/store",
               "@constants": "./src/constants",
               "@services": "./src/services",
               "@theme": "./src/theme",
-              "@utils": "./src/utils"
+              "@utils": "./src/utils",
+              "@layouts": "./src/layouts",
+              "@locales": "./src/locales"
             }
           }
         ],
@@ -32,12 +33,13 @@
             "alias": {
               "@components": "./src/components",
               "@containers": "./src/containers",
-              "@common": "./src/common",
               "@store": "./src/store",
               "@constants": "./src/constants",
               "@services": "./src/services",
               "@theme": "./src/theme",
-              "@utils": "./src/utils"
+              "@utils": "./src/utils",
+              "@layouts": "./src/layouts",
+              "@locales": "./src/locales"
             }
           }
         ],
@@ -63,12 +65,13 @@
             "alias": {
               "@components": "./src/components",
               "@containers": "./src/containers",
-              "@common": "./src/common",
               "@store": "./src/store",
               "@constants": "./src/constants",
               "@services": "./src/services",
               "@theme": "./src/theme",
-              "@utils": "./src/utils"
+              "@utils": "./src/utils",
+              "@layouts": "./src/layouts",
+              "@locales": "./src/locales"
             }
           }
         ],

@@ -1,0 +1,136 @@
+.mentions--multiLine .mentions__control {
+  color: #fff;
+}
+.mentions--multiLine .mentions__highlighter {
+  border: 1px solid transparent !important;
+  padding: 9px;
+  outline: 0;
+  color: #fff;
+  font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック' !important;
+  font-size: 14px !important;
+  font-weight: 400;
+  background-color: transparent;
+  line-height: 1.4;
+  box-sizing: border-box;
+  overflow: hidden !important;
+  max-height: 177px;
+  min-height: 38px;
+  max-width: 100%;
+  width: 100%;
+}
+
+.mentions--multiLine .mentions__input {
+  border: 1px solid #777;
+  padding: 9px;
+  outline: 0;
+  color: #fff;
+  font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック' !important;
+  font-size: 14px !important;
+  font-weight: 400;
+  line-height: 1.4;
+  max-height: 177px;
+  max-width: 100%;
+  width: 100%;
+  min-height: 38px;
+  overflow: overlay !important;
+  border-radius: 24px;
+  background-color: #101010 !important;
+  resize: none !important;
+  position: relative;
+}
+
+.mentions--multiLine .mentions__input::-webkit-scrollbar {
+  width: 6px;
+  opacity: 1;
+  padding: 2;
+  visibility: visible;
+  cursor: pointer;
+  max-height: 80%;
+}
+.mentions--multiLine .mentions__input::-webkit-scrollbar-track {
+  padding-left: 1px;
+  opacity: 1;
+}
+.mentions--multiLine .mentions__input::-webkit-scrollbar-thumb {
+  background-color: #222;
+  border-right: none;
+  border-left: none;
+}
+.mentions--multiLine .mentions__input::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+  margin-bottom: 20px;
+}
+.mentions--multiLine .mentions__input::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+  margin-top: 20px;
+}
+
+.mentions__suggestions__list {
+  background-color: white;
+  font-size: 14px;
+  bottom: -5px;
+  left: 2px;
+  color: #101010;
+  position: absolute;
+  min-width: 200px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px 0 rgb(0 0 0 / 14%), 0 1px 3px 0 rgb(0 0 0 / 12%);
+  overflow: auto;
+  max-height: 250px;
+  max-width: 330px;
+  width: 100%;
+  scrollbar-color: #222 transparent;
+  scrollbar-width: thin;
+}
+
+/* .mentions__suggestions__item {
+} */
+
+.mentions__suggestions__item--focused {
+  background-color: #eee;
+}
+
+.mentions__mention {
+  font-family: 'Roboto', 'Noto Sans Jp', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', Osaka, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック' !important;
+  position: relative;
+  z-index: 1;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  text-shadow: 1px 1px 1px #101010, 1px -1px 1px #101010, -1px 1px 1px #101010, -1px -1px 1px #101010;
+  color: #ff4786;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .mentions__suggestions__list {
+    max-width: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    bottom: 4px;
+  }
+  .mentions__suggestions__item--focused {
+    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  .mentions--multiLine .mentions__control,
+  .mentions--multiLine .mentions__input {
+    max-width: calc(100vw - 96px);
+    /* Prevent IOS resize input out of container */
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+
+  @media (max-width: 720px) {
+    .mentions--multiLine .mentions__control,
+    .mentions--multiLine .mentions__input {
+      left: 3px !important;
+      top: -1px !important;
+      /* Strange bug on IOS X input element positionig not correct relative to parent temp fix */
+    }
+  }
+}

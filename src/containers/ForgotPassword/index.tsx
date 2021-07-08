@@ -1,148 +1,110 @@
-import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
-import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import { Colors } from '@theme/colors'
+import ESInput from '@components/Input'
+import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon'
 import * as Yup from 'yup'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useTranslation } from 'react-i18next'
 import useForgotPassword from './useForgotPassword'
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .test('email-validation', 'Invalid email', (value) => {
-      return CommonHelper.validateEmail(value)
-    })
-    .required('Required'),
-})
+import ESStickyFooter from '@components/StickyFooter'
+import ESLoader from '@components/FullScreenLoader'
+import { IconButton } from '@material-ui/core'
+import _ from 'lodash'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { showDialog } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 
 const ForgotPasswordContainer: React.FC = () => {
-  const {
-    user,
-    meta,
-    metaConfirm,
-    forgotPassword,
-    forgotConfirm,
-    resetPassword,
-  } = useForgotPassword()
-  const [confirmationCode, setConfirm] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const { handleChange, values, handleSubmit, errors, touched } = useFormik<
-    services.ForgotPasswordParams
-  >({
+  const { t } = useTranslation(['common'])
+  const classes = useStyles()
+  const { forgotPassword, meta, backAction } = useForgotPassword()
+  const dispatch = useAppDispatch()
+  const { checkNgWord } = useCheckNgWord()
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .test('email-validation', t('common:login.validation.email'), (value) => {
+        return CommonHelper.validateEmail(value)
+      })
+      .required(t('common:common.input_required')),
+  })
+
+  const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<services.ForgotPasswordParams>({
     initialValues: {
       email: '',
     },
     validationSchema,
     onSubmit: (values) => {
       if (values.email) {
-        forgotPassword(values)
+        if (_.isEmpty(checkNgWord(values.email))) {
+          forgotPassword(values)
+        } else {
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.forgot_password }))
+        }
       }
     },
   })
 
-  const handleForgotConfirm = () => {
-    forgotConfirm({ ...values, confirmation_code: confirmationCode })
-  }
-
-  const handleResetPassword = () => {
-    resetPassword({
-      ...values,
-      password: password,
-      password_confirm: passwordConfirmation,
-      confirmation_code: confirmationCode,
-    })
+  const buttonActive = (): boolean => {
+    return values.email !== '' && CommonHelper.validateEmail(values.email)
   }
 
   return (
     <>
-      <form onSubmit={handleSubmit} style={{ paddingBottom: 20 }}>
-        <p>{user && JSON.stringify(user)}</p>
-        <p>{meta && JSON.stringify(meta)}</p>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
-            <TextField
-              id="email"
-              label="Email"
-              placeholder="Email"
-              onChange={handleChange}
-              value={values.email}
-              helperText={touched.email && errors.email}
-              error={touched.email && !!errors.email}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Forgot password
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+      <ESStickyFooter disabled={!buttonActive()} title={t('common:forgot_password.send')} onClick={handleSubmit} noScroll>
+        <form onSubmit={handleSubmit}>
+          <Box pt={7.5} pb={9} className={classes.topContainer}>
+            <Box py={2} display="flex" flexDirection="row" alignItems="center">
+              <IconButton className={classes.iconButtonBg} onClick={backAction}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Box pl={2}>
+                <Typography variant="h2">{t('common:forgot_password.title')}</Typography>
+              </Box>
+            </Box>
 
-      {meta.loaded && (
-        <>
-          <TextField
-            id="confirm"
-            label="confirm"
-            placeholder="confirm"
-            onChange={(e) => setConfirm(e.target.value)}
-            value={confirmationCode}
-            fullWidth
-            style={{ paddingBottom: 20 }}
-          />
+            <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
+              <Box>
+                <ESInput
+                  id="email"
+                  placeholder={t('common:register_by_email.email_placeholder')}
+                  labelPrimary={t('common:forgot_password.email')}
+                  fullWidth
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  helperText={touched.email && errors.email}
+                  error={touched.email && !!errors.email}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </form>
+      </ESStickyFooter>
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleForgotConfirm}
-            style={{ marginBottom: 20 }}
-          >
-            Confirm forgot
-          </Button>
-        </>
-      )}
-
-      {metaConfirm.loaded && (
-        <>
-          <TextField
-            id="password"
-            label="password"
-            placeholder="password"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            fullWidth
-            style={{ paddingBottom: 20 }}
-          />
-
-          <TextField
-            id="password-confirm"
-            label="password confirm"
-            placeholder="password confirm"
-            type="password"
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
-            value={passwordConfirmation}
-            fullWidth
-            style={{ paddingBottom: 20 }}
-          />
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleResetPassword}
-          >
-            Confirm forgot
-          </Button>
-        </>
-      )}
+      {meta.pending && <ESLoader open={meta.pending} />}
     </>
   )
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[200]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[200]}80`,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    topContainer: {
+      paddingTop: 0,
+    },
+  },
+}))
 
 export default ForgotPasswordContainer
