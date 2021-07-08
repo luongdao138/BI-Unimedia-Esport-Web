@@ -98,52 +98,71 @@ const TournamentCreate: React.FC = () => {
     } else {
       const isRequiredFieldsValid = TournamentHelper.checkRequiredFields(formik.errors)
       setError(!isRequiredFieldsValid)
+
+      if (isConfirm) {
+        setIsConfirm(false)
+      }
+      if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
+      else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
+      else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
+      else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
+
+      setTab(activeTabIndex)
     }
   }, [formik.errors])
 
   const handleSetConfirm = () => {
-    const { stepOne, stepTwo, stepThree, stepFour } = formik.values
+    formik.validateForm().then(() => {
+      const { stepOne, stepTwo, stepThree, stepFour } = formik.values
 
-    const fieldIdentifier = checkNgWordFields({
-      title: stepOne.title,
-      overview: stepOne.overview,
-      prize_amount: stepOne.prize_amount,
-      terms_of_participation: stepTwo.terms_of_participation,
-      notes: stepTwo.notes,
-      address: stepThree.address,
-      organizer_name: stepFour.organizer_name,
-    })
+      const fieldIdentifier = checkNgWordFields({
+        title: stepOne.title,
+        overview: stepOne.overview,
+        prize_amount: stepOne.prize_amount,
+        terms_of_participation: stepTwo.terms_of_participation,
+        notes: stepTwo.notes,
+        address: stepThree.address,
+        organizer_name: stepFour.organizer_name,
+      })
 
-    const ngFields = checkNgWordByField({
-      [FIELD_TITLES.stepOne.title]: stepOne.title,
-      [FIELD_TITLES.stepOne.overview]: stepOne.overview,
-      [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
-      [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
-      [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
-      [FIELD_TITLES.stepThree.address]: stepThree.address,
-      [FIELD_TITLES.stepFour.organizer_name]: stepFour.organizer_name,
-    })
+      const ngFields = checkNgWordByField({
+        [FIELD_TITLES.stepOne.title]: stepOne.title,
+        [FIELD_TITLES.stepOne.overview]: stepOne.overview,
+        [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
+        [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
+        [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
+        [FIELD_TITLES.stepThree.address]: stepThree.address,
+        [FIELD_TITLES.stepFour.organizer_name]: stepFour.organizer_name,
+      })
 
-    if (fieldIdentifier) {
-      if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
-      else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
-      else if (_.has(FIELD_TITLES.stepThree, fieldIdentifier)) activeTabIndex = 2
-      else if (_.has(FIELD_TITLES.stepFour, fieldIdentifier)) activeTabIndex = 3
+      if (fieldIdentifier) {
+        if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
+        else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
+        else if (_.has(FIELD_TITLES.stepThree, fieldIdentifier)) activeTabIndex = 2
+        else if (_.has(FIELD_TITLES.stepFour, fieldIdentifier)) activeTabIndex = 3
 
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
-    } else {
-      if (_.isEmpty(formik.errors)) {
-        setIsConfirm(true)
-        return
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
       } else {
-        if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
-        else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-        else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
-        else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
+        if (_.isEmpty(formik.errors)) {
+          if (isConfirm) {
+            formik.submitForm()
+          } else {
+            setIsConfirm(true)
+          }
+          return
+        } else {
+          if (isConfirm) {
+            setIsConfirm(false)
+          }
+          if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
+          else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
+          else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
+          else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
 
-        setTab(activeTabIndex)
+          setTab(activeTabIndex)
+        }
       }
-    }
+    })
   }
 
   const handleUnsetConfirm = () => setIsConfirm(false)
@@ -175,7 +194,7 @@ const TournamentCreate: React.FC = () => {
               <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
-              <ButtonPrimary type="submit" onClick={() => formik.submitForm()} round disabled={hasError} className={classes.footerButton}>
+              <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
                 {i18n.t('common:tournament_create.submit')}
               </ButtonPrimary>
             </Box>
