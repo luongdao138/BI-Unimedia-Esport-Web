@@ -34,7 +34,7 @@ const NotificationListItem: React.FC<Props> = ({ data }) => {
               {notification.nickname}
             </Typography>
           </Box>
-          <Typography noWrap>{notification.message}</Typography>
+          <Typography>{notification.full_message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
               {createdAt}
