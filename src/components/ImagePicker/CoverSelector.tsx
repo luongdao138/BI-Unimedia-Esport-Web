@@ -61,6 +61,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
   const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
+  const [error, setError] = useState<boolean>(false)
   const classes = useStyles({ width: dynamicWidth })
 
   useEffect(() => {
@@ -71,11 +72,21 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
     setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
   }, [containerWidth])
 
+  const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
   const dropZoneConfig = {
-    accept: 'image/*',
+    accept: 'image/jpeg, image/jpg, image/png, image/gif',
     onDrop: (files: any) => handleChange(files),
+    maxSize: MAX_SIZE,
   }
-  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
+
+  useEffect(() => {
+    if (fileRejections.length > 0) {
+      setError(fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE)
+    } else {
+      setError(false)
+    }
+  }, [fileRejections])
 
   const handleChange = (files: Array<File>) => {
     const f = files[0]
@@ -126,7 +137,11 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
-
+        {error && (
+          <Typography color="secondary" className={classes.warning}>
+            {i18n.t('common:messages.file_size_limit')}
+          </Typography>
+        )}
         <Box className={classes.cropContainer}>
           {file ? (
             <Cropper
@@ -231,6 +246,9 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   title: {
     marginTop: 40,
     marginBottom: 40,
+  },
+  warning: {
+    marginBottom: 20,
   },
   description: {
     marginTop: 40,
