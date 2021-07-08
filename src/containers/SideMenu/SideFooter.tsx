@@ -1,4 +1,4 @@
-import { Link, ListItemText, Theme, Box, ButtonBase } from '@material-ui/core'
+import { Link, ListItemText, Theme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
@@ -6,7 +6,11 @@ import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
 import Icon from '@material-ui/core/Icon'
 
-const SideFooter: React.FC = () => {
+type Props = {
+  handleAppModal: (value: boolean) => void
+}
+
+const SideFooter: React.FC<Props> = ({ handleAppModal }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
@@ -17,6 +21,11 @@ const SideFooter: React.FC = () => {
           <div className={classes.iconText}>
             <Icon className="fab fa-twitter" fontSize="small" />
             <ListItemText className={classes.label}>{t('common:top.footer_twitter_official')}</ListItemText>
+          </div>
+        </Link>
+        <Link className={classes.appLink} underline={'none'} onClick={() => handleAppModal(true)}>
+          <div className={classes.iconAppText}>
+            <ListItemText className={classes.label}>{t('common:home.app_version')}</ListItemText>
           </div>
         </Link>
         <Link href={ESRoutes.TERMS} underline={'none'}>
@@ -44,14 +53,6 @@ const SideFooter: React.FC = () => {
           </ListItemText>
         </div>
       </Link>
-      <Box className={classes.buttonWrap}>
-        <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
-          <img className={classes.google_app_stores} src="/images/appstore.png" />
-        </ButtonBase>
-        <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
-          <img className={classes.google_app_stores} src="/images/googleplay.png" />
-        </ButtonBase>
-      </Box>
     </div>
   )
 }
@@ -77,9 +78,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconText: {
     color: Colors.white_opacity[30],
+    paddingBottom: theme.spacing(1),
+    display: 'flex',
+    alignItems: 'center',
+  },
+  iconAppText: {
+    color: Colors.white_opacity[30],
     paddingBottom: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
+  },
+  appLink: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   listText: {
     color: Colors.white_opacity[30],
@@ -103,16 +115,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: 12,
     },
   },
-  buttonWrap: {
-    paddingTop: theme.spacing(2),
-  },
   appDesc: {
     display: 'block',
-    paddingBottom: theme.spacing(1),
-  },
-  google_app_stores: {
-    height: 50,
-    maxWidth: '100%',
     paddingBottom: theme.spacing(1),
   },
 }))

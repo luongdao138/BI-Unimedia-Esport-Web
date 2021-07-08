@@ -1,7 +1,5 @@
 # eXeLAB.jp STEP2.0
 
-An opinionated boilerplate to kickstart projects using NextJS
-
 **Features**
 
 - 👏🏼 Next 10.2.0 and webpack 5

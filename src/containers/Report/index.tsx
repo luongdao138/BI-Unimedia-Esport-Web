@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { Box, Typography, Grid, FormControlLabel, DialogContent, DialogActions, Radio, Hidden } from '@material-ui/core'
+import { Box, Typography, Grid, FormControlLabel, DialogActions, Radio, Hidden, IconButton, Icon } from '@material-ui/core'
 import Input from '@components/Input'
 import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
-import ESDialog from '@components/Dialog'
+import ESDialog from '@components/Modal'
+import ESStickyFooter from '@components/StickyFooter'
 import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ReportParams } from '@services/report.service'
@@ -22,6 +23,7 @@ import * as Yup from 'yup'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import BlankLayout from '@layouts/BlankLayout'
 
 export interface ESReportProps {
   chat_id?: string
@@ -68,7 +70,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
-      reason_id: reasons[0] ? Number(reasons[0].id) : 1,
+      reason_id: null,
       report_type: 0,
       user_email: emailAssigned ? userEmail : '',
     },
@@ -148,102 +150,119 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 
   return (
     <ESDialog
-      title={t('user_report.title')}
       open={open}
       handleClose={() => {
         handleClose()
         formik.resetForm()
       }}
-      className={'scroll-bar'}
-      bkColor={'#2C2C2C'}
     >
       <form onSubmit={formik.handleSubmit}>
-        <DialogContent className={classes.dialogContent}>
-          {attr && reportInfo()}
-          <Grid container style={{ marginTop: 24 }}>
-            <Hidden xsDown smDown>
-              <Box style={{ minWidth: 24 }}></Box>
-            </Hidden>
-            <Grid item md={10}>
-              {/* xs={12} sm={12} md={10} lg={10} xl={10} */}
-              <RadioVertical
-                id="reason_id"
-                name="reason_id"
-                value={formik.values.reason_id + ''}
-                onChange={formik.handleChange}
-                required
-                label={t('user_report.reason')}
-                helperText={formik.touched.reason_id && formik.errors.reason_id}
-              >
-                {reasons.map((g, idx) => (
-                  <FormControlLabel key={idx} value={g.id} control={<Radio color="primary" />} label={g.attributes.reason} />
-                ))}
-              </RadioVertical>
-
-              <Box mt={4}>
-                <Input
-                  id="description"
-                  name="description"
-                  value={formik.values.description}
-                  onChange={formik.handleChange}
-                  labelPrimary={t('user_report.reason_desc')}
-                  placeholder={t('user_report.reason_desc')}
-                  fullWidth
-                  required
-                  helperText={formik.errors.description}
-                  error={!!formik.errors.description}
-                  multiline
-                  rows={4}
-                />
+        <ESStickyFooter
+          disabled={false}
+          noScroll
+          content={
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <Box mb={2} className={classes.desc}>
+                <Typography align="center">{t('user_report.desc_first')}</Typography>
+                <Typography align="center">{t('user_report.desc_second')}</Typography>
               </Box>
-              <Box mt={4} mb={2}>
-                {emailAssigned ? (
-                  <>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" pb={1} mb={1}>
-                      <Box style={{ width: '100%' }} display="flex" alignItems="center">
-                        <label className={classes.label}>{t('user_report.reporter_email')}</label>
-                        <Typography component="span" className={classes.required}>
-                          {t('common.required')}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Typography className={classes.staticMail}>{userEmail}</Typography>
-                  </>
-                ) : (
-                  <Input
-                    id="user_email"
-                    name="user_email"
-                    value={formik.values.user_email}
+              <DialogActions style={{ justifyContent: 'center' }}>
+                <ButtonPrimary
+                  style={{ width: 280 }}
+                  type="submit"
+                  round
+                  disabled={
+                    (typeof formik.errors != undefined && !_.isEmpty(formik.errors)) || meta.pending || _.isEmpty(formik.values.description)
+                  }
+                >
+                  {t('user_report.btn_text')}
+                </ButtonPrimary>
+              </DialogActions>
+            </Box>
+          }
+        >
+          <BlankLayout>
+            <Box pt={7.5} pb={9} className={classes.topContainer}>
+              <Box py={2} display="flex" flexDirection="row" alignItems="center">
+                <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+                  <Icon className="fa fa-arrow-left" fontSize="small" />
+                </IconButton>
+                <Box pl={2}>
+                  <Typography variant="h2">{t('user_report.title')}</Typography>
+                </Box>
+              </Box>
+              <Box py={4}>{attr && reportInfo()}</Box>
+              <Grid container>
+                <Hidden xsDown smDown>
+                  <Box style={{ minWidth: 24 }}></Box>
+                </Hidden>
+                <Grid item md={10}>
+                  {/* xs={12} sm={12} md={10} lg={10} xl={10} */}
+                  <RadioVertical
+                    id="reason_id"
+                    name="reason_id"
+                    value={formik.values.reason_id + ''}
                     onChange={formik.handleChange}
-                    labelPrimary={t('user_report.reporter_email')}
-                    fullWidth
                     required
-                    helperText={formik.errors.user_email}
-                    error={!!formik.errors.user_email}
-                  />
-                )}
-              </Box>
-              <label className={classes.label}>{t('user_report.email_required_text')}</label>
-            </Grid>
-          </Grid>
-        </DialogContent>
+                    label={t('user_report.reason')}
+                    helperText={formik.touched.reason_id && formik.errors.reason_id}
+                    size="small"
+                  >
+                    {reasons.map((g, idx) => (
+                      <FormControlLabel key={idx} value={g.id} control={<Radio color="primary" />} label={g.attributes.reason} />
+                    ))}
+                  </RadioVertical>
 
-        <Box mt={6} mb={2} className={classes.desc}>
-          <Typography align="center">{t('user_report.desc_first')}</Typography>
-          <Typography align="center">{t('user_report.desc_second')}</Typography>
-        </Box>
-        <DialogActions style={{ justifyContent: 'center' }}>
-          <ButtonPrimary
-            style={{ width: 280 }}
-            type="submit"
-            round
-            disabled={
-              (typeof formik.errors != undefined && !_.isEmpty(formik.errors)) || meta.pending || _.isEmpty(formik.values.description)
-            }
-          >
-            {t('user_report.btn_text')}
-          </ButtonPrimary>
-        </DialogActions>
+                  <Box mt={4}>
+                    <Input
+                      id="description"
+                      name="description"
+                      value={formik.values.description}
+                      onChange={formik.handleChange}
+                      labelPrimary={t('user_report.reason_desc')}
+                      placeholder={t('user_report.reason_desc')}
+                      fullWidth
+                      required
+                      helperText={formik.errors.description}
+                      error={!!formik.errors.description}
+                      multiline
+                      rows={4}
+                    />
+                  </Box>
+                  <Box mt={4} mb={1}>
+                    {emailAssigned ? (
+                      <>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" pb={1}>
+                          <Box style={{ width: '100%' }} display="flex" alignItems="center">
+                            <Typography>{t('user_report.reporter_email')}</Typography>
+                            <Typography component="span" className={classes.required}>
+                              {t('common.required')}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Typography className={classes.staticMail}>{userEmail}</Typography>
+                      </>
+                    ) : (
+                      <Input
+                        id="user_email"
+                        name="user_email"
+                        value={formik.values.user_email}
+                        onChange={formik.handleChange}
+                        labelPrimary={t('user_report.reporter_email')}
+                        fullWidth
+                        required
+                        helperText={formik.errors.user_email}
+                        error={!!formik.errors.user_email}
+                      />
+                    )}
+                  </Box>
+                  <label className={classes.label}>{t('user_report.email_required_text')}</label>
+                </Grid>
+              </Grid>
+            </Box>
+            <Box className={classes.blankSpace}></Box>
+          </BlankLayout>
+        </ESStickyFooter>
       </form>
       {meta.pending ? (
         <Box className={classes.loader}>
@@ -326,26 +345,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#2C2C2C',
     alignItems: 'center',
   },
-  dialogContent: {
-    overflow: 'hidden',
-    scrollbarWidth: 'none' /* Firefox */,
-    '&::-webkit-scrollbar-track': {
-      '&::-webkit-box-shadow': 'none !important',
-      backgroundColor: 'transparent',
-      width: 0,
-      height: 0,
-    },
-    '&::-webkit-scrollbar': {
-      backgroundColor: 'transparent',
-      width: '3px !important',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'transparent',
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[200]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[200]}80`,
     },
   },
+  blankSpace: {
+    height: 169,
+  },
   label: {
-    fontWeight: 'bold',
-    fontSize: theme.typography.h3.fontSize,
+    fontSize: 12,
   },
   required: {
     backgroundColor: Colors.primary,
@@ -366,6 +376,17 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column',
+    },
+    topContainer: {
+      paddingTop: 0,
+    },
+    blankSpace: {
+      height: theme.spacing(15),
+    },
   },
 }))
 
