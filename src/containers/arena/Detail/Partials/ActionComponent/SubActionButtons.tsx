@@ -46,7 +46,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                 <Box className={classes.actionButton}>
                   <Participants detail={tournament} />
                 </Box>
-                {isModerator && (
+                {(isModerator || isEntered) && (
                   <Box className={classes.actionButton}>
                     <ActionLabelButton
                       actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
