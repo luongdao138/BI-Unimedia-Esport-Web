@@ -1,6 +1,5 @@
 import { useState, ReactNode } from 'react'
-import { IconButton, Icon, Box, Popover } from '@material-ui/core'
-// import { Menu, IconButton, Icon, Box, withStyles } from '@material-ui/core'
+import { Menu, IconButton, Icon, Box, withStyles } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -16,25 +15,22 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-// const StyledMenu = withStyles({
-//   paper: {
-//     background: 'white',
-//   },
-// })(Menu)
+const StyledMenu = withStyles({
+  paper: {
+    background: 'white',
+  },
+})(Menu)
 
 const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconClass }) => {
   const [anchorEl, setAnchorEl] = useState(null)
-  const [open, setOpen] = useState(false)
   const classes = useStyles()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
-    setOpen(true)
   }
 
   const handleClose = () => {
     setAnchorEl(null)
-    setOpen(false)
   }
 
   return (
@@ -42,25 +38,7 @@ const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconC
       <IconButton className={`${classes.iconButtonBg} ${iconClass ? iconClass : ''}`} disableRipple={disableRipple} onClick={handleClick}>
         <Icon className="fa fa-ellipsis-v" fontSize="small" />
       </IconButton>
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        onClose={handleClose}
-        onClick={handleClose}
-        disableScrollLock
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        {children}
-      </Popover>
-      {/* <StyledMenu
+      <StyledMenu
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{
@@ -76,7 +54,7 @@ const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconC
         onClick={handleClose}
       >
         {children}
-      </StyledMenu> */}
+      </StyledMenu>
     </Box>
   )
 }
