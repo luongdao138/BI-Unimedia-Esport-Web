@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Colors } from '@theme/colors'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -33,7 +33,7 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
       <Box mt={3}>
         <LinkButton onClick={() => setModal(true)}>{t('common:tournament_cancel.confirm_cancel_btn')}</LinkButton>
       </Box>
-      <ESModal open={modal} handleClose={() => setModal(false)}>
+      <ESPopup open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
           <Box pt={7.5} pb={9} className={classes.topContainer}>
             <Box py={2}>
@@ -75,7 +75,7 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
             {meta.pending && <ESLoader open={meta.pending} />}
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
     </>
   )
 }
