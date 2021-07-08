@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { TournamentDetail } from '@services/arena.service'
+import { ParticipantName, TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
@@ -22,6 +22,8 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ServerError from './ServerError'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -51,6 +53,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   const { resetTitle, changeTitle } = useDocTitle()
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const validationSchema = Yup.object().shape({
     nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
@@ -126,6 +129,13 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     onClose()
   }
 
+  const onUserClick = (participant: ParticipantName) => {
+    const userCode = _.get(participant, 'attributes.user.user_code')
+    if (_.isString(userCode)) {
+      router.push(`${ESRoutes.PROFILE}/${userCode}`)
+    }
+  }
+
   return (
     <Box>
       <StickyActionModal
@@ -175,7 +185,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
             </Box>
           ) : (
             <Box width="100%" flexDirection="column" alignItems="center" pt={4.5} style={isPending ? { display: 'none' } : undefined}>
-              <UserListItem data={userData(participant)} handleClick={() => null} nicknameYellow={me} />
+              <UserListItem data={userData(participant)} handleClick={() => onUserClick(participant)} nicknameYellow={me} />
             </Box>
           )}
         </form>
