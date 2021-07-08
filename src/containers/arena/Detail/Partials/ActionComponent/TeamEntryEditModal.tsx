@@ -146,7 +146,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
         actionButtonDisabled={false}
         onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
-        hideFooter={!myTeam || isRecruiting}
+        hideFooter={!myTeam || !isRecruiting}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
