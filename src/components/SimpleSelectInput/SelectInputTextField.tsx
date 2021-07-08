@@ -6,6 +6,9 @@ const SelectInputTextField = withStyles({
     '& .MuiAutocomplete-popupIndicator': {
       display: 'none',
     },
+    '& .MuiOutlinedInput-adornedEnd': {
+      paddingRight: '10px !important',
+    },
     '& .MuiOutlinedInput-root': {
       color: Colors.white,
       height: 40,
