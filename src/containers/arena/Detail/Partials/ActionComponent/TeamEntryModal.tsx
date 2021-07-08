@@ -70,14 +70,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [])
 
   useEffect(() => {
-    if (updateTeamMeta.loaded || updateTeamMeta.error) {
+    if (updateTeamMeta.loaded) {
       onClose()
       if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
         updateDone()
       }
       reset()
     }
-  }, [updateTeamMeta.loaded, updateTeamMeta.error])
+  }, [updateTeamMeta.loaded])
 
   useEffect(() => {
     if (userProfile) {
@@ -264,6 +264,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
       >
         <Box mt={2} />
         {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+        {!!updateTeamMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
         <form onSubmit={handleActionButton}>{teamForm()}</form>
       </StickyActionModal>
 

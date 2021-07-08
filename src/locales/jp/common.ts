@@ -178,6 +178,7 @@ export default {
     password_reissue: 'パスワードを再発行しました',
     close_arena_failed: 'エントリーを締め切れませんでした。',
     join_arena_failed: 'エントリーを完了できませんでした。',
+    edit_entry_failed: 'エントリー情報を編集できませんでした。',
     leave_arena_failed: 'エントリーを辞退できませんでした',
     too_short: '短すぎます。',
     password_must_match: 'パスワードが一致していません。',
