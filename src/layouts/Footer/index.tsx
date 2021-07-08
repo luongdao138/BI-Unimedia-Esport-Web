@@ -69,7 +69,7 @@ export const Footer: React.FC = () => {
             {t('common:top.footer_download_app')}
           </Typography>
           <Box className={classes.appWrap}>
-            <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
+            <ButtonBase href="https://apps.apple.com/jp/app/exelab/id1525346211" target="_blank">
               <img className={classes.app_store} src="/images/appstore.png" />
             </ButtonBase>
             <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
