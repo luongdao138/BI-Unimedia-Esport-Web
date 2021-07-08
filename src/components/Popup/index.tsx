@@ -28,12 +28,19 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
 
   return (
     <Dialog
+      disableScrollLock
       maxWidth={'md'}
       fullWidth
       open={open}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      onEntered={() => {
+        document.body.style.overflow = 'hidden'
+      }}
+      onExited={() => {
+        document.body.style.overflow = 'unset'
+      }}
     >
       <DialogContent>{children}</DialogContent>
     </Dialog>

@@ -25,7 +25,7 @@ const useParticipantDetail = () => {
   const isPending = getMeta.pending || changeMeta.pending
   const changeDone = changeMeta.loaded || changeMeta.error
 
-  return { getParticipant, resetMeta, isPending, participant, changeName, changeDone }
+  return { getParticipant, resetMeta, isPending, participant, changeName, changeDone, changeMeta }
 }
 
 export default useParticipantDetail

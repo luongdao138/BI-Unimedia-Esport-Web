@@ -14,6 +14,7 @@ import { PlacementItem } from '@services/arena.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
+import { ROLE } from '@constants/tournament.constants'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -60,9 +61,11 @@ const ArenaWinners: React.FC = () => {
 
   const isMyTeam = (participant: PlacementItem) => {
     const myInfo = _.get(arena, 'attributes.my_info', [])
-    const interestedInfo = myInfo.find((info) => info.role === 'interested')
-    if (!interestedInfo) return false
-    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+    const interestedInfos = myInfo
+      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
+      .map((info) => `${info.team_id}`)
+    if (!interestedInfos || !interestedInfos.length) return false
+    return interestedInfos.includes(`${getTeamId(participant)}`)
   }
 
   const isMe = (participant: PlacementItem) => {

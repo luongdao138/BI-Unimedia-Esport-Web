@@ -52,6 +52,7 @@ interface MatchProps {
   score2?: number | null
   highlightLabel?: MatchItemType
   onClick?: (e: MouseEvent) => void
+  emptyLabel?: string
 }
 
 const Match: React.FC<MatchProps> = ({
@@ -63,6 +64,7 @@ const Match: React.FC<MatchProps> = ({
   editable,
   winner,
   highlightLabel,
+  emptyLabel,
   ...rest
 }) => {
   const classes = useStyles()
@@ -86,7 +88,7 @@ const Match: React.FC<MatchProps> = ({
             ) : (
               <>
                 <Avatar className={classes.avatar} alt={null} />
-                <Typography className={classes.noLabel}>{i18n.t('common:common.not_sure')}</Typography>
+                <Typography className={classes.noLabel}>{emptyLabel ? emptyLabel : i18n.t('common:common.not_sure')}</Typography>
               </>
             )}
           </div>
@@ -112,7 +114,7 @@ const Match: React.FC<MatchProps> = ({
             ) : (
               <>
                 <Avatar className={classes.avatar} alt={null} />
-                <Typography className={classes.noLabel}>{i18n.t('common:common.not_sure')}</Typography>
+                <Typography className={classes.noLabel}>{emptyLabel ? emptyLabel : i18n.t('common:common.not_sure')}</Typography>
               </>
             )}
           </div>
