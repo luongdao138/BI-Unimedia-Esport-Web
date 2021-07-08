@@ -33,10 +33,10 @@ const useTournamentMatches = (): {
   const scoreMeta = useAppSelector(setScoreMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
   const arena = useAppSelector(selectors.getTournamentDetail)
-  const { isNotHeld } = useArenaHelper(arena)
+  const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
   useEffect(() => {
-    if (isNotHeld) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
-  }, [isNotHeld])
+    if (isNotHeld || isBattleRoyale) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
+  }, [isNotHeld, isBattleRoyale])
 
   useEffect(() => {
     fetchMatches()

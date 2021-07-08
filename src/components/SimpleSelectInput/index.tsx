@@ -18,6 +18,7 @@ interface SelectInputProps {
   onSearchInput: (keyword: string) => void
   onItemSelected: (selectedItem: MemberSelection) => void
   onScrollEnd: () => void
+  placeholder?: string
 }
 
 const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
@@ -29,6 +30,7 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
   onSearchInput,
   onItemSelected,
   onScrollEnd,
+  placeholder,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation()
@@ -104,6 +106,7 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
                 variant="outlined"
                 {...params}
                 inputRef={textRef}
+                placeholder={placeholder}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (

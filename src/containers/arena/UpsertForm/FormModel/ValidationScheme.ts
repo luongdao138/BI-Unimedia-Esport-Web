@@ -66,7 +66,12 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
       acceptance_end_date: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))
-        .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
+        .when('acceptance_start_date', {
+          is: (acceptance_start_date) => {
+            return acceptance_start_date === null
+          },
+          then: Yup.date().min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
+        }),
       area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
       address: Yup.string().max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
       // for cross-fields validations
