@@ -69,7 +69,7 @@ export const TopContent: React.FC = () => {
               <Typography className={classes.topDescription}>{t('common:top.top_description')}</Typography>
               <Typography className={classes.topDescriptionBottom}>{t('common:top.download_app_version')}</Typography>
               <Box className={classes.buttonWrap}>
-                <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
+                <ButtonBase href="https://apps.apple.com/jp/app/exelab/id1525346211" target="_blank">
                   <img className={classes.google_app_stores} src="/images/appstore.png" />
                 </ButtonBase>
                 <Box className={classes.buttonSeperator} />

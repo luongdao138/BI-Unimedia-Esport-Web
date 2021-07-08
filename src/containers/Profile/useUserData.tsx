@@ -67,7 +67,7 @@ const useUserData = (
   const profileImageChange = async (file: File, type: number, blob?: any) => {
     const params = {
       file_name: file.name,
-      content_type: file.type,
+      content_type: file.type == 'image/gif' ? 'image/png' : file.type,
     }
     try {
       const res = await getAvatarPreSignedUrl(params)
