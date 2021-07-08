@@ -83,6 +83,7 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
               selectedItem={selectedItem}
               items={suggestedTeamMembers}
               loading={loading}
+              placeholder="ニックネームを入力してください"
               onSearchInput={(keyword) => onSearchInput(keyword, index)}
               onItemSelected={onItemSelected}
               onScrollEnd={() => null}

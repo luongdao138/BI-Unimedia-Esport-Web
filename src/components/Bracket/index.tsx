@@ -4,6 +4,7 @@ import { Colors } from '@theme/colors'
 import Avatar from '../Avatar'
 import { Typography } from '@material-ui/core'
 import { MatchItemType } from '@services/arena.service'
+import i18n from '@locales/i18n'
 
 interface BracketContainerProps {
   children?: ReactNode
@@ -85,12 +86,12 @@ const Match: React.FC<MatchProps> = ({
             ) : (
               <>
                 <Avatar className={classes.avatar} alt={null} />
-                <Typography className={classes.noLabel}>設定してください</Typography>
+                <Typography className={classes.noLabel}>{i18n.t('common:common.not_sure')}</Typography>
               </>
             )}
           </div>
           <div className={`${classes.score} ${winner === 'home' ? classes.scoreWinner : ''}`}>
-            {score1 == null || score1 == undefined ? '-' : score1}
+            {score1 == null || score1 == undefined ? '0' : score1}
           </div>
           {winner !== null && winner === 'guest' && <div className={classes.backdrop} />}
         </div>
@@ -111,12 +112,12 @@ const Match: React.FC<MatchProps> = ({
             ) : (
               <>
                 <Avatar className={classes.avatar} alt={null} />
-                <Typography className={classes.noLabel}>設定してください</Typography>
+                <Typography className={classes.noLabel}>{i18n.t('common:common.not_sure')}</Typography>
               </>
             )}
           </div>
           <div className={`${classes.score} ${winner === 'guest' ? classes.scoreWinner : ''}`}>
-            {score2 == null || score2 == undefined ? '-' : score2}
+            {score2 == null || score2 == undefined ? '0' : score2}
           </div>
           {winner !== null && winner === 'home' && <div className={classes.backdrop} />}
         </div>
