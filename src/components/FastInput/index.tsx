@@ -15,7 +15,9 @@ const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
   const [value, setValue] = useState('')
 
   useEffect(() => {
-    if (_.isString(props.value)) setValue(String(props.value))
+    if (props.value !== null && props.value !== undefined) {
+      setValue(String(props.value))
+    }
   }, [props.value])
 
   const debouncedChangeHandler = useCallback(
