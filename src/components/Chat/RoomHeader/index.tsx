@@ -82,7 +82,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-    } else if (!isDirect()) {
+    } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     }
     return null
@@ -120,10 +120,19 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return null
   }
 
+  const renderMemberList = () => {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+    } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+    }
+    return null
+  }
+
   const MenuItems = () => (
     <Box className={classes.menu}>
       <ESMenu>
-        <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+        {renderMemberList()}
         {memberAddItem()}
         {renderRoomNameChange()}
         {renderTournamentDetailItem()}
