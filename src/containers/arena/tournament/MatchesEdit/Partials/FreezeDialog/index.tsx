@@ -22,7 +22,7 @@ const FreezeDialog: React.FC<FreezeDialogProps> = ({ onAction, onClose, open }) 
     <Box>
       <ESPopup open={open}>
         <BlankLayout>
-          <Box paddingY={16} className={classes.childrenContainer}>
+          <Box paddingY={2} className={classes.childrenContainer}>
             <Box pb={4} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:arena.dialog.freeze_title')}</Typography>
             </Box>
