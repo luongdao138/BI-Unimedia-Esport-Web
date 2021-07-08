@@ -140,7 +140,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   return (
     <Box>
       <StickyActionModal
-        open={open || isPreview}
+        open={(open || isPreview) && !editMode}
         returnText={t('common:arena.entry_information')}
         actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={false}
@@ -171,18 +171,19 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             </Box>
           )}
         </form>
-        {editMode ? (
-          <TeamEntryModal
-            tournament={tournament}
-            userProfile={userProfile}
-            onClose={() => setEditMode(false)}
-            open={editMode}
-            isEdit
-            initialData={getEditInitialData()}
-            updateDone={() => fetch()}
-          />
-        ) : null}
       </StickyActionModal>
+
+      {editMode ? (
+        <TeamEntryModal
+          tournament={tournament}
+          userProfile={userProfile}
+          onClose={() => setEditMode(false)}
+          open={editMode}
+          isEdit
+          initialData={getEditInitialData()}
+          updateDone={() => fetch()}
+        />
+      ) : null}
 
       {isPending && <ESLoader open={isPending} />}
     </Box>

@@ -76,7 +76,7 @@ const useArenaHelper = (
     })
 
   const toMatches = () => {
-    if (isModerator && status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED) {
+    if (isModerator && !isFreezed) {
       const matchEditRoute = isBattleRoyale ? ESRoutes.ARENA_BATTLES_EDIT : ESRoutes.ARENA_MATCHES_EDIT
       router.push(matchEditRoute.replace(/:id/gi, hashKey))
     } else {
