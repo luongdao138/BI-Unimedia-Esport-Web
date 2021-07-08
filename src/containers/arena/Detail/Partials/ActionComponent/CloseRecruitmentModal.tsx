@@ -1,24 +1,24 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, Icon } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import UserSlashIcon from '@components/UserSlashIcon'
 interface CloseRecruitmentModalProps {
   tournament: TournamentDetail
+  isRecruiting: boolean
   handleClose: () => void
 }
 
-const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament }) => {
+const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament, isRecruiting }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
@@ -33,12 +33,16 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
   return (
     <Box>
       <Box className={classes.button}>
-        <ButtonPrimaryOutlined onClick={() => setOpen(true)} leadingIcon={<UserSlashIcon />}>
+        <ButtonPrimaryOutlined
+          disabled={!isRecruiting}
+          onClick={() => setOpen(true)}
+          leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}
+        >
           {t('common:tournament.close_recruitment.button_text')}
         </ButtonPrimaryOutlined>
       </Box>
 
-      <ESModal open={open}>
+      <ESPopup open={open}>
         <BlankLayout>
           <Box paddingY={16} className={classes.childrenContainer}>
             <Box pb={4} color={Colors.white} alignItems="center">
@@ -69,7 +73,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
             </Box>
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
     </Box>

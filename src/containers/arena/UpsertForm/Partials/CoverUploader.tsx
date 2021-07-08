@@ -10,7 +10,7 @@ import ESLoader from '@components/Loader'
 type ProfileAvatarProps = {
   src: string
   isUploading: boolean
-  onChange?: (file: File) => void
+  onChange?: (file: File, blob: any) => void
   disabled?: boolean
 }
 
@@ -27,18 +27,12 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
     }
   }, [src])
 
-  const handleChange = (file: File) => {
+  const handleChange = (file: File, blob: any) => {
     setOpen(false)
 
-    const reader = new FileReader()
     if (file) {
       if (onChange) {
-        onChange(file)
-      }
-
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        setLocalSrc(reader.result)
+        onChange(file, blob)
       }
     }
   }
@@ -74,7 +68,14 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
           </Box>
         ) : null}
       </label>
-      {open && <CoverSelector src={localSrc.toString()} cancel={() => setOpen(false)} onUpdate={(file: File, _) => handleChange(file)} />}
+      {open && (
+        <CoverSelector
+          src={localSrc.toString()}
+          isArena={true}
+          cancel={() => setOpen(false)}
+          onUpdate={(file: File, blob: any) => handleChange(file, blob)}
+        />
+      )}
     </div>
   )
 }

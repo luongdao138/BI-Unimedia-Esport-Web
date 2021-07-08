@@ -15,17 +15,16 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
 
   const status = tournament.attributes.status
-  const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
-  const isOnHold = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
+  const beforeOnhold = status === TOURNAMENT_STATUS.RECRUITING || status === TOURNAMENT_STATUS.READY
 
-  const date = tournament.attributes.acceptance_end_date
-  const endDate = moment(date)
+  const accEndDate = moment(tournament.attributes.acceptance_end_date)
+  const startDate = moment(tournament.attributes.start_date)
+  const targetDate = beforeOnhold ? accEndDate : startDate
   const nowDate = moment()
-  const days = endDate.diff(nowDate, 'days')
-  const hours = endDate.diff(nowDate, 'hours')
-  const minutes = endDate.diff(nowDate, 'minutes')
+  const days = targetDate.diff(nowDate, 'days')
+  const hours = targetDate.diff(nowDate, 'hours')
 
-  const untilDatePrefix = isRecruiting ? t('common:tournament.until_deadline') : isOnHold ? t('common:tournament.until_event') : ''
+  const untilDatePrefix = beforeOnhold ? t('common:tournament.until_deadline') : t('common:tournament.until_event')
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
@@ -35,21 +34,22 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
           <Typography className={classes.highlightedNumber}>{days}</Typography>
           <Typography>{t('common:common.day')}</Typography>
         </>
-      ) : hours > 1 ? (
+      ) : hours >= 1 ? (
         <>
           <Typography>{untilDatePrefix}</Typography>
           <Typography className={classes.highlightedNumber}>{hours}</Typography>
           <Typography>{t('common:common.time')}</Typography>
         </>
       ) : (
-        minutes > 0 && (
-          <>
-            <Typography className={classes.highlightedNumber}>{endDate.hours()}</Typography>
-            <Typography>{t('common:common.hour')}</Typography>
-            <Typography className={classes.highlightedNumber}>{endDate.minutes()}</Typography>
-            <Typography>{t('common:tournament.start_from_minutes')}</Typography>
-          </>
-        )
+        <>
+          <Box mr={1}>
+            <Typography className={classes.highlightedNumber}>{startDate.format('YYYY/MM/DD')}</Typography>
+          </Box>
+          <Typography className={classes.highlightedNumber}>{startDate.hours()}</Typography>
+          <Typography>{t('common:common.hour')}</Typography>
+          <Typography className={classes.highlightedNumber}>{startDate.minutes()}</Typography>
+          <Typography>{t('common:tournament.start_from_minutes')}</Typography>
+        </>
       )}
     </Box>
   )

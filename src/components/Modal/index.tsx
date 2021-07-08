@@ -26,6 +26,7 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
 
   return (
     <Dialog
+      disableScrollLock
       fullScreen
       TransitionComponent={Transition}
       aria-labelledby="modal"

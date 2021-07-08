@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { IconButton, Typography, Icon, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
@@ -14,8 +13,11 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import { TournamentMatchItem } from '@services/arena.service'
+import { Colors } from '@theme/colors'
 
 const ArenaMatches: React.FC = () => {
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const {
@@ -114,16 +116,16 @@ const ArenaMatches: React.FC = () => {
           show={showSummary()}
           noScroll
         >
-          <AppBar className={classes.appbar}>
-            <Container maxWidth="lg">
-              <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.backButton} onClick={handleBack}>
-                  <ArrowBack />
-                </IconButton>
-                <Typography variant="h2">{tournament.attributes.title}</Typography>
-              </Toolbar>
-            </Container>
-          </AppBar>
+          <Box className={classes.backContainer}>
+            <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
+              <Icon className="fa fa-arrow-left" fontSize="small" />
+            </IconButton>
+            {!isMobile && (
+              <Typography variant="h2" className={classes.wrapOne}>
+                {tournament.attributes.title}
+              </Typography>
+            )}
+          </Box>
           <div className={classes.content}>
             <Bracket.Container activeRound={10}>
               {matches.map((round, rid) => (
@@ -160,25 +162,50 @@ const useStyles = makeStyles((theme) => ({
     width: '100vw',
     overflow: 'auto',
   },
-  appbar: {
-    top: 60,
-    backgroundColor: '#000000',
-    borderBottom: '1px solid #FFFFFF30',
-    borderTop: '1px solid #FFFFFF30',
-  },
-  toolbar: {
-    paddingLeft: 0,
-  },
   content: {
     padding: theme.spacing(3),
-    paddingTop: 108,
+    paddingTop: theme.spacing(6),
   },
   backButton: {
-    backgroundColor: '#4D4D4D',
-    padding: 7,
-    marginRight: 16,
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+    marginRight: 20,
+    marginTop: 5,
+  },
+  backContainer: {
+    position: 'fixed',
+    top: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingLeft: theme.spacing(3),
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: Colors.black,
+    opacity: 0.7,
+    zIndex: 100,
+    borderBottom: '1px solid #FFFFFF30',
+  },
+  iconButtonBg2: {
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+    marginRight: 20,
+  },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  [theme.breakpoints.down('sm')]: {
+    backContainer: {
+      position: 'absolute',
+      backgroundColor: 'transparent',
+      borderBottom: 'none',
     },
   },
 }))

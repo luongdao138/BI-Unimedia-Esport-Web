@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
-import ButtonPrimary from '@components/ButtonPrimary'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -12,45 +11,63 @@ import ESButton from '@components/Button'
 import { useFormik } from 'formik'
 import useParticipantDetail from './useParticipantDetail'
 import UserListItem from '@components/UserItem'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
 import ESInput from '@components/Input'
-import { useStore } from 'react-redux'
 import * as Yup from 'yup'
 import { ROLE } from '@constants/tournament.constants'
+import useDocTitle from '@utils/hooks/useDocTitle'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useAppDispatch } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
   previewMode?: boolean
   initialParticipantId?: string
   me: boolean
-  onClose?: () => void
+  onClose: () => void
+  toDetail?: () => void
+  open: boolean
 }
 
-const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, previewMode, initialParticipantId, me, onClose }) => {
+const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
+  tournament,
+  previewMode,
+  initialParticipantId,
+  me,
+  onClose,
+  open,
+  toDetail,
+}) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const store = useStore()
-  const { participant, isPending, getParticipant, changeName, changeDone } = useParticipantDetail()
-  const [open, setOpen] = useState(false)
+  const { participant, isPending, getParticipant, changeName } = useParticipantDetail()
+  const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
+  const { resetTitle, changeTitle } = useDocTitle()
+  const { checkNgWord } = useCheckNgWord()
+  const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string()
-      .required(t('common:common.error'))
-      .max(40, t('common:common.too_long'))
-      .test('nickname', 'at_least', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       nickname: '',
     },
     validationSchema,
     onSubmit: (_values) => {
       if (values.nickname) {
-        changeName(tournament.attributes.hash_key, values.nickname)
+        if (_.isEmpty(checkNgWord(values.nickname))) {
+          changeName(tournament.attributes.hash_key, values.nickname, () => {
+            handleClose()
+            setEditMode(false)
+          })
+        } else {
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
+        }
       }
     },
   })
@@ -59,45 +76,29 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return
     for (const myInfo of myInfoList) {
-      if (_.get(myInfo, 'role', '') === ROLE.INTERESTED && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
+      const role = _.get(myInfo, 'role', '')
+      if ((role === ROLE.INTERESTED || role === ROLE.PARTICIPANT) && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
     }
   }
 
   useEffect(() => {
-    if (open) {
-      getParticipant(_.get(tournament, 'attributes.hash_key', ''), getPid())
-    }
-  }, [open])
+    return () => resetTitle()
+  }, [])
 
   useEffect(() => {
-    if (isPreview) {
-      const pId = parseInt(initialParticipantId)
+    if (isPreview && open) {
+      setEditMode(false)
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+      const pId = initialParticipantId ? parseInt(initialParticipantId) : getPid()
       getParticipant(_.get(tournament, 'attributes.hash_key', ''), pId)
     }
-  }, [isPreview])
-
-  useEffect(() => {
-    setOpen(false)
-    setEditMode(false)
-  }, [changeDone])
+  }, [isPreview, open])
 
   useEffect(() => {
     if (participant) {
       setFieldValue('nickname', _.get(participant, 'attributes.name', ''))
     }
   }, [participant])
-
-  const handleReturn = () => {
-    if (_.isFunction(onClose)) {
-      onClose()
-    }
-    setOpen(false)
-  }
-
-  const onOpen = () => {
-    setOpen(true)
-    setEditMode(false)
-  }
 
   const onSubmit = (param?) => {
     if (!editMode) {
@@ -118,29 +119,35 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
       },
     }
   }
+
+  const handleClose = () => {
+    resetTitle()
+    onClose()
+  }
+
   return (
     <Box>
-      {isPreview ? null : (
-        <ButtonPrimary round fullWidth onClick={onOpen}>
-          {t('common:tournament.check_entry')}
-        </ButtonPrimary>
-      )}
-
       <StickyActionModal
-        open={open || isPreview}
-        returnText={t('common:tournament.join')}
-        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
+        open={open}
+        returnText={editMode ? t('common:tournament.update_entry_info') : t('common:arena.entry_information')}
+        actionButtonText={editMode ? t('common:arena.update_with_content') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={!isValid}
-        onReturnClicked={handleReturn}
+        onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
-        hideFooter={!me}
+        hideFooter={!me || !isRecruiting}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={() => setOpen(false)}>
+                <ESButton
+                  className={classes.bottomButton}
+                  variant="outlined"
+                  round
+                  size="large"
+                  onClick={toDetail ? toDetail : handleClose}
+                >
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }
@@ -157,8 +164,8 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, 
                   fullWidth
                   value={values.nickname}
                   onChange={handleChange}
-                  helperText={touched.nickname && errors.nickname}
-                  error={touched.nickname && !!errors.nickname}
+                  helperText={errors.nickname}
+                  error={!!errors.nickname}
                   required
                 />
               </Box>
@@ -184,5 +191,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(7),
   },
 }))
+
+InidividualEntryEditModal.defaultProps = {
+  previewMode: true,
+}
 
 export default InidividualEntryEditModal

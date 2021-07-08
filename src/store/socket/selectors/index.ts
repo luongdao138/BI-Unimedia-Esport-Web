@@ -28,7 +28,7 @@ export const newRoomId = createSelector(getRoot, (state) => state.newRoomId)
 
 export const selectedRoomInfo = createSelector(getRoot, (state) => state.selectedRoomInfo)
 export const blocked = createSelector(getRoot, (state) => {
-  return _.get(state, 'selectedRoomInfo.blocked', false)
+  return _.isNumber(_.get(state, 'selectedRoomInfo.blocked[0]', false))
 })
 
 export const membersSuggest = createSelector(getRoot, (state) => {

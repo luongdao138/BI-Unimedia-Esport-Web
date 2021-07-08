@@ -9,26 +9,77 @@ import { useEffect, useState, useRef } from 'react'
 import ESButton from '@components/Button'
 import { useTranslation } from 'react-i18next'
 import Linkify from 'react-linkify'
+import _ from 'lodash'
+import { PlacementItem } from '@services/arena.service'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import TeamEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/TeamEntryEditModal'
+import InidividualEntryEditModal from '@containers/arena/Detail/Partials/ActionComponent/InidividualEntryEditModal'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
   const { arenaWinners, arena, handleBack, toDetail } = useArenaWinners()
+  const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
   const [, setUpdate] = useState(false)
   const winnerListRef = useRef(null)
   const backButtonRef = useRef(null)
+  const [selectedItem, setSelectedItem] = useState(null as PlacementItem | null)
+  const { userProfile } = useGetProfile()
 
   useEffect(() => {
     window.onscroll = () => {
-      const winnerListTopOffset = winnerListRef.current.getBoundingClientRect().top
-      const backButtonBottomOffset = backButtonRef.current.getBoundingClientRect().bottom
+      const winnerListTopOffset = getClientRect(winnerListRef).top
+      const backButtonBottomOffset = getClientRect(backButtonRef).bottom
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
   }, [])
 
-  const toEntryDetail = () => {
-    // TODO: open check entry modal
+  const getClientRect = (ref) => {
+    if (ref && ref.current) {
+      return ref.current.getBoundingClientRect()
+    }
+    return { top: 0, bottom: 0 }
+  }
+
+  const isTeam = () => {
+    const pType = _.get(arena, 'attributes.participant_type', 0)
+    if (_.isNumber(pType)) {
+      return pType > 1
+    }
+    return false
+  }
+
+  const toEntryDetail = (placementItem: PlacementItem) => {
+    setSelectedItem(placementItem)
+  }
+
+  const getTeamId = (participant: PlacementItem) => {
+    return _.get(participant, 'team.id')
+  }
+
+  const isMyTeam = (participant: PlacementItem) => {
+    const myInfo = _.get(arena, 'attributes.my_info', [])
+    const interestedInfo = myInfo.find((info) => info.role === 'interested')
+    if (!interestedInfo) return false
+    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+  }
+
+  const isMe = (participant: PlacementItem) => {
+    return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
+  }
+
+  const hasWinnersData = () => {
+    if (!arenaWinners) return false
+
+    let hasData = false
+    Object.keys(arenaWinners).forEach((place) => {
+      const placement = arenaWinners[place]
+      if (!!placement && placement.length > 0) {
+        hasData = true
+      }
+    })
+    return hasData
   }
 
   return (
@@ -49,8 +100,11 @@ const ArenaWinners: React.FC = () => {
         </Box>
         <Divider />
         <Box position="relative">
-          <div className={classes.winnerAvatarWrapper} onClick={() => setShowSummary(!showSummary)}>
-            {arenaWinners['1'] && !!arenaWinners['1'].length && (
+          <div
+            className={`${classes.winnerAvatarWrapper} ${!showWinner && classes.winnerFull}`}
+            onClick={() => setShowSummary(!showSummary)}
+          >
+            {showWinner ? (
               <ArenaAvatar
                 src={arenaWinners['1'][0].avatar}
                 name={arenaWinners['1'][0].name}
@@ -59,12 +113,16 @@ const ArenaWinners: React.FC = () => {
                 leaf
                 nameWhite
               />
+            ) : (
+              <Typography variant="h3">{t('common:arena.result_not_decided')}</Typography>
             )}
           </div>
         </Box>
       </div>
-      <div className={`${classes.summary} ${showSummary && classes.showSummary}`}>
-        <div className={classes.summarImageWrapper}>{arena?.attributes?.summary_image && <img src={arena.attributes.summary_image} />}</div>
+      <div className={classes.summary}>
+        {arena?.attributes?.summary_image && (
+          <div className={classes.summarImageWrapper}>{<img src={arena.attributes.summary_image} />}</div>
+        )}
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
             <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
@@ -75,44 +133,68 @@ const ArenaWinners: React.FC = () => {
           <Typography>{arena?.attributes?.summary || ''}</Typography>
         </Linkify>
       </div>
-      <Box textAlign="center" pb={showSummary ? 4 : 8}>
+      <Box textAlign="center" pb={4}>
         <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
           {t('common:tournament.tournament_detail')}
         </ESButton>
       </Box>
-      <div ref={winnerListRef} className={classes.listContainer}>
-        {Object.keys(arenaWinners).map((key) =>
-          (arenaWinners[key] || []).map((p, idx) => (
-            <div className={classes.listItem} key={idx}>
-              <div className={classes.placementWrapper}>
-                <p
-                  className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
-                    p.position === 3 && classes.third
-                  }`}
-                >
-                  {p.position}
-                  {p.position === 1 && <span>st</span>}
-                  {p.position === 2 && <span>nd</span>}
-                  {p.position === 3 && <span>rd</span>}
-                </p>
-              </div>
-              <ButtonBase onClick={toEntryDetail}>
-                <Avatar src={p.avatar} />
-              </ButtonBase>
-              <div className={classes.nameWrapper}>
-                <Typography variant="h3" component="p">
-                  {p.name}
-                </Typography>
-                {p.user && (
-                  <Typography variant="body2" className={classes.user_code}>
-                    {`@${p.user.user_code}`}
+      {hasWinnersData() && (
+        <div ref={winnerListRef} className={classes.listContainer}>
+          {Object.keys(arenaWinners).map((key) =>
+            (arenaWinners[key] || []).map((p, idx) => (
+              <div className={classes.listItem} key={idx}>
+                <div className={classes.placementWrapper}>
+                  <p
+                    className={`${classes.text} ${p.position === 1 && classes.first} ${p.position === 2 && classes.second} ${
+                      p.position === 3 && classes.third
+                    }`}
+                  >
+                    {p.position}
+                    {p.position === 1 && <span>st</span>}
+                    {p.position === 2 && <span>nd</span>}
+                    {p.position === 3 && <span>rd</span>}
+                  </p>
+                </div>
+                <ButtonBase className={classes.itemAvatar} onClick={() => toEntryDetail(p)}>
+                  <Avatar src={p.avatar} />
+                </ButtonBase>
+                <div className={classes.nameWrapper}>
+                  <Typography className={classes.breakWord} variant="h3" component="p">
+                    {p.name}
                   </Typography>
-                )}
+                  {p.user && (
+                    <Typography variant="body2" className={`${classes.user_code} ${classes.breakWord}`}>
+                      {`@${p.user.user_code}`}
+                    </Typography>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
+            ))
+          )}
+        </div>
+      )}
+      {!selectedItem ? null : isTeam() ? (
+        <TeamEntryEditModal
+          tournament={arena}
+          userProfile={userProfile}
+          previewMode
+          open={true}
+          initialTeamId={`${getTeamId(selectedItem)}`}
+          onClose={() => setSelectedItem(null)}
+          myTeam={isMyTeam(selectedItem)}
+          toDetail={toDetail}
+        />
+      ) : (
+        <InidividualEntryEditModal
+          tournament={arena}
+          previewMode
+          open={true}
+          initialParticipantId={`${selectedItem.id}`}
+          onClose={() => setSelectedItem(null)}
+          me={isMe(selectedItem)}
+          toDetail={toDetail}
+        />
+      )}
     </div>
   )
 }
@@ -161,11 +243,15 @@ const useStyles = makeStyles((theme) => ({
     objectFit: 'cover',
   },
   winnerAvatarWrapper: {
+    textAlign: 'center',
     position: 'absolute',
     top: 155,
     left: '50%',
     transform: 'translate(-50%, -50%)',
     cursor: 'pointer',
+  },
+  winnerFull: {
+    width: '100%',
   },
   topWrapper: {
     position: 'absolute',
@@ -179,15 +265,9 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
-    marginBottom: theme.spacing(0),
     overflow: 'visible',
-    opacity: 0,
-    height: 0,
-    visibility: 'hidden',
     willChange: 'all',
     transition: 'all 0.225s ease-out',
-  },
-  showSummary: {
     opacity: 1,
     height: 'auto',
     marginBottom: theme.spacing(4),
@@ -234,6 +314,10 @@ const useStyles = makeStyles((theme) => ({
   nameWrapper: {
     color: Colors.white,
     paddingLeft: theme.spacing(2),
+    flex: 1,
+  },
+  breakWord: {
+    wordBreak: 'break-word',
   },
   user_code: {
     color: Colors.white_opacity['70'],
@@ -290,6 +374,9 @@ const useStyles = makeStyles((theme) => ({
   placementWrapper: {
     width: 55,
     marginRight: theme.spacing(1),
+  },
+  itemAvatar: {
+    width: 40,
   },
   bottomButton: {
     borderRadius: 4,

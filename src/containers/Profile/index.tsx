@@ -17,15 +17,14 @@ import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import useBlock from './useBlock'
 import useUnblock from './useUnblock'
-import ESFollowers from '@containers/Followers'
-import ESFollowing from '@containers/Following'
+import FollowUsers from '@containers/FollowUsers'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
 import ESToast from '@components/Toast'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
-import { REPORT_TYPE } from '@constants/common.constants'
+import { FOLLOW_STATES, REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 interface WithRouterProps {
   router: NextRouter
@@ -180,7 +179,14 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       {i18n.t('common:profile.unblock')}
                     </ESButton>
                   ) : isFollowing ? (
-                    <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
+                    <ESButton
+                      variant="contained"
+                      color="primary"
+                      round
+                      className={classes.button}
+                      disabled={disable}
+                      onClick={setFollowState}
+                    >
                       {i18n.t('common:profile.following')}
                     </ESButton>
                   ) : (
@@ -239,8 +245,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowing user_code={isOthers ? userCode : null} />
-            <ESFollowers user_code={isOthers ? userCode : null} />
+            <FollowUsers user_code={isOthers ? userCode : null} fromType={FOLLOW_STATES.FOLLOWING} />
+            <FollowUsers user_code={isOthers ? userCode : null} fromType={FOLLOW_STATES.FOLLOWERS} />
           </Box>
         </Grid>
         {isAuthenticated ? (
@@ -272,10 +278,11 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
         if (!isOthers || profile.attributes.show_about) return <ProfileMainContainer userProfile={profile} isOthers={isOthers} />
         break
       case TABS.TOURNAMENT:
-        if (!isOthers || profile.attributes.show_tournament_history) return <TournamentHistoryContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_tournament_history)
+          return <TournamentHistoryContainer userCode={userCode} isOthers={isOthers} />
         break
       case TABS.ACTIVITY:
-        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} />
+        if (!isOthers || profile.attributes.show_activity_logs) return <ActivityLogsContainer userCode={userCode} isOthers={isOthers} />
         break
       default:
         break

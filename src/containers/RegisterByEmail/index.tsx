@@ -27,7 +27,7 @@ const RegisterByEmailContainer: React.FC = () => {
   const [score, setScore] = useState(0)
   const [showPassword, setShowPassword] = useState(false)
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .test('email-validation', t('common:login.validation.email'), (value) => {

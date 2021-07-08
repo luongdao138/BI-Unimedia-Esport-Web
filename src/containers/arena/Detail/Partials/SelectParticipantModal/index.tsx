@@ -115,17 +115,13 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
         <Box width={'100%'} display="flex" flexDirection="column" alignItems="center">
           <ESAvatar size={120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
-          <Typography noWrap className={classes.label} variant="h3">
+          <Typography className={classes.label} variant="h3">
             {_name || ''}
           </Typography>
-          {!isTeam && (
-            <Typography noWrap className={classes.label}>
-              {user ? `${t('common:common.at')}${user.user_code}` : ''}
-            </Typography>
-          )}
+          {!isTeam && <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>}
         </Box>
 
-        <Box display="flex" alignItems="flex-end">
+        <Box display="flex" alignItems="flex-end" pt={2}>
           <ButtonPrimary
             style={{ padding: '12px 24px' }}
             disabled={meta.pending}
@@ -217,9 +213,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     width: '100%',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     textAlign: 'center',
+    wordBreak: 'break-word',
   },
   vsLabel: {
     fontSize: 40,
@@ -227,12 +222,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   itemWrapper: {
     width: 196,
-    height: 240,
+    minHeight: 240,
   },
   [theme.breakpoints.down('sm')]: {
     itemWrapper: {
       width: 133,
-      height: 220,
+      minHeight: 220,
     },
     topContainer: {
       paddingTop: 0,

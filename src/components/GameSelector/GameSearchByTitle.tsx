@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   searchBtn: {
     fontWeight: 400,
     height: 37.6,
+    minWidth: 68,
     borderBottomLeftRadius: 'unset',
     borderTopLeftRadius: 'unset',
   },

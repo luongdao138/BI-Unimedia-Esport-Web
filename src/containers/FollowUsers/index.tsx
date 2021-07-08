@@ -1,32 +1,30 @@
 import { useEffect, useState } from 'react'
+import { Box, Typography, Button, DialogContent } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESLoader from '@components/Loader'
-import UserListItem from '@components/UserItem'
-import { Box, Typography, Button, DialogContent } from '@material-ui/core'
+import UserRow from './partials/UserRow'
+import { FOLLOW_STATES } from '@constants/common.constants'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
-import useFollowing from './useFollowing'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { FixedSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { FollowResponse } from '@services/user.service'
+import useData from './useData'
 
-export interface ESFollowingProps {
+export interface FollowUsersProps {
   user_code: string
+  fromType: FOLLOW_STATES.FOLLOWERS | FOLLOW_STATES.FOLLOWING
 }
 
-enum FOLLOWING_STATE_CHANGE_TYPE {
-  FOLLOW = 1,
-  UNFOLLOW = 0,
-}
-
-const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
-  const [open, setOpen] = useState(false)
+const FollowUsers: React.FC<FollowUsersProps> = ({ user_code, fromType }) => {
   const classes = useStyles()
+  const isOthers = user_code !== null
+  const [open, setOpen] = useState(false)
+
   const { t } = useTranslation(['common'])
-  const { clearFollowing, following, fetchFollowing, increaseFollowing, decreaseFollowing, page, meta } = useFollowing()
+  const { clearUsers, users, fetchUsers, follow, unfollow, page, meta } = useData(fromType)
   const hasNextPage = page && page.current_page !== page.total_pages
 
   useEffect(() => {
@@ -34,34 +32,33 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
     if (user_code != null) {
       _.merge(params, { user_code: user_code })
     }
-    fetchFollowing(params)
+    fetchUsers(params)
     return function clear() {
-      clearFollowing()
+      clearUsers()
     }
   }, [user_code])
 
   const loadMore = () => {
     if (hasNextPage) {
-      fetchFollowing({ page: page.current_page + 1, user_code: user_code })
+      fetchUsers({ page: page.current_page + 1, user_code: user_code })
     }
   }
 
   const changeFollowingCount = (type: number, user_code: string) => {
-    if (type === FOLLOWING_STATE_CHANGE_TYPE.FOLLOW) {
-      increaseFollowing(user_code)
-    } else if (type === FOLLOWING_STATE_CHANGE_TYPE.UNFOLLOW) {
-      decreaseFollowing(user_code)
+    if (type === FOLLOW_STATES.FOLLOW) {
+      follow(user_code, isOthers)
+    } else if (type === FOLLOW_STATES.UNFOLLOW) {
+      unfollow(user_code, isOthers)
     }
   }
 
-  const Row = (props: { index: number; style: React.CSSProperties; data: Array<FollowResponse> }) => {
+  const Row = (props: { index: number; style: React.CSSProperties; data: any }) => {
     const { index, style, data } = props
     const user = data[index]
     return (
       <div style={style} key={index}>
-        <UserListItem
-          data={user}
-          isFollowed={user.attributes.is_following}
+        <UserRow
+          user={user?.attributes}
           handleClose={() => setOpen(false)}
           changeFollowState={(type: number) => changeFollowingCount(type, user.attributes.user_code)}
         />
@@ -69,29 +66,37 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
     )
   }
 
-  const itemCount = hasNextPage ? following.length + 1 : following.length
-
+  const itemCount = hasNextPage ? users.length + 1 : users.length
+  const title = fromType === FOLLOW_STATES.FOLLOWERS ? t('common:followers.title') : t('common:following.title')
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} style={{ marginRight: 10 }}>
         <Box display="flex" className={classes.rowContainer}>
-          <Typography>{t('common:following.title')}</Typography>
+          <Typography>{title}</Typography>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : 0}</Typography>
-            <Typography>{t('common:following.th')}</Typography>
+            <Typography>{t('common:followers.th')}</Typography>
           </Box>
         </Box>
       </Button>
-      <ESDialog title={t('common:following.title')} open={open} handleClose={() => setOpen(false)}>
-        <DialogContent>
-          <InfiniteLoader isItemLoaded={(index: number) => index < following.length} itemCount={itemCount} loadMoreItems={loadMore}>
+      <ESDialog
+        title={title}
+        open={open}
+        handleClose={() => setOpen(false)}
+        classes={{
+          paperFullWidth: classes.dialogFullWidth,
+          paper: classes.dialogPaper,
+        }}
+      >
+        <DialogContent style={{ paddingRight: 0, paddingLeft: 0 }}>
+          <InfiniteLoader isItemLoaded={(index: number) => index < users.length} itemCount={itemCount} loadMoreItems={loadMore}>
             {({ onItemsRendered, ref }) => (
               <List
                 className={classes.scroll}
-                height={800}
+                height={innerHeight - 200}
                 width={'100%'}
-                itemCount={following.length}
-                itemData={following}
+                itemCount={users.length}
+                itemData={users}
                 itemSize={66}
                 onItemsRendered={onItemsRendered}
                 ref={ref}
@@ -100,11 +105,6 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
               </List>
             )}
           </InfiniteLoader>
-          {/* {following.length > 0 && page.total_pages > 0 && !hasNextPage ? (
-            <p style={{ textAlign: 'center' }}>
-              <b>{t('common:infinite_scroll.message')}</b>
-            </p>
-          ) : null} */}
           {meta.pending ? (
             <Box className={classes.loader}>
               <ESLoader />
@@ -116,7 +116,7 @@ const ESFollowing: React.FC<ESFollowingProps> = ({ user_code }) => {
   )
 }
 
-export default ESFollowing
+export default FollowUsers
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
@@ -132,6 +132,13 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white,
+  },
+  dialogFullWidth: {
+    width: '90%',
+  },
+  dialogPaper: {
+    marginLeft: 24,
+    marginRight: 0,
   },
   scroll: {
     overflow: 'overlay',

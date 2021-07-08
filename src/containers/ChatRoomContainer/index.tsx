@@ -61,7 +61,7 @@ const ChatRoomContainer: React.FC<ChatRoomContainerProps> = ({ roomId, router })
   const { copy } = useCopyToClipboard(true, i18n.t('common:chat.chat_copied'))
   const classes = useStyles()
 
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   const dispatch = useAppDispatch()
 
@@ -394,6 +394,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     maxWidth: '100%',
     background: '#101010',
+    willChange: 'transform',
   },
   panel: {
     position: 'relative',

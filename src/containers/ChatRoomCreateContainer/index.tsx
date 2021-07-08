@@ -54,7 +54,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   const [selectedUsers, setSelectedUsers] = useState([] as number[])
   const [roomId, setRoomId] = useState(null as null | string)
   const [uploadMeta, setMeta] = useState<UploadStateType>({ uploading: false })
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
 
   const ref = useRef<{ handleUpload: () => void }>(null)
   const inputRef = useRef<{ clearInput: () => void }>(null)
@@ -229,9 +229,9 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   return (
     <Box className={classes.room}>
       <Box className={classes.memberSelectContainer}>
-        <Box>
+        <Box className={classes.titleBox}>
           <Typography variant="h2" className={classes.title}>
-            宛先
+            {i18n.t('common:chat.destination')}
           </Typography>
         </Box>
         <Box className={classes.inputArea}>
@@ -293,6 +293,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     pointerEvents: 'auto',
   },
   title: { fontSize: 17 },
+  titleBox: {
+    height: '40px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   loaderBox: {
     width: 20,
     height: 20,
@@ -356,7 +362,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     borderBottom: '1px solid #212121',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     columnGap: 14,
     padding: '8px 12px',
   },

@@ -152,12 +152,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
     textAlign: 'start',
+    wordBreak: 'break-all',
   },
   targetText: {
     textDecoration: 'underline',
-    textAlign: 'start',
-    flexWrap: 'wrap',
-    wordWrap: 'break-word',
+    // textAlign: 'start',
+    // flexWrap: 'wrap',
+    // wordWrap: 'break-word',
   },
   date: {
     whiteSpace: 'nowrap',

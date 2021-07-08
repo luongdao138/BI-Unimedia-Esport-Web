@@ -6,6 +6,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import * as selectors from '@store/arena/selectors'
 
 const _closeMeta = createMetaSelector(actions.closeTournament)
 const _joinMeta = createMetaSelector(actions.joinTournament)
@@ -16,7 +17,14 @@ const _updateTeamMeta = createMetaSelector(actions.updateTournamentTeamDetail)
 const useEntry = () => {
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
-  const join = (param: JoinParams) => dispatch(actions.joinTournament(param))
+  const arena = useAppSelector(selectors.getTournamentDetail)
+  const join = async (param: JoinParams) => {
+    const resultAction = await dispatch(actions.joinTournament(param))
+    if (actions.joinTournament.fulfilled.match(resultAction)) {
+      dispatch(commonActions.addToast(t('common:arena.join_success')))
+      dispatch(actions.getTournamentDetail(arena.attributes.hash_key))
+    }
+  }
   const updateTeam = (param: UpdateTournamentTeamParams) => dispatch(actions.updateTournamentTeamDetail(param))
   const leave = (param) => dispatch(actions.leaveTournament(param))
   const close = (param) => dispatch(actions.closeTournament(param))
@@ -32,11 +40,10 @@ const useEntry = () => {
   const resetUpdateTeamMeta = () => dispatch(clearMetaData(actions.updateTournamentTeamDetail.typePrefix))
 
   useEffect(() => {
-    if (joinMeta.error) {
-      dispatch(commonActions.addToast(t('common:error.join_arena_failed')))
-      resetJoinMeta()
+    if (leaveMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.leave_success')))
     }
-  }, [joinMeta.error])
+  }, [leaveMeta.loaded])
 
   useEffect(() => {
     if (leaveMeta.error) {
@@ -44,6 +51,12 @@ const useEntry = () => {
       resetLeaveMeta()
     }
   }, [leaveMeta.error])
+
+  useEffect(() => {
+    if (closeMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.close_entry_success')))
+    }
+  }, [closeMeta.loaded])
 
   useEffect(() => {
     if (closeMeta.error) {
@@ -58,12 +71,6 @@ const useEntry = () => {
       resetUpdateTeamMeta()
     }
   }, [updateTeamMeta.error])
-
-  useEffect(() => {
-    if (joinMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:arena.join_success')))
-    }
-  }, [joinMeta.loaded])
 
   return {
     join,

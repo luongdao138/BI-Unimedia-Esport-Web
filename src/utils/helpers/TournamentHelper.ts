@@ -178,8 +178,13 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
     requiredFieldErrors.push(stepOne.title)
     requiredFieldErrors.push(stepOne.game_title_id)
     requiredFieldErrors.push(stepOne.game_hardware_id)
+    if (stepOne.prize_amount) {
+      requiredFieldErrors.push(stepOne.prize_amount)
+    }
   }
   if (stepTwo) {
+    requiredFieldErrors.push(stepTwo.rule)
+    requiredFieldErrors.push(stepTwo.participant_type)
     requiredFieldErrors.push(stepTwo.max_participants)
   }
   if (stepThree) {
@@ -191,6 +196,7 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
     requiredFieldErrors.push(stepThree.acceptance_dates)
     requiredFieldErrors.push(stepThree.acceptance_end_start_date)
     requiredFieldErrors.push(stepThree.start_end_date)
+    requiredFieldErrors.push(stepThree.area_id)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

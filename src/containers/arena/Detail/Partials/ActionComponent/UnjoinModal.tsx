@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, IconButton, Icon } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import LinkButton from '@components/LinkButton'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
@@ -31,14 +31,9 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
   return (
     <Box textAlign="center" mt={2}>
       <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
-      <ESModal open={open}>
+      <ESPopup open={open}>
         <BlankLayout>
           <Box paddingBottom={16} paddingTop={8} className={classes.childrenContainer}>
-            <Box py={2}>
-              <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-            </Box>
             <Box pb={4} pt={12} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:tournament.unjoin_dialog.dialog_title')}</Typography>
             </Box>
@@ -50,7 +45,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
               <Box className={classes.actionButton}>
-                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
                   {t('common:common.cancel')}
                 </ESButton>
               </Box>
@@ -62,7 +57,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
             </Box>
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
 
       {leaveMeta.pending && <ESLoader open={leaveMeta.pending} />}
     </Box>
@@ -105,6 +100,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   actionButton: {
     width: theme.spacing(35),
     margin: 8,
+  },
+  cancelBtn: {
+    padding: '12px 22px',
   },
   [theme.breakpoints.down('sm')]: {
     container: {

@@ -17,6 +17,8 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import LoginRequired from '@containers/LoginRequired'
 import TeamEntryEditModal from './TeamEntryEditModal'
 import UnjoinModal from './UnjoinModal'
+import InidividualEntryEditModal from './InidividualEntryEditModal'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface Props {
   tournament: TournamentDetail
@@ -27,91 +29,84 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { children, tournament, userProfile } = props
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const [entryModalOpen, setEntryModalOpen] = useState(false)
 
   const {
     toMatches,
     isModerator,
     isTeam,
-    isInProgress,
     isRecruiting,
+    isReady,
     isCompleted,
     isCancelled,
     isRecruitmentClosed,
     isNotHeld,
     isAdminJoined,
+    isTeamLeader,
+    isEntered,
   } = useArenaHelper(tournament)
 
   const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
+  const [soloEntryEditShow, setSoloEntryEditShow] = useState<boolean>(false)
+  const [soloEntryShow, setSoloEntryShow] = useState<boolean>(false)
+  const [teamEntryShow, setTeamEntryShow] = useState<boolean>(false)
+  const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
 
   const buildArenaPeriodValue = () => {
-    const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
-    const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
+    const beforeEntry = isReady || isRecruiting
+    const targetStartDate = beforeEntry ? tournament.attributes.acceptance_start_date : tournament.attributes.start_date
+    const targetEndDate = beforeEntry ? tournament.attributes.acceptance_end_date : tournament.attributes.end_date
+    const entryStartDate = TournamentHelper.formatDate(targetStartDate)
+    const entryEndDate = TournamentHelper.formatDate(targetEndDate)
 
     return `${entryStartDate} ～ ${entryEndDate}`
   }
   const buildArenaTitle = () => {
-    const arenaStatus = isRecruiting
-      ? t('common:tournament.entry_period')
-      : isRecruitmentClosed || isInProgress || isCompleted
-      ? t('common:tournament.holding_period')
-      : ''
+    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:tournament.holding_period')
 
     return `${arenaStatus}`
   }
-  const hideEntryModal = () => {
-    setEntryModalOpen(false)
-  }
-  const renderTeamEntry = () => {
+
+  const entryButton = () => {
     return (
-      <Box>
+      <Box className={classes.actionButton}>
         <LoginRequired>
-          <Box className={classes.actionButton}>
-            {(tournament.attributes.is_entered && tournament.attributes.my_role) === 'interested' ? (
-              <Box>
-                <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
-                <UnjoinModal tournament={tournament} />
-              </Box>
-            ) : null}
-            {tournament.attributes.my_role === null && (
-              <ButtonPrimary round fullWidth onClick={() => setEntryModalOpen(true)}>
-                {t('common:tournament.join')}
-              </ButtonPrimary>
-            )}
-          </Box>
+          <ButtonPrimary disabled={isReady} round fullWidth onClick={() => (isTeam ? setTeamEntryShow(true) : setSoloEntryShow(true))}>
+            {t('common:tournament.join')}
+          </ButtonPrimary>
         </LoginRequired>
       </Box>
     )
   }
 
-  const renderAdminTeamEntry = () => {
+  const entryEditButton = () => {
     return (
-      <>
-        <Box className={classes.buttonHolder}>
-          <Box minWidth={260} className={classes.buttonLeft}>
-            <CloseRecruitmentModal tournament={tournament} handleClose={() => {}} />
-          </Box>
-          <Box minWidth={256} className={classes.buttonRight}>
-            {isTeam ? (
-              <Box className={classes.actionButton}>
-                {isAdminJoined() ? (
-                  <Box>
-                    <TeamEntryEditModal tournament={tournament} userProfile={userProfile} myTeam />
-                  </Box>
-                ) : (
-                  <ButtonPrimary round fullWidth onClick={() => setEntryModalOpen(true)}>
-                    {t('common:tournament.join')}
-                  </ButtonPrimary>
-                )}
-              </Box>
-            ) : (
-              <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} hideUnjoin={isAdminJoined()} />
-            )}
-          </Box>
-        </Box>
-        {isAdminJoined() ? <UnjoinModal tournament={tournament} /> : null}
-      </>
+      <Box className={classes.actionButton}>
+        <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
+          {t('common:tournament.check_entry')}
+        </ButtonPrimary>
+      </Box>
     )
+  }
+
+  const renderAdminEntry = () => {
+    return (
+      <Box className={classes.buttonHolder}>
+        <Box minWidth={260} className={classes.buttonLeft}>
+          <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={tournament} handleClose={() => {}} />
+        </Box>
+        <Box minWidth={256} className={classes.buttonRight}>
+          {renderEntry()}
+        </Box>
+      </Box>
+    )
+  }
+
+  const renderEntry = () => {
+    if ((isEntered && isTeamLeader) || isAdminJoined) {
+      return entryEditButton()
+    } else if (isRecruiting || isReady) {
+      return entryButton()
+    }
   }
 
   return (
@@ -142,20 +137,18 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {isRecruiting && (
+      {isRecruiting || isReady ? (
         <>
-          {isModerator ? (
-            <Box>
-              {renderAdminTeamEntry()}
-              <Box className={classes.description}>
-                <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
-              </Box>
+          {isModerator ? renderAdminEntry() : renderEntry()}
+          {isAdminJoined || (isEntered && isTeamLeader) ? <UnjoinModal tournament={tournament} /> : null}
+          {isModerator && isRecruiting && (
+            <Box pb={2} className={classes.description}>
+              <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
             </Box>
-          ) : null}
-          {entryModalOpen ? <TeamEntryModal tournament={tournament} userProfile={userProfile} handleClose={hideEntryModal} /> : null}
-          {!isModerator && isTeam && renderTeamEntry()}
-          {!isModerator && !isTeam && <IndividualEntryModal tournament={tournament} userProfile={userProfile} handleClose={() => {}} />}
+          )}
         </>
+      ) : (
+        !TournamentHelper.isStatusPassed(tournament.attributes.status, TOURNAMENT_STATUS.COMPLETED) && renderEntry()
       )}
 
       {isModerator && isCompleted && !isNotHeld && (
@@ -166,6 +159,25 @@ const ActionComponent: React.FC<Props> = (props) => {
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
         </Box>
       )}
+
+      {/* modals */}
+      {teamEntryShow && (
+        <TeamEntryModal tournament={tournament} userProfile={userProfile} open={teamEntryShow} onClose={() => setTeamEntryShow(false)} />
+      )}
+      <TeamEntryEditModal
+        tournament={tournament}
+        userProfile={userProfile}
+        myTeam
+        open={teamEntryEditShow}
+        onClose={() => setTeamEntryEditShow(false)}
+      />
+      <InidividualEntryEditModal tournament={tournament} me open={soloEntryEditShow} onClose={() => setSoloEntryEditShow(false)} />
+      <IndividualEntryModal
+        tournament={tournament}
+        userProfile={userProfile}
+        open={soloEntryShow}
+        onClose={() => setSoloEntryShow(false)}
+      />
     </Box>
   )
 }

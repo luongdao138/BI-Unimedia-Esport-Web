@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
-import ButtonPrimary from '@components/ButtonPrimary'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import { useTranslation } from 'react-i18next'
 import BlackBox from '@components/BlackBox'
@@ -15,6 +14,9 @@ import useTeamDetail from './useTeamDetail'
 import TeamMemberItemExpanded from '../TeamMemberItemExpanded'
 import TeamEntryModal from './TeamEntryModal'
 import { TeamMemberSelectItem } from '@store/arena/actions/types'
+import useDocTitle from '@utils/hooks/useDocTitle'
+import { ROLE } from '@constants/tournament.constants'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -22,36 +24,49 @@ interface EntryEditModalProps {
   previewMode?: boolean
   initialTeamId?: string
   myTeam: boolean
+  open: boolean
   onClose?: () => void
+  toDetail?: () => void
 }
 
-const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userProfile, previewMode, initialTeamId, myTeam, onClose }) => {
+const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
+  tournament,
+  userProfile,
+  previewMode,
+  initialTeamId,
+  myTeam,
+  open,
+  onClose,
+  toDetail,
+}) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { teamDetail, isPending, getTeamDetail } = useTeamDetail()
-  const [open, setOpen] = useState(false)
+  const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
+  const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
-    if (open) fetch()
+    if (open) {
+      setEditMode(false)
+      fetch()
+      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
+    }
   }, [open])
+
+  useEffect(() => {
+    return () => resetTitle()
+  }, [])
 
   useEffect(() => {
     if (isPreview) fetch()
   }, [isPreview])
 
-  const handleReturn = () => {
-    if (_.isFunction(onClose)) {
-      onClose()
-    }
-    setOpen(false)
-  }
-
   const getTeamId = () => {
     const myInfos = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfos)) return null
-    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === 'interested')
+    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT)
     if (!info) return null
     const teamId = _.get(info, 'team_id', null)
     if (_.isNumber(teamId)) return teamId
@@ -69,11 +84,6 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
     if (_.isNumber(teamId)) {
       getTeamDetail(teamId)
     }
-  }
-
-  const onOpen = () => {
-    setOpen(true)
-    setEditMode(false)
   }
 
   const onSubmit = () => {
@@ -122,29 +132,34 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
     }
   }
 
+  const handleClose = () => {
+    resetTitle()
+    onClose()
+  }
+
   return (
     <Box>
-      {isPreview ? null : (
-        <ButtonPrimary round fullWidth onClick={onOpen}>
-          {t('common:tournament.check_entry')}
-        </ButtonPrimary>
-      )}
-
       <StickyActionModal
         open={open || isPreview}
-        returnText={t('common:tournament.join')}
-        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
+        returnText={t('common:arena.entry_information')}
+        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={false}
-        onReturnClicked={handleReturn}
+        onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
-        hideFooter={!myTeam}
+        hideFooter={!myTeam || !isRecruiting}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={() => setOpen(false)}>
+                <ESButton
+                  className={classes.bottomButton}
+                  variant="outlined"
+                  round
+                  size="large"
+                  onClick={toDetail ? toDetail : handleClose}
+                >
                   {t('common:tournament.tournament_detail')}
                 </ESButton>
               }
@@ -160,7 +175,8 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({ tournament, userPro
           <TeamEntryModal
             tournament={tournament}
             userProfile={userProfile}
-            handleClose={() => setEditMode(false)}
+            onClose={() => setEditMode(false)}
+            open={editMode}
             isEdit
             initialData={getEditInitialData()}
             updateDone={() => fetch()}

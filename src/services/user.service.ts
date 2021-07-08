@@ -2,10 +2,16 @@ import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
 import { TournamentListItem } from './arena.service'
+import { FOLLOW_STATES } from '@constants/common.constants'
 
 export type HistorySearchParams = {
   page?: number
+  user_code?: string
+}
+
+export type FollowStateChangeParam = {
   user_code: string
+  isOthers: boolean
 }
 
 export type HistorySearchResponse = {
@@ -20,7 +26,7 @@ export type ActivityLogResponse = {
 
 export type ActivityLogParams = {
   page?: number
-  user_code: string
+  user_code?: string
 }
 
 export type NicknamesResponse = {
@@ -121,7 +127,7 @@ export type ProfileEditParams = {
   show_area: boolean
   features: number[]
   nickname: string
-  nickname2: string
+  // nickname2: string
   bio: string
   instagram_link: string
   facebook_link: string
@@ -185,12 +191,19 @@ export type FollowActionResponse = {
   data: Array<FollowResponse>
 }
 
+export type FollowActionResponse2 = {
+  res: FollowActionResponse
+  param: FollowParams
+}
+
 export type UnFollowResponse = {
   success: 'success'
 }
 
 export type FollowParams = {
   user_code: string
+  isOthers?: boolean
+  fromType?: FOLLOW_STATES.FOLLOWERS | FOLLOW_STATES.FOLLOWING
 }
 
 export type FollowersParams = {

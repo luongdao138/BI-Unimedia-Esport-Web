@@ -66,7 +66,8 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
         options={items}
         getOptionLabel={(item) => item.nickname}
         filterSelectedOptions
-        noOptionsText={t('common:chat.no_user_available')}
+        noOptionsText={t('common:common.no_user_available')}
+        loadingText={t('common:common.loading')}
         onChange={(__, values) => {
           onItemSelected({ index: index, item: values as TeamMemberSelectItem })
         }}
@@ -96,8 +97,9 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
           <Box>
             <ESLabel label={label} size="small" bold required />
             <Box m={1} />
-            <Box className={selectedItem ? classes.avatarInputHolder : null}>
-              {selectedItem ? <ESAvatar size={40} src={selectedItem.avatar} alt={selectedItem.nickname} /> : null}
+            {/* <Box className={selectedItem ? classes.avatarInputHolder : null}> */}
+            <Box>
+              {/* {selectedItem ? <ESAvatar size={40} src={selectedItem.avatar} alt={selectedItem.nickname} /> : null} */}
               <SelectInputTextField
                 variant="outlined"
                 {...params}
@@ -141,12 +143,12 @@ const useStyles = makeStyles((theme) =>
         },
       },
     },
-    avatarInputHolder: {
-      display: 'grid',
-      gridTemplateColumns: 'auto 1fr',
-      alignItems: 'center',
-      gridGap: 8,
-    },
+    // avatarInputHolder: {
+    //   display: 'grid',
+    //   gridTemplateColumns: 'auto 1fr',
+    //   alignItems: 'center',
+    //   gridGap: 8,
+    // },
   })
 )
 

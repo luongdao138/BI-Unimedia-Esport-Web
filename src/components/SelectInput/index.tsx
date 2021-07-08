@@ -1,5 +1,4 @@
-import { Box, createStyles, makeStyles, Popper, Typography, CircularProgress } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Box, createStyles, makeStyles, Typography, CircularProgress } from '@material-ui/core'
 import { useCallback, useRef } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
@@ -7,6 +6,8 @@ import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import useAutocomplete from '@material-ui/lab/useAutocomplete'
+import NoSsr from '@material-ui/core/NoSsr'
 
 export type SelectInputItem = {
   id: number
@@ -37,8 +38,78 @@ const useStyles = makeStyles((theme) =>
         },
       },
     },
-    input: {
-      maxHeight: 128,
+    chip: {
+      display: 'flex',
+      margin: '2px 2px',
+      height: '30px',
+      padding: '0 4px',
+      '& .MuiChip-label': {
+        maxWidth: 140,
+      },
+    },
+    autocomplete: {
+      margin: 0,
+      padding: '0 !important',
+    },
+
+    listBox: {
+      width: '300px',
+      margin: '10px 0 0',
+      padding: '0',
+      position: 'absolute',
+      listStyle: 'none',
+      backgroundColor: '#fff',
+      overflow: 'auto',
+      maxHeight: '250px',
+      borderRadius: '3px',
+      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+      zIndex: 1,
+      scrollbarColor: '#222 transparent',
+      scrollbarWidth: 'thin',
+      '&::-webkit-scrollbar': {
+        width: 5,
+        opacity: 1,
+        padding: 2,
+      },
+      '&::-webkit-scrollbar-track': {
+        paddingLeft: 1,
+        background: 'rgba(0,0,0,0.5)',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#222',
+        borderRadius: 6,
+      },
+      '& li': {
+        padding: '5px 12px',
+        display: 'flex',
+        '& span': { flexGrow: 1 },
+        '& svg': { color: 'transparent' },
+      },
+      "& li[aria-selected='true']": {
+        backgroundColor: '#fafafa',
+        fontWeight: 600,
+        '& svg': { color: '#1890ff' },
+      },
+      "& li[data-focus='true']": {
+        backgroundColor: '#e6f7ff',
+        cursor: 'pointer',
+        '& svg': { color: '#000' },
+      },
+    },
+    listItem: {
+      padding: 4,
+      cursor: 'pointer',
+      '&:hover': {
+        background: '#eee',
+      },
+    },
+    inputWrapper: {
+      maxHeight: 104,
+      width: '100%',
+      display: 'flex',
+      padding: 4,
+      outline: '0 none',
+      flexWrap: 'wrap',
       overflow: 'auto',
       scrollbarColor: '#222 transparent',
       scrollbarWidth: 'thin',
@@ -55,16 +126,31 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: '#222',
         borderRadius: 6,
       },
-    },
-    chip: {
-      display: 'flex',
-      '& .MuiChip-label': {
-        maxWidth: 140,
+      '&.focused': {
+        background: '#111',
+      },
+      '& input': {
+        fontSize: '14px',
+        height: '26px',
+        marginTop: '4px',
+        boxSizing: 'border-box',
+        padding: '8px 6px',
+        width: '0',
+        minWidth: '100px',
+        flexGrow: 1,
+        border: '0',
+        margin: '0',
+        outline: '0',
       },
     },
-    autocomplete: {
-      margin: 0,
-      padding: '0 !important',
+
+    [theme.breakpoints.down('sm')]: {
+      listBox: {
+        width: '240px',
+      },
+      loader: {
+        display: 'none',
+      },
     },
   })
 )
@@ -80,87 +166,81 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
     []
   )
 
-  const PopperMy = function (props) {
-    return <Popper {...props} className={classes.root} style={{ width: 300 }} placement="bottom-start" anchorEl={textRef.current} />
-  }
-
   const handleChange = (_event, value: string, reason: string) => {
     if (reason === 'input') {
       inputDebounce(value)
     }
   }
 
+  const { getRootProps, getInputProps, getTagProps, getListboxProps, getOptionProps, groupedOptions, value, focused } = useAutocomplete({
+    multiple: true,
+    options: items,
+    getOptionLabel: (option) => option.nickName,
+    onChange: (_, values) => onItemsSelected(values),
+    getOptionSelected: (option, value) => option.id === value.id,
+    onInputChange: handleChange,
+  })
+
   return (
     <Box width={1}>
-      <Autocomplete
-        multiple
-        limitTags={2}
-        options={items}
-        getOptionLabel={(option) => option.nickName}
-        filterSelectedOptions
-        className={classes.autocomplete}
-        noOptionsText={t('common:chat.no_user_available')}
-        disableClearable
-        onInputChange={handleChange}
-        onChange={(_, values) => onItemsSelected(values)}
-        onOpen={(_) => onSearchInput('')}
-        loading={loading}
-        getOptionSelected={(option, value) => option.id === value.id}
-        renderOption={(item) => {
-          return (
-            <Box display="flex" overflow="hidden">
-              <ESAvatar alt={item.nickName} src={item.avatar} />
-              <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
-                <Box color={Colors.black}>
-                  <Typography variant="h3" noWrap>
-                    {item.nickName}
-                  </Typography>
-                </Box>
-                <Box color={Colors.black}>
-                  <Typography variant="body2" noWrap>
-                    {`${t('common:common.at')}${item.userCode}`}
-                  </Typography>
-                </Box>
-              </Box>
+      <NoSsr>
+        <div>
+          <div {...getRootProps()}>
+            <Box className={`${focused ? 'focused' : ''} ${classes.inputWrapper}`}>
+              {value.map((option: SelectInputItem, index: number) => (
+                <ESChip
+                  size="small"
+                  className={classes.chip}
+                  key={index}
+                  label={<EllipsisText>{option.nickName}</EllipsisText>}
+                  {...getTagProps({ index })}
+                />
+              ))}
+              <SelectInputTextField
+                {...getInputProps()}
+                inputRef={textRef}
+                className={classes.input}
+                InputProps={{
+                  ...getInputProps(),
+                  endAdornment: <>{loading ? <CircularProgress className={classes.loader} color="inherit" size={20} /> : null}</>,
+                }}
+              />
             </Box>
-          )
-        }}
-        renderInput={(params) => (
-          <SelectInputTextField
-            {...params}
-            inputRef={textRef}
-            className={classes.input}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
-            }}
-          />
-        )}
-        renderTags={(value, getTagProps) =>
-          value.map((item, index) => (
-            <ESChip
-              size="small"
-              className={classes.chip}
-              key={index}
-              label={<EllipsisText>{item.nickName}</EllipsisText>}
-              {...getTagProps({ index })}
-            />
-          ))
-        }
-        PopperComponent={PopperMy}
-      />
+          </div>
+          {groupedOptions.length > 0 ? (
+            <Box className={classes.listBox} {...getListboxProps()}>
+              {groupedOptions.map((option, index) => {
+                const isSelected = getOptionProps({ option, index })['aria-selected']
+                if (!isSelected)
+                  return (
+                    <Box className={classes.listItem} display="flex" overflow="hidden" key={index} {...getOptionProps({ option, index })}>
+                      <ESAvatar alt={option.nickName} src={option.avatar} />
+                      <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
+                        <Box color={Colors.black}>
+                          <Typography variant="h3" noWrap>
+                            {option.nickName}
+                          </Typography>
+                        </Box>
+                        <Box color={Colors.black}>
+                          <Typography variant="body2" noWrap>
+                            {`${t('common:common.at')}${option.userCode}`}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  )
+              })}
+            </Box>
+          ) : null}
+        </div>
+      </NoSsr>
     </Box>
   )
 }
 
 export default ESSelectInput
 
-const CHIP_MAX_WIDTH = 150
+const CHIP_MAX_WIDTH = 120
 const CHIP_ICON_WIDTH = 30
 
 const EllipsisText = (props) => {

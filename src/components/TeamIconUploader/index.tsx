@@ -23,6 +23,7 @@ const ESTeamIconUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading, on
 
   const dropZoneConfig = {
     accept: 'image/*',
+    multiple: false,
     onDrop: (files: any) => handleChange(files),
   }
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)

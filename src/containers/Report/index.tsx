@@ -14,7 +14,7 @@ import useReport from './useReport'
 import useReasons from './useReasons'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
@@ -39,7 +39,7 @@ export interface ESReportProps {
 const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWordByField } = useCheckNgWord()
   const { createReport, meta, userEmail } = useReport()
   const { reasons, fetchReasons } = useReasons()
   const { t } = useTranslation('common')
@@ -68,15 +68,21 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
-      reason_id: reasons[0] ? Number(reasons[0].id) : 1,
+      reason_id: null,
       report_type: 0,
       user_email: emailAssigned ? userEmail : '',
     },
     enableReinitialize: true,
     validationSchema,
     onSubmit(values) {
-      const checked = checkNgWord([values.description, emailAssigned ? '' : values.user_email])
-      if (_.isEmpty(checked)) {
+      // const checked = checkNgWord([values.description, emailAssigned ? '' : values.user_email])
+      const checkFields = { [t('user_report.reason_desc')]: values.description }
+      if (!emailAssigned) {
+        checkFields[t('user_report.email')] = values.user_email
+      }
+      const failedFields = checkNgWordByField(checkFields)
+
+      if (_.isEmpty(failedFields)) {
         switch (reportType) {
           case REPORT_TYPE.CHAT:
             _.merge(values, { target_id: chat_id })
@@ -91,7 +97,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         _.merge(values, { report_type: reportType })
         createReport(values)
       } else {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: failedFields.join(', ') }))
       }
     },
   })
@@ -262,6 +268,7 @@ const useStyles = makeStyles((theme) => ({
   },
   nameContainer: {
     marginLeft: 20,
+    paddingRight: 10,
   },
   desc: {
     display: 'flex',
@@ -286,6 +293,9 @@ const useStyles = makeStyles((theme) => ({
   userCode: {
     fontSize: 14,
     color: Colors.text[200],
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
   staticMail: {
     fontSize: 16,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, makeStyles, DialogContent, Typography, Theme } from '@material-ui/core'
+import { Box, makeStyles, DialogContent, Typography, Theme, useTheme } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
 import ESInput from '@components/Input'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -13,6 +13,8 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { addToast } from '@store/common/actions'
+import { useRect } from '@utils/hooks/useRect'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 export interface RoomNameEditorProps {
   roomName: string
@@ -21,12 +23,24 @@ export interface RoomNameEditorProps {
   hide: () => void
 }
 
+const contentRef = React.createRef<HTMLDivElement>()
+
 const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open, hide }) => {
   roomId
   const classes = useStyles()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const theme = useTheme()
+  const { checkNgWord } = useCheckNgWord()
   const [newName, setNewName] = useState('')
+  const [bottomGap, setBottomGap] = useState<number>(0)
+  const contentRect = useRect(contentRef)
+  const matches = useMediaQuery(theme.breakpoints.up('sm'))
+
+  useEffect(() => {
+    setBottomGap(contentRect?.height)
+  }, [contentRect?.height])
+
+  const height = matches ? bottomGap + 100 : bottomGap + 68
 
   useEffect(() => {
     if (_.isString(roomName)) {
@@ -64,10 +78,10 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   }
 
   const renderFooter = () => (
-    <div className={classes.stickyFooter}>
+    <div className={classes.stickyFooter} ref={contentRef}>
       <Box maxWidth={280} className={classes.buttonBottom}>
         <ButtonPrimary type="submit" disabled={isButtonDisabled()} round fullWidth onClick={onSubmit}>
-          {i18n.t('common:chat.add_submit')}
+          {i18n.t('common:chat.name_change_submit')}
         </ButtonPrimary>
       </Box>
     </div>
@@ -84,19 +98,21 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
         fixedFooter={renderFooter()}
         className={`scroll-bar`}
       >
-        <DialogContent>
-          <Box mt={8}>
-            <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります。</Typography>
-          </Box>
-          <Box mt={6}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                onSubmit()
-              }}
-            >
-              <ESInput placeholder={i18n.t('common:chat.room_name_placeholder')} value={newName} fullWidth onChange={handleChange} />
-            </form>
+        <DialogContent className={classes.dialogContentWrap} style={{ height: `calc(100vh - ${height}px)` }}>
+          <Box className={classes.contentInner}>
+            <Box className={classes.contentHolder}>
+              <Typography className={classes.nameInfoMsg}>変更したメッセージ名は、全員のメッセージで変更になります</Typography>
+              <Box className={classes.input}>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    onSubmit()
+                  }}
+                >
+                  <ESInput placeholder={i18n.t('common:chat.room_name_placeholder')} value={newName} fullWidth onChange={handleChange} />
+                </form>
+              </Box>
+            </Box>
           </Box>
           {renderFooter()}
         </DialogContent>
@@ -108,16 +124,44 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
 RoomNameEditor.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
+  dialogContentWrap: {
+    padding: 0,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  input: {
+    width: '100%',
+    marginTop: 60,
+  },
+  contentHolder: {
+    paddingTop: 60,
+  },
+  contentInner: {
+    overflow: 'auto',
+    overflowX: 'hidden',
+    height: '100%',
+    paddingBottom: 30,
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
+  },
   container: {
     alignSelf: 'flex-start',
   },
   nameInfoMsg: {
     textAlign: 'center',
-  },
-  alignTop: {
-    '& .MuiDialog-container ': {
-      alignItems: 'flex-start',
-    },
   },
   stickyFooter: {
     position: 'fixed',
@@ -138,12 +182,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(8),
   },
   [theme.breakpoints.down('md')]: {
+    dialogContentWrap: {
+      padding: '0 16px',
+    },
     stickyFooter: {
-      height: theme.spacing(14.5),
+      height: 'auto',
     },
     buttonBottom: {
-      bottom: theme.spacing(5.2),
-      width: theme.spacing(24),
+      margin: 'auto',
+      width: theme.spacing(35),
+      minWidth: theme.spacing(18),
+      marginTop: theme.spacing(1.5),
+      marginBottom: theme.spacing(1.5),
+    },
+    contentHolder: {
+      paddingTop: 10,
+    },
+    input: {
+      marginTop: 20,
     },
   },
 }))

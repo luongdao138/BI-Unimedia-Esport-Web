@@ -24,7 +24,7 @@ const RegisterProfileContainer: React.FC = () => {
   const classes = useStyles()
   const { registerProfile, meta, backAction, isSocial, resetMeta } = useProfile()
   const dispatch = useAppDispatch()
-  const checkNgWord = useCheckNgWord()
+  const { checkNgWord } = useCheckNgWord()
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
       .required(t('common:common.user_id_at_least'))

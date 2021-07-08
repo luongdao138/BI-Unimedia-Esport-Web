@@ -9,6 +9,7 @@ import ESCheckbox from '@components/Checkbox'
 import ESSelect from '@components/Select'
 import ESLabel from '@components/Label'
 import i18n from '@locales/i18n'
+import { useEffect } from 'react'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -17,6 +18,12 @@ type Props = {
 
 const StepTwo: React.FC<Props> = ({ formik, editables }) => {
   const classes = useStyles()
+
+  useEffect(() => {
+    if (formik.values.stepTwo.rule !== 'single') {
+      formik.setFieldValue('stepTwo.has_third_place', false)
+    }
+  }, [formik.values.stepTwo.rule])
 
   return (
     <Box pb={9}>
@@ -31,6 +38,9 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.rule}
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           {RULES.map((rule, index) => (
             <option key={index} value={rule.value}>
               {rule.label}
@@ -39,13 +49,15 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
         </ESSelect>
       </Box>
       <Box pb={4}>
-        <ESCheckbox
-          disableRipple
-          checked={formik.values.stepTwo.has_third_place}
-          onChange={() => formik.setFieldValue('stepTwo.has_third_place', !formik.values.stepTwo.has_third_place)}
-          label={i18n.t('common:tournament_create.has_third_place')}
-          disabled={!editables.has_third_place}
-        />
+        {formik.values.stepTwo.rule === 'single' && (
+          <ESCheckbox
+            disableRipple
+            checked={formik.values.stepTwo.has_third_place}
+            onChange={() => formik.setFieldValue('stepTwo.has_third_place', !formik.values.stepTwo.has_third_place)}
+            label={i18n.t('common:tournament_create.has_third_place')}
+            disabled={!editables.rule}
+          />
+        )}
       </Box>
       <Box pb={4}>
         <ESSelect
@@ -58,6 +70,9 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.participant_type}
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           {PARTICIPATION_TYPES.map((type, index) => (
             <option value={type.value} key={index}>
               {type.label}
@@ -108,7 +123,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           checked={TournamentHelper.getTypeValue(formik.values.stepTwo.t_type)}
           onChange={() => formik.setFieldValue('stepTwo.t_type', TournamentHelper.onTypeChange(formik.values.stepTwo.t_type))}
           label={i18n.t('common:profile.show')}
-          disabled={!editables.retain_history}
+          disabled={!editables.t_type}
         />
       </Box>
       <Box pb={1}>

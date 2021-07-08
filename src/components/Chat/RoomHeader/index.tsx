@@ -44,7 +44,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   const roomImg = _.get(roomInfo, 'roomImg')
   const tournament = useAppSelector(tournamentDetail)
 
-  const { imageProcess, uploadMeta } = useRoomImageUploader()
+  const { imageProcess, uploadMeta, hideLoader } = useRoomImageUploader()
 
   const router = useRouter()
 
@@ -65,6 +65,10 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     }
   }, [roomInfo])
 
+  useEffect(() => {
+    if (roomImg) hideLoader()
+  }, [roomImg])
+
   const isAdmin = () => {
     return _.get(roomInfo, 'isAdmin', false)
   }
@@ -73,7 +77,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
   }
 
-  const hasPermission = !_.get(tournament, 'is_freezed', false)
+  const hasPermission = _.get(tournament, 'is_freezed', false)
 
   const memberAddItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {

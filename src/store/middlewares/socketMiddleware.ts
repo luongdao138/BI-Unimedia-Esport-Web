@@ -44,7 +44,7 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
     } else if (message.action === CHAT_ACTION_TYPE.MEMBER_ADDED) {
       socket.send(
         JSON.stringify({
-          action: CHAT_ACTION_TYPE.GET_ROOM_MEMBERS,
+          action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
           roomId: message.content.roomId,
         })
       )

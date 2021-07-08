@@ -74,12 +74,42 @@ export const follow = createAsyncThunk<services.FollowActionResponse, services.F
   }
 )
 
-export const unfollow = createAsyncThunk<services.UnFollowResponse, services.FollowParams>(
+export const followFromList = createAsyncThunk<services.FollowActionResponse2, services.FollowParams>(
+  USER_PROFILE_ACTION_TYPE.FOLLOW_FROM_LIST,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.follow({ user_code: param.user_code })
+      return { res: res, param: param }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const unfollow = createAsyncThunk<services.UnFollowResponse | any, services.FollowParams>(
   USER_PROFILE_ACTION_TYPE.UNFOLLOW,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.unfollow(param)
       return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const unfollowFromList = createAsyncThunk<services.FollowParams, services.FollowParams>(
+  USER_PROFILE_ACTION_TYPE.UNFOLLOW_FROM_LIST,
+  async (param, { rejectWithValue }) => {
+    try {
+      await services.unfollow({ user_code: param.user_code })
+      return param
     } catch (error) {
       if (!error.response) {
         throw error
@@ -104,8 +134,6 @@ export const followers = createAsyncThunk<services.FollowersResponse, services.F
   }
 )
 
-export const clearFollowers = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_FOLLOWERS)
-
 export const following = createAsyncThunk<services.FollowersResponse, services.FollowersParams>(
   USER_PROFILE_ACTION_TYPE.FOLLOWING,
   async (param, { rejectWithValue }) => {
@@ -121,13 +149,7 @@ export const following = createAsyncThunk<services.FollowersResponse, services.F
   }
 )
 
-export const increaseFollowing = createAsyncThunk<string, string>(USER_PROFILE_ACTION_TYPE.FOLLOWING_INCREASE, (param) => {
-  return param
-})
-export const decreaseFollowing = createAsyncThunk<string, string>(USER_PROFILE_ACTION_TYPE.FOLLOWING_DECREASE, (param) => {
-  return param
-})
-
+export const clearFollowers = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_FOLLOWERS)
 export const clearFollowing = createAction(USER_PROFILE_ACTION_TYPE.CLEAR_FOLLOWING)
 
 export const tournamentHistorySearch = createAsyncThunk<services.HistorySearchResponse, services.HistorySearchParams>(

@@ -1,12 +1,4 @@
 import i18n from '@locales/i18n'
-import { Dialog } from '@store/common/actions/types'
-
-export const ARENA_CREATE_VALIDATION_POPUP: Dialog = {
-  title: i18n.t('common:arena.validation_popup.title'),
-  message: i18n.t('common:arena.validation_popup.message'),
-  actionMsg: i18n.t('common:arena.validation_popup.check_item'),
-  actions: [{ name: i18n.t('common:arena.validation_popup.confirm'), action: 'confirm', type: 'primary' }],
-}
 
 export const FIELD_TITLES = {
   stepOne: {
@@ -34,7 +26,7 @@ export const FIELD_TITLES = {
     acceptance_end_start_date: i18n.t('common:tournament_create.holding_period'),
     start_end_date: i18n.t('common:tournament_create.holding_period'),
     area_id: i18n.t('common:tournament_create.area'),
-    area_name: i18n.t('common:tournament_create.area'),
+    address: i18n.t('common:tournament_create.area'),
   },
   stepFour: {
     organizer_name: i18n.t('common:tournament_create.organizer_name'),

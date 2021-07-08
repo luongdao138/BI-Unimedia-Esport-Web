@@ -353,10 +353,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     dialogContentWrap: {
       padding: '0px 16px',
       paddingTop: '100px !important',
-      height: `calc(100vh - ${(props) => props.mobileHeight})`,
     },
     inputHolder: {
       padding: '0 16px',
+    },
+    buttonBottom: {
+      margin: 'auto',
+      width: theme.spacing(35),
+      minWidth: theme.spacing(18),
+      marginTop: theme.spacing(1.5),
+      marginBottom: theme.spacing(1.5),
     },
   },
 }))
