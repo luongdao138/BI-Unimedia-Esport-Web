@@ -418,6 +418,7 @@ export default {
     join_success: ' エントリー完了しました',
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',
+    edit_entry_success: 'エントリー情報を編集しました',
     dialog: {
       randomize_title: 'ユーザーをランダムに配置します',
       randomize_desc: '現在エントリーしているユーザーをトーナメント表の空欄になっている枠へランダムに配置します',
