@@ -184,7 +184,7 @@ const TournamentCreate: React.FC = () => {
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
           {i18n.t('common:tournament_create.check_content_button')}
         </ButtonPrimary>
-        <CancelDialog hashKey={`${router.query.hash_key}`} />
+        <CancelDialog arena={arena} hashKey={`${router.query.hash_key}`} />
       </Box>
     )
   }
