@@ -68,7 +68,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
   const formik = useFormik<ReportParams>({
     initialValues: {
       description: '',
-      reason_id: reasons[0] ? Number(reasons[0].id) : 1,
+      reason_id: null,
       report_type: 0,
       user_email: emailAssigned ? userEmail : '',
     },
