@@ -74,6 +74,12 @@ const TournamentCreate: React.FC = () => {
   })
 
   useEffect(() => {
+    if (updateMeta.error) {
+      setIsConfirm(false)
+    }
+  }, [updateMeta.error])
+
+  useEffect(() => {
     if (actionSelector === 'confirm') {
       setTab(activeTabIndex)
     }
@@ -101,13 +107,14 @@ const TournamentCreate: React.FC = () => {
 
       if (isConfirm) {
         setIsConfirm(false)
-      }
-      if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
-      else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-      else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
-      else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
 
-      setTab(activeTabIndex)
+        if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
+        else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
+        else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
+        else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
+
+        setTab(activeTabIndex)
+      }
     }
   }, [formik.errors])
 
@@ -234,7 +241,7 @@ const TournamentCreate: React.FC = () => {
         <form onSubmit={formik.handleSubmit}>
           <Box>
             {isConfirm ? (
-              <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} />
+              <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} prefectures={prefectures.data || []} />
             ) : (
               <>
                 <StepTabs tab={tab} onTabChange={handleTabChange} />
