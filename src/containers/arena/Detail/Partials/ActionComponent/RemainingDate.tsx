@@ -28,7 +28,7 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-      {days > 1 ? (
+      {days >= 1 ? (
         <>
           <Typography>{untilDatePrefix}</Typography>
           <Typography className={classes.highlightedNumber}>{days}</Typography>
