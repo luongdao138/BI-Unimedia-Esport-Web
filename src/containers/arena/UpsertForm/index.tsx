@@ -74,10 +74,10 @@ const TournamentCreate: React.FC = () => {
   })
 
   useEffect(() => {
-    if (updateMeta.error) {
+    if (updateMeta.error || meta.error) {
       setIsConfirm(false)
     }
-  }, [updateMeta.error])
+  }, [updateMeta.error, meta.error])
 
   useEffect(() => {
     if (actionSelector === 'confirm') {
