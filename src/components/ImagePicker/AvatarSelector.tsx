@@ -67,11 +67,20 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   //   setFileLocation(src)
   // }, [src])
 
+  const MAX_SIZE = 1048576 * 5 //5MB
   const dropZoneConfig = {
     accept: 'image/*',
     onDrop: (files: any) => handleChange(files),
+    maxSize: MAX_SIZE,
   }
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  // const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
+
+  // const isFileTooLarge = fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE
+  // if (fileRejections.length > 0) {
+  //   console.log('AvatarSelector.tsx 81 ', fileRejections[0].file.size)
+  // }
+  // console.log('isFileTooLarge ', isFileTooLarge)
 
   const handleChange = (files: Array<File>) => {
     const f = files[0]
