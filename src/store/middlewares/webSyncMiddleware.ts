@@ -26,8 +26,10 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
     switch (message.action) {
       case AppSyncActionType.NOTIFICATION:
         store.dispatch(notificationActions.getNotificationBadge())
-        store.dispatch(notificationActions.getNotifications({ page: 1 }))
         store.dispatch(notificationActions.getNotificationBadgeList())
+        if (window.location && window.location.pathname === '/notifications') {
+          store.dispatch(notificationActions.getNotifications({ page: 1 }))
+        }
         break
       default:
     }
