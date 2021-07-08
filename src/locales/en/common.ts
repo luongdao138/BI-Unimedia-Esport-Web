@@ -176,7 +176,6 @@ export default {
     user_settings_failed: 'User settings failed',
     signup_failed: '登録に失敗しました。',
     failed: '失敗しました',
-    password_reissue: 'パスワードを再発行しました',
     close_arena_failed: 'エントリーを締め切れませんでした。',
     join_arena_failed: 'エントリーを完了できませんでした。',
     leave_arena_failed: 'エントリーを辞退できませんでした',
@@ -216,6 +215,8 @@ export default {
     copyright_symbol: '© ',
     copyright_text: ' NTTe-Sports',
     download_app_version: 'アプリ版ダウンロードはこちら',
+    app_version: 'アプリ版eXeLAB',
+    app_desc: '以下のボタンから「アプリ版eXeLAB」をインストールすることができます。',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

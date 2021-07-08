@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { OutlinedInput, Box, Select, withStyles, IconButton, Icon } from '@material-ui/core'
+import { OutlinedInput, Select, withStyles, IconButton, Icon } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '@components/Button'
@@ -57,7 +57,8 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     setOption(Number(e.target.value))
   }
 
-  const handleSearch = () => {
+  const handleSearch = (event) => {
+    event.preventDefault()
     onSearch({
       value: value,
       type: option,
@@ -77,7 +78,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   }
 
   return (
-    <Box className={classes.searchCont}>
+    <form onSubmit={handleSearch} className={classes.searchCont}>
       <OutlinedInput
         onChange={onChange}
         placeholder={t('common:search.search_placeholder')}
@@ -108,7 +109,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
       <Button onClick={handleSearch} className={classes.searchBtn} variant="contained" color="primary">
         {t('common:search.search')}
       </Button>
-    </Box>
+    </form>
   )
 }
 
