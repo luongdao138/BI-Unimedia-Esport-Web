@@ -66,6 +66,12 @@ const useEntry = () => {
   }, [closeMeta.error])
 
   useEffect(() => {
+    if (updateTeamMeta.loaded) {
+      dispatch(commonActions.addToast(t('common:arena.edit_entry_success')))
+    }
+  }, [updateTeamMeta.loaded])
+
+  useEffect(() => {
     if (closeMeta.error) {
       dispatch(commonActions.addToast(t('common:error.failed')))
       resetUpdateTeamMeta()

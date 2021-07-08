@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
-import { HardwareResponse } from '@services/common.service'
+import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { RULES, PARTICIPATION_TYPES } from '@constants/tournament.constants'
@@ -13,6 +13,7 @@ import _ from 'lodash'
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
   hardwares: HardwareResponse['data']
+  prefectures: GetPrefecturesResponse['data']
   user: UserLoginResponse
 }
 
@@ -20,11 +21,19 @@ ESInput.defaultProps = {
   size: 'small',
 }
 
-const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
+const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
   const [coOrganizers, setCoOrganizers] = useState('')
+  const [areaName, setAreaName] = useState('')
   const classes = useStyles()
+
+  useEffect(() => {
+    if (prefectures) {
+      const area = prefectures.find((area) => area.id === String(values.stepThree.area_id))
+      setAreaName(area.attributes.area)
+    }
+  }, [prefectures])
 
   useEffect(() => {
     hardwares.forEach((h) => {
@@ -151,7 +160,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.area')} value={ruleName} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth />
       {values.stepThree.address && <ESInput value={values.stepThree.address} disabled={true} fullWidth />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
