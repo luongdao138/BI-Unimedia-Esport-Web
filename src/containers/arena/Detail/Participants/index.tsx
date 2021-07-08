@@ -80,9 +80,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   const isMyTeam = (participant: ParticipantsResponse) => {
     const myInfo = _.get(detail, 'attributes.my_info', [])
-    const interestedInfo = myInfo.find((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
-    if (!interestedInfo) return false
-    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+    const interestedInfos = myInfo
+      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
+      .map((info) => `${info.team_id}`)
+    if (!interestedInfos || !interestedInfos.length) return false
+    return interestedInfos.includes(`${getTeamId(participant)}`)
   }
 
   const isMe = (participant: ParticipantsResponse) => {
