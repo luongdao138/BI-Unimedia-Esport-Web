@@ -355,7 +355,7 @@ export default {
     cover_upload_select_img: '画像を選択する',
     report: '通報',
     entry_members: 'エントリーメンバー',
-    number_of_entries: 'エントリー数',
+    number_of_entries: 'エントリー人数',
     type_single: '個人戦',
     rule_tournament: 'トーナメント',
     rule_battle: 'バトルロイヤル',

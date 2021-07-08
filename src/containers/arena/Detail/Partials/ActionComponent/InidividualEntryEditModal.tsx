@@ -20,6 +20,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -43,6 +44,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { participant, isPending, getParticipant, changeName } = useParticipantDetail()
+  const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
   const { resetTitle, changeTitle } = useDocTitle()
@@ -132,7 +134,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
         actionButtonDisabled={!isValid}
         onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
-        hideFooter={!me}
+        hideFooter={!me || !isRecruiting}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
