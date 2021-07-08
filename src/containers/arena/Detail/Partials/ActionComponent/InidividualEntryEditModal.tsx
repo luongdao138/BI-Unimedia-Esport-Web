@@ -21,6 +21,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import ServerError from './ServerError'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -43,7 +44,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
 }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { participant, isPending, getParticipant, changeName } = useParticipantDetail()
+  const { participant, isPending, getParticipant, changeName, changeMeta } = useParticipantDetail()
   const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
@@ -136,6 +137,8 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
         onActionButtonClicked={onSubmit}
         hideFooter={!me || !isRecruiting}
       >
+        {!!changeMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
+        <Box mt={3} />
         <form onSubmit={onSubmit}>
           <BlackBox>
             <DetailInfo

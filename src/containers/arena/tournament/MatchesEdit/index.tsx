@@ -48,7 +48,7 @@ const ArenaMatches: React.FC = () => {
     if (match && match.round_no == 0 && isModerator && !tournament.attributes.is_freezed) setSelectedMatch(match)
   }
 
-  const getMatch = (headerText, _match) => {
+  const getMatch = (headerText, _match, round) => {
     const data = tournament.attributes
     const isTeam = data.participant_type > 1
 
@@ -58,6 +58,7 @@ const ArenaMatches: React.FC = () => {
         key={_match.id}
         headerText={headerText}
         editable
+        emptyLabel={round === 0 ? t('common:common.please_set') : undefined}
         winner={_match.winner}
         participant1={
           _match.home_user
@@ -124,14 +125,14 @@ const ArenaMatches: React.FC = () => {
             {matches.map((round, rid) => (
               <Bracket.Round key={rid} roundNo={rid}>
                 <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
-                {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
+                {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match, rid))}
               </Bracket.Round>
             ))}
           </Bracket.Container>
           {!_.isEmpty(third_place_match) && (
             <Bracket.Container activeRound={0}>
               <Bracket.Round key="3rd" roundNo={0}>
-                {getMatch('1-1', third_place_match[0])}
+                {getMatch('1-1', third_place_match[0], null)}
               </Bracket.Round>
             </Bracket.Container>
           )}

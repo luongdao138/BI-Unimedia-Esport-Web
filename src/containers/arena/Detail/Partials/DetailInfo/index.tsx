@@ -77,7 +77,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </Box>
           )}
         </Box>
-        <Box display="flex" flexDirection="row" alignItems="center" className={classes.colMin}>
+        <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
           {extended && (
             <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
@@ -353,15 +353,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     label: {
       flex: 5,
-    },
-  },
-  [theme.breakpoints.down('xs')]: {
-    colMin: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-    urlCopy: {
-      marginLeft: 0,
     },
   },
 }))
