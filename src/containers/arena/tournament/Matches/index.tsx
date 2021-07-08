@@ -11,7 +11,6 @@ import useTournamentDetail from '../../hooks/useTournamentDetail'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import { TournamentMatchItem } from '@services/arena.service'
 import { Colors } from '@theme/colors'
 
@@ -62,13 +61,6 @@ const ArenaMatches: React.FC = () => {
     )
   }
 
-  const showSummary = () => {
-    const data = tournament.attributes
-    const isAdmin = data.my_role === ROLE.ADMIN || data.my_role === ROLE.CO_ORGANIZER
-    const isCompleted = data.status === TOURNAMENT_STATUS.COMPLETED
-    return isAdmin && isCompleted
-  }
-
   const getMatch = (headerText: string, _match: TournamentMatchItem) => {
     const data = tournament.attributes
     const isTeam = data.participant_type > 1
@@ -111,10 +103,14 @@ const ArenaMatches: React.FC = () => {
       {matches && tournament && (
         <ESStickyFooter
           disabled={false}
-          title={t('common:arena.freeze_button')}
           onClick={() => setShowSummaryModal(true)}
-          show={showSummary()}
+          show={!tournament.attributes.is_freezed}
           noScroll
+          content={
+            <Box>
+              <Typography className={classes.notYetLabel}>{t('common:arena.match_not_yet')}</Typography>
+            </Box>
+          }
         >
           <Box className={classes.backContainer}>
             <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -200,6 +196,9 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  notYetLabel: {
+    color: Colors.grey[400],
   },
   [theme.breakpoints.down('sm')]: {
     backContainer: {

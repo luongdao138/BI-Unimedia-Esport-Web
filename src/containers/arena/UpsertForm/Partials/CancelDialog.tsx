@@ -4,7 +4,7 @@ import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
 import LinkButton from '@components/LinkButton'
@@ -35,13 +35,8 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
       </Box>
       <ESPopup open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <Box pt={7.5} pb={9} className={classes.topContainer}>
-            <Box py={2}>
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-            </Box>
-            <Box px={5} pt={12} display="flex" flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
+          <Box pt={2} pb={2} className={classes.topContainer}>
+            <Box px={5} display="flex" flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
               <Typography className={classes.title}>{t('common:tournament_cancel.cancel_title')}</Typography>
               <Box pt={4}>
                 <Typography className={classes.desc}>
