@@ -37,6 +37,9 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       onEntered={() => {
         document.body.style.overflow = 'hidden'
       }}
+      onExited={() => {
+        document.body.style.overflow = 'unset'
+      }}
     >
       {children}
     </Dialog>
