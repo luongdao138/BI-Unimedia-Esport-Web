@@ -11,20 +11,28 @@ import { AddRounded } from '@material-ui/icons'
 import ESChip from '@components/Chip'
 import useArenaHelper from '../hooks/useArenaHelper'
 import LoginRequired from '@containers/LoginRequired'
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
-const ArenaHome: React.FC = () => {
+interface ArenaHomeProps {
+  filter: TournamentFilterOption
+}
+
+const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const { t } = useTranslation()
   const classes = useStyles()
   const { arenas, page, meta, loadMore, onFilterChange } = useArenaHome()
+  const router = useRouter()
   const { toCreate } = useArenaHelper()
-  const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
+
+  useEffect(() => {
+    onFilterChange(filter)
+  }, [filter])
 
   const onFilter = (filter: TournamentFilterOption) => {
-    if (selectedFilter !== filter) {
-      onFilterChange(filter)
-    }
-    setSelectedFilter(filter)
+    router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
+    return null
   }
 
   const defaultFilterOptions = [
@@ -89,7 +97,7 @@ const ArenaHome: React.FC = () => {
           {defaultFilterOptions.map((option) => (
             <ESChip
               key={option.type}
-              color={option.type === selectedFilter ? 'primary' : undefined}
+              color={option.type === filter ? 'primary' : undefined}
               className={classes.filterChip}
               label={option.label}
               onClick={() => onFilter(option.type)}
@@ -101,7 +109,7 @@ const ArenaHome: React.FC = () => {
             <LoginRequired key={option.type}>
               <ESChip
                 key={option.type}
-                color={option.type === selectedFilter ? 'primary' : undefined}
+                color={option.type === filter ? 'primary' : undefined}
                 className={classes.filterChip}
                 label={option.label}
                 onClick={() => onFilter(option.type)}

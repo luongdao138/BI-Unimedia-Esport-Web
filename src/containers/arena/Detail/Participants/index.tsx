@@ -80,9 +80,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   const isMyTeam = (participant: ParticipantsResponse) => {
     const myInfo = _.get(detail, 'attributes.my_info', [])
-    const interestedInfo = myInfo.find((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
-    if (!interestedInfo) return false
-    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+    const interestedInfos = myInfo
+      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
+      .map((info) => `${info.team_id}`)
+    if (!interestedInfos || !interestedInfos.length) return false
+    return interestedInfos.includes(`${getTeamId(participant)}`)
   }
 
   const isMe = (participant: ParticipantsResponse) => {
@@ -98,7 +100,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
       <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
         {data.is_freezed ? t('common:tournament.participants') : t('common:tournament.entry_members')}
       </ESButton>
-      <ESModal open={open} handleClose={handleClose}>
+      <ESModal open={open && !selectedParticipant} handleClose={handleClose}>
         <BlankLayout>
           <Box pt={7.5} className={classes.topContainer}>
             <Box py={2} display="flex" flexDirection="row" alignItems="center">
@@ -175,38 +177,39 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                       />
                     ))}
               </InfiniteScroll>
-              {!selectedParticipant ? null : isTeam ? (
-                <TeamEntryEditModal
-                  tournament={detail}
-                  userProfile={userProfile}
-                  previewMode
-                  open={true}
-                  initialTeamId={getTeamId(selectedParticipant)}
-                  onClose={() => setSelectedParticipant(null)}
-                  myTeam={isMyTeam(selectedParticipant)}
-                  toDetail={() => {
-                    setSelectedParticipant(null)
-                    setOpen(false)
-                  }}
-                />
-              ) : (
-                <InidividualEntryEditModal
-                  tournament={detail}
-                  previewMode
-                  open={true}
-                  initialParticipantId={`${selectedParticipant.id}`}
-                  onClose={() => setSelectedParticipant(null)}
-                  me={isMe(selectedParticipant)}
-                  toDetail={() => {
-                    setSelectedParticipant(null)
-                    setOpen(false)
-                  }}
-                />
-              )}
             </div>
           </Box>
         </BlankLayout>
       </ESModal>
+
+      {!selectedParticipant ? null : isTeam ? (
+        <TeamEntryEditModal
+          tournament={detail}
+          userProfile={userProfile}
+          previewMode
+          open={true}
+          initialTeamId={getTeamId(selectedParticipant)}
+          onClose={() => setSelectedParticipant(null)}
+          myTeam={isMyTeam(selectedParticipant)}
+          toDetail={() => {
+            setSelectedParticipant(null)
+            setOpen(false)
+          }}
+        />
+      ) : (
+        <InidividualEntryEditModal
+          tournament={detail}
+          previewMode
+          open={true}
+          initialParticipantId={`${selectedParticipant.id}`}
+          onClose={() => setSelectedParticipant(null)}
+          me={isMe(selectedParticipant)}
+          toDetail={() => {
+            setSelectedParticipant(null)
+            setOpen(false)
+          }}
+        />
+      )}
     </div>
   )
 }
