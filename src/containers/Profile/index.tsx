@@ -17,15 +17,14 @@ import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import useBlock from './useBlock'
 import useUnblock from './useUnblock'
-import ESFollowers from '@containers/Followers'
-import ESFollowing from '@containers/Following'
+import FollowUsers from '@containers/FollowUsers'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
 import ESToast from '@components/Toast'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
-import { REPORT_TYPE } from '@constants/common.constants'
+import { FOLLOW_STATES, REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 interface WithRouterProps {
   router: NextRouter
@@ -246,8 +245,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowing user_code={isOthers ? userCode : null} isOthers={isOthers} />
-            <ESFollowers user_code={isOthers ? userCode : null} isOthers={isOthers} />
+            <FollowUsers user_code={isOthers ? userCode : null} fromType={FOLLOW_STATES.FOLLOWING} />
+            <FollowUsers user_code={isOthers ? userCode : null} fromType={FOLLOW_STATES.FOLLOWERS} />
           </Box>
         </Grid>
         {isAuthenticated ? (

@@ -2,6 +2,7 @@ import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
 import { TournamentListItem } from './arena.service'
+import { FOLLOW_STATES } from '@constants/common.constants'
 
 export type HistorySearchParams = {
   page?: number
@@ -190,12 +191,19 @@ export type FollowActionResponse = {
   data: Array<FollowResponse>
 }
 
+export type FollowActionResponse2 = {
+  res: FollowActionResponse
+  param: FollowParams
+}
+
 export type UnFollowResponse = {
   success: 'success'
 }
 
 export type FollowParams = {
   user_code: string
+  isOthers?: boolean
+  fromType?: FOLLOW_STATES.FOLLOWERS | FOLLOW_STATES.FOLLOWING
 }
 
 export type FollowersParams = {

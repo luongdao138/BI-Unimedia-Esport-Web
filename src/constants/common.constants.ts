@@ -152,3 +152,12 @@ export const NG_WORD_AREA = {
   join_nickname: i18n.t('common:tournament.join_nickname'),
   summary: i18n.t('common:arena.summary'),
 }
+
+export enum FOLLOW_STATES {
+  FOLLOW = 1,
+  UNFOLLOW = 0,
+  FOLLOWED = 1,
+  UNFOLLOWED = 0,
+  FOLLOWING = 1,
+  FOLLOWERS = 0,
+}
