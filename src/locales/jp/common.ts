@@ -463,6 +463,8 @@ export default {
     result_not_decided: '大会結果が決定していません',
     entry_information: 'エントリー情報',
     update_with_content: 'この内容で更新する',
+    see_app: 'バトルロイヤル形式の大会はアプリでご覧ください。',
+    install_app: 'お手持ちのスマートフォンより、アプリをインストールしてください。',
   },
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
