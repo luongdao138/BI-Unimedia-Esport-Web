@@ -182,6 +182,11 @@ const TournamentCreate: React.FC = () => {
     )
   }
 
+  const handleBack = () => {
+    if (isConfirm) setIsConfirm(false)
+    else handleReturn()
+  }
+
   return (
     <ESStickyFooter
       disabled={false}
@@ -216,7 +221,7 @@ const TournamentCreate: React.FC = () => {
       <>
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
-            <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
+            <IconButton className={classes.iconButtonBg} onClick={handleBack}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
