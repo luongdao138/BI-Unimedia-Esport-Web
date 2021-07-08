@@ -74,6 +74,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   bottomButton: {
     paddingTop: theme.spacing(8),
+    display: 'flex',
+    justifyContent: 'center',
   },
   [theme.breakpoints.down('sm')]: {
     app_store: {
