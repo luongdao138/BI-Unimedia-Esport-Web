@@ -33,8 +33,8 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
       <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
       <ESPopup open={open}>
         <BlankLayout>
-          <Box paddingBottom={16} paddingTop={8} className={classes.childrenContainer}>
-            <Box pb={4} pt={12} color={Colors.white} alignItems="center">
+          <Box paddingBottom={2} paddingTop={2} className={classes.childrenContainer}>
+            <Box pb={4} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:tournament.unjoin_dialog.dialog_title')}</Typography>
             </Box>
             <Box pb={4}>

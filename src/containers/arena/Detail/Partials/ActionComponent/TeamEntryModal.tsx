@@ -50,7 +50,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
-  const { checkNgWord } = useCheckNgWord()
+  const { checkNgWordByField } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const { resetTitle, changeTitle } = useDocTitle()
 
@@ -179,18 +179,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }
 
   const handleActionButton = () => {
-    let handle = true
-    if (!_.isEmpty(checkNgWord(formik.values.team_name))) {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.team_name }))
-      handle = false
-    }
+    let fields = { [NG_WORD_AREA.team_name]: formik.values.team_name }
+
     formik.values.members.forEach((member, i) => {
-      if (!_.isEmpty(checkNgWord(member.name))) {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: `メンバー${i + 1}` }))
-        handle = false
-      }
+      fields = { ...fields, [`メンバー${i + 1}`]: member.name }
     })
-    if (handle) formik.handleSubmit()
+
+    const ngFields = checkNgWordByField(fields)
+    if (!!ngFields && ngFields.length > 0) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    } else {
+      formik.handleSubmit()
+    }
   }
 
   const handleImageUpload = (file: File) => {

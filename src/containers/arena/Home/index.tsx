@@ -22,9 +22,14 @@ interface ArenaHomeProps {
 const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const { t } = useTranslation()
   const classes = useStyles()
-  const { arenas, page, meta, loadMore, onFilterChange } = useArenaHome()
+  const { arenas, meta, loadMore, onFilterChange } = useArenaHome()
   const router = useRouter()
   const { toCreate } = useArenaHelper()
+
+  useEffect(() => {
+    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
+    loadMore()
+  }, [arenas])
 
   useEffect(() => {
     onFilterChange(filter)
@@ -121,9 +126,9 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
           className={classes.scrollContainer}
           dataLength={arenas.length}
           next={loadMore}
-          hasMore={page && page.current_page !== page.total_pages}
+          hasMore={true}
           loader={null}
-          scrollThreshold="1px"
+          scrollThreshold={0.8}
         >
           {arenas.map((tournament, i) => (
             <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>

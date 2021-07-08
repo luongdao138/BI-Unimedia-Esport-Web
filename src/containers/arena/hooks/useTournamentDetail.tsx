@@ -35,7 +35,7 @@ const useTournamentDetail = (): {
     if (query.hash_key) {
       dispatch(actions.getTournamentDetail(String(query.hash_key)))
     }
-  }, [query.hash_key, isAuth])
+  }, [query, isAuth])
 
   useEffect(() => {
     if (query.hash_key && tournament && userProfile?.id) {

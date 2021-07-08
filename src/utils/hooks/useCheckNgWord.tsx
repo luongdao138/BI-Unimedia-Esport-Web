@@ -49,7 +49,7 @@ const useCheckNgWord = (): {
 
     return Object.keys(
       _.pickBy(fields, function (value) {
-        return value.match(regex) !== null
+        return (_.isString(value) ? value.match(regex) : null) !== null
       })
     )
   }
@@ -60,7 +60,7 @@ const useCheckNgWord = (): {
     const regex = getNgWordRegex()
     if (regex === null) return undefined
 
-    return _.findKey(fields, (value) => value.match(regex))
+    return _.findKey(fields, (value) => (_.isString(value) ? value.match(regex) : null))
   }
 
   return {
