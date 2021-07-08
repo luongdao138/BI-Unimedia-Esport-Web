@@ -80,7 +80,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   const isMyTeam = (participant: ParticipantsResponse) => {
     const myInfo = _.get(detail, 'attributes.my_info', [])
-    const interestedInfo = myInfo.find((info) => info.role === 'interested')
+    const interestedInfo = myInfo.find((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
     if (!interestedInfo) return false
     return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
   }
@@ -151,16 +151,12 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                     </div>
                   )
                 }
-                endMessage={
-                  <p style={{ textAlign: 'center' }}>
-                    <b>{t('common:infinite_scroll.message')}</b>
-                  </p>
-                }
               >
                 {isTeam
                   ? members.map((participant, i) => (
                       <Box key={`team${i}`} py={1}>
                         <TeamMemberItemExpanded
+                          hideFollow={isMyTeam(participant) ? true : false}
                           team={participant}
                           yellowTitle={isMyTeam(participant)}
                           handleClick={() => onTeamClick(participant)}

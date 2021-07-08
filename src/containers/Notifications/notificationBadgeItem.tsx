@@ -29,7 +29,7 @@ const NotificationBadgeItem: React.FC<Props> = ({ data }) => {
           <Typography variant="caption" noWrap className={classes.title}>
             {notification.nickname}
           </Typography>
-          <Typography noWrap>{notification.message}</Typography>
+          <Typography noWrap>{notification.full_message}</Typography>
           <Box textAlign="right">
             <Typography variant="caption" noWrap>
               {CommonHelper.staticSmartTime(notification.created_at)}

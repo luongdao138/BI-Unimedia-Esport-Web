@@ -122,6 +122,7 @@ const useStyles = makeStyles((theme) => ({
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     WebkitTextStroke: '1px #FFFF65',
+    letterSpacing: '0.0075rem',
     top: -36,
     left: '50%',
     transform: 'translate(-50%, -50%)',

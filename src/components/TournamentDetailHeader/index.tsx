@@ -68,7 +68,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
           onChange={() => {}}
           classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
         >
-          <Tab label="エントリー" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
+          <Tab label="エントリー期間中" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
           <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
           <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
           <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
@@ -110,8 +110,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
     paddingLeft: theme.spacing(3),
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
     backgroundColor: Colors.black,
     opacity: 0.7,
     zIndex: 100,
@@ -122,7 +122,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: Colors.grey[200],
     },
     marginRight: 20,
-    marginTop: 5,
   },
   wrapOne: {
     overflow: 'hidden',
@@ -162,7 +161,6 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(2),
     },
   },
-  backButton: { backgroundColor: `${Colors.grey['200']}80`, margin: 24, marginTop: 16, padding: 6 },
 }))
 
 export default TournamentHeader

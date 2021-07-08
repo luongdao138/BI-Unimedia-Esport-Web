@@ -28,7 +28,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
     case CHAT_ACTION_TYPE.GET_ALL_ROOMS:
       return {
         ...state,
-        roomList: action.data.content,
+        roomList: ChatHelper.roomUpdateWithUnseen(action.data.content, state.activeRoom),
       }
     case CHAT_ACTION_TYPE.MESSAGE_PAGINATING:
       return {
@@ -58,7 +58,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         members: newUsers,
         lastKey: action.data.lastKey,
         paginating: false,
-        roomList: ChatHelper.unseenClear(state.roomList, action.data.chatRoomId),
+        roomList: ChatHelper.unseenClear(_.cloneDeep(state.roomList), action.data.chatRoomId),
         error: _.get(action.data, 'error', undefined),
       }
     case CHAT_ACTION_TYPE.MESSAGE_PENDING:

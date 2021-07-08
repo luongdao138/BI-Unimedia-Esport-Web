@@ -17,6 +17,7 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -27,22 +28,22 @@ interface IndividualEntryModalProps {
 
 const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
   const { t } = useTranslation(['common'])
-  const { join, joinMeta } = useEntry()
+  const { join, joinMeta, resetJoinMeta } = useEntry()
   const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       handleClose()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.error')).max(40, t('common:common.too_long')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
 
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       nickname: '',
     },
@@ -70,6 +71,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   }, [])
 
   const handleClose = () => {
+    resetJoinMeta()
     resetTitle()
     onClose()
   }
@@ -84,6 +86,8 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         onReturnClicked={handleClose}
         onActionButtonClicked={handleSubmit}
       >
+        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+        <Box mt={3} />
         <form onSubmit={handleSubmit}>
           <BlackBox>
             <DetailInfo detail={tournament} />
@@ -98,8 +102,8 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
                 fullWidth
                 value={values.nickname}
                 onChange={handleChange}
-                helperText={touched.nickname && errors.nickname}
-                error={touched.nickname && !!errors.nickname}
+                helperText={errors.nickname}
+                error={!!errors.nickname}
               />
             </Box>
           </Box>

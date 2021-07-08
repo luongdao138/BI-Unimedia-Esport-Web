@@ -29,7 +29,7 @@ export type FormType = {
     start_date: string
     end_date: string
     area_id: number
-    area_name: string
+    address: string
     acceptance_dates: string
     recruit_date: string
     acceptance_end_start_date: string

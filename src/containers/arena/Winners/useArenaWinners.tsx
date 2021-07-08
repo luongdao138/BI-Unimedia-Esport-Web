@@ -28,12 +28,12 @@ const useWinners = (
   const arenaMeta = useAppSelector(getArenaMeta)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const arenaWinners = useAppSelector(selectors.getArenaWinners)
-  const { isNotHeld } = useArenaHelper(arena)
+  const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
   const fetchWinners = () => dispatch(actions.getArenaWinners(router.query.hash_key))
 
   useEffect(() => {
-    if (isNotHeld) toDetail()
-  }, [isNotHeld])
+    if (isNotHeld || isBattleRoyale) toDetail()
+  }, [isNotHeld, isBattleRoyale])
 
   useEffect(() => {
     if (router.query.hash_key && isImmediately) {

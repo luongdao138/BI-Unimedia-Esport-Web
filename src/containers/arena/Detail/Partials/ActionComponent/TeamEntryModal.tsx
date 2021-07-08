@@ -25,6 +25,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -56,11 +57,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       onClose()
       reset()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
 
   useEffect(() => {
     changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
@@ -211,7 +212,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamForm = () => {
     const { values, handleChange, errors } = formik
     return (
-      <Box mt={6}>
+      <Box mt={4}>
         <BlackBox>
           <DetailInfo detail={tournament} />
         </BlackBox>
@@ -255,12 +256,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     <>
       <StickyActionModal
         open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
+        returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
+        actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
         actionButtonDisabled={!formik.isValid || !isMembersComplete()}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
+        <Box mt={2} />
+        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
         <form onSubmit={handleActionButton}>{teamForm()}</form>
       </StickyActionModal>
 

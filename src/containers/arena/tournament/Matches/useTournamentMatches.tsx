@@ -8,7 +8,6 @@ import { SetScoreParams, TournamentMatchRound } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
-import { getIsAuthenticated } from '@store/auth/selectors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
@@ -33,18 +32,15 @@ const useTournamentMatches = (): {
   const meta = useAppSelector(getMeta)
   const scoreMeta = useAppSelector(setScoreMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
-  const isAuth = useAppSelector(getIsAuthenticated)
   const arena = useAppSelector(selectors.getTournamentDetail)
-  const { isNotHeld } = useArenaHelper(arena)
+  const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
   useEffect(() => {
-    if (isNotHeld) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
-  }, [isNotHeld])
+    if (isNotHeld || isBattleRoyale) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
+  }, [isNotHeld, isBattleRoyale])
 
   useEffect(() => {
-    if (!isAuth) {
-      push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
-    } else fetchMatches()
-  }, [query.hash_key, isAuth])
+    fetchMatches()
+  }, [query.hash_key])
   useEffect(() => {
     if (meta.loaded) {
       const matchesLength = matches.length

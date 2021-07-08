@@ -83,7 +83,12 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
     <ESModal open={!!match}>
       {!!match && (
         <BlankLayout>
-          <ESStickyFooter disabled={false} title={t('common:tournament_create.decide')} onClick={() => onScoreEntered(match)} noScroll>
+          <ESStickyFooter
+            disabled={!match?.winner}
+            title={t('common:tournament_create.decide')}
+            onClick={() => onScoreEntered(match)}
+            noScroll
+          >
             <Box paddingY={7.5} className={classes.topContainer}>
               <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
                 <IconButton className={classes.iconButtonBg} onClick={() => handleClose()}>
@@ -94,13 +99,11 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
                 </Box>
               </Box>
               <Divider />
-              {!isMobile && (
-                <Box pb={2} pt={3} textAlign="center">
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                  </ThemeProvider>
-                </Box>
-              )}
+              <Box pb={2} pt={3} textAlign="center">
+                <ThemeProvider theme={theme}>
+                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
+                </ThemeProvider>
+              </Box>
               <Box pb={5} pt={5} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
               </Box>
@@ -145,9 +148,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     width: '100%',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     textAlign: 'center',
+    wordBreak: 'break-word',
   },
   customRadio: {
     display: 'flex',
@@ -155,7 +157,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 196,
-    height: 240,
+    minHeight: 240,
+    height: '100%',
     cursor: 'pointer',
     backgroundColor: Colors.black,
     borderRadius: 5,
@@ -198,7 +201,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     customRadio: {
       width: 155,
-      height: 220,
+      minHeight: 220,
       paddingRight: theme.spacing(2),
       paddingLeft: theme.spacing(2),
     },

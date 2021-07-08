@@ -11,13 +11,16 @@ import ESButton from '@components/Button'
 import { useFormik } from 'formik'
 import useParticipantDetail from './useParticipantDetail'
 import UserListItem from '@components/UserItem'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import _ from 'lodash'
 import ESInput from '@components/Input'
-import { useStore } from 'react-redux'
 import * as Yup from 'yup'
 import { ROLE } from '@constants/tournament.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useAppDispatch } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -40,30 +43,31 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
 }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const store = useStore()
   const { participant, isPending, getParticipant, changeName } = useParticipantDetail()
+  const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
   const { resetTitle, changeTitle } = useDocTitle()
+  const { checkNgWord } = useCheckNgWord()
+  const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string()
-      .required(t('common:common.error'))
-      .max(40, t('common:common.too_long'))
-      .test('nickname', 'at_least', function (value) {
-        return CommonHelper.matchNgWords(store, value).length <= 0
-      }),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
   })
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       nickname: '',
     },
     validationSchema,
     onSubmit: (_values) => {
       if (values.nickname) {
-        changeName(tournament.attributes.hash_key, values.nickname, () => {
-          handleClose()
-          setEditMode(false)
-        })
+        if (_.isEmpty(checkNgWord(values.nickname))) {
+          changeName(tournament.attributes.hash_key, values.nickname, () => {
+            handleClose()
+            setEditMode(false)
+          })
+        } else {
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
+        }
       }
     },
   })
@@ -72,7 +76,8 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return
     for (const myInfo of myInfoList) {
-      if (_.get(myInfo, 'role', '') === ROLE.INTERESTED && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
+      const role = _.get(myInfo, 'role', '')
+      if ((role === ROLE.INTERESTED || role === ROLE.PARTICIPANT) && _.get(myInfo, 'is_leader', '') === true) return myInfo.id
     }
   }
 
@@ -124,12 +129,12 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
     <Box>
       <StickyActionModal
         open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
+        returnText={editMode ? t('common:tournament.update_entry_info') : t('common:arena.entry_information')}
+        actionButtonText={editMode ? t('common:arena.update_with_content') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={!isValid}
         onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
-        hideFooter={!me}
+        hideFooter={!me || !isRecruiting}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
@@ -159,8 +164,8 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
                   fullWidth
                   value={values.nickname}
                   onChange={handleChange}
-                  helperText={touched.nickname && errors.nickname}
-                  error={touched.nickname && !!errors.nickname}
+                  helperText={errors.nickname}
+                  error={!!errors.nickname}
                   required
                 />
               </Box>

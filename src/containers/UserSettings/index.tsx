@@ -102,7 +102,7 @@ const UserSettingsContainer: React.FC = () => {
     <>
       <Box className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
-          <Box display="flex" flexDirection="row" alignItems="center" width="100%" style={{ justifyContent: 'spaceBetween' }}>
+          <Box display="flex" flexDirection="row" alignItems="center" width="100%" style={{ justifyContent: 'space-between' }}>
             <Box>
               <ResponsiveTypo variant="h2">{t('common:welcome')}</ResponsiveTypo>
             </Box>

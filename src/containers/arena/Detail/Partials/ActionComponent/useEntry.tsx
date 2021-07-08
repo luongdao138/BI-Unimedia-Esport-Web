@@ -40,15 +40,8 @@ const useEntry = () => {
   const resetUpdateTeamMeta = () => dispatch(clearMetaData(actions.updateTournamentTeamDetail.typePrefix))
 
   useEffect(() => {
-    if (joinMeta.error) {
-      dispatch(commonActions.addToast(t('common:error.join_arena_failed')))
-      resetJoinMeta()
-    }
-  }, [joinMeta.error])
-
-  useEffect(() => {
     if (leaveMeta.loaded) {
-      dispatch(commonActions.addToast(t('common:arena.join_success')))
+      dispatch(commonActions.addToast(t('common:arena.leave_success')))
     }
   }, [leaveMeta.loaded])
 

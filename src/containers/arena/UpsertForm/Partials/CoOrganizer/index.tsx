@@ -6,116 +6,74 @@ import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import MemberItem from './MemberItem'
-import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
-import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
-import useMemberAdd from './useMemberAdd'
 import _ from 'lodash'
 import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 import { useRect } from '@utils/hooks/useRect'
 import ESSlider from '@components/Slider'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { RecommendedUsers } from '@services/arena.service'
+import useOrganizerSearch from '../useOrganizerSearch'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
-export interface RoomMemberAddViewProps {
-  roomId: string
+export interface Props {
   open: boolean
+  values: RecommendedUsers[]
+  onSubmit: (values) => void
   hide: () => void
 }
 
-export interface ShortMember {
-  id: number
-  nickName: string
-  userCode: string
-  profile: string
-}
 const contentRef = React.createRef<HTMLDivElement>()
 
-const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hide }) => {
-  const [memberList, setMemberList] = useState([] as ShortMember[]) // friends in search list
-  const [selectedList, setSelectedList] = useState([] as ShortMember[]) // friends who are going to enter the room
+const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
+  const [selectedList, setSelectedList] = useState([] as RecommendedUsers[])
   const theme = useTheme()
-  const { roomMembers, resetMeta, friends, getFriends, currentUserId, meta, socketSend, cleanFriendsData } = useMemberAdd()
+  const { getRecommendedUsersByName, meta, recommendedUsers, page } = useOrganizerSearch()
   const [keyword, setKeyword] = useState('')
   const [bottomGap, setBottomGap] = useState<number>(0)
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
   const height = matches ? bottomGap + 100 : bottomGap + 68
   const classes = useStyles()
-  const userId = currentUserId
   const contentRect = useRect(contentRef)
 
   useEffect(() => {
-    if (userId && open) {
-      setSelectedList([])
-      setMemberList([])
+    if (open) {
+      setSelectedList(values)
+      getRecommendedUsersByName(keyword, 1)
     }
-  }, [userId, open])
+  }, [open])
 
   useEffect(() => {
     setBottomGap(contentRect?.height)
   }, [contentRect?.height])
 
-  useEffect(() => {
-    if (_.isArray(friends)) {
-      filterItems()
-    }
-  }, [friends])
-
-  const filterItems = () => {
-    if (_.isArray(friends) && _.isArray(roomMembers)) {
-      const filtered = _.filter(friends, (friend) => {
-        const member = roomMembers.find((member) => `${member.id}` === `${friend.id}`)
-        if (!member) return true
-        return member.memberStatus === CHAT_MEMBER_STATUS.INACTIVE
-      })
-      setMemberList(
-        filtered.map((item) => ({
-          id: parseInt(item.id),
-          nickName: item.attributes.nickname,
-          userCode: item.attributes.user_code,
-          profile: item.attributes.avatar,
-        }))
-      )
-    }
-  }
-
   const onSearch = () => {
-    cleanFriendsData()
-    getFriends({ type: 'group', keyword: keyword })
+    getRecommendedUsersByName(keyword, 1)
   }
 
   const handleChange = (event) => {
     setKeyword(event.target.value)
   }
 
-  const onSubmit = () => {
-    socketSend({
-      action: CHAT_ACTION_TYPE.ADD_MEMBERS,
-      roomId: roomId,
-      userIds: selectedList.map((item) => item.id),
-    })
+  const handleSubmit = () => {
+    onSubmit(selectedList)
     hide()
   }
 
-  const onAdd = (data: ShortMember) => {
+  const onAdd = (data: RecommendedUsers) => {
     setSelectedList((state) => [...state, data])
   }
 
-  const removeFromList = (id: number) => {
-    setSelectedList(
-      _.filter(selectedList, function (s) {
-        return s.id != id
-      })
-    )
+  const removeFromList = (id: string) => {
+    setSelectedList(_.filter(selectedList, (s) => s.id != id))
   }
 
-  const onClosing = () => {
-    hide()
-    resetMeta()
-    cleanFriendsData()
+  const loadMore = () => {
+    getRecommendedUsersByName(keyword, page.current_page + 1)
   }
 
   const renderLoader = () => {
-    if (friends === undefined && !meta.loaded && meta.pending && !meta.error) {
+    if (meta.pending) {
       return (
         <Box height={'100%'} width={'100%'} display="flex" justifyContent="center" alignItems="center">
           <Box className={classes.loaderBox}>
@@ -136,7 +94,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
               containerClass={classes.slider}
               slidesPerView={'auto'}
               navigation={false}
-              items={selectedList.map((member, index) => (
+              items={selectedList.map((item, index) => (
                 <Box className={classes.item} key={index}>
                   <Badge
                     className={classes.user}
@@ -148,17 +106,17 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
                     }}
                     badgeContent={
                       <>
-                        <IconButton onClick={() => removeFromList(member.id)} disableRipple className={classes.closeBtn}>
+                        <IconButton onClick={() => removeFromList(item.id)} disableRipple className={classes.closeBtn}>
                           <Icon className={`fa fa-times ${classes.closeIcon}`} />
                         </IconButton>
                       </>
                     }
                   >
-                    <Avatar key={member.id} src={member.profile} alt={member.nickName} />
+                    <Avatar key={item.id} src={item.attributes.avatar} alt={item.attributes.nickname} />
                   </Badge>
                   <Box className={classes.nameHolder}>
                     <Typography variant="body2" noWrap={true}>
-                      {member.nickName}
+                      {item.attributes.nickname}
                     </Typography>
                   </Box>
                 </Box>
@@ -168,54 +126,70 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
         </Container>
       </Box>
       <Box maxWidth={280} className={classes.buttonBottom}>
-        <ButtonPrimary type="submit" disabled={_.isEmpty(selectedList)} round fullWidth onClick={onSubmit}>
-          {i18n.t('common:chat.add_submit')}
+        <ButtonPrimary type="submit" disabled={_.isEmpty(selectedList)} round fullWidth onClick={handleSubmit}>
+          {i18n.t('common:tournament_create.add')}
         </ButtonPrimary>
       </Box>
     </div>
   )
 
+  const renderItems = () => {
+    const selectedUserIds = selectedList.map((user) => user.id)
+    return recommendedUsers.map((user) => (
+      <MemberItem key={user.id} item={user} onAdd={onAdd} disabled={selectedUserIds.includes(user.id)} />
+    ))
+  }
+
   return (
     <Box className={classes.container}>
       <ESDialog
         open={open}
-        title={i18n.t('common:chat.member_add_title')}
-        handleClose={() => onClosing()}
+        title={i18n.t('common:tournament_create.choose_co_organizer')}
+        handleClose={() => hide()}
         bkColor="rgba(0,0,0,0.8)"
         alignTop
       >
         <DialogContent className={classes.dialogContentWrap} style={{ height: `calc(100vh - ${height}px)` }}>
           <Box className={classes.inputHolder}>
             <ESInput
-              placeholder={i18n.t('common:chat.member_add_placeholder')}
+              placeholder={i18n.t('common:common.username')}
               value={keyword}
               fullWidth
               onChange={handleChange}
               endAdornment={
-                <>
-                  {
-                    <IconButton onClick={onSearch}>
-                      <Icon className={`fa fa-search ${classes.icon}`}></Icon>
-                    </IconButton>
-                  }
-                </>
+                <IconButton onClick={onSearch}>
+                  <Icon className={`fa fa-search ${classes.icon}`} />
+                </IconButton>
               }
             />
-            <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
+            <Box pt={1} />
+            <Typography variant="caption">{i18n.t('common:tournament_create.user_hint')}</Typography>
           </Box>
           {renderLoader()}
+          {meta.loaded && recommendedUsers.length === 0 && (
+            <Box pt={12} textAlign="center">
+              <Typography color="textSecondary">{i18n.t('common:tournament_create.not_found')}</Typography>
+            </Box>
+          )}
           {open ? (
             <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
-              {_.filter(
-                memberList,
-                ({ id }) =>
-                  !_.includes(
-                    selectedList.map(({ id }) => id),
-                    id
+              <InfiniteScroll
+                dataLength={recommendedUsers.length}
+                scrollableTarget="scrollableDiv"
+                scrollThreshold={0.99}
+                style={{ overflow: 'hidden' }}
+                next={loadMore}
+                hasMore={true}
+                loader={
+                  meta.pending && (
+                    <Box textAlign="center">
+                      <ESLoader />
+                    </Box>
                   )
-              ).map((member) => (
-                <MemberItem key={member.id} item={member} onAdd={onAdd} />
-              ))}
+                }
+              >
+                {renderItems()}
+              </InfiniteScroll>
             </div>
           ) : null}
 
@@ -226,13 +200,15 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
   )
 }
 
-RoomMemberAddView.defaultProps = {}
+CoOrganizer.defaultProps = {}
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogContentWrap: {
     padding: 0,
     position: 'relative',
     paddingTop: '100px',
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
     overflow: 'hidden',
   },
   inputHolder: {
@@ -246,6 +222,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     flexDirection: 'column',
     paddingBottom: 30,
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
   },
   item: {
     width: '100%',
@@ -338,15 +316,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectedAvatars: {
     width: '100%',
   },
-  bottomSection: {
-    // position: 'fixed',
-  },
+  bottomSection: {},
   buttonBottom: {
     margin: 'auto',
     width: theme.spacing(35),
     minWidth: theme.spacing(18),
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(8),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(11),
   },
   [theme.breakpoints.down('md')]: {},
   [theme.breakpoints.down('sm')]: {
@@ -361,10 +337,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: 'auto',
       width: theme.spacing(35),
       minWidth: theme.spacing(18),
-      marginTop: theme.spacing(1.5),
-      marginBottom: theme.spacing(1.5),
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(5),
     },
   },
 }))
 
-export default RoomMemberAddView
+export default CoOrganizer
