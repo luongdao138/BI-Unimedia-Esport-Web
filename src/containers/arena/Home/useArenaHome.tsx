@@ -26,7 +26,7 @@ const useArenaHome = (): {
   const tournamentSearch = (param: TournamentSearchParams) => dispatch(actions.tournamentSearch(param))
   const resetMeta = () => dispatch(clearMetaData(actions.tournamentSearch.typePrefix))
   const loadMore = () => {
-    if (page && page.current_page !== page.total_pages) {
+    if (page && page.current_page < page.total_pages) {
       tournamentSearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter })
     }
   }

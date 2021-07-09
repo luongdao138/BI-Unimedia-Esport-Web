@@ -325,6 +325,7 @@ const useStyles = makeStyles((theme) => ({
   staticMail: {
     fontSize: 16,
     color: Colors.grey[400],
+    wordBreak: 'break-word',
   },
   img: {
     width: 80,
