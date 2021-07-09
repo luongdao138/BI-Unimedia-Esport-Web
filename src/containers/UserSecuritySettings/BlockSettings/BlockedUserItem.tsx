@@ -49,6 +49,15 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
     }
   }, [unblockMeta])
 
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset'
+      document.body.style.position = 'unset'
+      document.body.style.width = 'unset'
+      document.body.style.height = 'unset'
+    }
+  }, [])
+
   const DialogContent = withStyles((theme) => ({
     root: {
       padding: theme.spacing(3),
@@ -99,6 +108,16 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        onEntered={() => {
+          document.body.style.position = 'fixed'
+          document.body.style.width = '100%'
+          document.body.style.height = '100%'
+        }}
+        onExited={() => {
+          document.body.style.position = 'unset'
+          document.body.style.width = 'unset'
+          document.body.style.height = 'unset'
+        }}
       >
         <DialogContent>
           <Box className={classes.containerDialog}>

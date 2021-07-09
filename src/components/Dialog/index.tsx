@@ -103,6 +103,9 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
   useEffect(() => {
     return () => {
       document.body.style.overflow = 'unset'
+      document.body.style.position = 'unset'
+      document.body.style.width = 'unset'
+      document.body.style.height = 'unset'
     }
   }, [])
   return (
@@ -136,7 +139,14 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
       }}
       className={classes.dialog}
       onEntered={() => {
-        document.body.style.overflow = 'hidden'
+        document.body.style.position = 'fixed'
+        document.body.style.width = '100%'
+        document.body.style.height = '100%'
+      }}
+      onExited={() => {
+        document.body.style.position = 'unset'
+        document.body.style.width = 'unset'
+        document.body.style.height = 'unset'
       }}
       {...rest}
     >
