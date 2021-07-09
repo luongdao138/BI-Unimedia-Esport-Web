@@ -548,6 +548,7 @@ export default {
     max_participants: '参加枠数',
     max_participants_placeholder: '○○○人上限',
     comfirm_title: 'この内容で作成しますか？',
+    confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
   },
   arenaSearchFilters: {
