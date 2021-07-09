@@ -100,6 +100,7 @@ const useTournamentCreate = (): {
     if (actions.updateTournament.fulfilled.match(resultAction)) {
       resetUpdateMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
+      dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
       dispatch(commonActions.addToast(t('common:arena.update_success')))
     }
   }

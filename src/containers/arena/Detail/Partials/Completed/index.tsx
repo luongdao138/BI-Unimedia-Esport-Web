@@ -20,7 +20,9 @@ const Completed: React.FC<CompletedProps> = (props) => {
   const { tournament } = props
   const { t } = useTranslation(['common'])
 
-  useEffect(() => fetchWinners(), [])
+  useEffect(() => {
+    if (!!tournament && tournament.attributes.is_freezed) fetchWinners()
+  }, [tournament])
 
   return (
     <ActionComponent {...props}>

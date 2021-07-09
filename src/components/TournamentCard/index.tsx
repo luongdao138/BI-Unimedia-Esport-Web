@@ -144,6 +144,11 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
     )
   }
 
+  const pCount = () => {
+    const count = attr.is_freezed ? attr.participant_count : Number(attr.participant_count) + Number(attr.interested_count)
+    return isNaN(count) || !count ? 0 : count
+  }
+
   return (
     <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.ARENA}/${attr.hash_key}`)}>
       <ESCardMedia
@@ -157,7 +162,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
         {getInfoRow(attr.game_of_title)}
         {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)}
         {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.entry'), attr.participant_count, `/${attr.max_participants}`, 0.5)}
+        {getChippedRow(t('common:tournament.entry'), pCount(), `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>

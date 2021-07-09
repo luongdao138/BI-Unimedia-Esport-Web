@@ -58,6 +58,8 @@ export type TournamentListItem = {
       profile_image: null | string
     }
     participants: Array<ParticipantType>
+    is_freezed: boolean
+    interested_count: number
   }
 }
 
