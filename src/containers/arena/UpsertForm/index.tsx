@@ -241,7 +241,7 @@ const TournamentCreate: React.FC = () => {
         <form onSubmit={formik.handleSubmit}>
           <Box>
             {isConfirm ? (
-              <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} prefectures={prefectures.data} />
+              <Confirm values={formik.values} hardwares={hardwares.data || []} user={user} prefectures={prefectures.data} isEdit={isEdit} />
             ) : (
               <>
                 <StepTabs tab={tab} onTabChange={handleTabChange} />
