@@ -96,13 +96,13 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
               >
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
-              <Box pl={2}>
+              <Box pl={2} width="100%">
                 <Typography variant="h2">{t('common:arena.summary_title')}</Typography>
               </Box>
             </Box>
             <Divider />
             <Box pt={4}>
-              <Typography>{data.title}</Typography>
+              <Typography className={classes.summaryTitle}>{data.title}</Typography>
             </Box>
 
             <Box width="100%" pb={4} pt={4}>
@@ -160,6 +160,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
+  },
+  summaryTitle: {
+    wordBreak: 'break-word',
   },
   stickyFooter: {
     position: 'fixed',
