@@ -21,6 +21,9 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
   useEffect(() => {
     return () => {
       document.body.style.overflow = 'unset'
+      document.body.style.position = 'unset'
+      document.body.style.width = 'unset'
+      document.body.style.height = 'unset'
     }
   }, [])
 
