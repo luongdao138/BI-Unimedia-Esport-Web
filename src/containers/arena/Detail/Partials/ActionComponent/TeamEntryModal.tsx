@@ -25,6 +25,7 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -49,18 +50,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
-  const { checkNgWord } = useCheckNgWord()
+  const { checkNgWordByField } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const { resetTitle, changeTitle } = useDocTitle()
 
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       onClose()
       reset()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
 
   useEffect(() => {
     changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
@@ -69,14 +70,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [])
 
   useEffect(() => {
-    if (updateTeamMeta.loaded || updateTeamMeta.error) {
+    if (updateTeamMeta.loaded) {
       onClose()
       if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
         updateDone()
       }
       reset()
     }
-  }, [updateTeamMeta.loaded, updateTeamMeta.error])
+  }, [updateTeamMeta.loaded])
 
   useEffect(() => {
     if (userProfile) {
@@ -178,18 +179,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }
 
   const handleActionButton = () => {
-    let handle = true
-    if (!_.isEmpty(checkNgWord(formik.values.team_name))) {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.team_name }))
-      handle = false
-    }
+    let fields = { [NG_WORD_AREA.team_name]: formik.values.team_name }
+
     formik.values.members.forEach((member, i) => {
-      if (!_.isEmpty(checkNgWord(member.name))) {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: `メンバー${i + 1}` }))
-        handle = false
-      }
+      fields = { ...fields, [`メンバー${i + 1}`]: member.name }
     })
-    if (handle) formik.handleSubmit()
+
+    const ngFields = checkNgWordByField(fields)
+    if (!!ngFields && ngFields.length > 0) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    } else {
+      formik.handleSubmit()
+    }
   }
 
   const handleImageUpload = (file: File) => {
@@ -211,7 +212,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamForm = () => {
     const { values, handleChange, errors } = formik
     return (
-      <Box mt={6}>
+      <Box mt={4}>
         <BlackBox>
           <DetailInfo detail={tournament} />
         </BlackBox>
@@ -255,12 +256,15 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     <>
       <StickyActionModal
         open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
+        returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
+        actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
         actionButtonDisabled={!formik.isValid || !isMembersComplete()}
         onReturnClicked={handleReturn}
         onActionButtonClicked={handleActionButton}
       >
+        <Box mt={2} />
+        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+        {!!updateTeamMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
         <form onSubmit={handleActionButton}>{teamForm()}</form>
       </StickyActionModal>
 

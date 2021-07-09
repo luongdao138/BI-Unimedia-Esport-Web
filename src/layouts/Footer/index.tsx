@@ -21,17 +21,17 @@ export const Footer: React.FC = () => {
       <Box className={classes.footerInner}>
         <Box className={classes.leftSection}>
           <List component="nav" aria-labelledby="footer-list" disablePadding className={classes.root}>
-            <Link href={ESRoutes.TERMS} underline={'none'} target="_blank">
+            <Link href={ESRoutes.TERMS} underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.terms_of_use')}</ListItemText>
               </ListItem>
             </Link>
-            <Link href={ESRoutes.PRIVACY} underline={'none'} target="_blank">
+            <Link href={ESRoutes.PRIVACY} underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.handling_of_personal_information')}</ListItemText>
               </ListItem>
             </Link>
-            <Link href={ESRoutes.COMMERCIAL} underline={'none'} target="_blank">
+            <Link href={ESRoutes.COMMERCIAL} underline={'none'}>
               <ListItem className={classes.listBorder} button disableRipple>
                 <ListItemText className={classes.listText}>{t('common:home.notation_commercial')}</ListItemText>
               </ListItem>
@@ -69,7 +69,7 @@ export const Footer: React.FC = () => {
             {t('common:top.footer_download_app')}
           </Typography>
           <Box className={classes.appWrap}>
-            <ButtonBase href="https://apps.apple.com/us/app/exelab/id1525346211" target="_blank">
+            <ButtonBase href="https://apps.apple.com/jp/app/exelab/id1525346211" target="_blank">
               <img className={classes.app_store} src="/images/appstore.png" />
             </ButtonBase>
             <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">

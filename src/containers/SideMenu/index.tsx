@@ -19,9 +19,11 @@ import LoginRequired from '@containers/LoginRequired'
 import SideFooter from './SideFooter'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import AppDialog from './AppDialog'
 
 const SideMenu: React.FC = () => {
   const [modal, setModal] = useState(false)
+  const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -38,6 +40,10 @@ const SideMenu: React.FC = () => {
   const handleModal = (contentType: string) => {
     setModal(true)
     setContent(contentType)
+  }
+
+  const handleAppModal = (value: boolean) => {
+    setAppModal(value)
   }
 
   return (
@@ -130,7 +136,7 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
           )}
-          {!downSm && <SideFooter />}
+          {!downSm && <SideFooter handleAppModal={handleAppModal} />}
         </Box>
       </Box>
 
@@ -139,6 +145,7 @@ const SideMenu: React.FC = () => {
           {content === 'qr' ? <QrContainer handleClose={() => setModal(false)} /> : <LogoutContainer handleClose={() => setModal(false)} />}
         </BlankLayout>
       </ESModal>
+      <AppDialog open={appModal} handleClose={() => setAppModal(false)} />
     </>
   )
 }

@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
-import { HardwareResponse } from '@services/common.service'
+import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { RULES, PARTICIPATION_TYPES } from '@constants/tournament.constants'
@@ -13,18 +13,28 @@ import _ from 'lodash'
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
   hardwares: HardwareResponse['data']
+  prefectures: GetPrefecturesResponse['data']
   user: UserLoginResponse
+  isEdit: boolean
 }
 
 ESInput.defaultProps = {
   size: 'small',
 }
 
-const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
+const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user, isEdit }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
   const [coOrganizers, setCoOrganizers] = useState('')
+  const [areaName, setAreaName] = useState('')
   const classes = useStyles()
+
+  useEffect(() => {
+    if (prefectures) {
+      const area = prefectures.find((area) => area.id === String(values.stepThree.area_id))
+      setAreaName(area.attributes.area)
+    }
+  }, [prefectures])
 
   useEffect(() => {
     hardwares.forEach((h) => {
@@ -100,7 +110,9 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
   return (
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={8} />
-      <Typography variant="h2">{t('common:tournament_create.comfirm_title')}</Typography>
+      <Typography variant="h2">
+        {isEdit ? t('common:tournament_create.confirm_edit_title') : t('common:tournament_create.comfirm_title')}
+      </Typography>
       <Box pb={4.25} />
       <Box>
         <img
@@ -151,8 +163,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.area')} value={ruleName} disabled={true} fullWidth />
-      {values.stepThree.area_name && <ESInput value={values.stepThree.area_name} disabled={true} fullWidth />}
+      <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth />
+      {values.stepThree.address && <ESInput value={values.stepThree.address} disabled={true} fullWidth />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
       <Box pb={2} />
@@ -194,8 +206,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     viewHolder: {
-      marginLeft: 24,
-      marginRight: 24,
+      marginLeft: 0,
+      marginRight: 0,
     },
   },
 }))

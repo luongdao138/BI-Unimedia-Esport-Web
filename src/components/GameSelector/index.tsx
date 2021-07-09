@@ -42,7 +42,7 @@ const GameSelector: React.FC<GameSelectorProps> = (props) => {
   }
   return (
     <Box>
-      <Tabs value={tab} onChange={handleChangeTab} className={classes.tab}>
+      <Tabs value={tab} onChange={handleChangeTab} className={classes.tab} variant={'scrollable'}>
         <Tab label={t('common:profile.favorite_game.search_title')} value={0} />
         <Tab label={t('common:profile.favorite_game.search_by_genre')} value={1} />
         <Tab label={t('common:profile.favorite_game.create_new')} value={2} />

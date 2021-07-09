@@ -101,6 +101,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.closeTournament.fulfilled, (state) => {
     state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as TournamentStatus
   })
+  builder.addCase(actions.cancelTournament.fulfilled, (state) => {
+    state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.CANCELLED as TournamentStatus
+  })
   builder.addCase(actions.getTournamentParticipants.fulfilled, (state, action) => {
     let _participants = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {

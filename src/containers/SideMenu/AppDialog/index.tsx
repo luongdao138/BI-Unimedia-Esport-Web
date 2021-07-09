@@ -1,4 +1,4 @@
-import { makeStyles, Theme, Typography, Box, Paper } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box, Paper, ButtonBase } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESModal from '@components/Modal'
@@ -7,10 +7,9 @@ import i18n from '@locales/i18n'
 type Props = {
   open: boolean
   handleClose: (value: boolean) => void
-  onSubmit: any
 }
 
-const ConfirmDialog: React.FC<Props> = ({ open, handleClose, onSubmit }) => {
+const ConfirmDialog: React.FC<Props> = ({ open, handleClose }) => {
   const classes = useStyles()
 
   return (
@@ -18,28 +17,22 @@ const ConfirmDialog: React.FC<Props> = ({ open, handleClose, onSubmit }) => {
       <Box display="flex" alignItems="center" height="100%" maxWidth={754} margin="0 auto" className={classes.dialogContainer}>
         <Paper className={classes.paperBg}>
           <Box textAlign="center" py={5}>
-            <Typography className={classes.title}>{i18n.t('common:common.confirm_title')}</Typography>
+            <Typography className={classes.title}>{i18n.t('common:home.app_version')}</Typography>
             <Box pt={5} px={120 / 8} className={classes.detailContainer}>
-              <Typography className={classes.detail}>{i18n.t('common:common.info')}</Typography>
+              <Typography className={classes.detail}>{i18n.t('common:home.app_desc')}</Typography>
             </Box>
-
-            <Box
-              pt={148 / 8}
-              width="100%"
-              justifyContent="center"
-              display="flex"
-              alignItems="center"
-              flexDirection="row"
-              className={classes.bottomButton}
-            >
-              <Box width={220} className={classes.buttonTop} pr={2}>
-                <ButtonPrimary fullWidth gradient={false} onClick={() => handleClose(false)}>
-                  {i18n.t('common:common.confirm_back')}
-                </ButtonPrimary>
-              </Box>
+            <Box className={classes.buttonWrap}>
+              <ButtonBase href="https://apps.apple.com/jp/app/exelab/id1525346211" target="_blank">
+                <img className={classes.app_store} src="/images/appstore.png" />
+              </ButtonBase>
+              <ButtonBase href="https://play.google.com/store/apps/details?id=jp.co.ntt.esportspf.exelab" target="_blank">
+                <img className={classes.google_play} src="/images/googleplay.png" />
+              </ButtonBase>
+            </Box>
+            <Box className={classes.bottomButton}>
               <Box width={220} className={classes.button}>
-                <ButtonPrimary fullWidth onClick={onSubmit}>
-                  {i18n.t('common:common.confirm_ok')}
+                <ButtonPrimary fullWidth onClick={() => handleClose(false)}>
+                  {i18n.t('common:common.confirm_back')}
                 </ButtonPrimary>
               </Box>
             </Box>
@@ -65,9 +58,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.white_opacity[70],
     whiteSpace: 'pre-line',
   },
+  buttonWrap: {
+    paddingTop: theme.spacing(4),
+  },
+  app_store: {
+    height: 50,
+    maxWidth: '100%',
+    paddingBottom: theme.spacing(1),
+    marginRight: theme.spacing(3),
+  },
+  google_play: {
+    height: 50,
+    maxWidth: '100%',
+    paddingBottom: theme.spacing(1),
+  },
+  bottomButton: {
+    paddingTop: theme.spacing(8),
+    display: 'flex',
+    justifyContent: 'center',
+  },
   [theme.breakpoints.down('sm')]: {
-    bottomButton: {
-      flexDirection: 'column-reverse',
+    app_store: {
+      marginRight: theme.spacing(2),
     },
     button: {
       width: 280,

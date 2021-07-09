@@ -20,14 +20,18 @@ const Completed: React.FC<CompletedProps> = (props) => {
   const { tournament } = props
   const { t } = useTranslation(['common'])
 
-  useEffect(() => fetchWinners(), [])
+  useEffect(() => {
+    if (!!tournament && tournament.attributes.is_freezed) fetchWinners()
+  }, [tournament])
 
   return (
     <ActionComponent {...props}>
-      <Box className={classes.body}>
-        {tournament.attributes.is_freezed ? (
-          <div className={classes.winnerAvatarWrapper} onClick={() => {}}>
-            {arenaWinners && arenaWinners['1'] && arenaWinners['1'][0] && (
+      {tournament.attributes.is_freezed ? (
+        arenaWinners &&
+        arenaWinners['1'] &&
+        arenaWinners['1'][0] && (
+          <Box className={classes.body}>
+            <div className={classes.winnerAvatarWrapper} onClick={() => {}}>
               <ArenaAvatar
                 src={arenaWinners['1'][0].avatar}
                 name={arenaWinners['1'][0].name}
@@ -37,16 +41,16 @@ const Completed: React.FC<CompletedProps> = (props) => {
                 nameWhite
                 size="small"
               />
-            )}
-          </div>
-        ) : (
+            </div>
+          </Box>
+        )
+      ) : (
+        <Box className={classes.body}>
           <Box display="flex" flexDirection="row">
             <Typography className={classes.roundInfoText}>{t('common:arena.not_held')}</Typography>
           </Box>
-        )}
-
-        <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline"></Box>
-      </Box>
+        </Box>
+      )}
     </ActionComponent>
   )
 }

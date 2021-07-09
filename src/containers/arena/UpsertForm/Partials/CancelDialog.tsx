@@ -1,23 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Colors } from '@theme/colors'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
 import LinkButton from '@components/LinkButton'
+import { TournamentDetail } from '@services/arena.service'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface Props {
   hashKey: string
+  arena: TournamentDetail
 }
 
-const CancelDialog: React.FC<Props> = ({ hashKey }) => {
+const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
   const [modal, setModal] = useState(false)
+  const [isCanceled, setCanceled] = useState(false)
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { meta, cancelTournament } = useCancelDialog()
+
+  useEffect(() => {
+    if (arena && arena.attributes) {
+      const _status = arena.attributes.status === TOURNAMENT_STATUS.CANCELLED || arena.attributes.status === TOURNAMENT_STATUS.COMPLETED
+      setCanceled(_status)
+    }
+  }, [arena])
 
   const handleClose = () => {
     setModal(false)
@@ -31,17 +42,12 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
   return (
     <>
       <Box mt={3}>
-        <LinkButton onClick={() => setModal(true)}>{t('common:tournament_cancel.confirm_cancel_btn')}</LinkButton>
+        {!isCanceled && <LinkButton onClick={() => setModal(true)}>{t('common:tournament_cancel.confirm_cancel_btn')}</LinkButton>}
       </Box>
-      <ESModal open={modal} handleClose={() => setModal(false)}>
+      <ESPopup open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <Box pt={7.5} pb={9} className={classes.topContainer}>
-            <Box py={2}>
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-            </Box>
-            <Box px={5} pt={12} display="flex" flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
+          <Box pt={2} pb={2} className={classes.topContainer}>
+            <Box px={5} display="flex" flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
               <Typography className={classes.title}>{t('common:tournament_cancel.cancel_title')}</Typography>
               <Box pt={4}>
                 <Typography className={classes.desc}>
@@ -75,7 +81,7 @@ const CancelDialog: React.FC<Props> = ({ hashKey }) => {
             {meta.pending && <ESLoader open={meta.pending} />}
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
     </>
   )
 }

@@ -4,7 +4,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 
@@ -20,9 +20,9 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
 
   return (
     <Box>
-      <ESModal open={open}>
+      <ESPopup open={open}>
         <BlankLayout>
-          <Box paddingY={16} className={classes.childrenContainer}>
+          <Box paddingY={2} className={classes.childrenContainer}>
             <Box pb={4} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:arena.dialog.randomize_title')}</Typography>
             </Box>
@@ -57,7 +57,7 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
             </Box>
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
     </Box>
   )
 }

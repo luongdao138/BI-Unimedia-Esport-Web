@@ -29,7 +29,7 @@ export type EditableTypes = {
   acceptance_end_date: boolean
   participant_type: boolean
   area_id: boolean
-  area_name: boolean
+  address: boolean
   prize: boolean
   terms_of_participation: boolean
   organizer_name: boolean
@@ -68,7 +68,7 @@ const useTournamentCreate = (): {
     t_type: true,
     notes: true,
     area_id: true,
-    area_name: true,
+    address: true,
     co_organizers: true,
     organizer_name: true,
     // always not editable
@@ -100,6 +100,7 @@ const useTournamentCreate = (): {
     if (actions.updateTournament.fulfilled.match(resultAction)) {
       resetUpdateMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
+      dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
       dispatch(commonActions.addToast(t('common:arena.update_success')))
     }
   }
@@ -139,7 +140,7 @@ const useTournamentCreate = (): {
         _editables.t_type = true
         _editables.notes = true
         _editables.area_id = true
-        _editables.area_name = true
+        _editables.address = true
         _editables.co_organizers = true
         _editables.organizer_name = true
 
@@ -147,18 +148,19 @@ const useTournamentCreate = (): {
         if (_status === TOURNAMENT_STATUS.RECRUITING) {
           _editables.max_participants = true
           _editables.retain_history = true
-          _editables.acceptance_start_date = true
+          _editables.acceptance_start_date = false
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
-        } else if (
-          _status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED ||
-          _status === TOURNAMENT_STATUS.READY_TO_START ||
-          _status === TOURNAMENT_STATUS.IN_PROGRESS
-        ) {
+        } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
           _editables.start_date = true
+          _editables.end_date = true
+        } else if (_status === TOURNAMENT_STATUS.IN_PROGRESS) {
+          // max_participants, retain_history,
+          // acceptance_start_date, acceptance_end_date are already false on top
+          _editables.start_date = false
           _editables.end_date = true
         }
       }

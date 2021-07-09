@@ -15,6 +15,8 @@ import TeamMemberItemExpanded from '../TeamMemberItemExpanded'
 import TeamEntryModal from './TeamEntryModal'
 import { TeamMemberSelectItem } from '@store/arena/actions/types'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import { ROLE } from '@constants/tournament.constants'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -40,6 +42,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { teamDetail, isPending, getTeamDetail } = useTeamDetail()
+  const { isRecruiting } = useArenaHelper(tournament)
   const [editMode, setEditMode] = useState(false)
   const isPreview = previewMode === true
   const { resetTitle, changeTitle } = useDocTitle()
@@ -63,7 +66,7 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   const getTeamId = () => {
     const myInfos = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfos)) return null
-    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === 'interested')
+    const info = myInfos.find((myInfo) => _.get(myInfo, 'role') === ROLE.INTERESTED || _.get(myInfo, 'role') === ROLE.PARTICIPANT)
     if (!info) return null
     const teamId = _.get(info, 'team_id', null)
     if (_.isNumber(teamId)) return teamId
@@ -137,13 +140,13 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   return (
     <Box>
       <StickyActionModal
-        open={open || isPreview}
-        returnText={t('common:tournament.join')}
-        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_nick')}
+        open={(open || isPreview) && !editMode}
+        returnText={t('common:arena.entry_information')}
+        actionButtonText={editMode ? t('common:tournament.join_with_this') : t('common:tournament.update_entry_info')}
         actionButtonDisabled={false}
         onReturnClicked={handleClose}
         onActionButtonClicked={onSubmit}
-        hideFooter={!myTeam}
+        hideFooter={!myTeam || !isRecruiting}
       >
         <form onSubmit={onSubmit}>
           <BlackBox>
@@ -168,18 +171,19 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             </Box>
           )}
         </form>
-        {editMode ? (
-          <TeamEntryModal
-            tournament={tournament}
-            userProfile={userProfile}
-            onClose={() => setEditMode(false)}
-            open={editMode}
-            isEdit
-            initialData={getEditInitialData()}
-            updateDone={() => fetch()}
-          />
-        ) : null}
       </StickyActionModal>
+
+      {editMode ? (
+        <TeamEntryModal
+          tournament={tournament}
+          userProfile={userProfile}
+          onClose={() => setEditMode(false)}
+          open={editMode}
+          isEdit
+          initialData={getEditInitialData()}
+          updateDone={() => fetch()}
+        />
+      ) : null}
 
       {isPending && <ESLoader open={isPending} />}
     </Box>
