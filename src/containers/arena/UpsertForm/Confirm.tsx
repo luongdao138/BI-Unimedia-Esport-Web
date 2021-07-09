@@ -15,13 +15,14 @@ interface ConfirmProps {
   hardwares: HardwareResponse['data']
   prefectures: GetPrefecturesResponse['data']
   user: UserLoginResponse
+  isEdit: boolean
 }
 
 ESInput.defaultProps = {
   size: 'small',
 }
 
-const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user }) => {
+const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user, isEdit }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
   const [coOrganizers, setCoOrganizers] = useState('')
@@ -109,7 +110,9 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user 
   return (
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={8} />
-      <Typography variant="h2">{t('common:tournament_create.comfirm_title')}</Typography>
+      <Typography variant="h2">
+        {isEdit ? t('common:tournament_create.confirm_edit_title') : t('common:tournament_create.comfirm_title')}
+      </Typography>
       <Box pb={4.25} />
       <Box>
         <img

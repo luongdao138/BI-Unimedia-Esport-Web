@@ -46,11 +46,13 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
         <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
-        {!isMobile && (
-          <Typography variant="h2" className={classes.wrapOne}>
-            {title}
-          </Typography>
-        )}
+        <div style={{ overflow: 'hidden' }}>
+          {!isMobile && (
+            <Typography variant="h2" className={classes.wrapOne}>
+              {title}
+            </Typography>
+          )}
+        </div>
       </Box>
       <Box
         style={{
@@ -118,6 +120,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.black,
     opacity: 0.7,
     zIndex: 100,
+    maxWidth: 840,
   },
   iconButtonBg2: {
     backgroundColor: Colors.grey[200],
@@ -162,6 +165,11 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
+    },
+  },
+  ['@media (max-width: 960px)']: {
+    backContainer: {
+      maxWidth: 'none',
     },
   },
 }))

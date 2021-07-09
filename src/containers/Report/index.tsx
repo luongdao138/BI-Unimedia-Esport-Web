@@ -184,7 +184,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           <BlankLayout>
             <Box pt={7.5} pb={9} className={classes.topContainer}>
               <Box py={2} display="flex" flexDirection="row" alignItems="center">
-                <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+                <IconButton
+                  className={classes.iconButtonBg}
+                  onClick={() => {
+                    handleClose()
+                    formik.resetForm()
+                  }}
+                >
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
@@ -319,6 +325,7 @@ const useStyles = makeStyles((theme) => ({
   staticMail: {
     fontSize: 16,
     color: Colors.grey[400],
+    wordBreak: 'break-word',
   },
   img: {
     width: 80,
