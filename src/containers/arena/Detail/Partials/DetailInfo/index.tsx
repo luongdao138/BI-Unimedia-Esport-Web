@@ -327,6 +327,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flex: 8,
     wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
   },
   title: {
     wordBreak: 'break-word',
