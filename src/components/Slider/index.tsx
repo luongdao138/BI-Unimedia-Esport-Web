@@ -17,7 +17,7 @@ const ESSlide: React.FC<{
   slidesPerView?: number | 'auto'
   breakpoints?: any
   containerClass?: string
-  smallSliderButton: boolean
+  smallSliderButton?: boolean
 }> = ({ items, navigation, slidesPerView, breakpoints, containerClass, smallSliderButton, ...rest }) => {
   const { t } = useTranslation(['common'])
 
