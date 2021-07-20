@@ -15,7 +15,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface CoverSelectorProps {
   src?: string
-  isArena?: boolean
+  ratio?: number
   cancel: () => void
   onUpdate: (file: File, blob: any, blobUrl: string) => void
 }
@@ -50,7 +50,7 @@ const ImageSlider = withStyles({
 const STATIC_WIDTH = 600
 const STATIC_HEIGHT = 200
 
-const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onUpdate }) => {
+const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
@@ -149,7 +149,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
               crop={crop}
               zoom={zoom}
               objectFit={fitType}
-              aspect={isArena ? 16 / 9 : 4 / 1}
+              aspect={ratio || 4 / 1}
               style={{
                 containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
                 mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
@@ -209,7 +209,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
 }
 
 CoverSelector.defaultProps = {
-  isArena: false,
+  ratio: null,
 }
 
 export default CoverSelector

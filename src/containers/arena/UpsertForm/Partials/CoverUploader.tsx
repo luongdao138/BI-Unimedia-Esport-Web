@@ -71,7 +71,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
       {open && (
         <CoverSelector
           src={localSrc.toString()}
-          isArena={true}
+          ratio={16 / 9}
           cancel={() => setOpen(false)}
           onUpdate={(file: File, blob: any) => handleChange(file, blob)}
         />
