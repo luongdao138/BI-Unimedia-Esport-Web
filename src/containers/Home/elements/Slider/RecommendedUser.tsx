@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  innerWrap: { width: 60, cursor: 'pointer' },
+  innerWrap: { width: 72, cursor: 'pointer' },
   avatar: {
     margin: '0 auto',
   },
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden !important',
     display: 'inline-block',
-    width: 60,
+    width: 72,
     textAlign: 'center',
   },
 }))
