@@ -147,7 +147,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.participation')} value={participationType} disabled={true} fullWidth />
       <ESInput value={`${values.stepTwo.max_participants}${peopleText}`} disabled={true} fullWidth />
-      <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth />
+      <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth multiline />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.precautions')} value={values.stepTwo.notes} multiline disabled={true} fullWidth />
       <Box pb={2} />
