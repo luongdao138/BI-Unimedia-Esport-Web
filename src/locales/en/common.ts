@@ -557,7 +557,7 @@ export default {
     inProgress: '開催中',
     completed: '終了',
     joined: 'あなたがエントリーした大会',
-    organized: 'あなたが開催者の大会',
+    organized: 'あなたが主催者の大会',
     ready: 'エントリー受付前',
     recruiting: 'エントリー受付中',
   },
