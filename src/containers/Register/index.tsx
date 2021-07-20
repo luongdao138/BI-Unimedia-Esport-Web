@@ -89,17 +89,6 @@ const RegisterContainer: React.FC = () => {
           </Box>
         </Box>
 
-        <Box pt={3} flexDirection="column" display="flex">
-          <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label={t('common:register.terms')} name="terms" />
-          <ESCheckbox
-            disableRipple
-            checked={checkbox.privacy}
-            onChange={handleChange}
-            label={t('common:register.privacy')}
-            name="privacy"
-          />
-        </Box>
-
         <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
           <ButtonPrimary
             round
@@ -118,7 +107,19 @@ const RegisterContainer: React.FC = () => {
           <ESDividerWithMiddleText text={t('common:login.divider')} />
         </Box>
 
-        <Box pt={8} maxWidth={280} className={classes.buttonContainer}>
+        <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
+          <Box pb={2}>
+            <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
+              <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label={t('common:register.terms')} name="terms" />
+              <ESCheckbox
+                disableRipple
+                checked={checkbox.privacy}
+                onChange={handleChange}
+                label={t('common:register.privacy')}
+                name="privacy"
+              />
+            </Box>
+          </Box>
           <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
           <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
           <ESButtonLine fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
