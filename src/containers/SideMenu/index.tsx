@@ -194,10 +194,10 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfo: {
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    width: 128,
+    alignItems: 'center',
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+    width: '100%',
     display: 'flex',
     paddingTop: 40,
     flexDirection: 'column',
@@ -220,7 +220,8 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: 80,
+    maxWidth: '100%',
+    fontSize: 14,
   },
   usercode: {
     color: theme.palette.text.secondary,
@@ -228,7 +229,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    maxWidth: 80,
+    maxWidth: 130,
   },
   clickable: {
     cursor: 'pointer',
