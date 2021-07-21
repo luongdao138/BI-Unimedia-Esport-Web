@@ -36,10 +36,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           value={formik.values.stepThree.start_date}
           onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date) ||
-            formik.errors?.stepThree?.acceptance_end_start_date
-          }
+          helperText={formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date}
           error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
           disabled={!editables.start_date}
         />
@@ -99,7 +96,8 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
-            formik.errors?.stepThree?.acceptance_dates
+            formik.errors?.stepThree?.acceptance_dates ||
+            formik.errors?.stepThree?.acceptance_end_start_date
           }
           error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}
           disabled={!editables.acceptance_end_date}
