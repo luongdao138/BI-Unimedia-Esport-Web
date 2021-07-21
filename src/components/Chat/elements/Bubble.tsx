@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
   bubble: (props: { direction: string }) => {
     return {
-      width: 290,
+      width: '100%',
       borderRadius: 16,
       textAlign: 'left',
       overflow: 'hidden',
