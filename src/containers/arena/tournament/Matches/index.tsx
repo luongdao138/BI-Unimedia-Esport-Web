@@ -98,6 +98,8 @@ const ArenaMatches: React.FC = () => {
     )
   }
 
+  const lastRound = matches.length
+
   return (
     <div className={classes.root}>
       {matches && tournament && (
@@ -128,16 +130,18 @@ const ArenaMatches: React.FC = () => {
                 <Bracket.Round key={rid} roundNo={rid}>
                   <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
                   {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
+                  {!_.isEmpty(third_place_match) && lastRound === rid + 1 && (
+                    <div className={classes.thirdPlaceContainer}>
+                      <Bracket.Round key={'3rd'} roundNo={0}>
+                        <Typography variant="h3">3位決定戦</Typography>
+                        {getMatch(`${rid + 1}-2`, third_place_match[0])}
+                      </Bracket.Round>
+                    </div>
+                  )}
                 </Bracket.Round>
               ))}
             </Bracket.Container>
-            {!_.isEmpty(third_place_match) && (
-              <Bracket.Container activeRound={0}>
-                <Bracket.Round key={'3rd'} roundNo={0}>
-                  {getMatch('1-1', third_place_match[0])}
-                </Bracket.Round>
-              </Bracket.Container>
-            )}
+
             {scoreDialog()}
           </div>
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
@@ -161,6 +165,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(16),
   },
   backButton: {
     backgroundColor: Colors.grey[200],
@@ -184,6 +189,14 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.7,
     zIndex: 100,
     borderBottom: '1px solid #FFFFFF30',
+  },
+  thirdPlaceContainer: {
+    position: 'absolute',
+    left: 40,
+    top: 'calc(50% + 96px)',
+    '& h3': {
+      top: '12px !important',
+    },
   },
   iconButtonBg2: {
     backgroundColor: Colors.grey[200],
