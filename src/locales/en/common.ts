@@ -112,8 +112,6 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
-    intro_hint1: 'eXeLABをお楽しみいただくには',
-    intro_hint2: 'ログインが必要です',
     validation: {
       email: 'メールアドレスが間違っています。',
       password: 'パスワードが間違っています。',
