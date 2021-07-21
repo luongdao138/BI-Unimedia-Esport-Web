@@ -1,8 +1,7 @@
-import { Box, Link } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import ESCheckbox from '@components/Checkbox'
 import i18n from '@locales/i18n'
 import { memo, useEffect, useState } from 'react'
-import { ESRoutes } from '@constants/route.constants'
 
 interface LoginAgreementBoxProps {
   onAgreementChange: (value) => void
@@ -18,28 +17,12 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
 
   return (
     <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
-      <ESCheckbox
-        disableRipple
-        checked={checkbox.terms}
-        onChange={handleChange}
-        label={
-          <>
-            <Link href={ESRoutes.TERMS}>{i18n.t('common:register.link1')}</Link>
-            {i18n.t('common:register.terms').substring(i18n.t('common:register.terms').length - 5)}
-          </>
-        }
-        name="terms"
-      />
+      <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label={i18n.t('common:register.terms')} name="terms" />
       <ESCheckbox
         disableRipple
         checked={checkbox.privacy}
         onChange={handleChange}
-        label={
-          <>
-            <Link href={ESRoutes.PRIVACY}>{i18n.t('common:register.link2')}</Link>
-            {i18n.t('common:register.privacy').substring(i18n.t('common:register.privacy').length - 5)}
-          </>
-        }
+        label={i18n.t('common:register.privacy')}
         name="privacy"
       />
     </Box>
