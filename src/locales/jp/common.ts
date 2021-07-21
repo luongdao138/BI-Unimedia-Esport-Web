@@ -557,7 +557,7 @@ export default {
     inProgress: '開催中',
     completed: '終了',
     joined: 'あなたがエントリーした大会',
-    organized: 'あなたが開催者の大会',
+    organized: 'あなたが主催者の大会',
     ready: 'エントリー受付前',
     recruiting: 'エントリー受付中',
   },
@@ -622,7 +622,7 @@ export default {
     reply_msg: '引用返信',
     report_chat: '通報',
     room_options: {
-      member_list: 'メンバー一覧',
+      member_list: 'メンバーリスト',
       add_member: 'メンバーの追加',
       change_room_name: 'グループ名の変更',
       change_img: 'アイコンを変更',
@@ -645,7 +645,7 @@ export default {
     room_name_placeholder: 'グループ名を入力',
     reply_img_text: '写真',
     not_selected_text: 'メッセージを始めましょう',
-    member_list_title: 'メンバー一覧',
+    member_list_title: 'メンバーリスト',
     add_submit: '追加する',
     toast: {
       room_name_changed: 'グループ名を変更しました',
