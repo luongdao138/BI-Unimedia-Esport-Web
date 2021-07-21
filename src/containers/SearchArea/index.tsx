@@ -24,7 +24,7 @@ interface returnItem {
 
 const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
-  const { searchType, searchKeyword } = useSearch()
+  const { searchType, searchKeyword, setSearch } = useSearch()
   const { selectData, onSearch } = props
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [option, setOption] = useState<number>(1)
@@ -51,6 +51,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const onClear = () => {
     setHasvalue(false)
     setValue('')
+    setSearch({ type: 0, keyword: '' })
   }
 
   const onSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
