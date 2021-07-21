@@ -6,6 +6,7 @@ import authStore from '@store/auth'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import searchStore from '@store/search'
+import arenaStore from '@store/arena'
 
 const { actions } = authStore
 const getLogoutMeta = createMetaSelector(actions.logout)
@@ -19,6 +20,8 @@ const useLogout = (handleClose?: () => void) => {
   const handleLogout = () => {
     dispatch(actions.logout())
     dispatch(searchStore.actions.setSearchParams({ keyword: '', type: 0 }))
+    dispatch(searchStore.actions.resetSearchUsers())
+    dispatch(arenaStore.actions.resetSearchTournaments())
   }
 
   useEffect(() => {
