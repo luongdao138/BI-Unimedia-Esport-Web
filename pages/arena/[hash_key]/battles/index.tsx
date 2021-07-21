@@ -3,7 +3,6 @@ import PageWithLayoutType from '@constants/page'
 import { BattlesContainer } from '@containers/arena'
 import { storeWrapper, AppDispatch } from '@store/store'
 import i18n from '@locales/i18n'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
 
 import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
@@ -21,7 +20,6 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 })
 
 const ArenaBattlesPage: PageWithLayoutType = () => {
-  useAuthenticated()
   return (
     <PlainLayout noFooter>
       <BattlesContainer />
