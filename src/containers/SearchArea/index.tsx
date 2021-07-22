@@ -51,7 +51,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const onClear = () => {
     setHasvalue(false)
     setValue('')
-    setSearch({ type: 0, keyword: '' })
+    setSearch({ type: searchType, keyword: '' })
   }
 
   const onSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
