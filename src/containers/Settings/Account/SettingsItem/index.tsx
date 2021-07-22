@@ -10,7 +10,7 @@ export interface SettingsItemProps {
   value: string
   invisible?: boolean
   showButton?: boolean
-  is_social?: boolean
+  is_social_email?: boolean
   route?: string
   onChangeEmail?: () => void
   onChangePassword?: () => void
@@ -23,7 +23,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
   value,
   invisible,
   showButton,
-  is_social,
+  is_social_email,
   route,
   onChangeEmail,
   onChangePassword,
@@ -45,7 +45,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
             <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '************' : value}</Typography>
           </Box>
           <Box>
-            <Typography>{is_social ? 'SNSサインアップ済み' : ''}</Typography>
+            <Typography>{is_social_email ? 'SNSサインアップ済み' : ''}</Typography>
           </Box>
         </Box>
         {showButton && (
