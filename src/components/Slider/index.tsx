@@ -17,7 +17,8 @@ const ESSlide: React.FC<{
   slidesPerView?: number | 'auto'
   breakpoints?: any
   containerClass?: string
-}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, ...rest }) => {
+  smallSliderButton?: boolean
+}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, smallSliderButton, ...rest }) => {
   const { t } = useTranslation(['common'])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -74,10 +75,10 @@ const ESSlide: React.FC<{
 
         {navigation && (
           <>
-            <div ref={prevRef} className={classes.sliderButtonPrev}>
+            <div ref={prevRef} className={`${classes.sliderButtonPrev} ${smallSliderButton ? classes.sliderButtonSmall : ''}`}>
               <Icon classes={{ root: classes.fas }} className="fas fa-chevron-left" fontSize="small" />
             </div>
-            <div ref={nextRef} className={classes.sliderButtonNext}>
+            <div ref={nextRef} className={`${classes.sliderButtonNext} ${smallSliderButton ? classes.sliderButtonSmall : ''}`}>
               <Icon classes={{ root: classes.fas }} className="fas fa-chevron-right" fontSize="small" />
             </div>
           </>
@@ -145,6 +146,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: 'translateY(-80px)',
     visibility: 'visible',
     opacity: 1,
+  },
+  sliderButtonSmall: {
+    transform: 'translateY(-43px)',
+    height: 86,
   },
   fas: {
     textAlign: 'center',
