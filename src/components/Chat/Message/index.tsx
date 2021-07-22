@@ -187,7 +187,7 @@ const useStyles = makeStyles(() => ({
   },
   left: {
     marginRight: 'auto',
-    width: 300,
+    width: 'calc((70%) + (36px) + (16px))',
     height: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -196,7 +196,7 @@ const useStyles = makeStyles(() => ({
   },
   right: {
     marginLeft: 'auto',
-    width: 300,
+    width: 'calc((70%) + (36px) + (16px))',
     transform: 'will-change',
     display: 'flex',
     flexDirection: 'row',
