@@ -90,7 +90,16 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           {t('account_settings.change_password')}
         </Typography>
       </Box>
-      <Box mt={12} mx={5} mb={4} className={classes.formWrap}>
+
+      <Box mt={7} mx={5} mb={4} className={classes.formWrap}>
+        <Box pt={5} display="flex" justifyContent="center">
+          {touched.new_password && (
+            <Typography color="secondary" style={{ position: 'absolute', top: 0 }}>
+              {errors.new_password}
+            </Typography>
+          )}
+        </Box>
+
         <ESInput
           id="current_password"
           autoFocus
@@ -142,8 +151,8 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
           labelSecondary={<ESStrengthMeter value={score} />}
           value={values.new_password}
           onChange={handleChange}
-          helperText={touched.new_password && errors.new_password}
-          error={touched.new_password && !!errors.new_password}
+          // helperText={touched.new_password && errors.new_password}
+          // error={touched.new_password && !!errors.new_password}
         />
         <Box mt={1} />
         <Typography variant="body2">{t('account_settings.hint')}</Typography>
@@ -201,6 +210,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formWrapBottom: {
     marginBottom: theme.spacing(4),
+  },
+  formWrap: {
+    position: 'relative',
   },
   [theme.breakpoints.down('md')]: {
     header: {
