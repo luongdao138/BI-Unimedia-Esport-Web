@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation } from 'swiper/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { Meta } from '@store/metadata/actions/types'
 SwiperCore.use([Navigation])
 
 const SMALL_WIDTH = 84
@@ -18,7 +19,9 @@ const ESSlide: React.FC<{
   breakpoints?: any
   containerClass?: string
   smallSliderButton?: boolean
-}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, smallSliderButton, ...rest }) => {
+  meta?: Meta
+  noItemsMessage?: string
+}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, smallSliderButton, meta, noItemsMessage, ...rest }) => {
   const { t } = useTranslation(['common'])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -72,6 +75,12 @@ const ESSlide: React.FC<{
             </SwiperSlide>
           )
         })}
+
+        {meta && meta.loaded && !items.length && noItemsMessage && (
+          <Box display="flex" py={3} justifyContent="center" alignItems="center">
+            <Typography>{noItemsMessage}</Typography>
+          </Box>
+        )}
 
         {navigation && (
           <>

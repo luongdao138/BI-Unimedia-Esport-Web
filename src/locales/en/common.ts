@@ -409,6 +409,10 @@ export default {
     confirm_brackets_desc_tail: 'が確定していない場合はエントリーが無効となるのでご注意ください',
     results: '大会結果',
     summary: '大会の総括',
+    no_data: {
+      followers_entering: '該当の大会は存在しません',
+      followers_entering_results: '該当の大会結果は存在しません',
+    },
   },
   arena: {
     match_not_yet: 'まだ作成されていません',
