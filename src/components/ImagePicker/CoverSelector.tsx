@@ -194,7 +194,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, cancel, onUpd
           </ButtonPrimary>
         </Box>
         <Box className={classes.linkContainer}>
-          <Link className={classes.link} onClick={reset}>
+          <Link className={file === null || rawFile === null ? classes.linkDisabled : classes.link} onClick={reset}>
             {i18n.t('common:profile.reset')}
           </Link>
         </Box>
@@ -266,6 +266,14 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
       color: '#ffffff9c',
     },
     cursor: 'pointer',
+    textDecoration: 'underline',
+  },
+  linkDisabled: {
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'default',
     textDecoration: 'underline',
   },
   //--------Control--------------------
