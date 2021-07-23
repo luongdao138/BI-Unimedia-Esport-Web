@@ -87,8 +87,9 @@ const StreamDetail = (props: detailProps) => {
       return (
         <Chip
           size="small"
+          color="primary"
           style={{
-            background: Colors.secondary,
+            // background: Colors.secondary,
             borderRadius: 0,
             fontWeight: 600,
             height: 25,

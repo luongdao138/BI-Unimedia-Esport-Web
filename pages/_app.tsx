@@ -30,6 +30,7 @@ import 'video.js/src/css/video-js.scss'
 import 'src/containers/VideoPlayer/theme.scss'
 import 'src/containers/VideoPlayer/position.scss'
 import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
+import 'src/theme/globalcss/layout.scss'
 
 type Props = AppProps & {
   Component: PageWithLayoutType

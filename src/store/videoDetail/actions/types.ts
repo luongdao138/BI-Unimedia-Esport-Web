@@ -12,6 +12,14 @@ export type VideoDetailAction = {
   data: any
 }
 
+interface Meta {
+  pending: boolean
+  loaded: boolean
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  error?: any
+}
+
 export type VideoDetailState = {
   detail: any
+  meta: Meta
 }

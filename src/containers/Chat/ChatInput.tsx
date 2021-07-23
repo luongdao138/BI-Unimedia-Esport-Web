@@ -118,7 +118,7 @@ const ChatInput = (props: detailProps) => {
   }
 
   return (
-    <div className={'chat-input-wrapper'}>
+    <div className={'live-chat-input-wrapper'}>
       <form onSubmit={protection ? handleSubmitSpam : handleSubmit} style={{ width: '100%' }}>
         <Box display="flex" flexDirection="row" alignItems="center">
           {warning ? (

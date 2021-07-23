@@ -102,8 +102,8 @@ const Chat = forwardRef((props: chatProps, ref) => {
 
   return (
     <PaperChat variant="outlined" square>
-      <div ref={contentRef} className="chat-window">
-        <div className={input ? 'chat-wrapper with-input' : 'chat-wrapper'}>
+      <div ref={contentRef} className="live-chat-window">
+        <div className={input ? 'live-chat-wrapper with-input' : 'live-chat-wrapper'}>
           <Button
             style={{ display: showScroll ? 'flex' : 'none' }}
             variant="contained"

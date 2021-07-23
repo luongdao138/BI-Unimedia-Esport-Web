@@ -1,4 +1,4 @@
-import { WEBSOCKET_PREFIX, STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { WEBSOCKET_STREAM_PREFIX, STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { AppDispatch } from '@store/store'
 
 export const socketActions = {
@@ -21,7 +21,7 @@ export const socketActions = {
 
 export const socketCreators = {
   socketSend: (payload: any) => ({
-    type: `${WEBSOCKET_PREFIX}:SEND`,
+    type: `${WEBSOCKET_STREAM_PREFIX}:SEND`,
     payload: payload,
   }),
   setCount: (data: any) => ({

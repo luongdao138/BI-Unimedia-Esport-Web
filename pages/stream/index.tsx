@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PlainLayout from '@layouts/PlainLayout'
 import { Grid, Tabs, Tab, Container, useMediaQuery, Typography, Box, Paper } from '@material-ui/core'
 import { TabContext, TabPanel } from '@material-ui/lab/'
 import StreamDetail from '@containers/Stream/elements/StreamDetail'
@@ -13,11 +14,10 @@ import {
   roomMeta,
   //  socketConnected
 } from '@store/live_socket/selectors'
-import { WEBSOCKET_PREFIX, STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { WEBSOCKET_STREAM_PREFIX, STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { socketActions } from '@store/live_socket/actions'
 import { videoDetailActions } from '@store/videoDetail/actions'
-import { detailSelectors } from '@store/videoDetail/selectors'
-import { videoMeta } from '@store/metadata/selectors'
+import { detailSelectors, getMeta } from '@store/videoDetail/selectors'
 // import { getCurrentUser } from '@store/auth/selectors'
 import Router from 'next/router'
 import _ from 'lodash'
@@ -38,7 +38,7 @@ const StreamPage = () => {
   const data = useSelector(detailSelectors)
   const messageList = useSelector(messages)
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const meta = useSelector(videoMeta)
+  const meta = useSelector(getMeta)
   const currentUser = useSelector(getAuth)
   const time = _.get(data, 'attributes.live_start_datetime', null)
   const roomCountInfo = useSelector(roomMeta)
@@ -75,7 +75,7 @@ const StreamPage = () => {
     } else if (hasTicked == true && meta.loaded && !meta.error && !meta.pending && data) {
       if (status == STREAM_STATUS.LIVE_STREAMING && data.attributes.chat_room_id) {
         dispatch({
-          type: `${WEBSOCKET_PREFIX}:CONNECT`,
+          type: `${WEBSOCKET_STREAM_PREFIX}:CONNECT`,
           payload: { eventRoomId: data.attributes.chat_room_id },
         })
       }
@@ -110,8 +110,8 @@ const StreamPage = () => {
     if (status == STREAM_STATUS.LIVE_STREAMING && connected) {
       return (
         <VideoPlayer
-          src="https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-          // src={data.attributes.live_stream_endpoint + '?start=' + data.attributes.stream_shift_start_at}
+          // src="https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+          src={data.attributes.live_stream_endpoint + '?start=' + data.attributes.stream_shift_start_at}
           handleFirstPlay={_handleFirstPlay}
           liveTime={Date.parse(data.attributes.live_start_datetime)}
         />
@@ -137,27 +137,27 @@ const StreamPage = () => {
     return false
   }
 
-  // const renderInActivePlayer = () => {
-  //   if (meta.error.code === STREAM_STATUS.INACTIVE_STREAM) {
-  //     return (
-  //       <div className="content-wrapper-stream">
-  //         <div className={classes.root}>
-  //           <Container className={classes.spacing} disableGutters maxWidth="xl">
-  //             <Grid container spacing={isDesktop ? 1 : 0}>
-  //               <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-  //                 <Paper className={classes.playerContainer} elevation={2} square>
-  //                   <PlayerCard>
-  //                     <BeforeHolder text="配信情報が見つかりませんでした。" />
-  //                   </PlayerCard>
-  //                 </Paper>
-  //               </Grid>
-  //             </Grid>
-  //           </Container>
-  //         </div>
-  //       </div>
-  //     )
-  //   }
-  // }
+  const renderInActivePlayer = () => {
+    if (meta.error?.code === STREAM_STATUS.INACTIVE_STREAM) {
+      return (
+        <div className="content-wrapper-stream">
+          <div className={classes.root}>
+            <Container className={classes.spacing} disableGutters maxWidth="xl">
+              <Grid container spacing={isDesktop ? 1 : 0}>
+                <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                  <Paper className={classes.playerContainer} elevation={2} square>
+                    <PlayerCard>
+                      <BeforeHolder text="配信情報が見つかりませんでした。" />
+                    </PlayerCard>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Container>
+          </div>
+        </div>
+      )
+    }
+  }
 
   const chatPlaceHolder = () => {
     if (status !== STREAM_STATUS.LIVE_STREAMING) {
@@ -188,7 +188,7 @@ const StreamPage = () => {
   const classes = useStyles()
 
   return (
-    <>
+    <PlainLayout>
       {checkLoading() && <Loader />}
       {data && hasTicked && (
         <>
@@ -255,11 +255,10 @@ const StreamPage = () => {
         </>
       )}
       {hasNgWord && <ErrorSnackbar open={hasNgWord} message={'不適切な文字列が含まれています。'} onClose={() => setNgWord(false)} />}
-    </>
+      {renderInActivePlayer()}
+    </PlainLayout>
   )
 }
-
-// StreamPage.Layout = MainLayout
 
 export async function getStaticProps() {
   try {
