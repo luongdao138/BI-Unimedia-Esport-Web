@@ -14,8 +14,12 @@ import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
 import socket from '@store/socket'
+import { videoDetailReducer } from '@store/videoDetail/reducers'
+import liveSocket from '@store/live_socket/reducers'
 
 const reducer = combineReducers({
+  liveSocket,
+  videoDetail: videoDetailReducer,
   auth: auth.reducers,
   metadata: metadata.reducer,
   search: search.reducers,

@@ -12,6 +12,7 @@ class Document extends NextDocument<Props> {
           <link rel="shortcut icon" href="/favicon.png" key="shortcutIcon" />
           <link rel="manifest" href="/manifest.json" />
           <link href="/fonts/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"></link>
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
 
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />

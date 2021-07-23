@@ -97,4 +97,9 @@ export const URI = {
   PURCHASE_HISTORY_DETAIL: '/v2/purchases/:id/details',
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
   PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
+  PR_TOP: '/v1/live_events/pr',
+  LIVE_EVENTS_TOP: '/v1/live_events/top',
+  LIVE_EVENTS_TICKET_PURCHASE_URI: '/v1/purchases',
+  LIVE_EVENT_PURCHASE_GMO_CALLBACK: '/v1/purchases/gmo_response_handle',
+  LIVE_EVENT_ARCHIVE_PLAY: '/v1/live_events/archive_view_count',
 }
