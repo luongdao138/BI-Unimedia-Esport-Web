@@ -45,7 +45,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
             <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '************' : value}</Typography>
           </Box>
           <Box>
-            <Typography>{is_social_email ? 'SNSサインアップ済み' : ''}</Typography>
+            <Typography>{is_social_email ? SNS : ''}</Typography>
           </Box>
         </Box>
         {showButton && (
