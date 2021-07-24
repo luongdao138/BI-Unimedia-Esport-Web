@@ -41,6 +41,19 @@ export const videoDetailActions = {
         }
     }
   },
+  GetPrTop: () => {
+    return (dispatch: AppDispatch) => {
+      dispatch(videoDetailCreators.GetPrRequest())
+      liveEventsServices.getPrTop().then(
+        (data) => {
+          dispatch(videoDetailCreators.GetPrSuccess(data.data))
+        },
+        (_) => {
+          dispatch(videoDetailCreators.GetPrFail())
+        }
+      )
+    }
+  },
 }
 
 export const videoDetailCreators = {
@@ -63,5 +76,15 @@ export const videoDetailCreators = {
   }),
   requestFailure: () => ({
     type: VIDEO_DETAIL_ACTION_TYPE.LIVE_EVENTS_REQUEST_FAILURE,
+  }),
+  GetPrRequest: () => ({
+    type: VIDEO_DETAIL_ACTION_TYPE.PR_DETAIL_GET_REQUEST,
+  }),
+  GetPrSuccess: (data: any) => ({
+    type: VIDEO_DETAIL_ACTION_TYPE.PR_DETAIL_GET_SUCCESS,
+    data: data.data,
+  }),
+  GetPrFail: () => ({
+    type: VIDEO_DETAIL_ACTION_TYPE.PR_DETAIL_GET_FAIL,
   }),
 }

@@ -67,6 +67,9 @@ export default {
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
   },
+  pr: {
+    static_title: '【JAVCOMセミナー No.158】eスポーツがもたらす映像ビジネス',
+  },
   page404: {
     title: '404',
     description: 'お探しのページが見つかりませんでした',
