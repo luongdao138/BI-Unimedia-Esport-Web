@@ -17,14 +17,14 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
   useEffect(() => onAgreementChange(checkbox.terms && checkbox.privacy), [checkbox])
 
   return (
-    <Box pt={22 / 8} flexDirection="column" display="flex" width={240} margin="0 auto">
+    <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
       <ESCheckbox
         disableRipple
         checked={checkbox.terms}
         onChange={handleChange}
         label={
           <>
-            <Link href={ESRoutes.TERMS}>「{i18n.t('common:register.link1')}」</Link>
+            <Link href={ESRoutes.TERMS}>{i18n.t('common:register.link1')}</Link>
             {i18n.t('common:register.terms').substr(i18n.t('common:register.terms').length - 5)}
           </>
         }
@@ -36,7 +36,7 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
         onChange={handleChange}
         label={
           <>
-            <Link href={ESRoutes.PRIVACY}>「{i18n.t('common:register.link2')}」</Link>
+            <Link href={ESRoutes.PRIVACY}>{i18n.t('common:register.link2')}</Link>
             {i18n.t('common:register.privacy').substr(i18n.t('common:register.privacy').length - 5)}
           </>
         }
