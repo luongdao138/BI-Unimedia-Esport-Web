@@ -149,7 +149,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
               crop={crop}
               zoom={zoom}
               objectFit={fitType}
-              aspect={isArena ? 16 / 9 : 4 / 1}
+              aspect={isArena ? 3.303 / 1 : 4 / 1}
               style={{
                 containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
                 mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
