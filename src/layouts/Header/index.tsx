@@ -18,7 +18,6 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import LoginContainer from '@containers/Login'
-import IntroContainer from '@containers/Login/Intro'
 import ForgotContainer from '@containers/ForgotPassword'
 import ResetPasswordContainer from '@containers/ResetPassword'
 import RegisterContainer from '@containers/Register'
@@ -67,14 +66,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
     router.push(ESRoutes.SEARCH)
   }
 
-  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+  const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
 
   const renderContent = () => {
     switch (router.query.pathName) {
       case ESRoutes.LOGIN:
         return <LoginContainer />
-      case ESRoutes.WELCOME:
-        return <IntroContainer />
       case ESRoutes.FORGOT_PASSWORD:
         return <ForgotContainer />
       case ESRoutes.FORGOT_PASSWORD_CONFIRM:

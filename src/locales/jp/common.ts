@@ -112,8 +112,6 @@ export default {
     submit: 'ログイン',
     register: 'はじめての方はこちら',
     divider: 'または',
-    intro_hint1: 'eXeLABをお楽しみいただくには',
-    intro_hint2: 'ログインが必要です',
     validation: {
       email: 'メールアドレスが間違っています。',
       password: 'パスワードが間違っています。',
@@ -793,7 +791,7 @@ export default {
     subject: '件名',
     email: 'メールアドレス',
     desc: '本文',
-    desc_required: '入力内容が適切ではありません',
+    desc_required: '入力内容が適切ではありません。',
     desc_placeholder: 'お問い合わせ内容を入力してください',
     send: '送信する',
     next: '決定',
@@ -804,6 +802,7 @@ export default {
     email_required: 'お問い合わせにはメールアドレスの登録が必須となります。',
     error: {
       email: '入力内容が適切ではありません。',
+      too_long: '文字以内で入力ください。',
     },
   },
   settings: {

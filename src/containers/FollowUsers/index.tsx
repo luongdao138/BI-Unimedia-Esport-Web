@@ -74,8 +74,8 @@ const FollowUsers: React.FC<FollowUsersProps> = ({ user_code, fromType }) => {
         <Box display="flex" className={classes.rowContainer}>
           <Typography>{title}</Typography>
           <Box display="flex" className={classes.countContainer}>
-            <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : 0}</Typography>
-            <Typography>{t('common:followers.th')}</Typography>
+            <Typography className={classes.count}>{page ? FormatHelper.kFormatter(page.total_count) : ''}</Typography>
+            <Typography>{page ? t('common:followers.th') : ''}</Typography>
           </Box>
         </Box>
       </Button>

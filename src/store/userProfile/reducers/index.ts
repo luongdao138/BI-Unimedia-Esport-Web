@@ -254,6 +254,7 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.clearFollowers, (state) => {
       state.followers = []
+      state.followersMeta = undefined
     })
     .addCase(actions.following.fulfilled, (state, action) => {
       let tmpFollowing = action.payload.data
@@ -266,6 +267,7 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.clearFollowing, (state) => {
       state.following = []
+      state.followingMeta = undefined
     })
 
   builder.addCase(actions.clearHomeSettings, (state) => {
