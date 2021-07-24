@@ -218,7 +218,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>注意事項</Typography>
               </Box>
               <Box className={classes.value}>
-                <Typography>{_.isEmpty(data.notes) ? '-' : data.notes}</Typography>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{_.isEmpty(data.notes) ? '-' : data.notes}</Typography>
+                </Linkify>
               </Box>
             </Box>
 
