@@ -15,7 +15,7 @@ type ProfileAvatarProps = {
   disabled?: boolean
 }
 
-const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 16 / 9, isUploading = false, onChange, disabled = false }) => {
+const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, isUploading = false, onChange, disabled = false }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
