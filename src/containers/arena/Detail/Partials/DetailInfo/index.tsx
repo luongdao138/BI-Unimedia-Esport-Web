@@ -197,7 +197,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* Participation conditions */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.participation_condition')}</Typography>
+                <Typography>{t('common:tournament_create.participation_term')}</Typography>
               </Box>
               <Box className={classes.value}>
                 <Linkify
@@ -209,6 +209,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 >
                   <Typography>{_.isEmpty(data.terms_of_participation) ? '-' : data.terms_of_participation}</Typography>
                 </Linkify>
+              </Box>
+            </Box>
+
+            {/* Notes conditions */}
+            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+              <Box className={classes.label}>
+                <Typography>注意事項</Typography>
+              </Box>
+              <Box className={classes.value}>
+                <Typography>{_.isEmpty(data.notes) ? '-' : data.notes}</Typography>
               </Box>
             </Box>
 
