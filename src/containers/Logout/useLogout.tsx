@@ -5,6 +5,7 @@ import { clearMetaData } from '@store/metadata/actions'
 import authStore from '@store/auth'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import searchStore from '@store/search'
 
 const { actions } = authStore
 const getLogoutMeta = createMetaSelector(actions.logout)
@@ -15,7 +16,10 @@ const useLogout = (handleClose?: () => void) => {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getLogoutMeta)
   const resetMeta = () => dispatch(clearMetaData(actions.logout.typePrefix))
-  const handleLogout = () => dispatch(actions.logout())
+  const handleLogout = () => {
+    dispatch(actions.logout())
+    dispatch(searchStore.actions.setSearchParams({ keyword: '', type: 0 }))
+  }
 
   useEffect(() => {
     if (meta.loaded) {

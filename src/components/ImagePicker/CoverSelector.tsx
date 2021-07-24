@@ -15,7 +15,7 @@ import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
 
 interface CoverSelectorProps {
   src?: string
-  isArena?: boolean
+  ratio?: number
   cancel: () => void
   onUpdate: (file: File, blob: any, blobUrl: string) => void
 }
@@ -50,7 +50,7 @@ const ImageSlider = withStyles({
 const STATIC_WIDTH = 600
 const STATIC_HEIGHT = 200
 
-const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onUpdate }) => {
+const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
@@ -149,7 +149,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
               crop={crop}
               zoom={zoom}
               objectFit={fitType}
-              aspect={isArena ? 3.303 / 1 : 4 / 1}
+              aspect={ratio || 4 / 1}
               style={{
                 containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
                 mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
@@ -194,7 +194,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
           </ButtonPrimary>
         </Box>
         <Box className={classes.linkContainer}>
-          <Link className={classes.link} onClick={reset}>
+          <Link className={file === null || rawFile === null ? classes.linkDisabled : classes.link} onClick={reset}>
             {i18n.t('common:profile.reset')}
           </Link>
         </Box>
@@ -209,7 +209,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, isArena, cancel, onU
 }
 
 CoverSelector.defaultProps = {
-  isArena: false,
+  ratio: null,
 }
 
 export default CoverSelector
@@ -266,6 +266,14 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
       color: '#ffffff9c',
     },
     cursor: 'pointer',
+    textDecoration: 'underline',
+  },
+  linkDisabled: {
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'default',
     textDecoration: 'underline',
   },
   //--------Control--------------------
