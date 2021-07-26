@@ -49,7 +49,7 @@ const useTournamentMatches = (): {
           setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.final_game')] })
           break
         case 2:
-          setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.final_game'), t('common:arena.matches.semi_final')] })
+          setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.semi_final'), t('common:arena.matches.final_game')] })
           break
         default: {
           const rounds = Array.from({ length: matchesLength }, (_, i) => i)
