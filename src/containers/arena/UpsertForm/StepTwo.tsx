@@ -102,6 +102,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           error={formik.touched?.stepTwo?.max_participants && !!formik.errors?.stepTwo?.max_participants}
           size="small"
           disabled={!editables.max_participants}
+          nowrapHelperText
         />
       </Box>
       <Box pb={4}>
