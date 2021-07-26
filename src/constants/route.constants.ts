@@ -50,8 +50,6 @@ export const ESRoutes = {
   ARENA_MATCHES: '/arena/:id/matches',
   ARENA_BATTLES: '/arena/:id/battles',
   ARENA_RESULTS: '/arena/:id/placements',
-  ARENA_JOINED: '/arena?filter=joined',
-  ARENA_ORGANIZED: '/arena?filter=organized',
   ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
