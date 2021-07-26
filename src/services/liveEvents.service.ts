@@ -46,4 +46,5 @@ export const liveEventsServices = {
       }
     }>(URI.PR_TOP)
   },
+  getCookie: (): Promise<any> => axios.get('/api/signedcookie'),
 }

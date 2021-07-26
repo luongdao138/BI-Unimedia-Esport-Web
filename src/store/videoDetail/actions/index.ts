@@ -11,7 +11,7 @@ export const videoDetailActions = {
       dispatch(videoDetailCreators.detailRequest())
       liveEventsServices.getTop().then(
         (data) => {
-          // dispatch(getCookie())
+          dispatch(getCookie())
           dispatch(videoDetailCreators.detailSuccess(data.data))
         },
         (error) => {
@@ -56,6 +56,20 @@ export const videoDetailActions = {
   },
 }
 
+export const getCookie = () => {
+  return (dispatch: AppDispatch) => {
+    dispatch(videoDetailCreators.getCookieRequest())
+    liveEventsServices.getCookie().then(
+      () => {
+        dispatch(videoDetailCreators.getCookieSuccess())
+      },
+      () => {
+        dispatch(videoDetailCreators.getCookieFailure())
+      }
+    )
+  }
+}
+
 export const videoDetailCreators = {
   detailRequest: () => ({
     type: VIDEO_DETAIL_ACTION_TYPE.VIDEO_DETAIL_REQUEST,
@@ -86,5 +100,14 @@ export const videoDetailCreators = {
   }),
   GetPrFail: () => ({
     type: VIDEO_DETAIL_ACTION_TYPE.PR_DETAIL_GET_FAIL,
+  }),
+  getCookieRequest: () => ({
+    type: VIDEO_DETAIL_ACTION_TYPE.GET_COOKIE_REQUEST,
+  }),
+  getCookieSuccess: () => ({
+    type: VIDEO_DETAIL_ACTION_TYPE.GET_COOKIE_SUCCESS,
+  }),
+  getCookieFailure: () => ({
+    type: VIDEO_DETAIL_ACTION_TYPE.GET_COOKIE_FAILURE,
   }),
 }
