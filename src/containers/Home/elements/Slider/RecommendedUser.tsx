@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  innerWrap: { width: 60, cursor: 'pointer' },
+  innerWrap: { width: 72, cursor: 'pointer' },
   avatar: {
     margin: '0 auto',
   },
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden !important',
     display: 'inline-block',
-    width: 60,
+    width: 72,
     textAlign: 'center',
   },
 }))
@@ -55,8 +55,9 @@ export const RecommendedUser: React.FC<Props> = ({ users }) => {
   return (
     <ESSlider
       title={t('common:home.recommended_user')}
-      navigation={false}
+      navigation
       slidesPerView={'auto'}
+      smallSliderButton
       items={users.slice(0, USER_LIMIT).map((user, i) => (
         <Box key={i}>
           <Box className={classes.innerWrap} onClick={() => router.push(`${ESRoutes.PROFILE}/${user.attributes.user_code}`)}>

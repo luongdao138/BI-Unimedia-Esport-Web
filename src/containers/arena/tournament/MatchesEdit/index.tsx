@@ -84,6 +84,8 @@ const ArenaMatches: React.FC = () => {
     )
   }
 
+  const lastRound = matches.length
+
   const body = () => {
     const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
 
@@ -126,16 +128,19 @@ const ArenaMatches: React.FC = () => {
               <Bracket.Round key={rid} roundNo={rid}>
                 <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
                 {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match, rid))}
+                {!_.isEmpty(third_place_match) && lastRound === rid + 1 && (
+                  <div className={classes.thirdPlaceContainer}>
+                    <Bracket.Container activeRound={-1}>
+                      <Bracket.Round key={'3rd'} roundNo={0}>
+                        <Typography variant="h3">3位決定戦</Typography>
+                        {getMatch(`${rid + 1}-2`, third_place_match[0], null)}
+                      </Bracket.Round>
+                    </Bracket.Container>
+                  </div>
+                )}
               </Bracket.Round>
             ))}
           </Bracket.Container>
-          {!_.isEmpty(third_place_match) && (
-            <Bracket.Container activeRound={0}>
-              <Bracket.Round key="3rd" roundNo={0}>
-                {getMatch('1-1', third_place_match[0], null)}
-              </Bracket.Round>
-            </Bracket.Container>
-          )}
           <SelectParticipantModal
             meta={setParticipantMeta}
             tournament={tournament}
@@ -189,6 +194,15 @@ const useStyles = makeStyles((theme) => ({
   content: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(16),
+  },
+  thirdPlaceContainer: {
+    position: 'absolute',
+    left: 40,
+    top: 'calc(50% + 96px)',
+    '& h3': {
+      top: '12px !important',
+    },
   },
   backButton: {
     backgroundColor: Colors.grey[200],

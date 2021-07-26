@@ -10,11 +10,12 @@ import ESLoader from '@components/Loader'
 type ProfileAvatarProps = {
   src: string
   isUploading: boolean
+  ratio?: number
   onChange?: (file: File, blob: any) => void
   disabled?: boolean
 }
 
-const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false, onChange, disabled = false }) => {
+const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, isUploading = false, onChange, disabled = false }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
@@ -71,7 +72,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading = false,
       {open && (
         <CoverSelector
           src={localSrc.toString()}
-          isArena={true}
+          ratio={ratio}
           cancel={() => setOpen(false)}
           onUpdate={(file: File, blob: any) => handleChange(file, blob)}
         />
