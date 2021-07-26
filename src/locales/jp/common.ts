@@ -402,6 +402,7 @@ export default {
     until_deadline: '締め切りまであと',
     until_event: '開催まであと',
     start_from_minutes: '分から開始',
+    end_from_minutes: '分に受付終了',
     current_round: '{{round_number}}回戦目 対戦中',
     confirm_brackets: '大会開始前に対戦表を確定してください',
     confirm_brackets_desc_tail: 'が確定していない場合はエントリーが無効となるのでご注意ください',

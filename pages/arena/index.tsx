@@ -6,11 +6,18 @@ import i18n from '@locales/i18n'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import { TournamentFilterOption } from '@services/arena.service'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { ESRoutes } from '@constants/route.constants'
 
 const TournamentPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
-
+  const isAuth = useAppSelector(getIsAuthenticated)
+  if (!isAuth && ['joined', 'organized'].includes(filter)) {
+    router.push(ESRoutes.HOME)
+    return <></>
+  }
   return <ArenaHomeContainer filter={formatFilter(filter)} />
 }
 

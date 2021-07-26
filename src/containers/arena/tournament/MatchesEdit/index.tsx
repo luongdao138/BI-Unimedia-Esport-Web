@@ -130,10 +130,12 @@ const ArenaMatches: React.FC = () => {
                 {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match, rid))}
                 {!_.isEmpty(third_place_match) && lastRound === rid + 1 && (
                   <div className={classes.thirdPlaceContainer}>
-                    <Bracket.Round key={'3rd'} roundNo={0}>
-                      <Typography variant="h3">3位決定戦</Typography>
-                      {getMatch(`${rid + 1}-2`, third_place_match[0], null)}
-                    </Bracket.Round>
+                    <Bracket.Container activeRound={-1}>
+                      <Bracket.Round key={'3rd'} roundNo={0}>
+                        <Typography variant="h3">3位決定戦</Typography>
+                        {getMatch(`${rid + 1}-2`, third_place_match[0], null)}
+                      </Bracket.Round>
+                    </Bracket.Container>
                   </div>
                 )}
               </Bracket.Round>

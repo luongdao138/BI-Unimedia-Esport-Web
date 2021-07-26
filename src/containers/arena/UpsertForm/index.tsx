@@ -177,6 +177,11 @@ const TournamentCreate: React.FC = () => {
   const handleTabChange = useCallback((value) => {
     setTab(value)
   }, [])
+  useEffect(() => {
+    document.body.style.position = 'fixed'
+    document.body.style.width = '100%'
+    document.body.style.height = '100%'
+  }, [tab])
 
   const renderEditButton = () => {
     return (
