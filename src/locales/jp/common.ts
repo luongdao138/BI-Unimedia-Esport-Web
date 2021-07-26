@@ -452,7 +452,7 @@ export default {
     temporary: 'Temporary',
     matches: {
       final_game: '決勝戦',
-      semi_final: '準決勝戦',
+      semi_final: '準決勝',
       round: '回戦',
     },
     not_found: 'このページは無効化されました。',
