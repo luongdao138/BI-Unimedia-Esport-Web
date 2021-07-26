@@ -6,11 +6,12 @@ import i18n from '@locales/i18n'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import { TournamentFilterOption } from '@services/arena.service'
+import useAuthenticated from '@utils/hooks/useAuthenticated'
 
 const TournamentPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
-
+  useAuthenticated()
   return <ArenaHomeContainer filter={formatFilter(filter)} />
 }
 
