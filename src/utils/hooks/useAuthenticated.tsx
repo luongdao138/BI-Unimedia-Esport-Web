@@ -15,7 +15,7 @@ const useAuthenticated = () => {
 
   useEffect(() => {
     if (!isAuth) {
-      if (pathname !== ESRoutes.ARENA_JOINED || pathname !== ESRoutes.ARENA_ORGANIZED) {
+      if (pathname === ESRoutes.ARENA_JOINED || pathname === ESRoutes.ARENA_ORGANIZED) {
         router.push(ESRoutes.HOME)
       }
       router.push(ESRoutes.LOGIN)
