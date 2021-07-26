@@ -15,6 +15,9 @@ const useAuthenticated = () => {
 
   useEffect(() => {
     if (!isAuth) {
+      if (pathname !== ESRoutes.ARENA_JOINED || pathname !== ESRoutes.ARENA_ORGANIZED) {
+        router.push(ESRoutes.HOME)
+      }
       router.push(ESRoutes.LOGIN)
     } else if (isAuth && !isRegistered && pathname !== profilePath) {
       router.push(profilePath)
@@ -22,10 +25,6 @@ const useAuthenticated = () => {
       router.push(ESRoutes.HOME)
     } else if (pathname === profilePath && isRegistered) {
       router.push(ESRoutes.USER_SETTINGS)
-    } else if (pathname !== ESRoutes.ARENA_JOINED) {
-      router.push(ESRoutes.HOME)
-    } else if (pathname !== ESRoutes.ARENA_ORGANIZED) {
-      router.push(ESRoutes.HOME)
     }
   }, [isAuth, isRegistered, pathname])
 
