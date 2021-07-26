@@ -99,7 +99,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </a>
             )}
           >
-            <Typography>{data.overview}</Typography>
+            <Typography className={classes.multiline}>{data.overview}</Typography>
           </Linkify>
         </Box>
 
@@ -162,7 +162,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
               <Box className={classes.value} flexDirection="column">
                 <Typography>{data.area_name ? data.area_name : '-'}</Typography>
-                <Typography>{data.address}</Typography>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{data.address}</Typography>
+                </Linkify>
               </Box>
             </Box>
 
@@ -189,10 +197,36 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* Participation conditions */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.participation_condition')}</Typography>
+                <Typography>{t('common:tournament_create.participation_term')}</Typography>
               </Box>
               <Box className={classes.value}>
-                <Typography>{_.isEmpty(data.terms_of_participation) ? '-' : data.terms_of_participation}</Typography>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{_.isEmpty(data.terms_of_participation) ? '-' : data.terms_of_participation}</Typography>
+                </Linkify>
+              </Box>
+            </Box>
+
+            {/* Notes conditions */}
+            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+              <Box className={classes.label}>
+                <Typography>注意事項</Typography>
+              </Box>
+              <Box className={classes.value}>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{_.isEmpty(data.notes) ? '-' : data.notes}</Typography>
+                </Linkify>
               </Box>
             </Box>
 
@@ -307,6 +341,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  multiline: {
+    whiteSpace: 'pre-wrap',
+  },
   linkify: {
     color: Colors.white,
     textDecoration: 'underline',
@@ -327,6 +364,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flex: 8,
     wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
   },
   title: {
     wordBreak: 'break-word',

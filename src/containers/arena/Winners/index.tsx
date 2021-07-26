@@ -133,7 +133,7 @@ const ArenaWinners: React.FC = () => {
             </a>
           )}
         >
-          <Typography>{arena?.attributes?.summary || ''}</Typography>
+          <Typography className={classes.multiline}>{arena?.attributes?.summary || ''}</Typography>
         </Linkify>
       </div>
       <Box textAlign="center" pb={4}>
@@ -205,6 +205,9 @@ const ArenaWinners: React.FC = () => {
 export default ArenaWinners
 
 const useStyles = makeStyles((theme) => ({
+  multiline: {
+    whiteSpace: 'pre-wrap',
+  },
   link: {
     color: Colors.white,
     textDecoration: 'underline',

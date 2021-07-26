@@ -10,6 +10,7 @@ export interface SettingsItemProps {
   value: string
   invisible?: boolean
   showButton?: boolean
+  is_social_email?: boolean
   route?: string
   onChangeEmail?: () => void
   onChangePassword?: () => void
@@ -22,6 +23,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
   value,
   invisible,
   showButton,
+  is_social_email,
   route,
   onChangeEmail,
   onChangePassword,
@@ -38,7 +40,14 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
             {title}
           </Typography>
         </Box>
-        <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '************' : value}</Typography>
+        <Box>
+          <Box>
+            <Typography className={disabled ? classes.disabled : classes.value}>{invisible ? '************' : value}</Typography>
+          </Box>
+          <Box>
+            <Typography>{is_social_email ? SNS : ''}</Typography>
+          </Box>
+        </Box>
         {showButton && (
           <Box className={classes.buttonWrap}>
             <ButtonPrimary
@@ -63,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     width: '100%',
     padding: theme.spacing(2),
     paddingRight: 110,
@@ -80,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     width: '100%',
     padding: theme.spacing(2),
     position: 'relative',

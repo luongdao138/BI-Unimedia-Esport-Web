@@ -41,6 +41,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
   },
   iconButton: {
+    alignItems: 'flex-end',
     '&:hover $icon': {
       color: Colors.primary,
       transition: 'all 0.3s ease',

@@ -223,7 +223,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     onClick={() =>
                       isAuthenticated
                         ? handleReportOpen()
-                        : router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+                        : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
                     }
                   >
                     {i18n.t('common:user_report.report_menu')}

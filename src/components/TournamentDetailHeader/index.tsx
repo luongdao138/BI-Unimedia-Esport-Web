@@ -57,7 +57,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
       <Box
         style={{
           background: `url(${cover})`,
-          paddingTop: '56.25%',
+          paddingTop: '30.27%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
@@ -72,7 +72,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
             onChange={() => {}}
             classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
           >
-            <Tab label="エントリー期間中" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
+            <Tab label="受付中" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
             <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
             <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
             <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />

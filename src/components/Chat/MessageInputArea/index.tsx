@@ -132,6 +132,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
   },
   send: {
+    alignItems: 'flex-end',
     '&:hover $icon': {
       color: Colors.primary,
       transition: 'all 0.3s ease',

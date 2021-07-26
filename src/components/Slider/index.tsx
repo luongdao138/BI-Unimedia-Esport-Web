@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation } from 'swiper/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { Meta } from '@store/metadata/actions/types'
 SwiperCore.use([Navigation])
 
 const SMALL_WIDTH = 84
@@ -17,7 +18,10 @@ const ESSlide: React.FC<{
   slidesPerView?: number | 'auto'
   breakpoints?: any
   containerClass?: string
-}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, ...rest }) => {
+  smallSliderButton?: boolean
+  meta?: Meta
+  noItemsMessage?: string
+}> = ({ items, navigation, slidesPerView, breakpoints, containerClass, smallSliderButton, meta, noItemsMessage, ...rest }) => {
   const { t } = useTranslation(['common'])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -72,12 +76,18 @@ const ESSlide: React.FC<{
           )
         })}
 
+        {meta && meta.loaded && !items.length && noItemsMessage && (
+          <Box display="flex" py={3} justifyContent="center" alignItems="center">
+            <Typography>{noItemsMessage}</Typography>
+          </Box>
+        )}
+
         {navigation && (
           <>
-            <div ref={prevRef} className={classes.sliderButtonPrev}>
+            <div ref={prevRef} className={`${classes.sliderButtonPrev} ${smallSliderButton ? classes.sliderButtonSmall : ''}`}>
               <Icon classes={{ root: classes.fas }} className="fas fa-chevron-left" fontSize="small" />
             </div>
-            <div ref={nextRef} className={classes.sliderButtonNext}>
+            <div ref={nextRef} className={`${classes.sliderButtonNext} ${smallSliderButton ? classes.sliderButtonSmall : ''}`}>
               <Icon classes={{ root: classes.fas }} className="fas fa-chevron-right" fontSize="small" />
             </div>
           </>
@@ -145,6 +155,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     transform: 'translateY(-80px)',
     visibility: 'visible',
     opacity: 1,
+  },
+  sliderButtonSmall: {
+    transform: 'translateY(-43px)',
+    height: 86,
   },
   fas: {
     textAlign: 'center',

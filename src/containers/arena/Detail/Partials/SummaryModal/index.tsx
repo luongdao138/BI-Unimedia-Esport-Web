@@ -72,10 +72,10 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
     }
   }, [summaryMeta.loaded, summaryMeta.error])
 
-  const handleImageUpload = (file: File) => {
+  const handleImageUpload = (file: File, blob: any) => {
     setUploading(true)
 
-    uploadArenaSummaryImage(file, undefined, 1, true, (imageUrl) => {
+    uploadArenaSummaryImage(file, blob, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })
@@ -106,7 +106,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
             </Box>
 
             <Box width="100%" pb={4} pt={4}>
-              <CoverUploader src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
+              <CoverUploader ratio={25 / 7} src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
             </Box>
 
             <Box width="100%" pb={1}>
