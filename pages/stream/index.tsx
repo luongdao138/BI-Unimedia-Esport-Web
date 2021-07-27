@@ -31,7 +31,7 @@ import { useShareHash } from '@utils/useShareHash'
 import { prServices } from '@services/pr.services'
 import { getAuth } from '@store/auth/selectors'
 
-const StreamPage = () => {
+const StreamPage: React.FC = () => {
   const [value, setValue] = useState<string>('1')
   const [hasNgWord, setNgWord] = useState(false)
   const dispatch = useDispatch()

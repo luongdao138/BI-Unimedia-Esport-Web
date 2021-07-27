@@ -16,6 +16,8 @@ import notification from '@store/notification'
 import socket from '@store/socket'
 import { videoDetailReducer } from '@store/videoDetail/reducers'
 import liveSocket from '@store/live_socket/reducers'
+import { liveEventsReducer } from '@store/liveEvents/reducers'
+import chatHistory from '@store/chatHistory/reducers'
 
 const reducer = combineReducers({
   liveSocket,
@@ -35,6 +37,8 @@ const reducer = combineReducers({
   notification: notification.reducers,
   chat: chat.reducers,
   socket: socket.reducers,
+  liveEvent: liveEventsReducer,
+  chatHistory,
 })
 export default reducer
 

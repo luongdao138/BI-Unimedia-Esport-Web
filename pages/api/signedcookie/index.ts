@@ -26,14 +26,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Response>): Pro
               Resource: `${process.env.SPEKE_ENDPOINT}/5E99137A-BD6C-4ECC-A24D-A3EE04B4E011/*`,
               Condition: {
                 DateLessThan: {
-                  'AWS:EpochTime': expiry,
+                  'AWS:EpochTime': Math.floor(new Date().getTime() / 1000) + expiry,
                 },
               },
             },
           ],
         }),
       })
-      const options = { httpOnly: true, path: '/', expiry, sameSite: true }
+      const options = { httpOnly: true, path: '/', maxAge: expiry, sameSite: true }
 
       setCookies(res, [
         {

@@ -155,7 +155,7 @@ const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): A
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const cutLinksIntoPieces = (textMain: string) => {
+export const cutLinksIntoPieces = (textMain: string) => {
   const urlRegex = /(\b(https?):\/\/[^\s]+)/gim
   const text = textMain.replace(urlRegex, (url) => `<a>${url}</a>`)
   const aTagBegins = getIndicesOf('<a>', text)
@@ -190,6 +190,10 @@ const cutLinksIntoPieces = (textMain: string) => {
   }
   separations.push({ text: text.slice(spliceEnd), type: 'text' })
   return separations
+}
+
+export function getPriceWithTax(price: number, taxPercent: number): number {
+  return Math.floor(price + price / taxPercent)
 }
 
 export const CommonHelper = {
