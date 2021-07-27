@@ -48,7 +48,7 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
           <Typography className={classes.highlightedNumber}>{targetDate.format('HH')}</Typography>
           <Typography>{t('common:common.hour')}</Typography>
           <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
-          <Typography>{t('common:tournament.end_from_minutes')}</Typography>
+          <Typography>{beforeOnhold ? t('common:tournament.end_from_minutes') : t('common:tournament.start_from_minutes')}</Typography>
         </>
       )}
     </Box>
