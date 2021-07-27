@@ -5,13 +5,23 @@ import { NextApiResponse } from 'next'
  * This sets `cookie` using the `res` object
  */
 
-export const setCookie = (res: NextApiResponse, name: string, value: unknown, options: CookieSerializeOptions = {}): void => {
-  const stringValue = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
+interface Cookie {
+  name: string
+  value: unknown
+  options: CookieSerializeOptions
+}
 
-  if ('maxAge' in options) {
-    options.expires = new Date(Date.now() + options.maxAge)
-    options.maxAge /= 1000
-  }
+export const setCookies = (res: NextApiResponse, cookies: Cookie[]): void => {
+  const serializedCookies = cookies.map((cookie: Cookie) => {
+    const stringValue = typeof cookie.value === 'object' ? 'j:' + JSON.stringify(cookie.value) : String(cookie.value)
 
-  res.setHeader('Set-Cookie', serialize(name, String(stringValue), options))
+    if ('maxAge' in cookie.options) {
+      cookie.options.expires = new Date(Date.now() + cookie.options.maxAge)
+      // cookie.options.maxAge /= 1000
+    }
+    // console.log(cookie.options)
+    return serialize(cookie.name, String(stringValue), cookie.options)
+  })
+
+  res.setHeader('Set-Cookie', serializedCookies)
 }

@@ -2,13 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import axios from 'axios'
 import { Signer } from 'aws-sdk/clients/cloudfront'
-import { setCookie } from '@utils/cookies'
+import { setCookies } from '@utils/cookies'
 
-type Data = { status: 'OK' }
+type Response = { status: 'OK' }
 
-export default async (req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<Response>): Promise<void> => {
+  const expiry = 4 * 60 * 60
   try {
-    const { data } = await axios.get(`https://${process.env.NEXT_PUBLIC_API}/v1/live_events/top`, {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API}/v1/live_events/top`, {
       headers: {
         Authorization: `Bearer ${req.headers['authorization']}`,
       },
@@ -18,7 +19,6 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>): Promise<
         encoding: 'utf8',
       })
       const signer = new Signer(process.env.CF_KEY_ID, PRIVATE_KEY)
-      const expiry = Math.floor(new Date().getTime() / 1000) + 60 * 60 * 4
       const cookie = signer.getSignedCookie({
         policy: JSON.stringify({
           Statement: [
@@ -33,12 +33,48 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>): Promise<
           ],
         }),
       })
-      setCookie(res, 'CloudFront-Key-Pair-Id', cookie['CloudFront-Key-Pair-Id'], { httpOnly: true, maxAge: expiry })
-      setCookie(res, 'CloudFront-Policy', cookie['CloudFront-Policy'], { httpOnly: true, maxAge: expiry })
-      setCookie(res, 'CloudFront-Signature', cookie['CloudFront-Signature'], { httpOnly: true, maxAge: expiry })
+      const options = { httpOnly: true, path: '/', expiry, sameSite: true }
+
+      setCookies(res, [
+        {
+          name: 'CloudFront-Key-Pair-Id',
+          value: cookie['CloudFront-Key-Pair-Id'],
+          options,
+        },
+        {
+          name: 'CloudFront-Policy',
+          value: cookie['CloudFront-Policy'],
+          options,
+        },
+        {
+          name: 'CloudFront-Signature',
+          value: cookie['CloudFront-Signature'],
+          options,
+        },
+      ])
     }
   } catch (e) {
-    console.error(e.message)
+    setCookies(res, [
+      {
+        name: 'CloudFront-Key-Pair-Id',
+        value: '',
+        options: { maxAge: 0 },
+      },
+      {
+        name: 'CloudFront-Policy',
+        value: '',
+        options: { maxAge: 0 },
+      },
+      {
+        name: 'CloudFront-Signature',
+        value: '',
+        options: { maxAge: 0 },
+      },
+    ])
   }
-  res.send({ status: 'OK' })
+  return res.json({
+    status: 'OK',
+  })
 }
+
+export default handler
