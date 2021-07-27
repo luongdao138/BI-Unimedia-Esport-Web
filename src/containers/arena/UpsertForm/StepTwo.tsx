@@ -25,6 +25,12 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
     }
   }, [formik.values.stepTwo.rule])
 
+  useEffect(() => {
+    if (formik.values.stepTwo.max_participants < 0) {
+      formik.setFieldValue('stepTwo.max_participants', formik.values.stepTwo.max_participants * -1)
+    }
+  }, [formik.values.stepTwo.max_participants])
+
   return (
     <Box pb={9}>
       <Box pb={1}>
@@ -96,6 +102,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           error={formik.touched?.stepTwo?.max_participants && !!formik.errors?.stepTwo?.max_participants}
           size="small"
           disabled={!editables.max_participants}
+          nowrapHelperText
         />
       </Box>
       <Box pb={4}>
