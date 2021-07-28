@@ -99,6 +99,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           isNumber={true}
           formik={formik}
           disabled={!editables.max_participants}
+          nowrapHelperText
         />
       </Box>
       <Box pb={4}>

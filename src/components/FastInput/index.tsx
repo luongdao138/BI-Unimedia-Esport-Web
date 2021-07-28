@@ -8,6 +8,7 @@ export type InputProps = {
   labelPrimary?: string | ReactElement
   labelSecondary?: ReactElement
   required?: boolean
+  nowrapHelperText?: boolean
   size?: 'big' | 'small'
 }
 
