@@ -1,12 +1,20 @@
 import BlankLayout from '@layouts/BlankLayout'
 import PageWithLayoutType from '@constants/page'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
 import { GetStaticProps } from 'next'
 import i18n from '@locales/i18n'
+import { useRouter } from 'next/router'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { ESRoutes } from '@constants/route.constants'
 
 const ArenaCreatePage: PageWithLayoutType = () => {
-  useAuthenticated()
+  const isAuth = useAppSelector(getIsAuthenticated)
+  if (!isAuth) {
+    const router = useRouter()
+    router.push(ESRoutes.LOGIN)
+    return <></>
+  }
   return <ArenaCreateContainer />
 }
 
