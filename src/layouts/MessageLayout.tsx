@@ -55,7 +55,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push(ESRoutes.TOP)
+      router.push(ESRoutes.LOGIN)
     }
   }, [])
 
