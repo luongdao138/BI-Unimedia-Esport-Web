@@ -13,6 +13,7 @@ export type InputProps = {
   size?: 'big' | 'small'
   isNumber?: boolean
   formik?: FormikProps<FormType>
+  nowrapHelperText?: boolean
 }
 
 const ESNumberInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
