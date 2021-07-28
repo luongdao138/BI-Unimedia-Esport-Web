@@ -39,7 +39,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
 
   useEffect(() => {
     if (loginRequired && !isAuthenticated) {
-      router.push(ESRoutes.TOP)
+      router.push(ESRoutes.LOGIN)
     }
   }, [loginRequired])
 
