@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Events = (props: IProps) => {
-  const staticTitle = 'strings.static_title'
+  const staticTitle = '【JAVCOMセミナー No.158】eスポーツがもたらす映像ビジネス'
   const classes = useStyles({})
   const dispatch = useDispatch()
   const { top, loading } = useSelector((state: RootState) => state.liveEvent, shallowEqual)
