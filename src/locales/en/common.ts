@@ -38,7 +38,7 @@ export default {
     man: '人',
     integer: '数字のみ入力してください。',
     validation: {
-      acceptance_dates: 'エントリー開始日時はエントリー終了日時より前にしてください',
+      acceptance_dates: 'エントリー開始日時はエントリー終了日時より前でなければなりません',
       acceptance_end_start_date: 'エントリー終了日時は開催日時より前でなければなりません',
       start_end_date: '開催終了日時は開催日時より後ろでなければなりません',
       min_date: '日時は現在の日時より後でなければなりません',
