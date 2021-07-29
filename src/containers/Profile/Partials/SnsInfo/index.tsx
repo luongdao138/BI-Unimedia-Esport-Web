@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Grid, Container, makeStyles, Box, InputAdornment, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
+import Yup from '@utils/helpers/ValidationHelper'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitchCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
@@ -29,11 +29,11 @@ const SnsInfo: React.FC<SnsInfoProps> = ({ profile, onDataChange, handleError })
   const { instagram_link, facebook_link, twitter_link, twitch_link, discord_link } = profile
 
   const validationSchema = Yup.object().shape({
-    instagram_link: Yup.string().max(250, i18n.t('common:common.too_long')),
-    discord_link: Yup.string().max(250, i18n.t('common:common.too_long')),
-    facebook_link: Yup.string().max(250, i18n.t('common:common.too_long')),
-    twitter_link: Yup.string().max(250, i18n.t('common:common.too_long')),
-    twitch_link: Yup.string().max(250, i18n.t('common:common.too_long')),
+    instagram_link: Yup.string().max(250),
+    discord_link: Yup.string().max(250),
+    facebook_link: Yup.string().max(250),
+    twitter_link: Yup.string().max(250),
+    twitch_link: Yup.string().max(250),
   })
 
   const { handleChange, values, errors } = useFormik<SnsInfoParams>({

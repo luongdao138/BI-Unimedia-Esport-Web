@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Grid, Box, Container, makeStyles, Typography, Theme } from '@material-ui/core'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
+import Yup from '@utils/helpers/ValidationHelper'
 import { useTranslation } from 'react-i18next'
 // import ESSelect from '@components/Select'
 import ESInput from '@components/Input'
@@ -26,11 +26,8 @@ const NameInfo: React.FC<NameInfoProps> = ({ profile, onDataChange, handleError 
   const { nickname, bio } = profile
 
   const validationSchema = Yup.object().shape({
-    bio: Yup.string().max(250, t('common:common.too_long')).min(2, t('common:common.at_least')),
-    nickname: Yup.string()
-      .required(t('common:common.input_required'))
-      .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.at_least')),
+    bio: Yup.string().max(250).min(2, t('common:common.at_least')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(50).min(2, t('common:common.at_least')),
   })
 
   const { handleChange, values, errors } = useFormik<NameInfoParams>({

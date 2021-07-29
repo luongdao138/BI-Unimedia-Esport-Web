@@ -13,7 +13,7 @@ import useParticipantDetail from './useParticipantDetail'
 import UserListItem from '@components/UserItem'
 import _ from 'lodash'
 import ESInput from '@components/Input'
-import * as Yup from 'yup'
+import Yup from '@utils/helpers/ValidationHelper'
 import { ROLE } from '@constants/tournament.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -55,7 +55,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   const dispatch = useAppDispatch()
   const router = useRouter()
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40),
   })
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
