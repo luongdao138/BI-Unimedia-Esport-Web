@@ -1,6 +1,7 @@
 import ProfileContainer from '@containers/Profile'
 import PageWithLayoutType from '@constants/page'
 import MainLayout from '@layouts/MainLayout'
+import { withAuth } from '@utils/withAuth'
 
 const ProfilePage: PageWithLayoutType = () => {
   return <ProfileContainer />
@@ -8,4 +9,4 @@ const ProfilePage: PageWithLayoutType = () => {
 
 ProfilePage.Layout = MainLayout
 
-export default ProfilePage
+export default withAuth(ProfilePage)

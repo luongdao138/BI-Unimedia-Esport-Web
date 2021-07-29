@@ -2,6 +2,7 @@ import AccountSettingsPasswordContainer from '@containers/Settings/Account/Passw
 import BlankLayout from '@layouts/BlankLayout'
 import PageWithLayoutType from '@constants/page'
 import useAuthenticated from '@utils/hooks/useAuthenticated'
+import { withAuth } from '@utils/withAuth'
 
 const AccountSettingsPasswordPage: PageWithLayoutType = () => {
   useAuthenticated()
@@ -10,4 +11,4 @@ const AccountSettingsPasswordPage: PageWithLayoutType = () => {
 
 AccountSettingsPasswordPage.Layout = BlankLayout
 
-export default AccountSettingsPasswordPage
+export default withAuth(AccountSettingsPasswordPage)

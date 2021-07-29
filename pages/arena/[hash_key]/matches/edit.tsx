@@ -3,7 +3,7 @@ import PageWithLayoutType from '@constants/page'
 import { MatchesEditContainer } from '@containers/arena'
 import { storeWrapper, AppDispatch } from '@store/store'
 import i18n from '@locales/i18n'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
+import { withAuth } from '@utils/withAuth'
 
 import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
@@ -21,7 +21,6 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 })
 
 const ArenaMatchEditPage: PageWithLayoutType = () => {
-  useAuthenticated()
   return (
     <PlainLayout noFooter>
       <MatchesEditContainer />
@@ -29,4 +28,4 @@ const ArenaMatchEditPage: PageWithLayoutType = () => {
   )
 }
 
-export default ArenaMatchEditPage
+export default withAuth(ArenaMatchEditPage)

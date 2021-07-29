@@ -3,10 +3,10 @@ import PageWithLayoutType from '@constants/page'
 import { BattlesEditContainer } from '@containers/arena'
 import { storeWrapper, AppDispatch } from '@store/store'
 import i18n from '@locales/i18n'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
 
 import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
+import { withAuth } from '@utils/withAuth'
 
 export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store, params }) => {
   const { dispatch }: { dispatch: AppDispatch } = store
@@ -21,7 +21,6 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 })
 
 const ArenaBattleEditPage: PageWithLayoutType = () => {
-  useAuthenticated()
   return (
     <PlainLayout noFooter>
       <BattlesEditContainer />
@@ -29,4 +28,4 @@ const ArenaBattleEditPage: PageWithLayoutType = () => {
   )
 }
 
-export default ArenaBattleEditPage
+export default withAuth(ArenaBattleEditPage)
