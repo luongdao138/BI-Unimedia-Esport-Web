@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Grid, Container, makeStyles, Box, InputAdornment, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
-import Yup from '@utils/helpers/ValidationHelper'
+import Yup from '@utils/Yup'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
 import ESButtonTwitchCircle from '@components/Button/TwitchCircle'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'

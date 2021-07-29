@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Grid, Box, Container, makeStyles, Typography, Theme } from '@material-ui/core'
 import { useFormik } from 'formik'
-import Yup from '@utils/helpers/ValidationHelper'
+import Yup from '@utils/Yup'
 import { useTranslation } from 'react-i18next'
 // import ESSelect from '@components/Select'
 import ESInput from '@components/Input'
