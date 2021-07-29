@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from './useReturnHref'
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useProfileValid = () => {
   const { navigateScreen } = useReturnHref()
   const isRegistered = useAppSelector(getIsRegistered)
@@ -14,7 +13,7 @@ const useProfileValid = () => {
     if (isAuth && !isRegistered) navigateScreen(ESRoutes.REGISTER_PROFILE)
   }, [isAuth, isRegistered])
 
-  return { isAuth }
+  return { isAuth, isValidProfile: isAuth && !isRegistered }
 }
 
 export default useProfileValid
