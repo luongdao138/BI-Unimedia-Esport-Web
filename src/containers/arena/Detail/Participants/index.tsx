@@ -17,6 +17,7 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import _ from 'lodash'
 import TeamEntryEditModal from '../Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEntryEditModal'
+import LoginRequired from '@containers/LoginRequired'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -97,9 +98,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   return (
     <div>
-      <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
-        {data.is_freezed ? t('common:tournament.participants') : t('common:tournament.entry_members')}
-      </ESButton>
+      <LoginRequired>
+        <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
+          {data.is_freezed ? t('common:tournament.participants') : t('common:tournament.entry_members')}
+        </ESButton>
+      </LoginRequired>
       <ESModal open={open && !selectedParticipant} handleClose={handleClose}>
         <BlankLayout>
           <Box pt={7.5} className={classes.topContainer}>

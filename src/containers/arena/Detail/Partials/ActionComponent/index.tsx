@@ -81,9 +81,11 @@ const ActionComponent: React.FC<Props> = (props) => {
   const entryEditButton = () => {
     return (
       <Box className={classes.actionButton}>
-        <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
-          {t('common:tournament.check_entry')}
-        </ButtonPrimary>
+        <LoginRequired>
+          <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
+            {t('common:tournament.check_entry')}
+          </ButtonPrimary>
+        </LoginRequired>
       </Box>
     )
   }

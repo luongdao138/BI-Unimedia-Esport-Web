@@ -21,6 +21,7 @@ import ESModal from '@components/Modal'
 import InterestedList from './InterestedList'
 import { PARTICIPANT_TYPE, ROLE } from '@constants/tournament.constants'
 import { Meta } from '@store/metadata/actions/types'
+import LoginRequired from '@containers/LoginRequired'
 
 interface SelectParticipantModalProps {
   meta: Meta
@@ -122,16 +123,18 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
         </Box>
 
         <Box display="flex" alignItems="flex-end" pt={2}>
-          <ButtonPrimary
-            style={{ padding: '12px 24px' }}
-            disabled={meta.pending}
-            size="small"
-            round={false}
-            gradient={false}
-            onClick={() => handleSelect(type)}
-          >
-            {t('common:tournament.set_participants')}
-          </ButtonPrimary>
+          <LoginRequired>
+            <ButtonPrimary
+              style={{ padding: '12px 24px' }}
+              disabled={meta.pending}
+              size="small"
+              round={false}
+              gradient={false}
+              onClick={() => handleSelect(type)}
+            >
+              {t('common:tournament.set_participants')}
+            </ButtonPrimary>
+          </LoginRequired>
         </Box>
       </Box>
     )

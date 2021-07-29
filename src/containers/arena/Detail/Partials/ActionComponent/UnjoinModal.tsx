@@ -11,6 +11,7 @@ import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
+import LoginRequired from '@containers/LoginRequired'
 
 interface UnjoinModalProps {
   tournament: TournamentDetail
@@ -30,7 +31,9 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
 
   return (
     <Box textAlign="center" mt={2}>
-      <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
+      <LoginRequired>
+        <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
+      </LoginRequired>
       <ESPopup open={open}>
         <BlankLayout>
           <Box paddingBottom={2} paddingTop={2} className={classes.childrenContainer}>
@@ -42,19 +45,20 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
                 {t('common:tournament.unjoin_dialog.dialog_description')}
               </Typography>
             </Box>
-
-            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
-              <Box className={classes.actionButton}>
-                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
-                  {t('common:common.cancel')}
-                </ESButton>
+            <LoginRequired>
+              <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+                <Box className={classes.actionButton}>
+                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+                    {t('common:common.cancel')}
+                  </ESButton>
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ButtonPrimary round fullWidth onClick={() => leave(tournament.attributes.hash_key)}>
+                    {t('common:tournament.unjoin_dialog.decline')}
+                  </ButtonPrimary>
+                </Box>
               </Box>
-              <Box className={classes.actionButton}>
-                <ButtonPrimary round fullWidth onClick={() => leave(tournament.attributes.hash_key)}>
-                  {t('common:tournament.unjoin_dialog.decline')}
-                </ButtonPrimary>
-              </Box>
-            </Box>
+            </LoginRequired>
           </Box>
         </BlankLayout>
       </ESPopup>
