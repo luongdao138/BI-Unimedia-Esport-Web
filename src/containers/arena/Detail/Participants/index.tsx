@@ -108,7 +108,9 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
-                <Typography variant="h2">{t('common:tournament.participant.back')}</Typography>
+                <Typography variant="h2">
+                  {data.is_freezed ? t('common:tournament.participant.back') : t('common:tournament.entry_back')}
+                </Typography>
               </Box>
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">

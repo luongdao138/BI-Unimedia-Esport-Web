@@ -335,8 +335,9 @@ export default {
     has_prize_true: '副賞あり',
     online: 'オンライン',
     offline: 'オフライン',
+    entry_back: 'エントリーメンバー',
     participant: {
-      back: 'エントリーメンバー',
+      back: '参加メンバー',
     },
     tournament_id: '大会ID：',
     rule_format: '大会形式',
