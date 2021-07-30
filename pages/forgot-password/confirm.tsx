@@ -1,6 +1,8 @@
 import ConfirmContainer from '@containers/Confirm'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
 import PageWithLayoutType from '@constants/page'
+import withNoAuth from '@utils/withNoAuth'
+import { ESRoutes } from '@constants/route.constants'
 
 const ForgotConfirmPage: PageWithLayoutType = () => {
   return <ConfirmContainer />
@@ -8,4 +10,4 @@ const ForgotConfirmPage: PageWithLayoutType = () => {
 
 ForgotConfirmPage.Layout = AuthenticationLayout
 
-export default ForgotConfirmPage
+export default withNoAuth(ForgotConfirmPage, ESRoutes.LOGIN)
