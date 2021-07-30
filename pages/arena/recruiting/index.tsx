@@ -1,14 +1,15 @@
 import RecruitingContainer from '@containers/Tournament/Recruiting'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import { withAuth } from '@utils/withAuth'
 
 const RecruitingPage: PageWithLayoutType = () => {
-  return (
-    <MainLayout>
-      <RecruitingContainer />
-    </MainLayout>
-  )
+  return <RecruitingContainer />
 }
 
-export default withAuth(RecruitingPage)
+RecruitingPage.Layout = MainLayout
+
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
+export default RecruitingPage

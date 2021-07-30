@@ -1,14 +1,15 @@
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 import ESMyPageInfoSettings from '@containers/UserSecuritySettings/MyPageInfoSettings'
-import { withAuth } from '@utils/withAuth'
 
 const MyPageInfoSettingsSettingsPage: PageWithLayoutType = () => {
-  return (
-    <MainLayout>
-      <ESMyPageInfoSettings />
-    </MainLayout>
-  )
+  return <ESMyPageInfoSettings />
 }
 
-export default withAuth(MyPageInfoSettingsSettingsPage)
+MyPageInfoSettingsSettingsPage.Layout = MainLayout
+
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
+export default MyPageInfoSettingsSettingsPage

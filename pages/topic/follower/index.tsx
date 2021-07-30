@@ -1,14 +1,15 @@
 import TopicFollowerContainer from '@containers/Topic/Follower'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import { withAuth } from '@utils/withAuth'
 
 const TopicFollowerPage: PageWithLayoutType = () => {
-  return (
-    <MainLayout>
-      <TopicFollowerContainer />
-    </MainLayout>
-  )
+  return <TopicFollowerContainer />
 }
 
-export default withAuth(TopicFollowerPage)
+TopicFollowerPage.Layout = MainLayout
+
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
+export default TopicFollowerPage

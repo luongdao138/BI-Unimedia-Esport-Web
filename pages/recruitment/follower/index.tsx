@@ -1,14 +1,15 @@
 import RecruitmentFollowerContainer from '@containers/Recruitment/Follower'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import { withAuth } from '@utils/withAuth'
 
 const RecruitmentFollowerPage: PageWithLayoutType = () => {
-  return (
-    <MainLayout>
-      <RecruitmentFollowerContainer />
-    </MainLayout>
-  )
+  return <RecruitmentFollowerContainer />
 }
 
-export default withAuth(RecruitmentFollowerPage)
+RecruitmentFollowerPage.Layout = MainLayout
+
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
+export default RecruitmentFollowerPage
