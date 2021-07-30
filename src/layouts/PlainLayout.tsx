@@ -17,7 +17,7 @@ interface PlainLayoutProps {
 
 const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg }) => {
   const [open, setOpen] = useState<boolean>(false)
-  useProfileValid()
+  const { isValidProfile } = useProfileValid()
 
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)
@@ -36,7 +36,7 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
-
+  if (!isValidProfile) return null
   return (
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
