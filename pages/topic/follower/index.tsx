@@ -4,9 +4,11 @@ import PageWithLayoutType from '@constants/page'
 import { withAuth } from '@utils/withAuth'
 
 const TopicFollowerPage: PageWithLayoutType = () => {
-  return <TopicFollowerContainer />
+  return (
+    <MainLayout>
+      <TopicFollowerContainer />
+    </MainLayout>
+  )
 }
-
-TopicFollowerPage.Layout = MainLayout
 
 export default withAuth(TopicFollowerPage)

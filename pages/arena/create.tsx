@@ -6,10 +6,12 @@ import i18n from '@locales/i18n'
 import { withAuth } from '@utils/withAuth'
 
 const ArenaCreatePage: PageWithLayoutType = () => {
-  return <ArenaCreateContainer />
+  return (
+    <BlankLayout>
+      <ArenaCreateContainer />
+    </BlankLayout>
+  )
 }
-
-ArenaCreatePage.Layout = BlankLayout
 
 export const getStaticProps: GetStaticProps = async () => {
   return {

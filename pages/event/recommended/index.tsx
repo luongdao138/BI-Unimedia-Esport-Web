@@ -4,9 +4,11 @@ import PageWithLayoutType from '@constants/page'
 import { withAuth } from '@utils/withAuth'
 
 const EventRecommendedPage: PageWithLayoutType = () => {
-  return <EventRecommendedContainer />
+  return (
+    <MainLayout>
+      <EventRecommendedContainer />
+    </MainLayout>
+  )
 }
-
-EventRecommendedPage.Layout = MainLayout
 
 export default withAuth(EventRecommendedPage)

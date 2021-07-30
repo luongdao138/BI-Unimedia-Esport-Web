@@ -4,9 +4,11 @@ import ESMessageSettings from '@containers/UserSecuritySettings/MessageSettings'
 import { withAuth } from '@utils/withAuth'
 
 const MessageSettingsSettingsPage: PageWithLayoutType = () => {
-  return <ESMessageSettings />
+  return (
+    <MainLayout>
+      <ESMessageSettings />
+    </MainLayout>
+  )
 }
-
-MessageSettingsSettingsPage.Layout = MainLayout
 
 export default withAuth(MessageSettingsSettingsPage)

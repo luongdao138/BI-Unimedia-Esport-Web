@@ -4,9 +4,11 @@ import ESBlockSettings from '@containers/UserSecuritySettings/BlockSettings'
 import { withAuth } from '@utils/withAuth'
 
 const BlockSettingsSettingsPage: PageWithLayoutType = () => {
-  return <ESBlockSettings />
+  return (
+    <MainLayout>
+      <ESBlockSettings />
+    </MainLayout>
+  )
 }
-
-BlockSettingsSettingsPage.Layout = MainLayout
 
 export default withAuth(BlockSettingsSettingsPage)

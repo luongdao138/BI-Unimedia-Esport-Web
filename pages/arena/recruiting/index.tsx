@@ -4,9 +4,11 @@ import PageWithLayoutType from '@constants/page'
 import { withAuth } from '@utils/withAuth'
 
 const RecruitingPage: PageWithLayoutType = () => {
-  return <RecruitingContainer />
+  return (
+    <MainLayout>
+      <RecruitingContainer />
+    </MainLayout>
+  )
 }
-
-RecruitingPage.Layout = MainLayout
 
 export default withAuth(RecruitingPage)

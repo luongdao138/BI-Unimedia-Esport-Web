@@ -4,9 +4,11 @@ import PageWithLayoutType from '@constants/page'
 import { withAuth } from '@utils/withAuth'
 
 const RecruitmentFollowerPage: PageWithLayoutType = () => {
-  return <RecruitmentFollowerContainer />
+  return (
+    <MainLayout>
+      <RecruitmentFollowerContainer />
+    </MainLayout>
+  )
 }
-
-RecruitmentFollowerPage.Layout = MainLayout
 
 export default withAuth(RecruitmentFollowerPage)

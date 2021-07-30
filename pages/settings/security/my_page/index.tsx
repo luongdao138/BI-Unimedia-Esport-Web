@@ -4,9 +4,11 @@ import ESMyPageInfoSettings from '@containers/UserSecuritySettings/MyPageInfoSet
 import { withAuth } from '@utils/withAuth'
 
 const MyPageInfoSettingsSettingsPage: PageWithLayoutType = () => {
-  return <ESMyPageInfoSettings />
+  return (
+    <MainLayout>
+      <ESMyPageInfoSettings />
+    </MainLayout>
+  )
 }
-
-MyPageInfoSettingsSettingsPage.Layout = MainLayout
 
 export default withAuth(MyPageInfoSettingsSettingsPage)

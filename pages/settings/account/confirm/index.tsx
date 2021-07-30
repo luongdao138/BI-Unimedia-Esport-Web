@@ -4,9 +4,11 @@ import PageWithLayoutType from '@constants/page'
 import { withAuth } from '@utils/withAuth'
 
 const AccountChangeEmailConfirmPage: PageWithLayoutType = () => {
-  return <AccountSettingsConfirmContainer />
+  return (
+    <BlankLayout>
+      <AccountSettingsConfirmContainer />
+    </BlankLayout>
+  )
 }
-
-AccountChangeEmailConfirmPage.Layout = BlankLayout
 
 export default withAuth(AccountChangeEmailConfirmPage)
