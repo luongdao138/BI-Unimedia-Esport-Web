@@ -56,7 +56,7 @@ export function withNoAuth<T extends object>(Component: ComponentType<T>): React
     }, [isAuth])
 
     if (!render) {
-      return <div>aaa</div>
+      return <></>
     }
     return <Component {...props} />
   }
