@@ -31,7 +31,7 @@ const useReturnHref = () => {
       router.push(returnHref, undefined, { shallow: true })
     }
   }
-  return { handleReturn, navigateScreen, handleLink, handleLogin }
+  return { handleReturn, navigateScreen, handleLink, handleLogin, hasUCRReturnHref: !!router.query._UCR_return_href }
 }
 
 export default useReturnHref

@@ -4,9 +4,11 @@ import { getHasEmail, getIsAuthenticated, getIsRegistered } from '@store/auth/se
 import { useAppSelector } from '@store/hooks'
 import { useRouter } from 'next/router'
 import React, { ComponentType, useState, useEffect } from 'react'
+import useReturnHref from './hooks/useReturnHref'
 
 export function withNoAuth<T extends object>(Component: ComponentType<T>): React.FC {
   const AppWithAuth: React.FC<T> = (props) => {
+    const { navigateScreen } = useReturnHref()
     const isAuth = useAppSelector(getIsAuthenticated)
     const isRegistered = useAppSelector(getIsRegistered)
     const hasEmail = useAppSelector(getHasEmail)
@@ -14,9 +16,13 @@ export function withNoAuth<T extends object>(Component: ComponentType<T>): React
     const [render, setRender] = useState(false)
     useEffect(() => {
       if (isRegistered) {
-        router.push(ESRoutes.HOME)
+        navigateScreen(ESRoutes.HOME)
       } else if (isAuth) {
-        router.push(ESRoutes.REGISTER_PROFILE)
+        if (router.pathname === ESRoutes.REGISTER_PROFILE) {
+          setRender(true)
+        } else {
+          navigateScreen(ESRoutes.REGISTER_PROFILE)
+        }
       } else {
         switch (router.pathname) {
           case ESRoutes.REGISTER:
@@ -30,21 +36,21 @@ export function withNoAuth<T extends object>(Component: ComponentType<T>): React
             if (hasEmail) {
               setRender(true)
             } else {
-              router.push(ESRoutes.LOGIN)
+              navigateScreen(ESRoutes.LOGIN)
             }
             break
           }
-          case ESRoutes.REGISTER_PROFILE: {
-            if (isAuth && !isRegistered) {
-              setRender(true)
-            } else {
-              router.push(ESRoutes.LOGIN)
-            }
-            break
-          }
+          // case ESRoutes.REGISTER_PROFILE: {
+          //   if (isAuth && !isRegistered) {
+          //     setRender(true)
+          //   } else {
+          //     router.push(ESRoutes.LOGIN)
+          //   }
+          //   break
+          // }
 
           default:
-            router.push(ESRoutes.HOME)
+            navigateScreen(ESRoutes.HOME)
             break
         }
       }
