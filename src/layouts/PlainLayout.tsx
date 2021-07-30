@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { useRouter } from 'next/router'
 import useProfileValid from '@utils/hooks/useProfileValid'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 interface PlainLayoutProps {
   children: ReactNode
@@ -18,6 +19,7 @@ interface PlainLayoutProps {
 const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg }) => {
   const [open, setOpen] = useState<boolean>(false)
   const { isValidProfile, isAuth } = useProfileValid()
+  const { hasUCRReturnHref } = useReturnHref()
 
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)
@@ -36,7 +38,7 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
-  if (!isValidProfile && isAuth) return null
+  if (!isValidProfile && isAuth && !hasUCRReturnHref) return null
   return (
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
