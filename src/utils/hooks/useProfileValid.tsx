@@ -13,7 +13,7 @@ const useProfileValid = () => {
     if (isAuth && !isRegistered) navigateScreen(ESRoutes.REGISTER_PROFILE)
   }, [isAuth, isRegistered])
 
-  return { isAuth, isValidProfile: isAuth && !isRegistered }
+  return { isAuth, isValidProfile: isAuth && isRegistered }
 }
 
 export default useProfileValid
