@@ -10,15 +10,29 @@ import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
 import { ESRoutes } from '@constants/route.constants'
 
+import { useEffect, useState } from 'react'
+
 const TournamentPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
   const isAuth = useAppSelector(getIsAuthenticated)
-  if (!isAuth && ['joined', 'organized'].includes(filter)) {
-    router.push(ESRoutes.HOME)
+  const [render, setRender] = useState(false)
+  useEffect(() => {
+    if (!isAuth && ['joined', 'organized'].includes(filter)) {
+      router.push(ESRoutes.LOGIN)
+    } else if (isAuth) {
+      setRender(true)
+    }
+  }, [isAuth, router.query])
+
+  if (!render) {
     return <></>
   }
-  return <ArenaHomeContainer filter={formatFilter(filter)} />
+  return (
+    <MainLayout>
+      <ArenaHomeContainer filter={formatFilter(filter)} />
+    </MainLayout>
+  )
 }
 
 function formatFilter(filterText: string) {
@@ -29,8 +43,6 @@ function formatFilter(filterText: string) {
   }
   return TournamentFilterOption.all
 }
-
-TournamentPage.Layout = MainLayout
 
 export const getStaticProps: GetStaticProps = async () => {
   return {

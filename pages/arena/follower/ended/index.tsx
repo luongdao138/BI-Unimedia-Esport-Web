@@ -1,6 +1,7 @@
 import FollowerEndedContainer from '@containers/Tournament/Follower/Ended'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
+import { withAuth } from '@utils/withAuth'
 
 const FollowerEndedPage: PageWithLayoutType = () => {
   return <FollowerEndedContainer />
@@ -8,4 +9,4 @@ const FollowerEndedPage: PageWithLayoutType = () => {
 
 FollowerEndedPage.Layout = MainLayout
 
-export default FollowerEndedPage
+export default withAuth(FollowerEndedPage)
