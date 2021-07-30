@@ -116,7 +116,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <Box display="flex" flexDirection="row" alignItems="flex-end">
                   <Box mr={2}>
                     <Typography variant="h3" className={classes.countLabel}>
-                      {t('common:tournament.number_of_entries')}
+                      {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
                     </Typography>
                   </Box>
                   <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
