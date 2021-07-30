@@ -111,7 +111,9 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
-                <Typography variant="h2">{t('common:tournament.participant.back')}</Typography>
+                <Typography variant="h2">
+                  {data.is_freezed ? t('common:tournament.participant.back') : t('common:tournament.entry_back')}
+                </Typography>
               </Box>
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
@@ -119,7 +121,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <Box display="flex" flexDirection="row" alignItems="flex-end">
                   <Box mr={2}>
                     <Typography variant="h3" className={classes.countLabel}>
-                      {t('common:tournament.number_of_entries')}
+                      {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
                     </Typography>
                   </Box>
                   <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>

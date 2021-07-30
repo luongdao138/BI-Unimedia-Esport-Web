@@ -4,7 +4,7 @@ import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -25,18 +25,16 @@ const RegisterProfileContainer: React.FC = () => {
   const { registerProfile, meta, backAction, isSocial, resetMeta } = useProfile()
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
+
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
       .required(t('common:common.user_id_at_least'))
-      .max(50, t('common:common.too_long'))
+      .max(50)
       .min(2, t('common:common.user_id_at_least'))
       .test('user_code', t('common:common.user_code_invalid'), function (value) {
         return CommonHelper.userCodeValid(value)
       }),
-    nickname: Yup.string()
-      .required(t('common:common.nickname_at_least'))
-      .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.nickname_at_least')),
+    nickname: Yup.string().required(t('common:common.nickname_at_least')).max(50).min(2, t('common:common.nickname_at_least')),
   })
 
   const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({

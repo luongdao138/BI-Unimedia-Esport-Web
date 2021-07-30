@@ -28,3 +28,5 @@ export function withAuth<T extends object>(Component: ComponentType<T>): React.F
 
   return AppWithAuth
 }
+
+export default withAuth

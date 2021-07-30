@@ -9,7 +9,7 @@ import BlackBox from '@components/BlackBox'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'
 import ESLabel from '@components/Label'
 import useUploadImage from '@utils/hooks/useUploadImage'
@@ -106,11 +106,11 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [])
 
   const membersValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
+    name: Yup.string().required(t('common:common.input_required')).max(40),
   })
 
   const validationSchema = Yup.object().shape({
-    team_name: Yup.string().required('').max(40, t('common:common.too_long')),
+    team_name: Yup.string().required('').max(40),
     team_icon_url: Yup.string().required(),
     members: Yup.array().of(membersValidationSchema),
   })
