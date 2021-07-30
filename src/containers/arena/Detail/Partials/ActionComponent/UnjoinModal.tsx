@@ -45,20 +45,23 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
                 {t('common:tournament.unjoin_dialog.dialog_description')}
               </Typography>
             </Box>
-            <LoginRequired>
-              <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
-                <Box className={classes.actionButton}>
+
+            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+              <Box className={classes.actionButton}>
+                <LoginRequired>
                   <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
                     {t('common:common.cancel')}
                   </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
+                </LoginRequired>
+              </Box>
+              <Box className={classes.actionButton}>
+                <LoginRequired>
                   <ButtonPrimary round fullWidth onClick={() => leave(tournament.attributes.hash_key)}>
                     {t('common:tournament.unjoin_dialog.decline')}
                   </ButtonPrimary>
-                </Box>
+                </LoginRequired>
               </Box>
-            </LoginRequired>
+            </Box>
           </Box>
         </BlankLayout>
       </ESPopup>

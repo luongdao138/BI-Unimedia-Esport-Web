@@ -29,18 +29,21 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
             <Box className={classes.actionButton}>
               <Participants detail={tournament} />
             </Box>
-            <LoginRequired>
-              <Box className={classes.actionButton}>
+
+            <Box className={classes.actionButton}>
+              <LoginRequired>
                 <ESButton variant="outlined" fullWidth onClick={toMatches}>
                   {t('common:tournament.brackets')}
                 </ESButton>
-              </Box>
-              <Box className={classes.actionButton}>
+              </LoginRequired>
+            </Box>
+            <Box className={classes.actionButton}>
+              <LoginRequired>
                 <ESButton variant="outlined" fullWidth onClick={toResults}>
                   {t('common:tournament.results')}
                 </ESButton>
-              </Box>
-            </LoginRequired>
+              </LoginRequired>
+            </Box>
           </>
         ) : (
           <>

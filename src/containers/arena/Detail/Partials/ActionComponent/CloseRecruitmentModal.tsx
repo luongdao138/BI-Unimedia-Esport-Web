@@ -56,20 +56,23 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
                 {t('common:tournament.close_recruitment.dialog_description')}
               </Typography>
             </Box>
-            <LoginRequired>
-              <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
-                <Box className={classes.actionButton}>
+
+            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+              <Box className={classes.actionButton}>
+                <LoginRequired>
                   <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
                     {t('common:common.cancel')}
                   </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
+                </LoginRequired>
+              </Box>
+              <Box className={classes.actionButton}>
+                <LoginRequired>
                   <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
                     {t('common:tournament.close_recruitment.confirm')}
                   </ButtonPrimary>
-                </Box>
+                </LoginRequired>
               </Box>
-            </LoginRequired>
+            </Box>
 
             <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
               <WarningRounded fontSize="small" />
