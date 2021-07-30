@@ -20,8 +20,9 @@ export function withNoAuth<T extends object>(Component: ComponentType<T>): React
       } else if (isAuth) {
         if (router.pathname === ESRoutes.REGISTER_PROFILE) {
           setRender(true)
+        } else {
+          navigateScreen(ESRoutes.REGISTER_PROFILE)
         }
-        navigateScreen(ESRoutes.REGISTER_PROFILE)
       } else {
         switch (router.pathname) {
           case ESRoutes.REGISTER:
@@ -56,7 +57,7 @@ export function withNoAuth<T extends object>(Component: ComponentType<T>): React
     }, [isAuth])
 
     if (!render) {
-      return <div>aaa</div>
+      return <></>
     }
     return <Component {...props} />
   }
