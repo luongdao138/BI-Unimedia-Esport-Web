@@ -53,8 +53,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
     }
   }, [notFound, router.query.hash_key])
 
-  if (loginRequired && !isAuthenticated) return null
-  if (isValidProfile) return null
+  if (loginRequired && !isValidProfile) return null
 
   const renderContent = () => {
     return loginRequired ? isAuthenticated && children : children
