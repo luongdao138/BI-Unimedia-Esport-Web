@@ -159,7 +159,7 @@ const ArenaWinners: React.FC = () => {
                   </p>
                 </div>
                 <ButtonBase className={classes.itemAvatar} onClick={() => toEntryDetail(p)}>
-                  <Avatar src={p.avatar} />
+                  <Avatar src={p.avatar} alt={p.name} />
                 </ButtonBase>
                 <div className={classes.nameWrapper}>
                   <Typography className={classes.breakWord} variant="h3" component="p">
