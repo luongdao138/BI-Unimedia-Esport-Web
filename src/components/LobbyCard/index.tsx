@@ -43,7 +43,7 @@ const LobbyCard: React.FC<Props> = ({ tournament }) => {
           <Box alignSelf="flex-end">
             <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           </Box>
-          <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="space-around">
+          <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="space-between">
             <Chip
               className={classes.chipPrimary}
               size="small"
