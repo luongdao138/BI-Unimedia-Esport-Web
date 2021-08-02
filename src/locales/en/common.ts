@@ -328,6 +328,7 @@ export default {
     card_date: '開　催　日',
     organizer: '主催者',
     entry: 'エントリー',
+    entry_number: 'エントリー人数',
     rule: {
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
@@ -565,6 +566,12 @@ export default {
     organized: 'あなたが主催者の大会',
     ready: 'エントリー受付前',
     recruiting: 'エントリー受付中',
+  },
+  lobbySearchFilters: {
+    recommended: 'おすすめの募集',
+    beforeStart: 'エントリー受付中',
+    inProgress: 'エントリー中の募集',
+    organized: 'あなたが作成した募集',
   },
   search: {
     search: '検索',
