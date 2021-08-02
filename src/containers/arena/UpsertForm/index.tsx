@@ -177,10 +177,13 @@ const TournamentCreate: React.FC = () => {
   const handleTabChange = useCallback((value) => {
     setTab(value)
   }, [])
+  const { hasUCRReturnHref } = useReturnHref()
   useEffect(() => {
-    document.body.style.position = 'fixed'
-    document.body.style.width = '100%'
-    document.body.style.height = '100%'
+    if (hasUCRReturnHref) {
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
+    }
   }, [tab])
 
   const renderEditButton = () => {

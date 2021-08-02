@@ -8,4 +8,8 @@ const TopicFollowerPage: PageWithLayoutType = () => {
 
 TopicFollowerPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default TopicFollowerPage

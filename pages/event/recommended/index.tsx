@@ -8,4 +8,8 @@ const EventRecommendedPage: PageWithLayoutType = () => {
 
 EventRecommendedPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default EventRecommendedPage

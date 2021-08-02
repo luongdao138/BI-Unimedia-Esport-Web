@@ -8,4 +8,8 @@ const ProfilePage: PageWithLayoutType = () => {
 
 ProfilePage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default ProfilePage

@@ -8,4 +8,8 @@ const FollowerEnteringPage: PageWithLayoutType = () => {
 
 FollowerEnteringPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default FollowerEnteringPage

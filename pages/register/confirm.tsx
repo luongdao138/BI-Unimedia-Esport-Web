@@ -1,11 +1,9 @@
 import ConfirmContainer from '@containers/Confirm'
-import AuthenticationLayout from '@layouts/AuthenticationLayout'
 import PageWithLayoutType from '@constants/page'
+import withNoAuth from '@utils/withNoAuth'
 
 const ConfirmPage: PageWithLayoutType = () => {
   return <ConfirmContainer />
 }
 
-ConfirmPage.Layout = AuthenticationLayout
-
-export default ConfirmPage
+export default withNoAuth(ConfirmPage)

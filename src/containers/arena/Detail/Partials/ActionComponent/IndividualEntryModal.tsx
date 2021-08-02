@@ -8,7 +8,7 @@ import BlackBox from '@components/BlackBox'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -40,7 +40,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40),
   })
 
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({

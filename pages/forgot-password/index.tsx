@@ -1,11 +1,14 @@
 import ForgotPasswordContainer from '@containers/ForgotPassword'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
 import PageWithLayoutType from '@constants/page'
+import withNoAuth from '@utils/withNoAuth'
 
 const ForgotPasswordPage: PageWithLayoutType = () => {
-  return <ForgotPasswordContainer />
+  return (
+    <AuthenticationLayout>
+      <ForgotPasswordContainer />
+    </AuthenticationLayout>
+  )
 }
 
-ForgotPasswordPage.Layout = AuthenticationLayout
-
-export default ForgotPasswordPage
+export default withNoAuth(ForgotPasswordPage)

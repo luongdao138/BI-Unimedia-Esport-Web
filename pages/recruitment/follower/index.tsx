@@ -8,4 +8,8 @@ const RecruitmentFollowerPage: PageWithLayoutType = () => {
 
 RecruitmentFollowerPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default RecruitmentFollowerPage

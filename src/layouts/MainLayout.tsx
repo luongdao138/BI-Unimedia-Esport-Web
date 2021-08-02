@@ -25,7 +25,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)
-  useProfileValid()
+  const { isValidProfile } = useProfileValid()
   const router = useRouter()
   useLogout()
 
@@ -39,7 +39,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
 
   useEffect(() => {
     if (loginRequired && !isAuthenticated) {
-      router.push(ESRoutes.TOP)
+      router.push(ESRoutes.LOGIN)
     }
   }, [loginRequired])
 
@@ -53,7 +53,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
     }
   }, [notFound, router.query.hash_key])
 
-  if (loginRequired && !isAuthenticated) return null
+  if (loginRequired && !isValidProfile) return null
 
   const renderContent = () => {
     return loginRequired ? isAuthenticated && children : children

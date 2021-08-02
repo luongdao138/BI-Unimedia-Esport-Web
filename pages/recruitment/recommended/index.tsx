@@ -8,4 +8,8 @@ const RecruitmentRecommendedPage: PageWithLayoutType = () => {
 
 RecruitmentRecommendedPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default RecruitmentRecommendedPage

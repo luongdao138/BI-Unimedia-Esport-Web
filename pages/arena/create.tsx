@@ -1,16 +1,17 @@
 import BlankLayout from '@layouts/BlankLayout'
 import PageWithLayoutType from '@constants/page'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
 import { GetStaticProps } from 'next'
 import i18n from '@locales/i18n'
+import { withAuth } from '@utils/withAuth'
 
 const ArenaCreatePage: PageWithLayoutType = () => {
-  useAuthenticated()
-  return <ArenaCreateContainer />
+  return (
+    <BlankLayout>
+      <ArenaCreateContainer />
+    </BlankLayout>
+  )
 }
-
-ArenaCreatePage.Layout = BlankLayout
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
@@ -20,4 +21,4 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default ArenaCreatePage
+export default withAuth(ArenaCreatePage)

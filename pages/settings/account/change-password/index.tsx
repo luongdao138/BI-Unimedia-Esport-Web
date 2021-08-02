@@ -1,13 +1,14 @@
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
 import BlankLayout from '@layouts/BlankLayout'
 import PageWithLayoutType from '@constants/page'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
+import { withAuth } from '@utils/withAuth'
 
 const AccountChangePasswordPage: PageWithLayoutType = () => {
-  useAuthenticated()
-  return <AccountSettingsChangePasswordContainer />
+  return (
+    <BlankLayout>
+      <AccountSettingsChangePasswordContainer />
+    </BlankLayout>
+  )
 }
 
-AccountChangePasswordPage.Layout = BlankLayout
-
-export default AccountChangePasswordPage
+export default withAuth(AccountChangePasswordPage)

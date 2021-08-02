@@ -19,7 +19,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -57,7 +57,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         return CommonHelper.validateEmail(value)
       })
       .required(t('common.required')),
-    description: Yup.string().required(t('common.required')).max(1000, t('common.too_long')),
+    description: Yup.string().required(t('common.required')).max(1000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1

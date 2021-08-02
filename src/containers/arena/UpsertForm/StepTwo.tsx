@@ -5,6 +5,7 @@ import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import { EditableTypes } from './useTournamentCreate'
 import ESFastInput from '@components/FastInput'
+import ESNumberInput from '@components/NumberInput'
 import ESCheckbox from '@components/Checkbox'
 import ESSelect from '@components/Select'
 import ESLabel from '@components/Label'
@@ -24,12 +25,6 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
       formik.setFieldValue('stepTwo.has_third_place', false)
     }
   }, [formik.values.stepTwo.rule])
-
-  useEffect(() => {
-    if (formik.values.stepTwo.max_participants < 0) {
-      formik.setFieldValue('stepTwo.max_participants', formik.values.stepTwo.max_participants * -1)
-    }
-  }, [formik.values.stepTwo.max_participants])
 
   return (
     <Box pb={9}>
@@ -87,20 +82,22 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
         </ESSelect>
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="center" width={122}>
-        <ESFastInput
+        <ESNumberInput
           id="max_participants"
-          type="number"
+          type="tel"
           required={true}
           className={classes.input}
           labelPrimary={i18n.t('common:tournament_create.max_participants')}
           placeholder={i18n.t('common:tournament_create.max_participants_placeholder')}
           name="stepTwo.max_participants"
           value={formik.values.stepTwo.max_participants === 0 ? '' : formik.values.stepTwo.max_participants}
-          onChange={formik.handleChange}
+          onChange={formik.handleBlur}
           onBlur={formik.handleBlur}
           helperText={formik.touched?.stepTwo?.max_participants && formik.errors?.stepTwo?.max_participants}
           error={formik.touched?.stepTwo?.max_participants && !!formik.errors?.stepTwo?.max_participants}
           size="small"
+          isNumber={true}
+          formik={formik}
           disabled={!editables.max_participants}
           nowrapHelperText
         />

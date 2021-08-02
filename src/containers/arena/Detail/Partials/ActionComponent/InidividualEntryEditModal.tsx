@@ -13,7 +13,7 @@ import useParticipantDetail from './useParticipantDetail'
 import UserListItem from '@components/UserItem'
 import _ from 'lodash'
 import ESInput from '@components/Input'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import { ROLE } from '@constants/tournament.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -24,6 +24,7 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ServerError from './ServerError'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import LoginRequired from '@containers/LoginRequired'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -55,7 +56,7 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   const dispatch = useAppDispatch()
   const router = useRouter()
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40),
   })
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
@@ -154,15 +155,17 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton
-                  className={classes.bottomButton}
-                  variant="outlined"
-                  round
-                  size="large"
-                  onClick={toDetail ? toDetail : handleClose}
-                >
-                  {t('common:tournament.tournament_detail')}
-                </ESButton>
+                <LoginRequired>
+                  <ESButton
+                    className={classes.bottomButton}
+                    variant="outlined"
+                    round
+                    size="large"
+                    onClick={toDetail ? toDetail : handleClose}
+                  >
+                    {t('common:tournament.tournament_detail')}
+                  </ESButton>
+                </LoginRequired>
               }
             />
           </BlackBox>

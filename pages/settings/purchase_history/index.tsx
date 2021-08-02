@@ -14,6 +14,10 @@ const PurchaseHistoryPage: PageWithLayoutType = () => {
   )
 }
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 PurchaseHistoryPage.Layout = MainLayout
 
 export default PurchaseHistoryPage

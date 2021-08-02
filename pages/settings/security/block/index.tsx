@@ -8,4 +8,8 @@ const BlockSettingsSettingsPage: PageWithLayoutType = () => {
 
 BlockSettingsSettingsPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default BlockSettingsSettingsPage

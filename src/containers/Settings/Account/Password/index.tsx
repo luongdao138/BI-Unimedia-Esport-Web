@@ -52,7 +52,7 @@ const AccountSettingsPasswordContainer: React.FC = () => {
   const buttonActive = (): boolean => values.current_password !== '' && _.isEmpty(errors) && scoreCurrentPassword > 40
 
   return (
-    <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>
+    <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()} noScroll={true}>
       <Box className={classes.header}>
         <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
