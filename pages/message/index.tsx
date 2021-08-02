@@ -5,6 +5,7 @@ import Box from '@material-ui/core/Box'
 import i18n from '@locales/i18n'
 import { socketCreators } from '@store/socket/actions'
 import { useAppDispatch } from '@store/hooks'
+import { withAuth } from '@utils/withAuth'
 
 const Message: PageWithLayoutType = () => {
   const dispatch = useAppDispatch()
@@ -12,12 +13,12 @@ const Message: PageWithLayoutType = () => {
     dispatch(socketCreators.cleanRoom())
   }, [])
   return (
-    <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
-      {i18n.t('common:chat.not_selected_text')}
-    </Box>
+    <MessageLayout>
+      <Box display="flex" flex={1} justifyContent="center" alignItems="center" height={'100%'}>
+        {i18n.t('common:chat.not_selected_text')}
+      </Box>
+    </MessageLayout>
   )
 }
 
-Message.Layout = MessageLayout
-
-export default Message
+export default withAuth(Message)
