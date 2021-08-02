@@ -9,6 +9,7 @@ import ESPinInput from '@components/PinInput'
 import ESLoader from '@components/FullScreenLoader'
 import ESToast from '@components/Toast'
 import ESStickyFooter from '@components/StickyFooter'
+import AuthenticationLayout from '@layouts/AuthenticationLayout'
 
 const ConfirmContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -55,7 +56,7 @@ const ConfirmContainer: React.FC = () => {
   }
 
   return (
-    <>
+    <AuthenticationLayout>
       <ESStickyFooter disabled={!buttonActive()} title={t('common:register_by_email.button')} onClick={handleSubmit} noScroll>
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
@@ -111,7 +112,7 @@ const ConfirmContainer: React.FC = () => {
           resetMeta={resetResendMeta}
         />
       )}
-    </>
+    </AuthenticationLayout>
   )
 }
 
