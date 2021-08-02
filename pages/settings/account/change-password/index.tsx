@@ -4,9 +4,11 @@ import PageWithLayoutType from '@constants/page'
 import { withAuth } from '@utils/withAuth'
 
 const AccountChangePasswordPage: PageWithLayoutType = () => {
-  return <AccountSettingsChangePasswordContainer />
+  return (
+    <BlankLayout>
+      <AccountSettingsChangePasswordContainer />
+    </BlankLayout>
+  )
 }
-
-AccountChangePasswordPage.Layout = BlankLayout
 
 export default withAuth(AccountChangePasswordPage)

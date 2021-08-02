@@ -17,6 +17,7 @@ import { TeamMemberSelectItem } from '@store/arena/actions/types'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import { ROLE } from '@constants/tournament.constants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -153,15 +154,17 @@ const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton
-                  className={classes.bottomButton}
-                  variant="outlined"
-                  round
-                  size="large"
-                  onClick={toDetail ? toDetail : handleClose}
-                >
-                  {t('common:tournament.tournament_detail')}
-                </ESButton>
+                <LoginRequired>
+                  <ESButton
+                    className={classes.bottomButton}
+                    variant="outlined"
+                    round
+                    size="large"
+                    onClick={toDetail ? toDetail : handleClose}
+                  >
+                    {t('common:tournament.tournament_detail')}
+                  </ESButton>
+                </LoginRequired>
               }
             />
           </BlackBox>

@@ -24,6 +24,7 @@ import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import ServerError from './ServerError'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import LoginRequired from '@containers/LoginRequired'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -154,15 +155,17 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
             <DetailInfo
               detail={tournament}
               bottomButton={
-                <ESButton
-                  className={classes.bottomButton}
-                  variant="outlined"
-                  round
-                  size="large"
-                  onClick={toDetail ? toDetail : handleClose}
-                >
-                  {t('common:tournament.tournament_detail')}
-                </ESButton>
+                <LoginRequired>
+                  <ESButton
+                    className={classes.bottomButton}
+                    variant="outlined"
+                    round
+                    size="large"
+                    onClick={toDetail ? toDetail : handleClose}
+                  >
+                    {t('common:tournament.tournament_detail')}
+                  </ESButton>
+                </LoginRequired>
               }
             />
           </BlackBox>

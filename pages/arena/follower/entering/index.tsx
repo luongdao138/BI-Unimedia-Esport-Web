@@ -1,7 +1,6 @@
 import FollowerEnteringContainer from '@containers/Tournament/Follower/Entering'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import { withAuth } from '@utils/withAuth'
 
 const FollowerEnteringPage: PageWithLayoutType = () => {
   return <FollowerEnteringContainer />
@@ -9,4 +8,8 @@ const FollowerEnteringPage: PageWithLayoutType = () => {
 
 FollowerEnteringPage.Layout = MainLayout
 
-export default withAuth(FollowerEnteringPage)
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
+export default FollowerEnteringPage

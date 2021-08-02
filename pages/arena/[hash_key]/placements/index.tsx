@@ -5,7 +5,6 @@ import { storeWrapper, AppDispatch } from '@store/store'
 import i18n from '@locales/i18n'
 import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
-import { withAuth } from '@utils/withAuth'
 
 export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store, params }) => {
   const { dispatch }: { dispatch: AppDispatch } = store
@@ -26,7 +25,9 @@ const ArenaPlacementPage: PageWithLayoutType = () => {
 MainLayout.defaultProps = {
   footer: false,
   patternBg: false,
+  loginRequired: true,
 }
+
 ArenaPlacementPage.Layout = MainLayout
 
-export default withAuth(ArenaPlacementPage)
+export default ArenaPlacementPage

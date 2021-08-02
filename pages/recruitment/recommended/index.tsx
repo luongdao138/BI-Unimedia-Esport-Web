@@ -1,7 +1,6 @@
 import RecruitmentRecommendedContainer from '@containers/Recruitment/Recommended'
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import { withAuth } from '@utils/withAuth'
 
 const RecruitmentRecommendedPage: PageWithLayoutType = () => {
   return <RecruitmentRecommendedContainer />
@@ -9,4 +8,8 @@ const RecruitmentRecommendedPage: PageWithLayoutType = () => {
 
 RecruitmentRecommendedPage.Layout = MainLayout
 
-export default withAuth(RecruitmentRecommendedPage)
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
+export default RecruitmentRecommendedPage

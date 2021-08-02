@@ -6,6 +6,7 @@ import ESButton from '@components/Button'
 import ActionLabelButton from './ActionLabelButton'
 import Participants from '@containers/arena/Detail/Participants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
 
 interface Props {
   tournament: TournamentDetail
@@ -28,15 +29,20 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
             <Box className={classes.actionButton}>
               <Participants detail={tournament} />
             </Box>
+
             <Box className={classes.actionButton}>
-              <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                {t('common:tournament.brackets')}
-              </ESButton>
+              <LoginRequired>
+                <ESButton variant="outlined" fullWidth onClick={toMatches}>
+                  {t('common:tournament.brackets')}
+                </ESButton>
+              </LoginRequired>
             </Box>
             <Box className={classes.actionButton}>
-              <ESButton variant="outlined" fullWidth onClick={toResults}>
-                {t('common:tournament.results')}
-              </ESButton>
+              <LoginRequired>
+                <ESButton variant="outlined" fullWidth onClick={toResults}>
+                  {t('common:tournament.results')}
+                </ESButton>
+              </LoginRequired>
             </Box>
           </>
         ) : (
@@ -48,15 +54,17 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                 </Box>
                 {(isModerator || isEntered) && (
                   <Box className={classes.actionButton}>
-                    <ActionLabelButton
-                      actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
-                      variant="outlined"
-                      fullWidth
-                      onClick={toGroupChat}
-                      disabled={chatDisabled}
-                    >
-                      {t('common:tournament.group_chat')}
-                    </ActionLabelButton>
+                    <LoginRequired>
+                      <ActionLabelButton
+                        actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
+                        variant="outlined"
+                        fullWidth
+                        onClick={toGroupChat}
+                        disabled={chatDisabled}
+                      >
+                        {t('common:tournament.group_chat')}
+                      </ActionLabelButton>
+                    </LoginRequired>
                   </Box>
                 )}
               </>
@@ -66,20 +74,24 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                   <Participants detail={tournament} />
                 </Box>
                 <Box className={classes.actionButton}>
-                  <ActionLabelButton
-                    actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
-                    variant="outlined"
-                    fullWidth
-                    onClick={toGroupChat}
-                    disabled={chatDisabled}
-                  >
-                    {t('common:tournament.group_chat')}
-                  </ActionLabelButton>
+                  <LoginRequired>
+                    <ActionLabelButton
+                      actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
+                      variant="outlined"
+                      fullWidth
+                      onClick={toGroupChat}
+                      disabled={chatDisabled}
+                    >
+                      {t('common:tournament.group_chat')}
+                    </ActionLabelButton>
+                  </LoginRequired>
                 </Box>
                 <Box className={classes.actionButton}>
-                  <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                    {t('common:tournament.brackets')}
-                  </ESButton>
+                  <LoginRequired>
+                    <ESButton variant="outlined" fullWidth onClick={toMatches}>
+                      {t('common:tournament.brackets')}
+                    </ESButton>
+                  </LoginRequired>
                 </Box>
               </>
             )}
