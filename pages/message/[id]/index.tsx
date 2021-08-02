@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import MessageLayout from '@layouts/MessageLayout'
 import PageWithLayoutType from '@constants/page'
 import ChatRoomContainer from '@containers/ChatRoomContainer'
+import { withAuth } from '@utils/withAuth'
 
 // TODO get this data from endpoint
 
@@ -21,9 +22,11 @@ const Room: PageWithLayoutType = () => {
   const router = useRouter()
   const { id } = router.query
 
-  return <ChatRoomContainer router={router} roomId={id} />
+  return (
+    <MessageLayout>
+      <ChatRoomContainer router={router} roomId={id} />
+    </MessageLayout>
+  )
 }
 
-Room.Layout = MessageLayout
-
-export default Room
+export default withAuth(Room)
