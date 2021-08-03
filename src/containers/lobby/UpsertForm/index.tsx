@@ -14,7 +14,7 @@ import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-import { TournamentFormParams } from '@services/arena.service'
+import { LobbyFormParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import CancelDialog from './Partials/CancelDialog'
 import StepTabs from './StepTabs'
@@ -28,7 +28,7 @@ import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 
 let activeTabIndex = 0
 
@@ -54,7 +54,7 @@ const LobbyCreate: React.FC = () => {
     enableReinitialize: true,
     onSubmit: (values) => {
       const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
-      const data: TournamentFormParams = {
+      const data: LobbyFormParams = {
         ...values.stepOne,
         ...values.stepTwo,
         ...values.stepThree,
@@ -100,7 +100,7 @@ const LobbyCreate: React.FC = () => {
       isFirstRun.current = false
       return
     } else {
-      const isRequiredFieldsValid = TournamentHelper.checkRequiredFields(formik.errors)
+      const isRequiredFieldsValid = LobbyHelper.checkRequiredFields(formik.errors)
       setError(!isRequiredFieldsValid)
 
       if (isConfirm) {
@@ -108,8 +108,6 @@ const LobbyCreate: React.FC = () => {
 
         if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
         else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-        else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
-        else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
 
         setTab(activeTabIndex)
       }
@@ -143,8 +141,6 @@ const LobbyCreate: React.FC = () => {
       if (fieldIdentifier) {
         if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
         else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
-        else if (_.has(FIELD_TITLES.stepThree, fieldIdentifier)) activeTabIndex = 2
-        else if (_.has(FIELD_TITLES.stepFour, fieldIdentifier)) activeTabIndex = 3
 
         dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
       } else {
@@ -161,8 +157,6 @@ const LobbyCreate: React.FC = () => {
           }
           if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
           else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-          else if (_.has(formik.errors, 'stepThree')) activeTabIndex = 2
-          else if (_.has(formik.errors, 'stepFour')) activeTabIndex = 3
 
           setTab(activeTabIndex)
         }

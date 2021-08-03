@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import tournamentStore from '@store/arena'
-import { TournamentDetail, TournamentFormParams, UpdateParams } from '@services/arena.service'
+import { LobbyDetail, LobbyFormParams, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
@@ -42,12 +42,12 @@ export type EditableTypes = {
 }
 
 const useLobbyCreate = (): {
-  submit(params: TournamentFormParams): void
+  submit(params: LobbyFormParams): void
   update(params: UpdateParams): void
   meta: Meta
   updateMeta: Meta
   isEdit: boolean
-  arena: TournamentDetail
+  arena: LobbyDetail
   editables: EditableTypes
 } => {
   const { t } = useTranslation(['common'])
@@ -86,7 +86,7 @@ const useLobbyCreate = (): {
   const { isEditable } = useLobbyHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
-  const submit = async (params: TournamentFormParams) => {
+  const submit = async (params: LobbyFormParams) => {
     const resultAction = await dispatch(actions.createTournament(params))
     if (actions.createTournament.fulfilled.match(resultAction)) {
       resetMeta()

@@ -1,7 +1,7 @@
-import { TournamentDetail } from '@services/arena.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { FormType } from './FormType'
 
-export const getInitialValues = (data?: TournamentDetail): FormType => ({
+export const getInitialValues = (data?: LobbyDetail): FormType => ({
   stepOne: {
     title: data ? data.attributes.title : '',
     overview: data ? data.attributes.overview : '',

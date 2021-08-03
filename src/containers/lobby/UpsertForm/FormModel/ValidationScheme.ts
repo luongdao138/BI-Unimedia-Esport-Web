@@ -1,17 +1,17 @@
 import i18n from '@locales/i18n'
 import * as Yup from 'yup'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import moment from 'moment'
-import { TournamentDetail } from '@services/arena.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { EditableTypes } from '../useLobbyCreate'
 
-export const getValidationScheme = (data: TournamentDetail, editables: EditableTypes): any => {
+export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes): any => {
   let recruitMinDate = new Date()
   // let recruitEndMinDate = new Date()
   let minStartDate = new Date()
   let minEndDate = new Date()
   if (!!data && !!data.attributes.status) {
-    const beforeRecruit = TournamentHelper.checkStatus(data.attributes.status, 'recruiting')
+    const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, 'recruiting')
     // const beforeRecruitEnd = TournamentHelper.checkStatus(data.attributes.status, 'recruitment_closed')
     if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
     // if (!beforeRecruitEnd && data.attributes.acceptance_end_date) recruitEndMinDate = new Date(data.attributes.acceptance_end_date)

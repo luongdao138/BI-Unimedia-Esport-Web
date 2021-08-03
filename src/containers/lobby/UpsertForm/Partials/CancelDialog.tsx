@@ -8,12 +8,12 @@ import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
 import LinkButton from '@components/LinkButton'
-import { TournamentDetail } from '@services/arena.service'
-import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import { LobbyDetail } from '@services/lobby.service'
+import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 
 interface Props {
   hashKey: string
-  arena: TournamentDetail
+  arena: LobbyDetail
 }
 
 const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {

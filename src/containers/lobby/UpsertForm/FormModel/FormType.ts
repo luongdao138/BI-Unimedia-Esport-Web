@@ -22,6 +22,16 @@ export type FormType = {
     terms_of_participation: string
     notes: string
     retain_history: boolean
+    acceptance_start_date: string
+    acceptance_end_date: string
+    start_date: string
+    end_date: string
+    area_id: number
+    address: string
+    acceptance_dates: string
+    recruit_date: string
+    acceptance_end_start_date: string
+    start_end_date: string
   }
   stepThree: {
     acceptance_start_date: string

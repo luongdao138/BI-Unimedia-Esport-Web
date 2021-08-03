@@ -28,34 +28,32 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
-          name="stepThree.start_date"
+          name="stepTwo.start_date"
           placeholder={i18n.t('common:lobby_create.start_date')}
           fullWidth
           multiline
           rows={2}
-          value={formik.values.stepThree.start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
+          value={formik.values.stepTwo.start_date}
+          onChange={(date) => formik.setFieldValue('stepTwo.start_date', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date}
-          error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
+          helperText={formik.touched?.stepTwo?.start_date && formik.errors?.stepTwo?.start_date}
+          error={formik.touched?.stepTwo?.start_date && !!formik.errors?.stepTwo?.start_date}
           disabled={!editables.start_date}
         />
         <Box mt={2}>
           <span className={classes.dashes}>-</span>
         </Box>
         <ESInputDatePicker
-          name="stepThree.end_date"
+          name="stepTwo.end_date"
           placeholder={i18n.t('common:lobby_create.end_date')}
           fullWidth
           multiline
           rows={2}
-          value={formik.values.stepThree.end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
+          value={formik.values.stepTwo.end_date}
+          onChange={(date) => formik.setFieldValue('stepTwo.end_date', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date
-          }
-          error={formik.touched?.stepThree?.end_date && !!formik.errors?.stepThree?.end_date}
+          helperText={(formik.touched?.stepTwo?.end_date && formik.errors?.stepTwo?.end_date) || formik.errors?.stepTwo?.start_end_date}
+          error={formik.touched?.stepTwo?.end_date && !!formik.errors?.stepTwo?.end_date}
           disabled={!editables.end_date}
         />
       </Box>
@@ -67,20 +65,20 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={158}>
         <ESInputDatePicker
-          name="stepThree.acceptance_start_date"
+          name="stepTwo.acceptance_start_date"
           placeholder={i18n.t('common:lobby_create.start_date')}
           fullWidth
           multiline
           rows={2}
-          value={formik.values.stepThree.acceptance_start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toString())}
+          value={formik.values.stepTwo.acceptance_start_date}
+          onChange={(date) => formik.setFieldValue('stepTwo.acceptance_start_date', date.toString())}
           onBlur={formik.handleBlur}
           helperText={
-            (formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date) ||
-            formik.errors?.stepThree?.acceptance_dates ||
-            formik.errors?.stepThree?.recruit_date
+            (formik.touched?.stepTwo?.acceptance_start_date && formik.errors?.stepTwo?.acceptance_start_date) ||
+            formik.errors?.stepTwo?.acceptance_dates ||
+            formik.errors?.stepTwo?.recruit_date
           }
-          error={formik.touched?.stepThree?.acceptance_start_date && !!formik.errors?.stepThree?.acceptance_start_date}
+          error={formik.touched?.stepTwo?.acceptance_start_date && !!formik.errors?.stepTwo?.acceptance_start_date}
           disabled={!editables.acceptance_start_date}
         />
 
@@ -106,8 +104,8 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={1} width={200}>
         <ESSelect
-          name="stepThree.area_id"
-          value={formik.values.stepThree.area_id}
+          name="stepTwo.area_id"
+          value={formik.values.stepTwo.area_id}
           onChange={formik.handleChange}
           label={i18n.t('common:tournament_create.area')}
           required={true}
@@ -132,11 +130,11 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           name="stepThree.address"
           fullWidth
           placeholder={i18n.t('common:lobby_create.area_name_placeholder')}
-          value={formik.values.stepThree.address}
+          value={formik.values.stepTwo.address}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepThree?.address && formik.errors?.stepThree?.address}
-          error={formik.touched?.stepThree?.address && !!formik.errors?.stepThree?.address}
+          helperText={formik.touched?.stepTwo?.address && formik.errors?.stepTwo?.address}
+          error={formik.touched?.stepTwo?.address && !!formik.errors?.stepTwo?.address}
           size="small"
           required
           disabled={!editables.address}
