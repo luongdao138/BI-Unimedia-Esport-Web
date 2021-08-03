@@ -157,6 +157,7 @@ const AccountSettingsChangePasswordContainer: React.FC = () => {
         <Box mt={1} />
         <Typography variant="body2">{t('account_settings.hint')}</Typography>
         <Typography variant="body2">{t('account_settings.hint2')}</Typography>
+        <Typography variant="body2">{t('account_settings.hint3')}</Typography>
       </Box>
       <Box mx={5} className={classes.formWrapBottom}>
         <ESInput
