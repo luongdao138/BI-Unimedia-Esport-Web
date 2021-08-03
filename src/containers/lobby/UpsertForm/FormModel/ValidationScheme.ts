@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import moment from 'moment'
 import { TournamentDetail } from '@services/arena.service'
-import { EditableTypes } from '../useTournamentCreate'
+import { EditableTypes } from '../useLobbyCreate'
 
 export const getValidationScheme = (data: TournamentDetail, editables: EditableTypes): any => {
   let recruitMinDate = new Date()
