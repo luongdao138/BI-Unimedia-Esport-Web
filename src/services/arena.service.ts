@@ -57,6 +57,11 @@ export type TournamentListItem = {
       user_code: string
       profile_image: null | string
     }
+    participant: null | {
+      name: string
+      user_code: string
+      profile_image: null | string
+    }
     participants: Array<ParticipantType>
     is_freezed: boolean
     interested_count: number
