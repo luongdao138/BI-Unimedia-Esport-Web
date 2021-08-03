@@ -9,7 +9,7 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import useSummary from './useSummary'
 import ESLoader from '@components/FullScreenLoader'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import { useFormik } from 'formik'
 import CoverUploader from '@containers/arena/UpsertForm/Partials/CoverUploader'
 import useUploadImage from '@utils/hooks/useUploadImage'
@@ -37,7 +37,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    summary: Yup.string().required(t('common:common.required')).max(190, t('common:common.too_long')),
+    summary: Yup.string().required(t('common:common.required')).max(190),
   })
 
   const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit } = useFormik({

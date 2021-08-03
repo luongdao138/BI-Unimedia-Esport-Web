@@ -1,9 +1,8 @@
 import GameEditContainer from '@containers/Profile/GameEdit'
 import BlankLayout from '@layouts/BlankLayout'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
+import { withAuth } from '@utils/withAuth'
 
 const GameEditPage: React.FC = () => {
-  useAuthenticated()
   return (
     <BlankLayout>
       <GameEditContainer />
@@ -11,4 +10,4 @@ const GameEditPage: React.FC = () => {
   )
 }
 
-export default GameEditPage
+export default withAuth(GameEditPage)

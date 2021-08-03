@@ -8,4 +8,8 @@ const MyPageInfoSettingsSettingsPage: PageWithLayoutType = () => {
 
 MyPageInfoSettingsSettingsPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default MyPageInfoSettingsSettingsPage

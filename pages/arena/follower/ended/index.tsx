@@ -5,7 +5,10 @@ import PageWithLayoutType from '@constants/page'
 const FollowerEndedPage: PageWithLayoutType = () => {
   return <FollowerEndedContainer />
 }
-
 FollowerEndedPage.Layout = MainLayout
+
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
 
 export default FollowerEndedPage

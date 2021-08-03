@@ -17,6 +17,7 @@ import useSocialLogin from '@utils/hooks/useSocialLogin'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import i18n from '@locales/i18n'
+import AuthenticationLayout from '@layouts/AuthenticationLayout'
 
 const RegisterContainer: React.FC = () => {
   const social = useSocialLogin('register')
@@ -52,88 +53,96 @@ const RegisterContainer: React.FC = () => {
   }
 
   return (
-    <Box pt={7.5} pb={9} className={classes.topContainer}>
-      <Box py={2}>
-        <IconButton
-          className={classes.iconButtonBg}
-          onClick={() => {
-            social.resetMeta()
-            handleReturn()
-          }}
-        >
-          <Icon className="fa fa-arrow-left" fontSize="small" />
-        </IconButton>
-      </Box>
-
-      <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center" className={classes.container}>
-        <Box pt={1.375} pb={6}>
-          <img src="/images/lp_exelab_logo.svg" width="116" height="148" />
-        </Box>
-
-        {renderSocialError()}
-
-        <Box width="100%" flexDirection="column" alignItems="center">
-          <Box textAlign="center">
-            <Typography className={classes.termsText}>
-              <a href={ESRoutes.TERMS} target="_blank" rel="noopener noreferrer">
-                {t('common:register.link1')}
-              </a>
-              {t('common:register.description1')}
-              <a href={ESRoutes.PRIVACY} target="_blank" rel="noopener noreferrer">
-                {t('common:register.link2')}
-              </a>
-              {t('common:register.description2')}
-              <br />
-              {t('common:register.description3')}
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
-          <ButtonPrimary
-            round
-            fullWidth
+    <AuthenticationLayout>
+      <Box pt={7.5} pb={9} className={classes.topContainer}>
+        <Box py={2}>
+          <IconButton
+            className={classes.iconButtonBg}
             onClick={() => {
               social.resetMeta()
-              navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+              handleReturn()
             }}
-            disabled={!buttonActive()}
           >
-            {t('common:register.button')}
-          </ButtonPrimary>
+            <Icon className="fa fa-arrow-left" fontSize="small" />
+          </IconButton>
         </Box>
 
-        <Box width="100%">
-          <ESDividerWithMiddleText text={t('common:login.divider')} />
-        </Box>
+        <Box px={5} pt={6.625} display="flex" flexDirection="column" alignItems="center" className={classes.container}>
+          <Box pt={1.375} pb={6}>
+            <img src="/images/lp_exelab_logo.svg" width="116" height="148" />
+          </Box>
 
-        <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
-          <Box pb={2}>
-            <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
-              <ESCheckbox disableRipple checked={checkbox.terms} onChange={handleChange} label={t('common:register.terms')} name="terms" />
-              <ESCheckbox
-                disableRipple
-                checked={checkbox.privacy}
-                onChange={handleChange}
-                label={t('common:register.privacy')}
-                name="privacy"
-              />
+          {renderSocialError()}
+
+          <Box width="100%" flexDirection="column" alignItems="center">
+            <Box textAlign="center">
+              <Typography className={classes.termsText}>
+                <a href={ESRoutes.TERMS} target="_blank" rel="noopener noreferrer">
+                  {t('common:register.link1')}
+                </a>
+                {t('common:register.description1')}
+                <a href={ESRoutes.PRIVACY} target="_blank" rel="noopener noreferrer">
+                  {t('common:register.link2')}
+                </a>
+                {t('common:register.description2')}
+                <br />
+                {t('common:register.description3')}
+              </Typography>
             </Box>
           </Box>
-          <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-          <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-          <ESButtonLine fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-          <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-          <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-        </Box>
 
-        <Box pt={4} className={classes.linkContainer}>
-          <Link href={handleLink(ESRoutes.LOGIN)} as={ESRoutes.LOGIN} shallow>
-            <a onClick={() => social.resetMeta()}>{t('common:register.footer_link')}</a>
-          </Link>
+          <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
+            <ButtonPrimary
+              round
+              fullWidth
+              onClick={() => {
+                social.resetMeta()
+                navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
+              }}
+              disabled={!buttonActive()}
+            >
+              {t('common:register.button')}
+            </ButtonPrimary>
+          </Box>
+
+          <Box width="100%">
+            <ESDividerWithMiddleText text={t('common:login.divider')} />
+          </Box>
+
+          <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
+            <Box pb={2}>
+              <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
+                <ESCheckbox
+                  disableRipple
+                  checked={checkbox.terms}
+                  onChange={handleChange}
+                  label={t('common:register.terms')}
+                  name="terms"
+                />
+                <ESCheckbox
+                  disableRipple
+                  checked={checkbox.privacy}
+                  onChange={handleChange}
+                  label={t('common:register.privacy')}
+                  name="privacy"
+                />
+              </Box>
+            </Box>
+            <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+            <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+            <ESButtonLine fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+            <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+            <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+          </Box>
+
+          <Box pt={4} className={classes.linkContainer}>
+            <Link href={handleLink(ESRoutes.LOGIN)} as={ESRoutes.LOGIN} shallow>
+              <a onClick={() => social.resetMeta()}>{t('common:register.footer_link')}</a>
+            </Link>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </AuthenticationLayout>
   )
 }
 

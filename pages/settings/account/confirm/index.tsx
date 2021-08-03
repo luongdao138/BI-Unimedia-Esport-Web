@@ -1,13 +1,14 @@
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import BlankLayout from '@layouts/BlankLayout'
 import PageWithLayoutType from '@constants/page'
-import useAuthenticated from '@utils/hooks/useAuthenticated'
+import { withAuth } from '@utils/withAuth'
 
 const AccountChangeEmailConfirmPage: PageWithLayoutType = () => {
-  useAuthenticated()
-  return <AccountSettingsConfirmContainer />
+  return (
+    <BlankLayout>
+      <AccountSettingsConfirmContainer />
+    </BlankLayout>
+  )
 }
 
-AccountChangeEmailConfirmPage.Layout = BlankLayout
-
-export default AccountChangeEmailConfirmPage
+export default withAuth(AccountChangeEmailConfirmPage)

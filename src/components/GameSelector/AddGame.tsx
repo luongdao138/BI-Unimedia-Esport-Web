@@ -5,7 +5,7 @@ import Input from '@components/Input'
 import Select from '@components/Select'
 import Button from '@components/Button'
 import Toast from '@components/Toast'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import _ from 'lodash'
 import useAddGame from './useAddGame'
 import { useEffect, useState } from 'react'
@@ -42,7 +42,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { createGame, meta, createdGame } = useAddGame()
 
   const validationSchema = Yup.object().shape({
-    display_name: Yup.string().required(i18n.t('common:common.error')).max(60, i18n.t('common:common.too_long')),
+    display_name: Yup.string().required(i18n.t('common:common.error')).max(60),
     game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
       return value !== -1
     }),

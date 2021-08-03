@@ -19,7 +19,7 @@ export default {
     search_results: '検索結果',
     total: '件',
     error: 'エラー文言が入ります',
-    too_long: '長すぎる',
+    too_long: '{{max}}文字以内で入力してください',
     at_least: '2文字以上入力してください。',
     at_least_8: '8文字以上で入力してください',
     contains_ngword: '不適切な文字列が含まれています。',
@@ -38,7 +38,7 @@ export default {
     man: '人',
     integer: '数字のみ入力してください。',
     validation: {
-      acceptance_dates: 'エントリー開始日時はエントリー終了日時より前にしてください',
+      acceptance_dates: 'エントリー開始日時はエントリー終了日時より前でなければなりません',
       acceptance_end_start_date: 'エントリー終了日時は開催日時より前でなければなりません',
       start_end_date: '開催終了日時は開催日時より後ろでなければなりません',
       min_date: '日時は現在の日時より後でなければなりません',
@@ -338,8 +338,9 @@ export default {
     has_prize_true: '副賞あり',
     online: 'オンライン',
     offline: 'オフライン',
+    entry_back: 'エントリーメンバー',
     participant: {
-      back: 'エントリーメンバー',
+      back: '参加メンバー',
     },
     tournament_id: '大会ID：',
     rule_format: '大会形式',
@@ -360,7 +361,8 @@ export default {
     cover_upload_select_img: '画像を選択する',
     report: '通報',
     entry_members: 'エントリーメンバー',
-    number_of_entries: 'エントリー人数',
+    number_of_entries: 'エントリー数',
+    number_of_participants: '参加数',
     type_single: '個人戦',
     rule_tournament: 'トーナメント',
     rule_battle: 'バトルロイヤル',
@@ -806,7 +808,6 @@ export default {
     email_required: 'お問い合わせにはメールアドレスの登録が必須となります。',
     error: {
       email: '入力内容が適切ではありません。',
-      too_long: '文字以内で入力ください。',
     },
   },
   settings: {

@@ -8,4 +8,8 @@ const MessageSettingsSettingsPage: PageWithLayoutType = () => {
 
 MessageSettingsSettingsPage.Layout = MainLayout
 
+MainLayout.defaultProps = {
+  loginRequired: true,
+}
+
 export default MessageSettingsSettingsPage
