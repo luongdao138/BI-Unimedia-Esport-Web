@@ -1,5 +1,5 @@
 import PlainLayout from '@layouts/PlainLayout'
-import Pr from '@containers/Pr/index'
+import Pr from '@containers/Pr/FreeStreamPr'
 
 interface IProps {
   banners: string[]
