@@ -21,7 +21,7 @@ import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import { ESRoutes } from '@constants/route.constants'
 import { UserProfile } from '@services/user.service'
-import { getIsAuthenticated } from '@store/auth/selectors'
+import { getIsAuthenticated, getIsConfirmed } from '@store/auth/selectors'
 import { useAppSelector } from '@store/hooks'
 
 const FINAL_STEP = 3
@@ -39,6 +39,7 @@ const UserSettingsContainer: React.FC = () => {
   const [isValidDate, setValidDate] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
   const isAuth = useAppSelector(getIsAuthenticated)
+  const isConfirmed = useAppSelector(getIsConfirmed)
 
   useEffect(() => {
     if (userProfile) {
@@ -101,7 +102,7 @@ const UserSettingsContainer: React.FC = () => {
 
   const handleSkip = () => navigate()
 
-  if (isAuth) {
+  if (isAuth && isConfirmed) {
     router.push(ESRoutes.HOME)
     return <></>
   }
