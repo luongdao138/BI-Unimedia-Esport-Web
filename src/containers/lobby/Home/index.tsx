@@ -1,6 +1,6 @@
 import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { TournamentFilterOption, TournamentListItem } from '@services/arena.service'
+import { LobbyFilterOption, LobbyListItem } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { AddRounded } from '@material-ui/icons'
@@ -16,58 +16,58 @@ import LobbyCard from '@components/LobbyCard'
 // import { useEffect } from 'react'
 
 interface LobbyHomeProps {
-  filter: TournamentFilterOption
+  filter: LobbyFilterOption
 }
 
 const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   const { t } = useTranslation()
   const classes = useStyles()
-  // const { arenas, meta, loadMore, onFilterChange } = useLobbyHome()
+  // const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
   const router = useRouter()
   const { toCreate } = useLobbyHelper()
 
   // useEffect(() => {
   //   if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
   //   loadMore()
-  // }, [arenas])
+  // }, [lobbies])
 
   // useEffect(() => {
   //   onFilterChange(filter)
   // }, [filter])
 
-  const onFilter = (filter: TournamentFilterOption) => {
+  const onFilter = (filter: LobbyFilterOption) => {
     router.push(`${ESRoutes.LOBBY}?filter=${filter}`, undefined, { shallow: true })
     return null
   }
 
   const defaultFilterOptions = [
     {
-      type: TournamentFilterOption.all,
+      type: LobbyFilterOption.all,
       label: t('common:arenaSearchFilters.all'),
       loginRequired: false,
     },
     {
-      type: TournamentFilterOption.ready,
+      type: LobbyFilterOption.ready,
       label: t('common:lobbySearchFilters.recommended'),
       loginRequired: false,
     },
     {
-      type: TournamentFilterOption.recruiting,
+      type: LobbyFilterOption.recruiting,
       label: t('common:lobbySearchFilters.beforeStart'),
       loginRequired: false,
     },
     {
-      type: TournamentFilterOption.beforeStart,
+      type: LobbyFilterOption.beforeStart,
       label: t('common:lobbySearchFilters.inProgress'),
       loginRequired: false,
     },
     {
-      type: TournamentFilterOption.inProgress,
+      type: LobbyFilterOption.inProgress,
       label: t('common:lobbySearchFilters.organized'),
     },
   ]
 
-  const testLobbies: TournamentListItem[] = [
+  const testLobbies: LobbyListItem[] = [
     {
       attributes: {
         title: 'testLobby',
@@ -171,21 +171,21 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
         </Box>
         {/* <InfiniteScroll
           className={classes.scrollContainer}
-          dataLength={arenas.length}
+          dataLength={lobby.length}
           next={loadMore}
           hasMore={true}
           loader={null}
           scrollThreshold={0.8}
         >
-          {arenas.map((tournament, i) => (
+          {lobby.map((Lobby, i) => (
             <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
-              <TournamentCard tournament={tournament} />
+              <LobbyCard Lobby={Lobby} />
             </Grid>
           ))}
         </InfiniteScroll> */}
         {testLobbies.map((lobby, i) => (
           <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4}>
-            <LobbyCard tournament={lobby} />
+            <LobbyCard lobby={lobby} />
           </Grid>
         ))}
         {/* {meta.pending && (

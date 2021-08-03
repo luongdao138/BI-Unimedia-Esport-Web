@@ -41,7 +41,7 @@ interface TeamEntryModalProps {
   updateDone?: () => void
   open: boolean
 }
-
+//TODO arena action type ашиглаж байгаа өөрчлөлт оруулаагүй
 const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile, onClose, open, isEdit, initialData, updateDone }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()

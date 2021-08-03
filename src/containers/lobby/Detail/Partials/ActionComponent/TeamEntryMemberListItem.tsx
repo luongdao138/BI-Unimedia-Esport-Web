@@ -5,7 +5,7 @@ import { Colors } from '@theme/colors'
 import ESSimpleSelectInput from '@components/SimpleSelectInput'
 import { TeamMemberSelectItem, MemberSelection } from '@store/arena/actions/types'
 import { FormikProps } from 'formik'
-import { TeamJoinBase } from '@services/arena.service'
+import { TeamJoinBase } from '@services/lobby.service'
 import _ from 'lodash'
 
 interface TeamEntryMemberListProps {

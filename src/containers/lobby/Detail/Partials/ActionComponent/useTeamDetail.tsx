@@ -5,7 +5,7 @@ import store from '@store/arena'
 
 const { selectors, actions } = store
 const _getMeta = createMetaSelector(actions.getTournamentTeamDetail)
-
+//TODO arena store ашиглаж байгаа өөрчлөлт оруулаагүй
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useTeamDetail = () => {
   const dispatch = useAppDispatch()

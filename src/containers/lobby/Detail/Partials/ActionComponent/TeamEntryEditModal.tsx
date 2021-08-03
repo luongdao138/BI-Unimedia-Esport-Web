@@ -29,7 +29,7 @@ interface EntryEditModalProps {
   onClose?: () => void
   toDetail?: () => void
 }
-
+//TODO arena action type ашиглаж байгаа өөрчлөлт оруулаагүй
 const TeamEntryEditModal: React.FC<EntryEditModalProps> = ({
   tournament,
   userProfile,

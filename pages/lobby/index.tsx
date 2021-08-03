@@ -4,7 +4,7 @@ import React from 'react'
 import { LobbyHomeContainer } from '@containers/lobby'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
-import { TournamentFilterOption } from '@services/arena.service'
+import { LobbyFilterOption } from '@services/lobby.service'
 
 const LobbyPage: PageWithLayoutType = () => {
   const router = useRouter()
@@ -17,12 +17,12 @@ const LobbyPage: PageWithLayoutType = () => {
 }
 
 function formatFilter(filterText: string) {
-  if (!_.isString(filterText)) return TournamentFilterOption.all
+  if (!_.isString(filterText)) return LobbyFilterOption.all
   const possibleFilters = ['all', 'ready', 'recruiting', 'before_start', 'in_progress', 'completed', 'joined', 'organized']
   if (possibleFilters.includes(filterText)) {
-    return filterText as TournamentFilterOption
+    return filterText as LobbyFilterOption
   }
-  return TournamentFilterOption.all
+  return LobbyFilterOption.all
 }
 
 export default LobbyPage

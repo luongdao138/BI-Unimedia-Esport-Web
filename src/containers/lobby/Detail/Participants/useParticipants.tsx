@@ -5,7 +5,7 @@ import store from '@store/arena'
 
 const { selectors, actions } = store
 const getMeta = createMetaSelector(actions.getTournamentParticipants)
-
+//TODO arena useParticipants-тай яг адилхан байгаа
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useParticipants = () => {
   const dispatch = useAppDispatch()

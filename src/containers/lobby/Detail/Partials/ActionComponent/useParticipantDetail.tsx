@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 const { selectors, actions } = store
 const _getMeta = createMetaSelector(actions.getParticipantName)
 const _changeMeta = createMetaSelector(actions.changeParticipantName)
-
+//TODO arena store ашиглаж байгаа өөрчлөлт оруулаагүй
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useParticipantDetail = () => {
   const { t } = useTranslation(['common'])
