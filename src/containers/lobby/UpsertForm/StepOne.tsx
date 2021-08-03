@@ -62,7 +62,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           id="title"
           name="stepOne.title"
           labelPrimary={i18n.t('common:lobby_create.name')}
-          // placeholder={i18n.t('common:lobby_create.title_placeholder')}
           fullWidth
           value={formik.values.stepOne.title}
           onChange={formik.handleChange}

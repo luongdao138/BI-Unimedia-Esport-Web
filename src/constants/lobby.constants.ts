@@ -1,6 +1,6 @@
 import i18n from '@locales/i18n'
 export const PARTICIPATION_TYPES = [
-  { label: '個人戦', value: 1 },
+  { label: i18n.t('common:tournament.type_single'), value: 1 },
   { label: '2on2', value: 2 },
   { label: '3on3', value: 3 },
   { label: '4on4', value: 4 },
@@ -13,10 +13,7 @@ export const PARTICIPATION_TYPES = [
 ]
 
 // TEMPORARY: battle royale removed
-export const RULES = [
-  { label: i18n.t('common:tournament.rule.single'), value: 'single' },
-  // { label: 'バトルロイヤル', value: 'battle_royale' },
-]
+export const RULES = [{ label: i18n.t('common:tournament.rule.single'), value: 'single' }]
 
 export const T_TYPES = [
   { label: i18n.t('common:lobby_create.public'), value: 0 },

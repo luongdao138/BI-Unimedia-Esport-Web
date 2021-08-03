@@ -7,15 +7,11 @@ import { EditableTypes } from '../useLobbyCreate'
 
 export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes): any => {
   let recruitMinDate = new Date()
-  // let recruitEndMinDate = new Date()
   let minStartDate = new Date()
   let minEndDate = new Date()
   if (!!data && !!data.attributes.status) {
     const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, 'recruiting')
-    // const beforeRecruitEnd = TournamentHelper.checkStatus(data.attributes.status, 'recruitment_closed')
     if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
-    // if (!beforeRecruitEnd && data.attributes.acceptance_end_date) recruitEndMinDate = new Date(data.attributes.acceptance_end_date)
-
     if (!editables.start_date && data.attributes.start_date) minStartDate = new Date(data.attributes.start_date)
     if (!editables.end_date && data.attributes.end_date) minEndDate = new Date(data.attributes.end_date)
   }
@@ -54,12 +50,6 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .required(i18n.t('common:common.input_required'))
         .min(recruitMinDate, i18n.t('common:common.validation.min_date')),
       acceptance_end_date: Yup.date().nullable().required(i18n.t('common:common.input_required')),
-      // .when('acceptance_start_date', {
-      //   is: (acceptance_start_date) => {
-      //     return acceptance_start_date == null
-      //   },
-      //   then: Yup.date().min(recruitEndMinDate, "i18n.t('common:common.validation.min_date')"),
-      // }),
       area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
       address: Yup.string()
         .nullable()

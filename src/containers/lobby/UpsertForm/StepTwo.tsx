@@ -81,26 +81,6 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           error={formik.touched?.stepTwo?.acceptance_start_date && !!formik.errors?.stepTwo?.acceptance_start_date}
           disabled={!editables.acceptance_start_date}
         />
-
-        {/* <Box mt={2}>
-          <span className={classes.dashes}>-</span>
-        </Box>
-        <ESInputDatePicker
-          name="stepThree.acceptance_end_date"
-          placeholder={i18n.t('common:tournament_create.end_date')}
-          fullWidth
-          multiline
-          rows={2}
-          value={formik.values.stepThree.acceptance_end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toString())}
-          onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
-            formik.errors?.stepThree?.acceptance_end_start_date
-          }
-          error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}
-          disabled={!editables.acceptance_end_date}
-        /> */}
       </Box>
       <Box pb={1} width={200}>
         <ESSelect

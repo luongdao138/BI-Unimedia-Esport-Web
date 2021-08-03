@@ -44,7 +44,6 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
     <>
       <Box display="flex" alignItems="center" pb={1}>
         <Typography className={classes.labelColor}>{t('common:lobby_create.category')}</Typography>
-        {/* <Typography className={classes.required}>{t('common:common.required')}</Typography> */}
       </Box>
       <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
         <Box display="flex" flexDirection="row" flexWrap="wrap">
