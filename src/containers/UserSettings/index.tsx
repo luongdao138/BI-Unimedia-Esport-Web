@@ -54,7 +54,7 @@ const UserSettingsContainer: React.FC = () => {
 
   useEffect(() => {
     getFeatures()
-    getPrefectures()
+    getPrefectures(true)
   }, [])
 
   const onFeatureSelect = (selectedFeatures) => {
