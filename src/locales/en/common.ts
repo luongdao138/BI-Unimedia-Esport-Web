@@ -720,6 +720,7 @@ export default {
     new_password_re_enter: '新しいパスワード（再入力）',
     hint: '8文字以上の半角英数字を入力してください',
     hint2: 'パスワードは英大文字、英小文字、数字を一文字以上使用してください',
+    hint3: '前回と同じパスワードは利用できません',
     change_email_success: 'メールアドレスを変更しました',
     change_password_success: 'パスワードを変更しました',
     sent_resend_code: '認証コードメールを再度送信しました',
