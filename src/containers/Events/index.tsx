@@ -14,8 +14,6 @@ import { liveEventsActions } from '@store/liveEvents/actions'
 import moment from 'moment'
 import { RootState } from '@store/reducers'
 import { cutLinksIntoPieces, getPriceWithTax } from '@utils/helpers/CommonHelper'
-// import { errorActions } from '@store/error'
-// import strings from '@i18n/jp'
 
 interface IAttribute {
   archive_end_datetime?: string
@@ -117,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Events = (props: IProps) => {
+const Events: React.FC<IProps> = (props) => {
   const staticTitle = '【JAVCOMセミナー No.158】eスポーツがもたらす映像ビジネス'
   const classes = useStyles({})
   const dispatch = useDispatch()

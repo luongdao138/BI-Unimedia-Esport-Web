@@ -18,9 +18,11 @@ import { videoDetailReducer } from '@store/videoDetail/reducers'
 import liveSocket from '@store/live_socket/reducers'
 import { liveEventsReducer } from '@store/liveEvents/reducers'
 import chatHistory from '@store/chatHistory/reducers'
+import { prReducer as pr } from '@store/pr/reducers'
 
 const reducer = combineReducers({
   liveSocket,
+  pr,
   videoDetail: videoDetailReducer,
   auth: auth.reducers,
   metadata: metadata.reducer,
