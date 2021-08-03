@@ -5,6 +5,7 @@ import { LobbyDetail, LobbyStatus } from '@services/lobby.service'
 import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
 // import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'
+import Ready from './Partials/Ready'
 // import InProgress from './Partials/InProgress'
 // import Cancelled from './Partials/Cancelled'
 // import Completed from './Partials/Completed'
@@ -28,13 +29,13 @@ const LobbyDetailBody: React.FC = () => {
       notes: 'note',
       rule: 'single', //double, battle_royale
       max_participants: 15,
-      status: 'recruiting', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
+      status: 'ready', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
       is_freezed: false,
-      start_date: '2021-08-04 13:00',
-      end_date: '2021-08-05 13:00',
+      start_date: '2021-08-05 13:00',
+      end_date: '2021-08-06 13:00',
       chat_room_id: '123',
-      acceptance_start_date: '2021-08-03 13:00',
-      acceptance_end_date: '2021-08-04 12:00',
+      acceptance_start_date: '2021-08-04 13:00',
+      acceptance_end_date: '2021-08-05 12:00',
       participant_type: 1,
       area_id: 1,
       area_name: 'tokyo',
@@ -118,13 +119,10 @@ const LobbyDetailBody: React.FC = () => {
     completed: {
       /* <Completed lobby={lobby} userProfile={userProfile} /> */
     }, //trophy
-    ready: {
-      /* <Recruiting lobby={lobby} userProfile={userProfile} /> */
-    },
+    ready: <Ready lobby={lobby} userProfile={userProfile} />,
     ready_to_start: {
       /* <RecruitmentClosed lobby={lobby} userProfile={userProfile} /> */
     }, //hourglass
-    before_recruitment: {},
     recruiting: <Recruiting lobby={lobby} userProfile={userProfile} />,
     recruitment_closed: {
       /* <RecruitmentClosed lobby={lobby} userProfile={userProfile} /> */

@@ -21,7 +21,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
   const [tab, setTab] = useState(5)
   useEffect(() => {
     switch (status) {
-      case 'before_recruitment':
+      case 'ready':
         setTab(0)
         break
       case 'recruiting':
@@ -43,6 +43,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
         setTab(5)
     }
   }, [status])
+
   return (
     <>
       <Box className={classes.backContainer}>
