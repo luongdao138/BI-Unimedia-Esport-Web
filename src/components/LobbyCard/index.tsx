@@ -7,22 +7,22 @@ import ESCardContent from '@components/Card/CardContent'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { TournamentListItem } from '@services/arena.service'
+import { LobbyListItem } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
 import i18n from '@locales/i18n'
 
 interface Props {
-  tournament: TournamentListItem
+  lobby: LobbyListItem
 }
 
-const LobbyCard: React.FC<Props> = ({ tournament }) => {
+const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
 
-  const attr = tournament.attributes
-  const winner = tournament.attributes.winner
+  const attr = lobby.attributes
+  const winner = lobby.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   // const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
