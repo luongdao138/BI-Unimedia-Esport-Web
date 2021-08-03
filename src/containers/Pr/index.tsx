@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
   },
   footerBlankSpace: {
     width: '100%',
-    height: 58,
+    height: 80,
   },
   linkBreak: {
     wordWrap: 'break-word',
