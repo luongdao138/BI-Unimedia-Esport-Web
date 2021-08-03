@@ -183,7 +183,7 @@ const Events: React.FC<IProps> = (props) => {
               textDecoration: 'none',
             }}
           >
-            <ButtonPrimary round fullWidth>
+            <ButtonPrimary round gradient={false} fullWidth>
               eXeLAB ご紹介ページ
             </ButtonPrimary>
           </a>
