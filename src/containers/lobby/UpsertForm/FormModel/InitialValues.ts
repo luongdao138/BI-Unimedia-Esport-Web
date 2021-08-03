@@ -20,6 +20,17 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     t_type: data ? data.attributes.t_type : 't_public',
     notes: data ? data.attributes.notes : '',
     retain_history: data ? data.attributes.retain_history : true,
+    start_date: data ? data.attributes.start_date : null,
+    end_date: data ? data.attributes.end_date : null,
+    acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
+    acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
+    area_id: data ? data.attributes.area_id : -1,
+    address: data ? data.attributes.address : '',
+    // for cross-fields validations
+    recruit_date: '',
+    acceptance_dates: '',
+    acceptance_end_start_date: '',
+    start_end_date: '',
   },
   stepThree: {
     start_date: data ? data.attributes.start_date : null,
