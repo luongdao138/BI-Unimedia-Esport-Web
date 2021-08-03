@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { MemberSelection, TeamMemberSelectItem } from '@store/arena/actions/types'
 import _ from 'lodash'
-
+//TODO arena action type ашиглаж байгаа өөрчлөлт оруулаагүй
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useTeamSelectedMember = () => {
   const [selectedMembers, setSelectedMembers] = useState([] as MemberSelection[])

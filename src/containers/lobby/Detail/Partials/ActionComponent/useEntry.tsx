@@ -12,7 +12,7 @@ const _closeMeta = createMetaSelector(actions.closeTournament)
 const _joinMeta = createMetaSelector(actions.joinTournament)
 const _leaveMeta = createMetaSelector(actions.leaveTournament)
 const _updateTeamMeta = createMetaSelector(actions.updateTournamentTeamDetail)
-
+//TODO arena-тай ижил өөрчлөлт оруулаагүй
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useEntry = () => {
   const { t } = useTranslation(['common'])

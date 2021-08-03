@@ -17,7 +17,7 @@ interface TeamEntryMemberListProps {
   selectedMembers: MemberSelection[]
   isEdit: boolean
 }
-
+//TODO arena action type ашиглаж байгаа өөрчлөлт оруулаагүй
 const TeamEntryMemberList: React.FC<TeamEntryMemberListProps> = ({
   tournament,
   userProfile,
