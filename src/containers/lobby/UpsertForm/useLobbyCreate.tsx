@@ -9,7 +9,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import _ from 'lodash'
-import useArenaHelper from '../hooks/useArenaHelper'
+import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 
@@ -41,7 +41,7 @@ export type EditableTypes = {
   cover_image: boolean
 }
 
-const useTournamentCreate = (): {
+const useLobbyCreate = (): {
   submit(params: TournamentFormParams): void
   update(params: UpdateParams): void
   meta: Meta
@@ -83,7 +83,7 @@ const useTournamentCreate = (): {
     acceptance_start_date: true,
     acceptance_end_date: true,
   })
-  const { isEditable } = useArenaHelper(arena)
+  const { isEditable } = useLobbyHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
   const submit = async (params: TournamentFormParams) => {
@@ -171,4 +171,4 @@ const useTournamentCreate = (): {
   return { submit, update, updateMeta, meta, isEdit, arena, editables }
 }
 
-export default useTournamentCreate
+export default useLobbyCreate

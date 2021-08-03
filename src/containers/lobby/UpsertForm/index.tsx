@@ -8,7 +8,7 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
 import StepTwo from './StepTwo'
 import useCommonData from './useCommonData'
-import useTournamentCreate from './useTournamentCreate'
+import useLobbyCreate from './useLobbyCreate'
 import ESLoader from '@components/FullScreenLoader'
 import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
@@ -37,7 +37,7 @@ const LobbyCreate: React.FC = () => {
   const dispatch = useAppDispatch()
   const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
-  const { submit, update, meta, updateMeta, isEdit, arena, editables } = useTournamentCreate()
+  const { submit, update, meta, updateMeta, isEdit, arena, editables } = useLobbyCreate()
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
