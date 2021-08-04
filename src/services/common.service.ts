@@ -1,8 +1,13 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
+import _ from 'lodash'
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type GetPrefecturesParams = {}
+export type GetPrefecturesParams =
+  | {
+      isUser: boolean
+    }
+  | undefined
 
 export type GetPrefecturesResponse = {
   data: [
@@ -27,8 +32,13 @@ export type HardwareResponse = {
   }>
 }
 
-export const getPrefectures = async (): Promise<GetPrefecturesResponse> => {
-  const { data } = await api.get<GetPrefecturesResponse>(URI.GET_PREFECTURES)
+export const getPrefectures = async (param?: GetPrefecturesParams): Promise<GetPrefecturesResponse> => {
+  const isUser = _.get(param, 'isUser') === true
+  let url = URI.GET_PREFECTURES
+  if (isUser) {
+    url = `${URI.GET_PREFECTURES}?is_user=true`
+  }
+  const { data } = await api.get<GetPrefecturesResponse>(url)
   return data
 }
 

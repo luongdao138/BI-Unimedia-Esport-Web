@@ -515,7 +515,7 @@ export default {
     overview: '概要',
     please_enter: '入力してください',
     holding_format: '開催形式',
-    has_third_place: '3位決定トーナメントあり',
+    has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',
     participation_term_placeholder: 'キーワードを設けて、実施する大会を他ユーザーに見つけてもらいやすくすることができます。',
