@@ -21,8 +21,6 @@ import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import { ESRoutes } from '@constants/route.constants'
 import { UserProfile } from '@services/user.service'
-import { getIsAuthenticated, getIsConfirmed } from '@store/auth/selectors'
-import { useAppSelector } from '@store/hooks'
 
 const FINAL_STEP = 3
 
@@ -38,8 +36,6 @@ const UserSettingsContainer: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile['attributes'] | null>(null)
   const [isValidDate, setValidDate] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
-  const isAuth = useAppSelector(getIsAuthenticated)
-  const isConfirmed = useAppSelector(getIsConfirmed)
 
   useEffect(() => {
     if (userProfile) {
@@ -48,10 +44,13 @@ const UserSettingsContainer: React.FC = () => {
     }
   }, [userProfile])
 
+  const [isRender, setIsRender] = useState(false)
   useEffect(() => {
     if (getUserProfileMeta.loaded) {
       if (!userProfile || userProfile.attributes.update_step !== 1) {
         router.push(ESRoutes.HOME)
+      } else {
+        setIsRender(true)
       }
     }
   }, [getUserProfileMeta.loaded])
@@ -102,11 +101,7 @@ const UserSettingsContainer: React.FC = () => {
 
   const handleSkip = () => navigate()
 
-  if (isAuth && isConfirmed) {
-    router.push(ESRoutes.HOME)
-    return <></>
-  }
-  return profile && getUserProfileMeta.loaded ? (
+  return profile && getUserProfileMeta.loaded && isRender ? (
     <>
       <Box className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
