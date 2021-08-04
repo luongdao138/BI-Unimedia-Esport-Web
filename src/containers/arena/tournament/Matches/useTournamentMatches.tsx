@@ -25,9 +25,10 @@ const useTournamentMatches = (): {
   roundTitles: RoundTitles
   handleBack: () => void
 } => {
-  const [intervalId, setIntervalId] = useState(undefined as number | undefined)
+  const [intervalId, setIntervalId] = useState(null as number | null)
+  const [initialPathName, setInitialPathName] = useState(null as string | null)
   const { t } = useTranslation(['common'])
-  const { query, push, back } = useRouter()
+  const { query, push, back, pathname } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
@@ -59,12 +60,13 @@ const useTournamentMatches = (): {
 
   useEffect(() => {
     fetchMatches()
-    if (intervalId === undefined) {
+    if (intervalId === null) {
+      setInitialPathName(pathname)
       const nIntervId = setInterval(intervalFetch, 30 * 1000) as unknown
       setIntervalId(nIntervId as number)
     } else {
       clearInterval(intervalId)
-      setIntervalId(undefined)
+      setIntervalId(null)
     }
   }, [query.hash_key])
 
@@ -90,12 +92,21 @@ const useTournamentMatches = (): {
   }, [meta.loaded])
 
   useEffect(() => {
+    if (initialPathName !== null && initialPathName !== pathname) {
+      // eslint-disable-next-line no-console
+      console.log('removing interval')
+      clearInterval(intervalId)
+      setIntervalId(null)
+    }
+  }, [pathname])
+
+  useEffect(() => {
     return () => {
       if (intervalId !== undefined) {
         // eslint-disable-next-line no-console
         console.log('removing interval')
         clearInterval(intervalId)
-        setIntervalId(undefined)
+        setIntervalId(null)
       }
     }
   }, [])
