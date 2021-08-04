@@ -481,6 +481,9 @@ export default {
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
     recruitment_follower: 'フォローしている人の募集',
+    join_dialog: {
+      dialog_title: 'エントリーしますか？',
+    },
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
