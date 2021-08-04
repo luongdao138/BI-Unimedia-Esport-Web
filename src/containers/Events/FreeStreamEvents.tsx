@@ -1,7 +1,6 @@
 import Slider from '@components/LiveSlider'
 import Loader from '@components/Loader'
-import Box from '@material-ui/core/Box'
-import { Container } from '@material-ui/core'
+import { Box, Button, Container } from '@material-ui/core'
 import * as NextLink from 'next/link'
 import { useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
@@ -9,7 +8,7 @@ import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { liveEventsActions } from '@store/liveEvents/actions'
 import StaticDescription from '@components/StaticDescription'
 import { RootState } from '@store/reducers'
-import ButtonPrimary from '@components/ButtonPrimary'
+import { ESRoutes } from '@constants/route.constants'
 
 interface IAttribute {
   archive_end_datetime?: string
@@ -168,9 +167,9 @@ const Events: React.FC<IProps> = (props) => {
           textDecoration: 'none',
         }}
       >
-        <ButtonPrimary round gradient={false} fullWidth>
+        <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
           eXeLAB ご紹介ページ
-        </ButtonPrimary>
+        </Button>
       </a>
     ) : (
       <div className={classes.bottomButtons}>
@@ -183,16 +182,16 @@ const Events: React.FC<IProps> = (props) => {
               textDecoration: 'none',
             }}
           >
-            <ButtonPrimary round gradient={false} fullWidth>
+            <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
               eXeLAB ご紹介ページ
-            </ButtonPrimary>
+            </Button>
           </a>
         </div>
         <div>
-          <NextLink.default href={attr.flag === 'archive_delivery' ? '/archive' : '/stream'}>
-            <ButtonPrimary round fullWidth>
+          <NextLink.default href={attr.flag === 'archive_delivery' ? ESRoutes.ARCHIVE : ESRoutes.STREAM}>
+            <Button variant="contained" color="primary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
               {getRightButtonText(attr.flag, attr.has_ticket)}
-            </ButtonPrimary>
+            </Button>
           </NextLink.default>
         </div>
       </div>
@@ -208,32 +207,24 @@ const Events: React.FC<IProps> = (props) => {
             <StaticDescription />
           </div>
           <div className={classes.footerBlankSpace}></div>
-          <div className={classes.stickyFooter}>
-            <Container
-              maxWidth="lg"
-              style={{
-                paddingLeft: 16,
-                paddingRight: 16,
-              }}
-            >
-              {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
-                <a
-                  href="https://info.exelab.jp/"
-                  // eslint-disable-next-line react/jsx-no-target-blank
-                  target="_blank"
-                  style={{
-                    textDecoration: 'none',
-                  }}
-                >
-                  <ButtonPrimary round gradient={false} fullWidth>
-                    eXeLAB ご紹介ページ
-                  </ButtonPrimary>
-                </a>
-              ) : (
-                getDoubleButtonView()
-              )}
-            </Container>
-          </div>
+          <Box pb={12}>
+            {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
+              <a
+                href="https://info.exelab.jp/"
+                // eslint-disable-next-line react/jsx-no-target-blank
+                target="_blank"
+                style={{
+                  textDecoration: 'none',
+                }}
+              >
+                <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
+                  eXeLAB ご紹介ページ
+                </Button>
+              </a>
+            ) : (
+              getDoubleButtonView()
+            )}
+          </Box>
         </div>
       </Box>
       {loading ? <Loader /> : null}

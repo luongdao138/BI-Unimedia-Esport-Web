@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Colors } from '@theme/colors'
+import { Colors } from '@theme/live/colors'
 import Box from '@material-ui/core/Box'
 import moment from 'moment'
 import { weekDay } from '@containers/Stream/elements/helper'

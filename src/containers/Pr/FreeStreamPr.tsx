@@ -1,16 +1,14 @@
 /* eslint-disable react/jsx-no-target-blank */
 import Slider from '@components/LiveSlider'
-import Loader from '@components/Loader'
-import { Container } from '@material-ui/core'
+import { Container, Button } from '@material-ui/core'
 import { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { prActions } from '@store/pr/actions'
-import * as NextLink from 'next/link'
 import Box from '@material-ui/core/Box'
 import StaticDescription from '@components/StaticDescription'
 import { RootState } from '@store/reducers'
-import ButtonPrimary from '@components/ButtonPrimary'
+import LoginRequired from '@containers/LoginRequired'
 
 interface IProps {
   banners: string[]
@@ -113,19 +111,17 @@ const Pr: React.FC<IProps> = (props) => {
               textDecoration: 'none',
             }}
           >
-            <ButtonPrimary round gradient={false} fullWidth>
+            <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
               eXeLAB ご紹介ページ
-            </ButtonPrimary>
+            </Button>
           </a>
         </div>
         <div>
-          {
-            <NextLink.default href="/register">
-              <ButtonPrimary round fullWidth>
-                会員登録はこちら
-              </ButtonPrimary>
-            </NextLink.default>
-          }
+          <LoginRequired>
+            <Button variant="contained" color="primary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
+              会員登録はこちら
+            </Button>
+          </LoginRequired>
         </div>
       </div>
     )
@@ -144,21 +140,12 @@ const Pr: React.FC<IProps> = (props) => {
             </div>
             <div className={classes.footerBlankSpace}></div>
 
-            <div className={classes.stickyFooter}>
-              <Container
-                maxWidth="lg"
-                style={{
-                  paddingLeft: 16,
-                  paddingRight: 16,
-                }}
-              >
-                {getDoubleButtonView()}
-              </Container>
-            </div>
+            <Box pb={12}>{getDoubleButtonView()}</Box>
           </div>
         </Box>
-      ) : null}
-      {open ? <Loader /> : null}
+      ) : (
+        <></>
+      )}
     </Container>
   )
 }

@@ -52,4 +52,7 @@ export const ESRoutes = {
   ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
+  EVENTS: '/events',
+  STREAM: '/stream',
+  ARCHIVE: '/archive',
 }

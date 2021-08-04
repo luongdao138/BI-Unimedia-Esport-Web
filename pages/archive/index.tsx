@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useEffect, useState, useRef } from 'react'
-import MainLayout from '@layouts/PlainLayout'
+import MainLayout from '@layouts/MainLayout'
 import { Grid, Tabs, Tab, Container, useMediaQuery, Typography, Box, Paper } from '@material-ui/core'
 import { TabContext, TabPanel } from '@material-ui/lab/'
 import StreamDetail from '@containers/Stream/elements/StreamDetail'
@@ -27,6 +27,9 @@ import ChatWarningModal from '@containers/Stream/elements/ChatWarningModal'
 import _ from 'lodash'
 import Ad from '@components/Ad'
 import { prServices } from '@services/pr.services'
+import { ESRoutes } from '@constants/route.constants'
+import LiveThemeProvider from '@theme/live/LiveThemeProvider'
+import withAuth from '@utils/withAuth'
 
 const ArchivePage = () => {
   const [value, setValue] = useState<string>('1')
@@ -72,11 +75,11 @@ const ArchivePage = () => {
 
   useEffect(() => {
     if (hasTicked === false && meta.loaded && !meta.error && !meta.pending) {
-      Router.push('/events')
+      Router.push(ESRoutes.EVENTS)
     } else if (hasTicked === true && meta.loaded && !meta.error && !meta.pending && data) {
       if (status === STREAM_STATUS.LIVE_STREAMING || status === STREAM_STATUS.BEFORE_START || status === STREAM_STATUS.CM_STARTED) {
         // console.log(status)
-        Router.push('/stream')
+        Router.push(ESRoutes.STREAM)
       } else {
         const url = data.attributes.archive_messages
         if (url) {
@@ -218,108 +221,108 @@ const ArchivePage = () => {
   const classes = useStyles()
 
   return (
-    <>
-      {data && hasTicked == true ? (
-        <>
+    <MainLayout>
+      <LiveThemeProvider>
+        {data && hasTicked == true ? (
+          <>
+            <div className="content-wrapper-stream">
+              <div className={classes.root}>
+                <Container className={classes.spacing} disableGutters maxWidth="xl">
+                  <Grid container>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      <Paper className={classes.playerContainer} elevation={2} square>
+                        <PlayerCard>
+                          {renderArchivePlayer()}
+                          {renderArchiveEnd()}
+                        </PlayerCard>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      {status == STREAM_STATUS.END_OF_ARCHIVED ? (
+                        <>
+                          <Box className={classes.endDetail}>
+                            <StreamDetail url={url} data={data} countData={roomCountInfo} />
+                          </Box>
+                          <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+                        </>
+                      ) : (
+                        <TabContext value={value}>
+                          <Box
+                            style={{
+                              position: 'relative',
+                              height: '100%',
+                            }}
+                          >
+                            <Box className={classes.tabHeader}>
+                              <Box>LIVEチャット</Box>
+                            </Box>
+                            <Box className={classes.tabContainer}>
+                              <Tabs
+                                className={classes.tabs}
+                                value={value}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                onChange={handleChange}
+                              >
+                                <Tab disableRipple={true} className={classes.tab} label="LIVEチャット" value="1" />
+                                <Tab disableRipple={true} className={classes.tab} label="番組情報" value="2" />
+                              </Tabs>
+                            </Box>
+                            <TabPanel className={classes.panel} value="1">
+                              {chatPlaceHolder()}
+                              {renderChatHistory()}
+                            </TabPanel>
+                            <TabPanel className={classes.panel} value="2">
+                              <StreamDetail url={url} data={data} countData={roomCountInfo} />
+                              <Box className={classes.mobileBanner}>
+                                <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+                              </Box>
+                            </TabPanel>
+                          </Box>
+                        </TabContext>
+                      )}
+                    </Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      <PaperDetail className={classes.detail} elevation={2} square>
+                        <StreamDetail url={url} data={data} countData={roomCountInfo} />
+                      </PaperDetail>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      {status == STREAM_STATUS.END_OF_ARCHIVED ? null : (
+                        <Box className={classes.desktopBanner}>
+                          <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+                        </Box>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Container>
+              </div>
+              <ChatWarningModal openBottomPanel={isOpen} setOpenBottomPanel={_setOpenBottomPanel} />
+            </div>
+          </>
+        ) : (
           <div className="content-wrapper-stream">
             <div className={classes.root}>
               <Container className={classes.spacing} disableGutters maxWidth="xl">
-                <Grid container spacing={isDesktop ? 1 : 0}>
-                  <Grid item xs={12} sm={12} md={8} className={classes.grid}>
+                <Grid container>
+                  <Grid item xs={12} sm={12} md={12} className={classes.grid}>
                     <Paper className={classes.playerContainer} elevation={2} square>
                       <PlayerCard>
-                        {renderArchivePlayer()}
-                        {renderArchiveEnd()}
+                        <BeforeHolder text="配信情報が見つかりませんでした。" />
                       </PlayerCard>
                     </Paper>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4} className={classes.grid}>
-                    {status == STREAM_STATUS.END_OF_ARCHIVED ? (
-                      <>
-                        <Box className={classes.endDetail}>
-                          <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                        </Box>
-                        <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
-                      </>
-                    ) : (
-                      <TabContext value={value}>
-                        <Box
-                          style={{
-                            position: 'relative',
-                            height: '100%',
-                          }}
-                        >
-                          <Box className={classes.tabHeader}>
-                            <Box>LIVEチャット</Box>
-                          </Box>
-                          <Box className={classes.tabContainer}>
-                            <Tabs
-                              className={classes.tabs}
-                              value={value}
-                              indicatorColor="primary"
-                              textColor="primary"
-                              onChange={handleChange}
-                            >
-                              <Tab disableRipple={true} className={classes.tab} label="LIVEチャット" value="1" />
-                              <Tab disableRipple={true} className={classes.tab} label="番組情報" value="2" />
-                            </Tabs>
-                          </Box>
-                          <TabPanel className={classes.panel} value="1">
-                            {chatPlaceHolder()}
-                            {renderChatHistory()}
-                          </TabPanel>
-                          <TabPanel className={classes.panel} value="2">
-                            <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                            <Box className={classes.mobileBanner}>
-                              <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
-                            </Box>
-                          </TabPanel>
-                        </Box>
-                      </TabContext>
-                    )}
-                  </Grid>
-                </Grid>
-                <Grid container spacing={isDesktop ? 1 : 0}>
-                  <Grid item xs={12} sm={12} md={8} className={classes.grid}>
-                    <PaperDetail className={classes.detail} elevation={2} square>
-                      <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                    </PaperDetail>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4} className={classes.grid}>
-                    {status == STREAM_STATUS.END_OF_ARCHIVED ? null : (
-                      <Box className={classes.desktopBanner}>
-                        <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
-                      </Box>
-                    )}
                   </Grid>
                 </Grid>
               </Container>
             </div>
-            <ChatWarningModal openBottomPanel={isOpen} setOpenBottomPanel={_setOpenBottomPanel} />
           </div>
-        </>
-      ) : (
-        <div className="content-wrapper-stream">
-          <div className={classes.root}>
-            <Container className={classes.spacing} disableGutters maxWidth="xl">
-              <Grid container spacing={isDesktop ? 1 : 0}>
-                <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-                  <Paper className={classes.playerContainer} elevation={2} square>
-                    <PlayerCard>
-                      <BeforeHolder text="配信情報が見つかりませんでした。" />
-                    </PlayerCard>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Container>
-          </div>
-        </div>
-      )}
-    </>
+        )}
+      </LiveThemeProvider>
+    </MainLayout>
   )
 }
-
-ArchivePage.Layout = MainLayout
 
 export async function getStaticProps() {
   try {
@@ -337,4 +340,4 @@ export async function getStaticProps() {
   }
 }
 
-export default ArchivePage
+export default withAuth(ArchivePage)

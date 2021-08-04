@@ -1,6 +1,7 @@
-import PlainLayout from '@layouts/PlainLayout'
+import MainLayout from '@layouts/MainLayout'
 // import Events from '@containers/Events'
-import Events from '@containers/Events/FreeStream'
+import Events from '@containers/Events/FreeStreamEvents'
+import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 
 interface IProps {
   banners: string[]
@@ -37,9 +38,11 @@ export async function getStaticProps(): Promise<{
 
 const EventsPage: React.FC<IProps> = (props) => {
   return (
-    <PlainLayout>
-      <Events banners={props.banners} />
-    </PlainLayout>
+    <MainLayout>
+      <LiveThemeProvider>
+        <Events banners={props.banners} />
+      </LiveThemeProvider>
+    </MainLayout>
   )
 }
 

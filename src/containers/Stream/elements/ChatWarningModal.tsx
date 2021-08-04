@@ -1,7 +1,7 @@
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
-import { Colors } from '@theme/colors'
+import { Colors } from '@theme/live/colors'
 import CloseIcon from '@material-ui/icons/Close'
 import ErrorIcon from '@material-ui/icons/Error'
 import Box from '@material-ui/core/Box'

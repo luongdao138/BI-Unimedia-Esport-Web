@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import PlainLayout from '@layouts/PlainLayout'
+import MainLayout from '@layouts/MainLayout'
 import { Grid, Tabs, Tab, Container, useMediaQuery, Typography, Box, Paper } from '@material-ui/core'
 import { TabContext, TabPanel } from '@material-ui/lab/'
 import StreamDetail from '@containers/Stream/elements/StreamDetail'
@@ -30,6 +30,8 @@ import { useStyles } from '@utils/detail'
 import { useShareHash } from '@utils/useShareHash'
 import { prServices } from '@services/pr.services'
 import { getAuth } from '@store/auth/selectors'
+import withAuth from '@utils/withAuth'
+import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 
 const StreamPage: React.FC = () => {
   const [value, setValue] = useState<string>('1')
@@ -47,7 +49,7 @@ const StreamPage: React.FC = () => {
   const store = useStore()
   const userId = _.get(currentUser, 'id', null)
   const status = _.get(data, 'attributes.flag', undefined)
-  //const status = STREAM_STATUS.LIVE_STREAMING
+  // const status = STREAM_STATUS.LIVE_STREAMING
   const hash = _.get(data, 'attributes.shared_hash', undefined)
   const hasTicked = _.get(data, 'attributes.has_ticket', undefined)
   const url = useShareHash(hash)
@@ -188,75 +190,83 @@ const StreamPage: React.FC = () => {
   const classes = useStyles()
 
   return (
-    <PlainLayout>
-      {checkLoading() && <Loader />}
-      {data && hasTicked && (
-        <>
-          <div className="content-wrapper-stream">
-            <div className={classes.root}>
-              <Container className={classes.spacing} disableGutters maxWidth="xl">
-                <Grid container spacing={isDesktop ? 1 : 0}>
-                  <Grid item xs={12} sm={12} md={8} className={classes.grid}>
-                    <Paper className={classes.playerContainer} elevation={2} square>
-                      <PlayerCard>
-                        {renderBeforeStart()}
-                        {renderPlayer()}
-                      </PlayerCard>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={4} className={classes.grid}>
-                    <TabContext value={value}>
-                      <Box
-                        style={{
-                          position: 'relative',
-                          height: '100%',
-                        }}
-                      >
-                        <Box className={classes.tabHeader}>
-                          <Box>LIVEチャット</Box>
-                        </Box>
-                        <Box className={classes.tabContainer}>
-                          <Tabs className={classes.tabs} value={value} indicatorColor="primary" textColor="primary" onChange={handleChange}>
-                            <Tab disableRipple={true} className={classes.tab} label="LIVEチャット" value="1" />
-                            <Tab disableRipple={true} className={classes.tab} label="番組情報" value="2" />
-                          </Tabs>
-                        </Box>
-                        <TabPanel className={classes.panel} value="1">
-                          {chatPlaceHolder()}
-                          {renderChat()}
-                        </TabPanel>
-                        <TabPanel className={classes.panel} value="2">
-                          <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                          <Box className={classes.mobileBanner}>
-                            <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+    <MainLayout>
+      <LiveThemeProvider>
+        {checkLoading() && <Loader />}
+        {data && hasTicked && (
+          <>
+            <div className="content-wrapper-stream">
+              <div className={classes.root}>
+                <Container className={classes.spacing} disableGutters maxWidth="xl">
+                  <Grid container spacing={isDesktop ? 1 : 0}>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      <Paper className={classes.playerContainer} elevation={2} square>
+                        <PlayerCard>
+                          {renderBeforeStart()}
+                          {renderPlayer()}
+                        </PlayerCard>
+                      </Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      <TabContext value={value}>
+                        <Box
+                          style={{
+                            position: 'relative',
+                            height: '100%',
+                          }}
+                        >
+                          <Box className={classes.tabHeader}>
+                            <Box>LIVEチャット</Box>
                           </Box>
-                        </TabPanel>
-                      </Box>
-                    </TabContext>
+                          <Box className={classes.tabContainer}>
+                            <Tabs
+                              className={classes.tabs}
+                              value={value}
+                              indicatorColor="primary"
+                              textColor="primary"
+                              onChange={handleChange}
+                            >
+                              <Tab disableRipple={true} className={classes.tab} label="LIVEチャット" value="1" />
+                              <Tab disableRipple={true} className={classes.tab} label="番組情報" value="2" />
+                            </Tabs>
+                          </Box>
+                          <TabPanel className={classes.panel} value="1">
+                            {chatPlaceHolder()}
+                            {renderChat()}
+                          </TabPanel>
+                          <TabPanel className={classes.panel} value="2">
+                            <StreamDetail url={url} data={data} countData={roomCountInfo} />
+                            <Box className={classes.mobileBanner}>
+                              <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+                            </Box>
+                          </TabPanel>
+                        </Box>
+                      </TabContext>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing={isDesktop ? 1 : 0}>
-                  <Grid item xs={12} sm={12} md={8} className={classes.grid}>
-                    <PaperDetail className={classes.detail} elevation={2} square>
-                      <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                    </PaperDetail>
+                  <Grid container spacing={isDesktop ? 1 : 0}>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      <PaperDetail className={classes.detail} elevation={2} square>
+                        <StreamDetail url={url} data={data} countData={roomCountInfo} />
+                      </PaperDetail>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                      {status == STREAM_STATUS.END_OF_ARCHIVED ? null : (
+                        <Box className={classes.desktopBanner}>
+                          <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+                        </Box>
+                      )}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={4} className={classes.grid}>
-                    {status == STREAM_STATUS.END_OF_ARCHIVED ? null : (
-                      <Box className={classes.desktopBanner}>
-                        <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
-                      </Box>
-                    )}
-                  </Grid>
-                </Grid>
-              </Container>
+                </Container>
+              </div>
             </div>
-          </div>
-        </>
-      )}
-      {hasNgWord && <ErrorSnackbar open={hasNgWord} message={'不適切な文字列が含まれています。'} onClose={() => setNgWord(false)} />}
-      {renderInActivePlayer()}
-    </PlainLayout>
+          </>
+        )}
+        {hasNgWord && <ErrorSnackbar open={hasNgWord} message={'不適切な文字列が含まれています。'} onClose={() => setNgWord(false)} />}
+        {renderInActivePlayer()}
+      </LiveThemeProvider>
+    </MainLayout>
   )
 }
 
@@ -276,4 +286,4 @@ export async function getStaticProps() {
   }
 }
 
-export default StreamPage
+export default withAuth(StreamPage)

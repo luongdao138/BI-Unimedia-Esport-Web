@@ -25,7 +25,7 @@ export const videoDetailActions = {
   getArchiveData: (url: string, onSuccess?: (d: any) => void) => {
     return (dispatch: AppDispatch) => {
       liveEventsServices.getChatJson(url).then((data) => {
-        onSuccess(data.messages)
+        onSuccess && onSuccess(data.messages)
         dispatch(socketActions.setCount(data.roomInfo))
       })
     }

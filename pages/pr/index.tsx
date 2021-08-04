@@ -1,5 +1,11 @@
-import PlainLayout from '@layouts/PlainLayout'
+import MainLayout from '@layouts/MainLayout'
 import Pr from '@containers/Pr/FreeStreamPr'
+import LiveThemeProvider from '@theme/live/LiveThemeProvider'
+import { useAppSelector } from '@store/hooks'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { useEffect } from 'react'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface IProps {
   banners: string[]
@@ -21,12 +27,21 @@ export async function getStaticProps() {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const PrPage = (props: IProps) => {
+  const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const { push } = useRouter()
+  useEffect(() => {
+    if (isAuthenticated) {
+      push(ESRoutes.EVENTS)
+    }
+  }, [isAuthenticated])
+
+  if (isAuthenticated) return <></>
   return (
-    <>
-      <PlainLayout>
+    <MainLayout>
+      <LiveThemeProvider>
         <Pr banners={props.banners} />
-      </PlainLayout>
-    </>
+      </LiveThemeProvider>
+    </MainLayout>
   )
 }
 

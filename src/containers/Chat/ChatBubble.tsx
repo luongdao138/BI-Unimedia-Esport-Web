@@ -2,7 +2,7 @@ import React from 'react'
 import Time from './elements/Time'
 import { CHAT_MESSAGE_TYPE } from '@constants/socket.constants'
 import Box from '@material-ui/core/Box'
-import { Colors } from '@theme/colors'
+import { Colors } from '@theme/live/colors'
 import { makeStyles } from '@material-ui/core/styles'
 
 export interface BubbleProps {
