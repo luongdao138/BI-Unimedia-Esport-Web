@@ -53,13 +53,10 @@ const LobbyCreate: React.FC = () => {
     validationSchema: getValidationScheme(arena, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
-      const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
+      const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepTwo.area_id}`))
       const data: LobbyFormParams = {
         ...values.stepOne,
         ...values.stepTwo,
-        ...values.stepThree,
-        ...values.stepFour,
-        co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
         game_title_id: values.stepOne.game_title_id[0].id,
         area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
       }
@@ -116,7 +113,7 @@ const LobbyCreate: React.FC = () => {
 
   const handleSetConfirm = () => {
     formik.validateForm().then(() => {
-      const { stepOne, stepTwo, stepThree, stepFour } = formik.values
+      const { stepOne, stepTwo } = formik.values
 
       const fieldIdentifier = checkNgWordFields({
         title: stepOne.title,
@@ -124,8 +121,7 @@ const LobbyCreate: React.FC = () => {
         prize_amount: stepOne.prize_amount,
         terms_of_participation: stepTwo.terms_of_participation,
         notes: stepTwo.notes,
-        address: stepThree.address,
-        organizer_name: stepFour.organizer_name,
+        address: stepTwo.address,
       })
 
       const ngFields = checkNgWordByField({
@@ -134,8 +130,7 @@ const LobbyCreate: React.FC = () => {
         [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
         [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
         [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
-        [FIELD_TITLES.stepThree.address]: stepThree.address,
-        [FIELD_TITLES.stepFour.organizer_name]: stepFour.organizer_name,
+        [FIELD_TITLES.stepTwo.address]: stepTwo.address,
       })
 
       if (fieldIdentifier) {

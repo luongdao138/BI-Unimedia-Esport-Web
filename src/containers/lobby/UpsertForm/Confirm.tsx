@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { RULES, PARTICIPATION_TYPES } from '@constants/tournament.constants'
 import { UserLoginResponse } from '@services/auth.service'
-import _ from 'lodash'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -25,13 +24,12 @@ ESInput.defaultProps = {
 const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user, isEdit }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
-  const [coOrganizers, setCoOrganizers] = useState('')
   const [areaName, setAreaName] = useState('')
   const classes = useStyles()
 
   useEffect(() => {
     if (prefectures) {
-      const area = prefectures.find((area) => area.id === String(values.stepThree.area_id))
+      const area = prefectures.find((area) => area.id === String(values.stepTwo.area_id))
       setAreaName(area.attributes.area)
     }
   }, [prefectures])
@@ -61,17 +59,6 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       }
     })
   }, [values.stepTwo.participant_type])
-
-  useEffect(() => {
-    if (values.stepFour.co_organizers) {
-      const organizers = _.chain(values.stepFour.co_organizers)
-        .map((o) => o.attributes.nickname)
-        .join(' ')
-        .value()
-
-      setCoOrganizers(organizers)
-    }
-  }, [values.stepFour.co_organizers])
 
   const formatDate = (label: string, beginDateStr: string, endDateStr: string) => {
     const beginDate = moment(beginDateStr).format('YYYY年MM月DD日')
@@ -159,23 +146,14 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         fullWidth
       />
       <Box pb={2} />
-      {formatDate(t('common:tournament_create.entry_period'), values.stepThree.acceptance_start_date, values.stepThree.acceptance_end_date)}
+      {formatDate(t('common:tournament_create.entry_period'), values.stepTwo.acceptance_start_date, values.stepTwo.acceptance_end_date)}
       <Box pb={2} />
-      {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
+      {formatDate(t('common:tournament_create.holding_period'), values.stepTwo.start_date, values.stepTwo.end_date)}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth />
-      {values.stepThree.address && <ESInput value={values.stepThree.address} disabled={true} fullWidth multiline />}
+      {values.stepTwo.address && <ESInput value={values.stepTwo.address} disabled={true} fullWidth multiline />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
-      <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.co_organizer')} value={coOrganizers} disabled={true} fullWidth />
-      <Box pb={2} />
-      <ESInput
-        labelPrimary={t('common:tournament_create.organizer_name')}
-        value={values.stepFour.organizer_name}
-        disabled={true}
-        fullWidth
-      />
       <Box pb={2} />
     </Box>
   )
