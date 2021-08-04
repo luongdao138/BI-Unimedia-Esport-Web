@@ -208,6 +208,21 @@ export const getTournamentMatches = createAsyncThunk<services.TournamentMatchRes
   }
 )
 
+export const getTournamentMatchesInterval = createAsyncThunk<services.TournamentMatchResponse, string>(
+  types.GET_TOURNAMENT_MATCHES_INTERVAL,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentMatches(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const setParticipant = createAsyncThunk<void, services.SetParticipantParams>(
   types.SET_TOURNAMENT_PARTICIPANT,
   async (param, { rejectWithValue }) => {

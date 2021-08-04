@@ -25,6 +25,7 @@ const useTournamentMatches = (): {
   roundTitles: RoundTitles
   handleBack: () => void
 } => {
+  const [intervalId, setIntervalId] = useState(undefined as number | undefined)
   const { t } = useTranslation(['common'])
   const { query, push, back } = useRouter()
   const dispatch = useAppDispatch()
@@ -34,13 +35,39 @@ const useTournamentMatches = (): {
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
+
+  const fetchMatches = () => {
+    if (query.hash_key) {
+      dispatch(actions.getTournamentMatches(String(query.hash_key)))
+    }
+  }
+  const fetchMatchesInterval = () => {
+    if (query.hash_key) {
+      dispatch(actions.getTournamentMatchesInterval(String(query.hash_key)))
+    }
+  }
+
   useEffect(() => {
     if (isNotHeld || isBattleRoyale) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
   }, [isNotHeld, isBattleRoyale])
 
+  const intervalFetch = () => {
+    // eslint-disable-next-line no-console
+    console.log('fetching matches')
+    fetchMatchesInterval()
+  }
+
   useEffect(() => {
     fetchMatches()
+    if (intervalId === undefined) {
+      const nIntervId = setInterval(intervalFetch, 30 * 1000) as unknown
+      setIntervalId(nIntervId as number)
+    } else {
+      clearInterval(intervalId)
+      setIntervalId(undefined)
+    }
   }, [query.hash_key])
+
   useEffect(() => {
     if (meta.loaded) {
       const matchesLength = matches.length
@@ -62,11 +89,16 @@ const useTournamentMatches = (): {
     }
   }, [meta.loaded])
 
-  const fetchMatches = () => {
-    if (query.hash_key) {
-      dispatch(actions.getTournamentMatches(String(query.hash_key)))
+  useEffect(() => {
+    return () => {
+      if (intervalId !== undefined) {
+        // eslint-disable-next-line no-console
+        console.log('removing interval')
+        clearInterval(intervalId)
+        setIntervalId(undefined)
+      }
     }
-  }
+  }, [])
 
   const handleBack = () => back()
 

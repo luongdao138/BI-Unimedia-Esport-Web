@@ -137,6 +137,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
     state.tournamentMatches = action.payload
   })
+  builder.addCase(actions.getTournamentMatchesInterval.fulfilled, (state, action) => {
+    state.tournamentMatches = action.payload
+  })
   builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
     let tmpRecruitingTournaments = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
