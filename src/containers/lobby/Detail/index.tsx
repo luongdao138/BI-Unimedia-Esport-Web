@@ -29,7 +29,7 @@ const LobbyDetailBody: React.FC = () => {
       notes: 'note',
       rule: 'single', //double, battle_royale
       max_participants: 15,
-      status: 'ready', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
+      status: 'recruiting', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
       is_freezed: false,
       start_date: '2021-08-05 13:00',
       end_date: '2021-08-06 13:00',
@@ -104,11 +104,20 @@ const LobbyDetailBody: React.FC = () => {
       summary_image: null,
       interested_count: 0,
       participant_count: 2,
-      my_role: null, //admin,participant,interested,co_organizer
-      my_info: null,
+      my_role: 'interested', //admin,participant,interested,co_organizer
+      my_info: [
+        {
+          id: 4292,
+          user_id: 127,
+          role: 'interested',
+          position: null,
+          is_leader: true,
+          name: 'badamaa',
+        },
+      ], //[]
       my_position: null,
       hash_key: '12345678190',
-      is_entered: false,
+      is_entered: true,
     },
   }
   const { toEdit, isBattleRoyale } = useLobbyHelper(lobby)

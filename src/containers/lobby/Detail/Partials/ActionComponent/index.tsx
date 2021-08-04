@@ -78,18 +78,6 @@ const ActionComponent: React.FC<Props> = (props) => {
     )
   }
 
-  const entryEditButton = () => {
-    return (
-      <Box className={classes.actionButton}>
-        <LoginRequired>
-          <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
-            {t('common:tournament.check_entry')}
-          </ButtonPrimary>
-        </LoginRequired>
-      </Box>
-    )
-  }
-
   const renderAdminEntry = () => {
     return (
       <Box className={classes.buttonHolder}>
@@ -102,7 +90,7 @@ const ActionComponent: React.FC<Props> = (props) => {
 
   const renderEntry = () => {
     if ((isEntered && isTeamLeader) || isAdminJoined) {
-      return entryEditButton()
+      return null
     } else if (isRecruiting || isReady) {
       return entryButton()
     }
