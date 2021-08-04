@@ -21,7 +21,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
   return (
     <Box pb={9}>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{i18n.t('common:lobby_create.holding_period')}</Typography>
+        <Typography>{i18n.t('common:lobby_create.entry_period')}</Typography>
         <Typography component="span" className={classes.required}>
           {i18n.t('common:common.required')}
         </Typography>
@@ -58,7 +58,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
         />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{i18n.t('common:lobby_create.entry_period')}</Typography>
+        <Typography>{i18n.t('common:lobby_create.recruitment_start_date')}</Typography>
         <Typography component="span" className={classes.required}>
           {i18n.t('common:common.required')}
         </Typography>
