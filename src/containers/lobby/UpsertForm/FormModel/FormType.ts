@@ -1,5 +1,4 @@
 import { GameTitle } from '@services/game.service'
-import { RecommendedUsers } from '@services/arena.service'
 
 type GameTitleItem = GameTitle['attributes']
 
@@ -32,21 +31,5 @@ export type FormType = {
     recruit_date: string
     acceptance_end_start_date: string
     start_end_date: string
-  }
-  stepThree: {
-    acceptance_start_date: string
-    acceptance_end_date: string
-    start_date: string
-    end_date: string
-    area_id: number
-    address: string
-    acceptance_dates: string
-    recruit_date: string
-    acceptance_end_start_date: string
-    start_end_date: string
-  }
-  stepFour: {
-    co_organizers: RecommendedUsers[]
-    organizer_name: string
   }
 }

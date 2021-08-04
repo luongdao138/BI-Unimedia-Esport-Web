@@ -15,8 +15,7 @@ export const FIELD_TITLES = {
     notes: i18n.t('common:tournament_create.precautions'),
     participant_type: i18n.t('common:tournament_create.participation'),
     rule: i18n.t('common:tournament_create.holding_format'),
-  },
-  stepThree: {
+    //step three
     start_date: i18n.t('common:tournament_create.holding_period'),
     end_date: i18n.t('common:tournament_create.holding_period'),
     acceptance_start_date: i18n.t('common:tournament_create.entry_period'),
@@ -27,8 +26,5 @@ export const FIELD_TITLES = {
     start_end_date: i18n.t('common:tournament_create.holding_period'),
     area_id: i18n.t('common:tournament_create.area'),
     address: i18n.t('common:tournament_create.area'),
-  },
-  stepFour: {
-    organizer_name: i18n.t('common:tournament_create.organizer_name'),
   },
 }
