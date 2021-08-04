@@ -1,4 +1,4 @@
-import { Box, makeStyles } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import { FormikProps } from 'formik'
 import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
@@ -10,6 +10,7 @@ import CategorySelectorDialog from './Partials/CategorySelectorDialog'
 import CoverUploader from './Partials/CoverUploader'
 import ESSelect from '@components/Select'
 import ESFastInput from '@components/FastInput'
+import ESSwitchIOS from '@components/Switch'
 import i18n from '@locales/i18n'
 import useReturnHref from '@utils/hooks/useReturnHref'
 
@@ -17,9 +18,10 @@ type Props = {
   formik: FormikProps<FormType>
   hardwares: HardwareResponse
   editables: EditableTypes
+  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
+const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }) => {
   const classes = useStyles()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
@@ -79,7 +81,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           name="stepOne.overview"
           multiline
           rows={5}
-          labelPrimary={i18n.t('common:chat.title')}
+          labelPrimary={i18n.t('common:lobby_create.overview')}
           placeholder={i18n.t('common:lobby_create.overview_placeholder')}
           fullWidth
           value={formik.values.stepOne.overview}
@@ -137,6 +139,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
             {i18n.t('common:please_select')}
           </option>
         </ESSelect>
+      </Box>
+      <Box pb={4} display="flex" justifyContent="space-between">
+        <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
+        <ESSwitchIOS handleChange={handleChange} />
       </Box>
     </Box>
   )
