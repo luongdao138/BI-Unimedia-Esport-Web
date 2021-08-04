@@ -44,10 +44,13 @@ const UserSettingsContainer: React.FC = () => {
     }
   }, [userProfile])
 
+  const [isRender, setIsRender] = useState(false)
   useEffect(() => {
     if (getUserProfileMeta.loaded) {
       if (!userProfile || userProfile.attributes.update_step !== 1) {
         router.push(ESRoutes.HOME)
+      } else {
+        setIsRender(true)
       }
     }
   }, [getUserProfileMeta.loaded])
@@ -98,7 +101,7 @@ const UserSettingsContainer: React.FC = () => {
 
   const handleSkip = () => navigate()
 
-  return profile && getUserProfileMeta.loaded ? (
+  return profile && getUserProfileMeta.loaded && isRender ? (
     <>
       <Box className={classes.container}>
         <Box pt={2} pb={2} alignItems="center" display="flex">
