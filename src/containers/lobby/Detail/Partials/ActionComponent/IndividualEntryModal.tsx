@@ -1,23 +1,14 @@
 import React, { useEffect } from 'react'
 import { LobbyDetail } from '@services/lobby.service'
-import { Box } from '@material-ui/core'
-import ESInput from '@components/Input'
-import { useFormik } from 'formik'
+import { Box, Dialog, makeStyles, Typography, withStyles } from '@material-ui/core'
+import MuiDialogContent from '@material-ui/core/DialogContent'
 import { useTranslation } from 'react-i18next'
-import BlackBox from '@components/BlackBox'
-import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
-import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
-import Yup from '@utils/Yup'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
-import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import { useAppDispatch } from '@store/hooks'
-import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
-import _ from 'lodash'
-import useDocTitle from '@utils/hooks/useDocTitle'
-import ServerError from './ServerError'
+// import { useAppDispatch } from '@store/hooks'
+import { Colors } from '@theme/colors'
+import ButtonPrimary from '@components/ButtonPrimary'
 
 interface IndividualEntryModalProps {
   tournament: LobbyDetail
@@ -26,93 +17,116 @@ interface IndividualEntryModalProps {
   open: boolean
 }
 
-const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    display: 'block',
+    background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
+    width: '100%',
+    '&:first-child': {
+      padding: theme.spacing(3),
+    },
+  },
+}))(MuiDialogContent)
+
+const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, /* userProfile, */ onClose, open }) => {
   const { t } = useTranslation(['common'])
   const { join, joinMeta, resetJoinMeta } = useEntry()
-  const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
     if (joinMeta.loaded) {
       handleClose()
     }
   }, [joinMeta.loaded])
-  const { checkNgWord } = useCheckNgWord()
-  const dispatch = useAppDispatch()
 
-  const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.input_required')).max(40),
-  })
-
-  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
-    initialValues: {
-      nickname: '',
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      if (values.nickname) {
-        if (_.isEmpty(checkNgWord(values.nickname))) {
-          join({ hash_key: tournament.attributes.hash_key, data: { name: values.nickname } })
-        } else {
-          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.join_nickname }))
-        }
-      }
-    },
-  })
-
-  useEffect(() => {
-    if (open) {
-      setFieldValue('nickname', userProfile ? userProfile.attributes.nickname : '')
-      changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
-    }
-  }, [open])
-
-  useEffect(() => {
-    return () => resetTitle()
-  }, [])
+  const handleSubmit = () => {
+    join({ hash_key: tournament.attributes.hash_key, data: { name: '' } })
+  }
 
   const handleClose = () => {
     resetJoinMeta()
-    resetTitle()
     onClose()
   }
 
+  const classes = useStyles()
+
   return (
     <Box>
-      <StickyActionModal
+      <Dialog
+        disableBackdropClick
+        // disableScrollLock
+        maxWidth={'md'}
+        fullWidth
         open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
-        actionButtonDisabled={!isValid}
-        onReturnClicked={handleClose}
-        onActionButtonClicked={handleSubmit}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        onEntered={() => {
+          document.body.style.position = 'fixed'
+          document.body.style.width = '100%'
+          document.body.style.height = '100%'
+        }}
+        onExited={() => {
+          document.body.style.position = 'unset'
+          document.body.style.width = 'unset'
+          document.body.style.height = 'unset'
+        }}
       >
-        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
-        <Box mt={3} />
-        <form onSubmit={handleSubmit}>
-          <BlackBox>
-            <DetailInfo detail={tournament} />
-          </BlackBox>
-
-          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8}>
-            <Box>
-              <ESInput
-                id="nickname"
-                autoFocus
-                labelPrimary={t('common:tournament.join_nickname')}
-                fullWidth
-                value={values.nickname}
-                onChange={handleChange}
-                helperText={errors.nickname}
-                error={!!errors.nickname}
-              />
-            </Box>
+        <DialogContent>
+          <Box className={classes.container}>
+            <Typography className={classes.dialogTitle} gutterBottom>
+              {t('common:recruitment.join_dialog.dialog_title')}
+            </Typography>
           </Box>
-        </form>
-      </StickyActionModal>
+          <Box className={classes.actionBox}>
+            <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
+              {t('common:common.cancel')}
+            </ButtonPrimary>
+            <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
+              {t('common:tournament.entry')}
+            </ButtonPrimary>
+          </Box>
+        </DialogContent>
+      </Dialog>
 
       {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
     </Box>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: '100%',
+    display: 'block',
+  },
+  dialogTitle: {
+    color: Colors.white,
+    textAlign: 'center',
+    paddingTop: 8,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  actionBox: {
+    marginTop: 73,
+    display: 'flex',
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
+  actionBtnClose: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
+  },
+  actionBtnConfirm: {
+    width: '100%',
+    margin: 16,
+    [theme.breakpoints.down('sm')]: {
+      order: 0,
+    },
+  },
+}))
 
 export default IndividualEntryModal

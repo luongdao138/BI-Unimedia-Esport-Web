@@ -7,8 +7,6 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
-import _ from 'lodash'
-import { CommonResponse } from '@services/user.service'
 import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
@@ -19,7 +17,6 @@ import * as commonActions from '@store/common/actions'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
-import { RULE } from '@constants/tournament.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 
@@ -105,33 +102,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           </Linkify>
         </Box>
 
-        {extended && (
-          <>
-            {/* rule */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament.rule_format')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Typography>
-                  {TournamentHelper.ruleText(data.rule)}
-                  {data.rule === RULE.SINGLE && data.has_third_place ? t('common:arena.third_place') : t('common:arena.no_third_place')}
-                </Typography>
-              </Box>
-            </Box>
-
-            {/* prize */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament.prize')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Typography>{data.has_prize ? data.prize_amount : t('common:common.no')}</Typography>
-              </Box>
-            </Box>
-          </>
-        )}
-
         {/* entry period */}
         <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={extended ? 2 : 3}>
           <Box className={classes.label}>
@@ -139,7 +109,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           </Box>
           <Box className={classes.value}>
             <Typography>
-              {TournamentHelper.formatDate(data.acceptance_start_date)} - {TournamentHelper.formatDate(data.acceptance_end_date)}
+              {TournamentHelper.formatDate(data.acceptance_start_date)} ~ {TournamentHelper.formatDate(data.acceptance_end_date)}
             </Typography>
           </Box>
         </Box>
@@ -147,12 +117,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         {/* holding period */}
         <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
           <Box className={classes.label}>
+            {/* //TODO текст нэмээгүй */}
             <Typography>{t('common:tournament.holding_period')}</Typography>
           </Box>
           <Box className={classes.value}>
-            <Typography>
-              {TournamentHelper.formatDate(data.start_date)} - {TournamentHelper.formatDate(data.end_date)}
-            </Typography>
+            <Typography>{TournamentHelper.formatDate(data.start_date)}</Typography>
           </Box>
         </Box>
         {extended && (
@@ -176,62 +145,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
             </Box>
 
-            {/* save battle record */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament.retain_history')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Typography>{data.retain_history ? t('common:common.yes') : t('common:common.no')}</Typography>
-              </Box>
-            </Box>
-
-            {/* participant type */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament.participant_type')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Typography>{TournamentHelper.participantTypeText(data.participant_type)}</Typography>
-              </Box>
-            </Box>
-
-            {/* Participation conditions */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament_create.participation_term')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Linkify
-                  componentDecorator={(decoratedHref, decoratedText, key) => (
-                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                      {decoratedText}
-                    </a>
-                  )}
-                >
-                  <Typography>{_.isEmpty(data.terms_of_participation) ? '-' : data.terms_of_participation}</Typography>
-                </Linkify>
-              </Box>
-            </Box>
-
-            {/* Notes conditions */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>注意事項</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Linkify
-                  componentDecorator={(decoratedHref, decoratedText, key) => (
-                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
-                      {decoratedText}
-                    </a>
-                  )}
-                >
-                  <Typography>{_.isEmpty(data.notes) ? '-' : data.notes}</Typography>
-                </Linkify>
-              </Box>
-            </Box>
-
             {/* organizer */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
@@ -248,39 +161,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                     <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
                   </Box>
                 )}
-              </Box>
-            </Box>
-
-            {/* co organizers */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament.co_organizer')}</Typography>
-              </Box>
-              <Box className={classes.value} flexDirection="column">
-                {data.co_organizers && data.co_organizers.data && data.co_organizers.data.length > 0 ? (
-                  data.co_organizers.data.map((co: CommonResponse, i) => (
-                    <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
-                      <LoginRequired>
-                        <ButtonBase onClick={() => toProfile(co.attributes.user_code)}>
-                          <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} />{' '}
-                        </ButtonBase>
-                        <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
-                      </LoginRequired>
-                    </Box>
-                  ))
-                ) : (
-                  <Typography>-</Typography>
-                )}
-              </Box>
-            </Box>
-
-            {/* organizer name */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:tournament.organizer_name')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Typography>{_.isEmpty(data.organizer_name) ? '-' : data.organizer_name}</Typography>
               </Box>
             </Box>
 
@@ -306,6 +186,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </Box>
           </>
         )}
+
+        {/* //TODO gametag */}
         {!extended && (
           <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={2}>
             <Box mt={1} mr={1}>

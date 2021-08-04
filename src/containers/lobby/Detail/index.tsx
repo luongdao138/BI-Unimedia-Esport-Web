@@ -3,11 +3,12 @@ import useLobbyDetail from '../hooks/useLobbyDetail'
 import LobbyDetailHeader from '@components/LobbyDetailHeader'
 import { LobbyDetail, LobbyStatus } from '@services/lobby.service'
 import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
-// import RecruitmentClosed from './Partials/RecruitmentClosed'
+import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'
-// import InProgress from './Partials/InProgress'
-// import Cancelled from './Partials/Cancelled'
-// import Completed from './Partials/Completed'
+import Ready from './Partials/Ready'
+import InProgress from './Partials/InProgress'
+import Cancelled from './Partials/Cancelled'
+import Completed from './Partials/Completed'
 // import ESLoader from '@components/FullScreenLoader'
 // import BattleRoyaleInfo from './Partials/BattleRoyaleInfo'
 import useLobbyHelper from '../hooks/useLobbyHelper'
@@ -30,11 +31,11 @@ const LobbyDetailBody: React.FC = () => {
       max_participants: 15,
       status: 'recruiting', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
       is_freezed: false,
-      start_date: '2021-08-04 13:00',
-      end_date: '2021-08-05 13:00',
+      start_date: '2021-08-05 13:00',
+      end_date: '2021-08-06 13:00',
       chat_room_id: '123',
-      acceptance_start_date: '2021-08-03 13:00',
-      acceptance_end_date: '2021-08-04 12:00',
+      acceptance_start_date: '2021-08-04 13:00',
+      acceptance_end_date: '2021-08-05 12:00',
       participant_type: 1,
       area_id: 1,
       area_name: 'tokyo',
@@ -109,26 +110,13 @@ const LobbyDetailBody: React.FC = () => {
   const router = useRouter()
 
   const actionComponent: Record<LobbyStatus, ReactNode> = {
-    in_progress: {
-      /* <InProgress lobby={lobby} userProfile={userProfile} /> */
-    }, //headset
-    cancelled: {
-      /* <Cancelled lobby={lobby} userProfile={userProfile} /> */
-    },
-    completed: {
-      /* <Completed lobby={lobby} userProfile={userProfile} /> */
-    }, //trophy
-    ready: {
-      /* <Recruiting lobby={lobby} userProfile={userProfile} /> */
-    },
-    ready_to_start: {
-      /* <RecruitmentClosed lobby={lobby} userProfile={userProfile} /> */
-    }, //hourglass
-    before_recruitment: {},
+    in_progress: <InProgress lobby={lobby} userProfile={userProfile} />, //headset
+    cancelled: <Cancelled lobby={lobby} userProfile={userProfile} />,
+    completed: <Completed lobby={lobby} userProfile={userProfile} />, //trophy
+    ready: <Ready lobby={lobby} userProfile={userProfile} />,
+    ready_to_start: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
     recruiting: <Recruiting lobby={lobby} userProfile={userProfile} />,
-    recruitment_closed: {
-      /* <RecruitmentClosed lobby={lobby} userProfile={userProfile} /> */
-    }, //hourglass
+    recruitment_closed: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
   }
 
   const renderBody = () => {

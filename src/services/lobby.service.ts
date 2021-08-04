@@ -97,15 +97,7 @@ export type ResultsResponse = {
   attributes: any
 }
 
-export type LobbyStatus =
-  | 'before_recruitment'
-  | 'ready'
-  | 'recruiting'
-  | 'recruitment_closed'
-  | 'ready_to_start'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled'
+export type LobbyStatus = 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled'
 export type LobbyRule = 'single' | 'double' | 'battle_royale'
 export type ArenaRole = 'admin' | 'participant' | 'interested' | 'co_organizer'
 export type LobbyDetail = {
