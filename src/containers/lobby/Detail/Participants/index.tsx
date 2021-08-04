@@ -100,7 +100,9 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     <div>
       <LoginRequired>
         <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
-          {data.is_freezed ? t('common:tournament.participants') : t('common:tournament.entry_members')}
+          {data.is_freezed || data.status == 'ready_to_start' || data.status == 'recruitment_closed'
+            ? t('common:tournament.participants')
+            : t('common:tournament.entry_members')}
         </ESButton>
       </LoginRequired>
       <ESModal open={open && !selectedParticipant} handleClose={handleClose}>

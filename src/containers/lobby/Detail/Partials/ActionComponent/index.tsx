@@ -10,7 +10,6 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { LobbyDetail } from '@services/lobby.service'
 import { UserProfile } from '@services/user.service'
-import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '@containers/lobby/Detail/Partials/SummaryModal'
 import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
@@ -31,14 +30,12 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { t } = useTranslation(['common'])
 
   const {
-    toMatches,
     isModerator,
     isTeam,
     isRecruiting,
     isReady,
     isCompleted,
     isCancelled,
-    isRecruitmentClosed,
     isNotHeld,
     isAdminJoined,
     isTeamLeader,
@@ -52,16 +49,16 @@ const ActionComponent: React.FC<Props> = (props) => {
   const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
 
   const buildLobbyPeriodValue = () => {
-    const beforeEntry = isReady || isRecruiting
-    const targetStartDate = beforeEntry ? lobby.attributes.acceptance_start_date : lobby.attributes.start_date
-    const targetEndDate = beforeEntry ? lobby.attributes.acceptance_end_date : lobby.attributes.end_date
-    const entryStartDate = TournamentHelper.formatDate(targetStartDate)
-    const entryEndDate = TournamentHelper.formatDate(targetEndDate)
-
-    return `${entryStartDate} - ${entryEndDate}`
+    if (isReady || isRecruiting) {
+      const entryStartDate = TournamentHelper.formatDate(lobby.attributes.acceptance_start_date)
+      const entryEndDate = TournamentHelper.formatDate(lobby.attributes.acceptance_end_date)
+      return `${entryStartDate} - ${entryEndDate}`
+    } else {
+      return `${TournamentHelper.formatDate(lobby.attributes.start_date)}`
+    }
   }
   const buildLobbyTitle = () => {
-    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:tournament.holding_period')
+    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:recruitment.date_time')
 
     return `${arenaStatus}`
   }
@@ -110,18 +107,6 @@ const ActionComponent: React.FC<Props> = (props) => {
         {children}
         {!isReady && !isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
       </Box>
-      {isRecruitmentClosed && isModerator && (
-        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-          <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
-          <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
-            <Typography variant="body2">
-              {t('common:tournament.until_deadline')}
-              <ESLink onClick={toMatches}>{t('common:tournament.brackets')}</ESLink>
-              {t('common:tournament.confirm_brackets_desc_tail')}
-            </Typography>
-          </Box>
-        </Box>
-      )}
 
       {isRecruiting ? (
         <>

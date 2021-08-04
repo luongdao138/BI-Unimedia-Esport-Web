@@ -15,9 +15,17 @@ interface Props {
 const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { toGroupChat, toMatches, toResults, isCompleted, isUnselected, isEntered, isReady, isRecruiting, isModerator } = useLobbyHelper(
-    tournament
-  )
+  const {
+    toGroupChat,
+    toMatches,
+    toResults,
+    isCompleted,
+    isUnselected,
+    isEntered,
+    isSelected,
+    isRecruitmentClosed,
+    isModerator,
+  } = useLobbyHelper(tournament)
   const isFreezed = tournament?.attributes?.is_freezed
   const chatDisabled = (!isEntered || isUnselected) && !isModerator
 
@@ -47,16 +55,16 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
           </>
         ) : (
           <>
-            {isReady || isRecruiting ? (
-              <>
-                <Box className={classes.actionButton}>
-                  <Participants detail={tournament} />
-                </Box>
-                {(isModerator || isEntered) && (
+            <Box className={classes.actionButton}>
+              <Participants detail={tournament} />
+            </Box>
+            {(isModerator || isEntered) &&
+              (isSelected ||
+                (isRecruitmentClosed && (
                   <Box className={classes.actionButton}>
                     <LoginRequired>
                       <ActionLabelButton
-                        actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
+                        actionLabel={isFreezed || isRecruitmentClosed ? undefined : t('common:arena.temporary')}
                         variant="outlined"
                         fullWidth
                         onClick={toGroupChat}
@@ -66,35 +74,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                       </ActionLabelButton>
                     </LoginRequired>
                   </Box>
-                )}
-              </>
-            ) : (
-              <>
-                <Box className={classes.actionButton}>
-                  <Participants detail={tournament} />
-                </Box>
-                <Box className={classes.actionButton}>
-                  <LoginRequired>
-                    <ActionLabelButton
-                      actionLabel={isFreezed ? undefined : t('common:arena.temporary')}
-                      variant="outlined"
-                      fullWidth
-                      onClick={toGroupChat}
-                      disabled={chatDisabled}
-                    >
-                      {t('common:tournament.group_chat')}
-                    </ActionLabelButton>
-                  </LoginRequired>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <LoginRequired>
-                    <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                      {t('common:tournament.brackets')}
-                    </ESButton>
-                  </LoginRequired>
-                </Box>
-              </>
-            )}
+                )))}
           </>
         )}
       </Box>

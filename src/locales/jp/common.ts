@@ -484,6 +484,10 @@ export default {
     close_recruitment: {
       button_text: 'メンバー確定',
     },
+    date_time: '開催日時',
+    participate_status: {
+      no_entry: '実施中',
+    },
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
