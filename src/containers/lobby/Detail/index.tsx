@@ -29,7 +29,7 @@ const LobbyDetailBody: React.FC = () => {
       notes: 'note',
       rule: 'single', //double, battle_royale
       max_participants: 15,
-      status: 'recruiting', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
+      status: 'ready', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
       is_freezed: false,
       start_date: '2021-08-05 13:00',
       end_date: '2021-08-06 13:00',
@@ -54,20 +54,25 @@ const LobbyDetailBody: React.FC = () => {
           id: 'string',
           type: 'user_list',
           attributes: {
-            user_code: '04156',
+            user_code: 'testdulguun',
             nickname: 'dulguun',
-            nickname2: null,
+            nickname2: '格ゲーマニア',
             avatar: null,
-            features: [
-              {
-                id: 456,
-                feature: 'feature',
-              },
-            ],
+            features: null,
             game_titles: [
               {
                 id: 1,
-                display_name: 'dota 2',
+                display_name: 'Apex Legends',
+                short_name: 'Ape',
+                jp_kana_name: 'エーペックスレジェンズ',
+                en_name: 'Apex Legends',
+              },
+              {
+                id: 2,
+                display_name: 'Valorant',
+                short_name: 'VAL',
+                jp_kana_name: 'ヴァロラント',
+                en_name: 'Valorant',
               },
             ],
           },

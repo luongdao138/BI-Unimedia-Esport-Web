@@ -481,6 +481,9 @@ export default {
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
     recruitment_follower: 'フォローしている人の募集',
+    close_recruitment: {
+      button_text: 'メンバー確定',
+    },
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',

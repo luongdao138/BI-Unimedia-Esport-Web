@@ -58,7 +58,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     const entryStartDate = TournamentHelper.formatDate(targetStartDate)
     const entryEndDate = TournamentHelper.formatDate(targetEndDate)
 
-    return `${entryStartDate} ～ ${entryEndDate}`
+    return `${entryStartDate} - ${entryEndDate}`
   }
   const buildLobbyTitle = () => {
     const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:tournament.holding_period')
@@ -96,9 +96,6 @@ const ActionComponent: React.FC<Props> = (props) => {
         <Box minWidth={260} className={classes.buttonLeft}>
           <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={lobby} handleClose={() => {}} />
         </Box>
-        <Box minWidth={256} className={classes.buttonRight}>
-          {renderEntry()}
-        </Box>
       </Box>
     )
   }
@@ -123,9 +120,8 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {!isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
+        {!isReady && !isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
       </Box>
-
       {isRecruitmentClosed && isModerator && (
         <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
           <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
@@ -139,7 +135,7 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {isRecruiting || isReady ? (
+      {isRecruiting ? (
         <>
           {isModerator ? renderAdminEntry() : renderEntry()}
           {isAdminJoined || (isEntered && isTeamLeader) ? <UnjoinModal tournament={lobby} /> : null}
@@ -150,8 +146,10 @@ const ActionComponent: React.FC<Props> = (props) => {
           )}
         </>
       ) : (
-        !TournamentHelper.isStatusPassed(lobby.attributes.status, TOURNAMENT_STATUS.COMPLETED) && renderEntry()
+        !TournamentHelper.isStatusPassed(lobby.attributes.status, TOURNAMENT_STATUS.COMPLETED) || (!isReady && renderEntry())
       )}
+
+      {isReady && <>{isModerator ? renderAdminEntry() : renderEntry()}</>}
 
       {isModerator && isCompleted && !isNotHeld && (
         <Box className={classes.actionButton}>
