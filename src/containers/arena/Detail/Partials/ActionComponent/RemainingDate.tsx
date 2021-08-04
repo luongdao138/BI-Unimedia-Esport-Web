@@ -15,16 +15,28 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
 
   const status = tournament.attributes.status
-  const beforeOnhold = status === TOURNAMENT_STATUS.RECRUITING || status === TOURNAMENT_STATUS.READY
+  const beforeOnhold = status === TOURNAMENT_STATUS.RECRUITING
+  const beforeRecruit = status === TOURNAMENT_STATUS.READY
 
   const accEndDate = moment(tournament.attributes.acceptance_end_date)
+  const recruitStartDate = moment(tournament.attributes.acceptance_start_date)
   const startDate = moment(tournament.attributes.start_date)
-  const targetDate = beforeOnhold ? accEndDate : startDate
+  const targetDate = beforeOnhold ? accEndDate : beforeRecruit ? recruitStartDate : startDate
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
   const hours = targetDate.diff(nowDate, 'hours')
 
-  const untilDatePrefix = beforeOnhold ? t('common:tournament.until_deadline') : t('common:tournament.until_event')
+  const untilDatePrefix = beforeOnhold
+    ? t('common:tournament.until_deadline')
+    : beforeRecruit
+    ? t('common:tournament.until_start_recruit')
+    : t('common:tournament.until_event')
+
+  let inHourSuffix = t('common:tournament.end_from_minutes')
+  if (!beforeOnhold) {
+    inHourSuffix = t('common:tournament.start_from_minutes')
+    if (beforeRecruit) inHourSuffix = t('common:tournament.recruit_start_from_minutes')
+  }
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
@@ -48,7 +60,7 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
           <Typography className={classes.highlightedNumber}>{targetDate.format('HH')}</Typography>
           <Typography>{t('common:common.hour')}</Typography>
           <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
-          <Typography>{beforeOnhold ? t('common:tournament.end_from_minutes') : t('common:tournament.start_from_minutes')}</Typography>
+          <Typography>{inHourSuffix}</Typography>
         </>
       )}
     </Box>
