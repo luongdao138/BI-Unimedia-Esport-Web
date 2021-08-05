@@ -10,7 +10,7 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
     game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
     max_participants: data ? data.attributes.max_participants : 0,
-    is_organizer_join: data ? data.attributes.is_organizer_join : false,
+    is_organizer_join: data ? data.attributes.is_organizer_joinable : false,
   },
   stepTwo: {
     acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
