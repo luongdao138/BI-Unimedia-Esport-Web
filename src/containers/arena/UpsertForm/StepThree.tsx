@@ -77,7 +77,6 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date) ||
-            formik.errors?.stepThree?.acceptance_dates ||
             formik.errors?.stepThree?.recruit_date
           }
           error={formik.touched?.stepThree?.acceptance_start_date && !!formik.errors?.stepThree?.acceptance_start_date}
@@ -97,6 +96,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
+            formik.errors?.stepThree?.acceptance_dates ||
             formik.errors?.stepThree?.acceptance_end_start_date
           }
           error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}

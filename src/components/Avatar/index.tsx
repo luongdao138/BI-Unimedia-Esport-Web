@@ -1,7 +1,7 @@
 import { Avatar, AvatarProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-
+import _ from 'lodash'
 interface StyleProps {
   src: string
   alt: string | null
@@ -37,9 +37,13 @@ const ESAvatar: React.FC<Props> = (props) => {
       </Avatar>
     )
   }
-
+  const zIndex = _.get(props, 'style.zIndex')
   return (
-    <Avatar classes={classes} {...props} style={{ backgroundColor: backgroundColor, fontSize: (props.size * 33) / 50 }}>
+    <Avatar
+      classes={classes}
+      {...props}
+      style={{ backgroundColor: backgroundColor, fontSize: (props.size * 33) / 50, zIndex: _.isNumber(zIndex) ? zIndex : undefined }}
+    >
       {props.alt ? props.alt.toUpperCase().charAt(0) : ''}
     </Avatar>
   )
