@@ -30,4 +30,5 @@ export enum USER_PROFILE_ACTION_TYPE {
   CLEAR_FOLLOWING = 'followers/clearFollowing',
   SAVE_NEW_EMAIL = 'profile/save_new_email',
   CLEAR_NEW_EMAIL = 'profile/clear_new_email',
+  PROFILE_IMAGE_REMOVE = 'profile/profileImageRemove',
 }
