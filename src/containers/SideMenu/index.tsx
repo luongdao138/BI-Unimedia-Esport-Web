@@ -108,6 +108,14 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem> */}
+            <Link href={ESRoutes.DELIVERY_MANAGEMENT} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.DELIVERY_MANAGEMENT)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-play-circle" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary="動画" />
+              </ListItem>
+            </Link>
             <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
                 <ListItemIcon className={classes.icon}>

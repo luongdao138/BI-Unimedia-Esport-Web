@@ -52,4 +52,6 @@ export const ESRoutes = {
   ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
+  DELIVERY_MANAGEMENT: '/delivery-management',
+  STREAMING_SETTINGS_LIVE_STREAMING: '/streaming-settings-live-streaming',
 }

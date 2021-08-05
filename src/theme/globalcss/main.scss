@@ -682,3 +682,49 @@ body {
     }
   }
 }
+
+.streamer_aside_left {
+  top: 60px;
+  position: fixed;
+  left: 0;
+  width: 480px;
+}
+
+.streamer_main {
+  padding-left: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.streamer_aside_right {
+  width: 398px;
+  padding-top: 60px;
+  background-color: #0A0A0A;
+}
+
+.streamer_content_wrapper {
+  background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
+  flex: 1;
+  padding-top: 60px;
+  position: relative;
+  flex-grow: 1;
+}
+
+.not_streamer_aside_left {
+  top: 60px;
+  position: fixed;
+  left: 0;
+  width: 98px;
+}
+
+.not_streamer_main {
+  padding-left: 98px;
+}
+
+.not_streamer_content_wrapper {
+  padding-top: 60px;
+  width: 100%;
+  min-height: 100vh;
+}
