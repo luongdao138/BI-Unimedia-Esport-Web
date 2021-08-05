@@ -1,11 +1,11 @@
-import StreamLayout from '@layouts/StreamLayout'
+import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
-import DeliveryManagement from '@containers/DeliveryManagement'
+import DeliveryManagementContainer from '@containers/DeliveryManagementContainer'
 
 const DeliveryManagementPage: PageWithLayoutType = () => {
-  return <StreamLayout loginRequired>
-      <DeliveryManagement />
-    </StreamLayout>
+  return <DeliveryManagementContainer />
 }
+
+DeliveryManagementPage.Layout = MainLayout
 
 export default DeliveryManagementPage
