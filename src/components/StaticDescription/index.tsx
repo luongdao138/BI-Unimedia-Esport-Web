@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { cutLinksIntoPieces } from '@utils/helpers/CommonHelper'
 import { Link } from '@material-ui/core'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   description: {
     whiteSpace: 'pre-line',
     marginTop: 14,
@@ -11,10 +11,12 @@ const useStyles = makeStyles(() => ({
     fontSize: 14,
     wordBreak: 'break-word',
     overflowWrap: 'break-word',
+    color: theme.palette.text.primary,
   },
   linkBreak: {
     wordWrap: 'break-word',
     wordBreak: 'break-word',
+    color: theme.palette.text.primary,
   },
   row: {
     marginLeft: 30,

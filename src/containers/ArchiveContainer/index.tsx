@@ -24,6 +24,7 @@ import ChatWarningModal from '@containers/Stream/elements/ChatWarningModal'
 import _ from 'lodash'
 import Ad from '@components/Ad'
 import { ESRoutes } from '@constants/route.constants'
+import Header from '@components/HeaderWithButton'
 
 const ArchiveContainer: React.FC = () => {
   const [value, setValue] = useState<string>('1')
@@ -204,6 +205,7 @@ const ArchiveContainer: React.FC = () => {
     <>
       {data && hasTicked == true ? (
         <>
+          <Header title="動画" withBackButton={false} />
           <div className={classes.root}>
             <Container className={classes.spacing} disableGutters maxWidth="xl">
               <Paper className={classes.playerContainer} elevation={2} square>

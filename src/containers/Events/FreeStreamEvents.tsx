@@ -9,6 +9,7 @@ import { liveEventsActions } from '@store/liveEvents/actions'
 import StaticDescription from '@components/StaticDescription'
 import { RootState } from '@store/reducers'
 import { ESRoutes } from '@constants/route.constants'
+import Header from '@components/HeaderWithButton'
 
 interface IAttribute {
   archive_end_datetime?: string
@@ -200,6 +201,7 @@ const Events: React.FC<IProps> = (props) => {
 
   return (
     <>
+      <Header title="動画" withBackButton={false} />
       <Box p={3}>
         <Slider items={props.banners} noTitle />
         <div className={classes.description}>

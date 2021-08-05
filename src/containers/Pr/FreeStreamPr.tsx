@@ -10,6 +10,7 @@ import StaticDescription from '@components/StaticDescription'
 import { RootState } from '@store/reducers'
 import LoginRequired from '@containers/LoginRequired'
 import Loader from '@components/FullScreenLoader'
+import Header from '@components/HeaderWithButton'
 
 interface IProps {
   banners: string[]
@@ -130,6 +131,7 @@ const Pr: React.FC<IProps> = (props) => {
 
   return (
     <>
+      <Header title="動画" withBackButton={false} />
       <Box p={3}>
         <div className="sliderWrap">
           <Slider items={props.banners} noTitle />

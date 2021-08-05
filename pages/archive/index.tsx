@@ -6,7 +6,6 @@ import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 import withAuth from '@utils/withAuth'
 import ArchiveContainer from '@containers/ArchiveContainer'
 import { ESRoutes } from '@constants/route.constants'
-import Header from '@components/HeaderWithButton'
 
 interface ArchivePageProps {
   props: {
@@ -18,7 +17,6 @@ interface ArchivePageProps {
 const ArchivePage: React.FC<ArchivePageProps> = () => {
   return (
     <MainLayout footer={false}>
-      <Header title="動画" withBackButton={false} />
       <LiveThemeProvider>
         <ArchiveContainer />
       </LiveThemeProvider>

@@ -27,6 +27,7 @@ import ErrorSnackbar from '@components/Snackbar'
 import { useStyles } from '@utils/detail'
 import { useShareHash } from '@utils/useShareHash'
 import { getAuth } from '@store/auth/selectors'
+import Header from '@components/HeaderWithButton'
 
 const StreamContainer: React.FC = () => {
   const [value, setValue] = useState<string>('1')
@@ -174,6 +175,7 @@ const StreamContainer: React.FC = () => {
       {checkLoading() && <Loader />}
       {data && hasTicked && (
         <>
+          <Header title="動画" withBackButton={false} />
           <div className={classes.root}>
             <Container className={classes.spacing} disableGutters maxWidth="xl">
               <Paper className={classes.playerContainer} elevation={2} square>

@@ -6,7 +6,6 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { useEffect } from 'react'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
-import Header from '@components/HeaderWithButton'
 
 interface IProps {
   banners: string[]
@@ -39,7 +38,6 @@ const PrPage = (props: IProps) => {
   if (isAuthenticated) return <></>
   return (
     <MainLayout footer={false}>
-      <Header title="動画" withBackButton={false} />
       <LiveThemeProvider>
         <Pr banners={props.banners} />
       </LiveThemeProvider>

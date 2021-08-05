@@ -2,7 +2,6 @@ import MainLayout from '@layouts/MainLayout'
 // import Events from '@containers/Events'
 import Events from '@containers/Events/FreeStreamEvents'
 import LiveThemeProvider from '@theme/live/LiveThemeProvider'
-import Header from '@components/HeaderWithButton'
 
 interface IProps {
   banners: string[]
@@ -40,7 +39,6 @@ export async function getStaticProps(): Promise<{
 const EventsPage: React.FC<IProps> = (props) => {
   return (
     <MainLayout footer={false}>
-      <Header title="動画" withBackButton={false} />
       <LiveThemeProvider>
         <Events banners={props.banners} />
       </LiveThemeProvider>
