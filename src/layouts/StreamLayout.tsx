@@ -33,7 +33,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
     setOpen(open)
   }
 
-  const isStreamer = false;
+  const isStreamer = true
 
   // const toggleChatBar = (state: boolean) => {
   //   setExpand(state)
@@ -66,8 +66,8 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
       <Header open={open} toggleDrawer={toggleDrawer} />
       {isStreamer ? (
         <>
-          <aside className='streamer_aside_left stream_fixed_menu'>
-            <StreamSideMenu minimizeLayout={false} isStreamer={true}/>
+          <aside className="streamer_aside_left stream_fixed_menu">
+            <StreamSideMenu minimizeLayout={false} isStreamer={true} />
           </aside>
           <main role="streamer_main" className={patternBg ? 'streamer_main' : 'streamer_main no-pattern'}>
             <div className="streamer_content_wrapper">
@@ -81,10 +81,10 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
         </>
       ) : (
         <>
-          <aside className='not_streamer_aside_left'>
-            <StreamSideMenu minimizeLayout={true} isStreamer={false}/>
+          <aside className="not_streamer_aside_left">
+            <StreamSideMenu minimizeLayout={true} isStreamer={false} />
           </aside>
-          <main role="not_streamer_main" className='not_streamer_main'>
+          <main role="not_streamer_main" className="not_streamer_main">
             <div className="not_streamer_content_wrapper">
               <div className="not_streamer_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
@@ -93,7 +93,7 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
           </main>
         </>
       )}
-      
+
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
     </div>
   )
