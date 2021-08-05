@@ -74,8 +74,9 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
   // }, [src])
 
   const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
+  const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
-    accept: 'image/jpeg, image/jpg, image/png, image/gif',
+    accept: FILE_TYPES,
     onDrop: (files: any) => handleChange(files),
     maxSize: MAX_SIZE,
   }
@@ -86,8 +87,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
   }, [src])
 
   useEffect(() => {
-    if (fileRejections.length > 0) {
-      setError(fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE)
+    if (fileRejections.length > 0 && fileRejections[0].file) {
+      setError(fileRejections[0].file.size > MAX_SIZE || !FILE_TYPES.includes(fileRejections[0].file.type))
     } else {
       setError(false)
     }
@@ -128,6 +129,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
       setImgSrc(null)
       if (src) setIsClickedReset(true)
     }
+    setCroppedAreaPixels(null)
+    setZoom(1)
   }
 
   const disableUseButton = () => {
@@ -147,8 +150,6 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
       onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
-    } finally {
-      setUploading(false)
     }
   }, [croppedAreaPixels])
 
