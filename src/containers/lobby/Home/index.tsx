@@ -148,7 +148,7 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   return (
     <>
       <div className={classes.header}>
-        <Typography variant="h2">ロビー</Typography>
+        <Typography variant="h2">{t('common:home.lobby')}</Typography>
 
         <LoginRequired>
           <ButtonPrimary round gradient={false} onClick={toCreate} size="small">

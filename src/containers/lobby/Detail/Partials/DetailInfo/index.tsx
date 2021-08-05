@@ -19,6 +19,7 @@ import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import _ from 'lodash'
 
 interface Props {
   detail: LobbyDetail
@@ -34,6 +35,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
   const classes = useStyles()
   const data = detail.attributes
   const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
+  const tag = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
   const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
   const [openReport, setOpenReport] = useState(false)
   const helper = useLobbyHelper(detail)
@@ -79,10 +81,15 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
           {extended && (
-            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-              <Typography>{t('common:tournament.copy_shared_url')}</Typography>
-            </Box>
+            <>
+              <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+              </Box>
+              {/* <ButtonBase href="#" target="_blank">
+                <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
+              </ButtonBase> */}
+            </>
           )}
         </Box>
 
@@ -117,8 +124,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         {/* holding period */}
         <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
           <Box className={classes.label}>
-            {/* //TODO текст нэмээгүй */}
-            <Typography>{t('common:tournament.holding_period')}</Typography>
+            <Typography>{t('common:recruitment.date_time')}</Typography>
           </Box>
           <Box className={classes.value}>
             <Typography>{TournamentHelper.formatDate(data.start_date)}</Typography>
@@ -164,6 +170,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
             </Box>
 
+            {/* organizer name */}
+            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+              <Box className={classes.label}>
+                <Typography>{t('common:lobby_create.organizer_name')}</Typography>
+              </Box>
+              <Box className={classes.value}>
+                <Typography>{_.isEmpty(data.organizer_name) ? '-' : data.organizer_name}</Typography>
+              </Box>
+            </Box>
+
             {/* game */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
@@ -187,7 +203,13 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           </>
         )}
 
-        {/* //TODO gametag */}
+        {/* Category tag */}
+        <Box marginTop={2}>
+          <ESChip className={classes.tagChip} label={tag} />
+          <ESChip className={classes.tagChip} label={tag} />
+          <ESChip className={classes.tagChip} label={tag} />
+        </Box>
+
         {!extended && (
           <Box display="flex" flexDirection="row" flexWrap="wrap" marginTop={2}>
             <Box mt={1} mr={1}>
@@ -229,6 +251,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  twitter_logo: {
+    height: 23,
+    width: '100%',
+    paddingLeft: 12,
+  },
   multiline: {
     whiteSpace: 'pre-wrap',
   },
@@ -243,6 +270,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '85vw',
     minWidth: 177,
     justifyContent: 'flex-start',
+  },
+  tagChip: {
+    maxWidth: '85vw',
+    minWidth: 'fit-content',
+    justifyContent: 'flex-start',
+    marginRight: '0.7em',
   },
   label: {
     display: 'flex',

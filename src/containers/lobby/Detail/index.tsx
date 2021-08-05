@@ -29,8 +29,8 @@ const LobbyDetailBody: React.FC = () => {
       notes: 'note',
       rule: 'single', //double, battle_royale
       max_participants: 15,
-      status: 'recruiting', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
-      is_freezed: false,
+      status: 'completed', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
+      is_freezed: true,
       start_date: '2021-08-05 13:00',
       end_date: '2021-08-06 13:00',
       chat_room_id: '123',
@@ -44,7 +44,7 @@ const LobbyDetailBody: React.FC = () => {
       has_prize: false,
       prize_amount: '0',
       terms_of_participation: 'no terms',
-      organizer_name: 'dulguun',
+      organizer_name: 'Unimedia',
       summary: null,
       background_tpl: 1,
       has_third_place: false,
@@ -55,20 +55,25 @@ const LobbyDetailBody: React.FC = () => {
           id: 'string',
           type: 'user_list',
           attributes: {
-            user_code: '04156',
+            user_code: 'testdulguun',
             nickname: 'dulguun',
-            nickname2: null,
+            nickname2: '格ゲーマニア',
             avatar: null,
-            features: [
-              {
-                id: 456,
-                feature: 'feature',
-              },
-            ],
+            features: null,
             game_titles: [
               {
                 id: 1,
-                display_name: 'dota 2',
+                display_name: 'Apex Legends',
+                short_name: 'Ape',
+                jp_kana_name: 'エーペックスレジェンズ',
+                en_name: 'Apex Legends',
+              },
+              {
+                id: 2,
+                display_name: 'Valorant',
+                short_name: 'VAL',
+                jp_kana_name: 'ヴァロラント',
+                en_name: 'Valorant',
               },
             ],
           },
@@ -100,14 +105,14 @@ const LobbyDetailBody: React.FC = () => {
       summary_image: null,
       interested_count: 0,
       participant_count: 2,
-      my_role: null, //admin,participant,interested,co_organizer
-      my_info: null,
+      my_role: 'admin', //admin,participant,interested
+      my_info: null, //[]
       my_position: null,
       hash_key: '12345678190',
-      is_entered: false,
+      is_entered: true,
     },
   }
-  const { toEdit, isBattleRoyale } = useLobbyHelper(lobby)
+  const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
 
   const actionComponent: Record<LobbyStatus, ReactNode> = {
@@ -121,22 +126,6 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const renderBody = () => {
-    if (isBattleRoyale) {
-      return (
-        <>
-          <LobbyDetailHeader
-            title={lobby?.attributes?.title}
-            status={lobby?.attributes?.status || 'ready'}
-            cover={lobby?.attributes?.cover_image || '/images/default_card.png'}
-            onHandleBack={handleBack}
-            showTab={false}
-          >
-            {/* <BattleRoyaleInfo tournament={lobby} userProfile={userProfile} /> */}
-          </LobbyDetailHeader>
-        </>
-      )
-    }
-
     return (
       <>
         <LobbyDetailHeader
