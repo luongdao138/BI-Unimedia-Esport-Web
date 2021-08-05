@@ -74,7 +74,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
         <DialogContent>
           <Box className={classes.container}>
             <Typography className={classes.dialogTitle} gutterBottom>
-              エントリーしますか？
+              {t('common:recruitment.join_dialog.dialog_title')}
             </Typography>
           </Box>
           <Box className={classes.actionBox}>

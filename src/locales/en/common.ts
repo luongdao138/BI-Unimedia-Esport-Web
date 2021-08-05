@@ -488,6 +488,9 @@ export default {
     participate_status: {
       no_entry: '実施中',
     },
+    join_dialog: {
+      dialog_title: 'エントリーしますか？',
+    },
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
@@ -861,7 +864,7 @@ export default {
     tab2: '期間・会場',
     title: '募集を作成する',
     edit_title: '募集を作成する',
-    name: '募集名',
+    name: '募集タイトル',
     has_prize: '副賞あり',
     hint: '副賞提供は各種法令を遵守した形で実施されますよう十分ご注意ください',
     game: 'ゲーム',
@@ -887,8 +890,10 @@ export default {
     start_date: '開始日時',
     end_date: '終了日時',
     holding_period: '開催期間',
+    recruitment_start_date: '開催日時',
     area: '会場',
-    area_name_placeholder: `会場情報を記載`,
+    area_name_placeholder: `会場情報を入力しましょう。
+とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
     organizer: '開催者',
     co_organizer: '共同管理者',
     organizer_name: '主催',
@@ -910,5 +915,6 @@ export default {
     comfirm_title: 'この内容で作成しますか？',
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
+    organizer_joinable: '主催者を参加者として抽選に含める',
   },
 }

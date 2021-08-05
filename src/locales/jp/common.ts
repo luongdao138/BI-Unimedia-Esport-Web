@@ -488,6 +488,9 @@ export default {
     participate_status: {
       no_entry: '実施中',
     },
+    join_dialog: {
+      dialog_title: 'エントリーしますか？',
+    },
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
