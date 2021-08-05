@@ -771,6 +771,7 @@ export default {
     status: 'ステータス',
     payment_method: '支払い方法',
     payment_type_gmo: 'GMOペイメント',
+    payment_type_none: 'なし',
     questions: 'よくあるお問い合わせ',
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',

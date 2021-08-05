@@ -1,6 +1,6 @@
 import Slider from '@components/LiveSlider'
-import Loader from '@components/Loader'
-import { Box, Button, Container } from '@material-ui/core'
+import Loader from '@components/FullScreenLoader'
+import { Box, Button } from '@material-ui/core'
 import * as NextLink from 'next/link'
 import { useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
@@ -199,36 +199,34 @@ const Events: React.FC<IProps> = (props) => {
   }
 
   return (
-    <Container maxWidth="lg" disableGutters>
-      <Box pt={2}>
-        <div className={classes.container}>
-          <Slider items={props.banners} noTitle />
-          <div className={classes.description}>
-            <StaticDescription />
-          </div>
-          <div className={classes.footerBlankSpace}></div>
-          <Box pb={12}>
-            {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
-              <a
-                href="https://info.exelab.jp/"
-                // eslint-disable-next-line react/jsx-no-target-blank
-                target="_blank"
-                style={{
-                  textDecoration: 'none',
-                }}
-              >
-                <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-                  eXeLAB ご紹介ページ
-                </Button>
-              </a>
-            ) : (
-              getDoubleButtonView()
-            )}
-          </Box>
+    <>
+      <Box p={3}>
+        <Slider items={props.banners} noTitle />
+        <div className={classes.description}>
+          <StaticDescription />
         </div>
+        <div className={classes.footerBlankSpace}></div>
+        <Box pb={12}>
+          {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
+            <a
+              href="https://info.exelab.jp/"
+              // eslint-disable-next-line react/jsx-no-target-blank
+              target="_blank"
+              style={{
+                textDecoration: 'none',
+              }}
+            >
+              <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
+                eXeLAB ご紹介ページ
+              </Button>
+            </a>
+          ) : (
+            getDoubleButtonView()
+          )}
+        </Box>
       </Box>
-      {loading ? <Loader /> : null}
-    </Container>
+      <Loader open={loading} />
+    </>
   )
 }
 

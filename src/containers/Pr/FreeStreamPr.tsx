@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import Slider from '@components/LiveSlider'
-import { Container, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box'
 import StaticDescription from '@components/StaticDescription'
 import { RootState } from '@store/reducers'
 import LoginRequired from '@containers/LoginRequired'
+import Loader from '@components/FullScreenLoader'
 
 interface IProps {
   banners: string[]
@@ -128,25 +129,20 @@ const Pr: React.FC<IProps> = (props) => {
   }
 
   return (
-    <Container maxWidth="lg" disableGutters>
-      {!loading ? (
-        <Box pt={2}>
-          <div className={classes.container}>
-            <div className="sliderWrap">
-              <Slider items={props.banners} noTitle />
-            </div>
-            <div className={classes.description}>
-              <StaticDescription />
-            </div>
-            <div className={classes.footerBlankSpace}></div>
+    <>
+      <Box p={3}>
+        <div className="sliderWrap">
+          <Slider items={props.banners} noTitle />
+        </div>
+        <div className={classes.description}>
+          <StaticDescription />
+        </div>
+        <div className={classes.footerBlankSpace}></div>
 
-            <Box pb={12}>{getDoubleButtonView()}</Box>
-          </div>
-        </Box>
-      ) : (
-        <></>
-      )}
-    </Container>
+        <Box pb={12}>{getDoubleButtonView()}</Box>
+      </Box>
+      <Loader open={loading} />
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 import StreamContainer from '@containers/StreamContainer'
 import { prServices } from '@services/pr.services'
 import { ESRoutes } from '@constants/route.constants'
+import Header from '@components/HeaderWithButton'
 
 interface StreamPageProps {
   props: {
@@ -16,6 +17,7 @@ interface StreamPageProps {
 const StreamPage: React.FC<StreamPageProps> = () => {
   return (
     <MainLayout footer={false}>
+      <Header title="動画" withBackButton={false} />
       <LiveThemeProvider>
         <StreamContainer />
       </LiveThemeProvider>

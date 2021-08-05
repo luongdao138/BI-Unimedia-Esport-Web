@@ -9,8 +9,8 @@ const useStyles = makeStyles(() => ({
     flex: 1,
   },
   spacing: {
-    paddingLeft: 8,
-    paddingRight: 8,
+    paddingLeft: 24,
+    paddingRight: 24,
   },
   playerContainer: {
     position: 'relative',
