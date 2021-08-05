@@ -5,7 +5,7 @@ import { useAppSelector } from '@store/hooks'
 import { useRouter } from 'next/router'
 import React, { ComponentType, useState, useEffect } from 'react'
 
-export function withAuth<T extends object>(Component: ComponentType<T>): React.FC {
+export function withAuth<T extends object>(Component: ComponentType<T>, destination?: string): React.FC {
   const AppWithAuth: React.FC<T> = (props) => {
     const isAuth = useAppSelector(getIsAuthenticated)
     const router = useRouter()
@@ -16,7 +16,7 @@ export function withAuth<T extends object>(Component: ComponentType<T>): React.F
         setRender(true)
       } else {
         setRender(false)
-        router.push(ESRoutes.LOGIN)
+        router.push(destination || ESRoutes.LOGIN)
       }
     }, [isAuth])
 

@@ -55,4 +55,5 @@ export const ESRoutes = {
   EVENTS: '/events',
   STREAM: '/stream',
   ARCHIVE: '/archive',
+  PR: '/pr',
 }

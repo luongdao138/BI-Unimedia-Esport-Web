@@ -4,8 +4,16 @@ import withAuth from '@utils/withAuth'
 import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 import StreamContainer from '@containers/StreamContainer'
 import { prServices } from '@services/pr.services'
+import { ESRoutes } from '@constants/route.constants'
 
-const StreamPage: React.FC = () => {
+interface StreamPageProps {
+  props: {
+    title?: string
+    desc?: string
+  }
+}
+
+const StreamPage: React.FC<StreamPageProps> = () => {
   return (
     <MainLayout footer={false}>
       <LiveThemeProvider>
@@ -15,7 +23,7 @@ const StreamPage: React.FC = () => {
   )
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(): Promise<StreamPageProps> {
   try {
     const {
       data: { data },
@@ -31,4 +39,4 @@ export async function getStaticProps() {
   }
 }
 
-export default withAuth(StreamPage)
+export default withAuth(StreamPage, ESRoutes.PR)
