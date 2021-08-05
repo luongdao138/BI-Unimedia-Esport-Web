@@ -43,7 +43,7 @@ const LobbyDetailBody: React.FC = () => {
       has_prize: false,
       prize_amount: '0',
       terms_of_participation: 'no terms',
-      organizer_name: 'dulguun',
+      organizer_name: 'Unimedia',
       summary: null,
       background_tpl: 1,
       has_third_place: false,
@@ -111,7 +111,7 @@ const LobbyDetailBody: React.FC = () => {
       is_entered: true,
     },
   }
-  const { toEdit, isBattleRoyale } = useLobbyHelper(lobby)
+  const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
 
   const actionComponent: Record<LobbyStatus, ReactNode> = {
@@ -125,22 +125,6 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const renderBody = () => {
-    if (isBattleRoyale) {
-      return (
-        <>
-          <LobbyDetailHeader
-            title={lobby?.attributes?.title}
-            status={lobby?.attributes?.status || 'ready'}
-            cover={lobby?.attributes?.cover_image || '/images/default_card.png'}
-            onHandleBack={handleBack}
-            showTab={false}
-          >
-            {/* <BattleRoyaleInfo tournament={lobby} userProfile={userProfile} /> */}
-          </LobbyDetailHeader>
-        </>
-      )
-    }
-
     return (
       <>
         <LobbyDetailHeader
