@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
     marginRight: 10,
   },
   tabs: {
-    display: 'none',
+    display: 'flex',
     fontSize: 14,
   },
   detail: {
@@ -121,9 +121,9 @@ const useStyles = makeStyles(() => ({
       overflow: 'hidden',
       paddingBottom: 0,
     },
-    tabHeader: {
-      display: 'none',
-    },
+    // tabHeader: {
+    //   display: 'none',
+    // },
     detail: {
       display: 'none',
     },
