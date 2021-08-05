@@ -852,4 +852,10 @@ export default {
     archive_list: 'アーカイブ一覧',
     payment_information: '入金情報',
   },
+  streaming_settings_live_streaming_screen: {
+    title: '配信設定',
+    live_stream: 'ライブ配信',
+    streaming_reservation: '配信予約',
+    distributor_information: '配信者情報',
+  },
 }
