@@ -10,9 +10,7 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { LobbyDetail } from '@services/lobby.service'
 import { UserProfile } from '@services/user.service'
-import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
-import SummaryModal from '@containers/lobby/Detail/Partials/SummaryModal'
 import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
 import LoginRequired from '@containers/LoginRequired'
 import TeamEntryEditModal from './TeamEntryEditModal'
@@ -30,38 +28,26 @@ const ActionComponent: React.FC<Props> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const {
-    toMatches,
-    isModerator,
-    isTeam,
-    isRecruiting,
-    isReady,
-    isCompleted,
-    isCancelled,
-    isRecruitmentClosed,
-    isNotHeld,
-    isAdminJoined,
-    isTeamLeader,
-    isEntered,
-  } = useLobbyHelper(lobby)
+  const { isModerator, isTeam, isRecruiting, isReady, isCancelled, isNotHeld, isAdminJoined, isTeamLeader, isEntered } = useLobbyHelper(
+    lobby
+  )
 
-  const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
   const [soloEntryEditShow, setSoloEntryEditShow] = useState<boolean>(false)
   const [soloEntryShow, setSoloEntryShow] = useState<boolean>(false)
   const [teamEntryShow, setTeamEntryShow] = useState<boolean>(false)
   const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
 
   const buildLobbyPeriodValue = () => {
-    const beforeEntry = isReady || isRecruiting
-    const targetStartDate = beforeEntry ? lobby.attributes.acceptance_start_date : lobby.attributes.start_date
-    const targetEndDate = beforeEntry ? lobby.attributes.acceptance_end_date : lobby.attributes.end_date
-    const entryStartDate = TournamentHelper.formatDate(targetStartDate)
-    const entryEndDate = TournamentHelper.formatDate(targetEndDate)
-
-    return `${entryStartDate} ～ ${entryEndDate}`
+    if (isReady || isRecruiting) {
+      const entryStartDate = TournamentHelper.formatDate(lobby.attributes.acceptance_start_date)
+      const entryEndDate = TournamentHelper.formatDate(lobby.attributes.acceptance_end_date)
+      return `${entryStartDate} - ${entryEndDate}`
+    } else {
+      return `${TournamentHelper.formatDate(lobby.attributes.start_date)}`
+    }
   }
   const buildLobbyTitle = () => {
-    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:tournament.holding_period')
+    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:recruitment.date_time')
 
     return `${arenaStatus}`
   }
@@ -78,26 +64,11 @@ const ActionComponent: React.FC<Props> = (props) => {
     )
   }
 
-  const entryEditButton = () => {
-    return (
-      <Box className={classes.actionButton}>
-        <LoginRequired>
-          <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
-            {t('common:tournament.check_entry')}
-          </ButtonPrimary>
-        </LoginRequired>
-      </Box>
-    )
-  }
-
   const renderAdminEntry = () => {
     return (
       <Box className={classes.buttonHolder}>
         <Box minWidth={260} className={classes.buttonLeft}>
           <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={lobby} handleClose={() => {}} />
-        </Box>
-        <Box minWidth={256} className={classes.buttonRight}>
-          {renderEntry()}
         </Box>
       </Box>
     )
@@ -105,7 +76,7 @@ const ActionComponent: React.FC<Props> = (props) => {
 
   const renderEntry = () => {
     if ((isEntered && isTeamLeader) || isAdminJoined) {
-      return entryEditButton()
+      return null
     } else if (isRecruiting || isReady) {
       return entryButton()
     }
@@ -123,23 +94,10 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {!isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
+        {!isReady && !isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
       </Box>
 
-      {isRecruitmentClosed && isModerator && (
-        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-          <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
-          <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
-            <Typography variant="body2">
-              {t('common:tournament.until_deadline')}
-              <ESLink onClick={toMatches}>{t('common:tournament.brackets')}</ESLink>
-              {t('common:tournament.confirm_brackets_desc_tail')}
-            </Typography>
-          </Box>
-        </Box>
-      )}
-
-      {isRecruiting || isReady ? (
+      {isRecruiting ? (
         <>
           {isModerator ? renderAdminEntry() : renderEntry()}
           {isAdminJoined || (isEntered && isTeamLeader) ? <UnjoinModal tournament={lobby} /> : null}
@@ -150,17 +108,10 @@ const ActionComponent: React.FC<Props> = (props) => {
           )}
         </>
       ) : (
-        !TournamentHelper.isStatusPassed(lobby.attributes.status, TOURNAMENT_STATUS.COMPLETED) && renderEntry()
+        !TournamentHelper.isStatusPassed(lobby.attributes.status, TOURNAMENT_STATUS.COMPLETED) || (!isReady && renderEntry())
       )}
 
-      {isModerator && isCompleted && !isNotHeld && (
-        <Box className={classes.actionButton}>
-          <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
-            {t('common:tournament.summary')}
-          </ButtonPrimary>
-          <SummaryModal open={showSummaryModal} tournament={lobby} handleClose={() => setShowSummaryModal(false)} />
-        </Box>
-      )}
+      {isReady && <>{isModerator ? renderAdminEntry() : renderEntry()}</>}
 
       {/* modals */}
       {teamEntryShow && (

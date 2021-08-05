@@ -117,8 +117,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         {/* holding period */}
         <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
           <Box className={classes.label}>
-            {/* //TODO текст нэмээгүй */}
-            <Typography>{t('common:tournament.holding_period')}</Typography>
+            <Typography>{t('common:recruitment.date_time')}</Typography>
           </Box>
           <Box className={classes.value}>
             <Typography>{TournamentHelper.formatDate(data.start_date)}</Typography>

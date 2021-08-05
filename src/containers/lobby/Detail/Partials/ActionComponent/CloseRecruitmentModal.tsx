@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { LobbyDetail } from '@services/lobby.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, Icon } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
@@ -35,12 +35,8 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
     <Box>
       <Box className={classes.button}>
         <LoginRequired>
-          <ButtonPrimaryOutlined
-            disabled={!isRecruiting}
-            onClick={() => setOpen(true)}
-            leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}
-          >
-            {t('common:tournament.close_recruitment.button_text')}
+          <ButtonPrimaryOutlined disabled={!isRecruiting} onClick={() => setOpen(true)}>
+            {t('common:recruitment.close_recruitment.button_text')}
           </ButtonPrimaryOutlined>
         </LoginRequired>
       </Box>

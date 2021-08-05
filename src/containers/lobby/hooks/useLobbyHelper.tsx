@@ -29,6 +29,7 @@ const useLobbyHelper = (
   isAdminJoined: boolean
   isTeamLeader: boolean
   toDetail: () => void
+  isSelected: boolean
 } => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -51,6 +52,7 @@ const useLobbyHelper = (
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
   const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
+  const isSelected = isEntered && myRole === ROLE.PARTICIPANT
 
   const checkAdminJoined = () => {
     if (!isModerator) return false
@@ -119,6 +121,7 @@ const useLobbyHelper = (
     isTeamLeader,
     toDetail,
     isEntered,
+    isSelected,
   }
 }
 

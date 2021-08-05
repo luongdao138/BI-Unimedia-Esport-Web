@@ -481,6 +481,13 @@ export default {
   recruitment: {
     recommended_recruitment_list: 'おすすめの募集一覧',
     recruitment_follower: 'フォローしている人の募集',
+    close_recruitment: {
+      button_text: 'メンバー確定',
+    },
+    date_time: '開催日時',
+    participate_status: {
+      no_entry: '実施中',
+    },
     join_dialog: {
       dialog_title: 'エントリーしますか？',
     },
