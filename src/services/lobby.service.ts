@@ -102,7 +102,7 @@ export type LobbyRule = 'single' | 'double' | 'battle_royale'
 export type ArenaRole = 'admin' | 'participant' | 'interested' | 'co_organizer'
 export type LobbyDetail = {
   id: string
-  type: 'lobby_details'
+  type: 'tournament_details'
   attributes: {
     title: string
     overview: string

@@ -1,5 +1,4 @@
 // TEMPORARY: battle royale removed
-
 export const PARTICIPANT_TYPE = {
   HOME: 'home',
   GUEST: 'guest',
@@ -8,6 +7,11 @@ export const PARTICIPANT_TYPE = {
 export const T_TYPE = {
   PUBLIC: 't_public',
   PRIVATE: 't_private',
+}
+
+export const RULE = {
+  SINGLE: 'single',
+  BATTLE_ROYALE: 'battle_royale',
 }
 
 export const STATUS = {
