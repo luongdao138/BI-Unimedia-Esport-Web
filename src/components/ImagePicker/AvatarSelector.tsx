@@ -87,7 +87,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
   }, [src])
 
   useEffect(() => {
-    if (fileRejections.length > 0) {
+    if (fileRejections.length > 0 && fileRejections[0].file) {
       setError(fileRejections[0].file.size > MAX_SIZE || !FILE_TYPES.includes(fileRejections[0].file.type))
     } else {
       setError(false)

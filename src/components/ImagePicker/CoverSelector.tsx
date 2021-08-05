@@ -87,7 +87,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
   const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
-    if (fileRejections.length > 0) {
+    if (fileRejections.length > 0 && fileRejections[0].file) {
       setError(fileRejections[0].file.size > MAX_SIZE || !FILE_TYPES.includes(fileRejections[0].file.type))
     } else {
       setError(false)
