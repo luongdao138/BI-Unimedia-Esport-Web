@@ -19,99 +19,99 @@ import {
 import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 
 type StateType = {
-  searchTournaments?: Array<LobbyResponse>
-  searchTournamentsMeta?: PageMeta
-  tournamentFollowers: Array<FollowersResponse>
-  tournamentResults: Array<ResultsResponse>
-  tournamentDetail?: LobbyDetail
-  tournamentParticipants?: Array<ParticipantsResponse>
+  searchLobbys?: Array<LobbyResponse>
+  searchLobbysMeta?: PageMeta
+  lobbyFollowers: Array<FollowersResponse>
+  lobbyResults: Array<ResultsResponse>
+  lobbyDetail?: LobbyDetail
+  lobbyParticipants?: Array<ParticipantsResponse>
   participantsMeta?: PageMeta
   suggestedTeamMembers?: SuggestedTeamMembersResponse[]
   suggestedTeamMembersMeta?: PageMeta
-  tournamentInteresteds?: Array<ParticipantsResponse>
+  lobbyInteresteds?: Array<ParticipantsResponse>
   interestedsMeta?: PageMeta
-  tournamentMatches: LobbyMatchResponse
-  recruitingTournaments: Array<RecruitingResponse>
+  lobbyMatches: LobbyMatchResponse
+  recruitingLobbys: Array<RecruitingResponse>
   arenaWinners: ArenaWinners
   recommendedUsers?: Array<RecommendedUsers>
   recommendedUsersMeta?: PageMeta
-  tournamentFollowersMeta?: PageMeta
-  tournamentResultsMeta?: PageMeta
-  recruitingTournamentsMeta?: PageMeta
+  lobbyFollowersMeta?: PageMeta
+  lobbyResultsMeta?: PageMeta
+  recruitingLobbysMeta?: PageMeta
   selectedParticipant?: ParticipantName
   selectedTeamDetail?: LobbyTeamDetail
 }
 
 const initialState: StateType = {
-  searchTournaments: [],
-  tournamentFollowers: [],
-  tournamentResults: [],
-  tournamentParticipants: [],
+  searchLobbys: [],
+  lobbyFollowers: [],
+  lobbyResults: [],
+  lobbyParticipants: [],
   suggestedTeamMembers: [],
-  tournamentInteresteds: [],
-  tournamentMatches: { matches: [], third_place_match: [] },
+  lobbyInteresteds: [],
+  lobbyMatches: { matches: [], third_place_match: [] },
   arenaWinners: {},
-  recruitingTournaments: [],
+  recruitingLobbys: [],
   recommendedUsers: [],
 }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
-    let searchTournaments = action.payload.data
+  builder.addCase(actions.lobbySearch.fulfilled, (state, action) => {
+    let searchLobbys = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      searchTournaments = state.searchTournaments.concat(action.payload.data)
+      searchLobbys = state.searchLobbys.concat(action.payload.data)
     }
 
-    state.searchTournaments = searchTournaments
-    state.searchTournamentsMeta = action.payload.meta
+    state.searchLobbys = searchLobbys
+    state.searchLobbysMeta = action.payload.meta
   })
-  builder.addCase(actions.resetSearchTournaments, (state) => {
-    state.searchTournaments = []
-    state.searchTournamentsMeta = undefined
+  builder.addCase(actions.resetSearchLobbys, (state) => {
+    state.searchLobbys = []
+    state.searchLobbysMeta = undefined
   })
-  builder.addCase(actions.getTournamentFollowers.fulfilled, (state, action) => {
-    let tmpTournamentFollowers = action.payload.data
+  builder.addCase(actions.getLobbyFollowers.fulfilled, (state, action) => {
+    let tmpLobbyFollowers = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpTournamentFollowers = state.tournamentFollowers.concat(action.payload.data)
+      tmpLobbyFollowers = state.lobbyFollowers.concat(action.payload.data)
     }
-    state.tournamentFollowers = tmpTournamentFollowers
-    state.tournamentFollowersMeta = action.payload.meta
+    state.lobbyFollowers = tmpLobbyFollowers
+    state.lobbyFollowersMeta = action.payload.meta
   })
-  builder.addCase(actions.getTournamentResults.fulfilled, (state, action) => {
-    let tmpTournamentResults = action.payload.data
+  builder.addCase(actions.getLobbyResults.fulfilled, (state, action) => {
+    let tmpLobbyResults = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpTournamentResults = state.tournamentResults.concat(action.payload.data)
+      tmpLobbyResults = state.lobbyResults.concat(action.payload.data)
     }
-    state.tournamentResults = tmpTournamentResults
-    state.tournamentResultsMeta = action.payload.meta
+    state.lobbyResults = tmpLobbyResults
+    state.lobbyResultsMeta = action.payload.meta
   })
 
   builder.addCase(actions.getEntryStatus.fulfilled, (state, action) => {
-    state.tournamentDetail.attributes.is_entered = action.payload.is_entry
+    state.lobbyDetail.attributes.is_entered = action.payload.is_entry
   })
-  builder.addCase(actions.leaveTournament.fulfilled, (state) => {
-    state.tournamentDetail.attributes.interested_count--
-    state.tournamentDetail.attributes.is_entered = false
-    state.tournamentDetail.attributes.my_info = state.tournamentDetail.attributes.my_info.filter((info) => {
+  builder.addCase(actions.leaveLobby.fulfilled, (state) => {
+    state.lobbyDetail.attributes.interested_count--
+    state.lobbyDetail.attributes.is_entered = false
+    state.lobbyDetail.attributes.my_info = state.lobbyDetail.attributes.my_info.filter((info) => {
       info.role !== 'interested'
     })
   })
-  builder.addCase(actions.closeTournament.fulfilled, (state) => {
-    state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as LobbyStatus
+  builder.addCase(actions.closeLobby.fulfilled, (state) => {
+    state.lobbyDetail.attributes.status = TOURNAMENT_STATUS.RECRUITMENT_CLOSED as LobbyStatus
   })
-  builder.addCase(actions.cancelTournament.fulfilled, (state) => {
-    state.tournamentDetail.attributes.status = TOURNAMENT_STATUS.CANCELLED as LobbyStatus
+  builder.addCase(actions.cancelLobby.fulfilled, (state) => {
+    state.lobbyDetail.attributes.status = TOURNAMENT_STATUS.CANCELLED as LobbyStatus
   })
-  builder.addCase(actions.getTournamentParticipants.fulfilled, (state, action) => {
+  builder.addCase(actions.getLobbyParticipants.fulfilled, (state, action) => {
     let _participants = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      _participants = state.tournamentParticipants.concat(action.payload.data)
+      _participants = state.lobbyParticipants.concat(action.payload.data)
     }
-    state.tournamentParticipants = _participants
+    state.lobbyParticipants = _participants
     state.participantsMeta = action.payload.meta
   })
   builder.addCase(actions.resetParticipants, (state) => {
-    state.tournamentParticipants = []
+    state.lobbyParticipants = []
     state.participantsMeta = undefined
   })
   builder.addCase(actions.getSuggestedTeamMembers.fulfilled, (state, action) => {
@@ -123,24 +123,24 @@ export default createReducer(initialState, (builder) => {
     state.suggestedTeamMembers = _suggestedTeamMembers
     state.suggestedTeamMembersMeta = action.payload.links?.meta
   })
-  builder.addCase(actions.getTournamentInteresteds.fulfilled, (state, action) => {
+  builder.addCase(actions.getLobbyInteresteds.fulfilled, (state, action) => {
     let _interesteds = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      _interesteds = state.tournamentInteresteds.concat(action.payload.data)
+      _interesteds = state.lobbyInteresteds.concat(action.payload.data)
     }
-    state.tournamentInteresteds = _interesteds
+    state.lobbyInteresteds = _interesteds
     state.interestedsMeta = action.payload.meta
   })
-  builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
-    state.tournamentMatches = action.payload
+  builder.addCase(actions.getLobbyMatches.fulfilled, (state, action) => {
+    state.lobbyMatches = action.payload
   })
-  builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
-    let tmpRecruitingTournaments = action.payload.data
+  builder.addCase(actions.getRecruitingLobbys.fulfilled, (state, action) => {
+    let tmpRecruitingLobbys = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpRecruitingTournaments = state.recruitingTournaments.concat(action.payload.data)
+      tmpRecruitingLobbys = state.recruitingLobbys.concat(action.payload.data)
     }
-    state.recruitingTournaments = tmpRecruitingTournaments
-    state.recruitingTournamentsMeta = action.payload.meta
+    state.recruitingLobbys = tmpRecruitingLobbys
+    state.recruitingLobbysMeta = action.payload.meta
   })
   builder.addCase(actions.getArenaWinners.fulfilled, (state, action) => {
     const places = Object.keys(action.payload.matches)
@@ -165,8 +165,8 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.clearRecommendedUsers, (state) => {
     state.recommendedUsers = []
   })
-  builder.addCase(actions.clearTournamentResult, (state) => {
-    state.searchTournaments = []
+  builder.addCase(actions.clearLobbyResult, (state) => {
+    state.searchLobbys = []
   })
 
   builder.addCase(actions.getParticipantName.fulfilled, (state, action) => {
@@ -175,7 +175,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.changeParticipantName.fulfilled, (state, action) => {
     state.selectedParticipant.attributes.name = action.payload.name
   })
-  builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
+  builder.addCase(actions.getLobbyTeamDetail.fulfilled, (state, action) => {
     state.selectedTeamDetail = action.payload.data
   })
 })

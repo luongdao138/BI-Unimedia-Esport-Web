@@ -37,20 +37,20 @@ const LobbyCreate: React.FC = () => {
   const dispatch = useAppDispatch()
   const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
-  const { submit, update, meta, updateMeta, isEdit, arena, editables } = useLobbyCreate()
+  const { submit, update, meta, updateMeta, isEdit, lobby, editables } = useLobbyCreate()
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const [hasError, setError] = useState(true)
   const isFirstRun = useRef(true)
-  const initialValues = getInitialValues(isEdit ? arena : undefined)
+  const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
   const formik = useFormik<FormType>({
     initialValues: initialValues,
-    validationSchema: getValidationScheme(arena, editables),
+    validationSchema: getValidationScheme(lobby, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
       const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepTwo.area_id}`))
@@ -87,10 +87,10 @@ const LobbyCreate: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    if (arena) {
+    if (lobby) {
       formik.validateForm()
     }
-  }, [arena])
+  }, [lobby])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -172,7 +172,7 @@ const LobbyCreate: React.FC = () => {
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
           {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
-        <CancelDialog arena={arena} hashKey={`${router.query.hash_key}`} />
+        <CancelDialog arena={lobby} hashKey={`${router.query.hash_key}`} />
       </Box>
     )
   }
