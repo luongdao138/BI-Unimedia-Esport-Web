@@ -5,8 +5,16 @@ import { prServices } from '@services/pr.services'
 import LiveThemeProvider from '@theme/live/LiveThemeProvider'
 import withAuth from '@utils/withAuth'
 import ArchiveContainer from '@containers/ArchiveContainer'
+import { ESRoutes } from '@constants/route.constants'
 
-const ArchivePage = () => {
+interface ArchivePageProps {
+  props: {
+    title?: string
+    desc?: string
+  }
+}
+
+const ArchivePage: React.FC<ArchivePageProps> = () => {
   return (
     <MainLayout>
       <LiveThemeProvider>
@@ -16,7 +24,7 @@ const ArchivePage = () => {
   )
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(): Promise<ArchivePageProps> {
   try {
     const {
       data: { data },
@@ -24,7 +32,7 @@ export async function getStaticProps() {
     return {
       props: {
         title: 'NTTe-Sports動画配信',
-        description: data.attributes.description,
+        desc: data.attributes.description,
       },
     }
   } catch (error) {
@@ -32,4 +40,4 @@ export async function getStaticProps() {
   }
 }
 
-export default withAuth(ArchivePage)
+export default withAuth(ArchivePage, ESRoutes.PR)
