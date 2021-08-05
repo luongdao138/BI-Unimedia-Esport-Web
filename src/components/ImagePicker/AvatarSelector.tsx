@@ -11,12 +11,15 @@ import i18n from '@locales/i18n'
 import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { REMOVE_TYPE } from '@constants/image.constants'
 
 interface AvatarSelectorProps {
   src?: string
   alt: string
+  is_required?: boolean | true
   cancel: () => void
   onUpdate: (file: File, blob: any, blobUrl: string) => void
+  onRemove?: (path: string, file_type: number) => void
 }
 
 const ImageSlider = withStyles({
@@ -48,7 +51,7 @@ const ImageSlider = withStyles({
 
 const WH = 200
 
-const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpdate }) => {
+const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, cancel, onUpdate, onRemove }) => {
   const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
@@ -59,6 +62,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   const [error, setError] = useState<boolean>(false)
   const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: WH, height: WH })
   const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
+  const [imgSrc, setImgSrc] = useState<any>(null)
+  const [is_clicked_reset, setIsClickedReset] = useState<boolean>(false)
 
   useEffect(() => {
     return setUploading(false)
@@ -69,16 +74,21 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   // }, [src])
 
   const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
+  const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
-    accept: 'image/jpeg, image/jpg, image/png, image/gif',
+    accept: FILE_TYPES,
     onDrop: (files: any) => handleChange(files),
     maxSize: MAX_SIZE,
   }
   const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
-    if (fileRejections.length > 0) {
-      setError(fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE)
+    setImgSrc(src)
+  }, [src])
+
+  useEffect(() => {
+    if (fileRejections.length > 0 && fileRejections[0].file) {
+      setError(fileRejections[0].file.size > MAX_SIZE || !FILE_TYPES.includes(fileRejections[0].file.type))
     } else {
       setError(false)
     }
@@ -111,7 +121,22 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   }
 
   const reset = () => {
-    setFile(null)
+    if (file) {
+      setFile(null)
+      setRawFile(null)
+      setIsClickedReset(false)
+    } else {
+      setImgSrc(null)
+      if (src) setIsClickedReset(true)
+    }
+    setCroppedAreaPixels(null)
+    setZoom(1)
+  }
+
+  const disableUseButton = () => {
+    if (file !== null && rawFile !== null) return false
+    else if (is_required == false && is_clicked_reset) return false
+    return true
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -127,6 +152,10 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
       console.error(e)
     }
   }, [croppedAreaPixels])
+
+  const remove = useCallback(async () => {
+    onRemove(src, REMOVE_TYPE.profile)
+  }, [])
 
   return (
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
@@ -157,7 +186,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
             />
           ) : (
             <label htmlFor="cover-upload" className={classes.touch}>
-              <ESAvatar className={classes.avatar} src={src ?? '/images/avatar.png'} alt={alt} />
+              <ESAvatar className={classes.avatar} src={imgSrc ?? '/images/avatar.png'} alt={alt} />
               <Camera fontSize="large" className={classes.camera} />
               <div className={classes.backdrop} />
               <div {...getRootProps()} className={classes.dropZone}>
@@ -185,12 +214,12 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
           <ButtonPrimary round gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}>
+          <ButtonPrimary round onClick={file && rawFile ? update : remove} style={{ marginLeft: 20 }} disabled={disableUseButton()}>
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
         <Box className={classes.linkContainer}>
-          <Link className={file === null || rawFile === null ? classes.linkDisabled : classes.link} onClick={reset}>
+          <Link className={classes.link} onClick={reset}>
             {i18n.t('common:profile.reset')}
           </Link>
         </Box>

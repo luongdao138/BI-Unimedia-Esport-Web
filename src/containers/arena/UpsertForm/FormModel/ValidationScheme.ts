@@ -9,7 +9,6 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
   let recruitMinDate = new Date()
   // let recruitEndMinDate = new Date()
   let minStartDate = new Date()
-  let minEndDate = new Date()
   if (!!data && !!data.attributes.status) {
     const beforeRecruit = TournamentHelper.checkStatus(data.attributes.status, 'recruiting')
     // const beforeRecruitEnd = TournamentHelper.checkStatus(data.attributes.status, 'recruitment_closed')
@@ -17,7 +16,6 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
     // if (!beforeRecruitEnd && data.attributes.acceptance_end_date) recruitEndMinDate = new Date(data.attributes.acceptance_end_date)
 
     if (!editables.start_date && data.attributes.start_date) minStartDate = new Date(data.attributes.start_date)
-    if (!editables.end_date && data.attributes.end_date) minEndDate = new Date(data.attributes.end_date)
   }
 
   return Yup.object({
@@ -61,10 +59,7 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         .nullable()
         .required(i18n.t('common:common.input_required'))
         .min(minStartDate, i18n.t('common:common.validation.min_date')),
-      end_date: Yup.date()
-        .nullable()
-        .required(i18n.t('common:common.input_required'))
-        .min(minEndDate, i18n.t('common:common.validation.min_date')),
+      end_date: Yup.date().nullable().required(i18n.t('common:common.input_required')),
       acceptance_start_date: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))

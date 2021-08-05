@@ -131,6 +131,7 @@ const ResetPasswordContainer: React.FC = () => {
 
               <Typography variant="body2">{t('common:register_by_email.hint')}</Typography>
               <Typography variant="body2">{t('common:register_by_email.hint2')}</Typography>
+              <Typography variant="body2">{t('common:register_by_email.hint3')}</Typography>
 
               <Box pt={4}>
                 <ESInput
