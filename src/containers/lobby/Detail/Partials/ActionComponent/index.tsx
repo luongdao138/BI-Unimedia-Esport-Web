@@ -11,7 +11,6 @@ import { Colors } from '@theme/colors'
 import { LobbyDetail } from '@services/lobby.service'
 import { UserProfile } from '@services/user.service'
 import ButtonPrimary from '@components/ButtonPrimary'
-import SummaryModal from '@containers/lobby/Detail/Partials/SummaryModal'
 import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
 import LoginRequired from '@containers/LoginRequired'
 import TeamEntryEditModal from './TeamEntryEditModal'
@@ -29,20 +28,10 @@ const ActionComponent: React.FC<Props> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const {
-    isModerator,
-    isTeam,
-    isRecruiting,
-    isReady,
-    isCompleted,
-    isCancelled,
-    isNotHeld,
-    isAdminJoined,
-    isTeamLeader,
-    isEntered,
-  } = useLobbyHelper(lobby)
+  const { isModerator, isTeam, isRecruiting, isReady, isCancelled, isNotHeld, isAdminJoined, isTeamLeader, isEntered } = useLobbyHelper(
+    lobby
+  )
 
-  const [showSummaryModal, setShowSummaryModal] = useState<boolean>(false)
   const [soloEntryEditShow, setSoloEntryEditShow] = useState<boolean>(false)
   const [soloEntryShow, setSoloEntryShow] = useState<boolean>(false)
   const [teamEntryShow, setTeamEntryShow] = useState<boolean>(false)
@@ -123,15 +112,6 @@ const ActionComponent: React.FC<Props> = (props) => {
       )}
 
       {isReady && <>{isModerator ? renderAdminEntry() : renderEntry()}</>}
-
-      {isModerator && isCompleted && !isNotHeld && (
-        <Box className={classes.actionButton}>
-          <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
-            {t('common:tournament.summary')}
-          </ButtonPrimary>
-          <SummaryModal open={showSummaryModal} tournament={lobby} handleClose={() => setShowSummaryModal(false)} />
-        </Box>
-      )}
 
       {/* modals */}
       {teamEntryShow && (

@@ -29,8 +29,8 @@ const LobbyDetailBody: React.FC = () => {
       notes: 'note',
       rule: 'single', //double, battle_royale
       max_participants: 15,
-      status: 'in_progress', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
-      is_freezed: false,
+      status: 'completed', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
+      is_freezed: true,
       start_date: '2021-08-05 13:00',
       end_date: '2021-08-06 13:00',
       chat_room_id: '123',

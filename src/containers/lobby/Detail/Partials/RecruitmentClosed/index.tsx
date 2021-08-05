@@ -22,6 +22,7 @@ const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
   const entryMembersCount = lobby.attributes.interested_count + lobby.attributes.participant_count
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const isEntered = lobby.attributes.is_entered
+  const isFreezed = lobby.attributes.is_freezed
 
   const statusName = {
     admin: isEntered ? t('common:arena.participate_status.participating') : null,
@@ -32,7 +33,7 @@ const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
   return (
     <ActionComponent {...props}>
       <Box className={classes.body}>
-        {statusName[lobby.attributes.my_role] || isAuthenticated ? (
+        {isFreezed && (statusName[lobby.attributes.my_role] || isAuthenticated) ? (
           <Box display="flex" flexDirection="row">
             <Typography className={classes.roundInfoText}>
               {statusName[lobby.attributes.my_role] || (isAuthenticated && t('common:recruitment.participate_status.no_entry')) || null}
