@@ -16,3 +16,8 @@ export const ACTION_TYPE = {
   CREATE: 1,
   UPDATE: 2,
 }
+
+export const REMOVE_TYPE = {
+  profile: 0,
+  cover: 1,
+}
