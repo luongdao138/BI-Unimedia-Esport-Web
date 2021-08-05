@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import ChatInput from './ChatInput'
+import LiveChatInput from './LiveChatInput'
 import { PaperChat } from '@components/Styled/chat'
-import ChatBubble from './ChatBubble'
+import Bubble from './Bubble'
 import Button from '@material-ui/core/Button'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import { CellMeasurer, CellMeasurerCache, AutoSizer, List } from 'react-virtualized'
@@ -25,7 +25,7 @@ const cache = new CellMeasurerCache({
 })
 const contentRef = React.createRef<HTMLDivElement>()
 
-const Chat = forwardRef((props: chatProps, ref) => {
+const LiveChat = forwardRef((props: chatProps, ref) => {
   const { onSend, messages, userId, input, onPressTime, timeJump, protection } = props
   const classes = useStyles()
   const [showScroll, setShowScroll] = useState(false)
@@ -85,7 +85,7 @@ const Chat = forwardRef((props: chatProps, ref) => {
     return (
       <CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
         {({ measure }) => (
-          <ChatBubble
+          <Bubble
             key={index}
             style={style}
             onLoad={measure}
@@ -102,8 +102,8 @@ const Chat = forwardRef((props: chatProps, ref) => {
 
   return (
     <PaperChat variant="outlined" square>
-      <div ref={contentRef} className="live-chat-window">
-        <div className={input ? 'live-chat-wrapper with-input' : 'live-chat-wrapper'}>
+      <div ref={contentRef} className={classes.liveChatWindow}>
+        <div className={input ? classes.liveChatWithInput : classes.liveChatWrapper}>
           <Button
             style={{ display: showScroll ? 'flex' : 'none' }}
             variant="contained"
@@ -135,7 +135,7 @@ const Chat = forwardRef((props: chatProps, ref) => {
             )}
           </AutoSizer>
         </div>
-        {input ? <ChatInput typing={_typing} protection={protection} send={onSend} /> : null}
+        {input ? <LiveChatInput typing={_typing} protection={protection} send={onSend} /> : null}
       </div>
     </PaperChat>
   )
@@ -159,11 +159,34 @@ const useStyles = makeStyles(() => ({
     zIndex: 100,
     color: '#fff',
   },
+  liveChatWindow: {
+    position: 'relative',
+    height: '100%',
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+  },
+  liveChatWithInput: {
+    height: 'auto',
+    flex: 1,
+    display: 'flex',
+  },
+  liveChatWrapper: {
+    width: '100%',
+    background: '#212121',
+    padding: '8px',
+    position: 'relative',
+    flexGrow: 1,
+    display: 'flex',
+    '& textarea': {
+      overflow: 'hidden',
+    },
+  },
 }))
 
-export default Chat
+export default LiveChat
 
-Chat.defaultProps = {
+LiveChat.defaultProps = {
   input: true,
   timeJump: false,
   protection: false,

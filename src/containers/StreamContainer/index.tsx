@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Grid, Tabs, Tab, Container, useMediaQuery, Typography, Box, Paper } from '@material-ui/core'
+import { Grid, Tabs, Tab, Container, Typography, Box, Paper } from '@material-ui/core'
 import { TabContext, TabPanel } from '@material-ui/lab/'
 import StreamDetail from '@containers/Stream/elements/StreamDetail'
-import { PlayerCard, PaperDetail } from '@components/Styled/chat'
-import Chat from '@containers/Chat'
-import json2mq from 'json2mq'
+import { PlayerCard } from '@components/Styled/chat'
+import LiveChat from '@containers/LiveChat'
 import VideoPlayer from '@containers/VideoPlayer'
 import Loader from '@components/Loader'
 import { useSelector, useDispatch, useStore } from 'react-redux'
@@ -50,22 +49,9 @@ const StreamContainer: React.FC = () => {
   const hasTicked = _.get(data, 'attributes.has_ticket', undefined)
   const url = useShareHash(hash)
 
-  const isDesktop = useMediaQuery(
-    json2mq({
-      minWidth: 720,
-    })
-  )
-
   const handleChange = (_, newValue) => {
     setValue(newValue)
   }
-
-  useEffect(() => {
-    if (isDesktop) {
-      setValue('1')
-      // console.log('aaaa')
-    }
-  }, [isDesktop]) // Only re-run the effect if count changes
 
   useEffect(() => {
     if (hasTicked == false && meta.loaded && !meta.error && !meta.pending) {
@@ -138,20 +124,18 @@ const StreamContainer: React.FC = () => {
   const renderInActivePlayer = () => {
     if (meta.error?.code === STREAM_STATUS.INACTIVE_STREAM) {
       return (
-        <div className="content-wrapper-stream">
-          <div className={classes.root}>
-            <Container className={classes.spacing} disableGutters maxWidth="xl">
-              <Grid container spacing={isDesktop ? 1 : 0}>
-                <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-                  <Paper className={classes.playerContainer} elevation={2} square>
-                    <PlayerCard>
-                      <BeforeHolder text="配信情報が見つかりませんでした。" />
-                    </PlayerCard>
-                  </Paper>
-                </Grid>
+        <div className={classes.root}>
+          <Container className={classes.spacing} disableGutters maxWidth="xl">
+            <Grid container spacing={0}>
+              <Grid item xs={12} sm={12} md={12} className={classes.grid}>
+                <Paper className={classes.playerContainer} elevation={2} square>
+                  <PlayerCard>
+                    <BeforeHolder text="配信情報が見つかりませんでした。" />
+                  </PlayerCard>
+                </Paper>
               </Grid>
-            </Container>
-          </div>
+            </Grid>
+          </Container>
         </div>
       )
     }
@@ -170,7 +154,7 @@ const StreamContainer: React.FC = () => {
 
   const renderChat = () => {
     if (status == STREAM_STATUS.LIVE_STREAMING) {
-      return <Chat input={true} userId={userId} onSend={_onSend} protection={true} messages={messageList} />
+      return <LiveChat input={true} userId={userId} onSend={_onSend} protection={true} messages={messageList} />
     }
     return null
   }
@@ -190,65 +174,47 @@ const StreamContainer: React.FC = () => {
       {checkLoading() && <Loader />}
       {data && hasTicked && (
         <>
-          <div className="content-wrapper-stream">
-            <div className={classes.root}>
-              <Container className={classes.spacing} disableGutters maxWidth="xl">
-                <Grid container spacing={isDesktop ? 1 : 0}>
-                  <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-                    <Paper className={classes.playerContainer} elevation={2} square>
-                      <PlayerCard>
-                        {renderBeforeStart()}
-                        {renderPlayer()}
-                      </PlayerCard>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-                    <TabContext value={value}>
-                      <Box
-                        style={{
-                          position: 'relative',
-                          height: '100%',
-                        }}
-                      >
-                        <Box className={classes.tabHeader}>
-                          <Box>LIVEチャット</Box>
-                        </Box>
-                        <Box className={classes.tabContainer}>
-                          <Tabs className={classes.tabs} value={value} indicatorColor="primary" textColor="primary" onChange={handleChange}>
-                            <Tab disableRipple={true} className={classes.tab} label="LIVEチャット" value="1" />
-                            <Tab disableRipple={true} className={classes.tab} label="番組情報" value="2" />
-                          </Tabs>
-                        </Box>
-                        <TabPanel className={classes.panel} value="1">
-                          {chatPlaceHolder()}
-                          {renderChat()}
-                        </TabPanel>
-                        <TabPanel className={classes.panel} value="2">
-                          <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                          <Box className={classes.mobileBanner}>
-                            <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
-                          </Box>
-                        </TabPanel>
-                      </Box>
-                    </TabContext>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={isDesktop ? 1 : 0}>
-                  <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-                    <PaperDetail className={classes.detail} elevation={2} square>
-                      <StreamDetail url={url} data={data} countData={roomCountInfo} />
-                    </PaperDetail>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} className={classes.grid}>
-                    {status == STREAM_STATUS.END_OF_ARCHIVED ? null : (
-                      <Box className={classes.desktopBanner}>
-                        <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
-                      </Box>
-                    )}
-                  </Grid>
-                </Grid>
-              </Container>
-            </div>
+          <div className={classes.root}>
+            <Container className={classes.spacing} disableGutters maxWidth="xl">
+              <Paper className={classes.playerContainer} elevation={2} square>
+                <PlayerCard>
+                  {renderBeforeStart()}
+                  {renderPlayer()}
+                </PlayerCard>
+              </Paper>
+              <TabContext value={value}>
+                <Box
+                  style={{
+                    position: 'relative',
+                    height: '100%',
+                  }}
+                >
+                  <Box className={classes.tabContainer}>
+                    <Tabs
+                      TabIndicatorProps={{ style: { display: 'none' } }}
+                      className={classes.tabs}
+                      value={value}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      onChange={handleChange}
+                    >
+                      <Tab disableRipple={true} className={classes.tab} label="LIVEチャット" value="1" />
+                      <Tab disableRipple={true} className={classes.tab} label="番組情報" value="2" />
+                    </Tabs>
+                  </Box>
+                  <TabPanel className={classes.panel} value="1">
+                    {chatPlaceHolder()}
+                    {renderChat()}
+                  </TabPanel>
+                  <TabPanel className={classes.panel} value="2">
+                    <StreamDetail url={url} data={data} countData={roomCountInfo} />
+                    <Box className={classes.mobileBanner}>
+                      <Ad link={'https://info.exelab.jp/'} src="/images/info_exelab.jpg" />
+                    </Box>
+                  </TabPanel>
+                </Box>
+              </TabContext>
+            </Container>
           </div>
         </>
       )}

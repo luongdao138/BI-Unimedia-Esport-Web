@@ -9,8 +9,7 @@ export const PaperChat = styled(Paper)`
   background: #2c2c2e;
   flex-direction: column;
   display: flex;
-  min-height: 100px;
-  padding-top: 50px;
+  min-height: 300px;
   @media (max-width: ${theme.breakpoints.values.md}px) {
     height: calc(100vh - (100vw / 1.777777777777778) - 75px - 49px);
     border: 0 none;

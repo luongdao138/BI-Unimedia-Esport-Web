@@ -7,7 +7,7 @@ import { prServices } from '@services/pr.services'
 
 const StreamPage: React.FC = () => {
   return (
-    <MainLayout>
+    <MainLayout footer={false}>
       <LiveThemeProvider>
         <StreamContainer />
       </LiveThemeProvider>

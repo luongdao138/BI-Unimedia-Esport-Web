@@ -77,7 +77,8 @@ export default createMuiTheme({
     },
     MuiTabs: {
       flexContainer: {
-        justifyContent: 'center',
+        width: '100%',
+        background: '#3A3A3C',
       },
     },
     MuiSwitch: {

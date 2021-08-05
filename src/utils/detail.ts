@@ -23,10 +23,16 @@ const useStyles = makeStyles(() => ({
     height: '100%',
   },
   tab: {
-    minWidth: 90,
+    minWidth: '50%',
     minHeight: 30,
-    marginLeft: 10,
-    marginRight: 10,
+    '& span': {
+      width: 'auto',
+      padding: 5,
+      borderBottom: `2px solid transparent`,
+    },
+    '&.Mui-selected span': {
+      borderBottom: `2px solid ${Colors.secondary}`,
+    },
   },
   tabs: {
     display: 'flex',
@@ -43,7 +49,7 @@ const useStyles = makeStyles(() => ({
   },
   tabHeader: {
     color: Colors.white,
-    background: Colors.grey[900],
+    background: theme.palette.background.paper,
     fontSize: 14,
     height: 48,
     justifyContent: 'center',

@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ChatInput = (props: detailProps) => {
+const LiveChatInput: React.FC<detailProps> = (props) => {
   const [message, setMessage] = useState('')
   const [next, updateNextTime] = useState<any>(0)
   const [prevMsg, updatePrevMsg] = useState<any>('')
@@ -169,8 +169,8 @@ const ChatInput = (props: detailProps) => {
   )
 }
 
-ChatInput.defaultProps = {
+LiveChatInput.defaultProps = {
   protection: false,
 }
 
-export default ChatInput
+export default LiveChatInput

@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const ChatBubble: React.FC<BubbleProps> = (props) => {
+const Bubble: React.FC<BubbleProps> = (props) => {
   const { time, currentMessage, onPressTime, isMe, timeJump, onLoad, style } = props
 
   const classes = useStyles()
@@ -112,7 +112,7 @@ const ChatBubble: React.FC<BubbleProps> = (props) => {
   )
 }
 
-ChatBubble.defaultProps = {
+Bubble.defaultProps = {
   currentMessage: {
     eventId: '',
     createdAt: 0,
@@ -127,4 +127,4 @@ ChatBubble.defaultProps = {
   style: {},
 }
 
-export default ChatBubble
+export default Bubble
