@@ -1,14 +1,10 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Chip from '@material-ui/core/Chip'
 import { Colors } from '@theme/live/colors'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import DateElement from '@containers/Stream/elements/Date'
 import IconStatus from './IconStatus'
-import Share from '@components/Share'
-import Avatar from '@material-ui/core/Avatar'
-import { STREAM_STATUS } from '@constants/stream.constants'
 import _ from 'lodash'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import Link from '@material-ui/core/Link'
@@ -74,33 +70,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const StreamDetail = (props: detailProps) => {
-  const { data, countData, url } = props
-  const status = _.get(data, 'attributes.flag', undefined)
+const StreamDetail: React.FC<detailProps> = (props) => {
+  const { data, countData } = props
   const desc = _.get(data, 'attributes.description', '')
   const time = _.get(data, 'attributes.live_start_datetime', undefined)
-  const title = _.get(data, 'attributes.title_static', '')
-
-  const renderLiveIcon = () => {
-    // console.log()
-    if (data && status === STREAM_STATUS.LIVE_STREAMING) {
-      return (
-        <Chip
-          size="small"
-          color="primary"
-          style={{
-            // background: Colors.secondary,
-            borderRadius: 0,
-            fontWeight: 600,
-            height: 25,
-            minWidth: 41,
-          }}
-          label="LIVE"
-        />
-      )
-    }
-    return null
-  }
 
   const playCount = () => {
     return data.attributes.archive_view_count + (countData?.playCount ? countData?.playCount : 0)
@@ -124,30 +97,19 @@ const StreamDetail = (props: detailProps) => {
   const classes = useStyles()
   return (
     <Box padding={1}>
-      <Box className={classes.title}>
-        {renderLiveIcon()}
-        {data ? data.attributes.title_static : null}
-      </Box>
       <Grid container>
-        <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <DateElement time={time} />
         </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <Box display="flex" flexDirection="row" alignItems="center" className={classes.container}>
             <Box display="flex" flexDirection="row">
               <IconStatus type="views" count={playCount()} desc="（視聴回数）" />
               <IconStatus type="comment" count={countData?.messageCount} desc="（コメント数）" />
             </Box>
-            <Box display="flex" flex="1" justifyContent="flex-end">
-              <Share url={url ? url : ''} title={title} />
-            </Box>
           </Box>
         </Grid>
       </Grid>
-      <Box style={{ paddingTop: 10 }} display="flex" flexDirection="row" alignItems="center">
-        <Avatar alt="Host" src="/images/icon_detail.png" className={classes.large} />
-        <Box className={classes.subTitle}>&GAMES</Box>
-      </Box>
       <Box className={classes.desc}>{desc ? formatDescription(desc) : ''}</Box>
     </Box>
   )
