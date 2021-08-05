@@ -31,6 +31,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
+  const isDisabled = route === SNS ? true : false
 
   return (
     <Box margin={2} display="flex" justifyContent="space-between">
@@ -54,7 +55,7 @@ const SettingsItem: React.FC<SettingsItemProps> = ({
               round
               gradient={false}
               size="small"
-              disabled={route === SNS ? true : false}
+              disabled={is_social_email ? false : isDisabled}
               onClick={password ? onChangePassword : onChangeEmail}
               className={classes.button}
             >
