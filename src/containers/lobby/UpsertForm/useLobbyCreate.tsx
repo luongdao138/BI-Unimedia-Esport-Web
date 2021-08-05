@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import tournamentStore from '@store/arena'
+import lobbyStore from '@store/lobby'
 import { LobbyDetail, LobbyFormParams, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
@@ -13,9 +13,9 @@ import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 
-const { actions, selectors } = tournamentStore
-const getTournamentMeta = createMetaSelector(actions.createTournament)
-const getUpdateMeta = createMetaSelector(actions.updateTournament)
+const { actions, selectors } = lobbyStore
+const getTournamentMeta = createMetaSelector(actions.createLobby)
+const getUpdateMeta = createMetaSelector(actions.updateLobby)
 
 export type EditableTypes = {
   title: boolean
@@ -23,6 +23,7 @@ export type EditableTypes = {
   notes: boolean
   rule: boolean
   max_participants: boolean
+  is_organizer_joinable: boolean
   start_date: boolean
   end_date: boolean
   acceptance_start_date: boolean
@@ -47,7 +48,7 @@ const useLobbyCreate = (): {
   meta: Meta
   updateMeta: Meta
   isEdit: boolean
-  arena: LobbyDetail
+  lobby: LobbyDetail
   editables: EditableTypes
 } => {
   const { t } = useTranslation(['common'])
@@ -55,7 +56,7 @@ const useLobbyCreate = (): {
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getTournamentMeta)
   const updateMeta = useAppSelector(getUpdateMeta)
-  const arena = useAppSelector(selectors.getTournamentDetail)
+  const lobby = useAppSelector(selectors.getLobbyDetail)
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
     // always editable
@@ -63,6 +64,7 @@ const useLobbyCreate = (): {
     title: true,
     overview: true,
     prize: true, // has_prize, prize_amount
+    is_organizer_joinable: true,
     game_hardware: true,
     terms_of_participation: true,
     t_type: true,
@@ -83,12 +85,12 @@ const useLobbyCreate = (): {
     acceptance_start_date: true,
     acceptance_end_date: true,
   })
-  const { isEditable } = useLobbyHelper(arena)
-  const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
-  const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
+  const { isEditable } = useLobbyHelper(lobby)
+  const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
+  const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateLobby.typePrefix))
   const submit = async (params: LobbyFormParams) => {
-    const resultAction = await dispatch(actions.createTournament(params))
-    if (actions.createTournament.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(actions.createLobby(params))
+    if (actions.createLobby.fulfilled.match(resultAction)) {
       resetMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.payload.hash_key}`)
 
@@ -96,11 +98,11 @@ const useLobbyCreate = (): {
     }
   }
   const update = async (params: UpdateParams) => {
-    const resultAction = await dispatch(actions.updateTournament(params))
-    if (actions.updateTournament.fulfilled.match(resultAction)) {
+    const resultAction = await dispatch(actions.updateLobby(params))
+    if (actions.updateLobby.fulfilled.match(resultAction)) {
       resetUpdateMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
-      dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
+      dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
       dispatch(commonActions.addToast(t('common:arena.update_success')))
     }
   }
@@ -108,18 +110,18 @@ const useLobbyCreate = (): {
   useEffect(() => {
     if (router.asPath.endsWith('/edit') && router.query.hash_key) {
       setIsEdit(true)
-      dispatch(actions.getTournamentDetail(router.query.hash_key))
+      dispatch(actions.getLobbyDetail(router.query.hash_key))
     }
   }, [router])
 
   useEffect(() => {
-    if (arena && router.asPath.endsWith('/edit') && router.query.hash_key) {
+    if (lobby && router.asPath.endsWith('/edit') && router.query.hash_key) {
       if (!isEditable) {
         router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
         return
       }
 
-      const _status = arena.attributes.status
+      const _status = lobby.attributes.status
 
       let _editables = { ...editables }
       // always not editable
@@ -166,9 +168,9 @@ const useLobbyCreate = (): {
       }
       setEditables(_editables)
     }
-  }, [arena, router])
+  }, [lobby, router])
 
-  return { submit, update, updateMeta, meta, isEdit, arena, editables }
+  return { submit, update, updateMeta, meta, isEdit, lobby, editables }
 }
 
 export default useLobbyCreate

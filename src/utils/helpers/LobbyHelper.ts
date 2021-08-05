@@ -1,30 +1,9 @@
-import { PARTICIPATION_TYPES, RULE, T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
+import { T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/lobby.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { TournamentDetail, TournamentMatchRound } from '@services/arena.service'
+import { LobbyDetail, LobbyMatchRound } from '@services/lobby.service'
 import { FormikErrors } from 'formik'
-import { FormType } from '@containers/arena/UpsertForm/FormModel/FormType'
-
-const participantTypeText = (participant_type: number): string => {
-  const type = PARTICIPATION_TYPES.filter((t) => t.value === participant_type)[0]
-
-  return type?.label
-}
-
-const ruleText = (rule: string): string => {
-  let ruleText = ''
-  switch (rule) {
-    case RULE.SINGLE:
-      ruleText = 'トーナメント'
-      break
-    case RULE.BATTLE_ROYALE:
-      ruleText = 'バトルロイヤル'
-      break
-    default:
-      ruleText = ''
-  }
-  return ruleText
-}
+import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
 
 const getTypeValue = (t_type: string | number): boolean => {
   if (String(t_type) === T_TYPE.PRIVATE) return false
@@ -92,7 +71,7 @@ const checkRoles = (roles, role): boolean => {
   return roles.includes(role)
 }
 
-const getDetailData = (tournament: TournamentDetail): any => {
+const getDetailData = (tournament: LobbyDetail): any => {
   const _data = { ...tournament.attributes }
   const isTeam = _data.participant_type > 1
   const isAdmin = _data.my_role === ROLE.ADMIN || _data.my_role === ROLE.CO_ORGANIZER
@@ -108,7 +87,6 @@ const getDetailData = (tournament: TournamentDetail): any => {
   const memberSelectable =
     isAdmin &&
     (_data.status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || (_data.status === TOURNAMENT_STATUS.IN_PROGRESS && !_data.is_freezed))
-  const isBattleRoyale = _data.rule === RULE.BATTLE_ROYALE
   const teamIds = _.map(_data.my_info, (team: any) => team.team_id)
   const teamRoles = isTeam ? _.map(_data.my_info, (team: any) => team.role) : undefined
   const ownEnterable = isTeam ? checkRoles(teamRoles, ROLE.PARTICIPANT) : _data.my_role === ROLE.PARTICIPANT
@@ -123,14 +101,13 @@ const getDetailData = (tournament: TournamentDetail): any => {
     scoreEnterable,
     maxCapacity,
     memberSelectable,
-    isBattleRoyale,
     teamIds,
     teamRoles,
     ownEnterable,
   }
 }
 
-const checkParticipantsSelected = (bracketData: TournamentMatchRound[], interested_count: number, max_participants: number): boolean => {
+const checkParticipantsSelected = (bracketData: LobbyMatchRound[], interested_count: number, max_participants: number): boolean => {
   let selected = true
   const matches = bracketData[0]
   let p_ids: any = []
@@ -171,32 +148,18 @@ const isStatusPassed = (status: string, targetStatus: string): boolean => {
 }
 
 const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
-  const { stepOne, stepTwo, stepThree } = errors
+  const { stepOne, stepTwo } = errors
 
   const requiredFieldErrors = []
   if (stepOne) {
     requiredFieldErrors.push(stepOne.title)
-    requiredFieldErrors.push(stepOne.game_title_id)
-    requiredFieldErrors.push(stepOne.game_hardware_id)
-    if (stepOne.prize_amount) {
-      requiredFieldErrors.push(stepOne.prize_amount)
-    }
+    requiredFieldErrors.push(stepOne.max_participants)
   }
   if (stepTwo) {
-    requiredFieldErrors.push(stepTwo.rule)
-    requiredFieldErrors.push(stepTwo.participant_type)
-    requiredFieldErrors.push(stepTwo.max_participants)
-  }
-  if (stepThree) {
-    requiredFieldErrors.push(stepThree.start_date)
-    requiredFieldErrors.push(stepThree.end_date)
-    requiredFieldErrors.push(stepThree.acceptance_start_date)
-    requiredFieldErrors.push(stepThree.acceptance_end_date)
-    requiredFieldErrors.push(stepThree.recruit_date)
-    requiredFieldErrors.push(stepThree.acceptance_dates)
-    requiredFieldErrors.push(stepThree.acceptance_end_start_date)
-    requiredFieldErrors.push(stepThree.start_end_date)
-    requiredFieldErrors.push(stepThree.area_id)
+    requiredFieldErrors.push(stepTwo.acceptance_start_date)
+    requiredFieldErrors.push(stepTwo.acceptance_end_date)
+    requiredFieldErrors.push(stepTwo.start_date)
+    requiredFieldErrors.push(stepTwo.area_id)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
@@ -205,8 +168,6 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
 }
 
 export const LobbyHelper = {
-  participantTypeText,
-  ruleText,
   formatDate,
   defaultDetails,
   getTypeValue,

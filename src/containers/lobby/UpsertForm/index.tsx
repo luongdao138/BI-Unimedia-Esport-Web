@@ -37,29 +37,26 @@ const LobbyCreate: React.FC = () => {
   const dispatch = useAppDispatch()
   const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
-  const { submit, update, meta, updateMeta, isEdit, arena, editables } = useLobbyCreate()
+  const { submit, update, meta, updateMeta, isEdit, lobby, editables } = useLobbyCreate()
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
   const [hasError, setError] = useState(true)
   const isFirstRun = useRef(true)
-  const initialValues = getInitialValues(isEdit ? arena : undefined)
+  const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
   const formik = useFormik<FormType>({
     initialValues: initialValues,
-    validationSchema: getValidationScheme(arena, editables),
+    validationSchema: getValidationScheme(lobby, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
-      const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
+      const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepTwo.area_id}`))
       const data: LobbyFormParams = {
         ...values.stepOne,
         ...values.stepTwo,
-        ...values.stepThree,
-        ...values.stepFour,
-        co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
         game_title_id: values.stepOne.game_title_id[0].id,
         area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
       }
@@ -90,10 +87,10 @@ const LobbyCreate: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    if (arena) {
+    if (lobby) {
       formik.validateForm()
     }
-  }, [arena])
+  }, [lobby])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -116,26 +113,18 @@ const LobbyCreate: React.FC = () => {
 
   const handleSetConfirm = () => {
     formik.validateForm().then(() => {
-      const { stepOne, stepTwo, stepThree, stepFour } = formik.values
+      const { stepOne, stepTwo } = formik.values
 
       const fieldIdentifier = checkNgWordFields({
         title: stepOne.title,
         overview: stepOne.overview,
-        prize_amount: stepOne.prize_amount,
-        terms_of_participation: stepTwo.terms_of_participation,
-        notes: stepTwo.notes,
-        address: stepThree.address,
-        organizer_name: stepFour.organizer_name,
+        address: stepTwo.address,
       })
 
       const ngFields = checkNgWordByField({
         [FIELD_TITLES.stepOne.title]: stepOne.title,
         [FIELD_TITLES.stepOne.overview]: stepOne.overview,
-        [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
-        [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
-        [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
-        [FIELD_TITLES.stepThree.address]: stepThree.address,
-        [FIELD_TITLES.stepFour.organizer_name]: stepFour.organizer_name,
+        [FIELD_TITLES.stepTwo.address]: stepTwo.address,
       })
 
       if (fieldIdentifier) {
@@ -157,7 +146,6 @@ const LobbyCreate: React.FC = () => {
           }
           if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
           else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-
           setTab(activeTabIndex)
         }
       }
@@ -182,9 +170,9 @@ const LobbyCreate: React.FC = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          {i18n.t('common:tournament_create.check_content_button')}
+          {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
-        <CancelDialog arena={arena} hashKey={`${router.query.hash_key}`} />
+        <CancelDialog arena={lobby} hashKey={`${router.query.hash_key}`} />
       </Box>
     )
   }
@@ -207,7 +195,7 @@ const LobbyCreate: React.FC = () => {
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
               <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:tournament_create.submit')}
+                {i18n.t('common:lobby_create.submit')}
               </ButtonPrimary>
             </Box>
           ) : isEdit ? (
@@ -233,7 +221,7 @@ const LobbyCreate: React.FC = () => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
-                {isEdit ? i18n.t('common:tournament_create.edit_title') : i18n.t('common:lobby_create.title')}
+                {isEdit ? i18n.t('common:lobby_create.edit_title') : i18n.t('common:lobby_create.title')}
               </Typography>
             </Box>
           </Box>

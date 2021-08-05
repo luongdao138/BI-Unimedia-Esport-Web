@@ -8,12 +8,10 @@ import { EditableTypes } from '../useLobbyCreate'
 export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes): any => {
   let recruitMinDate = new Date()
   let minStartDate = new Date()
-  let minEndDate = new Date()
   if (!!data && !!data.attributes.status) {
     const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, 'recruiting')
     if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
     if (!editables.start_date && data.attributes.start_date) minStartDate = new Date(data.attributes.start_date)
-    if (!editables.end_date && data.attributes.end_date) minEndDate = new Date(data.attributes.end_date)
   }
 
   return Yup.object({
@@ -25,31 +23,32 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
       overview: Yup.string()
         .nullable()
         .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
-      has_prize: Yup.boolean(),
-      prize_amount: Yup.string().when('has_prize', {
-        is: true,
-        then: Yup.string()
-          .required(i18n.t('common:common.input_required'))
-          .max(40, i18n.t('common:common.validation.char_limit', { char_limit: 40 })),
-      }),
+      category_title_id: Yup.array(),
+      // category_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
       game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
-      game_hardware_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+      game_hardware_id: Yup.number()
+        .nullable()
+        .min(1, i18n.t('common:common.input_required'))
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1]),
+      max_participants: Yup.number()
+        .required(i18n.t('common:common.input_required'))
+        .min(2, i18n.t('common:arena.participants_limit'))
+        .max(128, i18n.t('common:arena.participants_limit'))
+        .integer(i18n.t('common:common.integer')),
+      is_organizer_join: Yup.boolean(),
     }),
 
     stepTwo: Yup.object({
-      start_date: Yup.date()
-        .nullable()
-        .required(i18n.t('common:common.input_required'))
-        .min(minStartDate, i18n.t('common:common.validation.min_date')),
-      end_date: Yup.date()
-        .nullable()
-        .required(i18n.t('common:common.input_required'))
-        .min(minEndDate, i18n.t('common:common.validation.min_date')),
       acceptance_start_date: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))
         .min(recruitMinDate, i18n.t('common:common.validation.min_date')),
       acceptance_end_date: Yup.date().nullable().required(i18n.t('common:common.input_required')),
+      start_date: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minStartDate, i18n.t('common:common.validation.min_date')),
       area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
       address: Yup.string()
         .nullable()

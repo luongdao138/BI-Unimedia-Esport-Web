@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useLobbyCreate'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CategorySelectorDialog from './Partials/CategorySelectorDialog'
@@ -11,6 +11,7 @@ import CoverUploader from './Partials/CoverUploader'
 import ESSelect from '@components/Select'
 import ESFastInput from '@components/FastInput'
 import ESSwitchIOS from '@components/Switch'
+import ESNumberInput from '@components/NumberInputLobby'
 import i18n from '@locales/i18n'
 import useReturnHref from '@utils/hooks/useReturnHref'
 
@@ -35,9 +36,9 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
     formik.setFieldValue('stepOne.game_title_id', value)
   }, [])
 
-  useEffect(() => {
-    if (!formik.values.stepOne.has_prize) formik.setFieldValue('stepOne.prize_amount', '')
-  }, [formik.values.stepOne.has_prize])
+  // useEffect(() => {
+  //   if (!formik.values.stepOne.has_prize) formik.setFieldValue('stepOne.prize_amount', '')
+  // }, [formik.values.stepOne.has_prize])
 
   const { hasUCRReturnHref } = useReturnHref()
   const handleCoverDailogStateChange = (_open: boolean) => {
@@ -124,21 +125,26 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
           ))}
         </ESSelect>
       </Box>
-      <Box pb={4}>
-        <ESSelect
-          className={classes.selectWidth}
-          name="stepTwo.participant_type"
-          value={formik.values.stepTwo.participant_type}
-          onChange={formik.handleChange}
-          label={i18n.t('common:lobby_create.max_participants')}
+      <Box pb={4} display="flex" flexDirection="row" alignItems="center" width={122}>
+        <ESNumberInput
+          id="max_participants"
+          type="tel"
           required={true}
+          className={classes.input}
+          labelPrimary={i18n.t('common:lobby_create.max_participants')}
+          placeholder={i18n.t('common:lobby_create.max_participants_placeholder')}
+          name="stepOne.max_participants"
+          value={formik.values.stepOne.max_participants === 0 ? '' : formik.values.stepOne.max_participants}
+          onChange={formik.handleBlur}
+          onBlur={formik.handleBlur}
+          helperText={formik.touched?.stepOne?.max_participants && formik.errors?.stepOne?.max_participants}
+          error={formik.touched?.stepOne?.max_participants && !!formik.errors?.stepOne?.max_participants}
           size="small"
-          disabled={!editables.participant_type}
-        >
-          <option disabled value={-1}>
-            {i18n.t('common:please_select')}
-          </option>
-        </ESSelect>
+          isNumber={true}
+          formik={formik}
+          disabled={!editables.max_participants}
+          nowrapHelperText
+        />
       </Box>
       <Box pb={4} display="flex" justifyContent="space-between">
         <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
@@ -151,6 +157,9 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
 const useStyles = makeStyles(() => ({
   selectWidth: {
     width: 200,
+  },
+  input: {
+    textAlign: 'right',
   },
 }))
 
