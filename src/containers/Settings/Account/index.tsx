@@ -92,7 +92,7 @@ const AccountSettingsContainer: React.FC = () => {
           value={hasEmail ? user.email : SNS}
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
-          showButton={!user.is_social || (user.is_social && hasEmail)}
+          showButton={!user.is_social}
           is_social_email={user.is_social && hasEmail}
         />
         <SettingsItem
