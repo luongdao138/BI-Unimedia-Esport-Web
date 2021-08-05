@@ -128,6 +128,8 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
       setImgSrc(null)
       if (src) setIsClickedReset(true)
     }
+    setCroppedAreaPixels(null)
+    setZoom(1)
   }
 
   const disableUseButton = () => {
@@ -147,8 +149,6 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
       onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
-    } finally {
-      setUploading(false)
     }
   }, [croppedAreaPixels])
 

@@ -151,8 +151,6 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
       onUpdate(rawFile, blob, blobUrl)
     } catch (e) {
       console.error(e)
-    } finally {
-      setUploading(false)
     }
   }, [croppedAreaPixels])
 
