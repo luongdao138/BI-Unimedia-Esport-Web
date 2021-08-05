@@ -4,31 +4,23 @@ type GameTitleItem = GameTitle['attributes']
 
 export type FormType = {
   stepOne: {
-    title: string
     cover_image_url: string
-    has_prize: boolean
-    prize_amount: string
+    title: string
+    overview: string
+    category_title_id: GameTitleItem[]
     game_title_id: GameTitleItem[]
     game_hardware_id: number
-    overview: string
+    max_participants: number
+    is_organizer_join: boolean
   }
   stepTwo: {
-    rule: string | -1
-    t_type: 't_public' | 't_private' | -1
-    has_third_place: boolean
-    participant_type: number
-    max_participants: number
-    terms_of_participation: string
-    notes: string
-    retain_history: boolean
     acceptance_start_date: string
     acceptance_end_date: string
     start_date: string
-    end_date: string
     area_id: number
     address: string
-    acceptance_dates: string
     recruit_date: string
+    acceptance_dates: string
     acceptance_end_start_date: string
     start_end_date: string
   }

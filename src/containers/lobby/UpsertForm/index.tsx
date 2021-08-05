@@ -118,18 +118,12 @@ const LobbyCreate: React.FC = () => {
       const fieldIdentifier = checkNgWordFields({
         title: stepOne.title,
         overview: stepOne.overview,
-        prize_amount: stepOne.prize_amount,
-        terms_of_participation: stepTwo.terms_of_participation,
-        notes: stepTwo.notes,
         address: stepTwo.address,
       })
 
       const ngFields = checkNgWordByField({
         [FIELD_TITLES.stepOne.title]: stepOne.title,
         [FIELD_TITLES.stepOne.overview]: stepOne.overview,
-        [FIELD_TITLES.stepOne.prize_amount]: stepOne.prize_amount,
-        [FIELD_TITLES.stepTwo.terms_of_participation]: stepTwo.terms_of_participation,
-        [FIELD_TITLES.stepTwo.notes]: stepTwo.notes,
         [FIELD_TITLES.stepTwo.address]: stepTwo.address,
       })
 
@@ -152,7 +146,6 @@ const LobbyCreate: React.FC = () => {
           }
           if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
           else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-
           setTab(activeTabIndex)
         }
       }
@@ -177,7 +170,7 @@ const LobbyCreate: React.FC = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          {i18n.t('common:tournament_create.check_content_button')}
+          {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
         <CancelDialog arena={arena} hashKey={`${router.query.hash_key}`} />
       </Box>
@@ -202,7 +195,7 @@ const LobbyCreate: React.FC = () => {
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
               <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:tournament_create.submit')}
+                {i18n.t('common:lobby_create.submit')}
               </ButtonPrimary>
             </Box>
           ) : isEdit ? (
@@ -228,7 +221,7 @@ const LobbyCreate: React.FC = () => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
-                {isEdit ? i18n.t('common:tournament_create.edit_title') : i18n.t('common:lobby_create.title')}
+                {isEdit ? i18n.t('common:lobby_create.edit_title') : i18n.t('common:lobby_create.title')}
               </Typography>
             </Box>
           </Box>

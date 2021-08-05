@@ -903,7 +903,7 @@ export default {
     title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `入力してください`,
     prize_placeholder: '副賞を設ける場合はその内容を入力してください。',
-    max_participants: '参加枠数',
+    max_participants: '参加上限',
     max_participants_placeholder: '○○○人上限',
     comfirm_title: 'この内容で作成しますか？',
     confirm_edit_title: 'この内容で編集しますか？',

@@ -28,33 +28,36 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
-          name="stepTwo.start_date"
+          name="stepTwo.acceptance_start_date"
           placeholder={i18n.t('common:lobby_create.start_date')}
           fullWidth
           multiline
           rows={2}
-          value={formik.values.stepTwo.start_date}
-          onChange={(date) => formik.setFieldValue('stepTwo.start_date', date.toString())}
+          value={formik.values.stepTwo.acceptance_start_date}
+          onChange={(date) => formik.setFieldValue('stepTwo.acceptance_start_date', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepTwo?.start_date && formik.errors?.stepTwo?.start_date}
-          error={formik.touched?.stepTwo?.start_date && !!formik.errors?.stepTwo?.start_date}
-          disabled={!editables.start_date}
+          helperText={formik.touched?.stepTwo?.acceptance_start_date && formik.errors?.stepTwo?.acceptance_start_date}
+          error={formik.touched?.stepTwo?.acceptance_start_date && !!formik.errors?.stepTwo?.acceptance_start_date}
+          disabled={!editables.acceptance_start_date}
         />
         <Box mt={2}>
           <span className={classes.dashes}>-</span>
         </Box>
         <ESInputDatePicker
-          name="stepTwo.end_date"
+          name="stepTwo.acceptance_end_date"
           placeholder={i18n.t('common:lobby_create.end_date')}
           fullWidth
           multiline
           rows={2}
-          value={formik.values.stepTwo.end_date}
-          onChange={(date) => formik.setFieldValue('stepTwo.end_date', date.toString())}
+          value={formik.values.stepTwo.acceptance_end_date}
+          onChange={(date) => formik.setFieldValue('stepTwo.acceptance_end_date', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={(formik.touched?.stepTwo?.end_date && formik.errors?.stepTwo?.end_date) || formik.errors?.stepTwo?.start_end_date}
-          error={formik.touched?.stepTwo?.end_date && !!formik.errors?.stepTwo?.end_date}
-          disabled={!editables.end_date}
+          helperText={
+            (formik.touched?.stepTwo?.acceptance_end_date && formik.errors?.stepTwo?.acceptance_end_date) ||
+            formik.errors?.stepTwo?.start_end_date
+          }
+          error={formik.touched?.stepTwo?.acceptance_end_date && !!formik.errors?.stepTwo?.acceptance_end_date}
+          disabled={!editables.acceptance_end_date}
         />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
@@ -65,21 +68,21 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={158}>
         <ESInputDatePicker
-          name="stepTwo.acceptance_start_date"
+          name="stepTwo.start_date"
           placeholder={i18n.t('common:lobby_create.start_date')}
           fullWidth
           multiline
           rows={2}
-          value={formik.values.stepTwo.acceptance_start_date}
-          onChange={(date) => formik.setFieldValue('stepTwo.acceptance_start_date', date.toString())}
+          value={formik.values.stepTwo.start_date}
+          onChange={(date) => formik.setFieldValue('stepTwo.start_date', date.toString())}
           onBlur={formik.handleBlur}
           helperText={
-            (formik.touched?.stepTwo?.acceptance_start_date && formik.errors?.stepTwo?.acceptance_start_date) ||
+            (formik.touched?.stepTwo?.start_date && formik.errors?.stepTwo?.start_date) ||
             formik.errors?.stepTwo?.acceptance_dates ||
             formik.errors?.stepTwo?.recruit_date
           }
-          error={formik.touched?.stepTwo?.acceptance_start_date && !!formik.errors?.stepTwo?.acceptance_start_date}
-          disabled={!editables.acceptance_start_date}
+          error={formik.touched?.stepTwo?.start_date && !!formik.errors?.stepTwo?.start_date}
+          disabled={!editables.start_date}
         />
       </Box>
       <Box pb={1} width={200}>
