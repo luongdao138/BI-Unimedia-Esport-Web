@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import tournamentStore from '@store/arena'
-import { LobbyDetail, LobbyFormParams, UpdateParams } from '@services/lobby.service'
+import lobbyStore from '@store/lobby'
+import { LobbyFormParams, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
-import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 import _ from 'lodash'
-import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 
-const { actions, selectors } = tournamentStore
+const { actions, selectors } = lobbyStore
 const getTournamentMeta = createMetaSelector(actions.createTournament)
 const getUpdateMeta = createMetaSelector(actions.updateTournament)
 
@@ -23,6 +22,7 @@ export type EditableTypes = {
   notes: boolean
   rule: boolean
   max_participants: boolean
+  is_organizer_joinable: boolean
   start_date: boolean
   end_date: boolean
   acceptance_start_date: boolean
@@ -47,7 +47,7 @@ const useLobbyCreate = (): {
   meta: Meta
   updateMeta: Meta
   isEdit: boolean
-  arena: LobbyDetail
+  // arena: LobbyDetail
   editables: EditableTypes
 } => {
   const { t } = useTranslation(['common'])
@@ -63,6 +63,7 @@ const useLobbyCreate = (): {
     title: true,
     overview: true,
     prize: true, // has_prize, prize_amount
+    is_organizer_joinable: true,
     game_hardware: true,
     terms_of_participation: true,
     t_type: true,
@@ -83,7 +84,6 @@ const useLobbyCreate = (): {
     acceptance_start_date: true,
     acceptance_end_date: true,
   })
-  const { isEditable } = useLobbyHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
   const submit = async (params: LobbyFormParams) => {
@@ -114,10 +114,10 @@ const useLobbyCreate = (): {
 
   useEffect(() => {
     if (arena && router.asPath.endsWith('/edit') && router.query.hash_key) {
-      if (!isEditable) {
-        router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
-        return
-      }
+      // if (!isEditable) {
+      //   router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
+      //   return
+      // }
 
       const _status = arena.attributes.status
 
@@ -168,7 +168,7 @@ const useLobbyCreate = (): {
     }
   }, [arena, router])
 
-  return { submit, update, updateMeta, meta, isEdit, arena, editables }
+  return { submit, update, updateMeta, meta, isEdit, editables }
 }
 
 export default useLobbyCreate

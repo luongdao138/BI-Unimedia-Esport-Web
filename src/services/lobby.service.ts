@@ -109,6 +109,7 @@ export type LobbyDetail = {
     notes: string
     rule: LobbyRule
     max_participants: number
+    is_organizer_joinable: boolean
     status: LobbyStatus
     is_freezed: boolean
     start_date: string
@@ -127,7 +128,6 @@ export type LobbyDetail = {
     summary: null | string
     background_tpl: number
     has_third_place: boolean
-    is_organizer_join: boolean
     retain_history: boolean
     t_type: 't_public' | 't_private'
     owner: {
