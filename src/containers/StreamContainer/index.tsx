@@ -5,7 +5,7 @@ import StreamDetail from '@containers/Stream/elements/StreamDetail'
 import { PlayerCard } from '@components/Styled/chat'
 import LiveChat from '@containers/LiveChat'
 import VideoPlayer from '@containers/VideoPlayer'
-import Loader from '@components/Loader'
+import Loader from '@components/FullScreenLoader'
 import { useSelector, useDispatch, useStore } from 'react-redux'
 import { messages, roomMeta, socketConnected } from '@store/live_socket/selectors'
 import { WEBSOCKET_STREAM_PREFIX, STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
@@ -23,8 +23,12 @@ import { useStyles } from '@utils/detail'
 import { useShareHash } from '@utils/useShareHash'
 import { getAuth } from '@store/auth/selectors'
 import Header from '@components/HeaderWithButton'
+import { useRect } from '@utils/useRect'
+
+const contentRef = React.createRef<HTMLDivElement>()
 
 const StreamContainer: React.FC = () => {
+  const contentRect = useRect(contentRef)
   const [value, setValue] = useState<string>('1')
   const [hasNgWord, setNgWord] = useState(false)
   const dispatch = useDispatch()
@@ -149,7 +153,16 @@ const StreamContainer: React.FC = () => {
 
   const renderChat = () => {
     if (status == STREAM_STATUS.LIVE_STREAMING) {
-      return <LiveChat input={true} userId={userId} onSend={_onSend} protection={true} messages={messageList} />
+      return (
+        <LiveChat
+          input={true}
+          userId={userId}
+          onSend={_onSend}
+          protection={true}
+          messages={messageList}
+          playerHeight={contentRect.height}
+        />
+      )
     }
     return null
   }
@@ -163,21 +176,22 @@ const StreamContainer: React.FC = () => {
   }
 
   const classes = useStyles()
-
   return (
     <>
-      {checkLoading() && <Loader />}
+      <Loader open={checkLoading()} />
       {data && hasTicked && (
         <>
           <Header title="動画" withBackButton={false} />
           <div className={classes.root}>
             <Container className={classes.spacing} disableGutters maxWidth="xl">
-              <Paper className={classes.playerContainer} elevation={2} square>
-                <PlayerCard>
-                  {renderBeforeStart()}
-                  {renderPlayer()}
-                </PlayerCard>
-              </Paper>
+              <div ref={contentRef} className={classes.playerWrapper}>
+                <Paper className={classes.playerContainer} elevation={2} square>
+                  <PlayerCard>
+                    {renderBeforeStart()}
+                    {renderPlayer()}
+                  </PlayerCard>
+                </Paper>
+              </div>
               <TabContext value={value}>
                 <Box
                   style={{

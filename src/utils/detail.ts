@@ -4,8 +4,6 @@ import theme from '@theme/index'
 
 const useStyles = makeStyles(() => ({
   root: {
-    paddingTop: 24,
-    paddingBottom: 24,
     flex: 1,
   },
   spacing: {
@@ -88,13 +86,17 @@ const useStyles = makeStyles(() => ({
     display: 'block',
   },
 
-  [theme.breakpoints.down('lg')]: {
-    root: {
-      paddingTop: 8,
-      paddingBottom: 8,
-      flex: 1,
-    },
+  playerWrapper: {
+    paddingTop: theme.spacing(3),
   },
+
+  // [theme.breakpoints.down('lg')]: {
+  // root: {
+  //   paddingTop: 8,
+  //   paddingBottom: 8,
+  //   flex: 1,
+  // },
+  // },
 
   [theme.breakpoints.down('md')]: {
     desktopBanner: {
@@ -122,6 +124,9 @@ const useStyles = makeStyles(() => ({
       paddingTop: 0,
       overflow: 'hidden',
       paddingBottom: 0,
+    },
+    playerWrapper: {
+      paddingTop: 0,
     },
     // tabHeader: {
     //   display: 'none',

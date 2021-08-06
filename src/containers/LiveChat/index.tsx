@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import { CellMeasurer, CellMeasurerCache, AutoSizer, List } from 'react-virtualized'
 import { useRect } from '@utils/useRect'
+import { use100vh } from 'react-div-100vh'
 
 interface chatProps {
   messages: any
@@ -17,6 +18,7 @@ interface chatProps {
   timeJump?: boolean
   protection?: boolean
   ref?: any
+  playerHeight?: number
 }
 
 const cache = new CellMeasurerCache({
@@ -32,7 +34,7 @@ const LiveChat = forwardRef((props: chatProps, ref) => {
   const [isBottom, setBottom] = useState<boolean>(true)
   const messagesEndRef = useRef<any>(null)
   const contentRect = useRect(contentRef)
-
+  const height = use100vh()
   useImperativeHandle(ref, () => ({
     triggerScroll: () => {
       _scrollToBottom(messages.length)
@@ -101,7 +103,7 @@ const LiveChat = forwardRef((props: chatProps, ref) => {
   }
 
   return (
-    <PaperChat variant="outlined" square>
+    <PaperChat variant="outlined" square style={{ height: `calc(${height}px - ${props.playerHeight}px - 170px)` }}>
       <div ref={contentRef} className={classes.liveChatWindow}>
         <div className={input ? classes.liveChatWithInput : classes.liveChatWrapper}>
           <Button
@@ -140,6 +142,10 @@ const LiveChat = forwardRef((props: chatProps, ref) => {
     </PaperChat>
   )
 })
+
+LiveChat.defaultProps = {
+  playerHeight: 100,
+}
 
 const useStyles = makeStyles(() => ({
   bottomArrow: {

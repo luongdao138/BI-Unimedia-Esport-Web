@@ -40,7 +40,7 @@ body {
   display: flex;
   flex-direction: row;
   padding-left: calc((100% - 840px) / 2);
-  min-height: 100vh;
+  // min-height: 100vh;
 }
 .chat-main {
   overflow: hidden;

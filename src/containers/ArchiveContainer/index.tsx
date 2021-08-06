@@ -25,8 +25,12 @@ import _ from 'lodash'
 import Ad from '@components/Ad'
 import { ESRoutes } from '@constants/route.constants'
 import Header from '@components/HeaderWithButton'
+import { useRect } from '@utils/useRect'
+
+const contentRef = React.createRef<HTMLDivElement>()
 
 const ArchiveContainer: React.FC = () => {
+  const contentRect = useRect(contentRef)
   const [value, setValue] = useState<string>('1')
   const [history, setHistory] = useState<any>(null)
   const [archiveText, setArchiveText] = useState<boolean>(true)
@@ -150,6 +154,7 @@ const ArchiveContainer: React.FC = () => {
             ref={ref}
             timeJump={true}
             onPressTime={_onPressTime}
+            playerHeight={contentRect.height}
           />
         </Box>
       )
@@ -198,13 +203,14 @@ const ArchiveContainer: React.FC = () => {
           <Header title="動画" withBackButton={false} />
           <div className={classes.root}>
             <Container className={classes.spacing} disableGutters maxWidth="xl">
-              <Paper className={classes.playerContainer} elevation={2} square>
-                <PlayerCard>
-                  {renderArchivePlayer()}
-                  {renderArchiveEnd()}
-                </PlayerCard>
-              </Paper>
-
+              <div ref={contentRef} className={classes.playerWrapper}>
+                <Paper className={classes.playerContainer} elevation={2} square>
+                  <PlayerCard>
+                    {renderArchivePlayer()}
+                    {renderArchiveEnd()}
+                  </PlayerCard>
+                </Paper>
+              </div>
               {status == STREAM_STATUS.END_OF_ARCHIVED ? (
                 <>
                   <Box className={classes.endDetail}>
