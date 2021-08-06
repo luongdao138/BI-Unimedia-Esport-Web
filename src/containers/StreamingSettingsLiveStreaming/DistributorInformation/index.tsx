@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import ESFastInput from '@components/FastInput'
 import _ from 'lodash'
 import useGetProfile from '@utils/hooks/useGetProfile'
-import SnsInfoStream from '@containers/StreamingSettingsLiveStreaming/SnsInfoStream'
+import SnsInfoStream from '@components/SnsInfoStream'
 
 type DistributorInformationContainerParams = {
   channelName: string
