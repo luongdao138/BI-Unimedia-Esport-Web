@@ -26,7 +26,7 @@ const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
   onOpenStateChange,
   size = 'small',
 }) => {
-  const classes = useStyles({ isBig: size === 'big' })
+  const classes = useStyles({ isBig: size === 'big', isShow: disabled })
   const [drag, setDrag] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
   const [localSrc, setLocalSrc] = useState<string | ArrayBuffer>('')
@@ -66,15 +66,14 @@ const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
         }}
       >
         {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
-
-        <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
-          <Camera fontSize="large" className={classes.camera} />
-          <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
-        </Box>
-
+        {!disabled && (
+          <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
+            <Camera fontSize="large" className={classes.camera} />
+            <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
+          </Box>
+        )}
         <img src="/images/logo.svg" className={classes.logo} />
-
-        <div className={classes.outerBackdrop} />
+        {!disabled && <div className={classes.outerBackdrop} />}
 
         {drag || isUploading ? <div className={classes.backdrop} /> : null}
         {isUploading ? (
@@ -111,7 +110,7 @@ const useStyles = makeStyles(() => ({
     height: 'auto',
     objectFit: 'contain',
   },
-  touch: (props: { isBig?: boolean }) => ({
+  touch: (props: { isBig?: boolean; isShow?: boolean }) => ({
     zIndex: 30,
     display: 'flex',
     position: 'relative',
@@ -119,7 +118,7 @@ const useStyles = makeStyles(() => ({
     height: props.isBig ? 278 : 120,
     alignItems: 'center',
     justifyContent: 'center',
-    border: `1px dashed ${Colors.text[200]}`,
+    border: props.isShow ? `1px solid ${Colors.text[200]}` : `1px dashed ${Colors.text[200]}`,
     borderRadius: 4,
     '&:hover': {
       cursor: 'pointer',
