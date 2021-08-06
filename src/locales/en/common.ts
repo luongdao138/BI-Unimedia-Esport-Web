@@ -531,6 +531,7 @@ export default {
     end_date: '終了日時',
     holding_period: '開催期間',
     area: '会場',
+    area_address: '会場詳細',
     area_name_placeholder: `会場情報を入力しましょう。
 とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
     organizer: '開催者',

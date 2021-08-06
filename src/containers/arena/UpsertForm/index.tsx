@@ -211,25 +211,24 @@ const TournamentCreate: React.FC = () => {
     }
 
     let msg = null as string | null
-    if (_.isObject(formik.errors)) {
-      const keys = Object.keys(formik.errors)
-      if (keys[0]) {
-        // eslint-disable-next-line no-console
-        console.log(keys[0])
-        const fields = _.get(formik, `errors.${keys[0]}`)
-        if (_.isObject(fields)) {
-          const fieldKeys = Object.keys(fields)
-          if (fieldKeys[0]) {
-            // eslint-disable-next-line no-console
-            console.log(fieldKeys[0])
-            msg = _.get(fields, `${fieldKeys[0]}`) as string
-          }
+    if (!_.isObject(formik.errors)) return null
+    const keys = Object.keys(formik.errors)
+    if (keys[0]) {
+      const fields = _.get(formik, `errors.${keys[0]}`)
+      if (_.isObject(fields)) {
+        const fieldKeys = Object.keys(fields)
+        if (fieldKeys[0]) {
+          const translationName = TournamentHelper.getLabelName(fieldKeys[0])
+          let errMsg = _.get(fields, `${fieldKeys[0]}`) as string
+          if (!_.isString(errMsg)) errMsg = ''
+          msg = `${i18n.t(translationName)}: ${errMsg}`
         }
       }
     }
+    if (!_.isString(msg)) return null
     return (
-      <Box textAlign="center" mb={2}>
-        {msg}
+      <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+        <Typography variant="body2">{msg}</Typography>
       </Box>
     )
   }
@@ -239,6 +238,7 @@ const TournamentCreate: React.FC = () => {
       disabled={false}
       noScroll
       noSpacing={isEdit && !isConfirm}
+      noBottomSpace
       content={
         <>
           {isConfirm ? (
@@ -251,7 +251,7 @@ const TournamentCreate: React.FC = () => {
               </ButtonPrimary>
             </Box>
           ) : (
-            <Box flexDirection="column">
+            <Box flexDirection="column" display="flex" justifyContent="center">
               {getFirstError()}
               {isEdit ? (
                 renderEditButton()
