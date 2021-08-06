@@ -729,6 +729,17 @@ body {
   min-height: 100vh;
 }
 
+.streaming_setting_dialog {
+  #customized-dialog-title {
+    h2 {
+      background: #000;
+      padding: 15px 30px;
+    }
+    span {
+      font-weight: bold;
+    }
+  }
+}
 @media (max-width: 960px) {
   .not_streamer_aside_left {
     display: none;
