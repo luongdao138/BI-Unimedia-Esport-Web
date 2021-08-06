@@ -887,11 +887,12 @@ export default {
     reissue: '再発行',
     publish_delivery: '配信を公開する',
     note_for_publish_delivery_pt: `※チェックを入れた場合、TOPページの一覧に表示されます。 `,
-    note_for_publish_delivery_pb: `ただし、チェックを入れなくてもURLを知っていた場合は配信画面へアクセスすることは可能です。`,
+    note_for_publish_delivery_pb: '　' + `ただし、チェックを入れなくてもURLを知っていた場合は配信画面へアクセスすることは可能です。`,
     check_submit: '確認する',
     thumbnail: 'サムネイル',
     complete_delivery_settings: '配信設定が完了しました',
     step3_delivery_settings_content: 'StreamURLを利用して配信を開始してださい。',
     step3_close_btn: '閉じる',
+    start_live_stream: '配信開始する',
   },
 }
