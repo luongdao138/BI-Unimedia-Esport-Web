@@ -565,7 +565,8 @@ body {
     width: 200px;
     max-width: 200px;
   }
-  .main {
+  .main,
+  .chat-main {
     padding-left: 200px;
   }
 }
@@ -638,11 +639,12 @@ body {
   .aside-right {
     display: none;
   }
-  .main {
+  .main,
+  .chat-main {
     max-width: 100%;
     padding-left: 0;
   }
-  .chat-main.main {
+  .chat-main {
     max-width: 100%;
     margin: 0 auto;
     padding: 0;

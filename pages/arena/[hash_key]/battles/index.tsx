@@ -22,7 +22,7 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 
 const ArenaBattlesPage: PageWithLayoutType = () => {
   return (
-    <PlainLayout noFooter>
+    <PlainLayout>
       <BattlesContainer />
     </PlainLayout>
   )

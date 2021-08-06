@@ -21,7 +21,7 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 
 const TournamentsPage: PageWithLayoutType = () => {
   return (
-    <MainLayout footer>
+    <MainLayout>
       <DetailContainer />
     </MainLayout>
   )

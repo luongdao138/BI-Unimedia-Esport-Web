@@ -4,7 +4,7 @@ import PageWithLayoutType from '@constants/page'
 
 const HomeOrderPage: PageWithLayoutType = () => {
   return (
-    <MainLayout loginRequired footer={false}>
+    <MainLayout loginRequired>
       <HomeOrderContainer />
     </MainLayout>
   )
