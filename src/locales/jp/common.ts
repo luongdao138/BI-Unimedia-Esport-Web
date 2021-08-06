@@ -44,6 +44,7 @@ export default {
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
       char_limit: '{{char_limit}}文字以内で入力してください。',
+      only_single_byte: '半角英数以外が入力されています',
     },
     no_data: '対象データありません',
     dash: '-',
@@ -531,6 +532,7 @@ export default {
     end_date: '終了日時',
     holding_period: '開催期間',
     area: '会場',
+    area_address: '会場詳細',
     area_name_placeholder: `会場情報を入力しましょう。
 とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
     organizer: '開催者',

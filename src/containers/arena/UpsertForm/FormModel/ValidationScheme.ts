@@ -35,13 +35,19 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
           .max(40, i18n.t('common:common.validation.char_limit', { char_limit: 40 })),
       }),
       game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
-      game_hardware_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+      game_hardware_id: Yup.number()
+        .min(1, i18n.t('common:common.input_required'))
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1], i18n.t('common:common.input_required')),
     }),
     stepTwo: Yup.object({
       rule: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .matches(/single|battle_royale/, { excludeEmptyString: false }),
-      participant_type: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+        .matches(/single|battle_royale/, { excludeEmptyString: false, message: i18n.t('common:common.input_required') }),
+      participant_type: Yup.number()
+        .min(1, i18n.t('common:common.input_required'))
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1], i18n.t('common:common.input_required')),
       max_participants: Yup.number()
         .required(i18n.t('common:common.input_required'))
         .min(2, i18n.t('common:arena.participants_limit'))
@@ -71,7 +77,10 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
       //   },
       //   then: Yup.date().min(recruitEndMinDate, "i18n.t('common:common.validation.min_date')"),
       // }),
-      area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+      area_id: Yup.number()
+        .min(1, i18n.t('common:common.input_required'))
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1], i18n.t('common:common.input_required')),
       address: Yup.string()
         .nullable()
         .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
