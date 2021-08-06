@@ -159,17 +159,7 @@ const ArchiveContainer: React.FC = () => {
 
   const renderArchiveEnd = () => {
     if (status == STREAM_STATUS.END_OF_ARCHIVED) {
-      return (
-        <BeforeHolder
-          text={
-            <Box style={{ textAlign: 'center' }}>
-              この動画の視聴期間は
-              <br />
-              終了しました
-            </Box>
-          }
-        />
-      )
+      return <BeforeHolder text={<Box style={{ textAlign: 'center' }}>この動画の視聴期間は終了しました</Box>} />
     }
     return null
   }

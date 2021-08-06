@@ -70,7 +70,6 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
   },
   endDetail: {
-    display: 'none',
     paddingTop: 16,
     paddingBottom: 16,
   },
