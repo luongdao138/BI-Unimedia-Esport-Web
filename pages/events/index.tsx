@@ -2,6 +2,8 @@ import MainLayout from '@layouts/MainLayout'
 // import Events from '@containers/Events'
 import Events from '@containers/Events/FreeStreamEvents'
 import LiveThemeProvider from '@theme/live/LiveThemeProvider'
+import { ESRoutes } from '@constants/route.constants'
+import withAuth from '@utils/withAuth'
 
 interface IProps {
   banners: string[]
@@ -46,4 +48,4 @@ const EventsPage: React.FC<IProps> = (props) => {
   )
 }
 
-export default EventsPage
+export default withAuth(EventsPage, ESRoutes.PR)
