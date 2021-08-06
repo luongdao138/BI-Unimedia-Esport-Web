@@ -864,5 +864,12 @@ export default {
     placeholder_input_description: '番組概要を入力してください',
     label_input_description: '概要',
     copy_url: 'コピー',
+    label_channel_name: 'チャンネル名',
+    placeholder_channel_name: '配信チャンネル名を入力してください',
+    label_overview: '概要',
+    placeholder_overview: '番組概要を入力してください',
+    discord_placeholder: 'Discordタグ#0000',
+    twitter_placeholder: 'https://www.twitter.com/******/',
+    instagram_placeholder: 'https://www.instagram.com/******/',
   },
 }
