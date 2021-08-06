@@ -20,7 +20,7 @@
     left: 0;
     width: 100%;
     height: 20px;
-    z-index: 999;
+    z-index: 199;
     .vjs-progress-holder {
       position: absolute;
       top: 20px;
@@ -145,6 +145,7 @@
       height: 100%;
       justify-content: flex-end;
       transition: none;
+      z-index: 200;
     }
   }
 

@@ -27,14 +27,15 @@ const useStyles = makeStyles((theme) => ({
     resize: 'none',
     margin: 0,
     flex: 1,
+    fontSize: 12,
     padding: 8,
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     overflowY: 'hidden',
   },
   warning: {
     position: 'absolute',
-    top: -42,
-    height: 42,
+    top: -52,
+    height: 52,
     left: 0,
     width: '100%',
     right: 0,
@@ -67,6 +68,14 @@ const useStyles = makeStyles((theme) => ({
   },
   textarea: {
     overflow: 'hidden',
+  },
+  liveChatInputWrapper: {
+    width: '100%',
+    padding: '8px',
+    position: 'relative',
+    flexGrow: 0,
+    display: 'flex',
+    '& textarea': { overflow: 'hidden' },
   },
 }))
 
@@ -118,7 +127,7 @@ const LiveChatInput: React.FC<detailProps> = (props) => {
   }
 
   return (
-    <div className={'live-chat-input-wrapper'}>
+    <div className={classes.liveChatInputWrapper}>
       <form onSubmit={protection ? handleSubmitSpam : handleSubmit} style={{ width: '100%' }}>
         <Box display="flex" flexDirection="row" alignItems="center">
           {warning ? (
@@ -151,7 +160,7 @@ const LiveChatInput: React.FC<detailProps> = (props) => {
             onInput={(e: any) => handleType(e)}
             onKeyPress={(e: any) => handleKeyPress(e)}
             rowsMax={2}
-            inputProps={{ maxLength: 256 }}
+            inputProps={{ maxLength: 256, style: { fontSize: 12 } }}
           />
           <IconButton
             type="submit"

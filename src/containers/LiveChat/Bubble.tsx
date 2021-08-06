@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis',
     wordBreak: 'break-all',
     overflowWrap: 'break-word',
-    marginBottom: -3,
+    marginBottom: -5,
   },
   messageText: {
     fontSize: 11,
