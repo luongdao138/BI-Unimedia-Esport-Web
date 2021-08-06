@@ -566,8 +566,8 @@ export default {
     completed: '終了',
     joined: 'あなたがエントリーした大会',
     organized: 'あなたが主催者の大会',
-    ready: 'エントリー受付前',
-    recruiting: 'エントリー受付中',
+    ready: '受付前',
+    recruiting: '受付中',
   },
   search: {
     search: '検索',
