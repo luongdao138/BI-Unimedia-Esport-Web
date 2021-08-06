@@ -114,7 +114,7 @@ const Pr: React.FC<IProps> = (props) => {
             }}
           >
             <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-              eXeLAB ご紹介ページ
+              Info.exelab.jpへのリンク
             </Button>
           </a>
         </div>

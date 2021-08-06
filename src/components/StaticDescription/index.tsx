@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.primary,
   },
   row: {
-    marginLeft: 30,
     whiteSpace: 'pre-line',
   },
   rowHeader: {},
@@ -57,23 +56,23 @@ export default function StaticDescription() {
       </div>
       　　
       <div className={classes.rowHeader}>{`■ eXeLABの会員登録のお願い`}</div>
-      <div className={classes.row}>{`本動画配信サービスをご利用いただくためには、株式会社NTTe-Sportsが提供・運営する
-ゲーマー向け総合コミュニケーションプラットフォーム「eXeLAB」のユーザー会員登録が
-必要です。`}</div>
+      <div
+        className={classes.row}
+      >{`本動画配信サービスをご利用いただくためには、株式会社NTTe-Sportsが提供・運営するゲーマー向け総合コミュニケーションプラットフォーム「eXeLAB」のユーザー会員登録が必要です。`}</div>
       　　
       <div className={classes.rowHeader}>{`■利用規約の適用について`}</div>
       <div className={classes.row}>
-        {formatDescription(`本サービスのご利用には、「eXeLAB」サービスの利用規約( https://info.exelab.jp/terms.html )、
-及び動画配信サービスの個別規約( https://info.exelab.jp/terms.html#movie )をご承諾いただく
-必要があります。`)}
+        {formatDescription(
+          `本サービスのご利用には、「eXeLAB」サービスの利用規約( https://info.exelab.jp/terms.html )、及び動画配信サービスの個別規約( https://info.exelab.jp/terms.html#movie )をご承諾いただく必要があります。`
+        )}
       </div>
       　　
       <div className={classes.rowHeader}>{`■「eXeLAB」ログインパスワードの紛失にご注意ください`}</div>
       <div className={classes.row}>{`本サービスのご利用には、「eXeLAB」サービスへのログインが必要になります。
-     ログインパスワードを紛失しますと、サービスがご利用いただけませんのでご注意ください。
-     ログインパスワードの再設定は「eXeLAB」のスマホアプリよりご利用ください。
-     なお、パスワードの入力ミスが連続する場合、ログインが24時間ロックされますので、
-     連続してのパスワード入力ミスには十分ご注意下さい。`}</div>
+ログインパスワードを紛失しますと、サービスがご利用いただけませんのでご注意ください。
+ログインパスワードの再設定は「eXeLAB」のスマホアプリよりご利用ください。
+なお、パスワードの入力ミスが連続する場合、ログインが24時間ロックされますので、連続してのパスワード入力ミスには十分ご注意下さい。
+`}</div>
       　　
       <div className={classes.rowHeader}>{`■eXeLABの動画配信サービスでライブ配信を希望されるお客様へ`}</div>
       <div className={classes.row}>
@@ -81,7 +80,7 @@ export default function StaticDescription() {
         <div className={classes.rowInner}>{`・eXeLABユーザー向けに有料チケットを販売しての有料配信
       ・eXeLABの限定ユーザ―向けのプライベートなライブ配信　など`}</div>
         {`詳細は、是非お問い合わせください。`}
-        <div className={classes.rowLast}>{formatDescription(`（問い合わせ先：https://www.ntte-sports.co.jp/contact/ ）`)}</div>
+        <div className={classes.rowLast}>{formatDescription(`（問い合わせ先： https://www.ntte-sports.co.jp/contact/　）`)}</div>
       </div>
     </div>
   )
