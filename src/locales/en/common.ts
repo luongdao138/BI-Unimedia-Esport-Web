@@ -894,6 +894,7 @@ export default {
     area: '会場',
     area_name_placeholder: `会場情報を入力しましょう。
 とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
+    area_detail: '会場詳細',
     organizer: '開催者',
     co_organizer: '共同管理者',
     organizer_name: '主催',
@@ -901,6 +902,7 @@ export default {
     check_content: '内容を確認する',
     decide: '決定する',
     add: '追加する',
+    choose_category: 'カテゴリを選ぶ',
     public: '公開',
     private: '限定公開',
     choose_co_organizer: '共同管理者を選ぶ',

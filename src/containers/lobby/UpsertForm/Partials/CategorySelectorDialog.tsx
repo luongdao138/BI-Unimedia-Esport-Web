@@ -1,44 +1,44 @@
 import React, { useState, useEffect, memo } from 'react'
-import { Theme, Box, Typography, makeStyles } from '@material-ui/core'
+import { Theme, Box, Typography, makeStyles, Container, List } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { GameTitle } from '@services/game.service'
 import { useTranslation } from 'react-i18next'
-import GameSelector from '@components/GameSelector'
+import useGameTitles from '@components/GameSelector/useGameTitles'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import ButtonPrimary from '@components/ButtonPrimary'
 import BlankLayout from '@layouts/BlankLayout'
 import Icon from '@material-ui/core/Icon'
 import ESModal from '@components/Modal'
+import ESChip from '@components/Chip'
 import _ from 'lodash'
 
 type GameTitleItem = GameTitle['attributes']
 interface Props {
   values: GameTitleItem[]
   onChange: (games: GameTitleItem[]) => void
+  selectedGames: GameTitle['attributes'][]
   disabled?: boolean
 }
 
-const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
+const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled, selectedGames }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
-  const [gameTitles, setGameTitles] = useState(values)
+  const [categoryTitles, setCategoryTitles] = useState(values)
+  const { games } = useGameTitles()
 
   useEffect(() => {
     if (open === true) {
-      setGameTitles(values)
+      setCategoryTitles(values)
     }
   }, [open])
 
-  const onGameChange = (games: GameTitle['attributes'][]) => {
-    setGameTitles(games)
-  }
-
   const onSubmit = () => {
-    onChange(gameTitles)
+    onChange(categoryTitles)
     setOpen(false)
   }
+  const checkIsSelected = (id: number) => selectedGames.find((g) => g.id === id)
 
   return (
     <>
@@ -68,12 +68,33 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
-                <Typography variant="h2">{t('common:user_profile.choose_game')}</Typography>
+                <Typography variant="h2">{t('common:lobby_create.choose_category')}</Typography>
               </Box>
             </Box>
 
             <Box pt={8} className={classes.container}>
-              <GameSelector values={gameTitles} onChange={onGameChange} single />
+              <>
+                {games.length > 0 ? (
+                  <Container maxWidth="md" className={classes.listContainer}>
+                    <List>
+                      {games.map((g, idx) => (
+                        <ESChip
+                          key={idx}
+                          className={classes.chip}
+                          label={g.display_name}
+                          onClick={() => {
+                            return 0
+                          }}
+                          color={checkIsSelected(g.id) ? 'primary' : 'default'}
+                          isGameList={true}
+                        />
+                      ))}
+                    </List>
+                  </Container>
+                ) : (
+                  <Typography> Hooson bn SAD</Typography>
+                )}
+              </>
             </Box>
           </Box>
 
@@ -82,7 +103,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
           <Box className={classes.stickyFooter}>
             <Box className={classes.nextBtnHolder}>
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={gameTitles.length === 0}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={categoryTitles.length === 0}>
                   {t('common:tournament_create.decide')}
                 </ButtonPrimary>
               </Box>
@@ -167,5 +188,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     topContainer: {
       paddingTop: 0,
     },
+  },
+  chip: {
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 }))

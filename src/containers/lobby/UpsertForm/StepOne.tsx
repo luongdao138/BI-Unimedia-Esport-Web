@@ -36,10 +36,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
     formik.setFieldValue('stepOne.game_title_id', value)
   }, [])
 
-  // useEffect(() => {
-  //   if (!formik.values.stepOne.has_prize) formik.setFieldValue('stepOne.prize_amount', '')
-  // }, [formik.values.stepOne.has_prize])
-
   const { hasUCRReturnHref } = useReturnHref()
   const handleCoverDailogStateChange = (_open: boolean) => {
     if (hasUCRReturnHref) {
@@ -99,6 +95,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
           values={formik.values.stepOne.game_title_id}
           onChange={handleSelectedGame}
           disabled={!editables.game_title}
+          selectedGames={formik.values.stepOne.game_title_id}
         />
       </Box>
       <Box pb={3}>
