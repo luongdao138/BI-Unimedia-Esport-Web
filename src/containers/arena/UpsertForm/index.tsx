@@ -202,6 +202,38 @@ const TournamentCreate: React.FC = () => {
     else handleReturn()
   }
 
+  const getFirstError = () => {
+    if (_.isEmpty(formik.errors)) {
+      return null
+    }
+    if (_.isEmpty(formik.touched)) {
+      return null
+    }
+
+    let msg = null as string | null
+    if (_.isObject(formik.errors)) {
+      const keys = Object.keys(formik.errors)
+      if (keys[0]) {
+        // eslint-disable-next-line no-console
+        console.log(keys[0])
+        const fields = _.get(formik, `errors.${keys[0]}`)
+        if (_.isObject(fields)) {
+          const fieldKeys = Object.keys(fields)
+          if (fieldKeys[0]) {
+            // eslint-disable-next-line no-console
+            console.log(fieldKeys[0])
+            msg = _.get(fields, `${fieldKeys[0]}`) as string
+          }
+        }
+      }
+    }
+    return (
+      <Box textAlign="center" mb={2}>
+        {msg}
+      </Box>
+    )
+  }
+
   return (
     <ESStickyFooter
       disabled={false}
@@ -218,17 +250,22 @@ const TournamentCreate: React.FC = () => {
                 {i18n.t('common:tournament_create.submit')}
               </ButtonPrimary>
             </Box>
-          ) : isEdit ? (
-            renderEditButton()
           ) : (
-            <ButtonPrimary
-              onClick={handleSetConfirm}
-              round
-              className={`${classes.footerButton} ${classes.confirmButton}`}
-              disabled={hasError}
-            >
-              {i18n.t('common:tournament_create.check_content_button')}
-            </ButtonPrimary>
+            <Box flexDirection="column">
+              {getFirstError()}
+              {isEdit ? (
+                renderEditButton()
+              ) : (
+                <ButtonPrimary
+                  onClick={handleSetConfirm}
+                  round
+                  className={`${classes.footerButton} ${classes.confirmButton}`}
+                  disabled={hasError}
+                >
+                  {i18n.t('common:tournament_create.check_content_button')}
+                </ButtonPrimary>
+              )}
+            </Box>
           )}
         </>
       }
