@@ -4,7 +4,8 @@ import { IconButton } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { GameTitle } from '@services/game.service'
 import { useTranslation } from 'react-i18next'
-import GameSelector from '@components/GameSelector'
+import GameList from '@components/GameSelector/GameList'
+import useGameTitles from '@components/GameSelector/useGameTitles'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import ButtonPrimary from '@components/ButtonPrimary'
 import BlankLayout from '@layouts/BlankLayout'
@@ -24,6 +25,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
   const [gameTitles, setGameTitles] = useState(values)
+  const { games } = useGameTitles()
 
   useEffect(() => {
     if (open === true) {
@@ -31,13 +33,13 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
     }
   }, [open])
 
-  const onGameChange = (games: GameTitle['attributes'][]) => {
-    setGameTitles(games)
-  }
-
   const onSubmit = () => {
     onChange(gameTitles)
     setOpen(false)
+  }
+
+  const handleAdd = (game: GameTitleItem) => {
+    onChange([game])
   }
 
   return (
@@ -68,12 +70,12 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
-                <Typography variant="h2">{t('common:user_profile.choose_game')}</Typography>
+                <Typography variant="h2">{t('common:lobby_create.choose_category')}</Typography>
               </Box>
             </Box>
 
             <Box pt={8} className={classes.container}>
-              <GameSelector values={gameTitles} onChange={onGameChange} single />
+              <GameList games={games} selectedGames={values} handleAdd={handleAdd} />
             </Box>
           </Box>
 

@@ -90,7 +90,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           name="stepTwo.area_id"
           value={formik.values.stepTwo.area_id}
           onChange={formik.handleChange}
-          label={i18n.t('common:tournament_create.area')}
+          label={i18n.t('common:lobby_create.area')}
           required={true}
           size="small"
           fullWidth
@@ -110,7 +110,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
         <ESFastInput
           multiline
           rows={5}
-          name="stepThree.address"
+          name="stepTwo.address"
           fullWidth
           placeholder={i18n.t('common:lobby_create.area_name_placeholder')}
           value={formik.values.stepTwo.address}

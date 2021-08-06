@@ -20,7 +20,7 @@ ESInput.defaultProps = {
   size: 'small',
 }
 
-const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user, isEdit }) => {
+const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdit }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
   const [areaName, setAreaName] = useState('')
@@ -74,7 +74,27 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
     )
   }
 
-  const peopleText = t('common:tournament_create.people')
+  const formatOneDate = (label: string, beginDateStr: string) => {
+    const beginDate = moment(beginDateStr).format('YYYY年MM月DD日')
+    const beginTime = moment(beginDateStr).format('HH:mm')
+
+    return (
+      <>
+        <ESInput labelPrimary={label} value={'dss'} disabled={true} fullWidth style={{ display: 'none' }} />
+        <Box className={classes.time}>
+          <Box className={classes.valueColor}>
+            <Typography>
+              {beginDate}
+              <br />
+              {beginTime}
+            </Typography>
+          </Box>
+        </Box>
+      </>
+    )
+  }
+
+  const peopleText = t('common:lobby_create.people')
   return (
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={8} />
@@ -89,31 +109,39 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         />
       </Box>
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
+      <ESInput labelPrimary={t('common:lobby_create.name')} fullWidth value={values.stepOne.title} disabled />
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:lobby_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
       <Box pb={2} />
 
       <ESInput
-        labelPrimary={t('common:tournament_create.game')}
+        labelPrimary={t('common:lobby_create.game')}
         value={values.stepOne.game_title_id[0].display_name}
         disabled={true}
         fullWidth
       />
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.game_hardware')} value={hardwareName} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:lobby_create.game_hardware')} value={hardwareName} disabled={true} fullWidth />
       <Box pb={2} />
 
-      <ESInput value={`${values.stepOne.max_participants}${peopleText}`} disabled={true} fullWidth />
+      <ESInput
+        labelPrimary={t('common:lobby_create.max_participants')}
+        value={`${values.stepOne.max_participants}${peopleText}`}
+        disabled={true}
+        fullWidth
+      />
       <Box pb={2} />
 
-      {formatDate(t('common:tournament_create.entry_period'), values.stepTwo.acceptance_start_date, values.stepTwo.acceptance_end_date)}
+      {formatDate(t('common:lobby_create.entry_period'), values.stepTwo.acceptance_start_date, values.stepTwo.acceptance_end_date)}
       <Box pb={2} />
 
-      <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth />
-      {values.stepTwo.address && <ESInput value={values.stepTwo.address} disabled={true} fullWidth multiline />}
+      {formatOneDate(t('common:lobby_create.recruitment_start_date'), values.stepTwo.start_date)}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
+
+      <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />
+      <Box pb={2} />
+
+      <ESInput labelPrimary={t('common:lobby_create.area_detail')} value={values.stepTwo.address} disabled={true} fullWidth />
       <Box pb={2} />
     </Box>
   )
