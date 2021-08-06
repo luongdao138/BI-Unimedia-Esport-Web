@@ -728,3 +728,27 @@ body {
   width: 100%;
   min-height: 100vh;
 }
+
+@media (max-width: 960px) {
+  .not_streamer_aside_left {
+    display: none;
+  }
+
+  .streamer_aside_left {
+    display: none;
+  }
+
+  .not_streamer_main {
+    padding-left: 0px;
+  }
+}
+
+@media (max-width: 768px) {
+  .streamer_main {
+    padding-left: 0px;
+  }
+
+  .streamer_aside_right {
+    width: 150px;
+  }
+}

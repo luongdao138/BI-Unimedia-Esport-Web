@@ -15,9 +15,11 @@ import LogoutContainer from '@containers/Logout'
 import LoginRequired from '@containers/LoginRequired'
 import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
-
+import { useTranslation } from 'react-i18next'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
+import SideFooter from './SideFooter'
 interface StreamSideMenuProps {
-  // toggleDrawer: (open: boolean) => void
   minimizeLayout?: boolean
   isStreamer: boolean
 }
@@ -25,16 +27,14 @@ interface StreamSideMenuProps {
 const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer }) => {
   const [modal, setModal] = useState(false)
   const [content, setContent] = useState('')
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
-  // console.log("🚀 ~ userProfile", userProfile)
-  // const theme = useTheme()
-  // const downSm = useMediaQuery(theme.breakpoints.down('sm'))
-  // const isStreamer = true;
+  const theme = useTheme()
+  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -54,7 +54,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
 
   return (
     <>
-      <Box className={classes.menu + getAddClass(classes.streamerMenu)}>
+      <Box
+        className={
+          classes.menu + getAddClass(classes.noMinimizeMenu, classes.minimizeMenu) + (isStreamer ? ' ' + classes.streamerMenu : '')
+        }
+      >
         <Box className={classes.menuWrap + getAddClass(classes.streamerMenuWrap, classes.minimizeMenuWrap)}>
           {minimizeLayout ? (
             <Box>
@@ -85,44 +89,46 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 </Box>
               </Box>
               <Box className={classes.wrap_point}>
-                <Box className={classes.text_point}>exePoint</Box>
+                <Box className={classes.text_point}>eXeポイント</Box>
                 <Box className={classes.point}>999999</Box>
                 <Box className={classes.link_point}>
+                  {/* redirect to point management */}
                   <Link href={ESRoutes.TERMS}>
-                    <a>eXePOINT管理</a>
+                    <a>eXeポイント管理</a>
                   </Link>
                 </Box>
               </Box>
             </>
           )}
 
-          {/* university fa-headset fa-users fa-heart fa-hourglass fa-paper-plane fa-play fa-video-slash "*/}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-            <Link href={ESRoutes.DELIVERY_MANAGEMENT} passHref>
+            <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem
                 className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
                 button
                 disableRipple
-                selected={isSelected(ESRoutes.DELIVERY_MANAGEMENT)}
+                selected={isSelected(ESRoutes.SETTINGS)}
               >
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-heart" />
                 </ListItemIcon>
-                {!minimizeLayout && <ListItemText className={classes.listText} primary="お気に入りチャンネル" />}
+                {/* link to top video page and tab favorite(お気に入り) is selected*/}
+                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.top_video')} />}
               </ListItem>
             </Link>
             {isStreamer && (
-              <Link href={ESRoutes.SETTINGS} passHref>
+              <Link href={ESRoutes.DELIVERY_MANAGEMENT} passHref>
                 <ListItem
                   className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
                   button
                   disableRipple
-                  selected={isSelected(ESRoutes.SETTINGS)}
+                  selected={isSelected(ESRoutes.DELIVERY_MANAGEMENT)}
                 >
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-video-slash" />
                   </ListItemIcon>
-                  {!minimizeLayout && <ListItemText className={classes.listText} primary="動画" />}
+                  {/* link to Delivery settings and tab Delivery reservation (配信予約) */}
+                  {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}
                 </ListItem>
               </Link>
             )}
@@ -136,9 +142,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-hourglass" />
                 </ListItemIcon>
-                {!minimizeLayout && <ListItemText className={classes.listText} primary="ンネル" />}
+                {/* is confirm link to */}
+                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.viewing_history')} />}
               </ListItem>
             </Link>
+            {!minimizeLayout && <Box paddingBottom={1} />}
             {isStreamer && (
               <Link href={ESRoutes.SETTINGS} passHref>
                 <ListItem
@@ -150,6 +158,8 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-users" />
                   </ListItemIcon>
+                  {/* link to stream management */}
+                  {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.delivery_management')} />}
                 </ListItem>
               </Link>
             )}
@@ -164,6 +174,10 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-paper-plane" />
                   </ListItemIcon>
+                  {/* confirm link to */}
+                  {!minimizeLayout && (
+                    <ListItemText className={classes.listText} primary={t('common:home.video_distribution_application')} />
+                  )}
                 </ListItem>
               </Link>
             )}
@@ -177,12 +191,14 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-cog" />
                 </ListItemIcon>
+                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.settings')} />}
               </ListItem>
             </Link>
+            {!minimizeLayout && <Box paddingBottom={1} />}
             <LoginRequired>
               <Link href={ESRoutes.HOME} passHref>
                 <ListItem
-                  className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                  className={classes.list + getAddClass(classes.streamer_list + ' ' + classes.listTextHome, classes.not_streamer_list)}
                   button
                   disableRipple
                   selected={isSelected(ESRoutes.HOME)}
@@ -190,6 +206,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-headset" />
                   </ListItemIcon>
+                  {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.eXeLAB_link')} />}
                 </ListItem>
               </Link>
             </LoginRequired>
@@ -204,9 +221,10 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               <ListItemIcon className={classes.icon}>
                 <Icon fontSize="small" className="fa fa-sign-out-alt" />
               </ListItemIcon>
+              {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:logout')} />}
             </ListItem>
           )}
-          {/* {!downSm && <SideFooter />} */}
+          {!downSm && !minimizeLayout && <SideFooter />}
         </Box>
       </Box>
 
@@ -227,6 +245,7 @@ const useStyles = makeStyles((theme) => ({
   listText: {
     fontSize: 16,
     color: theme.palette.text.primary,
+    maxWidth: '82px',
   },
   logo: {
     width: 50,
@@ -258,6 +277,8 @@ const useStyles = makeStyles((theme) => ({
   },
   not_streamer_list: {
     paddingTop: '0px',
+    marginBottom: 20,
+    marginTop: 20,
     '& .MuiListItemIcon-root': {
       minWidth: 'unset',
       display: 'flex',
@@ -268,8 +289,8 @@ const useStyles = makeStyles((theme) => ({
   },
   streamer_list: {
     paddingLeft: '25px',
-    marginBottom: '25px',
-    marginTop: '25px',
+    marginBottom: '10px',
+    marginTop: '10px',
     alignItems: 'baseline',
     '& .MuiListItemIcon-root': {
       minWidth: '15px',
@@ -278,23 +299,24 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   menu: {
-    // maxWidth: 165,
     width: '100%',
-    // position: 'relative',
-    // height: '100%',
-    // paddingBottom: 66,
     paddingTop: 72,
     display: 'flex',
     justifyContent: 'center',
-    background: Colors.black_card,
     minHeight: '100vh',
   },
-  streamerMenu: {
+  noMinimizeMenu: {
     justifyContent: 'flex-end',
   },
-  icon: {
-    // minWidth: 30,
+  streamerMenu: {
+    [theme.breakpoints.up('lg')]: {
+      background: Colors.black_card,
+    },
   },
+  minimizeMenu: {
+    background: Colors.black_card,
+  },
+  icon: {},
   userInfo: {
     display: 'flex',
     flexDirection: 'column',
@@ -369,7 +391,7 @@ const useStyles = makeStyles((theme) => ({
     borderTop: `1px solid ${Colors.white_opacity[30]}`,
     borderBottom: `1px solid ${Colors.white_opacity[30]}`,
     padding: '15px 0 15px 25px',
-    marginBottom: '45px',
+    marginBottom: '17px',
   },
   text_point: {
     fontSize: '12px',
@@ -392,17 +414,19 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  listTextHome: {
+    borderTop: `1px solid ${Colors.white_opacity[30]}`,
+    borderBottom: `1px solid ${Colors.white_opacity[30]}`,
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    marginBottom: '0px',
+  },
 }))
 
 const ListItem = withStyles({
   root: {
     '& .MuiListItemIcon-root': {
-      // minWidth: 'unset',
-      // display: 'flex',
-      // justifyContent: 'center',
-      // width: '100%',
       color: '#B6B6B6',
-      // textAlign: 'center',
     },
     '&$selected': {
       backgroundColor: 'transparent',
