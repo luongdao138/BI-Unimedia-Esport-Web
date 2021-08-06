@@ -5,7 +5,7 @@ import useNotificationSettings from './useNotificationSettings'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 
-const ESNotificationSettings = (): React.ReactNode => {
+const ESNotificationSettings = () => {
   const { t } = useTranslation('common')
   const { notificationSettings, updateNotificationSettings } = useNotificationSettings()
 
