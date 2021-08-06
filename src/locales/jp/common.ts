@@ -217,6 +217,12 @@ export default {
     download_app_version: 'アプリ版ダウンロードはこちら',
     app_version: 'アプリ版eXeLAB',
     app_desc: '以下のボタンから「アプリ版eXeLAB」をインストールすることができます。',
+    top_video: 'お気に入りチャンネル',
+    reservation_video: '予約動画',
+    viewing_history: '視聴履歴',
+    delivery_management: '配信管理',
+    video_distribution_application: '動画配信申請',
+    eXeLAB_link: 'eXeLABへ',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
