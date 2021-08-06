@@ -43,8 +43,8 @@ body {
   min-height: 100vh;
 }
 .chat-main.main {
-  height: 100vh;
   overflow: hidden;
+  //  min-height: -webkit-fill-available;
 }
 .aside-left {
   position: fixed;
@@ -387,7 +387,7 @@ body {
   position: absolute;
   left: 0;
   bottom: 0;
-  top: 0;
+  top: 60px;
 }
 .room-column {
   visibility: visible;
