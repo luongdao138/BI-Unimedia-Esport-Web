@@ -123,7 +123,7 @@ const LiveChat = forwardRef((props: chatProps, ref) => {
                 rowHeight={cache.rowHeight}
                 rowRenderer={rowRenderer}
                 onScroll={_onScroll}
-                className="list-container"
+                className="list-container-live"
                 rowCount={messages.length}
                 style={{
                   outline: 0,

@@ -107,7 +107,7 @@ const ArchiveContainer: React.FC = () => {
           {archiveText ? <ArchivePoster text={'この動画はアーカイブです'} time={data.attributes.archive_end_datetime} /> : null}
           <VideoPlayer
             src={data.attributes.archive_video_endpoint}
-            // src="https://multiplatform-f.akamaihd.net/i/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8"
+            //src="https://multiplatform-f.akamaihd.net/i/multi/april11/sintel/sintel-hd_,512x288_450_b,640x360_700_b,768x432_1000_b,1024x576_1400_m,.mp4.csmil/master.m3u8"
             type="archive"
             onChatTrigger={_onChatTrigger}
             trackSource={data.attributes.archive_captions}
