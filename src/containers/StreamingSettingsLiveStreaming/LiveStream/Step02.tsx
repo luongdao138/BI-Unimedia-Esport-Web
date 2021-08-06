@@ -1,157 +1,198 @@
-import { Box, Icon, makeStyles, Typography } from '@material-ui/core'
-import React, { useCallback } from 'react'
-// import { useTranslation } from 'react-i18next'
-import { useFormik } from 'formik'
+import { Box, makeStyles } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
-import ESSelect from '@components/Select'
-import { RULES } from '@constants/tournament.constants'
-import { useAppDispatch } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
-import * as commonActions from '@store/common/actions'
-import ESFastInput from '@components/FastInput'
-import CoverUploaderStream from '@containers/arena/UpsertForm/Partials/CoverUploaderStream'
 import ESButton from '@components/Button'
+import { Colors } from '@theme/colors'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import _ from 'lodash'
+import ESLabel from '@components/Label'
 
-type ContentParams = {
-  linkUrl: string
-  title: string
-  description: string
-  cover_image_url: string
-  listData: Array<string>
-}
 interface Step02Props {
   onNext: (step: number) => void
 }
 
 const Step02: React.FC<Step02Props> = ({ onNext }) => {
   // const onSubmitClicked = (): void => {}
+  const [showPreview, setShowPreview] = useState(false)
   const classes = useStyles()
-  const dispatch = useAppDispatch()
+  const { checkNgWord } = useCheckNgWord()
   const { t } = useTranslation(['common'])
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik<ContentParams>({
-    initialValues: { linkUrl: 'https://cowell-web.exelab.jp/', title: '', description: '', cover_image_url: '', listData: [] },
-    // validationSchema,
-    onSubmit: () => {
-      // onSubmitClicked(values)
-    },
-  })
-  const handleUpload = useCallback(() => {
-    // uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
-    //   formik.setFieldValue('stepOne.cover_image_url', imageUrl)
-    // })
-  }, [])
-  const handleCopy = () => {
-    if (values.linkUrl) {
-      window.navigator.clipboard.writeText(values.linkUrl.toString())
+  const content = 'habk1510@gmail.com'
+  const check_title = checkNgWord([content])
+  useEffect(() => {
+    if (_.isEmpty(check_title)) {
+      setShowPreview(true)
     }
-    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
-  }
-
+  }, [])
   const onClickNext = () => {
     onNext(3)
   }
 
   return (
-    <Box>
+    <Box className={classes.container}>
       <Box pb={9} py={4} px={19}>
-        <form onSubmit={handleSubmit}>
-          <Box display="flex" flexDirection="row" alignItems="flex-end" justifyContent="space-between">
-            <Box flex={3}>
-              <ESInput
-                id="linkUrl"
-                value={values.linkUrl}
-                onChange={handleChange}
-                placeholder={!values.linkUrl && i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_url')}
-                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_url')}
-                onBlur={handleBlur}
-                fullWidth
-                helperText={touched.linkUrl && errors.linkUrl}
-                error={touched.linkUrl && !!errors.linkUrl}
-                rows={8}
-                readOnly={true}
-                size="big"
-              />
-            </Box>
-            <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-              <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-            </Box>
-          </Box>
-          <Box paddingBottom={4} />
-          <Box pb={4} px={10} className={classes.box}>
-            <CoverUploaderStream
-              src={values.cover_image_url}
-              onChange={handleUpload}
-              isUploading={false}
-              disabled={false}
-              size="big"
-              // onOpenStateChange={handleCoverDailogStateChange}
-            />
-          </Box>
-          <Box px={10} className={classes.box}>
+        <Box mt={2} bgcolor={showPreview ? Colors.transparent : null} borderRadius={4} padding={3} margin={3}>
+          <Box mt={1}>
             <ESInput
               id="title"
-              required={true}
-              placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_title')}
+              name="title"
+              value={'https://exelab.jp/xxxxxxxxxxxxxxxxxx'}
+              fullWidth
+              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_url')}
+              required
+              disabled={true}
+              size="big"
+              classes={{ root: classes.root }}
+            />
+          </Box>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESLabel label={'サムネイル'} required={true} />
+          </Box>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={'テキストテキストテキストテキストここの文字数制限あるの'}
+              fullWidth
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_title')}
-              fullWidth
-              value={values.title}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.title && errors.title}
-              error={touched.title && !!errors.title}
+              required
+              disabled={showPreview}
               size="big"
+              classes={{ root: classes.root }}
             />
           </Box>
-          <Box paddingBottom={4} />
-          <Box px={10} className={classes.box}>
-            <ESFastInput
-              id="description"
-              multiline
-              rows={8}
-              placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_description')}
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={
+                '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
+                'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
+                'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
+                'ストテキストテキストテ\n' +
+                'https://sample.jp テキストテキスト'
+              }
+              fullWidth
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_description')}
-              fullWidth
-              value={values.description}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.description && errors.description}
-              error={touched.description && !!errors.description}
+              multiline={true}
+              required
+              disabled={true}
               size="big"
+              classes={{ root: classes.root }}
             />
           </Box>
-          <Box paddingBottom={3} />
-          <Box px={10} className={classes.box}>
-            <ESSelect
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={'ゲーム：Apex Legends'}
               fullWidth
-              name="stepTwo.rule"
-              value={values.listData}
-              onChange={handleChange}
-              label={i18n.t('common:tournament_create.holding_format')}
-              required={true}
+              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_stream_category')}
+              required
+              disabled={showPreview}
               size="big"
-              disabled={false}
-            >
-              <option disabled value={-1}>
-                {i18n.t('common:please_select')}
-              </option>
-              {RULES.map((rule, index) => (
-                <option key={index} value={rule.value}>
-                  {rule.label}
-                </option>
-              ))}
-            </ESSelect>
+              classes={{ root: classes.root }}
+            />
           </Box>
-        </form>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={'利用しない'}
+              fullWidth
+              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')}
+              disabled={showPreview}
+              size="big"
+              classes={{ root: classes.root }}
+            />
+          </Box>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={'共有する'}
+              fullWidth
+              labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
+              disabled={showPreview}
+              size="big"
+              classes={{ root: classes.root }}
+            />
+          </Box>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')}
+              fullWidth
+              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_url')}
+              disabled={showPreview}
+              size="big"
+              classes={{ root: classes.root }}
+            />
+          </Box>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')}
+              fullWidth
+              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_key')}
+              disabled={showPreview}
+              size="big"
+              classes={{ root: classes.root }}
+            />
+          </Box>
+          <Box paddingBottom={1} />
+          <Box mt={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={
+                '公開する\n' +
+                '※チェックを入れた場合、TOPページの一覧に表示されます。\n' +
+                '　ただし、チェックを入れなくてもURLを知っていた場合は配信画面へアクセスすることは可能です。'
+              }
+              fullWidth
+              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+              multiline={true}
+              disabled={showPreview}
+              size="big"
+              classes={{ root: classes.root }}
+            />
+          </Box>
+        </Box>
+        <ESButton onClick={onClickNext}></ESButton>
       </Box>
-      <ESButton onClick={onClickNext}></ESButton>
     </Box>
   )
 }
 
 export default Step02
 const useStyles = makeStyles(() => ({
+  root: {
+    '&.Mui-disabled': {
+      color: 'white',
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+      },
+    },
+  },
+  container: {
+    backgroundColor: 'transparent',
+  },
   urlCopy: {
     marginLeft: 20,
     cursor: 'pointer',
@@ -164,5 +205,9 @@ const useStyles = makeStyles(() => ({
   },
   box: {
     paddingLeft: 0,
+  },
+  overviewText: {
+    fontSize: 14,
+    color: 'white',
   },
 }))

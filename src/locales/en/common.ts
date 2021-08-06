@@ -869,6 +869,7 @@ export default {
     placeholder_input_title: '配信タイトルを入力してください',
     placeholder_input_description: '番組概要を入力してください',
     label_input_description: '概要',
+    label_stream_category: 'カテゴリ',
     copy_url: 'コピー',
     label_channel_name: 'チャンネル名',
     placeholder_channel_name: '配信チャンネル名を入力してください',

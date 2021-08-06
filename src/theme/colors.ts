@@ -6,6 +6,7 @@
 export const Colors = {
   primary: '#FF4786',
   secondary: '#F7F735',
+  transparent: 'transparent',
   grey: {
     '10': '#060606',
     '100': '#212121',
