@@ -857,5 +857,12 @@ export default {
     live_stream: 'ライブ配信',
     streaming_reservation: '配信予約',
     distributor_information: '配信者情報',
+    placeholder_input_url: 'https://exelab.jp/?xxxxxxxxxxxxxxxxx',
+    label_input_url: '視聴 URL',
+    label_input_title: 'タイトル',
+    placeholder_input_title: '配信タイトルを入力してください',
+    placeholder_input_description: '番組概要を入力してください',
+    label_input_description: '概要',
+    copy_url: 'コピー',
   },
 }
