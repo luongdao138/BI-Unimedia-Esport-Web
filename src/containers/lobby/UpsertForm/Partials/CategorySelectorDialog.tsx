@@ -18,11 +18,10 @@ type GameTitleItem = GameTitle['attributes']
 interface Props {
   values: GameTitleItem[]
   onChange: (games: GameTitleItem[]) => void
-  // selectedCategory: GameTitle['attributes'][]
   disabled?: boolean
 }
 
-const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled /* , selectedCategory */ }) => {
+const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
