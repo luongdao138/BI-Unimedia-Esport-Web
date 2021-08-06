@@ -918,5 +918,6 @@ export default {
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
     organizer_joinable: '主催者を参加者として抽選に含める',
+    organizer_joined: '主催者を参加者として抽選に含めるチェック',
   },
 }

@@ -132,6 +132,14 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       />
       <Box pb={2} />
 
+      <ESInput
+        labelPrimary={t('common:lobby_create.organizer_joined')}
+        value={values.stepOne.is_organizer_join ? t('common:common.yes') : t('common:common.no')}
+        disabled={true}
+        fullWidth
+      />
+      <Box pb={2} />
+
       {formatDate(t('common:lobby_create.entry_period'), values.stepTwo.acceptance_start_date, values.stepTwo.acceptance_end_date)}
       <Box pb={2} />
 
