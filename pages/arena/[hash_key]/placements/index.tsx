@@ -23,7 +23,6 @@ const ArenaPlacementPage: PageWithLayoutType = () => {
 }
 
 MainLayout.defaultProps = {
-  footer: false,
   patternBg: false,
   loginRequired: true,
 }
