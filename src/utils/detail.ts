@@ -96,7 +96,7 @@ const useStyles = makeStyles(() => ({
     },
   },
 
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     desktopBanner: {
       display: 'none',
     },

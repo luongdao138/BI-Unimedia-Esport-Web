@@ -11,7 +11,7 @@ export const PaperChat = styled(Paper)`
   display: flex;
   min-height: 300px;
   @media (max-width: ${theme.breakpoints.values.md}px) {
-    height: calc(100vh - (100vw / 1.777777777777778) - 75px - 49px);
+    height: calc(100vh - (100vw / 1.777777777777778) - 75px - 120px);
     border: 0 none;
     padding-top: 0px;
     overflow: hidden;

@@ -7,16 +7,11 @@ import LiveChat from '@containers/LiveChat'
 import VideoPlayer from '@containers/VideoPlayer'
 import Loader from '@components/Loader'
 import { useSelector, useDispatch, useStore } from 'react-redux'
-import {
-  messages,
-  roomMeta,
-  //  socketConnected
-} from '@store/live_socket/selectors'
+import { messages, roomMeta, socketConnected } from '@store/live_socket/selectors'
 import { WEBSOCKET_STREAM_PREFIX, STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import { socketActions } from '@store/live_socket/actions'
 import { videoDetailActions } from '@store/videoDetail/actions'
 import { detailSelectors, getMeta } from '@store/videoDetail/selectors'
-// import { getCurrentUser } from '@store/auth/selectors'
 import Router from 'next/router'
 import _ from 'lodash'
 import { STREAM_STATUS } from '@constants/stream.constants'
@@ -40,8 +35,7 @@ const StreamContainer: React.FC = () => {
   const currentUser = useSelector(getAuth)
   const time = _.get(data, 'attributes.live_start_datetime', null)
   const roomCountInfo = useSelector(roomMeta)
-  // const connected = useSelector(socketConnected)
-  const connected = true
+  const connected = useSelector(socketConnected)
   const store = useStore()
   const userId = _.get(currentUser, 'id', null)
   const status = _.get(data, 'attributes.flag', undefined)
