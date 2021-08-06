@@ -63,9 +63,6 @@ const useStyles = makeStyles(() => ({
     zIndex: 100,
   },
   chatHolder: {
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: Colors.grey[1000],
     height: '100%',
     justifyContent: 'center',
     paddingTop: 80,
