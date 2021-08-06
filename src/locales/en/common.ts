@@ -44,6 +44,7 @@ export default {
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
       char_limit: '{{char_limit}}文字以内で入力してください。',
+      only_single_byte: '半角英数以外が入力されています',
     },
     no_data: '対象データありません',
     dash: '-',

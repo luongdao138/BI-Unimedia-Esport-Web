@@ -30,14 +30,18 @@ const RegisterProfileContainer: React.FC = () => {
     user_code: Yup.string()
       .required(t('common:common.user_id_at_least'))
       .max(50)
+      .test('user_code', t('common:common.validation.only_single_byte'), function (value) {
+        return !CommonHelper.isDoubleByte(value)
+      })
       .min(2, t('common:common.user_id_at_least'))
       .test('user_code', t('common:common.user_code_invalid'), function (value) {
         return CommonHelper.userCodeValid(value)
       }),
+
     nickname: Yup.string().required(t('common:common.nickname_at_least')).max(50).min(2, t('common:common.nickname_at_least')),
   })
 
-  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
+  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue, handleChange } = useFormik<services.UserProfileParams>({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -93,7 +97,7 @@ const RegisterProfileContainer: React.FC = () => {
                   labelPrimary={t('common:register_profile.user_id')}
                   fullWidth
                   value={values.user_code}
-                  onChange={(e) => setFieldValue('user_code', CommonHelper.replaceSingleByteString(e.target.value))}
+                  onChange={handleChange}
                   onBlur={handleBlur}
                   helperText={touched.user_code && errors.user_code}
                   error={touched.user_code && !!errors.user_code}
