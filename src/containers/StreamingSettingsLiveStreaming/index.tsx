@@ -6,6 +6,9 @@ import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import DistributorInformationContainer from './DistributorInformation'
+import LiveStreamContainer from './LiveStream'
+import StreamingReservationContainer from './StreamingReservation'
 
 enum TABS {
   LIVE_STREAM = 0,
@@ -34,25 +37,13 @@ const StreamingManage: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.LIVE_STREAM:
-        return (
-          <Box className={classes.forbiddenMessageContainer}>
-            <Typography variant="h3">{t('streaming_settings_live_streaming_screen.live_stream')}</Typography>
-          </Box>
-        )
+        return <LiveStreamContainer />
         break
       case TABS.STREAMING_RESERVATION:
-        return (
-          <Box className={classes.forbiddenMessageContainer}>
-            <Typography variant="h3">{t('streaming_settings_live_streaming_screen.streaming_reservation')}</Typography>
-          </Box>
-        )
+        return <StreamingReservationContainer />
         break
       case TABS.DISTRIBUTOR:
-        return (
-          <Box className={classes.forbiddenMessageContainer}>
-            <Typography variant="h3">{t('streaming_settings_live_streaming_screen.distributor_information')}</Typography>
-          </Box>
-        )
+        return <DistributorInformationContainer />
         break
       default:
         break

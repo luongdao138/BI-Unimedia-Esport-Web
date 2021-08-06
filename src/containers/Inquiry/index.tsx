@@ -177,7 +177,7 @@ const ESInquiry: React.FC = () => {
                 helperText={touched.email && errors.email}
                 error={touched.email && !!errors.email}
                 rows={8}
-                disabled={!!hasEmail || showPreview}
+                // disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
               />
