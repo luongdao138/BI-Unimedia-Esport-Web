@@ -15,7 +15,7 @@ import { useRouter } from 'next/router'
 import { RouteContext } from 'pages/_app'
 import { socketActions } from '@store/socket/actions'
 import { CHAT_ACTION_TYPE } from '@constants/socket.constants'
-import { useWindow } from '@utils/hooks/useWindow'
+import { use100vh } from 'react-div-100vh'
 
 interface LayoutProps {
   defaultListState?: boolean
@@ -31,7 +31,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
   const { previousRoute } = useContext(RouteContext)
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const { height } = useWindow()
+  const height = use100vh()
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -80,7 +80,7 @@ const MessageLayout: React.FC<LayoutProps> = ({ children, defaultListState, crea
       <aside className="aside-left mui-fixed">
         <SideMenu />
       </aside>
-      <main role="main" style={{ height: height }} className={'chat-main main'}>
+      <main role="main" className={'chat-main'} style={{ height: `${height}px` }}>
         <div className={`chat-wrapper ${showList ? 'show-list' : ''}`}>
           <Box className="chat-header">
             <Box className="header-first-column">
