@@ -89,12 +89,12 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 </Box>
               </Box>
               <Box className={classes.wrap_point}>
-                <Box className={classes.text_point}>eXeポイント</Box>
+                <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
                 <Box className={classes.point}>999999</Box>
                 <Box className={classes.link_point}>
                   {/* redirect to point management */}
                   <Link href={ESRoutes.TERMS}>
-                    <a>eXeポイント管理</a>
+                    <a>{t('common:common.eXe_point_management')}</a>
                   </Link>
                 </Box>
               </Box>

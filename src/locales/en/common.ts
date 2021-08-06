@@ -66,6 +66,8 @@ export default {
     username: 'ユーザー名',
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
+    eXe_points: 'eXeポイント',
+    eXe_point_management: 'eXeポイント管理',
   },
   page404: {
     title: '404',
@@ -888,5 +890,8 @@ export default {
     note_for_publish_delivery_pt: `※チェックを入れた場合、TOPページの一覧に表示されます。 `,
     note_for_publish_delivery_pb: `ただし、チェックを入れなくてもURLを知っていた場合は配信画面へアクセスすることは可能です。`,
     check_submit: '確認する',
+    complete_delivery_settings: '配信設定が完了しました',
+    step3_delivery_settings_content: 'StreamURLを利用して配信を開始してださい。',
+    step3_close_btn: '閉じる',
   },
 }
