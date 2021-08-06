@@ -9,10 +9,11 @@ type ProfileAvatarProps = {
   size?: number
   src: string
   onChange?: (file: File, blob: any) => void
+  onRemove?: (path: string, file_type: number) => void
   alt?: string
 }
 
-const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, src, onChange }) => {
+const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, src, onChange, onRemove }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [setAvatar, toggleSetAvatar] = useState<boolean>(false)
@@ -41,8 +42,10 @@ const ESProfileAvatar: React.FC<ProfileAvatarProps> = ({ editable, size, alt, sr
         <AvatarSelector
           src={src}
           alt={alt}
+          is_required={false}
           cancel={() => toggleSetAvatar(false)}
           onUpdate={(file: File, blob: any) => onChange(file, blob)}
+          onRemove={(path: string, file_type: number) => onRemove(path, file_type)}
         />
       ) : null}
     </div>
