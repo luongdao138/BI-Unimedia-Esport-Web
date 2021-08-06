@@ -18,15 +18,14 @@ type GameTitleItem = GameTitle['attributes']
 interface Props {
   values: GameTitleItem[]
   onChange: (games: GameTitleItem[]) => void
-  // selectedCategory: GameTitle['attributes'][]
   disabled?: boolean
 }
 
-const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled /* , selectedCategory */ }) => {
+const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
-  const [categoryTitles, setCategoryTitles] = useState(values)
+  const [categoryTitles, setCategoryTitles] = useState<GameTitleItem[]>(values)
   const { games } = useGameTitles()
   const { getGameByGenreId, meta } = useGameGenre()
 
@@ -34,7 +33,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled /*
 
   useEffect(() => {
     if (open === true) {
-      setCategoryTitles(values)
+      setCategoryTitles(categoryTitles)
     }
   }, [open])
 
@@ -42,19 +41,14 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled /*
     onChange(categoryTitles)
     setOpen(false)
   }
-  const checkIsSelected = (id: number) => categoryTitles.find((g) => g.id === id)
-
-  const onGameChange = (games: GameTitle['attributes'][]) => {
-    setCategoryTitles(games)
-  }
+  const checkIsSelected = (id: number) => categoryTitles.some((g) => g.id === id)
 
   const handleSelect = (game: GameTitleItem) => {
     const selectedId = game.id
     if (checkIsSelected(selectedId)) {
-      const filtered = values.filter((category) => category.id !== selectedId)
-      onGameChange(filtered)
+      setCategoryTitles(categoryTitles.filter((category) => category.id !== selectedId))
     } else {
-      onGameChange([game, ...values])
+      setCategoryTitles([game, ...categoryTitles])
     }
   }
 
