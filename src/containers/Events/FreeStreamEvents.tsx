@@ -159,6 +159,21 @@ const Events: React.FC<IProps> = (props) => {
 
   function getDoubleButtonView() {
     const noTicket = attr.has_ticket == null || attr.has_ticket == undefined || !attr.has_ticket
+    if (isEnded && !noTicket)
+      return (
+        <a
+          href="https://info.exelab.jp/"
+          // eslint-disable-next-line react/jsx-no-target-blank
+          target="_blank"
+          style={{
+            textDecoration: 'none',
+          }}
+        >
+          <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
+            番組公式サイト
+          </Button>
+        </a>
+      )
     return noTicket ? (
       <a
         href="https://info.exelab.jp/"
@@ -169,7 +184,7 @@ const Events: React.FC<IProps> = (props) => {
         }}
       >
         <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-          info.exelab.jpへのリンク
+          番組公式サイト
         </Button>
       </a>
     ) : (
@@ -209,7 +224,7 @@ const Events: React.FC<IProps> = (props) => {
         </div>
         <div className={classes.footerBlankSpace}></div>
         <Box pb={12}>
-          {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
+          {isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
             <a
               href="https://info.exelab.jp/"
               // eslint-disable-next-line react/jsx-no-target-blank
