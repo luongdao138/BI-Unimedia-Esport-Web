@@ -109,7 +109,7 @@ export type LobbyDetail = {
     notes: string
     rule: LobbyRule
     max_participants: number
-    is_organizer_joinable: boolean
+    is_organizer_join: boolean
     status: LobbyStatus
     is_freezed: boolean
     start_date: string

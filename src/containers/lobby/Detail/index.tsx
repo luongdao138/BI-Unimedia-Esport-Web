@@ -37,7 +37,7 @@ const LobbyDetailBody: React.FC = () => {
       acceptance_start_date: '2021-08-04 13:00',
       acceptance_end_date: '2021-08-05 12:00',
       participant_type: 1,
-      is_organizer_joinable: false,
+      is_organizer_join: false,
       area_id: 1,
       area_name: 'tokyo',
       address: 'shinjuku',

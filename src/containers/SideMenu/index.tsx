@@ -90,7 +90,7 @@ const SideMenu: React.FC = () => {
               </ListItem>
             </Link>
             <Link href={ESRoutes.LOBBY} passHref>
-              <ListItem className={classes.list} button disableRipple>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.LOBBY)}>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-university" />
                 </ListItemIcon>

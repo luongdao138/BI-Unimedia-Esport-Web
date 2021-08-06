@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useLobbyCreate'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CategorySelectorDialog from './Partials/CategorySelectorDialog'
@@ -19,10 +19,9 @@ type Props = {
   formik: FormikProps<FormType>
   hardwares: HardwareResponse
   editables: EditableTypes
-  handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }) => {
+const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   const classes = useStyles()
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
@@ -36,6 +35,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
     formik.setFieldValue('stepOne.game_title_id', value)
   }, [])
 
+  const handleSelectedCategory = useCallback((value) => {
+    formik.setFieldValue('stepOne.category_title_id', value)
+  }, [])
+
   const { hasUCRReturnHref } = useReturnHref()
   const handleCoverDailogStateChange = (_open: boolean) => {
     if (hasUCRReturnHref) {
@@ -44,6 +47,10 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
       document.body.style.height = '100%'
     }
   }
+
+  useEffect(() => {
+    if (!formik.values.stepOne.is_organizer_join) formik.setFieldValue('stepOne.is_organizer_join', '')
+  }, [formik.values.stepOne.is_organizer_join])
 
   return (
     <Box pb={9}>
@@ -92,10 +99,9 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
       </Box>
       <Box pb={3}>
         <CategorySelectorDialog
-          values={formik.values.stepOne.game_title_id}
-          onChange={handleSelectedGame}
+          values={formik.values.stepOne.category_title_id}
+          onChange={handleSelectedCategory}
           disabled={!editables.game_title}
-          selectedGames={formik.values.stepOne.game_title_id}
         />
       </Box>
       <Box pb={3}>
@@ -107,7 +113,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
           fullWidth
           value={formik.values.stepOne.game_hardware_id}
           onChange={formik.handleChange}
-          label={i18n.t('common:tournament_create.game_hardware')}
+          label={i18n.t('common:lobby_create.game_hardware')}
           required={false}
           size="small"
           disabled={!editables.game_hardware}
@@ -145,7 +151,12 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables, handleChange }
       </Box>
       <Box pb={4} display="flex" justifyContent="space-between">
         <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
-        <ESSwitchIOS handleChange={handleChange} />
+        <ESSwitchIOS
+          checked={formik.values.stepOne.is_organizer_join}
+          handleChange={() => {
+            formik.setFieldValue('stepOne.is_organizer_join', !formik.values.stepOne.is_organizer_join)
+          }}
+        />
       </Box>
     </Box>
   )

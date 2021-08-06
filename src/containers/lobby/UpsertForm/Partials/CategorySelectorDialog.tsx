@@ -12,21 +12,25 @@ import Icon from '@material-ui/core/Icon'
 import ESModal from '@components/Modal'
 import ESChip from '@components/Chip'
 import _ from 'lodash'
+import useGameGenre from '@components/GameSelector/useGameByGenreId'
 
 type GameTitleItem = GameTitle['attributes']
 interface Props {
   values: GameTitleItem[]
   onChange: (games: GameTitleItem[]) => void
-  selectedGames: GameTitle['attributes'][]
+  // selectedCategory: GameTitle['attributes'][]
   disabled?: boolean
 }
 
-const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled, selectedGames }) => {
+const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled /* , selectedCategory */ }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
   const [categoryTitles, setCategoryTitles] = useState(values)
   const { games } = useGameTitles()
+  const { getGameByGenreId, meta } = useGameGenre()
+
+  const handleCategoryGenre = () => getGameByGenreId(1)
 
   useEffect(() => {
     if (open === true) {
@@ -38,21 +42,42 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled, s
     onChange(categoryTitles)
     setOpen(false)
   }
-  const checkIsSelected = (id: number) => selectedGames.find((g) => g.id === id)
+  const checkIsSelected = (id: number) => categoryTitles.find((g) => g.id === id)
+
+  const onGameChange = (games: GameTitle['attributes'][]) => {
+    setCategoryTitles(games)
+  }
+
+  const handleSelect = (game: GameTitleItem) => {
+    const selectedId = game.id
+    if (checkIsSelected(selectedId)) {
+      const filtered = values.filter((category) => category.id !== selectedId)
+      onGameChange(filtered)
+    } else {
+      onGameChange([game, ...values])
+    }
+  }
 
   return (
     <>
       <Box display="flex" alignItems="center" pb={1}>
         <Typography className={classes.labelColor}>{t('common:lobby_create.category')}</Typography>
       </Box>
-      <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
+      <ButtonBase
+        disabled={disabled}
+        onClick={() => {
+          setOpen(true)
+          handleCategoryGenre()
+        }}
+        className={classes.inputContainer}
+      >
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
           ) : (
             values.map((item, idx) => (
               <Box paddingRight={1} key={idx}>
-                <Typography>{item.display_name}</Typography>
+                <Typography>{'#' + item.display_name}</Typography>
               </Box>
             ))
           )}
@@ -74,7 +99,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled, s
 
             <Box pt={8} className={classes.container}>
               <>
-                {games.length > 0 ? (
+                {meta.loaded && !meta.pending && games.length > 0 && (
                   <Container maxWidth="md" className={classes.listContainer}>
                     <List>
                       {games.map((g, idx) => (
@@ -82,17 +107,13 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled, s
                           key={idx}
                           className={classes.chip}
                           label={g.display_name}
-                          onClick={() => {
-                            return 0
-                          }}
+                          onClick={() => handleSelect(g)}
                           color={checkIsSelected(g.id) ? 'primary' : 'default'}
                           isGameList={true}
                         />
                       ))}
                     </List>
                   </Container>
-                ) : (
-                  <Typography> Hooson bn SAD</Typography>
                 )}
               </>
             </Box>
@@ -104,7 +125,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled, s
             <Box className={classes.nextBtnHolder}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={categoryTitles.length === 0}>
-                  {t('common:tournament_create.decide')}
+                  {t('common:lobby_create.decide')}
                 </ButtonPrimary>
               </Box>
             </Box>
