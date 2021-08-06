@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box'
 export const PaperChat = styled(Paper)`
   height: 100%;
   border: 1px solid #3b3939;
-  background: #2c2c2e;
+  background: transparent;
   flex-direction: column;
   display: flex;
   min-height: 300px;
