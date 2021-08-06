@@ -888,5 +888,6 @@ export default {
     note_for_publish_delivery_pt: `※チェックを入れた場合、TOPページの一覧に表示されます。 `,
     note_for_publish_delivery_pb: `ただし、チェックを入れなくてもURLを知っていた場合は配信画面へアクセスすることは可能です。`,
     check_submit: '確認する',
+    thumbnail: 'サムネイル',
   },
 }
