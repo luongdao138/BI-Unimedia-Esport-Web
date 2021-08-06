@@ -202,11 +202,43 @@ const TournamentCreate: React.FC = () => {
     else handleReturn()
   }
 
+  const getFirstError = () => {
+    if (_.isEmpty(formik.errors)) {
+      return null
+    }
+    if (_.isEmpty(formik.touched)) {
+      return null
+    }
+
+    let msg = null as string | null
+    if (!_.isObject(formik.errors)) return null
+    const keys = Object.keys(formik.errors)
+    if (keys[0]) {
+      const fields = _.get(formik, `errors.${keys[0]}`)
+      if (_.isObject(fields)) {
+        const fieldKeys = Object.keys(fields)
+        if (fieldKeys[0]) {
+          const translationName = TournamentHelper.getLabelName(fieldKeys[0])
+          let errMsg = _.get(fields, `${fieldKeys[0]}`) as string
+          if (!_.isString(errMsg)) errMsg = ''
+          msg = `${i18n.t(translationName)}: ${errMsg}`
+        }
+      }
+    }
+    if (!_.isString(msg)) return null
+    return (
+      <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+        <Typography variant="body2">{msg}</Typography>
+      </Box>
+    )
+  }
+
   return (
     <ESStickyFooter
       disabled={false}
       noScroll
       noSpacing={isEdit && !isConfirm}
+      noBottomSpace
       content={
         <>
           {isConfirm ? (
@@ -218,17 +250,22 @@ const TournamentCreate: React.FC = () => {
                 {i18n.t('common:tournament_create.submit')}
               </ButtonPrimary>
             </Box>
-          ) : isEdit ? (
-            renderEditButton()
           ) : (
-            <ButtonPrimary
-              onClick={handleSetConfirm}
-              round
-              className={`${classes.footerButton} ${classes.confirmButton}`}
-              disabled={hasError}
-            >
-              {i18n.t('common:tournament_create.check_content_button')}
-            </ButtonPrimary>
+            <Box flexDirection="column" display="flex" justifyContent="center">
+              {getFirstError()}
+              {isEdit ? (
+                renderEditButton()
+              ) : (
+                <ButtonPrimary
+                  onClick={handleSetConfirm}
+                  round
+                  className={`${classes.footerButton} ${classes.confirmButton}`}
+                  disabled={hasError}
+                >
+                  {i18n.t('common:tournament_create.check_content_button')}
+                </ButtonPrimary>
+              )}
+            </Box>
           )}
         </>
       }
