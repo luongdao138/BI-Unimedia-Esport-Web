@@ -275,7 +275,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '85vw',
     minWidth: 'fit-content',
     justifyContent: 'flex-start',
-    marginRight: '0.7em',
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   label: {
     display: 'flex',
