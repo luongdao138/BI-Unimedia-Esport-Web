@@ -7,7 +7,7 @@ import { LobbyDetail, LobbyFormParams, UpdateParams } from '@services/lobby.serv
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
-import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 import _ from 'lodash'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
@@ -92,7 +92,7 @@ const useLobbyCreate = (): {
     const resultAction = await dispatch(actions.createLobby(params))
     if (actions.createLobby.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(`${ESRoutes.ARENA}/${resultAction.payload.hash_key}`)
+      router.push(`${ESRoutes.LOBBY}/${resultAction.payload.hash_key}`)
 
       dispatch(commonActions.addToast(t('common:arena.create_success')))
     }
@@ -117,7 +117,7 @@ const useLobbyCreate = (): {
   useEffect(() => {
     if (lobby && router.asPath.endsWith('/edit') && router.query.hash_key) {
       if (!isEditable) {
-        router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
+        router.push(ESRoutes.LOBBY_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
         return
       }
 

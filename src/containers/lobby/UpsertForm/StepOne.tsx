@@ -102,7 +102,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           values={formik.values.stepOne.category_title_id}
           onChange={handleSelectedCategory}
           disabled={!editables.game_title}
-          selectedCategory={formik.values.stepOne.category_title_id}
         />
       </Box>
       <Box pb={3}>

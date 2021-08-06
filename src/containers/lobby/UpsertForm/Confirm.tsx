@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
+import ESChip from '@components/Chip'
 import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
@@ -134,7 +135,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
 
       <ESInput
         labelPrimary={t('common:lobby_create.organizer_joined')}
-        value={values.stepOne.is_organizer_join ? t('common:common.yes') : t('common:common.no')}
+        value={values.stepOne.is_organizer_join ? 'ON' : 'OFF'}
         disabled={true}
         fullWidth
       />
@@ -150,6 +151,11 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:lobby_create.area_detail')} value={values.stepTwo.address} disabled={true} fullWidth />
+      <Box pb={2} />
+
+      {values.stepOne.category_title_id.map((category, idx) => (
+        <ESChip key={idx} className={classes.chip} label={category.display_name} />
+      ))}
       <Box pb={2} />
     </Box>
   )
@@ -183,6 +189,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 0,
       marginRight: 0,
     },
+  },
+  chip: {
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 }))
 
