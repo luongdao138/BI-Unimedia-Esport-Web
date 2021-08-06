@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
   dateBeforeStart: {
     fontSize: 13,
     color: theme.palette.grey[400],
+    paddingRight: 10,
   },
   media: {
     height: '100%',

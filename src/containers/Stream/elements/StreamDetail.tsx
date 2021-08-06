@@ -41,10 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
   desc: {
     fontSize: 11,
-    color: theme.palette.grey[500],
+    color: '#707070',
     marginTop: 10,
     whiteSpace: 'pre-line',
     wordBreak: 'break-word',
+    background: Colors.grey[900],
+    padding: 8,
     // background: theme.palette.grey[950],
   },
   container: {
@@ -96,7 +98,7 @@ const StreamDetail: React.FC<detailProps> = (props) => {
 
   const classes = useStyles()
   return (
-    <Box padding={1}>
+    <Box>
       <Grid container>
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
           <DateElement time={time} />

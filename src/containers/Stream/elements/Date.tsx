@@ -37,7 +37,8 @@ const DateComponent: React.FC<DateProps> = (props) => {
         {date}（{weekDay(time)}）
       </Box>
       <Box className={classes.infoText}>
-        {hours} {!showLabel ? '' : absolute ? '開始' : '~'}
+        {hours}
+        {!showLabel ? '' : absolute ? '開始' : '~'}
       </Box>
     </Box>
   )
