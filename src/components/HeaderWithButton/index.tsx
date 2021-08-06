@@ -5,21 +5,30 @@ import { useRouter } from 'next/router'
 
 export interface HeaderWithButtonProps {
   title?: string
+  withBackButton?: boolean
 }
 
-const HeaderWithButton: React.FC<HeaderWithButtonProps> = ({ title }) => {
+const HeaderWithButton: React.FC<HeaderWithButtonProps> = ({ title, withBackButton }) => {
   const classes = useStyles()
   const router = useRouter()
   return (
     <Box className={classes.header}>
-      <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
-        <Icon className={`fa fa-arrow-left ${classes.icon}`} />
-      </IconButton>
+      {withBackButton ? (
+        <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
+          <Icon className={`fa fa-arrow-left ${classes.icon}`} />
+        </IconButton>
+      ) : (
+        <></>
+      )}
       <Typography variant="body1" className={classes.headerTitle}>
         {title}
       </Typography>
     </Box>
   )
+}
+
+HeaderWithButton.defaultProps = {
+  withBackButton: true,
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     padding: 16,
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
     width: '100%',
     position: 'sticky',
     background: Colors.black,

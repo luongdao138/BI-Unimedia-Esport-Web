@@ -4,7 +4,7 @@ import { TournamentListItem } from '@services/arena.service'
 import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps, FollowResponse } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'
-import { UPLOADER_TYPE } from '@constants/image.constants'
+import { UPLOADER_TYPE, REMOVE_TYPE } from '@constants/image.constants'
 import { FOLLOW_STATES } from '@constants/common.constants'
 
 type StateType = {
@@ -63,6 +63,14 @@ export default createReducer(initialState, (builder) => {
       state.data.attributes.avatar_url = action.payload.image_url
     } else {
       state.data.attributes.cover_url = action.payload.image_url
+    }
+  })
+
+  builder.addCase(actions.profileImageRemove.fulfilled, (state, action) => {
+    if (action.payload.file_type === REMOVE_TYPE.cover) {
+      state.data.attributes.cover_url = null
+    } else if (action.payload.file_type === REMOVE_TYPE.profile) {
+      state.data.attributes.avatar_url = null
     }
   })
 

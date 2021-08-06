@@ -64,6 +64,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     meta,
     getMemberProfile,
     profileImageChange,
+    profileImageRemove,
     setFollowState,
     clearMemberProfile,
   } = useUserData(raw_code)
@@ -133,6 +134,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             onChange={(f: File, blob: any) => {
               isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
             }}
+            onRemove={(path: string, file_type: number) => {
+              isOthers ? null : profileImageRemove(path, file_type)
+            }}
           />
           {offset > 150 ? (
             <Box className={classes.backContainer}>
@@ -155,6 +159,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               alt={attr.nickname}
               onChange={(f: File, blob: any) => {
                 isOthers ? null : profileImageChange(f, UPLOADER_TYPE.AVATAR, blob)
+              }}
+              onRemove={(path: string, file_type: number) => {
+                isOthers ? null : profileImageRemove(path, file_type)
               }}
             />
             {isOthers ? (

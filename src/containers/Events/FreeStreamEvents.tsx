@@ -1,6 +1,6 @@
 import Slider from '@components/LiveSlider'
-import Loader from '@components/Loader'
-import { Box, Button, Container } from '@material-ui/core'
+import Loader from '@components/FullScreenLoader'
+import { Box, Button } from '@material-ui/core'
 import * as NextLink from 'next/link'
 import { useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
@@ -9,6 +9,7 @@ import { liveEventsActions } from '@store/liveEvents/actions'
 import StaticDescription from '@components/StaticDescription'
 import { RootState } from '@store/reducers'
 import { ESRoutes } from '@constants/route.constants'
+import Header from '@components/HeaderWithButton'
 
 interface IAttribute {
   archive_end_datetime?: string
@@ -168,7 +169,7 @@ const Events: React.FC<IProps> = (props) => {
         }}
       >
         <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-          eXeLAB ご紹介ページ
+          info.exelab.jpへのリンク
         </Button>
       </a>
     ) : (
@@ -183,7 +184,7 @@ const Events: React.FC<IProps> = (props) => {
             }}
           >
             <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-              eXeLAB ご紹介ページ
+              番組公式サイト
             </Button>
           </a>
         </div>
@@ -199,36 +200,35 @@ const Events: React.FC<IProps> = (props) => {
   }
 
   return (
-    <Container maxWidth="lg" disableGutters>
-      <Box pt={2}>
-        <div className={classes.container}>
-          <Slider items={props.banners} noTitle />
-          <div className={classes.description}>
-            <StaticDescription />
-          </div>
-          <div className={classes.footerBlankSpace}></div>
-          <Box pb={12}>
-            {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
-              <a
-                href="https://info.exelab.jp/"
-                // eslint-disable-next-line react/jsx-no-target-blank
-                target="_blank"
-                style={{
-                  textDecoration: 'none',
-                }}
-              >
-                <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-                  eXeLAB ご紹介ページ
-                </Button>
-              </a>
-            ) : (
-              getDoubleButtonView()
-            )}
-          </Box>
+    <>
+      <Header title="動画" withBackButton={false} />
+      <Box p={3}>
+        <Slider items={props.banners} noTitle />
+        <div className={classes.description}>
+          <StaticDescription />
         </div>
+        <div className={classes.footerBlankSpace}></div>
+        <Box pb={12}>
+          {isEnded || isNotStarted || attr.flag == 'before_start' || isCancelRequested() ? (
+            <a
+              href="https://info.exelab.jp/"
+              // eslint-disable-next-line react/jsx-no-target-blank
+              target="_blank"
+              style={{
+                textDecoration: 'none',
+              }}
+            >
+              <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
+                info.exelab.jpへのリンク
+              </Button>
+            </a>
+          ) : (
+            getDoubleButtonView()
+          )}
+        </Box>
       </Box>
-      {loading ? <Loader /> : null}
-    </Container>
+      <Loader open={loading} />
+    </>
   )
 }
 

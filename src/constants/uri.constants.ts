@@ -102,4 +102,5 @@ export const URI = {
   LIVE_EVENTS_TICKET_PURCHASE_URI: '/v1/purchases',
   LIVE_EVENT_PURCHASE_GMO_CALLBACK: '/v1/purchases/gmo_response_handle',
   LIVE_EVENT_ARCHIVE_PLAY: '/v1/live_events/archive_view_count',
+  IMAGE_REMOVE: '/v2/profile_images/remove',
 }

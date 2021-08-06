@@ -37,7 +37,7 @@ const PrPage = (props: IProps) => {
 
   if (isAuthenticated) return <></>
   return (
-    <MainLayout>
+    <MainLayout footer={false}>
       <LiveThemeProvider>
         <Pr banners={props.banners} />
       </LiveThemeProvider>

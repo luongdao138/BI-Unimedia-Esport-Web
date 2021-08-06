@@ -16,7 +16,7 @@ interface ArchivePageProps {
 
 const ArchivePage: React.FC<ArchivePageProps> = () => {
   return (
-    <MainLayout>
+    <MainLayout footer={false}>
       <LiveThemeProvider>
         <ArchiveContainer />
       </LiveThemeProvider>
