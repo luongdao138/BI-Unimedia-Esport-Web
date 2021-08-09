@@ -24,13 +24,8 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .nullable()
         .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
       category_title_id: Yup.array(),
-      // category_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
-      game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
-      game_hardware_id: Yup.number()
-        .nullable()
-        .min(1, i18n.t('common:common.input_required'))
-        .integer(i18n.t('common:common.integer'))
-        .notOneOf([-1]),
+      game_title_id: Yup.array(),
+      game_hardware_id: Yup.number().nullable().integer(i18n.t('common:common.integer')),
       max_participants: Yup.number()
         .required(i18n.t('common:common.input_required'))
         .min(2, i18n.t('common:arena.participants_limit'))
