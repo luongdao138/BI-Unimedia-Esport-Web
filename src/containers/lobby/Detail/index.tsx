@@ -14,7 +14,7 @@ import Completed from './Partials/Completed'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import BlankLayout from '@layouts/BlankLayout'
 import ESModal from '@components/Modal'
-// import { UpsertForm } from '..'
+import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
 
 const LobbyDetailBody: React.FC = () => {
@@ -146,7 +146,9 @@ const LobbyDetailBody: React.FC = () => {
       {/* <ESLoader open={meta.loading} /> */}
       {lobby /* && meta.loaded  */ && renderBody()}
       <ESModal open={router.asPath.endsWith('/edit')}>
-        <BlankLayout>{/* <UpsertForm /> */}</BlankLayout>
+        <BlankLayout>
+          <UpsertForm />
+        </BlankLayout>
       </ESModal>
     </div>
   )
