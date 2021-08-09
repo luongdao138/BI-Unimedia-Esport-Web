@@ -72,11 +72,8 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
               <div className="streamer_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>
-            <aside className="streamer_aside_right">
-              
-            </aside>
+            <aside className="streamer_aside_right"></aside>
           </main>
-          
         </>
       ) : (
         <>

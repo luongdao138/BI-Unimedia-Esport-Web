@@ -894,6 +894,7 @@ export default {
     step3_delivery_settings_content: 'StreamURLを利用して配信を開始してださい。',
     step3_close_btn: '閉じる',
     start_live_stream: '配信開始する',
+    save_channel_live_info: '配信者情報を保存する',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
@@ -902,5 +903,5 @@ export default {
     scheduled_end_datetime: '終了予定日時',
     ticket_sales_start_datetime: 'チケット販売開始日時',
     complete_delivery_settings: '配信データが保存できました',
-  }
+  },
 }

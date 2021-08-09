@@ -8,6 +8,7 @@ import ESButtonInstagramCircle from '@components/Button/InstagramCircle'
 import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import i18n from '@locales/i18n'
 import ESInput from '@components/Input'
+import { Colors } from '@theme/colors'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -19,9 +20,10 @@ interface SnsInfoStreamProps {
   profile: any
   onDataChange: (data: any) => void
   handleError: (error) => void
+  showPreview?: boolean
 }
 
-const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, handleError }) => {
+const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, handleError, showPreview = false }) => {
   const classes = useStyles()
   const { instagram_link, twitter_link, discord_link } = profile
 
@@ -68,6 +70,8 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 helperText={errors.discord_link}
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.discord_placeholder')}
                 error={!!errors.discord_link}
+                disabled={showPreview}
+                classes={{ root: classes.root }}
               />
             </Box>
           </Grid>
@@ -83,6 +87,8 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 helperText={errors.twitter_link}
                 error={!!errors.twitter_link}
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.twitter_placeholder')}
+                disabled={showPreview}
+                classes={{ root: classes.root }}
               />
             </Box>
           </Grid>
@@ -98,6 +104,8 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 helperText={errors.instagram_link}
                 error={!!errors.instagram_link}
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.instagram_placeholder')}
+                disabled={showPreview}
+                classes={{ root: classes.root }}
               />
             </Box>
           </Grid>
@@ -113,6 +121,22 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     marginRight: 8,
+  },
+  root: {
+    backgroundColor: Colors.black,
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      padding: 0,
+      // paddingBottom: theme.spacing(1),
+    },
   },
 }))
 
