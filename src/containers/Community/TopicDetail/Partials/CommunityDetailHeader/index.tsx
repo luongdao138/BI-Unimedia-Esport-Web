@@ -4,9 +4,8 @@ import { Colors } from '@theme/colors'
 
 type CommunityHeaderProps = {
   title: string
-  // onHandleBack: () => void
 }
-const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title /* onHandleBack */ }) => {
+const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title }) => {
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
@@ -14,7 +13,7 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title /* onHandleBack
   return (
     <>
       <Box className={classes.backContainer}>
-        <IconButton /* onClick={onHandleBack} */ className={classes.iconButtonBg2}>
+        <IconButton className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
         <div style={{ overflow: 'hidden' }}>
@@ -30,27 +29,6 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title /* onHandleBack
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(3),
-    border: `1px solid ${Colors.white_opacity['30']}`,
-    borderRadius: theme.spacing(0.5),
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    backgroundColor: Colors.black,
-  },
-  tabIndicator: {
-    visibility: 'hidden',
-  },
-  tabRoot: {
-    cursor: 'initial',
-    paddingLeft: 0,
-    paddingRight: 0,
-    minWidth: 'fit-content',
-  },
-  tabsFixed: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
   backContainer: {
     position: 'fixed',
     top: 60,
