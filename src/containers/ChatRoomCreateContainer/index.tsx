@@ -7,7 +7,7 @@ import ImageUploader from '../ChatRoomContainer/ImageUploader'
 import MessageInputArea from '@components/Chat/MessageInputArea'
 import { ESRoutes } from '@constants/route.constants'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { getFriendList } from '@store/chat/actions'
+import { getFriendList, resetAddUsers } from '@store/chat/actions'
 import { friendList } from '@store/chat/selectors'
 import { currentUserId } from '@store/auth/selectors'
 import { members } from '@store/socket/selectors'
@@ -62,11 +62,6 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   useEffect(() => {
     setRoomId(uuidv4())
   }, [])
-  useEffect(() => {
-    if (userId) {
-      dispatch(getFriendList({ type: 'group' }))
-    }
-  }, [userId])
 
   useEffect(() => {
     if (singleUser) {
@@ -203,7 +198,8 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
     setSelectedUsers(ids)
   }
   const handleSearchInput = (text: string) => {
-    dispatch(getFriendList({ type: 'group', keyword: text }))
+    if (text.length > 1) dispatch(getFriendList({ type: 'group', keyword: text }))
+    else dispatch(resetAddUsers())
   }
   const renderLoader = () => {
     if (actionPending || uploadMeta.uploading) {
