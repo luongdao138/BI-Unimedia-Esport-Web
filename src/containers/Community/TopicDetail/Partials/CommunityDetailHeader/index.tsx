@@ -56,39 +56,14 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  [theme.breakpoints.up('md')]: {
-    flexContainer: {
-      justifyContent: 'space-around',
-      maxWidth: theme.spacing(50),
-      minWidth: theme.spacing(50),
-    },
-  },
-  [theme.breakpoints.down('lg')]: {
-    flexContainer: {
-      justifyContent: 'space-around',
-      maxWidth: theme.spacing(50),
-      minWidth: theme.spacing(35),
-    },
-  },
+
   [theme.breakpoints.down('sm')]: {
-    tabWrapper: {
-      padding: theme.spacing(1),
-      paddingTop: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-    },
     backContainer: {
       position: 'absolute',
       backgroundColor: 'transparent',
     },
   },
-  [theme.breakpoints.down('xs')]: {
-    root: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-  },
+
   ['@media (max-width: 960px)']: {
     backContainer: {
       maxWidth: 'none',

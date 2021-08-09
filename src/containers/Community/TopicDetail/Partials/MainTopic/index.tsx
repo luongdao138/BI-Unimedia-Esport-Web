@@ -145,7 +145,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  number: {},
 }))
 
 export default MainTopic
