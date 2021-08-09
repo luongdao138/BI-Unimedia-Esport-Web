@@ -26,6 +26,7 @@ import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
+import LobbyCreateContainer from '@containers/lobby/UpsertForm'
 import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
@@ -90,6 +91,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <UserSettingsContainer />
       case ESRoutes.ARENA_CREATE:
         return <ArenaCreateContainer />
+      case ESRoutes.LOBBY_CREATE:
+        return <LobbyCreateContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
         return <AccountSettingsPasswordContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
