@@ -115,13 +115,22 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
       <Box pb={2} />
 
-      <ESInput
-        labelPrimary={t('common:lobby_create.game')}
-        value={values.stepOne.game_title_id[0].display_name}
-        disabled={true}
-        fullWidth
-      />
-      <Box pb={2} />
+      {values.stepOne.game_title_id[0] ? (
+        <>
+          <ESInput
+            labelPrimary={t('common:lobby_create.game')}
+            value={values.stepOne.game_title_id[0].display_name}
+            disabled={true}
+            fullWidth
+          />
+          <Box pb={2} />
+        </>
+      ) : (
+        <>
+          <ESInput labelPrimary={t('common:lobby_create.game')} disabled={true} fullWidth />
+          <Box pb={2} />
+        </>
+      )}
       <ESInput labelPrimary={t('common:lobby_create.game_hardware')} value={hardwareName} disabled={true} fullWidth />
       <Box pb={2} />
 

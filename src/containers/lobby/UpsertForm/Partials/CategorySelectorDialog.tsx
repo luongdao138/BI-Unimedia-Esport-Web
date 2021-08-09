@@ -118,7 +118,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
           <Box className={classes.stickyFooter}>
             <Box className={classes.nextBtnHolder}>
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={categoryTitles.length === 0}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit}>
                   {t('common:lobby_create.decide')}
                 </ButtonPrimary>
               </Box>

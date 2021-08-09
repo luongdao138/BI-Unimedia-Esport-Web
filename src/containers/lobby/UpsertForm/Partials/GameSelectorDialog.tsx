@@ -82,7 +82,7 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
           <Box className={classes.stickyFooter}>
             <Box className={classes.nextBtnHolder}>
               <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={gameTitles.length === 0}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit}>
                   {t('common:tournament_create.decide')}
                 </ButtonPrimary>
               </Box>
