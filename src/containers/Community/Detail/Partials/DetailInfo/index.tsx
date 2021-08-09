@@ -30,15 +30,16 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [openReport, setOpenReport] = useState(false)
+  // const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
   const data = detail.attributes
 
   const isFollowing = false
   const { isAuthenticated } = useCommunityDetail()
 
-  const handleReportOpen = () => setOpenReport(true)
+  const handleReportOpen = () => {
+    // setOpenReport(true)
+  }
 
   const handleCopy = () => {
     if (window.navigator.clipboard) {
