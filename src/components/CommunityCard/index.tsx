@@ -80,7 +80,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
         {tags.map((tag, i) => (
           <ESChip
             key={i}
-            className={classes.chip}
+            className={classes.tagChip}
             size="small"
             label={
               <Box color={Colors.white}>
@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme) => ({
     wordWrap: 'break-word',
     minHeight: 30,
   },
-  chip: {
+  tagChip: {
     height: 15,
     backgroundColor: Colors.white_opacity[20],
     marginBottom: theme.spacing(0.5),
@@ -161,7 +161,6 @@ const useStyles = makeStyles((theme) => ({
   },
   chipPrimary: {
     height: 20,
-    marginBottom: 5,
     backgroundColor: Colors.primary,
     borderRadius: 10,
   },
@@ -176,7 +175,7 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
   },
   pAvatar: {
-    marginLeft: -8,
+    marginLeft: theme.spacing(-1),
   },
   title: {
     display: '-webkit-box',

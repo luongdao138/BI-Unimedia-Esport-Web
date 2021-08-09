@@ -205,7 +205,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
     backgroundColor: Colors.black,
     '& .MuiButtonBase-root.button-primary': {
-      padding: '12px 16px',
+      padding: `${theme.spacing(1.5)}px ${theme.spacing(2)}px`,
     },
   },
   filters: {
@@ -218,12 +218,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   filterChip: {
     maxWidth: 'none',
-    marginBottom: 16,
-    marginRight: 16,
+    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(2),
   },
   addIcon: {
     position: 'relative',
-    left: -8,
+    left: theme.spacing(-1),
   },
   content: {
     paddingLeft: theme.spacing(2),
