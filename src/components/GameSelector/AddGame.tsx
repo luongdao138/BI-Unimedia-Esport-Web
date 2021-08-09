@@ -1,7 +1,6 @@
 import { useFormik } from 'formik'
 import { Box, makeStyles } from '@material-ui/core'
 import { CreateGameTitleParams, GameGenre, GameTitle } from '@services/game.service'
-import Input from '@components/Input'
 import Select from '@components/Select'
 import Button from '@components/Button'
 import Toast from '@components/Toast'
@@ -15,6 +14,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import ESFastInput from '@components/FastInput'
 
 interface Props {
   genres: GameGenre[]
@@ -103,7 +103,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
           ))}
         </Select>
         <Box pb={4} />
-        <Input
+        <ESFastInput
           id="display_name"
           name="display_name"
           value={formik.values.display_name}

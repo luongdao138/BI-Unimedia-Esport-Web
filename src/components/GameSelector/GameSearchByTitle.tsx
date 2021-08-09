@@ -1,11 +1,11 @@
 import { ReactNode, useState } from 'react'
-import Input from '@components/Input'
 import useGameSearchByTitle from './useGameSearchByTitle'
 import { Box, makeStyles, withStyles } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import Button from '@components/Button'
 import { Colors } from '@theme/colors'
 import ESLoader from '@components/Loader'
+import ESFastInput from '@components/FastInput'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +48,7 @@ const SquareInput = withStyles({
       WebkitBoxShadow: '0 0 0 100px #000000 inset',
     },
   },
-})(Input)
+})(ESFastInput)
 
 const GameSearchByTitle: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const classes = useStyles()
