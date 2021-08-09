@@ -1,84 +1,213 @@
 import React, { useEffect } from 'react'
 import { LobbyDetail } from '@services/lobby.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, DialogContent } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
-import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESPopup from '@components/Popup'
-import BlankLayout from '@layouts/BlankLayout'
-import { WarningRounded } from '@material-ui/icons'
-import useEntry from './useEntry'
-import ESLoader from '@components/FullScreenLoader'
 import LoginRequired from '@containers/LoginRequired'
+import ESDialog from '@components/Dialog'
+import InfiniteLoader from 'react-window-infinite-loader'
+import { FixedSizeList as List } from 'react-window'
+import ParticipantRow from './ParticipantRow'
+import ESLoader from '@components/Loader'
+import ConfirmDialog from '@components/ConfirmDialog'
+
 interface CloseRecruitmentModalProps {
   tournament: LobbyDetail
   isRecruiting: boolean
   handleClose: () => void
 }
 
-const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournament, isRecruiting }) => {
+export type Meta = {
+  pending: boolean
+  loaded: boolean
+  error: boolean | Record<string, any>
+}
+
+const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruiting }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const [open, setOpen] = useState(false)
-  const { close, closeMeta } = useEntry()
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [shuffleOpen, setShuffleOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [participants, setParticipants] = useState<{ id: number; user_code: string; avatar: string; nickname: string; status: boolean }[]>(
+    []
+  )
+  const meta = {
+    pending: false,
+    loaded: true,
+    error: false,
+  }
+  const hasNextPage = false
+  const users = [
+    {
+      id: 86,
+      user_code: 'cage21',
+      nickname: 'cage',
+      avatar: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/86/1624946172-86.jpeg',
+      status: false,
+    },
+    {
+      id: 23,
+      user_code: 'raiden23',
+      nickname: 'raiden',
+      avatar: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/23/1596358566-23.jpg',
+      status: false,
+    },
+  ]
 
   useEffect(() => {
-    if (closeMeta.loaded || closeMeta.error) {
-      setOpen(false)
+    setParticipants(users)
+  }, [])
+
+  const ListRow = (props: { index: number; style: React.CSSProperties; data: any }) => {
+    const { index, style, data } = props
+    const user = data[index]
+    return (
+      <div style={style} key={index}>
+        <ParticipantRow
+          user={user}
+          checked={user.status}
+          handleClose={() => setModalOpen(false)}
+          handleChange={() => handleChange(index)}
+        />
+      </div>
+    )
+  }
+
+  const itemCount = participants.length
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      // fetchParticipants({ page: page.current_page + 1, user_code: user_code })
     }
-  }, [closeMeta.loaded, closeMeta.error])
+  }
+
+  const handleChange = (index: number) => {
+    setParticipants(
+      participants.map((participant, i) => {
+        if (i === index) return { ...participant, status: !participant.status }
+        return participant
+      })
+    )
+  }
 
   return (
     <Box>
       <Box className={classes.button}>
         <LoginRequired>
-          <ButtonPrimaryOutlined disabled={!isRecruiting} onClick={() => setOpen(true)}>
+          <ButtonPrimaryOutlined disabled={!isRecruiting} onClick={() => setModalOpen(true)}>
             {t('common:recruitment.close_recruitment.button_text')}
           </ButtonPrimaryOutlined>
         </LoginRequired>
       </Box>
 
-      <ESPopup open={open}>
-        <BlankLayout>
-          <Box paddingY={2} className={classes.childrenContainer}>
-            <Box pb={4} color={Colors.white} alignItems="center">
-              <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
-            </Box>
-            <Box pb={4}>
-              <Typography variant="h2" className={classes.desc}>
-                {t('common:tournament.close_recruitment.dialog_description')}
-              </Typography>
-            </Box>
-
-            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
-              <Box className={classes.actionButton}>
-                <LoginRequired>
-                  <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
-                    {t('common:common.cancel')}
-                  </ESButton>
-                </LoginRequired>
-              </Box>
-              <Box className={classes.actionButton}>
-                <LoginRequired>
-                  <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
-                    {t('common:tournament.close_recruitment.confirm')}
-                  </ButtonPrimary>
-                </LoginRequired>
-              </Box>
-            </Box>
-
-            <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
-              <WarningRounded fontSize="small" />
-              <Typography variant="body2">{t('common:tournament.close_recruitment.warning')}</Typography>
-            </Box>
+      <ESDialog
+        title={t('common:confirm_member.title')}
+        open={modalOpen}
+        handleClose={() => setModalOpen(false)}
+        classes={{
+          paperFullWidth: classes.dialogFullWidth,
+          paper: classes.dialogPaper,
+        }}
+      >
+        <Typography className={classes.subTitle}>{t('common:confirm_member.sub_title')}</Typography>
+        <Box display="flex" className={classes.rowContainer} textAlign="center">
+          <Typography className={classes.subTitle}>{t('common:confirm_member.total_participants')}</Typography>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.selectedNumber}>{participants.filter((p) => p.status).length}</Typography>
           </Box>
-        </BlankLayout>
-      </ESPopup>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
+          </Box>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.totals}>/</Typography>
+          </Box>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.totals}>{participants.length}</Typography>
+          </Box>
+          <Box display="flex" className={classes.countContainer}>
+            <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
+          </Box>
+        </Box>
 
-      {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
+        <DialogContent style={{ paddingRight: 0, paddingLeft: 0 }}>
+          <InfiniteLoader isItemLoaded={(index: number) => index < participants.length} itemCount={itemCount} loadMoreItems={loadMore}>
+            {({ onItemsRendered, ref }) => (
+              <List
+                className={classes.scroll}
+                height={innerHeight - 200}
+                width={'100%'}
+                itemCount={participants.length}
+                itemData={participants}
+                itemSize={66}
+                onItemsRendered={onItemsRendered}
+                ref={ref}
+              >
+                {ListRow}
+              </List>
+            )}
+          </InfiniteLoader>
+          {meta.pending ? (
+            <Box className={classes.loader}>
+              <ESLoader />
+            </Box>
+          ) : null}
+        </DialogContent>
+        <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+          <Box className={classes.actionButton}>
+            <LoginRequired>
+              <ButtonPrimary
+                round
+                fullWidth
+                size="large"
+                disabled={!isRecruiting && participants.filter((p) => p.status).length == 0}
+                onClick={() => setConfirmOpen(true)}
+              >
+                {t('common:confirm_member.confirm')}
+              </ButtonPrimary>
+            </LoginRequired>
+          </Box>
+          <Box className={classes.actionButton}>
+            <LoginRequired>
+              <ButtonPrimaryOutlined disabled={!isRecruiting} onClick={() => setShuffleOpen(true)}>
+                {t('common:confirm_member.shuffle')}
+              </ButtonPrimaryOutlined>
+            </LoginRequired>
+          </Box>
+        </Box>
+      </ESDialog>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title={t('common:confirm_member.confirm_title')}
+        cancelButtonTitle={t('common:confirm_member.confirm_cancel_title')}
+        okButtonTitle={t('common:confirm_member.confirm_ok_title')}
+        warningTitle={t('common:confirm_member.confirm_warning_title')}
+        handleClose={() => {
+          setConfirmOpen(false)
+        }}
+        handleSubmit={() => {
+          setConfirmOpen(false)
+        }}
+      />
+
+      <ConfirmDialog
+        open={shuffleOpen}
+        title={t('common:confirm_member.shuffle_title')}
+        description={t('common:confirm_member.shuffle_description')}
+        cancelButtonTitle={t('common:confirm_member.shuffle_cancel_title')}
+        okButtonTitle={t('common:confirm_member.shuffle_ok_title')}
+        warningTitle={t('common:confirm_member.shuffle_warning_title')}
+        handleClose={() => {
+          setShuffleOpen(false)
+        }}
+        handleSubmit={() => {
+          setShuffleOpen(false)
+        }}
+      />
     </Box>
   )
 }
@@ -90,6 +219,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
+  rowContainer: {
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedNumber: { fontSize: 24, fontWeight: 'bold' },
+  totals: {
+    fontSize: 22,
+  },
+  slash: { fontSize: 20 },
+  countContainer: {
+    marginLeft: 8,
+    alignItems: 'center',
+  },
   childrenContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -97,6 +240,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  subTitle: {
+    fontSize: 16,
     textAlign: 'center',
   },
   description: {
