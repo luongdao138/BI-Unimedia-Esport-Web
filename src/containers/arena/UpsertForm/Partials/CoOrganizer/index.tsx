@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box, makeStyles, DialogContent, Typography, Theme, IconButton, Badge, Icon, Container, useTheme } from '@material-ui/core'
 import ESDialog from '@components/Dialog'
-import ESInput from '@components/Input'
 import Avatar from '@components/Avatar'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
@@ -15,6 +14,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { RecommendedUsers } from '@services/arena.service'
 import useOrganizerSearch from '../useOrganizerSearch'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import ESFastInput from '@components/FastInput'
 
 export interface Props {
   open: boolean
@@ -151,7 +151,7 @@ const CoOrganizer: React.FC<Props> = ({ open, values, onSubmit, hide }) => {
       >
         <DialogContent className={classes.dialogContentWrap} style={{ height: `calc(100vh - ${height}px)` }}>
           <Box className={classes.inputHolder}>
-            <ESInput
+            <ESFastInput
               placeholder={i18n.t('common:common.username')}
               value={keyword}
               fullWidth
