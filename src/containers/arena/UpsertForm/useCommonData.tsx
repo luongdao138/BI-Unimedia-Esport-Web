@@ -24,7 +24,7 @@ const useCommonData = () => {
 
   useEffect(() => {
     dispatch(actions.getHardwares())
-    getPrefectures()
+    getPrefectures(false)
   }, [])
 
   useEffect(() => {

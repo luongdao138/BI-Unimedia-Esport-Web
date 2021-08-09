@@ -17,8 +17,6 @@ import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
 import LoginRequired from '@containers/LoginRequired'
 import SideFooter from './SideFooter'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useTheme } from '@material-ui/core/styles'
 import AppDialog from './AppDialog'
 
 const SideMenu: React.FC = () => {
@@ -31,8 +29,6 @@ const SideMenu: React.FC = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
-  const theme = useTheme()
-  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -138,7 +134,7 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
           )}
-          {!downSm && <SideFooter handleAppModal={handleAppModal} />}
+          <SideFooter handleAppModal={handleAppModal} />
         </Box>
       </Box>
 

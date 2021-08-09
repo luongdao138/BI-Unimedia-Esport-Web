@@ -63,7 +63,7 @@ const ProfileEditContainer: React.FC = () => {
   useEffect(() => {
     getNicknames()
     getFeatures()
-    getPrefectures()
+    getPrefectures(true)
   }, [])
 
   const onBasicInfoChanged = (data) => {

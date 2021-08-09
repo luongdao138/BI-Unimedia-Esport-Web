@@ -19,7 +19,7 @@ const useLogout = (handleClose?: () => void) => {
   const resetMeta = () => dispatch(clearMetaData(actions.logout.typePrefix))
   const handleLogout = () => {
     dispatch(actions.logout())
-    dispatch(searchStore.actions.setSearchParams({ keyword: '', type: 0 }))
+    dispatch(searchStore.actions.setSearchParams({ keyword: '', type: 1 }))
     dispatch(arenaStore.actions.clearTournamentResult())
     dispatch(arenaStore.actions.clearRecommendedUsers())
   }
