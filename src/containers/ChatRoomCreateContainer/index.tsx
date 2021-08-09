@@ -197,10 +197,12 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
     const ids = selected.map((item) => (_.isString(item) ? 0 : item.id)) as number[]
     setSelectedUsers(ids)
   }
+
   const handleSearchInput = (text: string) => {
     if (text.length > 1) dispatch(getFriendList({ type: 'group', keyword: text }))
-    else dispatch(resetAddUsers())
+    dispatch(resetAddUsers())
   }
+
   const renderLoader = () => {
     if (actionPending || uploadMeta.uploading) {
       return (
@@ -249,6 +251,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
               }
               onItemsSelected={handleOnUserSelected}
               onSearchInput={handleSearchInput}
+              onFocusInput={() => dispatch(resetAddUsers())}
               loading={getFriendsMeta.pending}
             />
           )}
