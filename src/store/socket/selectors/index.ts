@@ -15,7 +15,15 @@ export const getRoomList = createSelector(getRoot, (state) => {
   if (state.roomList === undefined) {
     return undefined
   } else {
-    return _.orderBy(state.roomList, ['lastMsgAt'], ['desc'])
+    return _.orderBy(
+      state.roomList,
+      [
+        (o) => {
+          return o.lastMsgAt || ''
+        },
+      ],
+      ['desc']
+    )
   }
 })
 export const messages = createSelector(getRoot, (state) => state.messages)
