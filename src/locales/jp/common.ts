@@ -513,6 +513,9 @@ export default {
       dialog_title: 'エントリーしますか？',
     },
   },
+  community: {
+    official: '公式コミュニティ',
+  },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
   },
@@ -604,6 +607,10 @@ export default {
     beforeStart: 'エントリー受付中',
     inProgress: 'エントリー中の募集',
     organized: 'あなたが作成した募集',
+  },
+  communitySearchFilters: {
+    participating: '参加しているコミュニティ',
+    managing: '管理しているコミュニティ',
   },
   search: {
     search: '検索',

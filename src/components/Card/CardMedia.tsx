@@ -2,10 +2,10 @@ import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
-const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children, ...rest }) => {
-  const classes = useStyles()
+const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any; triangleColor?: string }> = ({ children, ...rest }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { cornerIcon } = rest
+  const { cornerIcon, triangleColor } = rest
+  const classes = useStyles({ triangleColor })
   const IMG_PLACEHOLDER = '/images/img_404.jpg'
 
   return (
@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     height: 0,
     borderTopWidth: 50,
     borderTopStyle: 'solid',
-    borderTopColor: Colors.black_opacity[70],
+    borderTopColor: (props: { triangleColor: string }) => props.triangleColor || Colors.black_opacity[70],
     borderRightWidth: 50,
     borderRightStyle: 'solid',
     borderRightColor: 'transparent',
