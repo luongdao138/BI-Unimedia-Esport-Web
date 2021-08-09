@@ -895,6 +895,7 @@ export default {
     step3_close_btn: '閉じる',
     start_live_stream: '配信開始する',
     save_channel_live_info: '配信者情報を保存する',
+    category: 'カテゴリー',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
