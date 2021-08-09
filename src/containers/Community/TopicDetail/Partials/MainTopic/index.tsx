@@ -54,7 +54,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
             <Icon className="fas fa-comment-alt" fontSize="small" />
           </Box>
           <Box className={classes.numberBox}>
-            <Typography className={classes.number}>{count}</Typography>
+            <Typography className={classes.count}>{count}</Typography>
           </Box>
         </Box>
       </Box>
@@ -144,6 +144,9 @@ const useStyles = makeStyles((theme) => ({
   numberBox: {
     display: 'flex',
     alignItems: 'center',
+  },
+  count: {
+    fontSize: 12,
   },
 }))
 
