@@ -55,4 +55,5 @@ export const ESRoutes = {
   LOBBY: '/lobby',
   LOBBY_CREATE: '/lobby/create',
   LOBBY_DETAIL: '/lobby/:id',
+  COMMUNITY: '/community',
 }
