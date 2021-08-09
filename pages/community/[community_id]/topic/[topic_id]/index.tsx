@@ -1,8 +1,13 @@
 import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
+import TopicDetailContainer from '@containers/Community/TopicDetail'
 
 const TopicDetailPage: PageWithLayoutType = () => {
-  return <></>
+  return (
+    <MainLayout>
+      <TopicDetailContainer />
+    </MainLayout>
+  )
 }
 
 TopicDetailPage.Layout = MainLayout
