@@ -9,14 +9,14 @@ import ESFastInput from '@components/FastInput'
 import SnsInfoStream from '@components/SnsInfoStream'
 import ButtonPrimary from '@components/ButtonPrimary'
 
-interface Step01Props {
+interface StepsProps {
   onNext: (step: number) => void
 }
 type ContentParams = {
   channelName: string
   description: string
 }
-const Step01: React.FC<Step01Props> = ({ onNext }) => {
+const Steps: React.FC<StepsProps> = ({ onNext }) => {
   const classes = useStyles()
   const [profile, setProfile] = useState([])
   const [hasError, setError] = useState(false)
@@ -102,7 +102,7 @@ const Step01: React.FC<Step01Props> = ({ onNext }) => {
   )
 }
 
-export default Step01
+export default Steps
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
