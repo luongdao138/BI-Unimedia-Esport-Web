@@ -26,7 +26,12 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       aria-labelledby="modal"
       open={open}
       onClose={handleClose}
-      BackdropProps={{ classes: { root: classes.backDrop } }}
+      BackdropProps={{
+        classes: { root: classes.backDrop },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+      }}
       PaperProps={{ classes: { root: classes.paper } }}
     >
       {children}
