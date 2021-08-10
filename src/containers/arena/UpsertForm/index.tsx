@@ -52,7 +52,7 @@ const TournamentCreate: React.FC = () => {
 
   const formik = useFormik<FormType>({
     initialValues: initialValues,
-    validationSchema: getValidationScheme(arena, editables),
+    validationSchema: getValidationScheme(arena, editables, isEdit),
     enableReinitialize: true,
     onSubmit: (values) => {
       const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
