@@ -18,7 +18,8 @@ import ESAvatar from '@components/Avatar'
 import { useTranslation } from 'react-i18next'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import SideFooter from './SideFooter'
+import SideFooter from '@containers/SideMenu/SideFooter'
+import AppDialog from '@containers/SideMenu/AppDialog'
 interface StreamSideMenuProps {
   minimizeLayout?: boolean
   isStreamer: boolean
@@ -26,6 +27,7 @@ interface StreamSideMenuProps {
 
 const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer }) => {
   const [modal, setModal] = useState(false)
+  const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -52,6 +54,10 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
     }
   }
 
+  const handleAppModal = (value: boolean) => {
+    setAppModal(value)
+  }
+
   return (
     <>
       <Box
@@ -59,8 +65,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           classes.menu + getAddClass(classes.noMinimizeMenu, classes.minimizeMenu) + (isStreamer ? ' ' + classes.streamerMenu : '')
         }
       >
-        <Box className={classes.menuWrap + getAddClass(classes.streamerMenuWrap, classes.minimizeMenuWrap)}>
-          {minimizeLayout ? (
+        {minimizeLayout ? (
             <Box>
               <img src="/images/stream_log.svg" className={classes.logo} />
             </Box>
@@ -88,19 +93,22 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   )}
                 </Box>
               </Box>
-              <Box className={classes.wrap_point}>
-                <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
-                <Box className={classes.point}>999999</Box>
-                <Box className={classes.link_point}>
-                  {/* redirect to point management */}
-                  <Link href={ESRoutes.TERMS}>
-                    <a>{t('common:common.eXe_point_management')}</a>
-                  </Link>
-                </Box>
-              </Box>
+              
             </>
           )}
-
+        <Box className={classes.menuWrap + getAddClass(classes.streamerMenuWrap, classes.minimizeMenuWrap)}>
+          {!minimizeLayout && (
+            <Box className={classes.wrap_point}>
+              <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
+              <Box className={classes.point}>999999</Box>
+              <Box className={classes.link_point}>
+                {/* redirect to point management */}
+                <Link href={ESRoutes.TERMS}>
+                  <a>{t('common:common.eXe_point_management')}</a>
+                </Link>
+              </Box>
+            </Box>
+          )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem
@@ -176,7 +184,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   </ListItemIcon>
                   {/* confirm link to */}
                   {!minimizeLayout && (
-                    <ListItemText className={classes.listText} primary={t('common:home.video_distribution_application')} />
+                    <ListItemText className={classes.listText + ' ' + classes.listTextWide} primary={t('common:home.video_distribution_application')} />
                   )}
                 </ListItem>
               </Link>
@@ -224,7 +232,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:logout')} />}
             </ListItem>
           )}
-          {!downSm && !minimizeLayout && <SideFooter />}
+          {!downSm && !minimizeLayout && <SideFooter handleAppModal={handleAppModal} />}
         </Box>
       </Box>
 
@@ -233,6 +241,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           {content === 'qr' ? <QrContainer handleClose={() => setModal(false)} /> : <LogoutContainer handleClose={() => setModal(false)} />}
         </BlankLayout>
       </ESModal>
+      <AppDialog open={appModal} handleClose={() => setAppModal(false)} />
     </>
   )
 }
@@ -246,6 +255,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     color: theme.palette.text.primary,
     maxWidth: '82px',
+  },
+  listTextWide: {
+    maxWidth: 'none',
   },
   logo: {
     width: 50,
@@ -300,13 +312,16 @@ const useStyles = makeStyles((theme) => ({
   },
   menu: {
     width: '100%',
+    height: '100%',
     paddingTop: 72,
     display: 'flex',
     justifyContent: 'center',
     minHeight: '100vh',
   },
   noMinimizeMenu: {
-    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    paddingBottom: '66px',
   },
   streamerMenu: {
     [theme.breakpoints.up('lg')]: {
@@ -315,6 +330,9 @@ const useStyles = makeStyles((theme) => ({
   },
   minimizeMenu: {
     background: Colors.black_card,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   icon: {},
   userInfo: {
@@ -322,6 +340,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     marginBottom: '25px',
+    width: 180,
   },
   avatar: {
     zIndex: 30,
