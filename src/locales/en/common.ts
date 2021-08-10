@@ -250,6 +250,7 @@ export default {
     approval_method: '承認方法',
     caretaker: '管理人',
     deputy_caretaker: '副管理人',
+    official: '公式コミュニティ',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
