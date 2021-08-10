@@ -6,7 +6,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 // import { clearMetaData } from '@store/metadata/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 import { RESPONSE_STATUS } from '@constants/common.constants'
-import { getAvatarPreSignedUrl, upload } from '@services/image.service'
+import { getAvatarPreSignedUrl, getCoverPreSignedUrl, upload } from '@services/image.service'
 import { UserProfile } from '@services/user.service'
 import { CommunityResponse } from '@services/community.service'
 import { Meta } from '@store/metadata/actions/types'
@@ -71,7 +71,12 @@ const useUserData = (
       content_type: file.type == 'image/gif' ? 'image/png' : file.type,
     }
     try {
-      const res = await getAvatarPreSignedUrl(params)
+      let res = null as any | null
+      if (UPLOADER_TYPE.COVER) {
+        res = await getCoverPreSignedUrl(params)
+      } else {
+        res = await getAvatarPreSignedUrl(params)
+      }
       const file_url = res.file_url
       const signed_url = res.url
       const u_res = await upload(blob ? blob : file, signed_url, undefined)
