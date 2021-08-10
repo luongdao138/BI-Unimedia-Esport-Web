@@ -4,11 +4,11 @@ import i18n from '@locales/i18n'
 import { memo, useEffect, useState } from 'react'
 import { ESRoutes } from '@constants/route.constants'
 
-interface LoginAgreementBoxProps {
+interface RegisterAgreementBoxProps {
   onAgreementChange: (value) => void
 }
 
-const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange }) => {
+const RegisterAgreementBox: React.FC<RegisterAgreementBoxProps> = ({ onAgreementChange }) => {
   const [checkbox, setCheckbox] = useState({ terms: false, privacy: false })
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckbox({ ...checkbox, [event.target.name]: event.target.checked })
@@ -60,4 +60,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default memo(LoginAgreementBox)
+export default memo(RegisterAgreementBox)

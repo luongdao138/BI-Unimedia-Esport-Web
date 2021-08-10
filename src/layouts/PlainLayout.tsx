@@ -1,6 +1,5 @@
 import React, { ReactNode, useState, useEffect } from 'react'
 import { Header } from '@layouts/Header'
-import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
 import * as selectors from '@store/common/selectors'
 import { setNotFound } from '@store/common/actions/index'
@@ -12,11 +11,10 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 
 interface PlainLayoutProps {
   children: ReactNode
-  noFooter?: boolean
   patternBg?: boolean
 }
 
-const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg }) => {
+const PlainLayout: React.FC<PlainLayoutProps> = ({ children, patternBg }) => {
   const [open, setOpen] = useState<boolean>(false)
   const { isValidProfile, isAuth } = useProfileValid()
   const { hasUCRReturnHref } = useReturnHref()
@@ -47,14 +45,12 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg
           <div>{children}</div>
         </div>
       </div>
-      {!noFooter && <Footer />}
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
     </div>
   )
 }
 
 PlainLayout.defaultProps = {
-  noFooter: false,
   patternBg: false,
 }
 

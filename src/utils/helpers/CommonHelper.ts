@@ -192,6 +192,16 @@ const cutLinksIntoPieces = (textMain: string) => {
   return separations
 }
 
+function isDoubleByte(str: string): boolean {
+  if (!str) return false
+  for (let i = 0, n = str.length; i < n; i++) {
+    if (str.charCodeAt(i) > 255) {
+      return true
+    }
+  }
+  return false
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -206,4 +216,5 @@ export const CommonHelper = {
   cutLinksIntoPieces,
   getIndicesOf,
   replaceWhiteSpace,
+  isDoubleByte,
 }

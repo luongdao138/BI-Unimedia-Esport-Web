@@ -59,7 +59,7 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
   }
 
   return (
-    <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>
+    <ESStickyFooter title={t('common.next')} noScroll={true} disabled={!buttonActive()} onClick={() => handleSubmit()}>
       <Box className={classes.header}>
         <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />
