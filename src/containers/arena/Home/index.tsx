@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import _ from 'lodash'
 
 interface ArenaHomeProps {
   filter: TournamentFilterOption
@@ -36,8 +37,17 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   }, [arenas])
 
   useEffect(() => {
-    onFilterChange(filter)
-  }, [filter])
+    if (!router.isReady) return
+
+    let filterVal = TournamentFilterOption.all
+
+    if (_.has(router.query, 'filter')) {
+      const queryFilterVal = _.get(router.query, 'filter') as TournamentFilterOption
+      if (Object.values(TournamentFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
+    }
+
+    onFilterChange(filterVal)
+  }, [router.query])
 
   const onFilter = (filter: TournamentFilterOption) => {
     router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
