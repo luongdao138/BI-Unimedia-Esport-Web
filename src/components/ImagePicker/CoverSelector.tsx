@@ -212,10 +212,16 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
         ) : null}
         <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
-          <ButtonPrimary round gradient={false} onClick={cancel}>
+          <ButtonPrimary round className={classes.button} gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary round onClick={file && rawFile ? update : remove} style={{ marginLeft: 20 }} disabled={disableUseButton()}>
+          <ButtonPrimary
+            round
+            className={classes.button}
+            onClick={file && rawFile ? update : remove}
+            style={{ marginLeft: 20 }}
+            disabled={disableUseButton()}
+          >
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
@@ -392,5 +398,8 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button: {
+    minWidth: 170,
   },
 }))
