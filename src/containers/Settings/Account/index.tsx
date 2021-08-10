@@ -11,7 +11,7 @@ import authStore from '@store/auth'
 import useAccount from './useAccount'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { ESRoutes } from '@constants/route.constants'
-import React, { useEffect } from 'react'
+import React from 'react'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -36,15 +36,6 @@ const AccountSettingsContainer: React.FC = () => {
   const handleClose = () => {
     setOpen(false)
   }
-
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'unset'
-      document.body.style.position = 'unset'
-      document.body.style.width = 'unset'
-      document.body.style.height = 'unset'
-    }
-  }, [])
 
   const handleSubmit = () => {
     router.push(ESRoutes.INQUIRY_SETTINGS)
@@ -119,15 +110,16 @@ const AccountSettingsContainer: React.FC = () => {
           onClose={handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
-          onEntered={() => {
-            document.body.style.position = 'fixed'
-            document.body.style.width = '100%'
-            document.body.style.height = '100%'
-          }}
-          onExited={() => {
-            document.body.style.position = 'unset'
-            document.body.style.width = 'unset'
-            document.body.style.height = 'unset'
+          BackdropProps={{
+            onTouchMove: (e) => {
+              e.preventDefault()
+            },
+            onTouchStart: (e) => {
+              e.preventDefault()
+            },
+            onTouchEnd: (e) => {
+              e.preventDefault()
+            },
           }}
         >
           <DialogContent>

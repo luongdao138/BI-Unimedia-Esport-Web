@@ -41,15 +41,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
   }, [value])
 
   useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'unset'
-      document.body.style.position = 'unset'
-      document.body.style.width = 'unset'
-      document.body.style.height = 'unset'
-    }
-  }, [])
-
-  useEffect(() => {
     setOption(searchType)
     setValue(searchKeyword)
   }, [searchType, searchKeyword])
@@ -94,18 +85,19 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
       open={show}
       className={classes.root}
       onClose={handleClose}
-      BackdropProps={{ classes: { root: classes.bg } }}
+      BackdropProps={{
+        classes: { root: classes.bg },
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
+      }}
       PaperProps={{ classes: { root: classes.bg } }}
-      onEntered={() => {
-        document.body.style.position = 'fixed'
-        document.body.style.width = '100%'
-        document.body.style.height = '100%'
-      }}
-      onExited={() => {
-        document.body.style.position = 'unset'
-        document.body.style.width = 'unset'
-        document.body.style.height = 'unset'
-      }}
     >
       <Box pt={2} paddingX={2} display="flex" flexDirection="column">
         <Select
