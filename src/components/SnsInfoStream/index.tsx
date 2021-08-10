@@ -55,6 +55,14 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
     handleError(errors)
   }, [errors])
 
+   const getAddClassByShowPreview = (addClass: string, otherClass?: string) => {
+    if (showPreview === true) {
+      return ' ' + addClass
+    } else {
+      return otherClass ? ' ' + otherClass : ''
+    }
+  }
+
   return (
     <Box className={classes.container}>
       <form>
@@ -71,7 +79,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.discord_placeholder')}
                 error={!!errors.discord_link}
                 disabled={showPreview}
-                classes={{ root: classes.root }}
+                className={getAddClassByShowPreview(classes.input_text)}
               />
             </Box>
           </Grid>
@@ -88,7 +96,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 error={!!errors.twitter_link}
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.twitter_placeholder')}
                 disabled={showPreview}
-                classes={{ root: classes.root }}
+                className={getAddClassByShowPreview(classes.input_text)}
               />
             </Box>
           </Grid>
@@ -105,7 +113,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 error={!!errors.instagram_link}
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.instagram_placeholder')}
                 disabled={showPreview}
-                classes={{ root: classes.root }}
+                className={getAddClassByShowPreview(classes.input_text)}
               />
             </Box>
           </Grid>
@@ -116,6 +124,21 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
 }
 
 const useStyles = makeStyles(() => ({
+  input_text: {
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      padding: 0,
+      // paddingBottom: theme.spacing(1),
+    },
+  },
   container: {
     marginTop: 0,
   },
