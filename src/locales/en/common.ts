@@ -237,21 +237,7 @@ export default {
     app_version: 'アプリ版eXeLAB',
     app_desc: '以下のボタンから「アプリ版eXeLAB」をインストールすることができます。',
   },
-  community: {
-    official: '公式コミュニティ',
-    report: '通報',
-    community_id: 'コミュニティコード：',
-    copy_shared_url: '共有URLをコピー',
-    copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
-    info: 'INFO',
-    topic_list: 'トピック一覧',
-    search: '検索',
-    area: 'エリア',
-    disclosure_range: '公開範囲',
-    approval_method: '承認方法',
-    caretaker: '管理人',
-    deputy_caretaker: '副管理人',
-  },
+
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
   },

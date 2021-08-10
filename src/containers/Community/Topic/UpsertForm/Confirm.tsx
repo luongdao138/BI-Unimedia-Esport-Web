@@ -1,12 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
-import { FormType } from './FormModel/FormType'
+
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { makeStyles, Box, Theme } from '@material-ui/core'
 
 interface ConfirmProps {
-  values?: FormikProps<FormType>['values']
+  values?: string | any
 }
 
 ESInput.defaultProps = {
