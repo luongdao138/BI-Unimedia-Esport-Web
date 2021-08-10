@@ -905,5 +905,6 @@ export default {
     scheduled_end_datetime: '終了予定日時',
     ticket_sales_start_datetime: 'チケット販売開始日時',
     complete_delivery_settings: '配信データが保存できました',
+    delivery_data_save: '配信データを保存する',
   },
 }

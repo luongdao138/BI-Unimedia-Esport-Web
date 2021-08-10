@@ -8,15 +8,19 @@ import i18n from '@locales/i18n'
 import ESFastInput from '@components/FastInput'
 import SnsInfoStream from '@components/SnsInfoStream'
 import ButtonPrimary from '@components/ButtonPrimary'
+import { Colors } from '@theme/colors'
+import ESButton from '@components/Button'
 
 interface StepsProps {
+  step: number,
   onNext: (step: number) => void
 }
 type ContentParams = {
   channelName: string
   description: string
 }
-const Steps: React.FC<StepsProps> = ({ onNext }) => {
+
+const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const classes = useStyles()
   const [profile, setProfile] = useState([])
   const [hasError, setError] = useState(false)
@@ -41,7 +45,19 @@ const Steps: React.FC<StepsProps> = ({ onNext }) => {
     })
   }
   const onClickNext = () => {
-    onNext(2)
+    onNext(step + 1)
+  }
+
+  const isFirstStep = () => {
+    return step === 1 ? true : false;
+  }
+
+  const getAddClassByStep = (addClass: string, otherClass?: string) => {
+    if (step === 2) {
+      return ' ' + addClass
+    } else {
+      return otherClass ? ' ' + otherClass : ''
+    }
   }
   return (
     <Box pb={9} py={4} className={classes.formContainer} maxWidth="md">
@@ -54,12 +70,14 @@ const Steps: React.FC<StepsProps> = ({ onNext }) => {
               placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_channel_name')}
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_channel_name')}
               fullWidth
-              value={values.channelName}
+              value={isFirstStep() ? values.channelName : 'テキストテキストテキストテキストここの文字数制限'}
               onChange={handleChange}
               onBlur={handleBlur}
               helperText={touched.channelName && errors.channelName}
               error={(touched.channelName && !!errors.channelName) || hasError}
               size="big"
+              disabled={!isFirstStep()}
+              className={getAddClassByStep(classes.input_text)}
             />
           </Grid>
         </Box>
@@ -73,12 +91,20 @@ const Steps: React.FC<StepsProps> = ({ onNext }) => {
               placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_overview')}
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_overview')}
               fullWidth
-              value={values.description}
+              value={isFirstStep() ? values.description : (
+                '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
+                'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
+                'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
+                'ストテキストテキストテ\n' +
+                'https://sample.jp テキストテキスト'
+              )}
               onChange={handleChange}
               onBlur={handleBlur}
               helperText={touched.description && errors.description}
               error={touched.description && !!errors.description}
               size="big"
+              disabled={!isFirstStep()}
+              className={getAddClassByStep(classes.input_text)}
             />
           </Grid>
         </Box>
@@ -87,16 +113,34 @@ const Steps: React.FC<StepsProps> = ({ onNext }) => {
             <Typography variant="h3" gutterBottom className={classes.label}>
               {i18n.t('common:user_profile.sns')}
             </Typography>
-            <SnsInfoStream showPreview={false} profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
+            <SnsInfoStream showPreview={isFirstStep() ? false : true} profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
           </Grid>
         </Box>
-        <Grid item xs={9}>
-          <Box maxWidth={280} className={classes.buttonContainer}>
-            <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
-              {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
-            </ButtonPrimary>
-          </Box>
-        </Grid>
+        {isFirstStep() ? (
+            <Grid item xs={9}>
+              <Box maxWidth={280} className={classes.buttonContainer}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+                  {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
+                </ButtonPrimary>
+              </Box>
+            </Grid>
+          ) : (
+            <Grid item xs={6} sm={8} md={8} lg={6}>
+              <Box className={classes.actionButtonContainer}>
+                <Box className={classes.actionButton}>
+                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                    {i18n.t('common:common.cancel')}
+                  </ESButton>
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ButtonPrimary round fullWidth onClick={onClickNext}>
+                    {i18n.t('common:streaming_settings_live_streaming_screen.save_channel_live_info')}
+                  </ButtonPrimary>
+                </Box>
+              </Box>
+            </Grid>
+          )
+        }
       </form>
     </Box>
   )
@@ -105,6 +149,21 @@ const Steps: React.FC<StepsProps> = ({ onNext }) => {
 export default Steps
 
 const useStyles = makeStyles((theme: Theme) => ({
+  input_text: {
+    '&.Mui-disabled': {
+      color: Colors.white_opacity['70'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      padding: 0,
+      // paddingBottom: theme.spacing(1),
+    },
+  },
   container: {
     // justifyContent: 'center',
   },
@@ -161,5 +220,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   captionNote: {
     fontSize: 12,
+  },
+  actionButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 27,
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column-reverse',
+    },
+  },
+  actionButton: {
+    width: theme.spacing(27.5),
+    margin: 8,
+  },
+  cancelBtn: {
+    padding: '12px 22px',
   },
 }))

@@ -1,9 +1,8 @@
+import SettingsCompleted from '@components/SettingsCompleted'
 import React, { useState } from 'react'
-import Step01 from './Step01'
-import Step02 from './Step02'
+import Steps from './Steps'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import SettingsCompleted from '@components/SettingsCompleted'
 
 const DistributorInformationContainer: React.FC = () => {
   const [step, setStep] = useState(1)
@@ -22,12 +21,11 @@ const DistributorInformationContainer: React.FC = () => {
     router.push(ESRoutes.DELIVERY_MANAGEMENT)
   }
 
-  return step === 1 ? (
-    <Step01 onNext={onChangeStep} />
-  ) : step === 2 ? (
-    <Step02 onNext={onChangeStep} />
-  ) : (
-    <SettingsCompleted onClose={onClose} onComplete={onComplete} />
-  )
+  return (step === 3 ? (
+      <SettingsCompleted onClose={onClose} onComplete={onComplete} />
+    ) : (
+      <Steps step={step} onNext={onChangeStep} />
+    )
+  );
 }
 export default DistributorInformationContainer

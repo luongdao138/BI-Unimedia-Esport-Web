@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
 import ESSelect from '@components/Select'
-import { RULES } from '@constants/tournament.constants'
+import { RULES } from '@constants/stream_setting.constants'
 import { useAppDispatch } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
 import * as commonActions from '@store/common/actions'
@@ -12,9 +12,10 @@ import ESFastInput from '@components/FastInput'
 import CoverUploaderStream from '@containers/arena/UpsertForm/Partials/CoverUploaderStream'
 import ESCheckboxBig from '@components/CheckboxBig'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Colors } from '@theme/colors'
+import ESInputDatePicker from '@components/InputDatePicker'
 import ESLabel from '@components/Label'
 import ESButton from '@components/Button'
+import { Colors } from '@theme/colors'
 
 type ContentParams = {
   linkUrl: string
@@ -24,6 +25,10 @@ type ContentParams = {
   listData: Array<string>
   streamURL?: string
   streamKey?: string
+  notification_datetime?: any
+  scheduled_delivery_start_datetime?: any
+  scheduled_end_datetime?: any
+  ticket_sales_start_datetime?: any
 }
 interface StepsProps {
   step: number,
@@ -51,6 +56,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       listData: [],
       streamURL: 'https://cowell-web.exelab.jp/stream-xxxx',
       streamKey: '',
+      notification_datetime: new Date(),
+      scheduled_delivery_start_datetime: new Date(),
+      scheduled_end_datetime: new Date(),
+      ticket_sales_start_datetime: new Date(),
     },
     onSubmit: () => {
       // onSubmitClicked(values)
@@ -110,10 +119,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             />
           </Grid>
           {isFirstStep() && (
-              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-              </Box>
+            <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+              <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
+            </Box>
             )
           }
         </Box>
@@ -181,40 +190,112 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             </Grid>
           </Grid>
         </Box>
-        <Box paddingBottom={3} />
         <Box pb={4} className={classes.box}>
           <Grid item xs={9}>
             {isFirstStep() ? (
-                <ESSelect
-                  fullWidth
-                  name="stepTwo.rule"
-                  value={isFirstStep() ? values.listData : 'ゲーム：Apex Legends'}
-                  onChange={handleChange}
-                  label={i18n.t('common:streaming_settings_live_streaming_screen.category')}
-                  required={true}
-                  size="big"
-                >
-                  <option disabled value={-1}>
-                    {i18n.t('common:please_select')}
+              <ESSelect
+                fullWidth
+                name="stepTwo.rule"
+                value={values.listData}
+                onChange={handleChange}
+                label={i18n.t('common:delivery_reservation_tab.category')}
+                required={true}
+                size="big"
+                disabled={false}
+              >
+                {RULES.map((rule, index) => (
+                  <option key={index} value={rule.value}>
+                    {rule.label}
                   </option>
-                  {RULES.map((rule, index) => (
-                    <option key={index} value={rule.value}>
-                      {rule.label}
-                    </option>
-                  ))}
-                </ESSelect>
+                ))}
+              </ESSelect>
               ) : (
                 <ESInput
                   id="title"
                   name="title"
                   value={'ゲーム：Apex Legends'}
                   fullWidth
-                  labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.category')}
+                  labelPrimary={i18n.t('common:delivery_reservation_tab.category')}
                   required
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
                   size="big"
                 />
+              )
+            }
+          </Grid>
+        </Box>
+        <Box pb={4} className={classes.box}>
+          <Grid item xs={9}>
+            <ESLabel label={i18n.t('common:delivery_reservation_tab.notification_datetime')} />
+            {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepThree.start_date"
+                  placeholder={i18n.t('common:delivery_reservation_tab.notification_datetime')}
+                  fullWidth
+                  value={values.notification_datetime}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  helperText={''}
+                  error={false}
+                  disabled={false}
+                />
+              ) : (
+                <>
+                  <Box>
+                    2021年6月20日 10:00
+                  </Box>
+                </>
+              )
+            }
+          </Grid>
+        </Box>
+        <Box pb={4} className={classes.box}>
+          <Grid item xs={9}>
+            <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')} />
+            {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepThree.start_date"
+                  placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
+                  fullWidth
+                  value={values.scheduled_delivery_start_datetime}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  helperText={''}
+                  error={false}
+                  disabled={false}
+                />
+              ) : (
+                <>
+                  <Box>
+                    2021年7月1日 15:45
+                  </Box>
+                </>
+              )
+            }
+          </Grid>
+        </Box>
+        <Box pb={4} className={classes.box}>
+          <Grid item xs={9}>
+            <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')} />
+            {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepThree.start_date"
+                  placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
+                  fullWidth
+                  value={values.scheduled_end_datetime}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  helperText={''}
+                  error={false}
+                  disabled={false}
+                />
+              ) : (
+                <>
+                  <Box>
+                    2021年7月1日 18:45
+                  </Box>
+                </>
               )
             }
           </Grid>
@@ -238,9 +319,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <ESInput
               id="title"
               required={true}
-              placeholder={'0'}
+              placeholder={'1,500'}
               fullWidth
-              value={isFirstStep() ? values.title : '利用しない'}
+              value={values.title}
               onChange={handleChange}
               onBlur={handleBlur}
               helperText={touched.title && errors.title}
@@ -252,6 +333,31 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           </Grid>
         </Box>
         <Box paddingBottom={1} />
+        <Box pb={4} className={classes.box}>
+          <Grid item xs={9}>
+            <ESLabel label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')} />
+            {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepThree.start_date"
+                  placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                  fullWidth
+                  value={values.ticket_sales_start_datetime}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  helperText={''}
+                  error={false}
+                  disabled={false}
+                />
+              ) : (
+                <>
+                  <Box>
+                    2021年6月20日 10:00
+                  </Box>
+                </>
+              )
+            }
+          </Grid>
+        </Box>
         {isFirstStep() ? (
             <Box>
               <ESCheckboxBig
@@ -265,7 +371,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <ESInput
               id="title"
               name="title"
-              value={'共有する'}
+              value={'共有しない'}
               fullWidth
               labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
               disabled={true}
@@ -413,14 +519,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onClickNext}>
-                    {t('common:streaming_settings_live_streaming_screen.start_live_stream')}
+                    {t('common:delivery_reservation_tab.delivery_data_save')}
                   </ButtonPrimary>
                 </Box>
               </Box>
             </Grid>
           )
         }
-        
       </form>
     </Box>
   )
