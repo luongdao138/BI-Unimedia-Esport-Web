@@ -57,12 +57,12 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
       <Box
         style={{
           background: `url(${cover})`,
-          paddingTop: '30.27%',
+          paddingTop: '33.03%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
         }}
-        mb={3}
+        className={classes.coverWrapper}
       ></Box>
       <div className={classes.root}>
         {showTab && (
@@ -93,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
     backgroundColor: Colors.black,
+  },
+  coverWrapper: {
+    marginBottom: theme.spacing(3),
   },
   tabIndicator: {
     visibility: 'hidden',
@@ -165,6 +168,12 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
+    },
+    coverWrapper: {
+      marginBottom: theme.spacing(2),
+    },
+    backContainer: {
+      paddingLeft: theme.spacing(1.5),
     },
   },
   ['@media (max-width: 960px)']: {

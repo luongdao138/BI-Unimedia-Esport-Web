@@ -60,6 +60,8 @@ export type MyPageSettingsParam = {
   show_tournament_history: boolean
   show_activity_logs: boolean
   show_about: boolean
+  allow_groups_from_strangers?: boolean
+  allow_messages_from_strangers?: boolean
 }
 
 export type MyPageSettingsResponse = {
@@ -76,7 +78,11 @@ export type MyPageSettings = {
   }
 }
 
-export const updateSecuritySettings = async (params: MyPageSettingsParam): Promise<MyPageSettingsResponse> => {
+export const updateSecuritySettings = async ({
+  allow_messages_from_strangers: _a,
+  allow_groups_from_strangers: _b,
+  ...params
+}: MyPageSettingsParam): Promise<MyPageSettingsResponse> => {
   const { data } = await api.post<MyPageSettingsResponse>(URI.USER_SECURITY_SETTINGS, params)
   return data
 }

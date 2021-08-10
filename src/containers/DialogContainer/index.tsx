@@ -59,7 +59,23 @@ const ConfirmContainer: React.FC = () => {
   return (
     <>
       {dialog ? (
-        <Dialog fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={dialog ? true : false}>
+        <Dialog
+          fullWidth
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={dialog ? true : false}
+          BackdropProps={{
+            onTouchMove: (e) => {
+              e.preventDefault()
+            },
+            onTouchStart: (e) => {
+              e.preventDefault()
+            },
+            onTouchEnd: (e) => {
+              e.preventDefault()
+            },
+          }}
+        >
           <DialogContent>
             <Box className={classes.container}>
               <Typography className={classes.title} variant="h2">
