@@ -49,7 +49,22 @@ const TagSelectDialog: React.FC<TagSelectDialogProps> = ({ selected, features, o
               <Icon className="fa fa-chevron-right" fontSize="small" />
             </ButtonBase>
 
-            <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+            <Dialog
+              fullScreen
+              open={open}
+              onClose={() => setOpen(false)}
+              BackdropProps={{
+                onTouchMove: (e) => {
+                  e.preventDefault()
+                },
+                onTouchStart: (e) => {
+                  e.preventDefault()
+                },
+                onTouchEnd: (e) => {
+                  e.preventDefault()
+                },
+              }}
+            >
               <Box className={classes.dialog}>
                 <BlankLayout>
                   <Box pt={7.5} pb={9} className={classes.topContainer}>

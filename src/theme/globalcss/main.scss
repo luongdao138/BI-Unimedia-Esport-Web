@@ -9,6 +9,9 @@
 
 body {
   overscroll-behavior-y: contain;
+  padding-right: 0 !important;
+  overflow: overlay;
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-wrapper {
