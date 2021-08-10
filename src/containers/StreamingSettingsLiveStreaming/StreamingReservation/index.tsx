@@ -20,11 +20,6 @@ const StreamingReservationContainer: React.FC = () => {
     router.push(ESRoutes.DELIVERY_MANAGEMENT)
   }
 
-  return (step === 3 ? (
-      <SettingsCompleted onClose={onClose} onComplete={onComplete} />
-    ) : (
-      <Steps step={step} onNext={onChangeStep} />
-    )
-  );
+  return step === 3 ? <SettingsCompleted onClose={onClose} onComplete={onComplete} /> : <Steps step={step} onNext={onChangeStep} />
 }
 export default StreamingReservationContainer
