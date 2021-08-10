@@ -250,7 +250,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   : '利用しない'
               }
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
               helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
               error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
               size="big"

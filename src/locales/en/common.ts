@@ -901,6 +901,9 @@ export default {
       point_ticket_limit: '1〜9,999,999の範囲で入力してください',
       title_limit: '100文字以内で入力してください',
       overview_limit: '5,000文字以内で入力してください',
+      date_limit: '配信開始予定日時は、告知掲載開始日時以降の日付を入力してください',
+      start_end_date: '終了予定日時は、配信開始予定日時以降の日付を入力してください',
+      min_date: '過去日付は登録できません',
     },
   },
   delivery_reservation_tab: {
