@@ -7,7 +7,7 @@ file_name=stage_deployment && \
   git checkout stage >> $new_fileName.log && \
   git pull >> $new_fileName.log && \
   zip -r EsportsStgWeb . -x 'node_modules*' -x '.next*' -x '.git*' && \
-  aws s3 cp EsportsStgWeb.zip s3://esports-deploy-src/stage/EsportsStgWeb.zip >> $new_fileName.log && \
+  aws s3 cp EsportsStgWeb.zip s3://esports-deploy-src/stg/EsportsStgWeb.zip >> $new_fileName.log && \
   rm EsportsStgWeb.zip && \
 
 if [ $? -eq 0 ]
