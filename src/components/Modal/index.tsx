@@ -28,7 +28,13 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       onClose={handleClose}
       BackdropProps={{
         classes: { root: classes.backDrop },
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
         onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
           e.preventDefault()
         },
       }}
