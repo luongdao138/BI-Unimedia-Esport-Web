@@ -99,6 +99,17 @@ const BlockedUserItem: React.FC<Props> = ({ data, actionHandler }) => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        BackdropProps={{
+          onTouchMove: (e) => {
+            e.preventDefault()
+          },
+          onTouchStart: (e) => {
+            e.preventDefault()
+          },
+          onTouchEnd: (e) => {
+            e.preventDefault()
+          },
+        }}
       >
         <DialogContent>
           <Box className={classes.containerDialog}>

@@ -27,7 +27,18 @@ const RegularModal: React.FC<ESDialogProps> = ({ open, handleClose, children, ..
       open={open}
       disableScrollLock={false}
       onClose={handleClose}
-      BackdropProps={{ classes: { root: classes.backDrop } }}
+      BackdropProps={{
+        classes: { root: classes.backDrop },
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
+      }}
       PaperProps={{ classes: { root: classes.paper } }}
       {...rest}
     >

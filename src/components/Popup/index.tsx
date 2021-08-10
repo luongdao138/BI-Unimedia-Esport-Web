@@ -28,6 +28,17 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      BackdropProps={{
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
+      }}
     >
       <DialogContent>{children}</DialogContent>
     </Dialog>

@@ -123,6 +123,15 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
             : 'rgba(0,0,30,0.6)',
         },
         children: fixedFooter ? fixedFooter : undefined,
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
       }}
       PaperProps={{
         style: {
