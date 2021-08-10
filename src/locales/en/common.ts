@@ -238,6 +238,7 @@ export default {
     app_desc: '以下のボタンから「アプリ版eXeLAB」をインストールすることができます。',
   },
   community: {
+    official: '公式コミュニティ',
     report: '通報',
     community_id: 'コミュニティコード：',
     copy_shared_url: '共有URLをコピー',
@@ -526,9 +527,6 @@ export default {
     join_dialog: {
       dialog_title: 'エントリーしますか？',
     },
-  },
-  community: {
-    official: '公式コミュニティ',
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
@@ -963,5 +961,13 @@ export default {
     check_content_button: '内容を確認する',
     organizer_joinable: '主催者を参加者として抽選に含める',
     organizer_joined: '主催者を参加者として抽選に含めるチェック',
+  },
+  topic_create: {
+    title: 'トピックを作成する',
+    name: 'トピック名',
+    text: '本文',
+    please_enter: '入力してください。',
+    confirm: 'この内容でトピックを作成しますか？',
+    preview: 'プレビュー',
   },
 }

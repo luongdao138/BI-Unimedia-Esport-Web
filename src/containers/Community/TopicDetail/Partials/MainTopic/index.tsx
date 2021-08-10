@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
+    width: 'calc(90% - 150px)',
   },
   userAvatarBox: {
     display: 'flex',
@@ -89,6 +90,7 @@ const useStyles = makeStyles((theme) => ({
   userInfoBox: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
   },
   dateReportContainer: {
     display: 'flex',

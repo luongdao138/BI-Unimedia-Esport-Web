@@ -4,8 +4,11 @@ import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Link, Box } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core'
+// import { useTranslation } from 'react-i18next'
+// import { Colors } from '@theme/colors'
 
 const TopicDetailContainer: React.FC = () => {
+  // const { t } = useTranslation(['common'])
   const classes = useStyles()
 
   const data = [
