@@ -11,6 +11,7 @@ import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import CommunityCard from '@components/CommunityCard'
+import useCommunityHelper from './hooks/useCommunityHelper'
 
 interface CommunityContainerProps {
   filter: CommunityFilterOption
@@ -20,6 +21,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
+  const { toCreate } = useCommunityHelper()
 
   const onFilter = (filter: CommunityFilterOption) => {
     router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
@@ -148,7 +150,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         <Typography variant="h2">{t('common:home.community')}</Typography>
 
         <LoginRequired>
-          <ButtonPrimary round gradient={false} /* onClick={toCreate}  */ size="small">
+          <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
             <AddRounded className={classes.addIcon} />
             {/* //TODO Change to community title */}
             {t('common:tournament_create.title')}
