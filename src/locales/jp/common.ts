@@ -43,7 +43,7 @@ export default {
       start_end_date: '開催終了日時は開催日時より後ろでなければなりません',
       min_date: '日時は現在の日時より後でなければなりません',
       prize_non_cash: '※現金等を副賞とするのはご遠慮ください。',
-      char_limit: '{{char_limit}}文字以内で入力してください。',
+      char_limit: '{{char_limit}} 文字以内で入力してください。',
     },
     no_data: '対象データありません',
     dash: '-',
@@ -898,6 +898,8 @@ export default {
     category: 'カテゴリー',
     validation: {
       point_ticket_limit: '1〜9,999,999の範囲で入力してください',
+      title_limit: '100文字以内で入力してください',
+      overview_limit: '5,000文字以内で入力してください',
     },
   },
   delivery_reservation_tab: {
