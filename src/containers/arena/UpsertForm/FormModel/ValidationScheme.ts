@@ -5,11 +5,11 @@ import moment from 'moment'
 import { TournamentDetail } from '@services/arena.service'
 import { EditableTypes } from '../useTournamentCreate'
 
-export const getValidationScheme = (data: TournamentDetail, editables: EditableTypes): any => {
+export const getValidationScheme = (data: TournamentDetail, editables: EditableTypes, isEdit: boolean): any => {
   let recruitMinDate = new Date()
   // let recruitEndMinDate = new Date()
   let minStartDate = new Date()
-  if (!!data && !!data.attributes.status) {
+  if (!!data && !!data.attributes.status && isEdit) {
     const beforeRecruit = TournamentHelper.checkStatus(data.attributes.status, 'recruiting')
     // const beforeRecruitEnd = TournamentHelper.checkStatus(data.attributes.status, 'recruitment_closed')
     if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
