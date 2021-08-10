@@ -66,36 +66,35 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
         }
       >
         {minimizeLayout ? (
-            <Box>
-              <img src="/images/stream_log.svg" className={classes.logo} />
-            </Box>
-          ) : (
-            <>
-              <Box
-                className={classes.clickable}
-                onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}
-              >
-                <Box className={classes.userInfo}>
-                  <ESAvatar
-                    className={classes.avatar}
-                    alt={userProfile?.attributes?.nickname}
-                    src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
-                  />
-                  {isAuthenticated && (
-                    <Box width="100%" textAlign="center">
-                      <Typography variant="h2" className={classes.name}>
-                        {userProfile ? userProfile.attributes.nickname : ''}
-                      </Typography>
-                      <Typography variant="body2" className={classes.usercode}>
-                        @{userProfile ? userProfile.attributes.user_code : ''}
-                      </Typography>
-                    </Box>
-                  )}
-                </Box>
+          <Box>
+            <img src="/images/stream_log.svg" className={classes.logo} />
+          </Box>
+        ) : (
+          <>
+            <Box
+              className={classes.clickable}
+              onClick={() => isAuthenticated && router.push(ESRoutes.PROFILE, undefined, { shallow: true })}
+            >
+              <Box className={classes.userInfo}>
+                <ESAvatar
+                  className={classes.avatar}
+                  alt={userProfile?.attributes?.nickname}
+                  src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
+                />
+                {isAuthenticated && (
+                  <Box width="100%" textAlign="center">
+                    <Typography variant="h2" className={classes.name}>
+                      {userProfile ? userProfile.attributes.nickname : ''}
+                    </Typography>
+                    <Typography variant="body2" className={classes.usercode}>
+                      @{userProfile ? userProfile.attributes.user_code : ''}
+                    </Typography>
+                  </Box>
+                )}
               </Box>
-              
-            </>
-          )}
+            </Box>
+          </>
+        )}
         <Box className={classes.menuWrap + getAddClass(classes.streamerMenuWrap, classes.minimizeMenuWrap)}>
           {!minimizeLayout && (
             <Box className={classes.wrap_point}>
@@ -184,7 +183,10 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   </ListItemIcon>
                   {/* confirm link to */}
                   {!minimizeLayout && (
-                    <ListItemText className={classes.listText + ' ' + classes.listTextWide} primary={t('common:home.video_distribution_application')} />
+                    <ListItemText
+                      className={classes.listText + ' ' + classes.listTextWide}
+                      primary={t('common:home.video_distribution_application')}
+                    />
                   )}
                 </ListItem>
               </Link>

@@ -415,6 +415,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
                 {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
               </ButtonPrimary>
+              {/* {hasError &&
+                <Box pt={1} display="flex" flexDirection="column" color={Colors.secondary} style={{ alignItems: 'center' }}>
+                  <Typography variant="body2">{'未入力の項目があります。'}</Typography>
+                </Box>} */}
             </Box>
           </Grid>
         ) : (

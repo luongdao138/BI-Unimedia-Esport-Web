@@ -10,27 +10,39 @@ import SnsInfoStream from '@components/SnsInfoStream'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
+import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
+import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
+import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
+import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 
 interface StepsProps {
   step: number
   onNext: (step: number) => void
-}
-type ContentParams = {
-  channelName: string
-  description: string
 }
 
 const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const classes = useStyles()
   const [profile, setProfile] = useState([])
   const [hasError, setError] = useState(false)
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik<ContentParams>({
-    initialValues: { channelName: '', description: '' },
+  const { userProfile } = useGetProfile()
+  const initialValues = getInitialLiveSettingValues()
+  const formik = useFormik<FormLiveType>({
+    initialValues: initialValues,
+    validationSchema: validationLiveSettingsScheme(),
+    enableReinitialize: true,
     onSubmit: () => {
-      // onSubmitClicked(values)
+      //TODO: smt
     },
   })
-  const { userProfile } = useGetProfile()
+  useEffect(() => {
+    formik.validateForm()
+  }, [])
+
+  useEffect(() => {
+    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(formik.errors)
+    setError(!isRequiredFieldsValid)
+  }, [formik.errors])
+
   useEffect(() => {
     if (userProfile) {
       setProfile([])
@@ -61,20 +73,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }
   return (
     <Box pb={9} py={4} className={classes.formContainer} maxWidth="md">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
         <Box pb={2} className={classes.box}>
           <Grid item xs={9}>
             <ESInput
-              id="channelName"
+              id="channel_name"
+              name="stepSettingThree.channel_name"
               required={true}
               placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_channel_name')}
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_channel_name')}
               fullWidth
-              value={isFirstStep() ? values.channelName : 'テキストテキストテキストテキストここの文字数制限'}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.channelName && errors.channelName}
-              error={(touched.channelName && !!errors.channelName) || hasError}
+              value={isFirstStep() ? formik.values.stepSettingThree.channel_name : 'テキストテキストテキストテキストここの文字数制限'}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              helperText={formik?.touched?.stepSettingThree?.channel_name && formik?.errors?.stepSettingThree?.channel_name}
+              error={formik?.touched?.stepSettingThree?.channel_name && !!formik?.errors?.stepSettingThree?.channel_name}
               size="big"
               disabled={!isFirstStep()}
               className={getAddClassByStep(classes.input_text)}
@@ -84,7 +97,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
         <Box pb={2} className={classes.box}>
           <Grid item xs={9}>
             <ESFastInput
-              id="description"
+              id="overview"
+              name="stepSettingThree.overview"
               multiline
               rows={12}
               required={true}
@@ -93,17 +107,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               fullWidth
               value={
                 isFirstStep()
-                  ? values.description
+                  ? formik.values.stepSettingThree.overview
                   : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
                     'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
                     'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
                     'ストテキストテキストテ\n' +
                     'https://sample.jp テキストテキスト'
               }
-              onChange={handleChange}
-              onBlur={handleBlur}
-              helperText={touched.description && errors.description}
-              error={touched.description && !!errors.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              helperText={formik?.touched?.stepSettingThree?.overview && formik?.errors?.stepSettingThree?.overview}
+              error={formik?.touched?.stepSettingThree?.overview && !!formik?.errors?.stepSettingThree?.overview}
               size="big"
               disabled={!isFirstStep()}
               className={getAddClassByStep(classes.input_text)}
@@ -126,9 +140,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
         {isFirstStep() ? (
           <Grid item xs={9}>
             <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+              <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
                 {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
               </ButtonPrimary>
+              {/* {hasError &&
+                <Box pt={1} display="flex" flexDirection="column" color={Colors.secondary} style={{ alignItems: 'center' }}>
+                  <Typography variant="body2">{showMessage}</Typography>
+                </Box>} */}
             </Box>
           </Grid>
         ) : (

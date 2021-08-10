@@ -14,4 +14,12 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     use_ticket: data ? data.attributes.use_ticket : false,
     share_sns_flag: data ? data.attributes.share_sns_flag : false,
   },
+  // stepSettingTwo:{},
+  stepSettingThree: {
+    channel_name: data ? data.attributes.channel_name : '',
+    overview: data ? data.attributes.overview : '',
+    discord_url: data ? data.attributes.discord_url : '',
+    twitter_url: data ? data.attributes.twitter_url : '',
+    instagram_url: data ? data.attributes.instagram_url : '',
+  },
 })

@@ -11,4 +11,12 @@ export type FormLiveType = {
     use_ticket: boolean
     share_sns_flag: boolean
   }
+  // stepSettingTwo:{},
+  stepSettingThree: {
+    channel_name: string
+    overview: string
+    discord_url?: string
+    twitter_url?: string
+    instagram_url?: string
+  }
 }
