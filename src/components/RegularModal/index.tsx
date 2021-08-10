@@ -29,16 +29,6 @@ const RegularModal: React.FC<ESDialogProps> = ({ open, handleClose, children, ..
       onClose={handleClose}
       BackdropProps={{ classes: { root: classes.backDrop } }}
       PaperProps={{ classes: { root: classes.paper } }}
-      onEntered={() => {
-        document.body.style.position = 'fixed'
-        document.body.style.width = '100%'
-        document.body.style.height = '100%'
-      }}
-      onExited={() => {
-        document.body.style.position = 'unset'
-        document.body.style.width = 'unset'
-        document.body.style.height = 'unset'
-      }}
       {...rest}
     >
       {children}
