@@ -539,6 +539,7 @@ export default {
     co_organizer: '共同管理者',
     organizer_name: '主催',
     submit: 'この内容で作成する',
+    edit: 'この内容で編集する',
     check_content: '内容を確認する',
     decide: '決定する',
     add: '追加する',

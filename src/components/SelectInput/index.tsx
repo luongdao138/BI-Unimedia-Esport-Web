@@ -1,5 +1,5 @@
 import { Box, createStyles, makeStyles, Typography, CircularProgress } from '@material-ui/core'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useEffect } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
@@ -20,6 +20,7 @@ interface SelectInputProps {
   items: SelectInputItem[]
   onItemsSelected: (selectedItems: (string | SelectInputItem)[]) => void
   onSearchInput: (keyword: string) => void
+  onFocusInput?: () => void
   loading: boolean
 }
 
@@ -155,7 +156,7 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
-const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, loading }) => {
+const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, onFocusInput, loading }) => {
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
@@ -180,6 +181,10 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
     getOptionSelected: (option, value) => option.id === value.id,
     onInputChange: handleChange,
   })
+
+  useEffect(() => {
+    if (onFocusInput) onFocusInput()
+  }, [focused])
 
   return (
     <Box width={1}>

@@ -114,12 +114,16 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
         {isEdit ? t('common:tournament_create.confirm_edit_title') : t('common:tournament_create.comfirm_title')}
       </Typography>
       <Box pb={4.25} />
-      <Box>
-        <img
-          src={values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'}
-          className={classes.coverImg}
-        />
-      </Box>
+      <Box
+        style={{
+          background: `url(${values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'})`,
+          paddingTop: '33.03%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+        }}
+        className={classes.coverWrapper}
+      ></Box>
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
       <Box pb={2} />
@@ -185,13 +189,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   viewHolder: {
     marginRight: 40,
     marginLeft: 40,
-  },
-  coverImg: {
-    width: '100%',
-    height: 116,
-    objectFit: 'cover',
-    objectPosition: '50% 50%',
-    borderRadius: 4,
   },
   time: {
     maxWidth: 340,

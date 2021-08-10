@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import { TournamentDetail } from '@services/arena.service'
 import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
-import { Colors } from '@theme/colors'
 import ActionComponent from '../ActionComponent'
 import { UserProfile } from '@services/user.service'
 import ArenaAvatar from '@containers/arena/Winners/ArenaAvatar'
@@ -47,7 +46,9 @@ const Completed: React.FC<CompletedProps> = (props) => {
       ) : (
         <Box className={classes.body}>
           <Box display="flex" flexDirection="row">
-            <Typography className={classes.roundInfoText}>{t('common:arena.not_held')}</Typography>
+            <Typography color="secondary" variant="body1">
+              {t('common:arena.not_held')}
+            </Typography>
           </Box>
         </Box>
       )}
@@ -56,10 +57,6 @@ const Completed: React.FC<CompletedProps> = (props) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  roundInfoText: {
-    fontSize: 24,
-    color: Colors.yellow,
-  },
   body: {
     display: 'flex',
     flexDirection: 'column',

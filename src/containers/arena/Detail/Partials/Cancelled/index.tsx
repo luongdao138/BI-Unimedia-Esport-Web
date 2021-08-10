@@ -19,7 +19,9 @@ const Cancelled: React.FC<CancelledProps> = (props) => {
     <ActionComponent {...props}>
       <Box className={classes.body}>
         <Box display="flex" flexDirection="row">
-          <Typography className={classes.roundInfoText}>{t('common:arena.cancelled')}</Typography>
+          <Typography color="secondary" variant="body1">
+            {t('common:arena.cancelled')}
+          </Typography>
         </Box>
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline"></Box>
       </Box>
@@ -28,10 +30,6 @@ const Cancelled: React.FC<CancelledProps> = (props) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  roundInfoText: {
-    fontSize: 24,
-    color: Colors.yellow,
-  },
   body: {
     display: 'flex',
     flexDirection: 'column',

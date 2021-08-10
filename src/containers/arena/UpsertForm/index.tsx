@@ -247,7 +247,7 @@ const TournamentCreate: React.FC = () => {
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
               <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:tournament_create.submit')}
+                {isEdit ? i18n.t('common:tournament_create.edit') : i18n.t('common:tournament_create.submit')}
               </ButtonPrimary>
             </Box>
           ) : (
