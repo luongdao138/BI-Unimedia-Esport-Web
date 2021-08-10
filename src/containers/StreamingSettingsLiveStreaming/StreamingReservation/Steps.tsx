@@ -31,7 +31,7 @@ type ContentParams = {
   ticket_sales_start_datetime?: any
 }
 interface StepsProps {
-  step: number,
+  step: number
   onNext: (step: number) => void
 }
 
@@ -85,7 +85,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }
 
   const isFirstStep = () => {
-    return step === 1 ? true : false;
+    return step === 1 ? true : false
   }
 
   const getAddClassByStep = (addClass: string, otherClass?: string) => {
@@ -123,8 +123,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
               <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
             </Box>
-            )
-          }
+          )}
         </Box>
         <Box paddingBottom={4} />
         <Box pb={4} className={classes.box}>
@@ -171,14 +170,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_description')}
                 labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_description')}
                 fullWidth
-                value={isFirstStep() ? values.description : (
-                  '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
-                  'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
-                  'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
-                  'ストテキストテキストテ\n' +
-                  'https://sample.jp テキストテキスト'
-
-                )}
+                value={
+                  isFirstStep()
+                    ? values.description
+                    : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
+                      'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
+                      'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
+                      'ストテキストテキストテ\n' +
+                      'https://sample.jp テキストテキスト'
+                }
                 onChange={handleChange}
                 onBlur={handleBlur}
                 helperText={touched.description && errors.description}
@@ -209,110 +209,99 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   </option>
                 ))}
               </ESSelect>
-              ) : (
-                <ESInput
-                  id="title"
-                  name="title"
-                  value={'ゲーム：Apex Legends'}
-                  fullWidth
-                  labelPrimary={i18n.t('common:delivery_reservation_tab.category')}
-                  required
-                  disabled={!isFirstStep()}
-                  className={getAddClassByStep(classes.input_text)}
-                  size="big"
-                />
-              )
-            }
+            ) : (
+              <ESInput
+                id="title"
+                name="title"
+                value={'ゲーム：Apex Legends'}
+                fullWidth
+                labelPrimary={i18n.t('common:delivery_reservation_tab.category')}
+                required
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
+                size="big"
+              />
+            )}
           </Grid>
         </Box>
         <Box pb={4} className={classes.box}>
           <Grid item xs={9}>
             <ESLabel label={i18n.t('common:delivery_reservation_tab.notification_datetime')} />
             {isFirstStep() ? (
-                <ESInputDatePicker
-                  name="stepThree.start_date"
-                  placeholder={i18n.t('common:delivery_reservation_tab.notification_datetime')}
-                  fullWidth
-                  value={values.notification_datetime}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  helperText={''}
-                  error={false}
-                  disabled={false}
-                />
-              ) : (
-                <>
-                  <Box>
-                    2021年6月20日 10:00
-                  </Box>
-                </>
-              )
-            }
+              <ESInputDatePicker
+                name="stepThree.start_date"
+                placeholder={i18n.t('common:delivery_reservation_tab.notification_datetime')}
+                fullWidth
+                value={values.notification_datetime}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={''}
+                error={false}
+                disabled={false}
+              />
+            ) : (
+              <>
+                <Box>2021年6月20日 10:00</Box>
+              </>
+            )}
           </Grid>
         </Box>
         <Box pb={4} className={classes.box}>
           <Grid item xs={9}>
             <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')} />
             {isFirstStep() ? (
-                <ESInputDatePicker
-                  name="stepThree.start_date"
-                  placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
-                  fullWidth
-                  value={values.scheduled_delivery_start_datetime}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  helperText={''}
-                  error={false}
-                  disabled={false}
-                />
-              ) : (
-                <>
-                  <Box>
-                    2021年7月1日 15:45
-                  </Box>
-                </>
-              )
-            }
+              <ESInputDatePicker
+                name="stepThree.start_date"
+                placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
+                fullWidth
+                value={values.scheduled_delivery_start_datetime}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={''}
+                error={false}
+                disabled={false}
+              />
+            ) : (
+              <>
+                <Box>2021年7月1日 15:45</Box>
+              </>
+            )}
           </Grid>
         </Box>
         <Box pb={4} className={classes.box}>
           <Grid item xs={9}>
             <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')} />
             {isFirstStep() ? (
-                <ESInputDatePicker
-                  name="stepThree.start_date"
-                  placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
-                  fullWidth
-                  value={values.scheduled_end_datetime}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  helperText={''}
-                  error={false}
-                  disabled={false}
-                />
-              ) : (
-                <>
-                  <Box>
-                    2021年7月1日 18:45
-                  </Box>
-                </>
-              )
-            }
+              <ESInputDatePicker
+                name="stepThree.start_date"
+                placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
+                fullWidth
+                value={values.scheduled_end_datetime}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={''}
+                error={false}
+                disabled={false}
+              />
+            ) : (
+              <>
+                <Box>2021年7月1日 18:45</Box>
+              </>
+            )}
           </Grid>
         </Box>
         {isFirstStep() ? (
-            <Box pb={3 / 8}>
-              <ESCheckboxBig
-                checked={checkboxStates.isTicketUse}
-                onChange={handleCheckboxChange}
-                label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
-                name="isTicketUse"
-              />
-            </Box>
-          ): (
-            <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')} />
-          )
-        }
+          <Box pb={3 / 8}>
+            <ESCheckboxBig
+              checked={checkboxStates.isTicketUse}
+              onChange={handleCheckboxChange}
+              label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
+              name="isTicketUse"
+            />
+          </Box>
+        ) : (
+          <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')} />
+        )}
         {/* TODO: Apply component enter point eXeポイント */}
         <Box className={classes.box}>
           <Grid item xs={9}>
@@ -337,49 +326,45 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Grid item xs={9}>
             <ESLabel label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')} />
             {isFirstStep() ? (
-                <ESInputDatePicker
-                  name="stepThree.start_date"
-                  placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                  fullWidth
-                  value={values.ticket_sales_start_datetime}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  helperText={''}
-                  error={false}
-                  disabled={false}
-                />
-              ) : (
-                <>
-                  <Box>
-                    2021年6月20日 10:00
-                  </Box>
-                </>
-              )
-            }
+              <ESInputDatePicker
+                name="stepThree.start_date"
+                placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                fullWidth
+                value={values.ticket_sales_start_datetime}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                helperText={''}
+                error={false}
+                disabled={false}
+              />
+            ) : (
+              <>
+                <Box>2021年6月20日 10:00</Box>
+              </>
+            )}
           </Grid>
         </Box>
         {isFirstStep() ? (
-            <Box>
-              <ESCheckboxBig
-                checked={checkboxStates.isShareSNS}
-                onChange={handleCheckboxChange}
-                label={t('common:streaming_settings_live_streaming_screen.share_SNS')}
-                name="isShareSNS"
-              />
-            </Box>
-          ): (
-            <ESInput
-              id="title"
-              name="title"
-              value={'共有しない'}
-              fullWidth
-              labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
-              disabled={true}
-              size="big"
-              className={getAddClassByStep(classes.input_text)}
+          <Box>
+            <ESCheckboxBig
+              checked={checkboxStates.isShareSNS}
+              onChange={handleCheckboxChange}
+              label={t('common:streaming_settings_live_streaming_screen.share_SNS')}
+              name="isShareSNS"
             />
-          )
-        }
+          </Box>
+        ) : (
+          <ESInput
+            id="title"
+            name="title"
+            value={'共有しない'}
+            fullWidth
+            labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
+            disabled={true}
+            size="big"
+            className={getAddClassByStep(classes.input_text)}
+          />
+        )}
         {/* stream URL */}
         <Box pb={4} py={3} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
           <Grid item xs={9}>
@@ -390,7 +375,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               type={showStreamURL ? 'text' : 'password'}
               endAdornment={
                 isFirstStep() ? (
-                   <InputAdornment position="end" className={classes.inputContainer}>
+                  <InputAdornment position="end" className={classes.inputContainer}>
                     <div className={classes.borderLeft}></div>
                     <IconButton
                       aria-label="toggle password visibility"
@@ -402,9 +387,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                       {showStreamURL ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
                     </IconButton>
                   </InputAdornment>
+                ) : (
+                  <></>
                 )
-                : <></>
-                
               }
               fullWidth
               value={values.streamURL}
@@ -415,17 +400,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             />
           </Grid>
           {isFirstStep() && (
-              <Box flexDirection="row" display="flex">
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                  <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-                </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
-                </Box>
+            <Box flexDirection="row" display="flex">
+              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
               </Box>
-            )
-          }
+              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
+              </Box>
+            </Box>
+          )}
         </Box>
         {/* stream key */}
         <Box className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
@@ -449,7 +433,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                       {showStreamKey ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
                     </IconButton>
                   </InputAdornment>
-                  ) : <></>
+                ) : (
+                  <></>
+                )
               }
               fullWidth
               value={values.streamKey}
@@ -460,40 +446,38 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             />
           </Grid>
           {isFirstStep() && (
-              <Box flexDirection="row" display="flex">
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                  <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-                </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
-                </Box>
+            <Box flexDirection="row" display="flex">
+              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
               </Box>
-            )
-          }
+              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
+              </Box>
+            </Box>
+          )}
         </Box>
         {isFirstStep() ? (
-            <Box pb={3 / 8} pt={2}>
-              <ESCheckboxBig
-                checked={checkboxStates.isReissue}
-                onChange={handleCheckboxChange}
-                label={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
-                name="isReissue"
-              />
-            </Box>
-          ): (
-            <ESInput
-              id="title"
-              name="title"
-              value={'公開する'}
-              fullWidth
-              labelPrimary={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
-              disabled={true}
-              size="big"
-              className={getAddClassByStep(classes.input_text)}
+          <Box pb={3 / 8} pt={2}>
+            <ESCheckboxBig
+              checked={checkboxStates.isReissue}
+              onChange={handleCheckboxChange}
+              label={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+              name="isReissue"
             />
-          )
-        }
+          </Box>
+        ) : (
+          <ESInput
+            id="title"
+            name="title"
+            value={'公開する'}
+            fullWidth
+            labelPrimary={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+            disabled={true}
+            size="big"
+            className={getAddClassByStep(classes.input_text)}
+          />
+        )}
         <Typography className={classes.captionNote}>
           {i18n.t('common:streaming_settings_live_streaming_screen.note_for_publish_delivery_pt')}
         </Typography>
@@ -502,30 +486,29 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
         </Typography>
         <Box paddingBottom={3} />
         {isFirstStep() ? (
-            <Grid item xs={9}>
-              <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
-                  {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
+          <Grid item xs={9}>
+            <Box maxWidth={280} className={classes.buttonContainer}>
+              <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+                {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
+              </ButtonPrimary>
+            </Box>
+          </Grid>
+        ) : (
+          <Grid item xs={6} sm={8} md={8} lg={6}>
+            <Box className={classes.actionButtonContainer}>
+              <Box className={classes.actionButton}>
+                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                  {t('common:common.cancel')}
+                </ESButton>
+              </Box>
+              <Box className={classes.actionButton}>
+                <ButtonPrimary round fullWidth onClick={onClickNext}>
+                  {t('common:delivery_reservation_tab.delivery_data_save')}
                 </ButtonPrimary>
               </Box>
-            </Grid>
-          ) : (
-            <Grid item xs={6} sm={8} md={8} lg={6}>
-              <Box className={classes.actionButtonContainer}>
-                <Box className={classes.actionButton}>
-                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
-                    {t('common:common.cancel')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ButtonPrimary round fullWidth onClick={onClickNext}>
-                    {t('common:delivery_reservation_tab.delivery_data_save')}
-                  </ButtonPrimary>
-                </Box>
-              </Box>
-            </Grid>
-          )
-        }
+            </Box>
+          </Grid>
+        )}
       </form>
     </Box>
   )

@@ -55,7 +55,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
     handleError(errors)
   }, [errors])
 
-   const getAddClassByShowPreview = (addClass: string, otherClass?: string) => {
+  const getAddClassByShowPreview = (addClass: string, otherClass?: string) => {
     if (showPreview === true) {
       return ' ' + addClass
     } else {

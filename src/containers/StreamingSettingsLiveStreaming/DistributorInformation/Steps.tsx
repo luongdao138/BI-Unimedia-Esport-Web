@@ -12,7 +12,7 @@ import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 
 interface StepsProps {
-  step: number,
+  step: number
   onNext: (step: number) => void
 }
 type ContentParams = {
@@ -49,7 +49,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }
 
   const isFirstStep = () => {
-    return step === 1 ? true : false;
+    return step === 1 ? true : false
   }
 
   const getAddClassByStep = (addClass: string, otherClass?: string) => {
@@ -91,13 +91,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_overview')}
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_overview')}
               fullWidth
-              value={isFirstStep() ? values.description : (
-                '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
-                'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
-                'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
-                'ストテキストテキストテ\n' +
-                'https://sample.jp テキストテキスト'
-              )}
+              value={
+                isFirstStep()
+                  ? values.description
+                  : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
+                    'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
+                    'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
+                    'ストテキストテキストテ\n' +
+                    'https://sample.jp テキストテキスト'
+              }
               onChange={handleChange}
               onBlur={handleBlur}
               helperText={touched.description && errors.description}
@@ -113,34 +115,38 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <Typography variant="h3" gutterBottom className={classes.label}>
               {i18n.t('common:user_profile.sns')}
             </Typography>
-            <SnsInfoStream showPreview={isFirstStep() ? false : true} profile={profile} onDataChange={onBasicInfoChanged} handleError={handleError} />
+            <SnsInfoStream
+              showPreview={isFirstStep() ? false : true}
+              profile={profile}
+              onDataChange={onBasicInfoChanged}
+              handleError={handleError}
+            />
           </Grid>
         </Box>
         {isFirstStep() ? (
-            <Grid item xs={9}>
-              <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
-                  {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
+          <Grid item xs={9}>
+            <Box maxWidth={280} className={classes.buttonContainer}>
+              <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+                {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
+              </ButtonPrimary>
+            </Box>
+          </Grid>
+        ) : (
+          <Grid item xs={6} sm={8} md={8} lg={6}>
+            <Box className={classes.actionButtonContainer}>
+              <Box className={classes.actionButton}>
+                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                  {i18n.t('common:common.cancel')}
+                </ESButton>
+              </Box>
+              <Box className={classes.actionButton}>
+                <ButtonPrimary round fullWidth onClick={onClickNext}>
+                  {i18n.t('common:streaming_settings_live_streaming_screen.save_channel_live_info')}
                 </ButtonPrimary>
               </Box>
-            </Grid>
-          ) : (
-            <Grid item xs={6} sm={8} md={8} lg={6}>
-              <Box className={classes.actionButtonContainer}>
-                <Box className={classes.actionButton}>
-                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
-                    {i18n.t('common:common.cancel')}
-                  </ESButton>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <ButtonPrimary round fullWidth onClick={onClickNext}>
-                    {i18n.t('common:streaming_settings_live_streaming_screen.save_channel_live_info')}
-                  </ButtonPrimary>
-                </Box>
-              </Box>
-            </Grid>
-          )
-        }
+            </Box>
+          </Grid>
+        )}
       </form>
     </Box>
   )

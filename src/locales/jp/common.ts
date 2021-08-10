@@ -896,6 +896,9 @@ export default {
     start_live_stream: '配信開始する',
     save_channel_live_info: '配信者情報を保存する',
     category: 'カテゴリー',
+    validation: {
+      point_ticket_limit: '1〜9,999,999の範囲で入力してください',
+    },
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
