@@ -220,6 +220,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#000',
     borderBottom: 'solid 1px #70707070',
     willChange: 'transform',
+    paddingRight: '0 !important',
   },
   toolbar: {
     minHeight: 60,
