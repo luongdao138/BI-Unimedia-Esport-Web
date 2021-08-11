@@ -4,10 +4,13 @@ import SettingsRowItem from '@components/SettingsRowItem'
 import useNotificationSettings from './useNotificationSettings'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import { makeStyles } from '@material-ui/core/styles'
+import ESLoader from '@components/Loader'
 
 const ESNotificationSettings = () => {
+  const classes = useStyles()
   const { t } = useTranslation('common')
-  const { notificationSettings, updateNotificationSettings } = useNotificationSettings()
+  const { notificationSettings, updateNotificationSettings, meta } = useNotificationSettings()
 
   const [state, setState] = useState<{ id: number; name: string; status: boolean }[]>([])
   const [checkAll, setCheckAll] = useState(false)
@@ -84,8 +87,21 @@ const ESNotificationSettings = () => {
           showSwitch={true}
         />
       ))}
+      {meta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  loaderCenter: {
+    marginTop: theme.spacing(1),
+    width: '100%',
+    textAlign: 'center',
+  },
+}))
 
 export default ESNotificationSettings

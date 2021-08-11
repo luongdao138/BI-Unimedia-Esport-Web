@@ -172,7 +172,15 @@ const TournamentCreate: React.FC = () => {
     })
   }
 
-  const handleUnsetConfirm = () => setIsConfirm(false)
+  const backFromConfirm = () => {
+    if (_.has(formik.errors, 'stepOne')) setTab(0)
+    else if (_.has(formik.errors, 'stepTwo')) setTab(1)
+    else if (_.has(formik.errors, 'stepThree')) setTab(2)
+    else if (_.has(formik.errors, 'stepFour')) setTab(3)
+    setIsConfirm(false)
+  }
+
+  const handleUnsetConfirm = () => backFromConfirm()
 
   const handleTabChange = useCallback((value) => {
     setTab(value)
@@ -190,7 +198,7 @@ const TournamentCreate: React.FC = () => {
   }
 
   const handleBack = () => {
-    if (isConfirm) setIsConfirm(false)
+    if (isConfirm) backFromConfirm()
     else handleReturn()
   }
 
@@ -211,9 +219,8 @@ const TournamentCreate: React.FC = () => {
         const fieldKeys = Object.keys(fields)
         if (fieldKeys[0]) {
           const translationName = TournamentHelper.getLabelName(fieldKeys[0])
-          let errMsg = _.get(fields, `${fieldKeys[0]}`) as string
-          if (!_.isString(errMsg)) errMsg = ''
-          msg = `「${i18n.t(translationName)}」${errMsg}`
+          const pleaseReviewMsg = i18n.t('common:tournament_create.please_review')
+          msg = `「${i18n.t(translationName)}」${pleaseReviewMsg}`
         }
       }
     }
