@@ -44,7 +44,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
           <Box
             className={classes.image}
             style={{
-              background: `url(${image})`,
+              backgroundImage: `url(${image})`,
             }}
             mb={3}
           ></Box>
