@@ -186,8 +186,6 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
     onChange: (_, values) => onItemsSelected(values),
     getOptionSelected: (option, value) => option.id === value.id,
     onInputChange: handleChange,
-    clearOnBlur: true,
-    clearOnEscape: true,
   })
 
   return (
