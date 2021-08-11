@@ -587,6 +587,9 @@ body {
 }
 
 @media (max-width: 720px) {
+  body {
+    overflow: unset;
+  }
   .chat-flex {
     padding-left: 0;
   }
