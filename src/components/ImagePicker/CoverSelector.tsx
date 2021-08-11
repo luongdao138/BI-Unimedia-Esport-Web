@@ -215,13 +215,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
           <ButtonPrimary round className={classes.button} gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary
-            round
-            className={classes.button}
-            onClick={file && rawFile ? update : remove}
-            style={{ marginLeft: 20 }}
-            disabled={disableUseButton()}
-          >
+          <ButtonPrimary round className={classes.button} onClick={file && rawFile ? update : remove} disabled={disableUseButton()}>
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
@@ -401,5 +395,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
   button: {
     minWidth: 170,
+    marginLeft: 20,
+    marginTop: 10,
   },
 }))
