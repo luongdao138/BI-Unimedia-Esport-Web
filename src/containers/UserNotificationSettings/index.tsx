@@ -4,10 +4,11 @@ import SettingsRowItem from '@components/SettingsRowItem'
 import useNotificationSettings from './useNotificationSettings'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import ESLoader from '@components/FullScreenLoader'
 
 const ESNotificationSettings = () => {
   const { t } = useTranslation('common')
-  const { notificationSettings, updateNotificationSettings } = useNotificationSettings()
+  const { notificationSettings, updateNotificationSettings, meta } = useNotificationSettings()
 
   const [state, setState] = useState<{ id: number; name: string; status: boolean }[]>([])
   const [checkAll, setCheckAll] = useState(false)
@@ -84,6 +85,7 @@ const ESNotificationSettings = () => {
           showSwitch={true}
         />
       ))}
+      {meta.pending && <ESLoader open={meta.pending} />}
     </div>
   )
 }
