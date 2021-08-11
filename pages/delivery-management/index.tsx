@@ -1,11 +1,11 @@
-import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
+import StreamLayout from '@layouts/StreamLayout'
 import DeliveryManagementContainer from '@containers/DeliveryManagementContainer'
 
 const DeliveryManagementPage: PageWithLayoutType = () => {
-  return <DeliveryManagementContainer />
+  return <StreamLayout>
+      <DeliveryManagementContainer />
+    </StreamLayout>
 }
-
-DeliveryManagementPage.Layout = MainLayout
 
 export default DeliveryManagementPage
