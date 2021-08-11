@@ -989,4 +989,18 @@ export default {
       submit: '作成する',
     },
   },
+  topic_create: {
+    title: 'トピックを作成する',
+    name: 'トピック名',
+    text: '本文',
+    please_enter: '入力してください。',
+    confirm: 'この内容でトピックを作成しますか？',
+    preview: 'プレビュー',
+    discard: {
+      title: '作成内容を破棄します',
+      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
+      confirm: '作成内容を破棄して戻る',
+    },
+    create_success: 'トピックを作成しました',
+  },
 }
