@@ -21,6 +21,7 @@ const useArenaHelper = (
   isTeam: boolean
   isEditable: boolean
   isNotHeld: boolean
+  isHeld: boolean
   isReady: boolean
   isEntered: boolean
   isUnselected: boolean
@@ -48,6 +49,7 @@ const useArenaHelper = (
   const isEditable = isModerator && status !== TOURNAMENT_STATUS.CANCELLED
   const isFreezed = tournament?.attributes?.is_freezed
   const isNotHeld = isCompleted && !isFreezed
+  const isHeld = isCompleted && (tournament?.attributes?.participant_count > 1 ? isFreezed : false)
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
   const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
@@ -111,6 +113,7 @@ const useArenaHelper = (
     isTeam,
     isEditable,
     isNotHeld,
+    isHeld,
     isReady,
     isUnselected,
     toEdit,

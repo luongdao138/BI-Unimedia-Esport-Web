@@ -37,7 +37,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     isCompleted,
     isCancelled,
     isRecruitmentClosed,
-    isNotHeld,
+    isHeld,
     isAdminJoined,
     isTeamLeader,
     isEntered,
@@ -121,7 +121,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {!isCancelled && !isNotHeld && <SubActionButtons tournament={tournament} />}
+        {!isCancelled && isHeld && <SubActionButtons tournament={tournament} />}
       </Box>
 
       {isRecruiting || isReady ? (
@@ -144,7 +144,7 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {isModerator && isCompleted && !isNotHeld && (
+      {isModerator && isCompleted && isHeld && (
         <Box className={classes.actionButton}>
           <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
             {t('common:tournament.summary')}
