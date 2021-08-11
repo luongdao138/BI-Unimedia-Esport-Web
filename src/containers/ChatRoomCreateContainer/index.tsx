@@ -199,7 +199,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   }
 
   const handleSearchInput = (text: string) => {
-    if (text.length > 1) dispatch(getFriendList({ type: 'group', keyword: text }))
+    if (text.trim().length > 0) dispatch(getFriendList({ type: 'group', keyword: text }))
     dispatch(resetAddUsers())
   }
 
