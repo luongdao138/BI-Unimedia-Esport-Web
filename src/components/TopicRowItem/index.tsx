@@ -14,7 +14,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, mail, description, d
 
   return (
     <>
-      <Box margin={2} display="flex" maxHeight={66} alignItems="flex-start">
+      <Box margin={1} display="flex" maxHeight={66} alignItems="flex-start">
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box display="flex" flexDirection="column" width="85%">
             <Box display="flex" flexDirection="row" justifyContent="" width="100%">

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import ESCheckbox from '@components/Checkbox'
 import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
+import Pagination from '@material-ui/lab/Pagination'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -15,6 +16,7 @@ const InfoContainer: React.FC = () => {
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [value, setValue] = useState<string>('')
   const classes = useStyles()
+  const [showResult, setShowResult] = useState(false)
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -28,8 +30,8 @@ const InfoContainer: React.FC = () => {
     //
   }
 
-  const handleSearch = (event) => {
-    event.preventDefault()
+  const handleSearch = () => {
+    setShowResult(true)
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,59 +57,127 @@ const InfoContainer: React.FC = () => {
 
   const dummy_data = [
     {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
+      title: '自己紹介しよう！ 自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！',
+      mail: '@watanabe @watanabe@watanabe@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 901,
     },
     {
       title: '自己紹介しよう！',
       mail: '@watanabe',
       description: 'はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 902,
     },
     {
       title: '自己紹介しよう！',
       mail: '@watanabe',
       description: 'はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 903,
     },
     {
       title: '自己紹介しよう！',
       mail: '@watanabe',
       description: 'はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 904,
     },
     {
       title: '自己紹介しよう！',
       mail: '@watanabe',
       description: 'はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 905,
     },
     {
       title: '自己紹介しよう！',
       mail: '@watanabe',
       description: 'はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 906,
     },
     {
       title: '自己紹介しよう！',
       mail: '@watanabe',
       description: 'はじめまして！　ダミーテキストです〜',
       date: '数秒前',
-      comment_number: 999,
+      comment_number: 907,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 908,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 909,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 910,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 911,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 912,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 913,
+    },
+    {
+      title: '自己紹介しよう！',
+      mail: '@watanabe',
+      description: 'はじめまして！　ダミーテキストです〜',
+      date: '数秒前',
+      comment_number: 914,
     },
   ]
 
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(1)
+  const chunkSize = 10
+
+  useEffect(() => {
+    setCount(Math.ceil(dummy_data.length / 10))
+  }, [])
+
+  const handleChange = (event, value) => {
+    setPage(value)
+    return event
+  }
+
+  const chunks = (arr, chunkSize, index) => {
+    const chunk_array = []
+    for (let i = 0; i < arr.length; i += chunkSize) chunk_array.push(arr.slice(i, i + chunkSize))
+    return chunk_array[index - 1]
+  }
+
   return (
     <>
-      <Box mt={2}>
+      <Box mt={2} ml={2}>
         <form onSubmit={handleSearch} className={classes.searchContainer}>
           <OutlinedInput
             autoComplete="off"
@@ -129,17 +199,33 @@ const InfoContainer: React.FC = () => {
         </form>
       </Box>
 
-      <Box pb={4}>
+      <Box pb={4} ml={2}>
         <ESCheckbox disableRipple onChange={handleCheckbox} label={i18n.t('common:community.search_by_title')} />
       </Box>
-      <Box pt={0} pb={2} ml={2}>
-        <ESLabel label="検索結果" bold />
-      </Box>
-      {dummy_data.map((d, i) => {
-        return (
-          <TopicRowItem key={i} title={d.title} mail={d.mail} description={d.description} date={d.date} comment_number={d.comment_number} />
-        )
-      })}
+      {showResult && (
+        <>
+          <Box pt={0} pb={2} ml={2}>
+            <ESLabel label="検索結果" bold />
+          </Box>
+          <>
+            {chunks(dummy_data, chunkSize, page).map((d, i) => {
+              return (
+                <TopicRowItem
+                  key={i}
+                  title={d.title}
+                  mail={d.mail}
+                  description={d.description}
+                  date={d.date}
+                  comment_number={d.comment_number}
+                />
+              )
+            })}
+            <Box display="flex" justifyContent="center" mt={4}>
+              <Pagination count={count} page={page} onChange={handleChange} variant="outlined" shape="rounded" color="primary" />
+            </Box>
+          </>
+        </>
+      )}
     </>
   )
 }
