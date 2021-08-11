@@ -56,7 +56,6 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
     <>
       <Box display="flex" alignItems="center" pb={1}>
         <Typography className={classes.labelColor}>{t('common:community_create.tag')}</Typography>
-        <Typography className={classes.required}>{t('common:common.required')}</Typography>
       </Box>
       <ButtonBase
         disabled={disabled}
@@ -70,11 +69,7 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
           ) : (
-            values.map((item, idx) => (
-              <Box paddingRight={1} key={idx}>
-                <Typography>{'#' + item.display_name}</Typography>
-              </Box>
-            ))
+            values.map((category, idx) => <ESChip key={idx} className={classes.chip} label={category.display_name} />)
           )}
         </Box>
         <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
@@ -172,16 +167,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blankSpace: {
     height: 169,
-  },
-  required: {
-    backgroundColor: Colors.primary,
-    borderRadius: 2,
-    paddingLeft: theme.spacing(1 / 2),
-    paddingRight: theme.spacing(1 / 2),
-    height: 16,
-    fontSize: 10,
-    marginLeft: theme.spacing(1),
-    color: Colors.white,
   },
   icon: {
     color: Colors.white,

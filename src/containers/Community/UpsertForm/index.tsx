@@ -22,9 +22,11 @@ import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import DiscardDialog from './Partials/DiscardDialog'
+import useCommonData from './useCommonData'
 
 const CommunityCreate: React.FC = () => {
   const dispatch = useAppDispatch()
+  const { prefectures } = useCommonData()
   const classes = useStyles()
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
@@ -60,7 +62,7 @@ const CommunityCreate: React.FC = () => {
 
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
-    else isFirstRun.current ? null : setIsDiscard(true)
+    else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
   }
 
   const handleSetConfirm = () => {
@@ -111,7 +113,7 @@ const CommunityCreate: React.FC = () => {
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
               <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:lobby_create.submit')}
+                {i18n.t('common:community_create.confirm.submit')}
               </ButtonPrimary>
             </Box>
           ) : (
@@ -136,8 +138,8 @@ const CommunityCreate: React.FC = () => {
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2" style={isConfirm ? { visibility: 'hidden' } : undefined}>
-                {/* isEdit ? i18n.t('common:lobby_create.edit_title') : */ i18n.t('common:community_create.title')}
+              <Typography variant="h2">
+                {isConfirm ? i18n.t('common:community_create.confirm.title') : i18n.t('common:community_create.title')}
               </Typography>
             </Box>
           </Box>
@@ -145,17 +147,11 @@ const CommunityCreate: React.FC = () => {
         <form onSubmit={formik.handleSubmit}>
           <Box>
             {isConfirm ? (
-              <Confirm
-                values={formik.values}
-                hardwares={/* hardwares.data || */ []}
-                user={/* user */ null}
-                prefectures={/* prefectures.data */ null}
-                isEdit={/* isEdit */ false}
-              />
+              <Confirm values={formik.values} prefectures={prefectures.data || null} />
             ) : (
               <>
                 <Box py={4} className={classes.formContainer}>
-                  {<StepOne formik={formik} hardwares={/* hardwares */ null} editables={editables} />}
+                  {<StepOne formik={formik} prefectures={prefectures || null} editables={editables} />}
                 </Box>
               </>
             )}

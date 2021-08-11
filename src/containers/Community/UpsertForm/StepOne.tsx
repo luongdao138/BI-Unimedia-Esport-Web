@@ -1,8 +1,7 @@
 import { Box /* makeStyles,   Typography*/ } from '@material-ui/core'
 import { FormikProps } from 'formik'
-import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
-// import { EditableTypes } from './useLobbyCreate'
+import { EditableTypes } from './useCommunityCreate'
 import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
@@ -14,15 +13,15 @@ import ESLabel from '@components/Label'
 import TagSelectorDialog from './Partials/TagSelectorDialog'
 import i18n from '@locales/i18n'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
+import { GetPrefecturesResponse } from '@services/common.service'
 
 type Props = {
   formik: FormikProps<FormType>
-  hardwares: HardwareResponse
-  editables: /* EditableTypes */ any
+  prefectures: GetPrefecturesResponse
+  editables: EditableTypes
 }
 
-const StepOne: React.FC<Props> = ({ formik, /* hardwares, */ editables }) => {
-  // const classes = useStyles()
+const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
   const { uploadArenaCoverImage, isUploading } = useUploadImage()
 
   const handleUpload = useCallback((file: File, blob: any) => {
@@ -99,11 +98,11 @@ const StepOne: React.FC<Props> = ({ formik, /* hardwares, */ editables }) => {
           <option disabled value={-1}>
             {i18n.t('common:please_select')}
           </option>
-          {/* {prefectures?.data?.map((prefecture, index) => (
+          {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
               {prefecture.attributes.area}
             </option>
-          ))} */}
+          ))}
         </ESSelect>
       </Box>
       <Box pb={4}>
@@ -133,13 +132,32 @@ const StepOne: React.FC<Props> = ({ formik, /* hardwares, */ editables }) => {
           disabled={!editables.t_type}
         />
       </Box>
+      <Box pb={4} width={200}>
+        <ESSelect
+          name="stepTwo.area_id"
+          value={formik.values.stepOne.participation_approval}
+          onChange={formik.handleChange}
+          label={i18n.t('common:community_create.participation_approval')}
+          size="small"
+          fullWidth
+          disabled={!editables.area_id}
+          required
+        >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
+          {prefectures?.data?.map((prefecture, index) => (
+            <option value={prefecture.id} key={index}>
+              {prefecture.attributes.area}
+            </option>
+          ))}
+        </ESSelect>
+      </Box>
       <Box>
         <TagSelectorDialog values={formik.values.stepOne.tag_title_id} onChange={handleSelectedTag} disabled={!editables.tag_title} />
       </Box>
     </Box>
   )
 }
-
-// const useStyles = makeStyles(() => ({}))
 
 export default StepOne

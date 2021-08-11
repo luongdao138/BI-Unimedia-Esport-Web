@@ -968,6 +968,7 @@ export default {
     name: 'コミュニティ名',
     introduction: 'コミュニティ紹介文',
     introduction_placeholder: '入力してください',
+    overview: '概要',
     game: 'ゲーム',
     game_placeholder: '選択されていません',
     area: 'エリア',
@@ -975,13 +976,17 @@ export default {
     public_or_private: 'コミュニティ公開設定',
     participation_approval: '参加承認',
     choose_tag: 'コミュニティタグを選ぶ',
-    tag: 'タグ',
+    tag: 'コミュニティタグ',
     decide: '決定する',
     check_content: '内容を確認する',
     discard: {
       title: '作成内容を破棄します',
       message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
       confirm: '作成内容を破棄して戻る',
+    },
+    confirm: {
+      title: 'この内容で作成しますか？',
+      submit: '作成する',
     },
   },
 }

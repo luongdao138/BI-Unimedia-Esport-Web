@@ -21,7 +21,7 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
   const requiredFieldErrors = []
   if (stepOne) {
     requiredFieldErrors.push(stepOne.title)
-    requiredFieldErrors.push(stepOne.tag_title_id)
+    requiredFieldErrors.push(stepOne.participation_approval)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

@@ -12,6 +12,6 @@ export type FormType = {
     area_id: number
     address: string
     t_type: 't_public' | 't_private' | -1
-    game_hardware_id: number
+    participation_approval: string
   }
 }
