@@ -101,9 +101,9 @@ const LiveChat = forwardRef((props: chatProps, ref) => {
       </CellMeasurer>
     )
   }
-
+  const chatHeight = height - props.playerHeight - 170
   return (
-    <PaperChat variant="outlined" square style={{ height: `calc(${height}px - ${props.playerHeight}px - 170px)` }}>
+    <PaperChat variant="outlined" square style={{ height: chatHeight >= 170 ? chatHeight : 170 }}>
       <div ref={contentRef} className={classes.liveChatWindow}>
         <div className={input ? classes.liveChatWithInput : classes.liveChatWrapper}>
           <Button
