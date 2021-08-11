@@ -57,18 +57,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   title: {
-    display: 'flex',
-    alignItems: 'flex-start',
     color: Colors.white_opacity[70],
     fontSize: 14,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: 600,
+    maxWidth: '100%',
   },
   mail: {
-    display: 'flex',
-    alignItems: 'flex-start',
     color: Colors.white_opacity[30],
     fontSize: 12,
     textOverflow: 'ellipsis',
@@ -77,8 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 100,
   },
   description: {
-    display: 'flex',
-    alignItems: 'flex-start',
     color: Colors.white_opacity[30],
     fontSize: 12,
     textOverflow: 'ellipsis',
@@ -87,14 +81,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 500,
   },
   date: {
-    display: 'flex',
-    alignItems: 'flex-start',
     color: Colors.white_opacity[30],
     fontSize: 12,
   },
   comment_number: {
-    display: 'flex',
-    alignItems: 'flex-start',
     color: Colors.white_opacity[70],
     fontSize: 14,
   },
