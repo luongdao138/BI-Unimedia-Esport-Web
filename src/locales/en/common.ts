@@ -250,6 +250,7 @@ export default {
     approval_method: '承認方法',
     caretaker: '管理人',
     deputy_caretaker: '副管理人',
+    official: '公式コミュニティ',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
@@ -526,9 +527,6 @@ export default {
     join_dialog: {
       dialog_title: 'エントリーしますか？',
     },
-  },
-  community: {
-    official: '公式コミュニティ',
   },
   event: {
     recommended_event_list: 'おすすめイベント一覧',
@@ -963,5 +961,32 @@ export default {
     check_content_button: '内容を確認する',
     organizer_joinable: '主催者を参加者として抽選に含める',
     organizer_joined: '主催者を参加者として抽選に含めるチェック',
+  },
+  community_create: {
+    title: 'コミュニティを作成する',
+    edit_title: '募集を作成する',
+    name: 'コミュニティ名',
+    introduction: 'コミュニティ紹介文',
+    introduction_placeholder: '入力してください',
+    overview: '概要',
+    game: 'ゲーム',
+    game_placeholder: '選択されていません',
+    area: 'エリア',
+    area_name_placeholder: 'エリア情報を記載',
+    public_or_private: 'コミュニティ公開設定',
+    participation_approval: '参加承認',
+    choose_tag: 'コミュニティタグを選ぶ',
+    tag: 'コミュニティタグ',
+    decide: '決定する',
+    check_content: '内容を確認する',
+    discard: {
+      title: '作成内容を破棄します',
+      message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
+      confirm: '作成内容を破棄して戻る',
+    },
+    confirm: {
+      title: 'この内容で作成しますか？',
+      submit: '作成する',
+    },
   },
 }

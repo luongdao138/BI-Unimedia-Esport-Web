@@ -39,6 +39,7 @@ import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { unseenCount } from '@store/socket/selectors'
+import CommunityCreateContainer from '@containers/Community/UpsertForm'
 
 interface returnItem {
   value: string
@@ -93,6 +94,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <ArenaCreateContainer />
       case ESRoutes.LOBBY_CREATE:
         return <LobbyCreateContainer />
+      case ESRoutes.COMMUNITY_CREATE:
+        return <CommunityCreateContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
         return <AccountSettingsPasswordContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
