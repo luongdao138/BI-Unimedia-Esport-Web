@@ -113,6 +113,7 @@ const ArenaMatches: React.FC = () => {
               <Typography className={classes.notYetLabel}>{t('common:arena.match_not_yet')}</Typography>
             </Box>
           }
+          classes={{ nextBtnHolder: classes.buttonHolder }}
         >
           <Box className={classes.backContainer}>
             <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -219,5 +220,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: 'transparent',
       borderBottom: 'none',
     },
+  },
+  buttonHolder: {
+    marginBottom: theme.spacing(3),
   },
 }))

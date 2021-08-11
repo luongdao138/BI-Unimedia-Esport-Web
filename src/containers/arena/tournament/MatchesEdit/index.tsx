@@ -111,6 +111,7 @@ const ArenaMatches: React.FC = () => {
             </Box>
           </Box>
         }
+        classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <Box className={classes.backContainer}>
           <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -257,5 +258,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: 'transparent',
       borderBottom: 'none',
     },
+  },
+  buttonHolder: {
+    marginBottom: theme.spacing(3),
   },
 }))
