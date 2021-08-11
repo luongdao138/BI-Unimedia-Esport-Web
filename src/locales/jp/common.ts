@@ -1001,5 +1001,6 @@ export default {
       message: '画面を戻ると、現在の作成内容は破棄されます。よろしいですか？',
       confirm: '作成内容を破棄して戻る',
     },
+    create_success: 'トピックを作成しました',
   },
 }
