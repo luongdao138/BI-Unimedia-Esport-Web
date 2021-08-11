@@ -821,6 +821,7 @@ export default {
   settings: {
     title: '設定',
     account_settings: 'アカウント設定',
+    point_management: 'ポイント管理',
     security_settings: 'セキュリティ',
     notification_settings: '通知設定',
     purchase_history: '購入履歴',
@@ -913,5 +914,11 @@ export default {
     ticket_sales_start_datetime: 'チケット販売開始日時',
     complete_delivery_settings: '配信データが保存できました',
     delivery_data_save: '配信データを保存する',
+  },
+  point_management_tab: {
+    point_management: 'ポイント管理',
+    purchase_point: 'ポイント購入',
+    purchase_history: '購入履歴',
+    usage_history: '利用履歴',
   },
 }
