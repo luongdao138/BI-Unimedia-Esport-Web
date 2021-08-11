@@ -15,6 +15,7 @@ import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
+import SearchContainer from '../../SearchContainer'
 
 type Props = {
   detail: any
@@ -118,7 +119,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
       case TABS.TOPIC_LIST:
         return <>Topic List</>
       case TABS.SEARCH:
-        return <>Search</>
+        return <SearchContainer />
       default:
         break
     }
