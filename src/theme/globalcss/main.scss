@@ -532,7 +532,7 @@ body {
   width: 100%;
 }
 
-.list-container-live {
+.list-container {
   height: 100%;
   width: 100%;
   display: flex !important;
@@ -544,21 +544,21 @@ body {
   scrollbar-width: thin;
 }
 
-.list-container-live > div {
+.list-container > div {
   height: 100%;
   margin-top: auto !important;
   flex: 1 1 auto;
 }
-.list-container-live::-webkit-scrollbar {
+.list-container::-webkit-scrollbar {
   width: 8px;
   padding: 2px;
   padding-right: 2px;
   cursor: pointer;
 }
-.list-container-live::-webkit-scrollbar-track {
+.list-container::-webkit-scrollbar-track {
   padding-left: 1px;
 }
-.list-container-live::-webkit-scrollbar-thumb {
+.list-container::-webkit-scrollbar-thumb {
   background-color: #111;
   border-radius: 6px;
 }

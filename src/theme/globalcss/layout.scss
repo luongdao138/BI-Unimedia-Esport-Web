@@ -87,6 +87,37 @@
 //   border-radius: 6px;
 // }
 
+.list-container-live {
+  height: 100%;
+  width: 100%;
+  display: flex !important;
+  padding-right: 14px !important;
+  padding-left: 10px !important;
+  flex: 1 1 0%;
+  min-height: 0;
+  scrollbar-color: #111 transparent;
+  scrollbar-width: thin;
+}
+
+.list-container-live > div {
+  height: 100%;
+  margin-top: auto !important;
+  flex: 1 1 auto;
+}
+.list-container-live::-webkit-scrollbar {
+  width: 8px;
+  padding: 2px;
+  padding-right: 2px;
+  cursor: pointer;
+}
+.list-container-live::-webkit-scrollbar-track {
+  padding-left: 1px;
+}
+.list-container-live::-webkit-scrollbar-thumb {
+  background-color: #111;
+  border-radius: 6px;
+}
+
 .live-chat-wrapper {
   position: relative;
   width: 100%;
