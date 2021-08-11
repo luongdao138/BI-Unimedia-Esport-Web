@@ -126,12 +126,11 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   }
 
   const renderMemberList = () => {
-    if (
-      (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) ||
-      (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission === false)
-    ) {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
     } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+    } else if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission === false) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
     }
     return null
