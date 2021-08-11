@@ -211,9 +211,8 @@ const TournamentCreate: React.FC = () => {
         const fieldKeys = Object.keys(fields)
         if (fieldKeys[0]) {
           const translationName = TournamentHelper.getLabelName(fieldKeys[0])
-          let errMsg = _.get(fields, `${fieldKeys[0]}`) as string
-          if (!_.isString(errMsg)) errMsg = ''
-          msg = `「${i18n.t(translationName)}」${errMsg}`
+          const pleaseReviewMsg = i18n.t('common:tournament_create.please_review')
+          msg = `「${i18n.t(translationName)}」${pleaseReviewMsg}`
         }
       }
     }
