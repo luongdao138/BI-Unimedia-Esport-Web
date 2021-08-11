@@ -1,5 +1,4 @@
 import ESLoader from '@components/Loader'
-import ESLoaderFullScreen from '@components/FullScreenLoader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect } from 'react'
@@ -44,24 +43,16 @@ const ESBlockSettings: React.FC = () => {
   return (
     <div>
       <HeaderWithButton title={t('block_settings.title')} />
-      <InfiniteScroll
-        dataLength={blockedUsers.length}
-        next={loadMore}
-        hasMore={hasNextPage}
-        loader={
-          meta.pending && (
-            <div className={classes.loaderCenter}>
-              <ESLoader />
-            </div>
-          )
-        }
-        scrollThreshold="1px"
-      >
+      <InfiniteScroll dataLength={blockedUsers.length} next={loadMore} hasMore={hasNextPage} loader={} scrollThreshold="1px">
         {blockedUsers.map((user, i) => (
           <BlockedUserItem actionHandler={actionHandler} data={user} key={i} />
         ))}
       </InfiniteScroll>
-      {meta.pending && <ESLoaderFullScreen open={meta.pending} />}
+      {meta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }
