@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import lobbyStore from '@store/lobby'
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail, LobbyFormParams } from '@services/lobby.service'
+import { clearMetaData } from '@store/metadata/actions'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
+import * as commonActions from '@store/common/actions'
 import _ from 'lodash'
 import useTopicHelper from '../hooks/useTopicHelper'
+import { useTranslation } from 'react-i18next'
 
 const { actions, selectors } = lobbyStore
 // TODO change when data is ready
 export type EditableTypes = {
   title: boolean
   overview: boolean
-  area_id: boolean
-  address: boolean
-  participation_approval: boolean
-  t_type: boolean
-  game_title: boolean
-  tag_title: boolean
   cover_image: boolean
 }
 
@@ -26,7 +23,9 @@ const useTopicCreate = (): {
   isEdit: boolean
   lobby: LobbyDetail
   editables: EditableTypes
+  submit(params: LobbyFormParams): void
 } => {
+  const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
   const lobby = useAppSelector(selectors.getLobbyDetail)
@@ -36,15 +35,23 @@ const useTopicCreate = (): {
     cover_image: true,
     title: true,
     overview: true,
-    participation_approval: true,
-    t_type: true,
-    area_id: true,
-    address: true,
-    // always not editable
-    game_title: true,
-    tag_title: true,
   })
   const { isEditable } = useTopicHelper(lobby)
+  const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
+
+  const submit = async (/* params: LobbyFormParams */) => {
+    // const resultAction = await dispatch(actions.createLobby(params))
+    // if (actions.createLobby.fulfilled.match(resultAction)) {
+    //   resetMeta()
+    //   router.push(`${ESRoutes.COMMUNITY}/1/${ESRoutes.TOPIC}/1`)
+
+    //   dispatch(commonActions.addToast(t('common:topic_create.create_success')))
+    // }
+    resetMeta()
+    router.push(`${ESRoutes.COMMUNITY}/1${ESRoutes.TOPIC}/1`)
+
+    dispatch(commonActions.addToast(t('common:topic_create.create_success')))
+  }
 
   useEffect(() => {
     if (router.asPath.endsWith('/edit') && router.query.hash_key) {
@@ -63,8 +70,7 @@ const useTopicCreate = (): {
       const _status = lobby.attributes.status
 
       let _editables = { ...editables }
-      // always not editable
-      _editables.game_title = false
+      // always not editabl
 
       if (_status !== TOURNAMENT_STATUS.READY) {
         _editables = _.mapValues(_editables, () => false)
@@ -73,16 +79,12 @@ const useTopicCreate = (): {
         _editables.cover_image = true
         _editables.title = true
         _editables.overview = true
-        _editables.participation_approval = true
-        _editables.t_type = true
-        _editables.area_id = true
-        _editables.address = true
       }
       setEditables(_editables)
     }
   }, [lobby, router])
 
-  return { isEdit, lobby, editables }
+  return { submit, isEdit, lobby, editables }
 }
 
 export default useTopicCreate

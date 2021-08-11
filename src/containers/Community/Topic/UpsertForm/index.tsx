@@ -9,6 +9,7 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
 import { useFormik } from 'formik'
 import { getValidationScheme } from './FormModel/ValidationScheme'
+import { LobbyFormParams } from '@services/lobby.service'
 import { FormType } from './FormModel/FormType'
 import Confirm from './Confirm'
 import { getInitialValues } from './FormModel/InitialValues'
@@ -32,7 +33,7 @@ const TopicCreate: React.FC = () => {
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
-  const { editables } = useTopicCreate()
+  const { submit, editables } = useTopicCreate()
   const [isDiscard, setIsDiscard] = useState(false)
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
@@ -41,8 +42,13 @@ const TopicCreate: React.FC = () => {
     initialValues: initialValues,
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
-    onSubmit: (/* values */) => {
-      //
+    onSubmit: (values) => {
+      const data: LobbyFormParams = {
+        ...values.stepOne,
+      }
+      if (submit) {
+        submit(data)
+      }
     },
   })
 
