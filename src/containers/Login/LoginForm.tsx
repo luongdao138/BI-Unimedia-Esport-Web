@@ -16,8 +16,8 @@ import { useEffect, useState } from 'react'
 import _, { NotVoid } from 'lodash'
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required(i18n.t('common:common.required')),
-  password: Yup.string().required(i18n.t('common:common.required')),
+  email: Yup.string().required(i18n.t('common:common.input_required')),
+  password: Yup.string().required(i18n.t('common:common.input_required')),
 })
 
 interface LoginFormProps {

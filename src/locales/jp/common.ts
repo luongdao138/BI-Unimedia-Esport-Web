@@ -11,7 +11,7 @@ export default {
     female: '女性',
     other: 'その他',
     required: '入力必須項目です',
-    input_required: '必須',
+    input_required: '入力必須項目です',
     private: '非公開',
     zero: '0',
     see_more: 'もっと見る',

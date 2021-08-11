@@ -40,7 +40,7 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.required')).max(40),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40),
   })
 
   const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
