@@ -37,7 +37,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     isCompleted,
     isCancelled,
     isRecruitmentClosed,
-    isHeld,
+    isNotHeld,
     isAdminJoined,
     isTeamLeader,
     isEntered,
@@ -109,6 +109,19 @@ const ActionComponent: React.FC<Props> = (props) => {
     }
   }
 
+  const renderSubActionButton = () => {
+    const { is_freezed, participant_count, status } = tournament.attributes
+    if (status === TOURNAMENT_STATUS.COMPLETED) {
+      if (is_freezed) {
+        if (participant_count > 1) {
+          return <SubActionButtons tournament={tournament} />
+        }
+      }
+    } else if (!isCancelled && !isNotHeld) {
+      return <SubActionButtons tournament={tournament} />
+    }
+  }
+
   return (
     <Box>
       <Box className={classes.container}>
@@ -121,7 +134,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {!isCancelled && isHeld && <SubActionButtons tournament={tournament} />}
+        {renderSubActionButton()}
       </Box>
 
       {isRecruiting || isReady ? (
@@ -144,7 +157,7 @@ const ActionComponent: React.FC<Props> = (props) => {
         </Box>
       )}
 
-      {isModerator && isCompleted && isHeld && (
+      {isModerator && isCompleted && !isNotHeld && tournament.attributes.participant_count > 1 && (
         <Box className={classes.actionButton}>
           <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
             {t('common:tournament.summary')}
