@@ -1,18 +1,22 @@
-import { useTranslation } from 'react-i18next'
-import ESInput from '@components/Input'
-
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
+import { useTranslation } from 'react-i18next'
+import { FormikProps } from 'formik'
+import ESInput from '@components/Input'
+import ESLabel from '@components/Label'
+import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Theme } from '@material-ui/core'
+import { GetPrefecturesResponse } from '@services/common.service'
 
 interface ConfirmProps {
-  values?: string | any
+  values: FormikProps<FormType>['values']
+  prefectures?: GetPrefecturesResponse['data']
 }
 
 ESInput.defaultProps = {
   size: 'small',
 }
 
-const Confirm: React.FC<ConfirmProps> = () => {
+const Confirm: React.FC<ConfirmProps> = ({ values }) => {
   const { t } = useTranslation(['common'])
 
   const classes = useStyles()
@@ -21,20 +25,18 @@ const Confirm: React.FC<ConfirmProps> = () => {
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={8} />
       <Box ml={3}>
-        <ESInput labelPrimary={t('common:topic_create.name')} fullWidth disabled />
+        <ESInput labelPrimary={t('common:topic_create.name')} value={values.stepOne.title} fullWidth disabled />
       </Box>
       <Box pb={2} />
       <Box ml={3}>
-        <ESInput labelPrimary={t('common:topic_create.preview')} fullWidth disabled />
+        <ESLabel label={t('common:topic_create.preview')} bold={false} size="small" />
       </Box>
 
       <MainTopic
         username="コイチコイチコイチコイチコイチコイチコイチコイチコイチコイチ"
         mail="@koichi"
-        date="2020年07月07日"
-        count={900}
-        discription="トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。"
-        image="https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F6%2F2019%2F11%2Frick-and-morty-season-4-2000.jpg&q=85"
+        discription={values.stepOne.overview}
+        image={values.stepOne.cover_image_url}
       />
       <Box pb={2} />
     </Box>

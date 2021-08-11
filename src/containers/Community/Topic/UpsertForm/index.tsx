@@ -1,40 +1,106 @@
-import { makeStyles, Theme, Box, IconButton, Typography } from '@material-ui/core'
-import { Colors } from '@theme/colors'
-import Icon from '@material-ui/core/Icon'
-import { useState } from 'react'
-import CoverUploader from './Partials/CoverUploader'
-import Confirm from './Confirm'
 import ESStickyFooter from '@components/StickyFooter'
-import ESFastInput from '@components/FastInput'
 import ButtonPrimary from '@components/ButtonPrimary'
+import { makeStyles, Theme, Box, IconButton, Typography } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon'
+import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
+import { useEffect, useRef, useState } from 'react'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import StepOne from './StepOne'
+import { useFormik } from 'formik'
+import { getValidationScheme } from './FormModel/ValidationScheme'
+import { FormType } from './FormModel/FormType'
+import Confirm from './Confirm'
+import { getInitialValues } from './FormModel/InitialValues'
+import useTopicCreate from './useTopicCreate'
+import { TopicHelper } from '@utils/helpers/TopicHelper'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import _ from 'lodash'
+import { useAppDispatch } from '@store/hooks'
+import { FIELD_TITLES } from './FormModel/field_titles.constants'
+import { showDialog } from '@store/common/actions'
+import DiscardDialog from './Partials/DiscardDialog'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import useCommonData from './useCommonData'
 
 const TopicCreate: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const { prefectures } = useCommonData()
   const classes = useStyles()
+  const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
-  const isEdit = false
+  const [hasError, setHasError] = useState(true)
+  const isFirstRun = useRef(true)
+  const initialValues = getInitialValues(undefined)
+  const { editables } = useTopicCreate()
+  const [isDiscard, setIsDiscard] = useState(false)
 
-  const renderEditButton = () => {
-    return (
-      <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
-        <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={false}>
-          {i18n.t('common:topic_create.title')}
-        </ButtonPrimary>
-      </Box>
-    )
+  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+
+  const formik = useFormik<FormType>({
+    initialValues: initialValues,
+    validationSchema: getValidationScheme(),
+    enableReinitialize: true,
+    onSubmit: (/* values */) => {
+      //
+    },
+  })
+
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false
+      return
+    } else {
+      const isRequiredFieldsValid = TopicHelper.checkRequiredFields(formik.errors)
+      setHasError(!isRequiredFieldsValid)
+      if (isConfirm) {
+        setIsConfirm(false)
+      }
+    }
+  }, [formik.errors])
+
+  const handleBack = () => {
+    if (isConfirm) setIsConfirm(false)
+    else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
+  }
+
+  const handleSetConfirm = () => {
+    formik.validateForm().then(() => {
+      const { stepOne } = formik.values
+
+      const fieldIdentifier = checkNgWordFields({
+        title: stepOne.title,
+        overview: stepOne.overview,
+      })
+
+      const ngFields = checkNgWordByField({
+        [FIELD_TITLES.stepOne.title]: stepOne.title,
+        [FIELD_TITLES.stepOne.overview]: stepOne.overview,
+      })
+
+      if (fieldIdentifier) {
+        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+      } else {
+        if (_.isEmpty(formik.errors)) {
+          if (isConfirm) {
+            formik.submitForm()
+          } else {
+            setIsConfirm(true)
+          }
+          return
+        } else {
+          setIsConfirm(false)
+        }
+      }
+    })
   }
 
   const handleUnsetConfirm = () => setIsConfirm(false)
-
-  const handleSetConfirm = () => {
-    setIsConfirm(true)
-  }
 
   return (
     <ESStickyFooter
       disabled={false}
       noScroll
-      noSpacing={true}
       content={
         <>
           {isConfirm ? (
@@ -42,15 +108,18 @@ const TopicCreate: React.FC = () => {
               <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
-              <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={false} className={classes.footerButton}>
-                {i18n.t('common:lobby_create.submit')}
+              <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
+                {i18n.t('common:community_create.confirm.submit')}
               </ButtonPrimary>
             </Box>
-          ) : isEdit ? (
-            renderEditButton()
           ) : (
-            <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={false}>
-              {i18n.t('common:lobby_create.submit')}
+            <ButtonPrimary
+              onClick={handleSetConfirm}
+              round
+              className={`${classes.footerButton} ${classes.confirmButton}`}
+              disabled={hasError}
+            >
+              {i18n.t('common:community_create.check_content')}
             </ButtonPrimary>
           )}
         </>
@@ -59,69 +128,42 @@ const TopicCreate: React.FC = () => {
       <>
         <Box pt={7.5} pb={9} className={classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
-            <IconButton
-              className={classes.iconButtonBg}
-              onClick={() => {
-                return 0
-              }}
-            >
+            <IconButton className={classes.iconButtonBg} onClick={handleBack}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">
-                {isConfirm ? i18n.t('common:topic_create.confirm') : i18n.t('common:topic_create.title')}
-              </Typography>
+              <Typography variant="h2">{isConfirm ? i18n.t('common:topic_create.title') : i18n.t('common:topic_create.title')}</Typography>
             </Box>
           </Box>
         </Box>
-        <form>
+        <form onSubmit={formik.handleSubmit}>
           <Box>
             {isConfirm ? (
-              <Confirm />
+              <Confirm values={formik.values} prefectures={prefectures.data || null} />
             ) : (
-              <Box>
+              <>
                 <Box py={4} className={classes.formContainer}>
-                  <Box pb={9}>
-                    <Box pb={4}>
-                      <ESFastInput
-                        id="title"
-                        name="stepOne.title"
-                        labelPrimary={i18n.t('common:topic_create.name')}
-                        fullWidth
-                        size="small"
-                        required
-                        disabled={false}
-                      />
-                    </Box>
-                    <Box pb={4}>
-                      <ESFastInput
-                        id="stepOne.overview"
-                        name="stepOne.overview"
-                        multiline
-                        rows={5}
-                        labelPrimary={i18n.t('common:topic_create.text')}
-                        placeholder={i18n.t('common:topic_create.please_enter')}
-                        fullWidth
-                        size="small"
-                        required
-                        disabled={false}
-                      />
-                    </Box>
-                    <Box pb={4}>
-                      <CoverUploader src={''} disabled={false} />
-                    </Box>
-                  </Box>
+                  {<StepOne formik={formik} prefectures={prefectures || null} editables={editables} />}
                 </Box>
-              </Box>
+              </>
             )}
           </Box>
         </form>
       </>
+      <DiscardDialog
+        open={isDiscard}
+        onClose={() => {
+          setIsDiscard(false)
+        }}
+        onSubmit={handleReturn}
+      />
     </ESStickyFooter>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  confirmButton: {},
+  cancelButton: {},
   footerButton: {
     width: 'fit-content',
     alignSelf: 'center',
@@ -130,8 +172,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: `${theme.spacing(4)}px !important`,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(5),
     '&$confirmButton': {
       minWidth: `280px !important`,
     },
@@ -142,6 +182,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
+  stickyFooter: {
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    background: Colors.black,
+    borderTop: `1px solid #ffffff30`,
+    textAlign: 'center',
+  },
+  reviewButtonContainer: {},
   editButtonContainer: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
@@ -171,5 +221,4 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
-
 export default TopicCreate

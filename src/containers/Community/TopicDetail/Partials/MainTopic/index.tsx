@@ -7,8 +7,8 @@ type CommunityHeaderProps = {
   username: string
   mail: string
   discription: string
-  date: string
-  count: number
+  date?: string
+  count?: number
   image?: string
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count }) => {
@@ -25,14 +25,16 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
               <Typography className={classes.mail}>{mail}</Typography>
             </Box>
           </Box>
-          <Box className={classes.dateReportContainer}>
-            <Typography className={classes.date}>{date}</Typography>
-            <Box className={classes.reportButton}>
-              <IconButton>
-                <Icon className="fa fa-ellipsis-v" fontSize="small" />
-              </IconButton>
+          {date && count && (
+            <Box className={classes.dateReportContainer}>
+              <Typography className={classes.date}>{date}</Typography>
+              <Box className={classes.reportButton}>
+                <IconButton>
+                  <Icon className="fa fa-ellipsis-v" fontSize="small" />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
 
         <Box className={classes.discriptionContainer} mb={3}>
@@ -49,14 +51,16 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
         ) : (
           <></>
         )}
-        <Box display="flex" justifyContent="flex-end" mr={3} mb={3}>
-          <Box className={classes.numberBox} mr={1}>
-            <Icon className="fas fa-comment-alt" fontSize="small" />
+        {count && (
+          <Box display="flex" justifyContent="flex-end" mr={3} mb={3}>
+            <Box className={classes.numberBox} mr={1}>
+              <Icon className="fas fa-comment-alt" fontSize="small" />
+            </Box>
+            <Box className={classes.numberBox}>
+              <Typography className={classes.count}>{count}</Typography>
+            </Box>
           </Box>
-          <Box className={classes.numberBox}>
-            <Typography className={classes.count}>{count}</Typography>
-          </Box>
-        </Box>
+        )}
       </Box>
     </>
   )
