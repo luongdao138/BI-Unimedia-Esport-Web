@@ -13,6 +13,7 @@ import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
+import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
 
@@ -116,7 +117,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
       case TABS.INFO:
         return <InfoContainer />
       case TABS.TOPIC_LIST:
-        return <>Topic List</>
+        return <TopicListContainer />
       case TABS.SEARCH:
         return <>Search</>
       default:
