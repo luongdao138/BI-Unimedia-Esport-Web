@@ -40,6 +40,7 @@ export const ESRoutes = {
   PRIVACY: '/settings/privacy',
   COMMERCIAL: '/settings/commercial',
   USER_ACCOUNT_SETTINGS: '/settings/account',
+  USER_POINT_MANAGEMENT: '/settings/point_manage',
   USER_ACCOUNT_SETTINGS_PASSWORD: '/settings/account/password',
   USER_ACCOUNT_SETTINGS_CHANGE_EMAIL: '/settings/account/change-email',
   USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM: '/settings/account/confirm',
