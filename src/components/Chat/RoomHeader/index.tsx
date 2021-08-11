@@ -20,6 +20,7 @@ import { tournamentDetail } from '@store/chat/selectors'
 import { useRouter } from 'next/router'
 import AvatarSelector from '@components/ImagePicker/AvatarSelector'
 import useRoomImageUploader from './useRoomImageUploader'
+import { TOURNAMENT_ADMIN_ROLES } from '@constants/socket.constants'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -79,8 +80,12 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
   const hasPermission = _.get(tournament, 'is_freezed', false)
 
+  const role = _.get(tournament, 'my_role.role', null)
+
+  const isOrganizer = _.includes(TOURNAMENT_ADMIN_ROLES, role)
+
   const memberAddItem = () => {
-    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
@@ -121,7 +126,10 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
   }
 
   const renderMemberList = () => {
-    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT) {
+    if (
+      (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) ||
+      (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && !hasPermission)
+    ) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
     } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
