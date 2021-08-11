@@ -68,7 +68,7 @@ const ESNotificationSettings = () => {
   return (
     <div>
       <HeaderWithButton title={t('notification_settings.title')} />
-      {state.length > 0 && (
+      {state.length > 0 && meta.loaded && (
         <SettingsRowItem
           title={t('notification_settings.settings_select_all')}
           name="settings_select_all"
@@ -77,16 +77,17 @@ const ESNotificationSettings = () => {
           handleChange={handleCheckAll}
         />
       )}
-      {state.map((settings, i) => (
-        <SettingsRowItem
-          key={i}
-          title={settings.name}
-          checked={settings.status}
-          handleChange={() => handleChange(i)}
-          name={settings.name}
-          showSwitch={true}
-        />
-      ))}
+      {meta.loaded &&
+        state.map((settings, i) => (
+          <SettingsRowItem
+            key={i}
+            title={settings.name}
+            checked={settings.status}
+            handleChange={() => handleChange(i)}
+            name={settings.name}
+            showSwitch={true}
+          />
+        ))}
       {meta.pending && (
         <div className={classes.loaderCenter}>
           <ESLoader />
