@@ -16,6 +16,7 @@ import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
+import SearchContainer from '../../SearchContainer'
 
 type Props = {
   detail: any
@@ -119,7 +120,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
       case TABS.TOPIC_LIST:
         return <TopicListContainer />
       case TABS.SEARCH:
-        return <>Search</>
+        return <SearchContainer />
       default:
         break
     }

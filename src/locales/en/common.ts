@@ -251,6 +251,7 @@ export default {
     caretaker: '管理人',
     deputy_caretaker: '副管理人',
     official: '公式コミュニティ',
+    search_by_title: 'タイトルのみで検索をかける',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
