@@ -4,7 +4,7 @@ import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useTopicCreate'
 import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import CoverUploader from './Partials/CoverUploader'
+import CoverUploader from '@components/CoverUploader'
 import ESFastInput from '@components/FastInput'
 
 import i18n from '@locales/i18n'

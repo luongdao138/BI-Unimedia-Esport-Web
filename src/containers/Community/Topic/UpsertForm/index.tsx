@@ -20,7 +20,7 @@ import _ from 'lodash'
 import { useAppDispatch } from '@store/hooks'
 import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
-import DiscardDialog from './Partials/DiscardDialog'
+import DiscardDialog from '../../Partials/DiscardDialog'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCommonData from './useCommonData'
 
