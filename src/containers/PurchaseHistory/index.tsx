@@ -3,7 +3,6 @@ import usePurchaseHistoryList from '@containers/PurchaseHistory/usePurchaseHisto
 import PurchaseHistoryItem from '@containers/PurchaseHistory/purchaseHistoryItem'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
-import ESLoaderFullScreen from '@components/FullScreenLoader'
 import { makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
@@ -34,19 +33,7 @@ const ESPurchaseHistory: React.FC = () => {
   return (
     <div>
       {purchaseHistory.length > 0 ? (
-        <InfiniteScroll
-          dataLength={purchaseHistory.length}
-          next={loadMore}
-          hasMore={hasNextPage}
-          loader={
-            meta.pending && (
-              <div className={classes.loaderCenter}>
-                <ESLoader />
-              </div>
-            )
-          }
-          scrollThreshold="1px"
-        >
+        <InfiniteScroll dataLength={purchaseHistory.length} next={loadMore} hasMore={hasNextPage} loader={null} scrollThreshold="1px">
           {purchaseHistory.map((history, i) => (
             <PurchaseHistoryItem data={history} key={i} />
           ))}
@@ -58,7 +45,11 @@ const ESPurchaseHistory: React.FC = () => {
           </div>
         )
       )}
-      {meta.pending && <ESLoaderFullScreen open={meta.pending} />}
+      {meta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }
