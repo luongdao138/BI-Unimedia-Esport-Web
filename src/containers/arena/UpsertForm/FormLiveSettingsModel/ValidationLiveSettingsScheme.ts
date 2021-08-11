@@ -1,6 +1,8 @@
 import i18n from '@locales/i18n'
 import * as Yup from 'yup'
 export const validationLiveSettingsScheme = (): any => {
+  const minStartDate = new Date()
+  const minEndDate = new Date()
   return Yup.object({
     stepSettingOne: Yup.object({
       title: Yup.string()
@@ -12,10 +14,60 @@ export const validationLiveSettingsScheme = (): any => {
       category: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
       ticket_price: Yup.number()
         .min(1, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
-        .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
-        .positive(i18n.t('common:common.integer')),
+        .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit')),
     }),
-    stepSettingTwo: Yup.object({}),
+    stepSettingTwo: Yup.object({
+      re_title: Yup.string()
+        .required(i18n.t('common:common.input_required'))
+        .max(100, i18n.t('common:streaming_settings_live_streaming_screen.validation.title_limit')),
+      re_description: Yup.string()
+        .required(i18n.t('common:common.input_required'))
+        .max(5000, i18n.t('common:streaming_settings_live_streaming_screen.validation.overview_limit')),
+      re_category: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+      re_ticket_price: Yup.number()
+        .min(1, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
+        .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit')),
+
+      date_time_ticket_sale_start: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minStartDate, i18n.t('common:streaming_settings_live_streaming_screen.validation.min_date')),
+
+      date_time_notification_delivery: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minStartDate, i18n.t('common:streaming_settings_live_streaming_screen.validation.min_date')),
+
+      date_time_schedule_delivery_start: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minStartDate, i18n.t('common:streaming_settings_live_streaming_screen.validation.min_date')),
+      date_time_schedule_end: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minEndDate, i18n.t('common:streaming_settings_live_streaming_screen.validation.min_date')),
+
+      //cross-fields validations
+      schedule_live_date: Yup.string().when(['date_time_schedule_delivery_start', 'date_time_schedule_end'], {
+        is: (date_time_schedule_delivery_start, date_time_schedule_end) => {
+          return Date.parse(date_time_schedule_delivery_start) >= Date.parse(date_time_schedule_end)
+        },
+        then: Yup.string().required(i18n.t('common:streaming_settings_live_streaming_screen.validation.start_end_date')),
+      }),
+
+      notify_live_start_date: Yup.string().when(['date_time_notification_delivery', 'date_time_schedule_delivery_start'], {
+        is: (date_time_notification_delivery, date_time_schedule_delivery_start) => {
+          return Date.parse(date_time_notification_delivery) > Date.parse(date_time_schedule_delivery_start)
+        },
+        then: Yup.string().required(i18n.t('common:streaming_settings_live_streaming_screen.validation.date_limit')),
+      }),
+      notify_live_end_date: Yup.string().when(['date_time_notification_delivery', 'date_time_schedule_end'], {
+        is: (date_time_notification_delivery, date_time_schedule_end) => {
+          return Date.parse(date_time_notification_delivery) >= Date.parse(date_time_schedule_end)
+        },
+        then: Yup.string().required(i18n.t('common:streaming_settings_live_streaming_screen.validation.date_limit')),
+      }),
+    }),
     stepSettingThree: Yup.object({
       channel_name: Yup.string()
         .required(i18n.t('common:common.input_required'))
