@@ -28,7 +28,7 @@ const AccountSettingsPasswordContainer: React.FC = () => {
         setCurrentPasswordScore(tempScore)
         return tempScore > 40
       })
-      .required(t('common.required'))
+      .required(t('common.input_required'))
       .min(8, t('error.too_short')),
   })
 

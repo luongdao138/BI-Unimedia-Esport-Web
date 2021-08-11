@@ -126,7 +126,7 @@ const ActionComponent: React.FC<Props> = (props) => {
         {!isCancelled && !isNotHeld && <SubActionButtons tournament={tournament} />}
       </Box>
 
-      {isRecruitmentClosed && isModerator && (
+      {isRecruitmentClosed && isModerator && !tournament.attributes.is_freezed && (
         <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
           <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
           <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
