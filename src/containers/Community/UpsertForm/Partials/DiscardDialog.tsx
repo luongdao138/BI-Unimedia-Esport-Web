@@ -109,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
   actionBtnConfirm: {
     width: '100%',
     margin: theme.spacing(2),
+    padding: `${theme.spacing(1.5)}px ${theme.spacing(3.375)}px !important`,
     [theme.breakpoints.down('sm')]: {
       order: 0,
     },
