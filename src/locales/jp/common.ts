@@ -251,7 +251,11 @@ export default {
     caretaker: '管理人',
     deputy_caretaker: '副管理人',
     official: '公式コミュニティ',
-    search_by_title: 'タイトルのみで検索をかける',
+    detail_search: {
+      by_title: 'タイトルのみで検索をかける',
+      placeholder: 'キーワードからトピックを検索します',
+      result: '検索結果',
+    },
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

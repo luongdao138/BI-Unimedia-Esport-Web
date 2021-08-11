@@ -1,4 +1,3 @@
-import i18n from '@locales/i18n'
 import { Box, IconButton, OutlinedInput, Icon, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -176,13 +175,13 @@ const InfoContainer: React.FC = () => {
   }
 
   return (
-    <>
-      <Box mt={2} ml={2}>
+    <Box ml={2}>
+      <Box mt={2} mb={1}>
         <form onSubmit={handleSearch} className={classes.searchContainer}>
           <OutlinedInput
             autoComplete="off"
             onChange={onChange}
-            placeholder={t('common:search.search_placeholder')}
+            placeholder={t('common:community.detail_search.placeholder')}
             id={'search'}
             value={value}
             classes={{ root: classes.input }}
@@ -195,17 +194,17 @@ const InfoContainer: React.FC = () => {
             className={classes.searchBtn}
             variant="outlined"
             startIcon={<Icon fontSize="small" className={`fa fa-search ${classes.icon}`} />}
-          ></Button>
+          />
         </form>
       </Box>
 
-      <Box pb={4} ml={2}>
-        <ESCheckbox disableRipple onChange={handleCheckbox} label={i18n.t('common:community.search_by_title')} />
+      <Box mb={5}>
+        <ESCheckbox disableRipple onChange={handleCheckbox} label={t('common:community.detail_search.by_title')} />
       </Box>
       {showResult && (
         <>
-          <Box pt={0} pb={2} ml={2}>
-            <ESLabel label="検索結果" bold />
+          <Box mb={2}>
+            <ESLabel label={t('common:community.detail_search.result')} bold />
           </Box>
           <>
             {chunks(dummy_data, chunkSize, page).map((d, i) => {
@@ -226,7 +225,7 @@ const InfoContainer: React.FC = () => {
           </>
         </>
       )}
-    </>
+    </Box>
   )
 }
 
