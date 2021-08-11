@@ -15,7 +15,7 @@ interface StreamPageProps {
 
 const StreamPage: React.FC<StreamPageProps> = () => {
   return (
-    <MainLayout footer={false}>
+    <MainLayout>
       <LiveThemeProvider>
         <StreamContainer />
       </LiveThemeProvider>

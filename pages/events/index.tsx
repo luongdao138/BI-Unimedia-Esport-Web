@@ -40,7 +40,7 @@ export async function getStaticProps(): Promise<{
 
 const EventsPage: React.FC<IProps> = (props) => {
   return (
-    <MainLayout footer={false}>
+    <MainLayout>
       <LiveThemeProvider>
         <Events banners={props.banners} />
       </LiveThemeProvider>
