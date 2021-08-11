@@ -3,6 +3,7 @@ import usePurchaseHistoryList from '@containers/PurchaseHistory/usePurchaseHisto
 import PurchaseHistoryItem from '@containers/PurchaseHistory/purchaseHistoryItem'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
+import ESLoaderFullScreen from '@components/FullScreenLoader'
 import { makeStyles, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
@@ -51,10 +52,13 @@ const ESPurchaseHistory: React.FC = () => {
           ))}
         </InfiniteScroll>
       ) : (
-        <div className={classes.loaderCenter}>
-          <Typography>{t('common:purchase_history.no_data')}</Typography>
-        </div>
+        meta.loaded && (
+          <div className={classes.loaderCenter}>
+            <Typography>{t('common:purchase_history.no_data')}</Typography>
+          </div>
+        )
       )}
+      {meta.pending && <ESLoaderFullScreen open={meta.pending} />}
     </div>
   )
 }

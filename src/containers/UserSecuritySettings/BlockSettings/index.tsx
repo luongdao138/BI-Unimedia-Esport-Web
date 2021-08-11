@@ -1,4 +1,5 @@
 import ESLoader from '@components/Loader'
+import ESLoaderFullScreen from '@components/FullScreenLoader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect } from 'react'
@@ -60,6 +61,7 @@ const ESBlockSettings: React.FC = () => {
           <BlockedUserItem actionHandler={actionHandler} data={user} key={i} />
         ))}
       </InfiniteScroll>
+      {meta.pending && <ESLoaderFullScreen open={meta.pending} />}
     </div>
   )
 }
