@@ -561,6 +561,7 @@ export default {
     comfirm_title: 'この内容で作成しますか？',
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
+    please_review: 'を見直してください',
   },
   arenaSearchFilters: {
     all: 'すべて',
