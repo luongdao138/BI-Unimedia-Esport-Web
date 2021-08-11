@@ -115,6 +115,7 @@ const InfoContainer: React.FC = () => {
 
   const handleChange = (event, value) => {
     setPage(value)
+    return event
   }
 
   const chunks = (arr, chunkSize, index) => {
