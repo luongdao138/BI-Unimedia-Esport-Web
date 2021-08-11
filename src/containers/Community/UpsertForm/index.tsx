@@ -52,7 +52,7 @@ const CommunityCreate: React.FC = () => {
       isFirstRun.current = false
       return
     } else {
-      const isRequiredFieldsValid = CommunityHelper.checkRequiredFields(formik.errors)
+      const isRequiredFieldsValid = CommunityHelper.checkCommunityRequiredFields(formik.errors)
       setHasError(!isRequiredFieldsValid)
       if (isConfirm) {
         setIsConfirm(false)

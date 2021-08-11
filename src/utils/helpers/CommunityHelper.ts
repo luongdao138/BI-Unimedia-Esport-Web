@@ -15,7 +15,21 @@ const onTypeChange = (type: string | number): string => {
   else return T_TYPE.PUBLIC
 }
 
-const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
+const checkCommunityRequiredFields = (errors: FormikErrors<FormType>): boolean => {
+  const { stepOne } = errors
+
+  const requiredFieldErrors = []
+  if (stepOne) {
+    requiredFieldErrors.push(stepOne.title)
+    requiredFieldErrors.push(stepOne.participation_approval)
+  }
+
+  const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
+
+  return _.isEmpty(filteredErrors)
+}
+
+const checkTopicRequiredFields = (errors: FormikErrors<FormType>): boolean => {
   const { stepOne } = errors
 
   const requiredFieldErrors = []
@@ -32,5 +46,6 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
 export const CommunityHelper = {
   getTypeValue,
   onTypeChange,
-  checkRequiredFields,
+  checkCommunityRequiredFields,
+  checkTopicRequiredFields,
 }

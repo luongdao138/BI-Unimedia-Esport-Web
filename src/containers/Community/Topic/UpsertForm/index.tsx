@@ -14,7 +14,7 @@ import { FormType } from './FormModel/FormType'
 import Confirm from './Confirm'
 import { getInitialValues } from './FormModel/InitialValues'
 import useTopicCreate from './useTopicCreate'
-import { TopicHelper } from '@utils/helpers/TopicHelper'
+import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _ from 'lodash'
 import { useAppDispatch } from '@store/hooks'
@@ -57,7 +57,7 @@ const TopicCreate: React.FC = () => {
       isFirstRun.current = false
       return
     } else {
-      const isRequiredFieldsValid = TopicHelper.checkRequiredFields(formik.errors)
+      const isRequiredFieldsValid = CommunityHelper.checkTopicRequiredFields(formik.errors)
       setHasError(!isRequiredFieldsValid)
       if (isConfirm) {
         setIsConfirm(false)

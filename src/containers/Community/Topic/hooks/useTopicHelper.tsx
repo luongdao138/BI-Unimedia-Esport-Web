@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { LobbyDetail } from '@services/lobby.service'
-import { ROLE, COMMUNITY_STATUS } from '@constants/topic.constants'
+import { ROLE, COMMUNITY_STATUS } from '@constants/community.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 
