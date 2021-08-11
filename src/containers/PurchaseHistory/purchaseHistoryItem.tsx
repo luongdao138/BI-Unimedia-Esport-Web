@@ -21,7 +21,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
       ? _.get(data.attributes, 'cancelled_datetime', +data.attributes.cancelled_datetime)
       : _.get(data.attributes, 'cancel_req_datetime', +data.attributes.cancel_req_datetime)
 
-  const time = CommonHelper.staticSmartTime(date)
+  const time = CommonHelper.purchaseHistoryStaticSmartTime(date)
 
   const price = _.get(data, 'attributes.price')
   const ticket_price = CommonHelper.formatCurrency(price)

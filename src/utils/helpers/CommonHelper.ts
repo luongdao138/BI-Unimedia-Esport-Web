@@ -135,6 +135,18 @@ const staticSmartTime = (time: string | number): string => {
   }
 }
 
+const purchaseHistoryStaticSmartTime = (time: string | number): string => {
+  const timestamp = time
+  const currentDate = moment().startOf('day')
+  const given = moment(timestamp).format('YYYY-MM-DD')
+  const diff = currentDate.diff(given, 'days', false)
+  if (diff > 30) {
+    return moment(timestamp).format('YYYY/MM/DD')
+  } else {
+    return moment(timestamp).fromNow()
+  }
+}
+
 const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): Array<number> => {
   const searchStrLen = searchStr.length
   if (searchStrLen == 0) {
@@ -206,6 +218,7 @@ export const CommonHelper = {
   validateEmail,
   genRanHex,
   staticSmartTime,
+  purchaseHistoryStaticSmartTime,
   scorePassword,
   userCodeValid,
   matchNgWords,
