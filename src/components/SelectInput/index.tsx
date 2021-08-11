@@ -1,5 +1,6 @@
 import { Box, createStyles, makeStyles, Typography, CircularProgress } from '@material-ui/core'
-import { useCallback, useRef, useEffect } from 'react'
+import { useState } from 'react'
+import { useCallback, useRef } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
@@ -20,7 +21,6 @@ interface SelectInputProps {
   items: SelectInputItem[]
   onItemsSelected: (selectedItems: (string | SelectInputItem)[]) => void
   onSearchInput: (keyword: string) => void
-  onFocusInput?: () => void
   loading: boolean
 }
 
@@ -144,6 +144,7 @@ const useStyles = makeStyles((theme) =>
         outline: '0',
       },
     },
+    hide: { display: 'none' },
 
     [theme.breakpoints.down('sm')]: {
       listBox: {
@@ -156,13 +157,19 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
-const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, onFocusInput, loading }) => {
+const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, loading }) => {
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
+  const [show, setShow] = useState<boolean>(false)
   const inputDebounce = useCallback(
     _.debounce((keyword: string) => {
-      onSearchInput(keyword)
+      if (keyword.trim().length > 0) {
+        setShow(true)
+        onSearchInput(keyword)
+      } else if (keyword.trim().length === 0) {
+        setShow(false)
+      }
     }, 500),
     []
   )
@@ -180,11 +187,9 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
     onChange: (_, values) => onItemsSelected(values),
     getOptionSelected: (option, value) => option.id === value.id,
     onInputChange: handleChange,
+    clearOnBlur: true,
+    clearOnEscape: true,
   })
-
-  useEffect(() => {
-    if (onFocusInput) onFocusInput()
-  }, [focused])
 
   return (
     <Box width={1}>
@@ -213,7 +218,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
             </Box>
           </div>
           {groupedOptions.length > 0 ? (
-            <Box className={classes.listBox} {...getListboxProps()}>
+            <Box className={`${classes.listBox} ${show ? '' : classes.hide}`} {...getListboxProps()}>
               {groupedOptions.map((option, index) => {
                 const isSelected = getOptionProps({ option, index })['aria-selected']
                 if (!isSelected)
