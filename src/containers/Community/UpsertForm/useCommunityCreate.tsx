@@ -4,7 +4,6 @@ import lobbyStore from '@store/lobby'
 import { LobbyDetail } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 import _ from 'lodash'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 
@@ -60,24 +59,18 @@ const useCommunityCreate = (): {
         return
       }
 
-      const _status = lobby.attributes.status
-
       let _editables = { ...editables }
       // always not editable
       _editables.game_title = false
-
-      if (_status !== TOURNAMENT_STATUS.READY) {
-        _editables = _.mapValues(_editables, () => false)
-
-        // always editable (default for status COMPLETED)
-        _editables.cover_image = true
-        _editables.title = true
-        _editables.overview = true
-        _editables.participation_approval = true
-        _editables.t_type = true
-        _editables.area_id = true
-        _editables.address = true
-      }
+      _editables = _.mapValues(_editables, () => false)
+      // always editable (default for status COMPLETED)
+      _editables.cover_image = true
+      _editables.title = true
+      _editables.overview = true
+      _editables.participation_approval = true
+      _editables.t_type = true
+      _editables.area_id = true
+      _editables.address = true
       setEditables(_editables)
     }
   }, [lobby, router])

@@ -1,4 +1,4 @@
-import { Box /* makeStyles,   Typography*/ } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { FormikProps } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useCommunityCreate'
@@ -87,7 +87,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={1} width={200}>
         <ESSelect
-          name="stepTwo.area_id"
+          name="stepOne.area_id"
           value={formik.values.stepOne.area_id}
           onChange={formik.handleChange}
           label={i18n.t('common:community_create.area')}
@@ -109,7 +109,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
         <ESFastInput
           multiline
           rows={5}
-          name="stepTwo.address"
+          name="stepOne.address"
           fullWidth
           placeholder={i18n.t('common:community_create.area_name_placeholder')}
           value={formik.values.stepOne.address}
@@ -134,7 +134,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4} width={200}>
         <ESSelect
-          name="stepTwo.area_id"
+          name="stepOne.participation_approval"
           value={formik.values.stepOne.participation_approval}
           onChange={formik.handleChange}
           label={i18n.t('common:community_create.participation_approval')}

@@ -19,12 +19,20 @@ ESInput.defaultProps = {
 const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
   const { t } = useTranslation(['common'])
   const [areaName, setAreaName] = useState('')
+  const [approval, setApproval] = useState('')
   const classes = useStyles()
 
   useEffect(() => {
     if (prefectures) {
       const area = prefectures.find((area) => area.id === String(values.stepOne.area_id))
-      setAreaName(area.attributes.area)
+      area && setAreaName(area.attributes.area)
+    }
+  }, [prefectures])
+
+  useEffect(() => {
+    if (prefectures) {
+      const area = prefectures.find((area) => area.id === String(values.stepOne.participation_approval))
+      setApproval(area.attributes.area)
     }
   }, [prefectures])
 
@@ -58,12 +66,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <ESInput labelPrimary={t('common:community_create.public_or_private')} value={values.stepOne.t_type} disabled={true} fullWidth />
       <Box pb={2} />
 
-      <ESInput
-        labelPrimary={t('common:community_create.participation_approval')}
-        value={values.stepOne.participation_approval}
-        disabled={true}
-        fullWidth
-      />
+      <ESInput labelPrimary={t('common:community_create.participation_approval')} value={approval} disabled={true} fullWidth />
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.tag')} disabled={true} fullWidth noValue />
