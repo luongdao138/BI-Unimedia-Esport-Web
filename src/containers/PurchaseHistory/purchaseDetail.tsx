@@ -66,7 +66,7 @@ const PurchaseDetail: React.FC = () => {
   const cancelled_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancelled_datetime')
   const cancel_req_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancel_req_datetime')
 
-  const time = CommonHelper.staticSmartTime(
+  const time = CommonHelper.purchaseHistoryStaticSmartTime(
     purchase_status == PAYMENT_STATUS.PURCHASED
       ? purchase_datetime
       : purchase_status == PAYMENT_STATUS.CANCELLED
