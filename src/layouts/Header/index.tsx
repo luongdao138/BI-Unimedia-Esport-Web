@@ -27,6 +27,7 @@ import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
 import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
+import ProfileEditContainer from '@containers/Profile/ProfileEdit'
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
@@ -98,6 +99,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <AccountSettingsConfirmContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD:
         return <AccountSettingsChangePasswordContainer />
+      case ESRoutes.PROFILE_EDIT:
+        return <ProfileEditContainer />
       default:
         return <></>
     }
@@ -220,6 +223,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#000',
     borderBottom: 'solid 1px #70707070',
     willChange: 'transform',
+    paddingRight: '0 !important',
   },
   toolbar: {
     minHeight: 60,

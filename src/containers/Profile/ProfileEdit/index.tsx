@@ -81,6 +81,11 @@ const ProfileEditContainer: React.FC = () => {
   const handleError = (errors) => {
     setError(!_.isEmpty(errors))
   }
+
+  const trimField = (profile, field) => {
+    if (_.isString(profile[field])) profile[field] = profile[field].trim()
+  }
+
   const handleSubmit = () => {
     const failedFields = checkNgWordByField({
       [i18n.t('common:profile.nickname')]: profile.nickname,
@@ -92,7 +97,12 @@ const ProfileEditContainer: React.FC = () => {
       [i18n.t('common:profile.twitter')]: profile.twitter_link,
     })
     if (_.isEmpty(failedFields)) {
-      profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
+      const newProfile = _.cloneDeep(profile)
+      const fields = ['nickname', 'bio', 'discord_link', 'facebook_link', 'instagram_link', 'twitch_link', 'twitter_link']
+      for (const field of fields) {
+        trimField(newProfile, field)
+      }
+      profileEdit({ ...newProfile, features: _.map(profile.features, (feature) => feature.id) })
     } else {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: failedFields.join(', ') }))
     }

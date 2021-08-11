@@ -15,6 +15,7 @@ import 'moment/locale/ja'
 import i18n from '@locales/i18n'
 import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
 import Icon from '@material-ui/core/Icon'
+import { AVATAR_PATH } from '@constants/common.constants'
 
 interface RoomListItemProps {
   expand?: boolean
@@ -58,6 +59,12 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
     return null
   }
 
+  const getRoomImg = () => {
+    if (!_.isString(roomImg)) return AVATAR_PATH
+    if (roomImg.length < 2) return AVATAR_PATH
+    return roomImg
+  }
+
   return (
     <ListItem className={classes.root} selected={selected} onClick={clickHandler}>
       <ListItemAvatar className={classes.avatarItem}>
@@ -71,7 +78,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
             badgeContent={unseenCount}
             showZero={false}
           >
-            <Avatar src={roomImg} alt={name} />
+            <Avatar src={getRoomImg()} alt={name} />
           </Badge>
         </>
       </ListItemAvatar>

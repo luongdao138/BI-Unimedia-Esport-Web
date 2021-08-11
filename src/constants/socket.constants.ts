@@ -81,3 +81,9 @@ export enum STREAM_CHAT_ACTION_TYPE {
   // RESET_CONNECTION = 'RESET_CONNECTION',
   // ERROR = 'ERROR',
 }
+export enum TOURNAMENT_SINGLE_ROLE {
+  ADMIN = 'admin',
+  ORGANIZER = 'co_organizer',
+}
+
+export const TOURNAMENT_ADMIN_ROLES = ['admin', 'co_organizer']

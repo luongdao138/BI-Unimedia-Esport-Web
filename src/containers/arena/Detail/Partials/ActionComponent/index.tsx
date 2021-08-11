@@ -10,7 +10,6 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/arena.service'
 import { UserProfile } from '@services/user.service'
-import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
@@ -31,7 +30,6 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { t } = useTranslation(['common'])
 
   const {
-    toMatches,
     isModerator,
     isTeam,
     isRecruiting,
@@ -126,19 +124,6 @@ const ActionComponent: React.FC<Props> = (props) => {
         {!isCancelled && !isNotHeld && <SubActionButtons tournament={tournament} />}
       </Box>
 
-      {isRecruitmentClosed && isModerator && (
-        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-          <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
-          <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
-            <Typography variant="body2">
-              {t('common:tournament.until_deadline')}
-              <ESLink onClick={toMatches}>{t('common:tournament.brackets')}</ESLink>
-              {t('common:tournament.confirm_brackets_desc_tail')}
-            </Typography>
-          </Box>
-        </Box>
-      )}
-
       {isRecruiting || isReady ? (
         <>
           {isModerator ? renderAdminEntry() : renderEntry()}
@@ -151,6 +136,12 @@ const ActionComponent: React.FC<Props> = (props) => {
         </>
       ) : (
         !TournamentHelper.isStatusPassed(tournament.attributes.status, TOURNAMENT_STATUS.COMPLETED) && renderEntry()
+      )}
+
+      {isRecruitmentClosed && isModerator && !tournament.attributes.is_freezed && (
+        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+          <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
+        </Box>
       )}
 
       {isModerator && isCompleted && !isNotHeld && (

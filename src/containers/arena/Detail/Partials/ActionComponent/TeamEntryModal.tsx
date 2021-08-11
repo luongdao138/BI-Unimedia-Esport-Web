@@ -110,7 +110,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   })
 
   const validationSchema = Yup.object().shape({
-    team_name: Yup.string().required('').max(40),
+    team_name: Yup.string().required(t('common:common.input_required')).max(40),
     team_icon_url: Yup.string().required(),
     members: Yup.array().of(membersValidationSchema),
   })

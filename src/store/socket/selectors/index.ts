@@ -5,6 +5,7 @@ import { mentionData } from '@components/Chat/constants'
 import _ from 'lodash'
 import { ChatSuggestionList } from '@components/Chat/types/chat.types'
 import { CHAT_MEMBER_STATUS } from '@constants/socket.constants'
+import moment from 'moment'
 
 const getRoot = (state: RootState) => state.socket
 const memberSelector = (state: RootState) => state.socket.members
@@ -15,7 +16,15 @@ export const getRoomList = createSelector(getRoot, (state) => {
   if (state.roomList === undefined) {
     return undefined
   } else {
-    return _.orderBy(state.roomList, ['lastMsgAt'], ['desc'])
+    return _.orderBy(
+      state.roomList,
+      [
+        (o) => {
+          return moment(o.lastMsgAt).format('x') || ''
+        },
+      ],
+      ['desc']
+    )
   }
 })
 export const messages = createSelector(getRoot, (state) => state.messages)

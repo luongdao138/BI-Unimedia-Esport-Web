@@ -16,15 +16,16 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="left" ref={ref} {...props} />
 })
 
-const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
+const RegularModal: React.FC<ESDialogProps> = ({ open, handleClose, children, ...rest }) => {
   const classes = useStyles()
+
   return (
     <Dialog
-      disableScrollLock={false}
       fullScreen
       TransitionComponent={Transition}
       aria-labelledby="modal"
       open={open}
+      disableScrollLock={false}
       onClose={handleClose}
       BackdropProps={{
         classes: { root: classes.backDrop },
@@ -39,6 +40,7 @@ const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
         },
       }}
       PaperProps={{ classes: { root: classes.paper } }}
+      {...rest}
     >
       {children}
     </Dialog>
@@ -56,4 +58,4 @@ const useStyles = makeStyles({
   },
 })
 
-export default Modal
+export default RegularModal

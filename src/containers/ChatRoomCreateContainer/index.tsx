@@ -62,11 +62,6 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   useEffect(() => {
     setRoomId(uuidv4())
   }, [])
-  useEffect(() => {
-    if (userId) {
-      dispatch(getFriendList({ type: 'group' }))
-    }
-  }, [userId])
 
   useEffect(() => {
     if (singleUser) {
@@ -202,9 +197,11 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
     const ids = selected.map((item) => (_.isString(item) ? 0 : item.id)) as number[]
     setSelectedUsers(ids)
   }
+
   const handleSearchInput = (text: string) => {
     dispatch(getFriendList({ type: 'group', keyword: text }))
   }
+
   const renderLoader = () => {
     if (actionPending || uploadMeta.uploading) {
       return (

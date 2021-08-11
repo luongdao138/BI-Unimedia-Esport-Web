@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Header } from '@layouts/Header'
-import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
 import SideMenu from '@containers/SideMenu'
 import ChatSideBar from '@containers/ChatSideBar'
@@ -16,11 +15,10 @@ import { use100vh } from 'react-div-100vh'
 
 interface MainLayoutProps {
   patternBg?: boolean
-  footer?: boolean
   loginRequired?: boolean
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, loginRequired }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequired }) => {
   const [open, setOpen] = useState<boolean>(false)
   const [expand, setExpand] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -64,13 +62,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
   return (
     <div className="main-wrapper">
       <Header open={open} toggleDrawer={toggleDrawer} />
-      <aside className="aside-left mui-fixed">
+      <aside className="aside-left">
         <SideMenu />
       </aside>
       <main role="main" className={patternBg ? 'main' : 'main no-pattern'} style={{ minHeight: height }}>
         <div className="content-wrapper">
           <div className="content">{renderContent()}</div>
-          {footer ? <Footer /> : ''}
         </div>
         <aside className="aside-right">{isAuthenticated ? <ChatSideBar expand={expand} toggleChatBar={toggleChatBar} /> : null}</aside>
       </main>
@@ -81,7 +78,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, footer, lo
 
 MainLayout.defaultProps = {
   patternBg: true,
-  footer: true,
   loginRequired: false,
 }
 
