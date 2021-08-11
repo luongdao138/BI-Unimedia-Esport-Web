@@ -68,6 +68,7 @@ export default {
     no_user_available: '一致するデータが見つかりません',
     eXe_points: 'eXeポイント',
     eXe_point_management: 'eXeポイント管理',
+    money_included_tax: '円(税込)',
   },
   page404: {
     title: '404',
@@ -928,4 +929,22 @@ export default {
     id: 'ID',
     eXe_point_text: 'eXePoint',
   },
+  purchase_point_tab: {
+    point_number_select: '購入したいポイント数を選択',
+    enter_payment_info: '支払い情報の入力',
+    purchase_goods: '購入商品',
+    card_info_title: '新規クレジットカード決済',
+    card_title: '登録済みのカードで購入',
+    card_name: 'クレジットカード名義',
+    card_name_placeholder: 'HANAKO KIMURA',
+    card_number: 'クレジットカード名義番号',
+    card_number_placeholder: '1234 5678 9102 3456',
+    card_expire_date: '有効期限',
+    card_expire_date_placeholder: '月/年',
+    card_cvc: 'セキュリティコード(CVC)',
+    register_toggle_name: 'このカードを支払い手段に登録する',
+    title_delete_card: 'このカードの登録を削除する',
+    clear_section: '選択をクリア',
+    btn_buy: '購入する',
+  }
 }
