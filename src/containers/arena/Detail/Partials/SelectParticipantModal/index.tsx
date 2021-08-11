@@ -124,14 +124,7 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
 
         <Box display="flex" alignItems="flex-end" pt={2}>
           <LoginRequired>
-            <ButtonPrimary
-              style={{ padding: '12px 24px' }}
-              disabled={meta.pending}
-              size="small"
-              round={false}
-              gradient={false}
-              onClick={() => handleSelect(type)}
-            >
+            <ButtonPrimary px={12} disabled={meta.pending} size="small" round={false} gradient={false} onClick={() => handleSelect(type)}>
               {t('common:tournament.set_participants')}
             </ButtonPrimary>
           </LoginRequired>
