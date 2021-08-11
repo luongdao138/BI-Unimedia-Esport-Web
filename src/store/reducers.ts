@@ -14,6 +14,7 @@ import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
 import socket from '@store/socket'
+import stream from '@store/stream'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   notification: notification.reducers,
   chat: chat.reducers,
   socket: socket.reducers,
+  liveSetting: stream.reducers,
 })
 export default reducer
 
