@@ -1,6 +1,5 @@
 import { Box, createStyles, makeStyles, Typography, CircularProgress } from '@material-ui/core'
-import { useState } from 'react'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
