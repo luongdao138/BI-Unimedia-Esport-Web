@@ -1,14 +1,168 @@
-import { Box, Typography } from '@material-ui/core'
-import React from 'react'
+import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
+import React, { FC } from 'react'
+import ESSelect from '@components/Select'
+import i18n from '@locales/i18n'
+import { Colors } from '@theme/colors'
+import { Pagination } from '@material-ui/lab'
+import UsagePointsItem from '../UsagePointsItem'
 
-const UsageHistory = () => {
+export interface UsagePointDataProps {
+  serialNumber: string
+  purchasedPointsId: number
+  points: number
+  expiresDatePurchased: string
+  type: string
+}
+const UsageHistory: FC = () => {
+  const classes = useStyles()
+  const dataUsagePoints = Array(3)
+    .fill('')
+    .map((_, i) => ({
+      id: `${i}`,
+      serialNumber: `${i + 1}`,
+      purchasedPointsId: 202106221234,
+      points: 1000,
+      expiresDatePurchased: '2022年04月09日',
+      type: 'used',
+    }))
+  const dataPurchasePoints = Array(1)
+    .fill('')
+    .map((_, i) => ({
+      id: `${i}`,
+      serialNumber: `${i + 1}`,
+      purchasedPointsId: 202106221234,
+      points: 1000,
+      expiresDatePurchased: '2022年04月09日',
+      type: 'purchase',
+    }))
+  const filterOptionsData = [
+    { label: '選択中', value: '' },
+    { label: i18n.t('common:point_management_tab.thirty_days_ago'), value: i18n.t('common:point_management_tab.thirty_days_ago') },
+    { label: '2020年6月', value: '2020年6月' },
+    { label: '2020年5月', value: '2020年5月' },
+    { label: '2020年4月', value: '2020年4月' },
+  ]
   return (
-    <Box>
-      <Typography variant="h3" gutterBottom>
-        {'Usage History'}
-      </Typography>
+    <Box pb={9} py={4} className={classes.container} maxWidth="md">
+      {dataUsagePoints.length > 0 ? (
+        <Box className={classes.headerContainer}>
+          <Typography className={classes.headerTitle}>
+            {i18n.t('common:point_management_tab.purchase_point') + i18n.t('common:point_management_tab.id')}「202106272123」
+            {i18n.t('common:point_management_tab.title_usage_history')}
+          </Typography>
+        </Box>
+      ) : (
+        <Grid item xs={7}>
+          <ESSelect
+            fullWidth
+            placeholder={i18n.t('common:point_management_tab.choosing')}
+            displayEmpty
+            size="big"
+            disabled={false}
+            className={classes.comboBox}
+          >
+            {filterOptionsData.map((rule, index) => (
+              <option key={index} value={rule.value}>
+                {rule.label}
+              </option>
+            ))}
+          </ESSelect>
+        </Grid>
+      )}
+      <Box pb={9} py={2} className={classes.content}>
+        {dataPurchasePoints.length > 0 && (
+          <>
+            <Box className={classes.typePurchaseContainer}>
+              <Typography>{i18n.t('common:point_management_tab.purchase_information')}</Typography>
+            </Box>
+            {dataPurchasePoints.map((item, i) => (
+              <UsagePointsItem data={item} key={i} />
+            ))}
+          </>
+        )}
+        {dataUsagePoints.length > 0 && (
+          <>
+            <Box className={classes.typeUsageContainer}>
+              <Typography>{i18n.t('common:point_management_tab.usage_details')}</Typography>
+            </Box>
+            {dataUsagePoints.map((item, i) => (
+              <UsagePointsItem data={item} key={i} />
+            ))}
+          </>
+        )}
+        {(!dataPurchasePoints || !dataUsagePoints) && (
+          <Box className={classes.noDataContainer}>
+            <Typography className={classes.headerTitle}>{i18n.t('common:point_management_tab.no_data_text')}</Typography>
+          </Box>
+        )}
+      </Box>
+      <Box className={classes.paginationContainer}>
+        <Pagination defaultPage={1} count={99} variant="outlined" shape="rounded" className={classes.paginationStyle} />
+      </Box>
     </Box>
   )
 }
-
+const useStyles = makeStyles((theme: Theme) => ({
+  headerContainer: {
+    justifyContent: 'center',
+    display: 'flex',
+  },
+  headerTitle: {
+    color: Colors.white_opacity['70'],
+    textAlign: 'center',
+  },
+  typePurchaseContainer: {
+    justifyContent: 'center',
+    display: 'flex',
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  typeUsageContainer: {
+    justifyContent: 'center',
+    display: 'flex',
+    marginTop: 24,
+    marginBottom: 24,
+  },
+  comboBox: {},
+  [theme.breakpoints.up('md')]: {
+    container: {
+      marginLeft: theme.spacing(7),
+      marginRight: theme.spacing(7),
+    },
+  },
+  content: {
+    backgroundColor: Colors.black,
+    flex: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.grey['200'],
+    borderStyle: 'solid',
+    marginTop: 16,
+  },
+  paginationContainer: {
+    marginTop: 24,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  paginationStyle: {
+    '& .MuiPaginationItem-root': {
+      color: Colors.white,
+      borderColor: Colors.primary,
+      borderWidth: 1,
+    },
+    '& .Mui-selected': {
+      backgroundColor: Colors.primary,
+    },
+    '& .MuiPaginationItem-ranges': {},
+  },
+  noDataContainer: {
+    display: 'flex',
+    backgroundColor: Colors.white_opacity['6'],
+    justifyContent: 'center',
+    marginLeft: 16,
+    marginRight: 16,
+    borderRadius: 4,
+    padding: 8,
+  },
+}))
 export default UsageHistory
