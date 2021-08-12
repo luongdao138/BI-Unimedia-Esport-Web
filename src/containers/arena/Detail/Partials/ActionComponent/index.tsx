@@ -121,9 +121,6 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {/* {
-          isNotHeld &&  status == 'completed' && <></>
-        } */}
         {!isCancelled && !isNotHeld && <SubActionButtons tournament={tournament} />}
       </Box>
 
