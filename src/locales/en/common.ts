@@ -934,6 +934,12 @@ export default {
     no_purchase_history: '購入履歴がありません',
     purchase_date: '購入日時',
     difference: '区分',
+    purchase_information: '購入情報',
+    usage_details: '利用詳細',
+    title_usage_history: 'の利用履歴',
+    no_data_text: '利用履歴がありません',
+    date_time: '日時',
+    use_point_information: '[動画] - チケット交換',
   },
   purchase_point_tab: {
     point_number_select: '購入したいポイント数を選択',
