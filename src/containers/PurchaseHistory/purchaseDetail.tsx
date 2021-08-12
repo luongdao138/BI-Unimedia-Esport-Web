@@ -59,7 +59,7 @@ const PurchaseDetail: React.FC = () => {
   }, [router])
 
   const price = _.get(purchaseHistoryDetail, 'data.attributes.price')
-  const tax = _.get(purchaseHistoryDetail, 'data.attributes.tax')
+  const tax = Math.floor(_.get(purchaseHistoryDetail, 'data.attributes.tax', 0))
 
   const purchase_status = _.get(purchaseHistoryDetail, 'data.attributes.status')
   const purchase_datetime = _.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime')
