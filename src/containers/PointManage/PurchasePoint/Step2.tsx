@@ -11,22 +11,16 @@ import ESSwitchIOS from '@components/Switch'
 import ESButton from '@components/Button'
 
 interface Step2Props {
-  step: number
+  step: number,
+  selectedPoint: number,
+  cards: Array<any>,
   onNext: (step: number) => void
+  deleteCard: (card: string) => void
 }
 
-const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
+const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const point = 2000
-  const cards = [
-    {
-      number: 'xxxx xxxx xxxx 4256',
-    },
-    {
-      number: 'xxxx xxxx xxxx 4256',
-    },
-  ]
 
   const formik = useFormik({
     initialValues: [],
@@ -49,14 +43,11 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
       <form onSubmit={formik.handleSubmit}>
         <Box className={classes.container}>
           <Box className={classes.wrap_point}>
-            <Typography className={classes.point}>{point}</Typography>
+            <Typography className={classes.point}>{selectedPoint}</Typography>
             <Typography className={classes.exe_point}>{t('common.eXe_points')}</Typography>
           </Box>
           <Box className={classes.wrap_money}>
-            <Typography className={classes.money}>
-              {point}
-              {t('common.money_included_tax')}
-            </Typography>
+            <Typography className={classes.money}>{selectedPoint}{t('common.money_included_tax')}</Typography>
           </Box>
         </Box>
         <Box className={classes.title}>
@@ -156,20 +147,29 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
                         </Box>
                       </Box>
                     </Box>
-                    <Box
-                      className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? classes.last_title_delete_card : '')}
-                      textAlign="right"
-                    >
+                    <Box textAlign='right'>
+                    <Box 
+                      className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? 
+                        classes.last_title_delete_card : '')} 
+                      onClick={() => {deleteCard('xxxx xxxx xxxx 4256')}}>
                       {t('purchase_point_tab.title_delete_card')}
-                    </Box>
+                    </Box> 
+                  </Box>
                   </>
+                )}
+              )}
+              {cards.length === 0 ? (
+                  <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>
+                    {t('purchase_point_tab.no_card')}
+                  </Box>
+                ) : (
+                  <Box textAlign="center" pb={1}>
+                    <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
+                      {t('purchase_point_tab.clear_section')}
+                    </ESButton>
+                  </Box>
                 )
-              })}
-              <Box textAlign="center">
-                <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
-                  {t('purchase_point_tab.clear_section')}
-                </ESButton>
-              </Box>
+              }
             </Box>
           </Box>
         </Box>
@@ -270,7 +270,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 16,
   },
   second_card_info_container: {
-    padding: '16px 16px 24px 16px',
+    padding: '16px',
   },
   wrap_all_card: {
     borderRadius: 4,
@@ -287,6 +287,10 @@ const useStyles = makeStyles(() => ({
       borderRadius: '50%',
     },
   },
+  wrap_no_card: {
+    padding: 16,
+    height: '100%',
+  },
   wrap_card_number: {
     paddingBottom: 12,
     fontSize: '14px',
@@ -295,11 +299,13 @@ const useStyles = makeStyles(() => ({
   title_delete_card: {
     fontSize: '10px',
     color: '#FF4786',
-    paddingTop: 8,
-    paddingBottom: 22,
+    marginTop: 8,
+    marginBottom: 22,
+    cursor: 'pointer',
+    display: 'inline-block',
   },
   last_title_delete_card: {
-    paddingBottom: 17,
+    marginBottom: 17,
   },
   clear_section_btn: {
     width: 108,
