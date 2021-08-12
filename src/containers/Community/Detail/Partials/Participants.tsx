@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Icon, Theme, Button } from '@material-ui/core'
 import ESModal from '@components/Modal'
 // import ESLoader from '@components/Loader'
-// import useParticipants from './useParticipants'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 // import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
-// import useGetProfile from '@utils/hooks/useGetProfile'
 import LoginRequired from '@containers/LoginRequired'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 
@@ -17,11 +15,8 @@ const Participants: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  // const [hasMore, setHasMore] = useState(true)
   const [selectedParticipant, setSelectedParticipant] = useState(false)
   const [members, setMembers] = useState([])
-  // const { participants, getParticipants, resetParticipants, resetMeta, page, meta } = useParticipants()
-  // const { userProfile } = useGetProfile()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -171,13 +166,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loaderCenter: {
     textAlign: 'center',
-  },
-  countLabel: {
-    marginLeft: 2,
-    fontWeight: 400,
-  },
-  urlCopy: {
-    cursor: 'pointer',
   },
   scroll: {
     scrollbarColor: '#222 transparent',
