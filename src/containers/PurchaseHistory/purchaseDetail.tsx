@@ -21,6 +21,7 @@ const PurchaseDetail: React.FC = () => {
   const { t } = useTranslation(['common'])
   const [open, setOpen] = React.useState(false)
   const { purchaseHistoryDetail, fetchPurchaseHistoryDetail, clearPurchaseHistoryDetail, cancelPurchase, meta } = usePurchaseHistoryDetail()
+
   const handleClickOpen = () => {
     setOpen(true)
   }
