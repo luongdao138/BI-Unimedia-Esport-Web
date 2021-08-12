@@ -176,13 +176,12 @@ const InfoContainer: React.FC = () => {
 
   return (
     <Box ml={2}>
-      <Box mt={2} mb={1}>
+      <Box mt={3} mb={1}>
         <form onSubmit={handleSearch} className={classes.searchContainer}>
           <OutlinedInput
             autoComplete="off"
             onChange={onChange}
             placeholder={t('common:community.detail_search.placeholder')}
-            id={'search'}
             value={value}
             classes={{ root: classes.input }}
             margin="dense"
@@ -193,7 +192,7 @@ const InfoContainer: React.FC = () => {
             onClick={handleSearch}
             className={classes.searchBtn}
             variant="outlined"
-            startIcon={<Icon fontSize="small" className={`fa fa-search ${classes.icon}`} />}
+            startIcon={<Icon className={`fa fa-search ${classes.icon}`} />}
           />
         </form>
       </Box>
@@ -233,17 +232,26 @@ const useStyles = makeStyles((theme) => ({
   searchBtn: {
     fontWeight: 400,
     height: 37.6,
-    minWidth: 45,
+    minWidth: 33,
     backgroundColor: Colors.black,
     borderBottomLeftRadius: 'unset',
     borderTopLeftRadius: 'unset',
-    '& > .MuiButton-label': {
-      minWidth: 20,
-    },
+    borderLeft: 0,
     padding: `${theme.spacing(0.75)}px 0`,
+    '&:before': {
+      content: '',
+      background: Colors.white,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      height: '100%',
+      width: '1.5px',
+    },
   },
   icon: {
     paddingLeft: theme.spacing(0.75),
+    color: Colors.white,
+    fontSize: '17px !important',
   },
   closeIcon: {
     color: '#888',
@@ -254,9 +262,16 @@ const useStyles = makeStyles((theme) => ({
     borderBottomRightRadius: 'unset',
     borderTopRightRadius: 'unset',
     backgroundColor: Colors.black,
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderRight: 0,
+    },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderRightStyle: 'solid',
       borderWidth: 1,
       borderColor: '#fff',
+    },
+    '&:hover:not(.Mui-focused)': {
+      borderRightStyle: 'solid !important',
     },
     '&.Mui-error .MuiOutlinedInput-notchedOutline': {
       background: 'rgba(247, 247, 53, 0.1)',
