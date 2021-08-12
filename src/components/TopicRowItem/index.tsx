@@ -14,23 +14,29 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, mail, description, d
 
   return (
     <>
-      <Box margin={1} display="flex" maxHeight={66} alignItems="flex-start">
+      <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%">
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box display="flex" flexDirection="column" width="85%">
             <Box display="flex" flexDirection="row" justifyContent="" width="100%">
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              <Typography className={classes.mail}>{mail}</Typography>
-              <Box ml={3}>
+              <Box width="15%">
+                <Typography className={classes.mail}>{mail}</Typography>
+              </Box>
+              <Box width="5%" />
+              <Box width="80%">
                 <Typography className={classes.description}>{description}</Typography>
               </Box>
             </Box>
           </Box>
 
           <Box display="flex" flexDirection="column" width="15%" alignItems="flex-end">
-            <Typography className={classes.date}>{date}</Typography>
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box width="100%" justifyContent="flex-end" display="flex">
+              <Typography className={classes.date}>{date}</Typography>
+            </Box>
+
+            <Box display="flex" flexDirection="row" alignItems="center" width="100%" justifyContent="flex-end">
               <Icon className="fas fa-comment-alt" fontSize="small" />
               <Box ml={1}>
                 <Typography className={classes.comment_number}>{comment_number}</Typography>
@@ -62,7 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: '100%',
   },
   mail: {
     color: Colors.white_opacity[30],
@@ -70,7 +75,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: 100,
   },
   description: {
     color: Colors.white_opacity[30],
@@ -78,11 +82,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: 500,
   },
   date: {
     color: Colors.white_opacity[30],
     fontSize: 12,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
   comment_number: {
     color: Colors.white_opacity[70],

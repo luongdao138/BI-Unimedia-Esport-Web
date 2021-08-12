@@ -128,7 +128,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
 
   return (
     <Grid container className={classes.container}>
-      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column">
+      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column" width="100%">
         {getHeader()}
         {getTabs()}
         {getContent()}
@@ -138,6 +138,14 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  margin: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  commentPlus: {
+    marginRight: theme.spacing(1),
+  },
   container: {
     padding: theme.spacing(3),
   },
