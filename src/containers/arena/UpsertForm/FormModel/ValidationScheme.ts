@@ -48,11 +48,13 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         .min(1, i18n.t('common:common.input_required'))
         .integer(i18n.t('common:common.integer'))
         .notOneOf([-1], i18n.t('common:common.input_required')),
-      max_participants: Yup.number()
+      max_participants: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .min(2, i18n.t('common:arena.participants_limit'))
-        .max(128, i18n.t('common:arena.participants_limit'))
-        .integer(i18n.t('common:common.integer')),
+        .matches(/^-?(0|[1-9]\d*)$/, { excludeEmptyString: false, message: i18n.t('common:common.validation.only_digit') })
+        .test('participant_boundary', i18n.t('common:arena.participants_limit'), (val) => {
+          const num = parseInt(val)
+          return num >= 2 && num <= 128
+        }),
       terms_of_participation: Yup.string()
         .nullable()
         .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
