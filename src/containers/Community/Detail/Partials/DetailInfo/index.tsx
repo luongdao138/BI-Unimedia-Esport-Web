@@ -15,6 +15,8 @@ import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
 
 type Props = {
   detail: any
@@ -30,7 +32,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  // const [openReport, setOpenReport] = useState(false)
+  const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
   const data = detail.attributes
 
@@ -38,7 +40,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
   const { isAuthenticated } = useCommunityDetail()
 
   const handleReportOpen = () => {
-    // setOpenReport(true)
+    setOpenReport(true)
   }
 
   const handleCopy = () => {
@@ -96,6 +98,16 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
             </Box>
           </Button>
         </Box>
+
+        {isAuthenticated && (
+          <ESReport
+            reportType={REPORT_TYPE.COMMUNITY}
+            target_id={Number(detail.id)}
+            data={detail}
+            open={openReport}
+            handleClose={() => setOpenReport(false)}
+          />
+        )}
       </>
     )
   }
