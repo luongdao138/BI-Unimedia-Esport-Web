@@ -25,7 +25,7 @@ const Completed: React.FC<CompletedProps> = (props) => {
 
   return (
     <ActionComponent {...props}>
-      {tournament.attributes.is_freezed ? (
+      {tournament.attributes.is_freezed && tournament.attributes.participant_count > 1 ? (
         arenaWinners &&
         arenaWinners['1'] &&
         arenaWinners['1'][0] && (

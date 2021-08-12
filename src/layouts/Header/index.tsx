@@ -131,7 +131,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
               <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
             </Link>
             <div className={classes.search + ' search-area'}>
-              <SearchArea selectData={searchOptions} onSearch={onSearch} />
+              <SearchArea isLoggedIn={isAuthenticated} selectData={searchOptions} onSearch={onSearch} />
             </div>
             <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
             <div className={classes.toolArea}>
