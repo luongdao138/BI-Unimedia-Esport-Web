@@ -31,7 +31,7 @@ interface StyleProps {
 
 const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onClick }) => {
   const active = item.unseenCount === 0 ? false : true
-  const date = _.get(item, 'lastMsgAt', +item.createdAt)
+  const date = _.get(item, 'lastMsgAt', 0)
   const roomImg = _.get(item, 'roomImg', '')
   const name = _.get(item, 'roomName', '')
   const lastMsg = _.get(item, 'lastMsg', '')
@@ -40,7 +40,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
 
   const classes = useStyles({ active, expand })
 
-  const time = CommonHelper.staticSmartTime(date)
+  const time = date === 0 ? '' : CommonHelper.staticSmartTime(date)
   const chatRoomId = _.get(item, 'chatRoomId', null)
 
   const clickHandler = (e: React.MouseEvent) => {
