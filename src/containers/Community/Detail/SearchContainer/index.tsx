@@ -1,4 +1,3 @@
-import i18n from '@locales/i18n'
 import { Box, IconButton, OutlinedInput, Icon, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -176,14 +175,13 @@ const InfoContainer: React.FC = () => {
   }
 
   return (
-    <>
-      <Box mt={2} ml={2}>
+    <Box ml={2}>
+      <Box mt={3} mb={1}>
         <form onSubmit={handleSearch} className={classes.searchContainer}>
           <OutlinedInput
             autoComplete="off"
             onChange={onChange}
-            placeholder={t('common:search.search_placeholder')}
-            id={'search'}
+            placeholder={t('common:community.detail_search.placeholder')}
             value={value}
             classes={{ root: classes.input }}
             margin="dense"
@@ -194,18 +192,18 @@ const InfoContainer: React.FC = () => {
             onClick={handleSearch}
             className={classes.searchBtn}
             variant="outlined"
-            startIcon={<Icon fontSize="small" className={`fa fa-search ${classes.icon}`} />}
-          ></Button>
+            startIcon={<Icon className={`fa fa-search ${classes.icon}`} />}
+          />
         </form>
       </Box>
 
-      <Box pb={4} ml={2}>
-        <ESCheckbox disableRipple onChange={handleCheckbox} label={i18n.t('common:community.search_by_title')} />
+      <Box mb={5}>
+        <ESCheckbox disableRipple onChange={handleCheckbox} label={t('common:community.detail_search.by_title')} />
       </Box>
       {showResult && (
         <>
-          <Box pt={0} pb={2} ml={2}>
-            <ESLabel label="検索結果" bold />
+          <Box mb={2}>
+            <ESLabel label={t('common:community.detail_search.result')} bold />
           </Box>
           <>
             {chunks(dummy_data, chunkSize, page).map((d, i) => {
@@ -234,7 +232,7 @@ const InfoContainer: React.FC = () => {
           </>
         </>
       )}
-    </>
+    </Box>
   )
 }
 
@@ -242,17 +240,27 @@ const useStyles = makeStyles((theme) => ({
   searchBtn: {
     fontWeight: 400,
     height: 37.6,
-    minWidth: 45,
+    minWidth: 33,
     backgroundColor: Colors.black,
     borderBottomLeftRadius: 'unset',
     borderTopLeftRadius: 'unset',
-    '& > .MuiButton-label': {
-      minWidth: 20,
-    },
+    borderLeft: 0,
     padding: `${theme.spacing(0.75)}px 0`,
+    '&:before': {
+      content: "' '",
+      background: Colors.white_opacity[20],
+      position: 'absolute',
+      left: 0,
+      height: '80%',
+      width: '1px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+    },
   },
   icon: {
     paddingLeft: theme.spacing(0.75),
+    color: Colors.white,
+    fontSize: '17px !important',
   },
   closeIcon: {
     color: '#888',
@@ -263,9 +271,16 @@ const useStyles = makeStyles((theme) => ({
     borderBottomRightRadius: 'unset',
     borderTopRightRadius: 'unset',
     backgroundColor: Colors.black,
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderRight: 0,
+    },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderRightStyle: 'solid',
       borderWidth: 1,
       borderColor: '#fff',
+    },
+    '&:hover:not(.Mui-focused)': {
+      borderRightStyle: 'solid !important',
     },
     '&.Mui-error .MuiOutlinedInput-notchedOutline': {
       background: 'rgba(247, 247, 53, 0.1)',
