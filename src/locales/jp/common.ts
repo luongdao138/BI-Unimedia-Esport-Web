@@ -256,6 +256,7 @@ export default {
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
     },
+    follow_list: 'フォローリスト',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
