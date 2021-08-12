@@ -8,21 +8,14 @@ import ESCheckboxBig from '@components/CheckboxBig'
 import ButtonPrimary from '@components/ButtonPrimary'
 
 interface Step1Props {
-  step: number,
+  step: number
   onNext: (step: number) => void
 }
 
 const Step1: React.FC<Step1Props> = ({ step, onNext }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const points = [
-    500,
-    1000,
-    2000,
-    3000,
-    5000,
-    10000
-  ];
+  const points = [500, 1000, 2000, 3000, 5000, 10000]
 
   const formik = useFormik({
     initialValues: [],
@@ -40,19 +33,19 @@ const Step1: React.FC<Step1Props> = ({ step, onNext }) => {
   return (
     <Box>
       <Box className={classes.title}>
-        <ESLabel label={t('purchase_point_tab.point_number_select')} required={true}/>
+        <ESLabel label={t('purchase_point_tab.point_number_select')} required={true} />
       </Box>
       <form onSubmit={formik.handleSubmit}>
         <Box className={classes.wrap_all_points}>
-          {points.map(point_value => {
+          {points.map((point_value) => {
             return (
               <Box className={classes.wrap_one_point} key={point_value}>
                 <ESCheckboxBig
-                    checked={false}
-                    onChange={() => {
-                      formik.handleChange
-                    }}
-                    name="use_ticket"
+                  checked={false}
+                  onChange={() => {
+                    formik.handleChange
+                  }}
+                  name="use_ticket"
                 />
                 <Box className={classes.container}>
                   <Box className={classes.wrap_point}>
@@ -60,20 +53,22 @@ const Step1: React.FC<Step1Props> = ({ step, onNext }) => {
                     <Typography className={classes.exe_point}>{t('common.eXe_points')}</Typography>
                   </Box>
                   <Box className={classes.wrap_money}>
-                    <Typography className={classes.money}>{point_value}{t('common.money_included_tax')}</Typography>
+                    <Typography className={classes.money}>
+                      {point_value}
+                      {t('common.money_included_tax')}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
             )
           })}
-          
         </Box>
       </form>
       <Box justifyContent="center" display="flex" className={classes.actionButton}>
-          <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
-            {t('purchase_point_tab.enter_payment_info')}
-          </ButtonPrimary>
-        </Box>
+        <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+          {t('purchase_point_tab.enter_payment_info')}
+        </ButtonPrimary>
+      </Box>
     </Box>
   )
 }
@@ -132,9 +127,7 @@ const useStyles = makeStyles(() => ({
   exe_point: {
     fontSize: 12,
   },
-  wrap_money: {
-
-  },
+  wrap_money: {},
   money: {
     fontSize: 12,
   },
@@ -147,11 +140,11 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiIconButton-label span': {
       borderRadius: '50%',
-    }
+    },
   },
   actionButton: {
     '& .MuiButtonBase-root.button-primary.full-width': {
       width: 220,
-    }
+    },
   },
 }))

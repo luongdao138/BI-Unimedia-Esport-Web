@@ -11,22 +11,22 @@ import ESSwitchIOS from '@components/Switch'
 import ESButton from '@components/Button'
 
 interface Step2Props {
-  step: number,
+  step: number
   onNext: (step: number) => void
 }
 
 const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const point = 2000;
+  const point = 2000
   const cards = [
     {
       number: 'xxxx xxxx xxxx 4256',
     },
     {
       number: 'xxxx xxxx xxxx 4256',
-    }
-  ];
+    },
+  ]
 
   const formik = useFormik({
     initialValues: [],
@@ -53,7 +53,10 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
             <Typography className={classes.exe_point}>{t('common.eXe_points')}</Typography>
           </Box>
           <Box className={classes.wrap_money}>
-            <Typography className={classes.money}>{point}{t('common.money_included_tax')}</Typography>
+            <Typography className={classes.money}>
+              {point}
+              {t('common.money_included_tax')}
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.title}>
@@ -61,19 +64,15 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
         </Box>
         <Box className={classes.card_info_wrap}>
           <Box className={classes.card_wrap + ' ' + classes.first_card_wrap}>
-            <Box className={classes.card_info_title}>
-              {t('purchase_point_tab.card_info_title')}
-            </Box>
+            <Box className={classes.card_info_title}>{t('purchase_point_tab.card_info_title')}</Box>
             <Box className={classes.card_info_container}>
               <Box>
                 <ESInput
                   id="card_name"
                   name="card_name"
                   required={true}
-                  value=''
-                  placeholder={
-                    t('purchase_point_tab.card_name_placeholder')
-                  }
+                  value=""
+                  placeholder={t('purchase_point_tab.card_name_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_name')}
                   fullWidth
                   rows={8}
@@ -86,10 +85,8 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
                   id="card_number"
                   name="card_number"
                   required={true}
-                  value=''
-                  placeholder={
-                    t('purchase_point_tab.card_number_placeholder')
-                  }
+                  value=""
+                  placeholder={t('purchase_point_tab.card_number_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_number')}
                   fullWidth
                   rows={8}
@@ -102,10 +99,8 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
                   id="card_expire_date"
                   name="card_expire_date"
                   required={true}
-                  value=''
-                  placeholder={
-                    t('purchase_point_tab.card_expire_date_placeholder')
-                  }
+                  value=""
+                  placeholder={t('purchase_point_tab.card_expire_date_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_expire_date')}
                   fullWidth
                   rows={8}
@@ -118,8 +113,8 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
                   id="card_cvc"
                   name="card_cvc"
                   required={true}
-                  value=''
-                  placeholder=''
+                  value=""
+                  placeholder=""
                   labelPrimary={t('purchase_point_tab.card_cvc')}
                   fullWidth
                   rows={8}
@@ -128,44 +123,47 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
                 />
               </Box>
               <Box className={classes.toggle} pt={2}>
-                <ESSwitchIOS key={'register_toggle_name'} handleChange={() => {return ''}} name={'register_toggle_name'} checked={false} />
-                <Box className={classes.toggle_name}>
-                  {t('purchase_point_tab.register_toggle_name')}
-                </Box>
+                <ESSwitchIOS
+                  key={'register_toggle_name'}
+                  handleChange={() => {
+                    return ''
+                  }}
+                  name={'register_toggle_name'}
+                  checked={false}
+                />
+                <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
               </Box>
             </Box>
           </Box>
           <Box className={classes.card_wrap}>
-            <Box className={classes.card_info_title}>
-              {t('purchase_point_tab.card_title')}
-            </Box>
+            <Box className={classes.card_info_title}>{t('purchase_point_tab.card_title')}</Box>
             <Box className={classes.card_info_container + ' ' + classes.second_card_info_container}>
               {cards.map((card, key) => {
-                return <>
-                  <Box className={classes.wrap_all_card}>
-                    <ESCheckboxBig
+                return (
+                  <>
+                    <Box className={classes.wrap_all_card}>
+                      <ESCheckboxBig
                         checked={false}
                         onChange={() => {
                           formik.handleChange
                         }}
                         name="use_ticket"
-                    />
-                    <Box >
-                      <Box className={classes.wrap_card_number}>
-                        {card.number}
-                      </Box>
-                      <Box className={classes.wrap_money}>
-                        <img src="/images/visa.svg"  />
+                      />
+                      <Box>
+                        <Box className={classes.wrap_card_number}>{card.number}</Box>
+                        <Box className={classes.wrap_money}>
+                          <img src="/images/visa.svg" />
+                        </Box>
                       </Box>
                     </Box>
-                  </Box>
-                  <Box 
-                    className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? 
-                      classes.last_title_delete_card : '')} 
-                    textAlign='right'>
-                    {t('purchase_point_tab.title_delete_card')}
-                  </Box> 
-                </>
+                    <Box
+                      className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? classes.last_title_delete_card : '')}
+                      textAlign="right"
+                    >
+                      {t('purchase_point_tab.title_delete_card')}
+                    </Box>
+                  </>
+                )
               })}
               <Box textAlign="center">
                 <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
@@ -177,10 +175,10 @@ const Step2: React.FC<Step2Props> = ({ step, onNext }) => {
         </Box>
       </form>
       <Box pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
-          <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
-            {t('purchase_point_tab.btn_buy')}
-          </ButtonPrimary>
-        </Box>
+        <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+          {t('purchase_point_tab.btn_buy')}
+        </ButtonPrimary>
+      </Box>
     </Box>
   )
 }
@@ -223,7 +221,7 @@ const useStyles = makeStyles(() => ({
   actionButton: {
     '& .MuiButtonBase-root.button-primary.full-width': {
       width: 220,
-    }
+    },
   },
   wrap_point: {
     display: 'flex',
@@ -239,9 +237,7 @@ const useStyles = makeStyles(() => ({
   exe_point: {
     fontSize: 12,
   },
-  wrap_money: {
-
-  },
+  wrap_money: {},
   money: {
     fontSize: 12,
   },
@@ -250,13 +246,12 @@ const useStyles = makeStyles(() => ({
     paddingBottom: '16px',
   },
   card_info_wrap: {
-    display: "flex",
-    fontSize: "14px",
+    display: 'flex',
+    fontSize: '14px',
     flex: 1,
   },
   card_wrap: {
     width: '50%',
-    
   },
   first_card_wrap: {
     paddingRight: 28,
@@ -290,7 +285,7 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiIconButton-label span': {
       borderRadius: '50%',
-    }
+    },
   },
   wrap_card_number: {
     paddingBottom: 12,
@@ -313,5 +308,5 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     color: Colors.white,
     borderColor: Colors.white,
-  }
+  },
 }))
