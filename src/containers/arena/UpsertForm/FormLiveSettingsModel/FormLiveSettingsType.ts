@@ -10,7 +10,7 @@ export type FormLiveType = {
     ticket_price: number
     use_ticket: boolean
     share_sns_flag: boolean
-    //TODO: add field 配信を公開する boolean
+    publish_flag: boolean
   }
   stepSettingTwo: {
     viewing_url: string
@@ -27,7 +27,7 @@ export type FormLiveType = {
     re_share_sns_flag: boolean
     re_stream_url: string
     re_stream_key: string
-    //TODO: add field 配信を公開する boolean
+    re_publish_flag: boolean
     //cross-fields validations
     schedule_live_date?: string
     notify_live_start_date?: string

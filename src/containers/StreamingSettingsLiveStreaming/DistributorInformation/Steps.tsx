@@ -39,7 +39,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }, [])
 
   useEffect(() => {
-    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(formik.errors)
+    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(3, formik.errors)
     setError(!isRequiredFieldsValid)
   }, [formik.errors])
 

@@ -12,9 +12,13 @@ export const validationLiveSettingsScheme = (): any => {
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:streaming_settings_live_streaming_screen.validation.overview_limit')),
       category: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
-      ticket_price: Yup.number()
-        .min(1, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
-        .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit')),
+      use_ticket: Yup.boolean(),
+      ticket_price: Yup.number().when('use_ticket', {
+        is: true,
+        then: Yup.number()
+          .min(1, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
+          .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit')),
+      }),
     }),
     stepSettingTwo: Yup.object({
       re_title: Yup.string()
@@ -24,14 +28,21 @@ export const validationLiveSettingsScheme = (): any => {
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:streaming_settings_live_streaming_screen.validation.overview_limit')),
       re_category: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
-      re_ticket_price: Yup.number()
-        .min(1, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
-        .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit')),
+      re_use_ticket: Yup.boolean(),
+      re_ticket_price: Yup.number().when('use_ticket', {
+        is: true,
+        then: Yup.number()
+          .min(1, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit'))
+          .max(9999999, i18n.t('common:streaming_settings_live_streaming_screen.validation.point_ticket_limit')),
+      }),
 
-      date_time_ticket_sale_start: Yup.date()
-        .nullable()
-        .required(i18n.t('common:common.input_required'))
-        .min(minStartDate, i18n.t('common:streaming_settings_live_streaming_screen.validation.min_date')),
+      date_time_ticket_sale_start: Yup.date().when('re_use_ticket', {
+        is: true,
+        then: Yup.date()
+          .nullable()
+          // .required(i18n.t('common:common.input_required'))
+          .min(minStartDate, i18n.t('common:streaming_settings_live_streaming_screen.validation.min_date')),
+      }),
 
       date_time_notification_delivery: Yup.date()
         .nullable()

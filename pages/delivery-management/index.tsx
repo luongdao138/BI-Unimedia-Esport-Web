@@ -3,9 +3,11 @@ import StreamLayout from '@layouts/StreamLayout'
 import DeliveryManagementContainer from '@containers/DeliveryManagementContainer'
 
 const DeliveryManagementPage: PageWithLayoutType = () => {
-  return <StreamLayout>
+  return (
+    <StreamLayout>
       <DeliveryManagementContainer />
     </StreamLayout>
+  )
 }
 
 export default DeliveryManagementPage

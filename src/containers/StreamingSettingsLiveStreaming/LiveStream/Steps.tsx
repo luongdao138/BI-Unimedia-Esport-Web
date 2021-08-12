@@ -19,6 +19,9 @@ import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel
 import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
+import useLiveSetting from './useLiveSetting'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import { baseViewingURL, TYPE_SETTING } from '@services/liveStream.service'
 interface StepsProps {
   step: number
   onNext: (step: number) => void
@@ -28,15 +31,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
-  const [checkboxStates, setCheckboxStates] = useState({
-    isTicketUse: false,
-    isShareSNS: false,
-    isReissue: true,
-  })
+  const { liveSettingInformation, getLiveSettingTab } = useLiveSetting()
+  const { userProfile } = useGetProfile()
+  const liveInfo = liveSettingInformation.data
+  const user_id = parseInt(userProfile?.id)
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
   const [hasError, setError] = useState(false)
-  const initialValues = getInitialLiveSettingValues()
+  const initialValues = getInitialLiveSettingValues(!liveInfo ? liveInfo : null)
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
     validationSchema: validationLiveSettingsScheme(),
@@ -47,12 +49,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   })
   useEffect(() => {
     formik.validateForm()
+    getLiveSetting()
   }, [])
 
   useEffect(() => {
-    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(formik.errors)
+    const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
     setError(!isRequiredFieldsValid)
   }, [formik.errors])
+
+  const getLiveSetting = () => {
+    getLiveSettingTab({ type: TYPE_SETTING.LIVE, user_id: user_id })
+  }
 
   const handleUpload = useCallback(() => {
     // uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
@@ -65,9 +72,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       window.navigator.clipboard.writeText(formik.values.stepSettingOne.linkUrl.toString())
     }
     dispatch(commonActions.addToast(t('common:arena.copy_toast')))
-  }
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckboxStates({ ...checkboxStates, [event.target.name]: event.target.checked })
   }
 
   const onClickNext = () => {
@@ -94,7 +98,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <ESInput
               id="linkUrl"
               name="stepSettingOne.linkUrl"
-              value={formik.values.stepSettingOne.linkUrl}
+              value={
+                formik.values.stepSettingOne.linkUrl
+                  ? `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`
+                  : formik.values.stepSettingOne.linkUrl
+              }
               placeholder={
                 !formik.values.stepSettingOne.linkUrl && i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_url')
               }
@@ -227,7 +235,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 formik.setFieldValue('stepSettingOne.use_ticket', !formik.values.stepSettingOne.use_ticket)
               }}
               label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
-              name="use_ticket"
+              name="stepSettingOne.use_ticket"
             />
           </Box>
         ) : (
@@ -384,10 +392,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
         {isFirstStep() ? (
           <Box pb={3 / 8} pt={2}>
             <ESCheckboxBig
-              checked={checkboxStates.isReissue}
-              onChange={handleCheckboxChange}
+              checked={formik.values.stepSettingOne.publish_flag}
+              onChange={() => formik.setFieldValue('stepSettingOne.publish_flag', !formik.values.stepSettingOne.publish_flag)}
               label={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
-              name="isReissue"
+              name="stepSettingOne.publish_flag"
             />
           </Box>
         ) : (
