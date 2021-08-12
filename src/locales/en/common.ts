@@ -921,5 +921,11 @@ export default {
     purchase_point: 'ポイント購入',
     purchase_history: '購入履歴',
     usage_history: '利用履歴',
+    my_points: '所持ポイント',
+    eXe_point: 'eXeポイント',
+    points: 'ポイント',
+    expires_date: '有効期限',
+    id: 'ID',
+    eXe_point_text: 'eXePoint',
   },
 }
