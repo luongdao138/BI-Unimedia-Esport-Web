@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Grid, Box, Icon, Typography, Button } from '@material-ui/core'
+import { Grid, Box, Icon, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -8,15 +8,18 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
-import { FormatHelper } from '@utils/helpers/FormatHelper'
+// import { FormatHelper } from '@utils/helpers/FormatHelper'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
+import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
+import SearchContainer from '../../SearchContainer'
+import FollowList from '../FollowList'
 
 type Props = {
   detail: any
@@ -88,15 +91,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
         </Box>
 
         <Box marginTop={2}>
-          <Button style={{ marginLeft: -6 }}>
-            <Box display="flex" className={classes.rowContainer}>
-              <Typography>{t('common:following.title')}</Typography>
-              <Box display="flex" className={classes.countContainer}>
-                <Typography className={classes.count}>{FormatHelper.kFormatter(999)}</Typography>
-                <Typography>{t('common:followers.th')}</Typography>
-              </Box>
-            </Box>
-          </Button>
+          <FollowList />
         </Box>
 
         {isAuthenticated && (
@@ -128,9 +123,9 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
       case TABS.INFO:
         return <InfoContainer />
       case TABS.TOPIC_LIST:
-        return <>Topic List</>
+        return <TopicListContainer />
       case TABS.SEARCH:
-        return <>Search</>
+        return <SearchContainer />
       default:
         break
     }
@@ -163,20 +158,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 5,
     fontSize: 14,
     paddingTop: 3,
-  },
-  rowContainer: {
-    flexWrap: 'wrap',
-    alignItems: 'center',
-  },
-  countContainer: {
-    marginLeft: 8,
-    alignItems: 'center',
-  },
-  count: {
-    marginRight: 10,
-    fontWeight: 'bold',
-    fontSize: 24,
-    color: Colors.white,
   },
   tabs: {
     overflow: 'hidden',
