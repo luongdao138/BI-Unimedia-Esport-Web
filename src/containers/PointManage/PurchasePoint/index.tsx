@@ -24,8 +24,7 @@ const PurchasePoint: React.FC = () => {
 
   return (
     <Box className={classes.wrap_container}>
-      {step === 1 ? <Step1 step={step} onNext={onChangeStep} /> : 
-      (step === 2 ? <Step2 step={step} onNext={onChangeStep} /> : <></>)}
+      {step === 1 ? <Step1 step={step} onNext={onChangeStep} /> : step === 2 ? <Step2 step={step} onNext={onChangeStep} /> : <></>}
     </Box>
   )
 }

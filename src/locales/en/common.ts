@@ -928,6 +928,11 @@ export default {
     expires_date: '有効期限',
     id: 'ID',
     eXe_point_text: 'eXePoint',
+    choosing: '選択中',
+    thirty_days_ago: '直近30日間',
+    no_purchase_history: '購入履歴がありません',
+    purchase_date: '購入日時',
+    difference: '区分',
   },
   purchase_point_tab: {
     point_number_select: '購入したいポイント数を選択',
@@ -946,5 +951,5 @@ export default {
     title_delete_card: 'このカードの登録を削除する',
     clear_section: '選択をクリア',
     btn_buy: '購入する',
-  }
+  },
 }
