@@ -240,7 +240,7 @@ const useStyles = makeStyles((theme) => ({
     padding: `${theme.spacing(0.75)}px 0`,
     '&:before': {
       content: "' '",
-      background: 'rgba(255, 255, 255, 0.23)',
+      background: Colors.white_opacity[20],
       position: 'absolute',
       left: 0,
       height: '80%',
