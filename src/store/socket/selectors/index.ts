@@ -21,7 +21,11 @@ export const getRoomList = createSelector(getRoot, (state) => {
       [
         (o) => {
           if (_.has(o, 'lastMsgAt')) {
-            return moment(o.lastMsgAt).format('x') || 0
+            if (o.lastMsgAt === null || o.lastMsgAt === undefined) {
+              return (o['lastMsgAt'] = 0)
+            } else {
+              return moment(o.lastMsgAt).format('x')
+            }
           } else {
             return (o['lastMsgAt'] = 0)
           }
