@@ -9,6 +9,7 @@ import useSearch from '@containers/Search/useSearch'
 
 interface SearchAreaProps {
   selectData: dataItem[]
+  isLoggedIn: boolean
   onSearch: (data: returnItem) => void
 }
 
@@ -81,7 +82,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   return (
     <form onSubmit={handleSearch} className={classes.searchCont}>
       <OutlinedInput
-        autoComplete="off"
+        autoComplete={props.isLoggedIn ? 'on' : 'off'}
         onChange={onChange}
         placeholder={t('common:search.search_placeholder')}
         id={'search'}
