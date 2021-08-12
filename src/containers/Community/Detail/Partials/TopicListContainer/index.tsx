@@ -1,6 +1,8 @@
 import { Box } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
+import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
 
 const InfoContainer: React.FC = () => {
@@ -108,7 +110,7 @@ const InfoContainer: React.FC = () => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const chunkSize = 10
-
+  const classes = useStyles()
   useEffect(() => {
     setCount(Math.ceil(dummy_data.length / 10))
   }, [])
@@ -126,16 +128,39 @@ const InfoContainer: React.FC = () => {
 
   return (
     <>
+      <Box mt={2} />
+
       {chunks(dummy_data, chunkSize, page).map((d, i) => {
         return (
           <TopicRowItem key={i} title={d.title} mail={d.mail} description={d.description} date={d.date} comment_number={d.comment_number} />
         )
       })}
       <Box display="flex" justifyContent="center" mt={4}>
-        <Pagination count={count} page={page} onChange={handleChange} variant="outlined" shape="rounded" color="primary" />
+        <Pagination
+          className={classes.pagination}
+          count={count}
+          page={page}
+          onChange={handleChange}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+        />
       </Box>
     </>
   )
 }
-
+const useStyles = makeStyles(() => ({
+  pagination: {
+    '& .MuiPaginationItem-root': {
+      color: Colors.white,
+    },
+    '& .MuiPaginationItem-outlined': {
+      borderColor: Colors.primary,
+    },
+    '& .Mui-selected': {
+      backgroundColor: Colors.primary,
+      color: Colors.white,
+    },
+  },
+}))
 export default InfoContainer
