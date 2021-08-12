@@ -257,6 +257,10 @@ export default {
       result: '検索結果',
     },
     follow_list: 'フォローリスト',
+    unapproved_users_title: '未承認ユーザーがいます',
+    general_user: '一般ユーザー',
+    applying: '申請中',
+    participating: '参加中',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

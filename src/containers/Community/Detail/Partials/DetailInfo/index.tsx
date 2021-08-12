@@ -22,6 +22,7 @@ import AddCommentIcon from '@material-ui/icons/AddComment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
+import ApproveList from '../ApproveList'
 
 type Props = {
   detail: any
@@ -92,8 +93,9 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
           <ESButtonTwitterCircle className={classes.marginLeft} link={'blabla'} />
         </Box>
 
-        <Box marginTop={2}>
+        <Box marginTop={2} display="flex">
           <FollowList />
+          <ApproveList />
         </Box>
       </>
     )
