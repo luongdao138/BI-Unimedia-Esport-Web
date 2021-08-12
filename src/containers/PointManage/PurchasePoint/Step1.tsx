@@ -10,9 +10,10 @@ import ButtonPrimary from '@components/ButtonPrimary'
 interface Step1Props {
   step: number
   onNext: (step: number) => void
+  setSelectedPoint: (point: number) => void
 }
 
-const Step1: React.FC<Step1Props> = ({ step, onNext }) => {
+const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const points = [500, 1000, 2000, 3000, 5000, 10000]
@@ -27,6 +28,7 @@ const Step1: React.FC<Step1Props> = ({ step, onNext }) => {
   })
 
   const onClickNext = () => {
+    setSelectedPoint(5000)
     onNext(step + 1)
   }
 

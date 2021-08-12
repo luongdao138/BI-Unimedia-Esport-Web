@@ -69,6 +69,7 @@ export default {
     eXe_points: 'eXeポイント',
     eXe_point_management: 'eXeポイント管理',
     money_included_tax: '円(税込)',
+    money: '円',
   },
   page404: {
     title: '404',
@@ -950,5 +951,13 @@ export default {
     title_delete_card: 'このカードの登録を削除する',
     clear_section: '選択をクリア',
     btn_buy: '購入する',
-  },
+    purchase_confirm: '購入確認',
+    purchase_exe_points: '購入eXeポイント',
+    purchase_fee: '購入料金',
+    no_card: '登録済みのカードがありません。',
+    note_purchase_point: '※eXePointの購入はキャンセル・返金が出来ません。予めご了承下さい。',
+    delete_confirm: '登録削除確認',
+    delete_confirm_content: '登録削除をしたいクレジットカード',
+    btn_delete: '削除する',
+  }
 }
