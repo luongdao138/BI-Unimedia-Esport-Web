@@ -31,6 +31,7 @@ import AccountSettingsPasswordContainer from '@containers/Settings/Account/Passw
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
+import TopicCreateContainer from '@containers/Community/Topic/UpsertForm'
 import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
@@ -96,6 +97,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <LobbyCreateContainer />
       case ESRoutes.COMMUNITY_CREATE:
         return <CommunityCreateContainer />
+      case ESRoutes.TOPIC_CREATE:
+        return <TopicCreateContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
         return <AccountSettingsPasswordContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:

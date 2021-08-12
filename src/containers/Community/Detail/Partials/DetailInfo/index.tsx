@@ -17,6 +17,10 @@ import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
 import SearchContainer from '../../SearchContainer'
+import Fab from '@material-ui/core/Fab'
+import AddCommentIcon from '@material-ui/icons/AddComment'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 
 type Props = {
@@ -119,12 +123,35 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
     }
   }
 
+  const router = useRouter()
+  const { community_id } = router.query
+
+  const toCreateTopic = () => {
+    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, community_id.toString()))
+  }
+
   return (
     <Grid container className={classes.container}>
-      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column">
+      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column" width="100%">
         {getHeader()}
         {getTabs()}
         {getContent()}
+        <Box className={classes.commentIconContainer}>
+          <Box />
+          <Box>
+            <Fab
+              variant="extended"
+              size="medium"
+              color="primary"
+              aria-label="add"
+              className={classes.commentIcon}
+              onClick={() => toCreateTopic()}
+            >
+              <AddCommentIcon className={classes.addCommentIcon} />
+              <Typography className={classes.addCommentText}>{t('common:topic_create.title')}</Typography>
+            </Fab>
+          </Box>
+        </Box>
       </Box>
     </Grid>
   )
@@ -162,6 +189,28 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 2,
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  commentIcon: {
+    '&:hover': {
+      outline: 'none',
+      borderColor: '#d600fd',
+      boxShadow: '0 0 10px #d600fd',
+    },
+  },
+  addCommentIcon: {
+    transform: 'scaleX(-1)',
+    margin: theme.spacing(1),
+  },
+  addCommentText: {
+    letterSpacing: -1,
+    margin: theme.spacing(1),
+  },
+  commentIconContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    position: 'sticky',
+    bottom: theme.spacing(4),
   },
 }))
 

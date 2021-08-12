@@ -23,6 +23,7 @@ const useCommunityHelper = (
   const isEditable = isModerator && status !== COMMUNITY_STATUS.CANCELLED
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/community/create' }), '/community/create', { shallow: true })
+
   const toEdit = () =>
     router.push(makeContextualHref({ hash_key: hashKey }), `/community/${hashKey}/edit`, {
       shallow: true,

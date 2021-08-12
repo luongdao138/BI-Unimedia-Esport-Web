@@ -219,7 +219,15 @@ const InfoContainer: React.FC = () => {
               )
             })}
             <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination count={count} page={page} onChange={handleChange} variant="outlined" shape="rounded" color="primary" />
+              <Pagination
+                className={classes.pagination}
+                count={count}
+                page={page}
+                onChange={handleChange}
+                variant="outlined"
+                shape="rounded"
+                color="primary"
+              />
             </Box>
           </>
         </>
@@ -292,6 +300,18 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     position: 'relative',
     width: 500,
+  },
+  pagination: {
+    '& .MuiPaginationItem-root': {
+      color: Colors.white,
+    },
+    '& .MuiPaginationItem-outlined': {
+      borderColor: Colors.primary,
+    },
+    '& .Mui-selected': {
+      backgroundColor: Colors.primary,
+      color: Colors.white,
+    },
   },
 }))
 
