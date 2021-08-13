@@ -136,15 +136,7 @@ const staticSmartTime = (time: string | number): string => {
 }
 
 const purchaseHistoryStaticSmartTime = (time: string | number): string => {
-  const timestamp = time
-  const currentDate = moment().startOf('day')
-  const given = moment(timestamp).format('YYYY-MM-DD')
-  const diff = currentDate.diff(given, 'days', false)
-  if (diff > 30) {
-    return moment(timestamp).format('YYYY/MM/DD')
-  } else {
-    return moment(timestamp).fromNow()
-  }
+  return moment(time).format('YYYY/MM/DD')
 }
 
 const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): Array<number> => {
