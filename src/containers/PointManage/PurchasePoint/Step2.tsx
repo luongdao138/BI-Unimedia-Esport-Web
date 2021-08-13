@@ -11,9 +11,9 @@ import ESSwitchIOS from '@components/Switch'
 import ESButton from '@components/Button'
 
 interface Step2Props {
-  step: number,
-  selectedPoint: number,
-  cards: Array<any>,
+  step: number
+  selectedPoint: number
+  cards: Array<any>
   onNext: (step: number) => void
   deleteCard: (card: string) => void
 }
@@ -47,7 +47,10 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
             <Typography className={classes.exe_point}>{t('common.eXe_points')}</Typography>
           </Box>
           <Box className={classes.wrap_money}>
-            <Typography className={classes.money}>{selectedPoint}{t('common.money_included_tax')}</Typography>
+            <Typography className={classes.money}>
+              {selectedPoint}
+              {t('common.money_included_tax')}
+            </Typography>
           </Box>
         </Box>
         <Box className={classes.title}>
@@ -147,29 +150,28 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
                         </Box>
                       </Box>
                     </Box>
-                    <Box textAlign='right'>
-                    <Box 
-                      className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? 
-                        classes.last_title_delete_card : '')} 
-                      onClick={() => {deleteCard('xxxx xxxx xxxx 4256')}}>
-                      {t('purchase_point_tab.title_delete_card')}
-                    </Box> 
-                  </Box>
+                    <Box textAlign="right">
+                      <Box
+                        className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? classes.last_title_delete_card : '')}
+                        onClick={() => {
+                          deleteCard('xxxx xxxx xxxx 4256')
+                        }}
+                      >
+                        {t('purchase_point_tab.title_delete_card')}
+                      </Box>
+                    </Box>
                   </>
-                )}
-              )}
-              {cards.length === 0 ? (
-                  <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>
-                    {t('purchase_point_tab.no_card')}
-                  </Box>
-                ) : (
-                  <Box textAlign="center" pb={1}>
-                    <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
-                      {t('purchase_point_tab.clear_section')}
-                    </ESButton>
-                  </Box>
                 )
-              }
+              })}
+              {cards.length === 0 ? (
+                <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>{t('purchase_point_tab.no_card')}</Box>
+              ) : (
+                <Box textAlign="center" pb={1}>
+                  <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
+                    {t('purchase_point_tab.clear_section')}
+                  </ESButton>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>

@@ -6,7 +6,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
 
 interface ModalProps {
-  selectedPoint: number,
+  selectedPoint: number
   open: boolean
   handleClose: () => void
 }
@@ -20,32 +20,24 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, 
       <ConfirmModal open={open}>
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('purchase_point_tab.purchase_confirm')}</Typography>
-            <Box className={classes.wrap_message}>
-                <Typography className={classes.message}>
-                    {t('purchase_point_tab.purchase_exe_points')}
-                </Typography>
-                <Typography className={classes.message}>
-                    {selectedPoint} {t('point_management_tab.eXe_point_text')}
-                </Typography>
-                <Box pb={3}></Box>
-                <Typography className={classes.message}>
-                    {t('purchase_point_tab.purchase_fee')}
-                </Typography>
-                <Typography className={classes.message}>
-                    1,760{t('common.money')}
-                </Typography> 
-            </Box>
-            <Typography className={classes.note_purchase_point}>
-                {t('purchase_point_tab.note_purchase_point')}
-            </Typography> 
+          <Box className={classes.wrap_message}>
+            <Typography className={classes.message}>{t('purchase_point_tab.purchase_exe_points')}</Typography>
+            <Typography className={classes.message}>
+              {selectedPoint} {t('point_management_tab.eXe_point_text')}
+            </Typography>
+            <Box pb={3}></Box>
+            <Typography className={classes.message}>{t('purchase_point_tab.purchase_fee')}</Typography>
+            <Typography className={classes.message}>1,760{t('common.money')}</Typography>
+          </Box>
+          <Typography className={classes.note_purchase_point}>{t('purchase_point_tab.note_purchase_point')}</Typography>
         </Box>
         <Box className={classes.actionBox}>
-            <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
-                {t('common.cancel')}
-            </ButtonPrimary>  
-            <ButtonPrimary className={classes.actionBtnBuy} onClick={handleClose}>
-                {t('purchase_point_tab.btn_buy')}
-            </ButtonPrimary>
+          <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
+            {t('common.cancel')}
+          </ButtonPrimary>
+          <ButtonPrimary className={classes.actionBtnBuy} onClick={handleClose}>
+            {t('purchase_point_tab.btn_buy')}
+          </ButtonPrimary>
         </Box>
       </ConfirmModal>
     </Box>
@@ -99,16 +91,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px',
     color: Colors.white_opacity[70],
   },
-  note_purchase_point:{
-        fontSize: '10px',
-        color: '#F7F735',
-        padding: '29px 0 37px 0',
-        textAlign: 'center',
+  note_purchase_point: {
+    fontSize: '10px',
+    color: '#F7F735',
+    padding: '29px 0 37px 0',
+    textAlign: 'center',
   },
   dialog_container: {
     '& .MuiDialog-paperFullWidth': {
-        borderRadius: 10,
-        maxWidth: 754,
-    }
-  }
+      borderRadius: 10,
+      maxWidth: 754,
+    },
+  },
 }))
