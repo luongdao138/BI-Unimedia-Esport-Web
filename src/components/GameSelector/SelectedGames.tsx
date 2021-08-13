@@ -1,8 +1,28 @@
-import { Container, List } from '@material-ui/core'
+import { Container, List, useMediaQuery, useTheme } from '@material-ui/core'
 import Chip from '@components/Chip'
 import { makeStyles } from '@material-ui/core/styles'
 import { GameTitle } from '@services/game.service'
 import { Colors } from '@theme/colors'
+
+type SelectedGamesProps = { games: GameTitle['attributes'][]; handleRemove: (game: GameTitle['attributes']) => void }
+const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) => {
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const classes = useStyles({ isMobile })
+  return (
+    <div className={isMobile ? classes.rootMobile : classes.root}>
+      {games.length > 0 && (
+        <Container maxWidth="md" className={classes.listContainer}>
+          <List>
+            {games.map((g, idx) => (
+              <Chip key={idx} isGameList={true} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
+            ))}
+          </List>
+        </Container>
+      )}
+    </div>
+  )
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +40,18 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: theme.spacing(14),
     },
   },
+  rootMobile: {
+    backgroundColor: theme.palette.common.black,
+    borderTop: `1px solid`,
+    borderTopColor: Colors.text['300'],
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    marginLeft: -theme.spacing(3),
+    marginRight: -theme.spacing(3),
+  },
   listContainer: {
     maxWidth: 600,
     paddingTop: theme.spacing(2),
@@ -33,24 +65,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 }))
-
-type SelectedGamesProps = { games: GameTitle['attributes'][]; handleRemove: (game: GameTitle['attributes']) => void }
-const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) => {
-  const classes = useStyles()
-  return (
-    <div className={classes.root}>
-      {games.length > 0 && (
-        <Container maxWidth="md" className={classes.listContainer}>
-          <List>
-            {games.map((g, idx) => (
-              <Chip key={idx} isGameList={true} label={g.display_name} className={classes.chip} onDelete={() => handleRemove(g)} />
-            ))}
-          </List>
-        </Container>
-      )}
-    </div>
-  )
-}
 
 SelectedGames.propTypes = {}
 
