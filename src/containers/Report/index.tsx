@@ -395,6 +395,7 @@ const useStyles = makeStyles((theme) => ({
   },
   communityIcon: {
     fontSize: 20,
+    color: Colors.white,
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
