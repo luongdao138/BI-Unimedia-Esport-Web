@@ -1,4 +1,4 @@
-import { Box, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Icon, IconButton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
@@ -6,8 +6,6 @@ type CommunityHeaderProps = {
   title: string
 }
 const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title }) => {
-  const _theme = useTheme()
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
 
   return (
@@ -16,13 +14,9 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title }) => {
         <IconButton className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
-        <div style={{ overflow: 'hidden' }}>
-          {!isMobile && (
-            <Typography variant="h2" className={classes.wrapOne}>
-              {title}
-            </Typography>
-          )}
-        </div>
+        <Typography variant="h2" className={classes.wrapOne}>
+          {title}
+        </Typography>
       </Box>
     </>
   )
@@ -37,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
     paddingLeft: theme.spacing(3),
-    paddingTop: 10,
-    paddingBottom: 10,
+    padding: `${theme.spacing(2)}px 0`,
     backgroundColor: Colors.black,
     opacity: 0.7,
     zIndex: 100,
@@ -55,13 +48,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-  },
-
-  [theme.breakpoints.down('sm')]: {
-    backContainer: {
-      position: 'absolute',
-      backgroundColor: 'transparent',
-    },
   },
 
   ['@media (max-width: 960px)']: {

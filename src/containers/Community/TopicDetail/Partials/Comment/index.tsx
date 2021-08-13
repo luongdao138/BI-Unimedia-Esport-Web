@@ -1,7 +1,16 @@
-import { Box, Typography, Icon, IconButton } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
+import ESMenu from '@components/Menu'
+import ESMenuItem from '@components/Menu/MenuItem'
+import LoginRequired from '@containers/LoginRequired'
+import { useTranslation } from 'react-i18next'
+import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
+import { useState } from 'react'
+import { REPORT_TYPE } from '@constants/common.constants'
+import ESReport from '@containers/Report'
+import DeleteDialog from '../DeleteDialog'
 
 type CommunityHeaderProps = {
   username: string
@@ -13,6 +22,21 @@ type CommunityHeaderProps = {
 }
 const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
+  const isModerator = true
+  const { isAuthenticated } = useCommunityDetail()
+  const [openReport, setOpenReport] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+
+  const handleReportOpen = () => {
+    setOpenReport(true)
+  }
+  const handleDeleteOpen = () => {
+    setOpenDelete(true)
+  }
+  const handleDeleteSubmit = () => {
+    //
+  }
 
   return (
     <>
@@ -24,18 +48,19 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
               <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
             </Box>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
+            <Box className={classes.userInfoBox} ml={1} maxWidth="67%">
               <Typography className={classes.username}>{username}</Typography>
               <Typography className={classes.mail}>{mail}</Typography>
             </Box>
           </Box>
           <Box className={classes.dateReportContainer}>
             <Typography className={classes.date}>{date}</Typography>
-            <Box className={classes.reportButton}>
-              <IconButton>
-                <Icon className="fa fa-ellipsis-v" fontSize="small" />
-              </IconButton>
-            </Box>
+            <ESMenu>
+              {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
+              <LoginRequired>
+                <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+              </LoginRequired>
+            </ESMenu>
           </Box>
         </Box>
 
@@ -46,14 +71,34 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
           <Box
             className={classes.image}
             style={{
-              background: `url(${image})`,
+              backgroundImage: `url(${image})`,
             }}
-            mb={3}
           ></Box>
         ) : (
           <></>
         )}
       </Box>
+      {isAuthenticated && (
+        <>
+          <ESReport
+            reportType={REPORT_TYPE.TOPIC_COMMENT}
+            // target_id={Number(detail.id)}
+            // data={detail}
+            open={openReport}
+            handleClose={() => setOpenReport(false)}
+          />
+          <DeleteDialog
+            title={t('common:topic_comment.delete.title')}
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+            onSubmit={handleDeleteSubmit}
+            description1={t('common:topic_comment.delete.description1')}
+            description2={t('common:topic_comment.delete.description2')}
+            confirmTitle={t('common:topic_comment.delete.submit')}
+            cancelTitle={t('common:common.cancel')}
+          />
+        </>
+      )}
     </>
   )
 }
@@ -62,18 +107,20 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     margin: theme.spacing(3),
+    marginBottom: theme.spacing(2),
     flexDirection: 'column',
     borderTop: '2px solid rgba(255,255,255,0.1)',
+    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px 0`,
   },
   userContainer: {
     display: 'flex',
-    margin: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   userInfoContainer: {
     display: 'flex',
-    width: 500,
+    width: '67%',
   },
   userAvatarBox: {
     display: 'flex',
@@ -121,23 +168,26 @@ const useStyles = makeStyles((theme) => ({
   },
   discriptionContainer: {
     display: 'flex',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
   },
   image: {
     display: 'flex',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
     paddingTop: '30.27%',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
+    borderRadius: '7px',
+    width: '66%',
   },
   discription: {
     color: Colors.white_opacity[70],
   },
   number: {
     fontSize: 10,
+  },
+  [theme.breakpoints.down('sm')]: {
+    image: {
+      width: '80%',
+    },
   },
 }))
 
