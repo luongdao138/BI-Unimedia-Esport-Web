@@ -2,9 +2,9 @@ import { Box } from '@material-ui/core'
 import { FormikProps } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useTopicCreate'
-import { useCallback } from 'react'
+import { useState } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
-import CoverUploader from '@components/CoverUploader'
+import CoverUploader from '../UpsertForm/Partials/CoverUploader'
 import ESFastInput from '@components/FastInput'
 
 import i18n from '@locales/i18n'
@@ -17,13 +17,17 @@ type Props = {
 }
 
 const StepOne: React.FC<Props> = ({ formik, editables }) => {
-  const { uploadArenaCoverImage, isUploading } = useUploadImage()
+  const { uploadArenaCoverImage } = useUploadImage()
+  const [isUploading, setUploading] = useState(false)
 
-  const handleUpload = useCallback((file: File, blob: any) => {
-    uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
+  const handleUpload = (file: File) => {
+    setUploading(true)
+
+    uploadArenaCoverImage(file, undefined, 1, true, (imageUrl) => {
+      setUploading(false)
       formik.setFieldValue('stepOne.cover_image_url', imageUrl)
     })
-  }, [])
+  }
 
   return (
     <Box pb={9}>
@@ -64,12 +68,7 @@ const StepOne: React.FC<Props> = ({ formik, editables }) => {
       </Box>
 
       <Box pb={4}>
-        <CoverUploader
-          src={formik.values.stepOne.cover_image_url}
-          onChange={handleUpload}
-          isUploading={isUploading}
-          disabled={!editables.cover_image}
-        />
+        <CoverUploader src={formik.values.stepOne.cover_image_url} onChange={handleUpload} isUploading={isUploading} />
       </Box>
     </Box>
   )
