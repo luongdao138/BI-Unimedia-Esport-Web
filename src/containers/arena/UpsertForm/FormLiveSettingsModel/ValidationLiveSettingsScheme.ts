@@ -11,7 +11,7 @@ export const validationLiveSettingsScheme = (): any => {
       description: Yup.string()
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:streaming_settings_live_streaming_screen.validation.overview_limit')),
-      category: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+      category: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, '']),
       use_ticket: Yup.boolean(),
       ticket_price: Yup.number().when('use_ticket', {
         is: true,
@@ -27,7 +27,7 @@ export const validationLiveSettingsScheme = (): any => {
       re_description: Yup.string()
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:streaming_settings_live_streaming_screen.validation.overview_limit')),
-      re_category: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')).notOneOf([-1]),
+      re_category: Yup.string(),
       re_use_ticket: Yup.boolean(),
       re_ticket_price: Yup.number().when('use_ticket', {
         is: true,

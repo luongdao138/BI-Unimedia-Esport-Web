@@ -16,3 +16,18 @@ export const getLiveSettingInfo = createAsyncThunk<services.LiveStreamSettingRes
     }
   }
 )
+
+export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, services.SetLiveStreamParams>(
+  ACTION_STREAM_TYPES.SET_INFORMATION_LIVE_SETTING,
+  async (setLiveStreamParams, { rejectWithValue }) => {
+    try {
+      const res = await services.setLiveSetting(setLiveStreamParams)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

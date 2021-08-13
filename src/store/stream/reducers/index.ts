@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { LiveStreamSettingResponse } from '@services/liveStream.service'
+import { LiveStreamSettingResponse, SetLiveStreamResponse } from '@services/liveStream.service'
 import * as actions from '../actions'
 
 type StateType = {
   liveSettingInfo?: LiveStreamSettingResponse
+  setLiveSettingResponse?: SetLiveStreamResponse
 }
 const initialState: StateType = {
   liveSettingInfo: {
@@ -13,7 +14,7 @@ const initialState: StateType = {
       title: '',
       description: '',
       thumbnail: null,
-      category: -1,
+      category: null,
       stream_url: '',
       stream_key: '',
       ticket_price: 0,
@@ -34,7 +35,11 @@ const initialState: StateType = {
 }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.getLiveSettingInfo.fulfilled, (state, action) => {
-    state.liveSettingInfo = action.payload
-  })
+  builder
+    .addCase(actions.getLiveSettingInfo.fulfilled, (state, action) => {
+      state.liveSettingInfo = action.payload
+    })
+    .addCase(actions.setLiveStream.fulfilled, (state, action) => {
+      state.setLiveSettingResponse = action.payload
+    })
 })

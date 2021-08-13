@@ -908,6 +908,9 @@ export default {
       start_end_date: '終了予定日時は、配信開始予定日時以降の日付を入力してください',
       min_date: '過去日付は登録できません',
     },
+    shared_it: '共有する',
+    dont_share: '共有しない',
+    issued_stream: '登録完了後に発行されます。',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
