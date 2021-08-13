@@ -130,6 +130,15 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         )
       case REPORT_TYPE.TOURNAMENT:
         return <Typography variant="h2">{data.attributes.title}</Typography>
+      case REPORT_TYPE.COMMUNITY:
+        return (
+          <Box className={classes.userInfoContainer}>
+            <Box display="flex" alignItems="center">
+              <Icon className="fas fa-users" fontSize="small" />
+            </Box>
+            <Typography variant="h2">{data.attributes.title}</Typography>
+          </Box>
+        )
       default:
         break
     }
