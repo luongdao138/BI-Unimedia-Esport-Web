@@ -27,6 +27,7 @@ import FollowList from '../FollowList'
 
 type Props = {
   detail: any
+  toEdit?: () => void
 }
 
 enum TABS {
@@ -35,7 +36,7 @@ enum TABS {
   SEARCH = 2,
 }
 
-const DetailInfo: React.FC<Props> = ({ detail }) => {
+const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -44,6 +45,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
   const data = detail.attributes
 
   const isFollowing = false
+  const isAdmin = true
   const { isAuthenticated } = useCommunityDetail()
 
   const handleReportOpen = () => {
@@ -68,7 +70,11 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
             {isAuthenticated ? (
-              isFollowing ? (
+              isAdmin ? (
+                <ESButton variant="outlined" round className={classes.button} disabled={false} onClick={toEdit}>
+                  {t('common:community.edit')}
+                </ESButton>
+              ) : isFollowing ? (
                 <ESButton variant="contained" color="primary" round className={classes.button} disabled={true}>
                   {t('common:profile.following')}
                 </ESButton>

@@ -162,6 +162,7 @@ const TopicCreate: React.FC = () => {
           setIsDiscard(false)
         }}
         onSubmit={handleReturn}
+        isTopic
       />
     </ESStickyFooter>
   )

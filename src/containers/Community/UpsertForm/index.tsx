@@ -9,7 +9,6 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
 import { useFormik } from 'formik'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-// import { CommunityFormParams } from '@services/community.service'
 import { FormType } from './FormModel/FormType'
 import Confirm from './Confirm'
 import { getInitialValues } from './FormModel/InitialValues'
@@ -23,8 +22,14 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import DiscardDialog from '../Partials/DiscardDialog'
 import useCommonData from './useCommonData'
+import CancelDialog from './Partials/CancelDialog'
 
-const CommunityCreate: React.FC = () => {
+// TODO used once at community edit
+type CommunityCreateProps = {
+  communityName?: string
+}
+
+const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const dispatch = useAppDispatch()
   const { prefectures } = useCommonData()
   const classes = useStyles()
@@ -33,7 +38,7 @@ const CommunityCreate: React.FC = () => {
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
-  const { editables } = useCommunityCreate()
+  const { editables, isEdit, submit } = useCommunityCreate()
   const [isDiscard, setIsDiscard] = useState(false)
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
@@ -42,8 +47,10 @@ const CommunityCreate: React.FC = () => {
     initialValues: initialValues,
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
-    onSubmit: (/* values */) => {
-      //
+    onSubmit: () => {
+      if (submit) {
+        submit()
+      }
     },
   })
 
@@ -59,6 +66,17 @@ const CommunityCreate: React.FC = () => {
       }
     }
   }, [formik.errors])
+
+  const renderEditButton = () => {
+    return (
+      <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
+        <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
+          {i18n.t('common:community_create.edit.title')}
+        </ButtonPrimary>
+        <CancelDialog communityName={communityName} />
+      </Box>
+    )
+  }
 
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
@@ -104,7 +122,7 @@ const CommunityCreate: React.FC = () => {
     <ESStickyFooter
       disabled={false}
       noScroll
-      // noSpacing={isEdit && !isConfirm}
+      noSpacing={isEdit && !isConfirm}
       content={
         <>
           {isConfirm ? (
@@ -116,9 +134,9 @@ const CommunityCreate: React.FC = () => {
                 {i18n.t('common:community_create.confirm.submit')}
               </ButtonPrimary>
             </Box>
+          ) : isEdit ? (
+            renderEditButton()
           ) : (
-            // ) : isEdit ? (
-            //   renderEditButton()
             <ButtonPrimary
               onClick={handleSetConfirm}
               round
@@ -157,7 +175,6 @@ const CommunityCreate: React.FC = () => {
             )}
           </Box>
         </form>
-        {/* <ESLoader open={meta.pending || updateMeta.pending} /> */}
       </>
       <DiscardDialog
         open={isDiscard}
@@ -165,6 +182,7 @@ const CommunityCreate: React.FC = () => {
           setIsDiscard(false)
         }}
         onSubmit={handleReturn}
+        isEdit={isEdit}
       />
     </ESStickyFooter>
   )
@@ -209,9 +227,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 0,
   },
   [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingTop: theme.spacing(4),
-    },
     topContainer: {
       paddingTop: 0,
     },

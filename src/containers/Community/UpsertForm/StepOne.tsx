@@ -123,7 +123,9 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
         />
       </Box>
       <Box pb={4}>
-        <ESLabel label={i18n.t('common:community_create.public_or_private')} size="small" />
+        <Box pb={1}>
+          <ESLabel label={i18n.t('common:community_create.public_or_private')} size="small" />
+        </Box>
         <ESCheckbox
           disableRipple
           checked={CommunityHelper.getTypeValue(formik.values.stepOne.t_type)}

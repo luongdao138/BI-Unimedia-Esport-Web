@@ -5,9 +5,10 @@ import { LobbyDetail } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
-import useCommunityHelper from '../hooks/useCommunityHelper'
+import * as commonActions from '@store/common/actions'
+import { useTranslation } from 'react-i18next'
 
-const { actions, selectors } = lobbyStore
+const { selectors } = lobbyStore
 // TODO change when data is ready
 export type EditableTypes = {
   title: boolean
@@ -25,7 +26,9 @@ const useCommunityCreate = (): {
   isEdit: boolean
   lobby: LobbyDetail
   editables: EditableTypes
+  submit(): void
 } => {
+  const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
   const lobby = useAppSelector(selectors.getLobbyDetail)
@@ -43,19 +46,26 @@ const useCommunityCreate = (): {
     game_title: true,
     tag_title: true,
   })
-  const { isEditable } = useCommunityHelper(lobby)
+  const isEditable = true
+
+  const submit = () => {
+    // TODO change route to community detail
+    router.push(`${ESRoutes.COMMUNITY}/123`)
+
+    dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+  }
 
   useEffect(() => {
-    if (router.asPath.endsWith('/edit') && router.query.hash_key) {
+    if (router.asPath.endsWith('/edit') && router.query.community_id) {
+      // TODO dispatch get Community detail
       setIsEdit(true)
-      dispatch(actions.getLobbyDetail(router.query.hash_key))
     }
   }, [router])
 
   useEffect(() => {
-    if (lobby && router.asPath.endsWith('/edit') && router.query.hash_key) {
+    if (lobby && router.asPath.endsWith('/edit') && router.query.community_id) {
       if (!isEditable) {
-        router.push(ESRoutes.LOBBY_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
+        router.push(ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(router.query.community_id)))
         return
       }
 
@@ -75,7 +85,7 @@ const useCommunityCreate = (): {
     }
   }, [lobby, router])
 
-  return { isEdit, lobby, editables }
+  return { isEdit, lobby, editables, submit }
 }
 
 export default useCommunityCreate

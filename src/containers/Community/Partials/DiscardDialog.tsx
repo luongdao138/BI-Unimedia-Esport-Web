@@ -8,6 +8,8 @@ interface IndividualEntryModalProps {
   onClose: () => void
   onSubmit: () => void
   open: boolean
+  isEdit?: boolean
+  isTopic?: boolean
 }
 
 const DialogContent = withStyles((theme) => ({
@@ -22,7 +24,7 @@ const DialogContent = withStyles((theme) => ({
   },
 }))(MuiDialogContent)
 
-const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onSubmit }) => {
+const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onSubmit, isEdit, isTopic }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
@@ -56,10 +58,18 @@ const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onS
       <DialogContent>
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle} gutterBottom>
-            {t('common:topic_create.discard.title')}
+            {isEdit
+              ? t('common:community_create.discard.edit_title')
+              : isTopic
+              ? t('common:topic_create.discard.title')
+              : t('common:community_create.discard.title')}
           </Typography>
           <Typography className={classes.message} gutterBottom>
-            {t('common:topic_create.discard.message')}
+            {isEdit
+              ? t('common:community_create.discard.edit_message')
+              : isTopic
+              ? t('common:topic_create.discard.message')
+              : t('common:community_create.discard.message')}
           </Typography>
         </Box>
         <Box className={classes.actionBox}>
@@ -67,7 +77,11 @@ const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onS
             {t('common:common.cancel')}
           </ButtonPrimary>
           <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
-            {t('common:topic_create.discard.confirm')}
+            {isEdit
+              ? t('common:community_create.discard.edit_confirm')
+              : isTopic
+              ? t('common:topic_create.discard.confirm')
+              : t('common:community_create.discard.confirm')}
           </ButtonPrimary>
         </Box>
       </DialogContent>
