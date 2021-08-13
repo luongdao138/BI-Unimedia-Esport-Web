@@ -15,7 +15,6 @@ const Participants: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const [selectedParticipant, setSelectedParticipant] = useState(false)
   const [members, setMembers] = useState([])
 
   const handleClickOpen = () => {
@@ -99,7 +98,7 @@ const Participants: React.FC = () => {
           </Box>
         </Button>
       </LoginRequired>
-      <ESModal open={open && !selectedParticipant} handleClose={handleClose}>
+      <ESModal open={open} handleClose={handleClose}>
         <BlankLayout>
           <Box pt={7.5} className={classes.topContainer}>
             <Box py={2} display="flex" flexDirection="row" alignItems="center">
@@ -127,12 +126,7 @@ const Participants: React.FC = () => {
                 }
               > */}
               {members.map((participant, i) => (
-                <UserListItem
-                  data={userData(participant)}
-                  key={i}
-                  nicknameYellow={false}
-                  handleClick={() => setSelectedParticipant(true)}
-                />
+                <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
               ))}
               {/* </InfiniteScroll> */}
             </div>
@@ -153,7 +147,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   count: {
-    marginRight: 10,
+    marginRight: theme.spacing(1.25),
     fontWeight: 'bold',
     fontSize: 24,
     color: Colors.white,

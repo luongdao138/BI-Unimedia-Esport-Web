@@ -239,7 +239,7 @@ const InfoContainer: React.FC = () => {
 const useStyles = makeStyles((theme) => ({
   searchBtn: {
     fontWeight: 400,
-    height: 37.6,
+    height: 38,
     minWidth: 33,
     backgroundColor: Colors.black,
     borderBottomLeftRadius: 'unset',
@@ -247,14 +247,12 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: 0,
     padding: `${theme.spacing(0.75)}px 0`,
     '&:before': {
-      content: "' '",
+      content: "''",
       background: Colors.white_opacity[20],
       position: 'absolute',
       left: 0,
       height: '80%',
       width: '1px',
-      top: '50%',
-      transform: 'translateY(-50%)',
     },
   },
   icon: {
@@ -266,7 +264,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#888',
   },
   input: {
-    zIndex: 11,
     width: '100%',
     borderBottomRightRadius: 'unset',
     borderTopRightRadius: 'unset',
@@ -299,7 +296,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     position: 'relative',
-    width: 500,
+    width: '65%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    searchContainer: {
+      width: '100%',
+    },
   },
   pagination: {
     zIndex: 1,

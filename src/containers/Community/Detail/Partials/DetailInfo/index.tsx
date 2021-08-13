@@ -16,7 +16,9 @@ import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
-import SearchContainer from '../../SearchContainer'
+import ESReport from '@containers/Report'
+import { REPORT_TYPE } from '@constants/common.constants'
+import SearchContainer from '../SearchContainer'
 import Fab from '@material-ui/core/Fab'
 import AddCommentIcon from '@material-ui/icons/AddComment'
 import { useRouter } from 'next/router'
@@ -38,7 +40,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  // const [openReport, setOpenReport] = useState(false)
+  const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
   const data = detail.attributes
 
@@ -51,7 +53,7 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   const handleReportOpen = () => {
-    // setOpenReport(true)
+    setOpenReport(true)
   }
 
   const handleCopy = () => {
@@ -102,6 +104,16 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
           <FollowList />
           <ApproveList />
         </Box>
+
+        {isAuthenticated && (
+          <ESReport
+            reportType={REPORT_TYPE.COMMUNITY}
+            target_id={Number(detail.id)}
+            data={detail}
+            open={openReport}
+            handleClose={() => setOpenReport(false)}
+          />
+        )}
       </>
     )
   }
