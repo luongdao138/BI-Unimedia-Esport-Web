@@ -1,126 +1,164 @@
 import { useEffect, useState } from 'react'
 import { Colors } from '@theme/colors'
-import ESPopup from '@components/Popup'
+import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
+import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
-import ESLoader from '@components/FullScreenLoader'
-import useCancelDialog from './useCancelDialog'
+import ESLabel from '@components/Label'
+import { Box, makeStyles, Typography, Theme, Icon, IconButton } from '@material-ui/core'
 import LinkButton from '@components/LinkButton'
-import { LobbyDetail } from '@services/lobby.service'
-import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
+import useCancelDialog from './useCancelDialog'
 
-interface Props {
-  hashKey: string
-  arena: LobbyDetail
+type CancelDialogProps = {
+  communityName: string
 }
 
-const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
+const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   const [modal, setModal] = useState(false)
   const [isCanceled, setCanceled] = useState(false)
   const classes = useStyles()
+  const { cancelTournament } = useCancelDialog()
   const { t } = useTranslation(['common'])
-  const { meta, cancelTournament } = useCancelDialog()
 
   useEffect(() => {
-    if (arena && arena.attributes) {
-      const _status = arena.attributes.status === TOURNAMENT_STATUS.CANCELLED || arena.attributes.status === TOURNAMENT_STATUS.COMPLETED
-      setCanceled(_status)
-    }
-  }, [arena])
+    setCanceled(false)
+  }, [])
 
   const handleClose = () => {
     setModal(false)
   }
 
   const handleSubmit = () => {
-    cancelTournament(hashKey)
+    cancelTournament()
     setModal(false)
+  }
+
+  const renderBackButton = () => {
+    return (
+      <Box pt={7.5} pb={10.625} className={classes.topContainer}>
+        <Box py={2} display="flex" flexDirection="row" alignItems="center">
+          <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+            <Icon className="fa fa-arrow-left" fontSize="small" />
+          </IconButton>
+          <Box pl={2}>
+            <Typography variant="h2">{t('common:community_create.disband.title')}</Typography>
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
+
+  const renderFooterButtons = () => {
+    return (
+      <Box className={classes.reviewButtonContainer}>
+        <ButtonPrimary onClick={handleClose} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
+          {t('common:common.cancel')}
+        </ButtonPrimary>
+        <ButtonPrimary type="submit" onClick={handleSubmit} round className={classes.footerButton}>
+          {t('common:community_create.disband.submit')}
+        </ButtonPrimary>
+      </Box>
+    )
+  }
+
+  const renderDetailContainer = () => {
+    return (
+      <Box py={4} className={classes.detailContainer}>
+        <ESLabel label={t('common:community_create.disband.dispand_community')} size="small" />
+        <Box className={classes.userInfoContainer} mb={4}>
+          <Box display="flex" alignItems="center" mr={2}>
+            <Icon className={`fas fa-users ${classes.communityIcon}`} />
+          </Box>
+          <Typography variant="body1" style={{ color: Colors.white }}>
+            {communityName}
+          </Typography>
+        </Box>
+        <ESLabel label={t('common:community_create.disband.description')} size="small" />
+        <ESLabel label={t('common:community_create.disband.description2')} size="small" />
+      </Box>
+    )
   }
 
   return (
     <>
       <Box mt={3}>
-        {!isCanceled && <LinkButton onClick={() => setModal(true)}>{t('common:tournament_cancel.confirm_cancel_btn')}</LinkButton>}
+        {!isCanceled && <LinkButton onClick={() => setModal(true)}>{t('common:community_create.edit.disband_button')}</LinkButton>}
       </Box>
-      <ESPopup open={modal} handleClose={() => setModal(false)}>
+      <ESModal open={modal} handleClose={handleClose}>
         <BlankLayout>
-          <Box pt={2} pb={2} className={classes.topContainer}>
-            <Box px={5} display="flex" flexDirection="column" alignItems="center" textAlign="center" className={classes.container}>
-              <Typography className={classes.title}>{t('common:tournament_cancel.cancel_title')}</Typography>
-              <Box pt={4}>
-                <Typography className={classes.desc}>
-                  {t('common:tournament_cancel.cancel_detail1')}
-                  <br />
-                  {t('common:tournament_cancel.cancel_detail2')}
-                </Typography>
-              </Box>
-
-              <Box
-                pt={148 / 8}
-                width="100%"
-                justifyContent="space-evenly"
-                display="flex"
-                alignItems="center"
-                flexDirection="row"
-                className={classes.buttonContainer}
-              >
-                <Box width={220} pb={2} className={classes.button}>
-                  <ButtonPrimary fullWidth gradient={false} onClick={handleClose}>
-                    {t('common:tournament_cancel.cancel_t')}
-                  </ButtonPrimary>
-                </Box>
-                <Box width={220} pb={2} className={classes.button}>
-                  <ButtonPrimary fullWidth onClick={handleSubmit}>
-                    {t('common:tournament_cancel.cancel_button')}
-                  </ButtonPrimary>
-                </Box>
-              </Box>
-            </Box>
-            {meta.pending && <ESLoader open={meta.pending} />}
-          </Box>
+          <ESStickyFooter disabled={false} noScroll content={renderFooterButtons()}>
+            <>
+              {renderBackButton()}
+              {renderDetailContainer()}
+            </>
+          </ESStickyFooter>
         </BlankLayout>
-      </ESPopup>
+      </ESModal>
     </>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  userInfoContainer: {
+    backgroundColor: Colors.black,
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(2),
+    borderStyle: 'solid',
+    borderColor: Colors.grey[400],
+    borderRadius: 4,
+    borderWidth: 0.5,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  communityIcon: {
+    fontSize: 16,
+    color: Colors.white,
+  },
+  confirmButton: {},
+  cancelButton: {},
+  footerButton: {
+    width: 'fit-content',
+    alignSelf: 'center',
+    minWidth: `220px !important`,
+    paddingLeft: `${theme.spacing(4)}px !important`,
+    paddingRight: `${theme.spacing(4)}px !important`,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    '&$confirmButton': {
+      minWidth: `280px !important`,
+    },
+  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  title: {
-    fontSize: 24,
-    color: Colors.white,
-    fontWeight: 'bold',
+  reviewButtonContainer: {},
+  editButtonContainer: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
-  desc: {
-    fontSize: 18,
-    color: Colors.white,
+  topContainer: {
+    paddingBottom: 0,
   },
   [theme.breakpoints.down('sm')]: {
-    container: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
     topContainer: {
       paddingTop: 0,
     },
-    buttonContainer: {
+    reviewButtonContainer: {
+      display: 'flex',
       flexDirection: 'column-reverse',
     },
-    title: {
-      fontSize: 20,
+    cancelButton: {
+      marginTop: theme.spacing(2),
     },
-    desc: {
-      fontSize: 14,
-    },
-    button: {
-      width: 280,
+  },
+  [theme.breakpoints.up('md')]: {
+    detailContainer: {
+      marginLeft: theme.spacing(5),
+      marginRight: theme.spacing(5),
     },
   },
 }))

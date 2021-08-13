@@ -1,12 +1,17 @@
 import { useRouter } from 'next/router'
-import { LobbyDetail } from '@services/lobby.service'
-import { ROLE, COMMUNITY_STATUS } from '@constants/community.constants'
+import { ROLE } from '@constants/community.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 
-const useCommunityHelper = (
-  tournament?: LobbyDetail
-): {
+const useCommunityHelper = (tournament?: {
+  id: number
+  attributes: {
+    title: string
+    cover: string
+    hash_key: string
+    my_role: string | null
+  }
+}): {
   isModerator: boolean
   isEditable: boolean
   toEdit: () => void
@@ -18,14 +23,14 @@ const useCommunityHelper = (
 
   const hashKey = tournament?.attributes?.hash_key
   const myRole = tournament?.attributes?.my_role
-  const status = tournament?.attributes?.status
-  const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
-  const isEditable = isModerator && status !== COMMUNITY_STATUS.CANCELLED
+  const isModerator = myRole === ROLE.ADMIN
+  // TODO check is canceled on isEditable
+  const isEditable = isModerator
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/community/create' }), '/community/create', { shallow: true })
 
   const toEdit = () =>
-    router.push(makeContextualHref({ hash_key: hashKey }), `/community/${hashKey}/edit`, {
+    router.push(makeContextualHref({ community_id: hashKey }), `/community/${hashKey}/edit`, {
       shallow: true,
     })
 

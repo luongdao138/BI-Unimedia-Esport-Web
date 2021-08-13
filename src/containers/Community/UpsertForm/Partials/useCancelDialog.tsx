@@ -1,23 +1,22 @@
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import * as actions from '@store/arena/actions'
-import { createMetaSelector } from '@store/metadata/selectors'
-import { Meta } from '@store/metadata/actions/types'
-
-const getMeta = createMetaSelector(actions.cancelTournament)
+import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
+import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 const useCancelDialog = (): {
-  meta: Meta
-  cancelTournament: (hashKey: string) => void
+  cancelTournament: () => void
 } => {
   const dispatch = useAppDispatch()
-  const meta = useAppSelector(getMeta)
+  const router = useRouter()
+  const { t } = useTranslation(['common'])
 
-  const cancelTournament = (hashKey: string) => {
-    dispatch(actions.cancelTournament(hashKey))
+  const cancelTournament = () => {
+    router.push(ESRoutes.COMMUNITY)
+    dispatch(commonActions.addToast(t('common:community_create.disband.disbanded_toast')))
   }
 
   return {
-    meta,
     cancelTournament,
   }
 }

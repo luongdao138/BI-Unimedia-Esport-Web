@@ -48,7 +48,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <Box pb={2} />
       <ESInput labelPrimary={t('common:community_create.name')} fullWidth value={values.stepOne.title} disabled />
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:community_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
+      <ESInput
+        labelPrimary={t('common:community_create.introduction')}
+        multiline
+        value={values.stepOne.overview}
+        disabled={true}
+        fullWidth
+      />
       <Box pb={2} />
 
       <ESInput
