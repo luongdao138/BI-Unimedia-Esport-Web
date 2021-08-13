@@ -1,7 +1,6 @@
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
-// import { Colors } from '@theme/colors'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 
@@ -56,7 +55,6 @@ const useStyles = makeStyles(() => ({
   },
   userContainer: {
     display: 'flex',
-    // margin: theme.spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

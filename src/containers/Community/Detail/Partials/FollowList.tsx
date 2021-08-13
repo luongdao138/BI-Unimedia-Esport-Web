@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Icon, Theme, Button } from '@material-ui/core'
 import ESModal from '@components/Modal'
-// import ESLoader from '@components/Loader'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
-// import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
@@ -110,25 +108,9 @@ const Participants: React.FC = () => {
               </Box>
             </Box>
             <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-              {/* <InfiniteScroll
-                dataLength={participants.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                scrollableTarget="scrollableDiv"
-                scrollThreshold={0.99}
-                style={{ overflow: 'hidden' }}
-                loader={
-                  meta.pending && (
-                    <div className={classes.loaderCenter}>
-                      <ESLoader />
-                    </div>
-                  )
-                }
-              > */}
               {members.map((participant, i) => (
                 <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
               ))}
-              {/* </InfiniteScroll> */}
             </div>
           </Box>
         </BlankLayout>

@@ -1,7 +1,6 @@
-import { /* useEffect, */ useState } from 'react'
+import { useState } from 'react'
 import { Box, Typography, IconButton, Icon, Theme, Link } from '@material-ui/core'
 import ESModal from '@components/Modal'
-// import ESLoader from '@components/Loader'
 import UserSelectBoxList from '../../Partials/UserSelectBoxList'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
@@ -60,7 +59,7 @@ const Participants: React.FC = () => {
           </Link>
         </Box>
       </LoginRequired>
-      <ESModal open={open /* && !selectedParticipant */} handleClose={handleClose}>
+      <ESModal open={open} handleClose={handleClose}>
         <BlankLayout>
           <Box pt={7.5} className={classes.topContainer}>
             <Box py={2} display="flex" flexDirection="row" alignItems="center">
