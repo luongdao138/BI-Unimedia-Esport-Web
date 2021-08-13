@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { TournamentDetail, TournamentMatchItem } from '@services/arena.service'
-import { Typography, Box, IconButton, Icon, ThemeProvider, createMuiTheme, Divider, useMediaQuery, useTheme } from '@material-ui/core'
+import { Typography, Box, IconButton, Icon, Divider, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -85,7 +85,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
         <BlankLayout>
           <ESStickyFooter
             disabled={!match?.winner}
-            title={t('common:tournament_create.decide')}
+            title={`${t('common:tournament_create.decide')}（#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
             onClick={() => onScoreEntered(match)}
             noScroll
           >
@@ -100,9 +100,9 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
               </Box>
               <Divider />
               <Box pb={2} pt={3} textAlign="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                </ThemeProvider>
+                {/* <ThemeProvider theme={theme}> */}
+
+                {/* </ThemeProvider> */}
               </Box>
               <Box pb={5} pt={5} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
@@ -122,18 +122,6 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
     </ESModal>
   )
 }
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiTypography: {
-      body1: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.white,
-      },
-    },
-  },
-})
 
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
