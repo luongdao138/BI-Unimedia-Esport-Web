@@ -130,6 +130,15 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         )
       case REPORT_TYPE.TOURNAMENT:
         return <Typography variant="h2">{data.attributes.title}</Typography>
+      case REPORT_TYPE.COMMUNITY:
+        return (
+          <Box className={classes.userInfoContainer}>
+            <Box display="flex" alignItems="center" mr={2}>
+              <Icon className={`fas fa-users ${classes.communityIcon}`} />
+            </Box>
+            <Typography variant="h2">{data.attributes.title}</Typography>
+          </Box>
+        )
       default:
         break
     }
@@ -383,6 +392,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  communityIcon: {
+    fontSize: 20,
+    color: Colors.white,
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {

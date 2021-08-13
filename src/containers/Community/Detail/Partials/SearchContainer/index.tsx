@@ -304,6 +304,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   pagination: {
+    zIndex: 1,
     '& .MuiPaginationItem-root': {
       color: Colors.white,
     },
