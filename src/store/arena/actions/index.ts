@@ -428,3 +428,7 @@ export const updateTournamentTeamDetail = createAsyncThunk<void, services.Update
     }
   }
 )
+
+export const teamMemberFollowStageChanged = createAction<{ userId: number; state: number }>(
+  TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
+)

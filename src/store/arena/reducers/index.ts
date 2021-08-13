@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import {
@@ -17,6 +18,7 @@ import {
   TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import { genRanHex } from '@utils/helpers/CommonHelper'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -185,5 +187,35 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
     state.selectedTeamDetail = action.payload.data
+  })
+  builder.addCase(actions.teamMemberFollowStageChanged, (state, action) => {
+    const tournamentParticipants = _.cloneDeep(state.tournamentParticipants)
+    state.tournamentParticipants = tournamentParticipants.map((participant) => {
+      return {
+        ...participant,
+        version: genRanHex(2),
+        attributes: {
+          ...participant.attributes,
+          team: {
+            data: {
+              ...participant.attributes.team.data,
+              attributes: {
+                ...participant.attributes.team.data.attributes,
+                members: participant.attributes.team.data.attributes.members.map((member) => {
+                  if (member.user_id !== action.payload.userId) return { ...member }
+                  return Object.assign(
+                    {},
+                    {
+                      ...member,
+                      is_followed: action.payload.state,
+                    }
+                  )
+                }),
+              },
+            },
+          },
+        },
+      }
+    })
   })
 })
