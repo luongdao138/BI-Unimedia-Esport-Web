@@ -27,6 +27,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const detail = {
+    attributes: {
+      username: username,
+      mail: mail,
+      description: discription,
+      date: date,
+      image: image,
+      number: number,
+    },
+  }
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -83,7 +93,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
             // target_id={Number(detail.id)}
-            // data={detail}
+            data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
           />

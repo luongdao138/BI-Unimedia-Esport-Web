@@ -66,7 +66,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
               </Box>
             )}
             <ESMenu>
-              {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete')}</ESMenuItem>}
+              {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.report.button')}</ESMenuItem>}
               <LoginRequired>
                 <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
               </LoginRequired>
@@ -123,13 +123,13 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
             handleClose={() => setOpenReport(false)}
           />
           <DeleteDialog
-            title={t('common:topic_comment.report.title')}
+            title={username + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDeleteSubmit}
-            description1={t('common:topic_comment.report.description1')}
-            description2={t('common:topic_comment.report.description2')}
-            confirmTitle={t('common:topic_comment.report.submit')}
+            description1={t('common:topic.delete.description1')}
+            description2={t('common:topic.delete.description2')}
+            confirmTitle={t('common:topic.delete.submit')}
             cancelTitle={t('common:common.cancel')}
           />
         </>

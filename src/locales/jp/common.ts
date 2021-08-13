@@ -544,15 +544,19 @@ export default {
       title: '通報するトピック',
       chat_topic: '雑談トピック',
     },
-    delete: 'トピックの削除',
-  },
-  topic_comment: {
-    report: {
-      button: 'コメントを通報',
+    delete: {
+      button: 'トピックの削除',
       title: 'を削除します',
       description1: '削除したトピックはコメントも含めて復元させることはできません。',
       description2: '削除してよろしいですか？',
       submit: '削除する',
+    },
+  },
+  topic_comment: {
+    report: {
+      button: 'コメントを通報',
+      title: '通報するコメント',
+      chat_topic: '雑談トピック',
     },
     delete: {
       button: 'コメントを削除',
