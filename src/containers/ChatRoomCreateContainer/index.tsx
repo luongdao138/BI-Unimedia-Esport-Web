@@ -239,12 +239,12 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
           ) : (
             <ESSelectInput
               items={
-                _.isArray(friends)
+                _.isArray(friends) && !_.isEmpty(friends)
                   ? friends.map((friend) => ({
                       id: parseInt(friend.id),
-                      nickName: friend.attributes.nickname,
+                      nickName: friend.attributes && friend.attributes.nickname ? friend.attributes.nickname : '',
                       avatar: friend.attributes.avatar,
-                      userCode: friend.attributes.user_code,
+                      userCode: _.get(friend, 'attributes.user_code', ''),
                     }))
                   : []
               }
