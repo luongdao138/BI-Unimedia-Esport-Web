@@ -16,6 +16,8 @@ export type AvatarPresignedDataParams = {
 
 export const getPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.S3_PRESIGNED_URL, params)
+  // console.log("========getPreSignedUrl CONFIG========", config)
+  // console.log("========getPreSignedUrl DATA========", data)
   return data
 }
 

@@ -13,7 +13,7 @@ export type LiveStreamSetting = {
   title: string
   description: string
   thumbnail: string
-  category: number
+  category: string
   stream_url?: string
   stream_key?: string
   ticket_price?: number
@@ -49,7 +49,7 @@ export type LiveStreamSettingResponse = {
     title: string
     description: string
     thumbnail: string
-    category: number
+    category: string
     stream_url?: string
     stream_key?: string
     ticket_price?: number
@@ -69,10 +69,36 @@ export type LiveStreamSettingResponse = {
 }
 export type LiveStreamSettingParams = {
   type: string
-  user_id: number
+}
+export type SetLiveStreamParams = {
+  uuid: string
+  thumbnail?: string
+  title: string
+  description: string
+  category: number
+  use_ticket?: string
+  ticket_price?: string
+  share_sns_flag?: string
+  publish_flag?: string
+  stream_notify_time: string
+  stream_schedule_start_time?: string
+  stream_schedule_end_time?: string
+  sell_ticket_start_time: string
+  scheduled_flag?: 1 | 0
+  stream_url?: string
+  stream_key?: string
+  status?: string
+}
+export type SetLiveStreamResponse = {
+  id: number
 }
 
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {
   const { data } = await api.get<LiveStreamSettingResponse>(URI.LIVE_SETTING, { params })
+  return data
+}
+
+export const setLiveSetting = async (params: SetLiveStreamParams): Promise<SetLiveStreamResponse> => {
+  const { data } = await api.post<SetLiveStreamResponse>(URI.SET_LIVE_SETTING, { params })
   return data
 }

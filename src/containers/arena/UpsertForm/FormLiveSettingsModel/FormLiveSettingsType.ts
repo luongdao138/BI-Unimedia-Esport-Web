@@ -4,7 +4,7 @@ export type FormLiveType = {
     title: string
     description: string
     thumbnail: string
-    category: number
+    category: string | number
     stream_url: string
     stream_key: string
     ticket_price: number
@@ -17,7 +17,7 @@ export type FormLiveType = {
     re_thumbnail: string
     re_title: string
     re_description: string
-    re_category: number
+    re_category: string | number
     date_time_notification_delivery: string
     date_time_schedule_delivery_start: string
     date_time_schedule_end: string

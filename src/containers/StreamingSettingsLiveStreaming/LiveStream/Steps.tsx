@@ -19,9 +19,16 @@ import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel
 import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
-import useLiveSetting from './useLiveSetting'
-import useGetProfile from '@utils/hooks/useGetProfile'
+import useLiveSetting from '../useLiveSetting'
 import { baseViewingURL, TYPE_SETTING } from '@services/liveStream.service'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import { FIELD_TITLES } from '../field_titles.constants'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import ESLoader from '@components/FullScreenLoader'
+import useGetProfile from '@utils/hooks/useGetProfile'
+
 interface StepsProps {
   step: number
   onNext: (step: number) => void
@@ -31,14 +38,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
-  const { liveSettingInformation, getLiveSettingTab } = useLiveSetting()
-  const { userProfile } = useGetProfile()
+  const { liveSettingInformation, getLiveSettingTab, meta } = useLiveSetting()
   const liveInfo = liveSettingInformation.data
-  const user_id = parseInt(userProfile?.id)
+  const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
   const [hasError, setError] = useState(false)
-  const initialValues = getInitialLiveSettingValues(!liveInfo ? liveInfo : null)
+  const initialValues = getInitialLiveSettingValues(liveInfo)
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
     validationSchema: validationLiveSettingsScheme(),
@@ -47,23 +53,27 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       //TODO: smt
     },
   })
+  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
+
   useEffect(() => {
-    formik.validateForm()
     getLiveSetting()
   }, [])
 
   useEffect(() => {
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
     setError(!isRequiredFieldsValid)
-  }, [formik.errors])
+  }, [formik.errors.stepSettingOne])
 
   const getLiveSetting = () => {
-    getLiveSettingTab({ type: TYPE_SETTING.LIVE, user_id: user_id })
+    getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then(() => {
+      formik.validateForm()
+    })
   }
 
   const handleUpload = useCallback(() => {
     // uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
-    //   formik.setFieldValue('stepOne.cover_image_url', imageUrl)
+    //   formik.setFieldValue('stepSettingOne.thumbnail', imageUrl)
     // })
   }, [])
 
@@ -75,7 +85,25 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }
 
   const onClickNext = () => {
-    onNext(step + 1)
+    const { stepSettingOne } = formik.values
+
+    const fieldIdentifier = checkNgWordFields({
+      title: stepSettingOne.title,
+      description: stepSettingOne.description,
+      ticket_price: stepSettingOne.ticket_price,
+    })
+
+    const ngFields = checkNgWordByField({
+      [FIELD_TITLES.stepSettingOne.title]: stepSettingOne.title,
+      [FIELD_TITLES.stepSettingOne.description]: stepSettingOne.description,
+      [FIELD_TITLES.stepSettingOne.ticket_price]: stepSettingOne.ticket_price,
+    })
+
+    if (fieldIdentifier) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    } else {
+      onNext(step + 1)
+    }
   }
 
   const isFirstStep = () => {
@@ -87,6 +115,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       return ' ' + addClass
     } else {
       return otherClass ? ' ' + otherClass : ''
+    }
+  }
+
+  const { hasUCRReturnHref } = useReturnHref()
+  const handleCoverDailogStateChange = (_open: boolean) => {
+    if (hasUCRReturnHref) {
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
     }
   }
 
@@ -133,7 +170,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 isUploading={false}
                 disabled={!isFirstStep()}
                 size="big"
-                // onOpenStateChange={handleCoverDailogStateChange}
+                onOpenStateChange={handleCoverDailogStateChange}
               />
             </Box>
           </Grid>
@@ -147,7 +184,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_title')}
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_title')}
               fullWidth
-              value={isFirstStep() ? formik.values.stepSettingOne.title : 'テキストテキストテキストテキストここの文字数制限あるの'}
+              value={formik.values.stepSettingOne.title}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               helperText={formik?.touched?.stepSettingOne?.title && formik?.errors.stepSettingOne?.title}
@@ -164,21 +201,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESFastInput
                 id="description"
                 name="stepSettingOne.description"
-                multiline
+                multiline={isFirstStep()}
                 rows={8}
                 required={true}
                 placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_description')}
                 labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_description')}
                 fullWidth
-                value={
-                  isFirstStep()
-                    ? formik.values.stepSettingOne.description
-                    : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
-                      'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
-                      'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
-                      'ストテキストテキストテ\n' +
-                      'https://sample.jp テキストテキスト'
-                }
+                value={formik.values.stepSettingOne.description}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingOne?.description && formik?.errors?.stepSettingOne?.description}
@@ -197,17 +226,20 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 fullWidth
                 id="category"
                 name="stepSettingOne.category"
-                value={isFirstStep() ? formik.values.stepSettingOne.category : 'ゲーム：Apex Legends'}
+                value={formik.values.stepSettingOne.category}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 label={i18n.t('common:streaming_settings_live_streaming_screen.category')}
                 required={true}
                 size="big"
+                helperText={formik?.touched?.stepSettingOne?.category && formik?.errors?.stepSettingOne?.category}
+                error={formik?.touched?.stepSettingOne?.category && !!formik?.errors?.stepSettingOne?.category}
               >
                 <option disabled value={-1}>
                   {i18n.t('common:please_select')}
                 </option>
                 {LIVE_CATEGORIES.map((rule, index) => (
-                  <option key={index} value={rule.value}>
+                  <option key={index} value={rule.label}>
                     {rule.label}
                   </option>
                 ))}
@@ -216,7 +248,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESInput
                 id="title"
                 name="title"
-                value={'ゲーム：Apex Legends'}
+                value={formik.values.stepSettingOne.category}
                 fullWidth
                 labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.category')}
                 required
@@ -227,47 +259,53 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             )}
           </Grid>
         </Box>
-        {isFirstStep() ? (
-          <Box pb={1}>
-            <ESCheckboxBig
-              checked={formik.values.stepSettingOne.use_ticket}
-              onChange={() => {
-                formik.setFieldValue('stepSettingOne.use_ticket', !formik.values.stepSettingOne.use_ticket)
-              }}
-              label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
-              name="stepSettingOne.use_ticket"
-            />
-          </Box>
-        ) : (
-          <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')} />
+        {!paid_delivery_flag && (
+          <>
+            {isFirstStep() ? (
+              <Box pb={1}>
+                <ESCheckboxBig
+                  checked={formik.values.stepSettingOne.use_ticket}
+                  onChange={() => {
+                    formik.setFieldValue('stepSettingOne.use_ticket', !formik.values.stepSettingOne.use_ticket)
+                  }}
+                  label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
+                  name="stepSettingOne.use_ticket"
+                />
+              </Box>
+            ) : (
+              <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')} />
+            )}
+            {/* TODO: Apply component enter point eXeポイント */}
+            <Box pb={2} className={classes.box}>
+              <Grid item xs={9}>
+                <ESInput
+                  id="ticket_price"
+                  name="stepSettingOne.ticket_price"
+                  required={true}
+                  placeholder={'0'}
+                  fullWidth
+                  value={
+                    isFirstStep()
+                      ? formik.values.stepSettingOne.ticket_price === 0 || !formik.values.stepSettingOne.use_ticket
+                        ? ''
+                        : formik.values.stepSettingOne.ticket_price
+                      : formik.values.stepSettingOne.use_ticket
+                      ? `利用する（${formik.values.stepSettingOne.ticket_price} exeポイント）`
+                      : '利用しない'
+                  }
+                  onChange={formik.handleChange}
+                  onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
+                  helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
+                  error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
+                  size="big"
+                  disabled={!isFirstStep()}
+                  className={getAddClassByStep(classes.input_text)}
+                  readOnly={!formik.values.stepSettingOne.use_ticket}
+                />
+              </Grid>
+            </Box>
+          </>
         )}
-        {/* TODO: Apply component enter point eXeポイント */}
-        <Box pb={1} className={classes.box}>
-          <Grid item xs={9}>
-            <ESInput
-              id="ticket_price"
-              name="stepSettingOne.ticket_price"
-              required={true}
-              placeholder={'0'}
-              fullWidth
-              value={
-                isFirstStep()
-                  ? formik.values.stepSettingOne.ticket_price === 0
-                    ? ''
-                    : formik.values.stepSettingOne.ticket_price
-                  : '利用しない'
-              }
-              onChange={formik.handleChange}
-              onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
-              helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
-              error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-              readOnly={!formik.values.stepSettingOne.use_ticket}
-            />
-          </Grid>
-        </Box>
         {isFirstStep() ? (
           <Box>
             <ESCheckboxBig
@@ -280,16 +318,22 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             />
           </Box>
         ) : (
-          <ESInput
-            id="title"
-            name="title"
-            value={'共有する'}
-            fullWidth
-            labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
-            disabled={true}
-            size="big"
-            className={getAddClassByStep(classes.input_text)}
-          />
+          <Box pt={2}>
+            <ESInput
+              id="title"
+              name="title"
+              value={
+                formik.values.stepSettingOne.share_sns_flag
+                  ? t('common:streaming_settings_live_streaming_screen.shared_it')
+                  : t('common:streaming_settings_live_streaming_screen.dont_share')
+              }
+              fullWidth
+              labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
+              disabled={true}
+              size="big"
+              className={getAddClassByStep(classes.input_text)}
+            />
+          </Box>
         )}
         {/* stream URL */}
         <Box pb={2} pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
@@ -299,9 +343,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               name="stepSettingOne.stream_url"
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_url')}
               placeholder={
-                !formik.values.stepSettingOne.stream_url && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
+                isFirstStep()
+                  ? !formik.values.stepSettingOne.stream_url && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
+                  : !formik.values.stepSettingOne.stream_url && t('common:streaming_settings_live_streaming_screen.issued_stream')
               }
-              type={showStreamURL ? 'text' : 'password'}
+              type={showStreamURL || formik.values.stepSettingOne.stream_url ? 'text' : 'password'}
               endAdornment={
                 isFirstStep() ? (
                   <InputAdornment position="end" className={classes.inputContainer}>
@@ -321,7 +367,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 )
               }
               fullWidth
-              value={formik.values.stepSettingOne.stream_url}
+              value={
+                !formik.values.stepSettingOne.stream_url
+                  ? formik.values.stepSettingOne.stream_url
+                  : t('common:streaming_settings_live_streaming_screen.issued_stream')
+              }
               readOnly={true}
               size="big"
               disabled={!isFirstStep()}
@@ -348,9 +398,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               name="stepSettingOne.stream_key"
               labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_key')}
               placeholder={
-                !formik.values.stepSettingOne.stream_key && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
+                isFirstStep()
+                  ? !formik.values.stepSettingOne.stream_key && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
+                  : !formik.values.stepSettingOne.stream_key && t('common:streaming_settings_live_streaming_screen.issued_stream')
               }
-              type={showStreamKey ? 'text' : 'password'}
+              type={showStreamKey || formik.values.stepSettingOne.stream_key ? 'text' : 'password'}
               endAdornment={
                 isFirstStep() ? (
                   <InputAdornment position="end" className={classes.inputContainer}>
@@ -370,10 +422,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 )
               }
               fullWidth
-              value={formik.values.stepSettingOne.stream_key}
+              value={
+                !formik.values.stepSettingOne.stream_key
+                  ? formik.values.stepSettingOne.stream_key
+                  : t('common:streaming_settings_live_streaming_screen.issued_stream')
+              }
               readOnly={true}
               size="big"
               disabled={!isFirstStep()}
+              // className={isFirstStep()?getAddClassByStep(classes.input_text):classes.input_pl}
               className={getAddClassByStep(classes.input_text)}
             />
           </Grid>
@@ -399,16 +456,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             />
           </Box>
         ) : (
-          <ESInput
-            id="title"
-            name="title"
-            value={'公開する'}
-            fullWidth
-            labelPrimary={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
-            disabled={true}
-            size="big"
-            className={getAddClassByStep(classes.input_text)}
-          />
+          <Box pt={2} pb={1}>
+            <ESInput
+              id="title"
+              name="title"
+              value={!formik.values.stepSettingOne.publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
+              fullWidth
+              labelPrimary={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+              disabled={true}
+              size="big"
+              className={getAddClassByStep(classes.input_text)}
+            />
+          </Box>
         )}
         <Typography className={classes.captionNote}>
           {i18n.t('common:streaming_settings_live_streaming_screen.note_for_publish_delivery_pt')}
@@ -446,6 +505,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           </Grid>
         )}
       </form>
+      <ESLoader open={meta.pending} />
     </Box>
   )
 }
@@ -465,6 +525,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiInputBase-input.Mui-disabled': {
       padding: 0,
       // paddingBottom: theme.spacing(1),
+    },
+  },
+  input_pl: {
+    color: 'red',
+    '& .MuiInputBase-input.Mui-disabled': {
+      padding: 0,
+      // paddingBottom: theme.spacing(1),
+      color: 'white',
+      opacity: 1,
     },
   },
   urlCopy: {
