@@ -85,7 +85,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
         <BlankLayout>
           <ESStickyFooter
             disabled={!match?.winner}
-            title={`${t('common:tournament_create.decide')}（#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
+            title={`${t('common:tournament_create.decide')}`}
             onClick={() => onScoreEntered(match)}
             noScroll
           >
@@ -95,15 +95,13 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
-                  <Typography variant="h2">{t('common:tournament.edit_match_result')}</Typography>
+                  <Typography variant="h2">
+                    {t('common:tournament.edit_match_result')}
+                    {` (#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
+                  </Typography>
                 </Box>
               </Box>
               <Divider />
-              <Box pb={2} pt={3} textAlign="center">
-                {/* <ThemeProvider theme={theme}> */}
-
-                {/* </ThemeProvider> */}
-              </Box>
               <Box pb={5} pt={5} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
               </Box>

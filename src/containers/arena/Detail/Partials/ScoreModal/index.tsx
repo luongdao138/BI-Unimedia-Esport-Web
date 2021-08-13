@@ -124,10 +124,6 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
     )
   }
 
-  const matchName = () => {
-    return `${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`
-  }
-
   return (
     <>
       <ESModal open={!!match && !editingMatch}>
@@ -150,15 +146,11 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
                   <Box pl={2}>
                     <Typography variant="h2">
                       {isModerator ? t('common:tournament.match_result') : t('common:tournament.match_setting')}
+                      {` (#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
                     </Typography>
                   </Box>
                 </Box>
                 <Divider />
-                <Box pb={6} pt={3} textAlign="center">
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="body1">{matchName()}</Typography>
-                  </ThemeProvider>
-                </Box>
                 <Box display="flex" justifyContent="space-between" padding={1}>
                   {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
                   <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>

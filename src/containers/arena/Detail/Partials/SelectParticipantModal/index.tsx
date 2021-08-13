@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SetParticipantParams, TournamentDetail, TournamentMatchItem, MatchParticipant } from '@services/arena.service'
-import {
-  Typography,
-  Box,
-  makeStyles,
-  Theme,
-  IconButton,
-  Icon,
-  ThemeProvider,
-  createMuiTheme,
-  useMediaQuery,
-  useTheme,
-} from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, IconButton, Icon, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import BlankLayout from '@layouts/BlankLayout'
@@ -144,13 +133,11 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
-                  <Typography variant="h2">{t('common:tournament.match_setting')}</Typography>
+                  <Typography variant="h2">
+                    {t('common:tournament.match_setting')}
+                    {` (#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
+                  </Typography>
                 </Box>
-              </Box>
-              <Box pb={6} pt={6} textAlign="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                </ThemeProvider>
               </Box>
               <Box display="flex" justifyContent="space-between" padding={1}>
                 {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
@@ -184,18 +171,6 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
     </>
   )
 }
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiTypography: {
-      body1: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.white,
-      },
-    },
-  },
-})
 
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
