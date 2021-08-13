@@ -68,7 +68,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Box display="flex" flexDirection="row" justifyContent="center">
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
               <ESButtonDiscordCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="discord_link"
@@ -85,7 +85,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
           </Grid>
 
           <Grid item xs={12}>
-            <Box display="flex" flexDirection="row" justifyContent="center">
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
               <ESButtonTwitterCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="twitter_link"
@@ -102,7 +102,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
           </Grid>
 
           <Grid item xs={12}>
-            <Box display="flex" flexDirection="row" justifyContent="center">
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
               <ESButtonInstagramCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="instagram_link"

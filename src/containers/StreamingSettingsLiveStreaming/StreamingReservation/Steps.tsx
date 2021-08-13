@@ -134,75 +134,75 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }
 
   return (
-    <Box pb={9} py={4} className={classes.formContainer} maxWidth="md">
-      <form onSubmit={formik.handleSubmit}>
-        <Box pb={2} display="flex" flexDirection="row" alignItems="flex-end">
-          <Grid item xs={9}>
-            <ESInput
-              id="viewing_url"
-              name="stepSettingTwo.viewing_url"
-              value={
-                formik.values.stepSettingTwo.viewing_url
-                  ? `${baseViewingURL}${formik.values.stepSettingTwo.viewing_url}`
-                  : formik.values.stepSettingTwo.viewing_url
-              }
-              placeholder={
-                !formik.values.stepSettingTwo.viewing_url && i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_url')
-              }
-              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_url')}
-              fullWidth
-              rows={8}
-              readOnly={true}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-            />
-          </Grid>
-          {isFirstStep() && (
-            <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-              <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-            </Box>
-          )}
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.thumbnail')} />
-            <Box pt={1} className={classes.box}>
-              <CoverUploaderStream
-                src={formik.values.stepSettingTwo.re_thumbnail}
-                onChange={handleUpload}
-                isUploading={false}
-                disabled={!isFirstStep()}
+    <Box py={4} className={classes.container}>
+      <Box className={classes.formContainer}>
+        <form onSubmit={formik.handleSubmit}>
+          <Box className={classes.wrap_input} pb={2} display="flex" flexDirection="row" alignItems="flex-end">
+            <Box className={classes.firstItem}>
+              <ESInput
+                id="viewing_url"
+                name="stepSettingTwo.viewing_url"
+                value={
+                  formik.values.stepSettingTwo.viewing_url
+                    ? `${baseViewingURL}${formik.values.stepSettingTwo.viewing_url}`
+                    : formik.values.stepSettingTwo.viewing_url
+                }
+                placeholder={
+                  !formik.values.stepSettingTwo.viewing_url && i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_url')
+                }
+                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_url')}
+                fullWidth
+                rows={8}
+                readOnly={true}
                 size="big"
-                onOpenStateChange={handleCoverDailogStateChange}
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
               />
             </Box>
-          </Grid>
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESInput
-              id="re_title"
-              name="stepSettingTwo.re_title"
-              required={true}
-              placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_title')}
-              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_title')}
-              fullWidth
-              value={formik.values.stepSettingTwo.re_title}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              helperText={formik?.touched?.stepSettingTwo?.re_title && formik?.errors?.stepSettingTwo?.re_title}
-              error={formik?.touched?.stepSettingTwo?.re_title && !!formik?.errors?.stepSettingTwo?.re_title}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-            />
-          </Grid>
-        </Box>
-        <Box pb={1} className={classes.box}>
-          <Grid container spacing={2}>
-            <Grid item xs={9}>
+            {isFirstStep() && (
+              <Box py={1} display="flex" justifyContent="flex-end" className={`${classes.urlCopy} ${classes.lastItem}`} onClick={handleCopy}>
+                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
+              </Box>
+            )}
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.thumbnail')} />
+              <Box pt={1} className={classes.box}>
+                <CoverUploaderStream
+                  src={formik.values.stepSettingTwo.re_thumbnail}
+                  onChange={handleUpload}
+                  isUploading={false}
+                  disabled={!isFirstStep()}
+                  size="big"
+                  onOpenStateChange={handleCoverDailogStateChange}
+                />
+              </Box>
+            </Box>
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESInput
+                id="re_title"
+                name="stepSettingTwo.re_title"
+                required={true}
+                placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_input_title')}
+                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_input_title')}
+                fullWidth
+                value={formik.values.stepSettingTwo.re_title}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                helperText={formik?.touched?.stepSettingTwo?.re_title && formik?.errors?.stepSettingTwo?.re_title}
+                error={formik?.touched?.stepSettingTwo?.re_title && !!formik?.errors?.stepSettingTwo?.re_title}
+                size="big"
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
+              />
+            </Box>
+          </Box>
+          <Box pb={1} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
               <ESFastInput
                 id="re_description"
                 name="stepSettingTwo.re_description"
@@ -221,399 +221,399 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
               />
-            </Grid>
-          </Grid>
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            {isFirstStep() ? (
-              <ESSelect
-                fullWidth
-                name="stepSettingTwo.re_category"
-                value={formik.values.stepSettingTwo.re_category}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                label={i18n.t('common:delivery_reservation_tab.category')}
-                required={true}
-                size="big"
-                disabled={false}
-                helperText={formik?.touched?.stepSettingTwo?.re_category && formik?.errors?.stepSettingTwo?.re_category}
-                error={formik?.touched?.stepSettingTwo?.re_category && !!formik?.errors?.stepSettingTwo?.re_category}
-              >
-                {RULES.map((rule, index) => (
-                  <option key={index} value={rule.label}>
-                    {rule.label}
-                  </option>
-                ))}
-              </ESSelect>
-            ) : (
-              <ESInput
-                id="re_category"
-                name="stepSettingTwo.re_category"
-                value={formik.values.stepSettingTwo.re_category}
-                fullWidth
-                labelPrimary={i18n.t('common:delivery_reservation_tab.category')}
-                required
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-                size="big"
-              />
-            )}
-          </Grid>
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESLabel label={i18n.t('common:delivery_reservation_tab.notification_datetime')} required />
-            {isFirstStep() ? (
-              <ESInputDatePicker
-                name="stepSettingTwo.date_time_notification_delivery"
-                placeholder={i18n.t('common:delivery_reservation_tab.notification_datetime')}
-                fullWidth
-                value={formik.values.stepSettingTwo.date_time_notification_delivery}
-                onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_notification_delivery', date.toString())}
-                onBlur={formik.handleBlur}
-                helperText={
-                  (formik?.touched?.stepSettingTwo?.date_time_notification_delivery &&
-                    formik?.errors?.stepSettingTwo?.date_time_notification_delivery) ||
-                  formik?.errors?.stepSettingTwo?.notify_live_start_date ||
-                  formik?.errors?.stepSettingTwo?.notify_live_end_date
-                }
-                error={
-                  formik?.touched?.stepSettingTwo?.date_time_notification_delivery &&
-                  !!formik?.errors?.stepSettingTwo?.date_time_notification_delivery
-                }
-                disabled={false}
-                // readOnly={!isFirstStep()}
-              />
-            ) : (
-              <Box pt={1}>
-                <Typography className={classes.date}>
-                  {moment(formik.values.stepSettingTwo.date_time_notification_delivery).format('YYYY年MM月DD日 HH:mm')}
-                </Typography>
-              </Box>
-            )}
-          </Grid>
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')} required />
-            {isFirstStep() ? (
-              <ESInputDatePicker
-                name="stepSettingTwo.date_time_schedule_delivery_start"
-                placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
-                fullWidth
-                value={formik.values.stepSettingTwo.date_time_schedule_delivery_start}
-                onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_schedule_delivery_start', date.toString())}
-                onBlur={formik.handleBlur}
-                helperText={
-                  (formik?.touched?.stepSettingTwo?.date_time_schedule_delivery_start &&
-                    formik?.errors?.stepSettingTwo?.date_time_schedule_delivery_start) ||
-                  formik?.errors?.stepSettingTwo?.schedule_live_date
-                }
-                error={
-                  formik?.touched?.stepSettingTwo?.date_time_schedule_delivery_start &&
-                  !!formik?.errors?.stepSettingTwo?.date_time_schedule_delivery_start
-                }
-                disabled={false}
-              />
-            ) : (
-              <Box pt={1}>
-                <Typography className={classes.date}>
-                  {moment(formik.values.stepSettingTwo.date_time_schedule_delivery_start).format('YYYY年MM月DD日 HH:mm')}
-                </Typography>
-              </Box>
-            )}
-          </Grid>
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')} required />
-            {isFirstStep() ? (
-              <ESInputDatePicker
-                name="stepSettingTwo.date_time_schedule_end"
-                placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
-                fullWidth
-                value={formik.values.stepSettingTwo.date_time_schedule_end}
-                onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_schedule_end', date.toString())}
-                onBlur={formik.handleBlur}
-                helperText={
-                  (formik?.touched?.stepSettingTwo?.date_time_schedule_end && formik?.errors?.stepSettingTwo?.date_time_schedule_end) ||
-                  formik?.errors?.stepSettingTwo?.schedule_live_date
-                }
-                error={formik?.touched?.stepSettingTwo?.date_time_schedule_end && !!formik?.errors?.stepSettingTwo?.date_time_schedule_end}
-                disabled={false}
-              />
-            ) : (
-              <Box pt={1}>
-                <Typography className={classes.date}>
-                  {moment(formik.values.stepSettingTwo.date_time_schedule_end).format('YYYY年MM月DD日 HH:mm')}
-                </Typography>
-              </Box>
-            )}
-          </Grid>
-        </Box>
-        {paid_delivery_flag && (
-          <>
-            {isFirstStep() ? (
-              <Box pb={3 / 8}>
-                <ESCheckboxBig
-                  checked={formik.values.stepSettingTwo.re_use_ticket}
-                  onChange={() => {
-                    checkUseTicket()
-                  }}
-                  label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
-                  name="stepSettingTwo.re_use_ticket"
-                />
-              </Box>
-            ) : (
-              <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')} />
-            )}
-            {/* TODO: Apply component enter point eXeポイント */}
-            <Box pb={2} className={classes.box}>
-              <Grid item xs={9}>
-                <ESInput
-                  id="re_ticket_price"
-                  name="stepSettingTwo.re_ticket_price"
-                  required={true}
-                  placeholder={'1,500'}
+            </Box>
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              {isFirstStep() ? (
+                <ESSelect
                   fullWidth
-                  value={
-                    isFirstStep()
-                      ? formik.values.stepSettingTwo.re_ticket_price === 0 || !formik.values.stepSettingTwo.re_ticket_price
-                        ? ''
-                        : formik.values.stepSettingTwo.re_ticket_price
-                      : formik.values.stepSettingTwo.re_ticket_price
-                      ? `利用する（${formik.values.stepSettingTwo.re_ticket_price} exeポイント）`
-                      : '利用しない'
-                  }
+                  name="stepSettingTwo.re_category"
+                  value={formik.values.stepSettingTwo.re_category}
                   onChange={formik.handleChange}
-                  onBlur={formik.values.stepSettingTwo.re_use_ticket && formik.handleBlur}
-                  helperText={formik?.touched?.stepSettingTwo?.re_ticket_price && formik?.errors?.stepSettingTwo?.re_ticket_price}
-                  error={formik?.touched?.stepSettingTwo?.re_ticket_price && !!formik?.errors?.stepSettingTwo?.re_ticket_price}
+                  onBlur={formik.handleBlur}
+                  label={i18n.t('common:delivery_reservation_tab.category')}
+                  required={true}
                   size="big"
+                  disabled={false}
+                  helperText={formik?.touched?.stepSettingTwo?.re_category && formik?.errors?.stepSettingTwo?.re_category}
+                  error={formik?.touched?.stepSettingTwo?.re_category && !!formik?.errors?.stepSettingTwo?.re_category}
+                >
+                  {RULES.map((rule, index) => (
+                    <option key={index} value={rule.label}>
+                      {rule.label}
+                    </option>
+                  ))}
+                </ESSelect>
+              ) : (
+                <ESInput
+                  id="re_category"
+                  name="stepSettingTwo.re_category"
+                  value={formik.values.stepSettingTwo.re_category}
+                  fullWidth
+                  labelPrimary={i18n.t('common:delivery_reservation_tab.category')}
+                  required
                   disabled={!isFirstStep()}
                   className={getAddClassByStep(classes.input_text)}
+                  size="big"
+                />
+              )}
+            </Box>
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel label={i18n.t('common:delivery_reservation_tab.notification_datetime')} required />
+              {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepSettingTwo.date_time_notification_delivery"
+                  placeholder={i18n.t('common:delivery_reservation_tab.notification_datetime')}
+                  fullWidth
+                  value={formik.values.stepSettingTwo.date_time_notification_delivery}
+                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_notification_delivery', date.toString())}
+                  onBlur={formik.handleBlur}
+                  helperText={
+                    (formik?.touched?.stepSettingTwo?.date_time_notification_delivery &&
+                      formik?.errors?.stepSettingTwo?.date_time_notification_delivery) ||
+                    formik?.errors?.stepSettingTwo?.notify_live_start_date ||
+                    formik?.errors?.stepSettingTwo?.notify_live_end_date
+                  }
+                  error={
+                    formik?.touched?.stepSettingTwo?.date_time_notification_delivery &&
+                    !!formik?.errors?.stepSettingTwo?.date_time_notification_delivery
+                  }
+                  disabled={false}
+                  // readOnly={!isFirstStep()}
+                />
+              ) : (
+                <Box pt={1}>
+                  <Typography className={classes.date}>
+                    {moment(formik.values.stepSettingTwo.date_time_notification_delivery).format('YYYY年MM月DD日 HH:mm')}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')} required />
+              {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepSettingTwo.date_time_schedule_delivery_start"
+                  placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
+                  fullWidth
+                  value={formik.values.stepSettingTwo.date_time_schedule_delivery_start}
+                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_schedule_delivery_start', date.toString())}
+                  onBlur={formik.handleBlur}
+                  helperText={
+                    (formik?.touched?.stepSettingTwo?.date_time_schedule_delivery_start &&
+                      formik?.errors?.stepSettingTwo?.date_time_schedule_delivery_start) ||
+                    formik?.errors?.stepSettingTwo?.schedule_live_date
+                  }
+                  error={
+                    formik?.touched?.stepSettingTwo?.date_time_schedule_delivery_start &&
+                    !!formik?.errors?.stepSettingTwo?.date_time_schedule_delivery_start
+                  }
+                  disabled={false}
+                />
+              ) : (
+                <Box pt={1}>
+                  <Typography className={classes.date}>
+                    {moment(formik.values.stepSettingTwo.date_time_schedule_delivery_start).format('YYYY年MM月DD日 HH:mm')}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')} required />
+              {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepSettingTwo.date_time_schedule_end"
+                  placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
+                  fullWidth
+                  value={formik.values.stepSettingTwo.date_time_schedule_end}
+                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_schedule_end', date.toString())}
+                  onBlur={formik.handleBlur}
+                  helperText={
+                    (formik?.touched?.stepSettingTwo?.date_time_schedule_end && formik?.errors?.stepSettingTwo?.date_time_schedule_end) ||
+                    formik?.errors?.stepSettingTwo?.schedule_live_date
+                  }
+                  error={formik?.touched?.stepSettingTwo?.date_time_schedule_end && !!formik?.errors?.stepSettingTwo?.date_time_schedule_end}
+                  disabled={false}
+                />
+              ) : (
+                <Box pt={1}>
+                  <Typography className={classes.date}>
+                    {moment(formik.values.stepSettingTwo.date_time_schedule_end).format('YYYY年MM月DD日 HH:mm')}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+          {paid_delivery_flag && (
+            <>
+              {isFirstStep() ? (
+                <Box pb={3 / 8}>
+                  <ESCheckboxBig
+                    checked={formik.values.stepSettingTwo.re_use_ticket}
+                    onChange={() => {
+                      checkUseTicket()
+                    }}
+                    label={t('common:streaming_settings_live_streaming_screen.ticket_use')}
+                    name="stepSettingTwo.re_use_ticket"
+                  />
+                </Box>
+              ) : (
+                <ESLabel label={i18n.t('common:streaming_settings_live_streaming_screen.ticket_use')} />
+              )}
+              {/* TODO: Apply component enter point eXeポイント */}
+              <Box pb={2} className={classes.wrap_input}>
+                <Box className={classes.firstItem}>
+                  <ESInput
+                    id="re_ticket_price"
+                    name="stepSettingTwo.re_ticket_price"
+                    required={true}
+                    placeholder={'1,500'}
+                    fullWidth
+                    value={
+                      isFirstStep()
+                        ? formik.values.stepSettingTwo.re_ticket_price === 0 || !formik.values.stepSettingTwo.re_ticket_price
+                          ? ''
+                          : formik.values.stepSettingTwo.re_ticket_price
+                        : formik.values.stepSettingTwo.re_ticket_price
+                        ? `利用する（${formik.values.stepSettingTwo.re_ticket_price} exeポイント）`
+                        : '利用しない'
+                    }
+                    onChange={formik.handleChange}
+                    onBlur={formik.values.stepSettingTwo.re_use_ticket && formik.handleBlur}
+                    helperText={formik?.touched?.stepSettingTwo?.re_ticket_price && formik?.errors?.stepSettingTwo?.re_ticket_price}
+                    error={formik?.touched?.stepSettingTwo?.re_ticket_price && !!formik?.errors?.stepSettingTwo?.re_ticket_price}
+                    size="big"
+                    disabled={!isFirstStep()}
+                    className={getAddClassByStep(classes.input_text)}
+                    readOnly={!formik.values.stepSettingTwo.re_use_ticket}
+                  />
+                </Box>
+              </Box>
+            </>
+          )}
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel
+                label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                required={formik.values.stepSettingTwo.re_use_ticket}
+              />
+              {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepSettingTwo.date_time_ticket_sale_start"
+                  placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                  fullWidth
+                  value={formik.values.stepSettingTwo.date_time_ticket_sale_start}
+                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_ticket_sale_start', date.toString())}
+                  onBlur={formik.handleBlur}
+                  helperText={
+                    formik?.touched?.stepSettingTwo?.date_time_ticket_sale_start &&
+                    formik?.errors?.stepSettingTwo?.date_time_ticket_sale_start
+                  }
+                  error={
+                    formik?.touched?.stepSettingTwo?.date_time_ticket_sale_start &&
+                    !!formik?.errors?.stepSettingTwo?.date_time_ticket_sale_start
+                  }
                   readOnly={!formik.values.stepSettingTwo.re_use_ticket}
                 />
-              </Grid>
+              ) : (
+                <Box pt={1}>
+                  <Typography className={classes.date}>
+                    {moment(formik.values.stepSettingTwo.date_time_ticket_sale_start).format('YYYY年MM月DD日 HH:mm')}
+                  </Typography>
+                </Box>
+              )}
             </Box>
-          </>
-        )}
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESLabel
-              label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-              required={formik.values.stepSettingTwo.re_use_ticket}
-            />
-            {isFirstStep() ? (
-              <ESInputDatePicker
-                name="stepSettingTwo.date_time_ticket_sale_start"
-                placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                fullWidth
-                value={formik.values.stepSettingTwo.date_time_ticket_sale_start}
-                onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_ticket_sale_start', date.toString())}
-                onBlur={formik.handleBlur}
-                helperText={
-                  formik?.touched?.stepSettingTwo?.date_time_ticket_sale_start &&
-                  formik?.errors?.stepSettingTwo?.date_time_ticket_sale_start
-                }
-                error={
-                  formik?.touched?.stepSettingTwo?.date_time_ticket_sale_start &&
-                  !!formik?.errors?.stepSettingTwo?.date_time_ticket_sale_start
-                }
-                readOnly={!formik.values.stepSettingTwo.re_use_ticket}
+          </Box>
+          {isFirstStep() ? (
+            <Box>
+              <ESCheckboxBig
+                checked={formik.values.stepSettingTwo.re_share_sns_flag}
+                onChange={() => formik.setFieldValue('stepSettingTwo.re_share_sns_flag', !formik.values.stepSettingTwo.re_share_sns_flag)}
+                label={t('common:streaming_settings_live_streaming_screen.share_SNS')}
+                name="isShareSNS"
               />
-            ) : (
-              <Box pt={1}>
-                <Typography className={classes.date}>
-                  {moment(formik.values.stepSettingTwo.date_time_ticket_sale_start).format('YYYY年MM月DD日 HH:mm')}
-                </Typography>
-              </Box>
-            )}
-          </Grid>
-        </Box>
-        {isFirstStep() ? (
-          <Box>
-            <ESCheckboxBig
-              checked={formik.values.stepSettingTwo.re_share_sns_flag}
-              onChange={() => formik.setFieldValue('stepSettingTwo.re_share_sns_flag', !formik.values.stepSettingTwo.re_share_sns_flag)}
-              label={t('common:streaming_settings_live_streaming_screen.share_SNS')}
-              name="isShareSNS"
-            />
-          </Box>
-        ) : (
-          <ESInput
-            id="title"
-            name="title"
-            value={
-              formik.values.stepSettingTwo.re_share_sns_flag
-                ? t('common:streaming_settings_live_streaming_screen.shared_it')
-                : t('common:streaming_settings_live_streaming_screen.dont_share')
-            }
-            fullWidth
-            labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
-            disabled={true}
-            size="big"
-            className={getAddClassByStep(classes.input_text)}
-          />
-        )}
-        {/* stream URL */}
-        <Box pb={2} pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
-          <Grid item xs={9}>
-            <ESInput
-              id="re_stream_url"
-              name="stepSettingTwo.re_stream_url"
-              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_url')}
-              placeholder={
-                isFirstStep()
-                  ? !formik.values.stepSettingTwo.re_stream_url && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
-                  : !formik.values.stepSettingTwo.re_stream_url && t('common:streaming_settings_live_streaming_screen.issued_stream')
-              }
-              type={showStreamURL || formik.values.stepSettingTwo.re_stream_url ? 'text' : 'password'}
-              endAdornment={
-                isFirstStep() ? (
-                  <InputAdornment position="end" className={classes.inputContainer}>
-                    <div className={classes.borderLeft}></div>
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      size="small"
-                      disableRipple
-                      color="inherit"
-                      onMouseDown={() => setShowStreamURL(!showStreamURL)}
-                    >
-                      {showStreamURL ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                    </IconButton>
-                  </InputAdornment>
-                ) : (
-                  <></>
-                )
-              }
-              fullWidth
-              value={formik.values.stepSettingTwo.re_stream_url}
-              readOnly={true}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-            />
-          </Grid>
-          {isFirstStep() && (
-            <Box flexDirection="row" display="flex">
-              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-              </Box>
-              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
-              </Box>
             </Box>
-          )}
-        </Box>
-        {/* stream key */}
-        <Box pb={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
-          <Grid item xs={9}>
-            <ESInput
-              id="re_stream_key"
-              name="stepSettingTwo.re_stream_key"
-              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_key')}
-              placeholder={
-                isFirstStep()
-                  ? !formik.values.stepSettingTwo.re_stream_key && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
-                  : !formik.values.stepSettingTwo.re_stream_key && t('common:streaming_settings_live_streaming_screen.issued_stream')
-              }
-              type={showStreamKey || formik.values.stepSettingTwo.re_stream_key ? 'text' : 'password'}
-              endAdornment={
-                isFirstStep() ? (
-                  <InputAdornment position="end" className={classes.inputContainer}>
-                    <div className={classes.borderLeft}></div>
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      size="small"
-                      disableRipple
-                      color="inherit"
-                      onMouseDown={() => setShowStreamKey(!showStreamKey)}
-                    >
-                      {showStreamKey ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                    </IconButton>
-                  </InputAdornment>
-                ) : (
-                  <></>
-                )
-              }
-              fullWidth
-              value={formik.values.stepSettingTwo.re_stream_key}
-              readOnly={true}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-            />
-          </Grid>
-          {isFirstStep() && (
-            <Box flexDirection="row" display="flex">
-              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
-              </Box>
-              <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
-              </Box>
-            </Box>
-          )}
-        </Box>
-        {isFirstStep() ? (
-          <Box pb={3 / 8} pt={2}>
-            <ESCheckboxBig
-              checked={formik.values.stepSettingTwo.re_publish_flag}
-              onChange={() => formik.setFieldValue('stepSettingTwo.re_publish_flag', !formik.values.stepSettingTwo.re_publish_flag)}
-              label={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
-              name="isReissue"
-            />
-          </Box>
-        ) : (
-          <Box pb={2}>
+          ) : (
             <ESInput
               id="title"
               name="title"
-              value={!formik.values.stepSettingTwo.re_publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
+              value={
+                formik.values.stepSettingTwo.re_share_sns_flag
+                  ? t('common:streaming_settings_live_streaming_screen.shared_it')
+                  : t('common:streaming_settings_live_streaming_screen.dont_share')
+              }
               fullWidth
-              labelPrimary={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+              labelPrimary={t('common:streaming_settings_live_streaming_screen.share_SNS')}
               disabled={true}
               size="big"
               className={getAddClassByStep(classes.input_text)}
             />
-          </Box>
-        )}
-        <Typography className={classes.captionNote}>
-          {i18n.t('common:streaming_settings_live_streaming_screen.note_for_publish_delivery_pt')}
-        </Typography>
-        <Typography className={classes.captionNote}>
-          {i18n.t('common:streaming_settings_live_streaming_screen.note_for_publish_delivery_pb')}
-        </Typography>
-        <Box paddingBottom={3} />
-        {isFirstStep() ? (
-          <Grid item xs={9}>
-            <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
-              </ButtonPrimary>
+          )}
+          {/* stream URL */}
+          <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+            <Box className={classes.firstItem}>
+              <ESInput
+                id="re_stream_url"
+                name="stepSettingTwo.re_stream_url"
+                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_url')}
+                placeholder={
+                  isFirstStep()
+                    ? !formik.values.stepSettingTwo.re_stream_url && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
+                    : !formik.values.stepSettingTwo.re_stream_url && t('common:streaming_settings_live_streaming_screen.issued_stream')
+                }
+                type={showStreamURL || formik.values.stepSettingTwo.re_stream_url ? 'text' : 'password'}
+                endAdornment={
+                  isFirstStep() ? (
+                    <InputAdornment position="end" className={classes.inputContainer}>
+                      <div className={classes.borderLeft}></div>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        size="small"
+                        disableRipple
+                        color="inherit"
+                        onMouseDown={() => setShowStreamURL(!showStreamURL)}
+                      >
+                        {showStreamURL ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                      </IconButton>
+                    </InputAdornment>
+                  ) : (
+                    <></>
+                  )
+                }
+                fullWidth
+                value={formik.values.stepSettingTwo.re_stream_url}
+                readOnly={true}
+                size="big"
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
+              />
             </Box>
-          </Grid>
-        ) : (
-          <Grid item xs={6} sm={8} md={8} lg={6}>
-            <Box className={classes.actionButtonContainer}>
-              <Box className={classes.actionButton}>
-                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
-                  {t('common:common.cancel')}
-                </ESButton>
+            {isFirstStep() && (
+              <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                  <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                  <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
+                </Box>
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                  <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
+                </Box>
               </Box>
-              <Box className={classes.actionButton}>
-                <ButtonPrimary round fullWidth onClick={onClickNext}>
-                  {t('common:delivery_reservation_tab.delivery_data_save')}
+            )}
+          </Box>
+          {/* stream key */}
+          <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+            <Box className={classes.firstItem}>
+              <ESInput
+                id="re_stream_key"
+                name="stepSettingTwo.re_stream_key"
+                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.stream_key')}
+                placeholder={
+                  isFirstStep()
+                    ? !formik.values.stepSettingTwo.re_stream_key && i18n.t('common:streaming_settings_live_streaming_screen.stream_mask')
+                    : !formik.values.stepSettingTwo.re_stream_key && t('common:streaming_settings_live_streaming_screen.issued_stream')
+                }
+                type={showStreamKey || formik.values.stepSettingTwo.re_stream_key ? 'text' : 'password'}
+                endAdornment={
+                  isFirstStep() ? (
+                    <InputAdornment position="end" className={classes.inputContainer}>
+                      <div className={classes.borderLeft}></div>
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        size="small"
+                        disableRipple
+                        color="inherit"
+                        onMouseDown={() => setShowStreamKey(!showStreamKey)}
+                      >
+                        {showStreamKey ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
+                      </IconButton>
+                    </InputAdornment>
+                  ) : (
+                    <></>
+                  )
+                }
+                fullWidth
+                value={formik.values.stepSettingTwo.re_stream_key}
+                readOnly={true}
+                size="big"
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
+              />
+            </Box>
+            {isFirstStep() && (
+              <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                  <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+                  <Typography>{t('common:streaming_settings_live_streaming_screen.copy_url')}</Typography>
+                </Box>
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                  <Typography>{t('common:streaming_settings_live_streaming_screen.reissue')}</Typography>
+                </Box>
+              </Box>
+            )}
+          </Box>
+          {isFirstStep() ? (
+            <Box pb={3 / 8} pt={2}>
+              <ESCheckboxBig
+                checked={formik.values.stepSettingTwo.re_publish_flag}
+                onChange={() => formik.setFieldValue('stepSettingTwo.re_publish_flag', !formik.values.stepSettingTwo.re_publish_flag)}
+                label={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+                name="isReissue"
+              />
+            </Box>
+          ) : (
+            <Box pb={2}>
+              <ESInput
+                id="title"
+                name="title"
+                value={!formik.values.stepSettingTwo.re_publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
+                fullWidth
+                labelPrimary={t('common:streaming_settings_live_streaming_screen.publish_delivery')}
+                disabled={true}
+                size="big"
+                className={getAddClassByStep(classes.input_text)}
+              />
+            </Box>
+          )}
+          <Typography className={classes.captionNote}>
+            {i18n.t('common:streaming_settings_live_streaming_screen.note_for_publish_delivery_pt')}
+          </Typography>
+          <Typography className={classes.captionNote}>
+            {i18n.t('common:streaming_settings_live_streaming_screen.note_for_publish_delivery_pb')}
+          </Typography>
+          <Box paddingBottom={3} />
+          {isFirstStep() ? (
+            <Grid item xs={12} md={9}>
+              <Box maxWidth={280} className={classes.buttonContainer}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
+                  {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
-            </Box>
-          </Grid>
-        )}
-      </form>
+            </Grid>
+          ) : (
+            <Grid item xs={12}>
+              <Box className={classes.actionButtonContainer}>
+                <Box className={classes.actionButton}>
+                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                    {t('common:common.cancel')}
+                  </ESButton>
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ButtonPrimary round fullWidth onClick={onClickNext}>
+                    {t('common:delivery_reservation_tab.delivery_data_save')}
+                  </ButtonPrimary>
+                </Box>
+              </Box>
+            </Grid>
+          )}
+        </form>
+      </Box>
     </Box>
   )
 }
@@ -649,11 +649,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   box: {
     paddingLeft: 0,
   },
-  [theme.breakpoints.up('md')]: {
-    formContainer: {
-      marginLeft: theme.spacing(7),
-      marginRight: theme.spacing(7),
-    },
+  container: {
+    display: "flex", 
+    justifyContent: "center"
+  },
+  formContainer: {
+    maxWidth: "617px",
   },
   inputContainer: {
     position: 'relative',
@@ -687,6 +688,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 27,
+    '& .MuiButtonBase-root.button-primary': {
+      padding: 0,
+    }
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
@@ -699,5 +703,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cancelBtn: {
     padding: '12px 22px',
+  },
+  firstItem: {
+    width: "75%", 
+  },
+  wrap_input: {
+    paddingLeft: 0,
+  },
+  [theme.breakpoints.down(768)]: {
+    container: {
+      padding: '34px 24px 32px 24px'
+    },
+    wrap_input: {
+      position: 'relative',
+      width: "100%", 
+      flexWrap: "wrap-reverse", 
+      justifyContent: "flex-end"
+    },
+    firstItem: {
+      width: "100%", 
+    },
+    lastItem: {
+      position: "absolute", 
+      top: "-2px"
+    }
   },
 }))

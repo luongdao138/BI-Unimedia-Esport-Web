@@ -63,6 +63,7 @@ const useStyles = makeStyles(() => ({
     color: '#fff',
     fontWeight: 'normal',
     paddingBottom: '144px',
+    textAlign: 'center',
   },
   redirectButton: {
     width: '220px',

@@ -72,100 +72,102 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
     }
   }
   return (
-    <Box pb={9} py={4} className={classes.formContainer} maxWidth="md">
-      <form onSubmit={formik.handleSubmit}>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESInput
-              id="channel_name"
-              name="stepSettingThree.channel_name"
-              required={true}
-              placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_channel_name')}
-              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_channel_name')}
-              fullWidth
-              value={isFirstStep() ? formik.values.stepSettingThree.channel_name : 'テキストテキストテキストテキストここの文字数制限'}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              helperText={formik?.touched?.stepSettingThree?.channel_name && formik?.errors?.stepSettingThree?.channel_name}
-              error={formik?.touched?.stepSettingThree?.channel_name && !!formik?.errors?.stepSettingThree?.channel_name}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-            />
-          </Grid>
-        </Box>
-        <Box pb={2} className={classes.box}>
-          <Grid item xs={9}>
-            <ESFastInput
-              id="overview"
-              name="stepSettingThree.overview"
-              multiline
-              rows={12}
-              required={true}
-              placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_overview')}
-              labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_overview')}
-              fullWidth
-              value={
-                isFirstStep()
-                  ? formik.values.stepSettingThree.overview
-                  : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
-                    'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
-                    'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
-                    'ストテキストテキストテ\n' +
-                    'https://sample.jp テキストテキスト'
-              }
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              helperText={formik?.touched?.stepSettingThree?.overview && formik?.errors?.stepSettingThree?.overview}
-              error={formik?.touched?.stepSettingThree?.overview && !!formik?.errors?.stepSettingThree?.overview}
-              size="big"
-              disabled={!isFirstStep()}
-              className={getAddClassByStep(classes.input_text)}
-            />
-          </Grid>
-        </Box>
-        <Box pb={4} className={classes.box}>
-          <Grid item xs={9}>
-            <Typography variant="h3" gutterBottom className={classes.label}>
-              {i18n.t('common:user_profile.sns')}
-            </Typography>
-            <SnsInfoStream
-              showPreview={isFirstStep() ? false : true}
-              profile={profile}
-              onDataChange={onBasicInfoChanged}
-              handleError={handleError}
-            />
-          </Grid>
-        </Box>
-        {isFirstStep() ? (
-          <Grid item xs={9}>
-            <Box maxWidth={280} className={classes.buttonContainer}>
-              <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
-              </ButtonPrimary>
-              {/* {hasError &&
-                <Box pt={1} display="flex" flexDirection="column" color={Colors.secondary} style={{ alignItems: 'center' }}>
-                  <Typography variant="body2">{showMessage}</Typography>
-                </Box>} */}
+    <Box py={4} className={classes.container}>
+      <Box className={classes.formContainer}>
+        <form onSubmit={formik.handleSubmit}>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESInput
+                id="channel_name"
+                name="stepSettingThree.channel_name"
+                required={true}
+                placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_channel_name')}
+                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_channel_name')}
+                fullWidth
+                value={isFirstStep() ? formik.values.stepSettingThree.channel_name : 'テキストテキストテキストテキストここの文字数制限'}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                helperText={formik?.touched?.stepSettingThree?.channel_name && formik?.errors?.stepSettingThree?.channel_name}
+                error={formik?.touched?.stepSettingThree?.channel_name && !!formik?.errors?.stepSettingThree?.channel_name}
+                size="big"
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
+              />
             </Box>
-          </Grid>
-        ) : (
-          <Grid item xs={6} sm={8} md={8} lg={6}>
-            <Box className={classes.actionButtonContainer}>
-              <Box className={classes.actionButton}>
-                <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
-                  {i18n.t('common:common.cancel')}
-                </ESButton>
-              </Box>
-              <Box className={classes.actionButton}>
-                <ButtonPrimary round fullWidth onClick={onClickNext}>
-                  {i18n.t('common:streaming_settings_live_streaming_screen.save_channel_live_info')}
+          </Box>
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESFastInput
+                id="overview"
+                name="stepSettingThree.overview"
+                multiline
+                rows={12}
+                required={true}
+                placeholder={i18n.t('common:streaming_settings_live_streaming_screen.placeholder_overview')}
+                labelPrimary={i18n.t('common:streaming_settings_live_streaming_screen.label_overview')}
+                fullWidth
+                value={
+                  isFirstStep()
+                    ? formik.values.stepSettingThree.overview
+                    : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
+                      'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
+                      'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
+                      'ストテキストテキストテ\n' +
+                      'https://sample.jp テキストテキスト'
+                }
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                helperText={formik?.touched?.stepSettingThree?.overview && formik?.errors?.stepSettingThree?.overview}
+                error={formik?.touched?.stepSettingThree?.overview && !!formik?.errors?.stepSettingThree?.overview}
+                size="big"
+                disabled={!isFirstStep()}
+                className={getAddClassByStep(classes.input_text)}
+              />
+            </Box>
+          </Box>
+          <Box pb={4} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <Typography variant="h3" gutterBottom className={classes.label}>
+                {i18n.t('common:user_profile.sns')}
+              </Typography>
+              <SnsInfoStream
+                showPreview={isFirstStep() ? false : true}
+                profile={profile}
+                onDataChange={onBasicInfoChanged}
+                handleError={handleError}
+              />
+            </Box>
+          </Box>
+          {isFirstStep() ? (
+            <Grid item xs={12}>
+              <Box maxWidth={280} className={classes.buttonContainer}>
+                <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
+                  {i18n.t('common:streaming_settings_live_streaming_screen.check_submit')}
                 </ButtonPrimary>
+                {/* {hasError &&
+                  <Box pt={1} display="flex" flexDirection="column" color={Colors.secondary} style={{ alignItems: 'center' }}>
+                    <Typography variant="body2">{showMessage}</Typography>
+                  </Box>} */}
               </Box>
-            </Box>
-          </Grid>
-        )}
-      </form>
+            </Grid>
+          ) : (
+            <Grid item xs={12}>
+              <Box className={classes.actionButtonContainer}>
+                <Box className={classes.actionButton}>
+                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                    {i18n.t('common:common.cancel')}
+                  </ESButton>
+                </Box>
+                <Box className={classes.actionButton}>
+                  <ButtonPrimary round fullWidth onClick={onClickNext}>
+                    {i18n.t('common:streaming_settings_live_streaming_screen.save_channel_live_info')}
+                  </ButtonPrimary>
+                </Box>
+              </Box>
+            </Grid>
+          )}
+        </form>
+      </Box>
     </Box>
   )
 }
@@ -188,9 +190,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       // paddingBottom: theme.spacing(1),
     },
   },
-  container: {
-    // justifyContent: 'center',
-  },
   forbiddenMessageContainer: {
     width: '100%',
     display: 'flex',
@@ -201,11 +200,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   box: {
     paddingLeft: 0,
   },
-  [theme.breakpoints.up('md')]: {
-    formContainer: {
-      marginLeft: theme.spacing(7),
-      marginRight: theme.spacing(7),
-    },
+  container: {
+    display: "flex", 
+    justifyContent: "center"
+  },
+  formContainer: {
+    maxWidth: "617px",
   },
   label: {
     paddingRight: theme.spacing(6),
@@ -246,6 +246,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 12,
   },
   actionButtonContainer: {
+    '& .MuiButtonBase-root.button-primary': {
+      padding: 0,
+    },
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -263,5 +266,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cancelBtn: {
     padding: '12px 22px',
+  },
+  firstItem: {
+    width: "75%", 
+  },
+  wrap_input: {
+    paddingLeft: 0,
+  },
+  [theme.breakpoints.down(768)]: {
+    container: {
+      padding: '34px 24px 32px 24px'
+    },
+    wrap_input: {
+      position: 'relative',
+      width: "100%", 
+      flexWrap: "wrap-reverse", 
+      justifyContent: "flex-end"
+    },
+    firstItem: {
+      width: "100%", 
+    },
+    lastItem: {
+      position: "absolute", 
+      top: "-2px"
+    }
   },
 }))
