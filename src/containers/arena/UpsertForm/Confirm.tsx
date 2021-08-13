@@ -139,7 +139,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.game')}
-        value={values.stepOne.game_title_id[0].display_name}
+        value={_.get(values, 'stepOne.game_title_id[0].display_name', '')}
         disabled={true}
         fullWidth
       />
