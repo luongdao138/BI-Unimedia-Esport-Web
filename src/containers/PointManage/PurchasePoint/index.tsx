@@ -18,19 +18,18 @@ const PurchasePoint: React.FC = () => {
     },
     {
       number: 'xxxx xxxx xxxx 4256',
-    }
+    },
   ]
 
   // const router = useRouter()
   const classes = useStyles()
 
   const onChangeStep = (new_step: number): void => {
-    if(new_step === 3) {
+    if (new_step === 3) {
       setIsShowPurchasePointModal(true)
-    }else {
+    } else {
       setStep(new_step)
     }
-    
   }
 
   const deleteCard = (): void => {
@@ -47,19 +46,28 @@ const PurchasePoint: React.FC = () => {
 
   return (
     <Box className={classes.wrap_container}>
-      {step === 1 ? <Step1 step={step} onNext={onChangeStep} setSelectedPoint={(point) => setSelectedPoint(point)} /> : 
-      (step === 2 ? <Step2 deleteCard={deleteCard} cards={cards} step={step} onNext={onChangeStep} selectedPoint={selectedPoint} /> : <></>)}
+      {step === 1 ? (
+        <Step1 step={step} onNext={onChangeStep} setSelectedPoint={(point) => setSelectedPoint(point)} />
+      ) : step === 2 ? (
+        <Step2 deleteCard={deleteCard} cards={cards} step={step} onNext={onChangeStep} selectedPoint={selectedPoint} />
+      ) : (
+        <></>
+      )}
       {isShowPurchasePointModal && (
-        <PointPurchaseConfirmModal 
-          open={isShowPurchasePointModal} 
-          selectedPoint={selectedPoint} 
-          handleClose={() => {setIsShowPurchasePointModal(false)}}
+        <PointPurchaseConfirmModal
+          open={isShowPurchasePointModal}
+          selectedPoint={selectedPoint}
+          handleClose={() => {
+            setIsShowPurchasePointModal(false)
+          }}
         />
       )}
       {isShowDeleteCardModal && (
-        <CardDeleteConfirmModal 
-          open={isShowDeleteCardModal} 
-          handleClose={() => {setIsShowDeleteCardModal(false)}}
+        <CardDeleteConfirmModal
+          open={isShowDeleteCardModal}
+          handleClose={() => {
+            setIsShowDeleteCardModal(false)
+          }}
         />
       )}
     </Box>

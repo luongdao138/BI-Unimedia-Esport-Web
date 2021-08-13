@@ -19,24 +19,20 @@ const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose }) => 
       <ConfirmModal open={open}>
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('purchase_point_tab.delete_confirm')}</Typography>
-            <Box className={classes.wrap_message}>
-                <Typography className={classes.message}>
-                    {t('purchase_point_tab.delete_confirm_content')}
-                </Typography>
-                <Box pb={4}></Box>
-                <Typography className={classes.message}>
-                    xxxx xxxx xxxx 4256
-                </Typography>
-                <Box pb={4}></Box>
-            </Box>
+          <Box className={classes.wrap_message}>
+            <Typography className={classes.message}>{t('purchase_point_tab.delete_confirm_content')}</Typography>
+            <Box pb={4}></Box>
+            <Typography className={classes.message}>xxxx xxxx xxxx 4256</Typography>
+            <Box pb={4}></Box>
+          </Box>
         </Box>
         <Box className={classes.actionBox}>
-            <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
-                {t('common.cancel')}
-            </ButtonPrimary>  
-            <ButtonPrimary className={classes.actionBtnBuy} onClick={()=>('')}>
-                {t('purchase_point_tab.btn_delete')}
-            </ButtonPrimary>
+          <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
+            {t('common.cancel')}
+          </ButtonPrimary>
+          <ButtonPrimary className={classes.actionBtnBuy} onClick={() => ''}>
+            {t('purchase_point_tab.btn_delete')}
+          </ButtonPrimary>
         </Box>
       </ConfirmModal>
     </Box>
@@ -90,16 +86,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px',
     color: Colors.white_opacity[70],
   },
-  note_purchase_point:{
-        fontSize: '10px',
-        color: '#F7F735',
-        padding: '29px 0 37px 0',
-        textAlign: 'center',
+  note_purchase_point: {
+    fontSize: '10px',
+    color: '#F7F735',
+    padding: '29px 0 37px 0',
+    textAlign: 'center',
   },
   dialog_container: {
     '& .MuiDialog-paperFullWidth': {
-        borderRadius: 10,
-        maxWidth: 754,
-    }
-  }
+      borderRadius: 10,
+      maxWidth: 754,
+    },
+  },
 }))

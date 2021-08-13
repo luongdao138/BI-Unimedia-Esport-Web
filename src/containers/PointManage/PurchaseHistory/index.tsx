@@ -25,7 +25,7 @@ const PurchaseHistory: FC = () => {
     { label: '2020年4月', value: '2020年4月' },
   ]
   return (
-    <Box pb={9} py={4} className={classes.container} maxWidth="md">
+    <Box className={classes.container} maxWidth="md">
       <Grid item xs={7}>
         <ESSelect
           fullWidth
@@ -42,7 +42,7 @@ const PurchaseHistory: FC = () => {
           ))}
         </ESSelect>
       </Grid>
-      <Box pb={9} py={2} className={classes.content}>
+      <Box className={classes.content}>
         {dataPurchasedPoints.map((item, i) => (
           <PurchaseHistoryItem data={item} key={i} />
         ))}
@@ -57,8 +57,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   comboBox: {},
   [theme.breakpoints.up('md')]: {
     container: {
-      marginLeft: theme.spacing(7),
-      marginRight: theme.spacing(7),
+      marginLeft: theme.spacing(3),
+      marginRight: theme.spacing(3),
+      marginTop: theme.spacing(3),
     },
   },
   content: {
@@ -68,12 +69,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
-    marginTop: 16,
+    marginTop: 18,
+    paddingBottom: 18,
   },
   paginationContainer: {
-    marginTop: 24,
+    marginTop: 30,
     display: 'flex',
     justifyContent: 'center',
+    paddingBottom: 30,
   },
   paginationStyle: {
     '& .MuiPaginationItem-root': {

@@ -963,5 +963,5 @@ export default {
     delete_confirm: '登録削除確認',
     delete_confirm_content: '登録削除をしたいクレジットカード',
     btn_delete: '削除する',
-  }
+  },
 }

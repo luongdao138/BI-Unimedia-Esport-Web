@@ -1,4 +1,4 @@
-import { Box, Grid, makeStyles, Theme } from '@material-ui/core'
+import { Box, makeStyles, Theme } from '@material-ui/core'
 import { Pagination } from '@material-ui/lab'
 import React, { FC } from 'react'
 import { Colors } from '@theme/colors'
@@ -24,11 +24,11 @@ const PointManagementTab: FC = () => {
       expiresDatePurchased: '2022年04月09日',
     }))
   return (
-    <Box pb={9} py={4} className={classes.container} maxWidth="md">
-      <Grid item xs={12}>
+    <Box className={classes.container} maxWidth="md">
+      <Box>
         <MyPointsCard my_points={1500} />
-      </Grid>
-      <Box pb={9} py={2} className={classes.content}>
+      </Box>
+      <Box className={classes.content}>
         {dataPurchasedPoints.map((item, i) => (
           <PointsPurchasedItem data={item} key={i} />
         ))}
@@ -42,8 +42,9 @@ const PointManagementTab: FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.up('md')]: {
     container: {
-      marginLeft: theme.spacing(7),
-      marginRight: theme.spacing(7),
+      marginLeft: theme.spacing(3),
+      marginRight: theme.spacing(3),
+      marginTop: theme.spacing(3),
     },
   },
   content: {
@@ -53,12 +54,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderWidth: 1,
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
-    marginTop: 16,
+    marginTop: 18,
+    paddingBottom: 18,
   },
   paginationContainer: {
-    marginTop: 24,
+    marginTop: 30,
     display: 'flex',
     justifyContent: 'center',
+    paddingBottom: 30,
   },
   paginationStyle: {
     '& .MuiPaginationItem-root': {
