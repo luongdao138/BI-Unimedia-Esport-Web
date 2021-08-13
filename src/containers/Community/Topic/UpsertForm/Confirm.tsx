@@ -37,6 +37,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
         mail="@koichi"
         discription={values.stepOne.overview}
         image={values.stepOne.cover_image_url}
+        isConfirm
       />
       <Box pb={2} />
     </Box>

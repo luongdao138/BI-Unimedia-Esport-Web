@@ -48,7 +48,7 @@ const useTopicCreate = (): {
     //   dispatch(commonActions.addToast(t('common:topic_create.create_success')))
     // }
     resetMeta()
-    router.push(`${ESRoutes.COMMUNITY}/1${ESRoutes.TOPIC}/1`)
+    router.push(`${ESRoutes.COMMUNITY}/1/topic/1`)
 
     dispatch(commonActions.addToast(t('common:topic_create.create_success')))
   }

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
+import { Colors } from '@theme/colors'
 
 type UserSelectBoxListProps = {
   username: string
@@ -24,9 +25,13 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, mail, a
       <Box className={classes.container} mb={3}>
         <Box className={classes.userContainer}>
           <ESAvatar className={classes.avatar} alt={username} src={avatar !== '' ? avatar : username ? '' : '/images/avatar.png'} />
-          <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-            <Typography className={classes.username}>{username}</Typography>
-            <Typography className={classes.mail}>{mail}</Typography>
+          <Box className={classes.userInfoBox} ml={1}>
+            <Box display="flex" alignItems="center" height="50%">
+              <Typography className={classes.username}>{username}</Typography>
+            </Box>
+            <Box display="flex" alignItems="center" height="50%">
+              <Typography className={classes.mail}>{mail}</Typography>
+            </Box>
           </Box>
         </Box>
 
@@ -52,26 +57,26 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   userContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: 'calc(100% - 200px)',
   },
   selectBoxContainer: {
     display: 'flex',
     alignItems: 'flex-start',
-  },
-  userInfoContainer: {
-    display: 'flex',
-    width: 'calc(90% - 150px)',
+    width: 130,
+    height: '100%',
+    justifyContent: 'center',
   },
   userInfoBox: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
   },
-
   avatar: {
     zIndex: 30,
     width: 50,
@@ -79,19 +84,19 @@ const useStyles = makeStyles(() => ({
   },
   username: {
     fontWeight: 'bold',
-    color: 'white',
+    color: Colors.white,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: '100%',
+    fontSize: 16,
   },
   mail: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: '100%',
+    fontSize: 12,
+    color: Colors.white_opacity[70],
   },
-
   selectWidth: {
     width: 130,
   },

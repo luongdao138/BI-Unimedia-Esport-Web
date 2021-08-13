@@ -10,57 +10,74 @@ type CommunityHeaderProps = {
   date?: string
   count?: number
   image?: string
+  isConfirm?: boolean
 }
-const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count }) => {
+const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm }) => {
   const classes = useStyles()
 
   return (
     <>
       <Box className={classes.container}>
-        <Box className={classes.userContainer}>
-          <Box className={classes.userInfoContainer}>
-            <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
-            <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-              <Typography className={classes.username}>{username}</Typography>
-              <Typography className={classes.mail}>{mail}</Typography>
-            </Box>
-          </Box>
-          {date && count && (
-            <Box className={classes.dateReportContainer}>
-              <Typography className={classes.date}>{date}</Typography>
-              <Box className={classes.reportButton}>
-                <IconButton>
-                  <Icon className="fa fa-ellipsis-v" fontSize="small" />
-                </IconButton>
+        <Box m={2}>
+          <Box className={classes.userContainer}>
+            <Box className={classes.userInfoContainer} ml={isConfirm ? 3 : 0}>
+              <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
+              <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
+                <Typography className={classes.username}>{username}</Typography>
+                <Typography className={classes.mail}>{mail}</Typography>
               </Box>
             </Box>
+            {date && count && (
+              <Box className={classes.dateReportContainer}>
+                <Typography className={classes.date}>{date}</Typography>
+                <Box className={classes.reportButton}>
+                  <IconButton>
+                    <Icon className="fa fa-ellipsis-v" fontSize="small" />
+                  </IconButton>
+                </Box>
+              </Box>
+            )}
+          </Box>
+
+          <Box className={classes.discriptionContainer} mb={3} mt={3}>
+            <Typography className={classes.discription}>{discription}</Typography>
+          </Box>
+          {image ? (
+            <Box
+              className={classes.image}
+              style={{
+                backgroundImage: `url(${image})`,
+              }}
+            ></Box>
+          ) : (
+            <></>
+          )}
+          {count ? (
+            <Box display="flex" justifyContent="space-between" mt={3}>
+              <Box display="flex" justifyContent="flex-end">
+                <Box className={classes.numberBox}>
+                  <Icon className="fas fa-comment-alt" fontSize="small" />
+                </Box>
+                <Box className={classes.numberBox} mr={1} ml={1}>
+                  <Typography className={classes.count}>{count}</Typography>
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent="flex-end">
+                <Box className={classes.numberBox}>
+                  <Icon className="fas fa-comment-alt" fontSize="small" />
+                </Box>
+                <Box className={classes.numberBox} mr={1} ml={1}>
+                  <Typography className={classes.count}>{count}</Typography>
+                </Box>
+                <Box className={classes.numberBox}>
+                  <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            <></>
           )}
         </Box>
-
-        <Box className={classes.discriptionContainer} mb={3}>
-          <Typography className={classes.discription}>{discription}</Typography>
-        </Box>
-        {image ? (
-          <Box
-            className={classes.image}
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-            mb={3}
-          ></Box>
-        ) : (
-          <></>
-        )}
-        {count && (
-          <Box display="flex" justifyContent="flex-end" mr={3} mb={3}>
-            <Box className={classes.numberBox} mr={1}>
-              <Icon className="fas fa-comment-alt" fontSize="small" />
-            </Box>
-            <Box className={classes.numberBox}>
-              <Typography className={classes.count}>{count}</Typography>
-            </Box>
-          </Box>
-        )}
       </Box>
     </>
   )
@@ -77,7 +94,6 @@ const useStyles = makeStyles((theme) => ({
   },
   userContainer: {
     display: 'flex',
-    margin: theme.spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -119,12 +135,14 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     maxWidth: '100%',
+    fontSize: 16,
   },
   mail: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     maxWidth: '100%',
+    fontSize: 12,
   },
   date: {
     fontSize: 11,
@@ -132,20 +150,18 @@ const useStyles = makeStyles((theme) => ({
   },
   discriptionContainer: {
     display: 'flex',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
   },
   image: {
     display: 'flex',
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
+
     paddingTop: '30.27%',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
   },
   discription: {
-    color: Colors.white_opacity[70],
+    color: Colors.grey[300],
+    fontSize: 14,
   },
   numberBox: {
     display: 'flex',

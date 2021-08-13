@@ -30,8 +30,8 @@ const Participants: React.FC = () => {
     },
     {
       avatar: '',
-      username: 'わたなべ',
-      mail: '@watanabe',
+      username: 'わたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべ',
+      mail: '@watanabeわたなべわたなべわたなべわたなべわたなべわたなべわたなべわたなべ',
     },
     {
       avatar: '',
