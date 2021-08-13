@@ -41,7 +41,14 @@ const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo
   }, [access_token])
   useEffect(() => {
     if (social.meta.loaded) {
-      router.push(redirectTo)
+      router.push(redirectTo || ESRoutes.HOME)
+      social.resetMeta()
+    } else if (social.meta.error) {
+      if (loginType === 'login') {
+        router.push(ESRoutes.LOGIN)
+      } else {
+        router.push(ESRoutes.REGISTER)
+      }
     }
   }, [social.meta])
   return <FullScreenLoader open />
