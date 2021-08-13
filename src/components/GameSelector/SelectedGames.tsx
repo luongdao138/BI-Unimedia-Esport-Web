@@ -10,7 +10,7 @@ const SelectedGames: React.FC<SelectedGamesProps> = ({ games, handleRemove }) =>
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles({ isMobile })
   return (
-    <div className={isMobile ? classes.rootMobile : classes.root}>
+    <div className={isMobile ? `sticky-div ${classes.root}` : classes.root}>
       {games.length > 0 && (
         <Container maxWidth="md" className={classes.listContainer}>
           <List>
@@ -39,18 +39,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       paddingBottom: theme.spacing(14),
     },
-  },
-  rootMobile: {
-    backgroundColor: theme.palette.common.black,
-    borderTop: `1px solid`,
-    borderTopColor: Colors.text['300'],
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    marginLeft: -theme.spacing(3),
-    marginRight: -theme.spacing(3),
   },
   listContainer: {
     maxWidth: 600,

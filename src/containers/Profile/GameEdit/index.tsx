@@ -43,16 +43,6 @@ const GameEditContainer: React.FC = () => {
     }
   }, [meta.loaded])
 
-  useEffect(() => {
-    window.addEventListener('resize', function () {
-      if (document.activeElement.tagName == 'INPUT') {
-        window.setTimeout(function () {
-          document.activeElement.scrollIntoViewIfNeeded()
-        }, 0)
-      }
-    })
-  }, [])
-
   const onGameChange = (games: GameTitle['attributes'][]) => {
     setProfile({ ...profile, game_titles: games })
   }
@@ -80,7 +70,7 @@ const GameEditContainer: React.FC = () => {
         {!isMobile && <Box className={classes.blankSpace} />}
       </Box>
 
-      <Box className={isMobile ? classes.stickyFooter : classes.stickyFooter}>
+      <Box className={isMobile ? `sticky-div ${classes.stickyFooter}` : classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
             <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit}>
@@ -100,14 +90,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-  },
-  stickyFooterMobile: {
-    position: 'relative',
-    backgroundColor: Colors.black,
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    marginLeft: -theme.spacing(3),
-    marginRight: -theme.spacing(3),
   },
   stickyFooter: {
     position: 'fixed',
