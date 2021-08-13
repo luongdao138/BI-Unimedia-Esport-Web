@@ -59,14 +59,14 @@ const PurchaseDetail: React.FC = () => {
   }, [router])
 
   const price = _.get(purchaseHistoryDetail, 'data.attributes.price')
-  const tax = _.get(purchaseHistoryDetail, 'data.attributes.tax')
+  const tax = Math.floor(_.get(purchaseHistoryDetail, 'data.attributes.tax', 0))
 
   const purchase_status = _.get(purchaseHistoryDetail, 'data.attributes.status')
   const purchase_datetime = _.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime')
   const cancelled_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancelled_datetime')
   const cancel_req_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancel_req_datetime')
 
-  const time = CommonHelper.staticSmartTime(
+  const time = CommonHelper.purchaseHistoryStaticSmartTime(
     purchase_status == PAYMENT_STATUS.PURCHASED
       ? purchase_datetime
       : purchase_status == PAYMENT_STATUS.CANCELLED

@@ -110,8 +110,8 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   })
 
   const validationSchema = Yup.object().shape({
-    team_name: Yup.string().required('').max(40),
-    team_icon_url: Yup.string().required(),
+    team_name: Yup.string().required(t('common:common.input_required')).max(40),
+    team_icon_url: Yup.string(),
     members: Yup.array().of(membersValidationSchema),
   })
 
@@ -218,7 +218,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
         </BlackBox>
 
         <Box className={classes.formContainer}>
-          <ESLabel label={t('common:icon')} required />
+          <ESLabel label={t('common:icon')} />
           <Box m={1} />
           <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
 
