@@ -118,7 +118,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
-      paddingBottom: 0,
     },
     blankSpace: {
       height: theme.spacing(15),
