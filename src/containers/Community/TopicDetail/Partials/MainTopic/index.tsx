@@ -52,7 +52,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
     <>
       <Box className={classes.container}>
         <Box m={2}>
-          <Box className={classes.userContainer}>
+          <Box className={classes.userContainer} mt={2}>
             <Box className={classes.userInfoContainer} ml={isConfirm ? 3 : 0}>
               <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
@@ -146,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     borderRadius: 5,
     border: '1px solid rgba(255,255,255,0.3)',
-    marginTop: theme.spacing(12.5),
+    marginTop: theme.spacing(1),
   },
   userContainer: {
     display: 'flex',
@@ -230,9 +230,6 @@ const useStyles = makeStyles((theme) => ({
   [theme.breakpoints.down('sm')]: {
     image: {
       width: '80%',
-    },
-    container: {
-      marginTop: theme.spacing(11.2),
     },
   },
 }))
