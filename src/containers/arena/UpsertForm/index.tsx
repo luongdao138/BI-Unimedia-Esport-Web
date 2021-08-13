@@ -62,7 +62,7 @@ const TournamentCreate: React.FC = () => {
         ...values.stepThree,
         ...values.stepFour,
         co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
-        game_title_id: values.stepOne.game_title_id[0].id,
+        game_title_id: _.get(values, 'stepOne.game_title_id[0].id'),
         area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
       }
       if (isEdit) {
