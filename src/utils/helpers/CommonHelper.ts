@@ -214,6 +214,21 @@ function isDoubleByte(str: string): boolean {
   return false
 }
 
+const startOfNextDay = (): string => {
+  return moment().add(1, 'days').startOf('day').toString()
+}
+
+const nearestFutureMinutes = (interval: number): string => {
+  const currentDate = moment()
+
+  if (currentDate.minute() % 5 === 0) currentDate.add(1, 'minutes')
+
+  return currentDate
+    .minute(Math.ceil(currentDate.minute() / interval) * interval)
+    .second(0)
+    .toString()
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -230,4 +245,6 @@ export const CommonHelper = {
   getIndicesOf,
   replaceWhiteSpace,
   isDoubleByte,
+  nearestFutureMinutes,
+  startOfNextDay,
 }
