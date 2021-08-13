@@ -261,6 +261,7 @@ export default {
     general_user: '一般ユーザー',
     applying: '申請中',
     participating: '参加中',
+    topic_creation: 'トピック作成',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

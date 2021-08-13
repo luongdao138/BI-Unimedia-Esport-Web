@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Grid, Box, Icon, Typography } from '@material-ui/core'
+import { Grid, Box, Icon, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -44,6 +44,11 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
 
   const isFollowing = false
   const { isAuthenticated } = useCommunityDetail()
+
+  const router = useRouter()
+  const _theme = useTheme()
+  const { community_id } = router.query
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   const handleReportOpen = () => {
     // setOpenReport(true)
@@ -125,9 +130,6 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
     }
   }
 
-  const router = useRouter()
-  const { community_id } = router.query
-
   const toCreateTopic = () => {
     router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, community_id.toString()))
   }
@@ -142,15 +144,19 @@ const DetailInfo: React.FC<Props> = ({ detail }) => {
           <Box />
           <Box>
             <Fab
-              variant="extended"
-              size="medium"
+              variant={isMobile ? 'round' : 'extended'}
+              size="large"
               color="primary"
               aria-label="add"
               className={classes.commentIcon}
               onClick={() => toCreateTopic()}
             >
-              <AddCommentIcon className={classes.addCommentIcon} />
-              <Typography className={classes.addCommentText}>{t('common:topic_create.title')}</Typography>
+              <Box className={classes.boxContainer}>
+                <AddCommentIcon className={classes.addCommentIcon} />
+                <Typography className={classes.addCommentText}>
+                  {isMobile ? t('common:community.topic_creation') : t('common:topic_create.title')}
+                </Typography>
+              </Box>
             </Fab>
           </Box>
         </Box>
@@ -198,6 +204,10 @@ const useStyles = makeStyles((theme) => ({
       borderColor: '#d600fd',
       boxShadow: '0 0 10px #d600fd',
     },
+    '&.MuiFab-root': {
+      width: 220,
+      height: 50,
+    },
   },
   addCommentIcon: {
     transform: 'scaleX(-1)',
@@ -213,6 +223,30 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'sticky',
     bottom: theme.spacing(4),
+  },
+  boxContainer: {
+    display: 'flex',
+  },
+  [theme.breakpoints.down('sm')]: {
+    commentIcon: {
+      '&.MuiFab-root': {
+        width: 99,
+        height: 99,
+      },
+    },
+    addCommentIcon: {
+      fontSize: 30,
+      margin: theme.spacing(0),
+    },
+    addCommentText: {
+      fontSize: 10,
+      margin: theme.spacing(0),
+    },
+    boxContainer: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   },
 }))
 

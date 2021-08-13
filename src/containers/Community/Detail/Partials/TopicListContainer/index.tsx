@@ -151,6 +151,7 @@ const InfoContainer: React.FC = () => {
 }
 const useStyles = makeStyles(() => ({
   pagination: {
+    zIndex: 1,
     '& .MuiPaginationItem-root': {
       color: Colors.white,
     },

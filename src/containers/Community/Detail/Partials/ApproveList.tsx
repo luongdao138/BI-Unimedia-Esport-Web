@@ -14,8 +14,6 @@ const Participants: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  /* const [selectedParticipant, setSelectedParticipant] = useState(false)
-  const [members, setMembers] = useState([]) */
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -24,15 +22,6 @@ const Participants: React.FC = () => {
   const handleClose = () => {
     setOpen(false)
   }
-
-  /* useEffect(() => {
-    setMembers(dummyData)
-  }, []) */
-
-  /* const userData = (participant) => {
-    const _user = participant.attributes.user
-    return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
-  } */
 
   const dummy_data = [
     {
