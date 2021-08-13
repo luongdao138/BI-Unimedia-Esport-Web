@@ -5,8 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
 import { LoginSocialParams } from '@services/auth.service'
+import { useCookies } from 'react-cookie'
 
 import { genRanHex } from '@utils/helpers/CommonHelper'
+import { useRouter } from 'next/router'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import { ESRoutes } from '@constants/route.constants'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -51,7 +55,6 @@ const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => 
   const { t } = useTranslation(['common'])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ...props } = rest
-
   return (
     <Button
       classes={{
@@ -121,6 +124,20 @@ type LineButtonProps = { onSuccess?: (param: LoginSocialParams) => void } & Butt
 
 const LineButton: React.FC<LineButtonProps> = ({ onSuccess, ...rest }) => {
   const [authCode, setAuthCode] = useState<string | undefined>()
+  const router = useRouter()
+  const { hasUCRReturnHref } = useReturnHref()
+  const [_cookies, setCookie, removeCookie] = useCookies(['loginType', 'redirectTo'])
+
+  useEffect(() => {
+    _cookies
+    setCookie('loginType', router.asPath, { path: '/' })
+    setCookie('redirectTo', hasUCRReturnHref ? router.query._UCR_return_href : ESRoutes.HOME, { path: '/' })
+    return function () {
+      removeCookie('loginType', { path: '/' })
+      removeCookie('redirectTo', { path: '/' })
+    }
+  }, [])
+
   const handleAuthorize = async () => {
     const popup = openPopup()
     popup.location.replace(
