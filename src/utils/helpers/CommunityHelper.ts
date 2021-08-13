@@ -1,5 +1,6 @@
 import { T_TYPE } from '@constants/community.constants'
 import { FormType } from '@containers/Community/UpsertForm/FormModel/FormType'
+import { FormType as TopicFormType } from '@containers/Community/Topic/UpsertForm/FormModel/FormType'
 import { FormikErrors } from 'formik'
 import _ from 'lodash'
 
@@ -29,13 +30,13 @@ const checkCommunityRequiredFields = (errors: FormikErrors<FormType>): boolean =
   return _.isEmpty(filteredErrors)
 }
 
-const checkTopicRequiredFields = (errors: FormikErrors<FormType>): boolean => {
+const checkTopicRequiredFields = (errors: FormikErrors<TopicFormType>): boolean => {
   const { stepOne } = errors
 
   const requiredFieldErrors = []
   if (stepOne) {
     requiredFieldErrors.push(stepOne.title)
-    requiredFieldErrors.push(stepOne.participation_approval)
+    requiredFieldErrors.push(stepOne.overview)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

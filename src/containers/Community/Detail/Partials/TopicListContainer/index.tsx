@@ -120,7 +120,7 @@ const InfoContainer: React.FC = () => {
     return event
   }
 
-  const chunks = (arr, chunkSize, index) => {
+  const chunks = (arr, index) => {
     const chunk_array = []
     for (let i = 0; i < arr.length; i += chunkSize) chunk_array.push(arr.slice(i, i + chunkSize))
     return chunk_array[index - 1]
@@ -130,7 +130,7 @@ const InfoContainer: React.FC = () => {
     <>
       <Box mt={2} />
 
-      {chunks(dummy_data, chunkSize, page).map((d, i) => {
+      {chunks(dummy_data, page).map((d, i) => {
         return (
           <TopicRowItem key={i} title={d.title} mail={d.mail} description={d.description} date={d.date} comment_number={d.comment_number} />
         )
