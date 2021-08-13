@@ -687,33 +687,45 @@ body {
   top: 60px;
   position: fixed;
   left: 0;
-  width: 480px;
   height: 100%;
   border-right: 1px solid #70707070;
   will-change: transform;
+  max-width: calc((100% - 802px) / 2);
+  width: 100%;
 }
 
 .streamer_main {
-  padding-left: 480px;
   width: 100%;
   display: flex;
   flex-direction: row;
   min-height: 100vh;
+  padding-left: calc((100% - 802px) / 2);
+  background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
 }
 
 .streamer_aside_right {
-  width: 398px;
   padding-top: 60px;
-  background-color: #0a0a0a;
-  border-left: 1px solid #70707070;
+  background-color: #000;
+  position: relative;
+  max-width: 100%;
+  height: 100vh;
+  justify-content: flex-start;
+  display: flex;
+  z-index: 100;
 }
 
 .streamer_content_wrapper {
-  background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
-  flex: 1;
+  max-width: 802px;
   padding-top: 60px;
   position: relative;
-  flex-grow: 1;
+  width: 100%;
+}
+
+.main_wrapper {
+  display: flex;
+  min-height: 400px;
+  background: #000;
+  justify-content: flex-end;
 }
 
 .not_streamer_aside_left {
@@ -744,6 +756,28 @@ body {
     }
   }
 }
+
+.streamer_content {
+  min-height: calc(100vh - 195px);
+}
+
+@media (max-width: 1200px) {
+  .streamer_aside_left {
+    width: 200px;
+    max-width: 200px;
+  }
+
+  .streamer_main {
+    padding-left: 200px;
+  }
+}
+
+@media (max-width: 1166px) {
+  .streamer_content_wrapper {
+    max-width: 660px;
+  }
+}
+
 @media (max-width: 960px) {
   .not_streamer_aside_left {
     display: none;
@@ -756,14 +790,32 @@ body {
   .not_streamer_main {
     padding-left: 0px;
   }
+
+  .streamer_aside_right {
+    display: none;
+  }
+
+  .streamer_main {
+    max-width: 100%;
+    padding-left: 0;
+  }
+
+  .streamer_content_wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .streamer_content {
+    min-height: calc(100vh - 264px);
+  }
 }
 
 @media (max-width: 768px) {
   .streamer_main {
-    padding-left: 0px;
+    // padding-left: 0px;
   }
 
   .streamer_aside_right {
-    width: 150px;
+    // width: 150px;
   }
 }

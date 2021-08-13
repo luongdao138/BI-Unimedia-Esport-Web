@@ -23,9 +23,10 @@ import AppDialog from '@containers/SideMenu/AppDialog'
 interface StreamSideMenuProps {
   minimizeLayout?: boolean
   isStreamer: boolean
+  isExpandEffect?: boolean
 }
 
-const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer }) => {
+const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStreamer, isExpandEffect }) => {
   const [modal, setModal] = useState(false)
   const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
@@ -62,7 +63,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
     <>
       <Box
         className={
-          classes.menu + getAddClass(classes.noMinimizeMenu, classes.minimizeMenu) + (isStreamer ? ' ' + classes.streamerMenu : '')
+          classes.menu + (isExpandEffect ? ' ' + classes.expandEffectMenu : '') + getAddClass(classes.noMinimizeMenu, classes.minimizeMenu)
         }
       >
         {minimizeLayout ? (
@@ -234,7 +235,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:logout')} />}
             </ListItem>
           )}
-          {!downSm && !minimizeLayout && <SideFooter handleAppModal={handleAppModal} />}
+          {!downSm && !minimizeLayout && (
+            <Box className={classes.wrap_footer}>
+              <SideFooter handleAppModal={handleAppModal} />
+            </Box>
+          )}
         </Box>
       </Box>
 
@@ -319,16 +324,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     minHeight: '100vh',
+    background: '#000',
   },
   noMinimizeMenu: {
     alignItems: 'flex-end',
     flexDirection: 'column',
     paddingBottom: '66px',
   },
-  streamerMenu: {
-    [theme.breakpoints.up('lg')]: {
-      background: Colors.black_card,
-    },
+  expandEffectMenu: {
+    background: 'none',
   },
   minimizeMenu: {
     background: Colors.black_card,
@@ -442,6 +446,9 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '10px',
     marginBottom: '0px',
   },
+  wrap_footer:{
+    paddingLeft: 17,
+  }
 }))
 
 const ListItem = withStyles({
@@ -476,6 +483,7 @@ const ListItem = withStyles({
 
 StreamSideMenu.defaultProps = {
   minimizeLayout: false,
+  isExpandEffect: false,
 }
 
 export default StreamSideMenu
