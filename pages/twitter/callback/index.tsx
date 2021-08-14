@@ -15,8 +15,9 @@ export const getServerSideProps: GetServerSideProps<LoginSocialParams | {}, Pars
 
 const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
   const router = useRouter()
-  const { cookies, login, meta, resetMeta } = useSocialLogin('')
-  const type = cookies.loginType === '/login' ? 'login' : 'register'
+  const { login, meta, resetMeta } = useSocialLogin('')
+  const type = router.query.type === 'login' ? 'login' : 'register'
+  const redirect = router.query.redirectTo === '/' ? ESRoutes.HOME : router.query.redirectTo
 
   useEffect(() => {
     const getAccessToken = async (): Promise<LoginSocialParams> => {
@@ -38,7 +39,7 @@ const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
       if (type === 'register') {
         router.push(ESRoutes.REGISTER_PROFILE)
       } else {
-        router.push(cookies.redirectTo === '/' ? ESRoutes.HOME : cookies.redirectTo)
+        router.push(redirect.toString())
       }
     } else if (meta.error) {
       handleError()
@@ -46,7 +47,7 @@ const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
   }, [meta])
 
   const handleError = () => {
-    if (cookies.loginType === 'login') {
+    if (type) {
       router.push(ESRoutes.LOGIN)
     } else {
       router.push(ESRoutes.REGISTER)

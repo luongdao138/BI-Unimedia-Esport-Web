@@ -113,15 +113,17 @@ const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => 
 ESButtonLine.defaultProps = {
   variant: 'contained',
 }
-type LineButtonProps = ButtonProps
+type LineButtonProps = { lineButtonType: 'login' | 'register'; redirectTo: string | string[] } & ButtonProps
 
-const LineButton: React.FC<LineButtonProps> = ({ ...rest }) => {
+const LineButton: React.FC<LineButtonProps> = ({ lineButtonType, redirectTo, ...rest }) => {
   const router = useRouter()
   const handleAuthorize = async () => {
     router.push(
       `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
         process.env.NEXT_PUBLIC_LINE_CLIENT_ID
-      }&scope=profile%20openid%20email&state=${genRanHex(6)}&redirect_uri=${process.env.NEXT_PUBLIC_LINE_CALLBACK}`
+      }&scope=profile%20openid%20email&state=${genRanHex(6)}&redirect_uri=${
+        process.env.NEXT_PUBLIC_LINE_CALLBACK
+      }?redirectTo=${redirectTo}type${lineButtonType}`
     )
   }
 

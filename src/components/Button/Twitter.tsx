@@ -68,15 +68,15 @@ ESButtonTwitter.defaultProps = {
   variant: 'contained',
 }
 
-type TwitterButtonProps = ButtonProps
+type TwitterButtonProps = { twitterButtonType: 'login' | 'register'; redirectTo: string | string[] } & ButtonProps
 
-const TwitterButton: React.FC<TwitterButtonProps> = ({ ...rest }) => {
+const TwitterButton: React.FC<TwitterButtonProps> = ({ twitterButtonType, redirectTo, ...rest }) => {
   const router = useRouter()
   const handleAuthorize = async () => {
     try {
       const { data } = await axios.get<{
         oauth_token: string
-      }>('/api/twitter/oauth_token')
+      }>(`/api/twitter/oauth_token?type=${twitterButtonType}&redirect=${redirectTo}`)
       router.push(`https://api.twitter.com/oauth/authorize?oauth_token=${data.oauth_token}`)
       // eslint-disable-next-line no-empty
     } catch (error) {}
