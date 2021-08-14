@@ -31,6 +31,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 let activeTabIndex = 0
 
@@ -89,6 +90,11 @@ const TournamentCreate: React.FC = () => {
     activeTabIndex = 0
     setTab(0)
     formik.validateForm()
+
+    if (!isEdit) {
+      formik.setFieldValue('stepThree.acceptance_start_date', CommonHelper.nearestFutureMinutes(5))
+      formik.setFieldValue('stepThree.end_date', CommonHelper.startOfNextDay())
+    }
   }, [])
 
   useEffect(() => {
@@ -292,7 +298,7 @@ const TournamentCreate: React.FC = () => {
                 <Box py={4} className={classes.formContainer}>
                   {tab == 0 && <StepOne formik={formik} hardwares={hardwares} editables={editables} />}
                   {tab == 1 && <StepTwo formik={formik} editables={editables} />}
-                  {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} isEdit={isEdit} />}
+                  {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} />}
                   {tab == 3 && <StepFour formik={formik} user={user} editables={editables} />}
                 </Box>
               </>
