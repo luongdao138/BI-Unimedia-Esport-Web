@@ -207,7 +207,6 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
                 </>
               }
             />
-            <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
           </Box>
           {renderLoader()}
           {open ? (
