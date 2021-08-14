@@ -6,6 +6,7 @@ export enum TOURNAMENT_ACTION_TYPE {
   TOURNAMENT_FOLLOWERS = 'tournament/tournamentFollowers',
   TOURNAMENT_RESULTS = 'tournament/tournamentResults',
   RECRUITING_TOURNAMENT = 'tournament/recruiting',
+  TEAM_MEMBER_FOLLOW_STATE_CHANGED = 'tournament/TEAM_MEMBER_FOLLOW_STATE_CHANGED',
 }
 
 export interface TeamMemberSelectItem {

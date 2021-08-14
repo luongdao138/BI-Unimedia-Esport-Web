@@ -17,13 +17,27 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import { Colors } from '@theme/colors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import useGetProfile from '@utils/hooks/useGetProfile'
+import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
+import useInterval from '@utils/hooks/useInterval'
+import { useRouter } from 'next/router'
+import moment from 'moment'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { matches, third_place_match, fetchMatches, roundTitles, meta: matchesMeta, handleBack } = useTournamentMatches()
+  const {
+    matches,
+    third_place_match,
+    fetchMatches,
+    roundTitles,
+    meta: matchesMeta,
+    handleBack,
+    setScore,
+    scoreMeta,
+  } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
   const { isModerator } = useArenaHelper(tournament)
@@ -31,6 +45,20 @@ const ArenaMatches: React.FC = () => {
   const [showRandomize, setShowRandomize] = useState(false)
   const [showFreeze, setShowFreeze] = useState(false)
   const [data, setData] = useState<any>()
+  const [scoreMatch, setScoreMatch] = useState()
+  const { userProfile } = useGetProfile()
+
+  const router = useRouter()
+  const startDate = moment(tournament?.attributes?.start_date).add(1, 'minutes')
+  const intervalSeconds = 30
+  const delay = intervalSeconds * 1000
+
+  useInterval(() => {
+    const currentDate = moment()
+    const diffSeconds = startDate.diff(currentDate, 'seconds')
+
+    if (diffSeconds < 0 && Math.abs(diffSeconds) <= intervalSeconds) router.reload()
+  }, delay)
 
   useEffect(() => {
     if (tournament) {
@@ -45,7 +73,35 @@ const ArenaMatches: React.FC = () => {
   }, [randomizeMeta.loaded])
 
   const onMatchClick = (match) => {
-    if (match && match.round_no == 0 && isModerator && !tournament.attributes.is_freezed) setSelectedMatch(match)
+    if (match && match.round_no == 0 && isModerator) {
+      if (tournament.attributes.is_freezed) {
+        setScoreMatch(match)
+      } else {
+        setSelectedMatch(match)
+      }
+    }
+  }
+
+  const scoreDialog = () => {
+    if (!scoreMatch || !tournament) return
+
+    const data = tournament.attributes
+    const isTeam = data.participant_type > 1
+    const teamIds = _.map(data.my_info, (team: any) => team.team_id)
+    const targetIds = isTeam ? teamIds : [Number(userProfile?.id)]
+    return (
+      <ScoreModal
+        targetIds={targetIds}
+        meta={scoreMeta}
+        tournament={tournament}
+        selectedMatch={scoreMatch}
+        handleSetScore={(params) => setScore({ ...params, hash_key: tournament.attributes.hash_key })}
+        handleClose={(refresh) => {
+          if (refresh) fetchMatches()
+          setScoreMatch(undefined)
+        }}
+      />
+    )
   }
 
   const getMatch = (headerText, _match, round) => {
@@ -152,6 +208,8 @@ const ArenaMatches: React.FC = () => {
               setSelectedMatch(undefined)
             }}
           />
+
+          {scoreDialog()}
         </div>
         <RandomizeDialog
           open={showRandomize}

@@ -31,6 +31,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 let activeTabIndex = 0
 
@@ -62,7 +63,7 @@ const TournamentCreate: React.FC = () => {
         ...values.stepThree,
         ...values.stepFour,
         co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
-        game_title_id: values.stepOne.game_title_id[0].id,
+        game_title_id: _.get(values, 'stepOne.game_title_id[0].id'),
         area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
       }
       if (isEdit) {
@@ -89,6 +90,11 @@ const TournamentCreate: React.FC = () => {
     activeTabIndex = 0
     setTab(0)
     formik.validateForm()
+
+    if (!isEdit) {
+      formik.setFieldValue('stepThree.acceptance_start_date', CommonHelper.nearestFutureMinutes(5))
+      formik.setFieldValue('stepThree.end_date', CommonHelper.startOfNextDay())
+    }
   }, [])
 
   useEffect(() => {

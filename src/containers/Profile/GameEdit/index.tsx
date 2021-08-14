@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nextBtnHolder: {
     display: 'flex',
-    marginBottom: theme.spacing(11),
+    marginBottom: theme.spacing(5),
     marginTop: theme.spacing(3),
     justifyContent: 'center',
   },

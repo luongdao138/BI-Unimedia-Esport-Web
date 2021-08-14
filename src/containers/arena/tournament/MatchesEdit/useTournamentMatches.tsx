@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as actions from '@store/arena/actions'
 import * as selectors from '@store/arena/selectors'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { TournamentMatchRound } from '@services/arena.service'
+import { SetScoreParams, TournamentMatchRound } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
@@ -12,6 +12,7 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
+const setScoreMeta = createMetaSelector(actions.setScore)
 
 type RoundTitles = { matches: string[]; third_place_match: string[] }
 
@@ -22,6 +23,8 @@ const useTournamentMatches = (): {
   fetchMatches: () => void
   roundTitles: RoundTitles
   handleBack: () => void
+  setScore: (params: SetScoreParams) => void
+  scoreMeta: Meta
 } => {
   const { t } = useTranslation(['common'])
   const { query, push, back } = useRouter()
@@ -32,6 +35,8 @@ const useTournamentMatches = (): {
   const isAuth = useAppSelector(getIsAuthenticated)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
+  const scoreMeta = useAppSelector(setScoreMeta)
+
   useEffect(() => {
     if (isNotHeld || isBattleRoyale) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
   }, [isNotHeld, isBattleRoyale])
@@ -70,6 +75,8 @@ const useTournamentMatches = (): {
 
   const handleBack = () => back()
 
+  const setScore = (param: SetScoreParams) => dispatch(actions.setScore(param))
+
   return {
     matches,
     third_place_match,
@@ -77,6 +84,8 @@ const useTournamentMatches = (): {
     fetchMatches,
     roundTitles,
     handleBack,
+    setScore,
+    scoreMeta,
   }
 }
 

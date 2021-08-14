@@ -1,5 +1,4 @@
 import { TournamentDetail } from '@services/arena.service'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { FormType } from './FormType'
 
 export const getInitialValues = (data?: TournamentDetail): FormType => ({
@@ -24,8 +23,8 @@ export const getInitialValues = (data?: TournamentDetail): FormType => ({
   },
   stepThree: {
     start_date: data ? data.attributes.start_date : null,
-    end_date: data ? data.attributes.end_date : CommonHelper.startOfNextDay(),
-    acceptance_start_date: data ? data.attributes.acceptance_start_date : CommonHelper.nearestFutureMinutes(5),
+    end_date: data ? data.attributes.end_date : null,
+    acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
     acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
     area_id: data ? data.attributes.area_id : 1,
     address: data ? data.attributes.address : '',
