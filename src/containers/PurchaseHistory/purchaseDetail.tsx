@@ -227,14 +227,6 @@ const PurchaseDetail: React.FC = () => {
                 </div>
               </Typography>
             </Link>
-            <Link href="https://support.exelab.jp/hc/ja" underline={'none'} target="_blank">
-              <Typography className={classes.questions}>
-                {t('common:purchase_history.help_purchase')}{' '}
-                <div className={classes.link}>
-                  <LinkIcon />
-                </div>
-              </Typography>
-            </Link>
           </Box>
         </div>
       ) : (
