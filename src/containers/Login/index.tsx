@@ -83,7 +83,7 @@ const LoginContainer: React.FC = () => {
             </Box>
             <ESButtonTwitter fullWidth disabled={!isAgreementChecked} />
             <ESButtonGoogle onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
-            <ESButtonLine onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
+            <ESButtonLine fullWidth disabled={!isAgreementChecked} />
             <ESButtonFacebook onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
             <ESButtonApple onSuccess={handleSocialLogin} fullWidth disabled={!isAgreementChecked} />
           </Box>
