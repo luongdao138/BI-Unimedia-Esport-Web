@@ -22,6 +22,7 @@ const useSocialLogin = (
     loginType?: any
     redirectTo?: any
   }
+  clearCookies: () => void
 } => {
   const dispatch = useAppDispatch()
   const { handleLogin, navigateScreen } = useReturnHref()
@@ -34,7 +35,10 @@ const useSocialLogin = (
     dispatch(loginSocial(param))
   }
 
-  const resetMeta = () => dispatch(clearMetaData(loginSocial.typePrefix))
+  const resetMeta = () => {
+    clearCookies()
+    dispatch(clearMetaData(loginSocial.typePrefix))
+  }
 
   useEffect(() => {
     if (type !== '') {
@@ -42,8 +46,7 @@ const useSocialLogin = (
       setCookie('redirectTo', hasUCRReturnHref ? router.query._UCR_return_href : ESRoutes.HOME, { path: '/' })
     }
     return function () {
-      removeCookie('loginType')
-      removeCookie('redirectTo')
+      clearCookies()
     }
   }, [])
 
@@ -51,12 +54,15 @@ const useSocialLogin = (
     if (meta.loaded) {
       if (type === 'login') handleLogin()
       if (type === 'register') navigateScreen(ESRoutes.REGISTER_PROFILE)
-      removeCookie('loginType')
-      removeCookie('redirectTo')
       resetMeta()
     }
   }, [meta])
-  return { meta, login, resetMeta, cookies }
+
+  const clearCookies = () => {
+    removeCookie('loginType')
+    removeCookie('redirectTo')
+  }
+  return { meta, login, resetMeta, cookies, clearCookies }
 }
 
 export default useSocialLogin
