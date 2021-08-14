@@ -8,25 +8,15 @@ import ESInputDatePicker from '@components/InputDatePicker'
 import ESFastInput from '@components/FastInput'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
-import { useEffect } from 'react'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type Props = {
   formik: FormikProps<FormType>
   prefectures: GetPrefecturesResponse
   editables: EditableTypes
-  isEdit: boolean
 }
 
-const StepThree: React.FC<Props> = ({ formik, prefectures, editables, isEdit }) => {
+const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
   const classes = useStyles()
-
-  useEffect(() => {
-    if (!isEdit) {
-      formik.setFieldValue('stepThree.acceptance_start_date', CommonHelper.nearestFutureMinutes(5))
-      formik.setFieldValue('stepThree.end_date', CommonHelper.startOfNextDay())
-    }
-  }, [])
 
   return (
     <Box pb={9}>
