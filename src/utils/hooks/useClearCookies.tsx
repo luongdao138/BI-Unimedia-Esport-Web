@@ -17,7 +17,7 @@ export const useClearCookies = () => {
         clearCookies()
         break
     }
-  }, [pathname])
+  }, [])
   const clearCookies = () => {
     removeCookie('loginType')
     removeCookie('redirectTo')
