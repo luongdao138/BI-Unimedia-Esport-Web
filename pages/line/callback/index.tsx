@@ -16,15 +16,20 @@ interface LineCallbackPage extends GetLineAccessTokenResponse {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const getServerSideProps: GetServerSideProps<LineCallbackPage | {}, ParsedUrlQuery> = async (context) => {
-  const { loginType, redirectTo } = cookies(context)
-  const type = loginType === '/login' ? 'login' : 'register'
-  const res = await getLineAccessToken(context.query.code)
-  return { props: { ...res, loginType: type, redirectTo: redirectTo || ESRoutes.HOME } }
+  if (context.query.code) {
+    const { loginType, redirectTo } = cookies(context)
+    const type = loginType === '/login' ? 'login' : 'register'
+    const res = await getLineAccessToken(context.query.code)
+    return { props: { ...res, loginType: type, redirectTo: redirectTo || ESRoutes.HOME } }
+  }
+  return {
+    props: {},
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo, loginType }) => {
-  const social = useSocialLogin('')
+  const { cookies, login, meta, resetMeta } = useSocialLogin('')
   const router = useRouter()
   useEffect(() => {
     if (access_token) {
@@ -33,21 +38,26 @@ const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo
         access_token: access_token,
         type: loginType,
       }
-      social.login(params)
+      login(params)
     }
   }, [access_token])
   useEffect(() => {
-    if (social.meta.loaded) {
-      router.push(redirectTo || ESRoutes.HOME)
-      social.resetMeta()
-    } else if (social.meta.error) {
-      if (loginType === 'login') {
+    if (meta.loaded) {
+      resetMeta()
+      if (loginType === 'register') {
+        router.push(ESRoutes.REGISTER_PROFILE)
+      } else {
+        router.push(redirectTo === '/' ? ESRoutes.HOME : redirectTo)
+      }
+    } else if (meta.error) {
+      if (cookies.loginType === 'login') {
         router.push(ESRoutes.LOGIN)
       } else {
         router.push(ESRoutes.REGISTER)
       }
     }
-  }, [social.meta])
+  }, [meta])
+
   return <FullScreenLoader open />
 }
 

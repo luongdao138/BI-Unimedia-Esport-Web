@@ -14,8 +14,10 @@ export const getServerSideProps: GetServerSideProps<LoginSocialParams | {}, Pars
 }
 
 const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
-  const social = useSocialLogin('')
   const router = useRouter()
+  const { cookies, login, meta, resetMeta } = useSocialLogin('')
+  const type = cookies.loginType === '/login' ? 'login' : 'register'
+
   useEffect(() => {
     const getAccessToken = async (): Promise<LoginSocialParams> => {
       const { data } = await axios.post<LoginSocialParams>('/api/twitter/token', { data: location.search })
@@ -23,8 +25,7 @@ const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
     }
     getAccessToken()
       .then((data) => {
-        const type = social.cookies.loginType === '/login' ? 'login' : 'register'
-        social.login({ ...data, social_channel: 'twitter', type })
+        login({ ...data, social_channel: 'twitter', type })
       })
       .catch((_e) => {
         handleError()
@@ -32,16 +33,20 @@ const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
   }, [location.search])
 
   useEffect(() => {
-    if (social.meta.loaded) {
-      router.push(social.cookies.redirectTo || ESRoutes.HOME)
-      social.resetMeta()
-    } else if (social.meta.error) {
+    if (meta.loaded) {
+      resetMeta()
+      if (type === 'register') {
+        router.push(ESRoutes.REGISTER_PROFILE)
+      } else {
+        router.push(cookies.redirectTo === '/' ? ESRoutes.HOME : cookies.redirectTo)
+      }
+    } else if (meta.error) {
       handleError()
     }
-  }, [social.meta])
+  }, [meta])
 
   const handleError = () => {
-    if (social.cookies.loginType === 'login') {
+    if (cookies.loginType === 'login') {
       router.push(ESRoutes.LOGIN)
     } else {
       router.push(ESRoutes.REGISTER)
