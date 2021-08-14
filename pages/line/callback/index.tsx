@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps<LineCallbackPage | {}, Parse
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo, loginType }) => {
-  const social = useSocialLogin(loginType || 'login')
+  const social = useSocialLogin('')
   const router = useRouter()
   useEffect(() => {
     if (access_token) {
