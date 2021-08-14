@@ -5,9 +5,7 @@ import { Box, Grid, Typography, Icon } from '@material-ui/core'
 import { Close as CloseIcon } from '@material-ui/icons'
 import ESButton from '@components/Button'
 import ButtonPrimary from '@components/ButtonPrimary'
-import ESButtonTwitter from '@components/Button/Twitter'
 import ESButtonGoogle from '@components/Button/Google'
-import ESButtonLine from '@components/Button/Line'
 import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
 import ESButtonFacebookCircle from '@components/Button/FacebookCircle'
@@ -141,12 +139,8 @@ const Atoms: PageWithLayoutType = () => {
         <ESLoader></ESLoader>
       </Box>
       <Box margin={4}>
-        <ESButtonTwitter variant="contained" fullWidth />
-        <ESButtonTwitter variant="contained" fullWidth disabled />
         <ESButtonGoogle variant="contained" fullWidth />
         <ESButtonGoogle variant="contained" fullWidth disabled />
-        <ESButtonLine variant="contained" fullWidth />
-        <ESButtonLine variant="contained" fullWidth disabled />
         <ESButtonFacebook variant="contained" fullWidth />
         <ESButtonFacebook variant="contained" fullWidth disabled />
         <ESButtonApple variant="contained" fullWidth />

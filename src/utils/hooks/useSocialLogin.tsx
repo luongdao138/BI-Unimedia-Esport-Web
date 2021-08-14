@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
-import { useCookies } from 'react-cookie'
+import { useState } from 'react'
 
 const getMeta = createMetaSelector(loginSocial)
 
@@ -18,35 +18,26 @@ const useSocialLogin = (
   meta: Meta
   login: (param: LoginSocialParams) => void
   resetMeta: () => void
-  cookies: {
-    loginType?: any
-    redirectTo?: any
-  }
-  clearCookies: () => void
+  redirectTo: string | string[]
 } => {
   const dispatch = useAppDispatch()
   const { handleLogin, navigateScreen } = useReturnHref()
   const meta = useAppSelector(getMeta)
   const router = useRouter()
   const { hasUCRReturnHref } = useReturnHref()
-  const [cookies, setCookie, removeCookie] = useCookies(['loginType', 'redirectTo'])
+  const [redirectTo, setRedirectTo] = useState<string | string[]>('')
 
   const login = (param) => {
     dispatch(loginSocial(param))
   }
 
   const resetMeta = () => {
-    clearCookies()
     dispatch(clearMetaData(loginSocial.typePrefix))
   }
 
   useEffect(() => {
     if (type !== '') {
-      setCookie('loginType', router.asPath, { path: '/' })
-      setCookie('redirectTo', hasUCRReturnHref ? router.query._UCR_return_href : ESRoutes.HOME, { path: '/' })
-    }
-    return function () {
-      clearCookies()
+      setRedirectTo(hasUCRReturnHref ? router.query._UCR_return_href : ESRoutes.HOME)
     }
   }, [])
 
@@ -58,11 +49,7 @@ const useSocialLogin = (
     }
   }, [meta])
 
-  const clearCookies = () => {
-    removeCookie('loginType')
-    removeCookie('redirectTo')
-  }
-  return { meta, login, resetMeta, cookies, clearCookies }
+  return { meta, login, resetMeta, redirectTo }
 }
 
 export default useSocialLogin

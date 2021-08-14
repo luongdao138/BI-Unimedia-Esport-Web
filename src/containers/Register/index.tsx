@@ -94,9 +94,9 @@ const RegisterContainer: React.FC = () => {
           </Box>
 
           <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
-            <ESButtonTwitter fullWidth disabled={!isAgreementChecked} />
+            <ESButtonTwitter fullWidth disabled={!isAgreementChecked} twitterButtonType="register" redirectTo={social.redirectTo} />
             <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
-            <ESButtonLine fullWidth disabled={!isAgreementChecked} />
+            <ESButtonLine fullWidth disabled={!isAgreementChecked} lineButtonType="register" redirectTo={social.redirectTo} />
             <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
             <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
           </Box>
