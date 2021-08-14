@@ -24,7 +24,8 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
   const time = CommonHelper.purchaseHistoryStaticSmartTime(date)
 
   const price = _.get(data, 'attributes.price')
-  const ticket_price = CommonHelper.formatCurrency(price)
+  const tax = Math.floor(_.get(data, 'attributes.tax', 0))
+  const ticket_price = CommonHelper.formatCurrency(price + tax)
 
   return (
     <Box
