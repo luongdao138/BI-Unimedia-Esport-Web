@@ -1,16 +1,9 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { Button, ButtonProps, SvgIcon } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { makeStyles } from '@material-ui/core/styles'
-import { LoginSocialParams } from '@services/auth.service'
-import { useCookies } from 'react-cookie'
-
 import { genRanHex } from '@utils/helpers/CommonHelper'
 import { useRouter } from 'next/router'
-import useReturnHref from '@utils/hooks/useReturnHref'
-import { ESRoutes } from '@constants/route.constants'
 
 const useStyles = makeStyles((theme) => ({
   contained: {
@@ -120,91 +113,16 @@ const ESButtonLine: React.FC<ButtonProps> = ({ classes: _classes, ...rest }) => 
 ESButtonLine.defaultProps = {
   variant: 'contained',
 }
-type LineButtonProps = { onSuccess?: (param: LoginSocialParams) => void } & ButtonProps
+type LineButtonProps = ButtonProps
 
-const LineButton: React.FC<LineButtonProps> = ({ onSuccess, ...rest }) => {
-  const [authCode, setAuthCode] = useState<string | undefined>()
+const LineButton: React.FC<LineButtonProps> = ({ ...rest }) => {
   const router = useRouter()
-  const { hasUCRReturnHref } = useReturnHref()
-  const [_cookies, setCookie, removeCookie] = useCookies(['loginType', 'redirectTo'])
-
-  useEffect(() => {
-    _cookies
-    setCookie('loginType', router.asPath, { path: '/' })
-    setCookie('redirectTo', hasUCRReturnHref ? router.query._UCR_return_href : ESRoutes.HOME, { path: '/' })
-    return function () {
-      removeCookie('loginType', { path: '/' })
-      removeCookie('redirectTo', { path: '/' })
-    }
-  }, [])
-
   const handleAuthorize = async () => {
-    const popup = openPopup()
-    popup.location.replace(
+    router.push(
       `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
         process.env.NEXT_PUBLIC_LINE_CLIENT_ID
       }&scope=profile%20openid%20email&state=${genRanHex(6)}&redirect_uri=${process.env.NEXT_PUBLIC_LINE_CALLBACK}`
     )
-    polling(popup)
-  }
-
-  useEffect(() => {
-    const getAccessToken = async (code) => {
-      const { data } = await axios.post<{ access_token }>('/api/line/token', { code })
-      return data
-    }
-    if (authCode) {
-      getAccessToken(authCode).then((data) => {
-        !!onSuccess && onSuccess({ social_channel: 'line', access_token: data.access_token })
-      })
-    }
-  }, [authCode])
-
-  const openPopup = () => {
-    const w = 600
-    const h = 600
-    const left = screen.width / 2 - w / 2
-    const top = screen.height / 2 - h / 2
-
-    return window.open(
-      '',
-      '',
-      'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' +
-        w +
-        ', height=' +
-        h +
-        ', top=' +
-        top +
-        ', left=' +
-        left
-    )
-  }
-
-  const polling = (popup) => {
-    const polling = setInterval(() => {
-      if (!popup || popup.closed || popup.closed === undefined) {
-        clearInterval(polling)
-        console.error(new Error('Popup has been closed by user'))
-      }
-
-      const closeDialog = () => {
-        clearInterval(polling)
-        popup.close()
-      }
-      try {
-        if (!popup.location.hostname.includes('access.line.me')) {
-          if (popup.location.search) {
-            const query = new URLSearchParams(popup.location.search)
-            const code = query.get('code')
-            if (code) {
-              setAuthCode(code)
-              closeDialog()
-            }
-          }
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-    }, 500)
   }
 
   return <ESButtonLine onClick={handleAuthorize} {...rest} />

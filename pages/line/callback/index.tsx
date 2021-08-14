@@ -16,18 +16,15 @@ interface LineCallbackPage extends GetLineAccessTokenResponse {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const getServerSideProps: GetServerSideProps<LineCallbackPage | {}, ParsedUrlQuery> = async (context) => {
-  if (context.query.liffClientId) {
-    const { loginType, redirectTo } = cookies(context)
-    const type = loginType === '/login' ? 'login' : 'register'
-    const res = await getLineAccessToken(context.query.code)
-    return { props: { ...res, loginType: type, redirectTo: redirectTo || ESRoutes.HOME } }
-  }
-  return { props: {} }
+  const { loginType, redirectTo } = cookies(context)
+  const type = loginType === '/login' ? 'login' : 'register'
+  const res = await getLineAccessToken(context.query.code)
+  return { props: { ...res, loginType: type, redirectTo: redirectTo || ESRoutes.HOME } }
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const LineCallbackPage: React.FC<LineCallbackPage> = ({ access_token, redirectTo, loginType }) => {
-  const social = useSocialLogin(loginType || 'login')
+  const social = useSocialLogin('')
   const router = useRouter()
   useEffect(() => {
     if (access_token) {
