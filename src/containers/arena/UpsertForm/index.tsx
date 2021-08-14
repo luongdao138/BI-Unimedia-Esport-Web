@@ -292,7 +292,7 @@ const TournamentCreate: React.FC = () => {
                 <Box py={4} className={classes.formContainer}>
                   {tab == 0 && <StepOne formik={formik} hardwares={hardwares} editables={editables} />}
                   {tab == 1 && <StepTwo formik={formik} editables={editables} />}
-                  {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} />}
+                  {tab == 2 && <StepThree formik={formik} prefectures={prefectures} editables={editables} isEdit={isEdit} />}
                   {tab == 3 && <StepFour formik={formik} user={user} editables={editables} />}
                 </Box>
               </>
