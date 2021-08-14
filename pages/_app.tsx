@@ -26,7 +26,6 @@ import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
-import useClearCookies from '@utils/hooks/useClearCookies'
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -45,7 +44,6 @@ const App = ({ Component, pageProps }: Props) => {
   const accessToken = store.getState().auth.user?.accessToken
   authorizationProvider(store)
   useNgWords(store)
-  useClearCookies()
   useEffect(() => {
     store.dispatch({
       type: `${WEBSOCKET_PREFIX}:CONNECT`,
