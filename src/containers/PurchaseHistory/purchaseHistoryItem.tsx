@@ -53,7 +53,7 @@ const PurchaseHistoryItem: React.FC<Props> = ({ data }) => {
         <Typography>{t('purchase_history.ticket')}</Typography>
       </Box>
       <Box display="flex">
-        <Typography className={classes.title}>{t('purchase_history.unit_price')}</Typography>
+        <Typography className={classes.title}>{t('purchase_history.total_fee')}</Typography>
         <Typography>
           {ticket_price}
           {data.attributes.status == PAYMENT_STATUS.CANCELLED

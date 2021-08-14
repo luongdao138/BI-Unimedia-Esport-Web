@@ -136,15 +136,7 @@ const staticSmartTime = (time: string | number): string => {
 }
 
 const purchaseHistoryStaticSmartTime = (time: string | number): string => {
-  const timestamp = time
-  const currentDate = moment().startOf('day')
-  const given = moment(timestamp).format('YYYY-MM-DD')
-  const diff = currentDate.diff(given, 'days', false)
-  if (diff > 30) {
-    return moment(timestamp).format('YYYY/MM/DD')
-  } else {
-    return moment(timestamp).fromNow()
-  }
+  return moment(time).format('YYYY/MM/DD')
 }
 
 const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): Array<number> => {
@@ -221,12 +213,17 @@ const startOfNextDay = (): string => {
 const nearestFutureMinutes = (interval: number): string => {
   const currentDate = moment()
 
-  if (currentDate.minute() % 5 === 0) currentDate.add(1, 'minutes')
+  if (currentDate.minute() % 5 === 0) {
+    currentDate.add(5, 'minutes')
+    return currentDate.second(0).toString()
+  } else {
+    currentDate.add(5, 'minutes')
 
-  return currentDate
-    .minute(Math.ceil(currentDate.minute() / interval) * interval)
-    .second(0)
-    .toString()
+    return currentDate
+      .minute(Math.round(currentDate.minute() / interval) * interval)
+      .second(0)
+      .toString()
+  }
 }
 
 export const CommonHelper = {
