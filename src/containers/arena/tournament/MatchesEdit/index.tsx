@@ -19,6 +19,9 @@ import { Colors } from '@theme/colors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
+import useInterval from '@utils/hooks/useInterval'
+import { useRouter } from 'next/router'
+import moment from 'moment'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -44,6 +47,18 @@ const ArenaMatches: React.FC = () => {
   const [data, setData] = useState<any>()
   const [scoreMatch, setScoreMatch] = useState()
   const { userProfile } = useGetProfile()
+
+  const router = useRouter()
+  const startDate = moment(tournament?.attributes?.start_date).add(1, 'minutes')
+  const intervalSeconds = 30
+  const delay = intervalSeconds * 1000
+
+  useInterval(() => {
+    const currentDate = moment()
+    const diffSeconds = startDate.diff(currentDate, 'seconds')
+
+    if (diffSeconds < 0 && Math.abs(diffSeconds) <= intervalSeconds) router.reload()
+  }, delay)
 
   useEffect(() => {
     if (tournament) {
