@@ -221,12 +221,17 @@ const startOfNextDay = (): string => {
 const nearestFutureMinutes = (interval: number): string => {
   const currentDate = moment()
 
-  if (currentDate.minute() % 5 === 0) currentDate.add(1, 'minutes')
+  if (currentDate.minute() % 5 === 0) {
+    currentDate.add(5, 'minutes')
+    return currentDate.second(0).toString()
+  } else {
+    currentDate.add(5, 'minutes')
 
-  return currentDate
-    .minute(Math.ceil(currentDate.minute() / interval) * interval)
-    .second(0)
-    .toString()
+    return currentDate
+      .minute(Math.round(currentDate.minute() / interval) * interval)
+      .second(0)
+      .toString()
+  }
 }
 
 export const CommonHelper = {
