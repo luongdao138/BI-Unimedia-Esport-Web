@@ -23,6 +23,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import DiscardDialog from '../Partials/DiscardDialog'
 import useCommonData from './useCommonData'
 import CancelDialog from './Partials/CancelDialog'
+import { useTranslation } from 'react-i18next'
 
 // TODO used once at community edit
 type CommunityCreateProps = {
@@ -40,6 +41,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const initialValues = getInitialValues(undefined)
   const { editables, isEdit, submit } = useCommunityCreate()
   const [isDiscard, setIsDiscard] = useState(false)
+  const { t } = useTranslation(['common'])
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -182,7 +184,9 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           setIsDiscard(false)
         }}
         onSubmit={handleReturn}
-        isEdit={isEdit}
+        title={isEdit ? t('common:community_create.discard.edit_title') : t('common:community_create.discard.title')}
+        description={isEdit ? t('common:community_create.discard.edit_message') : t('common:community_create.discard.message')}
+        confirmTitle={isEdit ? t('common:community_create.discard.edit_confirm') : t('common:community_create.discard.confirm')}
       />
     </ESStickyFooter>
   )

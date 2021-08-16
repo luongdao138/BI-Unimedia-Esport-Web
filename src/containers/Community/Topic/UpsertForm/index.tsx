@@ -23,6 +23,7 @@ import { showDialog } from '@store/common/actions'
 import DiscardDialog from '../../Partials/DiscardDialog'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCommonData from './useCommonData'
+import { useTranslation } from 'react-i18next'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -35,6 +36,7 @@ const TopicCreate: React.FC = () => {
   const initialValues = getInitialValues(undefined)
   const { submit, editables } = useTopicCreate()
   const [isDiscard, setIsDiscard] = useState(false)
+  const { t } = useTranslation(['common'])
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -162,7 +164,9 @@ const TopicCreate: React.FC = () => {
           setIsDiscard(false)
         }}
         onSubmit={handleReturn}
-        isTopic
+        title={t('common:topic_create.discard.title')}
+        description={t('common:topic_create.discard.message')}
+        confirmTitle={t('common:topic_create.discard.confirm')}
       />
     </ESStickyFooter>
   )
