@@ -10,7 +10,7 @@ import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
 import { useState } from 'react'
 import { REPORT_TYPE } from '@constants/common.constants'
 import ESReport from '@containers/Report'
-import DeleteDialog from '../DeleteDialog'
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 
 type CommunityHeaderProps = {
   username: string
@@ -97,15 +97,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
             open={openReport}
             handleClose={() => setOpenReport(false)}
           />
-          <DeleteDialog
+          <DiscardDialog
             title={t('common:topic_comment.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDeleteSubmit}
-            description1={t('common:topic_comment.delete.description1')}
-            description2={t('common:topic_comment.delete.description2')}
+            description={t('common:topic_comment.delete.description')}
             confirmTitle={t('common:topic_comment.delete.submit')}
-            cancelTitle={t('common:common.cancel')}
           />
         </>
       )}

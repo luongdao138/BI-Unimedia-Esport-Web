@@ -554,8 +554,8 @@ export default {
     delete: {
       button: 'トピックの削除',
       title: 'を削除します',
-      description1: '削除したトピックはコメントも含めて復元させることはできません。',
-      description2: '削除してよろしいですか？',
+      description: `削除したトピックはコメントも含めて復元させることはできません。
+      削除してよろしいですか？`,
       submit: '削除する',
     },
   },
@@ -568,8 +568,8 @@ export default {
     delete: {
       button: 'コメントを削除',
       title: '投稿されたコメントを削除します',
-      description1: '削除したコメントを復元させることはできません。',
-      description2: '削除してよろしいですか？',
+      description: `削除したコメントを復元させることはできません。
+      削除してよろしいですか？`,
       submit: '削除する',
     },
   },
