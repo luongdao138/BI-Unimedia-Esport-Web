@@ -1,7 +1,6 @@
 import { VIDEO_DETAIL_ACTION_TYPE, VideoDetailAction, VideoDetailState } from '../actions/types'
 
 const INITIAL_STATE: VideoDetailState = {
-  detail: undefined,
   pr_detail: null,
   meta: {
     pending: false,

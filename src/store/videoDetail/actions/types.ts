@@ -26,7 +26,7 @@ interface Meta {
 }
 
 export type VideoDetailState = {
-  detail: any
+  detail?: any
   meta: Meta
   pr_detail: any
 }

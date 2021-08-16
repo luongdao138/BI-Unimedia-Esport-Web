@@ -3,7 +3,6 @@ import { STREAM_CHAT_ACTION_TYPE } from '@constants/socket.constants'
 import _ from 'lodash'
 
 const initialState: State = {
-  currentRoom: undefined,
   msgList: [],
   roomCount: { messageCount: 0, playCount: 0 },
   connected: false,
