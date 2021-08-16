@@ -683,7 +683,7 @@ body {
   }
 }
 
-.streamer_aside_left {
+.no_minimize_aside_left {
   top: 60px;
   position: fixed;
   left: 0;
@@ -694,7 +694,7 @@ body {
   width: 100%;
 }
 
-.streamer_main {
+.no_minimize_main {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -703,7 +703,7 @@ body {
   background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
 }
 
-.streamer_aside_right {
+.no_minimize_aside_right {
   padding-top: 60px;
   background-color: #000;
   position: relative;
@@ -714,7 +714,7 @@ body {
   z-index: 100;
 }
 
-.streamer_content_wrapper {
+.no_minimize_content_wrapper {
   max-width: 802px;
   padding-top: 60px;
   position: relative;
@@ -728,18 +728,24 @@ body {
   justify-content: flex-end;
 }
 
-.not_streamer_aside_left {
+.minimize_main_wrapper{
+  justify-content: flex-start;
+}
+
+.minimize_aside_left {
   top: 60px;
   position: fixed;
   left: 0;
   width: 98px;
+  border-right: 1px solid #70707070;
 }
 
-.not_streamer_main {
+.minimize_main {
   padding-left: 98px;
+  width: 100%;
 }
 
-.not_streamer_content_wrapper {
+.minimize_content_wrapper {
   padding-top: 60px;
   width: 100%;
   min-height: 100vh;
@@ -757,65 +763,55 @@ body {
   }
 }
 
-.streamer_content {
+.no_minimize_content {
   min-height: calc(100vh - 195px);
 }
 
 @media (max-width: 1200px) {
-  .streamer_aside_left {
+  .no_minimize_aside_left {
     width: 200px;
     max-width: 200px;
   }
 
-  .streamer_main {
+  .no_minimize_main {
     padding-left: 200px;
   }
 }
 
 @media (max-width: 1166px) {
-  .streamer_content_wrapper {
+  .no_minimize_content_wrapper {
     max-width: 660px;
   }
 }
 
 @media (max-width: 960px) {
-  .not_streamer_aside_left {
+  .minimize_aside_left {
     display: none;
   }
 
-  .streamer_aside_left {
+  .no_minimize_aside_left {
     display: none;
   }
 
-  .not_streamer_main {
+  .minimize_main {
     padding-left: 0px;
   }
 
-  .streamer_aside_right {
+  .no_minimize_aside_right {
     display: none;
   }
 
-  .streamer_main {
+  .no_minimize_main {
     max-width: 100%;
     padding-left: 0;
   }
 
-  .streamer_content_wrapper {
+  .no_minimize_content_wrapper {
     width: 100%;
     max-width: 100%;
   }
 
-  .streamer_content {
+  .no_minimize_content {
     min-height: calc(100vh - 264px);
-  }
-}
-
-@media (max-width: 768px) {
-  .streamer_main {
-    // padding-left: 0px;
-  }
-
-  .streamer_aside_right {
-    // width: 150px;
   }
 }
