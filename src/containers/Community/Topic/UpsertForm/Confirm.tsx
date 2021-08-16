@@ -4,7 +4,7 @@ import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import ESLabel from '@components/Label'
 import { FormType } from './FormModel/FormType'
-import { makeStyles, Box, Theme } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 
 interface ConfirmProps {
@@ -19,11 +19,9 @@ ESInput.defaultProps = {
 const Confirm: React.FC<ConfirmProps> = ({ values }) => {
   const { t } = useTranslation(['common'])
 
-  const classes = useStyles()
-
   return (
-    <Box pb={20} className={classes.viewHolder}>
-      <Box pb={8} />
+    <Box pb={9}>
+      <Box pb={4} />
       <Box>
         <ESInput labelPrimary={t('common:topic_create.name')} value={values.stepOne.title} fullWidth disabled />
       </Box>
@@ -45,21 +43,5 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
     </Box>
   )
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  viewHolder: {
-    position: 'relative',
-  },
-  [theme.breakpoints.down('sm')]: {
-    viewHolder: {
-      marginLeft: 0,
-      marginRight: 0,
-      position: 'relative',
-    },
-    mainTopic: {
-      width: '100%',
-    },
-  },
-}))
 
 export default Confirm

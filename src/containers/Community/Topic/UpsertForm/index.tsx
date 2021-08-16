@@ -133,7 +133,7 @@ const TopicCreate: React.FC = () => {
         </>
       }
     >
-      <Box className={!isConfirm && classes.container}>
+      <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box pt={7.5} pb={9} className={isConfirm ? classes.topContainerConfirm : classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
             <IconButton className={classes.iconButtonBg} onClick={handleBack}>
@@ -177,7 +177,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 66,
     marginRight: 66,
   },
-
+  containerConfirm: {
+    marginLeft: 0,
+    marginRight: 0,
+  },
   footerButton: {
     width: 'fit-content',
     alignSelf: 'center',
@@ -220,9 +223,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingTop: theme.spacing(4),
+      marginLeft: 0,
+      marginRight: 0,
+    },
+    containerConfirm: {
+      paddingTop: theme.spacing(4),
+      marginLeft: 0,
+      marginRight: 0,
     },
     topContainer: {
       paddingTop: 0,
+    },
+    topContainerConfirm: {
+      paddingTop: 0,
+      paddingBottom: 0,
+      marginLeft: 0,
     },
     reviewButtonContainer: {
       display: 'flex',
