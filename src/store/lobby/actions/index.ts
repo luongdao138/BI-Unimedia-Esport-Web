@@ -58,3 +58,18 @@ export const cancelLobby = createAsyncThunk<services.EntryLobbyResponse, number>
     }
   }
 )
+
+export const searchLobby = createAsyncThunk<services.LobbySearchResponse, services.LobbySearchParams>(
+  LOBBY_ACTION_TYPE.LOBBY_SEARCH,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.search(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
