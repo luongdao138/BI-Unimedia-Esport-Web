@@ -6,20 +6,24 @@ export const TYPE_SETTING = {
   LIVE: 'live',
   SCHEDULE: 'schedule',
 }
-
+// type ImageFormDataValue = {
+//   uri: string
+//   type: string
+//   name: string
+// }
 export type LiveStreamSetting = {
   id: number
   uuid: string
   title: string
   description: string
   thumbnail: string
-  category: string
+  category: number
   stream_url?: string
   stream_key?: string
   ticket_price?: number
-  use_ticket?: boolean | 1 | 0
-  share_sns_flag?: boolean | 1 | 0
-  publish_flag?: boolean | 1 | 0
+  use_ticket?: boolean | number
+  share_sns_flag?: boolean | number
+  publish_flag?: boolean | number
   channel_name: string
   overview: string
   discord_url?: string
@@ -49,11 +53,11 @@ export type LiveStreamSettingResponse = {
     title: string
     description: string
     thumbnail: string
-    category: string
+    category: number
     stream_url?: string
     stream_key?: string
     ticket_price?: number
-    use_ticket?: boolean | 1 | 0
+    use_ticket?: boolean
     share_sns_flag?: boolean
     publish_flag?: boolean
     channel_name: string
@@ -90,7 +94,27 @@ export type SetLiveStreamParams = {
   status?: string
 }
 export type SetLiveStreamResponse = {
-  id: number
+  data: {
+    id?: number
+    uuid?: string
+    title?: string
+    description?: string
+    category?: number
+    use_ticket?: number
+    ticket_price?: string
+    share_sns_flag?: number
+    publish_flag?: number
+    stream_notify_time?: string
+    stream_schedule_start_time?: string
+    stream_schedule_end_time?: string
+    sell_ticket_start_time?: string
+    scheduled_flag?: string
+    stream_url?: string
+    stream_key?: string
+    status?: number
+    user_id?: string
+    thumbnail?: string
+  }
 }
 
 export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {
@@ -99,6 +123,6 @@ export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<L
 }
 
 export const setLiveSetting = async (params: SetLiveStreamParams): Promise<SetLiveStreamResponse> => {
-  const { data } = await api.post<SetLiveStreamResponse>(URI.SET_LIVE_SETTING, { params })
+  const { data } = await api.post<SetLiveStreamResponse>(URI.SET_LIVE_SETTING, params)
   return data
 }

@@ -4,8 +4,8 @@ import { Box, Typography } from '@material-ui/core'
 import { CameraAlt as Camera } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import CoverSelector from '@components/ImagePicker/CoverSelector'
 import ESLoader from '@components/Loader'
+import StreamCoverSelector from '@components/ImagePicker/StreamCoverSelector'
 
 type CoverUploaderStreamProps = {
   src: string
@@ -83,7 +83,7 @@ const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
         ) : null}
       </label>
       {open && (
-        <CoverSelector
+        <StreamCoverSelector
           src={localSrc.toString()}
           ratio={ratio}
           cancel={() => setOpen(false)}

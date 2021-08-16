@@ -4,17 +4,17 @@ import { FormLiveType } from './FormLiveSettingsType'
 
 export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveType => ({
   stepSettingOne: {
-    linkUrl: data ? data.uuid : '',
-    title: data ? (data.title ? data.title : undefined) : '',
-    description: data ? (data.description ? data.description : '') : '',
-    thumbnail: data ? data.thumbnail : '',
-    stream_url: data ? data.stream_url : '',
-    stream_key: data ? data.stream_key : '',
-    category: data ? (data.category ? data.category : -1) : -1,
-    ticket_price: data ? data.ticket_price : 0,
-    use_ticket: data ? (data.use_ticket === 1 ? true : false) : false,
-    share_sns_flag: data ? (data.share_sns_flag === 1 ? true : false) : false,
-    publish_flag: data ? (data.publish_flag === 1 ? true : false) : true,
+    linkUrl: data && data.uuid ? data.uuid : '',
+    title: data && data.title ? data.title : '',
+    description: data && data.description ? data.description : '',
+    thumbnail: data && data.thumbnail ? data.thumbnail : '',
+    stream_url: data && data.stream_url ? data.stream_url : '',
+    stream_key: data && data.stream_key ? data.stream_key : '',
+    category: data && data.category ? data.category : -1,
+    ticket_price: data && data.ticket_price ? data.ticket_price : 0,
+    use_ticket: data && data.use_ticket ? (data.use_ticket === 1 ? true : false) : false,
+    share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
+    publish_flag: data && data.share_sns_flag ? (data.publish_flag === 1 ? true : false) : true,
   },
   stepSettingTwo: {
     viewing_url: data ? data.uuid : '',
