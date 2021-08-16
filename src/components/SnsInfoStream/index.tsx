@@ -76,7 +76,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 value={values.discord_link}
                 onChange={handleChange}
                 helperText={errors.discord_link}
-                placeholder={i18n.t('common:streaming_settings_live_streaming_screen.discord_placeholder')}
+                placeholder={i18n.t('common:streaming_setting_screen.discord_placeholder')}
                 error={!!errors.discord_link}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
@@ -94,7 +94,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 onChange={handleChange}
                 helperText={errors.twitter_link}
                 error={!!errors.twitter_link}
-                placeholder={i18n.t('common:streaming_settings_live_streaming_screen.twitter_placeholder')}
+                placeholder={i18n.t('common:streaming_setting_screen.twitter_placeholder')}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />
@@ -111,7 +111,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ profile, onDataChange, ha
                 onChange={handleChange}
                 helperText={errors.instagram_link}
                 error={!!errors.instagram_link}
-                placeholder={i18n.t('common:streaming_settings_live_streaming_screen.instagram_placeholder')}
+                placeholder={i18n.t('common:streaming_setting_screen.instagram_placeholder')}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />

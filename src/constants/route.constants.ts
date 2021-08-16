@@ -40,7 +40,6 @@ export const ESRoutes = {
   PRIVACY: '/settings/privacy',
   COMMERCIAL: '/settings/commercial',
   USER_ACCOUNT_SETTINGS: '/settings/account',
-  USER_POINT_MANAGEMENT: '/settings/point_manage',
   USER_ACCOUNT_SETTINGS_PASSWORD: '/settings/account/password',
   USER_ACCOUNT_SETTINGS_CHANGE_EMAIL: '/settings/account/change-email',
   USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM: '/settings/account/confirm',
@@ -55,4 +54,12 @@ export const ESRoutes = {
   SEARCH: '/search',
   DELIVERY_MANAGEMENT: '/delivery-management',
   STREAMING_SETTINGS_LIVE_STREAMING: '/streaming-settings-live-streaming',
+  // w01-01
+  VIDEO_STREAMING_MANAGEMENT: '/video/streaming_manage',
+  // w01-02
+  VIDEO_STREAMING_SETTING: '/video/streaming_setting',
+  // w02-01
+  VIDEO_TOP: '/videos/top',
+  // w03-02
+  USER_POINT_MANAGEMENT: '/settings/points',
 }

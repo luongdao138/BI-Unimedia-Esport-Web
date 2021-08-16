@@ -16,7 +16,7 @@ enum TABS {
   DISTRIBUTOR = 2,
 }
 
-const StreamingManage: React.FC = () => {
+const StreamingSettingContainer: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(0)
@@ -38,13 +38,10 @@ const StreamingManage: React.FC = () => {
     switch (tab) {
       case TABS.LIVE_STREAM:
         return <LiveStreamContainer />
-        break
       case TABS.STREAMING_RESERVATION:
         return <StreamingReservationContainer />
-        break
       case TABS.DISTRIBUTOR:
         return <DistributorInformationContainer />
-        break
       default:
         break
     }
@@ -64,7 +61,7 @@ const StreamingManage: React.FC = () => {
     </>
   )
 }
-export default StreamingManage
+export default StreamingSettingContainer
 
 const useStyles = makeStyles(() => ({
   tabs: {
