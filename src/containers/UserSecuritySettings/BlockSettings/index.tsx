@@ -43,23 +43,16 @@ const ESBlockSettings: React.FC = () => {
   return (
     <div>
       <HeaderWithButton title={t('block_settings.title')} />
-      <InfiniteScroll
-        dataLength={blockedUsers.length}
-        next={loadMore}
-        hasMore={hasNextPage}
-        loader={
-          meta.pending && (
-            <div className={classes.loaderCenter}>
-              <ESLoader />
-            </div>
-          )
-        }
-        scrollThreshold="1px"
-      >
+      <InfiniteScroll dataLength={blockedUsers.length} next={loadMore} hasMore={hasNextPage} loader={null} scrollThreshold="1px">
         {blockedUsers.map((user, i) => (
           <BlockedUserItem actionHandler={actionHandler} data={user} key={i} />
         ))}
       </InfiniteScroll>
+      {meta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }

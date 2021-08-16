@@ -2,6 +2,8 @@ import React from 'react'
 import Avatar from '@components/Avatar'
 import { makeStyles, Box } from '@material-ui/core'
 import ESLoader from '@components/Loader'
+import { AVATAR_PATH } from '@constants/common.constants'
+import _ from 'lodash'
 
 export interface RoomImgViewProps {
   roomImg: string
@@ -12,11 +14,17 @@ export interface RoomImgViewProps {
 const RoomImgView: React.FC<RoomImgViewProps> = ({ roomImg, roomName, loading }) => {
   const classes = useStyles()
 
+  const getRoomImg = () => {
+    if (!_.isString(roomImg)) return AVATAR_PATH
+    if (roomImg.length < 2) return AVATAR_PATH
+    return roomImg
+  }
+
   const renderAvatar = () => {
     if (!loading) {
       return (
         <Box className={classes.avatarHolder}>
-          <Avatar src={roomImg} alt={roomName} size={36} className={classes.avatar} />
+          <Avatar src={getRoomImg()} alt={roomName} size={36} className={classes.avatar} />
         </Box>
       )
     }

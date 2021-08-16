@@ -12,9 +12,9 @@ import Completed from './Partials/Completed'
 import ESLoader from '@components/FullScreenLoader'
 import useArenaHelper from '../hooks/useArenaHelper'
 import BlankLayout from '@layouts/BlankLayout'
-import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
+import RegularModal from '@components/RegularModal'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -67,11 +67,11 @@ const TournamentDetail: React.FC = () => {
     <div>
       <ESLoader open={meta.pending} />
       {tournament && meta.loaded && renderBody()}
-      <ESModal open={router.asPath.endsWith('/edit')}>
+      <RegularModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
           <UpsertForm />
         </BlankLayout>
-      </ESModal>
+      </RegularModal>
     </div>
   )
 }

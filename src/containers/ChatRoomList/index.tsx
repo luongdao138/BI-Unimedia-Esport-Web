@@ -130,6 +130,7 @@ const useStyles = makeStyles(() => ({
       backgroundColor: '#222',
       borderRadius: 6,
     },
+    paddingBottom: 60,
   },
   noHover: {
     overflow: 'auto !important',

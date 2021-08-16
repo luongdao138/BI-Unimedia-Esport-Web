@@ -119,6 +119,7 @@ const ArenaBattlesEdit: React.FC = () => {
         onClick={freezable ? () => freeze(tournament.attributes.hash_key) : () => setShowRandomize(true)}
         show={data.memberSelectable}
         noScroll
+        classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
@@ -162,7 +163,7 @@ const ArenaBattlesEdit: React.FC = () => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -190,6 +191,9 @@ const useStyles = makeStyles(() => ({
   },
   pointer: {
     cursor: 'pointer',
+  },
+  buttonHolder: {
+    marginBottom: theme.spacing(3),
   },
 }))
 

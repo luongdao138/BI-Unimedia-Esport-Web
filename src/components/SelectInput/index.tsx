@@ -1,5 +1,5 @@
 import { Box, createStyles, makeStyles, Typography, CircularProgress } from '@material-ui/core'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
@@ -143,6 +143,7 @@ const useStyles = makeStyles((theme) =>
         outline: '0',
       },
     },
+    hide: { display: 'none' },
 
     [theme.breakpoints.down('sm')]: {
       listBox: {
@@ -159,9 +160,15 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
   const classes = useStyles()
   const { t } = useTranslation()
   const textRef = useRef()
+  const [show, setShow] = useState<boolean>(false)
   const inputDebounce = useCallback(
     _.debounce((keyword: string) => {
-      onSearchInput(keyword)
+      if (keyword.trim().length > 0) {
+        setShow(true)
+        onSearchInput(keyword)
+      } else if (keyword.trim().length === 0) {
+        setShow(false)
+      }
     }, 500),
     []
   )
@@ -208,7 +215,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
             </Box>
           </div>
           {groupedOptions.length > 0 ? (
-            <Box className={classes.listBox} {...getListboxProps()}>
+            <Box className={`${classes.listBox} ${show ? '' : classes.hide}`} {...getListboxProps()}>
               {groupedOptions.map((option, index) => {
                 const isSelected = getOptionProps({ option, index })['aria-selected']
                 if (!isSelected)

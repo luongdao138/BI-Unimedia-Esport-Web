@@ -35,7 +35,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const [selectedParticipant, setSelectedParticipant] = useState(null as ParticipantsResponse | null)
   const [members, setMembers] = useState([])
 
-  const { participants, getParticipants, resetParticipants, resetMeta, page, meta } = useParticipants()
+  const { participants, getParticipants, resetParticipants, resetMeta, page, meta, followStateChanged } = useParticipants()
   const { userProfile } = useGetProfile()
 
   const handleClickOpen = () => {
@@ -168,6 +168,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                           yellowTitle={isMyTeam(participant)}
                           handleClick={() => onTeamClick(participant)}
                           memberClick={() => onTeamClick(participant)}
+                          onFollowStateChange={followStateChanged}
                         />
                       </Box>
                     ))

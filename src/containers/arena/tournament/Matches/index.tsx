@@ -13,6 +13,9 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import { TournamentMatchItem } from '@services/arena.service'
 import { Colors } from '@theme/colors'
+import useInterval from '@utils/hooks/useInterval'
+import { useRouter } from 'next/router'
+import moment from 'moment'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -33,6 +36,18 @@ const ArenaMatches: React.FC = () => {
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
   const [showSummaryModal, setShowSummaryModal] = useState(false)
+
+  const router = useRouter()
+  const startDate = moment(tournament?.attributes?.start_date).add(1, 'minutes')
+  const intervalSeconds = 30
+  const delay = intervalSeconds * 1000
+
+  useInterval(() => {
+    const currentDate = moment()
+    const diffSeconds = startDate.diff(currentDate, 'seconds')
+
+    if (diffSeconds < 0 && Math.abs(diffSeconds) <= intervalSeconds) router.reload()
+  }, delay)
 
   const onMatchClick = (match) => {
     if (!match) return
@@ -113,6 +128,7 @@ const ArenaMatches: React.FC = () => {
               <Typography className={classes.notYetLabel}>{t('common:arena.match_not_yet')}</Typography>
             </Box>
           }
+          classes={{ nextBtnHolder: classes.buttonHolder }}
         >
           <Box className={classes.backContainer}>
             <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -219,5 +235,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: 'transparent',
       borderBottom: 'none',
     },
+  },
+  buttonHolder: {
+    marginBottom: theme.spacing(3),
   },
 }))

@@ -119,7 +119,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const cover = attr.cover_url ?? null
   const isFollowing = attr.is_following
 
-  const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+  const edit = () => {
+    router.push(makeContextualHref({ pathName: ESRoutes.PROFILE_EDIT }), ESRoutes.PROFILE_EDIT, { shallow: true })
+  }
   const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${attr.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
