@@ -51,7 +51,6 @@ const App = ({ Component, pageProps }: Props) => {
   const accessToken = store.getState().auth.user?.accessToken
   authorizationProvider(store)
   useNgWords(store)
-
   useEffect(() => {
     store.dispatch({
       type: `${WEBSOCKET_PREFIX}:CONNECT`,

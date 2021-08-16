@@ -9,7 +9,7 @@ class Document extends NextDocument<Props> {
     return (
       <Html>
         <Head>
-          <link rel="shortcut icon" href="/favicon.png" key="shortcutIcon" />
+          <link rel="shortcut icon" href="/favicon.ico" key="shortcutIcon" />
           <link rel="manifest" href="/manifest.json" />
           <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
           <link href="/fonts/fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet"></link>

@@ -64,6 +64,14 @@ const GameSearchByTitle: React.FC<{ children?: ReactNode }> = ({ children }) => 
           value={keyword}
           placeholder={i18n.t('common:search_by_keyword')}
           onChange={(e) => setKeyword(e.target.value)}
+          onBlur={() => {
+            setTimeout(() => {
+              document.body.classList.remove('has-sticky-div')
+            }, 100)
+          }}
+          onFocus={() => {
+            document.body.classList.add('has-sticky-div')
+          }}
           fullWidth
         />
         <Button onClick={handleClick} className={classes.searchBtn} variant="contained" color="primary">

@@ -19,8 +19,9 @@ const useParticipantDetail = () => {
   const changeMeta = useAppSelector(_changeMeta)
 
   useEffect(() => {
-    if (changeMeta.loaded) {
+    if (changeMeta.loaded && !changeMeta.error) {
       dispatch(commonActions.addToast(t('common:arena.edit_entry_success')))
+      resetChangeMeta()
     }
   }, [changeMeta.loaded])
 
@@ -32,6 +33,7 @@ const useParticipantDetail = () => {
     }
   }
   const resetMeta = () => dispatch(clearMetaData(actions.getParticipantName.typePrefix))
+  const resetChangeMeta = () => dispatch(clearMetaData(actions.changeParticipantName.typePrefix))
   const isPending = getMeta.pending || changeMeta.pending
   const changeDone = changeMeta.loaded || changeMeta.error
 

@@ -33,26 +33,21 @@ const ESPurchaseHistory: React.FC = () => {
   return (
     <div>
       {purchaseHistory.length > 0 ? (
-        <InfiniteScroll
-          dataLength={purchaseHistory.length}
-          next={loadMore}
-          hasMore={hasNextPage}
-          loader={
-            meta.pending && (
-              <div className={classes.loaderCenter}>
-                <ESLoader />
-              </div>
-            )
-          }
-          scrollThreshold="1px"
-        >
+        <InfiniteScroll dataLength={purchaseHistory.length} next={loadMore} hasMore={hasNextPage} loader={null} scrollThreshold="1px">
           {purchaseHistory.map((history, i) => (
             <PurchaseHistoryItem data={history} key={i} />
           ))}
         </InfiniteScroll>
       ) : (
+        meta.loaded && (
+          <div className={classes.loaderCenter}>
+            <Typography>{t('common:purchase_history.no_data')}</Typography>
+          </div>
+        )
+      )}
+      {meta.pending && (
         <div className={classes.loaderCenter}>
-          <Typography>{t('common:purchase_history.no_data')}</Typography>
+          <ESLoader />
         </div>
       )}
     </div>

@@ -9,6 +9,8 @@ import useSearch from '@containers/Search/useSearch'
 
 interface SearchAreaProps {
   selectData: dataItem[]
+  isLoggedIn: boolean
+  userCode: string
   onSearch: (data: returnItem) => void
 }
 
@@ -78,18 +80,41 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     }
   }
 
+  const renderSearchInput = () => {
+    if (props.isLoggedIn) {
+      return (
+        <OutlinedInput
+          autoComplete="on"
+          onChange={onChange}
+          placeholder={t('common:search.search_placeholder')}
+          id={`es_${props.userCode}`}
+          name={`es_${props.userCode}`}
+          value={value}
+          classes={{ root: classes.input }}
+          margin="dense"
+          endAdornment={renderIcon()}
+        />
+      )
+    } else {
+      return (
+        <OutlinedInput
+          autoComplete={'off'}
+          onChange={onChange}
+          placeholder={t('common:search.search_placeholder')}
+          id={'search'}
+          name="search"
+          value={value}
+          classes={{ root: classes.input }}
+          margin="dense"
+          endAdornment={renderIcon()}
+        />
+      )
+    }
+  }
+
   return (
     <form onSubmit={handleSearch} className={classes.searchCont}>
-      <OutlinedInput
-        autoComplete="off"
-        onChange={onChange}
-        placeholder={t('common:search.search_placeholder')}
-        id={'search'}
-        value={value}
-        classes={{ root: classes.input }}
-        margin="dense"
-        endAdornment={renderIcon()}
-      />
+      {renderSearchInput()}
       <Select
         id={'input'}
         variant="outlined"
