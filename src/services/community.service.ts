@@ -1,6 +1,12 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
 
+export enum CommunityFilterOption {
+  all = 'all',
+  participating = 'participating',
+  managing = 'managing',
+}
+
 export type CommunityListResponse = {
   data: Array<CommunityResponse>
   links: any

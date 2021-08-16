@@ -42,9 +42,12 @@ body {
   padding-left: calc((100% - 840px) / 2);
   min-height: 100vh;
 }
-.chat-main.main {
-  height: 100vh;
+.chat-main {
   overflow: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-left: calc((100% - 840px) / 2);
 }
 .aside-left {
   position: fixed;
@@ -369,13 +372,14 @@ body {
 }
 
 .chat-flex {
-  display: flex;
   height: 100%;
-  flex: 1;
   padding-top: 60px;
+  position: relative;
+  padding-left: 260px;
+  width: 100%;
 }
 .room-list-column {
-  flex: 0 0 260px;
+  width: 260px;
   border-right: 1px solid #212121;
   height: 100%;
   max-width: 260px;
@@ -383,13 +387,17 @@ body {
   visibility: visible;
   opacity: 1;
   width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 60px;
 }
 .room-column {
   visibility: visible;
   opacity: 1;
   width: 100%;
-  max-width: 630px;
-  flex: 1;
+  height: 100%;
+  max-width: 100%;
 }
 
 .scroll {
@@ -557,7 +565,8 @@ body {
     width: 200px;
     max-width: 200px;
   }
-  .main {
+  .main,
+  .chat-main {
     padding-left: 200px;
   }
 }
@@ -575,6 +584,9 @@ body {
 }
 
 @media (max-width: 720px) {
+  .chat-flex {
+    padding-left: 0;
+  }
   .room-list-column {
     visibility: hidden;
     opacity: 0;
@@ -627,11 +639,12 @@ body {
   .aside-right {
     display: none;
   }
-  .main {
+  .main,
+  .chat-main {
     max-width: 100%;
     padding-left: 0;
   }
-  .chat-main.main {
+  .chat-main {
     max-width: 100%;
     margin: 0 auto;
     padding: 0;

@@ -81,6 +81,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   return (
     <form onSubmit={handleSearch} className={classes.searchCont}>
       <OutlinedInput
+        autoComplete="off"
         onChange={onChange}
         placeholder={t('common:search.search_placeholder')}
         id={'search'}

@@ -24,6 +24,7 @@ const useUserData = (
   getCommunityList: () => void
   getMemberProfile: (userCode: string) => void
   profileImageChange: (file: File, user_id: number, type: number, blob?: any) => void
+  profileImageRemove: (path: string, file_type: number) => void
   setFollowState: () => void
   clearMemberProfile: () => void
 } => {
@@ -87,6 +88,19 @@ const useUserData = (
     }
   }
 
+  const profileImageRemove = async (path: string, file_type: number) => {
+    const params = {
+      path: path,
+      file_type: file_type,
+    }
+    try {
+      dispatch(userActions.profileImageRemove(params))
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('useUserData.tsx profileImageRemove failed', error)
+    }
+  }
+
   const setFollowState = async () => {
     if (profile) {
       const params = { user_code: userCode }
@@ -110,6 +124,7 @@ const useUserData = (
     getCommunityList,
     getMemberProfile,
     profileImageChange,
+    profileImageRemove,
     setFollowState,
     clearMemberProfile,
   }

@@ -26,10 +26,12 @@ import ConfirmContainer from '@containers/Confirm'
 import RegisterProfileContainer from '@containers/RegisterProfile'
 import UserSettingsContainer from '@containers/UserSettings'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
+import LobbyCreateContainer from '@containers/lobby/UpsertForm'
 import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
+import TopicCreateContainer from '@containers/Community/Topic/UpsertForm'
 import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
@@ -38,6 +40,7 @@ import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { unseenCount } from '@store/socket/selectors'
+import CommunityCreateContainer from '@containers/Community/UpsertForm'
 
 interface returnItem {
   value: string
@@ -90,6 +93,12 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <UserSettingsContainer />
       case ESRoutes.ARENA_CREATE:
         return <ArenaCreateContainer />
+      case ESRoutes.LOBBY_CREATE:
+        return <LobbyCreateContainer />
+      case ESRoutes.COMMUNITY_CREATE:
+        return <CommunityCreateContainer />
+      case ESRoutes.TOPIC_CREATE:
+        return <TopicCreateContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
         return <AccountSettingsPasswordContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
