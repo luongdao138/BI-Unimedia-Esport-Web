@@ -53,7 +53,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
           <Box className={classes.userContainer} mt={2}>
-            <Box className={classes.userInfoContainer} width={!date && '90%'}>
+            <Box className={date ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
               <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.username}>{username}</Typography>
@@ -164,6 +164,10 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     display: 'flex',
     width: 'calc(90% - 150px)',
+  },
+  userInfoContainerNoDate: {
+    display: 'flex',
+    width: 'calc(90% - 50px)',
   },
   userAvatarBox: {
     display: 'flex',
