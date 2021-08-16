@@ -31,6 +31,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 let activeTabIndex = 0
 
@@ -52,7 +53,7 @@ const TournamentCreate: React.FC = () => {
 
   const formik = useFormik<FormType>({
     initialValues: initialValues,
-    validationSchema: getValidationScheme(arena, editables),
+    validationSchema: getValidationScheme(arena, editables, isEdit),
     enableReinitialize: true,
     onSubmit: (values) => {
       const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepThree.area_id}`))
@@ -62,7 +63,7 @@ const TournamentCreate: React.FC = () => {
         ...values.stepThree,
         ...values.stepFour,
         co_organizers: values.stepFour.co_organizers.map((co) => parseInt(co.id)),
-        game_title_id: values.stepOne.game_title_id[0].id,
+        game_title_id: _.get(values, 'stepOne.game_title_id[0].id'),
         area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
       }
       if (isEdit) {
@@ -89,6 +90,11 @@ const TournamentCreate: React.FC = () => {
     activeTabIndex = 0
     setTab(0)
     formik.validateForm()
+
+    if (!isEdit) {
+      formik.setFieldValue('stepThree.acceptance_start_date', CommonHelper.nearestFutureMinutes(5))
+      formik.setFieldValue('stepThree.end_date', CommonHelper.startOfNextDay())
+    }
   }, [])
 
   useEffect(() => {
@@ -172,19 +178,19 @@ const TournamentCreate: React.FC = () => {
     })
   }
 
-  const handleUnsetConfirm = () => setIsConfirm(false)
+  const backFromConfirm = () => {
+    if (_.has(formik.errors, 'stepOne')) setTab(0)
+    else if (_.has(formik.errors, 'stepTwo')) setTab(1)
+    else if (_.has(formik.errors, 'stepThree')) setTab(2)
+    else if (_.has(formik.errors, 'stepFour')) setTab(3)
+    setIsConfirm(false)
+  }
+
+  const handleUnsetConfirm = () => backFromConfirm()
 
   const handleTabChange = useCallback((value) => {
     setTab(value)
   }, [])
-  const { hasUCRReturnHref } = useReturnHref()
-  useEffect(() => {
-    if (hasUCRReturnHref) {
-      document.body.style.position = 'fixed'
-      document.body.style.width = '100%'
-      document.body.style.height = '100%'
-    }
-  }, [tab])
 
   const renderEditButton = () => {
     return (
@@ -198,7 +204,7 @@ const TournamentCreate: React.FC = () => {
   }
 
   const handleBack = () => {
-    if (isConfirm) setIsConfirm(false)
+    if (isConfirm) backFromConfirm()
     else handleReturn()
   }
 
@@ -219,9 +225,8 @@ const TournamentCreate: React.FC = () => {
         const fieldKeys = Object.keys(fields)
         if (fieldKeys[0]) {
           const translationName = TournamentHelper.getLabelName(fieldKeys[0])
-          let errMsg = _.get(fields, `${fieldKeys[0]}`) as string
-          if (!_.isString(errMsg)) errMsg = ''
-          msg = `「${i18n.t(translationName)}」${errMsg}`
+          const pleaseReviewMsg = i18n.t('common:tournament_create.please_review')
+          msg = `「${i18n.t(translationName)}」${pleaseReviewMsg}`
         }
       }
     }
@@ -247,7 +252,7 @@ const TournamentCreate: React.FC = () => {
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
               <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:tournament_create.submit')}
+                {isEdit ? i18n.t('common:tournament_create.edit') : i18n.t('common:tournament_create.submit')}
               </ButtonPrimary>
             </Box>
           ) : (

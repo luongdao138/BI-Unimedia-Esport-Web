@@ -162,10 +162,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
   return (
     <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.ARENA}/${attr.hash_key}`)}>
-      <ESCardMedia
-        cornerIcon={<Icon className={attr.rule === TR.BATTLE_ROYAL ? 'fas fa-university' : 'fas fa-trophy'} fontSize="small" />}
-        image={cover}
-      >
+      <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
         {getMediaScreen()}
       </ESCardMedia>
       <ESCardContent>

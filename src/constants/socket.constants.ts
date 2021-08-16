@@ -56,3 +56,10 @@ export enum CHAT_ROOM_TYPE {
   RECRUITMENT = 2,
   TOURNAMENT = 3,
 }
+
+export enum TOURNAMENT_SINGLE_ROLE {
+  ADMIN = 'admin',
+  ORGANIZER = 'co_organizer',
+}
+
+export const TOURNAMENT_ADMIN_ROLES = ['admin', 'co_organizer']

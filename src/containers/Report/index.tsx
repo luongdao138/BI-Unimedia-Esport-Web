@@ -57,13 +57,13 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
       .test('email-validation', t('common.error'), (value) => {
         return CommonHelper.validateEmail(value)
       })
-      .required(t('common.required')),
-    description: Yup.string().required(t('common.required')).max(1000),
+      .required(t('common.input_required')),
+    description: Yup.string().required(t('common.input_required')).max(1000),
     reason_id: Yup.number()
       .test('reason_id', '', (value) => {
         return value !== -1
       })
-      .required(t('common.required')),
+      .required(t('common.input_required')),
   })
 
   const emailAssigned = CommonHelper.hasEmail(userEmail)

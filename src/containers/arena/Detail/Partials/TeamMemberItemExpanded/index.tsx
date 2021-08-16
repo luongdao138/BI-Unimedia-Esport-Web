@@ -14,9 +14,18 @@ interface Props {
   yellowTitle?: boolean
   hideFollow?: boolean
   memberClick?: () => void
+  onFollowStateChange?: ({ userId, state }: { userId: number; state: number }) => void
 }
 
-const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem, yellowTitle, hideFollow, memberClick }) => {
+const TeamMemberItemExpanded: React.FC<Props> = ({
+  team,
+  handleClick,
+  rightItem,
+  yellowTitle,
+  hideFollow,
+  memberClick,
+  onFollowStateChange,
+}) => {
   const data = team.attributes.team.data.attributes
   const members = data.members
   const classes = useStyles()
@@ -39,7 +48,7 @@ const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem,
               <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
                 <Box display="flex" overflow="hidden">
                   <ButtonBase>
-                    <ESAvatar alt={data.name} src={data.team_avatar || team.attributes.avatar_url} onClick={handleClick} />
+                    <ESAvatar alt={data.name} src={data.team_avatar} onClick={handleClick} />
                   </ButtonBase>
                   <Box
                     style={{ cursor: 'pointer' }}
@@ -76,6 +85,7 @@ const TeamMemberItemExpanded: React.FC<Props> = ({ team, handleClick, rightItem,
                 isBlocked={Boolean(member.is_blocked)}
                 nicknameYellow={isYellowTitle && `${userProfile?.id}` === `${member.user_id}`}
                 handleClick={memberClick}
+                changeFollowState={(s) => onFollowStateChange({ userId: member.user_id, state: s })}
               />
             ))}
           </Box>

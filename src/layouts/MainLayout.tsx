@@ -60,7 +60,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequi
   return (
     <div className="main-wrapper">
       <Header open={open} toggleDrawer={toggleDrawer} />
-      <aside className="aside-left mui-fixed">
+      <aside className="aside-left">
         <SideMenu />
       </aside>
       <main role="main" className={patternBg ? 'main' : 'main no-pattern'}>

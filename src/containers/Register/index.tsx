@@ -65,13 +65,9 @@ const RegisterContainer: React.FC = () => {
           <Box width="100%" flexDirection="column" alignItems="center">
             <Box textAlign="center">
               <Typography className={classes.termsText}>
-                <a href={ESRoutes.TERMS} target="_blank" rel="noopener noreferrer">
-                  {t('common:register.link1')}
-                </a>
+                {t('common:register.link1')}
                 {t('common:register.description1')}
-                <a href={ESRoutes.PRIVACY} target="_blank" rel="noopener noreferrer">
-                  {t('common:register.link2')}
-                </a>
+                {t('common:register.link2')}
                 {t('common:register.description2')}
                 <br />
                 {t('common:register.description3')}
@@ -98,9 +94,9 @@ const RegisterContainer: React.FC = () => {
           </Box>
 
           <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
-            <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
+            <ESButtonTwitter fullWidth disabled={!isAgreementChecked} twitterButtonType="register" redirectTo={social.redirectTo} />
             <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
-            <ESButtonLine fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
+            <ESButtonLine fullWidth disabled={!isAgreementChecked} lineButtonType="register" redirectTo={social.redirectTo} />
             <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
             <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
           </Box>

@@ -49,6 +49,10 @@ const UserListItem: React.FC<Props> = ({
   const [isLoading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
+    setFollowed(isFollowed)
+  }, [isFollowed])
+
+  useEffect(() => {
     return () => setMounted(false)
   }, [])
 
