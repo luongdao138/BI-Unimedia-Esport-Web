@@ -58,3 +58,18 @@ export const cancelLobby = createAsyncThunk<services.EntryLobbyResponse, number>
     }
   }
 )
+
+export const getParticipants = createAsyncThunk<services.ParticipantsResponse, number>(
+  LOBBY_ACTION_TYPE.LOBBY_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.participants(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
