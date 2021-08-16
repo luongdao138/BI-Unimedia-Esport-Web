@@ -131,8 +131,8 @@ const TopicCreate: React.FC = () => {
         </>
       }
     >
-      <>
-        <Box pt={7.5} pb={9} className={classes.topContainer}>
+      <Box className={!isConfirm && classes.container}>
+        <Box pt={7.5} pb={9} className={isConfirm ? classes.topContainerConfirm : classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
             <IconButton className={classes.iconButtonBg} onClick={handleBack}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
@@ -155,7 +155,7 @@ const TopicCreate: React.FC = () => {
             )}
           </Box>
         </form>
-      </>
+      </Box>
       <DiscardDialog
         open={isDiscard}
         onClose={() => {
@@ -169,8 +169,11 @@ const TopicCreate: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  confirmButton: {},
-  cancelButton: {},
+  container: {
+    marginLeft: 66,
+    marginRight: 66,
+  },
+
   footerButton: {
     width: 'fit-content',
     alignSelf: 'center',
@@ -205,6 +208,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   topContainer: {
     paddingBottom: 0,
+  },
+  topContainerConfirm: {
+    paddingBottom: 0,
+    marginLeft: 66,
   },
   [theme.breakpoints.down('sm')]: {
     container: {

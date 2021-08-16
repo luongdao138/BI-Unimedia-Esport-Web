@@ -263,6 +263,7 @@ export default {
     applying: '申請中',
     participating: '参加中',
     topic_creation: 'トピック作成',
+    confirm_follow_list: 'フォローリストを確定する',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

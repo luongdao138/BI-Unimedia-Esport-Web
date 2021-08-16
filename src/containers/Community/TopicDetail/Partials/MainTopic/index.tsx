@@ -50,7 +50,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
 
   return (
     <>
-      <Box className={classes.container}>
+      <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
           <Box className={classes.userContainer} mt={2}>
             <Box className={classes.userInfoContainer} width={!date && '90%'}>
@@ -144,6 +144,14 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     margin: theme.spacing(3),
+    backgroundColor: 'black',
+    flexDirection: 'column',
+    borderRadius: 5,
+    border: '1px solid rgba(255,255,255,0.3)',
+    marginTop: theme.spacing(1),
+  },
+  containerConfirm: {
+    display: 'flex',
     backgroundColor: 'black',
     flexDirection: 'column',
     borderRadius: 5,
