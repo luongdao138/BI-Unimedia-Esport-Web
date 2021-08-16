@@ -130,6 +130,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-word',
     marginLeft: theme.spacing(1),
   },
+  [theme.breakpoints.down('xs')]: {
+    label: {
+      flex: 3.5,
+    },
+    value: {
+      flex: 6.5,
+    },
+  },
 }))
 
 export default InfoContainer
