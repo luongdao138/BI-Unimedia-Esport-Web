@@ -13,7 +13,7 @@ const InfoContainer: React.FC = () => {
   return (
     <>
       <Box marginTop={2}>
-        <ESChip label={'Ninjala'} style={{ marginRight: 16 }} />
+        <ESChip className={classes.chip} label={'Ninjala'} style={{ marginRight: 16 }} />
         <ESChip className={classes.chip} label={'対戦'} />
         <ESChip className={classes.chip} label={'交流'} />
         <ESChip className={classes.chip} label={'初心者歓迎'} />
