@@ -13,7 +13,7 @@ const InfoContainer: React.FC = () => {
   return (
     <>
       <Box marginTop={2}>
-        <ESChip label={'Ninjala'} style={{ marginRight: 16 }} />
+        <ESChip className={classes.chip} label={'Ninjala'} style={{ marginRight: 16 }} />
         <ESChip className={classes.chip} label={'対戦'} />
         <ESChip className={classes.chip} label={'交流'} />
         <ESChip className={classes.chip} label={'初心者歓迎'} />
@@ -114,6 +114,7 @@ const InfoContainer: React.FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   label: {
     display: 'flex',
@@ -128,6 +129,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   breakWord: {
     wordBreak: 'break-word',
     marginLeft: theme.spacing(1),
+  },
+  [theme.breakpoints.down('xs')]: {
+    label: {
+      flex: 3.5,
+    },
+    value: {
+      flex: 6.5,
+    },
   },
 }))
 

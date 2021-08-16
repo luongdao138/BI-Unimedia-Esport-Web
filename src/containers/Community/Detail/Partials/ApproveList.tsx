@@ -8,6 +8,9 @@ import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import LoginRequired from '@containers/LoginRequired'
 import ESLabel from '@components/Label'
+import ESStickyFooter from '@components/StickyFooter'
+import ButtonPrimary from '@components/ButtonPrimary'
+import i18n from '@locales/i18n'
 
 const Participants: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -60,33 +63,45 @@ const Participants: React.FC = () => {
         </Box>
       </LoginRequired>
       <ESModal open={open} handleClose={handleClose}>
-        <BlankLayout>
-          <Box pt={7.5} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">{t('common:community.follow_list')}</Typography>
+        <ESStickyFooter
+          disabled={false}
+          noScroll
+          content={
+            <>
+              <ButtonPrimary round className={`${classes.footerButton} ${classes.confirmButton}`}>
+                {i18n.t('common:community.confirm_follow_list')}
+              </ButtonPrimary>
+            </>
+          }
+        >
+          <BlankLayout>
+            <Box pt={7.5} className={classes.topContainer}>
+              <Box py={2} display="flex" flexDirection="row" alignItems="center">
+                <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+                  <Icon className="fa fa-arrow-left" fontSize="small" />
+                </IconButton>
+                <Box pl={2}>
+                  <Typography variant="h2">{t('common:community.follow_list')}</Typography>
+                </Box>
               </Box>
+              <Box mt={3} />
+              <ESLabel label={t('common:community.applying')} />
+              <Box mt={4} />
+              <div style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+                {dummy_data.map((d, i) => {
+                  return <UserSelectBoxList key={i} username={d.username} mail={d.mail} avatar={d.avatar} />
+                })}
+              </div>
+              <ESLabel label={t('common:community.participating')} />
+              <Box mt={4} />
+              <div style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+                {dummy_data.map((d, i) => {
+                  return <UserSelectBoxList key={i} username={d.username} mail={d.mail} avatar={d.avatar} />
+                })}
+              </div>
             </Box>
-            <Box mt={3} />
-            <ESLabel label={t('common:community.applying')} />
-            <Box mt={4} />
-            <div id="scrollableDiv" style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-              {dummy_data.map((d, i) => {
-                return <UserSelectBoxList key={i} username={d.username} mail={d.mail} avatar={d.avatar} />
-              })}
-            </div>
-            <ESLabel label={t('common:community.participating')} />
-            <Box mt={4} />
-            <div id="scrollableDiv" style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-              {dummy_data.map((d, i) => {
-                return <UserSelectBoxList key={i} username={d.username} mail={d.mail} avatar={d.avatar} />
-              })}
-            </div>
-          </Box>
-        </BlankLayout>
+          </BlankLayout>
+        </ESStickyFooter>
       </ESModal>
     </>
   )

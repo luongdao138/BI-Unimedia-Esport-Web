@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Colors } from '@theme/colors'
 import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
@@ -16,14 +16,9 @@ type CancelDialogProps = {
 
 const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   const [modal, setModal] = useState(false)
-  const [isCanceled, setCanceled] = useState(false)
   const classes = useStyles()
   const { cancelTournament } = useCancelDialog()
   const { t } = useTranslation(['common'])
-
-  useEffect(() => {
-    setCanceled(false)
-  }, [])
 
   const handleClose = () => {
     setModal(false)
@@ -83,7 +78,8 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   return (
     <>
       <Box mt={3}>
-        {!isCanceled && <LinkButton onClick={() => setModal(true)}>{t('common:community_create.edit.disband_button')}</LinkButton>}
+        {/* //TODO check if disbanded */}
+        <LinkButton onClick={() => setModal(true)}>{t('common:community_create.edit.disband_button')}</LinkButton>
       </Box>
       <ESModal open={modal} handleClose={handleClose}>
         <BlankLayout>

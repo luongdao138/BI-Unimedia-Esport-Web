@@ -1,7 +1,16 @@
-import { Box, Typography, Icon, IconButton } from '@material-ui/core'
+import { Box, Typography, Icon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
+import ESMenu from '@components/Menu'
+import ESMenuItem from '@components/Menu/MenuItem'
+import LoginRequired from '@containers/LoginRequired'
+import { useTranslation } from 'react-i18next'
+import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
+import { useState } from 'react'
+import { REPORT_TYPE } from '@constants/common.constants'
+import ESReport from '@containers/Report'
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 
 type CommunityHeaderProps = {
   username: string
@@ -14,13 +23,37 @@ type CommunityHeaderProps = {
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
+  const isModerator = true
+  const { isAuthenticated } = useCommunityDetail()
+  const [openReport, setOpenReport] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+  const detail = {
+    attributes: {
+      username: username,
+      mail: mail,
+      description: discription,
+      date: date,
+      image: image,
+    },
+  }
+
+  const handleReportOpen = () => {
+    setOpenReport(true)
+  }
+  const handleDeleteOpen = () => {
+    setOpenDelete(true)
+  }
+  const handleDeleteSubmit = () => {
+    //
+  }
 
   return (
     <>
-      <Box className={classes.container}>
+      <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
-          <Box className={classes.userContainer}>
-            <Box className={classes.userInfoContainer} ml={isConfirm ? 3 : 0}>
+          <Box className={classes.userContainer} mt={2}>
+            <Box className={date ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
               <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.username}>{username}</Typography>
@@ -30,12 +63,15 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
             {date && count && (
               <Box className={classes.dateReportContainer}>
                 <Typography className={classes.date}>{date}</Typography>
-                <Box className={classes.reportButton}>
-                  <IconButton>
-                    <Icon className="fa fa-ellipsis-v" fontSize="small" />
-                  </IconButton>
-                </Box>
               </Box>
+            )}
+            {!isConfirm && (
+              <ESMenu>
+                {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
+                <LoginRequired>
+                  <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
+                </LoginRequired>
+              </ESMenu>
             )}
           </Box>
 
@@ -79,6 +115,25 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
           )}
         </Box>
       </Box>
+      {isAuthenticated && (
+        <>
+          <ESReport
+            reportType={REPORT_TYPE.TOPIC}
+            // target_id={Number(detail.id)}
+            data={detail}
+            open={openReport}
+            handleClose={() => setOpenReport(false)}
+          />
+          <DiscardDialog
+            title={username + t('common:topic.delete.title')}
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+            onSubmit={handleDeleteSubmit}
+            description={t('common:topic.delete.description')}
+            confirmTitle={t('common:topic.delete.submit')}
+          />
+        </>
+      )}
     </>
   )
 }
@@ -90,7 +145,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'black',
     flexDirection: 'column',
     borderRadius: 5,
-    border: '1px solid rgba(255,255,255,0.3)',
+    border: '1px solid ',
+    borderColor: Colors.white_opacity[30],
+    marginTop: theme.spacing(1),
+  },
+  containerConfirm: {
+    display: 'flex',
+    backgroundColor: 'black',
+    flexDirection: 'column',
+    borderRadius: 5,
+    border: '1px solid ',
+    borderColor: Colors.white_opacity[30],
+    marginTop: theme.spacing(1),
   },
   userContainer: {
     display: 'flex',
@@ -100,6 +166,10 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     display: 'flex',
     width: 'calc(90% - 150px)',
+  },
+  userInfoContainerNoDate: {
+    display: 'flex',
+    width: 'calc(90% - 50px)',
   },
   userAvatarBox: {
     display: 'flex',
@@ -124,7 +194,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
   },
   avatar: {
-    zIndex: 30,
     width: 50,
     height: 50,
   },
@@ -153,11 +222,12 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     display: 'flex',
-
     paddingTop: '30.27%',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
+    borderRadius: '7px',
+    width: '66%',
   },
   discription: {
     color: Colors.grey[300],
@@ -169,6 +239,11 @@ const useStyles = makeStyles((theme) => ({
   },
   count: {
     fontSize: 12,
+  },
+  [theme.breakpoints.down('sm')]: {
+    image: {
+      width: '80%',
+    },
   },
 }))
 

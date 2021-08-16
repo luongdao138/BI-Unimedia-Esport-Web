@@ -23,6 +23,7 @@ import { showDialog } from '@store/common/actions'
 import DiscardDialog from '../../Partials/DiscardDialog'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCommonData from './useCommonData'
+import { useTranslation } from 'react-i18next'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -35,6 +36,7 @@ const TopicCreate: React.FC = () => {
   const initialValues = getInitialValues(undefined)
   const { submit, editables } = useTopicCreate()
   const [isDiscard, setIsDiscard] = useState(false)
+  const { t } = useTranslation(['common'])
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -131,8 +133,8 @@ const TopicCreate: React.FC = () => {
         </>
       }
     >
-      <>
-        <Box pt={7.5} pb={9} className={classes.topContainer}>
+      <Box className={isConfirm ? classes.containerConfirm : classes.container}>
+        <Box pt={7.5} pb={9} className={isConfirm ? classes.topContainerConfirm : classes.topContainer}>
           <Box py={2} display="flex" flexDirection="row" alignItems="center">
             <IconButton className={classes.iconButtonBg} onClick={handleBack}>
               <Icon className="fa fa-arrow-left" fontSize="small" />
@@ -155,22 +157,30 @@ const TopicCreate: React.FC = () => {
             )}
           </Box>
         </form>
-      </>
+      </Box>
       <DiscardDialog
         open={isDiscard}
         onClose={() => {
           setIsDiscard(false)
         }}
         onSubmit={handleReturn}
-        isTopic
+        title={t('common:topic_create.discard.title')}
+        description={t('common:topic_create.discard.message')}
+        confirmTitle={t('common:topic_create.discard.confirm')}
       />
     </ESStickyFooter>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  confirmButton: {},
-  cancelButton: {},
+  container: {
+    marginLeft: 66,
+    marginRight: 66,
+  },
+  containerConfirm: {
+    marginLeft: 0,
+    marginRight: 0,
+  },
   footerButton: {
     width: 'fit-content',
     alignSelf: 'center',
@@ -206,12 +216,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   topContainer: {
     paddingBottom: 0,
   },
+  topContainerConfirm: {
+    paddingBottom: 0,
+    marginLeft: 66,
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingTop: theme.spacing(4),
+      marginLeft: 0,
+      marginRight: 0,
+    },
+    containerConfirm: {
+      paddingTop: theme.spacing(4),
+      marginLeft: 0,
+      marginRight: 0,
     },
     topContainer: {
       paddingTop: 0,
+    },
+    topContainerConfirm: {
+      paddingTop: 0,
+      paddingBottom: 0,
+      marginLeft: 0,
     },
     reviewButtonContainer: {
       display: 'flex',

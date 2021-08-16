@@ -78,7 +78,6 @@ const useStyles = makeStyles(() => ({
     width: '100%',
   },
   avatar: {
-    zIndex: 30,
     width: 50,
     height: 50,
   },

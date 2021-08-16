@@ -540,6 +540,32 @@ export default {
   },
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
+    report: {
+      button: 'トピックを通報',
+      title: '通報するトピック',
+      chat_topic: '雑談トピック',
+    },
+    delete: {
+      button: 'トピックの削除',
+      title: 'を削除します',
+      description: `削除したトピックはコメントも含めて復元させることはできません。
+      削除してよろしいですか？`,
+      submit: '削除する',
+    },
+  },
+  topic_comment: {
+    report: {
+      button: 'コメントを通報',
+      title: '通報するコメント',
+      chat_topic: '雑談トピック',
+    },
+    delete: {
+      button: 'コメントを削除',
+      title: '投稿されたコメントを削除します',
+      description: `削除したコメントを復元させることはできません。
+      削除してよろしいですか？`,
+      submit: '削除する',
+    },
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',

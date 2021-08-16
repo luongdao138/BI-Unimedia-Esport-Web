@@ -56,7 +56,7 @@ const TopicDetailContainer: React.FC = () => {
   return (
     <>
       <CommunityDetailHeader title="攻略情報共有"></CommunityDetailHeader>
-
+      <Box className={classes.blank}></Box>
       <MainTopic
         username="コイチコイチコイチコイチコイチコイチコイチコイチコイチコイチ"
         mail="@koichi"
@@ -89,6 +89,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
+  },
+  blank: {
+    marginTop: theme.spacing(11.5),
+  },
+  [theme.breakpoints.down('sm')]: {
+    blank: {
+      marginTop: theme.spacing(11.2),
+    },
   },
 }))
 
