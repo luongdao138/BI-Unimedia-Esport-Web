@@ -3,7 +3,6 @@ import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ButtonPrimary from '@components/ButtonPrimary'
-import ESDividerWithMiddleText from '@components/DividerWithMiddleText'
 import Link from 'next/link'
 import ESButtonTwitter from '@components/Button/Twitter'
 import ESButtonGoogle from '@components/Button/Google'
@@ -12,34 +11,23 @@ import ESButtonFacebook from '@components/Button/Facebook'
 import ESButtonApple from '@components/Button/Apple'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESCheckbox from '@components/Checkbox'
 import useSocialLogin from '@utils/hooks/useSocialLogin'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import i18n from '@locales/i18n'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
+import RegisterAgreementBox from './RegisterAgreementBox'
 
 const RegisterContainer: React.FC = () => {
   const social = useSocialLogin('register')
-  const [checkbox, setCheckox] = useState({
-    terms: false,
-    privacy: false,
-  })
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { handleLink, navigateScreen, handleReturn } = useReturnHref()
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCheckox({ ...checkbox, [event.target.name]: event.target.checked })
-  }
+  const [isAgreementChecked, setAgreementChecked] = useState(false)
 
   const handleSocialLogin = (params) => {
     social.resetMeta()
     social.login({ ...params, type: 'register' })
-  }
-
-  const buttonActive = (): boolean => {
-    return checkbox.terms && checkbox.privacy
   }
 
   const renderSocialError = () => {
@@ -77,13 +65,9 @@ const RegisterContainer: React.FC = () => {
           <Box width="100%" flexDirection="column" alignItems="center">
             <Box textAlign="center">
               <Typography className={classes.termsText}>
-                <a href={ESRoutes.TERMS} target="_blank" rel="noopener noreferrer">
-                  {t('common:register.link1')}
-                </a>
+                {t('common:register.link1')}
                 {t('common:register.description1')}
-                <a href={ESRoutes.PRIVACY} target="_blank" rel="noopener noreferrer">
-                  {t('common:register.link2')}
-                </a>
+                {t('common:register.link2')}
                 {t('common:register.description2')}
                 <br />
                 {t('common:register.description3')}
@@ -91,7 +75,11 @@ const RegisterContainer: React.FC = () => {
             </Box>
           </Box>
 
-          <Box pt={5} pb={8} maxWidth={280} className={classes.buttonContainer}>
+          <Box pb={2}>
+            <RegisterAgreementBox onAgreementChange={setAgreementChecked} />
+          </Box>
+
+          <Box pt={2} maxWidth={280} className={classes.buttonContainer}>
             <ButtonPrimary
               round
               fullWidth
@@ -99,40 +87,18 @@ const RegisterContainer: React.FC = () => {
                 social.resetMeta()
                 navigateScreen(ESRoutes.REGISTER_BY_EMAIL)
               }}
-              disabled={!buttonActive()}
+              disabled={!isAgreementChecked}
             >
               {t('common:register.button')}
             </ButtonPrimary>
           </Box>
 
-          <Box width="100%">
-            <ESDividerWithMiddleText text={t('common:login.divider')} />
-          </Box>
-
           <Box pt={4} maxWidth={280} className={classes.buttonContainer}>
-            <Box pb={2}>
-              <Box pt={22 / 8} flexDirection="column" display="flex" width={210} margin="0 auto">
-                <ESCheckbox
-                  disableRipple
-                  checked={checkbox.terms}
-                  onChange={handleChange}
-                  label={t('common:register.terms')}
-                  name="terms"
-                />
-                <ESCheckbox
-                  disableRipple
-                  checked={checkbox.privacy}
-                  onChange={handleChange}
-                  label={t('common:register.privacy')}
-                  name="privacy"
-                />
-              </Box>
-            </Box>
-            <ESButtonTwitter fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-            <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-            <ESButtonLine fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-            <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
-            <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!buttonActive()} />
+            <ESButtonTwitter fullWidth disabled={!isAgreementChecked} twitterButtonType="register" redirectTo={social.redirectTo} />
+            <ESButtonGoogle fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
+            <ESButtonLine fullWidth disabled={!isAgreementChecked} lineButtonType="register" redirectTo={social.redirectTo} />
+            <ESButtonFacebook fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
+            <ESButtonApple fullWidth onSuccess={handleSocialLogin} disabled={!isAgreementChecked} />
           </Box>
 
           <Box pt={4} className={classes.linkContainer}>

@@ -37,7 +37,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    summary: Yup.string().required(t('common:common.required')).max(190),
+    summary: Yup.string().required(t('common:common.input_required')).max(190),
   })
 
   const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit } = useFormik({

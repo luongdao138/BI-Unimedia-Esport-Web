@@ -63,7 +63,7 @@ const ProfileEditContainer: React.FC = () => {
   useEffect(() => {
     getNicknames()
     getFeatures()
-    getPrefectures()
+    getPrefectures(true)
   }, [])
 
   const onBasicInfoChanged = (data) => {
@@ -81,6 +81,11 @@ const ProfileEditContainer: React.FC = () => {
   const handleError = (errors) => {
     setError(!_.isEmpty(errors))
   }
+
+  const trimField = (profile, field) => {
+    if (_.isString(profile[field])) profile[field] = profile[field].trim()
+  }
+
   const handleSubmit = () => {
     const failedFields = checkNgWordByField({
       [i18n.t('common:profile.nickname')]: profile.nickname,
@@ -92,7 +97,12 @@ const ProfileEditContainer: React.FC = () => {
       [i18n.t('common:profile.twitter')]: profile.twitter_link,
     })
     if (_.isEmpty(failedFields)) {
-      profileEdit({ ...profile, features: _.map(profile.features, (feature) => feature.id) })
+      const newProfile = _.cloneDeep(profile)
+      const fields = ['nickname', 'bio', 'discord_link', 'facebook_link', 'instagram_link', 'twitch_link', 'twitter_link']
+      for (const field of fields) {
+        trimField(newProfile, field)
+      }
+      profileEdit({ ...newProfile, features: _.map(profile.features, (feature) => feature.id) })
     } else {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: failedFields.join(', ') }))
     }
@@ -102,7 +112,7 @@ const ProfileEditContainer: React.FC = () => {
     <>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
         <Box py={2} display="flex" flexDirection="row" alignItems="center">
-          <IconButton className={classes.iconButtonBg} onClick={() => router.push(ESRoutes.PROFILE)}>
+          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
             <Icon className="fa fa-arrow-left" fontSize="small" />
           </IconButton>
           <Box pl={2}>{<Typography variant="h2">{i18n.t('common:user_profile.edit_profile')}</Typography>}</Box>

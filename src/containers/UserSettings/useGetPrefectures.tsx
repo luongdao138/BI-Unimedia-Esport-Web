@@ -11,7 +11,7 @@ const useGetPrefectures = () => {
   const dispatch = useAppDispatch()
   const prefectures = useAppSelector(selectors.getPrefectures)
   const getPrefecturesMeta = useAppSelector(_getPrefecturesMeta)
-  const getPrefectures = () => dispatch(actions.getPrefectures())
+  const getPrefectures = (isUser: boolean) => dispatch(actions.getPrefectures({ isUser: isUser }))
   const resetGetPrefecturesMeta = () => dispatch(clearMetaData(actions.getPrefectures.typePrefix))
   return { prefectures, getPrefectures, resetGetPrefecturesMeta, getPrefecturesMeta }
 }

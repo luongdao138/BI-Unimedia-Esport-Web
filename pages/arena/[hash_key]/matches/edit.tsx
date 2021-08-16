@@ -22,7 +22,7 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 
 const ArenaMatchEditPage: PageWithLayoutType = () => {
   return (
-    <PlainLayout noFooter>
+    <PlainLayout>
       <MatchesEditContainer />
     </PlainLayout>
   )

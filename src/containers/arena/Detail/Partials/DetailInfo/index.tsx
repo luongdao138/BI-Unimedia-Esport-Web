@@ -66,7 +66,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
               {helper.isEditable && toEdit && (
                 <LoginRequired>
-                  <ButtonPrimary style={{ padding: '12px 8px' }} size="small" gradient={false} onClick={toEdit}>
+                  <ButtonPrimary px={12} size="small" gradient={false} onClick={toEdit}>
                     {t('common:arena.edit_arena_info')}
                   </ButtonPrimary>
                 </LoginRequired>
@@ -358,9 +358,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 24,
   },
   gameChip: {
-    maxWidth: '85vw',
-    minWidth: 177,
-    justifyContent: 'flex-start',
+    maxWidth: 'auto',
+    minWidth: 'auto',
+    justifyContent: 'center',
   },
   label: {
     display: 'flex',

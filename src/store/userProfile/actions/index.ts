@@ -59,6 +59,21 @@ export const profileImage = createAsyncThunk<services.ProfileImageParams, servic
   }
 )
 
+export const profileImageRemove = createAsyncThunk<services.RemoveProfileImageParams, services.RemoveProfileImageParams>(
+  USER_PROFILE_ACTION_TYPE.PROFILE_IMAGE_REMOVE,
+  async (params, { rejectWithValue }) => {
+    try {
+      await services.profileImageRemove(params)
+      return params
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const follow = createAsyncThunk<services.FollowActionResponse, services.FollowParams>(
   USER_PROFILE_ACTION_TYPE.FOLLOW,
   async (param, { rejectWithValue }) => {

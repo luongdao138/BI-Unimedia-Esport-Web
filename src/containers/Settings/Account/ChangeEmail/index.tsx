@@ -22,7 +22,7 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
   const { changeEmail, meta, user, changeEmailSteps } = useChangeEmail()
 
   const validationSchema = Yup.object().shape({
-    new_email: Yup.string().required(t('common.required')).email(t('error.email_invalid')),
+    new_email: Yup.string().required(t('common.input_required')).email(t('error.email_invalid')),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldError } = useFormik<services.ChangeEmailParams>({
@@ -59,7 +59,7 @@ const AccountSettingsChangeEmailContainer: React.FC = () => {
   }
 
   return (
-    <ESStickyFooter title={t('common.next')} disabled={!buttonActive()} onClick={() => handleSubmit()}>
+    <ESStickyFooter title={t('common.next')} noScroll={true} disabled={!buttonActive()} onClick={() => handleSubmit()}>
       <Box className={classes.header}>
         <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />

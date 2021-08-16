@@ -22,7 +22,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const router = useRouter()
 
   const attr = tournament.attributes
-  const winner = tournament.attributes.winner
+  const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
   const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
@@ -64,7 +64,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             />
           </Box>
         </Box>
-        {winner && attr.status === TS.COMPLETED && (
+        {participant?.position && attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -73,18 +73,29 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
             flexDirection="column"
             alignItems="center"
           >
-            <img className={classes.firstIcon} src="/images/first_icon.png" />
+            {/* <img className={classes.firstIcon} src="/images/first_icon.png" /> */}
+
+            <span
+              className={`${classes.text} ${participant.position === 1 && classes.first} ${participant.position === 2 && classes.second} ${
+                participant.position === 3 && classes.third
+              }`}
+            >
+              {participant.position}
+              {participant.position === 1 && <span>st</span>}
+              {participant.position === 2 && <span>nd</span>}
+              {participant.position === 3 && <span>rd</span>}
+            </span>
             <ESAvatar
               onClick={() => {
-                winner?.user_code ? router.push(`${ESRoutes.PROFILE}/${winner.user_code}`) : null
+                participant?.user_code ? router.push(`${ESRoutes.PROFILE}/${participant.user_code}`) : null
               }}
               className={classes.marginV}
-              alt={winner?.name}
-              src={winner?.profile_image ? winner.profile_image : attr.is_single ? null : '/images/avatar.png'}
+              alt={participant?.name}
+              src={participant?.profile_image ? participant.profile_image : attr.is_single ? null : '/images/avatar.png'}
             />
             <Box className={classes.captionTitle}>
               <Typography noWrap variant="overline">
-                {winner?.name}
+                {participant?.name}
               </Typography>
             </Box>
           </Box>
@@ -151,10 +162,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
 
   return (
     <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.ARENA}/${attr.hash_key}`)}>
-      <ESCardMedia
-        cornerIcon={<Icon className={attr.rule === TR.BATTLE_ROYAL ? 'fas fa-university' : 'fas fa-trophy'} fontSize="small" />}
-        image={cover}
-      >
+      <ESCardMedia cornerIcon={<Icon className="fas fa-trophy" fontSize="small" />} image={cover}>
         {getMediaScreen()}
       </ESCardMedia>
       <ESCardContent>
@@ -216,6 +224,54 @@ const useStyles = makeStyles((theme) => ({
   pAvatar: {
     marginLeft: -8,
   },
+
+  text: {
+    marginTop: 20,
+    fontSize: 20,
+    fontFamily: 'Futura Lt BT',
+    fontWeight: 300,
+    fontStyle: 'normal',
+    textAlign: 'center',
+    '& span': {
+      fontSize: '0.5em',
+    },
+    '&$first': {
+      fontFamily: 'Futura Hv BT',
+      fontWeight: 'normal',
+      fontSize: 20,
+      fontStyle: 'italic',
+      background: 'linear-gradient(55deg, rgba(247,247,53,1) 0%, rgba(195,247,53,1) 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      WebkitTextStroke: '1px #FFFF65',
+      '& span': {
+        marginLeft: -4,
+      },
+    },
+    '&$second': {
+      fontFamily: 'Futura Hv BT',
+      fontWeight: 'normal',
+      fontSize: 20,
+      fontStyle: 'italic',
+      background: 'linear-gradient(55deg, rgba(198,198,198,1) 0%, rgba(109,157,234,1) 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      WebkitTextStroke: '1px #C3D0E3',
+    },
+    '&$third': {
+      fontFamily: 'Futura Hv BT',
+      fontWeight: 'normal',
+      fontSize: 20,
+      fontStyle: 'italic',
+      background: 'linear-gradient(55deg, rgba(255,182,65,1) 0%, rgba(227,111,60,1) 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      WebkitTextStroke: '1px #FFC962',
+    },
+  },
+  first: {},
+  second: {},
+  third: {},
   title: {
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',

@@ -77,7 +77,6 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date) ||
-            formik.errors?.stepThree?.acceptance_dates ||
             formik.errors?.stepThree?.recruit_date
           }
           error={formik.touched?.stepThree?.acceptance_start_date && !!formik.errors?.stepThree?.acceptance_start_date}
@@ -97,6 +96,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
+            formik.errors?.stepThree?.acceptance_dates ||
             formik.errors?.stepThree?.acceptance_end_start_date
           }
           error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}
@@ -114,9 +114,6 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           fullWidth
           disabled={!editables.area_id}
         >
-          <option disabled value={-1}>
-            {i18n.t('common:please_select')}
-          </option>
           {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
               {prefecture.attributes.area}

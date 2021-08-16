@@ -269,6 +269,15 @@ export type ChangeEmailConfirmResponse = {
   email: string
 }
 
+export type RemoveProfileImageParams = {
+  path: string
+  file_type: number
+}
+
+export type RemoveProfileImageResponse = {
+  success: string
+}
+
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
   const { data } = await api.get<ProfileResponse>(`${URI.USER_DETAIL_PROFILE}/${param ?? ''}`)
   return data
@@ -361,5 +370,10 @@ export const changeEmail = async (params: ChangeEmailParams): Promise<ChangeEmai
 
 export const changeEmailConfirm = async (params: ChangeEmailConfirmParams): Promise<ChangeEmailConfirmResponse> => {
   const { data } = await api.post(URI.USER_EMAIL_CHANGE_CONFIRM, params)
+  return data
+}
+
+export const profileImageRemove = async (params: RemoveProfileImageParams): Promise<RemoveProfileImageResponse> => {
+  const { data } = await api.put<RemoveProfileImageResponse>(URI.IMAGE_REMOVE, params)
   return data
 }
