@@ -99,4 +99,7 @@ export const URI = {
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
   PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
   IMAGE_REMOVE: '/v2/profile_images/remove',
+  LOBBY_ENTRY: '/v2/recruitments/:id/do_entry',
+  LOBBY_CANCEL: '/v2/recruitments/:id/cancel',
+  LOBBY_UNJOIN: '/v2/recruitments/:id/unjoin',
 }
