@@ -114,6 +114,7 @@ const InfoContainer: React.FC = () => {
 const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   label: {
     display: 'flex',

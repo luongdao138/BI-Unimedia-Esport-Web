@@ -145,7 +145,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'black',
     flexDirection: 'column',
     borderRadius: 5,
-    border: '1px solid rgba(255,255,255,0.3)',
+    border: '1px solid ',
+    borderColor: Colors.white_opacity[30],
     marginTop: theme.spacing(1),
   },
   containerConfirm: {
@@ -153,7 +154,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'black',
     flexDirection: 'column',
     borderRadius: 5,
-    border: '1px solid rgba(255,255,255,0.3)',
+    border: '1px solid ',
+    borderColor: Colors.white_opacity[30],
     marginTop: theme.spacing(1),
   },
   userContainer: {
@@ -192,7 +194,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
   },
   avatar: {
-    zIndex: 30,
     width: 50,
     height: 50,
   },

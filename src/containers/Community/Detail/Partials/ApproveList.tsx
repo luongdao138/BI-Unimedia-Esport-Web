@@ -87,14 +87,14 @@ const Participants: React.FC = () => {
               <Box mt={3} />
               <ESLabel label={t('common:community.applying')} />
               <Box mt={4} />
-              <div id="scrollableDiv" style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+              <div style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
                 {dummy_data.map((d, i) => {
                   return <UserSelectBoxList key={i} username={d.username} mail={d.mail} avatar={d.avatar} />
                 })}
               </div>
               <ESLabel label={t('common:community.participating')} />
               <Box mt={4} />
-              <div id="scrollableDiv" style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+              <div style={{ height: '100%', paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
                 {dummy_data.map((d, i) => {
                   return <UserSelectBoxList key={i} username={d.username} mail={d.mail} avatar={d.avatar} />
                 })}
