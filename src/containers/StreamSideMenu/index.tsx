@@ -446,9 +446,9 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '10px',
     marginBottom: '0px',
   },
-  wrap_footer:{
+  wrap_footer: {
     paddingLeft: 17,
-  }
+  },
 }))
 
 const ListItem = withStyles({

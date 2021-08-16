@@ -105,7 +105,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       onNext(step + 1)
     }
   }
-
+  const onClickPrev = () => {
+    onNext(step - 1)
+  }
   const isFirstStep = () => {
     return step === 1 ? true : false
   }
@@ -141,9 +143,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                     ? `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`
                     : formik.values.stepSettingOne.linkUrl
                 }
-                placeholder={
-                  !formik.values.stepSettingOne.linkUrl && i18n.t('common:streaming_setting_screen.placeholder_input_url')
-                }
+                placeholder={!formik.values.stepSettingOne.linkUrl && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_url')}
                 fullWidth
                 rows={8}
@@ -154,9 +154,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               />
             </Box>
             {isFirstStep() && (
-              <Box py={1} display="flex" justifyContent="flex-end" className={`${classes.urlCopy} ${classes.lastItem}`} onClick={handleCopy}>
+              <Box
+                py={1}
+                display="flex"
+                justifyContent="flex-end"
+                className={`${classes.urlCopy} ${classes.lastItem}`}
+                onClick={handleCopy}
+              >
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                <Typography>{t('common:streaming_setting_screen.copy_url')}</Typography>
+                <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
               </Box>
             )}
           </Box>
@@ -381,10 +387,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
                 <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                  <Typography>{t('common:streaming_setting_screen.copy_url')}</Typography>
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
                 <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Typography>{t('common:streaming_setting_screen.reissue')}</Typography>
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
             )}
@@ -437,10 +443,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
                 <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-                  <Typography>{t('common:streaming_setting_screen.copy_url')}</Typography>
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
                 <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-                  <Typography>{t('common:streaming_setting_screen.reissue')}</Typography>
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
             )}
@@ -468,12 +474,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               />
             </Box>
           )}
-          <Typography className={classes.captionNote}>
-            {i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pt')}
-          </Typography>
-          <Typography className={classes.captionNote}>
-            {i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pb')}
-          </Typography>
+          <Typography className={classes.captionNote}>{i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pt')}</Typography>
+          <Typography className={classes.captionNote}>{i18n.t('common:streaming_setting_screen.note_for_publish_delivery_pb')}</Typography>
           <Box paddingBottom={3} />
           {isFirstStep() ? (
             <Grid item xs={12} md={9}>
@@ -491,7 +493,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <Grid item xs={12}>
               <Box className={classes.actionButtonContainer}>
                 <Box className={classes.actionButton}>
-                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={onClickPrev}>
                     {t('common:common.cancel')}
                   </ESButton>
                 </Box>
@@ -517,6 +519,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: Colors.white_opacity['70'],
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: 'transparent',
+        backgroundColor: 'transparent',
       },
       '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
         padding: 0,
@@ -528,13 +531,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   urlCopy: {
-    marginLeft: 11,
+    marginLeft: 12,
     cursor: 'pointer',
     color: '#EB5686',
+  },
+  textLink: {
     textDecoration: 'underline',
   },
   link: {
-    marginRight: 5,
     fontSize: 14,
     paddingTop: 3,
   },
@@ -542,15 +546,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 0,
   },
   container: {
-    display: "flex", 
-    justifyContent: "center"
+    display: 'flex',
+    justifyContent: 'center',
   },
   formContainer: {
-    maxWidth: "617px",
+    maxWidth: '617px',
   },
   inputContainer: {
     position: 'relative',
-    paddingRigth: 7,
+    paddingRight: 7,
   },
   borderLeft: {
     width: 1,
@@ -590,27 +594,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 22px',
   },
   firstItem: {
-    width: "75%", 
+    width: '75%',
   },
   wrap_input: {
     paddingLeft: 0,
   },
   [theme.breakpoints.down(768)]: {
     container: {
-      padding: '34px 24px 32px 24px'
+      padding: '34px 24px 32px 24px',
     },
     wrap_input: {
       position: 'relative',
-      width: "100%", 
-      flexWrap: "wrap-reverse", 
-      justifyContent: "flex-end"
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
     },
     firstItem: {
-      width: "100%", 
+      width: '100%',
     },
     lastItem: {
-      position: "absolute", 
-      top: "-2px"
-    }
+      position: 'absolute',
+      top: '-2px',
+    },
   },
 }))

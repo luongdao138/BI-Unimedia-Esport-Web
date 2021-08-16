@@ -59,6 +59,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const onClickNext = () => {
     onNext(step + 1)
   }
+  const onClickPrev = () => {
+    onNext(step - 1)
+  }
 
   const isFirstStep = () => {
     return step === 1 ? true : false
@@ -95,13 +98,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               />
             </Box>
           </Box>
-          <Box pb={2} className={classes.wrap_input}>
+          <Box paddingBottom={isFirstStep() ? 2 : 3} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESFastInput
                 id="overview"
                 name="stepSettingThree.overview"
                 multiline
-                rows={12}
+                rows={8}
                 required={true}
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
@@ -139,7 +142,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             </Box>
           </Box>
           {isFirstStep() ? (
-            <Grid item xs={12}>
+            <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
                   {i18n.t('common:streaming_setting_screen.check_submit')}
@@ -154,7 +157,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <Grid item xs={12}>
               <Box className={classes.actionButtonContainer}>
                 <Box className={classes.actionButton}>
-                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large">
+                  <ESButton className={classes.cancelBtn} variant="outlined" round fullWidth size="large" onClick={onClickPrev}>
                     {i18n.t('common:common.cancel')}
                   </ESButton>
                 </Box>
@@ -190,22 +193,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       // paddingBottom: theme.spacing(1),
     },
   },
-  forbiddenMessageContainer: {
-    width: '100%',
+  container: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: 30,
-    marginBottom: 50,
-  },
-  box: {
-    paddingLeft: 0,
-  },
-  container: {
-    display: "flex", 
-    justifyContent: "center"
   },
   formContainer: {
-    maxWidth: "617px",
+    maxWidth: '617px',
   },
   label: {
     paddingRight: theme.spacing(6),
@@ -213,37 +206,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
-  },
-
-  urlCopy: {
-    marginLeft: 11,
-    cursor: 'pointer',
-    color: '#EB5686',
-    textDecoration: 'underline',
-  },
-  link: {
-    marginRight: 5,
-    fontSize: 14,
-    paddingTop: 3,
-  },
-
-  inputContainer: {
-    position: 'relative',
-    paddingRigth: 7,
-  },
-  borderLeft: {
-    width: 1,
-    height: 24,
-    backgroundColor: '#4B4B4D',
-    position: 'absolute',
-    left: -8,
-  },
-  flexBox: {
-    display: 'flex',
-    flex: 1,
-  },
-  captionNote: {
-    fontSize: 12,
   },
   actionButtonContainer: {
     '& .MuiButtonBase-root.button-primary': {
@@ -268,27 +230,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 22px',
   },
   firstItem: {
-    width: "75%", 
+    width: '75%',
   },
   wrap_input: {
     paddingLeft: 0,
   },
   [theme.breakpoints.down(768)]: {
     container: {
-      padding: '34px 24px 32px 24px'
+      padding: '34px 24px 32px 24px',
     },
     wrap_input: {
       position: 'relative',
-      width: "100%", 
-      flexWrap: "wrap-reverse", 
-      justifyContent: "flex-end"
+      width: '100%',
+      flexWrap: 'wrap-reverse',
+      justifyContent: 'flex-end',
     },
     firstItem: {
-      width: "100%", 
+      width: '100%',
     },
     lastItem: {
-      position: "absolute", 
-      top: "-2px"
-    }
+      position: 'absolute',
+      top: '-2px',
+    },
   },
 }))
