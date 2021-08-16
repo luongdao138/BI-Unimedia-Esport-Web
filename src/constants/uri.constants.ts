@@ -102,4 +102,5 @@ export const URI = {
   LOBBY_ENTRY: '/v2/recruitments/:id/do_entry',
   LOBBY_CANCEL: '/v2/recruitments/:id/cancel',
   LOBBY_UNJOIN: '/v2/recruitments/:id/unjoin',
+  LOBBY_PARTICIPANTS: '/v2/recruitments/:id/participants',
 }
