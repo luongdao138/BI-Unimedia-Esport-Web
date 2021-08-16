@@ -14,15 +14,16 @@ import { setNotFound } from '@store/common/actions/index'
 import { Box } from '@material-ui/core'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 interface StreamLayoutProps {
   patternBg?: boolean
   footer?: boolean
   loginRequired?: boolean
-  isStreamer?: boolean
+  minimizeLayout?: boolean
 }
 
-const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer, loginRequired, isStreamer }) => {
+const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer, loginRequired, minimizeLayout }) => {
   const [open, setOpen] = useState<boolean>(false)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const dispatch = useAppDispatch()
@@ -32,6 +33,9 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
   useLogout()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down('md'))
+
+  const { userProfile } = useGetProfile()
+  const isStreamer = userProfile?.attributes?.delivery_flag || false
 
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
@@ -60,31 +64,31 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
   }
 
   return (
-    <div className="main_wrapper">
+    <div className={`main_wrapper ${minimizeLayout ? 'minimize_main_wrapper' : ''}`}>
       <Header open={open} toggleDrawer={toggleDrawer} />
-      {isStreamer ? (
+      {!minimizeLayout ? (
         <>
-          <aside className="streamer_aside_left stream_fixed_menu">
-            <StreamSideMenu minimizeLayout={false} isStreamer={true} />
+          <aside className="no_minimize_aside_left no_minimize_fixed_menu">
+            <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} />
           </aside>
-          <main role="streamer_main" className={patternBg ? 'streamer_main' : 'streamer_main no-pattern'}>
-            <div className="streamer_content_wrapper">
-              <div className="streamer_content">{renderContent()}</div>
+          <main role="no_minimize_main" className={patternBg ? 'no_minimize_main' : 'no_minimize_main no-pattern'}>
+            <div className="no_minimize_content_wrapper">
+              <div className="no_minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>
-            <aside className="streamer_aside_right"></aside>
+            <aside className="no_minimize_aside_right"></aside>
           </main>
         </>
       ) : (
         <>
-          <aside className="not_streamer_aside_left">
+          <aside className="minimize_aside_left">
             <Box onMouseOver={() => toggleDrawer(true)}>
-              <StreamSideMenu minimizeLayout={true} isStreamer={false} />
+              <StreamSideMenu minimizeLayout={minimizeLayout} isStreamer={isStreamer} />
             </Box>
           </aside>
-          <main role="not_streamer_main" className="not_streamer_main">
-            <div className="not_streamer_content_wrapper">
-              <div className="not_streamer_content">{renderContent()}</div>
+          <main role="minimize_main" className="minimize_main">
+            <div className="minimize_content_wrapper">
+              <div className="minimize_content">{renderContent()}</div>
               {footer ? <Footer /> : ''}
             </div>
           </main>
@@ -99,8 +103,8 @@ const StreamLayout: React.FC<StreamLayoutProps> = ({ children, patternBg, footer
 StreamLayout.defaultProps = {
   patternBg: true,
   footer: true,
-  loginRequired: false,
-  isStreamer: true,
+  loginRequired: true,
+  minimizeLayout: false,
 }
 
 export default StreamLayout

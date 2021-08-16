@@ -16,12 +16,12 @@ enum TABS {
   DISTRIBUTOR = 2,
 }
 
-const StreamingSettingContainer: React.FC = () => {
+const StreamingSettingContainer: React.FC<{default_tab: any}> = ({default_tab}) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const [tab, setTab] = useState(0)
+  const [tab, setTab] = useState(default_tab)
   useEffect(() => {
-    setTab(0)
+    setTab(default_tab)
   }, [])
   const getTabs = () => {
     return (

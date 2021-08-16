@@ -21,7 +21,7 @@ const StreamingManageContainer: React.FC = () => {
           >
             <SettingsRowItem key="delivery_settings" title={t('streaming_manage_screen.delivery_settings')} showSwitch={false} />
           </div>
-          <div
+          {/* <div
             onClick={() => {
               router.push(ESRoutes.VIDEO_STREAMING_SETTING)
             }}
@@ -45,7 +45,7 @@ const StreamingManageContainer: React.FC = () => {
             }}
           >
             <SettingsRowItem key="payment_information" title={t('streaming_manage_screen.payment_information')} showSwitch={false} />
-          </div>
+          </div> */}
         </LoginRequired>
       </Box>
     </div>

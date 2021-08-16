@@ -96,7 +96,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             </Box>
           </>
         )}
-        <Box className={classes.menuWrap + getAddClass(classes.streamerMenuWrap, classes.minimizeMenuWrap)}>
+        <Box className={classes.menuWrap + getAddClass(classes.noMinimizeMenuWrap, classes.minimizeMenuWrap)}>
           {!minimizeLayout && (
             <Box className={classes.wrap_point}>
               <Box className={classes.text_point}>{t('common:common.eXe_points')}</Box>
@@ -112,7 +112,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <Link href={ESRoutes.VIDEO_TOP} passHref>
               <ListItem
-                className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                 button
                 disableRipple
                 selected={isSelected(ESRoutes.VIDEO_TOP)}
@@ -125,9 +125,16 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </ListItem>
             </Link>
             {isStreamer && (
-              <Link href={ESRoutes.VIDEO_STREAMING_SETTING} passHref>
+              <Link 
+                href={{
+                    pathname: ESRoutes.VIDEO_STREAMING_SETTING,
+                    query: { default_tab: 1 },
+                  }} 
+                passHref
+                as={ESRoutes.VIDEO_STREAMING_SETTING}
+              >
                 <ListItem
-                  className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                   button
                   disableRipple
                   selected={isSelected(ESRoutes.VIDEO_STREAMING_SETTING)}
@@ -142,7 +149,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             )}
             <Link href={ESRoutes.TERMS} passHref>
               <ListItem
-                className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                 button
                 disableRipple
                 selected={isSelected(ESRoutes.TERMS)}
@@ -158,7 +165,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             {isStreamer && (
               <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
                 <ListItem
-                  className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                   button
                   disableRipple
                   selected={isSelected(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
@@ -172,12 +179,12 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </Link>
             )}
             {!isStreamer && (
-              <Link href={ESRoutes.SETTINGS} passHref>
+              <Link href={ESRoutes.TERMS} passHref>
                 <ListItem
-                  className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                   button
                   disableRipple
-                  selected={isSelected(ESRoutes.SETTINGS)}
+                  selected={isSelected(ESRoutes.TERMS)}
                 >
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-paper-plane" />
@@ -194,7 +201,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             )}
             <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem
-                className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                 button
                 disableRipple
                 selected={isSelected(ESRoutes.SETTINGS)}
@@ -209,7 +216,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
             <LoginRequired>
               <Link href={ESRoutes.HOME} passHref>
                 <ListItem
-                  className={classes.list + getAddClass(classes.streamer_list + ' ' + classes.listTextHome, classes.not_streamer_list)}
+                  className={classes.list + getAddClass(classes.noMinimizeList + ' ' + classes.listTextHome, classes.minimizeList)}
                   button
                   disableRipple
                   selected={isSelected(ESRoutes.HOME)}
@@ -224,7 +231,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           </List>
           {isAuthenticated && (
             <ListItem
-              className={classes.list + getAddClass(classes.streamer_list, classes.not_streamer_list)}
+              className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
               button
               disableRipple
               onClick={() => handleModal('logout')}
@@ -294,7 +301,7 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 500,
     },
   },
-  not_streamer_list: {
+  minimizeList: {
     paddingTop: '0px',
     marginBottom: 20,
     marginTop: 20,
@@ -306,7 +313,7 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'center',
     },
   },
-  streamer_list: {
+  noMinimizeList: {
     paddingLeft: '25px',
     marginBottom: '10px',
     marginTop: '10px',
@@ -386,7 +393,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     paddingBottom: theme.spacing(1),
   },
-  streamerMenuWrap: {
+  noMinimizeMenuWrap: {
     width: '180px',
   },
   menuWrap: {
