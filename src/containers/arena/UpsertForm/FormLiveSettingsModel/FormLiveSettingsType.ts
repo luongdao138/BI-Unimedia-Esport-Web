@@ -1,10 +1,10 @@
 export type FormLiveType = {
-  stepSettingOne: {
+  stepSettingOne?: {
     linkUrl: string
     title: string
     description: string
     thumbnail: string
-    category: string | number
+    category: number
     stream_url: string
     stream_key: string
     ticket_price: number
@@ -12,12 +12,12 @@ export type FormLiveType = {
     share_sns_flag: boolean
     publish_flag: boolean
   }
-  stepSettingTwo: {
+  stepSettingTwo?: {
     viewing_url: string
     re_thumbnail: string
     re_title: string
     re_description: string
-    re_category: string | number
+    re_category: number
     date_time_notification_delivery: string
     date_time_schedule_delivery_start: string
     date_time_schedule_end: string
@@ -33,7 +33,7 @@ export type FormLiveType = {
     notify_live_start_date?: string
     notify_live_end_date?: string
   }
-  stepSettingThree: {
+  stepSettingThree?: {
     channel_name: string
     overview: string
     discord_url?: string

@@ -20,7 +20,7 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, TYPE_SETTING } from '@services/liveStream.service'
+import { baseViewingURL, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
@@ -38,7 +38,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
-  const { liveSettingInformation, getLiveSettingTab, meta } = useLiveSetting()
+  const { liveSettingInformation, getLiveSettingTab, meta, setLiveStreamConfirm } = useLiveSetting()
   const liveInfo = liveSettingInformation.data
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
@@ -70,10 +70,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       formik.validateForm()
     })
   }
-
+  // const { uploadArenaCoverImage, isUploading } = useUploadImage()
   const handleUpload = useCallback(() => {
     // uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
-    //   formik.setFieldValue('stepSettingOne.thumbnail', imageUrl)
+    //   formik.setFieldValue('stepSettingOne.thumbnail', file)
     // })
   }, [])
 
@@ -127,6 +127,24 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       document.body.style.width = '100%'
       document.body.style.height = '100%'
     }
+  }
+
+  const onConfirm = () => {
+    const { linkUrl, ticket_price, use_ticket, share_sns_flag, publish_flag } = formik.values.stepSettingOne
+    const data: SetLiveStreamParams = {
+      ...formik.values.stepSettingOne,
+      uuid: linkUrl,
+      ticket_price: ticket_price + '',
+      use_ticket: use_ticket === false ? '0' : '1',
+      share_sns_flag: share_sns_flag === false ? '0' : '1',
+      publish_flag: publish_flag === false ? '0' : '1',
+      stream_notify_time: null,
+      stream_schedule_start_time: null,
+      stream_schedule_end_time: null,
+      sell_ticket_start_time: null,
+      scheduled_flag: 0,
+    }
+    setLiveStreamConfirm(data)
   }
 
   return (
@@ -244,7 +262,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                     {i18n.t('common:please_select')}
                   </option>
                   {LIVE_CATEGORIES.map((rule, index) => (
-                    <option key={index} value={rule.label}>
+                    <option key={index} value={rule.value}>
                       {rule.label}
                     </option>
                   ))}
@@ -498,7 +516,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
-                  <ButtonPrimary round fullWidth onClick={onClickNext}>
+                  <ButtonPrimary round fullWidth onClick={onConfirm}>
                     {t('common:streaming_setting_screen.start_live_stream')}
                   </ButtonPrimary>
                 </Box>
