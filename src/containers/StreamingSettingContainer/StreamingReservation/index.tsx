@@ -17,8 +17,7 @@ const StreamingReservationContainer: React.FC = () => {
   }
 
   const onComplete = (): void => {
-    router.push(ESRoutes.DELIVERY_MANAGEMENT)
-    // router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
+    router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
   return step === 3 ? <SettingsCompleted onClose={onClose} onComplete={onComplete} /> : <Steps step={step} onNext={onChangeStep} />

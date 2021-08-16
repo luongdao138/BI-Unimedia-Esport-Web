@@ -41,7 +41,6 @@ const PurchasePoint: React.FC = () => {
   // }
 
   // const onComplete = (): void => {
-  //   router.push(ESRoutes.DELIVERY_MANAGEMENT)
   // }
 
   return (
