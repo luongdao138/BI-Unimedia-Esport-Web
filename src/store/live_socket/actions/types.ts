@@ -1,5 +1,5 @@
 export interface State {
-  currentRoom: string | undefined
+  currentRoom?: string
   msgList: any
   roomCount: any
   connected: boolean
