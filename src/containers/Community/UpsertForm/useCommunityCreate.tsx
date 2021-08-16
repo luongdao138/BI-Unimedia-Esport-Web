@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@store/hooks'
-import lobbyStore from '@store/lobby'
-import { LobbyDetail } from '@services/lobby.service'
+import { useAppDispatch } from '@store/hooks'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 
-const { selectors } = lobbyStore
 // TODO change when data is ready
 export type EditableTypes = {
   title: boolean
@@ -24,14 +21,12 @@ export type EditableTypes = {
 
 const useCommunityCreate = (): {
   isEdit: boolean
-  lobby: LobbyDetail
   editables: EditableTypes
   submit(): void
 } => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const lobby = useAppSelector(selectors.getLobbyDetail)
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
     // always editable
@@ -63,7 +58,7 @@ const useCommunityCreate = (): {
   }, [router])
 
   useEffect(() => {
-    if (lobby && router.asPath.endsWith('/edit') && router.query.community_id) {
+    if (router.asPath.endsWith('/edit') && router.query.community_id) {
       if (!isEditable) {
         router.push(ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(router.query.community_id)))
         return
@@ -83,9 +78,9 @@ const useCommunityCreate = (): {
       _editables.address = true
       setEditables(_editables)
     }
-  }, [lobby, router])
+  }, [router])
 
-  return { isEdit, lobby, editables, submit }
+  return { isEdit, editables, submit }
 }
 
 export default useCommunityCreate

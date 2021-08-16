@@ -1,4 +1,4 @@
-import { LobbyStatus } from '@services/lobby.service'
+import { LobbyStatus } from '@services/lobbydump.service'
 import { Box, Icon, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'

@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { MatchItemType } from '@services/lobby.service'
+import { MatchItemType } from '@services/lobbydump.service'
 import { RootState } from '@store/store'
 
 const getRoot = (state: RootState) => state.lobby

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import useLobbyDetail from '../hooks/useLobbyDetail'
 import LobbyDetailHeader from '@components/LobbyDetailHeader'
-import { LobbyDetail, LobbyStatus } from '@services/lobby.service'
+import { LobbyDetail, LobbyStatus } from '@services/lobbydump.service'
 import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
 import RecruitmentClosed from './Partials/RecruitmentClosed'
 import Recruiting from './Partials/Recruiting'

@@ -15,7 +15,7 @@ import {
   RecommendedUsers,
   ParticipantName,
   LobbyTeamDetail,
-} from '@services/lobby.service'
+} from '@services/lobbydump.service'
 import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 
 type StateType = {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail } from '@services/lobbydump.service'
 import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme, DialogContent } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'

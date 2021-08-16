@@ -1,4 +1,4 @@
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail } from '@services/lobbydump.service'
 import { FormType } from './FormType'
 
 export const getInitialValues = (data?: LobbyDetail): FormType => ({

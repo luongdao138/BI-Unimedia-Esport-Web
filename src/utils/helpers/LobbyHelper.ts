@@ -1,7 +1,7 @@
 import { T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/lobby.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { LobbyDetail, LobbyMatchRound } from '@services/lobby.service'
+import { LobbyDetail, LobbyMatchRound } from '@services/lobbydump.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
 

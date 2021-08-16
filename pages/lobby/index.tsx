@@ -4,7 +4,7 @@ import React from 'react'
 import { LobbyHomeContainer } from '@containers/lobby'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
-import { LobbyFilterOption } from '@services/lobby.service'
+import { LobbyFilterOption } from '@services/lobbydump.service'
 
 const LobbyPage: PageWithLayoutType = () => {
   const router = useRouter()

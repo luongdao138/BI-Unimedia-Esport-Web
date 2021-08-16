@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { TeamJoinBase, TeamMember, LobbyDetail } from '@services/lobby.service'
+import { TeamJoinBase, TeamMember, LobbyDetail } from '@services/lobbydump.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import ESInput from '@components/Input'
