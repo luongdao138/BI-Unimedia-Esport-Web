@@ -863,7 +863,14 @@ export default {
     archive_list: 'アーカイブ一覧',
     payment_information: '入金情報',
   },
-  streaming_settings_live_streaming_screen: {
+  streaming_manage_screen: {
+    title: '配信管理',
+    delivery_settings: '配信設定',
+    distribution_data_management: '配信データ管理',
+    archive_list: 'アーカイブ一覧',
+    payment_information: '入金情報',
+  },
+  streaming_setting_screen: {
     title: '配信設定',
     live_stream: 'ライブ配信',
     streaming_reservation: '配信予約',

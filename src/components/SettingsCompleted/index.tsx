@@ -22,7 +22,7 @@ const SettingsCompleted: React.FC<Props> = ({ title, titleNotification, messageN
     <Box>
       <ESDialog
         open={true}
-        title={title || t('common:streaming_settings_live_streaming_screen.title')}
+        title={title || t('common:streaming_setting_screen.title')}
         handleClose={onClose}
         bkColor="#2D2D2D"
         alignTop
@@ -31,14 +31,14 @@ const SettingsCompleted: React.FC<Props> = ({ title, titleNotification, messageN
         <DialogContent>
           <Box pt={7} pb={18} display="flex" flexDirection="column" alignItems="center">
             <Typography variant="h2" className={classes.headerStep3}>
-              {titleNotification || t('common:streaming_settings_live_streaming_screen.complete_delivery_settings')}
+              {titleNotification || t('common:streaming_setting_screen.complete_delivery_settings')}
             </Typography>
             <Typography variant="subtitle1" className={classes.contentStep3}>
-              {messageNotification || t('common:streaming_settings_live_streaming_screen.step3_delivery_settings_content')}
+              {messageNotification || t('common:streaming_setting_screen.step3_delivery_settings_content')}
             </Typography>
             <Box className={classes.redirectButton}>
               <ButtonPrimary fullWidth round onClick={onComplete}>
-                {titleButton || t('common:streaming_settings_live_streaming_screen.step3_close_btn')}
+                {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
               </ButtonPrimary>
             </Box>
           </Box>
