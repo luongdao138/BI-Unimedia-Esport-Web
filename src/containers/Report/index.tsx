@@ -373,12 +373,12 @@ const useStyles = makeStyles((theme) => ({
   topicAvatar: {
     zIndex: 2,
     width: theme.spacing(5),
-    height: 40,
+    height: theme.spacing(5),
   },
   userInfoContainer: {
     backgroundColor: Colors.black,
-    marginTop: 24,
-    padding: 16,
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(2),
     borderStyle: 'solid',
     borderColor: Colors.grey[400],
     borderRadius: 4,
