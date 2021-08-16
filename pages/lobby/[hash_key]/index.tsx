@@ -4,7 +4,7 @@ import { DetailContainer } from '@containers/lobby'
 
 const LobbyPage: PageWithLayoutType = () => {
   return (
-    <MainLayout footer>
+    <MainLayout>
       <DetailContainer />
     </MainLayout>
   )

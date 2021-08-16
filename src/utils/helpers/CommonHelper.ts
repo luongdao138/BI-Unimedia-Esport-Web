@@ -135,6 +135,10 @@ const staticSmartTime = (time: string | number): string => {
   }
 }
 
+const purchaseHistoryStaticSmartTime = (time: string | number): string => {
+  return moment(time).format('YYYY/MM/DD')
+}
+
 const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): Array<number> => {
   const searchStrLen = searchStr.length
   if (searchStrLen == 0) {
@@ -192,10 +196,41 @@ const cutLinksIntoPieces = (textMain: string) => {
   return separations
 }
 
+function isDoubleByte(str: string): boolean {
+  if (!str) return false
+  for (let i = 0, n = str.length; i < n; i++) {
+    if (str.charCodeAt(i) > 255) {
+      return true
+    }
+  }
+  return false
+}
+
+const startOfNextDay = (): string => {
+  return moment().add(1, 'days').startOf('day').toString()
+}
+
+const nearestFutureMinutes = (interval: number): string => {
+  const currentDate = moment()
+
+  if (currentDate.minute() % 5 === 0) {
+    currentDate.add(5, 'minutes')
+    return currentDate.second(0).toString()
+  } else {
+    currentDate.add(5, 'minutes')
+
+    return currentDate
+      .minute(Math.round(currentDate.minute() / interval) * interval)
+      .second(0)
+      .toString()
+  }
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
   staticSmartTime,
+  purchaseHistoryStaticSmartTime,
   scorePassword,
   userCodeValid,
   matchNgWords,
@@ -206,4 +241,7 @@ export const CommonHelper = {
   cutLinksIntoPieces,
   getIndicesOf,
   replaceWhiteSpace,
+  isDoubleByte,
+  nearestFutureMinutes,
+  startOfNextDay,
 }

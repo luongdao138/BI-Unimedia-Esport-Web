@@ -22,13 +22,13 @@ const SecuritySettingsPage: PageWithLayoutType = () => {
           >
             <SettingsRowItem key="account_settings" title={t('security_settings.my_page')} showSwitch={false} />
           </div>
-          <div
+          {/* <div
             onClick={() => {
               router.push(ESRoutes.MESSAGE_SETTINGS)
             }}
           >
             <SettingsRowItem key="message" title={t('security_settings.message')} showSwitch={false} />
-          </div>
+          </div> */}
           <div
             onClick={() => {
               router.push(ESRoutes.BLOCK_SETTINGS)

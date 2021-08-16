@@ -9,9 +9,10 @@ type ProfileCoverProps = {
   editable?: boolean
   src: string
   onChange?: (file: File, blob: any) => void
+  onRemove?: (path: string, file_type: number) => void
 }
 
-const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) => {
+const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange, onRemove }) => {
   const classes = useStyles()
   const [setCover, toggleSetCover] = useState<boolean>(false)
   const [drag, setDrag] = useState<boolean>(false)
@@ -41,7 +42,13 @@ const ProfileCover: React.FC<ProfileCoverProps> = ({ editable, src, onChange }) 
         </label>
       ) : null}
       {setCover ? (
-        <CoverSelector src={src} cancel={() => toggleSetCover(false)} onUpdate={(file: File, blob: any) => onChange(file, blob)} />
+        <CoverSelector
+          src={src}
+          is_required={false}
+          cancel={() => toggleSetCover(false)}
+          onUpdate={(file: File, blob: any) => onChange(file, blob)}
+          onRemove={(path: string, file_type: number) => onRemove(path, file_type)}
+        />
       ) : null}
     </div>
   )

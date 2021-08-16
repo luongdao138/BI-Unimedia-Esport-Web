@@ -55,7 +55,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
   const deselectBtn = (handle, label) => {
     return (
       <Box flexShrink={0} height="100%" display="flex" justifyContent="center" alignItems="center">
-        <ButtonPrimary style={{ padding: '12px' }} size="small" gradient={false} onClick={handle}>
+        <ButtonPrimary px={12} size="small" gradient={false} onClick={handle}>
           {label}
         </ButtonPrimary>
       </Box>

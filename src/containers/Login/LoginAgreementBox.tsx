@@ -1,4 +1,4 @@
-import { Box, Link } from '@material-ui/core'
+import { Box, Theme, makeStyles } from '@material-ui/core'
 import ESCheckbox from '@components/Checkbox'
 import i18n from '@locales/i18n'
 import { memo, useEffect, useState } from 'react'
@@ -14,6 +14,8 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
     setCheckbox({ ...checkbox, [event.target.name]: event.target.checked })
   }
 
+  const classes = useStyles()
+
   useEffect(() => onAgreementChange(checkbox.terms && checkbox.privacy), [checkbox])
 
   return (
@@ -24,7 +26,9 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
         onChange={handleChange}
         label={
           <>
-            <Link href={ESRoutes.TERMS}>{i18n.t('common:register.link1')}</Link>
+            <a href={ESRoutes.TERMS} className={classes.link} target="_blank" rel="noopener noreferrer">
+              {i18n.t('common:register.link1')}
+            </a>
             {i18n.t('common:register.terms').substr(i18n.t('common:register.terms').length - 5)}
           </>
         }
@@ -36,7 +40,9 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
         onChange={handleChange}
         label={
           <>
-            <Link href={ESRoutes.PRIVACY}>{i18n.t('common:register.link2')}</Link>
+            <a href={ESRoutes.PRIVACY} className={classes.link} target="_blank" rel="noopener noreferrer">
+              {i18n.t('common:register.link2')}
+            </a>
             {i18n.t('common:register.privacy').substr(i18n.t('common:register.privacy').length - 5)}
           </>
         }
@@ -45,5 +51,13 @@ const LoginAgreementBox: React.FC<LoginAgreementBoxProps> = ({ onAgreementChange
     </Box>
   )
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    textDecoration: 'underline',
+  },
+}))
 
 export default memo(LoginAgreementBox)

@@ -55,4 +55,11 @@ export const ESRoutes = {
   LOBBY: '/lobby',
   LOBBY_CREATE: '/lobby/create',
   LOBBY_DETAIL: '/lobby/:id',
+  COMMUNITY: '/community',
+  COMMUNITY_DETAIL: '/community/:id',
+  COMMUNITY_CREATE: '/community/create',
+  TOPIC: '/community/:id/topic',
+  TOPIC_CREATE: '/community/:id/topic/create',
+  LINE_CALLBACK: '/line/callback',
+  TWITTER_CALLBACK: '/twitter/callback',
 }

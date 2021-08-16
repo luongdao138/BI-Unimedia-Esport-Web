@@ -10,7 +10,7 @@ import SearchModal from '@containers/SearchArea/SearchModal'
 import { searchOptions } from '@constants/common.constants'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { getIsAuthenticated } from '@store/auth/selectors'
+import { getAuth, getIsAuthenticated } from '@store/auth/selectors'
 import { useAppSelector, useAppDispatch } from '@store/hooks'
 import ESButton from '@components/Button'
 import { ESRoutes } from '@constants/route.constants'
@@ -28,9 +28,11 @@ import UserSettingsContainer from '@containers/UserSettings'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
 import LobbyCreateContainer from '@containers/lobby/UpsertForm'
 import AccountSettingsPasswordContainer from '@containers/Settings/Account/Password'
+import ProfileEditContainer from '@containers/Profile/ProfileEdit'
 import AccountSettingsChangeEmailContainer from '@containers/Settings/Account/ChangeEmail'
 import AccountSettingsConfirmContainer from '@containers/Settings/Account/Confirm'
 import AccountSettingsChangePasswordContainer from '@containers/Settings/Account/ChangePassword'
+import TopicCreateContainer from '@containers/Community/Topic/UpsertForm'
 import React, { useEffect, useState } from 'react'
 import { Box } from '@material-ui/core'
 import NotificationBadgeListContainer from '@containers/Notifications/notificationBadgeList'
@@ -39,6 +41,8 @@ import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { unseenCount } from '@store/socket/selectors'
+import CommunityCreateContainer from '@containers/Community/UpsertForm'
+import _ from 'lodash'
 
 interface returnItem {
   value: string
@@ -54,6 +58,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
   const router = useRouter()
   const classes = useStyles()
   const isAuthenticated = useAppSelector(getIsAuthenticated)
+  const userData = useAppSelector(getAuth)
+  const userCode = _.get(userData, 'user_code', '')
   const { handleReturn } = useReturnHref()
   const dispatch = useAppDispatch()
   const badge = useAppSelector(notificationSelector.getNotificationBadge)
@@ -93,6 +99,10 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <ArenaCreateContainer />
       case ESRoutes.LOBBY_CREATE:
         return <LobbyCreateContainer />
+      case ESRoutes.COMMUNITY_CREATE:
+        return <CommunityCreateContainer />
+      case ESRoutes.TOPIC_CREATE:
+        return <TopicCreateContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_PASSWORD:
         return <AccountSettingsPasswordContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_EMAIL:
@@ -101,6 +111,8 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
         return <AccountSettingsConfirmContainer />
       case ESRoutes.USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD:
         return <AccountSettingsChangePasswordContainer />
+      case ESRoutes.PROFILE_EDIT:
+        return <ProfileEditContainer />
       default:
         return <></>
     }
@@ -131,7 +143,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
               <img style={{ cursor: 'pointer' }} src="/images/logo.svg" />
             </Link>
             <div className={classes.search + ' search-area'}>
-              <SearchArea selectData={searchOptions} onSearch={onSearch} />
+              <SearchArea userCode={userCode} isLoggedIn={isAuthenticated} selectData={searchOptions} onSearch={onSearch} />
             </div>
             <SearchModal show={show} handleClose={() => setShow(false)} selectData={searchOptions} onSearch={onSearch}></SearchModal>
             <div className={classes.toolArea}>
@@ -223,6 +235,7 @@ const useStyles = makeStyles((theme) => ({
     background: '#000',
     borderBottom: 'solid 1px #70707070',
     willChange: 'transform',
+    paddingRight: '0 !important',
   },
   toolbar: {
     minHeight: 60,

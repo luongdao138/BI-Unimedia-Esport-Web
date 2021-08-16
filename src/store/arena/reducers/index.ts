@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import {
@@ -17,6 +18,7 @@ import {
   TournamentTeamDetail,
 } from '@services/arena.service'
 import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import { genRanHex } from '@utils/helpers/CommonHelper'
 
 type StateType = {
   searchTournaments?: Array<TournamentResponse>
@@ -109,6 +111,7 @@ export default createReducer(initialState, (builder) => {
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       _participants = state.tournamentParticipants.concat(action.payload.data)
     }
+    state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
   })
@@ -134,6 +137,9 @@ export default createReducer(initialState, (builder) => {
     state.interestedsMeta = action.payload.meta
   })
   builder.addCase(actions.getTournamentMatches.fulfilled, (state, action) => {
+    state.tournamentMatches = action.payload
+  })
+  builder.addCase(actions.getTournamentMatchesInterval.fulfilled, (state, action) => {
     state.tournamentMatches = action.payload
   })
   builder.addCase(actions.getRecruitingTournaments.fulfilled, (state, action) => {
@@ -181,5 +187,35 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getTournamentTeamDetail.fulfilled, (state, action) => {
     state.selectedTeamDetail = action.payload.data
+  })
+  builder.addCase(actions.teamMemberFollowStageChanged, (state, action) => {
+    const tournamentParticipants = _.cloneDeep(state.tournamentParticipants)
+    state.tournamentParticipants = tournamentParticipants.map((participant) => {
+      return {
+        ...participant,
+        version: genRanHex(2),
+        attributes: {
+          ...participant.attributes,
+          team: {
+            data: {
+              ...participant.attributes.team.data,
+              attributes: {
+                ...participant.attributes.team.data.attributes,
+                members: participant.attributes.team.data.attributes.members.map((member) => {
+                  if (member.user_id !== action.payload.userId) return { ...member }
+                  return Object.assign(
+                    {},
+                    {
+                      ...member,
+                      is_followed: action.payload.state,
+                    }
+                  )
+                }),
+              },
+            },
+          },
+        },
+      }
+    })
   })
 })

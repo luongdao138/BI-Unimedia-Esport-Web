@@ -9,6 +9,7 @@ import { Meta } from '@store/metadata/actions/types'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import useInterval from '@utils/hooks/useInterval'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
 const setScoreMeta = createMetaSelector(actions.setScore)
@@ -25,8 +26,10 @@ const useTournamentMatches = (): {
   roundTitles: RoundTitles
   handleBack: () => void
 } => {
+  const [delay, setDelay] = useState((30 * 1000) as number | null)
+  const [initialPathName, setInitialPathName] = useState(null as string | null)
   const { t } = useTranslation(['common'])
-  const { query, push, back } = useRouter()
+  const { query, push, back, pathname } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
@@ -34,13 +37,29 @@ const useTournamentMatches = (): {
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
   const arena = useAppSelector(selectors.getTournamentDetail)
   const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
+  useInterval(() => fetchMatchesInterval(), delay)
+  const fetchMatches = () => {
+    if (query.hash_key) {
+      dispatch(actions.getTournamentMatches(String(query.hash_key)))
+    }
+  }
+  const fetchMatchesInterval = () => {
+    if (query.hash_key) {
+      // eslint-disable-next-line no-console
+      console.log('fetching matches')
+      dispatch(actions.getTournamentMatchesInterval(String(query.hash_key)))
+    }
+  }
+
   useEffect(() => {
     if (isNotHeld || isBattleRoyale) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
   }, [isNotHeld, isBattleRoyale])
 
   useEffect(() => {
     fetchMatches()
+    setInitialPathName(pathname)
   }, [query.hash_key])
+
   useEffect(() => {
     if (meta.loaded) {
       const matchesLength = matches.length
@@ -62,11 +81,28 @@ const useTournamentMatches = (): {
     }
   }, [meta.loaded])
 
-  const fetchMatches = () => {
-    if (query.hash_key) {
-      dispatch(actions.getTournamentMatches(String(query.hash_key)))
+  useEffect(() => {
+    if (initialPathName !== null && initialPathName !== pathname) {
+      // eslint-disable-next-line no-console
+      console.log('removing interval')
+      setDelay(null)
     }
-  }
+  }, [pathname])
+
+  useEffect(() => {
+    return () => {
+      try {
+        if (delay !== null) {
+          // eslint-disable-next-line no-console
+          console.log('removing interval')
+          setDelay(null)
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      }
+    }
+  }, [])
 
   const handleBack = () => back()
 
