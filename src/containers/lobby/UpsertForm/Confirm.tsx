@@ -162,8 +162,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.area_detail')} value={values.stepTwo.address} disabled={true} fullWidth />
       <Box pb={2} />
 
-      {values.stepOne.category_title_id.map((category, idx) => (
-        <ESChip key={idx} className={classes.chip} label={category.display_name} />
+      {values.stepOne.categories.map((category, idx) => (
+        <ESChip key={idx} className={classes.chip} label={category.name} />
       ))}
       <Box pb={2} />
     </Box>

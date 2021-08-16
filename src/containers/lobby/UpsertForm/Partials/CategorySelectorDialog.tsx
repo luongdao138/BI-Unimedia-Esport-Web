@@ -2,9 +2,7 @@ import React, { useState, useEffect, memo } from 'react'
 import { Theme, Box, Typography, makeStyles, Container, List } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { GameTitle } from '@services/game.service'
 import { useTranslation } from 'react-i18next'
-import useGameTitles from '@components/GameSelector/useGameTitles'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import ButtonPrimary from '@components/ButtonPrimary'
 import BlankLayout from '@layouts/BlankLayout'
@@ -12,12 +10,13 @@ import Icon from '@material-ui/core/Icon'
 import ESModal from '@components/Modal'
 import ESChip from '@components/Chip'
 import _ from 'lodash'
-import useGameGenre from '@components/GameSelector/useGameByGenreId'
+import useCategory from './useCategory'
+import { CategoryItem } from '@services/lobby.service'
 
-type GameTitleItem = GameTitle['attributes']
+// type GameTitleItem = GameTitle['attributes']
 interface Props {
-  values: GameTitleItem[]
-  onChange: (games: GameTitleItem[]) => void
+  values: CategoryItem['attributes'][]
+  onChange: (categories: CategoryItem['attributes'][]) => void
   disabled?: boolean
 }
 
@@ -25,15 +24,17 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
-  const [categoryTitles, setCategoryTitles] = useState<GameTitleItem[]>(values)
-  const { games } = useGameTitles()
-  const { getGameByGenreId, meta } = useGameGenre()
+  const [categoryTitles, setCategoryTitles] = useState<CategoryItem['attributes'][]>(values)
+  // const { games } = useGameTitles()
+  // const { getGameByGenreId, meta } = useGameGenre()
+  const { getLobbyCategories, meta, categories } = useCategory()
 
-  const handleCategoryGenre = () => getGameByGenreId(1)
+  // const handleCategoryGenre = () => getGameByGenreId(1)
 
   useEffect(() => {
     if (open === true) {
       setCategoryTitles(categoryTitles)
+      getLobbyCategories()
     }
   }, [open])
 
@@ -43,12 +44,12 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
   }
   const checkIsSelected = (id: number) => categoryTitles.some((g) => g.id === id)
 
-  const handleSelect = (game: GameTitleItem) => {
-    const selectedId = game.id
+  const handleSelect = (category: CategoryItem['attributes']) => {
+    const selectedId = category.id
     if (checkIsSelected(selectedId)) {
       setCategoryTitles(categoryTitles.filter((category) => category.id !== selectedId))
     } else {
-      setCategoryTitles([game, ...categoryTitles])
+      setCategoryTitles([category, ...categoryTitles])
     }
   }
 
@@ -61,7 +62,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
         disabled={disabled}
         onClick={() => {
           setOpen(true)
-          handleCategoryGenre()
+          // handleCategoryGenre()
         }}
         className={classes.inputContainer}
       >
@@ -71,7 +72,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
           ) : (
             values.map((item, idx) => (
               <Box paddingRight={1} key={idx}>
-                <Typography>{'#' + item.display_name}</Typography>
+                <Typography>{'#' + item.name}</Typography>
               </Box>
             ))
           )}
@@ -93,16 +94,16 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
 
             <Box pt={8} className={classes.container}>
               <>
-                {meta.loaded && !meta.pending && games.length > 0 && (
+                {meta.loaded && !meta.pending && categories.length > 0 && (
                   <Container maxWidth="md" className={classes.listContainer}>
                     <List>
-                      {games.map((g, idx) => (
+                      {categories.map((c, idx) => (
                         <ESChip
                           key={idx}
                           className={classes.chip}
-                          label={g.display_name}
-                          onClick={() => handleSelect(g)}
-                          color={checkIsSelected(g.id) ? 'primary' : 'default'}
+                          label={c.name}
+                          onClick={() => handleSelect(c)}
+                          color={checkIsSelected(c.id) ? 'primary' : 'default'}
                           isGameList={true}
                         />
                       ))}
