@@ -38,11 +38,6 @@ export enum LobbyEntryStatus {
   notselected = 2,
 }
 
-export type ParticipantItem = {
-  nickname: string
-  profile_image?: string | null
-}
-
 export type LobbyResponse = {
   id: string
   type: string
@@ -58,7 +53,26 @@ export type LobbyResponse = {
     status: number
     entry_status?: LobbyEntryStatus | null
     participant_count: number
-    participants: Array<ParticipantItem>
+    participants: Array<ParticipantsItem>
+  }
+}
+
+export type ParticipantsResponse = {
+  data: ParticipantsData
+}
+
+export type ParticipantsData = Array<ParticipantsItem>
+
+export type ParticipantsItem = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    user_id: number
+    status: number
+    nickname: string
+    user_code: string
+    avatar_url: string
   }
 }
 
@@ -79,5 +93,10 @@ export const cancel = async (params: number): Promise<EntryLobbyResponse> => {
 
 export const search = async (params: LobbySearchParams): Promise<LobbySearchResponse> => {
   const { data } = await api.post<LobbySearchResponse>(URI.LOBBY_SEARCH, params)
+  return data
+}
+
+export const participants = async (params: number): Promise<ParticipantsResponse> => {
+  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, params.toString()))
   return data
 }
