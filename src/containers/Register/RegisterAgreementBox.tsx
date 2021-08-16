@@ -1,4 +1,4 @@
-import { Box, Link, makeStyles } from '@material-ui/core'
+import { Box, Theme, makeStyles } from '@material-ui/core'
 import ESCheckbox from '@components/Checkbox'
 import i18n from '@locales/i18n'
 import { memo, useEffect, useState } from 'react'
@@ -26,9 +26,9 @@ const RegisterAgreementBox: React.FC<RegisterAgreementBoxProps> = ({ onAgreement
         onChange={handleChange}
         label={
           <>
-            <Link className={classes.link} href={ESRoutes.TERMS}>
+            <a href={ESRoutes.TERMS} className={classes.link} target="_blank" rel="noopener noreferrer">
               {i18n.t('common:register.link1')}
-            </Link>
+            </a>
             {i18n.t('common:register.terms').substr(i18n.t('common:register.terms').length - 5)}
           </>
         }
@@ -40,9 +40,9 @@ const RegisterAgreementBox: React.FC<RegisterAgreementBoxProps> = ({ onAgreement
         onChange={handleChange}
         label={
           <>
-            <Link className={classes.link} href={ESRoutes.PRIVACY}>
+            <a href={ESRoutes.PRIVACY} className={classes.link} target="_blank" rel="noopener noreferrer">
               {i18n.t('common:register.link2')}
-            </Link>
+            </a>
             {i18n.t('common:register.privacy').substr(i18n.t('common:register.privacy').length - 5)}
           </>
         }
@@ -52,8 +52,10 @@ const RegisterAgreementBox: React.FC<RegisterAgreementBoxProps> = ({ onAgreement
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   link: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
     textDecoration: 'underline',
   },
 }))

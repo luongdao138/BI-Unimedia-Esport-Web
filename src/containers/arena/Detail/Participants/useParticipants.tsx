@@ -15,7 +15,9 @@ const useParticipants = () => {
   const getParticipants = (param) => dispatch(actions.getTournamentParticipants(param))
   const resetParticipants = () => dispatch(actions.resetParticipants())
   const resetMeta = () => dispatch(clearMetaData(actions.getTournamentParticipants.typePrefix))
-  return { participants, getParticipants, resetParticipants, resetMeta, meta, page }
+  const followStateChanged = (param) => dispatch(actions.teamMemberFollowStageChanged(param))
+
+  return { participants, getParticipants, resetParticipants, resetMeta, meta, page, followStateChanged }
 }
 
 export default useParticipants

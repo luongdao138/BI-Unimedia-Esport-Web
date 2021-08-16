@@ -32,6 +32,7 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
   const theme = useTheme()
   const { checkNgWord } = useCheckNgWord()
   const [newName, setNewName] = useState('')
+  const [isButtonDisabled, setButtonDisabled] = useState(true)
   const [bottomGap, setBottomGap] = useState<number>(0)
   const contentRect = useRect(contentRef)
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
@@ -71,16 +72,27 @@ const RoomNameEditor: React.FC<RoomNameEditorProps> = ({ roomName, roomId, open,
     }
   }
 
-  const isButtonDisabled = () => {
-    if (newName === '') return true
-    if (newName === roomName) return true
-    return false
-  }
+  useEffect(() => {
+    if (open) {
+      let value = newName
+      let isDisabled = true
+
+      if (value.match(/^\s/)) value = value.trim()
+
+      if (value === '' || value === roomName) isDisabled = true
+      else {
+        setNewName(value)
+        isDisabled = false
+      }
+
+      setButtonDisabled(isDisabled)
+    }
+  }, [newName, open])
 
   const renderFooter = () => (
     <div className={classes.stickyFooter} ref={contentRef}>
       <Box maxWidth={280} className={classes.buttonBottom}>
-        <ButtonPrimary type="submit" disabled={isButtonDisabled()} round fullWidth onClick={onSubmit}>
+        <ButtonPrimary type="submit" disabled={isButtonDisabled} round fullWidth onClick={onSubmit}>
           {i18n.t('common:chat.name_change_submit')}
         </ButtonPrimary>
       </Box>

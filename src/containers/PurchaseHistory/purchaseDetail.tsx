@@ -58,24 +58,15 @@ const PurchaseDetail: React.FC = () => {
     }
   }, [router])
 
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'unset'
-      document.body.style.position = 'unset'
-      document.body.style.width = 'unset'
-      document.body.style.height = 'unset'
-    }
-  }, [])
-
   const price = _.get(purchaseHistoryDetail, 'data.attributes.price')
-  const tax = _.get(purchaseHistoryDetail, 'data.attributes.tax')
+  const tax = Math.floor(_.get(purchaseHistoryDetail, 'data.attributes.tax', 0))
 
   const purchase_status = _.get(purchaseHistoryDetail, 'data.attributes.status')
   const purchase_datetime = _.get(purchaseHistoryDetail, 'data.attributes.purchase_datetime')
   const cancelled_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancelled_datetime')
   const cancel_req_datetime = _.get(purchaseHistoryDetail, 'data.attributes.cancel_req_datetime')
 
-  const time = CommonHelper.staticSmartTime(
+  const time = CommonHelper.purchaseHistoryStaticSmartTime(
     purchase_status == PAYMENT_STATUS.PURCHASED
       ? purchase_datetime
       : purchase_status == PAYMENT_STATUS.CANCELLED
@@ -112,15 +103,16 @@ const PurchaseDetail: React.FC = () => {
               onClose={handleClose}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
-              onEntered={() => {
-                document.body.style.position = 'fixed'
-                document.body.style.width = '100%'
-                document.body.style.height = '100%'
-              }}
-              onExited={() => {
-                document.body.style.position = 'unset'
-                document.body.style.width = 'unset'
-                document.body.style.height = 'unset'
+              BackdropProps={{
+                onTouchMove: (e) => {
+                  e.preventDefault()
+                },
+                onTouchStart: (e) => {
+                  e.preventDefault()
+                },
+                onTouchEnd: (e) => {
+                  e.preventDefault()
+                },
               }}
             >
               <DialogContent>
@@ -230,14 +222,6 @@ const PurchaseDetail: React.FC = () => {
             <Link href="https://support.exelab.jp/hc/ja/articles/900005549443" underline={'none'} target="_blank">
               <Typography className={classes.questions}>
                 {t('common:purchase_history.about_cancellation')}{' '}
-                <div className={classes.link}>
-                  <LinkIcon />
-                </div>
-              </Typography>
-            </Link>
-            <Link href="https://support.exelab.jp/hc/ja" underline={'none'} target="_blank">
-              <Typography className={classes.questions}>
-                {t('common:purchase_history.help_purchase')}{' '}
                 <div className={classes.link}>
                   <LinkIcon />
                 </div>

@@ -14,6 +14,8 @@ import LoginRequired from '@containers/LoginRequired'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import _ from 'lodash'
 
 interface ArenaHomeProps {
   filter: TournamentFilterOption
@@ -25,15 +27,27 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const { arenas, meta, loadMore, onFilterChange } = useArenaHome()
   const router = useRouter()
   const { toCreate } = useArenaHelper()
+  const { hasUCRReturnHref } = useReturnHref()
 
   useEffect(() => {
-    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
-    loadMore()
+    if (!hasUCRReturnHref) {
+      if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
+      loadMore()
+    }
   }, [arenas])
 
   useEffect(() => {
-    onFilterChange(filter)
-  }, [filter])
+    if (!router.isReady) return
+
+    let filterVal = TournamentFilterOption.all
+
+    if (_.has(router.query, 'filter')) {
+      const queryFilterVal = _.get(router.query, 'filter') as TournamentFilterOption
+      if (Object.values(TournamentFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
+    }
+
+    onFilterChange(filterVal)
+  }, [router.query])
 
   const onFilter = (filter: TournamentFilterOption) => {
     router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
@@ -126,7 +140,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
           className={classes.scrollContainer}
           dataLength={arenas.length}
           next={loadMore}
-          hasMore={true}
+          hasMore={!hasUCRReturnHref}
           loader={null}
           scrollThreshold={0.8}
         >

@@ -55,7 +55,7 @@ const AccountSettingsConfirmContainer: React.FC = () => {
   }
 
   return (
-    <ESStickyFooter title={t('common.send')} disabled={!buttonActive()} onClick={handleSubmit}>
+    <ESStickyFooter title={t('common.send')} disabled={!buttonActive()} onClick={handleSubmit} noScroll>
       <Box className={classes.header}>
         <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
           <Icon className={`fa fa-arrow-left ${classes.icon}`} />

@@ -60,6 +60,12 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     }
   }, [friends])
 
+  useEffect(() => {
+    return function () {
+      cleanFriendsData()
+    }
+  }, [])
+
   const filterItems = () => {
     if (_.isArray(friends) && _.isArray(roomMembers)) {
       const filtered = _.filter(friends, (friend) => {
@@ -201,7 +207,6 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
                 </>
               }
             />
-            <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
           </Box>
           {renderLoader()}
           {open ? (
