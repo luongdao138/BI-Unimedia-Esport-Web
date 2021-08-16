@@ -53,7 +53,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
       <Box className={classes.container}>
         <Box m={2}>
           <Box className={classes.userContainer} mt={2}>
-            <Box className={classes.userInfoContainer} ml={isConfirm ? 3 : 0}>
+            <Box className={classes.userInfoContainer} width={!date && '90%'}>
               <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.username}>{username}</Typography>
@@ -65,12 +65,14 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
                 <Typography className={classes.date}>{date}</Typography>
               </Box>
             )}
-            <ESMenu>
-              {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.report.button')}</ESMenuItem>}
-              <LoginRequired>
-                <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
-              </LoginRequired>
-            </ESMenu>
+            {!isConfirm && (
+              <ESMenu>
+                {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
+                <LoginRequired>
+                  <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
+                </LoginRequired>
+              </ESMenu>
+            )}
           </Box>
 
           <Box className={classes.discriptionContainer} mb={3} mt={3}>

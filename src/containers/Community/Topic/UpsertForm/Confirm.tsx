@@ -32,13 +32,15 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
         <ESLabel label={t('common:topic_create.preview')} bold={false} size="small" />
       </Box>
 
-      <MainTopic
-        username="コイチコイチコイチコイチコイチコイチコイチコイチコイチコイチ"
-        mail="@koichi"
-        discription={values.stepOne.overview}
-        image={values.stepOne.cover_image_url}
-        isConfirm
-      />
+      <Box className={classes.mainTopic}>
+        <MainTopic
+          username="コイチコイチコイチコイチコイチコイチコイチコイチコイチコイチ"
+          mail="@koichi"
+          discription={values.stepOne.overview}
+          image={values.stepOne.cover_image_url}
+          isConfirm
+        />
+      </Box>
       <Box pb={2} />
     </Box>
   )
@@ -48,18 +50,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   viewHolder: {
     marginRight: 40,
     marginLeft: 40,
-    width: 800,
     position: 'relative',
     left: -150,
   },
-
+  mainTopic: {
+    width: '200%',
+  },
   [theme.breakpoints.down('sm')]: {
     viewHolder: {
       marginLeft: 0,
       marginRight: 0,
-      width: 500,
       position: 'relative',
-      left: 50,
+      left: 0,
+    },
+    mainTopic: {
+      width: '100%',
     },
   },
 }))
