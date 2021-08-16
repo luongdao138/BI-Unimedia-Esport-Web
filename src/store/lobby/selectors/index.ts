@@ -4,3 +4,5 @@ import { RootState } from '@store/store'
 const getRoot = (state: RootState) => state.lobby
 
 export const lobbyDetail = createSelector(getRoot, (state) => state.detail)
+
+export const participantSelector = createSelector(getRoot, (state) => state.participants)
