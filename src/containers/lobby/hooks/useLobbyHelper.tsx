@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail } from '@services/lobbydump.service'
 import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/lobby.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useEffect } from 'react'
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail } from '@services/lobbydump.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'

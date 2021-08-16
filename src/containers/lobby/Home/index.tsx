@@ -1,6 +1,6 @@
 import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { LobbyFilterOption, LobbyListItem } from '@services/lobby.service'
+import { LobbyFilterOption, LobbyListItem } from '@services/lobbydump.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { AddRounded } from '@material-ui/icons'

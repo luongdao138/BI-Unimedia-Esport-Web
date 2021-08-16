@@ -8,7 +8,7 @@ import { Box, makeStyles, Typography, Theme } from '@material-ui/core'
 import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
 import LinkButton from '@components/LinkButton'
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail } from '@services/lobbydump.service'
 import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
 
 interface Props {

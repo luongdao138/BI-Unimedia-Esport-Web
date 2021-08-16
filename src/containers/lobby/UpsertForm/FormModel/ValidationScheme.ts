@@ -2,7 +2,7 @@ import i18n from '@locales/i18n'
 import * as Yup from 'yup'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import moment from 'moment'
-import { LobbyDetail } from '@services/lobby.service'
+import { LobbyDetail } from '@services/lobbydump.service'
 import { EditableTypes } from '../useLobbyCreate'
 
 export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes): any => {

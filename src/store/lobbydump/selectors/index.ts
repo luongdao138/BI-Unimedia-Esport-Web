@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { MatchItemType } from '@services/lobbydump.service'
 import { RootState } from '@store/store'
 
-const getRoot = (state: RootState) => state.lobby
+const getRoot = (state: RootState) => state.lobbydump
 const getUserId = (state: RootState) => state.auth?.user?.id
 
 export const getSearchLobbys = createSelector(getRoot, (state) => state.searchLobbys)

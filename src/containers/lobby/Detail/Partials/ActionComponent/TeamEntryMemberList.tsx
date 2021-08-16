@@ -1,4 +1,4 @@
-import { LobbyDetail, TeamJoinBase } from '@services/lobby.service'
+import { LobbyDetail, TeamJoinBase } from '@services/lobbydump.service'
 import { UserProfile } from '@services/user.service'
 import TeamEntryMemberListItem from './TeamEntryMemberListItem'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'

@@ -9,7 +9,6 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
 import { useFormik } from 'formik'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-import { LobbyFormParams } from '@services/lobby.service'
 import { FormType } from './FormModel/FormType'
 import Confirm from './Confirm'
 import { getInitialValues } from './FormModel/InitialValues'
@@ -42,12 +41,9 @@ const TopicCreate: React.FC = () => {
     initialValues: initialValues,
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
-    onSubmit: (values) => {
-      const data: LobbyFormParams = {
-        ...values.stepOne,
-      }
+    onSubmit: () => {
       if (submit) {
-        submit(data)
+        submit()
       }
     },
   })
