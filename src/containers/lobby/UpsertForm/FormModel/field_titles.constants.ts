@@ -4,7 +4,7 @@ export const FIELD_TITLES = {
   stepOne: {
     title: i18n.t('common:tournament_create.name'),
     overview: i18n.t('common:tournament_create.overview'),
-    category_title_id: i18n.t('common:tournament_create.category'),
+    categories: i18n.t('common:tournament_create.category'),
     game_title_id: i18n.t('common:tournament_create.game'),
     game_hardware_id: i18n.t('common:tournament_create.game_hardware'),
     max_participants: i18n.t('common:tournament_create.max_participants'),

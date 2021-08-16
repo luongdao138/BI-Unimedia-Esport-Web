@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import lobbyStore from '@store/lobbydump'
-import { LobbyDetail, LobbyFormParams, UpdateParams } from '@services/lobbydump.service'
+import lobbyStore from '@store/lobby'
+import { LobbyDetail, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
@@ -12,6 +12,7 @@ import _ from 'lodash'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import { LobbyUpsertParams } from '@services/lobby.service'
 
 const { actions, selectors } = lobbyStore
 const getTournamentMeta = createMetaSelector(actions.createLobby)
@@ -43,7 +44,7 @@ export type EditableTypes = {
 }
 
 const useLobbyCreate = (): {
-  submit(params: LobbyFormParams): void
+  submit(params: LobbyUpsertParams): void
   update(params: UpdateParams): void
   meta: Meta
   updateMeta: Meta
@@ -88,11 +89,11 @@ const useLobbyCreate = (): {
   const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateLobby.typePrefix))
-  const submit = async (params: LobbyFormParams) => {
+  const submit = async (params: LobbyUpsertParams) => {
     const resultAction = await dispatch(actions.createLobby(params))
     if (actions.createLobby.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(`${ESRoutes.LOBBY}/${resultAction.payload.hash_key}`)
+      router.push(`${ESRoutes.LOBBY}/${resultAction.payload.data.id}`)
 
       dispatch(commonActions.addToast(t('common:arena.create_success')))
     }

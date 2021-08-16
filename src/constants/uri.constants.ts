@@ -99,9 +99,12 @@ export const URI = {
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
   PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
   IMAGE_REMOVE: '/v2/profile_images/remove',
+  // Lobby
   LOBBY_ENTRY: '/v2/recruitments/:id/do_entry',
   LOBBY_CANCEL: '/v2/recruitments/:id/cancel',
   LOBBY_UNJOIN: '/v2/recruitments/:id/unjoin',
   LOBBY_SEARCH: '​/v2​/recruitments​/search',
   LOBBY_PARTICIPANTS: '/v2/recruitments/:id/participants',
+  LOBBY_CREATE: '/v2/recruitments',
+  LOBBY_CATEGORIES: '/v2/recruitment_categories',
 }

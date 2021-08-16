@@ -90,3 +90,63 @@ export const getParticipants = createAsyncThunk<services.ParticipantsResponse, n
     }
   }
 )
+
+export const createLobby = createAsyncThunk<services.CreateLobbyResponse, services.LobbyUpsertParams>(
+  LOBBY_ACTION_TYPE.LOBBY_CREATE,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.createLobby(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const updateLobby = createAsyncThunk<services.UpdateLobbyResponse, services.UpdateParams>(
+  LOBBY_ACTION_TYPE.LOBBY_UPDATE,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.updateLobby(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getLobbyDetail = createAsyncThunk<services.LobbyDetailResponse, string | string[]>(
+  LOBBY_ACTION_TYPE.LOBBY_DETAIL,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getLobbyDetail(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getLobbyCategories = createAsyncThunk<services.LobbyCategoriesResponse, void>(
+  LOBBY_ACTION_TYPE.LOBBY_CATEGORIES,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getLobbyCategories()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
