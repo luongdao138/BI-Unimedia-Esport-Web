@@ -108,13 +108,21 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
           name="display_name"
           value={formik.values.display_name}
           onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
           fullWidth
           required
           size="small"
           helperText={formik.touched.display_name && formik.errors.display_name}
           error={formik.touched.display_name && !!formik.errors.display_name}
           labelPrimary={t('profile.favorite_game.title_label')}
+          onBlur={(e) => {
+            formik.handleBlur(e)
+            setTimeout(() => {
+              document.body.classList.remove('has-sticky-div')
+            }, 100)
+          }}
+          onFocus={() => {
+            document.body.classList.add('has-sticky-div')
+          }}
         />
         <Box pb={4} />
         <Box textAlign="center">

@@ -52,4 +52,6 @@ export const ESRoutes = {
   ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
+  LINE_CALLBACK: '/line/callback',
+  TWITTER_CALLBACK: '/twitter/callback',
 }

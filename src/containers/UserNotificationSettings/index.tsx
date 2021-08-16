@@ -4,10 +4,13 @@ import SettingsRowItem from '@components/SettingsRowItem'
 import useNotificationSettings from './useNotificationSettings'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import { makeStyles } from '@material-ui/core/styles'
+import ESLoader from '@components/Loader'
 
 const ESNotificationSettings = () => {
+  const classes = useStyles()
   const { t } = useTranslation('common')
-  const { notificationSettings, updateNotificationSettings } = useNotificationSettings()
+  const { notificationSettings, updateNotificationSettings, meta } = useNotificationSettings()
 
   const [state, setState] = useState<{ id: number; name: string; status: boolean }[]>([])
   const [checkAll, setCheckAll] = useState(false)
@@ -65,7 +68,7 @@ const ESNotificationSettings = () => {
   return (
     <div>
       <HeaderWithButton title={t('notification_settings.title')} />
-      {state.length > 0 && (
+      {state.length > 0 && meta.loaded && (
         <SettingsRowItem
           title={t('notification_settings.settings_select_all')}
           name="settings_select_all"
@@ -74,18 +77,32 @@ const ESNotificationSettings = () => {
           handleChange={handleCheckAll}
         />
       )}
-      {state.map((settings, i) => (
-        <SettingsRowItem
-          key={i}
-          title={settings.name}
-          checked={settings.status}
-          handleChange={() => handleChange(i)}
-          name={settings.name}
-          showSwitch={true}
-        />
-      ))}
+      {meta.loaded &&
+        state.map((settings, i) => (
+          <SettingsRowItem
+            key={i}
+            title={settings.name}
+            checked={settings.status}
+            handleChange={() => handleChange(i)}
+            name={settings.name}
+            showSwitch={true}
+          />
+        ))}
+      {meta.pending && (
+        <div className={classes.loaderCenter}>
+          <ESLoader />
+        </div>
+      )}
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  loaderCenter: {
+    marginTop: theme.spacing(1),
+    width: '100%',
+    textAlign: 'center',
+  },
+}))
 
 export default ESNotificationSettings

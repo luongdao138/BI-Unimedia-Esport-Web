@@ -15,6 +15,7 @@ import 'moment/locale/ja'
 import i18n from '@locales/i18n'
 import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
 import Icon from '@material-ui/core/Icon'
+import { AVATAR_PATH } from '@constants/common.constants'
 
 interface RoomListItemProps {
   expand?: boolean
@@ -30,7 +31,7 @@ interface StyleProps {
 
 const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onClick }) => {
   const active = item.unseenCount === 0 ? false : true
-  const date = _.get(item, 'lastMsgAt', +item.createdAt)
+  const date = _.get(item, 'lastMsgAt', 0)
   const roomImg = _.get(item, 'roomImg', '')
   const name = _.get(item, 'roomName', '')
   const lastMsg = _.get(item, 'lastMsg', '')
@@ -39,7 +40,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
 
   const classes = useStyles({ active, expand })
 
-  const time = CommonHelper.staticSmartTime(date)
+  const time = date === 0 ? '' : CommonHelper.staticSmartTime(date)
   const chatRoomId = _.get(item, 'chatRoomId', null)
 
   const clickHandler = (e: React.MouseEvent) => {
@@ -58,6 +59,12 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
     return null
   }
 
+  const getRoomImg = () => {
+    if (!_.isString(roomImg)) return AVATAR_PATH
+    if (roomImg.length < 2) return AVATAR_PATH
+    return roomImg
+  }
+
   return (
     <ListItem className={classes.root} selected={selected} onClick={clickHandler}>
       <ListItemAvatar className={classes.avatarItem}>
@@ -71,7 +78,7 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
             badgeContent={unseenCount}
             showZero={false}
           >
-            <Avatar src={roomImg} alt={name} />
+            <Avatar src={getRoomImg()} alt={name} />
           </Badge>
         </>
       </ListItemAvatar>

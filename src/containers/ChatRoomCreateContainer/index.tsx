@@ -61,6 +61,10 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
 
   useEffect(() => {
     setRoomId(uuidv4())
+
+    return () => {
+      dispatch(resetAddUsers())
+    }
   }, [])
 
   useEffect(() => {
@@ -199,8 +203,7 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
   }
 
   const handleSearchInput = (text: string) => {
-    if (text.length > 1) dispatch(getFriendList({ type: 'group', keyword: text }))
-    dispatch(resetAddUsers())
+    dispatch(getFriendList({ type: 'group', keyword: text }))
   }
 
   const renderLoader = () => {
@@ -240,18 +243,17 @@ const ChatRoomCreateContainer: React.FC<ChatRoomCreateContainerProps> = (props) 
           ) : (
             <ESSelectInput
               items={
-                _.isArray(friends)
+                _.isArray(friends) && !_.isEmpty(friends)
                   ? friends.map((friend) => ({
                       id: parseInt(friend.id),
-                      nickName: friend.attributes.nickname,
+                      nickName: friend.attributes && friend.attributes.nickname ? friend.attributes.nickname : '',
                       avatar: friend.attributes.avatar,
-                      userCode: friend.attributes.user_code,
+                      userCode: _.get(friend, 'attributes.user_code', ''),
                     }))
                   : []
               }
               onItemsSelected={handleOnUserSelected}
               onSearchInput={handleSearchInput}
-              onFocusInput={() => dispatch(resetAddUsers())}
               loading={getFriendsMeta.pending}
             />
           )}

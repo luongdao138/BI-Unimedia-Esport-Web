@@ -161,3 +161,5 @@ export enum FOLLOW_STATES {
   FOLLOWING = 1,
   FOLLOWERS = 0,
 }
+
+export const AVATAR_PATH = '/images/avatar_o.png'

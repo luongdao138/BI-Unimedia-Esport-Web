@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import GameSelector from '@components/GameSelector'
@@ -17,6 +17,8 @@ import { useRouter } from 'next/router'
 import _ from 'lodash'
 
 const GameEditContainer: React.FC = () => {
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const router = useRouter()
   const dispatch = useAppDispatch()
@@ -65,10 +67,10 @@ const GameEditContainer: React.FC = () => {
           </Box>
         )}
 
-        <Box className={classes.blankSpace}></Box>
+        {!isMobile && <Box className={classes.blankSpace} />}
       </Box>
 
-      <Box className={classes.stickyFooter}>
+      <Box className={isMobile ? `sticky-div ${classes.stickyFooter}` : classes.stickyFooter}>
         <Box className={classes.nextBtnHolder}>
           <Box maxWidth={280} className={classes.buttonContainer}>
             <ButtonPrimary type="submit" round fullWidth onClick={handleSubmit}>
@@ -98,7 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nextBtnHolder: {
     display: 'flex',
-    marginBottom: theme.spacing(11),
+    marginBottom: theme.spacing(5),
     marginTop: theme.spacing(3),
     justifyContent: 'center',
   },
