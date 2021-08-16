@@ -77,7 +77,7 @@ export const cancel = async (params: number): Promise<EntryLobbyResponse> => {
   return data
 }
 
-export const search = async (params: LobbySearchParams): Promise<LobbyResponse> => {
-  const { data } = await api.post<LobbyResponse>(URI.LOBBY_SEARCH, params)
+export const search = async (params: LobbySearchParams): Promise<LobbySearchResponse> => {
+  const { data } = await api.post<LobbySearchResponse>(URI.LOBBY_SEARCH, params)
   return data
 }
