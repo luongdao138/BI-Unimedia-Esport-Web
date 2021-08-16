@@ -367,12 +367,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
-    borderRadius: '7px',
+    borderRadius: 7,
     width: '66%',
   },
   topicAvatar: {
     zIndex: 2,
-    width: 40,
+    width: theme.spacing(5),
     height: 40,
   },
   userInfoContainer: {
