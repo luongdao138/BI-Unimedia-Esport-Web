@@ -3,10 +3,10 @@ import { FormType } from './FormType'
 
 export const getInitialValues = (data?: LobbyDetail): FormType => ({
   stepOne: {
-    cover_image_url: data ? data.attributes.cover_image : '',
+    cover_image_url: data ? data.attributes.cover_image_url : '',
     title: data ? data.attributes.title : '',
-    overview: data ? data.attributes.overview : '',
-    categories: data ? [data.attributes.categories.data.attributes] : [],
+    message: data ? data.attributes.message : '',
+    categories: data ? data.attributes.categories : [],
     game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
     game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
     max_participants: data ? data.attributes.max_participants : 0,

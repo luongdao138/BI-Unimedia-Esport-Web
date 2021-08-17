@@ -132,7 +132,7 @@ const LobbyDetailBody: React.FC = () => {
         <LobbyDetailHeader
           title={lobby?.attributes?.title}
           status={lobby?.attributes?.status || 'ready'}
-          cover={lobby?.attributes?.cover_image || '/images/default_card.png'}
+          cover={lobby?.attributes?.cover_image_url || '/images/default_card.png'}
           onHandleBack={handleBack}
         >
           {actionComponent[lobby.attributes.status]}

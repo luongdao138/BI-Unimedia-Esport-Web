@@ -19,7 +19,6 @@ import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
-import _ from 'lodash'
 
 interface Props {
   detail: LobbyDetail
@@ -34,9 +33,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
-  const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
-  const tag = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
-  const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
+  const game = data.game_title ? data.game_title : ''
+  const hardware = data.hardware ? data.hardware : ''
   const [openReport, setOpenReport] = useState(false)
   const helper = useLobbyHelper(detail)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -79,7 +77,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           )}
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
-          <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
+          <Typography>{`${t('common:lobby.detail.label_id')}${detail.id}`}</Typography>
           {extended && (
             <>
               <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
@@ -105,7 +103,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </a>
             )}
           >
-            <Typography className={classes.multiline}>{data.overview}</Typography>
+            <Typography className={classes.multiline}>{data.message}</Typography>
           </Linkify>
         </Box>
 
@@ -157,28 +155,28 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.admin_organizer')}</Typography>
               </Box>
               <Box className={classes.value}>
-                {data.owner && (
+                {data.organizer && (
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <LoginRequired>
-                      <ButtonBase onClick={() => toProfile(data.owner.data.attributes.user_code)}>
-                        <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
+                      <ButtonBase onClick={() => toProfile(data.organizer.user_code)}>
+                        <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} />
                       </ButtonBase>
                     </LoginRequired>
-                    <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
+                    <Typography className={classes.breakWord}>{data.organizer.nickname}</Typography>
                   </Box>
                 )}
               </Box>
             </Box>
 
             {/* organizer name */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+            {/* <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
                 <Typography>{t('common:lobby_create.organizer_name')}</Typography>
               </Box>
               <Box className={classes.value}>
                 <Typography>{_.isEmpty(data.organizer_name) ? '-' : data.organizer_name}</Typography>
               </Box>
-            </Box>
+            </Box> */}
 
             {/* game */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
@@ -205,9 +203,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 
         {/* Category tag */}
         <Box marginTop={2}>
-          <ESChip className={classes.tagChip} label={tag} />
-          <ESChip className={classes.tagChip} label={tag} />
-          <ESChip className={classes.tagChip} label={tag} />
+          {(data.categories || []).map((category, key) => (
+            <ESChip className={classes.tagChip} label={category.name} key={key} />
+          ))}
         </Box>
 
         {!extended && (

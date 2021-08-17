@@ -121,13 +121,13 @@ const LobbyCreate: React.FC = () => {
 
       const fieldIdentifier = checkNgWordFields({
         title: stepOne.title,
-        overview: stepOne.overview,
+        message: stepOne.message,
         address: stepTwo.address,
       })
 
       const ngFields = checkNgWordByField({
         [FIELD_TITLES.stepOne.title]: stepOne.title,
-        [FIELD_TITLES.stepOne.overview]: stepOne.overview,
+        [FIELD_TITLES.stepOne.message]: stepOne.message,
         [FIELD_TITLES.stepTwo.address]: stepTwo.address,
       })
 
