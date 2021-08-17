@@ -1,4 +1,5 @@
 import { GameTitle } from '@services/game.service'
+import { CategoryItem } from '@services/lobby.service'
 
 type GameTitleItem = GameTitle['attributes']
 
@@ -7,7 +8,7 @@ export type FormType = {
     cover_image_url: string
     title: string
     overview: string
-    category_title_id: GameTitleItem[]
+    categories: CategoryItem['attributes'][]
     game_title_id: GameTitleItem[]
     game_hardware_id: number
     max_participants: number

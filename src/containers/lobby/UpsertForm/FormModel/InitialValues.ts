@@ -1,4 +1,4 @@
-import { LobbyDetail } from '@services/lobbydump.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { FormType } from './FormType'
 
 export const getInitialValues = (data?: LobbyDetail): FormType => ({
@@ -6,7 +6,7 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     cover_image_url: data ? data.attributes.cover_image : '',
     title: data ? data.attributes.title : '',
     overview: data ? data.attributes.overview : '',
-    category_title_id: data ? [data.attributes.game_title.data.attributes] : [],
+    categories: data ? [data.attributes.categories.data.attributes] : [],
     game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
     game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
     max_participants: data ? data.attributes.max_participants : 0,

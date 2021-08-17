@@ -6,4 +6,8 @@ export enum LOBBY_ACTION_TYPE {
   LOBBY_PARTICIPANTS = 'lobby/participants',
   CLEAR_LOBBY_RESULT = 'lobby/clearLobbyResult',
   RESET_SEARCH_LOBBIES = 'lobby/resetSearchsLobbies',
+  LOBBY_CREATE = 'lobby/create',
+  LOBBY_UPDATE = 'lobby/update',
+  LOBBY_CATEGORIES = 'lobby/categories',
+  LOBBY_DETAIL = 'lobby/detail',
 }

@@ -36,7 +36,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   }, [])
 
   const handleSelectedCategory = useCallback((value) => {
-    formik.setFieldValue('stepOne.category_title_id', value)
+    formik.setFieldValue('stepOne.categories', value)
   }, [])
 
   const { hasUCRReturnHref } = useReturnHref()
@@ -99,7 +99,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       </Box>
       <Box pb={3}>
         <CategorySelectorDialog
-          values={formik.values.stepOne.category_title_id}
+          values={formik.values.stepOne.categories}
           onChange={handleSelectedCategory}
           disabled={!editables.game_title}
         />

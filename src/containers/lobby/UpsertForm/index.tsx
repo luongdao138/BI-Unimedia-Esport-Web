@@ -14,7 +14,6 @@ import { useFormik } from 'formik'
 import { FormType } from './FormModel/FormType'
 import { getInitialValues } from './FormModel/InitialValues'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-import { LobbyFormParams } from '@services/lobbydump.service'
 import { useRouter } from 'next/router'
 import CancelDialog from './Partials/CancelDialog'
 import StepTabs from './StepTabs'
@@ -29,6 +28,7 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
+import { LobbyUpsertParams } from '@services/lobby.service'
 
 let activeTabIndex = 0
 
@@ -53,13 +53,17 @@ const LobbyCreate: React.FC = () => {
     validationSchema: getValidationScheme(lobby, editables),
     enableReinitialize: true,
     onSubmit: (values) => {
-      const selectedArea = prefectures?.data?.filter((a) => parseInt(`${a.id}`) === parseInt(`${values.stepTwo.area_id}`))
-      const data: LobbyFormParams = {
+      const { game_title_id, game_hardware_id } = values.stepOne
+      const selectedGameId = game_title_id.length > 0 ? game_title_id[0].id : null
+      const gameHardwareId = game_hardware_id !== -1 ? game_hardware_id : null
+
+      const data: LobbyUpsertParams = {
         ...values.stepOne,
         ...values.stepTwo,
-        game_title_id: values.stepOne.game_title_id[0].id,
-        area_name: selectedArea.length > 0 ? selectedArea[0].attributes.area : '',
+        game_title_id: selectedGameId,
+        game_hardware_id: gameHardwareId,
       }
+
       if (isEdit) {
         update({ hash_key: router.query.hash_key.toString(), data })
       } else {
