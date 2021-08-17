@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Box, Typography, makeStyles, Theme } from '@material-ui/core'
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import IndividualEntryModal from './IndividualEntryModal'
 import CloseRecruitmentModal from './CloseRecruitmentModal'
-import TeamEntryModal from './TeamEntryModal'
 import SubActionButtons from './SubActionButtons'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
@@ -13,10 +11,7 @@ import { UserProfile } from '@services/user.service'
 import ButtonPrimary from '@components/ButtonPrimary'
 import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
 import LoginRequired from '@containers/LoginRequired'
-import TeamEntryEditModal from './TeamEntryEditModal'
 import UnjoinModal from './UnjoinModal'
-import InidividualEntryEditModal from './InidividualEntryEditModal'
-import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface Props {
   lobby: LobbyDetail
@@ -24,18 +19,11 @@ interface Props {
 }
 
 const ActionComponent: React.FC<Props> = (props) => {
-  const { children, lobby, userProfile } = props
+  const { children, lobby } = props
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const { isModerator, isTeam, isRecruiting, isReady, isCancelled, isNotHeld, isAdminJoined, isTeamLeader, isEntered } = useLobbyHelper(
-    lobby
-  )
-
-  const [soloEntryEditShow, setSoloEntryEditShow] = useState<boolean>(false)
-  const [soloEntryShow, setSoloEntryShow] = useState<boolean>(false)
-  const [teamEntryShow, setTeamEntryShow] = useState<boolean>(false)
-  const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
+  const { isModerator, isRecruiting, isReady, isCancelled, isNotHeld, isEntered } = useLobbyHelper(lobby)
 
   const buildLobbyPeriodValue = () => {
     if (isReady || isRecruiting) {
@@ -52,34 +40,57 @@ const ActionComponent: React.FC<Props> = (props) => {
     return `${arenaStatus}`
   }
 
-  const entryButton = () => {
-    return (
-      <Box className={classes.actionButton}>
-        <LoginRequired>
-          <ButtonPrimary disabled={isReady} round fullWidth onClick={() => (isTeam ? setTeamEntryShow(true) : setSoloEntryShow(true))}>
-            {t('common:tournament.join')}
-          </ButtonPrimary>
-        </LoginRequired>
-      </Box>
-    )
-  }
+  const handleEntry = () => {}
 
   const renderAdminEntry = () => {
-    return (
-      <Box className={classes.buttonHolder}>
-        <Box minWidth={260} className={classes.buttonLeft}>
-          <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={lobby} handleClose={() => {}} />
+    if ((isRecruiting || isReady) && isModerator) {
+      return (
+        <Box className={classes.buttonHolder}>
+          <Box minWidth={260} className={classes.buttonLeft}>
+            <CloseRecruitmentModal isRecruiting={isRecruiting} tournament={lobby} handleClose={() => {}} />
+          </Box>
         </Box>
-      </Box>
-    )
+      )
+    }
+
+    return null
   }
 
   const renderEntry = () => {
-    if ((isEntered && isTeamLeader) || isAdminJoined) {
-      return null
-    } else if (isRecruiting || isReady) {
-      return entryButton()
+    if ((isRecruiting || isReady) && !isModerator && !isEntered) {
+      return (
+        <Box className={classes.actionButton}>
+          <LoginRequired>
+            <ButtonPrimary disabled={isReady} round fullWidth onClick={handleEntry}>
+              {t('common:tournament.join')}
+            </ButtonPrimary>
+          </LoginRequired>
+        </Box>
+      )
     }
+
+    return null
+  }
+
+  const renderEntryDecline = () => {
+    if (isRecruiting && isEntered) {
+      // isAdminJoined?
+      return <UnjoinModal tournament={lobby} />
+    }
+
+    return null
+  }
+
+  const renderEntryCloseWarning = () => {
+    if (isRecruiting && isModerator) {
+      return (
+        <Box pb={2} className={classes.description}>
+          <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
+        </Box>
+      )
+    }
+
+    return null
   }
 
   return (
@@ -97,35 +108,19 @@ const ActionComponent: React.FC<Props> = (props) => {
         {!isReady && !isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
       </Box>
 
-      {isRecruiting ? (
+      {renderAdminEntry()}
+      {renderEntry()}
+      {renderEntryDecline()}
+      {renderEntryCloseWarning()}
+
+      {/* {isRecruiting ? (
         <>
-          {isModerator ? renderAdminEntry() : renderEntry()}
-          {isAdminJoined || (isEntered && isTeamLeader) ? <UnjoinModal tournament={lobby} /> : null}
-          {isModerator && isRecruiting && (
-            <Box pb={2} className={classes.description}>
-              <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
-            </Box>
-          )}
         </>
       ) : (
         !TournamentHelper.isStatusPassed(lobby.attributes.status, TOURNAMENT_STATUS.COMPLETED) || (!isReady && renderEntry())
-      )}
+      )} */}
 
-      {isReady && <>{isModerator ? renderAdminEntry() : renderEntry()}</>}
-
-      {/* modals */}
-      {teamEntryShow && (
-        <TeamEntryModal tournament={lobby} userProfile={userProfile} open={teamEntryShow} onClose={() => setTeamEntryShow(false)} />
-      )}
-      <TeamEntryEditModal
-        tournament={lobby}
-        userProfile={userProfile}
-        myTeam
-        open={teamEntryEditShow}
-        onClose={() => setTeamEntryEditShow(false)}
-      />
-      <InidividualEntryEditModal tournament={lobby} me open={soloEntryEditShow} onClose={() => setSoloEntryEditShow(false)} />
-      <IndividualEntryModal tournament={lobby} userProfile={userProfile} open={soloEntryShow} onClose={() => setSoloEntryShow(false)} />
+      {/* {isReady && <>{isModerator ? renderAdminEntry() : renderEntry()}</>} */}
     </Box>
   )
 }

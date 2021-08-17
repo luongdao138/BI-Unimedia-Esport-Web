@@ -9,15 +9,12 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
-import TeamMemberItemExpanded from '../Partials/TeamMemberItemExpanded'
 import ESButton from '@components/Button'
 import { LobbyDetail } from '@services/lobby.service'
 import { ParticipantsResponse } from '@services/lobbydump.service'
 import { ROLE } from '@constants/tournament.constants'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import _ from 'lodash'
-import TeamEntryEditModal from '../Partials/ActionComponent/TeamEntryEditModal'
-import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEntryEditModal'
 import LoginRequired from '@containers/LoginRequired'
 
 export interface ParticipantsProps {
@@ -27,8 +24,7 @@ export interface ParticipantsProps {
 const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const { t } = useTranslation(['common'])
   const data = detail.attributes
-  const isTeam = data.participant_type > 1
-  const unit = isTeam ? t('common:common.team') : t('common:common.man')
+  const unit = t('common:common.man')
   const hash_key = data.hash_key
   const classes = useStyles()
   const [open, setOpen] = useState(false)
@@ -76,25 +72,9 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     const _user = participant.attributes.user
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
-  const getTeamId = (participant: ParticipantsResponse) => {
-    return _.get(participant, 'attributes.team.data.id')
-  }
-
-  const isMyTeam = (participant: ParticipantsResponse) => {
-    const myInfo = _.get(detail, 'attributes.my_info', [])
-    const interestedInfos = myInfo
-      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
-      .map((info) => `${info.team_id}`)
-    if (!interestedInfos || !interestedInfos.length) return false
-    return interestedInfos.includes(`${getTeamId(participant)}`)
-  }
 
   const isMe = (participant: ParticipantsResponse) => {
     return `${userProfile?.id}` === `${_.get(participant, 'attributes.user.id', '')}`
-  }
-
-  const onTeamClick = (participant: ParticipantsResponse) => {
-    setSelectedParticipant(participant)
   }
 
   return (
@@ -162,62 +142,21 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                   )
                 }
               >
-                {isTeam
-                  ? members.map((participant, i) => (
-                      <Box key={`team${i}`} py={1}>
-                        <TeamMemberItemExpanded
-                          hideFollow={isMyTeam(participant) ? true : false}
-                          team={participant}
-                          yellowTitle={isMyTeam(participant)}
-                          handleClick={() => onTeamClick(participant)}
-                          memberClick={() => onTeamClick(participant)}
-                        />
-                      </Box>
-                    ))
-                  : members.map((participant, i) => (
-                      <UserListItem
-                        data={userData(participant)}
-                        key={i}
-                        isFollowed={participant.attributes.is_followed}
-                        nicknameYellow={isMe(participant)}
-                        handleClick={() => setSelectedParticipant(participant)}
-                        isBlocked={participant.attributes.is_blocked}
-                      />
-                    ))}
+                {members.map((participant, i) => (
+                  <UserListItem
+                    data={userData(participant)}
+                    key={i}
+                    isFollowed={participant.attributes.is_followed}
+                    nicknameYellow={isMe(participant)}
+                    handleClick={() => setSelectedParticipant(participant)}
+                    isBlocked={participant.attributes.is_blocked}
+                  />
+                ))}
               </InfiniteScroll>
             </div>
           </Box>
         </BlankLayout>
       </ESModal>
-
-      {!selectedParticipant ? null : isTeam ? (
-        <TeamEntryEditModal
-          tournament={detail}
-          userProfile={userProfile}
-          previewMode
-          open={true}
-          initialTeamId={getTeamId(selectedParticipant)}
-          onClose={() => setSelectedParticipant(null)}
-          myTeam={isMyTeam(selectedParticipant)}
-          toDetail={() => {
-            setSelectedParticipant(null)
-            setOpen(false)
-          }}
-        />
-      ) : (
-        <InidividualEntryEditModal
-          tournament={detail}
-          previewMode
-          open={true}
-          initialParticipantId={`${selectedParticipant.id}`}
-          onClose={() => setSelectedParticipant(null)}
-          me={isMe(selectedParticipant)}
-          toDetail={() => {
-            setSelectedParticipant(null)
-            setOpen(false)
-          }}
-        />
-      )}
     </div>
   )
 }
