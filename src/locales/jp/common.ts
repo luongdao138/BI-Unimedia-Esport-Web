@@ -623,6 +623,10 @@ export default {
     ready: '受付前',
     recruiting: '受付中',
   },
+  lobby: {
+    lobby_results: 'ロビー「:key」 の検索結果',
+    lobby_results_all: 'ロビーの検索結果',
+  },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',
     beforeStart: 'エントリー受付中',
