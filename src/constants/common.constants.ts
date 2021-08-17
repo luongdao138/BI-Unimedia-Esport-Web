@@ -26,6 +26,10 @@ export const searchOptions = [
   //   value: searchTypes.RECRUITMENT,
   //   name: 'ロビー',
   // },
+  {
+    value: searchTypes.LOBBY,
+    name: 'ロビー',
+  },
 ]
 
 export const GENDER = {
