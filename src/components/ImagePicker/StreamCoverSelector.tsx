@@ -49,7 +49,7 @@ const ImageSlider = withStyles({
 
 const STATIC_WIDTH = 600
 const STATIC_HEIGHT = 300
-// const MIN_WIDTH = 640
+const MIN_WIDTH = 640
 
 const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
@@ -64,6 +64,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const [error, setError] = useState<boolean>(false)
   const classes = useStyles({ width: dynamicWidth })
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   useEffect(() => {
     return setUploading(false)
@@ -78,23 +79,22 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
     accept: 'image/jpeg, image/jpg, image/png, image/gif',
     onDrop: (files: any) => handleChange(files),
     maxSize: MAX_SIZE,
-    width: 640,
   }
   const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
-    // console.log('===fileRejections==', fileRejections, )
     if (fileRejections.length > 0) {
       setError(fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE)
+      setErrorMessage(i18n.t('common:messages.file_size_2mb_limit'))
     } else {
       setError(false)
+      setErrorMessage('')
     }
   }, [fileRejections])
 
   const handleChange = (files: Array<File>) => {
     const f = files[0]
     const reader = new FileReader()
-    // console.log('=====handleChange====', f, reader,files)
     if (f) {
       setRawFile(f)
       reader.onload = (e) => {
@@ -109,9 +109,16 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
           } else if (w > h) {
             setFit('vertical-cover')
           }
+          if (w >= MIN_WIDTH) {
+            setFile(reader.result)
+            setError(false)
+            setErrorMessage('')
+          } else {
+            setError(true)
+            setErrorMessage(i18n.t('common:messages.file_min_width'))
+          }
         }
-        // console.log("*****result****",reader.result)
-        setFile(reader.result)
+        // setFile(reader.result)
       }
       reader.readAsDataURL(f)
     }
@@ -125,13 +132,11 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
-    // console.log('******====onCropComplete====',_croppedArea, croppedAreaPixels, file)
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
 
   const update = useCallback(async () => {
     try {
-      // console.log("====getCroppedImg=====",file, croppedAreaPixels, rawFile)
       setUploading(true)
       const { blob, blobUrl } = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
       onUpdate(rawFile, blob, blobUrl)
@@ -146,7 +151,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
         {error && (
           <Typography color="secondary" className={classes.warning}>
-            {i18n.t('common:messages.file_size_limit')}
+            {errorMessage}
           </Typography>
         )}
         <Box className={classes.cropContainer}>

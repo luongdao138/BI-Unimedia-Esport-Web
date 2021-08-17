@@ -238,14 +238,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
               <Box pt={1} className={classes.box}>
-                <CoverUploaderStream
-                  src={formik.values.stepSettingTwo.thumbnail}
-                  onChange={handleUpload}
-                  isUploading={isUploading}
-                  disabled={!isFirstStep()}
-                  size="big"
-                  onOpenStateChange={handleCoverDailogStateChange}
-                />
+                {isFirstStep() && formik.values.stepSettingTwo.thumbnail ? (
+                  <CoverUploaderStream
+                    src={formik.values.stepSettingTwo.thumbnail}
+                    onChange={handleUpload}
+                    isUploading={isUploading}
+                    disabled={!isFirstStep()}
+                    size="big"
+                    onOpenStateChange={handleCoverDailogStateChange}
+                  />
+                ) : (
+                  <img src={'/images/default_card.png'} className={classes.coverImg} />
+                )}
               </Box>
             </Box>
           </Box>
@@ -832,5 +836,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: '-2px',
     },
+  },
+  coverImg: {
+    width: '100%',
+    height: 278,
+    objectFit: 'cover',
+    objectPosition: '50% 50%',
+    borderRadius: 4,
   },
 }))
