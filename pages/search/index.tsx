@@ -49,6 +49,11 @@ const SearchPage: PageWithLayoutType = () => {
           return t('common:tournament.tournament_results').replace(/:key/gi, keyword)
         }
         return t('common:tournament.tournament_results_all')
+      case searchTypes.LOBBY:
+        if (keyword) {
+          return t('common:lobby.lobby_results').replace(/:key/gi, keyword)
+        }
+        return t('common:lobby.lobby_results_all')
       default:
         return <></>
     }
