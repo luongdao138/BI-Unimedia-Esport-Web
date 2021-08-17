@@ -49,16 +49,16 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 18,
     marginTop: 24,
   },
-  wrapTitle:{
-    display: "flex", 
-    width: "148px",
+  wrapTitle: {
+    display: 'flex',
+    width: '148px',
   },
   serialContainer: {
     alignItems: 'center',
     display: 'flex',
     width: 28,
-    flexWrap: "wrap", 
-    wordBreak: "break-all",
+    flexWrap: 'wrap',
+    wordBreak: 'break-all',
   },
   serialStyle: {
     textAlign: 'center',
@@ -67,8 +67,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    width: "calc(100% - 28px)", 
-    paddingLeft: "8px"
+    width: 'calc(100% - 28px)',
+    paddingLeft: '8px',
   },
   titleItemStyle: {
     color: Colors.white_opacity['70'],
@@ -96,9 +96,9 @@ const useStyles = makeStyles((theme) => ({
     container: {
       margin: 8,
     },
-    wrapTitle:{
+    wrapTitle: {
       width: 110,
-    }
+    },
   },
 }))
 

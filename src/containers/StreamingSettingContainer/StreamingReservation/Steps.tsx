@@ -4,7 +4,6 @@ import { useFormik } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
 import ESSelect from '@components/Select'
-import { RULES } from '@constants/stream_setting.constants'
 import { useAppDispatch } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
 import * as commonActions from '@store/common/actions'
@@ -21,7 +20,7 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, TYPE_SETTING } from '@services/liveStream.service'
+import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
@@ -29,13 +28,21 @@ import { showDialog } from '@store/common/actions'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import moment from 'moment'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import ESLoader from '@components/FullScreenLoader'
+import useUploadImage from '@utils/hooks/useUploadImage'
 
 interface StepsProps {
   step: number
   onNext: (step: number) => void
+  category: GetCategoryResponse
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
+const KEY_TYPE = {
+  URL: 1,
+  KEY: 2,
+}
+
+const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -44,12 +51,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   const [showStreamKey, setShowStreamKey] = useState(false)
   const [hasError, setError] = useState(false)
 
-  const { liveSettingInformation, getLiveSettingTab } = useLiveSetting()
+  const { liveSettingInformation, getLiveSettingTab, getStreamUrlAndKey, isPending, setLiveStreamConfirm } = useLiveSetting()
   const liveInfo = liveSettingInformation.data
   const initialValues = getInitialLiveSettingValues(liveInfo ? liveInfo : null)
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
+  const [categoryName, setCategoryName] = useState('')
 
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -65,21 +73,33 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }, [])
 
   const getLiveSetting = () => {
-    getLiveSettingTab({ type: TYPE_SETTING.SCHEDULE }).then(() => formik.validateForm())
+    getLiveSettingTab({ type: TYPE_SETTING.SCHEDULE }).then(() => {
+      formik.validateForm()
+      // console.log("===CHEKC DATE FORMAT ====",formik.values.stepSettingTwo)
+    })
   }
   useEffect(() => {
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(2, formik.errors)
     setError(!isRequiredFieldsValid)
   }, [formik.errors.stepSettingTwo])
 
-  const handleUpload = useCallback(() => {
-    // uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
-    //   formik.setFieldValue('stepOne.cover_image_url', imageUrl)
-    // })
+  useEffect(() => {
+    category?.data.forEach((h) => {
+      if (Number(h.id) === Number(formik.values.stepSettingTwo.category)) {
+        setCategoryName(h.name)
+      }
+    })
+  }, [formik.values.stepSettingTwo.category])
+
+  const { uploadLiveStreamThumbnailImage, isUploading } = useUploadImage()
+  const handleUpload = useCallback((file: File, blob: any) => {
+    uploadLiveStreamThumbnailImage(file, blob, (imageUrl) => {
+      formik.setFieldValue('stepSettingTwo.thumbnail', imageUrl)
+    })
   }, [])
   const handleCopy = () => {
-    if (formik.values.stepSettingTwo.viewing_url) {
-      window.navigator.clipboard.writeText(formik.values.stepSettingTwo.viewing_url.toString())
+    if (formik.values.stepSettingTwo.uuid) {
+      window.navigator.clipboard.writeText(formik.values.stepSettingTwo.uuid.toString())
     }
     dispatch(commonActions.addToast(t('common:arena.copy_toast')))
   }
@@ -88,14 +108,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
     const { stepSettingTwo } = formik.values
 
     const fieldIdentifier = checkNgWordFields({
-      title: stepSettingTwo.re_title,
-      description: stepSettingTwo.re_description,
-      ticket_price: stepSettingTwo.re_ticket_price,
+      title: stepSettingTwo.title,
+      description: stepSettingTwo.description,
+      ticket_price: stepSettingTwo.ticket_price,
     })
     const ngFields = checkNgWordByField({
-      [FIELD_TITLES.stepSettingTwo.title]: stepSettingTwo.re_title,
-      [FIELD_TITLES.stepSettingTwo.description]: stepSettingTwo.re_description,
-      [FIELD_TITLES.stepSettingTwo.ticket_price]: stepSettingTwo.re_ticket_price,
+      [FIELD_TITLES.stepSettingTwo.title]: stepSettingTwo.title,
+      [FIELD_TITLES.stepSettingTwo.description]: stepSettingTwo.description,
+      [FIELD_TITLES.stepSettingTwo.ticket_price]: stepSettingTwo.ticket_price,
     })
     if (fieldIdentifier) {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
@@ -129,11 +149,30 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }
 
   const checkUseTicket = () => {
-    formik.setFieldValue('stepSettingTwo.re_use_ticket', !formik.values.stepSettingTwo.re_use_ticket)
-    formik.setFieldValue(
-      'stepSettingTwo.date_time_ticket_sale_start',
-      !formik.values.stepSettingTwo.re_use_ticket ? new Date().toString() : null
-    )
+    formik.setFieldValue('stepSettingTwo.use_ticket', !formik.values.stepSettingTwo.use_ticket)
+    formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', !formik.values.stepSettingTwo.use_ticket ? new Date().toString() : null)
+  }
+
+  const onReNewUrlAndKey = (type: number) => {
+    getStreamUrlAndKey((url, key) => {
+      if (type === 1) formik.setFieldValue('stepSettingTwo.stream_url', url)
+      else formik.setFieldValue('stepSettingTwo.stream_key', key)
+    })
+  }
+
+  const onConfirm = () => {
+    const { stepSettingTwo } = formik.values
+    const data: SetLiveStreamParams = {
+      ...stepSettingTwo,
+      ticket_price: stepSettingTwo.ticket_price + '',
+      use_ticket: stepSettingTwo.use_ticket === false ? '0' : '1',
+      share_sns_flag: stepSettingTwo.share_sns_flag === false ? '0' : '1',
+      publish_flag: stepSettingTwo.publish_flag === false ? '0' : '1',
+      scheduled_flag: 1,
+    }
+    setLiveStreamConfirm(data, () => {
+      onNext(step + 1)
+    })
   }
 
   return (
@@ -143,14 +182,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Box className={classes.wrap_input} pb={2} display="flex" flexDirection="row" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
-                id="viewing_url"
-                name="stepSettingTwo.viewing_url"
+                id="uuid"
+                name="stepSettingTwo.uuid"
                 value={
-                  formik.values.stepSettingTwo.viewing_url
-                    ? `${baseViewingURL}${formik.values.stepSettingTwo.viewing_url}`
-                    : formik.values.stepSettingTwo.viewing_url
+                  formik.values.stepSettingTwo.uuid
+                    ? `${baseViewingURL}${formik.values.stepSettingTwo.uuid}`
+                    : formik.values.stepSettingTwo.uuid
                 }
-                placeholder={!formik.values.stepSettingTwo.viewing_url && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
+                placeholder={!formik.values.stepSettingTwo.uuid && i18n.t('common:streaming_setting_screen.placeholder_input_url')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_url')}
                 fullWidth
                 rows={8}
@@ -178,9 +217,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
               <Box pt={1} className={classes.box}>
                 <CoverUploaderStream
-                  src={formik.values.stepSettingTwo.re_thumbnail}
+                  src={formik.values.stepSettingTwo.thumbnail}
                   onChange={handleUpload}
-                  isUploading={false}
+                  isUploading={isUploading}
                   disabled={!isFirstStep()}
                   size="big"
                   onOpenStateChange={handleCoverDailogStateChange}
@@ -191,17 +230,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Box pb={2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESInput
-                id="re_title"
-                name="stepSettingTwo.re_title"
+                id="title"
+                name="stepSettingTwo.title"
                 required={true}
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_title')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
-                value={formik.values.stepSettingTwo.re_title}
+                value={formik.values.stepSettingTwo.title}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingTwo?.re_title && formik?.errors?.stepSettingTwo?.re_title}
-                error={formik?.touched?.stepSettingTwo?.re_title && !!formik?.errors?.stepSettingTwo?.re_title}
+                helperText={formik?.touched?.stepSettingTwo?.title && formik?.errors?.stepSettingTwo?.title}
+                error={formik?.touched?.stepSettingTwo?.title && !!formik?.errors?.stepSettingTwo?.title}
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
@@ -211,18 +250,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Box pb={1} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESFastInput
-                id="re_description"
-                name="stepSettingTwo.re_description"
+                id="description"
+                name="stepSettingTwo.description"
                 multiline={isFirstStep()}
                 rows={8}
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                 fullWidth
-                value={formik.values.stepSettingTwo.re_description}
+                value={formik.values.stepSettingTwo.description}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingTwo?.re_description && formik?.errors?.stepSettingTwo?.re_description}
-                error={formik?.touched?.stepSettingTwo?.re_description && !!formik?.errors?.stepSettingTwo?.re_description}
+                helperText={formik?.touched?.stepSettingTwo?.description && formik?.errors?.stepSettingTwo?.description}
+                error={formik?.touched?.stepSettingTwo?.description && !!formik?.errors?.stepSettingTwo?.description}
                 size="big"
                 required
                 disabled={!isFirstStep()}
@@ -235,28 +274,28 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               {isFirstStep() ? (
                 <ESSelect
                   fullWidth
-                  name="stepSettingTwo.re_category"
-                  value={formik.values.stepSettingTwo.re_category}
+                  name="stepSettingTwo.category"
+                  value={formik.values.stepSettingTwo.category}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   label={i18n.t('common:delivery_reservation_tab.category')}
                   required={true}
                   size="big"
                   disabled={false}
-                  helperText={formik?.touched?.stepSettingTwo?.re_category && formik?.errors?.stepSettingTwo?.re_category}
-                  error={formik?.touched?.stepSettingTwo?.re_category && !!formik?.errors?.stepSettingTwo?.re_category}
+                  helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
+                  error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
                 >
-                  {RULES.map((rule, index) => (
-                    <option key={index} value={rule.label}>
-                      {rule.label}
+                  {(category?.data || []).map((item, index) => (
+                    <option key={index} value={item.id}>
+                      {item.name}
                     </option>
                   ))}
                 </ESSelect>
               ) : (
                 <ESInput
-                  id="re_category"
-                  name="stepSettingTwo.re_category"
-                  value={formik.values.stepSettingTwo.re_category}
+                  id="category"
+                  name="stepSettingTwo.category"
+                  value={categoryName}
                   fullWidth
                   labelPrimary={i18n.t('common:delivery_reservation_tab.category')}
                   required
@@ -272,29 +311,28 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESLabel label={i18n.t('common:delivery_reservation_tab.notification_datetime')} required />
               {isFirstStep() ? (
                 <ESInputDatePicker
-                  name="stepSettingTwo.date_time_notification_delivery"
+                  name="stepSettingTwo.stream_notify_time"
                   placeholder={i18n.t('common:delivery_reservation_tab.notification_datetime')}
                   fullWidth
-                  value={formik.values.stepSettingTwo.date_time_notification_delivery}
-                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_notification_delivery', date.toString())}
+                  value={formik.values.stepSettingTwo.stream_notify_time}
+                  onChange={(date) => {
+                    formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
+                    // console.log('formik.values.stepSettingTwo.stream_notify_time',date,date.toString() )
+                  }}
                   onBlur={formik.handleBlur}
                   helperText={
-                    (formik?.touched?.stepSettingTwo?.date_time_notification_delivery &&
-                      formik?.errors?.stepSettingTwo?.date_time_notification_delivery) ||
+                    (formik?.touched?.stepSettingTwo?.stream_notify_time && formik?.errors?.stepSettingTwo?.stream_notify_time) ||
                     formik?.errors?.stepSettingTwo?.notify_live_start_date ||
                     formik?.errors?.stepSettingTwo?.notify_live_end_date
                   }
-                  error={
-                    formik?.touched?.stepSettingTwo?.date_time_notification_delivery &&
-                    !!formik?.errors?.stepSettingTwo?.date_time_notification_delivery
-                  }
+                  error={formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time}
                   disabled={false}
                   // readOnly={!isFirstStep()}
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.date_time_notification_delivery).format('YYYY年MM月DD日 HH:mm')}
+                    {moment(formik.values.stepSettingTwo.stream_notify_time).format('YYYY年MM月DD日 HH:mm')}
                   </Typography>
                 </Box>
               )}
@@ -305,27 +343,27 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')} required />
               {isFirstStep() ? (
                 <ESInputDatePicker
-                  name="stepSettingTwo.date_time_schedule_delivery_start"
+                  name="stepSettingTwo.stream_schedule_start_time"
                   placeholder={i18n.t('common:delivery_reservation_tab.scheduled_delivery_start_datetime')}
                   fullWidth
-                  value={formik.values.stepSettingTwo.date_time_schedule_delivery_start}
-                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_schedule_delivery_start', date.toString())}
+                  value={formik.values.stepSettingTwo.stream_schedule_start_time}
+                  onChange={(date) => formik.setFieldValue('stepSettingTwo.stream_schedule_start_time', date.toString())}
                   onBlur={formik.handleBlur}
                   helperText={
-                    (formik?.touched?.stepSettingTwo?.date_time_schedule_delivery_start &&
-                      formik?.errors?.stepSettingTwo?.date_time_schedule_delivery_start) ||
+                    (formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
+                      formik?.errors?.stepSettingTwo?.stream_schedule_start_time) ||
                     formik?.errors?.stepSettingTwo?.schedule_live_date
                   }
                   error={
-                    formik?.touched?.stepSettingTwo?.date_time_schedule_delivery_start &&
-                    !!formik?.errors?.stepSettingTwo?.date_time_schedule_delivery_start
+                    formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
+                    !!formik?.errors?.stepSettingTwo?.stream_schedule_start_time
                   }
                   disabled={false}
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.date_time_schedule_delivery_start).format('YYYY年MM月DD日 HH:mm')}
+                    {moment(formik.values.stepSettingTwo.stream_schedule_start_time).format('YYYY年MM月DD日 HH:mm')}
                   </Typography>
                 </Box>
               )}
@@ -336,25 +374,26 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESLabel label={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')} required />
               {isFirstStep() ? (
                 <ESInputDatePicker
-                  name="stepSettingTwo.date_time_schedule_end"
+                  name="stepSettingTwo.stream_schedule_end_time"
                   placeholder={i18n.t('common:delivery_reservation_tab.scheduled_end_datetime')}
                   fullWidth
-                  value={formik.values.stepSettingTwo.date_time_schedule_end}
-                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_schedule_end', date.toString())}
+                  value={formik.values.stepSettingTwo.stream_schedule_end_time}
+                  onChange={(date) => formik.setFieldValue('stepSettingTwo.stream_schedule_end_time', date.toString())}
                   onBlur={formik.handleBlur}
                   helperText={
-                    (formik?.touched?.stepSettingTwo?.date_time_schedule_end && formik?.errors?.stepSettingTwo?.date_time_schedule_end) ||
+                    (formik?.touched?.stepSettingTwo?.stream_schedule_end_time &&
+                      formik?.errors?.stepSettingTwo?.stream_schedule_end_time) ||
                     formik?.errors?.stepSettingTwo?.schedule_live_date
                   }
                   error={
-                    formik?.touched?.stepSettingTwo?.date_time_schedule_end && !!formik?.errors?.stepSettingTwo?.date_time_schedule_end
+                    formik?.touched?.stepSettingTwo?.stream_schedule_end_time && !!formik?.errors?.stepSettingTwo?.stream_schedule_end_time
                   }
                   disabled={false}
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.date_time_schedule_end).format('YYYY年MM月DD日 HH:mm')}
+                    {moment(formik.values.stepSettingTwo.stream_schedule_end_time).format('YYYY年MM月DD日 HH:mm')}
                   </Typography>
                 </Box>
               )}
@@ -365,12 +404,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               {isFirstStep() ? (
                 <Box pb={3 / 8}>
                   <ESCheckboxBig
-                    checked={formik.values.stepSettingTwo.re_use_ticket}
+                    checked={formik.values.stepSettingTwo.use_ticket}
                     onChange={() => {
                       checkUseTicket()
                     }}
                     label={t('common:streaming_setting_screen.ticket_use')}
-                    name="stepSettingTwo.re_use_ticket"
+                    name="stepSettingTwo.use_ticket"
                   />
                 </Box>
               ) : (
@@ -380,71 +419,72 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <Box pb={2} className={classes.wrap_input}>
                 <Box className={classes.firstItem}>
                   <ESInput
-                    id="re_ticket_price"
-                    name="stepSettingTwo.re_ticket_price"
+                    id="ticket_price"
+                    name="stepSettingTwo.ticket_price"
                     required={true}
                     placeholder={'1,500'}
                     fullWidth
                     value={
                       isFirstStep()
-                        ? formik.values.stepSettingTwo.re_ticket_price === 0 || !formik.values.stepSettingTwo.re_ticket_price
+                        ? formik.values.stepSettingTwo.ticket_price === 0 || !formik.values.stepSettingTwo.ticket_price
                           ? ''
-                          : formik.values.stepSettingTwo.re_ticket_price
-                        : formik.values.stepSettingTwo.re_ticket_price
-                        ? `利用する（${formik.values.stepSettingTwo.re_ticket_price} exeポイント）`
+                          : formik.values.stepSettingTwo.ticket_price
+                        : formik.values.stepSettingTwo.ticket_price
+                        ? `利用する（${formik.values.stepSettingTwo.ticket_price} exeポイント）`
                         : '利用しない'
                     }
                     onChange={formik.handleChange}
-                    onBlur={formik.values.stepSettingTwo.re_use_ticket && formik.handleBlur}
-                    helperText={formik?.touched?.stepSettingTwo?.re_ticket_price && formik?.errors?.stepSettingTwo?.re_ticket_price}
-                    error={formik?.touched?.stepSettingTwo?.re_ticket_price && !!formik?.errors?.stepSettingTwo?.re_ticket_price}
+                    onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
+                    helperText={formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price}
+                    error={formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price}
                     size="big"
                     disabled={!isFirstStep()}
                     className={getAddClassByStep(classes.input_text)}
-                    readOnly={!formik.values.stepSettingTwo.re_use_ticket}
+                    readOnly={!formik.values.stepSettingTwo.use_ticket}
                   />
+                </Box>
+              </Box>
+
+              <Box pb={2} className={classes.wrap_input}>
+                <Box className={classes.firstItem}>
+                  <ESLabel
+                    label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                    required={formik.values.stepSettingTwo.use_ticket}
+                  />
+                  {isFirstStep() ? (
+                    <ESInputDatePicker
+                      name="stepSettingTwo.sell_ticket_start_time"
+                      placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                      fullWidth
+                      value={formik.values.stepSettingTwo.sell_ticket_start_time}
+                      onChange={(date) => formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', date.toString())}
+                      onBlur={formik.handleBlur}
+                      helperText={
+                        formik?.touched?.stepSettingTwo?.sell_ticket_start_time && formik?.errors?.stepSettingTwo?.sell_ticket_start_time
+                      }
+                      error={
+                        formik?.touched?.stepSettingTwo?.sell_ticket_start_time && !!formik?.errors?.stepSettingTwo?.sell_ticket_start_time
+                      }
+                      readOnly={!formik.values.stepSettingTwo.use_ticket}
+                    />
+                  ) : (
+                    <Box pt={1}>
+                      <Typography className={classes.date}>
+                        {formik.values.stepSettingTwo.sell_ticket_start_time !== null
+                          ? moment(formik.values.stepSettingTwo.sell_ticket_start_time).format('YYYY年MM月DD日 HH:mm')
+                          : i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </>
           )}
-          <Box pb={2} className={classes.wrap_input}>
-            <Box className={classes.firstItem}>
-              <ESLabel
-                label={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                required={formik.values.stepSettingTwo.re_use_ticket}
-              />
-              {isFirstStep() ? (
-                <ESInputDatePicker
-                  name="stepSettingTwo.date_time_ticket_sale_start"
-                  placeholder={i18n.t('common:delivery_reservation_tab.ticket_sales_start_datetime')}
-                  fullWidth
-                  value={formik.values.stepSettingTwo.date_time_ticket_sale_start}
-                  onChange={(date) => formik.setFieldValue('stepSettingTwo.date_time_ticket_sale_start', date.toString())}
-                  onBlur={formik.handleBlur}
-                  helperText={
-                    formik?.touched?.stepSettingTwo?.date_time_ticket_sale_start &&
-                    formik?.errors?.stepSettingTwo?.date_time_ticket_sale_start
-                  }
-                  error={
-                    formik?.touched?.stepSettingTwo?.date_time_ticket_sale_start &&
-                    !!formik?.errors?.stepSettingTwo?.date_time_ticket_sale_start
-                  }
-                  readOnly={!formik.values.stepSettingTwo.re_use_ticket}
-                />
-              ) : (
-                <Box pt={1}>
-                  <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.date_time_ticket_sale_start).format('YYYY年MM月DD日 HH:mm')}
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </Box>
           {isFirstStep() ? (
             <Box>
               <ESCheckboxBig
-                checked={formik.values.stepSettingTwo.re_share_sns_flag}
-                onChange={() => formik.setFieldValue('stepSettingTwo.re_share_sns_flag', !formik.values.stepSettingTwo.re_share_sns_flag)}
+                checked={formik.values.stepSettingTwo.share_sns_flag}
+                onChange={() => formik.setFieldValue('stepSettingTwo.share_sns_flag', !formik.values.stepSettingTwo.share_sns_flag)}
                 label={t('common:streaming_setting_screen.share_SNS')}
                 name="isShareSNS"
               />
@@ -454,7 +494,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               id="title"
               name="title"
               value={
-                formik.values.stepSettingTwo.re_share_sns_flag
+                formik.values.stepSettingTwo.share_sns_flag
                   ? t('common:streaming_setting_screen.shared_it')
                   : t('common:streaming_setting_screen.dont_share')
               }
@@ -469,15 +509,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
-                id="re_stream_url"
-                name="stepSettingTwo.re_stream_url"
+                id="stream_url"
+                name="stepSettingTwo.stream_url"
                 labelPrimary={i18n.t('common:streaming_setting_screen.stream_url')}
                 placeholder={
                   isFirstStep()
-                    ? !formik.values.stepSettingTwo.re_stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik.values.stepSettingTwo.re_stream_url && t('common:streaming_setting_screen.issued_stream')
+                    ? !formik.values.stepSettingTwo.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
+                    : !formik.values.stepSettingTwo.stream_url && t('common:streaming_setting_screen.issued_stream')
                 }
-                type={showStreamURL || formik.values.stepSettingTwo.re_stream_url ? 'text' : 'password'}
+                type={showStreamURL ? 'text' : 'password'}
                 endAdornment={
                   isFirstStep() ? (
                     <InputAdornment position="end" className={classes.inputContainer}>
@@ -497,7 +537,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   )
                 }
                 fullWidth
-                value={formik.values.stepSettingTwo.re_stream_url}
+                value={formik.values.stepSettingTwo.stream_url}
                 readOnly={true}
                 size="big"
                 disabled={!isFirstStep()}
@@ -510,7 +550,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={classes.urlCopy}
+                  onClick={() => {
+                    onReNewUrlAndKey(KEY_TYPE.URL)
+                  }}
+                >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
@@ -520,15 +568,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
-                id="re_stream_key"
-                name="stepSettingTwo.re_stream_key"
+                id="stream_key"
+                name="stepSettingTwo.stream_key"
                 labelPrimary={i18n.t('common:streaming_setting_screen.stream_key')}
                 placeholder={
                   isFirstStep()
-                    ? !formik.values.stepSettingTwo.re_stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
-                    : !formik.values.stepSettingTwo.re_stream_key && t('common:streaming_setting_screen.issued_stream')
+                    ? !formik.values.stepSettingTwo.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
+                    : !formik.values.stepSettingTwo.stream_key && t('common:streaming_setting_screen.issued_stream')
                 }
-                type={showStreamKey || formik.values.stepSettingTwo.re_stream_key ? 'text' : 'password'}
+                type={showStreamKey ? 'text' : 'password'}
                 endAdornment={
                   isFirstStep() ? (
                     <InputAdornment position="end" className={classes.inputContainer}>
@@ -548,7 +596,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   )
                 }
                 fullWidth
-                value={formik.values.stepSettingTwo.re_stream_key}
+                value={formik.values.stepSettingTwo.stream_key}
                 readOnly={true}
                 size="big"
                 disabled={!isFirstStep()}
@@ -561,7 +609,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={classes.urlCopy}
+                  onClick={() => {
+                    onReNewUrlAndKey(KEY_TYPE.KEY)
+                  }}
+                >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
@@ -570,8 +626,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           {isFirstStep() ? (
             <Box pb={3 / 8} pt={2}>
               <ESCheckboxBig
-                checked={formik.values.stepSettingTwo.re_publish_flag}
-                onChange={() => formik.setFieldValue('stepSettingTwo.re_publish_flag', !formik.values.stepSettingTwo.re_publish_flag)}
+                checked={formik.values.stepSettingTwo.publish_flag}
+                onChange={() => formik.setFieldValue('stepSettingTwo.publish_flag', !formik.values.stepSettingTwo.publish_flag)}
                 label={t('common:streaming_setting_screen.publish_delivery')}
                 name="isReissue"
               />
@@ -581,7 +637,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               <ESInput
                 id="title"
                 name="title"
-                value={!formik.values.stepSettingTwo.re_publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
+                value={!formik.values.stepSettingTwo.publish_flag ? t('common:profile.dont_show') : t('common:profile.show')}
                 fullWidth
                 labelPrimary={t('common:streaming_setting_screen.publish_delivery')}
                 disabled={true}
@@ -610,7 +666,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
-                  <ButtonPrimary round fullWidth onClick={onClickNext}>
+                  <ButtonPrimary round fullWidth onClick={onConfirm}>
                     {t('common:delivery_reservation_tab.delivery_data_save')}
                   </ButtonPrimary>
                 </Box>
@@ -619,6 +675,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           )}
         </form>
       </Box>
+      <ESLoader open={isPending} />
     </Box>
   )
 }

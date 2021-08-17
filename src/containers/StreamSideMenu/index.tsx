@@ -125,11 +125,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </ListItem>
             </Link>
             {isStreamer && (
-              <Link 
+              <Link
                 href={{
-                    pathname: ESRoutes.VIDEO_STREAMING_SETTING,
-                    query: { default_tab: 1 },
-                  }} 
+                  pathname: ESRoutes.VIDEO_STREAMING_SETTING,
+                  query: { default_tab: 1 },
+                }}
                 passHref
                 as={ESRoutes.VIDEO_STREAMING_SETTING}
               >

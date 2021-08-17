@@ -3,11 +3,12 @@ import React, { useState } from 'react'
 import Steps from './Steps'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useLiveSetting from '../useLiveSetting'
 
 const LiveStreamContainer: React.FC = () => {
   const [step, setStep] = useState(1)
   const router = useRouter()
-
+  const { categoryData } = useLiveSetting()
   const onChangeStep = (step: number): void => {
     setStep(step)
   }
@@ -20,7 +21,11 @@ const LiveStreamContainer: React.FC = () => {
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
-  return step === 3 ? <SettingsCompleted onClose={onClose} onComplete={onComplete} /> : <Steps step={step} onNext={onChangeStep} />
+  return step === 3 ? (
+    <SettingsCompleted onClose={onClose} onComplete={onComplete} />
+  ) : (
+    <Steps step={step} onNext={onChangeStep} category={categoryData} />
+  )
 }
 
 export default LiveStreamContainer

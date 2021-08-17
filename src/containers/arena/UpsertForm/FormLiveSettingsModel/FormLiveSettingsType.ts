@@ -13,31 +13,31 @@ export type FormLiveType = {
     publish_flag: boolean
   }
   stepSettingTwo?: {
-    viewing_url: string
-    re_thumbnail: string
-    re_title: string
-    re_description: string
-    re_category: number
-    date_time_notification_delivery: string
-    date_time_schedule_delivery_start: string
-    date_time_schedule_end: string
-    re_use_ticket: boolean
-    re_ticket_price?: number
-    date_time_ticket_sale_start: string
-    re_share_sns_flag: boolean
-    re_stream_url: string
-    re_stream_key: string
-    re_publish_flag: boolean
+    uuid: string
+    thumbnail: string
+    title: string
+    description: string
+    category: number
+    stream_notify_time: string
+    stream_schedule_start_time: string
+    stream_schedule_end_time: string
+    use_ticket: boolean
+    ticket_price?: number
+    sell_ticket_start_time: string
+    share_sns_flag: boolean
+    stream_url: string
+    stream_key: string
+    publish_flag: boolean
     //cross-fields validations
     schedule_live_date?: string
     notify_live_start_date?: string
     notify_live_end_date?: string
   }
   stepSettingThree?: {
-    channel_name: string
-    overview: string
-    discord_url?: string
-    twitter_url?: string
-    instagram_url?: string
+    name?: string
+    description?: string
+    discord_link?: string
+    twitter_link?: string
+    instagram_link?: string
   }
 }

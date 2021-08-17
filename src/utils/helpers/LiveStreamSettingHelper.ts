@@ -20,15 +20,15 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>): b
     }
     case 2: {
       if (stepSettingTwo) {
-        requiredFieldErrors.push(stepSettingTwo.re_title)
-        requiredFieldErrors.push(stepSettingTwo.re_description)
-        requiredFieldErrors.push(stepSettingTwo.re_category)
-        requiredFieldErrors.push(stepSettingTwo.date_time_notification_delivery)
-        requiredFieldErrors.push(stepSettingTwo.date_time_schedule_delivery_start)
-        requiredFieldErrors.push(stepSettingTwo.date_time_schedule_end)
-        if (stepSettingTwo.re_ticket_price && stepSettingTwo.date_time_ticket_sale_start) {
-          requiredFieldErrors.push(stepSettingTwo.re_ticket_price)
-          requiredFieldErrors.push(stepSettingTwo.date_time_ticket_sale_start)
+        requiredFieldErrors.push(stepSettingTwo.title)
+        requiredFieldErrors.push(stepSettingTwo.description)
+        requiredFieldErrors.push(stepSettingTwo.category)
+        requiredFieldErrors.push(stepSettingTwo.stream_notify_time)
+        requiredFieldErrors.push(stepSettingTwo.stream_schedule_start_time)
+        requiredFieldErrors.push(stepSettingTwo.stream_schedule_end_time)
+        if (stepSettingTwo.ticket_price && stepSettingTwo.sell_ticket_start_time) {
+          requiredFieldErrors.push(stepSettingTwo.ticket_price)
+          requiredFieldErrors.push(stepSettingTwo.sell_ticket_start_time)
         }
       }
       const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
@@ -36,8 +36,8 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>): b
     }
     case 3: {
       if (stepSettingThree) {
-        requiredFieldErrors.push(stepSettingThree.channel_name)
-        requiredFieldErrors.push(stepSettingThree.overview)
+        requiredFieldErrors.push(stepSettingThree.name)
+        requiredFieldErrors.push(stepSettingThree.description)
       }
       const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
       return _.isEmpty(filteredErrors)

@@ -97,9 +97,14 @@ const UsageHistory: FC = () => {
         )}
       </Box>
       <Box className={classes.paginationContainer}>
-        <Pagination 
-          showFirstButton showLastButton 
-          defaultPage={1} count={3} variant="outlined" shape="rounded" className={classes.paginationStyle} 
+        <Pagination
+          showFirstButton
+          showLastButton
+          defaultPage={1}
+          count={3}
+          variant="outlined"
+          shape="rounded"
+          className={classes.paginationStyle}
         />
       </Box>
     </Box>

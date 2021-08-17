@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
       padding: '32px 0 30px 0',
     },
     wrap_one_point: {
-      width: '100%'
+      width: '100%',
     },
   },
 }))

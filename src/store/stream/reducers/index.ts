@@ -1,37 +1,46 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { LiveStreamSettingResponse, SetLiveStreamResponse } from '@services/liveStream.service'
+import {
+  GetCategoryResponse,
+  GetChannelResponse,
+  GetStreamUrlAndKeyResponse,
+  LiveStreamSettingResponse,
+  SetLiveStreamResponse,
+} from '@services/liveStream.service'
 import * as actions from '../actions'
 
 type StateType = {
   liveSettingInfo?: LiveStreamSettingResponse
   setLiveSettingResponse?: SetLiveStreamResponse
+  getStreamUrlAndKeyInfo?: GetStreamUrlAndKeyResponse
+  getCategory?: GetCategoryResponse
+  getChannel?: GetChannelResponse
 }
 const initialState: StateType = {
-  liveSettingInfo: {
-    data: {
-      id: null,
-      uuid: '',
-      title: '',
-      description: '',
-      thumbnail: null,
-      category: null,
-      stream_url: '',
-      stream_key: '',
-      ticket_price: 0,
-      use_ticket: false,
-      share_sns_flag: false,
-      publish_flag: true,
-      channel_name: '',
-      overview: '',
-      discord_url: '',
-      twitter_url: '',
-      instagram_url: '',
-      stream_notify_time: null,
-      stream_schedule_start_time: null,
-      stream_schedule_end_time: null,
-      sell_ticket_start_time: null,
-    },
-  },
+  // liveSettingInfo: {
+  //   data: {
+  //     id: null,
+  //     uuid: '',
+  //     title: '',
+  //     description: '',
+  //     thumbnail: null,
+  //     category: null,
+  //     stream_url: '',
+  //     stream_key: '',
+  //     ticket_price: 0,
+  //     use_ticket: false,
+  //     share_sns_flag: false,
+  //     publish_flag: true,
+  //     name: '',
+  //     overview: '',
+  //     discord_link: '',
+  //     twitter_url: '',
+  //     instagram_url: '',
+  //     stream_notify_time: null,
+  //     stream_schedule_start_time: null,
+  //     stream_schedule_end_time: null,
+  //     sell_ticket_start_time: null,
+  //   },
+  // },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -41,5 +50,14 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.setLiveStream.fulfilled, (state, action) => {
       state.setLiveSettingResponse = action.payload
+    })
+    .addCase(actions.getStreamUrlAndKeyInfo.fulfilled, (state, action) => {
+      state.getStreamUrlAndKeyInfo = action.payload
+    })
+    .addCase(actions.getCategory.fulfilled, (state, action) => {
+      state.getCategory = action.payload
+    })
+    .addCase(actions.getChannel.fulfilled, (state, action) => {
+      state.getChannel = action.payload
     })
 })
