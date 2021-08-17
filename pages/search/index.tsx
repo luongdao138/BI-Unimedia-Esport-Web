@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import UserSearchContainer from '@containers/Search/UserSearch'
 import TournamentSearchContainer from '@containers/Search/TournamentSearch'
+import LobbySearchContainer from '@containers/Search/LobbySearch'
 import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import MainLayout from '@layouts/MainLayout'
 import { searchTypes } from '@constants/common.constants'
@@ -29,6 +30,8 @@ const SearchPage: PageWithLayoutType = () => {
         return <UserSearchContainer />
       case searchTypes.TOURNAMENT:
         return <TournamentSearchContainer />
+      case searchTypes.LOBBY:
+        return <LobbySearchContainer />
       default:
         return <></>
     }

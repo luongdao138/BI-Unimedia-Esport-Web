@@ -1,35 +1,33 @@
-import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
+import { Typography, Box, makeStyles, Icon } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
-import { useRouter } from 'next/router'
-import { ESRoutes } from '@constants/route.constants'
+// import { useRouter } from 'next/router'
+// import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { LobbyListItem } from '@services/lobbydump.service'
+import { LobbyResponse } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
-import i18n from '@locales/i18n'
+// import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+// import i18n from '@locales/i18n'
 
 interface Props {
-  lobby: LobbyListItem
+  lobby: LobbyResponse
 }
 
 const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
+  // const router = useRouter()
 
   const attr = lobby.attributes
-  const winner = lobby.attributes.winner
+  // const winner = lobby.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   // const organizer = attr.organizer_name ? attr.organizer_name : ''
-  const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
+  const startDate = new Date(attr.start_datetime).toISOString().slice(0, 10).replace(/-/g, '/')
 
   const getMediaScreen = () => {
-    const p_type =
-      attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
       <>
         <Box
@@ -43,7 +41,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
           <Box alignSelf="flex-end">
             <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
           </Box>
-          <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="space-between">
+          {/* <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="space-between">
             <Chip
               className={classes.chipPrimary}
               size="small"
@@ -62,13 +60,13 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
               size="small"
               label={
                 <Box color={Colors.black} justifyContent="flex-">
-                  <Typography variant="overline">{p_type}</Typography>
+                  <Typography variant="overline"> {attr.p_type}</Typography>
                 </Box>
               }
             />
-          </Box>
+          </Box> */}
         </Box>
-        {winner && attr.status === TS.COMPLETED && (
+        {/* {winner && attr.status === TS.COMPLETED && (
           <Box
             zIndex={2}
             className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
@@ -92,7 +90,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
               </Typography>
             </Box>
           </Box>
-        )}
+        )} */}
       </>
     )
   }
@@ -139,8 +137,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
                   key={`participants${i}`}
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
-                  src={participant.profile_image}
-                  alt={participant.nickname}
+                  src={participant.attributes.avatar_url}
+                  alt={participant.attributes.nickname}
                 />
               ))
           : null}
@@ -148,13 +146,11 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
     )
   }
 
-  const pCount = () => {
-    const count = attr.is_freezed ? attr.participant_count : Number(attr.participant_count) + Number(attr.interested_count)
-    return isNaN(count) || !count ? 0 : count
-  }
-
   return (
-    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.LOBBY}/${attr.hash_key}`)}>
+    <ESCard
+      classes={{ root: classes.cardHover }}
+      // onClick={() => router.push(`${ESRoutes.LOBBY}/${attr.hash_key}`)}
+    >
       <ESCardMedia
         cornerIcon={
           <Icon className={/* attr.rule === TR.BATTLE_ROYAL ? */ 'fas fa-university' /*  : 'fas fa-trophy' */} fontSize="small" />
@@ -165,11 +161,11 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
       </ESCardMedia>
       <ESCardContent>
         {getTitle()}
-        {getInfoRow(attr.game_of_title)}
+        {getInfoRow(attr.title)}
         {/* {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)} */}
         {getChippedRow(t('common:tournament_create.start_date'), startDate)}
         {getChippedRow(t('common:tournament_create.entry_period'), startDate, ' まで')}
-        {getChippedRow(t('common:tournament.entry_number'), pCount(), `/${attr.max_participants}`, 0.5)}
+        {getChippedRow(t('common:tournament.entry_number'), attr.participant_count, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>

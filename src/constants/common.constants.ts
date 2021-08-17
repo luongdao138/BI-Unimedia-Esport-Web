@@ -6,6 +6,7 @@ export const searchTypes = {
   COMMUNITY: 2,
   TOURNAMENT: 3,
   RECRUITMENT: 4,
+  LOBBY: 5,
 }
 
 export const searchOptions = [

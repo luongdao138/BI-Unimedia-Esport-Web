@@ -4,5 +4,6 @@ export enum LOBBY_ACTION_TYPE {
   LOBBY_CANCEL = 'lobby/cancel',
   LOBBY_UNJOIN = 'lobby/unjoin',
   LOBBY_PARTICIPANTS = 'lobby/participants',
-  CLEAR_LOBBY_RESULT = 'lobby/CLEAR_LOBBY_RESULT',
+  CLEAR_LOBBY_RESULT = 'lobby/clearLobbyResult',
+  RESET_SEARCH_LOBBIES = 'lobby/resetSearchsLobbies',
 }

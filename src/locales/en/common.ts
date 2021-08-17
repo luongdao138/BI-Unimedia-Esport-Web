@@ -630,7 +630,8 @@ export default {
     recruiting: '受付中',
   },
   lobbySearchFilters: {
-    recommended: 'おすすめの募集',
+    all: 'すべて',
+    suggested: 'おすすめの募集',
     beforeStart: 'エントリー受付中',
     inProgress: 'エントリー中の募集',
     organized: 'あなたが作成した募集',

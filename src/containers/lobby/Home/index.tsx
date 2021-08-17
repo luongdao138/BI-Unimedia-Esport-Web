@@ -1,6 +1,6 @@
 import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
-import { LobbyFilterOption, LobbyListItem } from '@services/lobbydump.service'
+import { LobbyFilterOption } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import { AddRounded } from '@material-ui/icons'
@@ -10,10 +10,10 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import LobbyCard from '@components/LobbyCard'
-// import InfiniteScroll from 'react-infinite-scroll-component'
-// import ESLoader from '@components/Loader'
-// import useLobbyHome from './useLobbyHome'
-// import { useEffect } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import ESLoader from '@components/Loader'
+import useLobbyHome from './useLobbyHome'
+import { useEffect } from 'react'
 
 interface LobbyHomeProps {
   filter: LobbyFilterOption
@@ -22,18 +22,18 @@ interface LobbyHomeProps {
 const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   const { t } = useTranslation()
   const classes = useStyles()
-  // const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
+  const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
   const router = useRouter()
   const { toCreate } = useLobbyHelper()
 
-  // useEffect(() => {
-  //   if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
-  //   loadMore()
-  // }, [lobbies])
+  useEffect(() => {
+    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
+    loadMore()
+  }, [lobbies])
 
-  // useEffect(() => {
-  //   onFilterChange(filter)
-  // }, [filter])
+  useEffect(() => {
+    onFilterChange(filter)
+  }, [filter])
 
   const onFilter = (filter: LobbyFilterOption) => {
     router.push(`${ESRoutes.LOBBY}?filter=${filter}`, undefined, { shallow: true })
@@ -47,8 +47,8 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
       loginRequired: false,
     },
     {
-      type: LobbyFilterOption.ready,
-      label: t('common:lobbySearchFilters.recommended'),
+      type: LobbyFilterOption.suggested,
+      label: t('common:lobbySearchFilters.suggested'),
       loginRequired: false,
     },
     {
@@ -57,94 +57,16 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
       loginRequired: false,
     },
     {
-      type: LobbyFilterOption.beforeStart,
+      type: LobbyFilterOption.joined,
       label: t('common:lobbySearchFilters.inProgress'),
       loginRequired: false,
     },
     {
-      type: LobbyFilterOption.inProgress,
+      type: LobbyFilterOption.organized,
       label: t('common:lobbySearchFilters.organized'),
     },
   ]
 
-  const testLobbies: LobbyListItem[] = [
-    {
-      attributes: {
-        title: 'testLobby',
-        hash_key: '1234567890',
-        start_date: '2021-08-02',
-        max_participants: 15,
-        participant_type: 1,
-        status: 1,
-        game_of_title: 'dota 2',
-        cover: null,
-        organizer_name: 'dulguun',
-        organizer_avatar: 'test',
-        role: 0,
-        rule: 0,
-        position: 1,
-        team_name: 'test team',
-        team_avatar: null,
-        participant_count: 4,
-        is_single: false,
-        winner: null,
-        participants: [
-          {
-            nickname: 'dulguun2',
-            profile_image: null,
-          },
-          {
-            nickname: 'bat',
-            profile_image: null,
-          },
-          {
-            nickname: 'erdene',
-            profile_image: null,
-          },
-        ],
-        is_freezed: false,
-        interested_count: 0,
-      },
-    },
-    {
-      attributes: {
-        title: 'testLobby2',
-        hash_key: '12345678190',
-        start_date: '2021-08-03',
-        max_participants: 15,
-        participant_type: 2,
-        status: 2,
-        game_of_title: 'csgo',
-        cover: null,
-        organizer_name: 'dulguun',
-        organizer_avatar: 'test',
-        role: 0,
-        rule: 0,
-        position: 1,
-        team_name: 'test team',
-        team_avatar: null,
-        participant_count: 3,
-        is_single: true,
-        winner: null,
-        participants: [
-          {
-            nickname: 'aulguun2',
-            profile_image: null,
-          },
-          {
-            nickname: 'sat',
-            profile_image: null,
-          },
-          {
-            nickname: 'frdene',
-            profile_image: null,
-          },
-        ],
-        is_freezed: false,
-        interested_count: 0,
-      },
-    },
-  ]
   return (
     <>
       <div className={classes.header}>
@@ -162,39 +84,34 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
           {defaultFilterOptions.map((option) => (
             <ESChip
               key={option.type}
-              color={option.type === filter ? 'primary' : undefined}
+              color={option.type === filter ? 'primary' : 'default'}
               className={classes.filterChip}
               label={option.label}
               onClick={() => onFilter(option.type)}
             />
           ))}
         </Box>
-        {/* <InfiniteScroll
+        <InfiniteScroll
           className={classes.scrollContainer}
-          dataLength={lobby.length}
+          dataLength={lobbies.length}
           next={loadMore}
           hasMore={true}
           loader={null}
           scrollThreshold={0.8}
         >
-          {lobby.map((Lobby, i) => (
+          {lobbies.map((Lobby, i) => (
             <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
-              <LobbyCard Lobby={Lobby} />
+              <LobbyCard lobby={Lobby} />
             </Grid>
           ))}
-        </InfiniteScroll> */}
-        {testLobbies.map((lobby, i) => (
-          <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4}>
-            <LobbyCard lobby={lobby} />
-          </Grid>
-        ))}
-        {/* {meta.pending && (
+        </InfiniteScroll>
+        {meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
             </Box>
           </Grid>
-        )} */}
+        )}
       </Grid>
     </>
   )

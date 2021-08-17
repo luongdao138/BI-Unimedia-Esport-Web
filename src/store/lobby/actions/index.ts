@@ -74,6 +74,7 @@ export const searchLobby = createAsyncThunk<services.LobbySearchResponse, servic
   }
 )
 
+export const resetSearchLobbies = createAction(LOBBY_ACTION_TYPE.RESET_SEARCH_LOBBIES)
 export const clearLobbyResult = createAction(LOBBY_ACTION_TYPE.CLEAR_LOBBY_RESULT)
 
 export const getParticipants = createAsyncThunk<services.ParticipantsResponse, number>(

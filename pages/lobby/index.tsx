@@ -4,7 +4,7 @@ import React from 'react'
 import { LobbyHomeContainer } from '@containers/lobby'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
-import { LobbyFilterOption } from '@services/lobbydump.service'
+import { LobbyFilterOption } from '@services/lobby.service'
 
 const LobbyPage: PageWithLayoutType = () => {
   const router = useRouter()
@@ -18,7 +18,7 @@ const LobbyPage: PageWithLayoutType = () => {
 
 function formatFilter(filterText: string) {
   if (!_.isString(filterText)) return LobbyFilterOption.all
-  const possibleFilters = ['all', 'ready', 'recruiting', 'before_start', 'in_progress', 'completed', 'joined', 'organized']
+  const possibleFilters = ['all', 'suggested', 'recruiting', 'joined', 'organized']
   if (possibleFilters.includes(filterText)) {
     return filterText as LobbyFilterOption
   }

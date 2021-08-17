@@ -26,7 +26,17 @@ export default createReducer(initialState, (builder) => {
     // do detail manipulation later
   })
   builder.addCase(actions.searchLobby.fulfilled, (_state, _action) => {
-    // do detail manipulation later
+    let searchLobbies = _action.payload.data
+    if (_action.payload.meta != undefined && _action.payload.meta.current_page > 1) {
+      searchLobbies = _state.searchLobbies.concat(_action.payload.data)
+    }
+
+    _state.searchLobbies = searchLobbies
+    _state.searchLobbiesMeta = _action.payload.meta
+  })
+  builder.addCase(actions.resetSearchLobbies, (state) => {
+    state.searchLobbies = []
+    state.searchLobbiesMeta = undefined
   })
   builder.addCase(actions.clearLobbyResult, (state) => {
     state.searchLobbies = []
