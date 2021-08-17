@@ -25,8 +25,8 @@ const PurchaseHistory: FC = () => {
     { label: '2020年4月', value: '2020年4月' },
   ]
   return (
-    <Box className={classes.container} maxWidth="md">
-      <Grid item xs={7}>
+    <Box className={classes.container}>
+      <Grid item xs={12} md={7}>
         <ESSelect
           fullWidth
           placeholder={i18n.t('common:point_management_tab.choosing')}
@@ -42,27 +42,28 @@ const PurchaseHistory: FC = () => {
           ))}
         </ESSelect>
       </Grid>
-      <Box className={classes.content}>
+      <Box className={classes.wrapContent}>
         {dataPurchasedPoints.map((item, i) => (
           <PurchaseHistoryItem data={item} key={i} />
         ))}
       </Box>
       <Box className={classes.paginationContainer}>
-        <Pagination defaultPage={1} count={99} variant="outlined" shape="rounded" className={classes.paginationStyle} />
+        <Pagination 
+          showFirstButton showLastButton
+          defaultPage={1} count={3} variant="outlined" shape="rounded" className={classes.paginationStyle}
+        />
       </Box>
     </Box>
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
   comboBox: {},
-  [theme.breakpoints.up('md')]: {
-    container: {
-      marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(3),
-      marginTop: theme.spacing(3),
-    },
+  container: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    marginTop: theme.spacing(3),
   },
-  content: {
+  wrapContent: {
     backgroundColor: Colors.black,
     flex: 1,
     borderRadius: 4,
@@ -88,6 +89,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: Colors.primary,
     },
     '& .MuiPaginationItem-ranges': {},
+  },
+  [theme.breakpoints.down(375)]: {
+    wrapContent: {
+      paddingBottom: 0,
+    },
   },
 }))
 export default PurchaseHistory

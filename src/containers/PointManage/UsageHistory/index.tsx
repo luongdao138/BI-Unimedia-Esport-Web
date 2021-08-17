@@ -43,7 +43,7 @@ const UsageHistory: FC = () => {
     { label: '2020年4月', value: '2020年4月' },
   ]
   return (
-    <Box className={classes.container} maxWidth="md">
+    <Box className={classes.container}>
       {dataUsagePoints.length > 0 ? (
         <Box className={classes.headerContainer}>
           <Typography className={classes.headerTitle}>
@@ -69,7 +69,7 @@ const UsageHistory: FC = () => {
           </ESSelect>
         </Grid>
       )}
-      <Box className={classes.content}>
+      <Box className={classes.wrapContent}>
         {dataPurchasePoints.length > 0 && (
           <>
             <Box className={classes.typePurchaseContainer}>
@@ -97,7 +97,10 @@ const UsageHistory: FC = () => {
         )}
       </Box>
       <Box className={classes.paginationContainer}>
-        <Pagination defaultPage={1} count={99} variant="outlined" shape="rounded" className={classes.paginationStyle} />
+        <Pagination 
+          showFirstButton showLastButton 
+          defaultPage={1} count={3} variant="outlined" shape="rounded" className={classes.paginationStyle} 
+        />
       </Box>
     </Box>
   )
@@ -126,14 +129,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 24,
   },
   comboBox: {},
-  [theme.breakpoints.up('md')]: {
-    container: {
-      marginLeft: theme.spacing(3),
-      marginRight: theme.spacing(3),
-      marginTop: theme.spacing(3),
-    },
+  container: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    marginTop: theme.spacing(3),
   },
-  content: {
+  wrapContent: {
     backgroundColor: Colors.black,
     flex: 1,
     borderRadius: 4,
@@ -170,6 +171,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noDataText: {
     color: Colors.white_opacity['70'],
+  },
+  [theme.breakpoints.down(375)]: {
+    typePurchaseContainer: {
+      margin: '8px 0',
+    },
+    typeUsageContainer: {
+      margin: '8px 0',
+    },
+    wrapContent: {
+      paddingBottom: 8,
+    },
+    headerTitle: {
+      fontSize: 13,
+    },
   },
 }))
 export default UsageHistory

@@ -29,10 +29,10 @@ const PointManage: React.FC = () => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={t('point_management_tab.point_management')} value={0} />
-          <ESTab label={t('point_management_tab.purchase_point')} value={1} />
-          <ESTab label={t('point_management_tab.purchase_history')} value={2} />
-          <ESTab label={t('point_management_tab.usage_history')} value={3} />
+          <ESTab className={classes.tabMin} label={t('point_management_tab.point_management')} value={0} />
+          <ESTab className={classes.tabMin} label={t('point_management_tab.purchase_point')} value={1} />
+          <ESTab className={classes.tabMin} label={t('point_management_tab.purchase_history')} value={2} />
+          <ESTab className={classes.tabMin} label={t('point_management_tab.usage_history')} value={3} />
         </ESTabs>
       </Grid>
     )
@@ -41,16 +41,12 @@ const PointManage: React.FC = () => {
     switch (tab) {
       case TABS.POINT_MANAGEMENT:
         return <PointManagementTab />
-        break
       case TABS.PURCHASE_POINT:
         return <PurchasePoint />
-        break
       case TABS.PURCHASE_HISTORY:
         return <PurchaseHistory />
-        break
       case TABS.USAGE_HISTORY:
         return <UsageHistory />
-        break
       default:
         break
     }
@@ -72,7 +68,7 @@ const PointManage: React.FC = () => {
 }
 export default PointManage
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   tabs: {
     overflow: 'hidden',
     borderBottomColor: Colors.text[300],
@@ -86,5 +82,18 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     marginTop: 30,
     marginBottom: 50,
+  },
+  tabMin: {
+    minWidth: 56,
+  },
+  [theme.breakpoints.down(375)]: {
+    tabs: {
+      paddingLeft: 0,
+    },
+    tabMin:{
+      '& .MuiTab-wrapper': {
+        fontSize: 12,
+      }
+    }
   },
 }))

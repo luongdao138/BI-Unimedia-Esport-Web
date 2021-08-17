@@ -176,7 +176,7 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
           </Box>
         </Box>
       </form>
-      <Box pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
+      <Box pb={3} pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
         <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
           {t('purchase_point_tab.btn_buy')}
         </ButtonPrimary>
@@ -187,7 +187,7 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
 
 export default Step2
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     // paddingLeft: 24,
     fontSize: 16,
@@ -316,5 +316,29 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     color: Colors.white,
     borderColor: Colors.white,
+  },
+  [theme.breakpoints.down('lg')]: {
+    card_info_wrap: {
+      flexWrap: 'wrap',
+      paddingRight: 0,
+    },
+    card_wrap: {
+      width: '100%',
+      paddingRight: 0,
+      marginBottom: 24,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    container: {
+      width: '100%',
+    },
+    point: {
+      width: 100,
+    },
+    card_info_container: {
+      '& label': {
+        fontSize: 15,
+      }
+    },
   },
 }))

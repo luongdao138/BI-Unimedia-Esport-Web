@@ -12,13 +12,15 @@ const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data }) => {
   const classes = useStyles()
   return (
     <Box className={classes.container} key={data?.serialNumber}>
-      <Box className={classes.serialContainer}>
-        <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
-      </Box>
-      <Box className={classes.titleContainer}>
-        <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
-        <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
-        <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.expires_date')}</Typography>
+      <Box className={classes.wrapTitle}>
+        <Box className={classes.serialContainer}>
+          <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
+        </Box>
+        <Box className={classes.titleContainer}>
+          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
+          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
+          <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.expires_date')}</Typography>
+        </Box>
       </Box>
       <Box className={classes.dataContainer}>
         <Typography className={classes.idTextItem}>{data?.purchasedPointsId}</Typography>
@@ -31,7 +33,7 @@ const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flex: 1,
@@ -39,30 +41,34 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
     backgroundColor: Colors.white_opacity['6'],
     alignContent: 'center',
-    marginLeft: 16,
-    marginRight: 16,
+    marginLeft: 24,
+    marginRight: 24,
     borderRadius: 4,
     paddingLeft: 16,
     paddingTop: 16,
     paddingBottom: 18,
     marginTop: 24,
   },
+  wrapTitle:{
+    display: "flex", 
+    width: "148px",
+  },
   serialContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
     display: 'flex',
+    width: 28,
+    flexWrap: "wrap", 
+    wordBreak: "break-all",
   },
   serialStyle: {
-    marginRight: 16,
     textAlign: 'center',
-    marginBottom: 8,
   },
   titleContainer: {
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    width: 127,
+    width: "calc(100% - 28px)", 
+    paddingLeft: "8px"
   },
   titleItemStyle: {
     color: Colors.white_opacity['70'],
@@ -85,6 +91,14 @@ const useStyles = makeStyles(() => ({
   },
   dateStyle: {
     color: Colors.white_opacity['70'],
+  },
+  [theme.breakpoints.down(375)]: {
+    container: {
+      margin: 8,
+    },
+    wrapTitle:{
+      width: 110,
+    }
   },
 }))
 
