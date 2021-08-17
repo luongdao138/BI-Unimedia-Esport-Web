@@ -6,10 +6,10 @@ import { useRouter } from 'next/router'
 const StreamingSettingPage: PageWithLayoutType = () => {
   const router = useRouter()
   const default_tab = router?.query?.default_tab || 0
-  
+
   return (
     <StreamLayout>
-      <StreamingSettingContainer default_tab={Number(default_tab)}/>
+      <StreamingSettingContainer default_tab={Number(default_tab)} />
     </StreamLayout>
   )
 }

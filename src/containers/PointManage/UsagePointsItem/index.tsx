@@ -56,9 +56,9 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
-  wrapTitle:{
-    display: "flex", 
-    width: "148px",
+  wrapTitle: {
+    display: 'flex',
+    width: '148px',
   },
   container: {
     display: 'flex',
@@ -79,8 +79,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     display: 'flex',
     width: 28,
-    flexWrap: "wrap", 
-    wordBreak: "break-all",
+    flexWrap: 'wrap',
+    wordBreak: 'break-all',
   },
   serialStyle: {
     marginRight: 16,
@@ -91,8 +91,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    width: "calc(100% - 28px)", 
-    paddingLeft: "8px"
+    width: 'calc(100% - 28px)',
+    paddingLeft: '8px',
   },
   titleItemStyle: {
     color: Colors.white_opacity['70'],
@@ -124,15 +124,15 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.white_opacity['70'],
   },
   [theme.breakpoints.down(414)]: {
-    wrapTitle:{
+    wrapTitle: {
       width: 135,
-    }
+    },
   },
   [theme.breakpoints.down(375)]: {
     container: {
       margin: 8,
     },
-    wrapTitle:{
+    wrapTitle: {
       width: 110,
     },
     textStyle: {

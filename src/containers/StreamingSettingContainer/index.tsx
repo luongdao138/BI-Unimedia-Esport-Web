@@ -16,7 +16,7 @@ enum TABS {
   DISTRIBUTOR = 2,
 }
 
-const StreamingSettingContainer: React.FC<{default_tab: any}> = ({default_tab}) => {
+const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(default_tab)

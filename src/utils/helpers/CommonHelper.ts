@@ -192,6 +192,13 @@ const cutLinksIntoPieces = (textMain: string) => {
   return separations
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const formatDateTime = (date: string) => {
+  const dateTime = new Date(date).toString()
+  // const dateResult = moment(dateTime).format(FORMAT_DATE_TIME_JP)
+  return dateTime
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -206,4 +213,5 @@ export const CommonHelper = {
   cutLinksIntoPieces,
   getIndicesOf,
   replaceWhiteSpace,
+  formatDateTime,
 }

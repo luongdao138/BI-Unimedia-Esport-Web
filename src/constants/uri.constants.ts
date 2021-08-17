@@ -100,4 +100,8 @@ export const URI = {
   //live stream management
   LIVE_SETTING: '/v2/live/setting',
   SET_LIVE_SETTING: '/v2/live/setting',
+  S3_THUMBNAIL_PRESIGNED_URL: '/v2/s3/url_video_image',
+  STREAM_URL_AND_KEY: '/v2/live/renew-stream-secret',
+  GET_CATEGORY: '/v2/categories',
+  GET_CHANNEL: '/v2/channels',
 }

@@ -24,6 +24,12 @@ export const calculateDimensions = (width: number, height: number, S_W: number, 
   return { height: h, width: w }
 }
 export const calculateDimensionsCover = (width: number, height: number, S_W: number, S_H: number): { height: number; width: number } => {
+  // console.log("======calculateDimensionsCover==width==",width)
+  // console.log("======calculateDimensionsCover==height==",height)
+  // console.log("======calculateDimensionsCover==S_W==",S_W)
+  // console.log("======calculateDimensionsCover==S_H==",S_H)
+  // console.log("======calculateDimensionsCover==height2==",height)
+  // console.log("======calculateDimensionsCover==width2==",width)
   let h = height,
     w = width,
     gap = S_W / w
@@ -34,5 +40,6 @@ export const calculateDimensionsCover = (width: number, height: number, S_W: num
     h = S_H
     w = w * gap
   }
+  // console.log("=====RETURN=====",h,w)
   return { height: h, width: w }
 }

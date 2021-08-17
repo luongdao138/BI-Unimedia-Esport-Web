@@ -22,7 +22,12 @@ export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, se
   async (setLiveStreamParams, { rejectWithValue }) => {
     try {
       const res = await services.setLiveSetting(setLiveStreamParams)
-      return res
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
     } catch (error) {
       if (!error.response) {
         throw error
@@ -31,3 +36,60 @@ export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, se
     }
   }
 )
+
+export const getStreamUrlAndKeyInfo = createAsyncThunk<services.GetStreamUrlAndKeyResponse>(
+  ACTION_STREAM_TYPES.GET_STREAM_URL_AND_KEY,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getStreamUrlAndKey()
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getCategory = createAsyncThunk<services.GetCategoryResponse>(
+  ACTION_STREAM_TYPES.GET_CATEGORY,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getCategory()
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getChannel = createAsyncThunk<services.GetChannelResponse>(ACTION_STREAM_TYPES.GET_CHANNEL, async (_, { rejectWithValue }) => {
+  try {
+    const res = await services.getChannel()
+    if (res?.code === 200) {
+      return res
+    } else {
+      // throw res.message
+      return rejectWithValue(JSON.stringify(res.message))
+    }
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})

@@ -161,3 +161,5 @@ export enum FOLLOW_STATES {
   FOLLOWING = 1,
   FOLLOWERS = 0,
 }
+
+export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'

@@ -4,7 +4,6 @@ import { useFormik } from 'formik'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
 import ESSelect from '@components/Select'
-import { LIVE_CATEGORIES } from '@constants/tournament.constants'
 import { useAppDispatch } from '@store/hooks'
 import { useTranslation } from 'react-i18next'
 import * as commonActions from '@store/common/actions'
@@ -20,7 +19,7 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
+import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
@@ -28,23 +27,31 @@ import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import ESLoader from '@components/FullScreenLoader'
 import useGetProfile from '@utils/hooks/useGetProfile'
+import useUploadImage from '@utils/hooks/useUploadImage'
 
 interface StepsProps {
   step: number
   onNext: (step: number) => void
+  category: GetCategoryResponse
+}
+const KEY_TYPE = {
+  URL: 1,
+  KEY: 2,
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
-  const { liveSettingInformation, getLiveSettingTab, meta, setLiveStreamConfirm } = useLiveSetting()
-  const liveInfo = liveSettingInformation.data
+  const [categoryName, setCategoryName] = useState('')
+  const { liveSettingInformation, getLiveSettingTab, setLiveStreamConfirm, getStreamUrlAndKey, isPending } = useLiveSetting()
+  const liveInfo = liveSettingInformation?.data
+
   const { userProfile } = useGetProfile()
   const [showStreamURL, setShowStreamURL] = useState(false)
   const [showStreamKey, setShowStreamKey] = useState(false)
   const [hasError, setError] = useState(false)
-  const initialValues = getInitialLiveSettingValues(liveInfo)
+  const initialValues = getInitialLiveSettingValues(liveInfo ? liveInfo : null)
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
     validationSchema: validationLiveSettingsScheme(),
@@ -65,16 +72,24 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
     setError(!isRequiredFieldsValid)
   }, [formik.errors.stepSettingOne])
 
+  useEffect(() => {
+    category?.data.forEach((h) => {
+      if (Number(h.id) === Number(formik.values.stepSettingOne.category)) {
+        setCategoryName(h.name)
+      }
+    })
+  }, [formik.values.stepSettingOne.category])
+
   const getLiveSetting = () => {
     getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then(() => {
       formik.validateForm()
     })
   }
-  // const { uploadArenaCoverImage, isUploading } = useUploadImage()
-  const handleUpload = useCallback(() => {
-    // uploadArenaCoverImage(file, blob, 1, true, (imageUrl) => {
-    //   formik.setFieldValue('stepSettingOne.thumbnail', file)
-    // })
+  const { uploadLiveStreamThumbnailImage, isUploading } = useUploadImage()
+  const handleUpload = useCallback((file: File, blob: any) => {
+    uploadLiveStreamThumbnailImage(file, blob, (imageUrl) => {
+      formik.setFieldValue('stepSettingOne.thumbnail', imageUrl)
+    })
   }, [])
 
   const handleCopy = () => {
@@ -144,7 +159,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
       sell_ticket_start_time: null,
       scheduled_flag: 0,
     }
-    setLiveStreamConfirm(data)
+    setLiveStreamConfirm(data, () => {
+      onNext(step + 1)
+    })
+  }
+
+  const onReNewUrlAndKey = (type: number) => {
+    getStreamUrlAndKey((url, key) => {
+      if (type === 1) formik.setFieldValue('stepSettingOne.stream_url', url)
+      else formik.setFieldValue('stepSettingOne.stream_key', key)
+    })
   }
 
   return (
@@ -192,7 +216,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 <CoverUploaderStream
                   src={formik.values.stepSettingOne.thumbnail}
                   onChange={handleUpload}
-                  isUploading={false}
+                  isUploading={isUploading}
                   disabled={!isFirstStep()}
                   size="big"
                   onOpenStateChange={handleCoverDailogStateChange}
@@ -261,9 +285,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   <option disabled value={-1}>
                     {i18n.t('common:please_select')}
                   </option>
-                  {LIVE_CATEGORIES.map((rule, index) => (
-                    <option key={index} value={rule.value}>
-                      {rule.label}
+                  {(category?.data || []).map((item, index) => (
+                    <option key={index} value={item.id}>
+                      {item.name}
                     </option>
                   ))}
                 </ESSelect>
@@ -271,7 +295,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 <ESInput
                   id="title"
                   name="title"
-                  value={formik.values.stepSettingOne.category}
+                  value={categoryName}
                   fullWidth
                   labelPrimary={i18n.t('common:streaming_setting_screen.category')}
                   required
@@ -370,7 +394,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                     ? !formik.values.stepSettingOne.stream_url && i18n.t('common:streaming_setting_screen.stream_mask')
                     : !formik.values.stepSettingOne.stream_url && t('common:streaming_setting_screen.issued_stream')
                 }
-                type={showStreamURL || formik.values.stepSettingOne.stream_url ? 'text' : 'password'}
+                type={showStreamURL ? 'text' : 'password'}
                 endAdornment={
                   isFirstStep() ? (
                     <InputAdornment position="end" className={classes.inputContainer}>
@@ -390,11 +414,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   )
                 }
                 fullWidth
-                value={
-                  !formik.values.stepSettingOne.stream_url
-                    ? formik.values.stepSettingOne.stream_url
-                    : t('common:streaming_setting_screen.issued_stream')
-                }
+                value={formik.values.stepSettingOne.stream_url}
                 readOnly={true}
                 size="big"
                 disabled={!isFirstStep()}
@@ -407,7 +427,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={classes.urlCopy}
+                  onClick={() => {
+                    onReNewUrlAndKey(KEY_TYPE.URL)
+                  }}
+                >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
@@ -425,7 +453,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                     ? !formik.values.stepSettingOne.stream_key && i18n.t('common:streaming_setting_screen.stream_mask')
                     : !formik.values.stepSettingOne.stream_key && t('common:streaming_setting_screen.issued_stream')
                 }
-                type={showStreamKey || formik.values.stepSettingOne.stream_key ? 'text' : 'password'}
+                type={showStreamKey ? 'text' : 'password'}
                 endAdornment={
                   isFirstStep() ? (
                     <InputAdornment position="end" className={classes.inputContainer}>
@@ -446,7 +474,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                 }
                 fullWidth
                 value={
-                  !formik.values.stepSettingOne.stream_key
+                  formik.values.stepSettingOne.stream_key
                     ? formik.values.stepSettingOne.stream_key
                     : t('common:streaming_setting_screen.issued_stream')
                 }
@@ -463,7 +491,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={classes.urlCopy}
+                  onClick={() => {
+                    onReNewUrlAndKey(KEY_TYPE.KEY)
+                  }}
+                >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
@@ -525,7 +561,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           )}
         </form>
       </Box>
-      <ESLoader open={meta.pending} />
+      <ESLoader open={isPending} />
     </Box>
   )
 }

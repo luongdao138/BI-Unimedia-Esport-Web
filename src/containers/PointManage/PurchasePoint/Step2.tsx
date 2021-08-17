@@ -338,7 +338,7 @@ const useStyles = makeStyles((theme) => ({
     card_info_container: {
       '& label': {
         fontSize: 15,
-      }
+      },
     },
   },
 }))

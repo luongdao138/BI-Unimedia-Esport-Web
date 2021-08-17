@@ -90,10 +90,10 @@ const useStyles = makeStyles((theme) => ({
     tabs: {
       paddingLeft: 0,
     },
-    tabMin:{
+    tabMin: {
       '& .MuiTab-wrapper': {
         fontSize: 12,
-      }
-    }
+      },
+    },
   },
 }))

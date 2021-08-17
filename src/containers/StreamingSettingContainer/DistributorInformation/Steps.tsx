@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
-import useGetProfile from '@utils/hooks/useGetProfile'
 import _ from 'lodash'
 import ESInput from '@components/Input'
 import i18n from '@locales/i18n'
@@ -10,22 +9,23 @@ import SnsInfoStream from '@components/SnsInfoStream'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
-import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
+import { getInitialDistributorValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
+import { GetChannelResponse } from '@services/liveStream.service'
 
 interface StepsProps {
   step: number
   onNext: (step: number) => void
+  channel: GetChannelResponse
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   const classes = useStyles()
-  const [profile, setProfile] = useState([])
+  const [social, setSocial] = useState(null)
   const [hasError, setError] = useState(false)
-  const { userProfile } = useGetProfile()
-  const initialValues = getInitialLiveSettingValues()
+  const initialValues = getInitialDistributorValues(channel.data ? channel.data : null)
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
     validationSchema: validationLiveSettingsScheme(),
@@ -44,15 +44,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
   }, [formik.errors])
 
   useEffect(() => {
-    if (userProfile) {
-      setProfile([])
-    }
-  }, [userProfile])
+    setSocial(channel?.data)
+  }, [])
   const handleError = (errors) => {
     setError(!_.isEmpty(errors))
   }
   const onBasicInfoChanged = (data): void => {
-    setProfile((prevState) => {
+    setSocial((prevState) => {
       return { ...prevState, ...data }
     })
   }
@@ -81,17 +79,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
           <Box pb={2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESInput
-                id="channel_name"
-                name="stepSettingThree.channel_name"
+                id="name"
+                name="stepSettingThree.name"
                 required={true}
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_channel_name')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_channel_name')}
                 fullWidth
-                value={isFirstStep() ? formik.values.stepSettingThree.channel_name : 'テキストテキストテキストテキストここの文字数制限'}
+                value={formik.values.stepSettingThree.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingThree?.channel_name && formik?.errors?.stepSettingThree?.channel_name}
-                error={formik?.touched?.stepSettingThree?.channel_name && !!formik?.errors?.stepSettingThree?.channel_name}
+                helperText={formik?.touched?.stepSettingThree?.name && formik?.errors?.stepSettingThree?.name}
+                error={formik?.touched?.stepSettingThree?.name && !!formik?.errors?.stepSettingThree?.name}
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
@@ -102,26 +100,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
             <Box className={classes.firstItem}>
               <ESFastInput
                 id="overview"
-                name="stepSettingThree.overview"
-                multiline
+                name="stepSettingThree.description"
+                multiline={isFirstStep()}
                 rows={8}
                 required={true}
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
                 fullWidth
-                value={
-                  isFirstStep()
-                    ? formik.values.stepSettingThree.overview
-                    : '番組概要テキストテキストテキストテキストテキストテキストテキストテキスト\n' +
-                      'テキストテキストテキストテキストテキストテキストテキストテキストテキス\n' +
-                      'トテキストテキストテキストテキストテキストテキストテキストテキストテキ\n' +
-                      'ストテキストテキストテ\n' +
-                      'https://sample.jp テキストテキスト'
-                }
+                value={formik.values.stepSettingThree.description}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingThree?.overview && formik?.errors?.stepSettingThree?.overview}
-                error={formik?.touched?.stepSettingThree?.overview && !!formik?.errors?.stepSettingThree?.overview}
+                helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}
+                error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
                 size="big"
                 disabled={!isFirstStep()}
                 className={getAddClassByStep(classes.input_text)}
@@ -135,7 +125,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext }) => {
               </Typography>
               <SnsInfoStream
                 showPreview={isFirstStep() ? false : true}
-                profile={profile}
+                social={social}
                 onDataChange={onBasicInfoChanged}
                 handleError={handleError}
               />
