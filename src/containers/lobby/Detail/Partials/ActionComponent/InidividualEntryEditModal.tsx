@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { ParticipantName, LobbyDetail } from '@services/lobbydump.service'
+import { LobbyDetail } from '@services/lobby.service'
+import { ParticipantName } from '@services/lobbydump.service'
 import { useState } from 'react'
 import { Box, makeStyles, Theme } from '@material-ui/core'
 import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'

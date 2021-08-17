@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { LobbyDetail } from '@services/lobbydump.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { Box, Dialog, makeStyles, Typography, withStyles } from '@material-ui/core'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import { useTranslation } from 'react-i18next'

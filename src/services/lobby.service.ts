@@ -1,9 +1,19 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-import { LobbyRule, LobbyStatus } from './lobbydump.service'
 import { Feature } from './user.service'
 import { GameHardware, GameTitle } from './game.service'
 import { ArenaRole } from './arena.service'
+
+export type LobbyStatus =
+  | 'open'
+  | 'ready'
+  | 'recruiting'
+  | 'recruitment_closed'
+  | 'ready_to_start'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled' // TODO
+export type LobbyRule = 'single' | 'double' | 'battle_royale' // TODO
 
 export type EntryLobbyResponse = {
   data: number
@@ -237,6 +247,6 @@ export const getLobbyCategories = async (): Promise<LobbyCategoriesResponse> => 
 }
 
 export const getLobbyDetail = async (hash_key: string | string[]): Promise<LobbyDetailResponse> => {
-  const { data } = await api.get<LobbyDetailResponse>(URI.TOURNAMENT_DETAIL.replace(/:id/gi, String(hash_key)))
+  const { data } = await api.get<LobbyDetailResponse>(URI.LOBBY_DETAIL.replace(/:id/gi, String(hash_key)))
   return data
 }

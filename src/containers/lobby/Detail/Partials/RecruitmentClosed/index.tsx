@@ -1,5 +1,5 @@
 import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
-import { LobbyDetail } from '@services/lobbydump.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { UserProfile } from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'

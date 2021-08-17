@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useEffect } from 'react'
-import { LobbyDetail } from '@services/lobbydump.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'

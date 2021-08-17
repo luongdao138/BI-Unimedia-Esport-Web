@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import { LobbyDetail } from '@services/lobbydump.service'
+import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import moment from 'moment'

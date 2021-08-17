@@ -54,4 +54,7 @@ export default createReducer(initialState, (builder) => {
       name: g.attributes.name,
     }))
   })
+  builder.addCase(actions.getLobbyDetail.fulfilled, (state, action) => {
+    state.lobbyDetail = action.payload.data
+  })
 })
