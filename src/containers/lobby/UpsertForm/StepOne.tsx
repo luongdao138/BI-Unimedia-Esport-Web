@@ -81,18 +81,18 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       </Box>
       <Box pb={4}>
         <ESFastInput
-          id="stepOne.overview"
-          name="stepOne.overview"
+          id="stepOne.message"
+          name="stepOne.message"
           multiline
           rows={5}
           labelPrimary={i18n.t('common:lobby_create.overview')}
           placeholder={i18n.t('common:lobby_create.overview_placeholder')}
           fullWidth
-          value={formik.values.stepOne.overview}
+          value={formik.values.stepOne.message}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
-          error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
+          helperText={formik.touched?.stepOne?.message && formik.errors?.stepOne?.message}
+          error={formik.touched?.stepOne?.message && !!formik.errors?.stepOne?.message}
           size="small"
           disabled={!editables.overview}
         />

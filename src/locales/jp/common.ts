@@ -626,6 +626,9 @@ export default {
   lobby: {
     lobby_results: 'ロビー「:key」 の検索結果',
     lobby_results_all: 'ロビーの検索結果',
+    detail: {
+      label_id: '募集ID：',
+    },
   },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',

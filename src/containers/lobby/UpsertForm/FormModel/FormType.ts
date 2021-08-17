@@ -7,7 +7,7 @@ export type FormType = {
   stepOne: {
     cover_image_url: string
     title: string
-    overview: string
+    message: string
     categories: CategoryItem['attributes'][]
     game_title_id: GameTitleItem[]
     game_hardware_id: number
