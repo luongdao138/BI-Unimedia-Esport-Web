@@ -37,6 +37,7 @@ interface StepsProps {
 const KEY_TYPE = {
   URL: 1,
   KEY: 2,
+  UUID: 3,
 }
 
 const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
@@ -92,11 +93,29 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     })
   }, [])
 
-  const handleCopy = () => {
-    if (formik.values.stepSettingOne.linkUrl) {
-      window.navigator.clipboard.writeText(formik.values.stepSettingOne.linkUrl.toString())
+  const handleCopy = (type: number) => {
+    switch (type) {
+      case KEY_TYPE.UUID:
+        if (formik.values.stepSettingOne.linkUrl) {
+          window.navigator.clipboard.writeText(`${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`)
+        }
+        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        break
+      case KEY_TYPE.URL:
+        if (formik.values.stepSettingOne.stream_url) {
+          window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_url.toString())
+        }
+        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        break
+      case KEY_TYPE.KEY:
+        if (formik.values.stepSettingOne.stream_key) {
+          window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_key.toString())
+        }
+        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        break
+      default:
+        break
     }
-    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
   }
 
   const onClickNext = () => {
@@ -117,6 +136,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     if (fieldIdentifier) {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
     } else {
+      setShowStreamKey(false)
+      setShowStreamURL(false)
       onNext(step + 1)
     }
   }
@@ -201,7 +222,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 display="flex"
                 justifyContent="flex-end"
                 className={`${classes.urlCopy} ${classes.lastItem}`}
-                onClick={handleCopy}
+                onClick={() => handleCopy(KEY_TYPE.UUID)}
               >
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                 <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
@@ -423,7 +444,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             </Box>
             {isFirstStep() && (
               <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={() => handleCopy(KEY_TYPE.URL)}>
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
@@ -473,11 +494,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   )
                 }
                 fullWidth
-                value={
-                  formik.values.stepSettingOne.stream_key
-                    ? formik.values.stepSettingOne.stream_key
-                    : t('common:streaming_setting_screen.issued_stream')
-                }
+                value={formik.values.stepSettingOne.stream_key}
                 readOnly={true}
                 size="big"
                 disabled={!isFirstStep()}
@@ -487,7 +504,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             </Box>
             {isFirstStep() && (
               <Box flexDirection="row" display="flex" className={`${classes.lastItem}`}>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={() => handleCopy(KEY_TYPE.KEY)}>
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>

@@ -136,8 +136,8 @@ export type GetCategoryResponse = {
 
 type CHANNEL_DATA = {
   id?: number
-  description?: string
-  name?: string
+  description: string
+  name: string
   discord_link?: string
   twitter_link?: string
   instagram_link?: string
@@ -145,6 +145,20 @@ type CHANNEL_DATA = {
 }
 
 export type GetChannelResponse = {
+  code: number
+  message: any
+  data: CHANNEL_DATA
+}
+
+export type SetChannelParams = {
+  description: string
+  name: string
+  discord_link?: string
+  twitter_link?: string
+  instagram_link?: string
+}
+
+export type SetChannelResponse = {
   code: number
   message: any
   data: CHANNEL_DATA
@@ -174,5 +188,10 @@ export const getCategory = async (): Promise<GetCategoryResponse> => {
 
 export const getChannel = async (): Promise<GetChannelResponse> => {
   const { data } = await api.get<GetChannelResponse>(URI.GET_CHANNEL)
+  return data
+}
+
+export const setChannel = async (params: SetChannelParams): Promise<SetChannelResponse> => {
+  const { data } = await api.post<SetChannelResponse>(URI.SET_CHANNEL, params)
   return data
 }

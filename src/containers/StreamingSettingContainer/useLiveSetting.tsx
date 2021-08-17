@@ -1,4 +1,4 @@
-import { LiveStreamSettingParams, SetLiveStreamParams } from '@services/liveStream.service'
+import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams } from '@services/liveStream.service'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import stream from '@store/stream'
@@ -30,6 +30,12 @@ const useLiveSetting = () => {
   const isPending = meta.pending || getStreamUrlAndKeyMeta.pending
   const categoryData = useAppSelector(selectors.getCategorySelector)
   const channelInfo = useAppSelector(selectors.getChannelSelector)
+  const setChannelConfirm = async (params: SetChannelParams, onSuccess: () => void) => {
+    const resultAction = await dispatch(actions.setChannel(params))
+    if (actions.setChannel.fulfilled.match(resultAction)) {
+      onSuccess()
+    }
+  }
 
   useEffect(() => {
     dispatch(actions.getCategory())
@@ -46,6 +52,7 @@ const useLiveSetting = () => {
     isPending,
     categoryData,
     channelInfo,
+    setChannelConfirm,
   }
 }
 export default useLiveSetting

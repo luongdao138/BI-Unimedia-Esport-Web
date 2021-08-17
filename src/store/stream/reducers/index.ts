@@ -4,6 +4,7 @@ import {
   GetChannelResponse,
   GetStreamUrlAndKeyResponse,
   LiveStreamSettingResponse,
+  SetChannelResponse,
   SetLiveStreamResponse,
 } from '@services/liveStream.service'
 import * as actions from '../actions'
@@ -14,6 +15,7 @@ type StateType = {
   getStreamUrlAndKeyInfo?: GetStreamUrlAndKeyResponse
   getCategory?: GetCategoryResponse
   getChannel?: GetChannelResponse
+  setChannel?: SetChannelResponse
 }
 const initialState: StateType = {
   // liveSettingInfo: {
@@ -59,5 +61,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.getChannel.fulfilled, (state, action) => {
       state.getChannel = action.payload
+    })
+    .addCase(actions.setChannel.fulfilled, (state, action) => {
+      state.setChannel = action.payload
     })
 })

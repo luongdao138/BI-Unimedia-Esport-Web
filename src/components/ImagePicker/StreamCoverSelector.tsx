@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
-import { calculateDimensionsCover } from './Partials/calculateDimensions'
+import { calculateDimensionsThumbStream } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Image from 'next/image'
@@ -48,7 +48,8 @@ const ImageSlider = withStyles({
 })(Slider)
 
 const STATIC_WIDTH = 600
-const STATIC_HEIGHT = 200
+const STATIC_HEIGHT = 300
+// const MIN_WIDTH = 640
 
 const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
@@ -77,10 +78,12 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
     accept: 'image/jpeg, image/jpg, image/png, image/gif',
     onDrop: (files: any) => handleChange(files),
     maxSize: MAX_SIZE,
+    width: 640,
   }
   const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
 
   useEffect(() => {
+    // console.log('===fileRejections==', fileRejections, )
     if (fileRejections.length > 0) {
       setError(fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE)
     } else {
@@ -91,6 +94,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
   const handleChange = (files: Array<File>) => {
     const f = files[0]
     const reader = new FileReader()
+    // console.log('=====handleChange====', f, reader,files)
     if (f) {
       setRawFile(f)
       reader.onload = (e) => {
@@ -99,13 +103,14 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
         img.onload = function () {
           const w = img.naturalWidth || img.width
           const h = img.naturalHeight || img.height
-          setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
+          setMediaDimensions(calculateDimensionsThumbStream(w, h, dynamicWidth, STATIC_HEIGHT))
           if (h >= w) {
             setFit('horizontal-cover')
           } else if (w > h) {
             setFit('vertical-cover')
           }
         }
+        // console.log("*****result****",reader.result)
         setFile(reader.result)
       }
       reader.readAsDataURL(f)
@@ -120,11 +125,13 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
+    // console.log('******====onCropComplete====',_croppedArea, croppedAreaPixels, file)
     setCroppedAreaPixels(croppedAreaPixels)
   }, [])
 
   const update = useCallback(async () => {
     try {
+      // console.log("====getCroppedImg=====",file, croppedAreaPixels, rawFile)
       setUploading(true)
       const { blob, blobUrl } = await getCroppedImg(file, croppedAreaPixels, rawFile.type)
       onUpdate(rawFile, blob, blobUrl)
@@ -149,10 +156,15 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
               crop={crop}
               zoom={zoom}
               objectFit={fitType}
-              aspect={ratio || 4 / 1}
+              // aspect={ratio || 4 / 1}
+              aspect={ratio || 16 / 9}
               style={{
                 containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
-                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+                mediaStyle: {
+                  width: mediaDimensions.width,
+                  height: mediaDimensions.height,
+                  position: 'relative',
+                },
               }}
               showGrid={false}
               onCropChange={setCrop}
