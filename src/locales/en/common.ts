@@ -970,4 +970,11 @@ export default {
     delete_confirm_content: '登録削除をしたいクレジットカード',
     btn_delete: '削除する',
   },
+  videos_top_tab: {
+    video_list: '動画一覧',
+    live_stream_video: 'ライブ中',
+    schedule_stream_video: '配信前',
+    archived_stream_video: 'アーカイブ',
+    favorite_video: 'お気に入り',
+  },
 }
