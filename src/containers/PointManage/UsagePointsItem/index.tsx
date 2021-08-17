@@ -13,21 +13,23 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data }) => {
   const isUsedPoints = data?.type === 'used'
   return (
     <Box className={classes.container} key={data?.serialNumber}>
-      <Box className={classes.serialContainer}>
-        <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
-      </Box>
-      <Box className={classes.titleContainer}>
-        <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
-        <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
-        <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.difference')}</Typography>
-        {isUsedPoints ? (
-          <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.date_time')}</Typography>
-        ) : (
-          <>
-            <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_date')}</Typography>
-            <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.expires_date')}</Typography>
-          </>
-        )}
+      <Box className={classes.wrapTitle}>
+        <Box className={classes.serialContainer}>
+          <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
+        </Box>
+        <Box className={classes.titleContainer}>
+          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
+          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
+          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.difference')}</Typography>
+          {isUsedPoints ? (
+            <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.date_time')}</Typography>
+          ) : (
+            <>
+              <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_date')}</Typography>
+              <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.expires_date')}</Typography>
+            </>
+          )}
+        </Box>
       </Box>
       <Box className={classes.dataContainer}>
         <Typography className={classes.textStyle}>{data?.purchasedPointsId}</Typography>
@@ -53,7 +55,11 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  wrapTitle:{
+    display: "flex", 
+    width: "148px",
+  },
   container: {
     display: 'flex',
     flex: 1,
@@ -70,10 +76,11 @@ const useStyles = makeStyles(() => ({
     marginTop: 16,
   },
   serialContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
     display: 'flex',
+    width: 28,
+    flexWrap: "wrap", 
+    wordBreak: "break-all",
   },
   serialStyle: {
     marginRight: 16,
@@ -81,10 +88,11 @@ const useStyles = makeStyles(() => ({
     marginBottom: 8,
   },
   titleContainer: {
-    width: 127,
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
+    width: "calc(100% - 28px)", 
+    paddingLeft: "8px"
   },
   titleItemStyle: {
     color: Colors.white_opacity['70'],
@@ -114,6 +122,22 @@ const useStyles = makeStyles(() => ({
   },
   dateStyle: {
     color: Colors.white_opacity['70'],
+  },
+  [theme.breakpoints.down(414)]: {
+    wrapTitle:{
+      width: 135,
+    }
+  },
+  [theme.breakpoints.down(375)]: {
+    container: {
+      margin: 8,
+    },
+    wrapTitle:{
+      width: 110,
+    },
+    textStyle: {
+      fontSize: 13,
+    },
   },
 }))
 

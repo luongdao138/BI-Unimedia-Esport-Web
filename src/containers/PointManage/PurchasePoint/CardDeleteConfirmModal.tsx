@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
+      alignItems: 'center',
     },
   },
   actionBtnClose: {
@@ -74,12 +75,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 16,
     [theme.breakpoints.down('sm')]: {
       order: 1,
+      marginRight: 0,
     },
   },
   actionBtnBuy: {
     width: '100%',
     [theme.breakpoints.down('sm')]: {
       order: 0,
+      marginBottom: 24,
     },
   },
   wrap_message: {

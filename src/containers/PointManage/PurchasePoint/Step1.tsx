@@ -66,7 +66,7 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
           })}
         </Box>
       </form>
-      <Box justifyContent="center" display="flex" className={classes.actionButton}>
+      <Box pb={4} justifyContent="center" display="flex" className={classes.actionButton}>
         <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
           {t('purchase_point_tab.enter_payment_info')}
         </ButtonPrimary>
@@ -77,7 +77,7 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
 
 export default Step1
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   wrap_all_points: {
     padding: '28px 32px 67px 32px',
     display: 'flex',
@@ -94,7 +94,7 @@ const useStyles = makeStyles(() => ({
   container: {
     height: 38,
     // maxWidth: '100%',
-    width: 265,
+    width: 'calc(100% - 34px)',
     backgroundColor: Colors.black,
     display: 'flex',
     // flex: 1,
@@ -134,7 +134,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 12,
   },
   wrap_one_point: {
-    width: '50%',
+    width: '45%',
     display: 'flex',
     paddingBottom: 16,
     '& .MuiCheckbox-root': {
@@ -147,6 +147,22 @@ const useStyles = makeStyles(() => ({
   actionButton: {
     '& .MuiButtonBase-root.button-primary.full-width': {
       width: 220,
+    },
+  },
+  [theme.breakpoints.down('lg')]: {
+    wrap_all_points: {
+      padding: '32px 8px 40px 8px',
+    },
+    wrap_one_point: {
+      width: '47%',
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    wrap_all_points: {
+      padding: '32px 0 30px 0',
+    },
+    wrap_one_point: {
+      width: '100%'
     },
   },
 }))
