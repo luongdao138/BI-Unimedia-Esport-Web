@@ -84,7 +84,7 @@ export const getTopicFollowers = async (params: TopicFollowersParams): Promise<T
   return data
 }
 
-export const getCommunityDetail = async (community_id: string): Promise<CommunityDetailResponse> => {
-  const { data } = await api.get<CommunityDetailResponse>(URI.COMMUNITY_DETAIL.replace(/:community_id/gi, community_id))
+export const getCommunityDetail = async (hash_key: string): Promise<CommunityDetailResponse> => {
+  const { data } = await api.get<CommunityDetailResponse>(URI.COMMUNITY_DETAIL.replace(/:id/gi, hash_key))
   return data
 }

@@ -25,9 +25,10 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import ApproveList from '../ApproveList'
+import { CommunityDetail } from '@services/community.service'
 
 type Props = {
-  detail: any
+  detail: CommunityDetail
   toEdit?: () => void
 }
 
@@ -71,7 +72,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Box pt={1} color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
-              {data?.name}
+              {data.name}
             </Typography>
             <Box ml={3.6}>
               {/* //TODO uncomment when is_official and is_private is in backend */}
@@ -106,7 +107,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
           </Box>
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
-          <Typography>{`${t('common:community.community_id')}${detail?.id}`}</Typography>
+          <Typography>{`${t('common:community.community_id')}${detail.id}`}</Typography>
           <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
             <Typography>{t('common:community.copy_shared_url')}</Typography>
@@ -122,7 +123,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         {isAuthenticated && (
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
-            target_id={Number(detail?.id)}
+            target_id={Number(detail.id)}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}

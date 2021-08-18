@@ -25,11 +25,7 @@ const InfoContainer: React.FC<any> = ({ data }) => {
         <ESChip className={classes.chip} label={'内輪向け'} /> */}
       </Box>
       <Box marginTop={2}>
-        <Typography>
-          {
-            '概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。'
-          }
-        </Typography>
+        <Typography>{data.description}</Typography>
       </Box>
 
       <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={3}>
@@ -37,7 +33,7 @@ const InfoContainer: React.FC<any> = ({ data }) => {
           <Typography>{t('common:community.area')}</Typography>
         </Box>
         <Box className={classes.value}>
-          <Typography>オンライン</Typography>
+          <Typography>{data.area_name}</Typography>
         </Box>
       </Box>
 

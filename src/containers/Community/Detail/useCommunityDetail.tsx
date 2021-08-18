@@ -9,14 +9,12 @@ import { CommunityDetail } from '@services/community.service'
 const { selectors, actions } = community
 const getCommunityDetailMeta = createMetaSelector(actions.getCommunityDetail)
 
-const useCommunityDetail = (
-  hashkey?: string
-): {
+const useCommunityDetail = (): {
   isAuthenticated: boolean
   meta: Meta
   handleBack: () => void
   communityDetail: CommunityDetail
-  getCommunityDetail: () => void
+  getCommunityDetail: (hashkey?: string) => void
 } => {
   const { back } = useRouter()
   const authSelectors = auth.selectors
@@ -26,7 +24,7 @@ const useCommunityDetail = (
 
   const meta = useAppSelector(getCommunityDetailMeta)
   const communityDetail = useAppSelector(selectors.getCommunityDetail)
-  const getCommunityDetail = () => dispatch(actions.getCommunityDetail(hashkey))
+  const getCommunityDetail = (hashkey: string) => dispatch(actions.getCommunityDetail(hashkey))
 
   return {
     handleBack,

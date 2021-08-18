@@ -11,11 +11,12 @@ import ESLoader from '@components/Loader'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
-  const { handleBack, communityDetail, getCommunityDetail, meta } = useCommunityDetail('260')
+  const { community_id } = router.query
+  const { handleBack, communityDetail, getCommunityDetail, meta } = useCommunityDetail()
 
   useEffect(() => {
-    getCommunityDetail()
-  }, [])
+    if (community_id) getCommunityDetail(String(community_id))
+  }, [router])
 
   const detail = {
     id: 60,
