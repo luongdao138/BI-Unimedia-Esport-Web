@@ -910,10 +910,12 @@ export default {
       start_end_date: '終了予定日時は、配信開始予定日時以降の日付を入力してください',
       min_date: '過去日付は登録できません',
       input_required: '未入力の項目があります',
+      max_time_schedule_live: '配信可能時間内の日時を入力してください',
     },
     shared_it: '共有する',
     dont_share: '共有しない',
     issued_stream: '登録完了後に発行されます。',
+    note_stream_url: '※Stream URLを再発行した場合、Stream Keyも変更されます。',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

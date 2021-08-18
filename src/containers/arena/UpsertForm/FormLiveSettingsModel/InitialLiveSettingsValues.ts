@@ -37,6 +37,7 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     schedule_live_date: '',
     notify_live_start_date: '',
     notify_live_end_date: '',
+    max_schedule_live_date: '',
   },
   // stepSettingThree: {
   //   name: data && data.name ? data.name : '',

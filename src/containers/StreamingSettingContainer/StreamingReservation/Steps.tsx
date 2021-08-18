@@ -436,7 +436,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_schedule_end_time &&
                       formik?.errors?.stepSettingTwo?.stream_schedule_end_time) ||
-                    formik?.errors?.stepSettingTwo?.schedule_live_date
+                    formik?.errors?.stepSettingTwo?.schedule_live_date ||
+                    formik?.errors?.stepSettingTwo?.max_schedule_live_date
                   }
                   error={
                     formik?.touched?.stepSettingTwo?.stream_schedule_end_time && !!formik?.errors?.stepSettingTwo?.stream_schedule_end_time
@@ -572,7 +573,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             />
           )}
           {/* stream URL */}
-          <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -632,8 +633,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               </Box>
             )}
           </Box>
+          {isFirstStep() && (
+            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+              {i18n.t('common:streaming_setting_screen.note_stream_url')}
+            </Typography>
+          )}
           {/* stream key */}
-          <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_key"
@@ -876,5 +882,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     }
+  },
+  addPaddingNote: {
+    paddingTop: 8,
   },
 }))
