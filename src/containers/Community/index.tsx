@@ -142,6 +142,219 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         ],
       },
     },
+    {
+      attributes: {
+        title: 'testLobby2111',
+        hash_key: '12345678190',
+        member_count: 1,
+        is_official: true,
+        description: '',
+        cover:
+          'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournaments/3e45db5a-be7f-4417-be09-3af6a3085b63/1625755001-31.jpg',
+        tags: [
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+        ],
+        participants: [
+          {
+            nickname: 'aulguun2',
+            profile_image: null,
+          },
+          {
+            nickname: 'sat',
+            profile_image: null,
+          },
+          {
+            nickname: 'frdene',
+            profile_image: null,
+          },
+        ],
+      },
+    },
+    {
+      attributes: {
+        title: 'longtitlenamelongtitlenamelongtitlenamelongtitlenamelongtitlenamelongtitlename',
+        hash_key: '1234567890',
+        member_count: 3,
+        is_official: false,
+        status: 1,
+        description: 'Description goes. Description goes. Description goes. Explanation is included ...asdasdasdasdasdasdasdasdasd',
+        cover:
+          'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournaments/a2718dbb-9d3a-48f9-8472-9fe5b0006a64/1625621403-31.png',
+        tags: [
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+        ],
+        participants: [
+          {
+            nickname: 'dulguun2',
+            profile_image: null,
+          },
+          {
+            nickname: 'bat',
+            profile_image: null,
+          },
+          {
+            nickname: 'erdene',
+            profile_image: null,
+          },
+          {
+            nickname: 'erdene',
+            profile_image: null,
+          },
+        ],
+      },
+    },
+    {
+      attributes: {
+        title: 'longtitlenamelongtitlenamelongtitlenamelongtitlenamelongtitlenamelongtitlename',
+        hash_key: '1234567890',
+        member_count: 3,
+        is_official: false,
+        status: 1,
+        description: 'Description goes. Description goes. Description goes. Explanation is included ...asdasdasdasdasdasdasdasdasd',
+        cover:
+          'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournaments/a2718dbb-9d3a-48f9-8472-9fe5b0006a64/1625621403-31.png',
+        tags: [
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+        ],
+        participants: [
+          {
+            nickname: 'dulguun2',
+            profile_image: null,
+          },
+          {
+            nickname: 'bat',
+            profile_image: null,
+          },
+          {
+            nickname: 'erdene',
+            profile_image: null,
+          },
+          {
+            nickname: 'erdene',
+            profile_image: null,
+          },
+        ],
+      },
+    },
+    {
+      attributes: {
+        title: 'longtitlenamelongtitlenamelongtitlenamelongtitlenamelongtitlenamelongtitlename',
+        hash_key: '1234567890',
+        member_count: 3,
+        is_official: false,
+        status: 1,
+        description: 'Description goes. Description goes. Description goes. Explanation is included ...asdasdasdasdasdasdasdasdasd',
+        cover:
+          'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournaments/a2718dbb-9d3a-48f9-8472-9fe5b0006a64/1625621403-31.png',
+        tags: [
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+          {
+            name: 'Newbie',
+          },
+          {
+            name: 'enjoyers',
+          },
+          {
+            name: 'match',
+          },
+        ],
+        participants: [
+          {
+            nickname: 'dulguun2',
+            profile_image: null,
+          },
+          {
+            nickname: 'bat',
+            profile_image: null,
+          },
+          {
+            nickname: 'erdene',
+            profile_image: null,
+          },
+          {
+            nickname: 'erdene',
+            profile_image: null,
+          },
+        ],
+      },
+    },
   ]
 
   return (
