@@ -71,14 +71,15 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Box pt={1} color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
-              {data.title}
+              {data?.name}
             </Typography>
             <Box ml={3.6}>
-              {data.is_official ? (
+              {/* //TODO uncomment when is_official and is_private is in backend */}
+              {/* {data.is_official ? (
                 <img className={classes.checkIcon} src="/images/check_icon.png" />
               ) : (
                 data.is_private && <Icon className={`fas fa-lock ${classes.lockIcon}`} />
-              )}
+              )} */}
             </Box>
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
@@ -105,7 +106,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
           </Box>
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
-          <Typography>{`${t('common:community.community_id')}${detail.id}`}</Typography>
+          <Typography>{`${t('common:community.community_id')}${detail?.id}`}</Typography>
           <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
             <Typography>{t('common:community.copy_shared_url')}</Typography>
@@ -121,7 +122,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         {isAuthenticated && (
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
-            target_id={Number(detail.id)}
+            target_id={Number(detail?.id)}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
@@ -145,7 +146,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.INFO:
-        return <InfoContainer />
+        return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
         return <TopicListContainer />
       case TABS.SEARCH:
