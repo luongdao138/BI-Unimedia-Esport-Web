@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Grid, Box, Icon, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Grid, Box, Icon, Typography, useMediaQuery, useTheme, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -69,10 +69,19 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
     return (
       <>
         <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <Box pt={1} color={Colors.white}>
+          <Box pt={1} color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
               {data.title}
             </Typography>
+            <Box ml={3.6}>
+              {data.is_official ? (
+                <ButtonBase href="#" target="_blank">
+                  <img className={classes.checkIcon} src="/images/check_icon.png" />
+                </ButtonBase>
+              ) : (
+                data.is_private && <Icon className={`fas fa-lock ${classes.lockIcon}`} />
+              )}
+            </Box>
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
             {isAuthenticated ? (
@@ -189,6 +198,13 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     wordBreak: 'break-word',
+  },
+  lockIcon: {
+    color: Colors.primary,
+    fontSize: 18,
+  },
+  checkIcon: {
+    height: 20,
   },
   urlCopy: {
     marginLeft: 20,

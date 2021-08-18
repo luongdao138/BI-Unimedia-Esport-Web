@@ -19,6 +19,8 @@ const CommunityContainer: React.FC = () => {
       cover: '/images/community_dummy_1.jpg',
       hash_key: '1231231',
       my_role: 'admin',
+      is_official: false,
+      is_private: true,
     },
   }
   const { toEdit } = useCommunityHelper(detail)

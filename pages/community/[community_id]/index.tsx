@@ -10,6 +10,7 @@ CommunityDetailPage.Layout = MainLayout
 
 MainLayout.defaultProps = {
   loginRequired: true,
+  patternBg: true,
 }
 
 export default CommunityDetailPage
