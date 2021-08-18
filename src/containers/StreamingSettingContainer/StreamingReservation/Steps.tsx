@@ -238,7 +238,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
               <Box pt={1} className={classes.box}>
-                {isFirstStep() && formik.values.stepSettingTwo.thumbnail ? (
+                {isFirstStep() ? (
                   <CoverUploaderStream
                     src={formik.values.stepSettingTwo.thumbnail}
                     onChange={handleUpload}
@@ -247,8 +247,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />
-                ) : (
+                ) : !formik.values.stepSettingTwo.thumbnail ? (
                   <img src={'/images/default_card.png'} className={classes.coverImg} />
+                ) : (
+                  <CoverUploaderStream
+                    src={formik.values.stepSettingTwo.thumbnail}
+                    onChange={handleUpload}
+                    isUploading={isUploading}
+                    disabled={!isFirstStep()}
+                    size="big"
+                    onOpenStateChange={handleCoverDailogStateChange}
+                  />
                 )}
               </Box>
             </Box>
@@ -467,6 +476,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     disabled={!isFirstStep()}
                     className={getAddClassByStep(classes.input_text)}
                     readOnly={!formik.values.stepSettingTwo.use_ticket}
+                    inputMode={'numeric'}
+                    type="number"
                   />
                 </Box>
               </Box>

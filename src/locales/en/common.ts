@@ -85,7 +85,7 @@ export default {
     report_sent: '通報処理が完了しました',
     file_size_limit: '5MB以内の画像をアップロードしてください。',
     file_size_2mb_limit: '2MB以内、かつ、jpg/png/gifのいずれかの画像ファイルをお選びください',
-    file_min_width: '最小幅640ピクセル',
+    file_min_width: '640ピクセル以上',
   },
   top: {
     title: '”ゲーム”が広がる。仲間ができる。',
@@ -909,6 +909,7 @@ export default {
       date_limit: '配信開始予定日時は、告知掲載開始日時以降の日付を入力してください',
       start_end_date: '終了予定日時は、配信開始予定日時以降の日付を入力してください',
       min_date: '過去日付は登録できません',
+      input_required: '未入力の項目があります',
     },
     shared_it: '共有する',
     dont_share: '共有しない',

@@ -6,12 +6,14 @@ export const validationLiveSettingsScheme = (): any => {
   return Yup.object({
     stepSettingOne: Yup.object({
       title: Yup.string()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit')),
       description: Yup.string()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
-      category: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, ''], i18n.t('common:common.input_required')),
+      category: Yup.mixed()
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+        .notOneOf([-1, ''], i18n.t('common:streaming_setting_screen.validation.input_required')),
       use_ticket: Yup.boolean(),
       ticket_price: Yup.number().when('use_ticket', {
         is: true,
@@ -22,10 +24,10 @@ export const validationLiveSettingsScheme = (): any => {
     }),
     stepSettingTwo: Yup.object({
       title: Yup.string()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit')),
       description: Yup.string()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
       category: Yup.string(),
       use_ticket: Yup.boolean(),
@@ -40,22 +42,22 @@ export const validationLiveSettingsScheme = (): any => {
         is: true,
         then: Yup.date()
           .nullable()
-          // .required(i18n.t('common:common.input_required'))
+          // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
           .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
       }),
 
       stream_notify_time: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
       stream_schedule_start_time: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
       stream_schedule_end_time: Yup.date()
         .nullable()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .min(minEndDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
       //cross-fields validations
@@ -81,10 +83,10 @@ export const validationLiveSettingsScheme = (): any => {
     }),
     // stepSettingThree: Yup.object({
     //   name: Yup.string()
-    //     .required(i18n.t('common:common.input_required'))
+    //     .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
     //     .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit')),
     //   description: Yup.string()
-    //     .required(i18n.t('common:common.input_required'))
+    //     .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
     //     .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
     // }),
   })
@@ -94,10 +96,10 @@ export const validationLDistributorScheme = (): any => {
   return Yup.object({
     stepSettingThree: Yup.object({
       name: Yup.string()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit')),
       description: Yup.string()
-        .required(i18n.t('common:common.input_required'))
+        .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
     }),
   })

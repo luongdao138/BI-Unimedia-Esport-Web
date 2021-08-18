@@ -47,8 +47,8 @@ const ImageSlider = withStyles({
   },
 })(Slider)
 
-const STATIC_WIDTH = 600
-const STATIC_HEIGHT = 300
+const STATIC_WIDTH = 640
+const STATIC_HEIGHT = 480
 const MIN_WIDTH = 640
 
 const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, cancel, onUpdate }) => {

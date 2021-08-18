@@ -63,6 +63,7 @@ export type LiveStreamSettingResponse = {
     stream_schedule_start_time?: string
     stream_schedule_end_time?: string
     sell_ticket_start_time?: string
+    created_at?: string
   }
 }
 export type LiveStreamSettingParams = {

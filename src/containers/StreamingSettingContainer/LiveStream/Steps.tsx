@@ -19,7 +19,13 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
+import {
+  baseViewingURL,
+  GetCategoryResponse,
+  LiveStreamSettingResponse,
+  SetLiveStreamParams,
+  TYPE_SETTING,
+} from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
@@ -83,9 +89,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const getLiveSetting = () => {
     getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then(() => {
+      checkStatusRecord(liveSettingInformation)
       formik.validateForm()
     })
   }
+
+  const checkStatusRecord = (data: LiveStreamSettingResponse) => {
+    if (!data?.data?.created_at) {
+      onReNewUrlAndKey()
+    }
+  }
+
   const { uploadLiveStreamThumbnailImage, isUploading } = useUploadImage()
   const handleUpload = useCallback((file: File, blob: any) => {
     uploadLiveStreamThumbnailImage(file, blob, (imageUrl) => {
@@ -185,10 +199,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     })
   }
 
-  const onReNewUrlAndKey = (type: number) => {
+  const onReNewUrlAndKey = () => {
     getStreamUrlAndKey((url, key) => {
-      if (type === 1) formik.setFieldValue('stepSettingOne.stream_url', url)
-      else formik.setFieldValue('stepSettingOne.stream_key', key)
+      formik.setFieldValue('stepSettingOne.stream_url', url)
+      formik.setFieldValue('stepSettingOne.stream_key', key)
     })
   }
 
@@ -234,7 +248,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Box className={classes.firstItem}>
               <ESLabel label={i18n.t('common:streaming_setting_screen.thumbnail')} />
               <Box pt={1} className={classes.box}>
-                {isFirstStep() && formik.values.stepSettingOne.thumbnail ? (
+                {isFirstStep() ? (
                   <CoverUploaderStream
                     src={formik.values.stepSettingOne.thumbnail}
                     onChange={handleUpload}
@@ -243,8 +257,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />
-                ) : (
+                ) : !formik.values.stepSettingOne.thumbnail ? (
                   <img src={'/images/default_card.png'} className={classes.coverImg} />
+                ) : (
+                  <CoverUploaderStream
+                    src={formik.values.stepSettingOne.thumbnail}
+                    onChange={handleUpload}
+                    isUploading={isUploading}
+                    disabled={!isFirstStep()}
+                    size="big"
+                    onOpenStateChange={handleCoverDailogStateChange}
+                  />
                 )}
               </Box>
             </Box>
@@ -373,6 +396,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     disabled={!isFirstStep()}
                     className={getAddClassByStep(classes.input_text)}
                     readOnly={!formik.values.stepSettingOne.use_ticket}
+                    inputMode={'numeric'}
+                    type="number"
                   />
                 </Box>
               </Box>
@@ -452,15 +477,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={classes.urlCopy}
-                  onClick={() => {
-                    onReNewUrlAndKey(KEY_TYPE.URL)
-                  }}
-                >
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
@@ -512,15 +529,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={classes.urlCopy}
-                  onClick={() => {
-                    onReNewUrlAndKey(KEY_TYPE.KEY)
-                  }}
-                >
+                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
               </Box>
