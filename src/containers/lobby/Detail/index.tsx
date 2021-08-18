@@ -15,7 +15,6 @@ import BlankLayout from '@layouts/BlankLayout'
 import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
-import { LobbyStatus } from '@services/lobby.service'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
@@ -115,8 +114,10 @@ const LobbyDetailBody: React.FC = () => {
   const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
 
+  type LobbyStatus = 'open' | 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' // TODO
+
   const actionComponent: Record<LobbyStatus, ReactNode> = {
-    open: <Recruiting lobby={lobby} userProfile={userProfile} />,
+    open: <Recruiting lobby={lobby} userProfile={userProfile} />, // before entry accepting
     in_progress: <InProgress lobby={lobby} userProfile={userProfile} />, //headset
     cancelled: <Cancelled lobby={lobby} userProfile={userProfile} />,
     completed: <Completed lobby={lobby} userProfile={userProfile} />, //trophy
@@ -131,7 +132,7 @@ const LobbyDetailBody: React.FC = () => {
       <>
         <LobbyDetailHeader
           title={lobby?.attributes?.title}
-          status={lobby?.attributes?.status || 'ready'}
+          status={/*lobby?.attributes?.status || */ 'ready'}
           cover={lobby?.attributes?.cover_image_url || '/images/default_card.png'}
           onHandleBack={handleBack}
         >

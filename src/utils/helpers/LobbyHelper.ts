@@ -1,9 +1,10 @@
-import { T_TYPE, TOURNAMENT_STATUS, ROLE } from '@constants/lobby.constants'
+import { T_TYPE, TOURNAMENT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { LobbyDetail, LobbyMatchRound } from '@services/lobbydump.service'
+import { LobbyMatchRound } from '@services/lobbydump.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
+import { LobbyDetail } from '@services/lobby.service'
 
 const getTypeValue = (t_type: string | number): boolean => {
   if (String(t_type) === T_TYPE.PRIVATE) return false
@@ -17,8 +18,8 @@ const onTypeChange = (type: string | number): string => {
   else return T_TYPE.PUBLIC
 }
 
-const checkStatus = (status: string, targetStatus: string): boolean => {
-  const statuses = ['ready', 'recruiting', 'recruitment_closed', 'ready_to_start', 'in_progress', 'completed', 'cancelled']
+const checkStatus = (status: LOBBY_STATUS, targetStatus: string): boolean => {
+  const statuses = Object.values(LOBBY_STATUS)
   const index = statuses.indexOf(status)
   const targetIndex = statuses.indexOf(targetStatus)
 
@@ -65,31 +66,30 @@ const checkTarget = (targetIds: Array<number>, target: number): boolean => {
   return targetIds.includes(Number(target))
 }
 
-const checkRoles = (roles, role): boolean => {
-  if (!roles || !role || _.isEmpty(roles)) return false
+// const checkRoles = (roles, role): boolean => {
+//   if (!roles || !role || _.isEmpty(roles)) return false
 
-  return roles.includes(role)
-}
+//   return roles.includes(role)
+// }
 
 const getDetailData = (tournament: LobbyDetail): any => {
   const _data = { ...tournament.attributes }
-  const isTeam = _data.participant_type > 1
-  const isAdmin = _data.my_role === ROLE.ADMIN || _data.my_role === ROLE.CO_ORGANIZER
+  const isTeam = false // _data.participant_type > 1
+  const isAdmin = _data.is_owner
   const showStatus = isAdmin ? TOURNAMENT_STATUS.RECRUITING : TOURNAMENT_STATUS.READY_TO_START
-  const noEntry = _data.participant_count == 0 && _data.interested_count == 0
-  const scoreEnterable = _data.status === TOURNAMENT_STATUS.IN_PROGRESS || _data.status === TOURNAMENT_STATUS.COMPLETED
-  const joinedCount = _data.interested_count + _data.participant_count
+  const noEntry = _data.participant_count == 0 && _data.entry_count == 0
+  const scoreEnterable = _data.status === LOBBY_STATUS.IN_PROGRESS || _data.status === LOBBY_STATUS.ENDED
+  const joinedCount = _data.entry_count + _data.participant_count
   const maxCapacity = _data.is_freezed
     ? _data.participant_count
     : checkStatus(_data.status, TOURNAMENT_STATUS.RECRUITMENT_CLOSED) || joinedCount > _data.max_participants
     ? _data.max_participants
     : joinedCount
   const memberSelectable =
-    isAdmin &&
-    (_data.status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || (_data.status === TOURNAMENT_STATUS.IN_PROGRESS && !_data.is_freezed))
-  const teamIds = _.map(_data.my_info, (team: any) => team.team_id)
-  const teamRoles = isTeam ? _.map(_data.my_info, (team: any) => team.role) : undefined
-  const ownEnterable = isTeam ? checkRoles(teamRoles, ROLE.PARTICIPANT) : _data.my_role === ROLE.PARTICIPANT
+    isAdmin && (_data.status === LOBBY_STATUS.ENTRY_CLOSED || (_data.status === LOBBY_STATUS.IN_PROGRESS && !_data.is_freezed))
+  const teamIds = [] //_.map(_data.my_info, (team: any) => team.team_id)
+  const teamRoles = undefined // isTeam ? _.map(_data.my_info, (team: any) => team.role) : undefined
+  const ownEnterable = false // isTeam ? checkRoles(teamRoles, ROLE.PARTICIPANT) : _data.my_role === ROLE.PARTICIPANT
 
   return {
     ...tournament.attributes,

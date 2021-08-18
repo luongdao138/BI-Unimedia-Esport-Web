@@ -7,6 +7,7 @@ import { UserProfile } from '@services/user.service'
 import { Colors } from '@theme/colors'
 import { useAppSelector } from '@store/hooks'
 import { getIsAuthenticated } from '@store/auth/selectors'
+// import { LOBBY_PARTICIPANT_STATUS } from '@constants/lobby.constants'
 
 interface InProgressProps {
   lobby: LobbyDetail
@@ -17,17 +18,17 @@ const InProgress: React.FC<InProgressProps> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { lobby } = props
-  const isTeam = lobby.attributes.participant_type > 1
+  const isTeam = false
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const entryMembersCount = lobby.attributes.interested_count + lobby.attributes.participant_count
+  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participant_count
   const isAuthenticated = useAppSelector(getIsAuthenticated)
-  const isEntered = lobby.attributes.is_entered
+  // const isEntered = lobby.attributes.participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
 
-  const statusName = {
-    admin: isEntered ? t('common:arena.participate_status.participating') : null,
-    interested: t('common:arena.participate_status.loss'),
-    participant: t('common:arena.participate_status.participating'),
-  }
+  // const statusName = {
+  //   admin: isEntered ? t('common:arena.participate_status.participating') : null,
+  //   interested: t('common:arena.participate_status.loss'),
+  //   participant: t('common:arena.participate_status.participating'),
+  // }
 
   return (
     <ActionComponent {...props}>
@@ -35,7 +36,7 @@ const InProgress: React.FC<InProgressProps> = (props) => {
       <Box className={classes.body}>
         <Box display="flex" flexDirection="row">
           <Typography className={classes.roundInfoText}>
-            {statusName[lobby.attributes.my_role] || (isAuthenticated && t('common:recruitment.participate_status.no_entry')) || null}
+            {/*statusName[lobby.attributes.my_role] ||*/ (isAuthenticated && t('common:recruitment.participate_status.no_entry')) || null}
           </Typography>
         </Box>
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">

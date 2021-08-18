@@ -10,8 +10,8 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
   let minStartDate = new Date()
   if (!!data && !!data.attributes.status) {
     const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, 'recruiting')
-    if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
-    if (!editables.start_date && data.attributes.start_date) minStartDate = new Date(data.attributes.start_date)
+    if (!beforeRecruit && data.attributes.entry_start_datetime) recruitMinDate = new Date(data.attributes.entry_start_datetime)
+    if (!editables.start_date && data.attributes.start_datetime) minStartDate = new Date(data.attributes.start_datetime)
   }
 
   return Yup.object({

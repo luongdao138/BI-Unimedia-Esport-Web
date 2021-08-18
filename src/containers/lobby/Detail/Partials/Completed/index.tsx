@@ -18,9 +18,9 @@ const Completed: React.FC<CompletedProps> = (props) => {
   const { t } = useTranslation(['common'])
   const { fetchWinners } = useWinners(false)
   const { lobby } = props
-  const isTeam = lobby.attributes.participant_type > 1
+  const isTeam = false //lobby.attributes.participant_type > 1
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const entryMembersCount = lobby.attributes.interested_count + lobby.attributes.participant_count
+  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participant_count
 
   useEffect(() => {
     if (!!lobby && lobby.attributes.is_freezed) fetchWinners()

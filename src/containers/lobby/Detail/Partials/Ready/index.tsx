@@ -16,9 +16,9 @@ const Ready: React.FC<RecruitingProps> = (props) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { lobby } = props
-  const isTeam = lobby.attributes.participant_type > 1
-  const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const entryMembersCount = lobby.attributes.interested_count + lobby.attributes.participant_count
+  // const isTeam = lobby.attributes.participant_type > 1
+  // const unit = isTeam ? t('common:common.team') : t('common:common.man')
+  // const entryMembersCount = lobby.attributes.interested_count + lobby.attributes.participant_count
 
   return (
     <ActionComponent {...props}>
@@ -28,10 +28,10 @@ const Ready: React.FC<RecruitingProps> = (props) => {
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
           <Typography className={classes.entryMembersInfoText}>{t('common:tournament.number_of_entries')}</Typography>
           <Box mr={2} />
-          <Typography className={classes.highlightedNumber}>{entryMembersCount}</Typography>
-          <Typography>{`${unit} /`}&nbsp;</Typography>
+          <Typography className={classes.highlightedNumber}>{'entryMembersCount'}</Typography>
+          <Typography>{`${'unit'} /`}&nbsp;</Typography>
           <Typography className={classes.highlightedNumber}>{lobby.attributes.max_participants}</Typography>
-          <Typography>{unit}</Typography>
+          <Typography>{'unit'}</Typography>
         </Box>
       </Box>
     </ActionComponent>

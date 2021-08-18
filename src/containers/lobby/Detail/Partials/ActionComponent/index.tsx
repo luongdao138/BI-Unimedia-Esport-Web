@@ -27,11 +27,11 @@ const ActionComponent: React.FC<Props> = (props) => {
 
   const buildLobbyPeriodValue = () => {
     if (isReady || isRecruiting) {
-      const entryStartDate = TournamentHelper.formatDate(lobby.attributes.acceptance_start_date)
-      const entryEndDate = TournamentHelper.formatDate(lobby.attributes.acceptance_end_date)
+      const entryStartDate = TournamentHelper.formatDate(lobby.attributes.entry_start_datetime)
+      const entryEndDate = TournamentHelper.formatDate(lobby.attributes.entry_end_datetime)
       return `${entryStartDate} - ${entryEndDate}`
     } else {
-      return `${TournamentHelper.formatDate(lobby.attributes.start_date)}`
+      return `${TournamentHelper.formatDate(lobby.attributes.start_datetime)}`
     }
   }
   const buildLobbyTitle = () => {
