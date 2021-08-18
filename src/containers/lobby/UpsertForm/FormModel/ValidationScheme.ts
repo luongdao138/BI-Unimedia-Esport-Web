@@ -20,7 +20,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .required(i18n.t('common:common.input_required'))
         .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
         .min(2, i18n.t('common:common.at_least')),
-      overview: Yup.string()
+      message: Yup.string()
         .nullable()
         .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
       categories: Yup.array(),

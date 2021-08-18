@@ -4,8 +4,8 @@ import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
 import ESCardMedia from '@components/Card/CardMedia'
 import ESCardContent from '@components/Card/CardContent'
-// import { useRouter } from 'next/router'
-// import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
 import { LobbyResponse } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ interface Props {
 const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  // const router = useRouter()
+  const router = useRouter()
 
   const attr = lobby.attributes
   // const winner = lobby.attributes.winner
@@ -147,10 +147,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   }
 
   return (
-    <ESCard
-      classes={{ root: classes.cardHover }}
-      // onClick={() => router.push(`${ESRoutes.LOBBY}/${attr.hash_key}`)}
-    >
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.LOBBY}/${lobby.id}`)}>
       <ESCardMedia
         cornerIcon={
           <Icon className={/* attr.rule === TR.BATTLE_ROYAL ? */ 'fas fa-university' /*  : 'fas fa-trophy' */} fontSize="small" />

@@ -1,6 +1,5 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-import { Feature } from './user.service'
 import { GameHardware, GameTitle } from './game.service'
 import { ArenaRole } from './arena.service'
 
@@ -77,6 +76,7 @@ export type CategoryItem = {
   attributes: {
     id: number
     name: string
+    status?: null | string
   }
 }
 
@@ -125,10 +125,10 @@ export type LobbyCategoriesResponse = {
 
 export type LobbyDetail = {
   id: string
-  type: 'tournament_details'
+  type: 'lobby_details'
   attributes: {
     title: string
-    overview: string
+    message: string
     notes: string
     rule: LobbyRule
     max_participants: number
@@ -153,30 +153,37 @@ export type LobbyDetail = {
     has_third_place: boolean
     retain_history: boolean
     t_type: 't_public' | 't_private'
-    owner: {
-      data: {
-        id: 'string'
-        type: 'user_list'
-        attributes: {
-          user_code: string
-          nickname: string
-          nickname2: null | string
-          avatar: null | string
-          features: Feature[]
-          game_titles: GameTitle['attributes'][]
-        }
-      }
+    // owner: {
+    //   data: {
+    //     id: 'string'
+    //     type: 'user_list'
+    //     attributes: {
+    //       user_code: string
+    //       nickname: string
+    //       nickname2: null | string
+    //       avatar: null | string
+    //       features: Feature[]
+    //       game_titles: GameTitle['attributes'][]
+    //     }
+    //   }
+    // }
+    organizer: {
+      id: number
+      nickname: string
+      user_code: string
     }
+    organizer_avatar: null | string
     game_title: {
       data: GameTitle
     }
     game_hardware: {
       data: GameHardware
     }
+    hardware: string
     co_organizers: {
       data: []
     }
-    cover_image: null | string
+    cover_image_url: null | string
     summary_image: null | string
     interested_count: number
     participant_count: number
@@ -185,14 +192,12 @@ export type LobbyDetail = {
     my_position: null | string
     hash_key: string
     is_entered?: boolean
-    categories: {
-      data: CategoryItem
-    }
+    categories: CategoryItem['attributes'][]
   }
 }
 
 export interface CreateLobbyResponse {
-  data: LobbyDetail
+  hash_key: string
 }
 
 export type LobbyDetailResponse = {

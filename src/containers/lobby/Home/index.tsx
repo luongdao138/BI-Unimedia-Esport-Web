@@ -75,7 +75,7 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
         <LoginRequired>
           <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
             <AddRounded className={classes.addIcon} />
-            {t('common:tournament_create.title')}
+            {t('common:lobby_create.title')}
           </ButtonPrimary>
         </LoginRequired>
       </div>
