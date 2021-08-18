@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '@store/store'
 
 const getRoot = (state: RootState) => state.userProfile
-// const getRootCommunity = (state: RootState) => state.community
+const getRootCommunity = (state: RootState) => state.community
 
 export const getUserProfile = createSelector(getRoot, (state) => state.data)
 export const getUserEmail = createSelector(getRoot, (state) => state.data?.attributes?.email)
@@ -12,7 +12,7 @@ export const getTourHistoriesMeta = createSelector(getRoot, (state) => state.tou
 export const getActivityLogs = createSelector(getRoot, (state) => state.activityLogs)
 export const getActivityLogsMeta = createSelector(getRoot, (state) => state.activityLogsMeta)
 export const getNicknames2 = createSelector(getRoot, (state) => state.nicknames2)
-// export const getCommunityList = createSelector(getRootCommunity, (state) => state.my_community_list)
+export const getCommunityList = createSelector(getRootCommunity, (state) => state.my_community_list)
 export const getRecommendations = createSelector(getRoot, (state) => state.recommendations)
 export const getRecommendedEvent = createSelector(getRoot, (state) => state.recommendedEvent)
 export const getRecommendedEventMeta = createSelector(getRoot, (state) => state.recommendedEventMeta)

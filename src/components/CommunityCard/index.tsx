@@ -16,19 +16,19 @@ interface Props {
 type CommunityAttributes = {
   attributes:
     | {
-        title: string
-        cover: string | null
+        name: string
+        description: string
+        cover_image_url: string | null
         hash_key: number | string
         is_official: boolean
         member_count: number | string
-        tags: {
-          name: string
-        }[]
-        description: string
-        participants: {
-          nickname: string
-          profile_image: any | null
+        members_avatar: {
+          user_id: string
+          avatar: any | null
         }
+        features: {
+          feature: string
+        }[]
       }[]
     | any
 }
@@ -39,7 +39,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const router = useRouter()
 
   const attr = community.attributes
-  const cover = attr.cover ? attr.cover : '/images/default_card.png'
+  const cover_image_url = attr.cover_image_url ? attr.cover_image_url : '/images/default_card.png'
 
   const getMediaScreen = () => {
     return (
@@ -66,7 +66,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const getTitle = () => {
     return (
       <Box color={Colors.white} className={classes.titleContainer} display="flex">
-        <Typography className={classes.title}>{attr.title}</Typography>
+        <Typography className={classes.title}>{attr.name}</Typography>
         {attr.is_official && <Icon className={`fas fa-check-circle ${classes.checkIcon}`} fontSize="default" />}
       </Box>
     )
@@ -74,7 +74,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const getDescription = (value: string) => {
     return <Typography className={classes.description}>{value}</Typography>
   }
-  const getTags = (tags: { name: string }[]) => {
+  const getTags = (tags: { feature: string }[]) => {
     return (
       <Box display="flex" flexDirection="row" mt={1} flexWrap="wrap" flexGrow="1" pr={47 / 8}>
         {tags.map((tag, i) => (
@@ -84,7 +84,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
             size="small"
             label={
               <Box color={Colors.white}>
-                <Typography variant="overline">{tag.name}</Typography>
+                <Typography variant="overline">{tag.feature}</Typography>
               </Box>
             }
           />
@@ -93,11 +93,11 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     )
   }
   const getParticipants = () => {
-    const participants = attr.participants
+    const participants = attr.members_avatar
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
         {participants && participants.length > 0
-          ? attr.participants
+          ? attr.members_avatar
               .slice(0, 3)
               .map((participant, i) => (
                 <ESAvatar
@@ -105,8 +105,8 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
                   key={`participants${i}`}
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
-                  src={participant.profile_image}
-                  alt={participant.nickname}
+                  src={participant.avatar}
+                  alt={String(participant.user_id)}
                 />
               ))
           : null}
@@ -118,7 +118,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
       <Box>
         <ESCardMedia
           cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-          image={cover}
+          image={cover_image_url}
           triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.7)' : null}
         >
           {getMediaScreen()}
@@ -127,7 +127,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
       <ESCardContent>
         {getTitle()}
         {getDescription(attr.description)}
-        {getTags(attr.tags)}
+        {getTags(attr.features)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
