@@ -978,5 +978,11 @@ export default {
     schedule_stream_video: '配信前',
     archived_stream_video: 'アーカイブ',
     favorite_video: 'お気に入り',
+    title_live_videos: 'ライブ中動画',
+    title_archived_videos: 'ライブ中動画',
+    title_schedule_videos: '配信前動画',
+    popular_category: '人気カテゴリー',
+    view_more: 'もっと見る',
+    no_data_text: '対象のコンテンツがありません。',
   },
 }
