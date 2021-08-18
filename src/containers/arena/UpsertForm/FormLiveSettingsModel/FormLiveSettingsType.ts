@@ -32,6 +32,7 @@ export type FormLiveType = {
     schedule_live_date?: string
     notify_live_start_date?: string
     notify_live_end_date?: string
+    max_schedule_live_date?: string
   }
   stepSettingThree?: {
     name?: string

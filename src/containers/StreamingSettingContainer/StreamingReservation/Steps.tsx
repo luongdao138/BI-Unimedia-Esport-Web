@@ -20,7 +20,13 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
+import {
+  baseViewingURL,
+  GetCategoryResponse,
+  LiveStreamSettingResponse,
+  SetLiveStreamParams,
+  TYPE_SETTING,
+} from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
@@ -59,6 +65,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [categoryName, setCategoryName] = useState('')
+  const [showReNew, setShowReNew] = useState<boolean>(false)
 
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -75,9 +82,20 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const getLiveSetting = () => {
     getLiveSettingTab({ type: TYPE_SETTING.SCHEDULE }).then(() => {
+      checkStatusRecord(liveSettingInformation)
       formik.validateForm()
     })
   }
+
+  const checkStatusRecord = (data: LiveStreamSettingResponse) => {
+    if (!data?.data?.created_at) {
+      onReNewUrlAndKey()
+      setShowReNew(false)
+    } else {
+      setShowReNew(true)
+    }
+  }
+
   useEffect(() => {
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(2, formik.errors)
     setError(!isRequiredFieldsValid)
@@ -173,10 +191,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', !formik.values.stepSettingTwo.use_ticket ? new Date().toString() : null)
   }
 
-  const onReNewUrlAndKey = (type: number) => {
+  const onReNewUrlAndKey = () => {
     getStreamUrlAndKey((url, key) => {
-      if (type === 1) formik.setFieldValue('stepSettingTwo.stream_url', url)
-      else formik.setFieldValue('stepSettingTwo.stream_key', key)
+      formik.setFieldValue('stepSettingTwo.stream_url', url)
+      formik.setFieldValue('stepSettingTwo.stream_key', key)
     })
   }
 
@@ -418,7 +436,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_schedule_end_time &&
                       formik?.errors?.stepSettingTwo?.stream_schedule_end_time) ||
-                    formik?.errors?.stepSettingTwo?.schedule_live_date
+                    formik?.errors?.stepSettingTwo?.schedule_live_date ||
+                    formik?.errors?.stepSettingTwo?.max_schedule_live_date
                   }
                   error={
                     formik?.touched?.stepSettingTwo?.stream_schedule_end_time && !!formik?.errors?.stepSettingTwo?.stream_schedule_end_time
@@ -554,7 +573,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             />
           )}
           {/* stream URL */}
-          <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -606,22 +625,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={classes.urlCopy}
-                  onClick={() => {
-                    onReNewUrlAndKey(KEY_TYPE.URL)
-                  }}
-                >
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
+                {showReNew && (
+                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
+          {isFirstStep() && (
+            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+              {i18n.t('common:streaming_setting_screen.note_stream_url')}
+            </Typography>
+          )}
           {/* stream key */}
-          <Box pb={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pb={2} pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_key"
@@ -673,17 +691,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box
-                  py={1}
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={classes.urlCopy}
-                  onClick={() => {
-                    onReNewUrlAndKey(KEY_TYPE.KEY)
-                  }}
-                >
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
+                {showReNew && (
+                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
@@ -870,5 +882,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     }
+  },
+  addPaddingNote: {
+    paddingTop: 8,
   },
 }))

@@ -20,6 +20,7 @@ import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
+import ESLoader from '@components/FullScreenLoader'
 
 interface StepsProps {
   step: number
@@ -41,10 +42,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
       //TODO: smt
     },
   })
-  const { setChannelConfirm } = useLiveSetting()
+  const { setChannelConfirm, isPending, getChannelLive } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   useEffect(() => {
-    formik.validateForm()
+    getChannelInfo()
   }, [])
 
   useEffect(() => {
@@ -55,6 +56,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   useEffect(() => {
     setSocial(channel?.data)
   }, [])
+
   const handleError = (errors) => {
     setError(!_.isEmpty(errors))
   }
@@ -63,6 +65,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
       return { ...prevState, ...data }
     })
   }
+
+  const getChannelInfo = () => {
+    getChannelLive().then(() => formik.validateForm())
+  }
+
   const onClickNext = () => {
     const { stepSettingThree } = formik.values
 
@@ -200,6 +207,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
           )}
         </form>
       </Box>
+      <ESLoader open={isPending} />
     </Box>
   )
 }

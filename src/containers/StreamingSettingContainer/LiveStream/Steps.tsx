@@ -69,6 +69,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   })
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
+  const [showReNew, setShowReNew] = useState<boolean>(false)
 
   useEffect(() => {
     getLiveSetting()
@@ -97,6 +98,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const checkStatusRecord = (data: LiveStreamSettingResponse) => {
     if (!data?.data?.created_at) {
       onReNewUrlAndKey()
+      setShowReNew(false)
+    } else {
+      setShowReNew(true)
     }
   }
 
@@ -424,7 +428,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               />
             </Box>
           ) : (
-            <Box pt={2}>
+            <Box>
               <ESInput
                 id="title"
                 name="title"
@@ -442,7 +446,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             </Box>
           )}
           {/* stream URL */}
-          <Box pb={2} pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -486,14 +490,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
+                {showReNew && (
+                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
+          {isFirstStep() && (
+            <Typography className={`${classes.captionNote} ${classes.addPaddingNote}`}>
+              {i18n.t('common:streaming_setting_screen.note_stream_url')}
+            </Typography>
+          )}
           {/* stream key */}
-          <Box className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_key"
@@ -538,9 +549,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
-                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                </Box>
+                {showReNew && (
+                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                  </Box>
+                )}
               </Box>
             )}
           </Box>
@@ -723,5 +736,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
     }
+  },
+  addPaddingNote: {
+    paddingTop: 8,
   },
 }))
