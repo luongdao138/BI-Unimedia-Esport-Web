@@ -19,10 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     // justifyContent: 'center',
     // alignItems: 'center',
-    width: 1100,
-    height: 366,
-    marginLeft: 192,
-    marginRight: 192,
+    width: '100%',
     marginBottom: theme.spacing(3),
   },
   container: {

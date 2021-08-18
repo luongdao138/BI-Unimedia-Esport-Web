@@ -27,7 +27,8 @@ export const TabsVideo = {
   ARCHIVED_VIDEOS: 3,
   FAVORITE_VIDEOS: 4,
 }
-const PointManage: React.FC = () => {
+
+const VideosTop: React.FC = () => {
   const data = [
     {
       id: 1,
@@ -76,13 +77,10 @@ const PointManage: React.FC = () => {
         break
       case TABS.LIVE_VIDEOS:
         return <LiveStreamVideos />
-        break
       case TABS.SCHEDULE_VIDEOS:
         return <ScheduleVideos />
-        break
       case TABS.ARCHIVED_VIDEOS:
         return <ArchivedVideos />
-        break
       case TABS.FAVORITE_VIDEOS:
         return <FavoriteVideos setTab={setTab} />
         break
@@ -101,7 +99,6 @@ const PointManage: React.FC = () => {
         <ESSlider
           smallSliderButton
           navigation
-          // slidesPerView={data.length}
           items={data.map((item, i) => (
             <BannerItems key={i} image={item.image} />
           ))}
@@ -114,7 +111,7 @@ const PointManage: React.FC = () => {
     </Box>
   )
 }
-export default PointManage
+export default VideosTop
 
 const useStyles = makeStyles(() => ({
   root: {

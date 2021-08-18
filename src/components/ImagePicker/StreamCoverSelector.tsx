@@ -164,10 +164,10 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
               // aspect={ratio || 4 / 1}
               aspect={ratio || 16 / 9}
               style={{
-                containerStyle: { width: dynamicWidth, height: (dynamicWidth * 3/4), position: 'relative' },
+                containerStyle: { width: dynamicWidth, height: (dynamicWidth * 3) / 4, position: 'relative' },
                 mediaStyle: {
                   width: mediaDimensions.width,
-                  height: (mediaDimensions.width * 3/4),
+                  height: (mediaDimensions.width * 3) / 4,
                   position: 'relative',
                 },
               }}
@@ -328,13 +328,13 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
   [theme.breakpoints.down(768)]: {
     cropContainer: {
-      height: ({ width }) => (width * 3/4),
-      display: "flex", 
-      alignItems: "center"
+      height: ({ width }) => (width * 3) / 4,
+      display: 'flex',
+      alignItems: 'center',
     },
     imageContainer: {
-      height: ({ width }) => (width * 3/4),
-    }
+      height: ({ width }) => (width * 3) / 4,
+    },
   },
   image: {
     width: '100%',
