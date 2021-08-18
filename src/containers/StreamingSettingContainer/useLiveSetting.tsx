@@ -7,6 +7,8 @@ import { useEffect } from 'react'
 const { selectors, actions } = stream
 const _getMeta = createMetaSelector(actions.getLiveSettingInfo)
 const _getStreamUrlAndKeyMeta = createMetaSelector(actions.getStreamUrlAndKeyInfo)
+const _getChannelMeta = createMetaSelector(actions.getChannel)
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useLiveSetting = () => {
   const dispatch = useAppDispatch()
@@ -21,21 +23,26 @@ const useLiveSetting = () => {
   }
   const meta = useAppSelector(_getMeta)
   const getStreamUrlAndKeyMeta = useAppSelector(_getStreamUrlAndKeyMeta)
+  const getChannelMeta = useAppSelector(_getChannelMeta)
+
   const getStreamUrlAndKey = async (onSuccess: (url, key) => void) => {
     const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo())
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
       onSuccess(resultAction.payload.data.stream_url, resultAction.payload.data.stream_key)
     }
   }
-  const isPending = meta.pending || getStreamUrlAndKeyMeta.pending
+  const isPending = meta.pending || getStreamUrlAndKeyMeta.pending || getChannelMeta.pending
   const categoryData = useAppSelector(selectors.getCategorySelector)
   const channelInfo = useAppSelector(selectors.getChannelSelector)
+
   const setChannelConfirm = async (params: SetChannelParams, onSuccess: () => void) => {
     const resultAction = await dispatch(actions.setChannel(params))
     if (actions.setChannel.fulfilled.match(resultAction)) {
       onSuccess()
     }
   }
+
+  const getChannelLive = () => dispatch(actions.getChannel())
 
   useEffect(() => {
     dispatch(actions.getCategory())
@@ -53,6 +60,7 @@ const useLiveSetting = () => {
     categoryData,
     channelInfo,
     setChannelConfirm,
+    getChannelLive,
   }
 }
 export default useLiveSetting
