@@ -19,7 +19,7 @@ type CoverUploaderStreamProps = {
 
 const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
   src,
-  ratio = 3.303 / 1,
+  ratio = 16 / 9,
   isUploading = false,
   onChange,
   disabled = false,
@@ -109,6 +109,8 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: 'auto',
     objectFit: 'contain',
+    borderWidth: 1,
+    borderColor: 'white',
   },
   touch: (props: { isBig?: boolean; isShow?: boolean }) => ({
     zIndex: 30,

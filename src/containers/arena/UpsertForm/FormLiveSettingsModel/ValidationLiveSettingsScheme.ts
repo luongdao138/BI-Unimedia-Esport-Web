@@ -11,7 +11,7 @@ export const validationLiveSettingsScheme = (): any => {
       description: Yup.string()
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
-      category: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, '']),
+      category: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, ''], i18n.t('common:common.input_required')),
       use_ticket: Yup.boolean(),
       ticket_price: Yup.number().when('use_ticket', {
         is: true,
@@ -79,6 +79,19 @@ export const validationLiveSettingsScheme = (): any => {
         then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.date_limit')),
       }),
     }),
+    // stepSettingThree: Yup.object({
+    //   name: Yup.string()
+    //     .required(i18n.t('common:common.input_required'))
+    //     .max(100, i18n.t('common:streaming_setting_screen.validation.title_limit')),
+    //   description: Yup.string()
+    //     .required(i18n.t('common:common.input_required'))
+    //     .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
+    // }),
+  })
+}
+
+export const validationLDistributorScheme = (): any => {
+  return Yup.object({
     stepSettingThree: Yup.object({
       name: Yup.string()
         .required(i18n.t('common:common.input_required'))

@@ -10,10 +10,16 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import ESButton from '@components/Button'
 import { getInitialDistributorValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
-import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
+import { validationLDistributorScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
-import { GetChannelResponse } from '@services/liveStream.service'
+import { GetChannelResponse, SetChannelParams } from '@services/liveStream.service'
+import useLiveSetting from '../useLiveSetting'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { FIELD_TITLES } from '../field_titles.constants'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { useAppDispatch } from '@store/hooks'
 
 interface StepsProps {
   step: number
@@ -23,17 +29,20 @@ interface StepsProps {
 
 const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   const classes = useStyles()
+  const dispatch = useAppDispatch()
   const [social, setSocial] = useState(null)
   const [hasError, setError] = useState(false)
   const initialValues = getInitialDistributorValues(channel.data ? channel.data : null)
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
-    validationSchema: validationLiveSettingsScheme(),
+    validationSchema: validationLDistributorScheme(),
     enableReinitialize: true,
     onSubmit: () => {
       //TODO: smt
     },
   })
+  const { setChannelConfirm } = useLiveSetting()
+  const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   useEffect(() => {
     formik.validateForm()
   }, [])
@@ -41,7 +50,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   useEffect(() => {
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(3, formik.errors)
     setError(!isRequiredFieldsValid)
-  }, [formik.errors])
+  }, [formik.errors.stepSettingThree])
 
   useEffect(() => {
     setSocial(channel?.data)
@@ -55,7 +64,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
     })
   }
   const onClickNext = () => {
-    onNext(step + 1)
+    const { stepSettingThree } = formik.values
+
+    const fieldIdentifier = checkNgWordFields({
+      name: stepSettingThree.name,
+      description: stepSettingThree.description,
+    })
+    const ngFields = checkNgWordByField({
+      [FIELD_TITLES.stepSettingThree.name]: stepSettingThree.name,
+      [FIELD_TITLES.stepSettingTwo.description]: stepSettingThree.description,
+    })
+    if (fieldIdentifier) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    } else {
+      onNext(step + 1)
+    }
   }
   const onClickPrev = () => {
     onNext(step - 1)
@@ -72,6 +95,22 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
       return otherClass ? ' ' + otherClass : ''
     }
   }
+
+  const onConfirm = () => {
+    const { stepSettingThree } = formik.values
+    const data: SetChannelParams = {
+      ...stepSettingThree,
+      name: stepSettingThree.name,
+      description: stepSettingThree.description,
+      twitter_link: social.twitter_link,
+      instagram_link: social.instagram_link,
+      discord_link: social.discord_link,
+    }
+    setChannelConfirm(data, () => {
+      onNext(step + 1)
+    })
+  }
+
   return (
     <Box py={4} className={classes.container}>
       <Box className={classes.formContainer}>
@@ -152,7 +191,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
                   </ESButton>
                 </Box>
                 <Box className={classes.actionButton}>
-                  <ButtonPrimary round fullWidth onClick={onClickNext}>
+                  <ButtonPrimary round fullWidth onClick={onConfirm}>
                     {i18n.t('common:streaming_setting_screen.save_channel_live_info')}
                   </ButtonPrimary>
                 </Box>

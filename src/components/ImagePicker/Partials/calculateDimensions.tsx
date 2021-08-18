@@ -43,3 +43,28 @@ export const calculateDimensionsCover = (width: number, height: number, S_W: num
   // console.log("=====RETURN=====",h,w)
   return { height: h, width: w }
 }
+export const calculateDimensionsThumbStream = (
+  width: number,
+  height: number,
+  S_W: number,
+  S_H: number
+): { height: number; width: number } => {
+  // console.log("======calculateDimensionsCover==width==",width)
+  // console.log("======calculateDimensionsCover==height==",height)
+  // console.log("======calculateDimensionsCover==S_W==",S_W)
+  // console.log("======calculateDimensionsCover==S_H==",S_H)
+  // console.log("======calculateDimensionsCover==height2==",height)
+  // console.log("======calculateDimensionsCover==width2==",width)
+  let h = height,
+    w = width,
+    gap = S_W / w
+  w = S_W
+  h = h * gap
+  if (h * 16 < w * 9) {
+    gap = S_H / h
+    h = S_H
+    w = w * gap
+  }
+  // console.log("=====RETURN=====",h,w)
+  return { height: h, width: w }
+}

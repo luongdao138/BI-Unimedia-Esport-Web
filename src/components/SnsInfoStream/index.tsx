@@ -10,7 +10,7 @@ import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
 import { getInitialDistributorValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
-import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
+import { validationLDistributorScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -32,7 +32,7 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
 
   const { handleChange, values, errors } = useFormik<FormLiveType>({
     initialValues: initialValues,
-    validationSchema: validationLiveSettingsScheme(),
+    validationSchema: validationLDistributorScheme(),
     enableReinitialize: true,
     onSubmit: (_) => null,
   })

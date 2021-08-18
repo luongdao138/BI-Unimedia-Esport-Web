@@ -11,4 +11,8 @@ export const FIELD_TITLES = {
     description: i18n.t('common:streaming_setting_screen.label_overview'),
     ticket_price: i18n.t('common:streaming_setting_screen.ticket_use'),
   },
+  stepSettingThree: {
+    name: i18n.t('common:streaming_setting_screen.label_channel_name'),
+    description: i18n.t('common:streaming_setting_screen.label_overview'),
+  },
 }

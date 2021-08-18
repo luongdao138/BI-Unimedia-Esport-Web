@@ -104,4 +104,5 @@ export const URI = {
   STREAM_URL_AND_KEY: '/v2/live/renew-stream-secret',
   GET_CATEGORY: '/v2/categories',
   GET_CHANNEL: '/v2/channels',
+  SET_CHANNEL: '/v2/channels',
 }

@@ -93,3 +93,23 @@ export const getChannel = createAsyncThunk<services.GetChannelResponse>(ACTION_S
     return rejectWithValue(error.response.data)
   }
 })
+
+export const setChannel = createAsyncThunk<services.SetChannelResponse, services.SetChannelParams>(
+  ACTION_STREAM_TYPES.SET_CHANNEL,
+  async (setChannelParams, { rejectWithValue }) => {
+    try {
+      const res = await services.setChannel(setChannelParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

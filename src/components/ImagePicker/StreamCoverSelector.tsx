@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
-import { calculateDimensionsCover } from './Partials/calculateDimensions'
+import { calculateDimensionsThumbStream } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Image from 'next/image'
@@ -48,7 +48,8 @@ const ImageSlider = withStyles({
 })(Slider)
 
 const STATIC_WIDTH = 600
-const STATIC_HEIGHT = 200
+const STATIC_HEIGHT = 300
+const MIN_WIDTH = 640
 
 const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, cancel, onUpdate }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
@@ -63,6 +64,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const [error, setError] = useState<boolean>(false)
   const classes = useStyles({ width: dynamicWidth })
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   useEffect(() => {
     return setUploading(false)
@@ -83,8 +85,10 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
   useEffect(() => {
     if (fileRejections.length > 0) {
       setError(fileRejections.length > 0 && fileRejections[0].file.size > MAX_SIZE)
+      setErrorMessage(i18n.t('common:messages.file_size_2mb_limit'))
     } else {
       setError(false)
+      setErrorMessage('')
     }
   }, [fileRejections])
 
@@ -99,14 +103,22 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
         img.onload = function () {
           const w = img.naturalWidth || img.width
           const h = img.naturalHeight || img.height
-          setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
+          setMediaDimensions(calculateDimensionsThumbStream(w, h, dynamicWidth, STATIC_HEIGHT))
           if (h >= w) {
             setFit('horizontal-cover')
           } else if (w > h) {
             setFit('vertical-cover')
           }
+          if (w >= MIN_WIDTH) {
+            setFile(reader.result)
+            setError(false)
+            setErrorMessage('')
+          } else {
+            setError(true)
+            setErrorMessage(i18n.t('common:messages.file_min_width'))
+          }
         }
-        setFile(reader.result)
+        // setFile(reader.result)
       }
       reader.readAsDataURL(f)
     }
@@ -139,7 +151,7 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
         {error && (
           <Typography color="secondary" className={classes.warning}>
-            {i18n.t('common:messages.file_size_limit')}
+            {errorMessage}
           </Typography>
         )}
         <Box className={classes.cropContainer}>
@@ -149,10 +161,15 @@ const StreamCoverSelector: React.FC<StreamCoverSelectorProps> = ({ src, ratio, c
               crop={crop}
               zoom={zoom}
               objectFit={fitType}
-              aspect={ratio || 4 / 1}
+              // aspect={ratio || 4 / 1}
+              aspect={ratio || 16 / 9}
               style={{
                 containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
-                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+                mediaStyle: {
+                  width: mediaDimensions.width,
+                  height: mediaDimensions.height,
+                  position: 'relative',
+                },
               }}
               showGrid={false}
               onCropChange={setCrop}
