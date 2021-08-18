@@ -152,7 +152,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* organizer */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.admin_organizer')}</Typography>
+                <Typography>{t('common:lobby.detail.organizer')}</Typography>
               </Box>
               <Box className={classes.value}>
                 {data.organizer && (

@@ -197,7 +197,7 @@ export type LobbyDetail = {
 }
 
 export interface CreateLobbyResponse {
-  data: LobbyDetail
+  hash_key: string
 }
 
 export type LobbyDetailResponse = {

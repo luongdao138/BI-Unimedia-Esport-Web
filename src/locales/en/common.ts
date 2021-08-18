@@ -635,6 +635,7 @@ export default {
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
+      organizer: '開催者',
     },
   },
   lobbySearchFilters: {

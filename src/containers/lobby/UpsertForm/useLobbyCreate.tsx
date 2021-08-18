@@ -93,7 +93,7 @@ const useLobbyCreate = (): {
     const resultAction = await dispatch(actions.createLobby(params))
     if (actions.createLobby.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(`${ESRoutes.LOBBY}/${resultAction.payload.data.id}`)
+      router.push(`${ESRoutes.LOBBY}/${resultAction.payload.hash_key}`)
 
       dispatch(commonActions.addToast(t('common:arena.create_success')))
     }
