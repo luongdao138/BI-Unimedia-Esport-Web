@@ -65,7 +65,9 @@ const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
           if (!isUploading && !disabled) setOpen(true)
         }}
       >
-        {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
+        {localSrc.toString() !== '' && <img 
+          className={classes.image} src={localSrc.toString()} 
+        />}
         {!disabled && (
           <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
             <Camera fontSize="large" className={classes.camera} />
@@ -96,7 +98,7 @@ const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
 
 export default memo(CoverUploaderStream)
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'block',
   },
@@ -176,5 +178,10 @@ const useStyles = makeStyles(() => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  [theme.breakpoints.down(768)]: {
+    touch: (props: { isBig?: boolean; isShow?: boolean }) => ({
+      height: props.isBig ? 'calc((100vw - 48px) * 9/16)' : 120,
+    }),
   },
 }))
