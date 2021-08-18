@@ -29,7 +29,7 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
       </Box>
       <Box
         style={{
-          background: `url(${cover})`,
+          background: `url(${cover || '/images/community_dummy_1.jpg'})`,
           paddingTop: '30.27%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',

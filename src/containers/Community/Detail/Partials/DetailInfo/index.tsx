@@ -25,9 +25,10 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import ApproveList from '../ApproveList'
+import { CommunityDetail } from '@services/community.service'
 
 type Props = {
-  detail: any
+  detail: CommunityDetail
   toEdit?: () => void
 }
 
@@ -71,14 +72,15 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Box pt={1} color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
-              {data.title}
+              {data.name}
             </Typography>
             <Box ml={3.6}>
-              {data.is_official ? (
+              {/* //TODO uncomment when is_official and is_private is in backend */}
+              {/* {data.is_official ? (
                 <img className={classes.checkIcon} src="/images/check_icon.png" />
               ) : (
                 data.is_private && <Icon className={`fas fa-lock ${classes.lockIcon}`} />
-              )}
+              )} */}
             </Box>
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
@@ -145,7 +147,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.INFO:
-        return <InfoContainer />
+        return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
         return <TopicListContainer />
       case TABS.SEARCH:
