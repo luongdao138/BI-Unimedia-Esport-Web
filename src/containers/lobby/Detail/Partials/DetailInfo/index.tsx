@@ -19,6 +19,8 @@ import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import _ from 'lodash'
+import { TwitterShareButton } from 'react-share'
 
 interface Props {
   detail: LobbyDetail
@@ -84,9 +86,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                 <Typography>{t('common:tournament.copy_shared_url')}</Typography>
               </Box>
-              {/* <ButtonBase href="#" target="_blank">
+              <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.title, '')}>
                 <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
-              </ButtonBase> */}
+              </TwitterShareButton>
             </>
           )}
         </Box>
