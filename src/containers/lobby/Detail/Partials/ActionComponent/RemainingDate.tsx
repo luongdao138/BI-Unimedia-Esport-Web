@@ -4,7 +4,8 @@ import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import moment from 'moment'
-import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+// import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 interface Props {
   tournament: LobbyDetail
@@ -15,10 +16,10 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
 
   const status = tournament.attributes.status
-  const beforeOnhold = status === TOURNAMENT_STATUS.RECRUITING || status === TOURNAMENT_STATUS.READY
+  const beforeOnhold = status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY
 
-  const accEndDate = moment(tournament.attributes.acceptance_end_date)
-  const startDate = moment(tournament.attributes.start_date)
+  const accEndDate = moment(tournament.attributes.entry_start_datetime)
+  const startDate = moment(tournament.attributes.start_datetime)
   const targetDate = beforeOnhold ? accEndDate : startDate
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')

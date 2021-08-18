@@ -81,9 +81,9 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
     <div>
       <LoginRequired>
         <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
-          {data.is_freezed || data.status == 'ready_to_start' || data.status == 'recruitment_closed' || data.status == 'in_progress'
+          {/* {data.is_freezed || data.status == 'ready_to_start' || data.status == 'recruitment_closed' || data.status == 'in_progress'
             ? t('common:tournament.participants')
-            : t('common:tournament.entry_members')}
+            : t('common:tournament.entry_members')} */}
         </ESButton>
       </LoginRequired>
       <ESModal open={open && !selectedParticipant} handleClose={handleClose}>
@@ -108,7 +108,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                     </Typography>
                   </Box>
                   <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {data.is_freezed ? data.participant_count : data.participant_count + data.interested_count}
+                    {data.is_freezed ? data.participant_count : data.participant_count + data.entry_count}
                   </Typography>
                   <Typography variant="h3" className={classes.countLabel}>
                     {unit}

@@ -40,3 +40,19 @@ export const TOURNAMENT_STATUS = {
   RECRUITING: 'recruiting',
   RECRUITMENT_CLOSED: 'recruitment_closed',
 }
+
+export enum LOBBY_STATUS {
+  READY = 0,
+  RECRUITING = 1,
+  ENTRY_CLOSED = 2,
+  IN_PROGRESS = 3,
+  ENDED = 4,
+  CANCELLED = 5,
+  DELETED = 6,
+}
+
+export enum LOBBY_PARTICIPANT_STATUS {
+  ENTERED = 0,
+  SELECTED = 1,
+  NOT_SELECTED = 2,
+}

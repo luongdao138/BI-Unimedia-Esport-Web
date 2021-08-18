@@ -1,17 +1,8 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-import { GameHardware, GameTitle } from './game.service'
-import { ArenaRole } from './arena.service'
+import { GameTitle } from './game.service'
+import { LOBBY_PARTICIPANT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 
-export type LobbyStatus =
-  | 'open'
-  | 'ready'
-  | 'recruiting'
-  | 'recruitment_closed'
-  | 'ready_to_start'
-  | 'in_progress'
-  | 'completed'
-  | 'cancelled' // TODO
 export type LobbyRule = 'single' | 'double' | 'battle_royale' // TODO
 
 export type EntryLobbyResponse = {
@@ -125,74 +116,41 @@ export type LobbyCategoriesResponse = {
 
 export type LobbyDetail = {
   id: string
-  type: 'lobby_details'
+  type: 'recruitment_details'
   attributes: {
-    title: string
-    message: string
-    notes: string
-    rule: LobbyRule
-    max_participants: number
-    is_organizer_join: boolean
-    status: LobbyStatus
-    is_freezed: boolean
-    start_date: string
-    end_date: string
-    chat_room_id: string
-    acceptance_start_date: string
-    acceptance_end_date: string
-    participant_type: number
+    address: string
     area_id: number
     area_name: string
-    address: string
-    has_prize: boolean
-    prize_amount: string
-    terms_of_participation: string
-    organizer_name: string
-    summary: null | string
-    background_tpl: number
-    has_third_place: boolean
-    retain_history: boolean
-    t_type: 't_public' | 't_private'
-    // owner: {
-    //   data: {
-    //     id: 'string'
-    //     type: 'user_list'
-    //     attributes: {
-    //       user_code: string
-    //       nickname: string
-    //       nickname2: null | string
-    //       avatar: null | string
-    //       features: Feature[]
-    //       game_titles: GameTitle['attributes'][]
-    //     }
-    //   }
-    // }
+    categories: CategoryItem['attributes'][]
+    chatroom_id: string //
+    cover_image_url: null | string
+    entry_count: number //
+    entry_end_datetime: string //
+    entry_start_datetime: string //
+    game_hardware_id: number // data: GameHardware
+    game_title: {
+      data: GameTitle
+    }
+    game_title_id: number
+    hardware: string
+    hash_key: string
+    id: number
+    is_owner: boolean
+    max_participants: number
+    message: string
     organizer: {
       id: number
       nickname: string
       user_code: string
     }
     organizer_avatar: null | string
-    game_title: {
-      data: GameTitle
-    }
-    game_hardware: {
-      data: GameHardware
-    }
-    hardware: string
-    co_organizers: {
-      data: []
-    }
-    cover_image_url: null | string
-    summary_image: null | string
-    interested_count: number
+    participant_status: null | LOBBY_PARTICIPANT_STATUS
     participant_count: number
-    my_role: null | ArenaRole
-    my_info: { team_id: number }[] | any
-    my_position: null | string
-    hash_key: string
-    is_entered?: boolean
-    categories: CategoryItem['attributes'][]
+    remain_days: null | number
+    start_datetime: string //
+    status: LOBBY_STATUS
+    title: string
+    is_freezed: boolean
   }
 }
 

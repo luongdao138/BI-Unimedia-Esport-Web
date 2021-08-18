@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { LobbyDetail } from '@services/lobby.service'
-import { ROLE, RULE, TOURNAMENT_STATUS } from '@constants/lobby.constants'
+import { LOBBY_STATUS, ROLE, LOBBY_PARTICIPANT_STATUS } from '@constants/lobby.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import _ from 'lodash'
@@ -35,24 +35,24 @@ const useLobbyHelper = (
   const { makeContextualHref } = useContextualRouting()
 
   const hashKey = tournament?.attributes?.hash_key
-  const chatRoomId = tournament?.attributes?.chat_room_id
-  const myRole = tournament?.attributes?.my_role
+  const chatRoomId = tournament?.attributes?.chatroom_id
+  // const myRole = tournament?.attributes?.is_owner
   const status = tournament?.attributes?.status
-  const isModerator = myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
-  const isInProgress = status === TOURNAMENT_STATUS.IN_PROGRESS
-  const isCancelled = status === TOURNAMENT_STATUS.CANCELLED
-  const isCompleted = status === TOURNAMENT_STATUS.COMPLETED
-  const isRecruitmentClosed = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
-  const isBattleRoyale = tournament?.attributes?.rule === RULE.BATTLE_ROYALE
-  const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
-  const isTeam = tournament?.attributes?.participant_type > 1
-  const isEditable = isModerator && status !== TOURNAMENT_STATUS.CANCELLED
+  const isModerator = tournament?.attributes?.is_owner // myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
+  const isInProgress = status === LOBBY_STATUS.IN_PROGRESS
+  const isCancelled = status === LOBBY_STATUS.CANCELLED
+  const isCompleted = status === LOBBY_STATUS.ENDED
+  const isRecruitmentClosed = status === LOBBY_STATUS.ENTRY_CLOSED // || status === LOBBY_STATUS.READY_TO_START
+  const isBattleRoyale = false // tournament?.attributes?.rule === RULE.BATTLE_ROYALE
+  const isRecruiting = status === LOBBY_STATUS.RECRUITING
+  const isTeam = false //tournament?.attributes?.participant_type > 1
+  const isEditable = isModerator && status !== LOBBY_STATUS.CANCELLED
   const isFreezed = tournament?.attributes?.is_freezed
   const isNotHeld = isCompleted && !isFreezed
-  const isReady = status === TOURNAMENT_STATUS.READY
-  const isEntered = tournament?.attributes?.is_entered
-  const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
-  const isSelected = isEntered && myRole === ROLE.PARTICIPANT
+  const isReady = status === LOBBY_STATUS.READY
+  const isEntered = tournament?.attributes?.participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
+  const isUnselected = isEntered && isFreezed // && myRole === ROLE.INTERESTED
+  const isSelected = isEntered // && myRole === ROLE.PARTICIPANT
 
   const checkAdminJoined = () => {
     if (!isModerator) return false
