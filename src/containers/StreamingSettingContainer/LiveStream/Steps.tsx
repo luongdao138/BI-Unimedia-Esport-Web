@@ -398,6 +398,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     readOnly={!formik.values.stepSettingOne.use_ticket}
                     inputMode={'numeric'}
                     type="number"
+                    endAdornment={
+                      isFirstStep() ? (
+                        <InputAdornment position="end" className={classes.inputContainer}>
+                          <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                        </InputAdornment>
+                      ) : (
+                        <></>
+                      )
+                    }
                   />
                 </Box>
               </Box>
@@ -665,6 +674,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     paddingTop: 27,
   },
+  coverImg: {
+    width: '100%',
+    height: 278,
+    objectFit: 'cover',
+    objectPosition: '50% 50%',
+    borderRadius: 4,
+  },
+  inputAdornment: {
+    color: "#fff", 
+    fontSize: "14px",
+  },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
       flexDirection: 'column-reverse',
@@ -678,7 +698,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 22px',
   },
   firstItem: {
-    width: '75%',
+    width: '494px',
   },
   wrap_input: {
     paddingLeft: 0,
@@ -700,12 +720,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: '-2px',
     },
-  },
-  coverImg: {
-    width: '100%',
-    height: 278,
-    objectFit: 'cover',
-    objectPosition: '50% 50%',
-    borderRadius: 4,
+    coverImg: {
+      height: 'calc((100vw - 48px) * 9/16)',
+    }
   },
 }))
