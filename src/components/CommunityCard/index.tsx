@@ -76,7 +76,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   }
   const getTags = (tags: { name: string }[]) => {
     return (
-      <Box display="flex" flexDirection="row" mt={1} alignItems="center" flexWrap="wrap" pr={47 / 8}>
+      <Box display="flex" flexDirection="row" mt={1} flexWrap="wrap" flexGrow="1" pr={47 / 8}>
         {tags.map((tag, i) => (
           <ESChip
             key={i}
@@ -115,13 +115,15 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   }
   return (
     <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.hash_key}`)}>
-      <ESCardMedia
-        cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-        image={cover}
-        triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.7)' : null}
-      >
-        {getMediaScreen()}
-      </ESCardMedia>
+      <Box>
+        <ESCardMedia
+          cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+          image={cover}
+          triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.7)' : null}
+        >
+          {getMediaScreen()}
+        </ESCardMedia>
+      </Box>
       <ESCardContent>
         {getTitle()}
         {getDescription(attr.description)}
@@ -135,6 +137,9 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
 const useStyles = makeStyles((theme) => ({
   cardHover: {
     cursor: 'pointer',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   titleContainer: {
     height: 42,
@@ -147,7 +152,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     wordWrap: 'break-word',
-    minHeight: 30,
   },
   tagChip: {
     height: 15,
@@ -173,6 +177,8 @@ const useStyles = makeStyles((theme) => ({
   },
   checkIcon: {
     color: Colors.primary,
+    fontSize: 18,
+    marginLeft: theme.spacing(1),
   },
   pAvatar: {
     marginLeft: theme.spacing(-1),
