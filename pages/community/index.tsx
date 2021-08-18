@@ -15,6 +15,7 @@ CommunityPage.Layout = MainLayout
 
 MainLayout.defaultProps = {
   loginRequired: true,
+  patternBg: true,
 }
 
 function formatFilter(filterText: string) {
