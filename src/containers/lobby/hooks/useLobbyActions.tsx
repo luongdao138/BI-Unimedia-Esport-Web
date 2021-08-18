@@ -14,10 +14,10 @@ const useLobbyActions = (): {
   entryMeta: Meta
   cancelMeta: Meta
   unjoinMeta: Meta
-  entry: (id: number) => void
-  cancel: (id: number) => void
-  unjoin: (id: number) => void
-  getParticipants: (id: number) => void
+  entry: (hash_key: string) => void
+  cancel: (hash_key: string) => void
+  unjoin: (hash_key: string) => void
+  getParticipants: (hash_key: string) => void
   participants: ParticipantsItem[]
   participantsMeta: Meta
 } => {
@@ -27,17 +27,17 @@ const useLobbyActions = (): {
   const unjoinMeta = useAppSelector(unjoinMetaSelector)
   const participantsMeta = useAppSelector(participantsMetaSelector)
   const participants = useAppSelector(participantSelector)
-  const entry = (id: number) => {
-    dispatch(actions.entryLobby(id))
+  const entry = (hash_key: string) => {
+    dispatch(actions.entryLobby(hash_key))
   }
-  const cancel = (id: number) => {
-    dispatch(actions.cancelLobby(id))
+  const cancel = (hash_key: string) => {
+    dispatch(actions.cancelLobby(hash_key))
   }
-  const unjoin = (id: number) => {
-    dispatch(actions.unjoinLobby(id))
+  const unjoin = (hash_key: string) => {
+    dispatch(actions.unjoinLobby(hash_key))
   }
-  const getParticipants = (id: number) => {
-    dispatch(actions.getParticipants(id))
+  const getParticipants = (hash_key: string) => {
+    dispatch(actions.getParticipants(hash_key))
   }
   return {
     entryMeta,

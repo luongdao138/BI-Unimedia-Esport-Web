@@ -15,7 +15,7 @@ export type LobbyStatus =
 export type LobbyRule = 'single' | 'double' | 'battle_royale' // TODO
 
 export type EntryLobbyResponse = {
-  data: number
+  data: string
   status: string
 }
 
@@ -211,18 +211,18 @@ export type UpdateParams = {
 
 export type UpdateLobbyResponse = void
 
-export const entry = async (params: number): Promise<EntryLobbyResponse> => {
-  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:id/gi, params.toString()))
+export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
+  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:id/gi, hash_key))
   return data
 }
 
-export const unjoin = async (params: number): Promise<EntryLobbyResponse> => {
-  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_UNJOIN.replace(/:id/gi, params.toString()))
+export const unjoin = async (hash_key: string): Promise<EntryLobbyResponse> => {
+  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_UNJOIN.replace(/:id/gi, hash_key))
   return data
 }
 
-export const cancel = async (params: number): Promise<EntryLobbyResponse> => {
-  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, params.toString()))
+export const cancel = async (hash_key: string): Promise<EntryLobbyResponse> => {
+  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, hash_key))
   return data
 }
 
@@ -231,8 +231,8 @@ export const search = async (params: LobbySearchParams): Promise<LobbySearchResp
   return data
 }
 
-export const participants = async (params: number): Promise<ParticipantsResponse> => {
-  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, params.toString()))
+export const participants = async (hash_key: string): Promise<ParticipantsResponse> => {
+  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, hash_key))
   return data
 }
 
