@@ -11,8 +11,6 @@ import FavoriteVideos from './FavoriteVideos'
 import LiveStreamVideos from './LiveStreamVideos'
 import ScheduleVideos from './ScheduleVideos'
 import VideosList from './VideosList'
-// import RecruitmentCard from '@components/RecruitmentCard'
-import dataFake from './BannersDataFake'
 import BannerItems from './BannerItems'
 
 enum TABS {
@@ -22,28 +20,34 @@ enum TABS {
   ARCHIVED_VIDEOS = 3,
   FAVORITE_VIDEOS = 4,
 }
-
+export const TabsVideo = {
+  VIDEOS_LIST: 0,
+  LIVE_VIDEOS: 1,
+  SCHEDULE_VIDEOS: 2,
+  ARCHIVED_VIDEOS: 3,
+  FAVORITE_VIDEOS: 4,
+}
 const PointManage: React.FC = () => {
   const data = [
     {
       id: 1,
-      image: dataFake.banner_01,
+      image: '/images/dataVideoFake/banner_01.png',
     },
     {
       id: 2,
-      image: dataFake.banner_02,
+      image: '/images/dataVideoFake/banner_02.png',
     },
     {
       id: 3,
-      image: dataFake.banner_03,
+      image: '/images/dataVideoFake/banner_03.png',
     },
     {
       id: 4,
-      image: dataFake.banner_04,
+      image: '/images/dataVideoFake/banner_04.png',
     },
     {
       id: 5,
-      image: dataFake.banner_05,
+      image: '/images/dataVideoFake/banner_05.png',
     },
   ]
   const { t } = useTranslation('common')
@@ -68,7 +72,7 @@ const PointManage: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.VIDEOS_LIST:
-        return <VideosList />
+        return <VideosList setTab={setTab} />
         break
       case TABS.LIVE_VIDEOS:
         return <LiveStreamVideos />

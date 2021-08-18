@@ -1,6 +1,5 @@
 import { Theme, makeStyles, Box } from '@material-ui/core'
 import ESCard from '@components/Card'
-import ESCardMedia from '@components/Card/CardMedia'
 
 type BannerItemsProps = {
   image: string
@@ -10,7 +9,7 @@ const BannerItems: React.FC<BannerItemsProps> = ({ image }) => {
   return (
     <Box className={classes.root}>
       <ESCard className={classes.container}>
-        <ESCardMedia className={classes.cardItem} src={image}></ESCardMedia>
+        <img className={classes.cardItem} src={image} />
       </ESCard>
     </Box>
   )
