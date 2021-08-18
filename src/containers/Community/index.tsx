@@ -100,7 +100,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           scrollThreshold={0.8}
         >
           {communities.map((community, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4}>
+            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
               <CommunityCard community={community} />
             </Grid>
           ))}
@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
     backgroundColor: Colors.black,
     '& .MuiButtonBase-root.button-primary': {
       padding: `${theme.spacing(1.5)}px ${theme.spacing(2)}px`,
@@ -156,6 +156,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   scrollContainer: {
     display: 'flex',
     flexWrap: 'wrap',
+  },
+  card: {
+    paddingTop: 0,
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(3.6),
+    paddingLeft: theme.spacing(1),
   },
 }))
 

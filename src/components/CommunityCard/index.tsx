@@ -67,7 +67,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     return (
       <Box color={Colors.white} className={classes.titleContainer} display="flex">
         <Typography className={classes.title}>{attr.name}</Typography>
-        {attr.is_official && <Icon className={`fas fa-check-circle ${classes.checkIcon}`} fontSize="default" />}
+        {attr.is_official && <img className={classes.checkIcon} src="/images/check_icon.png" />}
       </Box>
     )
   }
@@ -81,7 +81,6 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
           <ESChip
             key={i}
             className={classes.tagChip}
-            size="small"
             label={
               <Box color={Colors.white}>
                 <Typography variant="overline">{tag.feature}</Typography>
@@ -140,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    margin: 0,
   },
   titleContainer: {
     height: 42,
@@ -158,6 +158,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.white_opacity[20],
     marginBottom: theme.spacing(0.5),
     marginRight: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.25),
+    paddingRight: theme.spacing(0.5),
+    paddingLeft: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.125),
+    borderRadius: 2,
+    '& .MuiChip-label': {
+      padding: 0,
+      '& .MuiTypography-overline': {
+        fontSize: 8,
+      },
+    },
   },
   avatarContainer: {
     height: 20,
@@ -176,8 +187,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
   },
   checkIcon: {
-    color: Colors.primary,
-    fontSize: 18,
+    height: 20,
     marginLeft: theme.spacing(1),
   },
   pAvatar: {
