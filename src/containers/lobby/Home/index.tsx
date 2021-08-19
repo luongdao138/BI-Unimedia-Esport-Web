@@ -100,7 +100,7 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
           scrollThreshold={0.8}
         >
           {lobbies.map((Lobby, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
+            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4}>
               <LobbyCard lobby={Lobby} />
             </Grid>
           ))}

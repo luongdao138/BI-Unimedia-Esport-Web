@@ -105,7 +105,7 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {!isReady && !isCancelled && !isNotHeld && <SubActionButtons tournament={lobby} />}
+        {!isReady && !isCancelled && !isNotHeld && <SubActionButtons lobby={lobby} />}
       </Box>
 
       {renderAdminEntry()}

@@ -120,7 +120,11 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         <Box ml={1} color={Colors.white}>
           <Typography variant="caption">{value}</Typography>
         </Box>
-        {extra ? <Typography variant="caption">{extra}</Typography> : null}
+        {extra ? (
+          <Typography className={classes.caption} variant="caption">
+            &nbsp;{extra}
+          </Typography>
+        ) : null}
       </Box>
     )
   }
@@ -158,10 +162,10 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
       </ESCardMedia>
       <ESCardContent>
         {getTitle()}
-        {getInfoRow(attr.title)}
+        {getInfoRow(attr.game_title)}
         {/* {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)} */}
         {getChippedRow(t('common:tournament_create.start_date'), startDate)}
-        {getChippedRow(t('common:tournament_create.entry_period'), startDate, ' まで')}
+        {getChippedRow(t('common:tournament_create.entry_period'), startDate, 'まで')}
         {getChippedRow(t('common:tournament.entry_number'), attr.participant_count, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
@@ -174,13 +178,14 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   titleContainer: {
-    height: 42,
+    height: 25,
   },
   organizer: {
     fontSize: 10,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    minHeight: 15,
   },
   chip: {
     height: 15,
@@ -221,6 +226,9 @@ const useStyles = makeStyles((theme) => ({
   },
   pAvatar: {
     marginLeft: -8,
+  },
+  caption: {
+    wordBreak: 'keep-all',
   },
   title: {
     display: '-webkit-box',

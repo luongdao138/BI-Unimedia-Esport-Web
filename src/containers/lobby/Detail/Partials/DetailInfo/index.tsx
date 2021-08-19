@@ -4,7 +4,7 @@ import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
-// import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
@@ -116,7 +116,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           </Box>
           <Box className={classes.value}>
             <Typography>
-              {/* {TournamentHelper.formatDate(data.acceptance_start_date)} ~ {TournamentHelper.formatDate(data.acceptance_end_date)} */}
+              {LobbyHelper.formatDate(data.entry_start_datetime)} ~ {LobbyHelper.formatDate(data.entry_end_datetime)}
             </Typography>
           </Box>
         </Box>
@@ -126,7 +126,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           <Box className={classes.label}>
             <Typography>{t('common:recruitment.date_time')}</Typography>
           </Box>
-          <Box className={classes.value}>{/* <Typography>{TournamentHelper.formatDate(data.start_date)}</Typography> */}</Box>
+          <Box className={classes.value}>
+            <Typography>{LobbyHelper.formatDate(data.start_datetime)}</Typography>
+          </Box>
         </Box>
         {extended && (
           <>
@@ -214,10 +216,10 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
             </Box>
             <Box mt={1} mr={1}>
-              {/* <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} /> */}
+              {/* <ESChip label={LobbyHelper.participantTypeText(data.participant_type)} /> */}
             </Box>
             <Box mt={1} mr={1}>
-              {/* <ESChip label={TournamentHelper.ruleText(data.rule)} /> */}
+              {/* <ESChip label={LobbyHelper.ruleText(data.rule)} /> */}
             </Box>
             {/* {!!data.has_prize && (
               <Box mt={1} mr={1}>

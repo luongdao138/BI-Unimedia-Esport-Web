@@ -632,6 +632,12 @@ export default {
   lobby: {
     lobby_results: 'ロビー「:key」 の検索結果',
     lobby_results_all: 'ロビーの検索結果',
+    until_deadline: '締め切りまであと',
+    until_event: '開催まであと',
+    end_from_minutes: '分に受付終了',
+    start_from_minutes: '分から開始',
+    group_chat: 'グループチャット',
+    temporary: 'Temporary',
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',

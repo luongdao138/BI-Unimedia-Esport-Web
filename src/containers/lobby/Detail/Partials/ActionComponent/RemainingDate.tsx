@@ -8,24 +8,24 @@ import moment from 'moment'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 interface Props {
-  tournament: LobbyDetail
+  lobby: LobbyDetail
 }
 
-const RemainingDate: React.FC<Props> = ({ tournament }) => {
+const RemainingDate: React.FC<Props> = ({ lobby }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const status = tournament.attributes.status
+  const status = lobby?.attributes?.status
   const beforeOnhold = status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY
 
-  const accEndDate = moment(tournament.attributes.entry_start_datetime)
-  const startDate = moment(tournament.attributes.start_datetime)
+  const accEndDate = moment(lobby?.attributes?.entry_start_datetime)
+  const startDate = moment(lobby?.attributes?.start_datetime)
   const targetDate = beforeOnhold ? accEndDate : startDate
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
   const hours = targetDate.diff(nowDate, 'hours')
 
-  const untilDatePrefix = beforeOnhold ? t('common:tournament.until_deadline') : t('common:tournament.until_event')
+  const untilDatePrefix = beforeOnhold ? t('common:lobby.until_deadline') : t('common:lobby.until_event')
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
@@ -49,7 +49,7 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
           <Typography className={classes.highlightedNumber}>{targetDate.format('HH')}</Typography>
           <Typography>{t('common:common.hour')}</Typography>
           <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
-          <Typography>{beforeOnhold ? t('common:tournament.end_from_minutes') : t('common:tournament.start_from_minutes')}</Typography>
+          <Typography>{beforeOnhold ? t('common:lobby.end_from_minutes') : t('common:lobby.start_from_minutes')}</Typography>
         </>
       )}
     </Box>
