@@ -50,6 +50,18 @@ export type CommunityResponse = {
   attributes: any
 }
 
+export type CommunityFormParams = {
+  name: string
+  overview: string
+  features: number[]
+  game_titles: number[]
+  open_range: number
+  join_condition: number
+  area_id: number
+  address: string
+  cover_image_url: string
+}
+
 export type Meta = {
   current_page: number
   per_page: number
@@ -86,5 +98,10 @@ export const getTopicFollowers = async (params: TopicFollowersParams): Promise<T
 
 export const getCommunityDetail = async (hash_key: string): Promise<CommunityDetailResponse> => {
   const { data } = await api.get<CommunityDetailResponse>(URI.COMMUNITY_DETAIL.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const createCommunity = async (params: CommunityFormParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_CREATE, params)
   return data
 }

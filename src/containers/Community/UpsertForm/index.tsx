@@ -49,9 +49,16 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     initialValues: initialValues,
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
-    onSubmit: () => {
+    onSubmit: (values) => {
+      const data = {
+        ...values.stepOne,
+        features: values.stepOne.features.map((feature) => feature.id),
+        game_titles: values.stepOne.game_titles.map((feature) => feature.id),
+        join_condition: Number(values.stepOne.join_condition),
+      }
+      // console.log(data)
       if (submit) {
-        submit()
+        submit(data)
       }
     },
   })
@@ -90,13 +97,13 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       const { stepOne } = formik.values
 
       const fieldIdentifier = checkNgWordFields({
-        title: stepOne.title,
+        name: stepOne.name,
         overview: stepOne.overview,
         address: stepOne.address,
       })
 
       const ngFields = checkNgWordByField({
-        [FIELD_TITLES.stepOne.title]: stepOne.title,
+        [FIELD_TITLES.stepOne.name]: stepOne.name,
         [FIELD_TITLES.stepOne.overview]: stepOne.overview,
         [FIELD_TITLES.stepOne.address]: stepOne.address,
       })
