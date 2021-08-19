@@ -10,7 +10,6 @@ import ngWords from '@store/ngWords'
 import community from '@store/community'
 import arena from '@store/arena'
 import lobby from '@store/lobby'
-import lobbydump from '@store/lobbydump'
 import chat from '@store/chat'
 import recruitment from './recruitment'
 import game from '@store/game'
@@ -29,7 +28,6 @@ const reducer = combineReducers({
   community: community.reducers,
   arena: arena.reducers,
   lobby: lobby.reducers,
-  lobbydump: lobbydump.reducers,
   recruitment: recruitment.reducers,
   gameTitle: game.reducers,
   notification: notification.reducers,

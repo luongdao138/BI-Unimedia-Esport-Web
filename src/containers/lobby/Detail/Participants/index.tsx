@@ -11,11 +11,15 @@ import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import ESButton from '@components/Button'
 import { LobbyDetail } from '@services/lobby.service'
-import { ParticipantsResponse } from '@services/lobbydump.service'
 import { ROLE } from '@constants/tournament.constants'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import _ from 'lodash'
 import LoginRequired from '@containers/LoginRequired'
+
+export type ParticipantsResponse = {
+  id: number
+  attributes: any
+}
 
 export interface ParticipantsProps {
   detail: LobbyDetail

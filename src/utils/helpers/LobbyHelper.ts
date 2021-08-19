@@ -1,7 +1,6 @@
 import { T_TYPE, TOURNAMENT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { LobbyMatchRound } from '@services/lobbydump.service'
 import { FormikErrors } from 'formik'
 import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
 import { LobbyDetail } from '@services/lobby.service'
@@ -107,30 +106,6 @@ const getDetailData = (tournament: LobbyDetail): any => {
   }
 }
 
-const checkParticipantsSelected = (bracketData: LobbyMatchRound[], interested_count: number, max_participants: number): boolean => {
-  let selected = true
-  const matches = bracketData[0]
-  let p_ids: any = []
-
-  _.forEach(matches, (match) => {
-    p_ids.push(match.home_user)
-    p_ids.push(match.guest_user)
-    if (match.home_user === null && match.guest_user === null) {
-      selected = false
-      return false
-    } else return true
-  })
-
-  p_ids = _.compact(p_ids)
-  const max_capacity = matches.length * 2 > max_participants ? max_participants : matches.length * 2
-  if (interested_count >= max_capacity) {
-    if (p_ids.length != max_capacity) selected = false
-  } else {
-    if (p_ids.length != interested_count) selected = false
-  }
-  return selected
-}
-
 const isStatusPassed = (status: string, targetStatus: string): boolean => {
   const statuses = [
     TOURNAMENT_STATUS.READY,
@@ -174,7 +149,6 @@ export const LobbyHelper = {
   checkStatus,
   checkTarget,
   getDetailData,
-  checkParticipantsSelected,
   onTypeChange,
   isStatusPassed,
   checkRequiredFields,
