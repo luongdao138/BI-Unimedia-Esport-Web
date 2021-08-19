@@ -695,8 +695,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 4,
   },
   inputAdornment: {
-    color: "#fff", 
-    fontSize: "14px",
+    color: '#fff',
+    fontSize: '14px',
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
@@ -735,7 +735,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
-    }
+    },
   },
   addPaddingNote: {
     paddingTop: 8,

@@ -65,9 +65,7 @@ const CoverUploaderStream: React.FC<CoverUploaderStreamProps> = ({
           if (!isUploading && !disabled) setOpen(true)
         }}
       >
-        {localSrc.toString() !== '' && <img 
-          className={classes.image} src={localSrc.toString()} 
-        />}
+        {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
         {!disabled && (
           <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
             <Camera fontSize="large" className={classes.camera} />
