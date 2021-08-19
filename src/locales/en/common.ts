@@ -70,6 +70,7 @@ export default {
     eXe_point_management: 'eXeポイント管理',
     money_included_tax: '円(税込)',
     money: '円',
+    ten_thousand: '万',
   },
   page404: {
     title: '404',
@@ -992,5 +993,12 @@ export default {
     type_live_stream: 'ライブ配信中',
     view_more: 'もっと見る',
     no_data_text: '対象のコンテンツがありません。',
+  },
+  live_stream_screen: {
+    program_info: '番組情報',
+    distributor_info: '配信者情報',
+    related_videos: '関連動画',
+    live_stream_status: 'ライブ配信中',
+    share_btn: 'シェア',
   },
 }

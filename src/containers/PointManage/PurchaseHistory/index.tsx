@@ -24,6 +24,7 @@ const PurchaseHistory: FC = () => {
     { label: '2020年5月', value: '2020年5月' },
     { label: '2020年4月', value: '2020年4月' },
   ]
+  const letterCount = dataPurchasedPoints.length ? dataPurchasedPoints[dataPurchasedPoints.length - 1].serialNumber.length : 1
   return (
     <Box className={classes.container}>
       <Grid item xs={12} md={7}>
@@ -44,7 +45,7 @@ const PurchaseHistory: FC = () => {
       </Grid>
       <Box className={classes.wrapContent}>
         {dataPurchasedPoints.map((item, i) => (
-          <PurchaseHistoryItem data={item} key={i} />
+          <PurchaseHistoryItem data={item} key={i} letterCount={letterCount} />
         ))}
       </Box>
       <Box className={classes.paginationContainer}>

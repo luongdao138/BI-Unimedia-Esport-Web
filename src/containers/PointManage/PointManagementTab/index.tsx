@@ -23,6 +23,7 @@ const PointManagementTab: FC = () => {
       points: 1000,
       expiresDatePurchased: '2022年04月09日',
     }))
+  const letterCount = dataPurchasedPoints.length ? dataPurchasedPoints[dataPurchasedPoints.length - 1].serialNumber.length : 1
   return (
     <Box className={classes.container}>
       <Box>
@@ -30,7 +31,7 @@ const PointManagementTab: FC = () => {
       </Box>
       <Box className={classes.wrapContent}>
         {dataPurchasedPoints.map((item, i) => (
-          <PointsPurchasedItem data={item} key={i} />
+          <PointsPurchasedItem data={item} key={i} letterCount={letterCount} />
         ))}
       </Box>
       <Box className={classes.paginationContainer}>

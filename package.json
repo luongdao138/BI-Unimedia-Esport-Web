@@ -61,6 +61,7 @@
     "react-mentions": "^4.1.1",
     "react-redux": "7.2.3",
     "react-sortablejs": "^6.0.0",
+    "react-stacked-center-carousel": "^1.0.2",
     "react-test-renderer": "17.0.2",
     "react-text-mask": "^5.4.3",
     "react-virtualized": "^9.22.3",

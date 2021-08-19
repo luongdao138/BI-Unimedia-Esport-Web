@@ -721,6 +721,11 @@ body {
   width: 100%;
 }
 
+.minimize_content {
+  min-height: 100vh;
+  background-color: #212121;
+}
+
 .main_wrapper {
   display: flex;
   min-height: 400px;

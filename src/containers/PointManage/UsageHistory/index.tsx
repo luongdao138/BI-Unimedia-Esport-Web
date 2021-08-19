@@ -42,6 +42,7 @@ const UsageHistory: FC = () => {
     { label: '2020年5月', value: '2020年5月' },
     { label: '2020年4月', value: '2020年4月' },
   ]
+  const letterCount = dataPurchasePoints.length ? dataPurchasePoints[dataPurchasePoints.length - 1].serialNumber.length : 1
   return (
     <Box className={classes.container}>
       {dataUsagePoints.length > 0 ? (
@@ -76,7 +77,7 @@ const UsageHistory: FC = () => {
               <Typography>{i18n.t('common:point_management_tab.purchase_information')}</Typography>
             </Box>
             {dataPurchasePoints.map((item, i) => (
-              <UsagePointsItem data={item} key={i} />
+              <UsagePointsItem data={item} key={i} letterCount={letterCount} />
             ))}
           </>
         )}
@@ -86,7 +87,7 @@ const UsageHistory: FC = () => {
               <Typography>{i18n.t('common:point_management_tab.usage_details')}</Typography>
             </Box>
             {dataUsagePoints.map((item, i) => (
-              <UsagePointsItem data={item} key={i} />
+              <UsagePointsItem data={item} key={i} letterCount={letterCount} />
             ))}
           </>
         )}

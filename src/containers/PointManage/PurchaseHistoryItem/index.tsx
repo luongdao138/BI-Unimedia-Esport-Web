@@ -7,16 +7,26 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 interface PointsPurchasedItemProps {
   data: PointsPurchasedDataProps
+  letterCount: number
 }
-const PurchaseHistoryItem: FC<PointsPurchasedItemProps> = ({ data }) => {
+const PurchaseHistoryItem: FC<PointsPurchasedItemProps> = ({ data, letterCount }) => {
   const classes = useStyles()
+  const getAddClass = (firstClass, secClass) => {
+    if (letterCount === 2) {
+      return firstClass
+    }
+    if (letterCount >= 3) {
+      return secClass
+    }
+    return ''
+  }
   return (
     <Box className={classes.container} key={data?.serialNumber}>
       <Box className={classes.wrapTitle}>
-        <Box className={classes.serialContainer}>
+        <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
           <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
         </Box>
-        <Box className={classes.titleContainer}>
+        <Box className={`${classes.titleContainer} ${getAddClass(classes.letterSecTitle, classes.letterThirdTitle)}`}>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.difference')}</Typography>
@@ -60,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   serialContainer: {
     alignItems: 'center',
     display: 'flex',
-    width: 28,
+    width: 22,
     flexWrap: 'wrap',
     wordBreak: 'break-all',
   },
@@ -73,8 +83,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
-    width: 'calc(100% - 28px)',
-    paddingLeft: '8px',
+    width: 'calc(100% - 22px)',
+  },
+  letterSecTitle: {
+    width: 'calc(100% - 25px)',
+  },
+  letterThirdTitle: {
+    width: 'calc(100% - 34px)',
   },
   titleItemStyle: {
     color: Colors.white_opacity['70'],
@@ -97,6 +112,12 @@ const useStyles = makeStyles((theme) => ({
   },
   dateStyle: {
     color: Colors.white_opacity['70'],
+  },
+  letterSecSerial: {
+    width: 25,
+  },
+  letterThirdSerial: {
+    width: 34,
   },
   [theme.breakpoints.down(375)]: {
     container: {
