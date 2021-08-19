@@ -4,6 +4,7 @@ import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Link, Box } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core'
+import CommentInput from './Partials/CommentInput'
 // import { useTranslation } from 'react-i18next'
 // import { Colors } from '@theme/colors'
 
@@ -81,6 +82,9 @@ const TopicDetailContainer: React.FC = () => {
           />
         )
       })}
+      <Box className={classes.inputContainer}>
+        <CommentInput />
+      </Box>
     </>
   )
 }
@@ -92,6 +96,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   blank: {
     marginTop: theme.spacing(11.5),
+  },
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    position: 'sticky',
+    bottom: 0,
+    padding: 11,
+    width: '100%',
+    background: '#101010',
+    willChange: 'transform',
   },
   [theme.breakpoints.down('sm')]: {
     blank: {
