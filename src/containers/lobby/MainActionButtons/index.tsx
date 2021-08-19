@@ -88,13 +88,15 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta,
           <Box className={classes.actionButton}>
             <LoginRequired>
               <ButtonPrimary disabled={status === LOBBY_STATUS.READY} round fullWidth onClick={() => handleAction(MAIN_ACTIONS.ENTRY)}>
-                {i18n.t('common:lobby.buttons.member_confrim')}
+                {i18n.t('common:lobby.buttons.member_confirm')}
               </ButtonPrimary>
             </LoginRequired>
           </Box>
-          <Box pb={2} className={classes.description}>
-            <Typography variant="body2">{i18n.t('common:lobby.buttons.description')}</Typography>
-          </Box>
+          {status === LOBBY_STATUS.RECRUITING && (
+            <Box pb={2} className={classes.description}>
+              <Typography variant="body2">{i18n.t('common:lobby.buttons.description')}</Typography>
+            </Box>
+          )}
         </>
       )
     }

@@ -77,7 +77,7 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
   return <Box className={classes.remainingDate}>{renderRemainingDate()}</Box>
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   remainingDate: {
     display: 'flex',
     flexDirection: 'row',
@@ -87,6 +87,12 @@ const useStyles = makeStyles(() => ({
   highlightedNumber: {
     fontSize: '1.5rem',
     fontWeight: 'bold',
+  },
+  [theme.breakpoints.down('sm')]: {
+    highlightedNumber: {
+      fontSize: '1rem',
+      fontWeight: 'bold',
+    },
   },
 }))
 

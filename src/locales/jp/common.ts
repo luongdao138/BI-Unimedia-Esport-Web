@@ -662,6 +662,13 @@ export default {
       member_confirm: 'メンバー確定',
       description: 'エントリー期間終了時、自動的にエントリーが締め切られます',
     },
+    tabs: {
+      ready: '受付前',
+      recruiting: '受付中',
+      entry_closed: '受付締切',
+      in_progress: '本日開催',
+      ended: '終了',
+    },
   },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',
