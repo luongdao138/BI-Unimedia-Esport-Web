@@ -653,6 +653,15 @@ export default {
       in_progress: '実施',
       freeze: '開催',
     },
+    buttons: {
+      temporary: 'Temporary',
+      member_list: 'エントリーメンバー',
+      member_list_confirmed: '参加メンバー',
+      entry: 'エントリーするボタン',
+      decline: 'エントリーを辞退する',
+      member_confirm: 'メンバー確定',
+      description: 'エントリー期間終了時、自動的にエントリーが締め切られます',
+    },
   },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',

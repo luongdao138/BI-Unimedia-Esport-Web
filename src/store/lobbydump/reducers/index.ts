@@ -175,7 +175,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.changeParticipantName.fulfilled, (state, action) => {
     state.selectedParticipant.attributes.name = action.payload.name
   })
-  builder.addCase(actions.getLobbyTeamDetail.fulfilled, (state, action) => {
-    state.selectedTeamDetail = action.payload.data
+  builder.addCase(actions.getLobbyTeamDetail.fulfilled, (_state, _action) => {
+    // state.selectedTeamDetail = action.payload.data
   })
 })
