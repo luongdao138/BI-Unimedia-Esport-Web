@@ -7,6 +7,7 @@ import { makeStyles, Box, Theme } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import { CommunityFeature } from '@services/community.service'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -85,7 +86,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.tag')} disabled={true} fullWidth noValue />
-      {values.stepOne.features.map((category, idx) => (
+      {values.stepOne.features.map((category: CommunityFeature, idx) => (
         <ESChip key={idx} className={classes.chip} label={category.attributes.feature} />
       ))}
       <Box pb={2} />

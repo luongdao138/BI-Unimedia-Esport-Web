@@ -24,6 +24,8 @@ import DiscardDialog from '../Partials/DiscardDialog'
 import useCommonData from './useCommonData'
 import CancelDialog from './Partials/CancelDialog'
 import { useTranslation } from 'react-i18next'
+import { CommunityFeature } from '@services/community.service'
+import { GameTitle } from '@services/game.service'
 
 // TODO used once at community edit
 type CommunityCreateProps = {
@@ -52,8 +54,8 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     onSubmit: (values) => {
       const data = {
         ...values.stepOne,
-        features: values.stepOne.features.map((feature) => Number(feature.id)),
-        game_titles: values.stepOne.game_titles.map((feature) => feature.id),
+        features: values.stepOne.features.map((feature: CommunityFeature) => Number(feature.id)),
+        game_titles: values.stepOne.game_titles.map((game: GameTitle['attributes']) => game.id),
         join_condition: Number(values.stepOne.join_condition),
       }
       // console.log(data)

@@ -11,7 +11,7 @@ export const getInitialValues = (data): FormType => ({
     join_condition: data ? data.attributes.join_condition : 1,
     features: data ? [data.attributes.tag_title.data.attributes] : [],
     game_titles: data ? [data.attributes.game_title.data.attributes] : [],
-    area_id: data ? data.attributes.area_id : 0,
+    area_id: data ? data.attributes.area_id : 1,
     address: data ? data.attributes.address : '',
   },
 })
