@@ -42,6 +42,7 @@ const useEntry = () => {
   useEffect(() => {
     if (leaveMeta.loaded) {
       dispatch(commonActions.addToast(t('common:arena.leave_success')))
+      resetLeaveMeta()
     }
   }, [leaveMeta.loaded])
 
@@ -55,6 +56,7 @@ const useEntry = () => {
   useEffect(() => {
     if (closeMeta.loaded) {
       dispatch(commonActions.addToast(t('common:arena.close_entry_success')))
+      resetCloseMeta()
     }
   }, [closeMeta.loaded])
 
