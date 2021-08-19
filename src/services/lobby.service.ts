@@ -46,6 +46,7 @@ export type LobbyResponse = {
   id: string
   type: string
   attributes: {
+    hash_key: string
     title: string
     start_datetime: string
     entry_start_datetime?: string | null
