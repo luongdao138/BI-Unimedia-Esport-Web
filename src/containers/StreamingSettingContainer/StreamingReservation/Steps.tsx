@@ -36,6 +36,7 @@ import moment from 'moment'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import ESLoader from '@components/FullScreenLoader'
 import useUploadImage from '@utils/hooks/useUploadImage'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface StepsProps {
   step: number
@@ -205,12 +206,22 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const onConfirm = () => {
     const { stepSettingTwo } = formik.values
     const data: SetLiveStreamParams = {
-      ...stepSettingTwo,
       ticket_price: stepSettingTwo.ticket_price + '',
       use_ticket: stepSettingTwo.use_ticket === false ? '0' : '1',
       share_sns_flag: stepSettingTwo.share_sns_flag === false ? '0' : '1',
       publish_flag: stepSettingTwo.publish_flag === false ? '0' : '1',
       scheduled_flag: 1,
+      uuid: stepSettingTwo.uuid,
+      thumbnail: stepSettingTwo.thumbnail,
+      title: stepSettingTwo.title,
+      description: stepSettingTwo.description,
+      category: stepSettingTwo.category,
+      stream_notify_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_notify_time),
+      stream_schedule_start_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_schedule_start_time),
+      stream_schedule_end_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_schedule_end_time),
+      sell_ticket_start_time: CommonHelper.formatDateTimeJP(stepSettingTwo.sell_ticket_start_time),
+      stream_url: stepSettingTwo.stream_url,
+      stream_key: stepSettingTwo.stream_key,
     }
     setLiveStreamConfirm(data, () => {
       onNext(step + 1)
@@ -342,6 +353,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
                   error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
                 >
+                  <option disabled value={-1}>
+                    {i18n.t('common:please_select')}
+                  </option>
                   {(category?.data || []).map((item, index) => (
                     <option key={index} value={item.id}>
                       {item.name}
@@ -374,7 +388,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   value={formik.values.stepSettingTwo.stream_notify_time}
                   onChange={(date) => {
                     formik.setFieldValue('stepSettingTwo.stream_notify_time', date.toString())
-                    // console.log('formik.values.stepSettingTwo.stream_notify_time',date,date.toString() )
                   }}
                   onBlur={formik.handleBlur}
                   helperText={
@@ -474,45 +487,51 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
               )}
               {/* TODO: Apply component enter point eXeポイント */}
-              <Box pb={2} className={classes.wrap_input}>
-                <Box className={classes.firstItem}>
-                  <ESInput
-                    id="ticket_price"
-                    name="stepSettingTwo.ticket_price"
-                    required={true}
-                    placeholder={'1,500'}
-                    fullWidth
-                    value={
-                      isFirstStep()
-                        ? formik.values.stepSettingTwo.ticket_price === 0 || !formik.values.stepSettingTwo.ticket_price
+              {isFirstStep() ? (
+                <Box pb={2} className={classes.wrap_input}>
+                  <Box className={classes.firstItem}>
+                    <ESInput
+                      id="ticket_price"
+                      name="stepSettingTwo.ticket_price"
+                      required={true}
+                      placeholder={'0'}
+                      fullWidth
+                      value={
+                        isFirstStep() && (formik.values.stepSettingTwo.ticket_price === 0 || !formik.values.stepSettingTwo.use_ticket)
                           ? ''
                           : formik.values.stepSettingTwo.ticket_price
-                        : formik.values.stepSettingTwo.ticket_price
-                        ? `利用する（${formik.values.stepSettingTwo.ticket_price} exeポイント）`
-                        : '利用しない'
-                    }
-                    onChange={formik.handleChange}
-                    onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
-                    helperText={formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price}
-                    error={formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price}
-                    size="big"
-                    disabled={!isFirstStep()}
-                    className={getAddClassByStep(classes.input_text)}
-                    readOnly={!formik.values.stepSettingTwo.use_ticket}
-                    inputMode={'numeric'}
-                    type="number"
-                    endAdornment={
-                      isFirstStep() ? (
-                        <InputAdornment position="end" className={classes.inputContainer}>
-                          <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
-                        </InputAdornment>
-                      ) : (
-                        <></>
-                      )
-                    }
-                  />
+                      }
+                      onChange={formik.handleChange}
+                      onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
+                      helperText={formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price}
+                      error={formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price}
+                      size="big"
+                      disabled={!isFirstStep()}
+                      className={getAddClassByStep(classes.input_text)}
+                      readOnly={!formik.values.stepSettingTwo.use_ticket}
+                      inputMode={'numeric'}
+                      type="number"
+                      endAdornment={
+                        isFirstStep() ? (
+                          <InputAdornment position="end" className={classes.inputContainer}>
+                            <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                          </InputAdornment>
+                        ) : (
+                          <></>
+                        )
+                      }
+                    />
+                  </Box>
                 </Box>
-              </Box>
+              ) : (
+                <Box pb={2}>
+                  <Typography className={classes.date}>
+                    {formik.values.stepSettingTwo.use_ticket
+                      ? `利用する（${formik.values.stepSettingTwo.ticket_price} exeポイント）`
+                      : '利用しない'}
+                  </Typography>
+                </Box>
+              )}
 
               <Box pb={2} className={classes.wrap_input}>
                 <Box className={classes.firstItem}>

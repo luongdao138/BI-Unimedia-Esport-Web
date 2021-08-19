@@ -362,7 +362,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               )}
             </Box>
           </Box>
-          {!paid_delivery_flag && (
+          {paid_delivery_flag && (
             <>
               {isFirstStep() ? (
                 <Box pb={1}>
@@ -379,45 +379,51 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 <ESLabel label={i18n.t('common:streaming_setting_screen.ticket_use')} />
               )}
               {/* TODO: Apply component enter point eXeポイント */}
-              <Box pb={2} className={classes.box}>
-                <Box className={classes.firstItem}>
-                  <ESInput
-                    id="ticket_price"
-                    name="stepSettingOne.ticket_price"
-                    required={true}
-                    placeholder={'0'}
-                    fullWidth
-                    value={
-                      isFirstStep()
-                        ? formik.values.stepSettingOne.ticket_price === 0 || !formik.values.stepSettingOne.use_ticket
+              {isFirstStep() ? (
+                <Box pb={2} className={classes.box}>
+                  <Box className={classes.firstItem}>
+                    <ESInput
+                      id="ticket_price"
+                      name="stepSettingOne.ticket_price"
+                      required={true}
+                      placeholder={'0'}
+                      fullWidth
+                      value={
+                        isFirstStep() && (formik.values.stepSettingOne.ticket_price === 0 || !formik.values.stepSettingOne.use_ticket)
                           ? ''
                           : formik.values.stepSettingOne.ticket_price
-                        : formik.values.stepSettingOne.use_ticket
-                        ? `利用する（${formik.values.stepSettingOne.ticket_price} exeポイント）`
-                        : '利用しない'
-                    }
-                    onChange={formik.handleChange}
-                    onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
-                    helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
-                    error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
-                    size="big"
-                    disabled={!isFirstStep()}
-                    className={getAddClassByStep(classes.input_text)}
-                    readOnly={!formik.values.stepSettingOne.use_ticket}
-                    inputMode={'numeric'}
-                    type="number"
-                    endAdornment={
-                      isFirstStep() ? (
-                        <InputAdornment position="end" className={classes.inputContainer}>
-                          <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
-                        </InputAdornment>
-                      ) : (
-                        <></>
-                      )
-                    }
-                  />
+                      }
+                      onChange={formik.handleChange}
+                      onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
+                      helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
+                      error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
+                      size="big"
+                      disabled={!isFirstStep()}
+                      className={getAddClassByStep(classes.input_text)}
+                      readOnly={!formik.values.stepSettingOne.use_ticket}
+                      inputMode={'numeric'}
+                      type="number"
+                      endAdornment={
+                        isFirstStep() ? (
+                          <InputAdornment position="end" className={classes.inputContainer}>
+                            <Box className={classes.inputAdornment}>{t('common:common.eXe_points')}</Box>
+                          </InputAdornment>
+                        ) : (
+                          <></>
+                        )
+                      }
+                    />
+                  </Box>
                 </Box>
-              </Box>
+              ) : (
+                <Box pb={2}>
+                  <Typography className={classes.date}>
+                    {formik.values.stepSettingOne.use_ticket
+                      ? `利用する（${formik.values.stepSettingOne.ticket_price} exeポイント）`
+                      : '利用しない'}
+                  </Typography>
+                </Box>
+              )}
             </>
           )}
           {isFirstStep() ? (
