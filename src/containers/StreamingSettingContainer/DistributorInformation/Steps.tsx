@@ -44,6 +44,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   })
   const { setChannelConfirm, isPending, getChannelLive } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
+  const [status, setStatus] = useState<boolean>(false)
+
   useEffect(() => {
     getChannelInfo()
   }, [])
@@ -67,7 +69,18 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   }
 
   const getChannelInfo = () => {
-    getChannelLive().then(() => formik.validateForm())
+    getChannelLive().then((res) => {
+      checkStatusRecord(res.payload)
+      formik.validateForm()
+    })
+  }
+
+  const checkStatusRecord = (data) => {
+    if (!data?.data?.created_at) {
+      setStatus(false)
+    } else {
+      setStatus(true)
+    }
   }
 
   const onClickNext = () => {
@@ -144,24 +157,36 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
           </Box>
           <Box paddingBottom={isFirstStep() ? 2 : 3} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
-              <ESFastInput
-                id="overview"
-                name="stepSettingThree.description"
-                multiline={isFirstStep()}
-                rows={8}
-                required={true}
-                placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
-                labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
-                fullWidth
-                value={formik.values.stepSettingThree.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}
-                error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
-                size="big"
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-              />
+              {isFirstStep() ? (
+                <ESFastInput
+                  id="overview"
+                  name="stepSettingThree.description"
+                  multiline={isFirstStep()}
+                  rows={8}
+                  required={true}
+                  placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
+                  fullWidth
+                  value={formik.values.stepSettingThree.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}
+                  error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
+                  size="big"
+                  disabled={!isFirstStep()}
+                  className={getAddClassByStep(classes.input_text)}
+                />
+              ) : (
+                <ESInput
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
+                  multiline
+                  value={formik.values.stepSettingThree.description}
+                  disabled={true}
+                  fullWidth
+                  required
+                  size={'big'}
+                />
+              )}
             </Box>
           </Box>
           <Box pb={4} className={classes.wrap_input}>
@@ -182,12 +207,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {i18n.t('common:streaming_setting_screen.check_submit')}
+                  {status ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
-                {/* {hasError &&
-                  <Box pt={1} display="flex" flexDirection="column" color={Colors.secondary} style={{ alignItems: 'center' }}>
-                    <Typography variant="body2">{showMessage}</Typography>
-                  </Box>} */}
               </Box>
             </Grid>
           ) : (

@@ -20,13 +20,7 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import {
-  baseViewingURL,
-  GetCategoryResponse,
-  LiveStreamSettingResponse,
-  SetLiveStreamParams,
-  TYPE_SETTING,
-} from '@services/liveStream.service'
+import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
@@ -82,13 +76,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   }, [])
 
   const getLiveSetting = () => {
-    getLiveSettingTab({ type: TYPE_SETTING.SCHEDULE }).then(() => {
-      checkStatusRecord(liveSettingInformation)
+    getLiveSettingTab({ type: TYPE_SETTING.SCHEDULE }).then((res) => {
+      checkStatusRecord(res.payload)
       formik.validateForm()
     })
   }
 
-  const checkStatusRecord = (data: LiveStreamSettingResponse) => {
+  const checkStatusRecord = (data) => {
     if (!data?.data?.created_at) {
       onReNewUrlAndKey(KEY_TYPE.URL)
       setShowReNew(false)
@@ -352,6 +346,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   value={formik.values.stepSettingOne.description}
                   disabled={true}
                   fullWidth
+                  required
+                  size={'big'}
                 />
               )}
             </Box>
@@ -411,7 +407,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   onBlur={formik.handleBlur}
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_notify_time && formik?.errors?.stepSettingTwo?.stream_notify_time) ||
-                    formik?.errors?.stepSettingTwo?.notify_live_start_date ||
+                    // formik?.errors?.stepSettingTwo?.notify_live_start_date ||
                     formik?.errors?.stepSettingTwo?.notify_live_end_date
                   }
                   error={formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time}
@@ -441,7 +437,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
                       formik?.errors?.stepSettingTwo?.stream_schedule_start_time) ||
-                    formik?.errors?.stepSettingTwo?.schedule_live_date
+                    formik?.errors?.stepSettingTwo?.notify_live_start_date
+                    // || formik?.errors?.stepSettingTwo?.schedule_live_date
                   }
                   error={
                     formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
@@ -522,8 +519,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       }
                       onChange={formik.handleChange}
                       onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
-                      helperText={formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price}
-                      error={formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price}
+                      helperText={
+                        formik.values.stepSettingTwo.use_ticket
+                          ? formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price
+                          : null
+                      }
+                      error={
+                        formik.values.stepSettingTwo.use_ticket
+                          ? formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price
+                          : false
+                      }
                       size="big"
                       disabled={!isFirstStep()}
                       className={getAddClassByStep(classes.input_text)}
@@ -565,9 +570,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       fullWidth
                       value={formik.values.stepSettingTwo.sell_ticket_start_time}
                       onChange={(date) => {
-                        formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', date.toString())
+                        const temp = new Date(new Date(date.toString()).getTime() + 5000).toString()
+                        formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                       }}
-                      onBlur={formik.handleBlur}
+                      onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
                       helperText={
                         formik?.touched?.stepSettingTwo?.sell_ticket_start_time && formik?.errors?.stepSettingTwo?.sell_ticket_start_time
                       }
@@ -779,7 +785,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {i18n.t('common:streaming_setting_screen.check_submit')}
+                  {showReNew ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
             </Grid>
