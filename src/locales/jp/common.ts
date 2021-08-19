@@ -630,6 +630,11 @@ export default {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',
       organizer: '開催者',
+      entry_period: 'エントリー期間',
+      start_date: '開催日時',
+      ended: '終了',
+      admin_participated: '参加中',
+      admin_not_participated: '実施中',
     },
   },
   lobbySearchFilters: {

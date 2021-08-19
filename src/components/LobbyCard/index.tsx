@@ -147,7 +147,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   }
 
   return (
-    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.LOBBY}/${lobby.id}`)}>
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.LOBBY}/${attr.hash_key}`)}>
       <ESCardMedia
         cornerIcon={
           <Icon className={/* attr.rule === TR.BATTLE_ROYAL ? */ 'fas fa-university' /*  : 'fas fa-trophy' */} fontSize="small" />
