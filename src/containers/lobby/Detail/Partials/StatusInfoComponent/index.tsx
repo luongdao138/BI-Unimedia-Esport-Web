@@ -11,7 +11,7 @@ interface Props {
   userProfile?: UserProfile
 }
 
-const StatusInfoComponent: React.FC<Props> = (props) => {
+const SubStatusInfo: React.FC<Props> = (props) => {
   const classes = useStyles()
   // const { t } = useTranslation(['common'])
   const { lobby } = props
@@ -33,4 +33,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default StatusInfoComponent
+export default SubStatusInfo

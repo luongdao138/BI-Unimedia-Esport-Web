@@ -156,9 +156,9 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
     requiredFieldErrors.push(stepOne.max_participants)
   }
   if (stepTwo) {
-    requiredFieldErrors.push(stepTwo.acceptance_start_date)
-    requiredFieldErrors.push(stepTwo.acceptance_end_date)
-    requiredFieldErrors.push(stepTwo.start_date)
+    requiredFieldErrors.push(stepTwo.entry_start_datetime)
+    requiredFieldErrors.push(stepTwo.entry_end_datetime)
+    requiredFieldErrors.push(stepTwo.start_datetime)
     requiredFieldErrors.push(stepTwo.area_id)
   }
 
