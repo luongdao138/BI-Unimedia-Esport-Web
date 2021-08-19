@@ -29,91 +29,45 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
   const notEnteredText = t('common:lobby.status.not_entered') // 実施中
   const participatedText = t('common:lobby.status.participated') // 参加中
   const notParticipatedText = t('common:lobby.status.not_participated') // 落選
-  const endedText = t('common:lobby.status.ended') // 終了
-  const cancelledText = t('common:lobby.status.cancelled') // この募集は中止されました
 
   const entryMembersCount = _.defaultTo(entry_count, 0) + _.defaultTo(participants_count, 0)
   const maxMembersCount = _.defaultTo(max_participants, 0)
 
   const renderStatusInfo = () => {
     switch (status) {
-      case LOBBY_STATUS.READY: {
+      case LOBBY_STATUS.READY:
+      case LOBBY_STATUS.RECRUITING:
         return <RemainingDate lobby={lobby} />
-      }
-      case LOBBY_STATUS.RECRUITING: {
-        return <RemainingDate lobby={lobby} />
-      }
       case LOBBY_STATUS.ENTRY_CLOSED: {
         if (!is_freezed) {
           if (isNotEntered) {
-            if (is_owner) {
-              return <RemainingDate lobby={lobby} />
-            } else {
-              return <StatusText value={entryClosedText} />
-            }
+            if (is_owner) return <RemainingDate lobby={lobby} />
+            return <StatusText value={entryClosedText} />
           } else if (isEntered) {
-            if (is_owner) {
-              return <RemainingDate lobby={lobby} />
-            } else {
-              return <StatusText value={entryClosedText} />
-            }
+            if (is_owner) return <RemainingDate lobby={lobby} />
+            return <StatusText value={entryClosedText} />
           }
         }
 
         if (is_freezed) {
-          if (isNotEntered) {
-            if (is_owner) {
-              return <RemainingDate lobby={lobby} />
-            } else {
-              return <RemainingDate lobby={lobby} />
-            }
-          } else if (isParticipant) {
-            if (is_owner) {
-              return <RemainingDate lobby={lobby} />
-            } else {
-              return <RemainingDate lobby={lobby} />
-            }
-          } else if (isNotParticipant) {
-            if (is_owner) {
-              return <StatusText value={notParticipatedText} />
-            } else {
-              return <StatusText value={notParticipatedText} />
-            }
-          }
+          if (isNotEntered) return <RemainingDate lobby={lobby} />
+          else if (isParticipant) return <RemainingDate lobby={lobby} />
+          else if (isNotParticipant) return <StatusText value={notParticipatedText} />
         }
         break
       }
       case LOBBY_STATUS.IN_PROGRESS: {
-        if (isNotEntered) {
-          if (is_owner) {
-            return <StatusText value={notEnteredText} />
-          } else {
-            return <StatusText value={notEnteredText} />
-          }
-        } else if (isParticipant) {
-          if (is_owner) {
-            return <StatusText value={participatedText} />
-          } else {
-            return <StatusText value={participatedText} />
-          }
-        } else if (isNotParticipant) {
-          if (is_owner) {
-            return <StatusText value={notParticipatedText} />
-          } else {
-            return <StatusText value={notParticipatedText} />
-          }
-        }
+        if (isNotEntered) return <StatusText value={notEnteredText} />
+        else if (isParticipant) return <StatusText value={participatedText} />
+        else if (isNotParticipant) return <StatusText value={notParticipatedText} />
         break
       }
-      case LOBBY_STATUS.ENDED: {
-        return <StatusText value={endedText} />
-      }
-      case LOBBY_STATUS.CANCELLED: {
-        return <StatusText value={cancelledText} isImportant />
-      }
-      case LOBBY_STATUS.DELETED: {
+      case LOBBY_STATUS.ENDED:
+        return <StatusText value={t('common:lobby.status.ended')} /> // 終了
+      case LOBBY_STATUS.CANCELLED:
+        return <StatusText value={t('common:lobby.status.cancelled')} isImportant /> // この募集は中止されました
+      case LOBBY_STATUS.DELETED:
         return null // TODO
-      }
       default:
         return null
     }
