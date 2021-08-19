@@ -4,14 +4,23 @@ import Steps from './Steps'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useLiveSetting from '../useLiveSetting'
+import ESModal from '@components/Modal'
+import BlankLayout from '@layouts/BlankLayout'
+import { useTranslation } from 'react-i18next'
 
 const StreamingReservationContainer: React.FC = () => {
   const [step, setStep] = useState(1)
   const router = useRouter()
   const { categoryData } = useLiveSetting()
 
+  const [modal, setModal] = useState(false)
+  const { t } = useTranslation(['common'])
+
   const onChangeStep = (step: number): void => {
     setStep(step)
+    if(step === 3) {
+      setModal(true)
+    }
   }
 
   const onClose = (): void => {
@@ -22,10 +31,19 @@ const StreamingReservationContainer: React.FC = () => {
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
-  return step === 3 ? (
-    <SettingsCompleted onClose={onClose} onComplete={onComplete} />
-  ) : (
-    <Steps step={step} onNext={onChangeStep} category={categoryData} />
+  return (
+    <>
+      <Steps step={step} onNext={onChangeStep} category={categoryData} />
+      <ESModal open={modal} handleClose={() => setModal(false)}>
+        <BlankLayout>
+          <SettingsCompleted 
+            titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}
+            messageNotification={t('common:streaming_setting_screen.tab2_notification_mess')}
+            onClose={onClose} onComplete={onComplete} 
+          />
+        </BlankLayout>
+      </ESModal>
+    </>
   )
 }
 export default StreamingReservationContainer

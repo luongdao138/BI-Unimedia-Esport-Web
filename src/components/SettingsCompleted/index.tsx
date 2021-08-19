@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Typography, DialogContent } from '@material-ui/core'
+import { Box, Typography, IconButton } from '@material-ui/core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-
+import Icon from '@material-ui/core/Icon'
+import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
-import ESDialog from '@components/Dialog'
+
 type Props = {
   title?: string
   titleNotification?: string
@@ -14,41 +15,48 @@ type Props = {
   titleButton?: string
 }
 
-const SettingsCompleted: React.FC<Props> = ({ title, titleNotification, messageNotification, onClose, onComplete, titleButton }) => {
+const SettingsCompleted: React.FC<Props> = ({ titleNotification, messageNotification, onClose, onComplete, titleButton }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
 
   return (
     <Box>
-      <ESDialog
-        open={true}
-        title={title || t('common:streaming_setting_screen.title')}
-        handleClose={onClose}
-        bkColor="#2D2D2D"
-        alignTop
-        className="streaming_setting_dialog"
-      >
-        <DialogContent>
-          <Box pt={7} pb={18} display="flex" flexDirection="column" alignItems="center">
-            <Typography variant="h2" className={classes.headerStep3}>
-              {titleNotification || t('common:streaming_setting_screen.complete_delivery_settings')}
-            </Typography>
-            <Typography variant="subtitle1" className={classes.contentStep3}>
-              {messageNotification || t('common:streaming_setting_screen.step3_delivery_settings_content')}
-            </Typography>
-            <Box className={classes.redirectButton}>
-              <ButtonPrimary fullWidth round onClick={onComplete}>
-                {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
-              </ButtonPrimary>
-            </Box>
+      <Box pt={7.5} pb={9} className={classes.topContainer}>
+        <Box py={2}>
+          <IconButton className={classes.iconButtonBg} onClick={onClose}>
+            <Icon className="fa fa-arrow-left" fontSize="small" />
+          </IconButton>
+        </Box>
+        <Box display="flex" flexDirection="column" alignItems="center" className={classes.wrapContent}>
+          <Typography variant="h2" className={classes.headerStep3}>
+            {titleNotification || t('common:streaming_setting_screen.complete_delivery_settings')}
+          </Typography>
+          <Typography variant="subtitle1" className={classes.contentStep3}>
+            {messageNotification || t('common:streaming_setting_screen.step3_delivery_settings_content')}
+          </Typography>
+          <Box className={classes.redirectButton}>
+            <ButtonPrimary fullWidth round onClick={onComplete}>
+              {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
+            </ButtonPrimary>
           </Box>
-        </DialogContent>
-      </ESDialog>
+        </Box>
+      </Box>
     </Box>
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  iconButtonBg: {
+    backgroundColor: `${Colors.grey[200]}80`,
+    '&:focus': {
+      backgroundColor: `${Colors.grey[200]}80`,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    topContainer: {
+      paddingTop: 0,
+    },
+  },
   box: {
     paddingLeft: 0,
   },
@@ -67,6 +75,19 @@ const useStyles = makeStyles(() => ({
   },
   redirectButton: {
     width: '220px',
+  },
+  wrapContent: {
+    padding: '53px 40px 0 40px'
+  },
+  [theme.breakpoints.down(414)]: {
+    wrapContent: {
+      padding: '53px 20px 0 20px',
+    },
+  },
+  [theme.breakpoints.down(375)]: {
+    wrapContent: {
+      padding: '53px 0 0 0',
+    },
   },
 }))
 
