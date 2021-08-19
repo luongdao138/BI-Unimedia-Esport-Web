@@ -1,19 +1,67 @@
 import React from 'react'
 import { LobbyDetail } from '@services/lobby.service'
-import { Box } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
+import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
+import { DateHelper } from '@utils/helpers/DateHelper'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 interface Props {
   lobby: LobbyDetail
 }
 
-const SubActionButtons: React.FC<Props> = (_) => {
-  // const classes = useStyles()
-  // const { t } = useTranslation(['common'])
+const MainDatePeriod: React.FC<Props> = ({ lobby }) => {
+  const classes = useStyles()
+  const { t } = useTranslation(['common'])
+  const { status } = lobby.attributes
 
-  return <Box></Box>
+  const dateTitle = status <= LOBBY_STATUS.RECRUITING ? t('common:lobby.detail.entry_period') : t('common:lobby.detail.start_date')
+
+  const buildLobbyPeriodValue = () => {
+    if (status <= LOBBY_STATUS.RECRUITING) {
+      const entryStartDate = DateHelper.formatDateTime(lobby.attributes.entry_start_datetime)
+      const entryEndDate = DateHelper.formatDateTime(lobby.attributes.entry_end_datetime)
+      return `${entryStartDate} - ${entryEndDate}`
+    } else {
+      return `${DateHelper.formatDateTime(lobby.attributes.start_datetime)}`
+    }
+  }
+
+  return (
+    <Box className={classes.header}>
+      <Box display="flex" className={classes.headerDesc}>
+        <Typography variant="body1" className={classes.headerTitle}>
+          {dateTitle}
+        </Typography>
+        <Typography variant="body1">{buildLobbyPeriodValue()}</Typography>
+      </Box>
+    </Box>
+  )
 }
 
-// const useStyles = makeStyles((theme: Theme) => ({}))
+const useStyles = makeStyles((theme: Theme) => ({
+  header: {
+    backgroundColor: theme.palette.common.black,
+    borderRadius: 4,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    color: Colors.grey[300],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  headerTitle: {
+    paddingRight: theme.spacing(1),
+  },
+  [theme.breakpoints.down('sm')]: {
+    headerDesc: {
+      flexDirection: 'column',
+    },
+    headerTitle: {
+      paddingRight: 0,
+    },
+  },
+}))
 
-export default SubActionButtons
+export default MainDatePeriod
