@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     width: '220px',
   },
   wrapContent: {
-    padding: '53px 40px 0 40px'
+    padding: '53px 40px 0 40px',
   },
   [theme.breakpoints.down(414)]: {
     wrapContent: {

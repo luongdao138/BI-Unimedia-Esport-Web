@@ -17,7 +17,7 @@ const DistributorInformationContainer: React.FC = () => {
 
   const onChangeStep = (step: number): void => {
     setStep(step)
-    if(step === 3) {
+    if (step === 3) {
       setModal(true)
     }
   }
@@ -35,10 +35,11 @@ const DistributorInformationContainer: React.FC = () => {
       <Steps step={step} onNext={onChangeStep} channel={channelInfo} />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <SettingsCompleted 
+          <SettingsCompleted
             titleNotification={t('common:streaming_setting_screen.tab3_notification_title')}
             messageNotification={t('common:streaming_setting_screen.tab3_notification_mess')}
-            onClose={onClose} onComplete={onComplete} 
+            onClose={onClose}
+            onComplete={onComplete}
           />
         </BlankLayout>
       </ESModal>

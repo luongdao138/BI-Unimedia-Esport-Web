@@ -20,9 +20,9 @@ const LiveStreamVideos: React.FC = () => {
       category: 'Valorant',
     }))
   const classes = useStyles()
-  const renderLiveItem = (item: VideoPreviewProps) => {
+  const renderLiveItem = (item: VideoPreviewProps, index: number) => {
     return (
-      <Grid item xs={4} className={classes.itemContainer}>
+      <Grid item xs={4} className={classes.itemContainer} key={index}>
         <VideoPreviewItem data={item} key={item.id} />
       </Grid>
     )

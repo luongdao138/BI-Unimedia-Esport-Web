@@ -15,7 +15,7 @@ const LiveStreamContainer: React.FC = () => {
 
   const onChangeStep = (step: number): void => {
     setStep(step)
-    if(step === 3) {
+    if (step === 3) {
       setModal(true)
     }
   }
@@ -33,9 +33,7 @@ const LiveStreamContainer: React.FC = () => {
       <Steps step={step} onNext={onChangeStep} category={categoryData} />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <SettingsCompleted 
-            onClose={onClose} onComplete={onComplete} 
-          />
+          <SettingsCompleted onClose={onClose} onComplete={onComplete} />
         </BlankLayout>
       </ESModal>
     </>
