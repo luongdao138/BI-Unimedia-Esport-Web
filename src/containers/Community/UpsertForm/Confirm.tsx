@@ -86,7 +86,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.tag')} disabled={true} fullWidth noValue />
-      {values.stepOne.features.map((category: CommunityFeature, idx) => (
+      {(values.stepOne.features as CommunityFeature[]).map((category, idx) => (
         <ESChip key={idx} className={classes.chip} label={category.attributes.feature} />
       ))}
       <Box pb={2} />

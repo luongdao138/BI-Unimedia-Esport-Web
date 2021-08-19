@@ -54,8 +54,8 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     onSubmit: (values) => {
       const data = {
         ...values.stepOne,
-        features: values.stepOne.features.map((feature: CommunityFeature) => Number(feature.id)),
-        game_titles: values.stepOne.game_titles.map((game: GameTitle['attributes']) => game.id),
+        features: (values.stepOne.features as CommunityFeature[]).map((feature) => Number(feature.id)),
+        game_titles: (values.stepOne.game_titles as GameTitle['attributes'][]).map((game) => game.id),
         join_condition: Number(values.stepOne.join_condition),
       }
       // console.log(data)
