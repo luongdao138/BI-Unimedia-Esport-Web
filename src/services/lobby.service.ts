@@ -47,12 +47,13 @@ export type LobbyResponse = {
   type: string
   attributes: {
     hash_key: string
+    cover?: string | null
     title: string
+    game_title: string
     start_datetime: string
     entry_start_datetime?: string | null
     entry_end_datetime?: string | null
     max_participants: number
-    cover?: string | null
     organizer_name: string
     organizer_avatar?: string | null
     status: number

@@ -122,7 +122,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         </Box>
         {extra ? (
           <Typography className={classes.caption} variant="caption">
-            {extra}
+            &nbsp;{extra}
           </Typography>
         ) : null}
       </Box>
@@ -162,7 +162,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
       </ESCardMedia>
       <ESCardContent>
         {getTitle()}
-        {getInfoRow(attr.title)}
+        {getInfoRow(attr.game_title)}
         {/* {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)} */}
         {getChippedRow(t('common:tournament_create.start_date'), startDate)}
         {getChippedRow(t('common:tournament_create.entry_period'), startDate, 'まで')}
@@ -178,13 +178,14 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   titleContainer: {
-    height: 42,
+    height: 25,
   },
   organizer: {
     fontSize: 10,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    minHeight: 15,
   },
   chip: {
     height: 15,
