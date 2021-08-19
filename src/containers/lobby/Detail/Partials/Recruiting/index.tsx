@@ -21,7 +21,7 @@ const Recruiting: React.FC<RecruitingProps> = (props) => {
   return (
     <ActionComponent {...props}>
       <Box className={classes.body}>
-        <RemainingDate tournament={lobby} />
+        <RemainingDate lobby={lobby} />
 
         <EntryMembersCount entryCount={entryMembersCount} maxCount={maxMembersCount} />
       </Box>

@@ -18,7 +18,7 @@ const SubStatusInfo: React.FC<Props> = (props) => {
 
   return (
     <Box className={classes.body}>
-      <RemainingDate tournament={lobby} />
+      <RemainingDate lobby={lobby} />
     </Box>
   )
 }
