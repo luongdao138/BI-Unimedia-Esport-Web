@@ -1061,5 +1061,6 @@ export default {
       confirm: '作成内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',
+    comment_placeholder: 'コメントを入力…',
   },
 }
