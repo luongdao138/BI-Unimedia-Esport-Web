@@ -18,7 +18,7 @@ const StreamingReservationContainer: React.FC = () => {
 
   const onChangeStep = (step: number): void => {
     setStep(step)
-    if(step === 3) {
+    if (step === 3) {
       setModal(true)
     }
   }
@@ -36,10 +36,11 @@ const StreamingReservationContainer: React.FC = () => {
       <Steps step={step} onNext={onChangeStep} category={categoryData} />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <SettingsCompleted 
+          <SettingsCompleted
             titleNotification={t('common:streaming_setting_screen.tab2_notification_title')}
             messageNotification={t('common:streaming_setting_screen.tab2_notification_mess')}
-            onClose={onClose} onComplete={onComplete} 
+            onClose={onClose}
+            onComplete={onComplete}
           />
         </BlankLayout>
       </ESModal>

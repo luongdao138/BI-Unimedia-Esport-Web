@@ -1,4 +1,3 @@
-import ESSlider from '@components/Slider'
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
@@ -11,7 +10,7 @@ import FavoriteVideos from './FavoriteVideos'
 import LiveStreamVideos from './LiveStreamVideos'
 import ScheduleVideos from './ScheduleVideos'
 import VideosList from './VideosList'
-import BannerItems from './BannerItems'
+import BannerCarousel from './BannerCarousel'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -29,27 +28,16 @@ export const TabsVideo = {
 }
 
 const VideosTop: React.FC = () => {
-  const data = [
-    {
-      id: 1,
-      image: '/images/dataVideoFake/banner_01.png',
-    },
-    {
-      id: 2,
-      image: '/images/dataVideoFake/banner_02.png',
-    },
-    {
-      id: 3,
-      image: '/images/dataVideoFake/banner_03.png',
-    },
-    {
-      id: 4,
-      image: '/images/dataVideoFake/banner_04.png',
-    },
-    {
-      id: 5,
-      image: '/images/dataVideoFake/banner_05.png',
-    },
+  const dataBanner = [
+    { id: 0, cover: '/images/banners/banner_01.png', title: 'image_01' },
+    { id: 1, cover: '/images/banners/banner_02.png', title: 'image_02' },
+    { id: 2, cover: '/images/banners/banner_03.png', title: 'image_03' },
+    { id: 3, cover: '/images/banners/banner_04.png', title: 'image_04' },
+    { id: 4, cover: '/images/banners/banner_05.png', title: 'image_05' },
+    { id: 5, cover: '/images/banners/banner_04.png', title: 'image_06' },
+    { id: 6, cover: '/images/banners/banner_03.png', title: 'image_07' },
+    { id: 7, cover: '/images/banners/banner_02.png', title: 'image_08' },
+    { id: 8, cover: '/images/banners/banner_01.png', title: 'image_09' },
   ]
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -95,14 +83,8 @@ const VideosTop: React.FC = () => {
   }
   return (
     <Box className={classes.root}>
-      <Box>
-        <ESSlider
-          smallSliderButton
-          navigation
-          items={data.map((item, i) => (
-            <BannerItems key={i} image={item.image} />
-          ))}
-        />
+      <Box className={classes.bannerContainer}>
+        <BannerCarousel data={dataBanner} />
       </Box>
       <Grid container direction="column">
         {getTabs()}
@@ -115,6 +97,9 @@ export default VideosTop
 
 const useStyles = makeStyles(() => ({
   root: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
     backgroundColor: '#212121',
   },
   tabs: {
@@ -131,5 +116,17 @@ const useStyles = makeStyles(() => ({
     marginTop: 30,
     marginBottom: 50,
     backgroundColor: '#212121',
+  },
+  bannerContainer: {
+    position: 'relative',
+    width: 1100,
+    height: 366,
+    marginTop: 24,
+    marginBottom: 24,
+    justifyContent: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
   },
 }))
