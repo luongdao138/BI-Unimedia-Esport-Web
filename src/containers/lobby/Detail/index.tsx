@@ -55,7 +55,7 @@ const LobbyDetailBody: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        <HeaderBar title={title} cover={cover_image_url || '/images/default_card.png'} onHandleBack={handleBack} />
+        <HeaderBar title={title} cover={cover_image_url} onHandleBack={handleBack} />
         <Box className={classes.root}>
           <LobbyStatusHeader status={status} />
           <Box className={classes.statusContainer}>

@@ -27,7 +27,7 @@ const HeaderBar: React.FC<Props> = ({ title, cover, onHandleBack }) => {
           )}
         </div>
       </Box>
-      <Box className={classes.cover} style={{ background: `url(${cover})` }} mb={3}></Box>
+      <Box className={classes.cover} style={{ backgroundImage: `url(${cover || '/images/default_card.png'})` }} mb={3}></Box>
     </>
   )
 }
