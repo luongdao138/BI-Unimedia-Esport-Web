@@ -37,7 +37,7 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 
 interface StepsProps {
   step: number
-  onNext: (step: number) => void
+  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
   category: GetCategoryResponse
 }
 const KEY_TYPE = {
@@ -156,11 +156,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     } else {
       setShowStreamKey(false)
       setShowStreamURL(false)
-      onNext(step + 1)
+      onNext(step + 1, stepSettingOne.share_sns_flag, {
+        title: stepSettingOne.title,
+        content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
+      })
     }
   }
   const onClickPrev = () => {
-    onNext(step - 1)
+    onNext(step - 1, formik.values.stepSettingOne.share_sns_flag, {
+      title: formik.values.stepSettingOne.title,
+      content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
+    })
   }
   const isFirstStep = () => {
     return step === 1 ? true : false
@@ -199,11 +205,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       scheduled_flag: 0,
     }
     setLiveStreamConfirm(data, () => {
-      onNext(step + 1)
+      onNext(step + 1, share_sns_flag, {
+        title: formik.values.stepSettingOne.title,
+        content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
+      })
     })
   }
 
   const onReNewUrlAndKey = (type: number) => {
+    // if()
     getStreamUrlAndKey((url, key) => {
       if (type === KEY_TYPE.URL) {
         formik.setFieldValue('stepSettingOne.stream_url', url)
@@ -302,24 +312,34 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
           </Box>
           <Box pb={2} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
-              <ESFastInput
-                id="description"
-                name="stepSettingOne.description"
-                multiline={isFirstStep()}
-                rows={8}
-                required={true}
-                placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
-                labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
-                fullWidth
-                value={formik.values.stepSettingOne.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingOne?.description && formik?.errors?.stepSettingOne?.description}
-                error={formik?.touched?.stepSettingOne?.description && !!formik?.errors?.stepSettingOne?.description}
-                size="big"
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-              />
+              {isFirstStep() ? (
+                <ESFastInput
+                  id="description"
+                  name="stepSettingOne.description"
+                  multiline={isFirstStep()}
+                  rows={8}
+                  required={true}
+                  placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
+                  fullWidth
+                  value={formik.values.stepSettingOne.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  helperText={formik?.touched?.stepSettingOne?.description && formik?.errors?.stepSettingOne?.description}
+                  error={formik?.touched?.stepSettingOne?.description && !!formik?.errors?.stepSettingOne?.description}
+                  size="big"
+                  disabled={!isFirstStep()}
+                  className={getAddClassByStep(classes.input_text)}
+                />
+              ) : (
+                <ESInput
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
+                  multiline
+                  value={formik.values.stepSettingOne.description}
+                  disabled={true}
+                  fullWidth
+                />
+              )}
             </Box>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
@@ -500,17 +520,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                {showReNew && (
-                  <Box
-                    py={1}
-                    display="flex"
-                    justifyContent="flex-end"
-                    className={classes.urlCopy}
-                    onClick={() => onReNewUrlAndKey(KEY_TYPE.URL)}
-                  >
-                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                  </Box>
-                )}
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={showReNew ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL)}
+                >
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                </Box>
               </Box>
             )}
           </Box>
@@ -565,17 +583,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                {showReNew && (
-                  <Box
-                    py={1}
-                    display="flex"
-                    justifyContent="flex-end"
-                    className={classes.urlCopy}
-                    onClick={() => onReNewUrlAndKey(KEY_TYPE.KEY)}
-                  >
-                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                  </Box>
-                )}
+
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={showReNew ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY)}
+                >
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                </Box>
               </Box>
             )}
           </Box>
@@ -663,6 +680,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     color: '#EB5686',
   },
+  linkDisable: {
+    marginLeft: 12,
+    // cursor: 'pointer',
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'default',
+  },
   textLink: {
     textDecoration: 'underline',
   },
@@ -710,11 +736,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 27,
   },
   coverImg: {
-    width: '100%',
-    height: 278,
+    width: 200,
+    // height: 278,
     objectFit: 'cover',
     objectPosition: '50% 50%',
     borderRadius: 4,
+    border: `1px solid rgba(255,255,255,0.3)`,
   },
   inputAdornment: {
     color: '#fff',

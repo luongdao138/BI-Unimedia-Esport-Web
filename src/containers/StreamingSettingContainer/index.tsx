@@ -1,9 +1,11 @@
-import HeaderWithButton from '@components/HeaderWithButton'
+import HeaderWithButtonStream from '@components/HeaderWithButtonStream'
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
+import { ESRoutes } from '@constants/route.constants'
 import i18n from '@locales/i18n'
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DistributorInformationContainer from './DistributorInformation'
@@ -19,7 +21,9 @@ enum TABS {
 const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+  const router = useRouter()
   const [tab, setTab] = useState(default_tab)
+
   useEffect(() => {
     setTab(default_tab)
   }, [])
@@ -53,7 +57,10 @@ const StreamingSettingContainer: React.FC<{ default_tab: any }> = ({ default_tab
   }
   return (
     <>
-      <HeaderWithButton title={t('streaming_setting_screen.title')} />
+      <HeaderWithButtonStream
+        title={t('streaming_setting_screen.title')}
+        onClickBack={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}
+      />
       <Grid container direction="column">
         {getTabs()}
         {getContent()}

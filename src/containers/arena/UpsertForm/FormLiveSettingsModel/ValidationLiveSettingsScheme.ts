@@ -18,7 +18,9 @@ export const validationLiveSettingsScheme = (): any => {
         is: true,
         then: Yup.number()
           .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
+          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
     }),
     stepSettingTwo: Yup.object({
@@ -34,7 +36,9 @@ export const validationLiveSettingsScheme = (): any => {
         is: true,
         then: Yup.number()
           .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
+          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
 
       sell_ticket_start_time: Yup.date().when('use_ticket', {

@@ -40,7 +40,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface StepsProps {
   step: number
-  onNext: (step: number) => void
+  onNext: (step: number, isShare?: boolean, post?: { title: string; content: string }) => void
   category: GetCategoryResponse
 }
 
@@ -119,19 +119,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const handleCopy = (type: number) => {
     switch (type) {
       case KEY_TYPE.UUID:
-        if (formik.values.stepSettingTwo.uuid) {
+        if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(`${baseViewingURL}${formik.values.stepSettingTwo.uuid}`)
         }
         dispatch(commonActions.addToast(t('common:arena.copy_toast')))
         break
       case KEY_TYPE.URL:
-        if (formik.values.stepSettingTwo.stream_url) {
+        if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingTwo.stream_url.toString())
         }
         dispatch(commonActions.addToast(t('common:arena.copy_toast')))
         break
       case KEY_TYPE.KEY:
-        if (formik.values.stepSettingTwo.stream_key) {
+        if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingTwo.stream_key.toString())
         }
         dispatch(commonActions.addToast(t('common:arena.copy_toast')))
@@ -159,11 +159,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     } else {
       setShowStreamKey(false)
       setShowStreamURL(false)
-      onNext(step + 1)
+      onNext(step + 1, stepSettingTwo.share_sns_flag, {
+        title: stepSettingTwo.title,
+        content: `${baseViewingURL}${stepSettingTwo.uuid}`,
+      })
     }
   }
   const onClickPrev = () => {
-    onNext(step - 1)
+    onNext(step - 1, formik.values.stepSettingTwo.share_sns_flag, {
+      title: formik.values.stepSettingTwo.title,
+      content: `${baseViewingURL}${formik.values.stepSettingTwo.uuid}`,
+    })
   }
 
   const isFirstStep = () => {
@@ -224,7 +230,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       stream_key: stepSettingTwo.stream_key,
     }
     setLiveStreamConfirm(data, () => {
-      onNext(step + 1)
+      onNext(step + 1, stepSettingTwo.share_sns_flag, {
+        title: stepSettingTwo.title,
+        content: `${baseViewingURL}${stepSettingTwo.uuid}`,
+      })
     })
   }
 
@@ -317,24 +326,34 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
           </Box>
           <Box pb={1} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
-              <ESFastInput
-                id="description"
-                name="stepSettingTwo.description"
-                multiline={isFirstStep()}
-                rows={8}
-                placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
-                labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
-                fullWidth
-                value={formik.values.stepSettingTwo.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingTwo?.description && formik?.errors?.stepSettingTwo?.description}
-                error={formik?.touched?.stepSettingTwo?.description && !!formik?.errors?.stepSettingTwo?.description}
-                size="big"
-                required
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-              />
+              {isFirstStep() ? (
+                <ESFastInput
+                  id="description"
+                  name="stepSettingTwo.description"
+                  multiline={isFirstStep()}
+                  rows={8}
+                  placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_description')}
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
+                  fullWidth
+                  value={formik.values.stepSettingTwo.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  helperText={formik?.touched?.stepSettingTwo?.description && formik?.errors?.stepSettingTwo?.description}
+                  error={formik?.touched?.stepSettingTwo?.description && !!formik?.errors?.stepSettingTwo?.description}
+                  size="big"
+                  required
+                  disabled={!isFirstStep()}
+                  className={getAddClassByStep(classes.input_text)}
+                />
+              ) : (
+                <ESInput
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
+                  multiline
+                  value={formik.values.stepSettingOne.description}
+                  disabled={true}
+                  fullWidth
+                />
+              )}
             </Box>
           </Box>
           <Box pb={2} className={classes.wrap_input}>
@@ -648,17 +667,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                {showReNew && (
-                  <Box
-                    py={1}
-                    display="flex"
-                    justifyContent="flex-end"
-                    className={classes.urlCopy}
-                    onClick={() => onReNewUrlAndKey(KEY_TYPE.URL)}
-                  >
-                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                  </Box>
-                )}
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={showReNew ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL)}
+                >
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                </Box>
               </Box>
             )}
           </Box>
@@ -720,17 +737,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
-                {showReNew && (
-                  <Box
-                    py={1}
-                    display="flex"
-                    justifyContent="flex-end"
-                    className={classes.urlCopy}
-                    onClick={() => onReNewUrlAndKey(KEY_TYPE.KEY)}
-                  >
-                    <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
-                  </Box>
-                )}
+                <Box
+                  py={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={showReNew ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY)}
+                >
+                  <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
+                </Box>
               </Box>
             )}
           </Box>
@@ -814,6 +829,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#EB5686',
     // textDecoration: 'underline',
   },
+  linkDisable: {
+    marginLeft: 12,
+    // cursor: 'pointer',
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'default',
+  },
   textLink: {
     textDecoration: 'underline',
   },
@@ -869,11 +893,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   coverImg: {
-    width: '100%',
-    height: 278,
+    width: 200,
+    // height: 278,
     objectFit: 'cover',
     objectPosition: '50% 50%',
     borderRadius: 4,
+    border: `1px solid rgba(255,255,255,0.3)`,
   },
   inputAdornment: {
     color: '#fff',

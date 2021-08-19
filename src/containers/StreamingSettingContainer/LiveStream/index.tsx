@@ -12,9 +12,16 @@ const LiveStreamContainer: React.FC = () => {
   const router = useRouter()
   const { categoryData } = useLiveSetting()
   const [modal, setModal] = useState(false)
+  const [isShare, setShare] = useState(false)
+  const [post, setPost] = useState({
+    title: '',
+    content: '',
+  })
 
-  const onChangeStep = (step: number): void => {
+  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     setStep(step)
+    setShare(isShare)
+    setPost(post)
     if (step === 3) {
       setModal(true)
     }
@@ -24,7 +31,7 @@ const LiveStreamContainer: React.FC = () => {
     router.back()
   }
 
-  const onComplete = (): void => {
+  const onComplete = () => {
     router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
@@ -33,7 +40,13 @@ const LiveStreamContainer: React.FC = () => {
       <Steps step={step} onNext={onChangeStep} category={categoryData} />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
-          <SettingsCompleted onClose={onClose} onComplete={onComplete} />
+          <SettingsCompleted
+            onClose={onClose}
+            onComplete={onComplete}
+            isShare={isShare}
+            titlePost={post.title}
+            contentPost={post.content}
+          />
         </BlankLayout>
       </ESModal>
     </>
