@@ -89,7 +89,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const checkStatusRecord = (data: LiveStreamSettingResponse) => {
     if (!data?.data?.created_at) {
-      onReNewUrlAndKey()
+      onReNewUrlAndKey(KEY_TYPE.URL)
       setShowReNew(false)
     } else {
       setShowReNew(true)
@@ -191,10 +191,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', !formik.values.stepSettingTwo.use_ticket ? new Date().toString() : null)
   }
 
-  const onReNewUrlAndKey = () => {
+  const onReNewUrlAndKey = (type: number) => {
     getStreamUrlAndKey((url, key) => {
-      formik.setFieldValue('stepSettingTwo.stream_url', url)
-      formik.setFieldValue('stepSettingTwo.stream_key', key)
+      if (type === KEY_TYPE.URL) {
+        formik.setFieldValue('stepSettingTwo.stream_url', url)
+        formik.setFieldValue('stepSettingTwo.stream_key', key)
+      } else {
+        formik.setFieldValue('stepSettingTwo.stream_key', key)
+      }
     })
   }
 
@@ -626,7 +630,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
                 {showReNew && (
-                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                  <Box
+                    py={1}
+                    display="flex"
+                    justifyContent="flex-end"
+                    className={classes.urlCopy}
+                    onClick={() => onReNewUrlAndKey(KEY_TYPE.URL)}
+                  >
                     <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                   </Box>
                 )}
@@ -692,7 +702,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
                 {showReNew && (
-                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                  <Box
+                    py={1}
+                    display="flex"
+                    justifyContent="flex-end"
+                    className={classes.urlCopy}
+                    onClick={() => onReNewUrlAndKey(KEY_TYPE.KEY)}
+                  >
                     <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                   </Box>
                 )}

@@ -97,7 +97,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const checkStatusRecord = (data: LiveStreamSettingResponse) => {
     if (!data?.data?.created_at) {
-      onReNewUrlAndKey()
+      onReNewUrlAndKey(KEY_TYPE.URL)
       setShowReNew(false)
     } else {
       setShowReNew(true)
@@ -114,19 +114,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const handleCopy = (type: number) => {
     switch (type) {
       case KEY_TYPE.UUID:
-        if (formik.values.stepSettingOne.linkUrl) {
+        if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(`${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`)
         }
         dispatch(commonActions.addToast(t('common:arena.copy_toast')))
         break
       case KEY_TYPE.URL:
-        if (formik.values.stepSettingOne.stream_url) {
+        if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_url.toString())
         }
         dispatch(commonActions.addToast(t('common:arena.copy_toast')))
         break
       case KEY_TYPE.KEY:
-        if (formik.values.stepSettingOne.stream_key) {
+        if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_key.toString())
         }
         dispatch(commonActions.addToast(t('common:arena.copy_toast')))
@@ -203,10 +203,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     })
   }
 
-  const onReNewUrlAndKey = () => {
+  const onReNewUrlAndKey = (type: number) => {
     getStreamUrlAndKey((url, key) => {
-      formik.setFieldValue('stepSettingOne.stream_url', url)
-      formik.setFieldValue('stepSettingOne.stream_key', key)
+      if (type === KEY_TYPE.URL) {
+        formik.setFieldValue('stepSettingOne.stream_url', url)
+        formik.setFieldValue('stepSettingOne.stream_key', key)
+      } else {
+        formik.setFieldValue('stepSettingOne.stream_key', key)
+      }
     })
   }
 
@@ -491,7 +495,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
                 {showReNew && (
-                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                  <Box
+                    py={1}
+                    display="flex"
+                    justifyContent="flex-end"
+                    className={classes.urlCopy}
+                    onClick={() => onReNewUrlAndKey(KEY_TYPE.URL)}
+                  >
                     <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                   </Box>
                 )}
@@ -550,7 +560,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.copy_url')}</Typography>
                 </Box>
                 {showReNew && (
-                  <Box py={1} display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={onReNewUrlAndKey}>
+                  <Box
+                    py={1}
+                    display="flex"
+                    justifyContent="flex-end"
+                    className={classes.urlCopy}
+                    onClick={() => onReNewUrlAndKey(KEY_TYPE.KEY)}
+                  >
                     <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                   </Box>
                 )}
