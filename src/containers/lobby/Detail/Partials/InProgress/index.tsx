@@ -20,7 +20,7 @@ const InProgress: React.FC<InProgressProps> = (props) => {
   const { lobby } = props
   const isTeam = false
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participant_count
+  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participants_count
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const isEntered = lobby.attributes.participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
 

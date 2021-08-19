@@ -147,7 +147,7 @@ export type LobbyDetail = {
     }
     organizer_avatar: null | string
     participant_status: null | LOBBY_PARTICIPANT_STATUS
-    participant_count: number
+    participants_count: number
     remain_days: null | number
     start_datetime: string //
     status: LOBBY_STATUS

@@ -14,11 +14,11 @@ const MainDatePeriod: React.FC<Props> = ({ lobby }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { status } = lobby.attributes
-
-  const dateTitle = status <= LOBBY_STATUS.RECRUITING ? t('common:lobby.detail.entry_period') : t('common:lobby.detail.start_date')
+  const isEntryPeriod = status === LOBBY_STATUS.READY || status === LOBBY_STATUS.RECRUITING
+  const dateTitle = isEntryPeriod ? t('common:lobby.detail.entry_period') : t('common:lobby.detail.start_date')
 
   const buildLobbyPeriodValue = () => {
-    if (status <= LOBBY_STATUS.RECRUITING) {
+    if (isEntryPeriod) {
       const entryStartDate = DateHelper.formatDateTime(lobby.attributes.entry_start_datetime)
       const entryEndDate = DateHelper.formatDateTime(lobby.attributes.entry_end_datetime)
       return `${entryStartDate} - ${entryEndDate}`
