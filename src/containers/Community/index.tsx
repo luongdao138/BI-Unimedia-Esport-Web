@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import CommunityCard from '@components/CommunityCard'
 import useCommunityHelper from './hooks/useCommunityHelper'
+import _ from 'lodash'
 
 interface CommunityContainerProps {
   filter: CommunityFilterOption
@@ -34,6 +35,9 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
       label: t('common:arenaSearchFilters.all'),
       loginRequired: false,
     },
+  ]
+
+  const loginRequiredFilterOptions = [
     {
       type: CommunityFilterOption.participating,
       label: t('common:communitySearchFilters.participating'),
@@ -245,8 +249,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         is_official: false,
         status: 1,
         description: 'Description goes. Description goes. Description goes. Explanation is included ...asdasdasdasdasdasdasdasdasd',
-        cover:
-          'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournaments/a2718dbb-9d3a-48f9-8472-9fe5b0006a64/1625621403-31.png',
+        cover: null,
         tags: [
           {
             name: 'Newbie',
@@ -308,22 +311,22 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/tournaments/a2718dbb-9d3a-48f9-8472-9fe5b0006a64/1625621403-31.png',
         tags: [
           {
-            name: 'Newbie',
+            name: '対戦',
           },
           {
-            name: 'enjoyers',
+            name: '交流',
           },
           {
-            name: 'match',
+            name: '初心者歓迎',
           },
           {
-            name: 'Newbie',
+            name: '内輪向け',
           },
           {
-            name: 'enjoyers',
+            name: 'ガチ勢',
           },
           {
-            name: 'match',
+            name: 'エンジョイ勢',
           },
           {
             name: 'Newbie',
@@ -381,6 +384,17 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
               onClick={() => onFilter(option.type)}
             />
           ))}
+          {loginRequiredFilterOptions.map((option) => (
+            <LoginRequired key={option.type}>
+              <ESChip
+                key={option.type}
+                color={option.type === filter ? 'primary' : undefined}
+                className={classes.filterChip}
+                label={option.label}
+                onClick={() => onFilter(option.type)}
+              />
+            </LoginRequired>
+          ))}
         </Box>
         {/* <InfiniteScroll
           className={classes.scrollContainer}
@@ -391,11 +405,19 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           scrollThreshold={0.8}
         >
         </InfiniteScroll> */}
-        {testCommunities.map((community, i) => (
-          <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
-            <CommunityCard community={community} />
+        {!_.isEmpty(testCommunities) &&
+          testCommunities.map((community, i) => (
+            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
+              <CommunityCard community={community} />
+            </Grid>
+          ))}
+        {_.isEmpty(testCommunities) && (
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Box display="flex" justifyContent="center">
+              <Typography variant="body1">{t('common:community.no_data')}</Typography>
+            </Box>
           </Grid>
-        ))}
+        )}
         {/* {meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">

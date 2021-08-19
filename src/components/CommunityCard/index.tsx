@@ -76,7 +76,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   }
   const getTags = (tags: { name: string }[]) => {
     return (
-      <Box display="flex" flexDirection="row" mt={1} flexWrap="wrap" flexGrow="1" pr={47 / 8}>
+      <Box display="flex" flexDirection="row" mt={1} flexWrap="wrap" flexGrow="1">
         {tags.map((tag, i) => (
           <ESChip
             key={i}
@@ -165,9 +165,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 2,
     '& .MuiChip-label': {
       padding: 0,
-      '& .MuiTypography-overline': {
-        fontSize: 8,
-      },
     },
   },
   avatarContainer: {

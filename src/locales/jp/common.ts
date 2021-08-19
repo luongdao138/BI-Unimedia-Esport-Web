@@ -258,6 +258,7 @@ export default {
       result: '検索結果',
     },
     follow_list: 'フォローリスト',
+    no_data: '該当のコミュニティはありません。',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

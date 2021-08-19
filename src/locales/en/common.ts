@@ -265,6 +265,7 @@ export default {
     participating: '参加中',
     topic_creation: 'トピック作成',
     confirm_follow_list: 'フォローリストを確定する',
+    no_data: '該当のコミュニティはありません。',
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
