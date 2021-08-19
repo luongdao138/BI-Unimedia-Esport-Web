@@ -84,7 +84,7 @@ const PointManage: React.FC = () => {
         return <ArchivedVideos />
         break
       case TABS.FAVORITE_VIDEOS:
-        return <FavoriteVideos />
+        return <FavoriteVideos setTab={setTab} />
         break
       default:
         break
