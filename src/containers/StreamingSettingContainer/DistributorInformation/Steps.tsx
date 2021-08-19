@@ -174,6 +174,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
                 social={social}
                 onDataChange={onBasicInfoChanged}
                 handleError={handleError}
+                isFirstStep={isFirstStep()}
               />
             </Box>
           </Box>
