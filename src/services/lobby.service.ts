@@ -152,6 +152,7 @@ export type LobbyDetail = {
     status: LOBBY_STATUS
     title: string
     is_freezed: boolean
+    organizer_participated: boolean
   }
 }
 

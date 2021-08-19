@@ -49,8 +49,8 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   }
 
   useEffect(() => {
-    if (!formik.values.stepOne.is_organizer_join) formik.setFieldValue('stepOne.is_organizer_join', '')
-  }, [formik.values.stepOne.is_organizer_join])
+    if (!formik.values.stepOne.organizer_participated) formik.setFieldValue('stepOne.organizer_participated', '')
+  }, [formik.values.stepOne.organizer_participated])
 
   return (
     <Box pb={9}>
@@ -152,9 +152,9 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       <Box pb={4} display="flex" justifyContent="space-between">
         <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
         <ESSwitchIOS
-          checked={formik.values.stepOne.is_organizer_join}
+          checked={formik.values.stepOne.organizer_participated}
           handleChange={() => {
-            formik.setFieldValue('stepOne.is_organizer_join', !formik.values.stepOne.is_organizer_join)
+            formik.setFieldValue('stepOne.organizer_participated', !formik.values.stepOne.organizer_participated)
           }}
         />
       </Box>

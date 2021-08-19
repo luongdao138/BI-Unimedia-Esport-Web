@@ -12,12 +12,12 @@ export type FormType = {
     game_title_id: GameTitleItem[]
     game_hardware_id: number
     max_participants: number
-    is_organizer_join: boolean
+    organizer_participated: boolean
   }
   stepTwo: {
-    acceptance_start_date: string
-    acceptance_end_date: string
-    start_date: string
+    entry_start_datetime: string
+    entry_end_datetime: string
+    start_datetime: string
     area_id: number
     address: string
     recruit_date: string

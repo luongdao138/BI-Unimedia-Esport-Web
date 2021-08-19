@@ -25,10 +25,10 @@ export type EditableTypes = {
   rule: boolean
   max_participants: boolean
   is_organizer_join: boolean
-  start_date: boolean
+  start_datetime: boolean
   end_date: boolean
-  acceptance_start_date: boolean
-  acceptance_end_date: boolean
+  entry_start_datetime: boolean
+  entry_end_datetime: boolean
   participant_type: boolean
   area_id: boolean
   address: boolean
@@ -81,10 +81,10 @@ const useLobbyCreate = (): {
     // conditional editable
     max_participants: true,
     retain_history: true,
-    start_date: true,
+    start_datetime: true,
     end_date: true,
-    acceptance_start_date: true,
-    acceptance_end_date: true,
+    entry_start_datetime: true,
+    entry_end_datetime: true,
   })
   const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
@@ -151,19 +151,19 @@ const useLobbyCreate = (): {
         if (_status === LOBBY_STATUS.RECRUITING) {
           _editables.max_participants = true
           _editables.retain_history = true
-          _editables.acceptance_start_date = false
-          _editables.acceptance_end_date = true
-          _editables.start_date = true
+          _editables.entry_start_datetime = false
+          _editables.entry_end_datetime = true
+          _editables.start_datetime = true
           _editables.end_date = true
         } else if (_status === LOBBY_STATUS.ENTRY_CLOSED) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
-          _editables.start_date = true
+          _editables.start_datetime = true
           _editables.end_date = true
         } else if (_status === LOBBY_STATUS.IN_PROGRESS) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
-          _editables.start_date = false
+          _editables.start_datetime = false
           _editables.end_date = true
         }
       }

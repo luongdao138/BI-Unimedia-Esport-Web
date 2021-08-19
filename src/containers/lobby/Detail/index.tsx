@@ -15,6 +15,8 @@ import BlankLayout from '@layouts/BlankLayout'
 import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
+import MainDatePeriod from '../MainDatePeriod'
+import SubStatusInfo from './Partials/StatusInfoComponent'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
@@ -136,7 +138,11 @@ const LobbyDetailBody: React.FC = () => {
           cover={lobby?.attributes?.cover_image_url || '/images/default_card.png'}
           onHandleBack={handleBack}
         >
-          {actionComponent[lobby.attributes.status]}
+          <>
+            <MainDatePeriod lobby={lobby} />
+            <SubStatusInfo lobby={lobby} />
+            {actionComponent[lobby.attributes.status]}
+          </>
         </LobbyDetailHeader>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
       </>
