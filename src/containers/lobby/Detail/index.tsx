@@ -9,10 +9,18 @@ import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
 import SubActionButtons from '@containers/lobby/SubActionButtons'
+import MainActionButtons from '@containers/lobby/MainActionButtons'
+import useLobbyActions from '../hooks/useLobbyActions'
+import { ESRoutes } from '@constants/route.constants'
+import _ from 'lodash'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
+  const { unjoin, entry, unjoinMeta } = useLobbyActions()
+
   const { handleBack, lobby, meta } = useLobbyDetail()
+
+  const hashKey = _.get(lobby, 'attributes.hash_key', null)
   // const lobby: LobbyDetail = {
   //   id: 'uniqueid123',
   //   type: 'tournament_details',
@@ -120,10 +128,23 @@ const LobbyDetailBody: React.FC = () => {
   // }
 
   const openChat = () => {
-    alert('')
+    const chatRoomId = _.get(lobby, 'attributes.chatroom', null)
+    if (chatRoomId) router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
   }
   const openMemberList = () => {
     alert('')
+  }
+
+  const onEntry = () => {
+    hashKey && entry(hashKey)
+  }
+
+  const onDecline = () => {
+    hashKey && unjoin(hashKey)
+  }
+
+  const onMemberConfirm = () => {
+    alert('member confirm modal')
   }
 
   const renderBody = () => {
@@ -136,6 +157,7 @@ const LobbyDetailBody: React.FC = () => {
           onHandleBack={handleBack}
         >
           <SubActionButtons lobby={lobby} openChat={openChat} openMemberList={openMemberList} />
+          <MainActionButtons memberConfirm={onMemberConfirm} unjoinMeta={unjoinMeta} lobby={lobby} entry={onEntry} decline={onDecline} />
         </LobbyDetailHeader>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
       </>
