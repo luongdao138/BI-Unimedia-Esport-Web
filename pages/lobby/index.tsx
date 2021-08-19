@@ -1,7 +1,7 @@
 import PageWithLayoutType from '@constants/page'
 import MainLayout from '@layouts/MainLayout'
 import React from 'react'
-import { LobbyHomeContainer } from '@containers/lobby'
+import { LobbyHomeContainer } from '@containers/Lobby'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
 import { LobbyFilterOption } from '@services/lobby.service'

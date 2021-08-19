@@ -2,7 +2,7 @@ import { T_TYPE, TOURNAMENT_STATUS, LOBBY_STATUS } from '@constants/lobby.consta
 import moment from 'moment'
 import _ from 'lodash'
 import { FormikErrors } from 'formik'
-import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
+import { FormType } from '@containers/Lobby/UpsertForm/FormModel/FormType'
 import { LobbyDetail } from '@services/lobby.service'
 
 const getTypeValue = (t_type: string | number): boolean => {
