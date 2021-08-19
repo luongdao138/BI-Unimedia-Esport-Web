@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
     marginLeft: 13,
-    marginRight: 8,
+    marginRight: theme.spacing(1),
   },
   sendCont: {
     display: 'flex',
