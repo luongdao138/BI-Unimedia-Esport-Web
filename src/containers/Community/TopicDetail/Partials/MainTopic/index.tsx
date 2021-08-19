@@ -226,7 +226,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
-    borderRadius: '7px',
+    borderRadius: 7,
     width: '66%',
   },
   discription: {

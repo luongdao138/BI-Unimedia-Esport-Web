@@ -152,7 +152,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
   },
   avatar: {
-    zIndex: 30,
     width: 40,
     height: 40,
   },
