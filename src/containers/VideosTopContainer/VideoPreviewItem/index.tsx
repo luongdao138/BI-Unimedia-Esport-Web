@@ -142,6 +142,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   nameStyle: {
     textAlign: 'center',
+    fontSize: 12,
+    color: '#fff'
   },
   watchContainer: {
     display: 'flex',
@@ -175,5 +177,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 6,
     color: 'black',
   },
+  [theme.breakpoints.down(769)]: {
+    container: {
+      width: 465,
+    },
+  },
+  [theme.breakpoints.down(415)]: {
+    container: {
+      width: 299,
+    },
+  }
 }))
 export default VideoPreviewItem

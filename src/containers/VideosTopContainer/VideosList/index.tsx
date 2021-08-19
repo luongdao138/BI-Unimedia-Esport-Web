@@ -4,6 +4,8 @@ import VideoPreviewItem from '../VideoPreviewItem'
 import TitleSeeMore from '../TitleSeeMore'
 import { TabsVideo } from '../index'
 import TitleFavorite from '../TitleFavorite'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 export type VideoPreviewProps = {
   id: number
@@ -22,6 +24,8 @@ type VideoListProps = {
   setTab: (value: number) => void
 }
 const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
+  const theme = useTheme()
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
   const dataLiveVideo = Array(6)
     .fill('')
     .map((_, i) => ({
@@ -69,9 +73,18 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
   const classes = useStyles()
   const renderLiveItem = (item: VideoPreviewProps, index: number) => {
     return (
-      <Grid item xs={4} className={classes.itemContainer} key={index}>
-        <VideoPreviewItem data={item} key={item.id} />
-      </Grid>
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer} key={index}>
+            <VideoPreviewItem data={item} key={item.id} />
+          </Box>
+        ) : (
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+            <VideoPreviewItem data={item} key={item.id} />
+          </Grid>
+        )
+      }
+      </>
     )
   }
   const onClickSeeMoreLiveStream = () => {
@@ -86,6 +99,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.content}>
+        {/* live video */}
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_live_videos')}
@@ -93,16 +107,26 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataLiveVideo.length > 0 ? (
-            dataLiveVideo.map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataLiveVideo.length > 0 ? (
+              dataLiveVideo.map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        {dataLiveVideo.length > 0 && (
+            <Box className={classes.spViewMore} onClick={onClickSeeMoreLiveStream}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
             </Box>
-          )}
-        </Grid>
+          )
+        }
         <Box paddingTop={2} />
+
+        {/* schedule video */}
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_schedule_videos')}
@@ -110,16 +134,26 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataScheduleVideo.length > 0 ? (
-            dataScheduleVideo.map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataScheduleVideo.length > 0 ? (
+              dataScheduleVideo.map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        {dataScheduleVideo.length > 0 && (
+            <Box className={classes.spViewMore} onClick={onClickSeeMoreSchedule}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
             </Box>
-          )}
-        </Grid>
+          )
+        }
         <Box paddingTop={2} />
+
+        {/* archived videos */}
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_archived_videos')}
@@ -127,43 +161,60 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataArchiveVideo.length > 0 ? (
-            dataArchiveVideo.map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataArchiveVideo.length > 0 ? (
+              dataArchiveVideo.map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        {dataArchiveVideo.length > 0 && (
+            <Box className={classes.spViewMore} onClick={onClickSeeMoreArchive}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
             </Box>
-          )}
-        </Grid>
+          )
+        }
+        <Box paddingTop={2} />
+
+        {/* popular category */}
         <Box className={classes.popularCategoryTitle}>
           <Typography className={classes.popularText}> {i18n.t('common:videos_top_tab.popular_category')} </Typography>
         </Box>
         <Box className={classes.titleContainer}>
           <TitleFavorite titleText={'Apex Legends'} iconSource={'/images/big_logo.png'} />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataLiveVideo.length > 0 ? (
-            dataLiveVideo.slice(0, 3).map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
-            </Box>
-          )}
-        </Grid>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataLiveVideo.length > 0 ? (
+              dataLiveVideo.slice(0, 3).map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
         <Box paddingTop={3} />
+
+        {/* legend of league */}
         <Box className={classes.titleContainer}>
           <TitleFavorite titleText={'Legend of League'} iconSource={'/images/big_logo.png'} />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataLiveVideo.length > 0 ? (
-            dataLiveVideo.slice(0, 3).map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
-            </Box>
-          )}
-        </Grid>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataLiveVideo.length > 0 ? (
+              dataLiveVideo.slice(0, 3).map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
       </Box>
     </Box>
   )
@@ -174,19 +225,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: 45,
-    paddingLeft: theme.spacing(3),
   },
   content: {
     width: '100%',
   },
   titleContainer: {
-    paddingRight: theme.spacing(3),
   },
   contentContainer: {
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    width: '100%',
     height: '100%',
   },
   itemContainer: {
@@ -214,6 +262,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  wrapVideos: {
+  },
+  wrapContentContainer: {
+  },
+  spViewMore: {
+    display: 'none',
+  },
+  [theme.breakpoints.down(769)]: {
+    wrapContentContainer: {
+      width: "calc(100vw - 24px)", 
+      overflow: "auto"
+    },
+    contentContainer: {
+      flexWrap: "nowrap",
+      margin: "0px",
+      paddingBottom: "0px"
+    },
+    xsItemContainer: {
+      paddingRight: "24px",
+      '&:last-child': {
+        paddingRight: 0,
+      },
+    },
+    titleContainer: {
+      paddingBottom: 12,
+    },
+    spViewMore: {
+      display: 'block',
+      padding: "15px 0 26px 0", 
+      textAlign: "center"
+    },
   },
 }))
 export default VideosList
