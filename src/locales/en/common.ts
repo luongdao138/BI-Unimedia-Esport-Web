@@ -638,9 +638,14 @@ export default {
       organizer: '開催者',
       entry_period: 'エントリー期間',
       start_date: '開催日時',
+    },
+    status: {
+      entry_closed: '受付終了',
+      not_entered: '実施中',
+      participated: '参加中',
+      not_participated: '落選',
       ended: '終了',
-      admin_participated: '参加中',
-      admin_not_participated: '実施中',
+      cancelled: 'この募集は中止されました',
     },
   },
   lobbySearchFilters: {
