@@ -23,7 +23,7 @@ const Ready: React.FC<RecruitingProps> = (props) => {
   return (
     <ActionComponent {...props}>
       <Box className={classes.body}>
-        <RemainingDate tournament={lobby} />
+        <RemainingDate lobby={lobby} />
 
         <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
           <Typography className={classes.entryMembersInfoText}>{t('common:tournament.number_of_entries')}</Typography>

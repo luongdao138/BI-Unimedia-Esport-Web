@@ -15,11 +15,11 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
 
-  const status = lobby.attributes.status
+  const status = lobby?.attributes?.status
   const beforeOnhold = status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY
 
-  const accEndDate = moment(lobby.attributes.entry_start_datetime)
-  const startDate = moment(lobby.attributes.start_datetime)
+  const accEndDate = moment(lobby?.attributes?.entry_start_datetime)
+  const startDate = moment(lobby?.attributes?.start_datetime)
   const targetDate = beforeOnhold ? accEndDate : startDate
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
