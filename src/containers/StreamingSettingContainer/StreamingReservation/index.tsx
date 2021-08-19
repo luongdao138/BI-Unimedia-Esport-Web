@@ -15,9 +15,16 @@ const StreamingReservationContainer: React.FC = () => {
 
   const [modal, setModal] = useState(false)
   const { t } = useTranslation(['common'])
+  const [isShare, setShare] = useState(false)
+  const [post, setPost] = useState({
+    title: '',
+    content: '',
+  })
 
-  const onChangeStep = (step: number): void => {
+  const onChangeStep = (step: number, isShare?: boolean, post?: { title: string; content: string }): void => {
     setStep(step)
+    setShare(isShare)
+    setPost(post)
     if (step === 3) {
       setModal(true)
     }
@@ -41,6 +48,9 @@ const StreamingReservationContainer: React.FC = () => {
             messageNotification={t('common:streaming_setting_screen.tab2_notification_mess')}
             onClose={onClose}
             onComplete={onComplete}
+            isShare={isShare}
+            titlePost={post.title}
+            contentPost={post.content}
           />
         </BlankLayout>
       </ESModal>

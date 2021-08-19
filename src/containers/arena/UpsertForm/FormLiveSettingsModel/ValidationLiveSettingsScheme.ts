@@ -18,7 +18,9 @@ export const validationLiveSettingsScheme = (): any => {
         is: true,
         then: Yup.number()
           .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
+          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
     }),
     stepSettingTwo: Yup.object({
@@ -28,13 +30,15 @@ export const validationLiveSettingsScheme = (): any => {
       description: Yup.string()
         .required(i18n.t('common:common.input_required'))
         .max(5000, i18n.t('common:streaming_setting_screen.validation.overview_limit')),
-      category: Yup.string(),
+      category: Yup.mixed().required(i18n.t('common:common.input_required')).notOneOf([-1, ''], i18n.t('common:common.input_required')),
       use_ticket: Yup.boolean(),
       ticket_price: Yup.number().when('use_ticket', {
         is: true,
         then: Yup.number()
           .min(1, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
-          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
+          .max(9999999, i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
+          .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
 
       sell_ticket_start_time: Yup.date().when('use_ticket', {

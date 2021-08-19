@@ -60,6 +60,7 @@
     "react-load-script": "^0.0.6",
     "react-mentions": "^4.1.1",
     "react-redux": "7.2.3",
+    "react-share": "^4.4.0",
     "react-sortablejs": "^6.0.0",
     "react-stacked-center-carousel": "^1.0.2",
     "react-test-renderer": "17.0.2",

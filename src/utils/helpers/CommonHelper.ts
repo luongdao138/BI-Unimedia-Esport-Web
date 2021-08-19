@@ -1,3 +1,4 @@
+import { FORMAT_DATE_TIME_JP } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import moment from 'moment'
 
@@ -192,11 +193,14 @@ const cutLinksIntoPieces = (textMain: string) => {
   return separations
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const formatDateTime = (date: string) => {
+const formatDateTime = (date: string): string => {
   const dateTime = new Date(date).toString()
   // const dateResult = moment(dateTime).format(FORMAT_DATE_TIME_JP)
   return dateTime
+}
+const formatDateTimeJP = (date: string): string => {
+  const dateResult = moment(date).format(FORMAT_DATE_TIME_JP)
+  return dateResult
 }
 
 export const CommonHelper = {
@@ -214,4 +218,5 @@ export const CommonHelper = {
   getIndicesOf,
   replaceWhiteSpace,
   formatDateTime,
+  formatDateTimeJP,
 }

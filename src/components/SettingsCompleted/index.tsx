@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import Icon from '@material-ui/core/Icon'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
+import { TwitterShareButton } from 'react-share'
 
 type Props = {
   title?: string
@@ -13,12 +14,23 @@ type Props = {
   onClose: () => void
   onComplete: () => void
   titleButton?: string
+  isShare?: boolean
+  titlePost?: string
+  contentPost?: string
 }
 
-const SettingsCompleted: React.FC<Props> = ({ titleNotification, messageNotification, onClose, onComplete, titleButton }) => {
+const SettingsCompleted: React.FC<Props> = ({
+  titleNotification,
+  messageNotification,
+  onClose,
+  onComplete,
+  titleButton,
+  isShare = false,
+  titlePost,
+  contentPost,
+}) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-
   return (
     <Box>
       <Box pt={7.5} pb={9} className={classes.topContainer}>
@@ -34,11 +46,27 @@ const SettingsCompleted: React.FC<Props> = ({ titleNotification, messageNotifica
           <Typography variant="subtitle1" className={classes.contentStep3}>
             {messageNotification || t('common:streaming_setting_screen.step3_delivery_settings_content')}
           </Typography>
-          <Box className={classes.redirectButton}>
-            <ButtonPrimary fullWidth round onClick={onComplete}>
-              {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
-            </ButtonPrimary>
-          </Box>
+          {isShare ? (
+            <TwitterShareButton
+              title={titlePost}
+              url={contentPost}
+              onShareWindowClose={onComplete}
+              resetButtonStyle={false}
+              style={{ opacity: 1, backgroundColor: 'transparent', border: 0 }}
+            >
+              <Box className={classes.redirectButton}>
+                <ButtonPrimary fullWidth round>
+                  {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
+                </ButtonPrimary>
+              </Box>
+            </TwitterShareButton>
+          ) : (
+            <Box className={classes.redirectButton} onClick={onComplete}>
+              <ButtonPrimary fullWidth round>
+                {titleButton || t('common:streaming_setting_screen.step3_close_btn')}
+              </ButtonPrimary>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

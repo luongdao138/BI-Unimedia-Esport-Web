@@ -12,9 +12,9 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     stream_key: data && data.stream_key ? '' : '',
     category: data && data.category ? data.category : -1,
     ticket_price: data && data.ticket_price ? data.ticket_price : 0,
-    use_ticket: data && data.use_ticket ? (data.use_ticket === 1 ? true : false) : false,
+    use_ticket: data && data.use_ticket ? (data.use_ticket == 1 ? true : false) : false,
     share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
-    publish_flag: data && data.share_sns_flag ? (data.publish_flag === 1 ? true : false) : true,
+    publish_flag: data && data.share_sns_flag ? (data.publish_flag == 1 ? true : false) : true,
   },
   stepSettingTwo: {
     uuid: data && data.uuid ? data.uuid : '',
@@ -26,13 +26,13 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     stream_schedule_start_time:
       data && data.stream_schedule_start_time ? CommonHelper.formatDateTime(data.stream_schedule_start_time) : null,
     stream_schedule_end_time: data && data.stream_schedule_end_time ? CommonHelper.formatDateTime(data.stream_schedule_end_time) : null,
-    use_ticket: data && data.use_ticket ? (data.use_ticket === 1 ? true : false) : false,
+    use_ticket: data && data.use_ticket ? (data.use_ticket == 1 ? true : false) : false,
     ticket_price: data && data.ticket_price ? data.ticket_price : 0,
     sell_ticket_start_time: data && data.sell_ticket_start_time !== null ? CommonHelper.formatDateTime(data.sell_ticket_start_time) : null,
-    share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag === 1 ? true : false) : false,
+    share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
     stream_url: data && data.stream_url ? data.stream_url : '',
     stream_key: data && data.stream_key ? data.stream_key : '',
-    publish_flag: data && data.publish_flag ? (data.publish_flag === 1 ? true : false) : true,
+    publish_flag: data && data.publish_flag ? (data.publish_flag == 1 ? true : false) : true,
     //cross-fields validations
     schedule_live_date: '',
     notify_live_start_date: '',

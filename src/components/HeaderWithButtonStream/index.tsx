@@ -1,19 +1,17 @@
-import { ESRoutes } from '@constants/route.constants'
 import { Box, Icon, IconButton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import { useRouter } from 'next/router'
 
 export interface HeaderWithButtonProps {
   title?: string
+  onClickBack?: () => void
 }
 
-const HeaderWithButton: React.FC<HeaderWithButtonProps> = ({ title }) => {
+const HeaderWithButtonStream: React.FC<HeaderWithButtonProps> = ({ title, onClickBack }) => {
   const classes = useStyles()
-  const router = useRouter()
   return (
     <Box className={classes.header}>
-      <IconButton className={classes.iconButton} disableRipple onClick={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}>
+      <IconButton className={classes.iconButton} disableRipple onClick={onClickBack}>
         <Icon className={`fa fa-arrow-left ${classes.icon}`} />
       </IconButton>
       <Typography variant="body1" className={classes.headerTitle}>
@@ -67,4 +65,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default HeaderWithButton
+export default HeaderWithButtonStream
