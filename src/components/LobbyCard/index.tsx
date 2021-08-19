@@ -120,7 +120,11 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         <Box ml={1} color={Colors.white}>
           <Typography variant="caption">{value}</Typography>
         </Box>
-        {extra ? <Typography variant="caption">{extra}</Typography> : null}
+        {extra ? (
+          <Typography className={classes.caption} variant="caption">
+            {extra}
+          </Typography>
+        ) : null}
       </Box>
     )
   }
@@ -161,7 +165,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         {getInfoRow(attr.title)}
         {/* {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)} */}
         {getChippedRow(t('common:tournament_create.start_date'), startDate)}
-        {getChippedRow(t('common:tournament_create.entry_period'), startDate, ' まで')}
+        {getChippedRow(t('common:tournament_create.entry_period'), startDate, 'まで')}
         {getChippedRow(t('common:tournament.entry_number'), attr.participant_count, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
@@ -221,6 +225,9 @@ const useStyles = makeStyles((theme) => ({
   },
   pAvatar: {
     marginLeft: -8,
+  },
+  caption: {
+    wordBreak: 'keep-all',
   },
   title: {
     display: '-webkit-box',
