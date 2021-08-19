@@ -669,6 +669,10 @@ export default {
       in_progress: '本日開催',
       ended: '終了',
     },
+    toasts: {
+      edit: '編集を完了しました',
+      create: '募集を作成しました',
+    },
   },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',
