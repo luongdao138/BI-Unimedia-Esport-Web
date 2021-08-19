@@ -4,6 +4,7 @@ export const validationLiveSettingsScheme = (): any => {
   const minStartDate = new Date()
   const minEndDate = new Date()
   const maxSchedule = 3 * 3600000 //1h=3600000ms
+  const approximateMinDate = new Date(Date.now() - 30 * 1000)
   return Yup.object({
     stepSettingOne: Yup.object({
       title: Yup.string()
@@ -46,7 +47,7 @@ export const validationLiveSettingsScheme = (): any => {
         then: Yup.date()
           .nullable()
           // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
-          .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+          .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
       }),
 
       stream_notify_time: Yup.date()

@@ -8,9 +8,7 @@ import ESButtonDiscordCircle from '@components/Button/DiscordCircle'
 import i18n from '@locales/i18n'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
-import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
-import { getInitialDistributorValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
-import { validationLDistributorScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
+import Yup from '@utils/Yup'
 
 export type SnsInfoParams = {
   instagram_link: string
@@ -29,20 +27,27 @@ interface SnsInfoStreamProps {
 const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, handleError, showPreview = false, isFirstStep }) => {
   const classes = useStyles()
 
-  const initialValues = getInitialDistributorValues(social)
+  const validationSchema = Yup.object().shape({
+    instagram_link: Yup.string().max(250),
+    discord_link: Yup.string().max(250),
+    twitter_link: Yup.string().max(250),
+  })
 
-  const { handleChange, values, errors } = useFormik<FormLiveType>({
-    initialValues: initialValues,
-    validationSchema: validationLDistributorScheme(),
-    enableReinitialize: true,
+  const { handleChange, values, errors } = useFormik<SnsInfoParams>({
+    initialValues: {
+      instagram_link: social?.instagram_link ? social?.instagram_link : '',
+      twitter_link: social?.twitter_link ? social?.twitter_link : '',
+      discord_link: social?.discord_link ? social?.discord_link : '',
+    },
+    validationSchema,
     onSubmit: (_) => null,
   })
 
   useEffect(() => {
     onDataChange({
-      instagram_link: values.stepSettingThree.instagram_link?.trim(),
-      twitter_link: values.stepSettingThree.twitter_link?.trim(),
-      discord_link: values.stepSettingThree.discord_link?.trim(),
+      instagram_link: values.instagram_link?.trim(),
+      twitter_link: values.twitter_link?.trim(),
+      discord_link: values.discord_link?.trim(),
     })
   }, [values])
 
@@ -67,15 +72,12 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
               <ESButtonDiscordCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="discord_link"
-                name="stepSettingThree.discord_link"
                 fullWidth
-                value={values.stepSettingThree.discord_link}
+                value={values.discord_link}
                 onChange={handleChange}
-                helperText={errors?.stepSettingThree?.discord_link}
-                placeholder={
-                  !isFirstStep && !values.stepSettingThree.discord_link ? '' : i18n.t('common:streaming_setting_screen.discord_placeholder')
-                }
-                error={!!errors?.stepSettingThree?.discord_link}
+                helperText={errors?.discord_link}
+                placeholder={!isFirstStep && !values.discord_link ? '' : i18n.t('common:streaming_setting_screen.discord_placeholder')}
+                error={!!errors?.discord_link}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />
@@ -87,16 +89,13 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
               <ESButtonTwitterCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="twitter_link"
-                name="stepSettingThree.twitter_link"
                 fullWidth
-                value={values.stepSettingThree.twitter_link}
+                value={values.twitter_link}
                 onChange={handleChange}
-                helperText={errors?.stepSettingThree?.twitter_link}
-                error={!!errors?.stepSettingThree?.twitter_link}
+                helperText={errors?.twitter_link}
+                error={!!errors?.twitter_link}
                 // placeholder={i18n.t('common:streaming_setting_screen.twitter_placeholder')}
-                placeholder={
-                  !isFirstStep && !values.stepSettingThree.twitter_link ? '' : i18n.t('common:streaming_setting_screen.twitter_placeholder')
-                }
+                placeholder={!isFirstStep && !values.twitter_link ? '' : i18n.t('common:streaming_setting_screen.twitter_placeholder')}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />
@@ -108,17 +107,12 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
               <ESButtonInstagramCircle onlyIcon={true} className={classes.icon} />
               <ESInput
                 id="instagram_link"
-                name="stepSettingThree.instagram_link"
                 fullWidth
-                value={values.stepSettingThree.instagram_link}
+                value={values.instagram_link}
                 onChange={handleChange}
-                helperText={errors?.stepSettingThree?.instagram_link}
-                error={!!errors?.stepSettingThree?.instagram_link}
-                placeholder={
-                  !isFirstStep && !values.stepSettingThree.instagram_link
-                    ? ''
-                    : i18n.t('common:streaming_setting_screen.instagram_placeholder')
-                }
+                helperText={errors?.instagram_link}
+                error={!!errors?.instagram_link}
+                placeholder={!isFirstStep && !values.instagram_link ? '' : i18n.t('common:streaming_setting_screen.instagram_placeholder')}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />

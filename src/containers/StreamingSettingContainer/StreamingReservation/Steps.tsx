@@ -346,6 +346,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   value={formik.values.stepSettingOne.description}
                   disabled={true}
                   fullWidth
+                  required
+                  size={'big'}
                 />
               )}
             </Box>
@@ -405,7 +407,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   onBlur={formik.handleBlur}
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_notify_time && formik?.errors?.stepSettingTwo?.stream_notify_time) ||
-                    formik?.errors?.stepSettingTwo?.notify_live_start_date ||
+                    // formik?.errors?.stepSettingTwo?.notify_live_start_date ||
                     formik?.errors?.stepSettingTwo?.notify_live_end_date
                   }
                   error={formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time}
@@ -435,7 +437,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   helperText={
                     (formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
                       formik?.errors?.stepSettingTwo?.stream_schedule_start_time) ||
-                    formik?.errors?.stepSettingTwo?.schedule_live_date
+                    formik?.errors?.stepSettingTwo?.notify_live_start_date
+                    // || formik?.errors?.stepSettingTwo?.schedule_live_date
                   }
                   error={
                     formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
@@ -516,8 +519,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       }
                       onChange={formik.handleChange}
                       onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
-                      helperText={formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price}
-                      error={formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price}
+                      helperText={
+                        formik.values.stepSettingTwo.use_ticket
+                          ? formik?.touched?.stepSettingTwo?.ticket_price && formik?.errors?.stepSettingTwo?.ticket_price
+                          : null
+                      }
+                      error={
+                        formik.values.stepSettingTwo.use_ticket
+                          ? formik?.touched?.stepSettingTwo?.ticket_price && !!formik?.errors?.stepSettingTwo?.ticket_price
+                          : false
+                      }
                       size="big"
                       disabled={!isFirstStep()}
                       className={getAddClassByStep(classes.input_text)}
@@ -559,9 +570,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       fullWidth
                       value={formik.values.stepSettingTwo.sell_ticket_start_time}
                       onChange={(date) => {
-                        formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', date.toString())
+                        const temp = new Date(new Date(date.toString()).getTime() + 5000).toString()
+                        formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                       }}
-                      onBlur={formik.handleBlur}
+                      onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
                       helperText={
                         formik?.touched?.stepSettingTwo?.sell_ticket_start_time && formik?.errors?.stepSettingTwo?.sell_ticket_start_time
                       }

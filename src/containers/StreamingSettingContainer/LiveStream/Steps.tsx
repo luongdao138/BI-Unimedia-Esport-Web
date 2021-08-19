@@ -332,6 +332,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   value={formik.values.stepSettingOne.description}
                   disabled={true}
                   fullWidth
+                  required
+                  size={'big'}
                 />
               )}
             </Box>

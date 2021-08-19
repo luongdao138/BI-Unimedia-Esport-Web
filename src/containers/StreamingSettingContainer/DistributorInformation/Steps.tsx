@@ -157,24 +157,36 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
           </Box>
           <Box paddingBottom={isFirstStep() ? 2 : 3} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
-              <ESFastInput
-                id="overview"
-                name="stepSettingThree.description"
-                multiline={isFirstStep()}
-                rows={8}
-                required={true}
-                placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
-                labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
-                fullWidth
-                value={formik.values.stepSettingThree.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}
-                error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
-                size="big"
-                disabled={!isFirstStep()}
-                className={getAddClassByStep(classes.input_text)}
-              />
+              {isFirstStep() ? (
+                <ESFastInput
+                  id="overview"
+                  name="stepSettingThree.description"
+                  multiline={isFirstStep()}
+                  rows={8}
+                  required={true}
+                  placeholder={i18n.t('common:streaming_setting_screen.placeholder_overview')}
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
+                  fullWidth
+                  value={formik.values.stepSettingThree.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  helperText={formik?.touched?.stepSettingThree?.description && formik?.errors?.stepSettingThree?.description}
+                  error={formik?.touched?.stepSettingThree?.description && !!formik?.errors?.stepSettingThree?.description}
+                  size="big"
+                  disabled={!isFirstStep()}
+                  className={getAddClassByStep(classes.input_text)}
+                />
+              ) : (
+                <ESInput
+                  labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
+                  multiline
+                  value={formik.values.stepSettingThree.description}
+                  disabled={true}
+                  fullWidth
+                  required
+                  size={'big'}
+                />
+              )}
             </Box>
           </Box>
           <Box pb={4} className={classes.wrap_input}>
