@@ -49,11 +49,11 @@ const VideosTop: React.FC = () => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={t('videos_top_tab.video_list')} value={0} />
-          <ESTab label={t('videos_top_tab.live_stream_video')} value={1} />
-          <ESTab label={t('videos_top_tab.schedule_stream_video')} value={2} />
-          <ESTab label={t('videos_top_tab.archived_stream_video')} value={3} />
-          <ESTab label={t('videos_top_tab.favorite_video')} value={4} />
+          <ESTab className={classes.tabMin} label={t('videos_top_tab.video_list')} value={0} />
+          <ESTab className={classes.tabMin} label={t('videos_top_tab.live_stream_video')} value={1} />
+          <ESTab className={classes.tabMin} label={t('videos_top_tab.schedule_stream_video')} value={2} />
+          <ESTab className={classes.tabMin} label={t('videos_top_tab.archived_stream_video')} value={3} />
+          <ESTab className={classes.tabMin} label={t('videos_top_tab.favorite_video')} value={4} />
         </ESTabs>
       </Grid>
     )
@@ -62,7 +62,6 @@ const VideosTop: React.FC = () => {
     switch (tab) {
       case TABS.VIDEOS_LIST:
         return <VideosList setTab={setTab} />
-        break
       case TABS.LIVE_VIDEOS:
         return <LiveStreamVideos />
       case TABS.SCHEDULE_VIDEOS:
@@ -71,7 +70,6 @@ const VideosTop: React.FC = () => {
         return <ArchivedVideos />
       case TABS.FAVORITE_VIDEOS:
         return <FavoriteVideos setTab={setTab} />
-        break
       default:
         break
     }
@@ -95,12 +93,13 @@ const VideosTop: React.FC = () => {
 }
 export default VideosTop
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
     backgroundColor: '#212121',
+    padding: "0 122px 100px 24px",
   },
   tabs: {
     overflow: 'hidden',
@@ -108,6 +107,9 @@ const useStyles = makeStyles(() => ({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     paddingLeft: 24,
+  },
+  tabMin: {
+    minWidth: 56,
   },
   forbiddenMessageContainer: {
     width: '100%',
@@ -128,5 +130,20 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     alignContent: 'center',
     alignSelf: 'center',
+  },
+  [theme.breakpoints.down(1281)]: {
+    root: {
+      paddingRight: '24px',
+    },
+  },
+  [theme.breakpoints.down(375)]: {
+    tabs: {
+      paddingLeft: 0,
+    },
+    tabMin: {
+      '& .MuiTab-wrapper': {
+        fontSize: 12,
+      },
+    },
   },
 }))

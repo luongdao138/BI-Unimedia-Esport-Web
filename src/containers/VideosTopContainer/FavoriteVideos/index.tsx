@@ -4,11 +4,15 @@ import VideoPreviewItem from '../VideoPreviewItem'
 import TitleSeeMore from '../TitleSeeMore'
 import { TabsVideo } from '../index'
 import { VideoPreviewProps } from '../VideosList'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 type FavoriteVideosProps = {
   setTab: (value: number) => void
 }
 const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
+  const theme = useTheme()
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
   const dataLiveVideo = Array(6)
     .fill('')
@@ -56,9 +60,18 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
     }))
   const renderLiveItem = (item: VideoPreviewProps, index: number) => {
     return (
-      <Grid item xs={4} className={classes.itemContainer} key={index}>
-        <VideoPreviewItem data={item} key={item.id} />
-      </Grid>
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer} key={index}>
+            <VideoPreviewItem data={item} key={item.id} />
+          </Box>
+        ) : (
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+            <VideoPreviewItem data={item} key={item.id} />
+          </Grid>
+        )
+      }
+      </>
     )
   }
   const onClickSeeMoreLiveStream = () => {
@@ -80,16 +93,25 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataLiveVideo.length > 0 ? (
-            dataLiveVideo.map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataLiveVideo.length > 0 ? (
+              dataLiveVideo.map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        {dataLiveVideo.length > 0 && (
+            <Box className={classes.spViewMore} onClick={onClickSeeMoreLiveStream}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
             </Box>
-          )}
-        </Grid>
+          )
+        }
         <Box paddingTop={2} />
+
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_schedule_videos')}
@@ -97,16 +119,25 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataScheduleVideo.length > 0 ? (
-            dataScheduleVideo.map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataScheduleVideo.length > 0 ? (
+              dataScheduleVideo.map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        {dataScheduleVideo.length > 0 && (
+            <Box className={classes.spViewMore} onClick={onClickSeeMoreSchedule}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
             </Box>
-          )}
-        </Grid>
+          )
+        }
         <Box paddingTop={2} />
+
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_archived_videos')}
@@ -114,15 +145,23 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataArchiveVideo.length > 0 ? (
-            dataArchiveVideo.map(renderLiveItem)
-          ) : (
-            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {dataArchiveVideo.length > 0 ? (
+              dataArchiveVideo.map(renderLiveItem)
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        {dataArchiveVideo.length > 0 && (
+            <Box className={classes.spViewMore} onClick={onClickSeeMoreArchive}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
             </Box>
-          )}
-        </Grid>
+          )
+        }
       </Box>
     </Box>
   )
@@ -133,19 +172,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: 45,
-    paddingLeft: theme.spacing(3),
   },
   content: {
     width: '100%',
   },
   titleContainer: {
-    paddingRight: theme.spacing(3),
   },
   contentContainer: {
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    width: '100%',
     height: '100%',
   },
   itemContainer: {
@@ -173,6 +209,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  wrapVideos: {
+  },
+  wrapContentContainer: {
+  },
+  spViewMore: {
+    display: 'none',
+  },
+  [theme.breakpoints.down(769)]: {
+    wrapContentContainer: {
+      width: "calc(100vw - 24px)", 
+      overflow: "auto"
+    },
+    contentContainer: {
+      flexWrap: "nowrap",
+      margin: "0px",
+      paddingBottom: "0px"
+    },
+    xsItemContainer: {
+      paddingRight: "24px",
+      '&:last-child': {
+        paddingRight: 0,
+      },
+    },
+    titleContainer: {
+      paddingBottom: 12,
+    },
+    spViewMore: {
+      display: 'block',
+      padding: "15px 0 26px 0", 
+      textAlign: "center"
+    },
   },
 }))
 export default FavoriteVideos

@@ -41,5 +41,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   viewMoreStyle: {
     color: '#707070',
   },
+  [theme.breakpoints.down(769)]: {
+    viewMoreStyle: {
+      display: 'none',
+    },
+  }
 }))
 export default TitleSeeMore

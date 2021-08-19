@@ -3,8 +3,12 @@ import TitleSeeMore from '../TitleSeeMore'
 import VideoPreviewItem from '../VideoPreviewItem'
 import i18n from '@locales/i18n'
 import { VideoPreviewProps } from '../VideosList'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 const ScheduleVideos: React.FC = () => {
+  const theme = useTheme()
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
   const dataScheduleVideo = Array(6)
     .fill('')
     .map((_, i) => ({
@@ -23,9 +27,18 @@ const ScheduleVideos: React.FC = () => {
   const classes = useStyles()
   const renderLiveItem = (item: VideoPreviewProps, index: number) => {
     return (
-      <Grid item xs={4} className={classes.itemContainer} key={index}>
-        <VideoPreviewItem data={item} key={item.id} />
-      </Grid>
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer} key={index}>
+            <VideoPreviewItem data={item} key={item.id} />
+          </Box>
+        ) : (
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+            <VideoPreviewItem data={item} key={item.id} />
+          </Grid>
+        )
+      }
+      </>
     )
   }
   return (
@@ -33,15 +46,17 @@ const ScheduleVideos: React.FC = () => {
       <Box className={classes.titleContainer}>
         <TitleSeeMore titleText={i18n.t('common:videos_top_tab.title_schedule_videos')} />
       </Box>
-      <Grid container spacing={3} className={classes.contentContainer}>
-        {dataScheduleVideo.length > 0 ? (
-          dataScheduleVideo.map(renderLiveItem)
-        ) : (
-          <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-            <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
-          </Box>
-        )}
-      </Grid>
+      <Box className={classes.wrapContentContainer}>
+        <Grid container spacing={3} className={classes.contentContainer}>
+          {dataScheduleVideo.length > 0 ? (
+            dataScheduleVideo.map(renderLiveItem)
+          ) : (
+            <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+              <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+            </Box>
+          )}
+        </Grid>
+      </Box>
     </Box>
   )
 }
@@ -51,19 +66,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     marginTop: 45,
-    paddingLeft: theme.spacing(3),
   },
   content: {
     width: '100%',
   },
   titleContainer: {
-    paddingRight: theme.spacing(3),
   },
   contentContainer: {
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    width: '100%',
     height: '100%',
   },
   itemContainer: {
@@ -91,6 +103,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  wrapVideos: {
+  },
+  wrapContentContainer: {
+  },
+  spViewMore: {
+    display: 'none',
+  },
+  [theme.breakpoints.down(769)]: {
+    wrapContentContainer: {
+      width: "calc(100vw - 24px)", 
+      overflow: "auto"
+    },
+    contentContainer: {
+      flexWrap: "nowrap",
+      margin: "0px",
+      paddingBottom: "0px"
+    },
+    xsItemContainer: {
+      paddingRight: "24px",
+      '&:last-child': {
+        paddingRight: 0,
+      },
+    },
+    titleContainer: {
+      paddingBottom: 12,
+    },
+    spViewMore: {
+      display: 'block',
+      padding: "15px 0 26px 0", 
+      textAlign: "center"
+    },
   },
 }))
 export default ScheduleVideos
