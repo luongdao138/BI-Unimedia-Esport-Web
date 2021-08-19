@@ -20,7 +20,7 @@ const Completed: React.FC<CompletedProps> = (props) => {
   const { lobby } = props
   const isTeam = false //lobby.attributes.participant_type > 1
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participant_count
+  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participants_count
 
   useEffect(() => {
     if (!!lobby && lobby.attributes.is_freezed) fetchWinners()

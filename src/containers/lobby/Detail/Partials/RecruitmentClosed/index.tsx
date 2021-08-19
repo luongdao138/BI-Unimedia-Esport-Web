@@ -19,7 +19,7 @@ const RecruitmentClosed: React.FC<RecruitmentClosedProps> = (props) => {
   const { lobby } = props
   // const isTeam = lobby.attributes.participant_type > 1
   // const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participant_count
+  const entryMembersCount = lobby.attributes.entry_count + lobby.attributes.participants_count
   // const isAuthenticated = useAppSelector(getIsAuthenticated)
   // const isEntered = lobby.attributes.is_entered
   // const isFreezed = lobby.attributes.is_freezed

@@ -77,11 +77,11 @@ const getDetailData = (tournament: LobbyDetail): any => {
   const isTeam = false // _data.participant_type > 1
   const isAdmin = _data.is_owner
   const showStatus = isAdmin ? TOURNAMENT_STATUS.RECRUITING : TOURNAMENT_STATUS.READY_TO_START
-  const noEntry = _data.participant_count == 0 && _data.entry_count == 0
+  const noEntry = _data.participants_count == 0 && _data.entry_count == 0
   const scoreEnterable = _data.status === LOBBY_STATUS.IN_PROGRESS || _data.status === LOBBY_STATUS.ENDED
-  const joinedCount = _data.entry_count + _data.participant_count
+  const joinedCount = _data.entry_count + _data.participants_count
   const maxCapacity = _data.is_freezed
-    ? _data.participant_count
+    ? _data.participants_count
     : checkStatus(_data.status, TOURNAMENT_STATUS.RECRUITMENT_CLOSED) || joinedCount > _data.max_participants
     ? _data.max_participants
     : joinedCount

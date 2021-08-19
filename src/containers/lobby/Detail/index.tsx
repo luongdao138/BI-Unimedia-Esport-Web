@@ -16,7 +16,7 @@ import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
 import MainDatePeriod from '../MainDatePeriod'
-import SubStatusInfo from './Partials/StatusInfoComponent'
+import SubStatusInfo from '../SubStatusInfo'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()

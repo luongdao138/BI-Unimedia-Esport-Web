@@ -15,7 +15,7 @@ interface RecruitingProps {
 const Recruiting: React.FC<RecruitingProps> = (props) => {
   const classes = useStyles()
   const { lobby } = props
-  const entryMembersCount = _.defaultTo(lobby.attributes.entry_count, 0) + _.defaultTo(lobby.attributes.participant_count, 0)
+  const entryMembersCount = _.defaultTo(lobby.attributes.entry_count, 0) + _.defaultTo(lobby.attributes.participants_count, 0)
   const maxMembersCount = _.defaultTo(lobby.attributes.max_participants, 0)
 
   return (

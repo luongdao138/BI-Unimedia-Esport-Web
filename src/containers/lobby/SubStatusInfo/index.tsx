@@ -7,16 +7,18 @@ import { UserProfile } from '@services/user.service'
 import RemainingDate from './Partials/RemainingDate'
 import { LOBBY_PARTICIPANT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 import StatusText from './Partials/StatusText'
+import EntryMembersCount from '@components/EntryMembersCount'
+import _ from 'lodash'
 
 interface Props {
   lobby: LobbyDetail
   userProfile?: UserProfile
 }
 
-const StatusInfoComponent: React.FC<Props> = ({ lobby }) => {
+const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { status, is_freezed, participant_status, is_owner } = lobby.attributes
+  const { status, is_freezed, participant_status, is_owner, entry_count, participants_count, max_participants } = lobby.attributes
 
   const isNotEntered = participant_status === null
   const isEntered = participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
@@ -30,6 +32,9 @@ const StatusInfoComponent: React.FC<Props> = ({ lobby }) => {
   const endedText = t('common:lobby.status.ended') // 終了
   const cancelledText = t('common:lobby.status.cancelled') // この募集は中止されました
 
+  const entryMembersCount = _.defaultTo(entry_count, 0) + _.defaultTo(participants_count, 0)
+  const maxMembersCount = _.defaultTo(max_participants, 0)
+
   const renderStatusInfo = () => {
     switch (status) {
       case LOBBY_STATUS.READY: {
@@ -41,7 +46,6 @@ const StatusInfoComponent: React.FC<Props> = ({ lobby }) => {
       case LOBBY_STATUS.ENTRY_CLOSED: {
         if (!is_freezed) {
           if (isNotEntered) {
-            // not entered
             if (is_owner) {
               return <RemainingDate lobby={lobby} />
             } else {
@@ -115,7 +119,18 @@ const StatusInfoComponent: React.FC<Props> = ({ lobby }) => {
     }
   }
 
-  return <Box className={classes.body}>{renderStatusInfo()}</Box>
+  const renderEntryMembersInfo = () => {
+    if (status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED) return null
+
+    return <EntryMembersCount entryCount={entryMembersCount} maxCount={maxMembersCount} />
+  }
+
+  return (
+    <Box className={classes.body}>
+      {renderStatusInfo()}
+      {renderEntryMembersInfo()}
+    </Box>
+  )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -135,4 +150,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default StatusInfoComponent
+export default SubStatusInfo
