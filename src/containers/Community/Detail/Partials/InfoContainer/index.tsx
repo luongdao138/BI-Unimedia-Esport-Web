@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import LoginRequired from '@containers/LoginRequired'
 import ESAvatar from '@components/Avatar'
+import _ from 'lodash'
 
-const InfoContainer: React.FC = () => {
+const InfoContainer: React.FC<any> = ({ data }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const valueTrue = true
@@ -13,18 +14,18 @@ const InfoContainer: React.FC = () => {
   return (
     <>
       <Box marginTop={2}>
-        <ESChip className={classes.chip} label={'Ninjala'} style={{ marginRight: 16 }} />
+        {!_.isEmpty(data.game_titles) &&
+          data.game_titles.map((game) => {
+            return <ESChip key={game.id} className={classes.chip} label={game.display_name} />
+          })}
+        {/* <ESChip className={classes.chip} label={'Ninjala'} style={{ marginRight: 16 }} />
         <ESChip className={classes.chip} label={'対戦'} />
         <ESChip className={classes.chip} label={'交流'} />
         <ESChip className={classes.chip} label={'初心者歓迎'} />
-        <ESChip className={classes.chip} label={'内輪向け'} />
+        <ESChip className={classes.chip} label={'内輪向け'} /> */}
       </Box>
       <Box marginTop={2}>
-        <Typography>
-          {
-            '概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。概要説明が入ります。'
-          }
-        </Typography>
+        <Typography>{data.description}</Typography>
       </Box>
 
       <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={3}>
@@ -32,7 +33,7 @@ const InfoContainer: React.FC = () => {
           <Typography>{t('common:community.area')}</Typography>
         </Box>
         <Box className={classes.value}>
-          <Typography>オンライン</Typography>
+          <Typography>{data.area_name}</Typography>
         </Box>
       </Box>
 
@@ -63,7 +64,7 @@ const InfoContainer: React.FC = () => {
         </Box>
         <Box className={classes.value} flexDirection="column">
           {valueTrue ? (
-            <Box key={`co`} display="flex" flexDirection="row" alignItems="center" mt={0}>
+            <Box key={`3`} display="flex" flexDirection="row" alignItems="center" mt={0}>
               <LoginRequired>
                 <ButtonBase>
                   <ESAvatar alt={'わたなべ'} />{' '}
@@ -85,7 +86,7 @@ const InfoContainer: React.FC = () => {
         <Box className={classes.value} flexDirection="column">
           {valueTrue ? (
             <>
-              <Box key={`co`} display="flex" flexDirection="row" alignItems="center" mt={0}>
+              <Box key={`1`} display="flex" flexDirection="row" alignItems="center" mt={0}>
                 <LoginRequired>
                   <ButtonBase>
                     <ESAvatar alt={'グレちゃん'} />{' '}
@@ -93,7 +94,7 @@ const InfoContainer: React.FC = () => {
                   <Typography className={classes.breakWord}>{'グレちゃん'}</Typography>
                 </LoginRequired>
               </Box>
-              <Box key={`co`} display="flex" flexDirection="row" alignItems="center" mt={1}>
+              <Box key={`2`} display="flex" flexDirection="row" alignItems="center" mt={1}>
                 <LoginRequired>
                   <ButtonBase>
                     <ESAvatar alt={'わたなべ'} />{' '}

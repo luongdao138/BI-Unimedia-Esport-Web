@@ -31,3 +31,18 @@ export const getTopicFollowers = createAsyncThunk<services.TopicFollowersRespons
     }
   }
 )
+
+export const getCommunityDetail = createAsyncThunk<services.CommunityDetailResponse, string>(
+  COMMUNITY_ACTION_TYPE.GET_COMMUNITY_DETAIL,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getCommunityDetail(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

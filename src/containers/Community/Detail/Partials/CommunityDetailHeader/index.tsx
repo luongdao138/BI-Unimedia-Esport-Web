@@ -29,7 +29,7 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
       </Box>
       <Box
         style={{
-          background: `url(${cover})`,
+          background: `url(${cover || '/images/community_dummy_1.jpg'})`,
           paddingTop: '30.27%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
@@ -52,8 +52,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(3),
     paddingTop: 10,
     paddingBottom: 10,
-    backgroundColor: Colors.black,
-    opacity: 0.7,
+    backgroundColor: Colors.black_opacity['70'],
     zIndex: 100,
     maxWidth: 840,
   },

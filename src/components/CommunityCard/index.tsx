@@ -67,7 +67,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     return (
       <Box color={Colors.white} className={classes.titleContainer} display="flex">
         <Typography className={classes.title}>{attr.title}</Typography>
-        {attr.is_official && <Icon className={`fas fa-check-circle ${classes.checkIcon}`} />}
+        {attr.is_official && <img className={classes.checkIcon} src="/images/check_icon.png" />}
       </Box>
     )
   }
@@ -187,8 +187,7 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
   },
   checkIcon: {
-    color: Colors.primary,
-    fontSize: 18,
+    height: 20,
     marginLeft: theme.spacing(1),
   },
   pAvatar: {

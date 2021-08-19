@@ -36,6 +36,7 @@ export const URI = {
   USER_SECURITY_SETTINGS: '/v2/users/security/setting',
   INQUIRY: '/v2/users/inquiries',
   COMMUNITY_LIST: '/v2/communities/list',
+  COMMUNITY_DETAIL: '/v2/communities/:id/details',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
