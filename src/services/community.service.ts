@@ -62,6 +62,18 @@ export type CommunityFormParams = {
   cover_image_url: string
 }
 
+export type CommunityFeature = {
+  id: string
+  type: string
+  attributes: {
+    feature: string
+  }
+}
+
+export type CommunityFeaturesResponse = {
+  data: Array<CommunityFeature>
+}
+
 export type Meta = {
   current_page: number
   per_page: number
@@ -103,5 +115,10 @@ export const getCommunityDetail = async (hash_key: string): Promise<CommunityDet
 
 export const createCommunity = async (params: CommunityFormParams): Promise<void> => {
   const { data } = await api.post<void>(URI.COMMUNITY_CREATE, params)
+  return data
+}
+
+export const getCommunityFeatures = async (): Promise<CommunityFeaturesResponse> => {
+  const { data } = await api.get<CommunityFeaturesResponse>(URI.COMMUNITY_FEATURES)
   return data
 }

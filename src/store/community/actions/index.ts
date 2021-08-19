@@ -61,3 +61,18 @@ export const createCommunity = createAsyncThunk<void, services.CommunityFormPara
     }
   }
 )
+
+export const getCommunityFeatures = createAsyncThunk<services.CommunityFeaturesResponse>(
+  COMMUNITY_ACTION_TYPE.GET_COMMUNITY_FEATURES,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.getCommunityFeatures()
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

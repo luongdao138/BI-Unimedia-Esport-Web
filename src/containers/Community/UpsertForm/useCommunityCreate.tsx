@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import community from '@store/community'
-import { CommunityDetail, CommunityFormParams } from '@services/community.service'
+import { CommunityDetail, CommunityFeature, CommunityFormParams } from '@services/community.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import { createMetaSelector } from '@store/metadata/selectors'
+import { Meta } from '@store/metadata/actions/types'
 
 const { actions, selectors } = community
+const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
 // TODO change when data is ready
 export type EditableTypes = {
   name: boolean
@@ -25,13 +28,19 @@ export type EditableTypes = {
 const useCommunityCreate = (): {
   isEdit: boolean
   community: CommunityDetail
+  communityFeatures: Array<CommunityFeature>
   editables: EditableTypes
   submit(params: CommunityFormParams): void
+  getCommunityFeaturesMeta: Meta
+  getCommunityFeatures: () => void
 } => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
   const community = useAppSelector(selectors.getCommunityDetail)
+  const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
+  const getCommunityFeatures = () => dispatch(actions.getCommunityFeatures())
+  const getCommunityFeaturesMeta = useAppSelector(_getCommunityFeaturesMeta)
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
     // always editable
@@ -83,7 +92,7 @@ const useCommunityCreate = (): {
     }
   }, [community, router])
 
-  return { isEdit, community, editables, submit }
+  return { isEdit, community, communityFeatures, editables, submit, getCommunityFeaturesMeta, getCommunityFeatures }
 }
 
 export default useCommunityCreate

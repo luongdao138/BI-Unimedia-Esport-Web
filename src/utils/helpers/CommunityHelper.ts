@@ -22,6 +22,7 @@ const checkCommunityRequiredFields = (errors: FormikErrors<FormType>): boolean =
   const requiredFieldErrors = []
   if (stepOne) {
     requiredFieldErrors.push(stepOne.name)
+    requiredFieldErrors.push(stepOne.join_condition)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

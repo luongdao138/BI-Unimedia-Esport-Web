@@ -6,6 +6,7 @@ import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Theme } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
+import _ from 'lodash'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -21,6 +22,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
   const [areaName, setAreaName] = useState('')
   const [approval, setApproval] = useState('')
   const [openRange, setOpenRange] = useState('')
+  const [games, setGames] = useState('')
   const classes = useStyles()
 
   useEffect(() => {
@@ -39,6 +41,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
     const openRangeName =
       Number(values.stepOne.open_range) === 1 ? t('common:community_create.private') : t('common:community_create.public')
     setOpenRange(openRangeName)
+    if (!_.isEmpty(values.stepOne.game_titles)) {
+      const game = _.chain(values.stepOne.game_titles)
+        .map((g) => g.display_name)
+        .join(' ')
+        .value()
+      setGames(game)
+    }
   }, [])
 
   return (
@@ -62,12 +71,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       />
       <Box pb={2} />
 
-      <ESInput
-        labelPrimary={t('common:community_create.game')}
-        value={values.stepOne.game_titles[0]?.display_name || ''}
-        disabled={true}
-        fullWidth
-      />
+      <ESInput labelPrimary={t('common:community_create.game')} value={games} disabled={true} fullWidth />
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.area')} value={areaName} disabled={true} fullWidth />
@@ -82,7 +86,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
 
       <ESInput labelPrimary={t('common:community_create.tag')} disabled={true} fullWidth noValue />
       {values.stepOne.features.map((category, idx) => (
-        <ESChip key={idx} className={classes.chip} label={category.display_name} />
+        <ESChip key={idx} className={classes.chip} label={category.attributes.feature} />
       ))}
       <Box pb={2} />
     </Box>

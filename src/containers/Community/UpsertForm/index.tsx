@@ -39,7 +39,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
-  const { editables, isEdit, submit } = useCommunityCreate()
+  const { editables, isEdit, submit, getCommunityFeatures } = useCommunityCreate()
   const [isDiscard, setIsDiscard] = useState(false)
   const { t } = useTranslation(['common'])
 
@@ -52,7 +52,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     onSubmit: (values) => {
       const data = {
         ...values.stepOne,
-        features: values.stepOne.features.map((feature) => feature.id),
+        features: values.stepOne.features.map((feature) => Number(feature.id)),
         game_titles: values.stepOne.game_titles.map((feature) => feature.id),
         join_condition: Number(values.stepOne.join_condition),
       }
@@ -62,6 +62,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       }
     },
   })
+
+  useEffect(() => {
+    getCommunityFeatures()
+  }, [])
 
   useEffect(() => {
     if (isFirstRun.current) {
