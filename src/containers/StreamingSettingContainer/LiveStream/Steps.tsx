@@ -19,13 +19,7 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import {
-  baseViewingURL,
-  GetCategoryResponse,
-  LiveStreamSettingResponse,
-  SetLiveStreamParams,
-  TYPE_SETTING,
-} from '@services/liveStream.service'
+import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
@@ -89,13 +83,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   }, [formik.values.stepSettingOne.category])
 
   const getLiveSetting = () => {
-    getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then(() => {
-      checkStatusRecord(liveSettingInformation)
+    getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then((res) => {
+      checkStatusRecord(res.payload)
       formik.validateForm()
     })
   }
 
-  const checkStatusRecord = (data: LiveStreamSettingResponse) => {
+  const checkStatusRecord = (data) => {
     if (!data?.data?.created_at) {
       onReNewUrlAndKey(KEY_TYPE.URL)
       setShowReNew(false)
@@ -626,12 +620,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {i18n.t('common:streaming_setting_screen.check_submit')}
+                  {showReNew ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
-                {/* {hasError &&
-                  <Box pt={1} display="flex" flexDirection="column" color={Colors.secondary} style={{ alignItems: 'center' }}>
-                    <Typography variant="body2">{'未入力の項目があります。'}</Typography>
-                  </Box>} */}
               </Box>
             </Grid>
           ) : (
