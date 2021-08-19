@@ -647,6 +647,14 @@ export default {
       ended: '終了',
       cancelled: 'この募集は中止されました',
     },
+    remaining_date: {
+      entry: 'エントリー',
+      start: '開始',
+      until: 'まであと',
+      from_minutes: '分から',
+      in_progress: '実施',
+      freeze: '開催',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',

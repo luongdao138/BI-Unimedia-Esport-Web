@@ -14,49 +14,76 @@ interface Props {
 const RemainingDate: React.FC<Props> = ({ lobby }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const { status, is_freezed, is_owner } = lobby.attributes
 
-  const status = lobby.attributes.status
-  const beforeOnhold = status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY
-
-  const accEndDate = moment(lobby.attributes.entry_start_datetime)
+  const entryStartDate = moment(lobby.attributes.entry_start_datetime)
   const startDate = moment(lobby.attributes.start_datetime)
-  const targetDate = beforeOnhold ? accEndDate : startDate
+  const targetDate = status === LOBBY_STATUS.READY ? entryStartDate : startDate
+
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
   const hours = targetDate.diff(nowDate, 'hours')
 
-  const untilDatePrefix = beforeOnhold ? t('common:tournament.until_deadline') : t('common:tournament.until_event')
+  const entry = t('common:lobby.remaining_date.entry')
+  const start = t('common:lobby.remaining_date.start')
+  const until = t('common:lobby.remaining_date.until')
+  const end = t('common:lobby.status.ended')
+  const inProgress = t('common:lobby.remaining_date.in_progress')
+  const freeze = t('common:lobby.remaining_date.freeze')
 
-  return (
-    <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-      {days >= 1 ? (
-        <>
-          <Typography>{untilDatePrefix}</Typography>
-          <Typography className={classes.highlightedNumber}>{days}</Typography>
-          <Typography>{t('common:common.day')}</Typography>
-        </>
-      ) : hours >= 1 ? (
-        <>
-          <Typography>{untilDatePrefix}</Typography>
-          <Typography className={classes.highlightedNumber}>{hours}</Typography>
-          <Typography>{t('common:common.time')}</Typography>
-        </>
-      ) : (
-        <>
-          <Box mr={1}>
-            <Typography className={classes.highlightedNumber}>{targetDate.format('YYYY/MM/DD')}</Typography>
-          </Box>
-          <Typography className={classes.highlightedNumber}>{targetDate.format('HH')}</Typography>
-          <Typography>{t('common:common.hour')}</Typography>
-          <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
-          <Typography>{beforeOnhold ? t('common:tournament.end_from_minutes') : t('common:tournament.start_from_minutes')}</Typography>
-        </>
-      )}
-    </Box>
-  )
+  let prefix
+  if (status === LOBBY_STATUS.READY) prefix = `${entry + start + until}`
+  if (status === LOBBY_STATUS.RECRUITING) prefix = `${entry + end + until}`
+  if (status === LOBBY_STATUS.ENTRY_CLOSED) prefix = !is_freezed && is_owner ? `${freeze + until}` : `${inProgress + until}`
+
+  const renderDays = () => {
+    return (
+      <>
+        <Typography>{prefix}</Typography>
+        <Typography className={classes.highlightedNumber}>{days}</Typography>
+        <Typography>{t('common:common.day')}</Typography>
+      </>
+    )
+  }
+
+  const renderHours = () => {
+    return (
+      <>
+        <Typography>{prefix}</Typography>
+        <Typography className={classes.highlightedNumber}>{hours}</Typography>
+        <Typography>{t('common:common.time')}</Typography>
+      </>
+    )
+  }
+
+  const renderDueDate = () => {
+    return (
+      <>
+        <Typography className={classes.highlightedNumber}>{targetDate.format('YYYY/MM/DD HH')}</Typography>
+        <Typography>{t('common:common.hour')}</Typography>
+        <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
+        <Typography>{t('common:lobby.remaining_date.from_minutes')}</Typography>
+        <Typography>{t('common:lobby.remaining_date.start')}</Typography>
+      </>
+    )
+  }
+
+  const renderRemainingDate = () => {
+    if (days >= 1) return renderDays()
+    else if (hours >= 1) return renderHours()
+    else return renderDueDate()
+  }
+
+  return <Box className={classes.remainingDate}>{renderRemainingDate()}</Box>
 }
 
 const useStyles = makeStyles(() => ({
+  remainingDate: {
+    display: 'flex',
+    flexDirection: 'row',
+    color: Colors.grey[300],
+    alignItems: 'baseline',
+  },
   highlightedNumber: {
     fontSize: '1.5rem',
     fontWeight: 'bold',
