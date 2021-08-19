@@ -23,9 +23,10 @@ interface SnsInfoStreamProps {
   onDataChange: (data: any) => void
   handleError: (error) => void
   showPreview?: boolean
+  isFirstStep?: boolean
 }
 
-const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, handleError, showPreview = false }) => {
+const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, handleError, showPreview = false, isFirstStep }) => {
   const classes = useStyles()
 
   const initialValues = getInitialDistributorValues(social)
@@ -71,7 +72,9 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
                 value={values.stepSettingThree.discord_link}
                 onChange={handleChange}
                 helperText={errors?.stepSettingThree?.discord_link}
-                placeholder={i18n.t('common:streaming_setting_screen.discord_placeholder')}
+                placeholder={
+                  !isFirstStep && !values.stepSettingThree.discord_link ? '' : i18n.t('common:streaming_setting_screen.discord_placeholder')
+                }
                 error={!!errors?.stepSettingThree?.discord_link}
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
@@ -90,7 +93,10 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
                 onChange={handleChange}
                 helperText={errors?.stepSettingThree?.twitter_link}
                 error={!!errors?.stepSettingThree?.twitter_link}
-                placeholder={i18n.t('common:streaming_setting_screen.twitter_placeholder')}
+                // placeholder={i18n.t('common:streaming_setting_screen.twitter_placeholder')}
+                placeholder={
+                  !isFirstStep && !values.stepSettingThree.twitter_link ? '' : i18n.t('common:streaming_setting_screen.twitter_placeholder')
+                }
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />
@@ -108,7 +114,11 @@ const SnsInfoStream: React.FC<SnsInfoStreamProps> = ({ social, onDataChange, han
                 onChange={handleChange}
                 helperText={errors?.stepSettingThree?.instagram_link}
                 error={!!errors?.stepSettingThree?.instagram_link}
-                placeholder={i18n.t('common:streaming_setting_screen.instagram_placeholder')}
+                placeholder={
+                  !isFirstStep && !values.stepSettingThree.instagram_link
+                    ? ''
+                    : i18n.t('common:streaming_setting_screen.instagram_placeholder')
+                }
                 disabled={showPreview}
                 className={getAddClassByShowPreview(classes.input_text)}
               />
