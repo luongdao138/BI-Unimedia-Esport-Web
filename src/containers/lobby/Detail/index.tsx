@@ -1,13 +1,6 @@
-import { ReactNode } from 'react'
 import useLobbyDetail from '../hooks/useLobbyDetail'
 import LobbyDetailHeader from '@components/LobbyDetailHeader'
 import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
-import RecruitmentClosed from './Partials/RecruitmentClosed'
-import Recruiting from './Partials/Recruiting'
-import Ready from './Partials/Ready'
-import InProgress from './Partials/InProgress'
-import Cancelled from './Partials/Cancelled'
-import Completed from './Partials/Completed'
 import ESLoader from '@components/FullScreenLoader'
 // import BattleRoyaleInfo from './Partials/BattleRoyaleInfo'
 import useLobbyHelper from '../hooks/useLobbyHelper'
@@ -15,10 +8,11 @@ import BlankLayout from '@layouts/BlankLayout'
 import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
+import SubActionButtons from '@containers/lobby/SubActionButtons'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
-  const { userProfile, handleBack, lobby, meta } = useLobbyDetail()
+  const { handleBack, lobby, meta } = useLobbyDetail()
   // const lobby: LobbyDetail = {
   //   id: 'uniqueid123',
   //   type: 'tournament_details',
@@ -114,17 +108,22 @@ const LobbyDetailBody: React.FC = () => {
   const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
 
-  type LobbyStatus = 'open' | 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' // TODO
+  // const actionComponent: Record<LobbyStatus, ReactNode> = {
+  //   open: <Recruiting lobby={lobby} userProfile={userProfile} />, // before entry accepting
+  //   in_progress: <InProgress lobby={lobby} userProfile={userProfile} />, //headset
+  //   cancelled: <Cancelled lobby={lobby} userProfile={userProfile} />,
+  //   completed: <Completed lobby={lobby} userProfile={userProfile} />, //trophy
+  //   ready: <Ready lobby={lobby} userProfile={userProfile} />,
+  //   ready_to_start: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
+  //   recruiting: <Recruiting lobby={lobby} userProfile={userProfile} />,
+  //   recruitment_closed: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
+  // }
 
-  const actionComponent: Record<LobbyStatus, ReactNode> = {
-    open: <Recruiting lobby={lobby} userProfile={userProfile} />, // before entry accepting
-    in_progress: <InProgress lobby={lobby} userProfile={userProfile} />, //headset
-    cancelled: <Cancelled lobby={lobby} userProfile={userProfile} />,
-    completed: <Completed lobby={lobby} userProfile={userProfile} />, //trophy
-    ready: <Ready lobby={lobby} userProfile={userProfile} />,
-    ready_to_start: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
-    recruiting: <Recruiting lobby={lobby} userProfile={userProfile} />,
-    recruitment_closed: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
+  const openChat = () => {
+    alert('')
+  }
+  const openMemberList = () => {
+    alert('')
   }
 
   const renderBody = () => {
@@ -136,7 +135,7 @@ const LobbyDetailBody: React.FC = () => {
           cover={lobby?.attributes?.cover_image_url || '/images/default_card.png'}
           onHandleBack={handleBack}
         >
-          {actionComponent[lobby.attributes.status]}
+          <SubActionButtons lobby={lobby} openChat={openChat} openMemberList={openMemberList} />
         </LobbyDetailHeader>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
       </>

@@ -631,6 +631,11 @@ export default {
       number_of_entries: 'エントリー数',
       organizer: '開催者',
     },
+    buttons: {
+      temporary: 'Temporary',
+      member_list: 'エントリーメンバー',
+      member_list_confirmed: '参加メンバー',
+    },
   },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',
