@@ -337,6 +337,10 @@ export default {
     user_results: 'ニックネーム・ID「:key」 の検索結果',
     user_results_all: 'ニックネーム・IDの検索結果',
   },
+  video: {
+    video_results: '動画「:key」の検索結果',
+    video_results_all: '動画の検索結果',
+  },
   tournament: {
     card_date: '開　催　日',
     organizer: '主催者',

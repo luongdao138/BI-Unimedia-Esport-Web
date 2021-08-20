@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
+import { Grid, Box, makeStyles, Theme, Typography } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { useTheme } from '@material-ui/core/styles'
 
 const VideoSearchContainer: React.FC = () => {
   const dataLiveVideo = Array(20)
@@ -22,6 +24,9 @@ const VideoSearchContainer: React.FC = () => {
   const classes = useStyles()
   const { searchKeyword } = useSearch()
   const [searchVideos, setSearchVideos] = useState([])
+  const { t } = useTranslation(['common'])
+  const theme = useTheme()
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
 
   useEffect(() => {
     if (searchKeyword.length <= 0) {
@@ -33,13 +38,30 @@ const VideoSearchContainer: React.FC = () => {
 
   return (
     <Box className={classes.container}>
-      <Grid container spacing={3} className={classes.contentContainer}>
-        {searchVideos.map((data, i) => (
-          <Grid item xs={4} className={classes.itemContainer} key={i}>
-            <VideoPreviewItem data={data} key={i} />
-          </Grid>
-        ))}
+      <Grid item xs={12}>
+        <Box pt={3} pb={3}>
+          <Typography variant="caption" gutterBottom className={classes.title}>
+            {`${t('common:common.search_results')} ${dataLiveVideo.length}${t('common:common.total')}`}
+          </Typography>
+        </Box>
       </Grid>
+      <Box className={classes.wrapContentContainer}>
+        <Grid container spacing={3} className={classes.contentContainer}>
+          {searchVideos.map((data, i) => (
+            <>
+              {downMd ? (
+                <Box className={classes.xsItemContainer} key={i}>
+                  <VideoPreviewItem data={data} key={i} />
+                </Box>
+              ) : (
+                <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={i}>
+                  <VideoPreviewItem data={data} key={i} />
+                </Grid>
+              )}
+            </>
+          ))}
+        </Grid>
+      </Box>
     </Box>
   )
 }
@@ -51,10 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   contentContainer: {
-    marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
     display: 'flex',
-    width: '100%',
     height: '100%',
   },
   itemContainer: {
@@ -62,6 +82,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+  },
+  title: {
+    color: "#ADABAB"
+  },
+  [theme.breakpoints.down(769)]: {
+    wrapContentContainer: {
+      width: 'calc(100vw - 24px)',
+      overflow: 'auto',
+    },
+    contentContainer: {
+      flexWrap: 'nowrap',
+      margin: '0px',
+      paddingBottom: '0px',
+    },
+    xsItemContainer: {
+      paddingRight: '24px',
+      '&:last-child': {
+        paddingRight: 0,
+      },
+    },
   },
 }))
 export default VideoSearchContainer
