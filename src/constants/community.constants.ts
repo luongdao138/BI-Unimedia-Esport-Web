@@ -4,8 +4,8 @@ export const PARTICIPANT_TYPE = {
 }
 
 export const T_TYPE = {
-  PUBLIC: 't_public',
-  PRIVATE: 't_private',
+  PUBLIC: 0,
+  PRIVATE: 1,
 }
 
 export const STATUS = {
