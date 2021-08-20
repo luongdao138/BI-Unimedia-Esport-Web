@@ -24,7 +24,7 @@ const CommunityContainer: React.FC = () => {
       title: 'Ninjalaコミュニティ',
       cover: '/images/community_dummy_1.jpg',
       hash_key: '1231231',
-      my_role: 'admin',
+      my_role: null,
       is_official: false,
       is_private: true,
     },
