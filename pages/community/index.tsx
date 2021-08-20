@@ -20,7 +20,7 @@ MainLayout.defaultProps = {
 
 function formatFilter(filterText: string) {
   if (!_.isString(filterText)) return CommunityFilterOption.all
-  const possibleFilters = ['all', 'participating', 'managing']
+  const possibleFilters = ['all', 'joined', 'organized']
   if (possibleFilters.includes(filterText)) {
     return filterText as CommunityFilterOption
   }

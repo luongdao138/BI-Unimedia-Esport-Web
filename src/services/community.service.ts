@@ -3,13 +3,19 @@ import { URI } from '@constants/uri.constants'
 
 export enum CommunityFilterOption {
   all = 'all',
-  participating = 'participating',
-  managing = 'managing',
+  joined = 'joined',
+  organized = 'organized',
+}
+
+export type CommunitySearchParams = {
+  page: number
+  keyword: string
+  filter?: CommunityFilterOption
 }
 
 export type CommunityListResponse = {
   data: Array<CommunityResponse>
-  links: any
+  meta: PageMeta
 }
 
 export type GameTitle = {
@@ -74,7 +80,7 @@ export type CommunityFeaturesResponse = {
   data: Array<CommunityFeature>
 }
 
-export type Meta = {
+export type PageMeta = {
   current_page: number
   per_page: number
   total_count: number
@@ -83,7 +89,7 @@ export type Meta = {
 
 export type TopicFollowersResponse = {
   data: Array<FollowersTopicResponse>
-  meta: Meta
+  meta: PageMeta
 }
 
 export type FollowersTopicResponse = {
@@ -98,8 +104,8 @@ export type CommunityDetailResponse = {
   data: CommunityDetail
 }
 
-export const communityList = async (): Promise<CommunityListResponse> => {
-  const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST)
+export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
+  const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST, { params })
   return data
 }
 

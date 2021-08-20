@@ -1,20 +1,21 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { CommunityDetail, CommunityResponse, FollowersTopicResponse, CommunityFeature, Meta } from '@services/community.service'
+import { CommunityDetail, CommunityResponse, FollowersTopicResponse, CommunityFeature, PageMeta } from '@services/community.service'
 
 type StateType = {
-  my_community_list: Array<CommunityResponse> | null
+  communitiesList?: Array<CommunityResponse>
+  communitiesListMeta?: PageMeta
   topicFollowersList: Array<FollowersTopicResponse> | null
-  topicFollowersListMeta?: Meta
+  topicFollowersListMeta?: PageMeta
   community_detail: CommunityDetail
   community_features: Array<CommunityFeature>
 }
 
-const initialState: StateType = { my_community_list: [], topicFollowersList: [], community_detail: undefined, community_features: [] }
+const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_detail: undefined, community_features: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
-    state.my_community_list = action.payload.data
+    state.communitiesList = action.payload.data
   })
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
