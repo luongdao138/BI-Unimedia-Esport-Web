@@ -1044,7 +1044,7 @@ export default {
       description2: '一度解散したコミュニティのトピックやアップロードした画像は復元できません。',
       disbanded_toast: 'コミュニティを解散しました',
     },
-    community_created_toast: 'コミュニティを作成しました',
+    community_created_toast: 'コミュニティを作成しました。',
   },
   topic_create: {
     title: 'トピックを作成する',

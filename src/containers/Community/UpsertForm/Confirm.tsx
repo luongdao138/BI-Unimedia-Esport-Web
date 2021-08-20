@@ -45,7 +45,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
     if (!_.isEmpty(values.stepOne.game_titles)) {
       const game = _.chain(values.stepOne.game_titles)
         .map((g) => g.display_name)
-        .join(' ')
+        .join('  ')
         .value()
       setGames(game)
     }
@@ -72,7 +72,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       />
       <Box pb={2} />
 
-      <ESInput labelPrimary={t('common:community_create.game')} value={games} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:community_create.game')} value={games} disabled={true} fullWidth valueMultiline />
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.area')} value={areaName} disabled={true} fullWidth />
