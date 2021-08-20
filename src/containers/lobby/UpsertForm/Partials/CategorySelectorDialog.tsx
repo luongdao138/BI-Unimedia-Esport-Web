@@ -13,59 +13,50 @@ import _ from 'lodash'
 import useCategory from './useCategory'
 import { CategoryItem } from '@services/lobby.service'
 
-// type GameTitleItem = GameTitle['attributes']
+type Category = CategoryItem['attributes']
+
 interface Props {
-  values: CategoryItem['attributes'][]
-  onChange: (categories: CategoryItem['attributes'][]) => void
+  values: Category[]
+  onChange: (categories: Category[]) => void
   disabled?: boolean
 }
 
 const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const { getLobbyCategories, categories, meta } = useCategory()
   const [open, setOpen] = useState(false)
-  const [categoryTitles, setCategoryTitles] = useState<CategoryItem['attributes'][]>(values)
-  // const { games } = useGameTitles()
-  // const { getGameByGenreId, meta } = useGameGenre()
-  const { getLobbyCategories, meta, categories } = useCategory()
-
-  // const handleCategoryGenre = () => getGameByGenreId(1)
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>(values)
 
   useEffect(() => {
     if (open === true) {
-      setCategoryTitles(categoryTitles)
+      setSelectedCategories(values)
       getLobbyCategories()
     }
   }, [open])
 
   const onSubmit = () => {
-    onChange(categoryTitles)
+    onChange(selectedCategories)
     setOpen(false)
   }
-  const checkIsSelected = (id: number) => categoryTitles.some((g) => g.id === id)
 
-  const handleSelect = (category: CategoryItem['attributes']) => {
+  const checkIsSelected = (id: number) => selectedCategories.some((c) => c.id === id)
+
+  const handleSelect = (category: Category) => {
     const selectedId = category.id
     if (checkIsSelected(selectedId)) {
-      setCategoryTitles(categoryTitles.filter((category) => category.id !== selectedId))
+      setSelectedCategories(selectedCategories.filter((category) => category.id !== selectedId))
     } else {
-      setCategoryTitles([category, ...categoryTitles])
+      setSelectedCategories([category, ...selectedCategories])
     }
   }
 
   return (
     <>
       <Box display="flex" alignItems="center" pb={1}>
-        <Typography className={classes.labelColor}>{t('common:lobby_create.category')}</Typography>
+        <Typography className={classes.labelColor}>{t('common:lobby.create.category')}</Typography>
       </Box>
-      <ButtonBase
-        disabled={disabled}
-        onClick={() => {
-          setOpen(true)
-          // handleCategoryGenre()
-        }}
-        className={classes.inputContainer}
-      >
+      <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
@@ -88,29 +79,27 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
-                <Typography variant="h2">{t('common:lobby_create.choose_category')}</Typography>
+                <Typography variant="h2">{t('common:lobby.create.choose_category')}</Typography>
               </Box>
             </Box>
 
             <Box pt={8} className={classes.container}>
-              <>
-                {meta.loaded && !meta.pending && categories.length > 0 && (
-                  <Container maxWidth="md" className={classes.listContainer}>
-                    <List>
-                      {categories.map((c, idx) => (
-                        <ESChip
-                          key={idx}
-                          className={classes.chip}
-                          label={c.name}
-                          onClick={() => handleSelect(c)}
-                          color={checkIsSelected(c.id) ? 'primary' : 'default'}
-                          isGameList={true}
-                        />
-                      ))}
-                    </List>
-                  </Container>
-                )}
-              </>
+              {meta.loaded && !meta.pending && categories.length > 0 && (
+                <Container maxWidth="md" className={classes.listContainer}>
+                  <List>
+                    {categories.map((c, idx) => (
+                      <ESChip
+                        key={idx}
+                        className={classes.chip}
+                        label={c.name}
+                        onClick={() => handleSelect(c)}
+                        color={checkIsSelected(c.id) ? 'primary' : 'default'}
+                        isGameList={true}
+                      />
+                    ))}
+                  </List>
+                </Container>
+              )}
             </Box>
           </Box>
 
@@ -120,7 +109,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
             <Box className={classes.nextBtnHolder}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onSubmit}>
-                  {t('common:lobby_create.decide')}
+                  {t('common:lobby.create.decide')}
                 </ButtonPrimary>
               </Box>
             </Box>

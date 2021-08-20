@@ -24,7 +24,7 @@ export type EditableTypes = {
   notes: boolean
   rule: boolean
   max_participants: boolean
-  is_organizer_join: boolean
+  organizer_participated: boolean
   start_datetime: boolean
   end_date: boolean
   entry_start_datetime: boolean
@@ -41,6 +41,7 @@ export type EditableTypes = {
   game_hardware: boolean
   co_organizers: boolean
   cover_image: boolean
+  categories: boolean
 }
 
 const useLobbyCreate = (): {
@@ -65,7 +66,7 @@ const useLobbyCreate = (): {
     title: true,
     overview: true,
     prize: true, // has_prize, prize_amount
-    is_organizer_join: true,
+    organizer_participated: true,
     game_hardware: true,
     terms_of_participation: true,
     t_type: true,
@@ -74,6 +75,7 @@ const useLobbyCreate = (): {
     address: true,
     co_organizers: true,
     organizer_name: true,
+    categories: true,
     // always not editable
     rule: true, // rule, has_third_place
     participant_type: true,
