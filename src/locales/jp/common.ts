@@ -657,8 +657,8 @@ export default {
     organized: 'あなたが作成した募集',
   },
   communitySearchFilters: {
-    participating: '参加しているコミュニティ',
-    managing: '管理しているコミュニティ',
+    joined: '参加しているコミュニティ',
+    organized: '管理しているコミュニティ',
   },
   search: {
     search: '検索',
