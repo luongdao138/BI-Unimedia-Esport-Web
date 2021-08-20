@@ -8,9 +8,9 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     message: data ? data.attributes.message : '',
     categories: data ? data.attributes.categories : [],
     game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
-    game_hardware_id: data ? data.attributes.game_hardware_id : -1,
+    game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
     max_participants: data ? data.attributes.max_participants : 0,
-    organizer_participated: data ? /*data.attributes.is_organizer_join*/ true : false, // TODO
+    organizer_participated: data ? data.attributes.organizer_participated : false, // TODO
   },
   stepTwo: {
     entry_start_datetime: data ? data.attributes.entry_start_datetime : null,

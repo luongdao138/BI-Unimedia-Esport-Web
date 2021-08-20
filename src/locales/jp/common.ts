@@ -669,6 +669,16 @@ export default {
       in_progress: '本日開催',
       ended: '終了',
     },
+    toasts: {
+      edit: '編集を完了しました',
+      create: '募集を作成しました',
+    },
+    create: {
+      submit: '内容を確認する',
+      category: 'カテゴリ',
+      choose_category: 'カテゴリを選ぶ',
+      decide: '決定する',
+    },
   },
   lobbySearchFilters: {
     recommended: 'おすすめの募集',
