@@ -109,6 +109,8 @@ export type ParticipantsItem = {
     nickname: string
     user_code: string
     avatar_url: string
+    is_followed: true
+    is_blocked: false
   }
 }
 
