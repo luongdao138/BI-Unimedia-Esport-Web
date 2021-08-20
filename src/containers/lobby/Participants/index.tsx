@@ -28,7 +28,17 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
 
-  const { participants, getParticipants, resetParticipants, resetMeta, participantsPageMeta, participantsMeta } = useLobbyActions()
+  const {
+    participants,
+    getParticipants,
+    resetParticipants,
+    resetMeta,
+    participantsPageMeta,
+    participantsMeta,
+    follow,
+    unFollow,
+    unBlock,
+  } = useLobbyActions()
 
   const { userProfile } = useGetProfile()
 
@@ -53,6 +63,16 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
       return
     }
     getParticipants({ page: page.current_page + 1, hash_key: hash_key })
+  }
+
+  const onFollow = (userCode: string) => {
+    follow(userCode)
+  }
+  const onUnFollow = (userCode: string) => {
+    unFollow(userCode)
+  }
+  const onUnBlock = (userCode: string) => {
+    unBlock(userCode)
   }
 
   return (
@@ -116,7 +136,14 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                 }
               >
                 {participants.map((p: ParticipantsItem, i) => (
-                  <LobbyMemberItem isMe={userProfile.id === _.get(p, 'id', '')} data={p} key={i} />
+                  <LobbyMemberItem
+                    follow={onFollow}
+                    unFollow={onUnFollow}
+                    unBlock={onUnBlock}
+                    isMe={userProfile.id === _.get(p, 'id', '')}
+                    data={p}
+                    key={i}
+                  />
                 ))}
               </InfiniteScroll>
             ) : null}

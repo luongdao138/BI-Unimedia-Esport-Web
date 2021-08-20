@@ -5,6 +5,7 @@ import Avatar from '@components/Avatar'
 import _ from 'lodash'
 import ESButton from '@components/Button'
 import i18n from '@locales/i18n'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { Colors } from '@theme/colors'
 
 interface Props {
@@ -23,48 +24,64 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
   const avatar = _.defaultTo(data.attributes.avatar_url, null)
   const isBlocked = _.get(data, 'attributes.is_blocked', false)
   const isFollowed = _.get(data, 'attributes.is_followed', false)
+  const isLoading = _.get(data, 'pending', false)
 
   const renderUnBlock = () => {
     if (isBlocked) {
-      return (
+      return !isLoading ? (
         <ESButton
           onClick={() => unBlock(userCode)}
           variant="outlined"
           className={classes.button}
           size="medium"
           round
+          disabled={isLoading}
           normalColor={Colors.red[10]}
           hoverColor={Colors.red[30]}
         >
-          {i18n.t('common:home.follow')}
+          {i18n.t('common:common.blocking')}
         </ESButton>
+      ) : (
+        <CircularProgress size={24} className={classes.loader} />
       )
     }
   }
 
   const renderFollow = () => {
     if (!isBlocked && !isFollowed) {
-      return (
-        <ESButton onClick={() => follow && follow(userCode)} variant="outlined" className={classes.button} size="medium" round>
-          {i18n.t('common:common.blocking')}
+      return !isLoading ? (
+        <ESButton
+          disabled={isLoading}
+          onClick={() => follow && follow(userCode)}
+          variant="outlined"
+          className={classes.button}
+          size="medium"
+          round
+        >
+          {i18n.t('common:home.follow')}
         </ESButton>
+      ) : (
+        <CircularProgress size={24} className={classes.loader} />
       )
     }
   }
 
   const renderUnFollow = () => {
     if (!isBlocked && isFollowed) {
-      return (
+      return !isLoading ? (
         <ESButton
           onClick={() => unFollow && unFollow(userCode)}
           variant="contained"
           color="primary"
           size="medium"
+          disabled={isLoading}
           round
           className={classes.button}
         >
           {i18n.t('common:home.unfollow')}
         </ESButton>
+      ) : (
+        <CircularProgress size={24} className={classes.loader} />
       )
     }
   }
@@ -121,6 +138,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     secondaryAction: {
       right: 0,
     },
+  },
+  loader: {
+    width: 10,
+    height: 10,
+    marginRight: 40,
   },
 }))
 

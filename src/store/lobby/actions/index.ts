@@ -1,6 +1,8 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
 import { LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
+import { follow, FollowActionResponse, FollowParams, unfollow, UnFollowResponse } from '@services/user.service'
+import { UnblockParams, UnblockResponse, unblockUser } from '@services/block.service'
 
 export const entryLobby = createAsyncThunk<services.EntryLobbyResponse, string>(
   LOBBY_ACTION_TYPE.LOBBY_ENTRY,
@@ -153,3 +155,48 @@ export const getLobbyCategories = createAsyncThunk<services.LobbyCategoriesRespo
 )
 
 export const resetParticipants = createAction(RESET_LOBBY_PARTICIPANTS)
+
+export const lobbyFollow = createAsyncThunk<FollowActionResponse, FollowParams>(
+  LOBBY_ACTION_TYPE.LOBBY_FOLLOW,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await follow(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const lobbyUnfollow = createAsyncThunk<UnFollowResponse, FollowParams>(
+  LOBBY_ACTION_TYPE.LOBBY_UNFOLLOW,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await unfollow(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const lobbyUnblock = createAsyncThunk<UnblockResponse, UnblockParams>(
+  LOBBY_ACTION_TYPE.LOBBY_UNBLOCK,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await unblockUser(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

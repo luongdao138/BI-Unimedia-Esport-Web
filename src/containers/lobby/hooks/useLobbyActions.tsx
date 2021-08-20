@@ -24,6 +24,9 @@ const useLobbyActions = (): {
   participantsPageMeta: PageMeta
   resetMeta: () => void
   resetParticipants: () => void
+  follow: (userCode: string) => void
+  unFollow: (userCode: string) => void
+  unBlock: (userCode: string) => void
 } => {
   const dispatch = useAppDispatch()
   const entryMeta = useAppSelector(entryMetaSelector)
@@ -44,6 +47,15 @@ const useLobbyActions = (): {
   const getParticipants = (params: ParticipantParams) => {
     dispatch(actions.getParticipants(params))
   }
+  const follow = (userCode: string) => {
+    dispatch(actions.lobbyFollow({ user_code: userCode }))
+  }
+  const unFollow = (userCode: string) => {
+    dispatch(actions.lobbyUnfollow({ user_code: userCode }))
+  }
+  const unBlock = (userCode: string) => {
+    dispatch(actions.lobbyUnblock({ user_code: userCode }))
+  }
   const resetMeta = () => dispatch(clearMetaData(actions.getParticipants.typePrefix))
   const resetParticipants = () => dispatch(actions.resetParticipants())
   return {
@@ -59,6 +71,9 @@ const useLobbyActions = (): {
     participantsPageMeta,
     resetMeta,
     resetParticipants,
+    follow,
+    unFollow,
+    unBlock,
   }
 }
 
