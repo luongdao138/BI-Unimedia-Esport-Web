@@ -38,7 +38,7 @@ import * as notificationSelector from '@store/notification/selectors'
 import useSearch from '@containers/Search/useSearch'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { unseenCount } from '@store/socket/selectors'
-
+import { searchTypes } from '@constants/common.constants'
 interface returnItem {
   value: string
   type: number
@@ -63,7 +63,11 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
-    router.push(ESRoutes.SEARCH)
+    if(_data.type === searchTypes.VIDEO) {
+      router.push(ESRoutes.SEARCH_VIDEO)
+    } else {
+      router.push(ESRoutes.SEARCH)
+    }
   }
 
   const openModal = () => router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })

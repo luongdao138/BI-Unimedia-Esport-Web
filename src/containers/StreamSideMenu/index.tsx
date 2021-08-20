@@ -140,27 +140,13 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   selected={isSelected(ESRoutes.VIDEO_STREAMING_SETTING)}
                 >
                   <ListItemIcon className={classes.icon}>
-                    <Icon fontSize="small" className="fa fa-video-slash" />
+                    <Icon fontSize="small" className="fa fa-video" />
                   </ListItemIcon>
                   {/* link to Delivery settings and tab Delivery reservation (配信予約) */}
                   {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.reservation_video')} />}
                 </ListItem>
               </Link>
             )}
-            <Link href={ESRoutes.TERMS} passHref>
-              <ListItem
-                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                button
-                disableRipple
-                selected={isSelected(ESRoutes.TERMS)}
-              >
-                <ListItemIcon className={classes.icon}>
-                  <Icon fontSize="small" className="fa fa-hourglass" />
-                </ListItemIcon>
-                {/* is confirm link to */}
-                {!minimizeLayout && <ListItemText className={classes.listText} primary={t('common:home.viewing_history')} />}
-              </ListItem>
-            </Link>
             {!minimizeLayout && <Box paddingBottom={1} />}
             {isStreamer && (
               <Link href={ESRoutes.VIDEO_STREAMING_MANAGEMENT} passHref>
