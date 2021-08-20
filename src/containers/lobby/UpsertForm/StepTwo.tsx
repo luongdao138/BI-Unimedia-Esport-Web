@@ -1,13 +1,13 @@
 import { makeStyles, Box, Theme, Typography } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
-import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import { Colors } from '@theme/colors'
-import { EditableTypes } from './useLobbyCreate'
 import ESInputDatePicker from '@components/InputDatePicker'
 import ESFastInput from '@components/FastInput'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
+import { FormType } from './FormModel/FormType'
+import { EditableTypes } from './useLobbyCreate'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -95,7 +95,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           required={true}
           size="small"
           fullWidth
-          disabled={!editables.area_id}
+          disabled={!editables.area}
         >
           <option disabled value={-1}>
             {i18n.t('common:please_select')}

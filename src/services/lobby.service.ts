@@ -157,7 +157,11 @@ export type LobbyDetail = {
   }
 }
 
-export interface CreateLobbyResponse {
+export type CreateLobbyResponse = {
+  hash_key: string
+}
+
+export type UpdateLobbyResponse = {
   hash_key: string
 }
 
@@ -181,8 +185,6 @@ export type ParticipantParams = {
   hash_key: string
   page: number
 }
-
-export type UpdateLobbyResponse = void
 
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
   const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:id/gi, hash_key))
@@ -225,7 +227,7 @@ export const createLobby = async (params: LobbyUpsertParams): Promise<CreateLobb
 }
 
 export const updateLobby = async (params: UpdateParams): Promise<UpdateLobbyResponse> => {
-  const { data } = await api.post<UpdateLobbyResponse>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), params.data)
+  const { data } = await api.put<UpdateLobbyResponse>(URI.LOBBY_UPDATE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 

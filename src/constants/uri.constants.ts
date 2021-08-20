@@ -106,6 +106,7 @@ export const URI = {
   LOBBY_SEARCH: '/v2/recruitments/search',
   LOBBY_PARTICIPANTS: '/v2/recruitments/:id/participants',
   LOBBY_CREATE: '/v2/recruitments',
+  LOBBY_UPDATE: '/v2/recruitments/:id',
   LOBBY_CATEGORIES: '/v2/recruitment_categories',
   LOBBY_DETAIL: '/v2/recruitments/:id/details',
   LOBBY_RANDOMIZE_PARTICIPANTS: '/v2/recruitments/:id/randomize_participants',
