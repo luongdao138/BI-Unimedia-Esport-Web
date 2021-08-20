@@ -127,6 +127,10 @@ export default createReducer(initialState, (builder) => {
     state.data = undefined
   })
 
+  builder.addCase(logout.fulfilled, (state) => {
+    state.data = undefined
+  })
+
   builder.addCase(actions.getRecommendedEvent.fulfilled, (state, action) => {
     let tmpRecommendedEvent = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
