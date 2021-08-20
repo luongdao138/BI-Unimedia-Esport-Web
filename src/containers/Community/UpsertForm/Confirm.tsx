@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import ESChip from '@components/Chip'
 import { FormType } from './FormModel/FormType'
-import { makeStyles, Box, Theme } from '@material-ui/core'
+import { makeStyles, Box, Theme, Typography } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import { CommunityFeature } from '@services/community.service'
@@ -67,13 +67,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       />
       <Box pb={2} />
 
-      <ESInput labelPrimary={t('common:community_create.game')} disabled={true} fullWidth />
-      {values.stepOne.game_titles && (
+      <ESInput labelPrimary={t('common:community_create.game')} disabled={true} fullWidth noValue />
+      {values.stepOne.game_titles.length > 0 && (
         <Box display="flex" flexWrap="wrap">
           {values.stepOne.game_titles.map((game, i) => (
-            <Box key={i} className={classes.gameName}>
-              {String(game.display_name)}
-            </Box>
+            <Typography key={i} className={classes.gameName} variant="body1">
+              {game.display_name}
+            </Typography>
           ))}
         </Box>
       )}
