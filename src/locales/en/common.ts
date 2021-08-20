@@ -681,6 +681,12 @@ export default {
       edit: '編集を完了しました',
       create: '募集を作成しました',
     },
+    create: {
+      submit: '内容を確認する',
+      category: 'カテゴリ',
+      choose_category: 'カテゴリを選ぶ',
+      decide: '決定する',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',

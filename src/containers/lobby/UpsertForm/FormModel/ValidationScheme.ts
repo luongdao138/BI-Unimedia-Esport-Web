@@ -8,6 +8,7 @@ import { EditableTypes } from '../useLobbyCreate'
 export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes): any => {
   let recruitMinDate = new Date()
   let minStartDate = new Date()
+
   if (!!data && !!data.attributes.status) {
     const beforeRecruit = LobbyHelper.checkStatus(data.attributes.status, 'recruiting')
     if (!beforeRecruit && data.attributes.entry_start_datetime) recruitMinDate = new Date(data.attributes.entry_start_datetime)
@@ -18,8 +19,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
     stepOne: Yup.object({
       title: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
-        .min(2, i18n.t('common:common.at_least')),
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
       message: Yup.string()
         .nullable()
         .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
@@ -33,7 +33,6 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .integer(i18n.t('common:common.integer')),
       organizer_participated: Yup.boolean(),
     }),
-
     stepTwo: Yup.object({
       entry_start_datetime: Yup.date()
         .nullable()

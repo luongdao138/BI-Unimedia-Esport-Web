@@ -1,6 +1,6 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-import { GameTitle } from './game.service'
+import { GameTitle, GameHardware } from './game.service'
 import { LOBBY_PARTICIPANT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 
 export type LobbyRule = 'single' | 'double' | 'battle_royale' // TODO
@@ -131,12 +131,8 @@ export type LobbyDetail = {
     entry_count: number //
     entry_end_datetime: string //
     entry_start_datetime: string //
-    game_hardware_id: number // data: GameHardware
-    game_title: {
-      data: GameTitle
-    }
-    game_title_id: number
-    hardware: string
+    game_hardware: { data: GameHardware }
+    game_title: { data: GameTitle }
     hash_key: string
     id: number
     is_owner: boolean
