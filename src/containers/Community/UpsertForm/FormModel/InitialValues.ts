@@ -5,13 +5,13 @@ export const getInitialValues = (data): FormType => ({
   // TODO change after data is done
   stepOne: {
     cover_image_url: data ? data.attributes.cover_image : '',
-    title: data ? data.attributes.title : '',
+    name: data ? data.attributes.title : '',
     overview: data ? data.attributes.overview : '',
-    t_type: data ? data.attributes.overview : '',
-    participation_approval: data ? data.attributes.overview : -1,
-    tag_title_id: data ? [data.attributes.tag_title.data.attributes] : [],
-    game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
-    area_id: data ? data.attributes.area_id : -1,
+    open_range: data ? data.attributes.open_range : 0,
+    join_condition: data ? data.attributes.join_condition : -1,
+    features: data ? [data.attributes.tag_title.data.attributes] : [],
+    game_titles: data ? [data.attributes.game_title.data.attributes] : [],
+    area_id: data ? data.attributes.area_id : 1,
     address: data ? data.attributes.address : '',
   },
 })

@@ -1008,6 +1008,7 @@ export default {
   },
   community_create: {
     title: 'コミュニティを作成する',
+    input_required: '入力内容が適切ではありません。',
     edit_title: '募集を作成する',
     name: 'コミュニティ名',
     introduction: 'コミュニティ紹介文',
@@ -1017,7 +1018,11 @@ export default {
     area: 'エリア',
     area_name_placeholder: 'エリア情報を記載',
     public_or_private: 'コミュニティ公開設定',
+    public: '公開',
+    private: '非公開',
     participation_approval: '参加承認',
+    approval_automatic: '自動承認',
+    approval_manual: '手動承認',
     choose_tag: 'コミュニティタグを選ぶ',
     tag: 'コミュニティタグ',
     decide: '決定する',
@@ -1047,7 +1052,7 @@ export default {
       description2: '一度解散したコミュニティのトピックやアップロードした画像は復元できません。',
       disbanded_toast: 'コミュニティを解散しました',
     },
-    community_created_toast: 'コミュニティを作成しました',
+    community_created_toast: 'コミュニティを作成しました。',
   },
   topic_create: {
     title: 'トピックを作成する',
