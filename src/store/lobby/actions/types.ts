@@ -11,3 +11,5 @@ export enum LOBBY_ACTION_TYPE {
   LOBBY_CATEGORIES = 'lobby/categories',
   LOBBY_DETAIL = 'lobby/detail',
 }
+
+export const RESET_LOBBY_PARTICIPANTS = 'lobby/resetLobbyParticipants'

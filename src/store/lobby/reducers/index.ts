@@ -3,12 +3,13 @@ import * as actions from '../actions'
 import { ParticipantsData, PageMeta, LobbyResponse, CategoryItem, LobbyDetail } from '@services/lobby.service'
 
 type StateType = {
-  detail: any // change type
+  detail: LobbyDetail // change type
   participants: ParticipantsData
   searchLobbies?: Array<LobbyResponse>
   searchLobbiesMeta?: PageMeta
   lobbyCategories: CategoryItem['attributes'][]
   lobbyDetail?: LobbyDetail
+  participantsMeta?: PageMeta
 }
 
 const initialState: StateType = {
@@ -46,6 +47,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getParticipants.fulfilled, (state, action) => {
     state.participants = action.payload.data
+    state.participantsMeta = action.payload.meta
     // do detail manipulation later
   })
   builder.addCase(actions.getLobbyCategories.fulfilled, (state, action) => {

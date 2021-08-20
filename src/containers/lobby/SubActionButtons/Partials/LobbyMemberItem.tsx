@@ -10,12 +10,13 @@ import { Colors } from '@theme/colors'
 interface Props {
   data: ParticipantsItem
   goToProfile?: (userCode: string) => void
-  follow: (userCode: string) => void
-  unFollow: (userCode: string) => void
-  unBlock: (userCode: string) => void
+  follow?: (userCode: string) => void
+  unFollow?: (userCode: string) => void
+  unBlock?: (userCode: string) => void
+  isMe: boolean
 }
 
-const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goToProfile }) => {
+const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goToProfile, isMe }) => {
   const classes = useStyles()
   const userCode = _.defaultTo(data.attributes.user_code, '')
   const nickName = _.defaultTo(data.attributes.nickname, '')
@@ -44,7 +45,7 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
   const renderFollow = () => {
     if (!isBlocked && !isFollowed) {
       return (
-        <ESButton onClick={() => follow(userCode)} variant="outlined" className={classes.button} size="medium" round>
+        <ESButton onClick={() => follow && follow(userCode)} variant="outlined" className={classes.button} size="medium" round>
           {i18n.t('common:common.blocking')}
         </ESButton>
       )
@@ -54,7 +55,14 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
   const renderUnFollow = () => {
     if (!isBlocked && isFollowed) {
       return (
-        <ESButton onClick={() => unFollow(userCode)} variant="contained" color="primary" size="medium" round className={classes.button}>
+        <ESButton
+          onClick={() => unFollow && unFollow(userCode)}
+          variant="contained"
+          color="primary"
+          size="medium"
+          round
+          className={classes.button}
+        >
           {i18n.t('common:home.unfollow')}
         </ESButton>
       )
@@ -62,7 +70,11 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
   }
 
   return (
-    <ListItem onClick={() => goToProfile && goToProfile(userCode)} className={classes.root}>
+    <ListItem
+      ContainerProps={{ style: { listStyle: 'none' } }}
+      onClick={() => goToProfile && goToProfile(userCode)}
+      className={classes.root}
+    >
       <ListItemAvatar>
         <Badge
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -75,7 +87,7 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
         </Badge>
       </ListItemAvatar>
       <ListItemText className={classes.listItem}>
-        <Typography noWrap={true} variant="h3">
+        <Typography noWrap={true} variant="h3" style={isMe === true ? { color: Colors.yellow } : undefined}>
           {nickName}
         </Typography>
         <Typography noWrap={true} variant="body2">
@@ -95,6 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'flex-start',
     cursor: 'pointer',
+    listStyle: 'none',
   },
   listItem: {
     paddingRight: 140,

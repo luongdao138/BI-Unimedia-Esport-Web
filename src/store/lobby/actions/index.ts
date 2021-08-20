@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
-import { LOBBY_ACTION_TYPE } from './types'
+import { LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
 
 export const entryLobby = createAsyncThunk<services.EntryLobbyResponse, string>(
   LOBBY_ACTION_TYPE.LOBBY_ENTRY,
@@ -77,7 +77,7 @@ export const searchLobby = createAsyncThunk<services.LobbySearchResponse, servic
 export const resetSearchLobbies = createAction(LOBBY_ACTION_TYPE.RESET_SEARCH_LOBBIES)
 export const clearLobbyResult = createAction(LOBBY_ACTION_TYPE.CLEAR_LOBBY_RESULT)
 
-export const getParticipants = createAsyncThunk<services.ParticipantsResponse, string>(
+export const getParticipants = createAsyncThunk<services.ParticipantsResponse, services.ParticipantParams>(
   LOBBY_ACTION_TYPE.LOBBY_PARTICIPANTS,
   async (params, { rejectWithValue }) => {
     try {
@@ -151,3 +151,5 @@ export const getLobbyCategories = createAsyncThunk<services.LobbyCategoriesRespo
     }
   }
 )
+
+export const resetParticipants = createAction(RESET_LOBBY_PARTICIPANTS)
