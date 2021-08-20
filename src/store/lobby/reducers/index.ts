@@ -5,6 +5,7 @@ import { ParticipantsData, PageMeta, LobbyResponse, CategoryItem, LobbyDetail } 
 type StateType = {
   detail: any // change type
   participants: ParticipantsData
+  recommendedParticipants: ParticipantsData
   searchLobbies?: Array<LobbyResponse>
   searchLobbiesMeta?: PageMeta
   lobbyCategories: CategoryItem['attributes'][]
@@ -14,6 +15,7 @@ type StateType = {
 const initialState: StateType = {
   detail: undefined,
   participants: undefined,
+  recommendedParticipants: [],
   searchLobbies: [],
   lobbyCategories: [],
 }
@@ -46,6 +48,14 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getParticipants.fulfilled, (state, action) => {
     state.participants = action.payload.data
+    // do detail manipulation later
+  })
+  builder.addCase(actions.randomizeParticipants.fulfilled, (state, action) => {
+    state.recommendedParticipants = action.payload.data
+    // do detail manipulation later
+  })
+  builder.addCase(actions.confirmParticipants.fulfilled, (state) => {
+    state.recommendedParticipants = []
     // do detail manipulation later
   })
   builder.addCase(actions.getLobbyCategories.fulfilled, (state, action) => {

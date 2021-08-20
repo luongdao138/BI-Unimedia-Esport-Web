@@ -170,6 +170,13 @@ export type UpdateParams = {
   data: LobbyUpsertParams
 }
 
+export type ConfirmParticipantParams = {
+  hash_key: string
+  data: {
+    participant_ids: Array<number>
+  }
+}
+
 export type UpdateLobbyResponse = void
 
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
@@ -193,7 +200,17 @@ export const search = async (params: LobbySearchParams): Promise<LobbySearchResp
 }
 
 export const participants = async (hash_key: string): Promise<ParticipantsResponse> => {
-  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, hash_key))
+  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const randomizeParticipants = async (hash_key: string): Promise<ParticipantsResponse> => {
+  const { data } = await api.post<ParticipantsResponse>(URI.LOBBY_RANDOMIZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const confirmParticipants = async (params: ConfirmParticipantParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.LOBBY_CONFIRM_PARTICIPANTS.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 

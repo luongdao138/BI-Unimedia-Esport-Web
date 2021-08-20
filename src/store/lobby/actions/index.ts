@@ -92,6 +92,36 @@ export const getParticipants = createAsyncThunk<services.ParticipantsResponse, s
   }
 )
 
+export const randomizeParticipants = createAsyncThunk<services.ParticipantsResponse, string>(
+  LOBBY_ACTION_TYPE.LOBBY_RANDOMIZE_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.randomizeParticipants(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const confirmParticipants = createAsyncThunk<void, services.ConfirmParticipantParams>(
+  LOBBY_ACTION_TYPE.LOBBY_CONFIRM_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.confirmParticipants(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const createLobby = createAsyncThunk<services.CreateLobbyResponse, services.LobbyUpsertParams>(
   LOBBY_ACTION_TYPE.LOBBY_CREATE,
   async (param, { rejectWithValue }) => {

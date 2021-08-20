@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { LobbyDetail } from '@services/lobby.service'
+import { ParticipantsItem } from '@services/lobby.service'
 import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme, DialogContent } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
@@ -12,12 +12,22 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import { FixedSizeList as List } from 'react-window'
 import ParticipantRow from './ParticipantRow'
 import ESLoader from '@components/Loader'
+import ESFullLoader from '@components/FullScreenLoader'
 import ConfirmDialog from '@components/ConfirmDialog'
+import _ from 'lodash'
 
 interface CloseRecruitmentModalProps {
-  tournament: LobbyDetail
+  participants: Array<ParticipantsItem>
+  recommended_participants: Array<ParticipantsItem>
+  open: boolean
   isRecruiting: boolean
+  max_participants: number
+  participantsMeta: Meta
+  recommendedParticipantsMeta: Meta
+  onConfirm: () => void
   handleClose: () => void
+  randomizeParticipants: () => void
+  onConfirmParticipants: (participants_ids: Array<number>) => void
 }
 
 export type Meta = {
@@ -26,58 +36,88 @@ export type Meta = {
   error: boolean | Record<string, any>
 }
 
-const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruiting }) => {
+type ParticipantsFormItem = {
+  id: number
+  user_id: number
+  status: number
+  nickname: string
+  user_code: string
+  avatar_url: string
+  checked: boolean
+}
+
+const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({
+  participants,
+  open,
+  isRecruiting,
+  max_participants,
+  recommended_participants,
+  randomizeParticipants,
+  participantsMeta,
+  recommendedParticipantsMeta,
+  onConfirmParticipants,
+}) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [shuffleOpen, setShuffleOpen] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [participants, setParticipants] = useState<{ id: number; user_code: string; avatar: string; nickname: string; status: boolean }[]>(
-    []
-  )
-  const meta = {
-    pending: false,
-    loaded: true,
-    error: false,
-  }
-  const hasNextPage = false
-  const users = [
-    {
-      id: 86,
-      user_code: 'cage21',
-      nickname: 'cage',
-      avatar: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/86/1624946172-86.jpeg',
-      status: false,
-    },
-    {
-      id: 23,
-      user_code: 'raiden23',
-      nickname: 'raiden',
-      avatar: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/23/1596358566-23.jpg',
-      status: false,
-    },
-  ]
+  const [modalOpen, setModalOpen] = useState(open)
+  const [formParticipants, setFormParticipants] = useState<ParticipantsFormItem[]>([])
+  const [reload, setReload] = useState(false)
+  const [error, setError] = useState(true)
 
   useEffect(() => {
-    setParticipants(users)
-  }, [])
+    setReload(false)
+    const totalCheck = formParticipants.filter((p) => p.checked).length
+    if (totalCheck == max_participants && max_participants > 0) setError(false)
+    else setError(true)
+  }, [reload])
+
+  useEffect(() => {
+    if (participants && participants.length > 0) {
+      const arr = _.map(participants, function (participant) {
+        return _.extend({}, participant.attributes, { checked: false })
+      })
+      setFormParticipants(arr)
+      setReload(true)
+    }
+  }, [participants])
+
+  useEffect(() => {
+    if (recommended_participants && recommended_participants.length > 0) {
+      const arr: Array<ParticipantsFormItem> = formParticipants
+      for (let i = 0; i < arr.length; i++) {
+        const index = _.result(
+          _.find(recommended_participants, function (obj) {
+            return parseInt(obj.id) === arr[i].id
+          }),
+          'id'
+        )
+        arr[i].checked = index ? true : false
+      }
+      setFormParticipants(arr)
+      setReload(true)
+    }
+  }, [recommended_participants])
+
+  const hasNextPage = false
 
   const ListRow = (props: { index: number; style: React.CSSProperties; data: any }) => {
     const { index, style, data } = props
     const user = data[index]
-    return (
+    return user ? (
       <div style={style} key={index}>
         <ParticipantRow
           user={user}
-          checked={user.status}
+          checked={user.checked}
           handleClose={() => setModalOpen(false)}
           handleChange={() => handleChange(index)}
         />
       </div>
+    ) : (
+      <></>
     )
   }
-
-  const itemCount = participants.length
 
   const loadMore = () => {
     if (hasNextPage) {
@@ -86,24 +126,14 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
   }
 
   const handleChange = (index: number) => {
-    setParticipants(
-      participants.map((participant, i) => {
-        if (i === index) return { ...participant, status: !participant.status }
-        return participant
-      })
-    )
+    const arr = [...formParticipants]
+    arr[index].checked = !arr[index].checked
+    setFormParticipants(arr)
+    setReload(true)
   }
 
   return (
     <Box>
-      <Box className={classes.button}>
-        <LoginRequired>
-          <ButtonPrimaryOutlined disabled={!isRecruiting} onClick={() => setModalOpen(true)}>
-            {t('common:recruitment.close_recruitment.button_text')}
-          </ButtonPrimaryOutlined>
-        </LoginRequired>
-      </Box>
-
       <ESDialog
         title={t('common:confirm_member.title')}
         open={modalOpen}
@@ -112,12 +142,13 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
           paperFullWidth: classes.dialogFullWidth,
           paper: classes.dialogPaper,
         }}
+        bkColor="rgba(0,0,0,0.8)"
       >
         <Typography className={classes.subTitle}>{t('common:confirm_member.sub_title')}</Typography>
         <Box display="flex" className={classes.rowContainer} textAlign="center">
           <Typography className={classes.subTitle}>{t('common:confirm_member.total_participants')}</Typography>
           <Box display="flex" className={classes.countContainer}>
-            <Typography className={classes.selectedNumber}>{participants.filter((p) => p.status).length}</Typography>
+            <Typography className={classes.selectedNumber}>{formParticipants.filter((p) => p.checked).length}</Typography>
           </Box>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
@@ -126,22 +157,25 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
             <Typography className={classes.totals}>/</Typography>
           </Box>
           <Box display="flex" className={classes.countContainer}>
-            <Typography className={classes.totals}>{participants.length}</Typography>
+            <Typography className={classes.totals}>{max_participants}</Typography>
           </Box>
           <Box display="flex" className={classes.countContainer}>
             <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
           </Box>
         </Box>
-
         <DialogContent style={{ paddingRight: 0, paddingLeft: 0 }}>
-          <InfiniteLoader isItemLoaded={(index: number) => index < participants.length} itemCount={itemCount} loadMoreItems={loadMore}>
+          <InfiniteLoader
+            itemCount={formParticipants ? formParticipants.length : 0}
+            loadMoreItems={loadMore}
+            isItemLoaded={(index: number) => (index < formParticipants.length ? formParticipants.length : 0)}
+          >
             {({ onItemsRendered, ref }) => (
               <List
                 className={classes.scroll}
                 height={innerHeight - 200}
                 width={'100%'}
-                itemCount={participants.length}
-                itemData={participants}
+                itemCount={formParticipants ? formParticipants.length : 0}
+                itemData={formParticipants}
                 itemSize={66}
                 onItemsRendered={onItemsRendered}
                 ref={ref}
@@ -150,22 +184,16 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
               </List>
             )}
           </InfiniteLoader>
-          {meta.pending ? (
+          {participantsMeta.pending || recommendedParticipantsMeta.pending ? (
             <Box className={classes.loader}>
               <ESLoader />
             </Box>
           ) : null}
         </DialogContent>
-        <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
+        <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={3.5}>
           <Box className={classes.actionButton}>
             <LoginRequired>
-              <ButtonPrimary
-                round
-                fullWidth
-                size="large"
-                disabled={!isRecruiting && participants.filter((p) => p.status).length == 0}
-                onClick={() => setConfirmOpen(true)}
-              >
+              <ButtonPrimary round fullWidth size="large" disabled={error} onClick={() => setConfirmOpen(true)}>
                 {t('common:confirm_member.confirm')}
               </ButtonPrimary>
             </LoginRequired>
@@ -180,6 +208,8 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
         </Box>
       </ESDialog>
 
+      {recommendedParticipantsMeta.pending && <ESFullLoader open={recommendedParticipantsMeta.pending} />}
+
       <ConfirmDialog
         open={confirmOpen}
         title={t('common:confirm_member.confirm_title')}
@@ -191,6 +221,9 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
         }}
         handleSubmit={() => {
           setConfirmOpen(false)
+          const arr = _.filter(formParticipants, (p) => p.checked)
+          const arr2 = arr.map((a) => a.user_id)
+          onConfirmParticipants(arr2)
         }}
       />
 
@@ -206,6 +239,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ isRecruit
         }}
         handleSubmit={() => {
           setShuffleOpen(false)
+          randomizeParticipants()
         }}
       />
     </Box>
