@@ -35,7 +35,7 @@ export const URI = {
   UNFOLLOW: '/v2/followers/unfollow',
   USER_SECURITY_SETTINGS: '/v2/users/security/setting',
   INQUIRY: '/v2/users/inquiries',
-  COMMUNITY_LIST: '/v2/communities/list',
+  COMMUNITY_LIST: '/v2/communities/public_list',
   COMMUNITY_DETAIL: '/v2/communities/:id/details',
   COMMUNITY_CREATE: '/v2/communities',
   COMMUNITY_FEATURES: '/v2/communities/features',
