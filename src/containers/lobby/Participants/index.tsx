@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createRef } from 'react'
 import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
@@ -14,12 +14,17 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import LobbyMemberItem from '@containers/Lobby/SubActionButtons/Partials/LobbyMemberItem'
 import useLobbyActions from '../hooks/useLobbyActions'
 import _ from 'lodash'
+import router from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import { use100vh } from 'react-div-100vh'
+import { useRect } from '@utils/hooks/useRect'
 
 export interface ParticipantsProps {
   open: boolean
   handleClose: () => void
   data: LobbyDetail
 }
+const contentRef = createRef<HTMLDivElement>()
 
 const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) => {
   const { t } = useTranslation(['common'])
@@ -27,6 +32,9 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   const hash_key = data.attributes.hash_key
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
+  const windowHeight = use100vh()
+
+  const { height } = useRect(contentRef)
 
   const {
     participants,
@@ -75,80 +83,89 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
     unBlock(userCode)
   }
 
+  const goToProfile = (userCode: string) => {
+    router.push(`${ESRoutes.PROFILE}/${userCode}`)
+  }
+
   return (
     <ESModal open={open} handleClose={handleClose}>
       <BlankLayout>
-        <Box pt={7.5} className={classes.topContainer}>
-          <Box py={2} display="flex" flexDirection="row" alignItems="center">
-            <IconButton className={classes.iconButtonBg} onClick={handleClose}>
-              <Icon className="fa fa-arrow-left" fontSize="small" />
-            </IconButton>
-            <Box pl={2}>
-              <Typography variant="h2">
-                {data.attributes.is_freezed ? t('common:tournament.participant.back') : t('common:tournament.entry_back')}
-              </Typography>
-            </Box>
-          </Box>
-          <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
-            <Box display="flex" flexDirection="column">
-              <Box display="flex" flexDirection="row" alignItems="flex-end">
-                <Box mr={2}>
-                  <Typography variant="h3" className={classes.countLabel}>
-                    {data.attributes.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
-                  </Typography>
-                </Box>
-                <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
-                  {data.attributes.is_freezed
-                    ? data.attributes.participants_count
-                    : data.attributes.participants_count + data.attributes.entry_count}
-                </Typography>
-                <Typography variant="h3" className={classes.countLabel}>
-                  {unit}
-                </Typography>
-                <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
-                  /
-                </Typography>
-
-                <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
-                  {data.attributes.max_participants}
-                </Typography>
-                <Typography variant="h3" className={classes.countLabel}>
-                  {unit}
+        <div ref={contentRef}>
+          <Box pt={7.5} className={classes.topContainer}>
+            <Box py={2} display="flex" flexDirection="row" alignItems="center">
+              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Box pl={2}>
+                <Typography variant="h2">
+                  {data.attributes.is_freezed ? t('common:tournament.participant.back') : t('common:tournament.entry_back')}
                 </Typography>
               </Box>
             </Box>
+            <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" flexDirection="row" alignItems="flex-end">
+                  <Box mr={2}>
+                    <Typography variant="h3" className={classes.countLabel}>
+                      {data.attributes.is_freezed
+                        ? t('common:tournament.number_of_participants')
+                        : t('common:tournament.number_of_entries')}
+                    </Typography>
+                  </Box>
+                  <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
+                    {data.attributes.is_freezed
+                      ? data.attributes.participants_count
+                      : data.attributes.participants_count + data.attributes.entry_count}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel}>
+                    {unit}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 20, marginLeft: 4 }}>
+                    /
+                  </Typography>
+
+                  <Typography variant="h3" className={classes.countLabel} style={{ fontSize: 22 }}>
+                    {data.attributes.max_participants}
+                  </Typography>
+                  <Typography variant="h3" className={classes.countLabel}>
+                    {unit}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           </Box>
-          <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-            {_.isArray(participants) && !_.isEmpty(participants) && open ? (
-              <InfiniteScroll
-                dataLength={participants.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                scrollableTarget="scrollableDiv"
-                scrollThreshold={0.99}
-                style={{ overflow: 'hidden' }}
-                loader={
-                  participantsMeta.pending && (
-                    <div className={classes.loaderCenter}>
-                      <ESLoader />
-                    </div>
-                  )
-                }
-              >
-                {participants.map((p: ParticipantsItem, i) => (
-                  <LobbyMemberItem
-                    follow={onFollow}
-                    unFollow={onUnFollow}
-                    unBlock={onUnBlock}
-                    isMe={userProfile.id === _.get(p, 'id', '')}
-                    data={p}
-                    key={i}
-                  />
-                ))}
-              </InfiniteScroll>
-            ) : null}
-          </div>
-        </Box>
+        </div>
+        <div id="scrollableDiv" style={{ height: windowHeight - height, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+          {_.isArray(participants) && !_.isEmpty(participants) && open ? (
+            <InfiniteScroll
+              dataLength={participants.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              scrollableTarget="scrollableDiv"
+              scrollThreshold={0.99}
+              style={{ overflow: 'hidden' }}
+              loader={
+                participantsMeta.pending && (
+                  <div className={classes.loaderCenter}>
+                    <ESLoader />
+                  </div>
+                )
+              }
+            >
+              {participants.map((p: ParticipantsItem, i) => (
+                <LobbyMemberItem
+                  follow={onFollow}
+                  unFollow={onUnFollow}
+                  unBlock={onUnBlock}
+                  goToProfile={goToProfile}
+                  isMe={userProfile.id === _.get(p, 'id', '')}
+                  data={p}
+                  key={i}
+                />
+              ))}
+            </InfiniteScroll>
+          ) : null}
+        </div>
       </BlankLayout>
     </ESModal>
   )
