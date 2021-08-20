@@ -62,4 +62,6 @@ export const ESRoutes = {
   VIDEO_LIVE_STREAM: '/live',
   // w03-02
   USER_POINT_MANAGEMENT: '/settings/points',
+  // w00
+  SEARCH_VIDEO: '/search/video',
 }

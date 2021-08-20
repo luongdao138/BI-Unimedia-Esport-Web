@@ -6,6 +6,7 @@ export const searchTypes = {
   COMMUNITY: 2,
   TOURNAMENT: 3,
   RECRUITMENT: 4,
+  VIDEO: 5,
 }
 
 export const searchOptions = [
@@ -25,6 +26,10 @@ export const searchOptions = [
   //   value: searchTypes.RECRUITMENT,
   //   name: 'ロビー',
   // },
+  {
+    value: searchTypes.VIDEO,
+    name: '動画',
+  },
 ]
 
 export const GENDER = {
