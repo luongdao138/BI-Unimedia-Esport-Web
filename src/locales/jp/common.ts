@@ -46,6 +46,8 @@ export default {
       char_limit: '{{char_limit}}文字以内で入力してください。',
       only_single_byte: '半角英数以外が入力されています',
       only_digit: '半角数字以外が入力されています',
+      before_entry_end_date: 'エントリー開始日時はエントリー終了日時より前にしてください',
+      before_start_date: 'エントリー終了日時は開催日時より前にしてください',
     },
     no_data: '対象データありません',
     dash: '-',

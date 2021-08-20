@@ -23,6 +23,6 @@ export type FormType = {
     recruit_date: string
     acceptance_dates: string
     acceptance_end_start_date: string
-    start_end_date: string
+    before_entry_end_date: string
   }
 }

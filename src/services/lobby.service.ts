@@ -128,11 +128,11 @@ export type LobbyDetail = {
     area_id: number
     area_name: string
     categories: CategoryItem['attributes'][]
-    chatroom_id: string //
+    chatroom_id: string
     cover_image_url: null | string
-    entry_count: number //
-    entry_end_datetime: string //
-    entry_start_datetime: string //
+    entry_count: number
+    entry_end_datetime: string
+    entry_start_datetime: string
     game_hardware: { data: GameHardware }
     game_title: { data: GameTitle }
     hash_key: string
@@ -149,7 +149,7 @@ export type LobbyDetail = {
     participant_status: null | LOBBY_PARTICIPANT_STATUS
     participants_count: number
     remain_days: null | number
-    start_datetime: string //
+    start_datetime: string
     status: LOBBY_STATUS
     title: string
     is_freezed: boolean
@@ -157,7 +157,11 @@ export type LobbyDetail = {
   }
 }
 
-export interface CreateLobbyResponse {
+export type CreateLobbyResponse = {
+  hash_key: string
+}
+
+export type UpdateLobbyResponse = {
   hash_key: string
 }
 
@@ -170,12 +174,17 @@ export type UpdateParams = {
   data: LobbyUpsertParams
 }
 
+export type ConfirmParticipantParams = {
+  hash_key: string
+  data: {
+    participant_ids: Array<number>
+  }
+}
+
 export type ParticipantParams = {
   hash_key: string
   page: number
 }
-
-export type UpdateLobbyResponse = void
 
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
   const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:id/gi, hash_key))
@@ -197,6 +206,16 @@ export const search = async (params: LobbySearchParams): Promise<LobbySearchResp
   return data
 }
 
+export const randomizeParticipants = async (hash_key: string): Promise<ParticipantsResponse> => {
+  const { data } = await api.post<ParticipantsResponse>(URI.LOBBY_RANDOMIZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const confirmParticipants = async (params: ConfirmParticipantParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.LOBBY_CONFIRM_PARTICIPANTS.replace(/:id/gi, params.hash_key), params.data)
+  return data
+}
+
 export const participants = async (params: ParticipantParams): Promise<ParticipantsResponse> => {
   const { data } = await api.get<ParticipantsResponse>(`${URI.LOBBY_PARTICIPANTS.replace(/:id/gi, params.hash_key)}/?page=${params.page}`)
   return data
@@ -208,7 +227,7 @@ export const createLobby = async (params: LobbyUpsertParams): Promise<CreateLobb
 }
 
 export const updateLobby = async (params: UpdateParams): Promise<UpdateLobbyResponse> => {
-  const { data } = await api.post<UpdateLobbyResponse>(URI.TOURNAMENTS_UPDATE.replace(/:id/gi, params.hash_key), params.data)
+  const { data } = await api.put<UpdateLobbyResponse>(URI.LOBBY_UPDATE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 

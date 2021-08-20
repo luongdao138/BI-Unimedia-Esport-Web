@@ -55,7 +55,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           src={formik.values.stepOne.cover_image_url}
           onChange={handleUpload}
           isUploading={isUploading}
-          disabled={!editables.cover_image}
+          disabled={!editables.cover_image_url}
           onOpenStateChange={handleCoverDailogStateChange}
         />
       </Box>
@@ -90,7 +90,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           helperText={formik.touched?.stepOne?.message && formik.errors?.stepOne?.message}
           error={formik.touched?.stepOne?.message && !!formik.errors?.stepOne?.message}
           size="small"
-          disabled={!editables.overview}
+          disabled={!editables.message}
         />
       </Box>
       <Box pb={3}>
@@ -145,8 +145,8 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           nowrapHelperText
         />
       </Box>
-      <Box pb={4} display="flex" justifyContent="space-between">
-        <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
+      <Box pb={4} display="flex" justifyContent="space-between" alignItems="center">
+        <Typography className={classes.organizerParticipated}>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
         <ESSwitchIOS
           checked={formik.values.stepOne.organizer_participated}
           handleChange={() => {
@@ -158,12 +158,17 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   selectWidth: {
     width: 200,
   },
   input: {
     textAlign: 'right',
+  },
+  [theme.breakpoints.down('sm')]: {
+    organizerParticipated: {
+      fontSize: 12,
+    },
   },
 }))
 

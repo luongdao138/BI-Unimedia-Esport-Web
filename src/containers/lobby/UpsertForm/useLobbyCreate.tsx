@@ -7,8 +7,6 @@ import { LobbyDetail, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
-import { LOBBY_STATUS } from '@constants/lobby.constants'
-import _ from 'lodash'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
@@ -20,28 +18,18 @@ const getUpdateMeta = createMetaSelector(actions.updateLobby)
 
 export type EditableTypes = {
   title: boolean
-  overview: boolean
-  notes: boolean
-  rule: boolean
-  max_participants: boolean
-  organizer_participated: boolean
-  start_datetime: boolean
-  end_date: boolean
-  entry_start_datetime: boolean
-  entry_end_datetime: boolean
-  participant_type: boolean
-  area_id: boolean
-  address: boolean
-  prize: boolean
-  terms_of_participation: boolean
-  organizer_name: boolean
-  retain_history: boolean
-  t_type: boolean
+  message: boolean
   game_title: boolean
   game_hardware: boolean
-  co_organizers: boolean
-  cover_image: boolean
   categories: boolean
+  max_participants: boolean
+  entry_start_datetime: boolean
+  entry_end_datetime: boolean
+  start_datetime: boolean
+  area: boolean
+  address: boolean
+  organizer_participated: boolean
+  cover_image_url: boolean
 }
 
 const useLobbyCreate = (): {
@@ -61,32 +49,19 @@ const useLobbyCreate = (): {
   const lobby = useAppSelector(selectors.getLobbyDetail)
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
-    // always editable
-    cover_image: true,
     title: true,
-    overview: true,
-    prize: true, // has_prize, prize_amount
-    organizer_participated: true,
-    game_hardware: true,
-    terms_of_participation: true,
-    t_type: true,
-    notes: true,
-    area_id: true,
-    address: true,
-    co_organizers: true,
-    organizer_name: true,
-    categories: true,
-    // always not editable
-    rule: true, // rule, has_third_place
-    participant_type: true,
+    message: true,
     game_title: true,
-    // conditional editable
+    game_hardware: true,
+    categories: true,
     max_participants: true,
-    retain_history: true,
-    start_datetime: true,
-    end_date: true,
     entry_start_datetime: true,
     entry_end_datetime: true,
+    start_datetime: true,
+    area: true,
+    address: true,
+    organizer_participated: true,
+    cover_image_url: true,
   })
   const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
@@ -104,7 +79,7 @@ const useLobbyCreate = (): {
     const resultAction = await dispatch(actions.updateLobby(params))
     if (actions.updateLobby.fulfilled.match(resultAction)) {
       resetUpdateMeta()
-      router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
+      router.push(`${ESRoutes.LOBBY}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
       dispatch(commonActions.addToast(t('common:arena.update_success')))
     }
@@ -124,51 +99,12 @@ const useLobbyCreate = (): {
         return
       }
 
-      const _status = lobby.attributes.status
+      // const _status = lobby.attributes.status
 
-      let _editables = { ...editables }
-      // always not editable
-      _editables.rule = false // rule, has_third_place
-      _editables.participant_type = false
-      _editables.game_title = false
+      const _editables = { ...editables }
 
-      if (_status !== LOBBY_STATUS.READY) {
-        _editables = _.mapValues(_editables, () => false)
+      // TODO set editables cases here
 
-        // always editable (default for status COMPLETED)
-        _editables.cover_image = true
-        _editables.title = true
-        _editables.overview = true
-        _editables.prize = true // has_prize, prize_amount
-        _editables.game_hardware = true
-        _editables.terms_of_participation = true
-        _editables.t_type = true
-        _editables.notes = true
-        _editables.area_id = true
-        _editables.address = true
-        _editables.co_organizers = true
-        _editables.organizer_name = true
-
-        // conditional editable
-        if (_status === LOBBY_STATUS.RECRUITING) {
-          _editables.max_participants = true
-          _editables.retain_history = true
-          _editables.entry_start_datetime = false
-          _editables.entry_end_datetime = true
-          _editables.start_datetime = true
-          _editables.end_date = true
-        } else if (_status === LOBBY_STATUS.ENTRY_CLOSED) {
-          // max_participants, retain_history,
-          // acceptance_start_date, acceptance_end_date are already false on top
-          _editables.start_datetime = true
-          _editables.end_date = true
-        } else if (_status === LOBBY_STATUS.IN_PROGRESS) {
-          // max_participants, retain_history,
-          // acceptance_start_date, acceptance_end_date are already false on top
-          _editables.start_datetime = false
-          _editables.end_date = true
-        }
-      }
       setEditables(_editables)
     }
   }, [lobby, router])

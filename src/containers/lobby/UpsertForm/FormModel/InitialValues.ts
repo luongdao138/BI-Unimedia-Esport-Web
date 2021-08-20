@@ -10,7 +10,7 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
     game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
     max_participants: data ? data.attributes.max_participants : 0,
-    organizer_participated: data ? data.attributes.organizer_participated : false, // TODO
+    organizer_participated: data ? data.attributes.organizer_participated : false,
   },
   stepTwo: {
     entry_start_datetime: data ? data.attributes.entry_start_datetime : null,
@@ -21,6 +21,6 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     recruit_date: '',
     acceptance_dates: '',
     acceptance_end_start_date: '',
-    start_end_date: '',
+    before_entry_end_date: '',
   },
 })
