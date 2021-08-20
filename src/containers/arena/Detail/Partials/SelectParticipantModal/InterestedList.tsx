@@ -83,7 +83,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{t('common:tournament.select_user')}</Typography>
+              <Typography variant="h2">{isTeam ? t('common:tournament.select_team') : t('common:tournament.select_user')}</Typography>
             </Box>
           </Box>
           {selectedItem()}

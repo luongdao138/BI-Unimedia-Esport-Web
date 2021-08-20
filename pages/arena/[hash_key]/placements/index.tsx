@@ -24,7 +24,6 @@ const ArenaPlacementPage: PageWithLayoutType = () => {
 
 MainLayout.defaultProps = {
   patternBg: false,
-  loginRequired: true,
 }
 
 ArenaPlacementPage.Layout = MainLayout

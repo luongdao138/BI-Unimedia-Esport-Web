@@ -37,6 +37,7 @@ export default {
     no: 'なし',
     man: '人',
     integer: '数字のみ入力してください。',
+    unregistered: '未登録',
     validation: {
       acceptance_dates: 'エントリー終了日時はエントリー開始日時より後ろでなければなりません',
       acceptance_end_start_date: 'エントリー終了日時は開催日時より前でなければなりません',
@@ -371,7 +372,8 @@ export default {
     follower_entering: 'フォローしている人がエントリーしている大会',
     follower_ended: 'フォローしている人がエントリーしていた大会結果',
     recruiting_tournament_list: '募集中の大会一覧',
-    select_user: 'チームを選ぶ',
+    select_user: 'ユーザを選ぶ',
+    select_team: 'チームを選ぶ',
     set_participants: '設定する',
     deselect: '選択解除',
     match_setting: '試合設定',
