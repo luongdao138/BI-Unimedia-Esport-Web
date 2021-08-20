@@ -8,7 +8,7 @@ export const getInitialValues = (data): FormType => ({
     name: data ? data.attributes.title : '',
     overview: data ? data.attributes.overview : '',
     open_range: data ? data.attributes.open_range : 0,
-    join_condition: data ? data.attributes.join_condition : 1,
+    join_condition: data ? data.attributes.join_condition : -1,
     features: data ? [data.attributes.tag_title.data.attributes] : [],
     game_titles: data ? [data.attributes.game_title.data.attributes] : [],
     area_id: data ? data.attributes.area_id : 1,

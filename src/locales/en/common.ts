@@ -1007,6 +1007,7 @@ export default {
   },
   community_create: {
     title: 'コミュニティを作成する',
+    input_required: '入力内容が適切ではありません。',
     edit_title: '募集を作成する',
     name: 'コミュニティ名',
     introduction: 'コミュニティ紹介文',

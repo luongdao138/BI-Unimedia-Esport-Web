@@ -142,6 +142,9 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
           disabled={!editables.area_id}
           required
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           <option value={1}>{i18n.t('common:community_create.approval_automatic')}</option>
           <option value={0}>{i18n.t('common:community_create.approval_manual')}</option>
         </ESSelect>
