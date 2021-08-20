@@ -317,6 +317,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     width: ({ width }) => width,
     height: STATIC_HEIGHT,
     margin: 'auto',
+    zIndex: 20,
   },
   imageContainer: {
     display: 'flex',
