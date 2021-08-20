@@ -199,7 +199,7 @@ const LobbyCreate: React.FC = () => {
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
               <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:lobby_create.submit')}
+                {i18n.t('common:lobby.create.submit')}
               </ButtonPrimary>
             </Box>
           ) : isEdit ? (
@@ -211,7 +211,7 @@ const LobbyCreate: React.FC = () => {
               className={`${classes.footerButton} ${classes.confirmButton}`}
               disabled={hasError}
             >
-              {i18n.t('common:lobby_create.submit')}
+              {i18n.t('common:lobby.create.submit')}
             </ButtonPrimary>
           )}
         </>

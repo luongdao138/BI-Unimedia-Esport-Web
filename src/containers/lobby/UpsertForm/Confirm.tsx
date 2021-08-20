@@ -144,16 +144,16 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
 
       <ESInput
         labelPrimary={t('common:lobby_create.organizer_joined')}
-        value={values.stepOne.is_organizer_join ? 'ON' : 'OFF'}
+        value={values.stepOne.organizer_participated ? 'ON' : 'OFF'}
         disabled={true}
         fullWidth
       />
       <Box pb={2} />
 
-      {formatDate(t('common:lobby_create.entry_period'), values.stepTwo.acceptance_start_date, values.stepTwo.acceptance_end_date)}
+      {formatDate(t('common:lobby_create.entry_period'), values.stepTwo.entry_start_datetime, values.stepTwo.entry_end_datetime)}
       <Box pb={2} />
 
-      {formatOneDate(t('common:lobby_create.recruitment_start_date'), values.stepTwo.start_date)}
+      {formatOneDate(t('common:lobby_create.recruitment_start_date'), values.stepTwo.start_datetime)}
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />

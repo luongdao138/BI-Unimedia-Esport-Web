@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { LobbyDetail } from '@services/lobby.service'
 import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -9,30 +8,31 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
-import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
 import LoginRequired from '@containers/LoginRequired'
+import { Meta } from '@store/metadata/actions/types'
 
 interface UnjoinModalProps {
-  tournament: LobbyDetail
+  unjoinMeta: Meta
+  onConfirm: () => void
+  text: string
 }
 
-const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
+const UnjoinModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm, text }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const { leave, leaveMeta } = useEntry()
 
   useEffect(() => {
-    if (leaveMeta.loaded || leaveMeta.error) {
+    if (unjoinMeta.loaded || unjoinMeta.error) {
       setOpen(false)
     }
-  }, [leaveMeta.loaded, leaveMeta.error])
+  }, [unjoinMeta.loaded, unjoinMeta.error])
 
   return (
     <Box textAlign="center" mt={2}>
       <LoginRequired>
-        <LinkButton onClick={() => setOpen(true)}>{t('common:tournament.decline_entry')}</LinkButton>
+        <LinkButton onClick={() => setOpen(true)}>{text}</LinkButton>
       </LoginRequired>
       <ESPopup open={open}>
         <BlankLayout>
@@ -56,7 +56,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
               </Box>
               <Box className={classes.actionButton}>
                 <LoginRequired>
-                  <ButtonPrimary round fullWidth onClick={() => leave(tournament.attributes.hash_key)}>
+                  <ButtonPrimary round fullWidth onClick={() => onConfirm}>
                     {t('common:tournament.unjoin_dialog.decline')}
                   </ButtonPrimary>
                 </LoginRequired>
@@ -66,7 +66,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ tournament }) => {
         </BlankLayout>
       </ESPopup>
 
-      {leaveMeta.pending && <ESLoader open={leaveMeta.pending} />}
+      {unjoinMeta.pending && <ESLoader open={unjoinMeta.pending} />}
     </Box>
   )
 }

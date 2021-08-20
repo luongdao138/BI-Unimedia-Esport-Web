@@ -7,7 +7,7 @@ import { LobbyDetail, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
-import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 import _ from 'lodash'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import * as commonActions from '@store/common/actions'
@@ -24,11 +24,11 @@ export type EditableTypes = {
   notes: boolean
   rule: boolean
   max_participants: boolean
-  is_organizer_join: boolean
-  start_date: boolean
+  organizer_participated: boolean
+  start_datetime: boolean
   end_date: boolean
-  acceptance_start_date: boolean
-  acceptance_end_date: boolean
+  entry_start_datetime: boolean
+  entry_end_datetime: boolean
   participant_type: boolean
   area_id: boolean
   address: boolean
@@ -41,6 +41,7 @@ export type EditableTypes = {
   game_hardware: boolean
   co_organizers: boolean
   cover_image: boolean
+  categories: boolean
 }
 
 const useLobbyCreate = (): {
@@ -65,7 +66,7 @@ const useLobbyCreate = (): {
     title: true,
     overview: true,
     prize: true, // has_prize, prize_amount
-    is_organizer_join: true,
+    organizer_participated: true,
     game_hardware: true,
     terms_of_participation: true,
     t_type: true,
@@ -74,6 +75,7 @@ const useLobbyCreate = (): {
     address: true,
     co_organizers: true,
     organizer_name: true,
+    categories: true,
     // always not editable
     rule: true, // rule, has_third_place
     participant_type: true,
@@ -81,10 +83,10 @@ const useLobbyCreate = (): {
     // conditional editable
     max_participants: true,
     retain_history: true,
-    start_date: true,
+    start_datetime: true,
     end_date: true,
-    acceptance_start_date: true,
-    acceptance_end_date: true,
+    entry_start_datetime: true,
+    entry_end_datetime: true,
   })
   const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
@@ -130,7 +132,7 @@ const useLobbyCreate = (): {
       _editables.participant_type = false
       _editables.game_title = false
 
-      if (_status !== TOURNAMENT_STATUS.READY) {
+      if (_status !== LOBBY_STATUS.READY) {
         _editables = _.mapValues(_editables, () => false)
 
         // always editable (default for status COMPLETED)
@@ -148,22 +150,22 @@ const useLobbyCreate = (): {
         _editables.organizer_name = true
 
         // conditional editable
-        if (_status === TOURNAMENT_STATUS.RECRUITING) {
+        if (_status === LOBBY_STATUS.RECRUITING) {
           _editables.max_participants = true
           _editables.retain_history = true
-          _editables.acceptance_start_date = false
-          _editables.acceptance_end_date = true
-          _editables.start_date = true
+          _editables.entry_start_datetime = false
+          _editables.entry_end_datetime = true
+          _editables.start_datetime = true
           _editables.end_date = true
-        } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
+        } else if (_status === LOBBY_STATUS.ENTRY_CLOSED) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
-          _editables.start_date = true
+          _editables.start_datetime = true
           _editables.end_date = true
-        } else if (_status === TOURNAMENT_STATUS.IN_PROGRESS) {
+        } else if (_status === LOBBY_STATUS.IN_PROGRESS) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
-          _editables.start_date = false
+          _editables.start_datetime = false
           _editables.end_date = true
         }
       }

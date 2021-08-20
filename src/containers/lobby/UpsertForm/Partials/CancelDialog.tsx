@@ -9,7 +9,7 @@ import ESLoader from '@components/FullScreenLoader'
 import useCancelDialog from './useCancelDialog'
 import LinkButton from '@components/LinkButton'
 import { LobbyDetail } from '@services/lobby.service'
-import { TOURNAMENT_STATUS } from '@constants/lobby.constants'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 interface Props {
   hashKey: string
@@ -25,7 +25,7 @@ const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
 
   useEffect(() => {
     if (arena && arena.attributes) {
-      const _status = arena.attributes.status === TOURNAMENT_STATUS.CANCELLED || arena.attributes.status === TOURNAMENT_STATUS.COMPLETED
+      const _status = arena.attributes.status === LOBBY_STATUS.CANCELLED || arena.attributes.status === LOBBY_STATUS.ENDED
       setCanceled(_status)
     }
   }, [arena])

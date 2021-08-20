@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useLobbyCreate'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CategorySelectorDialog from './Partials/CategorySelectorDialog'
@@ -47,10 +47,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       document.body.style.height = '100%'
     }
   }
-
-  useEffect(() => {
-    if (!formik.values.stepOne.is_organizer_join) formik.setFieldValue('stepOne.is_organizer_join', '')
-  }, [formik.values.stepOne.is_organizer_join])
 
   return (
     <Box pb={9}>
@@ -101,7 +97,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         <CategorySelectorDialog
           values={formik.values.stepOne.categories}
           onChange={handleSelectedCategory}
-          disabled={!editables.game_title}
+          disabled={!editables.categories}
         />
       </Box>
       <Box pb={3}>
@@ -152,9 +148,9 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       <Box pb={4} display="flex" justifyContent="space-between">
         <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
         <ESSwitchIOS
-          checked={formik.values.stepOne.is_organizer_join}
+          checked={formik.values.stepOne.organizer_participated}
           handleChange={() => {
-            formik.setFieldValue('stepOne.is_organizer_join', !formik.values.stepOne.is_organizer_join)
+            formik.setFieldValue('stepOne.organizer_participated', !formik.values.stepOne.organizer_participated)
           }}
         />
       </Box>
