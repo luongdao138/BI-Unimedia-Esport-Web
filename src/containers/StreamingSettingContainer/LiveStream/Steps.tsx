@@ -109,7 +109,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     switch (type) {
       case KEY_TYPE.UUID:
         if (window.navigator.clipboard) {
-          window.navigator.clipboard.writeText(`${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`)
+          window.navigator.clipboard.writeText(formik.values.stepSettingOne.linkUrl)
         }
         dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
@@ -225,7 +225,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   }
 
   const onReNewUrlAndKey = (type: number) => {
-    // if()
     getStreamUrlAndKey((url, key) => {
       if (type === KEY_TYPE.URL) {
         formik.setFieldValue('stepSettingOne.stream_url', url)
@@ -233,6 +232,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       } else {
         formik.setFieldValue('stepSettingOne.stream_key', key)
       }
+      dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
     })
   }
 

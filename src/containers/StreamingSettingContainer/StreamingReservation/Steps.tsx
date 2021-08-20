@@ -200,6 +200,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       } else {
         formik.setFieldValue('stepSettingTwo.stream_key', key)
       }
+      dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
     })
   }
 
