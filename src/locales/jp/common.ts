@@ -37,6 +37,7 @@ export default {
     no: 'なし',
     man: '人',
     integer: '数字のみ入力してください。',
+    unregistered: '未登録',
     validation: {
       acceptance_dates: 'エントリー終了日時はエントリー開始日時より後ろでなければなりません',
       acceptance_end_start_date: 'エントリー終了日時は開催日時より前でなければなりません',
