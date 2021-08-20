@@ -15,6 +15,8 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     use_ticket: data && data.use_ticket ? (data.use_ticket == 1 ? true : false) : false,
     share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
     publish_flag: data && data.share_sns_flag ? (data.publish_flag == 1 ? true : false) : true,
+    //cross-fields validations
+    ticket_price_special: '',
   },
   stepSettingTwo: {
     uuid: data && data.uuid ? data.uuid : '',

@@ -28,7 +28,7 @@ const LiveStreamContainer: React.FC = () => {
   }
 
   const onClose = (): void => {
-    router.back()
+    router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)
   }
 
   const onComplete = () => {

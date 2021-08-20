@@ -925,6 +925,12 @@ export default {
     tab2_notification_title: '配信データが保存できました',
     tab2_notification_mess: 'StreamURLを利用して配信を開始してださい。',
     update: '再発行',
+    message_copy: 'クリップボードにコピーしました。',
+    dialog: {
+      title_renew: '新しいストリームURLを作成する',
+      message_renew: 'ストリームのURLを変更すると、ストリームキーも変更されます。ストリームのURLを変更してもよろしいですか？',
+    },
+    renew_success_toast: '再発行しました。',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
