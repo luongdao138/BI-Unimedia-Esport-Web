@@ -1,9 +1,8 @@
 import { T_TYPE, TOURNAMENT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 import moment from 'moment'
 import _ from 'lodash'
-import { LobbyMatchRound } from '@services/lobbydump.service'
 import { FormikErrors } from 'formik'
-import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
+import { FormType } from '@containers/Lobby/UpsertForm/FormModel/FormType'
 import { LobbyDetail } from '@services/lobby.service'
 
 const getTypeValue = (t_type: string | number): boolean => {
@@ -77,11 +76,11 @@ const getDetailData = (tournament: LobbyDetail): any => {
   const isTeam = false // _data.participant_type > 1
   const isAdmin = _data.is_owner
   const showStatus = isAdmin ? TOURNAMENT_STATUS.RECRUITING : TOURNAMENT_STATUS.READY_TO_START
-  const noEntry = _data.participant_count == 0 && _data.entry_count == 0
+  const noEntry = _data.participants_count == 0 && _data.entry_count == 0
   const scoreEnterable = _data.status === LOBBY_STATUS.IN_PROGRESS || _data.status === LOBBY_STATUS.ENDED
-  const joinedCount = _data.entry_count + _data.participant_count
+  const joinedCount = _data.entry_count + _data.participants_count
   const maxCapacity = _data.is_freezed
-    ? _data.participant_count
+    ? _data.participants_count
     : checkStatus(_data.status, TOURNAMENT_STATUS.RECRUITMENT_CLOSED) || joinedCount > _data.max_participants
     ? _data.max_participants
     : joinedCount
@@ -105,30 +104,6 @@ const getDetailData = (tournament: LobbyDetail): any => {
     teamRoles,
     ownEnterable,
   }
-}
-
-const checkParticipantsSelected = (bracketData: LobbyMatchRound[], interested_count: number, max_participants: number): boolean => {
-  let selected = true
-  const matches = bracketData[0]
-  let p_ids: any = []
-
-  _.forEach(matches, (match) => {
-    p_ids.push(match.home_user)
-    p_ids.push(match.guest_user)
-    if (match.home_user === null && match.guest_user === null) {
-      selected = false
-      return false
-    } else return true
-  })
-
-  p_ids = _.compact(p_ids)
-  const max_capacity = matches.length * 2 > max_participants ? max_participants : matches.length * 2
-  if (interested_count >= max_capacity) {
-    if (p_ids.length != max_capacity) selected = false
-  } else {
-    if (p_ids.length != interested_count) selected = false
-  }
-  return selected
 }
 
 const isStatusPassed = (status: string, targetStatus: string): boolean => {
@@ -174,7 +149,6 @@ export const LobbyHelper = {
   checkStatus,
   checkTarget,
   getDetailData,
-  checkParticipantsSelected,
   onTypeChange,
   isStatusPassed,
   checkRequiredFields,

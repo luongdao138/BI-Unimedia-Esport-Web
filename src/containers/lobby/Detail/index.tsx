@@ -1,13 +1,7 @@
-import { ReactNode } from 'react'
+import { useState } from 'react'
 import useLobbyDetail from '../hooks/useLobbyDetail'
-import LobbyDetailHeader from '@components/LobbyDetailHeader'
-import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
-import RecruitmentClosed from './Partials/RecruitmentClosed'
-import Recruiting from './Partials/Recruiting'
-import Ready from './Partials/Ready'
-import InProgress from './Partials/InProgress'
-import Cancelled from './Partials/Cancelled'
-import Completed from './Partials/Completed'
+import LobbyStatusHeader from '@components/LobbyStatusHeader'
+import DetailInfo from '@containers/Lobby/Detail/Partials/DetailInfo'
 import ESLoader from '@components/FullScreenLoader'
 // import BattleRoyaleInfo from './Partials/BattleRoyaleInfo'
 import useLobbyHelper from '../hooks/useLobbyHelper'
@@ -16,77 +10,66 @@ import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
 import MainDatePeriod from '../MainDatePeriod'
-import SubStatusInfo from './Partials/StatusInfoComponent'
-// import useLobbyActions from '../hooks/useLobbyActions'
-// import CloseRecruitmentModal from './Partials/ActionComponent/CloseRecruitmentModal'
+import SubStatusInfo from '../SubStatusInfo'
+import SubActionButtons from '@containers/Lobby/SubActionButtons'
+import MainActionButtons from '@containers/Lobby/MainActionButtons'
+import useLobbyActions from '../hooks/useLobbyActions'
+import { ESRoutes } from '@constants/route.constants'
+import _ from 'lodash'
+import HeaderBar from '@components/LobbyStatusHeader/HeaderBar'
+import { Box, makeStyles } from '@material-ui/core'
+import { Colors } from '@theme/colors'
+import Participants from '@containers/Lobby/Participants'
 
 const LobbyDetailBody: React.FC = () => {
-  const { userProfile, handleBack, lobby, meta } = useLobbyDetail()
-  // const {
-  //   participants, participantsMeta,
-  //   recommendedParticipants, recommendedParticipantsMeta,
-  //   getRecommendedParticipants,
-  //   getParticipants, confirmParticipants
-  // } = useLobbyActions();
+  // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
+  const [openList, setList] = useState<boolean>(false)
+  const classes = useStyles()
+  const { unjoin, entry, unjoinMeta } = useLobbyActions()
 
-  // useEffect(() => {
-  //   // get participants
-  //   if (lobby?.attributes?.hash_key) getParticipants(lobby?.attributes?.hash_key)
-  // }, [lobby])
+  const { handleBack, lobby, meta } = useLobbyDetail()
+  const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
 
-  // const randomizeParticipants = () : void => {
-  //   getRecommendedParticipants(lobby?.attributes?.hash_key)
-  // }
-
-  // const onConfirmParticipants = (participants_ids: Array<number>) : void => {
-  //   confirmParticipants(lobby?.attributes?.hash_key, participants_ids)
-  // }
+  const hashKey = _.get(lobby, 'attributes.hash_key', null)
 
   const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
 
-  type LobbyStatus = 'open' | 'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' // TODO
+  const openChat = () => {
+    const chatRoomId = _.get(lobby, 'attributes.chatroom', null)
+    if (chatRoomId) router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
+  }
+  const openMemberList = () => {
+    setList(true)
+  }
 
-  const actionComponent: Record<LobbyStatus, ReactNode> = {
-    open: <Recruiting lobby={lobby} userProfile={userProfile} />, // before entry accepting
-    in_progress: <InProgress lobby={lobby} userProfile={userProfile} />, //headset
-    cancelled: <Cancelled lobby={lobby} userProfile={userProfile} />,
-    completed: <Completed lobby={lobby} userProfile={userProfile} />, //trophy
-    ready: <Ready lobby={lobby} userProfile={userProfile} />,
-    ready_to_start: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
-    recruiting: <Recruiting lobby={lobby} userProfile={userProfile} />,
-    recruitment_closed: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
+  const onEntry = () => {
+    hashKey && entry(hashKey)
+  }
+
+  const onDecline = () => {
+    hashKey && unjoin(hashKey)
+  }
+
+  const onMemberConfirm = () => {
+    alert('member confirm modal')
   }
 
   const renderBody = () => {
     return (
       <>
-        <LobbyDetailHeader
-          title={lobby?.attributes?.title}
-          status={/*lobby?.attributes?.status || */ 'ready'}
-          cover={lobby?.attributes?.cover_image_url || '/images/default_card.png'}
-          onHandleBack={handleBack}
-        >
-          <>
+        <HeaderBar title={title} cover={cover_image_url} onHandleBack={handleBack} />
+        <Box className={classes.root}>
+          <LobbyStatusHeader status={status} />
+          <Box className={classes.statusContainer}>
             <MainDatePeriod lobby={lobby} />
             <SubStatusInfo lobby={lobby} />
-            {/* <CloseRecruitmentModal 
-              open={true} 
-              isRecruiting={true} 
-              participants={participants}
-              max_participants={lobby?.attributes?.max_participants}
-              recommended_participants={recommendedParticipants}
-              randomizeParticipants={randomizeParticipants}
-              participantsMeta={participantsMeta}
-              recommendedParticipantsMeta={recommendedParticipantsMeta}
-              onConfirmParticipants={onConfirmParticipants}
-              onConfirm={() => {}} 
-              handleClose={() => {}} 
-            /> */}
-            {actionComponent[lobby.attributes.status]}
-          </>
-        </LobbyDetailHeader>
+            <SubActionButtons lobby={lobby} openChat={openChat} openMemberList={openMemberList} />
+          </Box>
+          <MainActionButtons memberConfirm={onMemberConfirm} unjoinMeta={unjoinMeta} lobby={lobby} entry={onEntry} decline={onDecline} />
+        </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
+        <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
       </>
     )
   }
@@ -103,5 +86,29 @@ const LobbyDetailBody: React.FC = () => {
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    border: `1px solid ${Colors.white_opacity['30']}`,
+    borderRadius: theme.spacing(0.5),
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    backgroundColor: Colors.black,
+  },
+  statusContainer: {
+    backgroundColor: '#FFFFFF0F',
+    borderRadius: 4,
+    padding: 6,
+  },
+  [theme.breakpoints.down('xs')]: {
+    root: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
+  },
+}))
 
 export default LobbyDetailBody

@@ -1,6 +1,6 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-import { GameTitle } from './game.service'
+import { GameTitle, GameHardware } from './game.service'
 import { LOBBY_PARTICIPANT_STATUS, LOBBY_STATUS } from '@constants/lobby.constants'
 
 export type LobbyRule = 'single' | 'double' | 'battle_royale' // TODO
@@ -95,6 +95,7 @@ export type LobbyUpsertParams = {
 
 export type ParticipantsResponse = {
   data: ParticipantsData
+  meta: PageMeta
 }
 
 export type ParticipantsData = Array<ParticipantsItem>
@@ -102,6 +103,7 @@ export type ParticipantsData = Array<ParticipantsItem>
 export type ParticipantsItem = {
   id: string
   type: string
+  pending?: boolean
   attributes: {
     id: number
     user_id: number
@@ -109,6 +111,8 @@ export type ParticipantsItem = {
     nickname: string
     user_code: string
     avatar_url: string
+    is_followed: boolean
+    is_blocked: boolean
   }
 }
 
@@ -129,12 +133,8 @@ export type LobbyDetail = {
     entry_count: number //
     entry_end_datetime: string //
     entry_start_datetime: string //
-    game_hardware_id: number // data: GameHardware
-    game_title: {
-      data: GameTitle
-    }
-    game_title_id: number
-    hardware: string
+    game_hardware: { data: GameHardware }
+    game_title: { data: GameTitle }
     hash_key: string
     id: number
     is_owner: boolean
@@ -147,7 +147,7 @@ export type LobbyDetail = {
     }
     organizer_avatar: null | string
     participant_status: null | LOBBY_PARTICIPANT_STATUS
-    participant_count: number
+    participants_count: number
     remain_days: null | number
     start_datetime: string //
     status: LOBBY_STATUS
@@ -177,6 +177,11 @@ export type ConfirmParticipantParams = {
   }
 }
 
+export type ParticipantParams = {
+  hash_key: string
+  page: number
+}
+
 export type UpdateLobbyResponse = void
 
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
@@ -199,11 +204,6 @@ export const search = async (params: LobbySearchParams): Promise<LobbySearchResp
   return data
 }
 
-export const participants = async (hash_key: string): Promise<ParticipantsResponse> => {
-  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_PARTICIPANTS.replace(/:id/gi, hash_key))
-  return data
-}
-
 export const randomizeParticipants = async (hash_key: string): Promise<ParticipantsResponse> => {
   const { data } = await api.post<ParticipantsResponse>(URI.LOBBY_RANDOMIZE_PARTICIPANTS.replace(/:id/gi, hash_key))
   return data
@@ -211,6 +211,11 @@ export const randomizeParticipants = async (hash_key: string): Promise<Participa
 
 export const confirmParticipants = async (params: ConfirmParticipantParams): Promise<void> => {
   const { data } = await api.post<void>(URI.LOBBY_CONFIRM_PARTICIPANTS.replace(/:id/gi, params.hash_key), params.data)
+  return data
+}
+
+export const participants = async (params: ParticipantParams): Promise<ParticipantsResponse> => {
+  const { data } = await api.get<ParticipantsResponse>(`${URI.LOBBY_PARTICIPANTS.replace(/:id/gi, params.hash_key)}/?page=${params.page}`)
   return data
 }
 

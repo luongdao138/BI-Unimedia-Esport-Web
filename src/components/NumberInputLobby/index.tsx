@@ -2,7 +2,7 @@ import { OutlinedInputProps } from '@material-ui/core'
 import { ReactElement, useEffect, useState } from 'react'
 import ESInput from './Input'
 
-import { FormType } from '@containers/lobby/UpsertForm/FormModel/FormType'
+import { FormType } from '@containers/Lobby/UpsertForm/FormModel/FormType'
 import { FormikProps } from 'formik'
 
 export type InputProps = {

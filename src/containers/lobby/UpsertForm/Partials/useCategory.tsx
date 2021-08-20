@@ -11,11 +11,9 @@ const getMeta = createMetaSelector(actions.getLobbyCategories)
 
 const useCategory = (): { getLobbyCategories: () => void; meta: Meta; categories: CategoryItem['attributes'][] } => {
   const dispatch = useAppDispatch()
-  const meta = useAppSelector(getMeta)
-
+  const getLobbyCategories = () => dispatch(actions.getLobbyCategories())
   const categories = useAppSelector(selectors.getLobbyCategories)
-
-  // const clearGames = () => dispatch(actions.clearGameTitles())
+  const meta = useAppSelector(getMeta)
 
   useEffect(() => {
     return function () {
@@ -23,12 +21,10 @@ const useCategory = (): { getLobbyCategories: () => void; meta: Meta; categories
     }
   }, [])
 
-  const getLobbyCategories = () => dispatch(actions.getLobbyCategories())
-
   return {
-    meta,
     getLobbyCategories,
     categories,
+    meta,
   }
 }
 

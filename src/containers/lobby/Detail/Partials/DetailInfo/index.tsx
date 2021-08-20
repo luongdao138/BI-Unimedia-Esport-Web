@@ -7,7 +7,7 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
-import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
+import useLobbyHelper from '@containers/Lobby/hooks/useLobbyHelper'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -35,8 +35,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
-  const game = data.game_title ? data.game_title : ''
-  const hardware = data.hardware ? data.hardware : ''
+  const game = _.get(data, 'game_title.data.attributes.display_name', '')
+  const hardware = _.get(data, 'game_hardware.data.attributes.name', '')
   const [openReport, setOpenReport] = useState(false)
   const helper = useLobbyHelper(detail)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
