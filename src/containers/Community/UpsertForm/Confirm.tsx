@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { CommunityFeature } from '@services/community.service'
 import { INITIAL_VALUES } from '@constants/community.constants'
 import { Colors } from '@theme/colors'
+import { GameTitle } from '@services/game.service'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -70,7 +71,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <ESInput labelPrimary={t('common:community_create.game')} disabled={true} fullWidth noValue />
       {values.stepOne.game_titles.length > 0 && (
         <Box display="flex" flexWrap="wrap">
-          {values.stepOne.game_titles.map((game, i) => (
+          {(values.stepOne.game_titles as GameTitle['attributes'][]).map((game, i) => (
             <Typography key={i} className={classes.gameName} variant="body1">
               {game.display_name}
             </Typography>
