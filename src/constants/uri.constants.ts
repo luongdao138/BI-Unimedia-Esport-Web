@@ -108,4 +108,6 @@ export const URI = {
   LOBBY_CREATE: '/v2/recruitments',
   LOBBY_CATEGORIES: '/v2/recruitment_categories',
   LOBBY_DETAIL: '/v2/recruitments/:id/details',
+  LOBBY_RANDOMIZE_PARTICIPANTS: '/v2/recruitments/:id/randomize_participants',
+  LOBBY_CONFIRM_PARTICIPANTS: '/v2/recruitments/:id/do_member_confirm',
 }
