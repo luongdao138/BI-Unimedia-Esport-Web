@@ -54,6 +54,12 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         },
         then: Yup.string().required(i18n.t('common:common.validation.min_date')),
       }),
+      before_entry_end_date: Yup.string().when(['entry_start_datetime', 'entry_end_datetime'], {
+        is: (entry_start_datetime, entry_end_datetime) => {
+          return Date.parse(entry_start_datetime) >= Date.parse(entry_end_datetime)
+        },
+        then: Yup.string().required(i18n.t('common:common.validation.before_entry_end_date')),
+      }),
       acceptance_dates: Yup.string().when(['entry_start_datetime', 'entry_end_datetime'], {
         is: (entry_start_datetime, entry_end_datetime) => {
           return Date.parse(entry_start_datetime) >= Date.parse(entry_end_datetime)
@@ -64,13 +70,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         is: (entry_end_datetime, start_datetime) => {
           return Date.parse(entry_end_datetime) > Date.parse(start_datetime)
         },
-        then: Yup.string().required(i18n.t('common:common.validation.acceptance_end_start_date')),
-      }),
-      start_end_date: Yup.string().when(['start_date', 'end_date'], {
-        is: (start_date, end_date) => {
-          return Date.parse(start_date) >= Date.parse(end_date)
-        },
-        then: Yup.string().required(i18n.t('common:common.validation.start_end_date')),
+        then: Yup.string().required(i18n.t('common:common.validation.before_start_date')),
       }),
     }),
   })

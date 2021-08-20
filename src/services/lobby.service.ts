@@ -126,11 +126,11 @@ export type LobbyDetail = {
     area_id: number
     area_name: string
     categories: CategoryItem['attributes'][]
-    chatroom_id: string //
+    chatroom_id: string
     cover_image_url: null | string
-    entry_count: number //
-    entry_end_datetime: string //
-    entry_start_datetime: string //
+    entry_count: number
+    entry_end_datetime: string
+    entry_start_datetime: string
     game_hardware: { data: GameHardware }
     game_title: { data: GameTitle }
     hash_key: string
@@ -147,7 +147,7 @@ export type LobbyDetail = {
     participant_status: null | LOBBY_PARTICIPANT_STATUS
     participants_count: number
     remain_days: null | number
-    start_datetime: string //
+    start_datetime: string
     status: LOBBY_STATUS
     title: string
     is_freezed: boolean

@@ -36,7 +36,11 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           value={formik.values.stepTwo.entry_start_datetime}
           onChange={(date) => formik.setFieldValue('stepTwo.entry_start_datetime', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepTwo?.entry_start_datetime && formik.errors?.stepTwo?.entry_start_datetime}
+          helperText={
+            (formik.touched?.stepTwo?.entry_start_datetime && formik.errors?.stepTwo?.entry_start_datetime) ||
+            formik.errors?.stepTwo?.recruit_date ||
+            formik.errors?.stepTwo?.before_entry_end_date
+          }
           error={formik.touched?.stepTwo?.entry_start_datetime && !!formik.errors?.stepTwo?.entry_start_datetime}
           disabled={!editables.entry_start_datetime}
         />
@@ -54,7 +58,8 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepTwo?.entry_end_datetime && formik.errors?.stepTwo?.entry_end_datetime) ||
-            formik.errors?.stepTwo?.start_datetime
+            formik.errors?.stepTwo?.acceptance_dates ||
+            formik.errors?.stepTwo?.acceptance_end_start_date
           }
           error={formik.touched?.stepTwo?.entry_end_datetime && !!formik.errors?.stepTwo?.entry_end_datetime}
           disabled={!editables.entry_end_datetime}
@@ -76,11 +81,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           value={formik.values.stepTwo.start_datetime}
           onChange={(date) => formik.setFieldValue('stepTwo.start_datetime', date.toString())}
           onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepTwo?.start_datetime && formik.errors?.stepTwo?.start_datetime) ||
-            formik.errors?.stepTwo?.acceptance_dates ||
-            formik.errors?.stepTwo?.recruit_date
-          }
+          helperText={formik.touched?.stepTwo?.start_datetime && formik.errors?.stepTwo?.start_datetime}
           error={formik.touched?.stepTwo?.start_datetime && !!formik.errors?.stepTwo?.start_datetime}
           disabled={!editables.start_datetime}
         />
