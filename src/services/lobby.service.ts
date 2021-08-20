@@ -103,6 +103,7 @@ export type ParticipantsData = Array<ParticipantsItem>
 export type ParticipantsItem = {
   id: string
   type: string
+  pending?: boolean
   attributes: {
     id: number
     user_id: number
@@ -110,8 +111,8 @@ export type ParticipantsItem = {
     nickname: string
     user_code: string
     avatar_url: string
-    is_followed: true
-    is_blocked: false
+    is_followed: boolean
+    is_blocked: boolean
   }
 }
 
