@@ -13,7 +13,9 @@ const _getChannelMeta = createMetaSelector(actions.getChannel)
 const useLiveSetting = () => {
   const dispatch = useAppDispatch()
   const getLiveSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getLiveSettingInfo(param))
+  const getScheduleSettingTab = (param: LiveStreamSettingParams) => dispatch(actions.getScheduleSettingInfo(param))
   const liveSettingInformation = useAppSelector(selectors.getLiveStreamSetting)
+  const scheduleInformation = useAppSelector(selectors.getScheduleSetting)
   const streamUrlAndKeyInformation = useAppSelector(selectors.getStreamUrlAndKey)
   const setLiveStreamConfirm = async (param: SetLiveStreamParams, onSuccess: () => void) => {
     const resultAction = await dispatch(actions.setLiveStream(param))
@@ -61,6 +63,8 @@ const useLiveSetting = () => {
     channelInfo,
     setChannelConfirm,
     getChannelLive,
+    scheduleInformation,
+    getScheduleSettingTab,
   }
 }
 export default useLiveSetting

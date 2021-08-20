@@ -77,8 +77,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
   wrapContainer: {
-    background: "url(/images/pattern.png) center 60px repeat-x #212121 fixed", 
-    paddingRight: "98px",
+    background: 'url(/images/pattern.png) center 60px repeat-x #212121 fixed',
+    paddingRight: '98px',
     minHeight: '100vh',
   },
   wrapContent: {
@@ -86,14 +86,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down(1281)]: {
     wrapContainer: {
-      paddingRight: 24
+      paddingRight: 24,
     },
   },
   [theme.breakpoints.down(769)]: {
     wrapContainer: {
-      paddingRight: 0
+      paddingRight: 0,
     },
-  }
+  },
 }))
 
 export default SearchPage
