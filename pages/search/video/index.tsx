@@ -35,7 +35,7 @@ const SearchPage: PageWithLayoutType = () => {
     switch (type) {
       case searchTypes.VIDEO:
         if (keyword) {
-          return t('common:user.user_results').replace(/:key/gi, keyword)
+          return t('common:video.video_results').replace(/:key/gi, keyword)
         }
         return t('common:user.user_results_all')
       default:
@@ -45,7 +45,7 @@ const SearchPage: PageWithLayoutType = () => {
 
   return (
     <StreamLayout minimizeLayout>
-      <Box>
+      <Box className={classes.wrapContainer}>
         <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
           <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
             <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
@@ -54,7 +54,7 @@ const SearchPage: PageWithLayoutType = () => {
             {renderKeyword()}
           </Typography>
         </Box>
-        <Box p={3}>{renderSwitch()}</Box>
+        <Box className={classes.wrapContent}>{renderSwitch()}</Box>
       </Box>
     </StreamLayout>
   )
@@ -76,6 +76,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all',
     fontWeight: 'bold',
   },
+  wrapContainer: {
+    background: "url(/images/pattern.png) center 60px repeat-x #212121 fixed", 
+    paddingRight: "98px",
+    minHeight: '100vh',
+  },
+  wrapContent: {
+    padding: '0 24px 24px',
+  },
+  [theme.breakpoints.down(1281)]: {
+    wrapContainer: {
+      paddingRight: 24
+    },
+  },
+  [theme.breakpoints.down(769)]: {
+    wrapContainer: {
+      paddingRight: 0
+    },
+  }
 }))
 
 export default SearchPage

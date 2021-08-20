@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignSelf: 'center',
     zIndex: 1,
+    backgroundColor: 'transparent',
   },
   buttonRightContainer: {
     position: 'absolute',
@@ -151,6 +152,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignSelf: 'center',
     zIndex: 1,
+    backgroundColor: 'transparent',
   },
   iconBtnStyle: {
     fontSize: 30,
