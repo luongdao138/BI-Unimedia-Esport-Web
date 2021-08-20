@@ -2,42 +2,40 @@ import { Typography, Box, ButtonBase, Theme } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import i18n from '@locales/i18n'
-import { ESRoutes } from '@constants/route.constants'
-import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import ESSwitchIOS from '@components/Switch'
+import { ConfirmParticipantItem } from '@services/lobby.service'
+import _ from 'lodash'
 
 interface Props {
-  user: any
-  checked: boolean
-  handleClose?: () => void
+  data: ConfirmParticipantItem
+  toProfile?: (userCode: string) => void
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ParticipantRow: React.FC<Props> = ({ user, handleClose, checked, handleChange }) => {
+const ParticipantRow: React.FC<Props> = ({ data, toProfile, handleChange }) => {
   const classes = useStyles()
-  const router = useRouter()
 
-  const toProfile = () => {
-    if (handleClose) handleClose()
-    router.push(`${ESRoutes.PROFILE}/${user.user_code}`)
-  }
+  const userCode = _.defaultTo(data.attributes.user_code, '')
+  const nickName = _.defaultTo(data.attributes.nickname, '')
+  const avatar = _.defaultTo(data.attributes.avatar_url, null)
+  const checked = _.defaultTo(data.checked, false)
 
   return (
     <Box className={classes.container} pr={2}>
       <Box display="flex" overflow="hidden">
-        <ButtonBase onClick={toProfile}>
-          <ESAvatar alt={user.nickname} src={user.avatar} />
+        <ButtonBase onClick={() => toProfile && toProfile(userCode)}>
+          <ESAvatar alt={nickName} src={avatar} />
         </ButtonBase>
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
           <Box color={Colors.white}>
             <Typography variant="h3" noWrap>
-              {user.nickname}
+              {nickName}
             </Typography>
           </Box>
           <Typography variant="caption" noWrap>
             {i18n.t('common:common.at')}
-            {user.user_code}
+            {userCode}
           </Typography>
         </Box>
       </Box>
