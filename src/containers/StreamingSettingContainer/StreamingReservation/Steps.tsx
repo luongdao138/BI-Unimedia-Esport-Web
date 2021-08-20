@@ -116,19 +116,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(`${baseViewingURL}${formik.values.stepSettingTwo.uuid}`)
         }
-        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       case KEY_TYPE.URL:
         if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingTwo.stream_url.toString())
         }
-        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       case KEY_TYPE.KEY:
         if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingTwo.stream_key.toString())
         }
-        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       default:
         break

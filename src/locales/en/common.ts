@@ -926,6 +926,7 @@ export default {
     tab2_notification_title: '配信データが保存できました',
     tab2_notification_mess: 'StreamURLを利用して配信を開始してださい。',
     update: '再発行',
+    message_copy: 'クリップボードにコピーしました。',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

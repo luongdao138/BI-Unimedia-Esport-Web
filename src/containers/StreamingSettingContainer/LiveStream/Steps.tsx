@@ -111,19 +111,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(`${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`)
         }
-        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       case KEY_TYPE.URL:
         if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_url.toString())
         }
-        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       case KEY_TYPE.KEY:
         if (window.navigator.clipboard) {
           window.navigator.clipboard.writeText(formik.values.stepSettingOne.stream_key.toString())
         }
-        dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+        dispatch(commonActions.addToast(t('common:streaming_setting_screen.message_copy')))
         break
       default:
         break
@@ -184,9 +184,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   }
 
   const onConfirm = () => {
-    const { linkUrl, ticket_price, use_ticket, share_sns_flag, publish_flag } = formik.values.stepSettingOne
+    const {
+      linkUrl,
+      ticket_price,
+      use_ticket,
+      share_sns_flag,
+      publish_flag,
+      thumbnail,
+      title,
+      description,
+      category,
+      stream_url,
+      stream_key,
+    } = formik.values.stepSettingOne
     const data: SetLiveStreamParams = {
-      ...formik.values.stepSettingOne,
+      // ...formik.values.stepSettingOne,
       uuid: linkUrl,
       ticket_price: ticket_price + '',
       use_ticket: use_ticket === false ? '0' : '1',
@@ -197,6 +209,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       stream_schedule_end_time: null,
       sell_ticket_start_time: null,
       scheduled_flag: 0,
+      thumbnail: thumbnail,
+      title: title,
+      description: description,
+      category: category,
+      stream_url: stream_url,
+      stream_key: stream_key,
     }
     setLiveStreamConfirm(data, () => {
       onNext(step + 1, share_sns_flag, {
@@ -411,7 +429,10 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       }
                       onChange={formik.handleChange}
                       onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
-                      helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
+                      helperText={
+                        (formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price) ||
+                        formik?.errors?.stepSettingOne?.ticket_price_special
+                      }
                       error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
                       size="big"
                       disabled={!isFirstStep()}

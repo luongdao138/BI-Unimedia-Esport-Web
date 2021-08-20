@@ -23,6 +23,11 @@ export const validationLiveSettingsScheme = (): any => {
           .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
           .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
+      //cross-fields validations
+      ticket_price_special: Yup.number().when('use_ticket', {
+        is: true,
+        then: Yup.mixed().notOneOf(['e'], i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
+      }),
     }),
     stepSettingTwo: Yup.object({
       title: Yup.string()

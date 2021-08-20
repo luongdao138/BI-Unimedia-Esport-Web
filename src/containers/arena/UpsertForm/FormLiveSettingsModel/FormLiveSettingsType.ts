@@ -11,6 +11,8 @@ export type FormLiveType = {
     use_ticket: boolean
     share_sns_flag: boolean
     publish_flag: boolean
+    //cross-fields validations
+    ticket_price_special?: string
   }
   stepSettingTwo?: {
     uuid: string
