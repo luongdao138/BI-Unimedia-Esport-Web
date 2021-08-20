@@ -9,3 +9,4 @@ export const getSearchLobbiesMeta = createSelector(getRoot, (state) => state.sea
 export const participantSelector = createSelector(getRoot, (state) => state.participants)
 export const getLobbyCategories = createSelector(getRoot, (state) => state.lobbyCategories)
 export const getLobbyDetail = createSelector(getRoot, (state) => state.lobbyDetail)
+export const participantsMeta = createSelector(getRoot, (state) => state.participantsMeta)

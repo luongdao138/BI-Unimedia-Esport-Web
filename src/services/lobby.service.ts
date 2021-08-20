@@ -95,6 +95,7 @@ export type LobbyUpsertParams = {
 
 export type ParticipantsResponse = {
   data: ParticipantsData
+  meta: PageMeta
 }
 
 export type ParticipantsData = Array<ParticipantsItem>
@@ -168,6 +169,11 @@ export type UpdateParams = {
   data: LobbyUpsertParams
 }
 
+export type ParticipantParams = {
+  hash_key: string
+  page: number
+}
+
 export type UpdateLobbyResponse = void
 
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
@@ -190,8 +196,8 @@ export const search = async (params: LobbySearchParams): Promise<LobbySearchResp
   return data
 }
 
-export const participants = async (hash_key: string): Promise<ParticipantsResponse> => {
-  const { data } = await api.get<ParticipantsResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, hash_key))
+export const participants = async (params: ParticipantParams): Promise<ParticipantsResponse> => {
+  const { data } = await api.get<ParticipantsResponse>(`${URI.LOBBY_PARTICIPANTS.replace(/:id/gi, params.hash_key)}/?page=${params.page}`)
   return data
 }
 

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import useLobbyDetail from '../hooks/useLobbyDetail'
 import LobbyStatusHeader from '@components/LobbyStatusHeader'
 import DetailInfo from '@containers/Lobby/Detail/Partials/DetailInfo'
@@ -18,9 +19,11 @@ import _ from 'lodash'
 import HeaderBar from '@components/LobbyStatusHeader/HeaderBar'
 import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import Participants from '@containers/Lobby/Participants'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
+  const [openList, setList] = useState<boolean>(false)
   const classes = useStyles()
   const { unjoin, entry, unjoinMeta } = useLobbyActions()
 
@@ -37,7 +40,7 @@ const LobbyDetailBody: React.FC = () => {
     if (chatRoomId) router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
   }
   const openMemberList = () => {
-    alert('')
+    setList(true)
   }
 
   const onEntry = () => {
@@ -66,6 +69,7 @@ const LobbyDetailBody: React.FC = () => {
           <MainActionButtons memberConfirm={onMemberConfirm} unjoinMeta={unjoinMeta} lobby={lobby} entry={onEntry} decline={onDecline} />
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
+        <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
       </>
     )
   }
