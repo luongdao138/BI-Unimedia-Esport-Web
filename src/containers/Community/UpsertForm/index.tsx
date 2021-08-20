@@ -24,6 +24,8 @@ import DiscardDialog from '../Partials/DiscardDialog'
 import useCommonData from './useCommonData'
 import CancelDialog from './Partials/CancelDialog'
 import { useTranslation } from 'react-i18next'
+import { CommunityFeature } from '@services/community.service'
+import { GameTitle } from '@services/game.service'
 
 // TODO used once at community edit
 type CommunityCreateProps = {
@@ -39,7 +41,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
-  const { editables, isEdit, submit } = useCommunityCreate()
+  const { editables, isEdit, submit, getCommunityFeatures } = useCommunityCreate()
   const [isDiscard, setIsDiscard] = useState(false)
   const { t } = useTranslation(['common'])
 
@@ -49,12 +51,23 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     initialValues: initialValues,
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
-    onSubmit: () => {
+    onSubmit: (values) => {
+      const data = {
+        ...values.stepOne,
+        features: (values.stepOne.features as CommunityFeature[]).map((feature) => Number(feature.id)),
+        game_titles: (values.stepOne.game_titles as GameTitle['attributes'][]).map((game) => game.id),
+        join_condition: Number(values.stepOne.join_condition),
+      }
+      // console.log(data)
       if (submit) {
-        submit()
+        submit(data)
       }
     },
   })
+
+  useEffect(() => {
+    getCommunityFeatures()
+  }, [])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -90,13 +103,13 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       const { stepOne } = formik.values
 
       const fieldIdentifier = checkNgWordFields({
-        title: stepOne.title,
+        name: stepOne.name,
         overview: stepOne.overview,
         address: stepOne.address,
       })
 
       const ngFields = checkNgWordByField({
-        [FIELD_TITLES.stepOne.title]: stepOne.title,
+        [FIELD_TITLES.stepOne.name]: stepOne.name,
         [FIELD_TITLES.stepOne.overview]: stepOne.overview,
         [FIELD_TITLES.stepOne.address]: stepOne.address,
       })

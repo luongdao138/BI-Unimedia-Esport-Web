@@ -54,6 +54,9 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
       label: t('common:arenaSearchFilters.all'),
       loginRequired: false,
     },
+  ]
+
+  const loginRequiredFilterOptions = [
     {
       type: CommunityFilterOption.joined,
       label: t('common:communitySearchFilters.joined'),
@@ -89,6 +92,17 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
               label={option.label}
               onClick={() => onFilter(option.type)}
             />
+          ))}
+          {loginRequiredFilterOptions.map((option) => (
+            <LoginRequired key={option.type}>
+              <ESChip
+                key={option.type}
+                color={option.type === filter ? 'primary' : undefined}
+                className={classes.filterChip}
+                label={option.label}
+                onClick={() => onFilter(option.type)}
+              />
+            </LoginRequired>
           ))}
         </Box>
         <InfiniteScroll

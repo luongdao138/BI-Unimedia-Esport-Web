@@ -14,7 +14,7 @@ const CommunityPage: PageWithLayoutType = () => {
 CommunityPage.Layout = MainLayout
 
 MainLayout.defaultProps = {
-  loginRequired: true,
+  loginRequired: false,
   patternBg: true,
 }
 
