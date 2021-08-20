@@ -6,8 +6,9 @@ import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Theme } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
-import _ from 'lodash'
 import { CommunityFeature } from '@services/community.service'
+import { INITIAL_VALUES } from '@constants/community.constants'
+import { Colors } from '@theme/colors'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -20,10 +21,9 @@ ESInput.defaultProps = {
 
 const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
   const { t } = useTranslation(['common'])
-  const [areaName, setAreaName] = useState('')
-  const [approval, setApproval] = useState('')
-  const [openRange, setOpenRange] = useState('')
-  const [games, setGames] = useState('')
+  const [areaName, setAreaName] = useState<string>('')
+  const [approval, setApproval] = useState<string>('')
+  const [openRange, setOpenRange] = useState<string>('')
   const classes = useStyles()
 
   useEffect(() => {
@@ -35,20 +35,15 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
 
   useEffect(() => {
     const approvalName =
-      Number(values.stepOne.join_condition) === 0
+      Number(values.stepOne.join_condition) === INITIAL_VALUES.JOIN_CONDITION
         ? t('common:community_create.approval_manual')
         : t('common:community_create.approval_automatic')
     setApproval(approvalName)
     const openRangeName =
-      Number(values.stepOne.open_range) === 1 ? t('common:community_create.private') : t('common:community_create.public')
+      Number(values.stepOne.open_range) === INITIAL_VALUES.OPEN_RANGE
+        ? t('common:community_create.private')
+        : t('common:community_create.public')
     setOpenRange(openRangeName)
-    if (!_.isEmpty(values.stepOne.game_titles)) {
-      const game = _.chain(values.stepOne.game_titles)
-        .map((g) => g.display_name)
-        .join('  ')
-        .value()
-      setGames(game)
-    }
   }, [])
 
   return (
@@ -72,7 +67,16 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       />
       <Box pb={2} />
 
-      <ESInput labelPrimary={t('common:community_create.game')} value={games} disabled={true} fullWidth valueMultiline />
+      <ESInput labelPrimary={t('common:community_create.game')} disabled={true} fullWidth />
+      {values.stepOne.game_titles && (
+        <Box display="flex" flexWrap="wrap">
+          {values.stepOne.game_titles.map((game, i) => (
+            <Box key={i} className={classes.gameName}>
+              {String(game.display_name)}
+            </Box>
+          ))}
+        </Box>
+      )}
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.area')} value={areaName} disabled={true} fullWidth />
@@ -95,6 +99,11 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  gameName: {
+    marginRight: theme.spacing(2),
+    color: Colors.white_opacity['30'],
+    fontSize: 14,
+  },
   viewHolder: {
     marginRight: theme.spacing(5),
     marginLeft: theme.spacing(5),

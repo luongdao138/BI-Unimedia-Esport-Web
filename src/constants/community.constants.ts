@@ -8,6 +8,18 @@ export const T_TYPE = {
   PRIVATE: 1,
 }
 
+export const INITIAL_VALUES = {
+  COVER_IMAGE_URL: '',
+  NAME: '',
+  OVERVIEW: '',
+  ADDRESS: '',
+  AREA_ID: 1,
+  OPEN_RANGE: 0,
+  JOIN_CONDITION: -1,
+  FEATURES: [],
+  GAME_TITLES: [],
+}
+
 export const STATUS = {
   READY: 'ready',
   CANCELLED: 'cancelled',
