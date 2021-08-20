@@ -112,15 +112,16 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
         handleClose={handleClose}
         classes={{
           paperFullWidth: classes.dialogFullWidth,
-          paper: classes.dialogPaper,
         }}
         bkColor="rgba(0,0,0,0.8)"
       >
         <BlankLayout>
           <ESStickyFooter
+            classes={{ root: classes.stickyFooter }}
             disabled
+            noSpacing
             content={
-              <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={3.5}>
+              <Box className={classes.actionButtonContainer}>
                 <Box className={classes.actionButton}>
                   <LoginRequired>
                     <ButtonPrimary
@@ -231,6 +232,10 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  stickyFooter: {
+    backdropFilter: 'blur(3px)',
+    background: 'rgba(0, 0, 0, 0.8)',
+  },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
@@ -283,10 +288,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: '50px 0',
   },
   actionButton: {
     width: theme.spacing(35),
     margin: 8,
+  },
+  dialogFullWidth: {
+    maxHeight: '100%',
+    margin: 0,
   },
   [theme.breakpoints.down('sm')]: {
     container: {
@@ -294,13 +304,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0,
     },
     actionButtonContainer: {
-      flexDirection: 'column-reverse',
+      flexDirection: 'column',
+      padding: '10px 0',
     },
     title: {
       fontSize: 20,
     },
     desc: {
       fontSize: 14,
+    },
+    dialogFullWidth: {
+      width: '100%',
+      margin: 0,
     },
   },
 }))
