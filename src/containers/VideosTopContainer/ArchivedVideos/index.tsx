@@ -36,8 +36,7 @@ const ArchivedVideos: React.FC = () => {
           <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
-        )
-      }
+        )}
       </>
     )
   }
@@ -70,8 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     width: '100%',
   },
-  titleContainer: {
-  },
+  titleContainer: {},
   contentContainer: {
     marginTop: theme.spacing(0),
     paddingBottom: theme.spacing(2),
@@ -104,25 +102,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  wrapVideos: {
-  },
-  wrapContentContainer: {
-  },
+  wrapVideos: {},
+  wrapContentContainer: {},
   spViewMore: {
     display: 'none',
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
-      width: "calc(100vw - 24px)", 
-      overflow: "auto"
+      width: 'calc(100vw - 24px)',
+      overflow: 'auto',
     },
     contentContainer: {
-      flexWrap: "nowrap",
-      margin: "0px",
-      paddingBottom: "0px"
+      flexWrap: 'nowrap',
+      margin: '0px',
+      paddingBottom: '0px',
     },
     xsItemContainer: {
-      paddingRight: "24px",
+      paddingRight: '24px',
       '&:last-child': {
         paddingRight: 0,
       },
@@ -132,8 +128,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     spViewMore: {
       display: 'block',
-      padding: "15px 0 26px 0", 
-      textAlign: "center"
+      padding: '15px 0 26px 0',
+      textAlign: 'center',
     },
   },
 }))

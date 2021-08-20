@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     position: 'relative',
     backgroundColor: '#212121',
-    padding: "0 122px 100px 24px",
+    padding: '0 122px 100px 24px',
   },
   tabs: {
     overflow: 'hidden',

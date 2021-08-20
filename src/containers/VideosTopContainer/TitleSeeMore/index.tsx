@@ -45,6 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     viewMoreStyle: {
       display: 'none',
     },
-  }
+  },
 }))
 export default TitleSeeMore
