@@ -493,7 +493,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             </Box>
           )}
           {/* stream URL */}
-          <Box pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_url"
@@ -555,7 +555,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             </Typography>
           )}
           {/* stream key */}
-          <Box pt={2} className={classes.box} flexDirection="row" display="flex" alignItems="flex-end">
+          <Box pt={2} className={classes.wrap_input} flexDirection="row" display="flex" alignItems="flex-end">
             <Box className={classes.firstItem}>
               <ESInput
                 id="stream_key"
@@ -681,15 +681,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
         padding: 0,
+        display: 'flex',
       },
     },
     '& .MuiInputBase-input.Mui-disabled': {
-      padding: 0,
-      // paddingBottom: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      padding: '4px 0 4px 0',
     },
   },
   urlCopy: {
-    marginLeft: 12,
+    paddingLeft: 12,
     cursor: 'pointer',
     color: '#EB5686',
   },
@@ -793,7 +795,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     lastItem: {
       position: 'absolute',
-      top: '-2px',
+      // top: '-2px',
     },
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',

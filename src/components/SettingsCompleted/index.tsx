@@ -91,7 +91,9 @@ const useStyles = makeStyles((theme) => ({
   headerStep3: {
     fontSize: '24px',
     fontWeight: 'bold',
+    textAlign: 'center',
     color: '#fff',
+    width: '100%',
     paddingBottom: '30px',
   },
   contentStep3: {
@@ -109,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down(414)]: {
     wrapContent: {
-      padding: '53px 20px 0 20px',
+      padding: '53px 0 0 0',
     },
   },
   [theme.breakpoints.down(375)]: {

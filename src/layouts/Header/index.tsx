@@ -63,7 +63,7 @@ export const Header: React.FC<headerProps> = ({ toggleDrawer, open }) => {
 
   const onSearch = (_data: returnItem) => {
     setSearch({ type: _data.type, keyword: _data.value })
-    if(_data.type === searchTypes.VIDEO) {
+    if (_data.type === searchTypes.VIDEO) {
       router.push(ESRoutes.SEARCH_VIDEO)
     } else {
       router.push(ESRoutes.SEARCH)
