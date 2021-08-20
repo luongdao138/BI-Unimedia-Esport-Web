@@ -170,6 +170,11 @@ export const getLiveSetting = async (params: LiveStreamSettingParams): Promise<L
   return data
 }
 
+export const getScheduleSetting = async (params: LiveStreamSettingParams): Promise<LiveStreamSettingResponse> => {
+  const { data } = await api.get<LiveStreamSettingResponse>(URI.LIVE_SETTING, { params })
+  return data
+}
+
 export const setLiveSetting = async (params: SetLiveStreamParams): Promise<SetLiveStreamResponse> => {
   const { data } = await api.post<SetLiveStreamResponse>(URI.SET_LIVE_SETTING, params)
   // console.log("====CHECK====",data,)

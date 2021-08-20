@@ -28,6 +28,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import ESLoader from '@components/FullScreenLoader'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import useUploadImage from '@utils/hooks/useUploadImage'
+import ESNumberInputStream from '@components/NumberInput/stream'
 
 interface StepsProps {
   step: number
@@ -148,8 +149,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     if (fieldIdentifier) {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
     } else {
-      setShowStreamKey(false)
-      setShowStreamURL(false)
+      // setShowStreamKey(false)
+      // setShowStreamURL(false)
       onNext(step + 1, stepSettingOne.share_sns_flag, {
         title: stepSettingOne.title,
         content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
@@ -210,8 +211,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       sell_ticket_start_time: null,
       scheduled_flag: 0,
       thumbnail: thumbnail,
-      title: title,
-      description: description,
+      title: title.trim(),
+      description: description.trim(),
       category: category,
       stream_url: stream_url,
       stream_key: stream_key,
@@ -224,15 +225,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     })
   }
 
-  const onReNewUrlAndKey = (type: number) => {
+  const onReNewUrlAndKey = (type: number, showToast?: boolean) => {
     getStreamUrlAndKey((url, key) => {
       if (type === KEY_TYPE.URL) {
         formik.setFieldValue('stepSettingOne.stream_url', url)
         formik.setFieldValue('stepSettingOne.stream_key', key)
+        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
       } else {
         formik.setFieldValue('stepSettingOne.stream_key', key)
+        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
       }
-      dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
     })
   }
 
@@ -311,7 +313,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_title')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
-                value={formik.values.stepSettingOne.title}
+                value={isFirstStep() ? formik.values.stepSettingOne.title : formik.values.stepSettingOne.title.trim()}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingOne?.title && formik?.errors.stepSettingOne?.title}
@@ -347,7 +349,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 <ESInput
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   multiline
-                  value={formik.values.stepSettingOne.description}
+                  value={formik.values.stepSettingOne.description.trim()}
                   disabled={true}
                   fullWidth
                   required
@@ -416,12 +418,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               {isFirstStep() ? (
                 <Box pb={2} className={classes.box}>
                   <Box className={classes.firstItem}>
-                    <ESInput
+                    <ESNumberInputStream
                       id="ticket_price"
                       name="stepSettingOne.ticket_price"
-                      required={true}
-                      placeholder={'0'}
+                      type="tel"
                       fullWidth
+                      nameValue={'stepSettingOne.ticket_price'}
+                      // className={classes.input}
+                      placeholder={'0'}
                       value={
                         isFirstStep() && (formik.values.stepSettingOne.ticket_price === 0 || !formik.values.stepSettingOne.use_ticket)
                           ? ''
@@ -429,17 +433,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       }
                       onChange={formik.handleChange}
                       onBlur={formik.values.stepSettingOne.use_ticket && formik.handleBlur}
-                      helperText={
-                        (formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price) ||
-                        formik?.errors?.stepSettingOne?.ticket_price_special
-                      }
+                      helperText={formik?.touched?.stepSettingOne?.ticket_price && formik?.errors?.stepSettingOne?.ticket_price}
                       error={formik?.touched?.stepSettingOne?.ticket_price && !!formik?.errors?.stepSettingOne?.ticket_price}
                       size="big"
+                      isNumber={true}
+                      formik={formik}
                       disabled={!isFirstStep()}
                       className={getAddClassByStep(classes.input_text)}
                       readOnly={!formik.values.stepSettingOne.use_ticket}
-                      inputMode={'numeric'}
-                      type="number"
+                      nowrapHelperText
                       endAdornment={
                         isFirstStep() ? (
                           <InputAdornment position="end" className={classes.inputContainer}>
@@ -542,7 +544,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   display="flex"
                   justifyContent="flex-end"
                   className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL)}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -606,7 +608,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   display="flex"
                   justifyContent="flex-end"
                   className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY)}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>

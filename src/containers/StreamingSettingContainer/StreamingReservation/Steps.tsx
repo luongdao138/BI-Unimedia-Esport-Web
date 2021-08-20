@@ -16,8 +16,8 @@ import ESLabel from '@components/Label'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
-import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
-import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
+import { getInitialScheduleValues } from '@containers/arena/UpsertForm/FormLiveSettingsModel/InitialLiveSettingsValues'
+import { validationScheduleScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
 import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
@@ -31,6 +31,7 @@ import useGetProfile from '@utils/hooks/useGetProfile'
 import ESLoader from '@components/FullScreenLoader'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import ESNumberInputStream from '@components/NumberInput/stream'
 
 interface StepsProps {
   step: number
@@ -53,9 +54,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const [showStreamKey, setShowStreamKey] = useState(false)
   const [hasError, setError] = useState(false)
 
-  const { liveSettingInformation, getLiveSettingTab, getStreamUrlAndKey, isPending, setLiveStreamConfirm } = useLiveSetting()
-  const liveInfo = liveSettingInformation.data
-  const initialValues = getInitialLiveSettingValues(liveInfo ? liveInfo : null)
+  const { getScheduleSettingTab, getStreamUrlAndKey, isPending, setLiveStreamConfirm, scheduleInformation } = useLiveSetting()
+  const liveInfo = scheduleInformation?.data
+  const initialValues = getInitialScheduleValues(liveInfo ? liveInfo : null)
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const { userProfile } = useGetProfile()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
@@ -64,7 +65,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
-    validationSchema: validationLiveSettingsScheme(),
+    validationSchema: validationScheduleScheme(),
     enableReinitialize: true,
     onSubmit: () => {
       //TODO: smt
@@ -76,7 +77,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   }, [])
 
   const getLiveSetting = () => {
-    getLiveSettingTab({ type: TYPE_SETTING.SCHEDULE }).then((res) => {
+    getScheduleSettingTab({ type: TYPE_SETTING.SCHEDULE }).then((res) => {
       checkStatusRecord(res.payload)
       formik.validateForm()
     })
@@ -151,8 +152,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     if (fieldIdentifier) {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
     } else {
-      setShowStreamKey(false)
-      setShowStreamURL(false)
+      // setShowStreamKey(false)
+      // setShowStreamURL(false)
       onNext(step + 1, stepSettingTwo.share_sns_flag, {
         title: stepSettingTwo.title,
         content: `${baseViewingURL}${stepSettingTwo.uuid}`,
@@ -192,15 +193,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', !formik.values.stepSettingTwo.use_ticket ? new Date().toString() : null)
   }
 
-  const onReNewUrlAndKey = (type: number) => {
+  const onReNewUrlAndKey = (type: number, showToast?: boolean) => {
     getStreamUrlAndKey((url, key) => {
       if (type === KEY_TYPE.URL) {
         formik.setFieldValue('stepSettingTwo.stream_url', url)
         formik.setFieldValue('stepSettingTwo.stream_key', key)
+        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
       } else {
         formik.setFieldValue('stepSettingTwo.stream_key', key)
+        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
       }
-      dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
     })
   }
 
@@ -214,8 +216,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       scheduled_flag: 1,
       uuid: stepSettingTwo.uuid,
       thumbnail: stepSettingTwo.thumbnail,
-      title: stepSettingTwo.title,
-      description: stepSettingTwo.description,
+      title: stepSettingTwo.title.trim(),
+      description: stepSettingTwo.description.trim(),
       category: stepSettingTwo.category,
       stream_notify_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_notify_time),
       stream_schedule_start_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_schedule_start_time),
@@ -308,7 +310,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_input_title')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_input_title')}
                 fullWidth
-                value={formik.values.stepSettingTwo.title}
+                value={isFirstStep() ? formik.values.stepSettingTwo.title : formik.values.stepSettingTwo.title.trim()}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingTwo?.title && formik?.errors?.stepSettingTwo?.title}
@@ -344,7 +346,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 <ESInput
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   multiline
-                  value={formik.values.stepSettingOne.description}
+                  value={formik.values.stepSettingTwo.description.trim()}
                   disabled={true}
                   fullWidth
                   required
@@ -507,12 +509,14 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               {isFirstStep() ? (
                 <Box pb={2} className={classes.wrap_input}>
                   <Box className={classes.firstItem}>
-                    <ESInput
+                    <ESNumberInputStream
                       id="ticket_price"
                       name="stepSettingTwo.ticket_price"
-                      required={true}
-                      placeholder={'0'}
+                      type="tel"
                       fullWidth
+                      nameValue={'stepSettingTwo.ticket_price'}
+                      // className={classes.input}
+                      placeholder={'0'}
                       value={
                         isFirstStep() && (formik.values.stepSettingTwo.ticket_price === 0 || !formik.values.stepSettingTwo.use_ticket)
                           ? ''
@@ -531,11 +535,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                           : false
                       }
                       size="big"
+                      isNumber={true}
+                      formik={formik}
                       disabled={!isFirstStep()}
                       className={getAddClassByStep(classes.input_text)}
                       readOnly={!formik.values.stepSettingTwo.use_ticket}
-                      inputMode={'numeric'}
-                      type="number"
+                      nowrapHelperText
                       endAdornment={
                         isFirstStep() ? (
                           <InputAdornment position="end" className={classes.inputContainer}>
@@ -679,7 +684,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   display="flex"
                   justifyContent="flex-end"
                   className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL)}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -749,7 +754,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   display="flex"
                   justifyContent="flex-end"
                   className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY)}
+                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>

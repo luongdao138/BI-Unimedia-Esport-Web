@@ -11,6 +11,7 @@ import * as actions from '../actions'
 
 type StateType = {
   liveSettingInfo?: LiveStreamSettingResponse
+  scheduleInfo?: LiveStreamSettingResponse
   setLiveSettingResponse?: SetLiveStreamResponse
   getStreamUrlAndKeyInfo?: GetStreamUrlAndKeyResponse
   getCategory?: GetCategoryResponse
@@ -49,6 +50,9 @@ export default createReducer(initialState, (builder) => {
   builder
     .addCase(actions.getLiveSettingInfo.fulfilled, (state, action) => {
       state.liveSettingInfo = action.payload
+    })
+    .addCase(actions.getScheduleSettingInfo.fulfilled, (state, action) => {
+      state.scheduleInfo = action.payload
     })
     .addCase(actions.setLiveStream.fulfilled, (state, action) => {
       state.setLiveSettingResponse = action.payload

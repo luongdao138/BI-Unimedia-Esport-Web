@@ -120,8 +120,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
     const { stepSettingThree } = formik.values
     const data: SetChannelParams = {
       ...stepSettingThree,
-      name: stepSettingThree.name,
-      description: stepSettingThree.description,
+      name: stepSettingThree.name.trim(),
+      description: stepSettingThree.description.trim(),
       twitter_link: social.twitter_link,
       instagram_link: social.instagram_link,
       discord_link: social.discord_link,
@@ -144,7 +144,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
                 placeholder={i18n.t('common:streaming_setting_screen.placeholder_channel_name')}
                 labelPrimary={i18n.t('common:streaming_setting_screen.label_channel_name')}
                 fullWidth
-                value={formik.values.stepSettingThree.name}
+                value={isFirstStep() ? formik.values.stepSettingThree.name : formik.values.stepSettingThree.name.trim()}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 helperText={formik?.touched?.stepSettingThree?.name && formik?.errors?.stepSettingThree?.name}
@@ -180,7 +180,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
                 <ESInput
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
                   multiline
-                  value={formik.values.stepSettingThree.description}
+                  value={formik.values.stepSettingThree.description.trim()}
                   disabled={true}
                   fullWidth
                   required

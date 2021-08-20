@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
   },
   title: {
-    color: "#ADABAB"
+    color: '#ADABAB',
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
