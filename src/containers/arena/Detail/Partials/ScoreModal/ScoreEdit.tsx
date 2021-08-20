@@ -37,13 +37,12 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
     e.preventDefault()
     const _val = parseInt(e.target.value.replace(/[^0-9]/g, ''))
     if (_val > 99999 || _val < 0) return
-
     const _match = { ...match }
     type == PARTICIPANT_TYPE.GUEST ? (_match.score_guest = _val) : (_match.score_home = _val)
     setMatch(_match)
   }
-
   const participantItem = (user, avatar, type) => {
+    const scoreValue = type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home
     const _name = isTeam ? user?.team_name : user?.name
     const isWin = type == match?.winner
     const borderWidth = isWin ? 2.5 : 1.5
@@ -71,7 +70,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
             placeholder={t('common:arena.double_zero')}
             pattern="\d*"
             autoComplete="off"
-            value={type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home}
+            value={scoreValue || ''}
             onChange={(e) => handleOnChange(type, e)}
           />
         </Box>
