@@ -92,10 +92,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             </>
           )}
         </Box>
-
-        <Box marginTop={2}>
-          <ESChip className={classes.gameChip} label={game} />
-        </Box>
+        {!_.isEmpty(game) ? (
+          <Box marginTop={2}>
+            <ESChip className={classes.gameChip} label={game} />
+          </Box>
+        ) : null}
 
         <Box marginTop={2}>
           <Linkify
