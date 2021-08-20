@@ -123,7 +123,7 @@ export default createReducer(initialState, (builder) => {
     state.recommendations = action.payload.data
   })
 
-  builder.addCase(logout.fulfilled, (state) => {
+  builder.addCase(logout.pending, (state) => {
     state.data = undefined
   })
 
