@@ -826,12 +826,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     '& .MuiInputBase-input.Mui-disabled': {
-      padding: 0,
-      // paddingBottom: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      padding: '4px 0 4px 0',
     },
   },
   urlCopy: {
-    marginLeft: 12,
+    paddingLeft: 12,
     cursor: 'pointer',
     color: '#EB5686',
     // textDecoration: 'underline',
@@ -944,7 +945,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     lastItem: {
       position: 'absolute',
-      top: '-2px',
+      // top: '-2px',
     },
     coverImg: {
       height: 'calc((100vw - 48px) * 9/16)',
