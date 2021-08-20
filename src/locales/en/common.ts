@@ -1002,4 +1002,8 @@ export default {
     live_stream_status: 'ライブ配信中',
     share_btn: 'シェア',
   },
+  video_search: {
+    video_results: '動画「:key」 の検索結果',
+    video_results_all: '動画「:key」 の検索結果',
+  },
 }
