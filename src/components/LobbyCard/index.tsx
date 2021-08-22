@@ -178,7 +178,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   titleContainer: {
-    height: 25,
+    height: 45,
   },
   organizer: {
     fontSize: 10,
