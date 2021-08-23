@@ -58,7 +58,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
             <ESAvatar size={36} src={organizer_avatar} alt={organizer_name} />
           </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="space-between">
-            {entry_status ? (
+            {entry_status !== null ? (
               <Chip
                 className={classes.chipPrimary}
                 size="small"
