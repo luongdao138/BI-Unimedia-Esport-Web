@@ -6,6 +6,10 @@ import { TabsVideo } from '../index'
 import TitleFavorite from '../TitleFavorite'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import useListVideoAll from './useListVideoAll'
+import { useEffect } from 'react'
+import { TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import ESLoader from '@components/Loader'
 
 export type VideoPreviewProps = {
   id: number
@@ -26,6 +30,9 @@ type VideoListProps = {
 const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const classes = useStyles()
+  const { listLiveVideo, meta, videoTop } = useListVideoAll()
+
   const dataLiveVideo = Array(6)
     .fill('')
     .map((_, i) => ({
@@ -40,47 +47,22 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
       waitingNumber: 1500,
       category: 'Valorant',
     }))
-  const dataScheduleVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'schedule',
-      title: `ムービータイトルムービータイトル ...`,
-      scheduleTime: '2021年8月24日19時～配信予定',
-      iconStreamer: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnailVideo: '/images/dataVideoFake/banner_02.png',
-      nameStreamer: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category: 'Apex Legends',
-    }))
-  const dataArchiveVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'archive',
-      title: `ムービータイトルムービータイトル ...`,
-      scheduleTime: '2021年8月24日19時～配信予定',
-      iconStreamer: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnailVideo: '/images/dataVideoFake/banner_04.png',
-      nameStreamer: 'だみだみだみだみ',
-      // waitingNumber: 1500,
-      category: 'Valorant',
-    }))
-  const classes = useStyles()
-  const renderLiveItem = (item: VideoPreviewProps, index: number) => {
+
+  useEffect(() => {
+    listLiveVideo()
+  }, [])
+
+  const renderLiveItem = (item: TypeVideo, index: number, type?: string) => {
+    const itemVideo = { ...item, type: type }
     return (
       <>
         {downMd ? (
           <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+            <VideoPreviewItem data={itemVideo} key={itemVideo.id} />
           </Box>
         ) : (
           <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+            <VideoPreviewItem data={itemVideo} key={itemVideo.id} />
           </Grid>
         )}
       </>
@@ -95,21 +77,29 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
   const onClickSeeMoreArchive = () => {
     setTab(TabsVideo.ARCHIVED_VIDEOS)
   }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.content}>
+        {meta.pending && (
+          <Grid item xs={12}>
+            <Box my={4} display="flex" justifyContent="center" alignItems="center">
+              <ESLoader />
+            </Box>
+          </Grid>
+        )}
         {/* live video */}
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_live_videos')}
-            rightText={dataLiveVideo.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={videoTop?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {dataLiveVideo.length > 0 ? (
-              dataLiveVideo.map(renderLiveItem)
+            {videoTop?.length > 0 ? (
+              videoTop.map((item, index) => renderLiveItem(item, index, TYPE_VIDEO_TOP.LIVE))
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -117,7 +107,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             )}
           </Grid>
         </Box>
-        {dataLiveVideo.length > 0 && (
+        {videoTop?.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreLiveStream}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>
@@ -128,14 +118,14 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_schedule_videos')}
-            rightText={dataScheduleVideo.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={videoTop.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {dataScheduleVideo.length > 0 ? (
-              dataScheduleVideo.map(renderLiveItem)
+            {videoTop.length > 0 ? (
+              videoTop.map((item, index) => renderLiveItem(item, index, TYPE_VIDEO_TOP.SCHEDULE))
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -143,7 +133,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             )}
           </Grid>
         </Box>
-        {dataScheduleVideo.length > 0 && (
+        {videoTop.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreSchedule}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>
@@ -154,14 +144,14 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_archived_videos')}
-            rightText={dataArchiveVideo.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={videoTop.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreArchive}
           />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {dataArchiveVideo.length > 0 ? (
-              dataArchiveVideo.map(renderLiveItem)
+            {videoTop.length > 0 ? (
+              videoTop.map((item, index) => renderLiveItem(item, index, TYPE_VIDEO_TOP.ARCHIVE))
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -169,7 +159,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             )}
           </Grid>
         </Box>
-        {dataArchiveVideo.length > 0 && (
+        {videoTop.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreArchive}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>
@@ -186,7 +176,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {dataLiveVideo.length > 0 ? (
-              dataLiveVideo.slice(0, 3).map(renderLiveItem)
+              dataLiveVideo.slice(0, 3).map((item, index) => renderLiveItem(item, index, 'popular'))
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -203,7 +193,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {dataLiveVideo.length > 0 ? (
-              dataLiveVideo.slice(0, 3).map(renderLiveItem)
+              dataLiveVideo.slice(0, 3).map((item, index) => renderLiveItem(item, index, 'popular'))
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>

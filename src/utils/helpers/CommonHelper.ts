@@ -203,6 +203,21 @@ const formatDateTimeJP = (date: string): string => {
   return dateResult
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const detectUrl = (text: string) => {
+  const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g
+  //var urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, function (url, _, c) {
+    const url2 = c == 'www.' ? 'http://' + url : url
+    return '<a href="' + url2 + '" target="_blank">' + url + '</a>'
+  })
+}
+
+const formatTimeVideo = (date: string): string => {
+  const dateTime = moment(date).format('YYYY年MM月DD日hh時mm分')
+  return `${dateTime}～配信予定`
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -219,4 +234,6 @@ export const CommonHelper = {
   replaceWhiteSpace,
   formatDateTime,
   formatDateTimeJP,
+  detectUrl,
+  formatTimeVideo,
 }
