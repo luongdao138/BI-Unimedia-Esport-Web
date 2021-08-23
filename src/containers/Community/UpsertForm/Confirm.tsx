@@ -62,7 +62,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <ESInput
         labelPrimary={t('common:community_create.introduction')}
         multiline
-        value={values.stepOne.overview}
+        value={values.stepOne.description}
         disabled={true}
         fullWidth
       />

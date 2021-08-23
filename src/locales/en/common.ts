@@ -243,6 +243,7 @@ export default {
     community_id: 'コミュニティコード：',
     copy_shared_url: '共有URLをコピー',
     copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
+    copy_shared_url_toast_text: 'クリップボードにコピーしました。',
     info: 'INFO',
     topic_list: 'トピック一覧',
     search: '検索',

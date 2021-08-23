@@ -35,6 +35,7 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
   }, [])
 
   const handleSelectedTag = useCallback((value) => {
+    // value = value.filter((v) => {id: v.id, feature: v.attributes.feature})
     formik.setFieldValue('stepOne.features', value)
   }, [])
 
@@ -66,24 +67,24 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
       </Box>
       <Box pb={4}>
         <ESFastInput
-          id="stepOne.overview"
-          name="stepOne.overview"
+          id="stepOne.description"
+          name="stepOne.description"
           multiline
           rows={5}
           labelPrimary={i18n.t('common:community_create.introduction')}
           placeholder={i18n.t('common:community_create.introduction_placeholder')}
           fullWidth
-          value={formik.values.stepOne.overview}
+          value={formik.values.stepOne.description}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
-          error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
+          helperText={formik.touched?.stepOne?.description && formik.errors?.stepOne?.description}
+          error={formik.touched?.stepOne?.description && !!formik.errors?.stepOne?.description}
           size="small"
-          disabled={!editables.overview}
+          disabled={!editables.description}
         />
       </Box>
       <Box pb={3}>
-        <GameSelectorDialog values={formik.values.stepOne.game_titles} onChange={handleSelectedGame} disabled={!editables.game_title} />
+        <GameSelectorDialog values={formik.values.stepOne.game_titles} onChange={handleSelectedGame} disabled={!editables.game_titles} />
       </Box>
       <Box pb={1} width={200}>
         <ESSelect

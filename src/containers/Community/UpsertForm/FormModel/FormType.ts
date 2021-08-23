@@ -7,12 +7,12 @@ export type FormType = {
   stepOne: {
     cover_image_url: string
     name: string
-    overview: string
+    description: string
     game_titles: GameTitleItem[] | []
     features: CommunityFeature[] | []
     area_id: number
     address: string
-    open_range: 0 | 1
-    join_condition: 0 | 1
+    open_range: number
+    join_condition: number
   }
 }

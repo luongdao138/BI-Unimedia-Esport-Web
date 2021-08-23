@@ -8,16 +8,50 @@ export const T_TYPE = {
   PRIVATE: 1,
 }
 
-export const INITIAL_VALUES = {
+export const INITIAL_VALUES: {
+  COVER_IMAGE_URL: string
+  NAME: string
+  DESCRIPTION: string
+  ADDRESS: string
+  AREA_ID: 1
+  OPEN_RANGE: 0
+  JOIN_CONDITION: -1
+  FEATURES: []
+  GAME_TITLES: []
+} = {
   COVER_IMAGE_URL: '',
   NAME: '',
-  OVERVIEW: '',
+  DESCRIPTION: '',
   ADDRESS: '',
   AREA_ID: 1,
   OPEN_RANGE: 0,
   JOIN_CONDITION: -1,
   FEATURES: [],
   GAME_TITLES: [],
+}
+
+export const OPEN_RANGE: {
+  SEARCHABLE_VALUE: 0
+  UNSEARCHABLE_VALUE: 1
+  SEARCHABLE: string
+  UNSEARCHABLE: string
+} = {
+  SEARCHABLE_VALUE: 0,
+  UNSEARCHABLE_VALUE: 1,
+  SEARCHABLE: 'searchable',
+  UNSEARCHABLE: 'unsearchable',
+}
+
+export const JOIN_CONDITION: {
+  MANUAL_VALUE: 0
+  AUTOMATIC_VALUE: 1
+  MANUAL: string
+  AUTOMATIC: string
+} = {
+  MANUAL_VALUE: 0,
+  AUTOMATIC_VALUE: 1,
+  MANUAL: 'manual',
+  AUTOMATIC: 'automatic',
 }
 
 export const STATUS = {
