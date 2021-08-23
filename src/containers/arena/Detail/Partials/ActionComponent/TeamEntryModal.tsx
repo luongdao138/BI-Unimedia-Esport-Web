@@ -153,7 +153,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
               leader_name: _.get(values, 'members[0].name'),
               team_name: values.team_name,
               team_icon_url: values.team_icon_url,
-              members: newMembers.map((member) => ({ user_id: `${member.user_id}`, name: member.name })),
+              members: newMembers.map((member) => ({ user_id: Number(member.user_id), name: member.name })),
             },
           })
         } else {
