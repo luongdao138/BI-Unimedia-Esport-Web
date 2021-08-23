@@ -29,7 +29,7 @@ const LobbyDetailBody: React.FC = () => {
   const classes = useStyles()
   const { unjoin, entry, unjoinMeta } = useLobbyActions()
 
-  const { handleBack, lobby, meta } = useLobbyDetail()
+  const { handleBack, lobby } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
 
   const hashKey = _.get(lobby, 'attributes.hash_key', null)
@@ -80,8 +80,8 @@ const LobbyDetailBody: React.FC = () => {
 
   return (
     <div>
-      <ESLoader open={meta.pending} />
-      {lobby && meta.loaded && renderBody()}
+      <ESLoader open={lobby === undefined} />
+      {lobby && renderBody()}
       <ESModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
           <UpsertForm />

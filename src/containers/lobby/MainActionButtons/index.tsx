@@ -24,7 +24,7 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta,
 
   const status = _.get(lobby, 'attributes.status', 0)
   const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
-  const isEntered: LOBBY_PARTICIPANT_STATUS | null = _.get(lobby, 'attributes.participant_status', null)
+  const participantStatus: LOBBY_PARTICIPANT_STATUS | null = _.get(lobby, 'attributes.participant_status', null)
   const isOwner = _.get(lobby, 'attributes.is_owner', false)
 
   const actionHandlers = {
@@ -46,7 +46,7 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta,
    * [3] Also check user is not entered already 
    * [4] check if lobby members already confirmed no longer accepted
    */
-    if ((status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY) && !isEntered && !isOwner && !isFreezed) {
+    if ((status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY) && participantStatus === null && !isOwner && !isFreezed) {
       return (
         <Box className={classes.actionButton}>
           <LoginRequired>
@@ -68,7 +68,7 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta,
      * [3] Also check user is entered already must be entered
      * [4] check if lobby members already confirmed no longer able to decline
      */
-    if (status === LOBBY_STATUS.RECRUITING && isEntered && !isOwner && !isFreezed) {
+    if (status === LOBBY_STATUS.RECRUITING && participantStatus === LOBBY_PARTICIPANT_STATUS.ENTERED && !isOwner && !isFreezed) {
       return (
         <DeclineModal
           text={i18n.t('common:lobby.buttons.decline')}
@@ -87,7 +87,12 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta,
         <>
           <Box className={classes.actionButton}>
             <LoginRequired>
-              <ButtonPrimary disabled={status === LOBBY_STATUS.READY} round fullWidth onClick={() => handleAction(MAIN_ACTIONS.ENTRY)}>
+              <ButtonPrimary
+                disabled={status === LOBBY_STATUS.READY}
+                round
+                fullWidth
+                onClick={() => handleAction(MAIN_ACTIONS.MEMBER_CONFIRM)}
+              >
                 {i18n.t('common:lobby.buttons.member_confirm')}
               </ButtonPrimary>
             </LoginRequired>

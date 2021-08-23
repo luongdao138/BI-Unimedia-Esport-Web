@@ -157,7 +157,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                   unFollow={onUnFollow}
                   unBlock={onUnBlock}
                   goToProfile={goToProfile}
-                  isMe={userProfile.id === _.get(p, 'id', '')}
+                  isMe={Number(userProfile.id) === _.get(p, 'attributes.user_id', '')}
                   data={p}
                   key={i}
                 />

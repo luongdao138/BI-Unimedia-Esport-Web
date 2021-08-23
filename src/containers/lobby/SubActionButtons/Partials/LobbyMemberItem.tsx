@@ -87,11 +87,7 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
   }
 
   return (
-    <ListItem
-      ContainerProps={{ style: { listStyle: 'none' } }}
-      onClick={() => goToProfile && goToProfile(userCode)}
-      className={classes.root}
-    >
+    <ListItem ContainerProps={{ style: { listStyle: 'none' } }} className={classes.root}>
       <ListItemAvatar>
         <Badge
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -99,6 +95,8 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
           overlap="circle"
           badgeContent={0}
           showZero={false}
+          style={{ cursor: 'pointer' }}
+          onClick={() => goToProfile && goToProfile(userCode)}
         >
           <Avatar src={avatar} alt={nickName} />
         </Badge>
@@ -111,11 +109,14 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
           {!_.isEmpty(userCode) ? '@' + userCode : ''}
         </Typography>
       </ListItemText>
-      <ListItemSecondaryAction className={classes.secondaryAction}>
-        {renderFollow()}
-        {renderUnBlock()}
-        {renderUnFollow()}
-      </ListItemSecondaryAction>
+
+      {isMe === false && (
+        <ListItemSecondaryAction className={classes.secondaryAction}>
+          {renderFollow()}
+          {renderUnBlock()}
+          {renderUnFollow()}
+        </ListItemSecondaryAction>
+      )}
     </ListItem>
   )
 }
@@ -123,7 +124,6 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'flex-start',
-    cursor: 'pointer',
     listStyle: 'none',
   },
   listItem: {

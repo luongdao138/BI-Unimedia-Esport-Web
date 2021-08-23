@@ -3,7 +3,6 @@ import * as actions from '../actions'
 import { ParticipantsData, PageMeta, LobbyResponse, CategoryItem, LobbyDetail, ParticipantsItem } from '@services/lobby.service'
 
 type StateType = {
-  detail: LobbyDetail // change type
   participants: ParticipantsData
   recommendedParticipants: ParticipantsData
   searchLobbies?: Array<LobbyResponse>
@@ -14,7 +13,7 @@ type StateType = {
 }
 
 const initialState: StateType = {
-  detail: undefined,
+  lobbyDetail: undefined,
   participants: undefined,
   recommendedParticipants: [],
   searchLobbies: [],
@@ -156,5 +155,8 @@ export default createReducer(initialState, (builder) => {
         }
       )
     })
+  })
+  builder.addCase(actions.clearLobbyDetail, (state, _) => {
+    state.lobbyDetail = undefined
   })
 })
