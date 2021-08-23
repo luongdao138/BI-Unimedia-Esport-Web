@@ -20,10 +20,12 @@ import HeaderBar from '@components/LobbyStatusHeader/HeaderBar'
 import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import Participants from '@containers/Lobby/Participants'
+import ConfirmParticipants from '../ConfirmParticipants'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
   const [openList, setList] = useState<boolean>(false)
+  const [openConfirmList, setConfirmList] = useState<boolean>(false)
   const classes = useStyles()
   const { unjoin, entry, unjoinMeta } = useLobbyActions()
 
@@ -53,6 +55,7 @@ const LobbyDetailBody: React.FC = () => {
 
   const onMemberConfirm = () => {
     alert('member confirm modal')
+    setConfirmList(true)
   }
 
   const renderBody = () => {
@@ -70,6 +73,7 @@ const LobbyDetailBody: React.FC = () => {
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
         <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
+        <ConfirmParticipants open={openConfirmList} lobby={lobby} handleClose={() => setConfirmList(false)} />
       </>
     )
   }

@@ -116,6 +116,10 @@ export type ParticipantsItem = {
   }
 }
 
+export interface ConfirmParticipantItem extends ParticipantsItem {
+  checked: boolean
+}
+
 export type LobbyCategoriesResponse = {
   data: Array<CategoryItem>
 }
