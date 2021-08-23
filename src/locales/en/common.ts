@@ -1014,6 +1014,9 @@ export default {
     related_videos: '関連動画',
     live_stream_status: 'ライブ配信中',
     share_btn: 'シェア',
+    channel_register: 'チャンネル登録',
+    register_person_label: '登録者数',
+    streamer_name: '配信者の名前がはいります',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
