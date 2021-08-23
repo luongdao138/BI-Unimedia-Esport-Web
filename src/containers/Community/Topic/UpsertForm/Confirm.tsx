@@ -6,6 +6,8 @@ import ESLabel from '@components/Label'
 import { FormType } from './FormModel/FormType'
 import { Box } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
+import { useAppSelector } from '@store/hooks'
+import { getAuth } from '@store/auth/selectors'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -18,6 +20,7 @@ ESInput.defaultProps = {
 
 const Confirm: React.FC<ConfirmProps> = ({ values }) => {
   const { t } = useTranslation(['common'])
+  const user = useAppSelector(getAuth)
 
   return (
     <Box pb={9}>
@@ -32,10 +35,10 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
 
       <Box>
         <MainTopic
-          username="コイチコイチコイチコイチコイチコイチコイチコイチコイチコイチ"
-          mail="@koichi"
-          discription={values.stepOne.overview}
-          image={values.stepOne.cover_image_url}
+          username={user.nickname}
+          mail={user.email}
+          discription={values.stepOne.content}
+          image={values.stepOne.attachments}
           isConfirm
         />
       </Box>

@@ -6,11 +6,12 @@ export const getValidationScheme = (): any => {
     stepOne: Yup.object({
       title: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
         .min(2, i18n.t('common:common.at_least')),
-      overview: Yup.string()
+      content: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+        .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 }))
+        .min(2, i18n.t('common:common.at_least')),
     }),
   })
 }

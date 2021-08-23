@@ -6,6 +6,7 @@ import {
   FollowersTopicResponse,
   CommunityFeature,
   PageMeta,
+  TopicParams,
   TopicDetail,
 } from '@services/community.service'
 
@@ -16,6 +17,7 @@ type StateType = {
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
+  create_Topic?: TopicParams
   topicDetail?: TopicDetail
 }
 
