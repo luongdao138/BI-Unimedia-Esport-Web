@@ -950,15 +950,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   detectLink: {
     whiteSpace: 'pre-line',
-    paddingTop: "12px",
-    color: "#ffffffb3", 
-    display: "inline-block",
-    fontSize: "14px", 
+    paddingTop: '12px',
+    color: '#ffffffb3',
+    display: 'inline-block',
+    fontSize: '14px',
     fontWeight: 400,
     paddingBottom: 16,
     '& a': {
-      color: "#FF4786",  
-    }
+      color: '#FF4786',
+    },
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {

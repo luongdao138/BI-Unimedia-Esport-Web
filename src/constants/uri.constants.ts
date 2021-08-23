@@ -107,4 +107,5 @@ export const URI = {
   SET_CHANNEL: '/v2/channels',
   //video top
   GET_LIST_VIDEO_TOP: '/v2/videos/top',
+  GET_CATEGORY_POPULAR_VIDEO: '/v2/categories/hot',
 }

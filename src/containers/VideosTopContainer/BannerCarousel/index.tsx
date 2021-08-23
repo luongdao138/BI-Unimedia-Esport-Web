@@ -2,7 +2,7 @@ import { StackedCarousel, ResponsiveContainer, StackedCarouselSlideProps } from 
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { Box, Theme, makeStyles } from '@material-ui/core'
 
 export type BannerDataProps = {
@@ -57,8 +57,8 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
   }
 
   const playSlider = () => {
-    if(ref.current && data.length) {
-      if(centerSlideDataIndex + 1 < data.length) {
+    if (ref.current && data.length) {
+      if (centerSlideDataIndex + 1 < data.length) {
         // swipe to next slide
         ref.current.swipeTo(1)
       } else {
@@ -66,12 +66,12 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
         ref.current.swipeTo(-(data.length - 1))
       }
     }
-  };
+  }
 
   useEffect(() => {
-    setInterval(function(){ 
+    setInterval(function () {
       playSlider()
-    }, 5000);
+    }, 5000)
   }, [])
 
   return (
@@ -82,12 +82,12 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
           let currentVisibleSlide = 5
           if (parentWidth <= 992) currentVisibleSlide = 3
           if (parentWidth <= 768) currentVisibleSlide = 1
-          
+
           let width = 700
           let height = 340
           if (parentWidth <= 414) {
             width = parentWidth
-            height = parentWidth * (17/35)
+            height = parentWidth * (17 / 35)
           }
           return (
             <StackedCarousel
@@ -130,8 +130,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       '& .MuiFab-root': {
         opacity: 1,
-      }
-    }
+      },
+    },
   },
   paginationContainer: {
     display: 'flex',
@@ -168,7 +168,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 3,
     backgroundColor: '#fff',
     opacity: 0,
-    transition: "all 500ms"
+    transition: 'all 500ms',
   },
   buttonRightContainer: {
     position: 'absolute',
@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 3,
     backgroundColor: '#fff',
     opacity: 0,
-    transition: "all 500ms"
+    transition: 'all 500ms',
   },
   iconBtnStyle: {
     fontSize: 30,
@@ -195,7 +195,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down(415)]: {
     sliderContainer: {
-      height: (window.innerWidth - 48) * 17/35,
+      height: ((window.innerWidth - 48) * 17) / 35,
     },
     buttonLeftContainer: {
       left: 0,

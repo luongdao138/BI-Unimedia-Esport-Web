@@ -3,12 +3,11 @@ import i18n from '@locales/i18n'
 import VideoPreviewItem from '../VideoPreviewItem'
 import TitleSeeMore from '../TitleSeeMore'
 import { TabsVideo } from '../index'
-import TitleFavorite from '../TitleFavorite'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useListVideoAll from './useListVideoAll'
 import { useEffect } from 'react'
-import { TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import { CategoryPopularData, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
 import ESLoader from '@components/Loader'
 
 export type VideoPreviewProps = {
@@ -31,25 +30,11 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
-  const { listLiveVideo, meta, videoTop } = useListVideoAll()
-
-  const dataLiveVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'live',
-      title: `ムービータイトルムービータイトル ...`,
-      iconStreamer: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnailVideo: '/images/dataVideoFake/banner_04.png',
-      nameStreamer: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category: 'Valorant',
-    }))
+  const { listLiveVideo, meta, videoTop, videoPopular, videoCategoryPopular } = useListVideoAll()
 
   useEffect(() => {
     listLiveVideo()
+    videoPopular()
   }, [])
 
   const renderLiveItem = (item: TypeVideo, index: number, type?: string) => {
@@ -68,6 +53,34 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
       </>
     )
   }
+
+  const renderPopularItem = (item: CategoryPopularData, index: number) => {
+    return (
+      <>
+        <Box className={classes.titleContainer} key={index}>
+          <TitleSeeMore
+            titleText={item.name}
+            rightText={i18n.t('common:videos_top_tab.view_more')}
+            iconSource={'/images/big_logo.png'}
+            onPress={onClickSeeMoreLiveStream}
+          />
+        </Box>
+        <Box className={classes.wrapContentContainer}>
+          <Grid container spacing={3} className={classes.contentContainer}>
+            {item?.videos.length > 0 ? (
+              item?.videos.map((item, index) => renderLiveItem(item, index))
+            ) : (
+              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
+                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
+              </Box>
+            )}
+          </Grid>
+        </Box>
+        <Box paddingTop={3} />
+      </>
+    )
+  }
+
   const onClickSeeMoreLiveStream = () => {
     setTab(TabsVideo.LIVE_VIDEOS)
   }
@@ -170,37 +183,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
         <Box className={classes.popularCategoryTitle}>
           <Typography className={classes.popularText}> {i18n.t('common:videos_top_tab.popular_category')} </Typography>
         </Box>
-        <Box className={classes.titleContainer}>
-          <TitleFavorite titleText={'Apex Legends'} iconSource={'/images/big_logo.png'} />
-        </Box>
-        <Box className={classes.wrapContentContainer}>
-          <Grid container spacing={3} className={classes.contentContainer}>
-            {dataLiveVideo.length > 0 ? (
-              dataLiveVideo.slice(0, 3).map((item, index) => renderLiveItem(item, index, 'popular'))
-            ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
-              </Box>
-            )}
-          </Grid>
-        </Box>
-        <Box paddingTop={3} />
-
-        {/* legend of league */}
-        <Box className={classes.titleContainer}>
-          <TitleFavorite titleText={'Legend of League'} iconSource={'/images/big_logo.png'} />
-        </Box>
-        <Box className={classes.wrapContentContainer}>
-          <Grid container spacing={3} className={classes.contentContainer}>
-            {dataLiveVideo.length > 0 ? (
-              dataLiveVideo.slice(0, 3).map((item, index) => renderLiveItem(item, index, 'popular'))
-            ) : (
-              <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
-                <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
-              </Box>
-            )}
-          </Grid>
-        </Box>
+        {videoCategoryPopular.map(renderPopularItem)}
       </Box>
     </Box>
   )

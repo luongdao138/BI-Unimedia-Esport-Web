@@ -6,6 +6,7 @@ export const TYPE_VIDEO_TOP = {
   SCHEDULE: 'schedule',
   LIVE: 'live',
   ARCHIVE: 'archived',
+  POPULAR: 'popular',
 }
 export type ListVideoTopParams = {
   type: string
@@ -59,7 +60,28 @@ export type VideoTopData = {
   }
 }
 
+export type VideoPopularResponse = {
+  message?: string
+  code?: number
+  data?: Array<CategoryPopularData>
+}
+export type CategoryPopularData = {
+  id: number
+  name: string
+  count: number
+  videos: Array<TypeVideo>
+}
+
+export type VideoPopularResult = {
+  data: Array<TypeVideo>
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
+  return data
+}
+
+export const ListVideoPopular = async (): Promise<VideoPopularResponse> => {
+  const { data } = await api.get<VideoPopularResponse>(URI.GET_CATEGORY_POPULAR_VIDEO)
   return data
 }
