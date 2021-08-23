@@ -21,7 +21,8 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
 import ESLoader from '@components/FullScreenLoader'
-
+import Linkify from 'react-linkify'
+import ESLabel from '@components/Label'
 interface StepsProps {
   step: number
   onNext: (step: number) => void
@@ -177,15 +178,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
                   className={getAddClassByStep(classes.input_text)}
                 />
               ) : (
-                <ESInput
-                  labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
-                  multiline
-                  value={formik.values.stepSettingThree.description.trim()}
-                  disabled={true}
-                  fullWidth
-                  required
-                  size={'big'}
-                />
+                <>
+                  <ESLabel label={i18n.t('common:streaming_setting_screen.label_overview')} required={true} />
+                  <Linkify>
+                    <span className={classes.detectLink}> {formik.values.stepSettingThree.description.trim()}</span>
+                  </Linkify>
+                </>
               )}
             </Box>
           </Box>
@@ -280,6 +278,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 27,
+  },
+  detectLink: {
+    whiteSpace: 'pre-line',
+    paddingTop: "12px",
+    color: "#ffffffb3", 
+    display: "inline-block",
+    fontSize: "14px", 
+    fontWeight: 400,
+    '& a': {
+      color: "#FF4786",  
+    }
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {

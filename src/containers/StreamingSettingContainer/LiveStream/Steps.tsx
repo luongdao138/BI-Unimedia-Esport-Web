@@ -352,17 +352,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 />
               ) : (
                 <>
-                  {/* <ESInput
-                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
-                  multiline
-                  value={formik.values.stepSettingOne.description.trim()}
-                  disabled={true}
-                  fullWidth
-                  required
-                  size={'big'}
-                /> */}
+                  <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
                   <Linkify>
-                    <span style={{ whiteSpace: 'pre' }}> {formik.values.stepSettingOne.description.trim()}</span>
+                    <span className={classes.detectLink}> {formik.values.stepSettingOne.description.trim()}</span>
                   </Linkify>
                 </>
               )}
@@ -802,6 +794,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputAdornment: {
     color: '#fff',
     fontSize: '14px',
+  },
+  detectLink: {
+    whiteSpace: 'pre-line',
+    paddingTop: "12px",
+    color: "#ffffffb3", 
+    display: "inline-block",
+    fontSize: "14px", 
+    fontWeight: 400,
+    '& a': {
+      color: "#FF4786",  
+    }
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {

@@ -32,6 +32,7 @@ import ESLoader from '@components/FullScreenLoader'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import ESNumberInputStream from '@components/NumberInput/stream'
+import Linkify from 'react-linkify'
 
 interface StepsProps {
   step: number
@@ -344,15 +345,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   className={getAddClassByStep(classes.input_text)}
                 />
               ) : (
-                <ESInput
-                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
-                  multiline
-                  value={formik.values.stepSettingTwo.description.trim()}
-                  disabled={true}
-                  fullWidth
-                  required
-                  size={'big'}
-                />
+                <>
+                  <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
+                  <Linkify>
+                    <span className={classes.detectLink}> {formik.values.stepSettingTwo.description.trim()}</span>
+                  </Linkify>
+                </>
               )}
             </Box>
           </Box>
@@ -949,6 +947,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputAdornment: {
     color: '#fff',
     fontSize: '14px',
+  },
+  detectLink: {
+    whiteSpace: 'pre-line',
+    paddingTop: "12px",
+    color: "#ffffffb3", 
+    display: "inline-block",
+    fontSize: "14px", 
+    fontWeight: 400,
+    paddingBottom: 16,
+    '& a': {
+      color: "#FF4786",  
+    }
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
