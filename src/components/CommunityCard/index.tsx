@@ -113,7 +113,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     )
   }
   return (
-    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.hash_key}`)}>
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.id}`)}>
       <Box>
         <ESCardMedia
           cornerIcon={<Icon className="fas fa-users" fontSize="small" />}

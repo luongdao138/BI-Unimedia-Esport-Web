@@ -121,27 +121,30 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
             </LoginRequired>
           ))}
         </Box>
-        <InfiniteScroll
-          className={classes.scrollContainer}
-          dataLength={communities.length}
-          next={loadMore}
-          hasMore={hasNextPage}
-          loader={null}
-          scrollThreshold="1px"
-        >
-          {!_.isEmpty(communities) &&
-            communities.map((community, i) => (
+
+        {communities.length > 0 ? (
+          <InfiniteScroll
+            className={classes.scrollContainer}
+            dataLength={communities.length}
+            next={loadMore}
+            hasMore={hasNextPage}
+            loader={null}
+            scrollThreshold="1px"
+          >
+            {communities.map((community, i) => (
               <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
                 <CommunityCard community={community} />
               </Grid>
             ))}
-        </InfiniteScroll>
-        {meta.loaded && (
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Box display="flex" justifyContent="center">
-              <Typography variant="body1">{t('common:community.no_data')}</Typography>
-            </Box>
-          </Grid>
+          </InfiniteScroll>
+        ) : (
+          meta.loaded && (
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Box display="flex" justifyContent="center">
+                <Typography variant="body1">{t('common:community.no_data')}</Typography>
+              </Box>
+            </Grid>
+          )
         )}
         {meta.pending && (
           <Grid item xs={12}>

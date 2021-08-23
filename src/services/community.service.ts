@@ -121,6 +121,11 @@ export const communityList = async (params: CommunitySearchParams): Promise<Comm
   return data
 }
 
+export const communityListPublic = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
+  const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PUBLIC, { params })
+  return data
+}
+
 export const getTopicFollowers = async (params: TopicFollowersParams): Promise<TopicFollowersResponse> => {
   const { data } = await api.post<TopicFollowersResponse>(URI.TOPICS_FOLLOWERS, params)
   return data
