@@ -21,15 +21,6 @@ const initialState: StateType = {
 }
 
 export default createReducer(initialState, (builder) => {
-  builder.addCase(actions.entryLobby.fulfilled, (_state, _action) => {
-    // do detail manipulation later
-  })
-  builder.addCase(actions.cancelLobby.fulfilled, (_state, _action) => {
-    // do detail manipulation later
-  })
-  builder.addCase(actions.unjoinLobby.fulfilled, (_state, _action) => {
-    // do detail manipulation later
-  })
   builder.addCase(actions.searchLobby.fulfilled, (_state, _action) => {
     let searchLobbies = _action.payload.data
     if (_action.payload.meta != undefined && _action.payload.meta.current_page > 1) {
@@ -47,7 +38,6 @@ export default createReducer(initialState, (builder) => {
     state.searchLobbies = []
   })
   builder.addCase(actions.getParticipants.fulfilled, (state, action) => {
-    // do detail manipulation later
     let _participants = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       _participants = state.participants.concat(action.payload.data)
@@ -57,11 +47,9 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.randomizeParticipants.fulfilled, (state, action) => {
     state.recommendedParticipants = action.payload.data
-    // do detail manipulation later
   })
   builder.addCase(actions.confirmParticipants.fulfilled, (state) => {
     state.recommendedParticipants = []
-    // do detail manipulation later
   })
   builder.addCase(actions.getLobbyCategories.fulfilled, (state, action) => {
     state.lobbyCategories = action.payload.data.map((g) => ({
