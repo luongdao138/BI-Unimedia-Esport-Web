@@ -100,6 +100,65 @@ export type PageMeta = {
   total_pages: number
 }
 
+export type TopicGameTitle = {
+  id: number
+  parent_id?: number
+  display_name: string
+  short_name: string
+  jp_kana_name: string
+  en_name: string
+  aka: null
+  created_at: string
+  updated_at: string
+  deleted_at: null
+  user_id: null
+}
+
+export type TopicAttachments = {
+  id: number
+  file_type: string
+  sequence_no: number
+  assets_url: string
+  thumbnail_url?: string
+  bucket_name: string
+  message_id?: number
+  comment_id?: number
+  topic_id: number
+  user_id: number
+  created_at: string
+  updated_at: string
+  deleted_at?: string
+}
+
+export type TopicDetail = {
+  id: string
+  type: string
+  attributes: {
+    title: string
+    content: string
+    community_id: number
+    created_at: string
+    user_id: number
+    attachments?: Array<TopicAttachments>
+    owner_name: string
+    owner_profile: string
+    like_count: number
+    game_title: Array<TopicGameTitle>
+    is_liked: boolean
+    member_role: string
+    community_name: string
+    can_remove: boolean
+  }
+}
+
+export type TopicDetailResponse = {
+  data: TopicDetail
+}
+
+export type TopicDetailParams = {
+  topic_id: number
+}
+
 export type TopicFollowersResponse = {
   data: Array<FollowersTopicResponse>
   meta: PageMeta
@@ -144,5 +203,10 @@ export const updateCommunity = async (params: UpdateParams): Promise<UpdateCommu
 
 export const getCommunityFeatures = async (): Promise<CommunityFeaturesResponse> => {
   const { data } = await api.get<CommunityFeaturesResponse>(URI.COMMUNITY_FEATURES)
+  return data
+}
+
+export const getTopicDetail = async (params: TopicDetailParams): Promise<TopicDetailResponse> => {
+  const { data } = await api.get<TopicDetailResponse>(URI.TOPICS, { params })
   return data
 }
