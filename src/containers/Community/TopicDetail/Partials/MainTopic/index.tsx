@@ -21,7 +21,7 @@ type CommunityHeaderProps = {
   count?: number
   image?: string | null
   isConfirm?: boolean
-  handleDelete: () => void
+  handleDelete?: () => void
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({
   username,

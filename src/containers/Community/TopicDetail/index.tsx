@@ -8,11 +8,8 @@ import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { useRouter } from 'next/router'
 import moment from 'moment'
-// import { useTranslation } from 'react-i18next'
-// import { Colors } from '@theme/colors'
 
 const TopicDetailContainer: React.FC = () => {
-  // const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { topic_id } = router.query
