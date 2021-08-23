@@ -21,7 +21,8 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
 import ESLoader from '@components/FullScreenLoader'
-
+import Linkify from 'react-linkify'
+import ESLabel from '@components/Label'
 interface StepsProps {
   step: number
   onNext: (step: number) => void
@@ -44,7 +45,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   })
   const { setChannelConfirm, isPending, getChannelLive } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
-  const [status, setStatus] = useState<boolean>(false)
+  // const [status, setStatus] = useState<boolean>(false)
 
   useEffect(() => {
     getChannelInfo()
@@ -69,19 +70,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   }
 
   const getChannelInfo = () => {
-    getChannelLive().then((res) => {
-      checkStatusRecord(res.payload)
+    getChannelLive().then(() => {
+      // checkStatusRecord(res.payload)
       formik.validateForm()
     })
   }
 
-  const checkStatusRecord = (data) => {
-    if (!data?.data?.created_at) {
-      setStatus(false)
-    } else {
-      setStatus(true)
-    }
-  }
+  // const checkStatusRecord = (data) => {
+  //   if (!data?.data?.created_at) {
+  //     setStatus(false)
+  //   } else {
+  //     setStatus(true)
+  //   }
+  // }
 
   const onClickNext = () => {
     const { stepSettingThree } = formik.values
@@ -177,15 +178,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
                   className={getAddClassByStep(classes.input_text)}
                 />
               ) : (
-                <ESInput
-                  labelPrimary={i18n.t('common:streaming_setting_screen.label_overview')}
-                  multiline
-                  value={formik.values.stepSettingThree.description.trim()}
-                  disabled={true}
-                  fullWidth
-                  required
-                  size={'big'}
-                />
+                <>
+                  <ESLabel label={i18n.t('common:streaming_setting_screen.label_overview')} required={true} />
+                  <Linkify>
+                    <span className={classes.detectLink}> {formik.values.stepSettingThree.description.trim()}</span>
+                  </Linkify>
+                </>
               )}
             </Box>
           </Box>
@@ -207,7 +205,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {status ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
+                  {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
             </Grid>
@@ -280,6 +278,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 27,
+  },
+  detectLink: {
+    whiteSpace: 'pre-line',
+    paddingTop: "12px",
+    color: "#ffffffb3", 
+    display: "inline-block",
+    fontSize: "14px", 
+    fontWeight: 400,
+    '& a': {
+      color: "#FF4786",  
+    }
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {

@@ -31,6 +31,7 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import ESNumberInputStream from '@components/NumberInput/stream'
 import ESInputDatePicker from '@components/InputDatePicker'
 import moment from 'moment'
+import Linkify from 'react-linkify'
 
 interface StepsProps {
   step: number
@@ -157,6 +158,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         title: stepSettingOne.title,
         content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
       })
+      // console.log("description=====",stepSettingOne.description)
     }
   }
   const onClickPrev = () => {
@@ -239,6 +241,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       }
     })
   }
+  // console.log('formik.values.stepSettingOne.description.trim()', formik.values.stepSettingOne.description);
 
   return (
     <Box py={4} className={classes.container}>
@@ -348,15 +351,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   className={getAddClassByStep(classes.input_text)}
                 />
               ) : (
-                <ESInput
-                  labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
-                  multiline
-                  value={formik.values.stepSettingOne.description.trim()}
-                  disabled={true}
-                  fullWidth
-                  required
-                  size={'big'}
-                />
+                <>
+                  <ESLabel label={i18n.t('common:streaming_setting_screen.label_input_description')} required={true} />
+                  <Linkify>
+                    <span className={classes.detectLink}> {formik.values.stepSettingOne.description.trim()}</span>
+                  </Linkify>
+                </>
               )}
             </Box>
           </Box>
@@ -676,7 +676,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {showReNew ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
+                  {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
             </Grid>
@@ -690,7 +690,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {t('common:streaming_setting_screen.start_live_stream')}
+                    {showReNew ? i18n.t('common:streaming_setting_screen.update') : t('common:streaming_setting_screen.start_live_stream')}
                   </ButtonPrimary>
                 </Box>
               </Box>
@@ -794,6 +794,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputAdornment: {
     color: '#fff',
     fontSize: '14px',
+  },
+  detectLink: {
+    whiteSpace: 'pre-line',
+    paddingTop: "12px",
+    color: "#ffffffb3", 
+    display: "inline-block",
+    fontSize: "14px", 
+    fontWeight: 400,
+    '& a': {
+      color: "#FF4786",  
+    }
   },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
