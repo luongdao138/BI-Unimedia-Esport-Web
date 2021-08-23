@@ -6,11 +6,11 @@ type StateType = {
   my_community_list: Array<CommunityResponse> | null
   topicFollowersList: Array<FollowersTopicResponse> | null
   topicFollowersListMeta?: Meta
-  community_detail: CommunityDetail
+  community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
 }
 
-const initialState: StateType = { my_community_list: [], topicFollowersList: [], community_detail: undefined, community_features: [] }
+const initialState: StateType = { my_community_list: [], topicFollowersList: [], community_features: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {

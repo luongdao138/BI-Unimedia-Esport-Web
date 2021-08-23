@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import community from '@store/community'
-import { CommunityDetail, CommunityFeature, CommunityFormParams } from '@services/community.service'
+import { CommunityDetail, CommunityFeature, CommunityFormParams, UpdateParams } from '@services/community.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
@@ -15,12 +15,12 @@ const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeature
 // TODO change when data is ready
 export type EditableTypes = {
   name: boolean
-  overview: boolean
+  description: boolean
   area_id: boolean
   address: boolean
   join_condition: boolean
   open_range: boolean
-  game_title: boolean
+  game_titles: boolean
   features: boolean
   cover_image_url: boolean
 }
@@ -31,6 +31,7 @@ const useCommunityCreate = (): {
   communityFeatures: Array<CommunityFeature>
   editables: EditableTypes
   submit(params: CommunityFormParams): void
+  update(params: UpdateParams): void
   getCommunityFeaturesMeta: Meta
   getCommunityFeatures: () => void
 } => {
@@ -44,15 +45,15 @@ const useCommunityCreate = (): {
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
     // always editable
-    cover_image_url: true,
     name: true,
-    overview: true,
-    join_condition: true,
-    open_range: true,
-    area_id: true,
-    address: true,
-    game_title: true,
+    description: true,
     features: true,
+    game_titles: true,
+    join_condition: true,
+    area_id: true,
+    open_range: true,
+    address: true,
+    cover_image_url: true,
   })
   const isEditable = true
 
@@ -60,6 +61,15 @@ const useCommunityCreate = (): {
     // router.push(`${ESRoutes.COMMUNITY}/123`)
     dispatch(actions.createCommunity(params))
     dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+  }
+
+  const update = async (params: UpdateParams) => {
+    const resultAction = await dispatch(actions.updateCommunity(params))
+    if (actions.updateCommunity.fulfilled.match(resultAction)) {
+      router.push(`${ESRoutes.COMMUNITY}/${resultAction.meta.arg.hash_key}`)
+      dispatch(actions.getCommunityDetail(String(resultAction.meta.arg.hash_key)))
+      dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+    }
   }
 
   useEffect(() => {
@@ -78,11 +88,11 @@ const useCommunityCreate = (): {
 
       let _editables = { ...editables }
       // always not editable
-      _editables.game_title = false
       _editables = _.mapValues(_editables, () => false)
+      _editables.game_titles = true
       _editables.cover_image_url = true
       _editables.name = true
-      _editables.overview = true
+      _editables.description = true
       _editables.open_range = true
       _editables.join_condition = true
       _editables.area_id = true
@@ -92,7 +102,7 @@ const useCommunityCreate = (): {
     }
   }, [community, router])
 
-  return { isEdit, community, communityFeatures, editables, submit, getCommunityFeaturesMeta, getCommunityFeatures }
+  return { isEdit, update, community, communityFeatures, editables, submit, getCommunityFeaturesMeta, getCommunityFeatures }
 }
 
 export default useCommunityCreate

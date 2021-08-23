@@ -47,7 +47,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const data = detail.attributes
 
   const isFollowing = true
-  const isAdmin = false
+  const isAdmin = true
   const { isAuthenticated } = useCommunityDetail()
 
   const router = useRouter()

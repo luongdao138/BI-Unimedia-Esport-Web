@@ -18,18 +18,7 @@ const CommunityContainer: React.FC = () => {
     if (community_id) getCommunityDetail(String(community_id))
   }, [router])
 
-  const detail = {
-    id: 60,
-    attributes: {
-      title: 'Ninjalaコミュニティ',
-      cover: '/images/community_dummy_1.jpg',
-      hash_key: '1231231',
-      my_role: null,
-      is_official: false,
-      is_private: true,
-    },
-  }
-  const { toEdit } = useCommunityHelper(detail)
+  const { toEdit } = useCommunityHelper(communityDetail)
 
   const renderBody = () => {
     return (
@@ -54,7 +43,7 @@ const CommunityContainer: React.FC = () => {
       {renderBody()}
       <ESModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
-          <UpsertForm communityName={detail.attributes.title} />
+          <UpsertForm communityName={communityDetail?.attributes?.name} />
         </BlankLayout>
       </ESModal>
     </>

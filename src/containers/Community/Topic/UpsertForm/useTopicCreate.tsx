@@ -67,7 +67,7 @@ const useTopicCreate = (): {
         return
       }
 
-      const _status = lobby.attributes.status
+      const _status = lobby.attributes?.status
 
       let _editables = { ...editables }
       // always not editabl

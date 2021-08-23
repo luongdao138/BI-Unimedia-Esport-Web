@@ -1,5 +1,6 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
+import { GameTitle } from './game.service'
 
 export enum CommunityFilterOption {
   all = 'all',
@@ -12,15 +13,7 @@ export type CommunityListResponse = {
   links: any
 }
 
-export type GameTitle = {
-  id: number
-  display_name: string
-}
-
-export type FeatureTitle = {
-  id: number
-  feature: string
-}
+type GameTitleItem = GameTitle['attributes']
 
 export type CommunityDetail = {
   id: string
@@ -28,15 +21,17 @@ export type CommunityDetail = {
   attributes: {
     id: number
     name: string
-    open_range: string
+    open_range: number
     description: string
-    join_condition: string
+    join_condition: number
     area_id: number
     area_name: string
     member_count: number
     cover_image_url: string
-    game_titles: GameTitle[]
-    features: FeatureTitle[]
+    address: string
+    is_official: number
+    game_titles: GameTitleItem[]
+    features: CommunityDetailFeature[]
     admin: {
       id: number
       nickname: string
@@ -52,7 +47,7 @@ export type CommunityResponse = {
 
 export type CommunityFormParams = {
   name: string
-  overview: string
+  description: string
   features: number[]
   game_titles: number[]
   open_range: number
@@ -60,6 +55,20 @@ export type CommunityFormParams = {
   area_id: number
   address: string
   cover_image_url: string
+}
+
+export type UpdateParams = {
+  hash_key: string
+  data: CommunityFormParams
+}
+
+export type UpdateCommunityResponse = {
+  id: number
+}
+
+export type CommunityDetailFeature = {
+  id: number
+  feature: string
 }
 
 export type CommunityFeature = {
@@ -115,6 +124,11 @@ export const getCommunityDetail = async (hash_key: string): Promise<CommunityDet
 
 export const createCommunity = async (params: CommunityFormParams): Promise<void> => {
   const { data } = await api.post<void>(URI.COMMUNITY_CREATE, params)
+  return data
+}
+
+export const updateCommunity = async (params: UpdateParams): Promise<UpdateCommunityResponse> => {
+  const { data } = await api.put<UpdateCommunityResponse>(URI.COMMUNITY_UPDATE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 

@@ -62,6 +62,21 @@ export const createCommunity = createAsyncThunk<void, services.CommunityFormPara
   }
 )
 
+export const updateCommunity = createAsyncThunk<services.UpdateCommunityResponse, services.UpdateParams>(
+  COMMUNITY_ACTION_TYPE.UPDATE_COMMUNITY,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.updateCommunity(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const getCommunityFeatures = createAsyncThunk<services.CommunityFeaturesResponse>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_FEATURES,
   async (_, { rejectWithValue }) => {
