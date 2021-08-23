@@ -31,6 +31,7 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import ESNumberInputStream from '@components/NumberInput/stream'
 import ESInputDatePicker from '@components/InputDatePicker'
 import moment from 'moment'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface StepsProps {
   step: number
@@ -157,6 +158,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         title: stepSettingOne.title,
         content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
       })
+      // console.log("description=====",stepSettingOne.description)
     }
   }
   const onClickPrev = () => {
@@ -351,12 +353,13 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 <ESInput
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   multiline
-                  value={formik.values.stepSettingOne.description.trim()}
+                  value={CommonHelper.detectUrl(formik.values.stepSettingOne.description.trim())}
                   disabled={true}
                   fullWidth
                   required
                   size={'big'}
                 />
+                // <div>description 12 <a href="http://localhost:3000/video/streaming_setting" target="_blank">http://localhost:3000/video/streaming_setting</a></div>
               )}
             </Box>
           </Box>
@@ -676,7 +679,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {showReNew ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
+                  {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
             </Grid>
@@ -690,7 +693,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {t('common:streaming_setting_screen.start_live_stream')}
+                    {showReNew ? i18n.t('common:streaming_setting_screen.update') : t('common:streaming_setting_screen.start_live_stream')}
                   </ButtonPrimary>
                 </Box>
               </Box>

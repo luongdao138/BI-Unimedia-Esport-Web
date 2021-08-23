@@ -44,7 +44,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   })
   const { setChannelConfirm, isPending, getChannelLive } = useLiveSetting()
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
-  const [status, setStatus] = useState<boolean>(false)
+  // const [status, setStatus] = useState<boolean>(false)
 
   useEffect(() => {
     getChannelInfo()
@@ -69,19 +69,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   }
 
   const getChannelInfo = () => {
-    getChannelLive().then((res) => {
-      checkStatusRecord(res.payload)
+    getChannelLive().then(() => {
+      // checkStatusRecord(res.payload)
       formik.validateForm()
     })
   }
 
-  const checkStatusRecord = (data) => {
-    if (!data?.data?.created_at) {
-      setStatus(false)
-    } else {
-      setStatus(true)
-    }
-  }
+  // const checkStatusRecord = (data) => {
+  //   if (!data?.data?.created_at) {
+  //     setStatus(false)
+  //   } else {
+  //     setStatus(true)
+  //   }
+  // }
 
   const onClickNext = () => {
     const { stepSettingThree } = formik.values
@@ -207,7 +207,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {status ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
+                  {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
             </Grid>

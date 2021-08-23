@@ -824,7 +824,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
             <Grid item xs={12} md={9}>
               <Box maxWidth={280} className={classes.buttonContainer}>
                 <ButtonPrimary type="submit" round fullWidth onClick={onClickNext} disabled={hasError}>
-                  {showReNew ? i18n.t('common:streaming_setting_screen.update') : i18n.t('common:streaming_setting_screen.check_submit')}
+                  {i18n.t('common:streaming_setting_screen.check_submit')}
                 </ButtonPrimary>
               </Box>
             </Grid>
@@ -838,7 +838,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 </Box>
                 <Box className={classes.actionButton}>
                   <ButtonPrimary round fullWidth onClick={onConfirm}>
-                    {t('common:delivery_reservation_tab.delivery_data_save')}
+                    {showReNew ? i18n.t('common:streaming_setting_screen.update') : t('common:delivery_reservation_tab.delivery_data_save')}
                   </ButtonPrimary>
                 </Box>
               </Box>

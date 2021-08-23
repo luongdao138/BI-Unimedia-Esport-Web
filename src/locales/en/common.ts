@@ -926,7 +926,7 @@ export default {
     tab3_notification_mess: '配信画面にてご確認ください。',
     tab2_notification_title: '配信データが保存できました',
     tab2_notification_mess: 'StreamURLを利用して配信を開始してださい。',
-    update: '再発行',
+    update: '保存する',
     message_copy: 'クリップボードにコピーしました。',
     dialog: {
       title_renew: '新しいストリームURLを作成する',

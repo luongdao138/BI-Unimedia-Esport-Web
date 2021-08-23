@@ -208,6 +208,7 @@ const detectUrl = (text: string) => {
   const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g
   //var urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.replace(urlRegex, function (url, _, c) {
+    // console.log('detectUrl==',url, c, _)
     const url2 = c == 'www.' ? 'http://' + url : url
     return '<a href="' + url2 + '" target="_blank">' + url + '</a>'
   })
