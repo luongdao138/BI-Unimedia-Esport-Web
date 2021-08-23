@@ -93,3 +93,18 @@ export const getCommunityFeatures = createAsyncThunk<services.CommunityFeaturesR
     }
   }
 )
+
+export const getTopicDetail = createAsyncThunk<services.TopicDetailResponse, services.TopicDetailParams>(
+  COMMUNITY_ACTION_TYPE.GET_TOPIC_DETAIL,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getTopicDetail(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
