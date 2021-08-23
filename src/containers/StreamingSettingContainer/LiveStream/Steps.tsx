@@ -23,12 +23,14 @@ import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING 
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import ESLoader from '@components/FullScreenLoader'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import ESNumberInputStream from '@components/NumberInput/stream'
+import ESInputDatePicker from '@components/InputDatePicker'
+import moment from 'moment'
 
 interface StepsProps {
   step: number
@@ -395,6 +397,35 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   className={getAddClassByStep(classes.input_text)}
                   size="big"
                 />
+              )}
+            </Box>
+          </Box>
+          {/* public time video archive */}
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
+              {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepSettingOne.public_time"
+                  placeholder={'2021年7月31日 23:59'}
+                  fullWidth
+                  value={formik.values.stepSettingOne.public_time}
+                  onChange={(date) => {
+                    const temp = moment(date).add(5, 's')
+                    formik.setFieldValue('stepSettingOne.public_time', temp)
+                  }}
+                  onBlur={formik.handleBlur}
+                  helperText={formik?.touched?.stepSettingOne?.public_time && formik?.errors?.stepSettingOne?.public_time}
+                  error={formik?.touched?.stepSettingOne?.public_time && !!formik?.errors?.stepSettingOne?.public_time}
+                />
+              ) : (
+                <Box pt={1}>
+                  <Typography className={classes.date}>
+                    {formik.values.stepSettingOne.public_time !== null
+                      ? moment(formik.values.stepSettingOne.public_time).format(FORMAT_DATE_TIME_JP)
+                      : i18n.t('common:streaming_setting_screen.public_time_title')}
+                  </Typography>
+                </Box>
               )}
             </Box>
           </Box>
