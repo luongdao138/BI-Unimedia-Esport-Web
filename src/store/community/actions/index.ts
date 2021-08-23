@@ -49,7 +49,7 @@ export const getCommunityDetail = createAsyncThunk<services.CommunityDetailRespo
   }
 )
 
-export const createCommunity = createAsyncThunk<void, services.CommunityFormParams>(
+export const createCommunity = createAsyncThunk<services.CreateCommunityResponse, services.CommunityFormParams>(
   COMMUNITY_ACTION_TYPE.CREATE_COMMUNITY,
   async (params, { rejectWithValue }) => {
     try {

@@ -9,6 +9,7 @@ import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
+import { clearMetaData } from '@store/metadata/actions'
 
 const { actions, selectors } = community
 const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
@@ -56,10 +57,14 @@ const useCommunityCreate = (): {
   })
   const isEditable = true
 
-  const submit = (params: CommunityFormParams) => {
-    // router.push(`${ESRoutes.COMMUNITY}/123`)
-    dispatch(actions.createCommunity(params))
-    dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+  const resetMeta = () => dispatch(clearMetaData(actions.createCommunity.typePrefix))
+  const submit = async (params: CommunityFormParams) => {
+    const resultAction = await dispatch(actions.createCommunity(params))
+    if (actions.createCommunity.fulfilled.match(resultAction)) {
+      resetMeta()
+      router.push(`${ESRoutes.COMMUNITY}/${resultAction.payload.id}`)
+      dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+    }
   }
 
   useEffect(() => {
