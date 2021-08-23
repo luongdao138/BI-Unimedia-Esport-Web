@@ -46,7 +46,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const [tab, setTab] = useState(0)
   const data = detail.attributes
 
-  const isFollowing = false
+  const isFollowing = true
   const isAdmin = true
   const { isAuthenticated } = useCommunityDetail()
 
@@ -63,13 +63,13 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast')))
+    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast_text')))
   }
 
   const getHeader = () => {
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
           <Box pt={1} color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
               {data.name}

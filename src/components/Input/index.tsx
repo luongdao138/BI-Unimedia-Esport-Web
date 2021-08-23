@@ -12,7 +12,6 @@ export type InputProps = {
   required?: boolean
   size?: 'big' | 'small'
   noValue?: boolean
-  valueMultiline?: boolean
 }
 
 const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
@@ -23,7 +22,6 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   required = false,
   nowrapHelperText = false,
   noValue,
-  valueMultiline = false,
   ...rest
 }) => {
   const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big', isNumber: rest.type === 'number' })
@@ -49,9 +47,7 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
           {labelSecondary}
         </Box>
       )}
-      {!noValue && (
-        <OutlinedInput classes={{ root: classes.root, adornedEnd: classes.end }} margin="dense" multiline={valueMultiline} {...rest} />
-      )}
+      {!noValue && <OutlinedInput classes={{ root: classes.root, adornedEnd: classes.end }} margin="dense" {...rest} />}
       {helperText && <FormHelperText error>{helperText}</FormHelperText>}
     </FormControl>
   )

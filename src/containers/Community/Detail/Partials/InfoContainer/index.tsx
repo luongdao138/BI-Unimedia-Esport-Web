@@ -5,11 +5,18 @@ import { useTranslation } from 'react-i18next'
 import LoginRequired from '@containers/LoginRequired'
 import ESAvatar from '@components/Avatar'
 import _ from 'lodash'
+import { CommunityDetail } from '@services/community.service'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
 
-const InfoContainer: React.FC<any> = ({ data }) => {
+const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data }) => {
+  const router = useRouter()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const valueTrue = true
+
+  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
 
   return (
     <>
@@ -18,11 +25,6 @@ const InfoContainer: React.FC<any> = ({ data }) => {
           data.game_titles.map((game) => {
             return <ESChip key={game.id} className={classes.chip} label={game.display_name} />
           })}
-        {/* <ESChip className={classes.chip} label={'Ninjala'} style={{ marginRight: 16 }} />
-        <ESChip className={classes.chip} label={'対戦'} />
-        <ESChip className={classes.chip} label={'交流'} />
-        <ESChip className={classes.chip} label={'初心者歓迎'} />
-        <ESChip className={classes.chip} label={'内輪向け'} /> */}
       </Box>
       <Box marginTop={2}>
         <Typography>{data.description}</Typography>
@@ -43,7 +45,11 @@ const InfoContainer: React.FC<any> = ({ data }) => {
           <Typography>{t('common:community.disclosure_range')}</Typography>
         </Box>
         <Box className={classes.value}>
-          <Typography>公開</Typography>
+          <Typography>
+            {Number(data.open_range) == OPEN_RANGE.SEARCHABLE_VALUE
+              ? t('common:community_create.public')
+              : t('common:community_create.private')}
+          </Typography>
         </Box>
       </Box>
 
@@ -53,7 +59,11 @@ const InfoContainer: React.FC<any> = ({ data }) => {
           <Typography>{t('common:community.approval_method')}</Typography>
         </Box>
         <Box className={classes.value}>
-          <Typography>自動承認</Typography>
+          <Typography>
+            {Number(data.join_condition) == JOIN_CONDITION.MANUAL_VALUE
+              ? t('common:community_create.approval_manual')
+              : t('common:community_create.approval_automatic')}
+          </Typography>
         </Box>
       </Box>
 
@@ -63,21 +73,20 @@ const InfoContainer: React.FC<any> = ({ data }) => {
           <Typography>{t('common:community.caretaker')}</Typography>
         </Box>
         <Box className={classes.value} flexDirection="column">
-          {valueTrue ? (
-            <Box key={`3`} display="flex" flexDirection="row" alignItems="center" mt={0}>
+          {data.admin && (
+            <Box display="flex" flexDirection="row" alignItems="center">
               <LoginRequired>
-                <ButtonBase>
-                  <ESAvatar alt={'わたなべ'} />{' '}
+                <ButtonBase onClick={() => toProfile(data.admin.id)}>
+                  <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
                 </ButtonBase>
-                <Typography className={classes.breakWord}>{'わたなべ'}</Typography>
+                <Typography className={classes.breakWord}>{data.admin.nickname}</Typography>
               </LoginRequired>
             </Box>
-          ) : (
-            <Typography>-</Typography>
           )}
         </Box>
       </Box>
 
+      {/* //TODO when co organizer added to backend */}
       {/* deputy caretaker */}
       <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
         <Box className={classes.label}>

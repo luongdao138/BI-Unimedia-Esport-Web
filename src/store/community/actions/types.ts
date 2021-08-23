@@ -4,5 +4,6 @@ export enum COMMUNITY_ACTION_TYPE {
   CLEAR_COMMUNITY_LIST = 'community/clearList',
   GET_COMMUNITY_DETAIL = 'community/detail',
   CREATE_COMMUNITY = 'community/create',
+  UPDATE_COMMUNITY = 'community/update',
   GET_COMMUNITY_FEATURES = 'community/features',
 }

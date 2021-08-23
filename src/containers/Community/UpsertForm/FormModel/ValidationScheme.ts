@@ -10,7 +10,7 @@ export const getValidationScheme = (): any => {
         .required(i18n.t('common:common.input_required'))
         .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 }))
         .min(2, i18n.t('common:common.at_least')),
-      overview: Yup.string()
+      description: Yup.string()
         .nullable()
         .max(5000, i18n.t('common:common.validation.char_limit', { char_limit: 5000 })),
       features: Yup.array(),
