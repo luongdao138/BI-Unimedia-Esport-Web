@@ -4,7 +4,7 @@ import ESLoader from '@components/Loader'
 import LoginRequired from '@containers/LoginRequired'
 import { Box, Grid, Typography } from '@material-ui/core'
 import { AddRounded } from '@material-ui/icons'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles, Theme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { CommunityFilterOption } from '@services/community.service'
@@ -26,27 +26,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   const classes = useStyles()
   const router = useRouter()
   const { toCreate } = useCommunityHelper()
-  const { communities, meta, loadMore, onFilterChange } = useCommunityData()
-
-  useEffect(() => {
-    loadMore()
-  }, [communities])
-
-  useEffect(() => {
-    let filterVal = CommunityFilterOption.all
-
-    if (_.has(router.query, 'filter')) {
-      const queryFilterVal = _.get(router.query, 'filter') as CommunityFilterOption
-      if (Object.values(CommunityFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
-    }
-
-    onFilterChange(filterVal)
-  }, [router.query])
-
-  const onFilter = (filter: CommunityFilterOption) => {
-    router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
-    return null
-  }
+  const [selectedFilter, setSelectedFilter] = useState(CommunityFilterOption.all)
+  const { communities, meta, pages, fetchCommunityData, resetMeta, clearCommunityData } = useCommunityData()
 
   const defaultFilterOptions = [
     {
@@ -68,6 +49,41 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
       loginRequired: false,
     },
   ]
+
+  useEffect(() => {
+    fetchCommunityData({ page: 1, filter: filter })
+    return () => resetMeta()
+  }, [])
+
+  useEffect(() => {
+    let filterVal = CommunityFilterOption.all
+
+    if (_.has(router.query, 'filter')) {
+      const queryFilterVal = _.get(router.query, 'filter') as CommunityFilterOption
+      if (Object.values(CommunityFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
+    }
+
+    onFilterChange(filterVal)
+  }, [router.query])
+
+  const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchCommunityData({ page: Number(pages.current_page) + 1, filter: selectedFilter })
+    }
+  }
+
+  const onFilterChange = (filter: CommunityFilterOption) => {
+    setSelectedFilter(filter)
+    clearCommunityData()
+    fetchCommunityData({ page: 1, filter: filter })
+  }
+
+  const onFilter = (filter: CommunityFilterOption) => {
+    router.push(`${ESRoutes.COMMUNITY}?filter=${filter}`, undefined, { shallow: true })
+    return null
+  }
 
   return (
     <>
@@ -109,16 +125,24 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           className={classes.scrollContainer}
           dataLength={communities.length}
           next={loadMore}
-          hasMore={true}
+          hasMore={hasNextPage}
           loader={null}
-          scrollThreshold={0.8}
+          scrollThreshold="1px"
         >
-          {communities.map((community, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
-              <CommunityCard community={community} />
-            </Grid>
-          ))}
+          {!_.isEmpty(communities) &&
+            communities.map((community, i) => (
+              <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
+                <CommunityCard community={community} />
+              </Grid>
+            ))}
         </InfiniteScroll>
+        {meta.loaded && (
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Box display="flex" justifyContent="center">
+              <Typography variant="body1">{t('common:community.no_data')}</Typography>
+            </Box>
+          </Grid>
+        )}
         {meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">

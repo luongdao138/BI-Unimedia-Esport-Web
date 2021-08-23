@@ -10,7 +10,6 @@ export enum CommunityFilterOption {
 
 export type CommunitySearchParams = {
   page: number
-  keyword: string
   filter?: CommunityFilterOption
 }
 
@@ -118,7 +117,7 @@ export type CommunityDetailResponse = {
 }
 
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
-  const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST, { params })
+  const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PRIVATE, { params })
   return data
 }
 
