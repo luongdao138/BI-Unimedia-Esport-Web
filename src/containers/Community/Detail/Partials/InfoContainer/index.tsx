@@ -46,9 +46,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
         <Box className={classes.value}>
           <Typography>
-            {Number(data.open_range) == OPEN_RANGE.SEARCHABLE_VALUE
-              ? t('common:community_create.public')
-              : t('common:community_create.private')}
+            {Number(data.open_range) == OPEN_RANGE.SEARCHABLE ? t('common:community_create.public') : t('common:community_create.private')}
           </Typography>
         </Box>
       </Box>
@@ -60,7 +58,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
         <Box className={classes.value}>
           <Typography>
-            {Number(data.join_condition) == JOIN_CONDITION.MANUAL_VALUE
+            {Number(data.join_condition) == JOIN_CONDITION.MANUAL
               ? t('common:community_create.approval_manual')
               : t('common:community_create.approval_automatic')}
           </Typography>

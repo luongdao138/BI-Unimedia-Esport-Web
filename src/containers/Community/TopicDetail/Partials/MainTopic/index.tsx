@@ -11,6 +11,8 @@ import { useState } from 'react'
 import { REPORT_TYPE } from '@constants/common.constants'
 import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { SRLWrapper } from 'simple-react-lightbox'
+import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -49,19 +51,27 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
     //
   }
 
+  const renderClickableImage = () => {
+    return (
+      <SRLWrapper options={LIGHTBOX_OPTIONS}>
+        <img className={classes.imageBox} src={image} />
+      </SRLWrapper>
+    )
+  }
+
   return (
     <>
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
-          <Box className={classes.userContainer} mt={2}>
+          <Box className={classes.userContainer}>
             <Box className={date ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ESAvatar className={classes.avatar} alt={username} src={user_avatar ? '' : '/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} alt={username} src={user_avatar} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.username}>{username}</Typography>
                 <Typography className={classes.mail}>{mail}</Typography>
               </Box>
             </Box>
-            {date && (count || count == 0) && (
+            {date && (
               <Box className={classes.dateReportContainer}>
                 <Typography className={classes.date}>{date}</Typography>
               </Box>
@@ -76,21 +86,12 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
             )}
           </Box>
 
-          <Box className={classes.discriptionContainer} mb={3} mt={3}>
+          <Box className={classes.discriptionContainer} mb={2} mt={1}>
             <Typography className={classes.discription}>{discription}</Typography>
           </Box>
-          {image ? (
-            <Box
-              className={classes.image}
-              style={{
-                backgroundImage: `url(${image})`,
-              }}
-            ></Box>
-          ) : (
-            <></>
-          )}
+          {image && renderClickableImage()}
           {count || count == 0 ? (
-            <Box display="flex" justifyContent="space-between" mt={3}>
+            <Box display="flex" justifyContent="space-between" mt={2}>
               <Box display="flex" justifyContent="flex-end">
                 <Box className={classes.numberBox}>
                   <Icon className="fas fa-comment-alt" fontSize="small" />
@@ -221,15 +222,6 @@ const useStyles = makeStyles((theme) => ({
   discriptionContainer: {
     display: 'flex',
   },
-  image: {
-    display: 'flex',
-    paddingTop: '30.27%',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    borderRadius: 7,
-    width: '66%',
-  },
   discription: {
     color: Colors.grey[300],
     fontSize: 14,
@@ -241,8 +233,15 @@ const useStyles = makeStyles((theme) => ({
   count: {
     fontSize: 12,
   },
+  imageBox: {
+    display: 'flex',
+    cursor: 'pointer',
+    transition: 'all 0.5s ease',
+    borderRadius: 7,
+    width: '66%',
+  },
   [theme.breakpoints.down('sm')]: {
-    image: {
+    imageBox: {
       width: '80%',
     },
   },

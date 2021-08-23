@@ -67,16 +67,15 @@ const TopicDetailContainer: React.FC = () => {
   ]
   return (
     <>
-      <Box display="flex" flexDirection="column">
+      <Box display="flex" flexDirection="column" minHeight="100vh">
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <CommunityDetailHeader title={data.title}></CommunityDetailHeader>
-              <Box className={classes.blank}></Box>
+              <CommunityDetailHeader title={data.title} isTopic />
               <MainTopic
                 username={data.owner_name}
                 user_avatar={data.owner_profile}
-                mail="@koichi"
+                mail={data.owner_email}
                 date={`${moment(data.created_at).format('YYYY年MM月DD日')}`}
                 count={data.like_count}
                 discription={data.content}
@@ -114,9 +113,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
   },
-  blank: {
-    marginTop: theme.spacing(11.5),
-  },
   inputContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -127,11 +123,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     background: '#101010',
     willChange: 'transform',
-  },
-  [theme.breakpoints.down('sm')]: {
-    blank: {
-      marginTop: theme.spacing(11.2),
-    },
   },
 }))
 

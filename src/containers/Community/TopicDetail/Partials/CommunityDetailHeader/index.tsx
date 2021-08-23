@@ -4,13 +4,14 @@ import { Colors } from '@theme/colors'
 
 type CommunityHeaderProps = {
   title: string
+  isTopic?: boolean
 }
-const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title }) => {
+const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title, isTopic }) => {
   const classes = useStyles()
 
   return (
     <>
-      <Box className={classes.backContainer}>
+      <Box className={classes.backContainer} position={!isTopic && 'fixed'} mb={isTopic && 3}>
         <IconButton className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
@@ -24,7 +25,6 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title }) => {
 
 const useStyles = makeStyles((theme) => ({
   backContainer: {
-    position: 'fixed',
     top: 60,
     display: 'flex',
     flexDirection: 'row',

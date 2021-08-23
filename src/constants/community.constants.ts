@@ -21,17 +21,13 @@ export const INITIAL_VALUES = {
 }
 
 export const OPEN_RANGE = {
-  SEARCHABLE_VALUE: 0,
-  UNSEARCHABLE_VALUE: 1,
-  SEARCHABLE: 'searchable',
-  UNSEARCHABLE: 'unsearchable',
+  SEARCHABLE: 0,
+  UNSEARCHABLE: 1,
 }
 
 export const JOIN_CONDITION = {
-  MANUAL_VALUE: 0,
-  AUTOMATIC_VALUE: 1,
-  MANUAL: 'manual',
-  AUTOMATIC: 'automatic',
+  MANUAL: 0,
+  AUTOMATIC: 1,
 }
 
 export const STATUS = {
