@@ -1,8 +1,9 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
-import { LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
+import { CLEAR_LOBBY_DETAIL, LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
 import { follow, FollowActionResponse, FollowParams, unfollow, UnFollowResponse } from '@services/user.service'
 import { UnblockParams, UnblockResponse, unblockUser } from '@services/block.service'
+import { AppDispatch } from '@store/store'
 
 export const entryLobby = createAsyncThunk<services.EntryLobbyResponse, string>(
   LOBBY_ACTION_TYPE.LOBBY_ENTRY,
@@ -230,3 +231,12 @@ export const lobbyUnblock = createAsyncThunk<UnblockResponse, UnblockParams>(
     }
   }
 )
+
+export const clearLobbyDetail = createAction(CLEAR_LOBBY_DETAIL)
+
+export const getDetailWithClear = (hashKey: string) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  return (dispatch: AppDispatch) => {
+    Promise.resolve(dispatch(clearLobbyDetail())).then(() => dispatch(getLobbyDetail(hashKey)))
+  }
+}

@@ -51,7 +51,7 @@ const DeclineModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm }) => 
               </Box>
               <Box className={classes.actionButton}>
                 <LoginRequired>
-                  <ButtonPrimary round fullWidth onClick={() => onConfirm}>
+                  <ButtonPrimary round fullWidth onClick={() => onConfirm()}>
                     {t('common:tournament.unjoin_dialog.decline')}
                   </ButtonPrimary>
                 </LoginRequired>
