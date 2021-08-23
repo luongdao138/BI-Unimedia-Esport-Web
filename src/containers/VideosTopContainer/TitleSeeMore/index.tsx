@@ -37,9 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     paddingLeft: theme.spacing(4),
     height: '100%',
+    alignItems: 'center',
+    alignContent: 'center',
   },
   viewMoreStyle: {
     color: '#707070',
+    textAlign: 'center',
   },
   [theme.breakpoints.down(769)]: {
     viewMoreStyle: {

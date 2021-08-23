@@ -284,7 +284,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     spViewMore: {
       display: 'block',
-      padding: '15px 0 26px 0',
+      padding: '16px 0 8px 0',
       textAlign: 'center',
     },
   },

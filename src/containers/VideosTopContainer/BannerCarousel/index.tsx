@@ -15,6 +15,7 @@ type BannerCarouselProps = {
 }
 function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerDataProps> }) {
   const classes = useStyles()
+  // const [showBtn, setShowBtn] = React.useState<boolean>(false);
   const { centerSlideDataIndex, data } = props
   return (
     <Box className={classes.paginationContainer}>
@@ -65,16 +66,18 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
           else if (parentWidth <= 1080) currentVisibleSlide = 1
           return (
             <StackedCarousel
+              className={classes.stackContainer}
+              disableSwipe={true}
               ref={carouselRef}
-              fadeDistance={0.5}
-              customScales={[1, 0.85, 0.7, 0.55]}
+              fadeDistance={0}
+              customScales={[1, 0.85, 0.7, 0.7]}
               data={data}
               carouselWidth={parentWidth}
               slideWidth={750}
               slideComponent={SlideItem}
               maxVisibleSlide={5}
               currentVisibleSlide={currentVisibleSlide}
-              useGrabCursor={true}
+              useGrabCursor={false}
               onActiveSlideChange={onCenterSlideDataIndexChange}
             />
           )
@@ -96,32 +99,41 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
     alignSelf: 'center',
   },
+  stackContainer: {
+    display: 'flex',
+    // position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignSelf: 'center',
+    width: '80%',
+  },
   paginationContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 16,
   },
   sliderContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 340,
+    height: (innerWidth * 26) / 55,
     userSelect: 'none',
     alignContent: 'center',
   },
   sliderStyle: {
     height: '100%',
     width: '100%',
-    objectFit: 'cover',
+    objectFit: 'contain',
     borderRadius: 10,
   },
   buttonLeftContainer: {
