@@ -70,12 +70,10 @@ const useTopicCreate = (): {
       const _status = lobby.attributes?.status
 
       let _editables = { ...editables }
-      // always not editabl
 
       if (_status !== TOURNAMENT_STATUS.READY) {
         _editables = _.mapValues(_editables, () => false)
 
-        // always editable (default for status COMPLETED)
         _editables.cover_image = true
         _editables.title = true
         _editables.overview = true

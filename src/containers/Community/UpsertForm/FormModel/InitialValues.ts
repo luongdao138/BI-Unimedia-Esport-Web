@@ -5,7 +5,6 @@ import { FormType } from './FormType'
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getInitialValues = (data: CommunityDetail, detailFeature?: any): FormType => ({
   // TODO change after data is done
-  // data = value.filter((v) => {id: v.id, feature: v.attributes.feature})
   stepOne: {
     cover_image_url: data ? data.attributes.cover_image_url : INITIAL_VALUES.COVER_IMAGE_URL,
     name: data ? data.attributes.name : INITIAL_VALUES.NAME,

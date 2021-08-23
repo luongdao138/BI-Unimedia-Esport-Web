@@ -45,7 +45,6 @@ const useCommunityCreate = (): {
   const getCommunityFeaturesMeta = useAppSelector(_getCommunityFeaturesMeta)
   const [isEdit, setIsEdit] = useState(false)
   const [editables, setEditables] = useState<EditableTypes>({
-    // always editable
     name: true,
     description: true,
     features: true,
@@ -92,7 +91,6 @@ const useCommunityCreate = (): {
       }
 
       let _editables = { ...editables }
-      // always not editable
       _editables = _.mapValues(_editables, () => false)
       _editables.game_titles = true
       _editables.cover_image_url = true

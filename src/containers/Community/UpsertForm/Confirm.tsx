@@ -7,7 +7,7 @@ import { makeStyles, Box, Theme, Typography } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import { CommunityFeature } from '@services/community.service'
-import { INITIAL_VALUES } from '@constants/community.constants'
+import { JOIN_CONDITION, OPEN_RANGE } from '@constants/community.constants'
 import { Colors } from '@theme/colors'
 import { GameTitle } from '@services/game.service'
 
@@ -36,12 +36,12 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
 
   useEffect(() => {
     const approvalName =
-      Number(values.stepOne.join_condition) === INITIAL_VALUES.JOIN_CONDITION
+      Number(values.stepOne.join_condition) === JOIN_CONDITION.MANUAL_VALUE
         ? t('common:community_create.approval_manual')
         : t('common:community_create.approval_automatic')
     setApproval(approvalName)
     const openRangeName =
-      Number(values.stepOne.open_range) === INITIAL_VALUES.OPEN_RANGE
+      Number(values.stepOne.open_range) === OPEN_RANGE.UNSEARCHABLE_VALUE
         ? t('common:community_create.private')
         : t('common:community_create.public')
     setOpenRange(openRangeName)

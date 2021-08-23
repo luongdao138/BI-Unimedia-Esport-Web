@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router'
-// import { ESRoutes } from '@constants/route.constants'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { CommunityDetail } from '@services/community.service'
 
 const useCommunityHelper = (
-  tournament?: CommunityDetail
+  community?: CommunityDetail
 ): {
   toEdit: () => void
   toCreate: () => void
@@ -12,7 +11,7 @@ const useCommunityHelper = (
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
-  const hash_key = tournament?.id
+  const hash_key = community?.id
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/community/create' }), '/community/create', { shallow: true })
 

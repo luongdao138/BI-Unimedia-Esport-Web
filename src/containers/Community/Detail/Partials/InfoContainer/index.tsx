@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { CommunityDetail } from '@services/community.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import { INITIAL_VALUES } from '@constants/community.constants'
+import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
 
 const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data }) => {
   const router = useRouter()
@@ -46,7 +46,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
         <Box className={classes.value}>
           <Typography>
-            {Number(data.open_range) == INITIAL_VALUES.OPEN_RANGE
+            {Number(data.open_range) == OPEN_RANGE.SEARCHABLE_VALUE
               ? t('common:community_create.public')
               : t('common:community_create.private')}
           </Typography>
@@ -60,7 +60,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
         <Box className={classes.value}>
           <Typography>
-            {Number(data.join_condition) == INITIAL_VALUES.JOIN_CONDITION
+            {Number(data.join_condition) == JOIN_CONDITION.MANUAL_VALUE
               ? t('common:community_create.approval_manual')
               : t('common:community_create.approval_automatic')}
           </Typography>
