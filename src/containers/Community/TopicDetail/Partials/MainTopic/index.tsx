@@ -23,8 +23,19 @@ type CommunityHeaderProps = {
   count?: number
   image?: string | null
   isConfirm?: boolean
+  handleDelete?: () => void
 }
-const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm, user_avatar }) => {
+const MainTopic: React.FC<CommunityHeaderProps> = ({
+  username,
+  mail,
+  discription,
+  date,
+  image,
+  count,
+  isConfirm,
+  user_avatar,
+  handleDelete,
+}) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
@@ -46,9 +57,6 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
   }
   const handleDeleteOpen = () => {
     setOpenDelete(true)
-  }
-  const handleDeleteSubmit = () => {
-    //
   }
 
   const renderClickableImage = () => {
@@ -130,7 +138,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
             title={username + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
-            onSubmit={handleDeleteSubmit}
+            onSubmit={handleDelete}
             description={t('common:topic.delete.description')}
             confirmTitle={t('common:topic.delete.submit')}
           />

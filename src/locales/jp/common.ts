@@ -267,6 +267,9 @@ export default {
     topic_creation: 'トピック作成',
     confirm_follow_list: 'フォローリストを確定する',
     no_data: '該当のコミュニティはありません。',
+    topic: {
+      create_success: 'トピックを削除しました。',
+    },
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',

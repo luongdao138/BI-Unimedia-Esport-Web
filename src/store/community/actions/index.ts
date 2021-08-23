@@ -123,3 +123,18 @@ export const getTopicDetail = createAsyncThunk<services.TopicDetailResponse, ser
     }
   }
 )
+
+export const deleteTopic = createAsyncThunk<void, services.TopicDetailParams>(
+  COMMUNITY_ACTION_TYPE.DELETE_TOPIC,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.deleteTopic(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
