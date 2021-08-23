@@ -37,6 +37,7 @@ export const URI = {
   INQUIRY: '/v2/users/inquiries',
   COMMUNITY_LIST_PUBLIC: '/v2/communities/public_list',
   COMMUNITY_LIST_PRIVATE: '/v2/communities/list',
+  COMMUNITY_LIST_BY_USER: '/v2/communities/by_user',
   COMMUNITY_DETAIL: '/v2/communities/:id/details',
   COMMUNITY_CREATE: '/v2/communities',
   COMMUNITY_UPDATE: '/v2/communities/:id',

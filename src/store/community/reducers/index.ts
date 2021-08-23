@@ -5,13 +5,15 @@ import { CommunityDetail, CommunityResponse, FollowersTopicResponse, CommunityFe
 type StateType = {
   communitiesList?: Array<CommunityResponse>
   communitiesListMeta?: PageMeta
+  communitiesListByUser?: Array<CommunityResponse>
+  communitiesListByUserMeta?: PageMeta
   topicFollowersList: Array<FollowersTopicResponse> | null
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
 }
 
-const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_features: [] }
+const initialState: StateType = { communitiesList: [], communitiesListByUser: [], topicFollowersList: [], community_features: [] }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
@@ -26,6 +28,20 @@ export default createReducer(initialState, (builder) => {
     state.communitiesList = []
     state.communitiesListMeta = undefined
   })
+
+  builder.addCase(actions.getCommunityListByUser.fulfilled, (state, action) => {
+    let tmpCommunitiesList = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpCommunitiesList = state.communitiesList.concat(action.payload.data)
+    }
+    state.communitiesListByUser = tmpCommunitiesList
+    state.communitiesListByUserMeta = action.payload.meta
+  })
+  builder.addCase(actions.clearCommunityDataByUser, (state) => {
+    state.communitiesListByUser = []
+    state.communitiesListByUserMeta = undefined
+  })
+
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {

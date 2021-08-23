@@ -13,6 +13,11 @@ export type CommunitySearchParams = {
   filter?: CommunityFilterOption
 }
 
+export type CommunityListByUserParams = {
+  page: number
+  user_code: string
+}
+
 export type CommunityListResponse = {
   data: Array<CommunityResponse>
   meta: PageMeta
@@ -123,6 +128,11 @@ export const communityList = async (params: CommunitySearchParams): Promise<Comm
 
 export const communityListPublic = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PUBLIC, { params })
+  return data
+}
+
+export const communityListByUser = async (params: CommunityListByUserParams): Promise<CommunityListResponse> => {
+  const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_BY_USER, { params })
   return data
 }
 
