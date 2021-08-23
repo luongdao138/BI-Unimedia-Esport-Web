@@ -1,6 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { CommunityDetail, CommunityResponse, FollowersTopicResponse, CommunityFeature, PageMeta } from '@services/community.service'
+import {
+  CommunityDetail,
+  CommunityResponse,
+  FollowersTopicResponse,
+  CommunityFeature,
+  PageMeta,
+  TopicParams,
+} from '@services/community.service'
 
 type StateType = {
   communitiesList?: Array<CommunityResponse>
@@ -9,6 +16,7 @@ type StateType = {
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
+  create_Topic?: TopicParams
 }
 
 const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_features: [] }

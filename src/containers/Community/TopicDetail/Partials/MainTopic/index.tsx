@@ -18,7 +18,7 @@ type CommunityHeaderProps = {
   discription: string
   date?: string
   count?: number
-  image?: string
+  image?: string | null
   isConfirm?: boolean
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm }) => {

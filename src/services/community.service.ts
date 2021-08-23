@@ -116,6 +116,44 @@ export type TopicFollowersParams = {
 export type CommunityDetailResponse = {
   data: CommunityDetail
 }
+export type TopicParams = {
+  title: string
+  content: string
+  topic_type: string
+  community_id: number
+  attachments?: string
+}
+export type CreateTopicResponse = {
+  data: {
+    id: string
+    type: string
+    attributes: {
+      id: number
+      community_id: 2
+      content: string
+      created_at: string
+      last_comment_date: string
+      like_count: number
+      topic_title: string
+      community_name: string
+      community_cover: any
+      comment_count: number
+      unseen_count: number
+      is_liked: boolean
+      topic_owner: string
+      owner_name: string
+      game_title: any
+      last_comment: {
+        data: any
+      }
+      is_mine: boolean
+      sequence_no: any
+      member_role: string
+      is_new: boolean
+      can_remove: boolean
+    }
+  }
+}
 
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST, { params })
@@ -144,5 +182,10 @@ export const updateCommunity = async (params: UpdateParams): Promise<UpdateCommu
 
 export const getCommunityFeatures = async (): Promise<CommunityFeaturesResponse> => {
   const { data } = await api.get<CommunityFeaturesResponse>(URI.COMMUNITY_FEATURES)
+  return data
+}
+
+export const createTopic = async (params: TopicParams): Promise<CreateTopicResponse> => {
+  const { data } = await api.post<CreateTopicResponse>(URI.TOPIC_CREATE, params)
   return data
 }

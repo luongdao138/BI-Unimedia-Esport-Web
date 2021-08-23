@@ -36,7 +36,7 @@ const checkTopicRequiredFields = (errors: FormikErrors<TopicFormType>): boolean 
   const requiredFieldErrors = []
   if (stepOne) {
     requiredFieldErrors.push(stepOne.title)
-    requiredFieldErrors.push(stepOne.overview)
+    requiredFieldErrors.push(stepOne.content)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

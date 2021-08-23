@@ -9,7 +9,6 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import StepOne from './StepOne'
 import { useFormik } from 'formik'
 import { getValidationScheme } from './FormModel/ValidationScheme'
-import { LobbyFormParams } from '@services/lobby.service'
 import { FormType } from './FormModel/FormType'
 import Confirm from './Confirm'
 import { getInitialValues } from './FormModel/InitialValues'
@@ -24,6 +23,8 @@ import DiscardDialog from '../../Partials/DiscardDialog'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import useCommonData from './useCommonData'
 import { useTranslation } from 'react-i18next'
+import { TopicParams } from '@services/community.service'
+import { useRouter } from 'next/router'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -34,9 +35,10 @@ const TopicCreate: React.FC = () => {
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(undefined)
-  const { submit, editables } = useTopicCreate()
+  const { submit } = useTopicCreate()
   const [isDiscard, setIsDiscard] = useState(false)
   const { t } = useTranslation(['common'])
+  const router = useRouter()
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -45,8 +47,10 @@ const TopicCreate: React.FC = () => {
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
     onSubmit: (values) => {
-      const data: LobbyFormParams = {
+      const data: TopicParams = {
         ...values.stepOne,
+        topic_type: '0',
+        community_id: Number(router.query.community_id),
       }
       if (submit) {
         submit(data)
@@ -78,12 +82,12 @@ const TopicCreate: React.FC = () => {
 
       const fieldIdentifier = checkNgWordFields({
         title: stepOne.title,
-        overview: stepOne.overview,
+        overview: stepOne.content,
       })
 
       const ngFields = checkNgWordByField({
         [FIELD_TITLES.stepOne.title]: stepOne.title,
-        [FIELD_TITLES.stepOne.overview]: stepOne.overview,
+        [FIELD_TITLES.stepOne.content]: stepOne.content,
       })
 
       if (fieldIdentifier) {
@@ -151,7 +155,7 @@ const TopicCreate: React.FC = () => {
             ) : (
               <>
                 <Box py={4} className={classes.formContainer}>
-                  {<StepOne formik={formik} prefectures={prefectures || null} editables={editables} />}
+                  {<StepOne formik={formik} prefectures={prefectures || null} />}
                 </Box>
               </>
             )}
