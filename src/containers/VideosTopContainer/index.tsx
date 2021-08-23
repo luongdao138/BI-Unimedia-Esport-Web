@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    paddingLeft: 24,
+    // paddingLeft: 24,
   },
   tabMin: {
     minWidth: 56,
@@ -121,8 +121,9 @@ const useStyles = makeStyles((theme) => ({
   },
   bannerContainer: {
     position: 'relative',
-    width: 1100,
-    height: 366,
+    width: '100%',
+    // height: 366,
+    // height: (innerWidth * 26) / 55,
     marginTop: 24,
     marginBottom: 24,
     justifyContent: 'center',
