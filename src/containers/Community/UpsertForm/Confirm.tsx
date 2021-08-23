@@ -36,12 +36,12 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
 
   useEffect(() => {
     const approvalName =
-      Number(values.stepOne.join_condition) === JOIN_CONDITION.MANUAL_VALUE
+      Number(values.stepOne.join_condition) === JOIN_CONDITION.MANUAL
         ? t('common:community_create.approval_manual')
         : t('common:community_create.approval_automatic')
     setApproval(approvalName)
     const openRangeName =
-      Number(values.stepOne.open_range) === OPEN_RANGE.UNSEARCHABLE_VALUE
+      Number(values.stepOne.open_range) === OPEN_RANGE.UNSEARCHABLE
         ? t('common:community_create.private')
         : t('common:community_create.public')
     setOpenRange(openRangeName)
