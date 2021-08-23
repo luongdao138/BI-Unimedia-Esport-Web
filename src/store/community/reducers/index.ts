@@ -32,7 +32,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityListByUser.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpCommunitiesList = state.communitiesList.concat(action.payload.data)
+      tmpCommunitiesList = state.communitiesListByUser.concat(action.payload.data)
     }
     state.communitiesListByUser = tmpCommunitiesList
     state.communitiesListByUserMeta = action.payload.meta
