@@ -203,17 +203,6 @@ const formatDateTimeJP = (date: string): string => {
   return dateResult
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const detectUrl = (text: string) => {
-  const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g
-  //var urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, function (url, _, c) {
-    // console.log('detectUrl==',url, c, _)
-    const url2 = c == 'www.' ? 'http://' + url : url
-    return '<a href="' + url2 + '" target="_blank">' + url + '</a>'
-  })
-}
-
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -230,5 +219,4 @@ export const CommonHelper = {
   replaceWhiteSpace,
   formatDateTime,
   formatDateTimeJP,
-  detectUrl,
 }

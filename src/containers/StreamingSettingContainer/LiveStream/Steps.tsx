@@ -31,7 +31,7 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import ESNumberInputStream from '@components/NumberInput/stream'
 import ESInputDatePicker from '@components/InputDatePicker'
 import moment from 'moment'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
+import Linkify from 'react-linkify'
 
 interface StepsProps {
   step: number
@@ -241,6 +241,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       }
     })
   }
+  // console.log('formik.values.stepSettingOne.description.trim()', formik.values.stepSettingOne.description);
 
   return (
     <Box py={4} className={classes.container}>
@@ -350,16 +351,20 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   className={getAddClassByStep(classes.input_text)}
                 />
               ) : (
-                <ESInput
+                <>
+                  {/* <ESInput
                   labelPrimary={i18n.t('common:streaming_setting_screen.label_input_description')}
                   multiline
-                  value={CommonHelper.detectUrl(formik.values.stepSettingOne.description.trim())}
+                  value={formik.values.stepSettingOne.description.trim()}
                   disabled={true}
                   fullWidth
                   required
                   size={'big'}
-                />
-                // <div>description 12 <a href="http://localhost:3000/video/streaming_setting" target="_blank">http://localhost:3000/video/streaming_setting</a></div>
+                /> */}
+                  <Linkify>
+                    <span style={{ whiteSpace: 'pre' }}> {formik.values.stepSettingOne.description.trim()}</span>
+                  </Linkify>
+                </>
               )}
             </Box>
           </Box>
