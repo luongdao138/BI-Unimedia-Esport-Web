@@ -17,7 +17,6 @@ const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
   const router = useRouter()
   const { login, meta, resetMeta } = useSocialLogin('')
   const type = router.query.type === 'login' ? 'login' : 'register'
-  alert(router.query)
   const redirect = router.query.redirectTo === '/' ? ESRoutes.HOME : router.query.redirectTo
 
   useEffect(() => {
