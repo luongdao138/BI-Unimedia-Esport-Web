@@ -68,9 +68,11 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, memberConfi
      */
     if (status === LOBBY_STATUS.RECRUITING && participantStatus === LOBBY_PARTICIPANT_STATUS.ENTERED && !isOwner && !isFreezed) {
       return (
-        <LoginRequired>
-          <LinkButton onClick={() => decline()}>{i18n.t('common:lobby.buttons.decline')}</LinkButton>
-        </LoginRequired>
+        <Box textAlign="center" mt={2}>
+          <LoginRequired>
+            <LinkButton onClick={() => decline()}>{i18n.t('common:lobby.buttons.decline')}</LinkButton>
+          </LoginRequired>
+        </Box>
       )
     }
 

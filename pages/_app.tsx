@@ -27,6 +27,7 @@ import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
 import { ConfirmProvider } from '@components/Confirm'
+import { defaultConfirmationOptions } from '@constants/common.constants'
 
 type Props = AppProps & {
   Component: PageWithLayoutType
@@ -95,7 +96,7 @@ const App = ({ Component, pageProps }: Props) => {
             <ToastContainer />
             <DialogContainer />
             <SimpleReactLightbox>
-              <ConfirmProvider>
+              <ConfirmProvider defaultOptions={defaultConfirmationOptions}>
                 <Layout>
                   <CssBaseline />
                   <Component {...pageProps} />

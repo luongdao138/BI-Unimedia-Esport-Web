@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { DialogProps } from '@material-ui/core/Dialog'
-import { ButtonProps } from '@material-ui/core/Button'
+import { PrimaryButtonProps } from '@components/ButtonPrimary'
+import { ESButtonProps } from '@components/Button'
 
 export interface ConfirmOptions {
   title?: React.ReactNode
@@ -9,8 +10,9 @@ export interface ConfirmOptions {
   confirmationText?: React.ReactNode
   cancellationText?: React.ReactNode
   dialogProps?: Omit<DialogProps, 'open'>
-  confirmationButtonProps?: ButtonProps
-  cancellationButtonProps?: ButtonProps
+  confirmationButtonProps?: PrimaryButtonProps
+  cancellationButtonProps?: ESButtonProps
+  additionalText?: React.ReactNode
 }
 
 export interface ConfirmProviderProps {

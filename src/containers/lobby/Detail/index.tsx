@@ -52,7 +52,13 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const onDecline = () => {
-    confirm({ description: 'This action is permanent!', title: 'aaaaa', confirmationText: 'aaa', cancellationText: 'aaa' })
+    confirm({
+      description: 'This action is permanent!',
+      title: 'aaaaa',
+      confirmationText: 'aaa',
+      cancellationText: 'aaa',
+      additionalText: 'aaaaa',
+    })
       .then(() => {
         hashKey && unjoin(hashKey)
       })
