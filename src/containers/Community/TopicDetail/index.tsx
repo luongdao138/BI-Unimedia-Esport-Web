@@ -75,7 +75,7 @@ const TopicDetailContainer: React.FC = () => {
               <MainTopic
                 username={data.owner_name}
                 user_avatar={data.owner_profile}
-                mail="@koichi"
+                mail={data.owner_email}
                 date={`${moment(data.created_at).format('YYYY年MM月DD日')}`}
                 count={data.like_count}
                 discription={data.content}

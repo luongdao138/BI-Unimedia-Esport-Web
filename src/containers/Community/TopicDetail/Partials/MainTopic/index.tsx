@@ -51,17 +51,6 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
     //
   }
 
-  const renderImage = () => {
-    return (
-      <Box
-        className={classes.image}
-        style={{
-          backgroundImage: `url(${image})`,
-        }}
-      ></Box>
-    )
-  }
-
   const renderClickableImage = () => {
     return (
       <SRLWrapper options={LIGHTBOX_OPTIONS}>
@@ -74,7 +63,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
     <>
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
-          <Box className={classes.userContainer} mt={2}>
+          <Box className={classes.userContainer}>
             <Box className={date ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
               <ESAvatar className={classes.avatar} alt={username} src={user_avatar} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
@@ -97,12 +86,12 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
             )}
           </Box>
 
-          <Box className={classes.discriptionContainer} mb={3} mt={3}>
+          <Box className={classes.discriptionContainer} mb={2} mt={1}>
             <Typography className={classes.discription}>{discription}</Typography>
           </Box>
-          {image ? isConfirm ? renderImage() : renderClickableImage() : <></>}
+          {image && renderClickableImage()}
           {count || count == 0 ? (
-            <Box display="flex" justifyContent="space-between" mt={3}>
+            <Box display="flex" justifyContent="space-between" mt={2}>
               <Box display="flex" justifyContent="flex-end">
                 <Box className={classes.numberBox}>
                   <Icon className="fas fa-comment-alt" fontSize="small" />
@@ -233,15 +222,6 @@ const useStyles = makeStyles((theme) => ({
   discriptionContainer: {
     display: 'flex',
   },
-  image: {
-    display: 'flex',
-    paddingTop: '30.27%',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    borderRadius: 7,
-    width: '66%',
-  },
   discription: {
     color: Colors.grey[300],
     fontSize: 14,
@@ -261,7 +241,7 @@ const useStyles = makeStyles((theme) => ({
     width: '66%',
   },
   [theme.breakpoints.down('sm')]: {
-    image: {
+    imageBox: {
       width: '80%',
     },
   },

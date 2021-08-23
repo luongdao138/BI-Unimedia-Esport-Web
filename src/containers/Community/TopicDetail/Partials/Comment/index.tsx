@@ -11,6 +11,8 @@ import { useState } from 'react'
 import { REPORT_TYPE } from '@constants/common.constants'
 import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { SRLWrapper } from 'simple-react-lightbox'
+import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 
 type CommunityHeaderProps = {
   username: string
@@ -48,6 +50,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
     //
   }
 
+  const renderClickableImage = () => {
+    return (
+      <SRLWrapper options={LIGHTBOX_OPTIONS}>
+        <img className={classes.imageBox} src={image} />
+      </SRLWrapper>
+    )
+  }
+
   return (
     <>
       <Box className={classes.container}>
@@ -77,16 +87,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
         <Box className={classes.discriptionContainer} mb={3}>
           <Typography className={classes.discription}>{discription}</Typography>
         </Box>
-        {image ? (
-          <Box
-            className={classes.image}
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-          ></Box>
-        ) : (
-          <></>
-        )}
+        {image && renderClickableImage()}
       </Box>
       {isAuthenticated && (
         <>
@@ -176,13 +177,11 @@ const useStyles = makeStyles((theme) => ({
   discriptionContainer: {
     display: 'flex',
   },
-  image: {
+  imageBox: {
     display: 'flex',
-    paddingTop: '30.27%',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    borderRadius: '7px',
+    cursor: 'pointer',
+    transition: 'all 0.5s ease',
+    borderRadius: 7,
     width: '66%',
   },
   discription: {
@@ -192,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
   },
   [theme.breakpoints.down('sm')]: {
-    image: {
+    imageBox: {
       width: '80%',
     },
   },

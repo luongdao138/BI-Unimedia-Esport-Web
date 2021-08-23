@@ -141,6 +141,7 @@ export type TopicDetail = {
     user_id: number
     attachments?: Array<TopicAttachments>
     owner_name: string
+    owner_email: string
     owner_profile: string
     like_count: number
     game_title: Array<TopicGameTitle>

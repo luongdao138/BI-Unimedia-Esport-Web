@@ -8,6 +8,7 @@ import useCommunityDetail from './useCommunityDetail'
 import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
+import { Box } from '@material-ui/core'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
@@ -33,7 +34,11 @@ const CommunityContainer: React.FC = () => {
             <DetailInfo detail={communityDetail} toEdit={toEdit} />
           </>
         )}
-        {meta.pending && <ESLoader />}
+        {meta.pending && (
+          <Box textAlign="center">
+            <ESLoader />
+          </Box>
+        )}
       </>
     )
   }

@@ -39,6 +39,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
           mail={user.email}
           discription={values.stepOne.content}
           image={values.stepOne.attachments}
+          user_avatar={user.avatar_url}
           isConfirm
         />
       </Box>
