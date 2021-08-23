@@ -2,7 +2,7 @@ import { StackedCarousel, ResponsiveContainer, StackedCarouselSlideProps } from 
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Box, Theme, makeStyles } from '@material-ui/core'
 
 export type BannerDataProps = {
@@ -15,7 +15,6 @@ type BannerCarouselProps = {
 }
 function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerDataProps> }) {
   const classes = useStyles()
-  // const [showBtn, setShowBtn] = React.useState<boolean>(false);
   const { centerSlideDataIndex, data } = props
   return (
     <Box className={classes.paginationContainer}>
@@ -56,28 +55,53 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
   const onCenterSlideDataIndexChange = (activeSlide: number) => {
     setCenterSlideDataIndex(activeSlide)
   }
+
+  const playSlider = () => {
+    if(ref.current && data.length) {
+      if(centerSlideDataIndex + 1 < data.length) {
+        // swipe to next slide
+        ref.current.swipeTo(1)
+      } else {
+        // swipe to first slide
+        ref.current.swipeTo(-(data.length - 1))
+      }
+    }
+  };
+
+  useEffect(() => {
+    setInterval(function(){ 
+      playSlider()
+    }, 5000);
+  }, [])
+
   return (
     <Box className={classes.container}>
       <ResponsiveContainer
         carouselRef={ref}
         render={(parentWidth, carouselRef) => {
           let currentVisibleSlide = 5
-          if (parentWidth <= 1440) currentVisibleSlide = 5
-          else if (parentWidth <= 1080) currentVisibleSlide = 1
+          if (parentWidth <= 992) currentVisibleSlide = 3
+          if (parentWidth <= 768) currentVisibleSlide = 1
+          
+          let width = 700
+          let height = 340
+          if (parentWidth <= 414) {
+            width = parentWidth
+            height = parentWidth * (17/35)
+          }
           return (
             <StackedCarousel
-              className={classes.stackContainer}
-              disableSwipe={true}
               ref={carouselRef}
               fadeDistance={0}
-              customScales={[1, 0.85, 0.7, 0.7]}
+              customScales={[1, 0.85, 0.7, 0.55]}
               data={data}
               carouselWidth={parentWidth}
-              slideWidth={750}
+              slideWidth={width}
               slideComponent={SlideItem}
               maxVisibleSlide={5}
               currentVisibleSlide={currentVisibleSlide}
-              useGrabCursor={false}
+              useGrabCursor={true}
+              height={height}
               onActiveSlideChange={onCenterSlideDataIndexChange}
             />
           )
@@ -99,21 +123,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
-    paddingTop: theme.spacing(0),
-    paddingBottom: theme.spacing(0),
     alignItems: 'center',
     justifyContent: 'center',
     alignContent: 'center',
     alignSelf: 'center',
-  },
-  stackContainer: {
-    display: 'flex',
-    // position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignSelf: 'center',
-    width: '80%',
+    '&:hover': {
+      '& .MuiFab-root': {
+        opacity: 1,
+      }
+    }
   },
   paginationContainer: {
     display: 'flex',
@@ -126,51 +144,75 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: (innerWidth * 26) / 55,
+    height: 340,
     userSelect: 'none',
     alignContent: 'center',
   },
   sliderStyle: {
     height: '100%',
     width: '100%',
-    objectFit: 'contain',
-    borderRadius: 10,
+    objectFit: 'cover',
   },
   buttonLeftContainer: {
     position: 'absolute',
     width: 48,
     height: 48,
     borderRadius: 48,
-    left: 0,
+    right: 'calc(50% + 326px)',
     top: '50%',
     bottom: 0,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    zIndex: 1,
-    backgroundColor: 'transparent',
+    zIndex: 3,
+    backgroundColor: '#fff',
+    opacity: 0,
+    transition: "all 500ms"
   },
   buttonRightContainer: {
     position: 'absolute',
     width: 48,
     height: 48,
     borderRadius: 48,
-    right: 0,
+    left: 'calc(50% + 326px)',
     top: '50%',
     bottom: 0,
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    zIndex: 1,
-    backgroundColor: 'transparent',
+    zIndex: 3,
+    backgroundColor: '#fff',
+    opacity: 0,
+    transition: "all 500ms"
   },
   iconBtnStyle: {
     fontSize: 30,
     justifyContent: 'center',
     alignItems: 'center',
     color: '#707070',
+  },
+  [theme.breakpoints.down(415)]: {
+    sliderContainer: {
+      height: (window.innerWidth - 48) * 17/35,
+    },
+    buttonLeftContainer: {
+      left: 0,
+      right: 'auto',
+      top: '40%',
+      width: 36,
+      height: 36,
+      opacity: 1,
+    },
+    buttonRightContainer: {
+      right: 0,
+      left: 'auto',
+      top: '40%',
+      width: 36,
+      height: 36,
+      opacity: 1,
+    },
   },
 }))
 export default BannerCarousel
