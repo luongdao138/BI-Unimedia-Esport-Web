@@ -13,6 +13,7 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 
 type CommunityHeaderProps = {
+  user_avatar?: string
   username: string
   mail: string
   discription: string
@@ -21,7 +22,7 @@ type CommunityHeaderProps = {
   image?: string | null
   isConfirm?: boolean
 }
-const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm }) => {
+const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm, user_avatar }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
@@ -54,13 +55,13 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
         <Box m={2}>
           <Box className={classes.userContainer} mt={2}>
             <Box className={date ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} alt={username} src={user_avatar ? '' : '/images/avatar.png'} />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.username}>{username}</Typography>
                 <Typography className={classes.mail}>{mail}</Typography>
               </Box>
             </Box>
-            {date && count && (
+            {date && (count || count == 0) && (
               <Box className={classes.dateReportContainer}>
                 <Typography className={classes.date}>{date}</Typography>
               </Box>
@@ -88,7 +89,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
           ) : (
             <></>
           )}
-          {count ? (
+          {count || count == 0 ? (
             <Box display="flex" justifyContent="space-between" mt={3}>
               <Box display="flex" justifyContent="flex-end">
                 <Box className={classes.numberBox}>

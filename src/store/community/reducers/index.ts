@@ -7,6 +7,7 @@ import {
   CommunityFeature,
   PageMeta,
   TopicParams,
+  TopicDetail,
 } from '@services/community.service'
 
 type StateType = {
@@ -17,6 +18,7 @@ type StateType = {
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
   create_Topic?: TopicParams
+  topicDetail?: TopicDetail
 }
 
 const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_features: [] }
@@ -38,5 +40,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getCommunityFeatures.fulfilled, (state, action) => {
     state.community_features = action.payload.data
+  })
+  builder.addCase(actions.getTopicDetail.fulfilled, (state, action) => {
+    state.topicDetail = action.payload.data
   })
 })

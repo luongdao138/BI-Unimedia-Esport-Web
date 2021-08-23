@@ -64,6 +64,7 @@ export const URI = {
   ARENA_SET_PARTICIPANTS: 'v2/tournaments/:id/set_participants',
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic', //TODO skip 2.0
+  TOPICS: '/v2/topics',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',
   USER_RECOMMENDATIONS: '/v2/users/recommendations',

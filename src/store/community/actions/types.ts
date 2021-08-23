@@ -7,4 +7,5 @@ export enum COMMUNITY_ACTION_TYPE {
   UPDATE_COMMUNITY = 'community/update',
   GET_COMMUNITY_FEATURES = 'community/features',
   CREATE_TOPIC = 'topic/create',
+  GET_TOPIC_DETAIL = 'community/topic/detail',
 }
