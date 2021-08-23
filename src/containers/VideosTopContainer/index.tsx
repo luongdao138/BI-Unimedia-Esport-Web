@@ -106,7 +106,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    // paddingLeft: 24,
   },
   tabMin: {
     minWidth: 56,
@@ -121,10 +120,9 @@ const useStyles = makeStyles((theme) => ({
   },
   bannerContainer: {
     position: 'relative',
-    width: '100%',
+    width: 1100,
     // height: 366,
-    // height: (innerWidth * 26) / 55,
-    marginTop: 24,
+    marginTop: 37,
     marginBottom: 24,
     justifyContent: 'center',
     display: 'flex',
@@ -132,9 +130,19 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'center',
     alignSelf: 'center',
   },
-  [theme.breakpoints.down(1281)]: {
+  [theme.breakpoints.down(1401)]: {
     root: {
       paddingRight: '24px',
+    },
+  },
+  [theme.breakpoints.down(1281)]: {
+    bannerContainer: {
+      width: '100%',
+    },
+  },
+  [theme.breakpoints.down(415)]: {
+    bannerContainer: {
+      marginTop: 0,
     },
   },
   [theme.breakpoints.down(375)]: {
