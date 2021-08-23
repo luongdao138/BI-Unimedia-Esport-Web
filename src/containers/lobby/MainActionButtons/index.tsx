@@ -7,8 +7,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
-import DeclineModal from './Partials/DeclineModal'
-import { Meta } from '@store/metadata/actions/types'
+import LinkButton from '@components/LinkButton'
 // import { useTranslation } from 'react-i18next'
 
 interface Props {
@@ -16,10 +15,9 @@ interface Props {
   entry: () => void
   decline: () => void
   memberConfirm: () => void
-  unjoinMeta: Meta
 }
 
-const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta, memberConfirm }) => {
+const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, memberConfirm }) => {
   const classes = useStyles()
 
   const status = _.get(lobby, 'attributes.status', 0)
@@ -70,11 +68,9 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, unjoinMeta,
      */
     if (status === LOBBY_STATUS.RECRUITING && isEntered && !isOwner && !isFreezed) {
       return (
-        <DeclineModal
-          text={i18n.t('common:lobby.buttons.decline')}
-          unjoinMeta={unjoinMeta}
-          onConfirm={() => handleAction(MAIN_ACTIONS.DECLINE)}
-        />
+        <LoginRequired>
+          <LinkButton onClick={() => decline()}>{i18n.t('common:lobby.buttons.decline')}</LinkButton>
+        </LoginRequired>
       )
     }
 

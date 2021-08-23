@@ -21,13 +21,15 @@ import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import Participants from '@containers/Lobby/Participants'
 import ConfirmParticipants from '../ConfirmParticipants'
+import { useConfirm } from '@components/Confirm'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
   const [openList, setList] = useState<boolean>(false)
   const [openConfirmList, setConfirmList] = useState<boolean>(false)
   const classes = useStyles()
-  const { unjoin, entry, unjoinMeta } = useLobbyActions()
+  const { unjoin, entry } = useLobbyActions()
+  const confirm = useConfirm()
 
   const { handleBack, lobby, meta } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
@@ -50,7 +52,13 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const onDecline = () => {
-    hashKey && unjoin(hashKey)
+    confirm({ description: 'This action is permanent!', title: 'aaaaa', confirmationText: 'aaa', cancellationText: 'aaa' })
+      .then(() => {
+        hashKey && unjoin(hashKey)
+      })
+      .catch(() => {
+        /* ... */
+      })
   }
 
   const onMemberConfirm = () => {
@@ -69,7 +77,7 @@ const LobbyDetailBody: React.FC = () => {
             <SubStatusInfo lobby={lobby} />
             <SubActionButtons lobby={lobby} openChat={openChat} openMemberList={openMemberList} />
           </Box>
-          <MainActionButtons memberConfirm={onMemberConfirm} unjoinMeta={unjoinMeta} lobby={lobby} entry={onEntry} decline={onDecline} />
+          <MainActionButtons memberConfirm={onMemberConfirm} lobby={lobby} entry={onEntry} decline={onDecline} />
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
         <Participants open={openList} data={lobby} handleClose={() => setList(false)} />

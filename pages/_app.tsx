@@ -26,6 +26,8 @@ import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
+import { ConfirmProvider } from '@components/Confirm'
+
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -93,10 +95,12 @@ const App = ({ Component, pageProps }: Props) => {
             <ToastContainer />
             <DialogContainer />
             <SimpleReactLightbox>
-              <Layout>
-                <CssBaseline />
-                <Component {...pageProps} />
-              </Layout>
+              <ConfirmProvider>
+                <Layout>
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </Layout>
+              </ConfirmProvider>
             </SimpleReactLightbox>
           </ThemeProvider>
         </RouteContext.Provider>
