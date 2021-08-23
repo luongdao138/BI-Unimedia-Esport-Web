@@ -29,6 +29,7 @@ export type LiveStreamSetting = {
   stream_schedule_start_time?: string
   stream_schedule_end_time?: string
   sell_ticket_start_time?: string
+  public_time?: string
 }
 
 export type DistributorStepSetting = {

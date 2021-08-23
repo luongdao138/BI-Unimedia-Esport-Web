@@ -23,7 +23,7 @@ import useLiveSetting from '../useLiveSetting'
 import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
-import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { showDialog } from '@store/common/actions'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import moment from 'moment'
@@ -222,7 +222,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       stream_notify_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_notify_time),
       stream_schedule_start_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_schedule_start_time),
       stream_schedule_end_time: CommonHelper.formatDateTimeJP(stepSettingTwo.stream_schedule_end_time),
-      sell_ticket_start_time: CommonHelper.formatDateTimeJP(stepSettingTwo.sell_ticket_start_time),
+      sell_ticket_start_time:
+        stepSettingTwo.sell_ticket_start_time !== null ? CommonHelper.formatDateTimeJP(stepSettingTwo.sell_ticket_start_time) : null,
       stream_url: stepSettingTwo.stream_url,
       stream_key: stepSettingTwo.stream_key,
     }
@@ -489,6 +490,38 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               )}
             </Box>
           </Box>
+          {/* public time video archive */}
+          <Box pb={2} className={classes.wrap_input}>
+            <Box className={classes.firstItem}>
+              <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
+              {isFirstStep() ? (
+                <ESInputDatePicker
+                  name="stepSettingTwo.public_time"
+                  placeholder={'2021年7月31日 23:59'}
+                  fullWidth
+                  value={formik.values.stepSettingTwo.public_time}
+                  onChange={(date) => {
+                    const temp = moment(date).add(5, 's')
+                    formik.setFieldValue('stepSettingTwo.public_time', temp)
+                  }}
+                  onBlur={formik.handleBlur}
+                  helperText={
+                    (formik?.touched?.stepSettingTwo?.public_time && formik?.errors?.stepSettingTwo?.public_time) ||
+                    formik?.errors?.stepSettingTwo?.public_time_less_than_start
+                  }
+                  error={formik?.touched?.stepSettingTwo?.public_time && !!formik?.errors?.stepSettingTwo?.public_time}
+                />
+              ) : (
+                <Box pt={1}>
+                  <Typography className={classes.date}>
+                    {formik.values.stepSettingTwo.public_time !== null
+                      ? moment(formik.values.stepSettingTwo.public_time).format(FORMAT_DATE_TIME_JP)
+                      : i18n.t('common:streaming_setting_screen.public_time_title')}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
           {paid_delivery_flag && (
             <>
               {isFirstStep() ? (
@@ -576,7 +609,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       fullWidth
                       value={formik.values.stepSettingTwo.sell_ticket_start_time}
                       onChange={(date) => {
-                        const temp = new Date(new Date(date.toString()).getTime() + 5000).toString()
+                        const temp = moment(date).add(5, 's')
                         formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', temp)
                       }}
                       onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}

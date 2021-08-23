@@ -1,10 +1,11 @@
 import i18n from '@locales/i18n'
+import moment from 'moment'
 import * as Yup from 'yup'
 export const validationLiveSettingsScheme = (): any => {
   // const minStartDate = new Date()
   // const minEndDate = new Date()
   // const maxSchedule = 3 * 3600000 //1h=3600000ms
-  // const approximateMinDate = new Date(Date.now() - 30 * 1000)
+  const approximateMinDate = moment().subtract(30, 'seconds')
   return Yup.object({
     stepSettingOne: Yup.object({
       title: Yup.string()
@@ -25,6 +26,11 @@ export const validationLiveSettingsScheme = (): any => {
           .positive(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit'))
           .integer(i18n.t('common:streaming_setting_screen.validation.point_ticket_limit')),
       }),
+      public_time: Yup.date()
+        .nullable()
+        .notRequired()
+        // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+        .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
     }),
     // stepSettingTwo: Yup.object({
     //   title: Yup.string()
@@ -111,7 +117,7 @@ export const validationScheduleScheme = (): any => {
   const minStartDate = new Date()
   const minEndDate = new Date()
   const maxSchedule = 3 * 3600000 //1h=3600000ms
-  const approximateMinDate = new Date(Date.now() - 30 * 1000)
+  const approximateMinDate = moment().subtract(30, 'seconds')
   return Yup.object({
     stepSettingTwo: Yup.object({
       title: Yup.string()
@@ -155,6 +161,12 @@ export const validationScheduleScheme = (): any => {
         .required(i18n.t('common:common.input_required'))
         .min(minEndDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
+      public_time: Yup.date()
+        .nullable()
+        .notRequired()
+        // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+        .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+
       //cross-fields validations
       schedule_live_date: Yup.string().when(['stream_schedule_start_time', 'stream_schedule_end_time'], {
         is: (stream_schedule_start_time, stream_schedule_end_time) => {
@@ -181,6 +193,12 @@ export const validationScheduleScheme = (): any => {
           return Date.parse(stream_notify_time) >= Date.parse(stream_schedule_end_time)
         },
         then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.date_limit')),
+      }),
+      public_time_less_than_start: Yup.string().when(['public_time', 'stream_schedule_start_time'], {
+        is: (public_time, stream_schedule_start_time) => {
+          return Date.parse(public_time) < Date.parse(stream_schedule_start_time)
+        },
+        then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
       }),
     }),
   })
