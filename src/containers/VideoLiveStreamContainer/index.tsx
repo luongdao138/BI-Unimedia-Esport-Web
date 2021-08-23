@@ -10,6 +10,8 @@ import ProgramInfo from './ProgramInfo'
 import RelatedVideos from './RelatedVideos'
 import ChatContainer from './ChatContainer'
 import LiveStreamContent from './LiveStreamContent'
+import DonatePoints from './DonatePoints'
+import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -21,6 +23,18 @@ const VideosTop: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const [confirmModal, setConfirmModal] = useState(false)
+  const [stepsModal, setStepsModal] = useState(false)
+  const showConfirmModal = () => {
+    setConfirmModal(true)
+  }
+  const handleCloseModal = () => {
+    setConfirmModal(false)
+  }
+  const handleConfirmModal = () => {
+    setStepsModal(true)
+    setConfirmModal(false)
+  }
   useEffect(() => {
     setTab(0)
   }, [])
@@ -56,13 +70,20 @@ const VideosTop: React.FC = () => {
     <Box className={classes.root}>
       <Box className={classes.container}>
         <LiveStreamContent></LiveStreamContent>
-        <ChatContainer></ChatContainer>
+        <ChatContainer onPressDonate={showConfirmModal}></ChatContainer>
       </Box>
-
       <Grid container direction="column">
         {getTabs()}
         {getContent()}
       </Grid>
+      <DonatePointsConfirmModal
+        open={confirmModal}
+        handleClose={handleCloseModal}
+        selectedPoint={700}
+        msgContent={'abc'}
+        handleConfirm={handleConfirmModal}
+      />
+      {stepsModal && <DonatePoints modal={stepsModal} setShowModal={setStepsModal} />}
     </Box>
   )
 }
