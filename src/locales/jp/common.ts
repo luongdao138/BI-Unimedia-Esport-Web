@@ -641,6 +641,7 @@ export default {
     },
     status: {
       entry_closed: '受付終了',
+      entered: 'エントリー中',
       not_entered: '実施中',
       participated: '参加中',
       not_participated: '落選',
