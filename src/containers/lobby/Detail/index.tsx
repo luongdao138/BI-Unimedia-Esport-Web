@@ -81,7 +81,6 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const onMemberConfirm = () => {
-    alert('member confirm modal')
     setConfirmList(true)
   }
 
