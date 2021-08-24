@@ -69,7 +69,11 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     return (
       <Box color={Colors.white} className={classes.titleContainer} display="flex">
         <Typography className={classes.title}>{attr.name}</Typography>
-        {attr.is_official && <img className={classes.checkIcon} src="/images/check_icon.png" />}
+        {attr.is_official && (
+          <span className={classes.officialBadge}>
+            <Icon className="fa fa-check" fontSize="small" />
+          </span>
+        )}
       </Box>
     )
   }
@@ -136,6 +140,16 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  officialBadge: {
+    width: 20,
+    height: 20,
+    backgroundColor: Colors.primary,
+    borderRadius: '50%',
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   cardHover: {
     cursor: 'pointer',
     height: '100%',
@@ -184,10 +198,6 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  checkIcon: {
-    height: 20,
-    marginLeft: theme.spacing(1),
   },
   pAvatar: {
     marginLeft: theme.spacing(-1),
