@@ -104,6 +104,36 @@ export type PageMeta = {
   total_pages: number
 }
 
+export type CommunityMemberRole = 'admin' | 'co_organizer' | 'member'
+
+export type CommunityMembersParams = {
+  community_id: number
+  role: CommunityMemberRole
+}
+
+export type CommunityMember = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    user_id: number
+    member_role: CommunityMemberRole
+    profile: string
+    nickname: string
+    user_code: string
+  }
+}
+
+export type CommunityMembersResponse = {
+  data: Array<CommunityMember>
+  links: {
+    links: {
+      self: string
+    }
+    meta: PageMeta
+  }
+}
+
 export type TopicGameTitle = {
   id: number
   parent_id?: number
@@ -257,6 +287,11 @@ export const updateCommunity = async (params: UpdateParams): Promise<UpdateCommu
 
 export const getCommunityFeatures = async (): Promise<CommunityFeaturesResponse> => {
   const { data } = await api.get<CommunityFeaturesResponse>(URI.COMMUNITY_FEATURES)
+  return data
+}
+
+export const getCommunityMembers = async (params: CommunityMembersParams): Promise<CommunityMembersResponse> => {
+  const { data } = await api.get<CommunityMembersResponse>(URI.COMMUNITY_MEMBERS, { params })
   return data
 }
 

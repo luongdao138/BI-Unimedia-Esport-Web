@@ -38,8 +38,7 @@ export const STATUS = {
 export const ROLE = {
   ADMIN: 'admin',
   CO_ORGANIZER: 'co_organizer',
-  PARTICIPANT: 'participant',
-  INTERESTED: 'interested',
+  MEMBER: 'member',
 }
 
 export const COMMUNITY_STATUS = {

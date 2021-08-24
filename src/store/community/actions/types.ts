@@ -12,4 +12,5 @@ export enum COMMUNITY_ACTION_TYPE {
   GET_TOPIC_DETAIL = 'community/topic/detail',
   DELETE_TOPIC = 'topic/delete',
   CLEAR_TOPIC_DETAIL = 'community/topic/clearDetail',
+  GET_COMMUNITY_MEMBERS = 'community/members',
 }

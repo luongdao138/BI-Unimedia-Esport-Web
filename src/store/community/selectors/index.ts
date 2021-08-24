@@ -11,4 +11,5 @@ export const getTopicFollowersList = createSelector(getRoot, (state) => state.to
 export const getTopicFollowersListMeta = createSelector(getRoot, (state) => state.topicFollowersListMeta)
 export const getCommunityDetail = createSelector(getRoot, (state) => state.community_detail)
 export const getCommunityFeatures = createSelector(getRoot, (state) => state.community_features)
+export const getCommunityMembers = createSelector(getRoot, (state) => state.communityMembers)
 export const getTopicDetail = createSelector(getRoot, (state) => state.topicDetail)
