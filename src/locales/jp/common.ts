@@ -804,6 +804,7 @@ export default {
     room_not_found: 'ルームが見つかりませんでした',
     delete_chat: '削除',
     see_tournament: '該当の大会をみる',
+    see_lobby: 'ロビーをみる',
     lets_start: 'メッセージを入力',
     select_destination: '宛先を選んでください',
     already_member: '既にメンバーです',
