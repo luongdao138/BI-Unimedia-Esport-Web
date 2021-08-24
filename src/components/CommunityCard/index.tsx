@@ -149,7 +149,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    '& .MuiIcon-fontSizeSmall': {
+      fontSize: '0.7rem',
+    },
   },
+
   cardHover: {
     cursor: 'pointer',
     height: '100%',
