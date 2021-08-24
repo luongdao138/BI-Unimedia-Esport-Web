@@ -129,16 +129,9 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                       size="large"
                       disabled={selectedParticipants.filter((p) => p.checked).length === 0}
                       onClick={() => {
-                        confirm({
-                          title: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.title,
-                          description: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.desc,
-                          confirmationText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.confirmationText,
-                          cancellationText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.cancellationText,
-                          additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.warningText,
-                        })
+                        confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
                           .then(() => {
                             const _selectedParticipants = _.filter(selectedParticipants, (p) => p.checked).map((a) => a.attributes.user_id)
-
                             confirmParticipants(hash_key, _selectedParticipants)
                           })
                           .catch(() => {
@@ -154,13 +147,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                   <LoginRequired>
                     <ButtonPrimaryOutlined
                       onClick={() => {
-                        confirm({
-                          title: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.title,
-                          description: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.desc,
-                          confirmationText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.confirmationText,
-                          cancellationText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.cancellationText,
-                          additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.warningText,
-                        })
+                        confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
                           .then(() => {
                             if (status === LOBBY_STATUS.RECRUITING) {
                               getRecommendedParticipants(hash_key)

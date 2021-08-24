@@ -32,13 +32,7 @@ const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
         {!isCanceled && (
           <LinkButton
             onClick={() => {
-              confirm({
-                description: LOBBY_DIALOGS.CANCEL_LOBBY.desc,
-                title: LOBBY_DIALOGS.CANCEL_LOBBY.title,
-                confirmationText: LOBBY_DIALOGS.CANCEL_LOBBY.confirmationText,
-                cancellationText: LOBBY_DIALOGS.CANCEL_LOBBY.cancellationText,
-                additionalText: LOBBY_DIALOGS.CANCEL_LOBBY.warningText,
-              })
+              confirm({ ...LOBBY_DIALOGS.CANCEL_LOBBY })
                 .then(() => {
                   hashKey && cancelTournament(hashKey)
                 })
