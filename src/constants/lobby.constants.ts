@@ -1,3 +1,5 @@
+import i18n from '@locales/i18n'
+
 // TEMPORARY: battle royale removed
 export const PARTICIPANT_TYPE = {
   HOME: 'home',
@@ -66,40 +68,40 @@ export enum MAIN_ACTIONS {
 
 export const LOBBY_DIALOGS = {
   ENTRY_CONFIRMATION: {
-    title: 'common:lobby.entry_confirmation_dialog.title',
-    desc: 'common:lobby.entry_confirmation_dialog.desc',
-    warningText: 'common:lobby.entry_confirmation_dialog.warningText',
-    confirmationText: 'common:lobby.entry_confirmation_dialog.confirmationText',
-    cancellationText: 'common:lobby.entry_confirmation_dialog.cancellationText',
+    title: i18n.t('common:lobby.entry_confirmation_dialog.title'),
+    desc: i18n.t('common:lobby.entry_confirmation_dialog.desc'),
+    warningText: i18n.t('common:lobby.entry_confirmation_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.entry_confirmation_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.entry_confirmation_dialog.cancellationText'),
   },
   DECLINE_ENTRY: {
-    title: 'common:lobby.decline_entry_dialog.title',
-    desc: 'common:lobby.decline_entry_dialog.desc',
-    warningText: 'common:lobby.decline_entry_dialog.warningText',
-    confirmationText: 'common:lobby.decline_entry_dialog.confirmationText',
-    cancellationText: 'common:lobby.decline_entry_dialog.cancellationText',
+    title: i18n.t('common:lobby.decline_entry_dialog.title'),
+    desc: i18n.t('common:lobby.decline_entry_dialog.desc'),
+    warningText: i18n.t('common:lobby.decline_entry_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.decline_entry_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.decline_entry_dialog.cancellationText'),
   },
   CONFIRM_MEMBER: {
     shuffle: {
-      title: 'common:lobby.confirm_member_dialog.shuffle.title',
-      desc: 'common:lobby.confirm_member_dialog.shuffle.desc',
-      warningText: 'common:lobby.confirm_member_dialog.shuffle.warningText',
-      confirmationText: 'common:lobby.confirm_member_dialog.shuffle.confirmationText',
-      cancellationText: 'common:lobby.confirm_member_dialog.shuffle.cancellationText',
+      title: i18n.t('common:lobby.confirm_member_dialog.shuffle.title'),
+      desc: i18n.t('common:lobby.confirm_member_dialog.shuffle.desc'),
+      warningText: i18n.t('common:lobby.confirm_member_dialog.shuffle.warningText'),
+      confirmationText: i18n.t('common:lobby.confirm_member_dialog.shuffle.confirmationText'),
+      cancellationText: i18n.t('common:lobby.confirm_member_dialog.shuffle.cancellationText'),
     },
     confirm: {
-      title: 'common:lobby.confirm_member_dialog.confirm.title',
-      desc: 'common:lobby.confirm_member_dialog.confirm.desc',
-      warningText: 'common:lobby.confirm_member_dialog.confirm.warningText',
-      confirmationText: 'common:lobby.confirm_member_dialog.confirm.confirmationText',
-      cancellationText: 'common:lobby.confirm_member_dialog.confirm.cancellationText',
+      title: i18n.t('common:lobby.confirm_member_dialog.confirm.title'),
+      desc: i18n.t('common:lobby.confirm_member_dialog.confirm.desc'),
+      warningText: i18n.t('common:lobby.confirm_member_dialog.confirm.warningText'),
+      confirmationText: i18n.t('common:lobby.confirm_member_dialog.confirm.confirmationText'),
+      cancellationText: i18n.t('common:lobby.confirm_member_dialog.confirm.cancellationText'),
     },
   },
   ENTRY_DEADLINE: {
-    title: 'common:lobby.entry_deadline_dialog.title',
-    desc: 'common:lobby.entry_deadline_dialog.desc',
-    warningText: 'common:lobby.entry_deadline_dialog.warningText',
-    confirmationText: 'common:lobby.entry_deadline_dialog.confirmationText',
-    cancellationText: 'common:lobby.entry_deadline_dialog.cancellationText',
+    title: i18n.t('common:lobby.entry_deadline_dialog.title'),
+    desc: i18n.t('common:lobby.entry_deadline_dialog.desc'),
+    warningText: i18n.t('common:lobby.entry_deadline_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.entry_deadline_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.entry_deadline_dialog.cancellationText'),
   },
 }

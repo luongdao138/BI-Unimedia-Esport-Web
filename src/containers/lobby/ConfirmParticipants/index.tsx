@@ -21,7 +21,6 @@ import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import ESStickyFooter from '@components/StickyFooter'
 import BlankLayout from '@layouts/BlankLayout'
-import i18n from '@locales/i18n'
 
 interface CloseRecruitmentModalProps {
   lobby: LobbyDetail
@@ -197,11 +196,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
       <ConfirmDialog
         open={confirmOpen}
         options={{
-          title: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.title),
-          description: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.desc),
-          confirmationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.confirmationText),
-          cancellationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.cancellationText),
-          additionalText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.warningText),
+          title: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.title,
+          description: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.desc,
+          confirmationText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.confirmationText,
+          cancellationText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.cancellationText,
+          additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.warningText,
         }}
         onConfirm={() => {
           setConfirmOpen(false)
@@ -215,11 +214,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
       <ConfirmDialog
         open={shuffleOpen}
         options={{
-          title: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.title),
-          description: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.desc),
-          confirmationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.confirmationText),
-          cancellationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.cancellationText),
-          additionalText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.warningText),
+          title: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.title,
+          description: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.desc,
+          confirmationText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.confirmationText,
+          cancellationText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.cancellationText,
+          additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.warningText,
         }}
         onConfirm={() => {
           setShuffleOpen(false)
