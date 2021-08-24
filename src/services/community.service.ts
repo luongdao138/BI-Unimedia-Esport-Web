@@ -139,7 +139,7 @@ export type TopicDetail = {
     community_id: number
     created_at: string
     user_id: number
-    attachments?: Array<TopicAttachments>
+    attachments: Array<TopicAttachments> | null
     owner_name: string
     owner_email: string
     owner_profile: string
