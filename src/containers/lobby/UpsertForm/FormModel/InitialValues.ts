@@ -1,4 +1,5 @@
 import { LobbyDetail } from '@services/lobby.service'
+import _ from 'lodash'
 import { FormType } from './FormType'
 
 export const getInitialValues = (data?: LobbyDetail): FormType => ({
@@ -7,8 +8,8 @@ export const getInitialValues = (data?: LobbyDetail): FormType => ({
     title: data ? data.attributes.title : '',
     message: data ? data.attributes.message : '',
     categories: data ? data.attributes.categories : [],
-    game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
-    game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
+    game_title_id: _.get(data, 'attributes.game_title.data.attributes', []),
+    game_hardware_id: _.get(data, 'attributes.game_hardware.data.attributes.id', -1),
     max_participants: data ? data.attributes.max_participants : 0,
     organizer_participated: data ? data.attributes.organizer_participated : false,
   },

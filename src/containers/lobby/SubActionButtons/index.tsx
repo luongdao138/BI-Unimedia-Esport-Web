@@ -20,7 +20,9 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
   const classes = useStyles()
   const status = _.get(lobby, 'attributes.status', 0)
   const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
-  const isEntered: LOBBY_PARTICIPANT_STATUS | null = _.get(lobby, 'attributes.participant_status', null)
+  const participantStatus: LOBBY_PARTICIPANT_STATUS | null = _.get(lobby, 'attributes.participant_status', null)
+
+  const afterClosed = [LOBBY_STATUS.ENTRY_CLOSED, LOBBY_STATUS.IN_PROGRESS, LOBBY_STATUS.ENDED]
 
   const renderMemberList = () => {
     /*
@@ -49,7 +51,35 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
    * [3] Show entered or selected users
    * [?] Additional condition might be needed for not selected user show or not
    */
-    if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED && isEntered) {
+    if (
+      status !== LOBBY_STATUS.READY &&
+      status !== LOBBY_STATUS.DELETED &&
+      status !== LOBBY_STATUS.CANCELLED &&
+      !afterClosed.includes(status) &&
+      participantStatus === LOBBY_PARTICIPANT_STATUS.ENTERED
+    ) {
+      return (
+        <Box className={classes.actionButton}>
+          <LoginRequired>
+            <ActionLabelButton
+              actionLabel={isFreezed ? undefined : i18n.t('common:lobby.buttons.temporary')}
+              variant="outlined"
+              fullWidth
+              onClick={openChat && openChat}
+              // disabled={chatDisabled}
+            >
+              {i18n.t('common:tournament.group_chat')}
+            </ActionLabelButton>
+          </LoginRequired>
+        </Box>
+      )
+    } else if (
+      status !== LOBBY_STATUS.READY &&
+      status !== LOBBY_STATUS.DELETED &&
+      status !== LOBBY_STATUS.CANCELLED &&
+      afterClosed.includes(status) &&
+      participantStatus === LOBBY_PARTICIPANT_STATUS.SELECTED
+    ) {
       return (
         <Box className={classes.actionButton}>
           <LoginRequired>

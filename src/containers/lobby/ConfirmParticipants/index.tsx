@@ -162,7 +162,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                           additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.warningText,
                         })
                           .then(() => {
-                            if (status !== LOBBY_STATUS.RECRUITING) {
+                            if (status === LOBBY_STATUS.RECRUITING) {
                               getRecommendedParticipants(hash_key)
                             }
                           })

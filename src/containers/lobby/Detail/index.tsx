@@ -41,7 +41,7 @@ const LobbyDetailBody: React.FC = () => {
   const router = useRouter()
 
   const openChat = () => {
-    const chatRoomId = _.get(lobby, 'attributes.chatroom', null)
+    const chatRoomId = _.get(lobby, 'attributes.chatroom_id', null)
     if (chatRoomId) router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
   }
   const openMemberList = () => {
