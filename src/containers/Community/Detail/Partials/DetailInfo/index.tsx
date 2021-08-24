@@ -116,7 +116,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         </Box>
 
         <Box marginTop={2} display="flex">
-          <FollowList />
+          <FollowList community={detail} />
           <ApproveList />
         </Box>
 

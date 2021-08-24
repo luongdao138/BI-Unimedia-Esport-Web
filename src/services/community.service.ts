@@ -42,6 +42,7 @@ export type CommunityDetail = {
     is_official: number
     game_titles: GameTitleItem[]
     features: CommunityDetailFeature[]
+    member_role: CommunityMemberRoleNumber | null
     admin: {
       id: number
       nickname: string
@@ -104,7 +105,24 @@ export type PageMeta = {
   total_pages: number
 }
 
-export type CommunityMemberRole = 'admin' | 'co_organizer' | 'member'
+export enum CommunityMemberRole {
+  system = 'system',
+  admin = 'admin',
+  member = 'member',
+  co_organizer = 'co_organizer',
+  reported = 'reported',
+  leave = 'leave',
+  requested = 'requested',
+}
+export enum CommunityMemberRoleNumber {
+  system = 0,
+  admin = 1,
+  member = 2,
+  co_organizer = 3,
+  reported = 4,
+  leave = 5,
+  requested = 6,
+}
 
 export type CommunityMembersParams = {
   community_id: number

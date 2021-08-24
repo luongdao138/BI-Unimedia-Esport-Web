@@ -7,8 +7,9 @@ import { Colors } from '@theme/colors'
 
 type UserSelectBoxListProps = {
   username: string
-  mail: string
+  nickname: string
   avatar?: string
+  isAutomatic?: boolean
 }
 
 const OPTIONS = [
@@ -17,7 +18,13 @@ const OPTIONS = [
   { label: '保留', value: 'hold' },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, mail, avatar }) => {
+const OPTIONS_NEXT = [
+  { label: '一般ユーザー', value: 'user' },
+  { label: '共同管理者', value: 'co_organizer' },
+  { label: 'キックする', value: 'kick' },
+]
+
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, nickname, avatar, isAutomatic }) => {
   const classes = useStyles()
 
   return (
@@ -30,7 +37,7 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, mail, a
               <Typography className={classes.username}>{username}</Typography>
             </Box>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.mail}>{mail}</Typography>
+              <Typography className={classes.mail}>{nickname}</Typography>
             </Box>
           </Box>
         </Box>
@@ -38,9 +45,9 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, mail, a
         <Box className={classes.selectBoxContainer}>
           <ESSelect className={classes.selectWidth} size="small">
             <option disabled value={-1}>
-              {i18n.t('common:community.general_user')}
+              {isAutomatic ? i18n.t('common:community.applying') : i18n.t('common:community.general_user')}
             </option>
-            {OPTIONS.map((o, index) => (
+            {(isAutomatic ? OPTIONS : OPTIONS_NEXT).map((o, index) => (
               <option key={index} value={o.value}>
                 {o.label}
               </option>

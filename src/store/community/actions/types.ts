@@ -13,4 +13,5 @@ export enum COMMUNITY_ACTION_TYPE {
   DELETE_TOPIC = 'topic/delete',
   CLEAR_TOPIC_DETAIL = 'community/topic/clearDetail',
   GET_COMMUNITY_MEMBERS = 'community/members',
+  RESET_COMMUNITY_MEMBERS = 'community/resetMembers',
 }

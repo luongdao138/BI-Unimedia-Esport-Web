@@ -1,19 +1,32 @@
 import { useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Icon, Theme, Button } from '@material-ui/core'
 import ESModal from '@components/Modal'
+import ESLabel from '@components/Label'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import LoginRequired from '@containers/LoginRequired'
+import ESStickyFooter from '@components/StickyFooter'
+import ButtonPrimary from '@components/ButtonPrimary'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
+import { CommunityDetail, CommunityMember } from '@services/community.service'
+import UserSelectBoxList from '../../../Partials/UserSelectBoxList'
+import useFollowList from './useFollowList'
 
-const Participants: React.FC = () => {
+type Props = {
+  community: CommunityDetail
+}
+
+const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
-  const [members, setMembers] = useState([])
+  const [members, setMembers] = useState<Array<CommunityMember>>([])
+  const { isModerator, isAutomatic } = useCommunityHelper(community)
+  const { /* getMembers, */ membersList, resetMembers } = useFollowList()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -24,8 +37,18 @@ const Participants: React.FC = () => {
   }
 
   useEffect(() => {
-    setMembers(dummyData)
-  }, [])
+    setMembers(membersList)
+  }, [members])
+
+  useEffect(() => {
+    if (open) {
+      // TODO add params
+      // getMembers()
+    } else {
+      resetMembers()
+    }
+    return () => resetMembers()
+  }, [open])
 
   const userData = (participant) => {
     const _user = participant.attributes.user
@@ -83,6 +106,58 @@ const Participants: React.FC = () => {
     },
   ]
 
+  const renderMemberList = () => {
+    return (
+      <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+        {dummyData.map((participant, i) => (
+          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+        ))}
+      </div>
+    )
+  }
+
+  const renderAdminMemberList = () => {
+    return (
+      <Box mt={3}>
+        {isAutomatic && (
+          <>
+            <ESLabel label={t('common:community.applying')} />
+            <Box mt={4} />
+            <Box height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
+              {dummyData.map((m, i) => {
+                return (
+                  <UserSelectBoxList
+                    key={i}
+                    username={m.attributes.user.nickname}
+                    nickname={m.attributes.user.user_code}
+                    avatar={m.attributes.avatar_url}
+                    isAutomatic
+                  />
+                  // <UserSelectBoxList key={i} username={m.attributes.nickname} nickname={m.attributes.user_code} avatar={m.attributes.profile} isAutomatic/>
+                )
+              })}
+            </Box>
+          </>
+        )}
+        <ESLabel label={t('common:community.participating')} />
+        <Box mt={4} />
+        <Box height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
+          {dummyData.map((d, i) => {
+            return (
+              <UserSelectBoxList
+                key={i}
+                username={d.attributes.user.nickname}
+                nickname={d.attributes.user.user_code}
+                avatar={d.attributes.avatar_url}
+              />
+              // <UserSelectBoxList key={i} username={d.attributes.nickname} nickname={d.attributes.user_code} avatar={d.attributes.profile} />
+            )
+          })}
+        </Box>
+      </Box>
+    )
+  }
+
   return (
     <div>
       <LoginRequired>
@@ -97,23 +172,32 @@ const Participants: React.FC = () => {
         </Button>
       </LoginRequired>
       <ESModal open={open} handleClose={handleClose}>
-        <BlankLayout>
-          <Box pt={7.5} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">{t('common:community.follow_list')}</Typography>
+        <ESStickyFooter
+          disabled={false}
+          noScroll
+          show={isModerator}
+          content={
+            <>
+              <ButtonPrimary round className={`${classes.footerButton} ${classes.confirmButton}`}>
+                {t('common:community.confirm_follow_list')}
+              </ButtonPrimary>
+            </>
+          }
+        >
+          <BlankLayout>
+            <Box pt={7.5} className={classes.topContainer}>
+              <Box py={2} display="flex" flexDirection="row" alignItems="center">
+                <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+                  <Icon className="fa fa-arrow-left" fontSize="small" />
+                </IconButton>
+                <Box pl={2}>
+                  <Typography variant="h2">{t('common:community.follow_list')}</Typography>
+                </Box>
               </Box>
+              {isModerator ? renderAdminMemberList() : renderMemberList()}
             </Box>
-            <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-              {members.map((participant, i) => (
-                <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
-              ))}
-            </div>
-          </Box>
-        </BlankLayout>
+          </BlankLayout>
+        </ESStickyFooter>
       </ESModal>
     </div>
   )
@@ -175,4 +259,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default Participants
+export default FollowList

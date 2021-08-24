@@ -35,10 +35,14 @@ export const STATUS = {
   CANCELLED: 'cancelled',
 }
 
-export const ROLE = {
-  ADMIN: 'admin',
-  CO_ORGANIZER: 'co_organizer',
-  MEMBER: 'member',
+export const MEMBER_ROLE = {
+  SYSTEM: 0,
+  ADMIN: 1,
+  MEMBER: 2,
+  CO_ORGANIZER: 3,
+  REPORTED: 4,
+  LEAVE: 5,
+  REQUESTED: 6,
 }
 
 export const COMMUNITY_STATUS = {

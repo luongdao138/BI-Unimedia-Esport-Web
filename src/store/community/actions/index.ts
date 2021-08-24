@@ -125,6 +125,8 @@ export const getCommunityFeatures = createAsyncThunk<services.CommunityFeaturesR
   }
 )
 
+export const resetCommunityMembers = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL)
+
 export const getCommunityMembers = createAsyncThunk<services.CommunityMembersResponse, services.CommunityMembersParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_MEMBERS,
   async (params, { rejectWithValue }) => {

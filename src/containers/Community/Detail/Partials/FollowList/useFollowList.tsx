@@ -8,19 +8,22 @@ const { actions, selectors } = community
 const getMeta = createMetaSelector(actions.getCommunityMembers)
 
 const useFollowList = (): {
-  members: Array<CommunityMember>
+  membersList: Array<CommunityMember>
   getMembers: (params: CommunityMembersParams) => void
   membersMeta: Meta
+  resetMembers: () => void
 } => {
   const dispatch = useAppDispatch()
-  const members = useAppSelector(selectors.getCommunityMembers)
+  const membersList = useAppSelector(selectors.getCommunityMembers)
   const getMembers = (params) => dispatch(actions.getCommunityMembers(params))
   const membersMeta = useAppSelector(getMeta)
+  const resetMembers = () => dispatch(actions.resetCommunityMembers())
 
   return {
-    members,
+    membersList,
     getMembers,
     membersMeta,
+    resetMembers,
   }
 }
 
