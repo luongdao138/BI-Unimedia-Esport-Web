@@ -22,6 +22,7 @@ import { Colors } from '@theme/colors'
 import Participants from '@containers/Lobby/Participants'
 import ConfirmParticipants from '../ConfirmParticipants'
 import { useConfirm } from '@components/Confirm'
+import { LOBBY_DIALOGS } from '@constants/lobby.constants'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
@@ -48,16 +49,28 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const onEntry = () => {
-    hashKey && entry(hashKey)
+    confirm({
+      description: LOBBY_DIALOGS.ENTRY_CONFIRMATION.desc,
+      title: LOBBY_DIALOGS.ENTRY_CONFIRMATION.title,
+      confirmationText: LOBBY_DIALOGS.ENTRY_CONFIRMATION.confirmationText,
+      cancellationText: LOBBY_DIALOGS.ENTRY_CONFIRMATION.cancellationText,
+      additionalText: LOBBY_DIALOGS.ENTRY_CONFIRMATION.warningText,
+    })
+      .then(() => {
+        hashKey && entry(hashKey)
+      })
+      .catch(() => {
+        /* ... */
+      })
   }
 
   const onDecline = () => {
     confirm({
-      description: 'This action is permanent!',
-      title: 'aaaaa',
-      confirmationText: 'aaa',
-      cancellationText: 'aaa',
-      additionalText: 'aaaaa',
+      description: LOBBY_DIALOGS.DECLINE_ENTRY.desc,
+      title: LOBBY_DIALOGS.DECLINE_ENTRY.title,
+      confirmationText: LOBBY_DIALOGS.DECLINE_ENTRY.confirmationText,
+      cancellationText: LOBBY_DIALOGS.DECLINE_ENTRY.cancellationText,
+      additionalText: LOBBY_DIALOGS.DECLINE_ENTRY.warningText,
     })
       .then(() => {
         hashKey && unjoin(hashKey)
