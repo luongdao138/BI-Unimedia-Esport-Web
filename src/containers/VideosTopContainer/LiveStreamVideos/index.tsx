@@ -2,29 +2,22 @@ import { Box, Typography, Theme, makeStyles, Grid } from '@material-ui/core'
 import TitleSeeMore from '../TitleSeeMore'
 import VideoPreviewItem from '../VideoPreviewItem'
 import i18n from '@locales/i18n'
-import { VideoPreviewProps } from '../VideosList'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import React, { useEffect } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import useLiveVideos from './useLiveVideos'
+import { TypeVideo } from '@services/videoTop.services'
+import ESLoader from '@components/Loader'
 
 const LiveStreamVideos: React.FC = () => {
+  const page = 1
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const dataLiveVideo = Array(20)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'live',
-      title: `ムービータイトルムービータイトル ...`,
-      iconStreamer: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnailVideo: '/images/dataVideoFake/banner_04.png',
-      nameStreamer: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category: 'Valorant',
-    }))
+  const { loadMore, listLiveVideo, meta } = useLiveVideos()
+
   const classes = useStyles()
-  const renderLiveItem = (item: VideoPreviewProps, index: number) => {
+  const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
       <>
         {downMd ? (
@@ -39,22 +32,47 @@ const LiveStreamVideos: React.FC = () => {
       </>
     )
   }
+
+  useEffect(() => {
+    loadMore(page)
+  }, [])
+
   return (
     <Box className={classes.container}>
       <Box className={classes.titleContainer}>
         <TitleSeeMore titleText={i18n.t('common:videos_top_tab.title_live_videos')} />
       </Box>
       <Box className={classes.wrapContentContainer}>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataLiveVideo.length > 0 ? (
-            dataLiveVideo.map(renderLiveItem)
+        <InfiniteScroll
+          className={classes.scrollContainer}
+          dataLength={listLiveVideo.length}
+          next={() => {
+            loadMore(page + 1)
+          }}
+          hasMore={true}
+          loader={null}
+          scrollThreshold={0.8}
+          style={{ overflow: 'hidden' }}
+          // scrollableTarget="scrollableDiv"
+        >
+          {listLiveVideo.length > 0 ? (
+            <Grid container spacing={3} className={classes.contentContainer}>
+              {listLiveVideo.map(renderLiveItem)}
+            </Grid>
           ) : (
             <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
               <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
             </Box>
           )}
-        </Grid>
+        </InfiniteScroll>
       </Box>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </Box>
   )
 }
@@ -105,6 +123,12 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingRight: 0,
       },
     },
+    xsItemContainerBonus: {
+      marginRight: '20.7px',
+      '&:last-child': {
+        marginRight: 0,
+      },
+    },
     titleContainer: {
       paddingBottom: 12,
     },
@@ -113,6 +137,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '15px 0 26px 0',
       textAlign: 'center',
     },
+  },
+  scrollContainer: {
+    display: 'flex',
+    // flexWrap: 'wrap',
+    width: '100%',
+    height: '100%',
   },
 }))
 export default LiveStreamVideos

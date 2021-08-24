@@ -1,8 +1,9 @@
 import React from 'react'
 import { Box, Typography, Theme, makeStyles, CardMedia } from '@material-ui/core'
-import { TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import { TypeVideo } from '@services/videoTop.services'
 import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 type VideoPreviewItemProps = {
   data?: TypeVideo
@@ -10,13 +11,14 @@ type VideoPreviewItemProps = {
 const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const IMG_PLACEHOLDER = '/images/default_card.png'
+  const IMG_PLACEHOLDER = '/images/live_stream/exelab_default_card.png'
   const iconDefault = '/images/avatar.png'
+  //status = 0-schedule|1-live|2-archive
   return (
     <Box className={classes.container} key={data?.id}>
       <Box className={classes.videoContainer}>
         <CardMedia className={classes.video} image={data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER} />
-        {data?.type === TYPE_VIDEO_TOP.LIVE && (
+        {data?.status === 1 && (
           <Box className={classes.tagContainer}>
             <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
           </Box>
@@ -26,7 +28,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
         {/* </Box> */}
         {/* <Box className={classes.previewVideo}></Box> */}
         {/* <img src={data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER} className={classes.previewVideo} /> */}
-        {data?.type === TYPE_VIDEO_TOP.SCHEDULE && data?.stream_schedule_start_time && (
+        {data?.status === 0 && data?.stream_schedule_start_time && (
           <Box className={classes.scheduleContainer}>
             <Typography className={classes.scheduleTextStyle}>{CommonHelper.formatTimeVideo(data?.stream_schedule_start_time)}</Typography>
           </Box>
@@ -35,9 +37,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
       <Box className={classes.informationContainer}>
         {data?.title && (
           <Box className={classes.titleItemContainer}>
-            <Typography variant="h3" className={classes.label}>
-              {data?.title.length <= 30 ? data?.title : `${data?.title}...`}
-            </Typography>
+            <Typography className={classes.label}>{FormatHelper.textSizeMode(data?.title, 30)}</Typography>
           </Box>
         )}
         <Box className={classes.userItemContainer}>
@@ -46,12 +46,14 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
               <img src={data?.user_avatar ? data.user_avatar : iconDefault} width={36} height={36} className={classes.iconStyle} />
             </Box>
             <Box className={classes.nameContainer}>
-              <Typography className={classes.nameStyle}>{data?.user_nickname}</Typography>
+              <Typography className={classes.userNameStyle}>{FormatHelper.textSizeMode(data?.user_nickname, 30)}</Typography>
             </Box>
           </Box>
           <Box className={classes.watchContainer}>
-            {data?.type !== TYPE_VIDEO_TOP.ARCHIVE && (
-              <Typography className={classes.nameStyle}>{data?.live_view_count + t('common:videos_top_tab.view_count_text')}</Typography>
+            {data?.status !== 2 && (
+              <Typography className={classes.nameStyle}>
+                {FormatHelper.currencyFormat(`${data?.live_view_count}`) + t('common:videos_top_tab.view_count_text')}
+              </Typography>
             )}
             {data?.category_name && <Typography className={classes.valorantStyle}>{data?.category_name}</Typography>}
           </Box>
@@ -150,6 +152,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 12,
     color: '#fff',
   },
+  userNameStyle: {
+    textAlign: 'left',
+    fontSize: 12,
+    color: '#fff',
+  },
   watchContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -159,6 +166,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     textAlign: 'left',
+    fontSize: 14,
   },
   valorantStyle: {
     textAlign: 'right',

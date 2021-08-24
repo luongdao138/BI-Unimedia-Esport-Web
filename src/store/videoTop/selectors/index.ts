@@ -8,3 +8,7 @@ export const getVideoLive = createSelector(getRoot, (state) => state.listVideoAl
 export const getVideoSchedule = createSelector(getRoot, (state) => state.listVideoAll.schedule)
 export const getVideoArchive = createSelector(getRoot, (state) => state.listVideoAll.archive)
 export const getVideoPopular = createSelector(getRoot, (state) => state.listVideoPopular)
+export const getBannerTop = createSelector(getRoot, (state) => state.listBanner)
+export const liveVideos = createSelector(getRoot, (state) => state.videoLive)
+export const scheduleVideos = createSelector(getRoot, (state) => state.videoSchedule)
+export const archivedVideos = createSelector(getRoot, (state) => state.videoArchived)

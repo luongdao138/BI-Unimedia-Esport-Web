@@ -72,10 +72,16 @@ const spacedLinks = function (content: string): string {
   return content
 }
 
+const textSizeMode = (str: string, limit?: number): string => {
+  const text = str.length <= limit ? str : `${str.slice(0, limit)}...`
+  return text
+}
+
 export const FormatHelper = {
   kFormatter,
   dateFormatShort,
   dateFormat,
   spacedLinks,
   currencyFormat,
+  textSizeMode,
 }

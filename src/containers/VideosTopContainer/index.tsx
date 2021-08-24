@@ -11,6 +11,7 @@ import LiveStreamVideos from './LiveStreamVideos'
 import ScheduleVideos from './ScheduleVideos'
 import VideosList from './VideosList'
 import BannerCarousel from './BannerCarousel'
+import useListVideoAll from './VideosList/useListVideoAll'
 
 enum TABS {
   VIDEOS_LIST = 0,
@@ -29,21 +30,23 @@ export const TabsVideo = {
 
 const VideosTop: React.FC = () => {
   const dataBanner = [
-    { id: 0, cover: '/images/banners/banner_01.png', title: 'image_01' },
-    { id: 1, cover: '/images/banners/banner_02.png', title: 'image_02' },
-    { id: 2, cover: '/images/banners/banner_03.png', title: 'image_03' },
-    { id: 3, cover: '/images/banners/banner_04.png', title: 'image_04' },
-    { id: 4, cover: '/images/banners/banner_05.png', title: 'image_05' },
-    { id: 5, cover: '/images/banners/banner_04.png', title: 'image_06' },
-    { id: 6, cover: '/images/banners/banner_03.png', title: 'image_07' },
-    { id: 7, cover: '/images/banners/banner_02.png', title: 'image_08' },
-    { id: 8, cover: '/images/banners/banner_01.png', title: 'image_09' },
+    // { id: 0, url: '/images/banners/banner_01.png', target: 'image_01' },
+    // { id: 1, url: '/images/banners/banner_02.png', target: 'image_02' },
+    // { id: 2, url: '/images/banners/banner_03.png', target: 'image_03' },
+    // { id: 3, url: '/images/banners/banner_04.png', target: 'image_04' },
+    { id: 4, url: '/images/banners/banner_05.png', target: 'image_05' },
+    { id: 5, url: 'https://i.pinimg.com/564x/16/c7/44/16c744a2c5187694bfb9f2d220dc4f16.jpg', target: 'image_06' },
+    { id: 6, url: 'https://i.pinimg.com/236x/c4/7e/52/c47e523f07996bd610f1e1ecfa842ebb.jpg', target: 'image_07' },
+    { id: 7, url: 'https://i.pinimg.com/564x/09/b5/27/09b52762cc9d8aee221ebb6a062dee98.jpg', target: 'image_08' },
+    { id: 8, url: 'https://i.pinimg.com/564x/b1/1e/0c/b11e0cbe33201bac50a28b214bb459bf.jpg', target: 'image_09' },
   ]
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const { bannerTop } = useListVideoAll()
   useEffect(() => {
     setTab(0)
+    bannerTop()
   }, [])
   const getTabs = () => {
     return (
