@@ -10,17 +10,17 @@ import LoginRequired from '@containers/LoginRequired'
 import ESDialog from '@components/Dialog'
 import ParticipantRow from './ParticipantRow'
 import ESFullLoader from '@components/FullScreenLoader'
-import ConfirmDialog from '@components/ConfirmDialog'
 import _ from 'lodash'
 import { LobbyDetail } from '@services/lobby.service'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLobbyActions from '../hooks/useLobbyActions'
 import ESLoader from '@components/Loader'
-import { LOBBY_STATUS } from '@constants/lobby.constants'
+import { LOBBY_STATUS, LOBBY_DIALOGS } from '@constants/lobby.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import ESStickyFooter from '@components/StickyFooter'
 import BlankLayout from '@layouts/BlankLayout'
+import { useConfirm } from '@components/Confirm'
 
 interface CloseRecruitmentModalProps {
   lobby: LobbyDetail
@@ -31,11 +31,10 @@ interface CloseRecruitmentModalProps {
 const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, open, handleClose }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [shuffleOpen, setShuffleOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [selectedParticipants, setSelectedParticipants] = useState<ConfirmParticipantItem[]>([])
   const router = useRouter()
+  const confirm = useConfirm()
 
   const {
     participants,
@@ -129,7 +128,23 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                       fullWidth
                       size="large"
                       disabled={selectedParticipants.filter((p) => p.checked).length === 0}
-                      onClick={() => setConfirmOpen(true)}
+                      onClick={() => {
+                        confirm({
+                          title: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.title,
+                          description: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.desc,
+                          confirmationText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.confirmationText,
+                          cancellationText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.cancellationText,
+                          additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.warningText,
+                        })
+                          .then(() => {
+                            const _selectedParticipants = _.filter(selectedParticipants, (p) => p.checked).map((a) => a.attributes.user_id)
+
+                            confirmParticipants(hash_key, _selectedParticipants)
+                          })
+                          .catch(() => {
+                            /* ... */
+                          })
+                      }}
                     >
                       {t('common:confirm_member.confirm')}
                     </ButtonPrimary>
@@ -137,7 +152,27 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                 </Box>
                 <Box className={classes.actionButton}>
                   <LoginRequired>
-                    <ButtonPrimaryOutlined onClick={() => setShuffleOpen(true)}>{t('common:confirm_member.shuffle')}</ButtonPrimaryOutlined>
+                    <ButtonPrimaryOutlined
+                      onClick={() => {
+                        confirm({
+                          title: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.title,
+                          description: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.desc,
+                          confirmationText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.confirmationText,
+                          cancellationText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.cancellationText,
+                          additionalText: LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.warningText,
+                        })
+                          .then(() => {
+                            if (status !== LOBBY_STATUS.RECRUITING) {
+                              getRecommendedParticipants(hash_key)
+                            }
+                          })
+                          .catch(() => {
+                            /* ... */
+                          })
+                      }}
+                    >
+                      {t('common:confirm_member.shuffle')}
+                    </ButtonPrimaryOutlined>
                   </LoginRequired>
                 </Box>
               </Box>
@@ -192,41 +227,6 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
       </ESDialog>
 
       {recommendedParticipantsMeta.pending && <ESFullLoader open={recommendedParticipantsMeta.pending} />}
-
-      <ConfirmDialog
-        open={confirmOpen}
-        title={t('common:confirm_member.confirm_title')}
-        cancelButtonTitle={t('common:confirm_member.confirm_cancel_title')}
-        okButtonTitle={t('common:confirm_member.confirm_ok_title')}
-        warningTitle={t('common:confirm_member.confirm_warning_title')}
-        handleClose={() => {
-          setConfirmOpen(false)
-        }}
-        handleSubmit={() => {
-          setConfirmOpen(false)
-          const _selectedParticipants = _.filter(selectedParticipants, (p) => p.checked).map((a) => a.attributes.user_id)
-
-          confirmParticipants(hash_key, _selectedParticipants)
-        }}
-      />
-
-      <ConfirmDialog
-        open={shuffleOpen}
-        title={t('common:confirm_member.shuffle_title')}
-        description={t('common:confirm_member.shuffle_description')}
-        cancelButtonTitle={t('common:confirm_member.shuffle_cancel_title')}
-        okButtonTitle={t('common:confirm_member.shuffle_ok_title')}
-        warningTitle={t('common:confirm_member.shuffle_warning_title')}
-        handleClose={() => {
-          setShuffleOpen(false)
-        }}
-        handleSubmit={() => {
-          setShuffleOpen(false)
-          if (status !== LOBBY_STATUS.RECRUITING) {
-            getRecommendedParticipants(hash_key)
-          }
-        }}
-      />
     </Box>
   )
 }

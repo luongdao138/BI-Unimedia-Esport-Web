@@ -1,5 +1,6 @@
 import i18n from '@locales/i18n'
 import { Dialog } from '@store/common/actions/types'
+import { ConfirmOptions } from '@components/Confirm/types'
 
 export const searchTypes = {
   USER: 1,
@@ -165,6 +166,33 @@ export enum FOLLOW_STATES {
   UNFOLLOWED = 0,
   FOLLOWING = 1,
   FOLLOWERS = 0,
+}
+
+export const defaultConfirmationOptions: ConfirmOptions = {
+  confirmationButtonProps: {
+    round: true,
+    fullWidth: true,
+  },
+  cancellationButtonProps: {
+    variant: 'outlined',
+    round: true,
+    fullWidth: true,
+    size: 'large',
+  },
+  dialogProps: {
+    maxWidth: 'md',
+    BackdropProps: {
+      onTouchMove: (e: React.TouchEvent<HTMLDivElement>): void => {
+        e.preventDefault()
+      },
+      onTouchStart: (e: React.TouchEvent<HTMLDivElement>): void => {
+        e.preventDefault()
+      },
+      onTouchEnd: (e: React.TouchEvent<HTMLDivElement>): void => {
+        e.preventDefault()
+      },
+    },
+  },
 }
 
 export const AVATAR_PATH = '/images/avatar_o.png'

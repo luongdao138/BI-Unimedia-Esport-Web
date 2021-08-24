@@ -21,13 +21,16 @@ import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import Participants from '@containers/Lobby/Participants'
 import ConfirmParticipants from '../ConfirmParticipants'
+import { useConfirm } from '@components/Confirm'
+import { LOBBY_DIALOGS } from '@constants/lobby.constants'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
   const [openList, setList] = useState<boolean>(false)
   const [openConfirmList, setConfirmList] = useState<boolean>(false)
   const classes = useStyles()
-  const { unjoin, entry, unjoinMeta } = useLobbyActions()
+  const { unjoin, entry } = useLobbyActions()
+  const confirm = useConfirm()
 
   const { handleBack, lobby } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
@@ -46,15 +49,38 @@ const LobbyDetailBody: React.FC = () => {
   }
 
   const onEntry = () => {
-    hashKey && entry(hashKey)
+    confirm({
+      description: LOBBY_DIALOGS.ENTRY_CONFIRMATION.desc,
+      title: LOBBY_DIALOGS.ENTRY_CONFIRMATION.title,
+      confirmationText: LOBBY_DIALOGS.ENTRY_CONFIRMATION.confirmationText,
+      cancellationText: LOBBY_DIALOGS.ENTRY_CONFIRMATION.cancellationText,
+      additionalText: LOBBY_DIALOGS.ENTRY_CONFIRMATION.warningText,
+    })
+      .then(() => {
+        hashKey && entry(hashKey)
+      })
+      .catch(() => {
+        /* ... */
+      })
   }
 
   const onDecline = () => {
-    hashKey && unjoin(hashKey)
+    confirm({
+      description: LOBBY_DIALOGS.DECLINE_ENTRY.desc,
+      title: LOBBY_DIALOGS.DECLINE_ENTRY.title,
+      confirmationText: LOBBY_DIALOGS.DECLINE_ENTRY.confirmationText,
+      cancellationText: LOBBY_DIALOGS.DECLINE_ENTRY.cancellationText,
+      additionalText: LOBBY_DIALOGS.DECLINE_ENTRY.warningText,
+    })
+      .then(() => {
+        hashKey && unjoin(hashKey)
+      })
+      .catch(() => {
+        /* ... */
+      })
   }
 
   const onMemberConfirm = () => {
-    alert('member confirm modal')
     setConfirmList(true)
   }
 
@@ -69,7 +95,7 @@ const LobbyDetailBody: React.FC = () => {
             <SubStatusInfo lobby={lobby} />
             <SubActionButtons lobby={lobby} openChat={openChat} openMemberList={openMemberList} />
           </Box>
-          <MainActionButtons memberConfirm={onMemberConfirm} unjoinMeta={unjoinMeta} lobby={lobby} entry={onEntry} decline={onDecline} />
+          <MainActionButtons memberConfirm={onMemberConfirm} lobby={lobby} entry={onEntry} decline={onDecline} />
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
         <Participants open={openList} data={lobby} handleClose={() => setList(false)} />

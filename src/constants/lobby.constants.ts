@@ -1,3 +1,5 @@
+import i18n from '@locales/i18n'
+
 // TEMPORARY: battle royale removed
 export const PARTICIPANT_TYPE = {
   HOME: 'home',
@@ -62,4 +64,51 @@ export enum MAIN_ACTIONS {
   DECLINE = 2,
   CANCEL = 3,
   MEMBER_CONFIRM = 4,
+}
+
+export const LOBBY_DIALOGS = {
+  ENTRY_CONFIRMATION: {
+    title: i18n.t('common:lobby.entry_confirmation_dialog.title'),
+    desc: i18n.t('common:lobby.entry_confirmation_dialog.desc'),
+    warningText: i18n.t('common:lobby.entry_confirmation_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.entry_confirmation_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.entry_confirmation_dialog.cancellationText'),
+  },
+  DECLINE_ENTRY: {
+    title: i18n.t('common:lobby.decline_entry_dialog.title'),
+    desc: i18n.t('common:lobby.decline_entry_dialog.desc'),
+    warningText: i18n.t('common:lobby.decline_entry_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.decline_entry_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.decline_entry_dialog.cancellationText'),
+  },
+  CONFIRM_MEMBER: {
+    shuffle: {
+      title: i18n.t('common:lobby.confirm_member_dialog.shuffle.title'),
+      desc: i18n.t('common:lobby.confirm_member_dialog.shuffle.desc'),
+      warningText: i18n.t('common:lobby.confirm_member_dialog.shuffle.warningText'),
+      confirmationText: i18n.t('common:lobby.confirm_member_dialog.shuffle.confirmationText'),
+      cancellationText: i18n.t('common:lobby.confirm_member_dialog.shuffle.cancellationText'),
+    },
+    confirm: {
+      title: i18n.t('common:lobby.confirm_member_dialog.confirm.title'),
+      desc: i18n.t('common:lobby.confirm_member_dialog.confirm.desc'),
+      warningText: i18n.t('common:lobby.confirm_member_dialog.confirm.warningText'),
+      confirmationText: i18n.t('common:lobby.confirm_member_dialog.confirm.confirmationText'),
+      cancellationText: i18n.t('common:lobby.confirm_member_dialog.confirm.cancellationText'),
+    },
+  },
+  ENTRY_DEADLINE: {
+    title: i18n.t('common:lobby.entry_deadline_dialog.title'),
+    desc: i18n.t('common:lobby.entry_deadline_dialog.desc'),
+    warningText: i18n.t('common:lobby.entry_deadline_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.entry_deadline_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.entry_deadline_dialog.cancellationText'),
+  },
+  CANCEL_LOBBY: {
+    title: i18n.t('common:lobby.cancel_lobby_dialog.title'),
+    desc: i18n.t('common:lobby.cancel_lobby_dialog.desc'),
+    warningText: i18n.t('common:lobby.cancel_lobby_dialog.warningText'),
+    confirmationText: i18n.t('common:lobby.cancel_lobby_dialog.confirmationText'),
+    cancellationText: i18n.t('common:lobby.cancel_lobby_dialog.cancellationText'),
+  },
 }

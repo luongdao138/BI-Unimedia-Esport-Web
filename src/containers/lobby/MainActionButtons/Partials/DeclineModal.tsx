@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Typography, Box, makeStyles, Theme } from '@material-ui/core'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
-import LinkButton from '@components/LinkButton'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ESPopup from '@components/Popup'
@@ -15,10 +14,9 @@ import { Meta } from '@store/metadata/actions/types'
 interface UnjoinModalProps {
   unjoinMeta: Meta
   onConfirm: () => void
-  text: string
 }
 
-const DeclineModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm, text }) => {
+const DeclineModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
@@ -31,9 +29,6 @@ const DeclineModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm, text 
 
   return (
     <Box textAlign="center" mt={2}>
-      <LoginRequired>
-        <LinkButton onClick={() => setOpen(true)}>{text}</LinkButton>
-      </LoginRequired>
       <ESPopup open={open}>
         <BlankLayout>
           <Box paddingBottom={2} paddingTop={2} className={classes.childrenContainer}>

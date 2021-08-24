@@ -14,7 +14,7 @@ type StateType = {
 
 const initialState: StateType = {
   lobbyDetail: undefined,
-  participants: undefined,
+  participants: [],
   recommendedParticipants: [],
   searchLobbies: [],
   lobbyCategories: [],
