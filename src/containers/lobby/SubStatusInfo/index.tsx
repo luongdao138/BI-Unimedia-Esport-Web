@@ -30,7 +30,10 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
   const participatedText = t('common:lobby.status.participated') // 参加中
   const notParticipatedText = t('common:lobby.status.not_participated') // 落選
 
-  const entryMembersCount = _.defaultTo(entry_count, 0) + _.defaultTo(participants_count, 0)
+  const entryMembersCount = is_freezed
+    ? _.defaultTo(participants_count, 0)
+    : _.defaultTo(entry_count, 0) + _.defaultTo(participants_count, 0)
+
   const maxMembersCount = _.defaultTo(max_participants, 0)
 
   const renderStatusInfo = () => {
