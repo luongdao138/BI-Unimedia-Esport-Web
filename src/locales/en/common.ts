@@ -638,6 +638,13 @@ export default {
       entry_period: 'エントリー期間',
       start_date: '開催日時',
     },
+    cancel_lobby_dialog: {
+      title: '募集を中止しますか？',
+      desc: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
+      warningText: '',
+      confirmationText: '中止する',
+      cancellationText: 'キャンセル',
+    },
     entry_confirmation_dialog: {
       title: 'エントリーしますか？',
       desc: '',
