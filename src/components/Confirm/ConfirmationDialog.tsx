@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ConfirmOptions } from './types'
 import ESButton from '@components/Button'
-import { makeStyles, Theme, Typography } from '@material-ui/core'
+import { Container, makeStyles, Theme, Typography } from '@material-ui/core'
 import WarningRounded from '@material-ui/icons/WarningRounded'
 import { Colors } from '@theme/colors'
 
@@ -37,30 +37,30 @@ const ConfirmationDialog = ({ open, options, onCancel, onConfirm, onClose }: Con
 
   return (
     <Dialog fullWidth {...dialogProps} open={open} onClose={onClose} PaperProps={{ className: classes.root }}>
-      {title && <DialogTitle className={classes.title}>{title}</DialogTitle>}
-      {content ? (
-        <DialogContent>{content}</DialogContent>
-      ) : (
-        description && (
+      <Container maxWidth={false} className={classes.container}>
+        {title && <DialogTitle className={classes.title}>{title}</DialogTitle>}
+        {content ? (
+          <DialogContent>{content}</DialogContent>
+        ) : (
           <DialogContent className={classes.dialogContent}>
-            <DialogContentText className={classes.desc}>{description}</DialogContentText>
+            {description && <DialogContentText className={classes.desc}>{description}</DialogContentText>}
           </DialogContent>
-        )
-      )}
-      <DialogActions className={classes.dialogActions}>
-        <ESButton {...cancellationButtonProps} className={classes.secondary} onClick={onCancel}>
-          {cancellationText}
-        </ESButton>
-        <ButtonPrimary {...confirmationButtonProps} onClick={onConfirm}>
-          {confirmationText}
-        </ButtonPrimary>
-      </DialogActions>
-      {additionalText && (
-        <Typography className={classes.additional} variant="body1" component="p">
-          <WarningRounded className={classes.icon} fontSize="small" />
-          {additionalText}
-        </Typography>
-      )}
+        )}
+        <DialogActions className={classes.dialogActions}>
+          <ESButton {...cancellationButtonProps} className={classes.secondary} onClick={onCancel}>
+            {cancellationText}
+          </ESButton>
+          <ButtonPrimary {...confirmationButtonProps} onClick={onConfirm}>
+            {confirmationText}
+          </ButtonPrimary>
+        </DialogActions>
+        {additionalText && (
+          <Typography className={classes.additional} variant="body1" component="p">
+            <WarningRounded className={classes.icon} fontSize="small" />
+            {additionalText}
+          </Typography>
+        )}
+      </Container>
     </Dialog>
   )
 }
@@ -68,6 +68,7 @@ const ConfirmationDialog = ({ open, options, onCancel, onConfirm, onClose }: Con
 const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {
     textAlign: 'center',
+    minHeight: 50,
   },
   root: {
     padding: theme.spacing(3),
@@ -77,6 +78,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:first-child': {
       padding: theme.spacing(3),
     },
+  },
+  container: {
+    maxWidth: 500,
   },
   title: {
     textAlign: 'center',
@@ -110,6 +114,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&.MuiDialogActions-spacing > button': {
         margin: 5,
       },
+    },
+    dialogContent: {
+      minHeight: 'inherit',
+    },
+    container: {
+      maxWidth: '100%',
+      padding: 0,
+    },
+    root: {
+      '&:first-child': {
+        padding: 5,
+      },
+    },
+    title: {
+      padding: '24px 5px 16px 5px',
     },
   },
 }))

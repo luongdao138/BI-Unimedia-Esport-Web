@@ -180,6 +180,7 @@ export const defaultConfirmationOptions: ConfirmOptions = {
     size: 'large',
   },
   dialogProps: {
+    maxWidth: 'md',
     BackdropProps: {
       onTouchMove: (e: React.TouchEvent<HTMLDivElement>): void => {
         e.preventDefault()
