@@ -191,17 +191,17 @@ export type ParticipantParams = {
 }
 
 export const entry = async (hash_key: string): Promise<EntryLobbyResponse> => {
-  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:id/gi, hash_key))
+  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_ENTRY.replace(/:hash_key/gi, hash_key))
   return data
 }
 
 export const unjoin = async (hash_key: string): Promise<EntryLobbyResponse> => {
-  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_UNJOIN.replace(/:id/gi, hash_key))
+  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_UNJOIN.replace(/:hash_key/gi, hash_key))
   return data
 }
 
 export const cancel = async (hash_key: string): Promise<EntryLobbyResponse> => {
-  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_CANCEL.replace(/:id/gi, hash_key))
+  const { data } = await api.post<EntryLobbyResponse>(URI.LOBBY_CANCEL.replace(/:hash_key/gi, hash_key))
   return data
 }
 
@@ -211,17 +211,19 @@ export const search = async (params: LobbySearchParams): Promise<LobbySearchResp
 }
 
 export const randomizeParticipants = async (hash_key: string): Promise<ParticipantsResponse> => {
-  const { data } = await api.post<ParticipantsResponse>(URI.LOBBY_RANDOMIZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+  const { data } = await api.post<ParticipantsResponse>(URI.LOBBY_RANDOMIZE_PARTICIPANTS.replace(/:hash_key/gi, hash_key))
   return data
 }
 
 export const confirmParticipants = async (params: ConfirmParticipantParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.LOBBY_CONFIRM_PARTICIPANTS.replace(/:id/gi, params.hash_key), params.data)
+  const { data } = await api.post<void>(URI.LOBBY_CONFIRM_PARTICIPANTS.replace(/:hash_key/gi, params.hash_key), params.data)
   return data
 }
 
 export const participants = async (params: ParticipantParams): Promise<ParticipantsResponse> => {
-  const { data } = await api.get<ParticipantsResponse>(`${URI.LOBBY_PARTICIPANTS.replace(/:id/gi, params.hash_key)}/?page=${params.page}`)
+  const { data } = await api.get<ParticipantsResponse>(
+    `${URI.LOBBY_PARTICIPANTS.replace(/:hash_key/gi, params.hash_key)}/?page=${params.page}`
+  )
   return data
 }
 
@@ -231,7 +233,7 @@ export const createLobby = async (params: LobbyUpsertParams): Promise<CreateLobb
 }
 
 export const updateLobby = async (params: UpdateParams): Promise<UpdateLobbyResponse> => {
-  const { data } = await api.put<UpdateLobbyResponse>(URI.LOBBY_UPDATE.replace(/:id/gi, params.hash_key), params.data)
+  const { data } = await api.put<UpdateLobbyResponse>(URI.LOBBY_UPDATE.replace(/:hash_key/gi, params.hash_key), params.data)
   return data
 }
 
@@ -241,6 +243,6 @@ export const getLobbyCategories = async (): Promise<LobbyCategoriesResponse> => 
 }
 
 export const getLobbyDetail = async (hash_key: string | string[]): Promise<LobbyDetailResponse> => {
-  const { data } = await api.get<LobbyDetailResponse>(URI.LOBBY_DETAIL.replace(/:id/gi, String(hash_key)))
+  const { data } = await api.get<LobbyDetailResponse>(URI.LOBBY_DETAIL.replace(/:hash_key/gi, String(hash_key)))
   return data
 }
