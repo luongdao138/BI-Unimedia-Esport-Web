@@ -29,6 +29,7 @@ const useArenaHelper = (
   isAdminJoined: boolean
   isTeamLeader: boolean
   toDetail: () => void
+  toParticipants: () => void
 } => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -97,6 +98,8 @@ const useArenaHelper = (
     router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, hashKey))
   }
 
+  const toParticipants = () => router.push(makeContextualHref({ modalName: 'participants' }), `${hashKey}/participants`, { shallow: true })
+
   return {
     toGroupChat,
     toMatches,
@@ -119,6 +122,7 @@ const useArenaHelper = (
     isTeamLeader,
     toDetail,
     isEntered,
+    toParticipants,
   }
 }
 
