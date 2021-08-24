@@ -8,20 +8,21 @@ import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-// import { useTranslation } from 'react-i18next'
-// import { Colors } from '@theme/colors'
 
 const TopicDetailContainer: React.FC = () => {
-  // const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { topic_id } = router.query
-  const { getTopicDetail, topic, topicDetailMeta } = useTopicDetail()
+  const { getTopicDetail, topic, topicDetailMeta, deleteTopic } = useTopicDetail()
   const data = topic?.attributes
 
   useEffect(() => {
     if (topic_id) getTopicDetail({ topic_id: String(topic_id) })
   }, [router])
+
+  const handleDeleteTopic = () => {
+    deleteTopic({ topic_id: String(topic_id) })
+  }
 
   const comments = [
     {
@@ -65,6 +66,7 @@ const TopicDetailContainer: React.FC = () => {
       number: 91,
     },
   ]
+
   return (
     <>
       <Box display="flex" flexDirection="column" minHeight="100vh">
@@ -80,6 +82,7 @@ const TopicDetailContainer: React.FC = () => {
                 count={data.like_count}
                 discription={data.content}
                 image={(!!data.attachments && data.attachments[0].assets_url) || ''}
+                handleDelete={handleDeleteTopic}
               />
             </>
           )}

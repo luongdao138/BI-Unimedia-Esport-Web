@@ -176,6 +176,7 @@ export type TopicFollowersParams = {
 export type CommunityDetailResponse = {
   data: CommunityDetail
 }
+
 export type TopicParams = {
   title: string
   content: string
@@ -252,5 +253,10 @@ export const createTopic = async (params: TopicParams): Promise<CreateTopicRespo
 
 export const getTopicDetail = async (params: TopicDetailParams): Promise<TopicDetailResponse> => {
   const { data } = await api.get<TopicDetailResponse>(URI.TOPICS, { params })
+  return data
+}
+
+export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
+  const { data } = await api.delete<void>(URI.TOPICS, { params })
   return data
 }
