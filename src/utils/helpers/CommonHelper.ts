@@ -1,4 +1,4 @@
-import { FORMAT_DATE_TIME_JP } from '@constants/common.constants'
+import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import moment from 'moment'
 
@@ -203,6 +203,11 @@ const formatDateTimeJP = (date: string): string => {
   return dateResult
 }
 
+const formatTimeVideo = (date: string): string => {
+  const dateTime = moment(date).format(FORMAT_SCHEDULE_TIME)
+  return `${dateTime}～配信予定`
+}
+
 export const CommonHelper = {
   validateEmail,
   genRanHex,
@@ -219,4 +224,5 @@ export const CommonHelper = {
   replaceWhiteSpace,
   formatDateTime,
   formatDateTimeJP,
+  formatTimeVideo,
 }

@@ -168,3 +168,4 @@ export enum FOLLOW_STATES {
 }
 
 export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'
+export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日hh時mm分'

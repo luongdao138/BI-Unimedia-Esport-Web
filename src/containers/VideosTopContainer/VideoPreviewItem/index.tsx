@@ -1,31 +1,34 @@
 import React from 'react'
 import { Box, Typography, Theme, makeStyles, CardMedia } from '@material-ui/core'
-import { VideoPreviewProps } from '../VideosList'
+import { TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import { useTranslation } from 'react-i18next'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type VideoPreviewItemProps = {
-  data?: VideoPreviewProps
+  data?: TypeVideo
 }
 const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
   const IMG_PLACEHOLDER = '/images/default_card.png'
   const iconDefault = '/images/avatar.png'
   return (
     <Box className={classes.container} key={data?.id}>
       <Box className={classes.videoContainer}>
-        <CardMedia className={classes.video} image={data?.thumbnailLive ? data.thumbnailLive : IMG_PLACEHOLDER} />
-        {data?.type === 'live' && (
+        <CardMedia className={classes.video} image={data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER} />
+        {data?.type === TYPE_VIDEO_TOP.LIVE && (
           <Box className={classes.tagContainer}>
-            <Typography className={classes.tagStyle}>{'ライブ配信中'}</Typography>
+            <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
           </Box>
         )}
         {/* <Box className={classes.previewUser}> */}
-        <img src={data?.thumbnailStreamer ? data.thumbnailStreamer : IMG_PLACEHOLDER} className={classes.previewUser} />
+        {/* <img src={data?.user_avatar ? data.user_avatar : IMG_PLACEHOLDER} className={classes.previewUser} /> */}
         {/* </Box> */}
         {/* <Box className={classes.previewVideo}></Box> */}
-        <img src={data?.thumbnailVideo ? data.thumbnailVideo : IMG_PLACEHOLDER} className={classes.previewVideo} />
-        {data?.type === 'schedule' && data?.scheduleTime && (
+        {/* <img src={data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER} className={classes.previewVideo} /> */}
+        {data?.type === TYPE_VIDEO_TOP.SCHEDULE && data?.stream_schedule_start_time && (
           <Box className={classes.scheduleContainer}>
-            <Typography className={classes.scheduleTextStyle}>{data?.scheduleTime}</Typography>
+            <Typography className={classes.scheduleTextStyle}>{CommonHelper.formatTimeVideo(data?.stream_schedule_start_time)}</Typography>
           </Box>
         )}
       </Box>
@@ -33,22 +36,24 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
         {data?.title && (
           <Box className={classes.titleItemContainer}>
             <Typography variant="h3" className={classes.label}>
-              {data?.title}
+              {data?.title.length <= 30 ? data?.title : `${data?.title}...`}
             </Typography>
           </Box>
         )}
         <Box className={classes.userItemContainer}>
           <Box className={classes.userStyle}>
             <Box className={classes.iconStyle}>
-              <img src={data?.iconStreamer ? data.iconStreamer : iconDefault} width={36} height={36} className={classes.iconStyle} />
+              <img src={data?.user_avatar ? data.user_avatar : iconDefault} width={36} height={36} className={classes.iconStyle} />
             </Box>
             <Box className={classes.nameContainer}>
-              <Typography className={classes.nameStyle}>{data?.nameStreamer}</Typography>
+              <Typography className={classes.nameStyle}>{data?.user_nickname}</Typography>
             </Box>
           </Box>
           <Box className={classes.watchContainer}>
-            {data?.waitingNumber && <Typography className={classes.nameStyle}>{data?.waitingNumber + '人 視聴中'}</Typography>}
-            {data?.category && <Typography className={classes.valorantStyle}>{data?.category}</Typography>}
+            {data?.type !== TYPE_VIDEO_TOP.ARCHIVE && (
+              <Typography className={classes.nameStyle}>{data?.live_view_count + t('common:videos_top_tab.view_count_text')}</Typography>
+            )}
+            {data?.category_name && <Typography className={classes.valorantStyle}>{data?.category_name}</Typography>}
           </Box>
         </Box>
       </Box>
@@ -153,7 +158,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center',
   },
   label: {
-    textAlign: 'center',
+    textAlign: 'left',
   },
   valorantStyle: {
     textAlign: 'right',
@@ -176,6 +181,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 6,
     paddingLeft: 6,
     color: 'black',
+    fontSize: 12,
   },
   [theme.breakpoints.down(769)]: {
     container: {

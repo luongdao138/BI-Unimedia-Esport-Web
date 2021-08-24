@@ -15,6 +15,7 @@ import game from '@store/game'
 import notification from '@store/notification'
 import socket from '@store/socket'
 import stream from '@store/stream'
+import videoTop from '@store/videoTop'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   chat: chat.reducers,
   socket: socket.reducers,
   liveSetting: stream.reducers,
+  videoTop: videoTop.reducers,
 })
 export default reducer
 

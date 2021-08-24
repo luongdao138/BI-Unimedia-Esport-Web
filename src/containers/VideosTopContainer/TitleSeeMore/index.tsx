@@ -12,11 +12,14 @@ const TitleSeeMore: React.FC<TitleSeeMoreProps> = ({ iconSource, titleText, righ
   return (
     <Box className={classes.container}>
       {iconSource && (
-        <Box className={classes.iconContainer}>
-          <img src={iconSource} width={33} height={44} />
+        <Box className={classes.boxOut}>
+          <Box className={classes.iconContainer} pr={2}>
+            <img src={iconSource} width={33} height={44} />
+          </Box>
+          <ESLabel label={titleText} />
         </Box>
       )}
-      <ESLabel label={titleText} />
+      {!iconSource && <ESLabel label={titleText} />}
       <Box className={classes.viewMoreContainer} onClick={onPress}>
         {rightText && <Typography className={classes.viewMoreStyle}>{rightText}</Typography>}
       </Box>
@@ -48,6 +51,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     viewMoreStyle: {
       display: 'none',
     },
+  },
+  boxOut: {
+    display: 'flex',
+    flexDirection: 'row',
   },
 }))
 export default TitleSeeMore
