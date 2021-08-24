@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
+import { COMMUNITY_ACTION_TYPE } from '../actions/types'
 import {
   CommunityDetail,
   CommunityResponse,
@@ -18,10 +19,10 @@ type StateType = {
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
   create_Topic?: TopicParams
-  topicDetail?: TopicDetail
+  topicDetail: TopicDetail | null
 }
 
-const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_features: [] }
+const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_features: [], topicDetail: null }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
@@ -43,5 +44,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getTopicDetail.fulfilled, (state, action) => {
     state.topicDetail = action.payload.data
+  })
+  builder.addCase(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL, (state) => {
+    state.topicDetail = undefined
   })
 })

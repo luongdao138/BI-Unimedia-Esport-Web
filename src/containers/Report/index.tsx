@@ -139,7 +139,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 
           <Box display="flex" mb={3} flexDirection="column">
             <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
-              {CommonHelper.staticSmartTime(attr.date)}
+              {attr.date}
             </Typography>
             <Typography variant="body1">{attr.description}</Typography>
           </Box>
