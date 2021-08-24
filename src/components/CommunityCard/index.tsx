@@ -18,9 +18,11 @@ type CommunityAttributes = {
     | {
         name: string
         description: string
+        address: string
         cover_image_url: string | null
         hash_key: number | string
         is_official: boolean
+        open_range: boolean
         member_count: number | string
         members_avatar: {
           user_id: string
@@ -46,7 +48,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
       <>
         <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="flex-end" p={1}>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
-            {attr.is_official && (
+            {!!attr.is_official && (
               <Chip
                 className={classes.chipPrimary}
                 size="small"
@@ -113,12 +115,12 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     )
   }
   return (
-    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.id}`)}>
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.hash_key}`)}>
       <Box>
         <ESCardMedia
           cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
           image={cover_image_url}
-          triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.7)' : null}
+          triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.8)' : null}
         >
           {getMediaScreen()}
         </ESCardMedia>

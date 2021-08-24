@@ -33,7 +33,7 @@ const CommunityContainer: React.FC<Props> = ({ userCode }) => {
       {communities && communities.length > 0
         ? communities &&
           communities.map((community, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
+            <Grid key={i} item xs={12} sm={12} md={3} lg={3} xl={3} className={classes.card}>
               <CommunityCard community={community} />
             </Grid>
           ))
@@ -52,9 +52,9 @@ const CommunityContainer: React.FC<Props> = ({ userCode }) => {
         </Grid>
       )}
       {hasNextPage && (
-        <Grid item xs={12} className={classes.loadMore} onClick={loadMore}>
+        <Grid item xs={12} className={classes.loadMoreContainer} onClick={loadMore}>
           <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
-            <Typography className={classes.marginRight}>{t('common:profile.read_more')}</Typography>
+            <Typography className={classes.loadMore}>{t('common:profile.read_more')}</Typography>
             <Icon className={'fa fa-angle-down'} fontSize="small" />
           </Box>
         </Grid>
@@ -79,11 +79,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(3.6),
     paddingLeft: theme.spacing(1),
   },
-  marginRight: {
-    marginRight: 8,
+  loadMoreContainer: {
+    cursor: 'pointer',
   },
   loadMore: {
-    cursor: 'pointer',
+    marginRight: theme.spacing(1),
   },
 }))
 
