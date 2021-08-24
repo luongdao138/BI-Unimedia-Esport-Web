@@ -12,7 +12,7 @@ interface RandomizeDialogProps {
   onAction: () => void
   onClose: () => void
   open: boolean
-  isTeam: boolean
+  isTeam?: boolean
 }
 
 const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, open, isTeam }) => {
