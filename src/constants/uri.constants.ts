@@ -97,6 +97,7 @@ export const URI = {
   PURCHASE_HISTORY: '/v2/purchases/histories',
   PURCHASE_HISTORY_DETAIL: '/v2/purchases/:id/details',
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
+  MESSAGE_LOBBY_ID: '/v2/recruitments',
   PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
   IMAGE_REMOVE: '/v2/profile_images/remove',
   // Lobby

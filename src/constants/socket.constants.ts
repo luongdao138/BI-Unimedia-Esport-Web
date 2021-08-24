@@ -63,3 +63,4 @@ export enum TOURNAMENT_SINGLE_ROLE {
 }
 
 export const TOURNAMENT_ADMIN_ROLES = ['admin', 'co_organizer']
+export const LOBBY_ADMIN_ROLES = ['admin']
