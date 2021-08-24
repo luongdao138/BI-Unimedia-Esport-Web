@@ -10,17 +10,18 @@ import LoginRequired from '@containers/LoginRequired'
 import ESDialog from '@components/Dialog'
 import ParticipantRow from './ParticipantRow'
 import ESFullLoader from '@components/FullScreenLoader'
-import ConfirmDialog from '@components/ConfirmDialog'
+import ConfirmDialog from '@components/Confirm/ConfirmationDialog'
 import _ from 'lodash'
 import { LobbyDetail } from '@services/lobby.service'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLobbyActions from '../hooks/useLobbyActions'
 import ESLoader from '@components/Loader'
-import { LOBBY_STATUS } from '@constants/lobby.constants'
+import { LOBBY_STATUS, LOBBY_DIALOGS } from '@constants/lobby.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import ESStickyFooter from '@components/StickyFooter'
 import BlankLayout from '@layouts/BlankLayout'
+import i18n from '@locales/i18n'
 
 interface CloseRecruitmentModalProps {
   lobby: LobbyDetail
@@ -195,37 +196,39 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
 
       <ConfirmDialog
         open={confirmOpen}
-        title={t('common:confirm_member.confirm_title')}
-        cancelButtonTitle={t('common:confirm_member.confirm_cancel_title')}
-        okButtonTitle={t('common:confirm_member.confirm_ok_title')}
-        warningTitle={t('common:confirm_member.confirm_warning_title')}
-        handleClose={() => {
-          setConfirmOpen(false)
+        options={{
+          title: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.title),
+          description: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.desc),
+          confirmationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.confirmationText),
+          cancellationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.cancellationText),
+          additionalText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.confirm.warningText),
         }}
-        handleSubmit={() => {
+        onConfirm={() => {
           setConfirmOpen(false)
           const _selectedParticipants = _.filter(selectedParticipants, (p) => p.checked).map((a) => a.attributes.user_id)
 
           confirmParticipants(hash_key, _selectedParticipants)
         }}
+        onCancel={() => setConfirmOpen(false)}
+        onClose={() => setConfirmOpen(false)}
       />
-
       <ConfirmDialog
         open={shuffleOpen}
-        title={t('common:confirm_member.shuffle_title')}
-        description={t('common:confirm_member.shuffle_description')}
-        cancelButtonTitle={t('common:confirm_member.shuffle_cancel_title')}
-        okButtonTitle={t('common:confirm_member.shuffle_ok_title')}
-        warningTitle={t('common:confirm_member.shuffle_warning_title')}
-        handleClose={() => {
-          setShuffleOpen(false)
+        options={{
+          title: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.title),
+          description: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.desc),
+          confirmationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.confirmationText),
+          cancellationText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.cancellationText),
+          additionalText: i18n.t(LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle.warningText),
         }}
-        handleSubmit={() => {
+        onConfirm={() => {
           setShuffleOpen(false)
           if (status !== LOBBY_STATUS.RECRUITING) {
             getRecommendedParticipants(hash_key)
           }
         }}
+        onCancel={() => setShuffleOpen(false)}
+        onClose={() => setShuffleOpen(false)}
       />
     </Box>
   )
