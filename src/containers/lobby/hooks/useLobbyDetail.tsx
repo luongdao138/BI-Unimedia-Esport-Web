@@ -32,7 +32,7 @@ const useLobbyDetail = (): {
 
   useEffect(() => {
     if (query.hash_key) {
-      dispatch(actions.getLobbyDetail(String(query.hash_key)))
+      dispatch(actions.getDetailWithClear(String(query.hash_key)))
     }
   }, [query.hash_key, isAuth])
 

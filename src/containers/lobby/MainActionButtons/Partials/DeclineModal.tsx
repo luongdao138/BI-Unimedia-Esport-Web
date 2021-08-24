@@ -18,7 +18,7 @@ interface UnjoinModalProps {
   text: string
 }
 
-const UnjoinModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm, text }) => {
+const DeclineModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm, text }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [open, setOpen] = useState(false)
@@ -56,7 +56,7 @@ const UnjoinModal: React.FC<UnjoinModalProps> = ({ unjoinMeta, onConfirm, text }
               </Box>
               <Box className={classes.actionButton}>
                 <LoginRequired>
-                  <ButtonPrimary round fullWidth onClick={() => onConfirm}>
+                  <ButtonPrimary round fullWidth onClick={() => onConfirm()}>
                     {t('common:tournament.unjoin_dialog.decline')}
                   </ButtonPrimary>
                 </LoginRequired>
@@ -128,4 +128,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default UnjoinModal
+export default DeclineModal

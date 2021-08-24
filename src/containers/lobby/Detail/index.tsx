@@ -20,14 +20,16 @@ import HeaderBar from '@components/LobbyStatusHeader/HeaderBar'
 import { Box, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import Participants from '@containers/Lobby/Participants'
+import ConfirmParticipants from '../ConfirmParticipants'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
   const [openList, setList] = useState<boolean>(false)
+  const [openConfirmList, setConfirmList] = useState<boolean>(false)
   const classes = useStyles()
   const { unjoin, entry, unjoinMeta } = useLobbyActions()
 
-  const { handleBack, lobby, meta } = useLobbyDetail()
+  const { handleBack, lobby } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
 
   const hashKey = _.get(lobby, 'attributes.hash_key', null)
@@ -53,6 +55,7 @@ const LobbyDetailBody: React.FC = () => {
 
   const onMemberConfirm = () => {
     alert('member confirm modal')
+    setConfirmList(true)
   }
 
   const renderBody = () => {
@@ -70,14 +73,15 @@ const LobbyDetailBody: React.FC = () => {
         </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
         <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
+        <ConfirmParticipants open={openConfirmList} lobby={lobby} handleClose={() => setConfirmList(false)} />
       </>
     )
   }
 
   return (
     <div>
-      <ESLoader open={meta.pending} />
-      {lobby && meta.loaded && renderBody()}
+      <ESLoader open={lobby === undefined} />
+      {lobby && renderBody()}
       <ESModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
           <UpsertForm />

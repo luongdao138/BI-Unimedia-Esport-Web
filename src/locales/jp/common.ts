@@ -641,6 +641,7 @@ export default {
     },
     status: {
       entry_closed: '受付終了',
+      entered: 'エントリー中',
       not_entered: '実施中',
       participated: '参加中',
       not_participated: '落選',
@@ -659,7 +660,7 @@ export default {
       temporary: 'Temporary',
       member_list: 'エントリーメンバー',
       member_list_confirmed: '参加メンバー',
-      entry: 'エントリーするボタン',
+      entry: 'エントリーする',
       decline: 'エントリーを辞退する',
       member_confirm: 'メンバー確定',
       description: 'エントリー期間終了時、自動的にエントリーが締め切られます',

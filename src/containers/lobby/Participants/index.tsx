@@ -2,7 +2,6 @@ import { useEffect, useState, createRef } from 'react'
 import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
-// import useParticipants from './useParticipants'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,7 +9,6 @@ import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import { LobbyDetail, ParticipantsItem } from '@services/lobby.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
-
 import LobbyMemberItem from '@containers/Lobby/SubActionButtons/Partials/LobbyMemberItem'
 import useLobbyActions from '../hooks/useLobbyActions'
 import _ from 'lodash'
@@ -84,6 +82,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   }
 
   const goToProfile = (userCode: string) => {
+    handleClose()
     router.push(`${ESRoutes.PROFILE}/${userCode}`)
   }
 
@@ -158,7 +157,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                   unFollow={onUnFollow}
                   unBlock={onUnBlock}
                   goToProfile={goToProfile}
-                  isMe={userProfile.id === _.get(p, 'id', '')}
+                  isMe={Number(userProfile.id) === _.get(p, 'attributes.user_id', '')}
                   data={p}
                   key={i}
                 />
