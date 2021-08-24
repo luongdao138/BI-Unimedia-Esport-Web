@@ -14,6 +14,8 @@ import {
 type StateType = {
   communitiesList?: Array<CommunityResponse>
   communitiesListMeta?: PageMeta
+  communitiesListByUser?: Array<CommunityResponse>
+  communitiesListByUserMeta?: PageMeta
   topicFollowersList: Array<FollowersTopicResponse> | null
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
@@ -22,12 +24,41 @@ type StateType = {
   topicDetail: TopicDetail | null
 }
 
-const initialState: StateType = { communitiesList: [], topicFollowersList: [], community_features: [], topicDetail: null }
+const initialState: StateType = {
+  communitiesList: [],
+  communitiesListByUser: [],
+  topicFollowersList: [],
+  community_features: [],
+  topicDetail: null,
+}
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
-    state.communitiesList = action.payload.data
+    let tmpCommunitiesList = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpCommunitiesList = state.communitiesList.concat(action.payload.data)
+    }
+    state.communitiesList = tmpCommunitiesList
+    state.communitiesListMeta = action.payload.meta
   })
+  builder.addCase(actions.clearCommunityData, (state) => {
+    state.communitiesList = []
+    state.communitiesListMeta = undefined
+  })
+
+  builder.addCase(actions.getCommunityListByUser.fulfilled, (state, action) => {
+    let tmpCommunitiesList = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpCommunitiesList = state.communitiesListByUser.concat(action.payload.data)
+    }
+    state.communitiesListByUser = tmpCommunitiesList
+    state.communitiesListByUserMeta = action.payload.meta
+  })
+  builder.addCase(actions.clearCommunityDataByUser, (state) => {
+    state.communitiesListByUser = []
+    state.communitiesListByUserMeta = undefined
+  })
+
   builder.addCase(actions.getTopicFollowers.fulfilled, (state, action) => {
     let tmpTopicFollowersList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
