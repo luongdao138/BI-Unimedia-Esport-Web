@@ -39,14 +39,16 @@ const LiveStreamContent: React.FC = () => {
               <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10000')}
             </Typography>
             <Typography className={classes.like}>
-              <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10')}{t('common.ten_thousand')}
+              <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10')}
+              {t('common.ten_thousand')}
             </Typography>
             <Typography className={classes.dislike}>
-              <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10')}{t('common.ten_thousand')}
+              <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10')}
+              {t('common.ten_thousand')}
             </Typography>
             <Box className={classes.shareButton}>
               <ButtonBase onClick={() => ''}>
-                <Icon className={`fa fa-share-alt ${classes.icon}`} fontSize="small" /> 
+                <Icon className={`fa fa-share-alt ${classes.icon}`} fontSize="small" />
                 <Box pl={1}>{t('live_stream_screen.share_btn')}</Box>
               </ButtonBase>
             </Box>
@@ -64,22 +66,19 @@ const LiveStreamContent: React.FC = () => {
             src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
           />
           <Box className={classes.streamer_data}>
-            <Box className={classes.streamer_name}>
-              {t('live_stream_screen.streamer_name')}
-            </Box>
+            <Box className={classes.streamer_name}>{t('live_stream_screen.streamer_name')}</Box>
             <Box className={classes.registration}>
-              <Typography className={classes.register_person_label}>
-                {t('live_stream_screen.register_person_label')}
-              </Typography>
+              <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
               <Typography className={classes.register_person_number}>
-                {FormatHelper.currencyFormat('10000')}{t('common.man')}
+                {FormatHelper.currencyFormat('10000')}
+                {t('common.man')}
               </Typography>
             </Box>
           </Box>
         </Box>
         <ButtonBase onClick={() => ''} className={classes.register_channel_btn}>
           <Box>
-            <Icon className={`far fa-heart ${classes.icon}`} fontSize="small" /> 
+            <Icon className={`far fa-heart ${classes.icon}`} fontSize="small" />
           </Box>
           <Box pl={1}>{t('live_stream_screen.channel_register')}</Box>
         </ButtonBase>
@@ -98,7 +97,7 @@ const useStyles = makeStyles(() => ({
   },
   wrap_info: {
     padding: '16px 0 16px 24px',
-    width: "100%"
+    width: '100%',
   },
   wrap_movie_info: {
     display: 'flex',
@@ -125,9 +124,9 @@ const useStyles = makeStyles(() => ({
     color: '#fff',
     alignItems: 'center',
     paddingTop: '16px',
-    justifyContent: "space-between", 
-    width: "100%",
-    paddingRight: "30px"
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingRight: '30px',
   },
   interactive_info: {
     display: 'flex',
@@ -175,47 +174,47 @@ const useStyles = makeStyles(() => ({
   },
   icon: {},
   wrap_streamer_info: {
-    height: "112px", 
-    display: "flex", 
-    borderTop: "1px solid #212121", 
-    width: "100%", 
-    alignItems: "center", 
-    justifyContent: "space-between",
+    height: '112px',
+    display: 'flex',
+    borderTop: '1px solid #212121',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   streamer_info: {
-    display: "flex", 
-    paddingLeft: "24px", 
-    alignItems: "center",
+    display: 'flex',
+    paddingLeft: '24px',
+    alignItems: 'center',
   },
   avatar: {
-    marginRight: "14px", 
-    width: "72px", 
-    height: "72px"
+    marginRight: '14px',
+    width: '72px',
+    height: '72px',
   },
   streamer_data: {
-    color: "#fff"
+    color: '#fff',
   },
   streamer_name: {
-    fontSize: "18px", 
-    fontWeight: "bold"
+    fontSize: '18px',
+    fontWeight: 'bold',
   },
   registration: {
-    display: "flex", 
+    display: 'flex',
   },
   register_person_label: {
-    paddingRight: "34px"
+    paddingRight: '34px',
   },
   register_person_number: {},
   register_channel_btn: {
     background: Colors.primary,
-    padding: "6px 10px", 
-    borderRadius: "5px", 
-    fontSize: "14px", 
-    color: "#fff", 
-    fontWeight: "bold", 
-    marginRight: "16px", 
-    alignItems: "center", 
-    display: "flex"
+    padding: '6px 10px',
+    borderRadius: '5px',
+    fontSize: '14px',
+    color: '#fff',
+    fontWeight: 'bold',
+    marginRight: '16px',
+    alignItems: 'center',
+    display: 'flex',
   },
 }))
 export default LiveStreamContent

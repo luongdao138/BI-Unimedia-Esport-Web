@@ -1018,4 +1018,28 @@ export default {
     video_results: '動画「:key」 の検索結果',
     video_results_all: '動画「:key」 の検索結果',
   },
+  donate_points: {
+    purchase_points: 'ポイント購入',
+    step_one_points: 'ポイント',
+    step_two_purchase: '購入',
+    step_three_complete: '完了',
+    missing_points: '不足ポイント',
+    my_points: '所持ポイント',
+
+    confirm_message_modal: '確認メッセージ',
+    title_send_message: 'ここに送りたいテキストメッセージが入ります。あいうえおあいうえおあいうえお',
+    warning_text: 'この内容でプレミアムチャットを送信して宜しいですか？',
+    cancel_text_btn: 'いいえ',
+    confirm_text_btn: 'はい',
+    title_donate_point: '所持eXeポイント',
+    eXe_point_text: 'eXeポイント',
+
+    purchase_missing_points: '不足分ポイントを購入',
+    purchase_new_points: '新規ポイント購入',
+    purchase_goods: '購入商品',
+
+    title_purchase_point_step_3: '購入ポイント',
+    title_total_point_step_3: '合計ポイント',
+    success_message_purchase: 'ポイント購入が完了しました。' + '\n' + '右上の「x」ボタンをクリックして動画視聴画面にお戻りください。',
+  },
 }

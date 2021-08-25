@@ -6,8 +6,8 @@ export type CardAddParams = {
   card_name: string
   card_number: string
   card_expire_date: string
-  card_cvc?: string,
-  is_saved_card?: boolean,
+  card_cvc?: string
+  is_saved_card?: boolean
 }
 
 export const getSavedCards = async (): Promise<any> => {

@@ -4,6 +4,8 @@ import { TypeVideo } from '@services/videoTop.services'
 import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 type VideoPreviewItemProps = {
   data?: TypeVideo
@@ -14,8 +16,12 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const IMG_PLACEHOLDER = '/images/live_stream/exelab_default_card.png'
   const iconDefault = '/images/avatar.png'
   //status = 0-schedule|1-live|2-archive
+  const router = useRouter()
+  const onNavigateLive = () => {
+    router.push(ESRoutes.VIDEO_LIVE_STREAM)
+  }
   return (
-    <Box className={classes.container} key={data?.id}>
+    <Box className={classes.container} key={data?.id} onClick={onNavigateLive}>
       <Box className={classes.videoContainer}>
         <CardMedia className={classes.video} image={data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER} />
         {data?.status === 1 && (
