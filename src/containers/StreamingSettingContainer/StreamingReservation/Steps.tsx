@@ -507,7 +507,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   onBlur={formik.handleBlur}
                   helperText={
                     (formik?.touched?.stepSettingTwo?.video_publish_end_time && formik?.errors?.stepSettingTwo?.video_publish_end_time) ||
-                    formik?.errors?.stepSettingTwo?.public_time_less_than_start
+                    formik?.errors?.stepSettingTwo?.public_time_less_than_start ||
+                    formik?.errors?.stepSettingTwo?.public_time_more_than_end
                   }
                   error={
                     formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time

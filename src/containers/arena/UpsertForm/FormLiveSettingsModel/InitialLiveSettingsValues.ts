@@ -74,6 +74,7 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     notify_live_end_date: '',
     max_schedule_live_date: '',
     public_time_less_than_start: '',
+    public_time_more_than_end: '',
   },
 })
 

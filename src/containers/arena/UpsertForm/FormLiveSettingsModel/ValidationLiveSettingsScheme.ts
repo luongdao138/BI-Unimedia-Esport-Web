@@ -200,6 +200,12 @@ export const validationScheduleScheme = (): any => {
         },
         then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
       }),
+      public_time_more_than_end: Yup.string().when(['video_publish_end_time', 'stream_schedule_end_time'], {
+        is: (video_publish_end_time, stream_schedule_end_time) => {
+          return Date.parse(video_publish_end_time) < Date.parse(stream_schedule_end_time)
+        },
+        then: Yup.string().required(i18n.t('common:streaming_setting_screen.validation.public_time_less')),
+      }),
     }),
   })
 }
