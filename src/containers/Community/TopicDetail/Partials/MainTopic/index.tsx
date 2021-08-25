@@ -18,7 +18,7 @@ type CommunityHeaderProps = {
   user_avatar?: string
   username: string
   mail: string
-  discription: string
+  description: string
   date?: string
   count?: number
   image?: string | null
@@ -28,7 +28,7 @@ type CommunityHeaderProps = {
 const MainTopic: React.FC<CommunityHeaderProps> = ({
   username,
   mail,
-  discription,
+  description,
   date,
   image,
   count,
@@ -46,7 +46,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
     attributes: {
       username: username,
       mail: mail,
-      description: discription,
+      description: description,
       date: date,
       image: image,
     },
@@ -94,8 +94,8 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             )}
           </Box>
 
-          <Box className={classes.discriptionContainer} mb={2} mt={1}>
-            <Typography className={classes.discription}>{discription}</Typography>
+          <Box className={classes.descriptionContainer} mb={2} mt={1}>
+            <Typography className={classes.description}>{description}</Typography>
           </Box>
           {image && renderClickableImage()}
           {count || count == 0 ? (
@@ -227,10 +227,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 11,
     color: Colors.white_opacity[30],
   },
-  discriptionContainer: {
+  descriptionContainer: {
     display: 'flex',
   },
-  discription: {
+  description: {
     color: Colors.grey[300],
     fontSize: 14,
   },

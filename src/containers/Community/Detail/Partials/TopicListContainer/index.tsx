@@ -41,6 +41,7 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
     <>
       <Box mt={2} />
       {!!topicList &&
+        topicList.length > 0 &&
         chunks(topicList, page).map((d, i) => {
           const attr = d.attributes
           const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date

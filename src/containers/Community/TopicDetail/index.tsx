@@ -80,7 +80,7 @@ const TopicDetailContainer: React.FC = () => {
                 mail={data.owner_email}
                 date={`${CommonHelper.staticSmartTime(data.created_at)}`}
                 count={data.like_count}
-                discription={data.content}
+                description={data.content}
                 image={(!!data.attachments && data.attachments[0].assets_url) || ''}
                 handleDelete={handleDeleteTopic}
               />
