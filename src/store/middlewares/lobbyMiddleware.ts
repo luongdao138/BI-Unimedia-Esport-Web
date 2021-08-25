@@ -10,7 +10,9 @@ const messages = {
   [`${createLobby.fulfilled}`]: i18n.t('common:lobby.toasts.create'),
   [`${updateLobby.fulfilled}`]: i18n.t('common:lobby.toasts.edit'),
   [`${entryLobby.fulfilled}`]: i18n.t('common:lobby.toasts.entry'),
+  [`${entryLobby.rejected}`]: i18n.t('common:lobby.toasts.entry_failed'),
   [`${unjoinLobby.fulfilled}`]: i18n.t('common:lobby.toasts.entry_decline'),
+  [`${unjoinLobby.rejected}`]: i18n.t('common:lobby.toasts.entry_decline_failed'),
   [`${randomizeParticipants.fulfilled}`]: i18n.t('common:lobby.toasts.randomize_participant'),
   [`${confirmParticipants.fulfilled}`]: i18n.t('common:lobby.toasts.confirm_participant'),
 }
