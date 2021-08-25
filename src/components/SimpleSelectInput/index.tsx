@@ -1,4 +1,4 @@
-import { Box, CircularProgress, createStyles, makeStyles, Popper, Typography } from '@material-ui/core'
+import { Box, CircularProgress, createStyles, makeStyles, Popper, Typography, InputBaseProps } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import { useCallback, useRef } from 'react'
 import SelectInputTextField from './SelectInputTextField'
@@ -19,6 +19,8 @@ interface SelectInputProps {
   onItemSelected: (selectedItem: MemberSelection) => void
   onScrollEnd: () => void
   placeholder?: string
+  onFocus?: InputBaseProps['onFocus']
+  onBlur?: InputBaseProps['onBlur']
 }
 
 const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
@@ -31,6 +33,8 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
   onItemSelected,
   onScrollEnd,
   placeholder,
+  onFocus,
+  onBlur,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation()
@@ -107,6 +111,7 @@ const ESSimpleSelectInput: React.FC<SelectInputProps> = ({
                 {...params}
                 inputRef={textRef}
                 placeholder={placeholder}
+                {...{ onFocus, onBlur }}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (

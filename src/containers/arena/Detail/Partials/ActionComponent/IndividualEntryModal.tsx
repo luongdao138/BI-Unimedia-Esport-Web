@@ -18,6 +18,7 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
+import { FocusContext, FocusContextProvider } from '@containers/arena/hooks/input-focus-context'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -77,41 +78,49 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   }
 
   return (
-    <Box>
-      <StickyActionModal
-        open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
-        actionButtonDisabled={!isValid}
-        onReturnClicked={handleClose}
-        onActionButtonClicked={handleSubmit}
-      >
-        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
-        <Box mt={3} />
-        <form onSubmit={handleSubmit}>
-          <BlackBox>
-            <DetailInfo detail={tournament} />
-          </BlackBox>
+    <FocusContextProvider>
+      <FocusContext.Consumer>
+        {({ isFocused, focusEvent }) => (
+          <>
+            <StickyActionModal
+              open={open}
+              returnText={t('common:tournament.join')}
+              actionButtonText={t('common:tournament.join_with_this')}
+              actionButtonDisabled={!isValid}
+              onReturnClicked={handleClose}
+              onActionButtonClicked={handleSubmit}
+              hideFooterOnMobile={isFocused}
+            >
+              {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+              <Box mt={3} />
+              <form onSubmit={handleSubmit}>
+                <BlackBox>
+                  <DetailInfo detail={tournament} />
+                </BlackBox>
 
-          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8}>
-            <Box>
-              <ESInput
-                id="nickname"
-                autoFocus
-                labelPrimary={t('common:tournament.join_nickname')}
-                fullWidth
-                value={values.nickname}
-                onChange={handleChange}
-                helperText={errors.nickname}
-                error={!!errors.nickname}
-              />
-            </Box>
-          </Box>
-        </form>
-      </StickyActionModal>
+                <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8}>
+                  <Box>
+                    <ESInput
+                      id="nickname"
+                      autoFocus
+                      labelPrimary={t('common:tournament.join_nickname')}
+                      fullWidth
+                      value={values.nickname}
+                      onChange={handleChange}
+                      helperText={errors.nickname}
+                      error={!!errors.nickname}
+                      {...focusEvent}
+                    />
+                  </Box>
+                </Box>
+              </form>
+            </StickyActionModal>
 
-      {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
-    </Box>
+            {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
+          </>
+        )}
+      </FocusContext.Consumer>
+    </FocusContextProvider>
   )
 }
 
