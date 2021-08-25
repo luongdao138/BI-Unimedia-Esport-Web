@@ -10,7 +10,7 @@ const useTopicHelper = (
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
-  const hashKey = topic?.hash_key
+  const hashKey = topic?.attributes.hash_key
 
   const toCreate = () => router.push(makeContextualHref({ hash_key: hashKey }), `/community/${hashKey}/topic/create`, { shallow: true })
 

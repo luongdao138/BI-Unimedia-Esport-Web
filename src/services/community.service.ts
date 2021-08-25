@@ -28,8 +28,8 @@ type GameTitleItem = GameTitle['attributes']
 export type CommunityDetail = {
   id: string
   type: string
-  hash_key: string
   attributes: {
+    hash_key: string
     id: number
     name: string
     open_range: number
