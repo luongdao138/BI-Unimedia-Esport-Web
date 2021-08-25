@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import { HardwareResponse } from '@services/common.service'
 import { FormType } from './FormModel/FormType'
 import { EditableTypes } from './useLobbyCreate'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import GameSelectorDialog from './Partials/GameSelectorDialog'
 import CategorySelectorDialog from './Partials/CategorySelectorDialog'
@@ -36,7 +36,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   }, [])
 
   const handleSelectedCategory = useCallback((value) => {
-    formik.setFieldValue('stepOne.category_title_id', value)
+    formik.setFieldValue('stepOne.categories', value)
   }, [])
 
   const { hasUCRReturnHref } = useReturnHref()
@@ -48,10 +48,6 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
     }
   }
 
-  useEffect(() => {
-    if (!formik.values.stepOne.is_organizer_join) formik.setFieldValue('stepOne.is_organizer_join', '')
-  }, [formik.values.stepOne.is_organizer_join])
-
   return (
     <Box pb={9}>
       <Box pb={4}>
@@ -59,7 +55,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           src={formik.values.stepOne.cover_image_url}
           onChange={handleUpload}
           isUploading={isUploading}
-          disabled={!editables.cover_image}
+          disabled={!editables.cover_image_url}
           onOpenStateChange={handleCoverDailogStateChange}
         />
       </Box>
@@ -67,7 +63,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         <ESFastInput
           id="title"
           name="stepOne.title"
-          labelPrimary={i18n.t('common:lobby_create.name')}
+          labelPrimary={i18n.t('common:lobby.create.name')}
           fullWidth
           value={formik.values.stepOne.title}
           onChange={formik.handleChange}
@@ -81,27 +77,27 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
       </Box>
       <Box pb={4}>
         <ESFastInput
-          id="stepOne.overview"
-          name="stepOne.overview"
+          id="stepOne.message"
+          name="stepOne.message"
           multiline
           rows={5}
-          labelPrimary={i18n.t('common:lobby_create.overview')}
-          placeholder={i18n.t('common:lobby_create.overview_placeholder')}
+          labelPrimary={i18n.t('common:lobby.create.overview')}
+          placeholder={i18n.t('common:lobby.create.overview_placeholder')}
           fullWidth
-          value={formik.values.stepOne.overview}
+          value={formik.values.stepOne.message}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
-          error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
+          helperText={formik.touched?.stepOne?.message && formik.errors?.stepOne?.message}
+          error={formik.touched?.stepOne?.message && !!formik.errors?.stepOne?.message}
           size="small"
-          disabled={!editables.overview}
+          disabled={!editables.message}
         />
       </Box>
       <Box pb={3}>
         <CategorySelectorDialog
-          values={formik.values.stepOne.category_title_id}
+          values={formik.values.stepOne.categories}
           onChange={handleSelectedCategory}
-          disabled={!editables.game_title}
+          disabled={!editables.categories}
         />
       </Box>
       <Box pb={3}>
@@ -113,7 +109,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           fullWidth
           value={formik.values.stepOne.game_hardware_id}
           onChange={formik.handleChange}
-          label={i18n.t('common:lobby_create.game_hardware')}
+          label={i18n.t('common:lobby.create.game_hardware')}
           required={false}
           size="small"
           disabled={!editables.game_hardware}
@@ -134,8 +130,8 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           type="tel"
           required={true}
           className={classes.input}
-          labelPrimary={i18n.t('common:lobby_create.max_participants')}
-          placeholder={i18n.t('common:lobby_create.max_participants_placeholder')}
+          labelPrimary={i18n.t('common:lobby.create.max_participants')}
+          placeholder={i18n.t('common:lobby.create.max_participants_placeholder')}
           name="stepOne.max_participants"
           value={formik.values.stepOne.max_participants === 0 ? '' : formik.values.stepOne.max_participants}
           onChange={formik.handleBlur}
@@ -149,12 +145,13 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           nowrapHelperText
         />
       </Box>
-      <Box pb={4} display="flex" justifyContent="space-between">
-        <Typography>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
+      <Box pb={4} display="flex" justifyContent="space-between" alignItems="center">
+        <Typography className={classes.organizerParticipated}>{i18n.t('common:lobby.create.organizer_participated')}</Typography>
         <ESSwitchIOS
-          checked={formik.values.stepOne.is_organizer_join}
+          checked={formik.values.stepOne.organizer_participated}
+          disabled={!editables.organizer_participated}
           handleChange={() => {
-            formik.setFieldValue('stepOne.is_organizer_join', !formik.values.stepOne.is_organizer_join)
+            formik.setFieldValue('stepOne.organizer_participated', !formik.values.stepOne.organizer_participated)
           }}
         />
       </Box>
@@ -162,12 +159,17 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   selectWidth: {
     width: 200,
   },
   input: {
     textAlign: 'right',
+  },
+  [theme.breakpoints.down('sm')]: {
+    organizerParticipated: {
+      fontSize: 12,
+    },
   },
 }))
 

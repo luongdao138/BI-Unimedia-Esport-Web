@@ -4,10 +4,10 @@ import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
-import { TournamentHelper } from '@utils/helpers/TournamentHelper'
+import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
-import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
+import useLobbyHelper from '@containers/Lobby/hooks/useLobbyHelper'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -20,6 +20,7 @@ import Linkify from 'react-linkify'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import _ from 'lodash'
+import { TwitterShareButton } from 'react-share'
 
 interface Props {
   detail: LobbyDetail
@@ -34,9 +35,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
-  const game = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
-  const tag = data.game_title?.data ? data.game_title.data.attributes.display_name : ''
-  const hardware = data.game_hardware?.data ? data.game_hardware.data.attributes.name : ''
+  const game = _.get(data, 'game_title.data.attributes.display_name', '')
+  const hardware = _.get(data, 'game_hardware.data.attributes.name', '')
   const [openReport, setOpenReport] = useState(false)
   const helper = useLobbyHelper(detail)
   const isAuthenticated = useAppSelector(getIsAuthenticated)
@@ -79,23 +79,24 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           )}
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
-          <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
+          <Typography>{`${t('common:lobby.detail.label_id')}${detail.id}`}</Typography>
           {extended && (
             <>
               <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
                 <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
                 <Typography>{t('common:tournament.copy_shared_url')}</Typography>
               </Box>
-              {/* <ButtonBase href="#" target="_blank">
+              <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.title, '')}>
                 <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
-              </ButtonBase> */}
+              </TwitterShareButton>
             </>
           )}
         </Box>
-
-        <Box marginTop={2}>
-          <ESChip className={classes.gameChip} label={game} />
-        </Box>
+        {!_.isEmpty(game) ? (
+          <Box marginTop={2}>
+            <ESChip className={classes.gameChip} label={game} />
+          </Box>
+        ) : null}
 
         <Box marginTop={2}>
           <Linkify
@@ -105,7 +106,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </a>
             )}
           >
-            <Typography className={classes.multiline}>{data.overview}</Typography>
+            <Typography className={classes.multiline}>{data.message}</Typography>
           </Linkify>
         </Box>
 
@@ -116,7 +117,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           </Box>
           <Box className={classes.value}>
             <Typography>
-              {TournamentHelper.formatDate(data.acceptance_start_date)} ~ {TournamentHelper.formatDate(data.acceptance_end_date)}
+              {LobbyHelper.formatDate(data.entry_start_datetime)} ~ {LobbyHelper.formatDate(data.entry_end_datetime)}
             </Typography>
           </Box>
         </Box>
@@ -127,7 +128,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             <Typography>{t('common:recruitment.date_time')}</Typography>
           </Box>
           <Box className={classes.value}>
-            <Typography>{TournamentHelper.formatDate(data.start_date)}</Typography>
+            <Typography>{LobbyHelper.formatDate(data.start_datetime)}</Typography>
           </Box>
         </Box>
         {extended && (
@@ -154,31 +155,31 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* organizer */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.admin_organizer')}</Typography>
+                <Typography>{t('common:lobby.detail.organizer')}</Typography>
               </Box>
               <Box className={classes.value}>
-                {data.owner && (
+                {data.organizer && (
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <LoginRequired>
-                      <ButtonBase onClick={() => toProfile(data.owner.data.attributes.user_code)}>
-                        <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
+                      <ButtonBase onClick={() => toProfile(data.organizer.user_code)}>
+                        <ESAvatar alt={data.organizer.nickname} src={data.organizer_avatar} />
                       </ButtonBase>
                     </LoginRequired>
-                    <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
+                    <Typography className={classes.breakWord}>{data.organizer.nickname}</Typography>
                   </Box>
                 )}
               </Box>
             </Box>
 
             {/* organizer name */}
-            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+            {/* <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
                 <Typography>{t('common:lobby_create.organizer_name')}</Typography>
               </Box>
               <Box className={classes.value}>
                 <Typography>{_.isEmpty(data.organizer_name) ? '-' : data.organizer_name}</Typography>
               </Box>
-            </Box>
+            </Box> */}
 
             {/* game */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
@@ -205,9 +206,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 
         {/* Category tag */}
         <Box marginTop={2}>
-          <ESChip className={classes.tagChip} label={tag} />
-          <ESChip className={classes.tagChip} label={tag} />
-          <ESChip className={classes.tagChip} label={tag} />
+          {(data.categories || []).map((category, key) => (
+            <ESChip className={classes.tagChip} label={category.name} key={key} />
+          ))}
         </Box>
 
         {!extended && (
@@ -216,16 +217,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
             </Box>
             <Box mt={1} mr={1}>
-              <ESChip label={TournamentHelper.participantTypeText(data.participant_type)} />
+              {/* <ESChip label={LobbyHelper.participantTypeText(data.participant_type)} /> */}
             </Box>
             <Box mt={1} mr={1}>
-              <ESChip label={TournamentHelper.ruleText(data.rule)} />
+              {/* <ESChip label={LobbyHelper.ruleText(data.rule)} /> */}
             </Box>
-            {!!data.has_prize && (
+            {/* {!!data.has_prize && (
               <Box mt={1} mr={1}>
                 <ESChip label={t('common:tournament.has_prize_true')} />
               </Box>
-            )}
+            )} */}
             <Box mt={1}>
               <ESChip label={hardware} />
             </Box>

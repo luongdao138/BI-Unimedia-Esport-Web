@@ -13,6 +13,7 @@ export type Props = {
   noSpacing?: boolean
   noBottomSpace?: boolean
   classes?: {
+    root?: string
     nextBtnHolder?: string
   }
 }
@@ -35,7 +36,7 @@ const ESStickyFooter: React.FC<Props> = ({
     <Box className={`${show ? classes.wrapper : classes.wrapper2} ${!noScroll && classes.scroll}`}>
       {children}
       {show && (
-        <Box className={classes.stickyFooter}>
+        <Box className={`${classes.stickyFooter} ${classesOverrides?.root && classesOverrides?.root}`}>
           <Box
             className={`${isNoBottmSpace ? classes.nextBtnHolderNoSpace : classes.nextBtnHolder} ${noSpacing && classes.noSpacing} ${
               classesOverrides?.nextBtnHolder ? classesOverrides?.nextBtnHolder : ''

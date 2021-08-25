@@ -1,46 +1,46 @@
+import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
-import searchStore from '@store/arena'
-import { TournamentResponse, TournamentSearchParams, PageMeta, TournamentFilterOption } from '@services/arena.service'
-import { useEffect, useState } from 'react'
+import searchStore from '@store/lobby'
+import { PageMeta, LobbyFilterOption, LobbySearchParams, LobbyResponse } from '@services/lobby.service'
 import { Meta } from '@store/metadata/actions/types'
 
 const { selectors, actions } = searchStore
-const getTournamentSearchMeta = createMetaSelector(actions.tournamentSearch)
-// TODO api бэлэн болсон үед засна, одоогоор useArenaHome-той яг адилхан байгаа
-const useArenaHome = (): {
-  arenas: TournamentResponse[]
+const getTournamentSearchMeta = createMetaSelector(actions.searchLobby)
+
+const useLobbyHome = (): {
+  lobbies: LobbyResponse[]
   meta: Meta
   page: PageMeta
   loadMore: () => void
-  onFilterChange: (filter: TournamentFilterOption) => void
-  selectedFilter: TournamentFilterOption
-  setSelectedFilter: (filter: TournamentFilterOption) => void
+  onFilterChange: (filter: LobbyFilterOption) => void
+  selectedFilter: LobbyFilterOption
+  setSelectedFilter: (filter: LobbyFilterOption) => void
 } => {
   const dispatch = useAppDispatch()
-  const arenas = useAppSelector(selectors.getSearchTournaments)
-  const page = useAppSelector(selectors.getSearchTournamentsMeta)
+  const lobbies = useAppSelector(selectors.getSearchLobbies)
+  const page = useAppSelector(selectors.getSearchLobbiesMeta)
   const meta = useAppSelector(getTournamentSearchMeta)
-  const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
-  const tournamentSearch = (param: TournamentSearchParams) => dispatch(actions.tournamentSearch(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.tournamentSearch.typePrefix))
+  const [selectedFilter, setSelectedFilter] = useState(LobbyFilterOption.all)
+  const lobbySearch = (param: LobbySearchParams) => dispatch(actions.searchLobby(param))
+  const resetMeta = () => dispatch(clearMetaData(actions.searchLobby.typePrefix))
   const loadMore = () => {
     if (page && page.current_page < page.total_pages) {
-      tournamentSearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter })
+      lobbySearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter })
     }
   }
 
-  const onFilterChange = (filter: TournamentFilterOption) => {
+  const onFilterChange = (filter: LobbyFilterOption) => {
     setSelectedFilter(filter)
-    dispatch(actions.clearTournamentResult())
-    tournamentSearch({ page: 1, keyword: '', filter: filter })
+    dispatch(actions.clearLobbyResult())
+    lobbySearch({ page: 1, keyword: '', filter: filter })
   }
 
   useEffect(() => {
     return () => resetMeta()
   }, [])
-  return { arenas, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter }
+  return { lobbies, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter }
 }
 
-export default useArenaHome
+export default useLobbyHome

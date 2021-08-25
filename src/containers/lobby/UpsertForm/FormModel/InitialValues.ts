@@ -1,26 +1,27 @@
 import { LobbyDetail } from '@services/lobby.service'
+import _ from 'lodash'
 import { FormType } from './FormType'
 
 export const getInitialValues = (data?: LobbyDetail): FormType => ({
   stepOne: {
-    cover_image_url: data ? data.attributes.cover_image : '',
+    cover_image_url: data ? data.attributes.cover_image_url : '',
     title: data ? data.attributes.title : '',
-    overview: data ? data.attributes.overview : '',
-    category_title_id: data ? [data.attributes.game_title.data.attributes] : [],
-    game_title_id: data ? [data.attributes.game_title.data.attributes] : [],
-    game_hardware_id: data ? data.attributes.game_hardware.data.attributes.id : -1,
+    message: data ? data.attributes.message : '',
+    categories: data ? data.attributes.categories : [],
+    game_title_id: _.get(data, 'attributes.game_title.data.attributes', []),
+    game_hardware_id: _.get(data, 'attributes.game_hardware.data.attributes.id', -1),
     max_participants: data ? data.attributes.max_participants : 0,
-    is_organizer_join: data ? data.attributes.is_organizer_join : false,
+    organizer_participated: data ? data.attributes.organizer_participated : false,
   },
   stepTwo: {
-    acceptance_start_date: data ? data.attributes.acceptance_start_date : null,
-    acceptance_end_date: data ? data.attributes.acceptance_end_date : null,
-    start_date: data ? data.attributes.start_date : null,
+    entry_start_datetime: data ? data.attributes.entry_start_datetime : null,
+    entry_end_datetime: data ? data.attributes.entry_end_datetime : null,
+    start_datetime: data ? data.attributes.start_datetime : null,
     area_id: data ? data.attributes.area_id : -1,
     address: data ? data.attributes.address : '',
     recruit_date: '',
     acceptance_dates: '',
     acceptance_end_start_date: '',
-    start_end_date: '',
+    before_entry_end_date: '',
   },
 })

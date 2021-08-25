@@ -1,150 +1,101 @@
-import { ReactNode } from 'react'
+import { useState } from 'react'
 import useLobbyDetail from '../hooks/useLobbyDetail'
-import LobbyDetailHeader from '@components/LobbyDetailHeader'
-import { LobbyDetail, LobbyStatus } from '@services/lobby.service'
-import DetailInfo from '@containers/lobby/Detail/Partials/DetailInfo'
-import RecruitmentClosed from './Partials/RecruitmentClosed'
-import Recruiting from './Partials/Recruiting'
-import Ready from './Partials/Ready'
-import InProgress from './Partials/InProgress'
-import Cancelled from './Partials/Cancelled'
-import Completed from './Partials/Completed'
-// import ESLoader from '@components/FullScreenLoader'
+import LobbyStatusHeader from '@components/LobbyStatusHeader'
+import DetailInfo from '@containers/Lobby/Detail/Partials/DetailInfo'
+import ESLoader from '@components/FullScreenLoader'
 // import BattleRoyaleInfo from './Partials/BattleRoyaleInfo'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import BlankLayout from '@layouts/BlankLayout'
 import ESModal from '@components/Modal'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
+import MainDatePeriod from '../MainDatePeriod'
+import SubStatusInfo from '../SubStatusInfo'
+import SubActionButtons from '@containers/Lobby/SubActionButtons'
+import MainActionButtons from '@containers/Lobby/MainActionButtons'
+import useLobbyActions from '../hooks/useLobbyActions'
+import { ESRoutes } from '@constants/route.constants'
+import _ from 'lodash'
+import HeaderBar from '@components/LobbyStatusHeader/HeaderBar'
+import { Box, makeStyles } from '@material-ui/core'
+import { Colors } from '@theme/colors'
+import Participants from '@containers/Lobby/Participants'
+import ConfirmParticipants from '../ConfirmParticipants'
+import { useConfirm } from '@components/Confirm'
+import { LOBBY_DIALOGS } from '@constants/lobby.constants'
 
 const LobbyDetailBody: React.FC = () => {
   // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
-  const { userProfile, handleBack } = useLobbyDetail()
-  const lobby: LobbyDetail = {
-    id: 'uniqueid123',
-    type: 'tournament_details',
-    attributes: {
-      title: 'testLobby',
-      overview: 'overview',
-      notes: 'note',
-      rule: 'single', //double, battle_royale
-      max_participants: 15,
-      status: 'completed', //'ready' | 'recruiting' | 'recruitment_closed' | 'ready_to_start' | 'in_progress' | 'completed' | 'cancelled' | 'before_recruitment'
-      is_freezed: true,
-      start_date: '2021-08-05 13:00',
-      end_date: '2021-08-06 13:00',
-      chat_room_id: '123',
-      acceptance_start_date: '2021-08-04 13:00',
-      acceptance_end_date: '2021-08-05 12:00',
-      participant_type: 1,
-      is_organizer_join: false,
-      area_id: 1,
-      area_name: 'tokyo',
-      address: 'shinjuku',
-      has_prize: false,
-      prize_amount: '0',
-      terms_of_participation: 'no terms',
-      organizer_name: 'Unimedia',
-      summary: null,
-      background_tpl: 1,
-      has_third_place: false,
-      retain_history: false,
-      t_type: 't_public',
-      owner: {
-        data: {
-          id: 'string',
-          type: 'user_list',
-          attributes: {
-            user_code: 'testdulguun',
-            nickname: 'dulguun',
-            nickname2: '格ゲーマニア',
-            avatar: null,
-            features: null,
-            game_titles: [
-              {
-                id: 1,
-                display_name: 'Apex Legends',
-                short_name: 'Ape',
-                jp_kana_name: 'エーペックスレジェンズ',
-                en_name: 'Apex Legends',
-              },
-              {
-                id: 2,
-                display_name: 'Valorant',
-                short_name: 'VAL',
-                jp_kana_name: 'ヴァロラント',
-                en_name: 'Valorant',
-              },
-            ],
-          },
-        },
-      },
-      game_title: {
-        data: {
-          id: '2',
-          type: 'game_title',
-          attributes: {
-            display_name: 'test game title',
-          },
-        },
-      },
-      game_hardware: {
-        data: {
-          id: 'string',
-          type: 'game_hardware',
-          attributes: {
-            id: 5,
-            name: 'hardware',
-          },
-        },
-      },
-      co_organizers: {
-        data: [],
-      },
-      cover_image: null,
-      summary_image: null,
-      interested_count: 0,
-      participant_count: 2,
-      my_role: 'admin', //admin,participant,interested
-      my_info: null, //[]
-      my_position: null,
-      hash_key: '12345678190',
-      is_entered: true,
-    },
-  }
+  const [openList, setList] = useState<boolean>(false)
+  const [openConfirmList, setConfirmList] = useState<boolean>(false)
+  const classes = useStyles()
+  const { unjoin, entry } = useLobbyActions()
+  const confirm = useConfirm()
+
+  const { handleBack, lobby } = useLobbyDetail()
+  const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
+
+  const hashKey = _.get(lobby, 'attributes.hash_key', null)
+
   const { toEdit } = useLobbyHelper(lobby)
   const router = useRouter()
 
-  const actionComponent: Record<LobbyStatus, ReactNode> = {
-    in_progress: <InProgress lobby={lobby} userProfile={userProfile} />, //headset
-    cancelled: <Cancelled lobby={lobby} userProfile={userProfile} />,
-    completed: <Completed lobby={lobby} userProfile={userProfile} />, //trophy
-    ready: <Ready lobby={lobby} userProfile={userProfile} />,
-    ready_to_start: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
-    recruiting: <Recruiting lobby={lobby} userProfile={userProfile} />,
-    recruitment_closed: <RecruitmentClosed lobby={lobby} userProfile={userProfile} />, //hourglass
+  const openChat = () => {
+    const chatRoomId = _.get(lobby, 'attributes.chatroom_id', null)
+    if (chatRoomId) router.push(ESRoutes.GROUP_CHAT.replace(/:id/gi, chatRoomId))
+  }
+  const openMemberList = () => {
+    setList(true)
+  }
+
+  const onEntry = () => {
+    confirm({ ...LOBBY_DIALOGS.ENTRY_CONFIRMATION })
+      .then(() => {
+        hashKey && entry(hashKey)
+      })
+      .catch(() => {
+        /* ... */
+      })
+  }
+
+  const onDecline = () => {
+    confirm({ ...LOBBY_DIALOGS.DECLINE_ENTRY })
+      .then(() => {
+        hashKey && unjoin(hashKey)
+      })
+      .catch(() => {
+        /* ... */
+      })
+  }
+
+  const onMemberConfirm = () => {
+    setConfirmList(true)
   }
 
   const renderBody = () => {
     return (
       <>
-        <LobbyDetailHeader
-          title={lobby?.attributes?.title}
-          status={lobby?.attributes?.status || 'ready'}
-          cover={lobby?.attributes?.cover_image || '/images/default_card.png'}
-          onHandleBack={handleBack}
-        >
-          {actionComponent[lobby.attributes.status]}
-        </LobbyDetailHeader>
+        <HeaderBar title={title} cover={cover_image_url} onHandleBack={handleBack} />
+        <Box className={classes.root}>
+          <LobbyStatusHeader status={status} />
+          <Box className={classes.statusContainer}>
+            <MainDatePeriod lobby={lobby} />
+            <SubStatusInfo lobby={lobby} />
+            <SubActionButtons lobby={lobby} openChat={openChat} openMemberList={openMemberList} />
+          </Box>
+          <MainActionButtons memberConfirm={onMemberConfirm} lobby={lobby} entry={onEntry} decline={onDecline} />
+        </Box>
         <DetailInfo toEdit={toEdit} detail={lobby} extended />
+        <Participants open={openList} data={lobby} handleClose={() => setList(false)} />
+        <ConfirmParticipants open={openConfirmList} lobby={lobby} handleClose={() => setConfirmList(false)} />
       </>
     )
   }
 
   return (
     <div>
-      {/* <ESLoader open={meta.loading} /> */}
-      {lobby /* && meta.loaded  */ && renderBody()}
+      <ESLoader open={lobby === undefined} />
+      {lobby && renderBody()}
       <ESModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
           <UpsertForm />
@@ -153,5 +104,29 @@ const LobbyDetailBody: React.FC = () => {
     </div>
   )
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    border: `1px solid ${Colors.white_opacity['30']}`,
+    borderRadius: theme.spacing(0.5),
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    backgroundColor: Colors.black,
+  },
+  statusContainer: {
+    backgroundColor: '#FFFFFF0F',
+    borderRadius: 4,
+    padding: 6,
+  },
+  [theme.breakpoints.down('xs')]: {
+    root: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
+  },
+}))
 
 export default LobbyDetailBody
