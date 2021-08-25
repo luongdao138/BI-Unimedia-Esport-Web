@@ -42,7 +42,7 @@ export const URI = {
   COMMUNITY_CREATE: '/v2/communities',
   COMMUNITY_UPDATE: '/v2/communities/:id',
   COMMUNITY_FEATURES: '/v2/communities/features',
-  TOPIC_LIST: '/v2/community/topics',
+  TOPIC_LIST: '/v2/communities/topics',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',

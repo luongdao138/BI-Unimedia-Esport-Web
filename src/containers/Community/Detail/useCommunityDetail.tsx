@@ -15,7 +15,7 @@ const useCommunityDetail = (): {
   handleBack: () => void
   topicList: Array<TopicDetail>
   communityDetail: CommunityDetail
-  getCommunityDetail: (hashkey?: string) => void
+  getCommunityDetail: (hash_key?: string) => void
   getTopicList: (params: TopicListParams) => void
 } => {
   const { back } = useRouter()
@@ -28,7 +28,7 @@ const useCommunityDetail = (): {
   const communityDetail = useAppSelector(selectors.getCommunityDetail)
   const topicList = useAppSelector(selectors.getTopicList)
 
-  const getCommunityDetail = (hashkey: string) => dispatch(actions.getCommunityDetail(hashkey))
+  const getCommunityDetail = (hash_key: string) => dispatch(actions.getCommunityDetail(hash_key))
   const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
 
   return {
