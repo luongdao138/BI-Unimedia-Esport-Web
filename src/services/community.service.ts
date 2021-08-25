@@ -43,7 +43,6 @@ export type CommunityDetail = {
     is_official: number
     game_titles: GameTitleItem[]
     features: CommunityDetailFeature[]
-    my_role: CommunityMemberRoleNumber | null
     admin: {
       id: number
       nickname: string
@@ -116,15 +115,6 @@ export enum CommunityMemberRole {
   requested = 'requested',
   reported = 'reported',
   system = 'system',
-}
-export enum CommunityMemberRoleNumber {
-  system = 0,
-  admin = 1,
-  member = 2,
-  co_organizer = 3,
-  reported = 4,
-  leave = 5,
-  requested = 6,
 }
 
 export type CommunityMembersParams = {

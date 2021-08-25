@@ -74,13 +74,3 @@ export const TOPIC_STATUS = {
   MINE: 'mine',
   NEW: 'new',
 }
-
-export const MEMBER_ROLE = {
-  SYSTEM: 0,
-  ADMIN: 1,
-  MEMBER: 2,
-  CO_ORGANIZER: 3,
-  REPORTED: 4,
-  LEAVE: 5,
-  REQUESTED: 6,
-}
