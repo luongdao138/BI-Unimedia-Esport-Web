@@ -11,7 +11,7 @@ import ESLoader from '@components/Loader'
 import { TypeVideo } from '@services/videoTop.services'
 
 const ArchivedVideos: React.FC = () => {
-  const page = 1
+  const page = 2
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const { loadMore, listArchivedVideo, meta } = useArchivedVideos()

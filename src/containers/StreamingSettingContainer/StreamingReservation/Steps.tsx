@@ -227,6 +227,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         stepSettingTwo.sell_ticket_start_time !== null ? CommonHelper.formatDateTimeJP(stepSettingTwo.sell_ticket_start_time) : null,
       stream_url: stepSettingTwo.stream_url,
       stream_key: stepSettingTwo.stream_key,
+      video_publish_end_time:
+        stepSettingTwo.video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(stepSettingTwo.video_publish_end_time) : null,
     }
     setLiveStreamConfirm(data, () => {
       onNext(step + 1, stepSettingTwo.share_sns_flag, {
@@ -494,26 +496,28 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
               {isFirstStep() ? (
                 <ESInputDatePicker
-                  name="stepSettingTwo.public_time"
+                  name="stepSettingTwo.video_publish_end_time"
                   placeholder={'2021年7月31日 23:59'}
                   fullWidth
-                  value={formik.values.stepSettingTwo.public_time}
+                  value={formik.values.stepSettingTwo.video_publish_end_time}
                   onChange={(date) => {
                     const temp = moment(date).add(5, 's')
-                    formik.setFieldValue('stepSettingTwo.public_time', temp)
+                    formik.setFieldValue('stepSettingTwo.video_publish_end_time', temp)
                   }}
                   onBlur={formik.handleBlur}
                   helperText={
-                    (formik?.touched?.stepSettingTwo?.public_time && formik?.errors?.stepSettingTwo?.public_time) ||
+                    (formik?.touched?.stepSettingTwo?.video_publish_end_time && formik?.errors?.stepSettingTwo?.video_publish_end_time) ||
                     formik?.errors?.stepSettingTwo?.public_time_less_than_start
                   }
-                  error={formik?.touched?.stepSettingTwo?.public_time && !!formik?.errors?.stepSettingTwo?.public_time}
+                  error={
+                    formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time
+                  }
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {formik.values.stepSettingTwo.public_time !== null
-                      ? moment(formik.values.stepSettingTwo.public_time).format(FORMAT_DATE_TIME_JP)
+                    {formik.values.stepSettingTwo.video_publish_end_time !== null
+                      ? moment(formik.values.stepSettingTwo.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
                       : i18n.t('common:streaming_setting_screen.public_time_title')}
                   </Typography>
                 </Box>

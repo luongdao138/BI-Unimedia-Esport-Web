@@ -15,7 +15,7 @@ export const getInitialLiveSettingValues = (data?: LiveStreamSetting): FormLiveT
     use_ticket: data && data.use_ticket ? (data.use_ticket == 1 ? true : false) : false,
     share_sns_flag: data && data.share_sns_flag ? (data.share_sns_flag == 1 ? true : false) : false,
     publish_flag: data && data.share_sns_flag ? (data.publish_flag == 1 ? true : false) : true,
-    public_time: data && data.public_time ? CommonHelper.formatDateTime(data.public_time) : null,
+    video_publish_end_time: data && data.video_publish_end_time ? CommonHelper.formatDateTime(data.video_publish_end_time) : null,
   },
   // stepSettingTwo: {
   //   uuid: data && data.uuid ? data.uuid : '',
@@ -67,7 +67,7 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     stream_url: data && data.stream_url ? data.stream_url : '',
     stream_key: data && data.stream_key ? data.stream_key : '',
     publish_flag: data && data.publish_flag ? (data.publish_flag == 1 ? true : false) : true,
-    public_time: data && data.public_time ? CommonHelper.formatDateTime(data.public_time) : null,
+    video_publish_end_time: data && data.video_publish_end_time ? CommonHelper.formatDateTime(data.video_publish_end_time) : null,
     //cross-fields validations
     schedule_live_date: '',
     notify_live_start_date: '',

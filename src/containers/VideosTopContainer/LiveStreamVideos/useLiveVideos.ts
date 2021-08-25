@@ -24,7 +24,9 @@ const useLiveVideos = (): {
   }
 
   useEffect(() => {
-    getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: 1, limit: LIMIT })
+    if (listLiveVideo.length === 0) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: 1, limit: LIMIT })
+    }
   }, [])
 
   return {

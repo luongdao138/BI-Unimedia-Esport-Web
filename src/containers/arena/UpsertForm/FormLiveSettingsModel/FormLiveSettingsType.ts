@@ -11,7 +11,7 @@ export type FormLiveType = {
     use_ticket: boolean
     share_sns_flag: boolean
     publish_flag: boolean
-    public_time?: string
+    video_publish_end_time?: string
   }
   stepSettingTwo?: {
     uuid: string
@@ -29,7 +29,7 @@ export type FormLiveType = {
     stream_url: string
     stream_key: string
     publish_flag: boolean
-    public_time?: string
+    video_publish_end_time?: string
     //cross-fields validations
     schedule_live_date?: string
     notify_live_start_date?: string

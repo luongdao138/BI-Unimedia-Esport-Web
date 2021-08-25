@@ -24,7 +24,9 @@ const useArchivedVideos = (): {
   }
 
   useEffect(() => {
-    getListVideoTop({ type: TYPE_VIDEO_TOP.ARCHIVE, page: 1, limit: LIMIT })
+    if (listArchivedVideo.length === 0) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.ARCHIVE, page: 1, limit: LIMIT })
+    }
   }, [])
 
   return {
