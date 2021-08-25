@@ -11,6 +11,7 @@ const cancelMetaSelector = createMetaSelector(actions.cancelLobby)
 const unjoinMetaSelector = createMetaSelector(actions.unjoinLobby)
 const participantsMetaSelector = createMetaSelector(actions.getParticipants)
 const recommendedParticipantsMetaSelector = createMetaSelector(actions.randomizeParticipants)
+const confirmParticipantsMetaSelector = createMetaSelector(actions.confirmParticipants)
 
 const useLobbyActions = (): {
   entryMeta: Meta
@@ -32,6 +33,7 @@ const useLobbyActions = (): {
   follow: (userCode: string) => void
   unFollow: (userCode: string) => void
   unBlock: (userCode: string) => void
+  confirmParticipantsMeta: Meta
 } => {
   const dispatch = useAppDispatch()
   const entryMeta = useAppSelector(entryMetaSelector)
@@ -42,6 +44,8 @@ const useLobbyActions = (): {
   const participants = useAppSelector(participantSelector)
   const recommendedParticipants = useAppSelector(recommendedParticipantsSelector)
   const participantsPageMeta = useAppSelector(pageMeta)
+  const confirmParticipantsMeta = useAppSelector(confirmParticipantsMetaSelector)
+
   const entry = (hash_key: string) => {
     dispatch(actions.entryLobby(hash_key))
   }
@@ -98,6 +102,7 @@ const useLobbyActions = (): {
     follow,
     unFollow,
     unBlock,
+    confirmParticipantsMeta,
   }
 }
 

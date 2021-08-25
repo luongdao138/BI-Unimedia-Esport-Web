@@ -1,7 +1,7 @@
 import { StoreType, AppDispatch } from '@store/store'
 import { Middleware, Action } from 'redux'
 import _ from 'lodash'
-import { createLobby, updateLobby, entryLobby, unjoinLobby, confirmParticipants } from '@store/lobby/actions/index'
+import { createLobby, updateLobby, entryLobby, unjoinLobby, confirmParticipants, randomizeParticipants } from '@store/lobby/actions/index'
 import i18n from '@locales/i18n'
 import { addToast } from '@store/common/actions'
 import { getLobbyDetail } from '@store/lobby/actions'
@@ -9,6 +9,10 @@ import { getLobbyDetail } from '@store/lobby/actions'
 const messages = {
   [`${createLobby.fulfilled}`]: i18n.t('common:lobby.toast.create'),
   [`${updateLobby.fulfilled}`]: i18n.t('common:lobby.toast.edit'),
+  [`${entryLobby.fulfilled}`]: i18n.t('common:lobby.toast.entry'),
+  [`${unjoinLobby.fulfilled}`]: i18n.t('common:lobby.toast.entry_decline'),
+  [`${randomizeParticipants.fulfilled}`]: i18n.t('common:lobby.toast.randomize_participant'),
+  [`${confirmParticipants.fulfilled}`]: i18n.t('common:lobby.toast.confirm_participant'),
 }
 
 const fetchDetail = (store: StoreType) => {

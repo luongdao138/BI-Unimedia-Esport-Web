@@ -668,11 +668,6 @@ export default {
       cancellationText: 'キャンセル',
     },
     confirm_member_dialog: {
-      // title: 'ユーザーをランダムに選びますか？',
-      // description: '現在エントリーしているユーザーから参加者をランダムに選ぶことができます。',
-      // additionalText: 'この時点ではまだ参加者は確定しません',
-      // confirmationText: 'ランダムに選ぶ',
-      // cancellationText: 'キャンセル',
       shuffle: {
         title: 'ユーザーをランダムに選びますか？',
         description: '現在エントリーしているユーザーから参加者をランダムに選ぶことができます。',
@@ -731,6 +726,10 @@ export default {
     toasts: {
       edit: '編集を完了しました',
       create: '募集を作成しました',
+      entry: 'エントリー完了しました',
+      entry_decline: 'エントリーを辞退しました',
+      randomize_participant: 'ユーザーをランダムに選びました',
+      confirm_participant: 'エントリーを締め切りました',
     },
     create: {
       submit: '内容を確認する',

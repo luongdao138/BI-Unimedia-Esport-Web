@@ -47,6 +47,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
     recommendedParticipantsMeta,
     getRecommendedParticipants,
     confirmParticipants,
+    confirmParticipantsMeta,
   } = useLobbyActions()
   const { status, max_participants, hash_key } = lobby.attributes
 
@@ -64,6 +65,10 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
       resetMeta()
     }
   }, [open])
+
+  useEffect(() => {
+    if (confirmParticipantsMeta.loaded) handleClose()
+  }, [confirmParticipantsMeta.loaded])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {

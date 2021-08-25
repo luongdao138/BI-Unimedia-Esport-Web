@@ -718,6 +718,10 @@ export default {
     toasts: {
       edit: '編集を完了しました',
       create: '募集を作成しました',
+      entry: 'エントリー完了しました',
+      entry_decline: 'エントリーを辞退しました',
+      randomize_participant: 'ユーザーをランダムに選びました',
+      confirm_participant: 'エントリーを締め切りました',
     },
     create: {
       submit: '内容を確認する',
