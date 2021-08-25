@@ -474,12 +474,16 @@ export default {
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
     dialog: {
-      randomize_title: 'ユーザーをランダムに配置します',
-      randomize_desc: '現在エントリーしているユーザーをトーナメント表の空欄になっている枠へランダムに配置します',
-      randomize_sub1: '※エントリーしているユーザー数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。',
-      randomize_sub2: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+      randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
+      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
+      randomize_sub1:
+        '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
+      randomize_sub2:
+        '※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+      randomize_sub3: '※既に手動で登録されているユーザーはこのランダム配置を行っても移動しません。',
       randomize_warn: 'この時点ではまだエントリー表は確定しません',
-      deploy_button: '確定する',
+      deploy_button: '配置する',
+      confirm_button: '確定する',
       freeze_title: 'トーナメント表を確定する',
       freeze_desc: '現在の対戦表に登録されているユーザーで対戦表を確定させます。よろしいですか？',
       freeze_sub1: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
