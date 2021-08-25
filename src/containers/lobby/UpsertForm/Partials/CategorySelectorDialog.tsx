@@ -4,7 +4,6 @@ import { IconButton } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import ButtonBase from '@material-ui/core/ButtonBase'
-import ButtonPrimary from '@components/ButtonPrimary'
 import BlankLayout from '@layouts/BlankLayout'
 import Icon from '@material-ui/core/Icon'
 import ESModal from '@components/Modal'
@@ -75,7 +74,7 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
         <BlankLayout>
           <Box pt={7.5} pb={9} className={classes.topContainer}>
             <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
+              <IconButton className={classes.iconButtonBg} onClick={() => onSubmit()}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
@@ -104,16 +103,6 @@ const CategorySelectorDialog: React.FC<Props> = ({ values, onChange, disabled })
           </Box>
 
           <Box className={classes.blankSpace} />
-
-          <Box className={classes.stickyFooter}>
-            <Box className={classes.nextBtnHolder}>
-              <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit}>
-                  {t('common:lobby.create.decide')}
-                </ButtonPrimary>
-              </Box>
-            </Box>
-          </Box>
         </BlankLayout>
       </ESModal>
     </>
@@ -142,23 +131,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  stickyFooter: {
-    position: 'fixed',
-    left: 0,
-    bottom: 0,
-    width: '100%',
-    backgroundColor: Colors.black,
-  },
-  nextBtnHolder: {
-    display: 'flex',
-    marginBottom: theme.spacing(11),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    width: '100%',
-    margin: '0 auto',
-  },
   blankSpace: {
     height: 169,
   },
@@ -182,9 +154,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.text[300],
   },
   [theme.breakpoints.down('sm')]: {
-    nextBtnHolder: {
-      marginBottom: theme.spacing(5.2),
-    },
     container: {
       paddingLeft: 0,
       paddingRight: 0,

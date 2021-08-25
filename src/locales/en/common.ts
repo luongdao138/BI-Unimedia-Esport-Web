@@ -735,7 +735,6 @@ export default {
       submit: '内容を確認する',
       category: 'カテゴリ',
       choose_category: 'カテゴリを選ぶ',
-      decide: '決定する',
     },
   },
   lobbySearchFilters: {
