@@ -62,14 +62,13 @@ const useStyles = makeStyles(() => ({
     width: 32,
     height: 32,
     color: Colors.white,
-
+    transition: 'color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     '&:disabled': {
       opacity: 0.38,
       cursor: 'default',
     },
     '&:hover': {
       backgroundColor: 'rgba(255,255,255,0.08)',
-      transition: 'color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
     },
   },
   pageButton: {
