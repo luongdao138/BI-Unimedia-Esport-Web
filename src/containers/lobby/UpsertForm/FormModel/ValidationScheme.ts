@@ -22,7 +22,7 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
       message: Yup.string()
         .nullable()
-        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+        .max(1500, i18n.t('common:common.validation.char_limit', { char_limit: 1500 })),
       categories: Yup.array(),
       game_title_id: Yup.array().nullable(),
       game_hardware_id: Yup.number().nullable().integer(i18n.t('common:common.integer')),
