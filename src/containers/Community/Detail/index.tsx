@@ -13,14 +13,13 @@ import { TOPIC_STATUS, JOIN_CONDITION } from '@constants/community.constants'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
-  const { community_id } = router.query
+  const { hash_key } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
 
   useEffect(() => {
-    if (community_id) {
-      const communityId = String(community_id)
-      getCommunityDetail(communityId)
+    if (hash_key) {
+      getCommunityDetail(String(hash_key))
     }
   }, [router])
 
@@ -28,12 +27,12 @@ const CommunityContainer: React.FC = () => {
     if (
       communityDetail &&
       communityDetail.attributes.join_condition === JOIN_CONDITION.MANUAL &&
-      communityDetail.attributes.member_role === null
+      communityDetail.attributes.my_role === null
     ) {
       setShowTopicListAndSearchTab(false)
-      if (community_id) {
-        const communityId = String(community_id)
-        getTopicList({ community_id: communityId, filter: TOPIC_STATUS.ALL, page: 1 })
+    } else {
+      if (hash_key) {
+        getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
       }
     }
   }, [communityDetail])

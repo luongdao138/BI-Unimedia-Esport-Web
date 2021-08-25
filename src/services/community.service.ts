@@ -49,7 +49,7 @@ export type CommunityDetail = {
       user_code: string
       avatar_image_url: string
     }
-    member_role: number | null
+    my_role: number | null
   }
 }
 
@@ -227,7 +227,7 @@ export type CreateTopicResponse = {
 export type TopicListParams = {
   page: number
   filter: string
-  community_id: string
+  community_hash: string
 }
 
 export type TopicListResponse = {
@@ -291,6 +291,6 @@ export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
 }
 
 export const getTopicList = async (params: TopicListParams): Promise<TopicListResponse> => {
-  const { data } = await api.get<TopicListResponse>(URI.TOPIC_LIST, { params })
+  const { data } = await api.post<TopicListResponse>(URI.TOPIC_LIST, params)
   return data
 }

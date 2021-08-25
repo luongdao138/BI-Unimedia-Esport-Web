@@ -5,6 +5,7 @@ import Pagination from '@material-ui/lab/Pagination'
 import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
 import { TopicDetail } from '@services/community.service'
+import moment from 'moment'
 import PaginationMobile from '../../../Partials/PaginationMobile'
 
 type Props = {
@@ -41,13 +42,15 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
       <Box mt={2} />
       {!!topicList &&
         chunks(topicList, page).map((d, i) => {
+          const attr = d.attributes
+          const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
           return (
             <TopicRowItem
               key={i}
-              title={d.title}
-              last_comment={d.last_comment}
-              latest_date={d.latest_date}
-              comment_count={d.comment_count}
+              title={attr.topic_title}
+              last_comment={attr.last_comment.data}
+              latest_date={latestDate}
+              comment_count={attr.comment_count}
             />
           )
         })}
