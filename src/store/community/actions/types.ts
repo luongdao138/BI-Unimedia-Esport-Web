@@ -9,7 +9,8 @@ export enum COMMUNITY_ACTION_TYPE {
   UPDATE_COMMUNITY = 'community/update',
   GET_COMMUNITY_FEATURES = 'community/features',
   CREATE_TOPIC = 'topic/create',
-  GET_TOPIC_DETAIL = 'community/topic/detail',
+  GET_TOPIC_DETAIL = 'topic/detail',
   DELETE_TOPIC = 'topic/delete',
-  GET_TOPIC_LIST = 'community/topicList',
+  GET_TOPIC_LIST = 'topic/list',
+  CLEAR_TOPIC_DETAIL = 'topic/clearDetail',
 }

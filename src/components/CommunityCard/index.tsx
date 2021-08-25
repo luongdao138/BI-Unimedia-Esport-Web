@@ -18,9 +18,11 @@ type CommunityAttributes = {
     | {
         name: string
         description: string
+        address: string
         cover_image_url: string | null
         hash_key: number | string
         is_official: boolean
+        open_range: boolean
         member_count: number | string
         members_avatar: {
           user_id: string
@@ -46,7 +48,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
       <>
         <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="flex-end" p={1}>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
-            {attr.is_official && (
+            {!!attr.is_official && (
               <Chip
                 className={classes.chipPrimary}
                 size="small"
@@ -67,7 +69,11 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     return (
       <Box color={Colors.white} className={classes.titleContainer} display="flex">
         <Typography className={classes.title}>{attr.name}</Typography>
-        {attr.is_official && <img className={classes.checkIcon} src="/images/check_icon.png" />}
+        {!!attr.is_official && (
+          <span className={classes.officialBadge}>
+            <Icon className="fa fa-check" fontSize="small" />
+          </span>
+        )}
       </Box>
     )
   }
@@ -113,12 +119,12 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     )
   }
   return (
-    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.id}`)}>
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.hash_key}`)}>
       <Box>
         <ESCardMedia
           cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
           image={cover_image_url}
-          triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.7)' : null}
+          triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.8)' : null}
         >
           {getMediaScreen()}
         </ESCardMedia>
@@ -134,6 +140,22 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  officialBadge: {
+    width: 18,
+    height: 18,
+    minWidth: 18,
+    minHeight: 18,
+    backgroundColor: Colors.primary,
+    borderRadius: '50%',
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& .MuiIcon-fontSizeSmall': {
+      fontSize: '0.7rem',
+    },
+  },
+
   cardHover: {
     cursor: 'pointer',
     height: '100%',
@@ -182,10 +204,6 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  checkIcon: {
-    height: 20,
-    marginLeft: theme.spacing(1),
   },
   pAvatar: {
     marginLeft: theme.spacing(-1),

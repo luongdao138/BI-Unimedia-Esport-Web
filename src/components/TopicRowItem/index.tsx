@@ -3,43 +3,36 @@ import { Colors } from '@theme/colors'
 
 export interface TopicRowItemProps {
   title?: string
-  mail?: string
-  description?: string
-  date?: string
-  comment_number?: number
+  last_comment?: string
+  latest_date?: string
+  comment_count?: number
 }
 
-const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, mail, description, date, comment_number }) => {
+const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count }) => {
   const classes = useStyles()
 
   return (
     <>
       <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%">
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
-          <Box display="flex" flexDirection="column" width="85%">
-            <Box display="flex" flexDirection="row" justifyContent="" width="100%">
+          <Box className={classes.container}>
+            <Box display="flex" flexDirection="row" width="100%">
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              <Box width="15%">
-                <Typography className={classes.mail}>{mail}</Typography>
-              </Box>
-              <Box width="5%" />
-              <Box width="80%">
-                <Typography className={classes.description}>{description}</Typography>
-              </Box>
+              <Typography className={classes.last_comment}>{last_comment}</Typography>
             </Box>
           </Box>
 
-          <Box display="flex" flexDirection="column" width="15%" alignItems="flex-end">
+          <Box display="flex" flexDirection="column" width={80} alignItems="flex-end">
             <Box width="100%" justifyContent="flex-end" display="flex">
-              <Typography className={classes.date}>{date}</Typography>
+              <Typography className={classes.latest_date}>{latest_date}</Typography>
             </Box>
 
             <Box display="flex" flexDirection="row" alignItems="center" width="100%" justifyContent="flex-end">
               <Icon className="fas fa-comment-alt" fontSize="small" />
               <Box ml={1}>
-                <Typography className={classes.comment_number}>{comment_number}</Typography>
+                <Typography className={classes.comment_count}>{comment_count}</Typography>
               </Box>
             </Box>
           </Box>
@@ -50,6 +43,11 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, mail, description, d
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: 'calc(100% - 80px)',
+  },
   wrap: {
     width: '100%',
     padding: theme.spacing(2),
@@ -76,21 +74,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   },
-  description: {
+  last_comment: {
     color: Colors.white_opacity[30],
     fontSize: 12,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   },
-  date: {
+  latest_date: {
     color: Colors.white_opacity[30],
     fontSize: 12,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
   },
-  comment_number: {
+  comment_count: {
     color: Colors.white_opacity[70],
     fontSize: 14,
   },

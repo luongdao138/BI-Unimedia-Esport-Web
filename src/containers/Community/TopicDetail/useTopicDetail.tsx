@@ -25,14 +25,15 @@ const useTopicDetail = (): {
   const topic = useAppSelector(selectors.getTopicDetail)
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
-
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
+  const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
 
   const deleteTopic = async (params: TopicDetailParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))
     if (actions.deleteTopic.fulfilled.match(resultAction)) {
-      router.push(`${ESRoutes.COMMUNITY}/${router.query.community_id}`)
       dispatch(commonActions.addToast(t('common:community.topic.create_success')))
+      await router.push(`${ESRoutes.COMMUNITY}/${router.query.community_id}`)
+      resetTopicMeta()
     }
   }
 

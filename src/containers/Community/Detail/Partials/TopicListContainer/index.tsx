@@ -38,15 +38,13 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
       <Box mt={2} />
       {!!topicList &&
         chunks(topicList, page).map((d, i) => {
-          const attr = d.attributes
           return (
             <TopicRowItem
               key={i}
-              title={attr.topic_title}
-              mail={d.mail}
-              description={attr.last_comment.data}
-              date={attr.created_at}
-              comment_number={attr.comment_count}
+              title={d.title}
+              last_comment={d.last_comment}
+              latest_date={d.latest_date}
+              comment_count={d.comment_count}
             />
           )
         })}
