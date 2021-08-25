@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Grid, Box, Icon, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Grid, Box, Icon, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +8,6 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
-// import { FormatHelper } from '@utils/helpers/FormatHelper'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
@@ -19,8 +18,7 @@ import ESButton from '@components/Button'
 import ESReport from '@containers/Report'
 import { REPORT_TYPE } from '@constants/common.constants'
 import SearchContainer from '../SearchContainer'
-import Fab from '@material-ui/core/Fab'
-import AddCommentIcon from '@material-ui/icons/AddComment'
+import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
@@ -51,9 +49,7 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const { isAuthenticated } = useCommunityDetail()
 
   const router = useRouter()
-  const _theme = useTheme()
   const { community_id } = router.query
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -168,23 +164,8 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         {getTabs()}
         {getContent()}
         <Box className={classes.commentIconContainer}>
-          <Box />
           <Box>
-            <Fab
-              variant={isMobile ? 'round' : 'extended'}
-              size="large"
-              color="primary"
-              aria-label="add"
-              className={classes.commentIcon}
-              onClick={() => toCreateTopic()}
-            >
-              <Box className={classes.boxContainer}>
-                <AddCommentIcon className={classes.addCommentIcon} />
-                <Typography className={classes.addCommentText}>
-                  {isMobile ? t('common:community.topic_creation') : t('common:topic_create.title')}
-                </Typography>
-              </Box>
-            </Fab>
+            <TopicCreateButton onClick={toCreateTopic} />
           </Box>
         </Box>
       </Box>
@@ -252,9 +233,11 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   commentIconContainer: {
+    zIndex: 50,
     display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
+    justifyContent: 'flex-end',
+    width: 99,
+    left: 'calc(100% - 99px)',
     position: 'sticky',
     bottom: theme.spacing(4),
   },

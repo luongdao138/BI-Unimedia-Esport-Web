@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -8,6 +8,7 @@ import ESCheckbox from '@components/Checkbox'
 import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
+import PaginationMobile from '../../../Partials/PaginationMobile'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -16,6 +17,8 @@ const InfoContainer: React.FC = () => {
   const [value, setValue] = useState<string>('')
   const classes = useStyles()
   const [showResult, setShowResult] = useState(false)
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -204,15 +207,23 @@ const InfoContainer: React.FC = () => {
               )
             })}
             <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination
-                className={classes.pagination}
-                count={count}
-                page={page}
-                onChange={handleChange}
-                variant="outlined"
-                shape="rounded"
-                color="primary"
-              />
+              {isMobile ? (
+                <PaginationMobile page={page} pageNumber={count} setPage={setPage} count={count} />
+              ) : (
+                <Pagination
+                  className={classes.pagination}
+                  count={count}
+                  page={page}
+                  onChange={handleChange}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  hideNextButton
+                  hidePrevButton
+                  showFirstButton
+                  showLastButton
+                />
+              )}
             </Box>
           </>
         </>
