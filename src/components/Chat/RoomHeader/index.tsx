@@ -125,7 +125,7 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
 
   const renderLobbyDetailItem = () => {
     if (roomInfo.groupType === CHAT_ROOM_TYPE.RECRUITMENT && lobby) {
-      return <ESMenuItem onClick={() => router.push(`/lobby/${tournament.hash_key}`)}>{t('common:chat.see_lobby')}</ESMenuItem>
+      return <ESMenuItem onClick={() => router.push(`/lobby/${lobby.hash_key}`)}>{t('common:chat.see_lobby')}</ESMenuItem>
     }
   }
 
