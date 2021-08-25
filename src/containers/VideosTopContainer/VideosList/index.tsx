@@ -10,19 +10,6 @@ import { useEffect } from 'react'
 import { CategoryPopularData, TypeVideo } from '@services/videoTop.services'
 import ESLoader from '@components/Loader'
 
-export type VideoPreviewProps = {
-  id: number
-  type: string
-  title: string
-  iconStreamer: string
-  thumbnailLive: string
-  thumbnailStreamer: string
-  thumbnailVideo: string
-  nameStreamer: string
-  waitingNumber?: number
-  category: string
-  scheduleTime?: string
-}
 type VideoListProps = {
   setTab: (value: number) => void
 }
@@ -60,7 +47,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
           <TitleSeeMore
             titleText={item.name}
             rightText={i18n.t('common:videos_top_tab.view_more')}
-            iconSource={'/images/big_logo.png'}
+            iconSource={item.image}
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
