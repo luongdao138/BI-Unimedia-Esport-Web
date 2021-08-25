@@ -70,12 +70,12 @@ const VideosTop: React.FC = () => {
     <Box className={classes.root}>
       <Box className={classes.container}>
         <LiveStreamContent></LiveStreamContent>
-        <ChatContainer onPressDonate={showConfirmModal}></ChatContainer>
+        <Grid container direction="row">
+          {getTabs()}
+          {getContent()}
+        </Grid>
       </Box>
-      <Grid container direction="column">
-        {getTabs()}
-        {getContent()}
-      </Grid>
+      <ChatContainer onPressDonate={showConfirmModal}></ChatContainer>
       <DonatePointsConfirmModal
         open={confirmModal}
         handleClose={handleCloseModal}
@@ -92,6 +92,7 @@ export default VideosTop
 const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: '#212121',
+    display: 'flex',
   },
   tabs: {
     overflow: 'hidden',
@@ -110,5 +111,6 @@ const useStyles = makeStyles(() => ({
   },
   container: {
     display: 'flex',
+    flexDirection: 'column',
   },
 }))
