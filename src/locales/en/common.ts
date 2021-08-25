@@ -750,6 +750,8 @@ export default {
       area: '会場',
       area_name_placeholder: `会場情報を入力しましょう。
   とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
+      please_review: 'を見直してください',
+      holding_period: '開催日時',
     },
   },
   lobbySearchFilters: {

@@ -29,6 +29,7 @@ import { getAction } from '@store/common/selectors'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 let activeTabIndex = 0
 
@@ -45,6 +46,8 @@ const LobbyCreate: React.FC = () => {
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
+  const isEnded = [LOBBY_STATUS.CANCELLED, LOBBY_STATUS.ENDED].includes(_.get(lobby, 'attributes.status', LOBBY_STATUS.ENDED))
+  const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -178,7 +181,7 @@ const LobbyCreate: React.FC = () => {
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
           {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
-        <CancelDialog lobby={lobby} hashKey={`${router.query.hash_key}`} />
+        {!isEnded && !isFreezed ? <CancelDialog lobby={lobby} hashKey={`${router.query.hash_key}`} /> : <Box mt={8} />}
       </Box>
     )
   }
@@ -186,6 +189,36 @@ const LobbyCreate: React.FC = () => {
   const handleBack = () => {
     if (isConfirm) setIsConfirm(false)
     else handleReturn()
+  }
+
+  const getFirstError = () => {
+    if (_.isEmpty(formik.errors)) {
+      return null
+    }
+    if (_.isEmpty(formik.touched)) {
+      return null
+    }
+
+    let msg = null as string | null
+    if (!_.isObject(formik.errors)) return null
+    const keys = Object.keys(formik.errors)
+    if (keys[0]) {
+      const fields = _.get(formik, `errors.${keys[0]}`)
+      if (_.isObject(fields)) {
+        const fieldKeys = Object.keys(fields)
+        if (fieldKeys[0]) {
+          const translationName = LobbyHelper.getLabelName(fieldKeys[0])
+          const pleaseReviewMsg = i18n.t('common:lobby.create.please_review')
+          msg = `「${i18n.t(translationName)}」${pleaseReviewMsg}`
+        }
+      }
+    }
+    if (!_.isString(msg)) return null
+    return (
+      <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+        <Typography variant="body2">{msg}</Typography>
+      </Box>
+    )
   }
 
   return (
@@ -204,17 +237,22 @@ const LobbyCreate: React.FC = () => {
                 {i18n.t('common:lobby.create.submit')}
               </ButtonPrimary>
             </Box>
-          ) : isEdit ? (
-            renderEditButton()
           ) : (
-            <ButtonPrimary
-              onClick={handleSetConfirm}
-              round
-              className={`${classes.footerButton} ${classes.confirmButton}`}
-              disabled={hasError}
-            >
-              {i18n.t('common:lobby.create.submit')}
-            </ButtonPrimary>
+            <Box flexDirection="column" display="flex" justifyContent="center">
+              {getFirstError()}
+              {isEdit ? (
+                renderEditButton()
+              ) : (
+                <ButtonPrimary
+                  onClick={handleSetConfirm}
+                  round
+                  className={`${classes.footerButton} ${classes.confirmButton}`}
+                  disabled={hasError}
+                >
+                  {i18n.t('common:lobby.create.submit')}
+                </ButtonPrimary>
+              )}
+            </Box>
           )}
         </>
       }

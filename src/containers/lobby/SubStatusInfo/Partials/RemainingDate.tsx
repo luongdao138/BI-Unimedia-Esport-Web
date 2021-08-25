@@ -63,7 +63,7 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
         <Typography>{t('common:common.hour')}</Typography>
         <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
         <Typography>{t('common:lobby.remaining_date.from_minutes')}</Typography>
-        <Typography>{t('common:lobby.remaining_date.start')}</Typography>
+        <Typography>{status === LOBBY_STATUS.READY ? entry + start : start}</Typography>
       </>
     )
   }
