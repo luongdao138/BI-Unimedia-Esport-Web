@@ -4,7 +4,7 @@ import auth from '@store/auth'
 import community from '@store/community'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
-import { CommunityDetail } from '@services/community.service'
+import { CommunityDetail, TopicDetail, TopicListParams } from '@services/community.service'
 
 const { selectors, actions } = community
 const getCommunityDetailMeta = createMetaSelector(actions.getCommunityDetail)
@@ -13,8 +13,10 @@ const useCommunityDetail = (): {
   isAuthenticated: boolean
   meta: Meta
   handleBack: () => void
+  topicList: Array<TopicDetail>
   communityDetail: CommunityDetail
   getCommunityDetail: (hashkey?: string) => void
+  getTopicList: (params: TopicListParams) => void
 } => {
   const { back } = useRouter()
   const authSelectors = auth.selectors
@@ -24,13 +26,18 @@ const useCommunityDetail = (): {
 
   const meta = useAppSelector(getCommunityDetailMeta)
   const communityDetail = useAppSelector(selectors.getCommunityDetail)
+  const topicList = useAppSelector(selectors.getTopicList)
+
   const getCommunityDetail = (hashkey: string) => dispatch(actions.getCommunityDetail(hashkey))
+  const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
 
   return {
     handleBack,
     isAuthenticated,
     communityDetail,
+    topicList,
     getCommunityDetail,
+    getTopicList,
     meta,
   }
 }

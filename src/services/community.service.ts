@@ -48,6 +48,7 @@ export type CommunityDetail = {
       user_code: string
       avatar_image_url: string
     }
+    member_role: number | null
   }
 }
 
@@ -143,7 +144,7 @@ export type TopicDetail = {
     community_id: number
     created_at: string
     user_id: number
-    attachments?: Array<TopicAttachments>
+    attachments: Array<TopicAttachments> | null
     owner_name: string
     owner_email: string
     owner_profile: string
@@ -188,6 +189,7 @@ export type TopicParams = {
   community_id: number
   attachments?: string
 }
+
 export type CreateTopicResponse = {
   data: {
     id: string
@@ -218,6 +220,17 @@ export type CreateTopicResponse = {
       can_remove: boolean
     }
   }
+}
+
+export type TopicListParams = {
+  page: number
+  filter: string
+  community_id: string
+}
+
+export type TopicListResponse = {
+  data: Array<TopicDetail>
+  meta: PageMeta
 }
 
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
@@ -272,5 +285,10 @@ export const getTopicDetail = async (params: TopicDetailParams): Promise<TopicDe
 
 export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
   const { data } = await api.delete<void>(URI.TOPICS, { params })
+  return data
+}
+
+export const getTopicList = async (params: TopicListParams): Promise<TopicListResponse> => {
+  const { data } = await api.get<TopicListResponse>(URI.TOPIC_LIST, { params })
   return data
 }

@@ -2,6 +2,21 @@ import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/community.service'
 import { COMMUNITY_ACTION_TYPE } from './types'
 
+export const getTopicList = createAsyncThunk<services.TopicListResponse, services.TopicListParams>(
+  COMMUNITY_ACTION_TYPE.GET_TOPIC_LIST,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getTopicList(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const getCommunityList = createAsyncThunk<services.CommunityListResponse, services.CommunitySearchParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_LIST,
   async (param, { rejectWithValue }) => {
@@ -154,6 +169,8 @@ export const getTopicDetail = createAsyncThunk<services.TopicDetailResponse, ser
     }
   }
 )
+
+export const clearTopicDetail = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL)
 
 export const deleteTopic = createAsyncThunk<void, services.TopicDetailParams>(
   COMMUNITY_ACTION_TYPE.DELETE_TOPIC,

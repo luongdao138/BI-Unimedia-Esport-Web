@@ -7,7 +7,7 @@ import { makeStyles, Theme } from '@material-ui/core'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { useRouter } from 'next/router'
-import moment from 'moment'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const TopicDetailContainer: React.FC = () => {
   const classes = useStyles()
@@ -78,10 +78,10 @@ const TopicDetailContainer: React.FC = () => {
                 username={data.owner_name}
                 user_avatar={data.owner_profile}
                 mail={data.owner_email}
-                date={`${moment(data.created_at).format('YYYY年MM月DD日')}`}
+                date={`${CommonHelper.staticSmartTime(data.created_at)}`}
                 count={data.like_count}
                 discription={data.content}
-                image={data.attachments[0].assets_url}
+                image={(!!data.attachments && data.attachments[0].assets_url) || ''}
                 handleDelete={handleDeleteTopic}
               />
             </>
