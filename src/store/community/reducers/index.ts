@@ -12,6 +12,7 @@ import {
 
 type StateType = {
   communitiesList?: Array<CommunityResponse>
+  topicList?: Array<TopicDetail>
   communitiesListMeta?: PageMeta
   communitiesListByUser?: Array<CommunityResponse>
   communitiesListByUserMeta?: PageMeta
@@ -23,9 +24,18 @@ type StateType = {
   topicDetail?: TopicDetail
 }
 
-const initialState: StateType = { communitiesList: [], communitiesListByUser: [], topicFollowersList: [], community_features: [] }
+const initialState: StateType = {
+  communitiesList: [],
+  communitiesListByUser: [],
+  topicFollowersList: [],
+  community_features: [],
+  topicList: [],
+}
 
 export default createReducer(initialState, (builder) => {
+  builder.addCase(actions.getTopicList.fulfilled, (state, action) => {
+    state.topicList = action.payload.data
+  })
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {

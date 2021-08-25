@@ -17,15 +17,23 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
   const valueTrue = true
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
-
   return (
     <>
-      <Box marginTop={2}>
-        {!_.isEmpty(data.game_titles) &&
-          data.game_titles.map((game) => {
-            return <ESChip key={game.id} className={classes.chip} label={game.display_name} />
-          })}
-      </Box>
+      {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
+        <Box marginTop={2}>
+          {!_.isEmpty(data.game_titles) && (
+            <Box mr={1} display="inline">
+              {data.game_titles.map((game) => {
+                return <ESChip key={game.id} className={classes.chip} label={game.display_name} />
+              })}
+            </Box>
+          )}
+          {!_.isEmpty(data.features) &&
+            data.features.map((item) => {
+              return <ESChip key={item.id} className={classes.chip} label={item.feature} />
+            })}
+        </Box>
+      )}
       <Box marginTop={2}>
         <Typography>{data.description}</Typography>
       </Box>

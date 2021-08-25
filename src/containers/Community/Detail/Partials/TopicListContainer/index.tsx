@@ -4,115 +4,22 @@ import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
 import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
+import { TopicDetail } from '@services/community.service'
 
-const InfoContainer: React.FC = () => {
-  const dummy_data = [
-    {
-      title: '自己紹介しよう！ 自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！',
-      mail: '@watanabe @watanabe@watanabe@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 901,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 902,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 903,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 904,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 905,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 906,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 907,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 908,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 909,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 910,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 911,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 912,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 913,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 914,
-    },
-  ]
+type Props = {
+  topicList: TopicDetail[]
+}
 
+const TopicListContainer: React.FC<Props> = ({ topicList }) => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const chunkSize = 10
   const classes = useStyles()
+
   useEffect(() => {
-    setCount(Math.ceil(dummy_data.length / 10))
+    if (topicList) {
+      setCount(Math.ceil(topicList.length / 10))
+    }
   }, [])
 
   const handleChange = (event, value) => {
@@ -129,12 +36,20 @@ const InfoContainer: React.FC = () => {
   return (
     <>
       <Box mt={2} />
-
-      {chunks(dummy_data, page).map((d, i) => {
-        return (
-          <TopicRowItem key={i} title={d.title} mail={d.mail} description={d.description} date={d.date} comment_number={d.comment_number} />
-        )
-      })}
+      {!!topicList &&
+        chunks(topicList, page).map((d, i) => {
+          const attr = d.attributes
+          return (
+            <TopicRowItem
+              key={i}
+              title={attr.topic_title}
+              mail={d.mail}
+              description={attr.last_comment.data}
+              date={attr.created_at}
+              comment_number={attr.comment_count}
+            />
+          )
+        })}
       <Box display="flex" justifyContent="center" mt={4}>
         <Pagination
           className={classes.pagination}
@@ -164,4 +79,4 @@ const useStyles = makeStyles(() => ({
     },
   },
 }))
-export default InfoContainer
+export default TopicListContainer

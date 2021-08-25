@@ -25,11 +25,13 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import ApproveList from '../ApproveList'
-import { CommunityDetail } from '@services/community.service'
+import { CommunityDetail, TopicDetail } from '@services/community.service'
 
 type Props = {
   detail: CommunityDetail
   toEdit?: () => void
+  topicList: TopicDetail[]
+  showTopicListAndSearchTab: boolean
 }
 
 enum TABS {
@@ -38,7 +40,7 @@ enum TABS {
   SEARCH = 2,
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
+const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -138,8 +140,8 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
-          <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />
-          <ESTab label={t('common:community.search')} value={TABS.SEARCH} />
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
         </ESTabs>
       </Grid>
     )
@@ -149,9 +151,9 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
       case TABS.INFO:
         return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
-        return <TopicListContainer />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} />
       case TABS.SEARCH:
-        return <SearchContainer />
+        return showTopicListAndSearchTab && <SearchContainer />
       default:
         break
     }
