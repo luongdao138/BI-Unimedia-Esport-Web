@@ -3,6 +3,7 @@ import { RootState } from '@store/store'
 
 const getRoot = (state: RootState) => state.community
 
+export const getTopicList = createSelector(getRoot, (state) => state.topicList)
 export const getCommunityList = createSelector(getRoot, (state) => state.communitiesList)
 export const getCommunityListMeta = createSelector(getRoot, (state) => state.communitiesListMeta)
 export const getCommunityListByUser = createSelector(getRoot, (state) => state.communitiesListByUser)

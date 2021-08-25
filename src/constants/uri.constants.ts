@@ -43,6 +43,7 @@ export const URI = {
   COMMUNITY_UPDATE: '/v2/communities/:id',
   COMMUNITY_FEATURES: '/v2/communities/features',
   COMMUNITY_MEMBERS: '/v2/communities/:id/members',
+  TOPIC_LIST: '/v2/communities/topics',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
@@ -66,7 +67,7 @@ export const URI = {
   ARENA_SET_PARTICIPANTS: 'v2/tournaments/:id/set_participants',
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic', //TODO skip 2.0
-  TOPICS: '/v2/topics',
+  TOPICS: '/v2/topics/:id',
   TOPIC_CREATE: '/v2/topic/create',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',

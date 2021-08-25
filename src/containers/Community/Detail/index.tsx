@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from 'react'
 import BlankLayout from '@layouts/BlankLayout'
-import React, { useEffect } from 'react'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 import UpsertForm from '../UpsertForm'
 import CommunityDetailHeader from './Partials/CommunityDetailHeader'
@@ -9,15 +9,33 @@ import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
 import { Box } from '@material-ui/core'
+import { TOPIC_STATUS, JOIN_CONDITION } from '@constants/community.constants'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
-  const { community_id } = router.query
-  const { handleBack, communityDetail, getCommunityDetail, meta } = useCommunityDetail()
+  const { hash_key } = router.query
+  const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
+  const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
 
   useEffect(() => {
-    if (community_id) getCommunityDetail(String(community_id))
+    if (hash_key) {
+      getCommunityDetail(String(hash_key))
+    }
   }, [router])
+
+  useEffect(() => {
+    if (
+      communityDetail &&
+      communityDetail.attributes.join_condition === JOIN_CONDITION.MANUAL &&
+      communityDetail.attributes.my_role === null
+    ) {
+      setShowTopicListAndSearchTab(false)
+    } else {
+      if (hash_key) {
+        getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
+      }
+    }
+  }, [communityDetail])
 
   const { toEdit } = useCommunityHelper(communityDetail)
 
@@ -31,7 +49,12 @@ const CommunityContainer: React.FC = () => {
               cover={communityDetail.attributes.cover_image_url}
               onHandleBack={handleBack}
             />
-            <DetailInfo detail={communityDetail} toEdit={toEdit} />
+            <DetailInfo
+              detail={communityDetail}
+              topicList={topicList}
+              toEdit={toEdit}
+              showTopicListAndSearchTab={showTopicListAndSearchTab}
+            />
           </>
         )}
         {meta.pending && (

@@ -15,7 +15,7 @@ const useCommunityHelper = (
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
-  const hash_key = community?.id
+  const hash_key = community?.attributes.hash_key
   const myRole = community?.attributes?.my_role
   const isModerator = myRole == MEMBER_ROLE.ADMIN || myRole == MEMBER_ROLE.CO_ORGANIZER
   const isAutomatic = community?.attributes?.join_condition == JOIN_CONDITION.AUTOMATIC

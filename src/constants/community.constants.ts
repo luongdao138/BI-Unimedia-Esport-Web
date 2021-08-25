@@ -68,3 +68,19 @@ export const COMMUNITY_STATUS = {
   CANCELLED: 'cancelled',
   READY: 'ready',
 }
+
+export const TOPIC_STATUS = {
+  ALL: 'all',
+  MINE: 'mine',
+  NEW: 'new',
+}
+
+export const MEMBER_ROLE = {
+  SYSTEM: 0,
+  ADMIN: 1,
+  MEMBER: 2,
+  CO_ORGANIZER: 3,
+  REPORTED: 4,
+  LEAVE: 5,
+  REQUESTED: 6,
+}
