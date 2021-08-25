@@ -63,7 +63,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         <ESFastInput
           id="title"
           name="stepOne.title"
-          labelPrimary={i18n.t('common:lobby_create.name')}
+          labelPrimary={i18n.t('common:lobby.create.name')}
           fullWidth
           value={formik.values.stepOne.title}
           onChange={formik.handleChange}
@@ -81,8 +81,8 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           name="stepOne.message"
           multiline
           rows={5}
-          labelPrimary={i18n.t('common:lobby_create.overview')}
-          placeholder={i18n.t('common:lobby_create.overview_placeholder')}
+          labelPrimary={i18n.t('common:lobby.create.overview')}
+          placeholder={i18n.t('common:lobby.create.overview_placeholder')}
           fullWidth
           value={formik.values.stepOne.message}
           onChange={formik.handleChange}
@@ -109,7 +109,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           fullWidth
           value={formik.values.stepOne.game_hardware_id}
           onChange={formik.handleChange}
-          label={i18n.t('common:lobby_create.game_hardware')}
+          label={i18n.t('common:lobby.create.game_hardware')}
           required={false}
           size="small"
           disabled={!editables.game_hardware}
@@ -130,8 +130,8 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           type="tel"
           required={true}
           className={classes.input}
-          labelPrimary={i18n.t('common:lobby_create.max_participants')}
-          placeholder={i18n.t('common:lobby_create.max_participants_placeholder')}
+          labelPrimary={i18n.t('common:lobby.create.max_participants')}
+          placeholder={i18n.t('common:lobby.create.max_participants_placeholder')}
           name="stepOne.max_participants"
           value={formik.values.stepOne.max_participants === 0 ? '' : formik.values.stepOne.max_participants}
           onChange={formik.handleBlur}
@@ -146,7 +146,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         />
       </Box>
       <Box pb={4} display="flex" justifyContent="space-between" alignItems="center">
-        <Typography className={classes.organizerParticipated}>{i18n.t('common:lobby_create.organizer_joinable')}</Typography>
+        <Typography className={classes.organizerParticipated}>{i18n.t('common:lobby.create.organizer_participated')}</Typography>
         <ESSwitchIOS
           checked={formik.values.stepOne.organizer_participated}
           handleChange={() => {

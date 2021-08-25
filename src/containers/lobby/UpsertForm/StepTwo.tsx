@@ -21,7 +21,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
   return (
     <Box pb={9}>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{i18n.t('common:lobby_create.entry_period')}</Typography>
+        <Typography>{i18n.t('common:lobby.create.entry_period')}</Typography>
         <Typography component="span" className={classes.required}>
           {i18n.t('common:common.required')}
         </Typography>
@@ -29,7 +29,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={340}>
         <ESInputDatePicker
           name="stepTwo.entry_start_datetime"
-          placeholder={i18n.t('common:lobby_create.start_date')}
+          placeholder={i18n.t('common:lobby.create.start_date')}
           fullWidth
           multiline
           rows={2}
@@ -49,7 +49,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
         </Box>
         <ESInputDatePicker
           name="stepTwo.entry_end_datetime"
-          placeholder={i18n.t('common:lobby_create.end_date')}
+          placeholder={i18n.t('common:lobby.create.end_date')}
           fullWidth
           multiline
           rows={2}
@@ -66,7 +66,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
         />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <Typography>{i18n.t('common:lobby_create.recruitment_start_date')}</Typography>
+        <Typography>{i18n.t('common:lobby.create.recruitment_start_date')}</Typography>
         <Typography component="span" className={classes.required}>
           {i18n.t('common:common.required')}
         </Typography>
@@ -74,7 +74,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
       <Box pb={4} display="flex" flexDirection="row" alignItems="flex-start" maxWidth={158}>
         <ESInputDatePicker
           name="stepTwo.start_datetime"
-          placeholder={i18n.t('common:lobby_create.start_date')}
+          placeholder={i18n.t('common:lobby.create.start_date')}
           fullWidth
           multiline
           rows={2}
@@ -91,7 +91,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           name="stepTwo.area_id"
           value={formik.values.stepTwo.area_id}
           onChange={formik.handleChange}
-          label={i18n.t('common:lobby_create.area')}
+          label={i18n.t('common:lobby.create.area')}
           required={true}
           size="small"
           fullWidth
@@ -113,7 +113,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           rows={5}
           name="stepTwo.address"
           fullWidth
-          placeholder={i18n.t('common:lobby_create.area_name_placeholder')}
+          placeholder={i18n.t('common:lobby.create.area_name_placeholder')}
           value={formik.values.stepTwo.address}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
