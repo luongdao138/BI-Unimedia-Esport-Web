@@ -58,7 +58,9 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
           <Box className={classes.watchContainer}>
             {data?.status !== 2 && (
               <Typography className={classes.nameStyle}>
-                {FormatHelper.currencyFormat(`${data?.live_view_count}`) + t('common:videos_top_tab.view_count_text')}
+                {data?.type !== 'related'
+                  ? FormatHelper.currencyFormat(`${data?.live_view_count}`) + t('common:videos_top_tab.view_count_text')
+                  : '2021/06/22'}
               </Typography>
             )}
             {data?.category_name && <Typography className={classes.valorantStyle}>{data?.category_name}</Typography>}

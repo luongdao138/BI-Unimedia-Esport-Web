@@ -7,6 +7,7 @@ export const TYPE_VIDEO_TOP = {
   LIVE: 'live',
   ARCHIVE: 'archived',
   POPULAR: 'popular',
+  RELATED: 'related',
 }
 export type ListVideoTopParams = {
   type: string
