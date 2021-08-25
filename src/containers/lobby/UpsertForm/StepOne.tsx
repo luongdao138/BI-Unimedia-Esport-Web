@@ -149,6 +149,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
         <Typography className={classes.organizerParticipated}>{i18n.t('common:lobby.create.organizer_participated')}</Typography>
         <ESSwitchIOS
           checked={formik.values.stepOne.organizer_participated}
+          disabled={!editables.organizer_participated}
           handleChange={() => {
             formik.setFieldValue('stepOne.organizer_participated', !formik.values.stepOne.organizer_participated)
           }}

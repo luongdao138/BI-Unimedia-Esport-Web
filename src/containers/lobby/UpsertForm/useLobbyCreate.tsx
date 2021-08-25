@@ -9,6 +9,7 @@ import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 const { actions, selectors } = lobbyStore
 const getTournamentMeta = createMetaSelector(actions.createLobby)
@@ -60,6 +61,8 @@ const useLobbyCreate = (): {
     organizer_participated: true,
     cover_image_url: true,
   })
+  const notEditableStatuses = [LOBBY_STATUS.CANCELLED, LOBBY_STATUS.ENDED, LOBBY_STATUS.DELETED]
+
   const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateLobby.typePrefix))
@@ -93,11 +96,32 @@ const useLobbyCreate = (): {
         return
       }
 
-      // const _status = lobby.attributes.status
+      const _status = lobby.attributes.status
 
       const _editables = { ...editables }
 
       // TODO set editables cases here
+      if (_status === LOBBY_STATUS.RECRUITING) {
+        _editables.entry_start_datetime = false
+      } else if (_status === LOBBY_STATUS.ENTRY_CLOSED) {
+        _editables.entry_start_datetime = false
+        _editables.entry_end_datetime = false
+        _editables.organizer_participated = false
+        _editables.max_participants = false
+      } else if (_status === LOBBY_STATUS.IN_PROGRESS) {
+        _editables.entry_start_datetime = false
+        _editables.entry_end_datetime = false
+        _editables.start_datetime = false
+        _editables.organizer_participated = false
+        _editables.max_participants = false
+      } else if (notEditableStatuses.includes(_status)) {
+        _editables.entry_start_datetime = false
+        _editables.entry_end_datetime = false
+        _editables.start_datetime = false
+        _editables.organizer_participated = false
+        _editables.max_participants = false
+        // _editables = _.mapValues(_editables, () => false)
+      }
 
       setEditables(_editables)
     }
