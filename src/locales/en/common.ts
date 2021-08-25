@@ -633,6 +633,7 @@ export default {
     start_from_minutes: '分から開始',
     group_chat: 'グループチャット',
     temporary: 'Temporary',
+    cancel: '募集を中止する',
     detail: {
       label_id: '募集ID：',
       number_of_entries: 'エントリー数',

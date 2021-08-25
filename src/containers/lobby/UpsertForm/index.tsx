@@ -176,7 +176,7 @@ const LobbyCreate: React.FC = () => {
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
           {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
-        <CancelDialog arena={lobby} hashKey={`${router.query.hash_key}`} />
+        <CancelDialog lobby={lobby} hashKey={`${router.query.hash_key}`} />
       </Box>
     )
   }

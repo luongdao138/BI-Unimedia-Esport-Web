@@ -10,21 +10,21 @@ import { useConfirm } from '@components/Confirm'
 
 interface Props {
   hashKey: string
-  arena: LobbyDetail
+  lobby: LobbyDetail
 }
 
-const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
+const CancelDialog: React.FC<Props> = ({ lobby, hashKey }) => {
   const [isCanceled, setCanceled] = useState(false)
   const { t } = useTranslation(['common'])
-  const { meta, cancelTournament } = useCancelDialog()
+  const { meta, cancelLobby } = useCancelDialog()
   const confirm = useConfirm()
 
   useEffect(() => {
-    if (arena && arena.attributes) {
-      const _status = arena.attributes.status === LOBBY_STATUS.CANCELLED || arena.attributes.status === LOBBY_STATUS.ENDED
+    if (lobby && lobby.attributes) {
+      const _status = lobby.attributes.status === LOBBY_STATUS.CANCELLED || lobby.attributes.status === LOBBY_STATUS.ENDED
       setCanceled(_status)
     }
-  }, [arena])
+  }, [lobby])
 
   return (
     <>
@@ -34,14 +34,14 @@ const CancelDialog: React.FC<Props> = ({ arena, hashKey }) => {
             onClick={() => {
               confirm({ ...LOBBY_DIALOGS.CANCEL_LOBBY })
                 .then(() => {
-                  hashKey && cancelTournament(hashKey)
+                  hashKey && cancelLobby(hashKey)
                 })
                 .catch(() => {
                   /* ... */
                 })
             }}
           >
-            {t('common:tournament_cancel.confirm_cancel_btn')}
+            {t('common:lobby.cancel')}
           </LinkButton>
         )}
       </Box>

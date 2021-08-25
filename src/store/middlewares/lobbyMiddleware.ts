@@ -7,12 +7,12 @@ import { addToast } from '@store/common/actions'
 import { getLobbyDetail } from '@store/lobby/actions'
 
 const messages = {
-  [`${createLobby.fulfilled}`]: i18n.t('common:lobby.toast.create'),
-  [`${updateLobby.fulfilled}`]: i18n.t('common:lobby.toast.edit'),
-  [`${entryLobby.fulfilled}`]: i18n.t('common:lobby.toast.entry'),
-  [`${unjoinLobby.fulfilled}`]: i18n.t('common:lobby.toast.entry_decline'),
-  [`${randomizeParticipants.fulfilled}`]: i18n.t('common:lobby.toast.randomize_participant'),
-  [`${confirmParticipants.fulfilled}`]: i18n.t('common:lobby.toast.confirm_participant'),
+  [`${createLobby.fulfilled}`]: i18n.t('common:lobby.toasts.create'),
+  [`${updateLobby.fulfilled}`]: i18n.t('common:lobby.toasts.edit'),
+  [`${entryLobby.fulfilled}`]: i18n.t('common:lobby.toasts.entry'),
+  [`${unjoinLobby.fulfilled}`]: i18n.t('common:lobby.toasts.entry_decline'),
+  [`${randomizeParticipants.fulfilled}`]: i18n.t('common:lobby.toasts.randomize_participant'),
+  [`${confirmParticipants.fulfilled}`]: i18n.t('common:lobby.toasts.confirm_participant'),
 }
 
 const fetchDetail = (store: StoreType) => {

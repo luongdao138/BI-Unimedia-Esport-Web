@@ -8,8 +8,6 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
 import useLobbyHelper from '../hooks/useLobbyHelper'
-import * as commonActions from '@store/common/actions'
-import { useTranslation } from 'react-i18next'
 import { LobbyUpsertParams } from '@services/lobby.service'
 
 const { actions, selectors } = lobbyStore
@@ -41,7 +39,6 @@ const useLobbyCreate = (): {
   lobby: LobbyDetail
   editables: EditableTypes
 } => {
-  const { t } = useTranslation(['common'])
   const router = useRouter()
   const dispatch = useAppDispatch()
   const meta = useAppSelector(getTournamentMeta)
@@ -71,8 +68,6 @@ const useLobbyCreate = (): {
     if (actions.createLobby.fulfilled.match(resultAction)) {
       resetMeta()
       router.push(`${ESRoutes.LOBBY}/${resultAction.payload.hash_key}`)
-
-      dispatch(commonActions.addToast(t('common:arena.create_success')))
     }
   }
   const update = async (params: UpdateParams) => {
@@ -81,7 +76,6 @@ const useLobbyCreate = (): {
       resetUpdateMeta()
       router.push(`${ESRoutes.LOBBY}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getLobbyDetail(String(resultAction.meta.arg.hash_key)))
-      dispatch(commonActions.addToast(t('common:arena.update_success')))
     }
   }
 
