@@ -187,7 +187,7 @@ export type TopicParams = {
   title: string
   content: string
   topic_type: string
-  community_hash: number
+  community_hash: string
   attachments?: string
 }
 export type CreateTopicResponse = {
@@ -268,11 +268,11 @@ export const createTopic = async (params: TopicParams): Promise<CreateTopicRespo
 }
 
 export const getTopicDetail = async (params: TopicDetailParams): Promise<TopicDetailResponse> => {
-  const { data } = await api.get<TopicDetailResponse>(URI.TOPICS, { params })
+  const { data } = await api.get<TopicDetailResponse>(URI.TOPICS.replace(/:id/gi, params.hash_key))
   return data
 }
 
 export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
-  const { data } = await api.delete<void>(URI.TOPICS, { params })
+  const { data } = await api.delete<void>(URI.TOPICS.replace(/:id/gi, params.hash_key))
   return data
 }
