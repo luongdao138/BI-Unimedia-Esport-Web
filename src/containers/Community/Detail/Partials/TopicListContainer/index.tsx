@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
@@ -6,6 +6,7 @@ import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
 import { TopicDetail } from '@services/community.service'
 import moment from 'moment'
+import PaginationMobile from '../../../Partials/PaginationMobile'
 
 type Props = {
   topicList: TopicDetail[]
@@ -16,6 +17,8 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
   const [count, setCount] = useState(1)
   const chunkSize = 10
   const classes = useStyles()
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
 
   useEffect(() => {
     if (topicList) {
@@ -52,15 +55,23 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
           )
         })}
       <Box display="flex" justifyContent="center" mt={4}>
-        <Pagination
-          className={classes.pagination}
-          count={count}
-          page={page}
-          onChange={handleChange}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
+        {isMobile ? (
+          <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
+        ) : (
+          <Pagination
+            className={classes.pagination}
+            count={count}
+            page={page}
+            onChange={handleChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            hideNextButton
+            hidePrevButton
+            showFirstButton
+            showLastButton
+          />
+        )}
       </Box>
     </>
   )
@@ -70,6 +81,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     '& .MuiPaginationItem-root': {
       color: Colors.white,
+      borderRadius: 4,
     },
     '& .MuiPaginationItem-outlined': {
       borderColor: Colors.primary,
@@ -77,6 +89,14 @@ const useStyles = makeStyles(() => ({
     '& .Mui-selected': {
       backgroundColor: Colors.primary,
       color: Colors.white,
+    },
+    '& .MuiPaginationItem-ellipsis': {
+      height: 32,
+      border: '1px solid',
+      borderColor: Colors.primary,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   },
 }))

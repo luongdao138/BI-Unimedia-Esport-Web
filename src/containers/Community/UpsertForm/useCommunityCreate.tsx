@@ -62,7 +62,7 @@ const useCommunityCreate = (): {
     const resultAction = await dispatch(actions.createCommunity(params))
     if (actions.createCommunity.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(`${ESRoutes.COMMUNITY}/${resultAction.payload.id}`)
+      router.push(`${ESRoutes.COMMUNITY}/${resultAction.payload.hash_key}`)
       dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
     }
   }
