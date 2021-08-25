@@ -6,7 +6,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
 
 interface ModalProps {
-  selectedPoint: number
+  selectedPoint: any
   open: boolean
   handleClose: () => void
 }

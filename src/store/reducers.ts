@@ -16,6 +16,7 @@ import notification from '@store/notification'
 import socket from '@store/socket'
 import stream from '@store/stream'
 import videoTop from '@store/videoTop'
+import purchasePoint from '@store/purchasePoint'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -35,6 +36,7 @@ const reducer = combineReducers({
   socket: socket.reducers,
   liveSetting: stream.reducers,
   videoTop: videoTop.reducers,
+  purchasePoint: purchasePoint.reducers,
 })
 export default reducer
 
