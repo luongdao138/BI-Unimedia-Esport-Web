@@ -1,4 +1,4 @@
-import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE, CHAT_PAGING_ACTION_TYPE } from '@constants/socket.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
@@ -32,7 +32,24 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
   const message = JSON.parse(event.data)
 
   if (message && message.action) {
-    if (message.action === CHAT_ACTION_TYPE.REFRESH_MEMBERS) {
+    if (message.action === CHAT_ACTION_TYPE.GET_ALL_ROOMS) {
+      if (message.nextPagingInfo) {
+        //list has next paging
+        store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.STORE_LIST, data: message })
+        socket.send(
+          JSON.stringify({
+            action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
+            roomId: message.nextPagingInfo,
+          })
+        )
+      } else if (!message.nextPagingInfo && message.ended) {
+        // paging has ended
+        store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.PAGING_ENDED, data: message })
+      } else {
+        // regular case no paging
+        store.dispatch({ type: message.action, data: message })
+      }
+    } else if (message.action === CHAT_ACTION_TYPE.REFRESH_MEMBERS) {
       const userId = store.getState().auth.user?.id
       if (!userId) return
       socket.send(

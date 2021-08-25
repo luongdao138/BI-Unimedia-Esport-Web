@@ -1,5 +1,5 @@
 import { State } from '../actions/types'
-import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX, CHAT_PAGING_ACTION_TYPE } from '@constants/socket.constants'
 import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
@@ -11,6 +11,7 @@ const initialState: State = {
   activeRoom: null,
   socketReady: false,
   actionPending: false,
+  tempList: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -26,6 +27,7 @@ let roomListDeleted: ChatDataType[] | undefined
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
     case CHAT_ACTION_TYPE.GET_ALL_ROOMS:
+      //clear tempMessage
       return {
         ...state,
         roomList: ChatHelper.roomUpdateWithUnseen(action.data.content, state.activeRoom),
@@ -154,6 +156,18 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         messages: deleted,
         roomList: roomListDeleted,
+      }
+    //room list paginating
+    case CHAT_PAGING_ACTION_TYPE.STORE_LIST:
+      // unique merge store messages
+      return {
+        ...state,
+      }
+
+    case CHAT_PAGING_ACTION_TYPE.PAGING_ENDED:
+      // store last item to temp message end save too roomList
+      return {
+        ...state,
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {

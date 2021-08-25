@@ -12,4 +12,5 @@ export interface State {
   newRoomId?: string
   selectedRoomInfo?: ChatDataType
   error?: string
+  tempList?: ChatDataType[]
 }
