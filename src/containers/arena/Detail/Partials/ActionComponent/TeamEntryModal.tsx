@@ -26,6 +26,7 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
+import { FocusContext, FocusContextProvider } from '@containers/arena/hooks/input-focus-context'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -209,67 +210,71 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     teamMemberHook.setSelectedMember(selection)
   }
 
-  const teamForm = () => {
-    const { values, handleChange, errors } = formik
-    return (
-      <Box mt={4}>
-        <BlackBox>
-          <DetailInfo detail={tournament} />
-        </BlackBox>
-
-        <Box className={classes.formContainer}>
-          <ESLabel label={t('common:icon')} />
-          <Box m={1} />
-          <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
-
-          <Box mt={4} />
-          <ESInput
-            id="team_name"
-            autoFocus
-            labelPrimary={t('common:team_name')}
-            fullWidth
-            required
-            value={values.team_name}
-            onChange={handleChange}
-            helperText={errors.team_name}
-          />
-
-          <Box mt={4} />
-          <ESLabel label={t('common:tournament.entry_members')} required />
-
-          <TeamEntryMemberList
-            tournament={tournament}
-            userProfile={userProfile}
-            formik={formik}
-            setSelectedMember={setSelectedMember}
-            removeSelectedMember={teamMemberHook.removeSelectedMember}
-            getSelectedMember={teamMemberHook.getSelectedMember}
-            selectedMembers={teamMemberHook.selectedMembers}
-            isEdit={isEdit === true}
-          />
-        </Box>
-      </Box>
-    )
-  }
-
+  const { values, handleChange, errors } = formik
   return (
-    <>
-      <StickyActionModal
-        open={open}
-        returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
-        actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
-        actionButtonDisabled={!formik.isValid || !isMembersComplete()}
-        onReturnClicked={handleReturn}
-        onActionButtonClicked={handleActionButton}
-      >
-        <Box mt={2} />
-        {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
-        {!!updateTeamMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
-        <form onSubmit={handleActionButton}>{teamForm()}</form>
-      </StickyActionModal>
+    <FocusContextProvider>
+      <FocusContext.Consumer>
+        {({ isFocused, focusEvent }) => (
+          <>
+            <StickyActionModal
+              open={open}
+              returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
+              actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
+              actionButtonDisabled={!formik.isValid || !isMembersComplete()}
+              onReturnClicked={handleReturn}
+              onActionButtonClicked={handleActionButton}
+              hideFooterOnMobile={isFocused}
+            >
+              <Box mt={2} />
+              {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+              {!!updateTeamMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
+              <form onSubmit={handleActionButton}>
+                <Box mt={4}>
+                  <BlackBox>
+                    <DetailInfo detail={tournament} />
+                  </BlackBox>
 
-      {isPending && <ESLoader open={isPending} />}
-    </>
+                  <Box className={classes.formContainer}>
+                    <ESLabel label={t('common:icon')} />
+                    <Box m={1} />
+                    <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
+
+                    <Box mt={4} />
+                    <ESInput
+                      id="team_name"
+                      autoFocus
+                      labelPrimary={t('common:team_name')}
+                      fullWidth
+                      required
+                      value={values.team_name}
+                      onChange={handleChange}
+                      helperText={errors.team_name}
+                      {...focusEvent}
+                    />
+
+                    <Box mt={4} />
+                    <ESLabel label={t('common:tournament.entry_members')} required />
+
+                    <TeamEntryMemberList
+                      tournament={tournament}
+                      userProfile={userProfile}
+                      formik={formik}
+                      setSelectedMember={setSelectedMember}
+                      removeSelectedMember={teamMemberHook.removeSelectedMember}
+                      getSelectedMember={teamMemberHook.getSelectedMember}
+                      selectedMembers={teamMemberHook.selectedMembers}
+                      isEdit={isEdit === true}
+                    />
+                  </Box>
+                </Box>
+              </form>
+            </StickyActionModal>
+
+            {isPending && <ESLoader open={isPending} />}
+          </>
+        )}
+      </FocusContext.Consumer>
+    </FocusContextProvider>
   )
 }
 
