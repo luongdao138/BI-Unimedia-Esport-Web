@@ -4,13 +4,11 @@ import ESAvatar from '@components/Avatar'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
+import { CommunityMember, CommunityMemberRole } from '@services/community.service'
 
 type UserSelectBoxListProps = {
-  username: string
-  nickname: string
-  avatar?: string
+  member: CommunityMember
   isAutomatic?: boolean
-  value?: any
   setValue?: (e: any) => void
 }
 
@@ -21,38 +19,45 @@ const APPLYING_OPTIONS = [
 ]
 
 const PARTICIPATING_OPTIONS = [
-  { label: '一般ユーザー', value: 'user' },
-  { label: '共同管理者', value: 'co_organizer' },
-  { label: 'キックする', value: 'kick' },
+  { label: '一般ユーザー', value: CommunityMemberRole.member },
+  { label: '共同管理者', value: CommunityMemberRole.co_organizer },
+  { label: 'キックする', value: CommunityMemberRole.leave },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, nickname, avatar, isAutomatic, value, setValue }) => {
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomatic /* , setValue */ }) => {
   const classes = useStyles()
+  const data = member.attributes
 
-  const handleSelectOption = (e: any) => {
-    setValue(e.target.value)
+  const handleSelectOption = () => {
+    // setValue(e.target.value)
   }
 
   return (
     <>
       <Box className={classes.container} mb={3}>
         <Box className={classes.userContainer}>
-          <ESAvatar className={classes.avatar} alt={username} src={avatar !== '' ? avatar : username ? '' : '/images/avatar.png'} />
+          <ESAvatar
+            className={classes.avatar}
+            alt={data.nickname}
+            src={data.profile !== '' ? data.profile : data.nickname ? '' : '/images/avatar.png'}
+          />
           <Box className={classes.userInfoBox} ml={1}>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.username}>{username}</Typography>
+              <Typography className={classes.username}>{data.nickname}</Typography>
             </Box>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.mail}>{nickname}</Typography>
+              <Typography className={classes.mail}>{data.user_code}</Typography>
             </Box>
           </Box>
         </Box>
 
         <Box className={classes.selectBoxContainer}>
-          <ESSelect className={classes.selectWidth} size="small" value={value} onChange={handleSelectOption}>
-            <option disabled value={-1}>
-              {isAutomatic ? i18n.t('common:community.applying') : i18n.t('common:community.general_user')}
-            </option>
+          <ESSelect className={classes.selectWidth} size="small" value={data.member_role || -1} onChange={handleSelectOption}>
+            {isAutomatic && (
+              <option disabled value={-1}>
+                {i18n.t('common:community.applying')}
+              </option>
+            )}
             {(isAutomatic ? APPLYING_OPTIONS : PARTICIPATING_OPTIONS).map((o, index) => (
               <option key={index} value={o.value}>
                 {o.label}

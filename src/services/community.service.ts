@@ -42,7 +42,7 @@ export type CommunityDetail = {
     is_official: number
     game_titles: GameTitleItem[]
     features: CommunityDetailFeature[]
-    member_role: CommunityMemberRoleNumber | null
+    my_role: CommunityMemberRoleNumber | null
     admin: {
       id: number
       nickname: string
@@ -106,13 +106,14 @@ export type PageMeta = {
 }
 
 export enum CommunityMemberRole {
-  system = 'system',
+  all = 'all',
   admin = 'admin',
   member = 'member',
-  co_organizer = 'co_organizer',
-  reported = 'reported',
+  co_organizer = 'moderator',
   leave = 'leave',
   requested = 'requested',
+  reported = 'reported',
+  system = 'system',
 }
 export enum CommunityMemberRoleNumber {
   system = 0,
@@ -125,7 +126,7 @@ export enum CommunityMemberRoleNumber {
 }
 
 export type CommunityMembersParams = {
-  community_id: number
+  hash_key: string
   role: CommunityMemberRole
 }
 
@@ -309,7 +310,7 @@ export const getCommunityFeatures = async (): Promise<CommunityFeaturesResponse>
 }
 
 export const getCommunityMembers = async (params: CommunityMembersParams): Promise<CommunityMembersResponse> => {
-  const { data } = await api.get<CommunityMembersResponse>(URI.COMMUNITY_MEMBERS, { params })
+  const { data } = await api.get<CommunityMembersResponse>(URI.COMMUNITY_MEMBERS.replace(/:id/gi, params.hash_key), { params })
   return data
 }
 

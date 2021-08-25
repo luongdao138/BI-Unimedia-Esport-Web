@@ -12,9 +12,12 @@ import ESStickyFooter from '@components/StickyFooter'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
-import { CommunityDetail, CommunityMember } from '@services/community.service'
+import { CommunityDetail, CommunityMember, CommunityMemberRole } from '@services/community.service'
 import UserSelectBoxList from '../../../Partials/UserSelectBoxList'
 import useFollowList from './useFollowList'
+import _ from 'lodash'
+import { useRouter } from 'next/router'
+import ESLoader from '@components/Loader'
 
 type Props = {
   community: CommunityDetail
@@ -23,10 +26,12 @@ type Props = {
 const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [members, setMembers] = useState<Array<CommunityMember>>([])
   const { isModerator, isAutomatic } = useCommunityHelper(community)
-  const { /* getMembers, */ membersList, resetMembers } = useFollowList()
+  const { getMembers, membersList, resetMembers, membersMeta } = useFollowList()
+  const [applyingValues, setApplyingValues] = useState<Array<CommunityMember>>([])
+  const [participatingValues, setParticipatingValues] = useState<Array<CommunityMember>>([])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -37,18 +42,23 @@ const FollowList: React.FC<Props> = ({ community }) => {
   }
 
   useEffect(() => {
-    setMembers(membersList)
-  }, [members])
-
-  useEffect(() => {
     if (open) {
-      // TODO add params
-      // getMembers()
+      getMembers({ hash_key: String(router.query.community_id), role: CommunityMemberRole.all })
     } else {
       resetMembers()
     }
     return () => resetMembers()
   }, [open])
+
+  useEffect(() => {
+    const participating = _.filter(
+      membersList,
+      (m) => m.attributes.member_role != CommunityMemberRole.admin && m.attributes.member_role != CommunityMemberRole.requested
+    )
+    const applying = _.filter(membersList, (m) => m.attributes.member_role == CommunityMemberRole.requested)
+    setParticipatingValues(participating)
+    setApplyingValues(applying)
+  }, [membersList])
 
   const userData = (participant) => {
     const _user = participant.attributes.user
@@ -59,65 +69,10 @@ const FollowList: React.FC<Props> = ({ community }) => {
     //
   }
 
-  const handleValue = () => {
-    // let
-  }
-
-  const dummyData = [
-    {
-      id: '4371',
-      type: 'community_participant',
-      attributes: {
-        role: 'participant',
-        name: 'わたなべ',
-        user: {
-          id: 2144,
-          nickname: 'わたなべ',
-          user_code: 'watanabe',
-        },
-        avatar_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/2144/1625798112-2144.jfif',
-        is_followed: false,
-        is_blocked: false,
-      },
-    },
-    {
-      id: '4371',
-      type: 'community_participant',
-      attributes: {
-        role: 'participant',
-        name: 'たなべ',
-        user: {
-          id: 2144,
-          nickname: 'わたなべ',
-          user_code: 'watanabe',
-        },
-        avatar_url: null,
-        is_followed: false,
-        is_blocked: false,
-      },
-    },
-    {
-      id: '4371',
-      type: 'community_participant',
-      attributes: {
-        role: 'participant',
-        name: 'わたなべ',
-        user: {
-          id: 2144,
-          nickname: 'わたなべ',
-          user_code: 'watanabe',
-        },
-        avatar_url: 'https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/2144/1625798112-2144.jfif',
-        is_followed: false,
-        is_blocked: false,
-      },
-    },
-  ]
-
   const renderMemberList = () => {
     return (
       <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-        {dummyData.map((participant, i) => (
+        {applyingValues.map((participant, i) => (
           <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
         ))}
       </div>
@@ -127,23 +82,13 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderAdminMemberList = () => {
     return (
       <Box mt={3}>
-        {isAutomatic && (
+        {isAutomatic && applyingValues.length > 0 && (
           <>
             <ESLabel label={t('common:community.applying')} />
             <Box mt={4} />
             <Box height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
-              {dummyData.map((m, i) => {
-                return (
-                  <UserSelectBoxList
-                    key={i}
-                    username={m.attributes.user.nickname}
-                    nickname={m.attributes.user.user_code}
-                    avatar={m.attributes.avatar_url}
-                    isAutomatic
-                    value={handleValue}
-                  />
-                  // <UserSelectBoxList key={i} username={m.attributes.nickname} nickname={m.attributes.user_code} avatar={m.attributes.profile} isAutomatic/>
-                )
+              {applyingValues.map((member, i) => {
+                return <UserSelectBoxList key={i} member={member} isAutomatic />
               })}
             </Box>
           </>
@@ -151,16 +96,8 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <ESLabel label={t('common:community.participating')} />
         <Box mt={4} />
         <Box height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
-          {dummyData.map((d, i) => {
-            return (
-              <UserSelectBoxList
-                key={i}
-                username={d.attributes.user.nickname}
-                nickname={d.attributes.user.user_code}
-                avatar={d.attributes.avatar_url}
-              />
-              // <UserSelectBoxList key={i} username={d.attributes.nickname} nickname={d.attributes.user_code} avatar={d.attributes.profile} />
-            )
+          {participatingValues.map((member, i) => {
+            return <UserSelectBoxList key={i} member={member} />
           })}
         </Box>
       </Box>
@@ -184,7 +121,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <ESStickyFooter
           disabled={false}
           noScroll
-          show={!isModerator}
+          show={isModerator}
           content={
             <>
               <ButtonPrimary round className={`${classes.footerButton} ${classes.confirmButton}`} onClick={handleSubmit}>
@@ -203,7 +140,12 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   <Typography variant="h2">{t('common:community.follow_list')}</Typography>
                 </Box>
               </Box>
-              {!isModerator ? renderAdminMemberList() : renderMemberList()}
+              {membersMeta.loaded && (isModerator ? renderAdminMemberList() : renderMemberList())}
+              {membersMeta.pending && (
+                <Box className={classes.loader}>
+                  <ESLoader />
+                </Box>
+              )}
             </Box>
           </BlankLayout>
         </ESStickyFooter>
@@ -256,6 +198,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+  },
+  loader: {
+    textAlign: 'center',
   },
   [theme.breakpoints.down('sm')]: {
     container: {
