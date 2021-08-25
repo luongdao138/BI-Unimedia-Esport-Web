@@ -109,4 +109,6 @@ export const URI = {
   GET_LIST_VIDEO_TOP: '/v2/videos/top',
   GET_CATEGORY_POPULAR_VIDEO: '/v2/categories/hot',
   GET_BANNER: '/v2/videos/top/banners',
+  //purchase points
+  GET_LIST_CARDS: '/gmo/list_card',
 }

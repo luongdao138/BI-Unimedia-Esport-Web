@@ -1,35 +1,52 @@
-import { Box, Typography, makeStyles } from '@material-ui/core'
-import React from 'react'
+import { Box, Typography, makeStyles, withStyles } from '@material-ui/core'
+import React, {useEffect} from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
 import { useFormik } from 'formik'
-import ESCheckboxBig from '@components/CheckboxBig'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ESInput from '@components/Input'
 import ESSwitchIOS from '@components/Switch'
 import ESButton from '@components/Button'
-
+import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { calValueFromTax } from '@utils/helpers/CommonHelper'
+import { CardAddParams } from '@services/purchasePoints.service'
+import Radio from '@material-ui/core/Radio';
+import { RadioProps } from '@material-ui/core/Radio';
+import usePurchasePointData from './usePurchasePointData'
 interface Step2Props {
   step: number
-  selectedPoint: number
+  selectedPoint: any
   cards: Array<any>
   onNext: (step: number) => void
   deleteCard: (card: string) => void
 }
 
 const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selectedPoint }) => {
+  const [selectedCardId, setSelectedCardId] = React.useState<any>('');
   const { t } = useTranslation('common')
   const classes = useStyles()
+  const { getSavedCards } = usePurchasePointData()
 
-  const formik = useFormik({
-    initialValues: [],
-    // validationSchema: validationLiveSettingsScheme(),
-    enableReinitialize: true,
+  const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik<CardAddParams>({
+    initialValues: { card_name: '', card_number: '', card_expire_date: '', card_cvc: '', is_saved_card: false },
+    // validationSchema,
     onSubmit: () => {
-      //TODO: smt
+      // onSubmitClicked(values)
     },
   })
+  // const formik = useFormik({
+  //   initialValues: [],
+  //   // validationSchema: validationLiveSettingsScheme(),
+  //   enableReinitialize: true,
+  //   onSubmit: () => {
+  //     //TODO: smt
+  //   },
+  // })
+
+  useEffect(() => {
+    getSavedCards()
+  }, [])
 
   const onClickNext = () => {
     onNext(step + 1)
@@ -40,15 +57,15 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
       <Box className={classes.title}>
         <ESLabel label={t('purchase_point_tab.purchase_goods')} />
       </Box>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Box className={classes.container}>
           <Box className={classes.wrap_point}>
-            <Typography className={classes.point}>{selectedPoint}</Typography>
+            <Typography className={classes.point}>{FormatHelper.currencyFormat(selectedPoint.toString())}</Typography>
             <Typography className={classes.exe_point}>{t('common.eXe_points')}</Typography>
           </Box>
           <Box className={classes.wrap_money}>
             <Typography className={classes.money}>
-              {selectedPoint}
+              {FormatHelper.currencyFormat(calValueFromTax(selectedPoint).toString())}
               {t('common.money_included_tax')}
             </Typography>
           </Box>
@@ -65,12 +82,13 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
                   id="card_name"
                   name="card_name"
                   required={true}
-                  value=""
+                  value={values.card_name}
                   placeholder={t('purchase_point_tab.card_name_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_name')}
                   fullWidth
-                  rows={8}
-                  readOnly={true}
+                  onChange={handleChange}
+                  onBlur={handleBlur} 
+                  error={touched.card_name && !!errors?.card_name}
                   size="big"
                 />
               </Box>
@@ -79,12 +97,13 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
                   id="card_number"
                   name="card_number"
                   required={true}
-                  value=""
+                  value={values.card_number}
                   placeholder={t('purchase_point_tab.card_number_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_number')}
                   fullWidth
-                  rows={8}
-                  readOnly={true}
+                  onChange={handleChange}
+                  onBlur={handleBlur} 
+                  error={touched.card_number && !!errors?.card_number}
                   size="big"
                 />
               </Box>
@@ -93,12 +112,13 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
                   id="card_expire_date"
                   name="card_expire_date"
                   required={true}
-                  value=""
+                  value={values.card_expire_date}
                   placeholder={t('purchase_point_tab.card_expire_date_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_expire_date')}
                   fullWidth
-                  rows={8}
-                  readOnly={true}
+                  onChange={handleChange}
+                  onBlur={handleBlur} 
+                  error={touched.card_expire_date && !!errors?.card_expire_date}
                   size="big"
                 />
               </Box>
@@ -107,23 +127,22 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
                   id="card_cvc"
                   name="card_cvc"
                   required={true}
-                  value=""
+                  value={values.card_cvc}
                   placeholder=""
                   labelPrimary={t('purchase_point_tab.card_cvc')}
                   fullWidth
-                  rows={8}
-                  readOnly={true}
+                  onChange={handleChange}
+                  onBlur={handleBlur} 
+                  error={touched.card_expire_date && !!errors?.card_expire_date}
                   size="big"
                 />
               </Box>
               <Box className={classes.toggle} pt={2}>
                 <ESSwitchIOS
-                  key={'register_toggle_name'}
-                  handleChange={() => {
-                    return ''
-                  }}
-                  name={'register_toggle_name'}
-                  checked={false}
+                  key={'is_saved_card'}
+                  handleChange={handleChange}
+                  name={'is_saved_card'}
+                  checked={values.is_saved_card}
                 />
                 <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
               </Box>
@@ -136,13 +155,15 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
                 return (
                   <>
                     <Box className={classes.wrap_all_card}>
-                      <ESCheckboxBig
-                        checked={false}
-                        onChange={() => {
-                          formik.handleChange
-                        }}
-                        name="use_ticket"
-                      />
+                      <Box className={classes.wrap_check_box}>
+                        <CustomRadio
+                          checked={selectedCardId === key}
+                          onChange={e => setSelectedCardId(Number(e.target.value))}
+                          value={key}
+                          name="radio-button"
+                          size="small"
+                        />
+                      </Box>
                       <Box>
                         <Box className={classes.wrap_card_number}>{card.number}</Box>
                         <Box className={classes.wrap_money}>
@@ -187,6 +208,17 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
 
 export default Step2
 
+const CustomRadio = withStyles({
+  root: {
+    color: Colors.white_opacity[30],
+    padding: 0,
+    '&$checked': {
+      color: Colors.primary,
+    },
+  },
+  checked: {},
+})((props: RadioProps) => <Radio color="default" {...props} />);
+
 const useStyles = makeStyles((theme) => ({
   title: {
     // paddingLeft: 24,
@@ -198,11 +230,9 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     height: 38,
-    // maxWidth: '100%',
     width: 366,
     backgroundColor: Colors.black,
     display: 'flex',
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
@@ -210,13 +240,7 @@ const useStyles = makeStyles((theme) => ({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: Colors.white_opacity['30'],
-    // paddingLeft: theme.spacing(2),
-    // paddingRight: theme.spacing(2),
-    // paddingTop: theme.spacing(1),
-    // paddingBottom: theme.spacing(1),
-    // marginBottom: theme.spacing(1),
     alignItems: 'center',
-    /* font-size: 12px; */
     color: '#4D4D4D',
     padding: '0 9px 0 0',
   },
@@ -265,6 +289,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toggle: {
     display: 'flex',
+    alignItems: 'center'
   },
   toggle_name: {
     fontSize: '12px',
@@ -316,6 +341,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     color: Colors.white,
     borderColor: Colors.white,
+  },
+  wrap_check_box: {
+    marginTop: "15px", 
+    marginRight: "27px",
+    display: "flex", 
+    alignItems: "center"
   },
   [theme.breakpoints.down('lg')]: {
     card_info_wrap: {
