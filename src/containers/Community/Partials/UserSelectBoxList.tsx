@@ -13,13 +13,18 @@ type UserSelectBoxListProps = {
   setValue?: (isApplying: boolean, id: number, value: number) => void
 }
 
-const APPLYING_OPTIONS = [
+type SelectionOptionType = {
+  label: string
+  value: string | number
+}
+
+const APPLYING_OPTIONS: Array<SelectionOptionType> = [
   { label: '承認', value: 'approve' },
   { label: '拒否', value: 'reject' },
   { label: '保留', value: 'hold' },
 ]
 
-const PARTICIPATING_OPTIONS = [
+const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
   { label: '一般ユーザー', value: MEMBER_ROLE.MEMBER },
   { label: '共同管理者', value: MEMBER_ROLE.CO_ORGANIZER },
   { label: 'キックする', value: MEMBER_ROLE.LEAVE },
