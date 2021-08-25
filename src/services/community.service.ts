@@ -29,6 +29,7 @@ export type CommunityDetail = {
   id: string
   type: string
   attributes: {
+    hash_key: string
     id: number
     name: string
     open_range: number
@@ -69,7 +70,7 @@ export type CommunityFormParams = {
 }
 
 export interface CreateCommunityResponse {
-  id: number
+  hash_key: string
 }
 
 export type UpdateParams = {
@@ -78,7 +79,7 @@ export type UpdateParams = {
 }
 
 export type UpdateCommunityResponse = {
-  id: number
+  hash_key: string
 }
 
 export type CommunityDetailFeature = {
@@ -138,6 +139,7 @@ export type TopicAttachments = {
 export type TopicDetail = {
   id: string
   type: string
+  hash_key: string
   attributes: {
     title: string
     content: string
@@ -162,7 +164,7 @@ export type TopicDetailResponse = {
 }
 
 export type TopicDetailParams = {
-  topic_id: number
+  hash_key: string
 }
 
 export type TopicFollowersResponse = {
@@ -186,16 +188,16 @@ export type TopicParams = {
   title: string
   content: string
   topic_type: string
-  community_id: number
+  community_hash: string
   attachments?: string
 }
 
 export type CreateTopicResponse = {
   data: {
-    id: string
+    id: number
     type: string
     attributes: {
-      id: number
+      hash_key: string
       community_id: 2
       content: string
       created_at: string
@@ -279,12 +281,12 @@ export const createTopic = async (params: TopicParams): Promise<CreateTopicRespo
 }
 
 export const getTopicDetail = async (params: TopicDetailParams): Promise<TopicDetailResponse> => {
-  const { data } = await api.get<TopicDetailResponse>(URI.TOPICS, { params })
+  const { data } = await api.get<TopicDetailResponse>(URI.TOPICS.replace(/:id/gi, params.hash_key))
   return data
 }
 
 export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
-  const { data } = await api.delete<void>(URI.TOPICS, { params })
+  const { data } = await api.delete<void>(URI.TOPICS.replace(/:id/gi, params.hash_key))
   return data
 }
 
