@@ -24,7 +24,9 @@ const useScheduleVideos = (): {
   }
 
   useEffect(() => {
-    getListVideoTop({ type: TYPE_VIDEO_TOP.SCHEDULE, page: 1, limit: LIMIT })
+    if (listScheduleVideo.length === 0) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.SCHEDULE, page: 1, limit: LIMIT })
+    }
   }, [])
 
   return {

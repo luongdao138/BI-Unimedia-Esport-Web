@@ -1,4 +1,4 @@
-import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Box, FormHelperText, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import ESInput from '@components/Input'
@@ -32,6 +32,7 @@ import ESNumberInputStream from '@components/NumberInput/stream'
 import ESInputDatePicker from '@components/InputDatePicker'
 import moment from 'moment'
 import Linkify from 'react-linkify'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 interface StepsProps {
   step: number
@@ -68,6 +69,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [showReNew, setShowReNew] = useState<boolean>(false)
+  const [errPublicTime, setErrPublicTime] = useState('')
 
   useEffect(() => {
     getLiveSetting()
@@ -158,7 +160,6 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
         title: stepSettingOne.title,
         content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
       })
-      // console.log("description=====",stepSettingOne.description)
     }
   }
   const onClickPrev = () => {
@@ -201,6 +202,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       category,
       stream_url,
       stream_key,
+      video_publish_end_time,
     } = formik.values.stepSettingOne
     const data: SetLiveStreamParams = {
       // ...formik.values.stepSettingOne,
@@ -220,13 +222,26 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       category: category,
       stream_url: stream_url,
       stream_key: stream_key,
+      video_publish_end_time: video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(video_publish_end_time) : null,
     }
-    setLiveStreamConfirm(data, () => {
-      onNext(step + 1, share_sns_flag, {
-        title: formik.values.stepSettingOne.title,
-        content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
+    if (checkPublicTime(video_publish_end_time)) {
+      setErrPublicTime('')
+      setLiveStreamConfirm(data, () => {
+        onNext(step + 1, share_sns_flag, {
+          title: formik.values.stepSettingOne.title,
+          content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
+        })
       })
-    })
+    } else {
+      setErrPublicTime(i18n.t('common:streaming_setting_screen.validation.public_time_less'))
+    }
+  }
+
+  const checkPublicTime = (time: string): boolean => {
+    const current = Date.now()
+    const publicTime = new Date(time).getTime()
+    if (publicTime >= current || time === null) return true
+    return false
   }
 
   const onReNewUrlAndKey = (type: number, showToast?: boolean) => {
@@ -406,25 +421,30 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
               <ESLabel label={i18n.t('common:streaming_setting_screen.public_time_title')} required={false} />
               {isFirstStep() ? (
                 <ESInputDatePicker
-                  name="stepSettingOne.public_time"
+                  name="stepSettingOne.video_publish_end_time"
                   placeholder={'2021年7月31日 23:59'}
                   fullWidth
-                  value={formik.values.stepSettingOne.public_time}
+                  value={formik.values.stepSettingOne.video_publish_end_time}
                   onChange={(date) => {
                     const temp = moment(date).add(5, 's')
-                    formik.setFieldValue('stepSettingOne.public_time', temp)
+                    formik.setFieldValue('stepSettingOne.video_publish_end_time', temp)
                   }}
                   onBlur={formik.handleBlur}
-                  helperText={formik?.touched?.stepSettingOne?.public_time && formik?.errors?.stepSettingOne?.public_time}
-                  error={formik?.touched?.stepSettingOne?.public_time && !!formik?.errors?.stepSettingOne?.public_time}
+                  helperText={
+                    formik?.touched?.stepSettingOne?.video_publish_end_time && formik?.errors?.stepSettingOne?.video_publish_end_time
+                  }
+                  error={
+                    formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
+                  }
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {formik.values.stepSettingOne.public_time !== null
-                      ? moment(formik.values.stepSettingOne.public_time).format(FORMAT_DATE_TIME_JP)
+                    {formik.values.stepSettingOne.video_publish_end_time !== null
+                      ? moment(formik.values.stepSettingOne.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
                       : i18n.t('common:streaming_setting_screen.public_time_title')}
                   </Typography>
+                  {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>}
                 </Box>
               )}
             </Box>

@@ -71,6 +71,7 @@ export type CategoryPopularData = {
   id: number
   name: string
   count: number
+  image: string
   videos: Array<TypeVideo>
 }
 
@@ -142,5 +143,10 @@ export const ListVideoSchedule = async (params: ListVideoTopParams): Promise<Vid
 
 export const ListVideoArchived = async (params: ListVideoTopParams): Promise<VideoTypeArchivedResponse> => {
   const { data } = await api.get<VideoTypeArchivedResponse>(URI.GET_LIST_VIDEO_TOP, { params })
+  return data
+}
+
+export const ListVideoFavorite = async (): Promise<ListVideoTopResponse> => {
+  const { data } = await api.get<ListVideoTopResponse>(URI.GET_VIDEO_FAVORITE)
   return data
 }

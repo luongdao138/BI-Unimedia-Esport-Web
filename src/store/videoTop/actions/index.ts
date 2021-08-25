@@ -121,3 +121,23 @@ export const getVideoArchived = createAsyncThunk<services.VideoTypeArchivedRespo
     }
   }
 )
+
+export const getListVideoFavorite = createAsyncThunk<services.ListVideoTopResponse>(
+  ACTION_VIDEO_TOP.GET_LIST_FAVORITE,
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await services.ListVideoFavorite()
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

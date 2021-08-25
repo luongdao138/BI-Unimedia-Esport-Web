@@ -29,7 +29,7 @@ export type LiveStreamSetting = {
   stream_schedule_start_time?: string
   stream_schedule_end_time?: string
   sell_ticket_start_time?: string
-  public_time?: string
+  video_publish_end_time?: string
 }
 
 export type DistributorStepSetting = {
@@ -88,6 +88,7 @@ export type SetLiveStreamParams = {
   stream_url: string
   stream_key: string
   status?: string
+  video_publish_end_time?: string
 }
 export type SetLiveStreamResponse = {
   code: number

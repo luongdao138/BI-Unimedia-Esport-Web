@@ -13,6 +13,11 @@ type StateType = {
   videoLive?: Array<TypeVideo>
   videoSchedule?: Array<TypeVideo>
   videoArchived?: Array<TypeVideo>
+  listVideoFavorite?: {
+    live?: Array<TypeVideo>
+    schedule?: Array<TypeVideo>
+    archive?: Array<TypeVideo>
+  }
 }
 const initialState: StateType = {
   listVideoAll: {
@@ -25,6 +30,11 @@ const initialState: StateType = {
   videoLive: [],
   videoSchedule: [],
   videoArchived: [],
+  listVideoFavorite: {
+    live: [],
+    schedule: [],
+    archive: [],
+  },
 }
 
 export default createReducer(initialState, (builder) => {
@@ -60,5 +70,9 @@ export default createReducer(initialState, (builder) => {
     listVideoArchived = state.videoArchived.concat(action.payload.data.archived)
     // }
     state.videoArchived = listVideoArchived
+  })
+  builder.addCase(actions.getListVideoFavorite.fulfilled, (state, action) => {
+    const listVideo = action.payload.data
+    state.listVideoFavorite = listVideo
   })
 })
