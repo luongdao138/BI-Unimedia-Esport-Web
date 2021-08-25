@@ -161,7 +161,9 @@ const LobbyCreate: React.FC = () => {
   const handleTabChange = useCallback((value) => {
     setTab(value)
   }, [])
+
   const { hasUCRReturnHref } = useReturnHref()
+
   useEffect(() => {
     if (hasUCRReturnHref) {
       document.body.style.position = 'fixed'
