@@ -157,9 +157,10 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
       <ESCardContent>
         {getTitle()}
         {getInfoRow(game_title)}
-        {getChippedRow(i18n.t('common:tournament_create.start_date'), startDate)}
-        {getChippedRow(i18n.t('common:tournament_create.entry_period'), startDate, 'まで')}
-        {getChippedRow(i18n.t('common:tournament.entry_number'), participant_count, `/${max_participants}`, 0.5)}
+        {getInfoRow(`${i18n.t('common:lobby.card.organizer')} ${organizer_name}`)}
+        {getChippedRow(i18n.t('common:lobby.card.start_date'), startDate)}
+        {getChippedRow(i18n.t('common:lobby.card.entry_period'), startDate, 'まで')}
+        {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>

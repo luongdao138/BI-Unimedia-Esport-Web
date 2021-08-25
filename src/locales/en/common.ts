@@ -640,6 +640,12 @@ export default {
       entry_period: 'エントリー期間',
       start_date: '開催日時',
     },
+    card: {
+      organizer: '開催者',
+      start_date: '開催日',
+      entry_period: 'エントリー期間',
+      entries: 'エントリー',
+    },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
       description: '中止した募集は復元することはできません。募集の中止は、メンバーに通知されます。',
