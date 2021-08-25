@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     alignItems: 'center',
     alignContent: 'center',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   viewMoreStyle: {
     color: '#707070',

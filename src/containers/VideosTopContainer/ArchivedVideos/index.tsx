@@ -2,30 +2,22 @@ import { Box, Typography, Theme, makeStyles, Grid } from '@material-ui/core'
 import TitleSeeMore from '../TitleSeeMore'
 import VideoPreviewItem from '../VideoPreviewItem'
 import i18n from '@locales/i18n'
-import { VideoPreviewProps } from '../VideosList'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import useArchivedVideos from './useArchivedVideos'
+import React, { useEffect } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import ESLoader from '@components/Loader'
+import { TypeVideo } from '@services/videoTop.services'
 
 const ArchivedVideos: React.FC = () => {
+  const page = 1
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const dataArchiveVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'archive',
-      title: `ムービータイトルムービータイトル ...`,
-      scheduleTime: '2021年8月24日19時～配信予定',
-      iconStreamer: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnailVideo: '/images/dataVideoFake/banner_04.png',
-      nameStreamer: 'だみだみだみだみ',
-      // waitingNumber: 1500,
-      category: 'Valorant',
-    }))
+  const { loadMore, listArchivedVideo, meta } = useArchivedVideos()
+
   const classes = useStyles()
-  const renderLiveItem = (item: VideoPreviewProps, index: number) => {
+  const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
       <>
         {downMd ? (
@@ -40,22 +32,46 @@ const ArchivedVideos: React.FC = () => {
       </>
     )
   }
+
+  useEffect(() => {
+    loadMore(page)
+  }, [])
+
   return (
     <Box className={classes.container}>
       <Box className={classes.titleContainer}>
         <TitleSeeMore titleText={i18n.t('common:videos_top_tab.title_archived_videos')} />
       </Box>
       <Box className={classes.wrapContentContainer}>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {dataArchiveVideo.length > 0 ? (
-            dataArchiveVideo.map(renderLiveItem)
+        <InfiniteScroll
+          className={classes.scrollContainer}
+          dataLength={listArchivedVideo.length}
+          next={() => {
+            loadMore(page + 1)
+          }}
+          hasMore={true}
+          loader={null}
+          scrollThreshold={0.8}
+          style={{ overflow: 'hidden' }}
+        >
+          {listArchivedVideo.length > 0 ? (
+            <Grid container spacing={3} className={classes.contentContainer}>
+              {listArchivedVideo.map(renderLiveItem)}
+            </Grid>
           ) : (
             <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
               <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
             </Box>
           )}
-        </Grid>
+        </InfiniteScroll>
       </Box>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </Box>
   )
 }

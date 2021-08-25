@@ -40,6 +40,7 @@ export type TypeVideo = {
   user_nickname?: string
   user_avatar?: string
   type?: string
+  status?: number
 }
 
 export type ListVideoTopResponse = {
@@ -76,6 +77,43 @@ export type VideoPopularResult = {
   data: Array<TypeVideo>
 }
 
+export type BannerItem = {
+  id?: number
+  title?: string
+  url?: string
+  target?: string
+}
+
+export type BannerResponse = {
+  message?: string
+  code?: number
+  data?: Array<BannerItem>
+}
+
+export type VideoTypeLiveResponse = {
+  message?: string
+  code?: number
+  data?: {
+    live?: Array<TypeVideo>
+  }
+}
+
+export type VideoTypeScheduleResponse = {
+  message?: string
+  code?: number
+  data?: {
+    schedule?: Array<TypeVideo>
+  }
+}
+
+export type VideoTypeArchivedResponse = {
+  message?: string
+  code?: number
+  data?: {
+    archived?: Array<TypeVideo>
+  }
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
@@ -83,5 +121,25 @@ export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVide
 
 export const ListVideoPopular = async (): Promise<VideoPopularResponse> => {
   const { data } = await api.get<VideoPopularResponse>(URI.GET_CATEGORY_POPULAR_VIDEO)
+  return data
+}
+
+export const GetBanner = async (): Promise<BannerResponse> => {
+  const { data } = await api.get<BannerResponse>(URI.GET_BANNER)
+  return data
+}
+
+export const ListVideoLiveStream = async (params: ListVideoTopParams): Promise<VideoTypeLiveResponse> => {
+  const { data } = await api.get<VideoTypeLiveResponse>(URI.GET_LIST_VIDEO_TOP, { params })
+  return data
+}
+
+export const ListVideoSchedule = async (params: ListVideoTopParams): Promise<VideoTypeScheduleResponse> => {
+  const { data } = await api.get<VideoTypeScheduleResponse>(URI.GET_LIST_VIDEO_TOP, { params })
+  return data
+}
+
+export const ListVideoArchived = async (params: ListVideoTopParams): Promise<VideoTypeArchivedResponse> => {
+  const { data } = await api.get<VideoTypeArchivedResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
 }

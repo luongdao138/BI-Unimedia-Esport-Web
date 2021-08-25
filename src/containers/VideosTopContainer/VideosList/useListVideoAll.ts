@@ -1,4 +1,4 @@
-import { CategoryPopularData, ListVideoTopParams, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import { BannerItem, CategoryPopularData, ListVideoTopParams, TYPE_VIDEO_TOP } from '@services/videoTop.services'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
 import { createMetaSelector } from '@store/metadata/selectors'
@@ -9,18 +9,22 @@ const _getListVideoAll = createMetaSelector(actions.getListVideoAll)
 const useListVideoAll = (): {
   meta: Meta
   getListVideoTop: (params: ListVideoTopParams) => void
-  videoTop: TypeVideo[]
+  videoTop: any
   listLiveVideo: () => void
   videoPopular: () => void
   videoCategoryPopular: CategoryPopularData[]
+  listBanner: BannerItem[]
+  bannerTop: () => void
 } => {
   const dispatch = useAppDispatch()
-  const videoTop = useAppSelector(selectors.getVideoLive)
+  const videoTop = useAppSelector(selectors.getAllVideo)
   const videoCategoryPopular = useAppSelector(selectors.getVideoPopular)
+  const listBanner = useAppSelector(selectors.getBannerTop)
   // const page = useAppSelector(selectors.getListVideoTop)
   const meta = useAppSelector(_getListVideoAll)
   const getListVideoTop = (params: ListVideoTopParams) => dispatch(actions.getListVideoAll(params))
   const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo())
+  const bannerTop = () => dispatch(actions.getBannerTop())
 
   const listLiveVideo = () => {
     getListVideoTop({ type: TYPE_VIDEO_TOP.ALL })
@@ -37,6 +41,8 @@ const useListVideoAll = (): {
     listLiveVideo,
     videoPopular,
     videoCategoryPopular,
+    listBanner,
+    bannerTop,
   }
 }
 

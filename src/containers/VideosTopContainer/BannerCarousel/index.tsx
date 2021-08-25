@@ -2,18 +2,14 @@ import { StackedCarousel, ResponsiveContainer, StackedCarouselSlideProps } from 
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Box, Theme, makeStyles } from '@material-ui/core'
+import { BannerItem } from '@services/videoTop.services'
 
-export type BannerDataProps = {
-  id: number
-  cover: string
-  title: string
-}
 type BannerCarouselProps = {
-  data: Array<BannerDataProps>
+  data: Array<BannerItem>
 }
-function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerDataProps> }) {
+function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerItem> }) {
   const classes = useStyles()
   const { centerSlideDataIndex, data } = props
   return (
@@ -40,11 +36,31 @@ function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerDat
 }
 const SlideItem = React.memo(function (props: StackedCarouselSlideProps) {
   const { data, dataIndex } = props
-  const cover = data[dataIndex]?.cover
+  const cover = data[dataIndex]?.url
   const classes = useStyles()
+  // const [load, setLoad] = useState<boolean>(true);
+  // const [error, setError] = useState<boolean>(false);
+  const refImage = useRef<any>(null)
+
+  // const handleLoading = ()=>{
+  //   console.log('handleLoading')
+  //   setLoad(false)
+  // }
+  // const handleError = ()=>{
+  //   console.log('handleError')
+  //   setError(true)
+  // }
   return (
-    <Box className={classes.sliderContainer} key={data[dataIndex].id}>
-      <img className={classes.sliderStyle} draggable={false} src={cover} />
+    <Box className={classes.sliderContainer} key={data[dataIndex]?.id}>
+      <img
+        ref={refImage}
+        className={classes.sliderStyle}
+        draggable={false}
+        src={cover}
+        // src={load?'/images/live_stream/exelab_thumb.png':'https://i.pinimg.com/564x/09/b5/27/09b52762cc9d8aee221ebb6a062dee98.jpg'}
+        // onLoad={handleLoading}
+        // onError={handleError}
+      />
     </Box>
   )
 })
@@ -79,7 +95,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
       <ResponsiveContainer
         carouselRef={ref}
         render={(parentWidth, carouselRef) => {
-          let currentVisibleSlide = 5
+          let currentVisibleSlide = 3
           if (parentWidth <= 992) currentVisibleSlide = 3
           if (parentWidth <= 768) currentVisibleSlide = 1
 
@@ -93,12 +109,12 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
             <StackedCarousel
               ref={carouselRef}
               fadeDistance={0}
-              customScales={[1, 0.85, 0.7, 0.55]}
+              customScales={[1, 0.85, 0.7]}
               data={data}
               carouselWidth={parentWidth}
               slideWidth={width}
               slideComponent={SlideItem}
-              maxVisibleSlide={5}
+              maxVisibleSlide={3}
               currentVisibleSlide={currentVisibleSlide}
               useGrabCursor={true}
               height={height}
