@@ -90,12 +90,25 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
     }, 5000)
   }, [])
 
+  const checkCurrentVisible = () => {
+    const length = data.length
+    if (length <= 3) return 1
+    if (length === 4 || length === 5) return 3
+    else return 5
+  }
+  const checkCustomScales = () => {
+    const length = data.length
+    if (length <= 3) return [1, 0.85]
+    if (length === 4 || length === 5) return [1, 0.85, 0.7]
+    else return [1, 0.85, 0.7, 0.55]
+  }
+
   return (
     <Box className={classes.container}>
       <ResponsiveContainer
         carouselRef={ref}
         render={(parentWidth, carouselRef) => {
-          let currentVisibleSlide = 3
+          let currentVisibleSlide = checkCurrentVisible() //1|3|5
           if (parentWidth <= 992) currentVisibleSlide = 3
           if (parentWidth <= 768) currentVisibleSlide = 1
 
@@ -109,12 +122,12 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
             <StackedCarousel
               ref={carouselRef}
               fadeDistance={0}
-              customScales={[1, 0.85, 0.7]}
+              customScales={checkCustomScales()} //[1, 0.85]|[1, 0.85, 0.7]|[1, 0.85, 0.7, 0.55]
               data={data}
               carouselWidth={parentWidth}
               slideWidth={width}
               slideComponent={SlideItem}
-              maxVisibleSlide={3}
+              maxVisibleSlide={checkCurrentVisible()}
               currentVisibleSlide={currentVisibleSlide}
               useGrabCursor={true}
               height={height}
