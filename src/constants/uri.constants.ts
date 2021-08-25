@@ -115,4 +115,7 @@ export const URI = {
   DELETE_CARD: '/v2/gmo/delete_card',
   ADD_CARD: '/v2/gmo/add_card',
   PURCHASE_POINT: '/v2/gmo/purchase',
+  GET_LIST_MY_POINTS: '/v2/points',
+  GET_HISTORY_POINTS: '/v2/points/history',
+  GET_LIST_USED_POINTS: '/v2/points/used',
 }

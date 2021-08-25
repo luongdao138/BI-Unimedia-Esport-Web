@@ -2,14 +2,15 @@ import { Box, makeStyles, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
-import { PointsPurchasedDataProps } from '../PointManagementTab'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { ListMyPointsData } from '@services/points.service'
 
 interface PointsPurchasedItemProps {
-  data: PointsPurchasedDataProps
+  data: ListMyPointsData
   letterCount: number
+  serialNumber: number
 }
-const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, letterCount }) => {
+const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, letterCount, serialNumber }) => {
   const classes = useStyles()
   const getAddClass = (firstClass, secClass) => {
     if (letterCount === 2) {
@@ -22,10 +23,10 @@ const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, letterCount }
   }
 
   return (
-    <Box className={classes.container} key={data?.serialNumber}>
+    <Box className={classes.container} key={data?.purchased_id}>
       <Box className={classes.wrapTitle}>
         <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
-          <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
+          <Typography className={classes.serialStyle}>{serialNumber}</Typography>
         </Box>
         <Box className={`${classes.titleContainer} ${getAddClass(classes.letterSecTitle, classes.letterThirdTitle)}`}>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
@@ -34,11 +35,11 @@ const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, letterCount }
         </Box>
       </Box>
       <Box className={classes.dataContainer}>
-        <Typography className={classes.idTextItem}>{data?.purchasedPointsId}</Typography>
+        <Typography className={classes.idTextItem}>{data?.purchased_id}</Typography>
         <Typography className={classes.pointStyle}>
-          {FormatHelper.currencyFormat(data?.points.toString())} {i18n.t('common:point_management_tab.eXe_point_text')}
+          {FormatHelper.currencyFormat(data?.amount.toString())} {i18n.t('common:point_management_tab.eXe_point_text')}
         </Typography>
-        <Typography className={classes.dateStyle}>{data?.expiresDatePurchased}</Typography>
+        <Typography className={classes.dateStyle}>{data?.valid_until}</Typography>
       </Box>
     </Box>
   )

@@ -5,7 +5,7 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 interface MyPointsCardProps {
-  my_points: number
+  my_points: number | string
 }
 
 const MyPointsCard: FC<MyPointsCardProps> = ({ my_points }) => {

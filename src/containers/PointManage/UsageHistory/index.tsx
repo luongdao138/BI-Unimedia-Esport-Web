@@ -1,10 +1,12 @@
 import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core'
-import React, { FC } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
 import { Pagination } from '@material-ui/lab'
 import UsagePointsItem from '../UsagePointsItem'
+import usePointsManage from '../usePointsManage'
+import ESLoader from '@components/Loader'
 
 export interface UsagePointDataProps {
   serialNumber: string
@@ -43,8 +45,48 @@ const UsageHistory: FC = () => {
     { label: '2020年4月', value: '2020年4月' },
   ]
   const letterCount = dataPurchasePoints.length ? dataPurchasePoints[dataPurchasePoints.length - 1].serialNumber.length : 1
+
+  const [page, setPage] = useState<number>(1)
+  const { getUsedPointData, meta_used_points } = usePointsManage()
+  const params = {
+    page: page,
+    limit: 10,
+  }
+  useEffect(() => {
+    getUsedPointData(params)
+  }, [page])
+
+  const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
+    setPage(value)
+  }
+
   return (
     <Box className={classes.container}>
+      <Grid item xs={7}>
+        <ESSelect
+          fullWidth
+          placeholder={i18n.t('common:point_management_tab.choosing')}
+          displayEmpty
+          size="big"
+          disabled={false}
+          className={classes.comboBox}
+        >
+          {filterOptionsData.map((rule, index) => (
+            <option key={index} value={rule.value}>
+              {rule.label}
+            </option>
+          ))}
+        </ESSelect>
+      </Grid>
+      {meta_used_points.pending ? (
+        <Grid item xs={12}>
+          <Box className={classes.loadingContainer}>
+            <ESLoader />
+          </Box>
+        </Grid>
+      ) : (
+        <></>
+      )}
       {dataUsagePoints.length > 0 ? (
         <Box className={classes.headerContainer}>
           <Typography className={classes.headerTitle}>
@@ -102,16 +144,26 @@ const UsageHistory: FC = () => {
           showFirstButton
           showLastButton
           defaultPage={1}
+          page={page}
           count={3}
           variant="outlined"
           shape="rounded"
           className={classes.paginationStyle}
+          onChange={onChangePage}
         />
       </Box>
     </Box>
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
+  loadingContainer: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
   headerContainer: {
     justifyContent: 'center',
     display: 'flex',

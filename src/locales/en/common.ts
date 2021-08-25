@@ -966,6 +966,8 @@ export default {
     no_data_text: '利用履歴がありません',
     date_time: '日時',
     use_point_information: '[動画] - チケット交換',
+    no_data_used_point: '利用履歴がありません',
+    no_data_purchase_point: '購入履歴がありません',
   },
   purchase_point_tab: {
     point_number_select: '購入したいポイント数を選択',
