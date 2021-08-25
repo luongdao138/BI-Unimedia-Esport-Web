@@ -139,8 +139,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
                   key={`participants${i}`}
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
-                  src={participant?.attributes?.avatar_url}
-                  alt={participant?.attributes?.nickname}
+                  src={participant?.profile_image}
+                  alt={participant?.nickname}
                 />
               ))
           : null}

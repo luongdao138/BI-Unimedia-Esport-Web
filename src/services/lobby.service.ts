@@ -59,7 +59,7 @@ export type LobbyResponse = {
     status: number
     entry_status?: LobbyEntryStatus | null
     participant_count: number
-    participants: Array<ParticipantsItem>
+    participants: Array<ParticipantsItem['attributes']>
   }
 }
 
@@ -111,6 +111,7 @@ export type ParticipantsItem = {
     nickname: string
     user_code: string
     avatar_url: string
+    profile_image?: string
     is_followed: boolean
     is_blocked: boolean
   }
