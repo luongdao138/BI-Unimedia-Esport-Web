@@ -4,101 +4,22 @@ import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
 import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
+import { TopicDetail } from '@services/community.service'
 
-const InfoContainer: React.FC = () => {
-  const dummy_data = [
-    {
-      title: '自己紹介しよう！ 自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 901,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 902,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 903,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 904,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 905,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 906,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 907,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 908,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 909,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 910,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 911,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 912,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 913,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 914,
-    },
-  ]
+type Props = {
+  topicList: TopicDetail[]
+}
 
+const TopicListContainer: React.FC<Props> = ({ topicList }) => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const chunkSize = 10
   const classes = useStyles()
+
   useEffect(() => {
-    setCount(Math.ceil(dummy_data.length / 10))
+    if (topicList) {
+      setCount(Math.ceil(topicList.length / 10))
+    }
   }, [])
 
   const handleChange = (event, value) => {
@@ -115,12 +36,18 @@ const InfoContainer: React.FC = () => {
   return (
     <>
       <Box mt={2} />
-
-      {chunks(dummy_data, page).map((d, i) => {
-        return (
-          <TopicRowItem key={i} title={d.title} last_comment={d.last_comment} latest_date={d.latest_date} comment_count={d.comment_count} />
-        )
-      })}
+      {!!topicList &&
+        chunks(topicList, page).map((d, i) => {
+          return (
+            <TopicRowItem
+              key={i}
+              title={d.title}
+              last_comment={d.last_comment}
+              latest_date={d.latest_date}
+              comment_count={d.comment_count}
+            />
+          )
+        })}
       <Box display="flex" justifyContent="center" mt={4}>
         <Pagination
           className={classes.pagination}
@@ -150,4 +77,4 @@ const useStyles = makeStyles(() => ({
     },
   },
 }))
-export default InfoContainer
+export default TopicListContainer

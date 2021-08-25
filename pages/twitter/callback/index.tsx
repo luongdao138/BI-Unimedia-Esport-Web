@@ -47,7 +47,7 @@ const TwitterCallbackPage: React.FC<LoginSocialParams> = () => {
   }, [meta])
 
   const handleError = () => {
-    if (type) {
+    if (type === 'login') {
       router.push(ESRoutes.LOGIN)
     } else {
       router.push(ESRoutes.REGISTER)
