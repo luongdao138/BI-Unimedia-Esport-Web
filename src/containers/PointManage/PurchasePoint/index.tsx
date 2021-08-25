@@ -1,75 +1,67 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Step1 from './Step1'
 import Step2 from './Step2'
-import PointPurchaseConfirmModal from './PointPurchaseConfirmModal'
-import CardDeleteConfirmModal from './CardDeleteConfirmModal'
-// import { useRouter } from 'next/router'
-// import { ESRoutes } from '@constants/route.constants'
 import { Box, makeStyles } from '@material-ui/core'
+import usePurchasePointData from './usePurchasePointData'
+
+declare global{
+  interface Window {
+    Multipayment: any;
+  }
+}
 
 const PurchasePoint: React.FC = () => {
   const [step, setStep] = useState(1)
-  const [isShowPurchasePointModal, setIsShowPurchasePointModal] = useState(false)
-  const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
   const [selectedPoint, setSelectedPoint] = useState(0)
-  const cards = [
-    {
-      number: 'xxxx xxxx xxxx 4256',
-    },
-    {
-      number: 'xxxx xxxx xxxx 4256',
-    },
-  ]
+  
+  const { 
+    getSavedCards, 
+  } = usePurchasePointData()
 
-  // const router = useRouter()
+  useEffect(() => {
+    // Multipayment.getToken(
+    //   {
+    //     cardno: '371449635398433',
+    //     expire: '2112',
+    //     securitycode: '1405',
+    //     holdername: 'MONKEY',
+    //     tokennumber: '1'
+    //   },
+    //   response => {
+    //     //   if (response.resultCode == "000") {
+    //     //   console.log(response);
+    //     //   document.getElementById("token").value = response.tokenObject.token;
+    //     // //document.getElementById("purchaseForm").submit();
+    //     //   } else if (response.resultCode in tokenError) {
+    //     //     alert(tokenError[response.resultCode]);
+    //     //   } else {
+    //     //     alert("エラー発生しました。");
+    //     //   }
+    //   }
+    // );
+    getSavedCards()
+  }, [])
+    
+
   const classes = useStyles()
 
   const onChangeStep = (new_step: number): void => {
-    if (new_step === 3) {
-      setIsShowPurchasePointModal(true)
-    } else {
-      setStep(new_step)
-    }
+    setStep(new_step)
   }
-
-  const deleteCard = (): void => {
-    setIsShowDeleteCardModal(true)
-  }
-
-  // const onClose = (): void => {
-  //   router.back()
-  // }
-
-  // const onComplete = (): void => {
-  // }
 
   return (
-    <Box className={classes.wrap_container}>
-      {step === 1 ? (
-        <Step1 step={step} onNext={onChangeStep} setSelectedPoint={(point) => setSelectedPoint(point)} />
-      ) : step === 2 ? (
-        <Step2 deleteCard={deleteCard} cards={cards} step={step} onNext={onChangeStep} selectedPoint={selectedPoint} />
-      ) : (
-        <></>
-      )}
-      {isShowPurchasePointModal && (
-        <PointPurchaseConfirmModal
-          open={isShowPurchasePointModal}
-          selectedPoint={selectedPoint}
-          handleClose={() => {
-            setIsShowPurchasePointModal(false)
-          }}
-        />
-      )}
-      {isShowDeleteCardModal && (
-        <CardDeleteConfirmModal
-          open={isShowDeleteCardModal}
-          handleClose={() => {
-            setIsShowDeleteCardModal(false)
-          }}
-        />
-      )}
-    </Box>
+    <>
+      <Box className={classes.wrap_container}>
+        {step === 1 ? (
+          <Step1 step={step} onNext={onChangeStep} setSelectedPoint={(point) => setSelectedPoint(point)} />
+        ) : step === 2 ? (
+          <Step2 selectedPoint={selectedPoint} />
+        ) : (
+          <></>
+        )}
+      </Box>
+      
+    </>
   )
 }
 
