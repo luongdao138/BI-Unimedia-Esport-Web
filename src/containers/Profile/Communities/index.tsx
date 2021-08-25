@@ -78,6 +78,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(1),
     paddingBottom: theme.spacing(3.6),
     paddingLeft: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      paddingBottom: theme.spacing(1),
+    },
   },
   loadMoreContainer: {
     cursor: 'pointer',
