@@ -102,9 +102,9 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const getInfoRow = (value: string) => {
     return <Typography className={classes.organizer}>{value}</Typography>
   }
-  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
+  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number) => {
     return (
-      <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center" color={Colors.white}>
+      <Box display="flex" flexDirection="row" mt={0.5} alignItems="center" color={Colors.white}>
         <ESChip
           className={classes.chip}
           size="small"
@@ -115,10 +115,12 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
           }
         />
         <Box ml={1} color={Colors.white}>
-          <Typography variant="caption">{value}</Typography>
+          <Typography variant="caption" className={classes.chippedValue}>
+            {`${value}`}
+          </Typography>
         </Box>
         {extra ? (
-          <Typography className={classes.caption} variant="caption">
+          <Typography variant="caption" className={classes.chippedExtra}>
             &nbsp;{extra}
           </Typography>
         ) : null}
@@ -160,7 +162,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         {getInfoRow(`${i18n.t('common:lobby.card.organizer')} ${organizer_name}`)}
         {getChippedRow(i18n.t('common:lobby.card.start_date'), startDate)}
         {getChippedRow(i18n.t('common:lobby.card.entry_period'), startDate, 'まで')}
-        {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`, 0.5)}
+        {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -234,7 +236,11 @@ const useStyles = makeStyles((theme) => ({
   pAvatar: {
     marginLeft: -8,
   },
-  caption: {
+  chippedValue: {
+    fontSize: 12,
+  },
+  chippedExtra: {
+    fontSize: 12,
     wordBreak: 'keep-all',
   },
   title: {
@@ -262,6 +268,14 @@ const useStyles = makeStyles((theme) => ({
     marginV: {
       height: 30,
       width: 30,
+    },
+  },
+  [theme.breakpoints.up('lg')]: {
+    chippedValue: {
+      fontSize: 10,
+    },
+    chippedExtra: {
+      fontSize: 10,
     },
   },
 }))
