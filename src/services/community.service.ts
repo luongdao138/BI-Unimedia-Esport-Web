@@ -128,7 +128,7 @@ export type CommunityMember = {
   attributes: {
     id: number
     user_id: number
-    member_role: CommunityMemberRole
+    member_role: number
     profile: string
     nickname: string
     user_code: string

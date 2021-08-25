@@ -22,7 +22,6 @@ import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
-import ApproveList from '../ApproveList'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
 
 type Props = {
@@ -115,7 +114,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
         <Box marginTop={2} display="flex">
           <FollowList community={detail} />
-          <ApproveList />
+          {getRequestedMembers()}
         </Box>
 
         {isAuthenticated && (
@@ -128,6 +127,14 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           />
         )}
       </>
+    )
+  }
+
+  const getRequestedMembers = () => {
+    return (
+      <Box className={classes.linkUnapproved} display="flex" alignItems="center" ml={2}>
+        {t('common:community.unapproved_users_title')}
+      </Box>
     )
   }
 
@@ -245,6 +252,10 @@ const useStyles = makeStyles((theme) => ({
   },
   boxContainer: {
     display: 'flex',
+  },
+  linkUnapproved: {
+    textDecoration: 'underline',
+    color: 'yellow',
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {

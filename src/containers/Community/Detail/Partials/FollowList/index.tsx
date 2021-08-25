@@ -16,8 +16,8 @@ import { CommunityDetail, CommunityMember, CommunityMemberRole } from '@services
 import UserSelectBoxList from '../../../Partials/UserSelectBoxList'
 import useFollowList from './useFollowList'
 import _ from 'lodash'
-import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
+import { MEMBER_ROLE } from '@constants/community.constants'
 
 type Props = {
   community: CommunityDetail
@@ -26,7 +26,6 @@ type Props = {
 const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const router = useRouter()
   const [open, setOpen] = useState(false)
   const { isModerator, isAutomatic } = useCommunityHelper(community)
   const { getMembers, membersList, resetMembers, membersMeta } = useFollowList()
@@ -43,7 +42,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   useEffect(() => {
     if (open) {
-      getMembers({ hash_key: String(router.query.community_id), role: CommunityMemberRole.all })
+      getMembers({ hash_key: community.attributes.hash_key, role: CommunityMemberRole.all })
     } else {
       resetMembers()
     }
@@ -53,9 +52,9 @@ const FollowList: React.FC<Props> = ({ community }) => {
   useEffect(() => {
     const participating = _.filter(
       membersList,
-      (m) => m.attributes.member_role != CommunityMemberRole.admin && m.attributes.member_role != CommunityMemberRole.requested
+      (m) => m.attributes.member_role != MEMBER_ROLE.ADMIN && m.attributes.member_role != MEMBER_ROLE.REQUESTED
     )
-    const applying = _.filter(membersList, (m) => m.attributes.member_role == CommunityMemberRole.requested)
+    const applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
     setParticipatingValues(participating)
     setApplyingValues(applying)
   }, [membersList])
@@ -67,6 +66,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleSubmit = () => {
     //
+  }
+
+  const handleSelectedValue = (isApplying: boolean, id: number, value: number) => {
+    const data = JSON.parse(JSON.stringify(isApplying ? applyingValues : participatingValues))
+
+    _.set(_.find(data, { attributes: { id: id } }), 'attributes.member_role', Number(value))
+
+    isApplying ? setApplyingValues(data) : setParticipatingValues(data)
   }
 
   const renderMemberList = () => {
@@ -85,19 +92,17 @@ const FollowList: React.FC<Props> = ({ community }) => {
         {isAutomatic && applyingValues.length > 0 && (
           <>
             <ESLabel label={t('common:community.applying')} />
-            <Box mt={4} />
-            <Box height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
+            <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
               {applyingValues.map((member, i) => {
-                return <UserSelectBoxList key={i} member={member} isAutomatic />
+                return <UserSelectBoxList key={i} member={member} isAutomatic setValue={handleSelectedValue} />
               })}
             </Box>
           </>
         )}
         <ESLabel label={t('common:community.participating')} />
-        <Box mt={4} />
-        <Box height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
+        <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
           {participatingValues.map((member, i) => {
-            return <UserSelectBoxList key={i} member={member} />
+            return <UserSelectBoxList key={i} member={member} setValue={handleSelectedValue} />
           })}
         </Box>
       </Box>

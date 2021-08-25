@@ -45,16 +45,6 @@ export const MEMBER_ROLE = {
   REQUESTED: 6,
 }
 
-export const MEMBER_ROLE_STRING = {
-  SYSTEM: 'system',
-  ADMIN: 'admin',
-  MEMBER: 'member',
-  CO_ORGANIZER: 'moderator',
-  REPORTED: 'reported',
-  LEAVE: 'leave',
-  REQUESTED: 'requested',
-}
-
 export const MEMBER_ACTION_TYPE = {
   APPROVE_USER: 'approve_user',
   REJECT_USER: 'reject_user',

@@ -4,12 +4,13 @@ import ESAvatar from '@components/Avatar'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
-import { CommunityMember, CommunityMemberRole } from '@services/community.service'
+import { CommunityMember } from '@services/community.service'
+import { MEMBER_ROLE } from '@constants/community.constants'
 
 type UserSelectBoxListProps = {
   member: CommunityMember
   isAutomatic?: boolean
-  setValue?: (e: any) => void
+  setValue?: (isApplying: boolean, id: number, value: number) => void
 }
 
 const APPLYING_OPTIONS = [
@@ -19,17 +20,17 @@ const APPLYING_OPTIONS = [
 ]
 
 const PARTICIPATING_OPTIONS = [
-  { label: '一般ユーザー', value: CommunityMemberRole.member },
-  { label: '共同管理者', value: CommunityMemberRole.co_organizer },
-  { label: 'キックする', value: CommunityMemberRole.leave },
+  { label: '一般ユーザー', value: MEMBER_ROLE.MEMBER },
+  { label: '共同管理者', value: MEMBER_ROLE.CO_ORGANIZER },
+  { label: 'キックする', value: MEMBER_ROLE.LEAVE },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomatic /* , setValue */ }) => {
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomatic, setValue }) => {
   const classes = useStyles()
   const data = member.attributes
 
-  const handleSelectOption = () => {
-    // setValue(e.target.value)
+  const handleSelectOption = (e: any) => {
+    setValue(isAutomatic, data.id, e.target.value)
   }
 
   return (
