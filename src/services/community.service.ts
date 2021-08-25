@@ -192,10 +192,10 @@ export type TopicParams = {
 }
 export type CreateTopicResponse = {
   data: {
-    hash_key: string
+    id: number
     type: string
     attributes: {
-      id: number
+      hash_key: string
       community_id: 2
       content: string
       created_at: string
