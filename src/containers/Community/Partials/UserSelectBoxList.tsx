@@ -10,22 +10,28 @@ type UserSelectBoxListProps = {
   nickname: string
   avatar?: string
   isAutomatic?: boolean
+  value?: any
+  setValue?: (e: any) => void
 }
 
-const OPTIONS = [
+const APPLYING_OPTIONS = [
   { label: '承認', value: 'approve' },
   { label: '拒否', value: 'reject' },
   { label: '保留', value: 'hold' },
 ]
 
-const OPTIONS_NEXT = [
+const PARTICIPATING_OPTIONS = [
   { label: '一般ユーザー', value: 'user' },
   { label: '共同管理者', value: 'co_organizer' },
   { label: 'キックする', value: 'kick' },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, nickname, avatar, isAutomatic }) => {
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, nickname, avatar, isAutomatic, value, setValue }) => {
   const classes = useStyles()
+
+  const handleSelectOption = (e: any) => {
+    setValue(e.target.value)
+  }
 
   return (
     <>
@@ -43,11 +49,11 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, nicknam
         </Box>
 
         <Box className={classes.selectBoxContainer}>
-          <ESSelect className={classes.selectWidth} size="small">
+          <ESSelect className={classes.selectWidth} size="small" value={value} onChange={handleSelectOption}>
             <option disabled value={-1}>
               {isAutomatic ? i18n.t('common:community.applying') : i18n.t('common:community.general_user')}
             </option>
-            {(isAutomatic ? OPTIONS : OPTIONS_NEXT).map((o, index) => (
+            {(isAutomatic ? APPLYING_OPTIONS : PARTICIPATING_OPTIONS).map((o, index) => (
               <option key={index} value={o.value}>
                 {o.label}
               </option>

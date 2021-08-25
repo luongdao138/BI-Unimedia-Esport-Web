@@ -55,6 +55,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
     return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
   }
 
+  const handleSubmit = () => {
+    //
+  }
+
+  const handleValue = () => {
+    // let
+  }
+
   const dummyData = [
     {
       id: '4371',
@@ -132,6 +140,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                     nickname={m.attributes.user.user_code}
                     avatar={m.attributes.avatar_url}
                     isAutomatic
+                    value={handleValue}
                   />
                   // <UserSelectBoxList key={i} username={m.attributes.nickname} nickname={m.attributes.user_code} avatar={m.attributes.profile} isAutomatic/>
                 )
@@ -175,10 +184,10 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <ESStickyFooter
           disabled={false}
           noScroll
-          show={isModerator}
+          show={!isModerator}
           content={
             <>
-              <ButtonPrimary round className={`${classes.footerButton} ${classes.confirmButton}`}>
+              <ButtonPrimary round className={`${classes.footerButton} ${classes.confirmButton}`} onClick={handleSubmit}>
                 {t('common:community.confirm_follow_list')}
               </ButtonPrimary>
             </>
@@ -194,7 +203,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   <Typography variant="h2">{t('common:community.follow_list')}</Typography>
                 </Box>
               </Box>
-              {isModerator ? renderAdminMemberList() : renderMemberList()}
+              {!isModerator ? renderAdminMemberList() : renderMemberList()}
             </Box>
           </BlankLayout>
         </ESStickyFooter>
