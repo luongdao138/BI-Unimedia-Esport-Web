@@ -11,7 +11,7 @@ const useCommunityHelper = (
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
-  const hash_key = community?.id
+  const hash_key = community?.hash_key
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/community/create' }), '/community/create', { shallow: true })
 

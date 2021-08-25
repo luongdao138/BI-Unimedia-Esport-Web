@@ -28,6 +28,7 @@ type GameTitleItem = GameTitle['attributes']
 export type CommunityDetail = {
   id: string
   type: string
+  hash_key: string
   attributes: {
     id: number
     name: string
@@ -68,7 +69,7 @@ export type CommunityFormParams = {
 }
 
 export interface CreateCommunityResponse {
-  id: number
+  hash_key: string
 }
 
 export type UpdateParams = {
@@ -77,7 +78,7 @@ export type UpdateParams = {
 }
 
 export type UpdateCommunityResponse = {
-  id: number
+  hash_key: string
 }
 
 export type CommunityDetailFeature = {
@@ -137,6 +138,7 @@ export type TopicAttachments = {
 export type TopicDetail = {
   id: string
   type: string
+  hash_key: string
   attributes: {
     title: string
     content: string
@@ -161,7 +163,7 @@ export type TopicDetailResponse = {
 }
 
 export type TopicDetailParams = {
-  topic_id: number
+  hash_key: string
 }
 
 export type TopicFollowersResponse = {
@@ -185,12 +187,12 @@ export type TopicParams = {
   title: string
   content: string
   topic_type: string
-  community_id: number
+  community_hash: number
   attachments?: string
 }
 export type CreateTopicResponse = {
   data: {
-    id: string
+    hash_key: string
     type: string
     attributes: {
       id: number

@@ -17,11 +17,11 @@ const TopicDetailContainer: React.FC = () => {
   const data = topic?.attributes
 
   useEffect(() => {
-    if (topic_id) getTopicDetail({ topic_id: String(topic_id) })
+    if (topic_id) getTopicDetail({ hash_key: String(topic_id) })
   }, [router])
 
   const handleDeleteTopic = () => {
-    deleteTopic({ topic_id: String(topic_id) })
+    deleteTopic({ hash_key: String(topic_id) })
   }
 
   const comments = [
