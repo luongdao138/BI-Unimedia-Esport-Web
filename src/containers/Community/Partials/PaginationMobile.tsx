@@ -7,10 +7,9 @@ type Props = {
   page?: number
   pageNumber?: number
   setPage?: Dispatch<SetStateAction<number>>
-  count?: any
 }
 
-const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, count }) => {
+const Pagination: React.FC<Props> = ({ page, pageNumber, setPage }) => {
   const classes = useStyles()
 
   const firstPage = () => {
@@ -23,7 +22,7 @@ const Pagination: React.FC<Props> = ({ page, pageNumber, setPage, count }) => {
     setPage(page + 1)
   }
   const lastPage = () => {
-    setPage(count)
+    setPage(pageNumber)
   }
 
   return (

@@ -208,7 +208,7 @@ const InfoContainer: React.FC = () => {
             })}
             <Box display="flex" justifyContent="center" mt={4}>
               {isMobile ? (
-                <PaginationMobile page={page} pageNumber={count} setPage={setPage} count={count} />
+                <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
               ) : (
                 <Pagination
                   className={classes.pagination}
