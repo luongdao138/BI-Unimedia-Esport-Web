@@ -28,7 +28,7 @@ const useTopicCreate = (): {
     const resultAction = await dispatch(actions.createTopic(params))
     if (actions.createTopic.fulfilled.match(resultAction)) {
       resetMeta()
-      router.push(`${ESRoutes.COMMUNITY}/${router.query.community_id}/topic/${resultAction.payload.data.attributes.hash_key}`)
+      router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}/topic/${resultAction.payload.data.attributes.hash_key}`)
       dispatch(commonActions.addToast(t('common:topic_create.create_success')))
     }
   }

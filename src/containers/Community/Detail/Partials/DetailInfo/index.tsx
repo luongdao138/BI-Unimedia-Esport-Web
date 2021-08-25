@@ -51,7 +51,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const { isAuthenticated } = useCommunityDetail()
 
   const router = useRouter()
-  const { community_id } = router.query
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -156,7 +155,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }
 
   const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, community_id.toString()))
+    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, data.hash_key.toString()))
   }
 
   return (
