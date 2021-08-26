@@ -34,7 +34,6 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
         i++
         //list has next paging
         // eslint-disable-next-line no-console
-        console.log('paginating', i)
         store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.STORE_LIST, data: message })
         socket.send(
           JSON.stringify({
@@ -44,13 +43,11 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
         )
       } else if (message.ended) {
         // eslint-disable-next-line no-console
-        console.log('paging ended')
         // paging has ended
         store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.PAGING_ENDED, data: message })
         i = 0
       } else {
         // eslint-disable-next-line no-console
-        console.log('regular list no paging')
         // regular case no paging
         store.dispatch({ type: message.action, data: message })
       }
@@ -63,8 +60,6 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
           roomId: message.content.roomId,
         })
       )
-    } else if (message.action === CHAT_ACTION_TYPE.MEMBER_ADDED) {
-      store.dispatch(socketActions.initRoomList())
     } else {
       store.dispatch({ type: message.action, data: message })
     }

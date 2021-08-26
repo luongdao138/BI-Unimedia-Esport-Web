@@ -158,6 +158,13 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         messages: deleted,
         roomList: roomListDeleted,
       }
+
+    case CHAT_ACTION_TYPE.MEMBER_ADDED:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.addList(state.roomList, [action.data.content.roomDetail]),
+      }
     //room list paginating
     case CHAT_PAGING_ACTION_TYPE.STORE_LIST:
       // unique merge store messages
@@ -170,7 +177,7 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       // store last item to temp message end save too roomList
       return {
         ...state,
-        roomList: ListHelper.mergeList(state.tempList, action.data.content),
+        roomList: _.union(state.roomList, ListHelper.mergeList(state.tempList, action.data.content)),
       }
     case CHAT_PAGING_ACTION_TYPE.CLEAN_TEMP_LIST:
       // store last item to temp message end save too roomList
