@@ -19,15 +19,15 @@ type SelectionOptionType = {
 }
 
 const APPLYING_OPTIONS: Array<SelectionOptionType> = [
-  { label: '承認', value: MEMBER_ROLE.MEMBER },
-  { label: '拒否', value: MEMBER_ROLE.NOT_MEMBER },
-  { label: '保留', value: MEMBER_ROLE.ON_HOLD },
+  { label: i18n.t('common:community.member_list.approve'), value: MEMBER_ROLE.MEMBER },
+  { label: i18n.t('common:community.member_list.cancel'), value: MEMBER_ROLE.NOT_MEMBER },
+  { label: i18n.t('common:community.member_list.hold'), value: MEMBER_ROLE.ON_HOLD },
 ]
 
 const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
-  { label: '一般ユーザー', value: MEMBER_ROLE.MEMBER },
-  { label: '共同管理者', value: MEMBER_ROLE.CO_ORGANIZER },
-  { label: 'キックする', value: MEMBER_ROLE.LEAVE },
+  { label: i18n.t('common:community.member_list.user'), value: MEMBER_ROLE.MEMBER },
+  { label: i18n.t('common:community.member_list.co_organizer'), value: MEMBER_ROLE.CO_ORGANIZER },
+  { label: i18n.t('common:community.member_list.kick'), value: MEMBER_ROLE.LEAVE },
 ]
 
 const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue, isApplying = false }) => {

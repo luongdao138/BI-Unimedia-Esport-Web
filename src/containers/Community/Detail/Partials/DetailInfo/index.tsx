@@ -131,9 +131,9 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const getRequestedMembers = () => {
     return (
-      <Box className={classes.linkUnapproved} display="flex" alignItems="center" ml={2}>
+      <Typography className={classes.linkUnapproved} variant="body2">
         {t('common:community.unapproved_users_title')}
-      </Box>
+      </Typography>
     )
   }
 
@@ -255,6 +255,9 @@ const useStyles = makeStyles((theme) => ({
   linkUnapproved: {
     textDecoration: 'underline',
     color: 'yellow',
+    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
