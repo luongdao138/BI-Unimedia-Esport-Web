@@ -10,7 +10,7 @@ import _ from 'lodash'
 const DEVICE_ID = uuidv4()
 
 let socket: any = null
-let i = 0 // max number of pagination retry request
+let i = 0
 
 const onOpen = (store: StoreType) => (_event: Event) => {
   const userId = store.getState().auth.user?.id
@@ -30,7 +30,7 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
 
   if (message && message.action) {
     if (message.action === CHAT_ACTION_TYPE.GET_ALL_ROOMS) {
-      if (_.isObject(message.nextPageInfo) && i < 10) {
+      if (_.isObject(message.nextPageInfo) && i < 20) {
         i++
         //list has next paging
         // eslint-disable-next-line no-console
