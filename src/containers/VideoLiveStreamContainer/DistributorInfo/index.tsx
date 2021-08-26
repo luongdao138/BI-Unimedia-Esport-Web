@@ -5,6 +5,7 @@ import React from 'react'
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import SocialDistributionCircle from '@components/Button/SocialDistributionCircle'
+import i18n from '@locales/i18n'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 
@@ -64,7 +65,7 @@ const DistributorInfo: React.FC = () => {
   const archiveVideo = () => (
     <Box className={classes.archiveVideoContainer}>
       <Typography gutterBottom className={classes.archiveVideoTitle}>
-        {'アーカイブ'}
+        {i18n.t('common:live_stream_screen.archived_stream_video')}
       </Typography>
       <Grid container spacing={3} className={classes.contentContainer}>
         {dataLiveVideo().map((data, i) => (

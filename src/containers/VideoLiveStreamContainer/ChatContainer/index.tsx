@@ -1,8 +1,8 @@
 import { Box, Typography, makeStyles, Icon, Button, OutlinedInput, IconButton, Input } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import ButtonPrimary from '@components/ButtonPrimary'
 import React, { useState } from 'react'
+import i18n from '@locales/i18n'
 
 type ChatContainerProps = {
   onPressDonate?: () => void
@@ -96,13 +96,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
 
   const purchaseInfoDialog = () => (
     <Box className={classes.purchaseDialogContainer}>
-      <Typography className={classes.dialogTitle}>{'プレミアムコメント'}</Typography>
+      <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
       <Box className={classes.purchaseCommentInputContainer}>
         <Input
           id="comment"
           multiline
           rows={6}
-          placeholder={'コメントを入力してください'}
+          placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
           fullWidth
           value={purchaseComment}
           onChange={onCommentChange}
@@ -129,12 +129,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
           })}
         </Box>
       </Box>
-      <Button className={classes.purchaseButton}>
-        <Typography className={classes.purchaseButtonText}>{'送る'}</Typography>
+      <Button onClick={onPressDonate} className={classes.purchaseButton}>
+        <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
       </Button>
       <Box className={classes.dialogFooter}>
         <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
-        <Typography className={classes.purchasePointText}>{'ポイント購入'}</Typography>
+        <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchasePoints')}</Typography>
       </Box>
     </Box>
   )
@@ -220,11 +220,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
         </Box>
         {chatBoardComponent()}
       </Box>
-      <Box pt={22 / 8} pb={4} maxWidth={280} className={classes.buttonContainer} onClick={onPressDonate}>
-        <ButtonPrimary type="submit" round fullWidth>
-          {'Donate Points'}
-        </ButtonPrimary>
-      </Box>
+      {/*<Box pt={22 / 8} pb={4} maxWidth={280} className={classes.buttonContainer} onClick={onPressDonate}>*/}
+      {/*  <ButtonPrimary type="submit" round fullWidth>*/}
+      {/*    {'Donate Points'}*/}
+      {/*  </ButtonPrimary>*/}
+      {/*</Box>*/}
     </Box>
   )
 }

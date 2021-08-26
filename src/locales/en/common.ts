@@ -1021,6 +1021,11 @@ export default {
     channel_register: 'チャンネル登録',
     register_person_label: '登録者数',
     streamer_name: '配信者の名前がはいります',
+    archived_stream_video: 'アーカイブ',
+    premium_comment: 'プレミアムコメント',
+    please_enter_a_comment: 'コメントを入力してください',
+    send: '送る',
+    purchase_points: 'ポイント購入',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

@@ -1,6 +1,6 @@
 import { Box, Typography, Theme, makeStyles, Icon, Grid } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
-// import i18n from '@locales/i18n'
+import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
 import React from 'react'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
@@ -32,7 +32,7 @@ const ProgramInfo: React.FC = () => {
   const archiveVideo = () => (
     <Box className={classes.archiveVideoContainer}>
       <Typography gutterBottom className={classes.archiveVideoTitle}>
-        {'アーカイブ'}
+        {i18n.t('common:live_stream_screen.archived_stream_video')}
       </Typography>
       <Grid container spacing={3} className={classes.contentContainer}>
         {dataLiveVideo().map((data, i) => (
@@ -58,7 +58,7 @@ const ProgramInfo: React.FC = () => {
           '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります…'}
       </Typography>
       <Box className={classes.seeMoreContainer}>
-        <Typography className={classes.seeMoreTitle}>{'もっとみる'}</Typography>
+        <Typography className={classes.seeMoreTitle}>{i18n.t('common:profile.read_more')}</Typography>
         <Icon className={`fa fa-angle-down ${classes.angleDownIcon}`} fontSize="small" />
       </Box>
       {archiveVideo()}
