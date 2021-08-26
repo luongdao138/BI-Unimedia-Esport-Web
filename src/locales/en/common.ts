@@ -336,6 +336,8 @@ export default {
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
     },
+    t_public: '公開する',
+    t_private: '公開しない',
     has_prize_true: '副賞あり',
     online: 'オンライン',
     offline: 'オフライン',
@@ -556,6 +558,7 @@ export default {
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
     public_or_private: '大会公開設定',
+    public_or_private_short: '大会公開',
     title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
