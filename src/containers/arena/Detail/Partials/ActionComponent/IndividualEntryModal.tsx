@@ -18,7 +18,7 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
 import ServerError from './ServerError'
-import { FocusContext, FocusContextProvider } from '@containers/arena/hooks/input-focus-context'
+import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail

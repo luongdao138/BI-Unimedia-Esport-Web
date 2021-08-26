@@ -7,7 +7,7 @@ import { TeamMemberSelectItem, MemberSelection } from '@store/arena/actions/type
 import { FormikProps } from 'formik'
 import { TeamJoinBase } from '@services/arena.service'
 import _ from 'lodash'
-import { useFocusState } from '@containers/arena/hooks/input-focus-context'
+import { useFocusState } from '@utils/hooks/input-focus-context'
 
 interface TeamEntryMemberListProps {
   isLeader?: boolean
