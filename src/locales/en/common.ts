@@ -932,6 +932,7 @@ export default {
       message_renew: 'ストリームのURLを変更すると、ストリームキーも変更されます。ストリームのURLを変更してもよろしいですか？',
     },
     renew_success_toast: '再発行しました。',
+    public_time_title: 'アーカイブ配信終了日時',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',
@@ -990,8 +991,8 @@ export default {
     delete_confirm: '登録削除確認',
     delete_confirm_content: '登録削除をしたいクレジットカード',
     btn_delete: '削除する',
-    mess_delete_card_success: "登録済みカードの削除が完了しました",
-    mess_purchase_point_success: "ポイント購入が正常に完了しました",
+    mess_delete_card_success: '登録済みカードの削除が完了しました',
+    mess_purchase_point_success: 'ポイント購入が正常に完了しました',
   },
   videos_top_tab: {
     video_list: '動画一覧',
