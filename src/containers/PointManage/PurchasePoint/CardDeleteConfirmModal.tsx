@@ -6,10 +6,10 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
 
 interface ModalProps {
-  open: boolean,
-  deletedCard: any,
-  handleClose: () => void,
-  deleteSavedCard: (card_seq) => void,
+  open: boolean
+  deletedCard: any
+  handleClose: () => void
+  deleteSavedCard: (card_seq) => void
 }
 
 const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, deletedCard, deleteSavedCard }) => {

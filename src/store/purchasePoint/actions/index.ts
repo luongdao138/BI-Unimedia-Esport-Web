@@ -27,29 +27,31 @@ export const deleteCard = createAsyncThunk(POINT_PURCHASE_ACTION_TYPE.DELETE_CAR
 })
 
 export const purchasePointUseNewCard = createAsyncThunk(
-    POINT_PURCHASE_ACTION_TYPE.PURCHASE_POINT_USE_NEW_CARD, 
-    async (purchase_info: services.ParamsPurchasePointUseNewCard, { rejectWithValue }) => {
-  try {
-    const res = await services.purchasePointUseNewCard(purchase_info)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
+  POINT_PURCHASE_ACTION_TYPE.PURCHASE_POINT_USE_NEW_CARD,
+  async (purchase_info: services.ParamsPurchasePointUseNewCard, { rejectWithValue }) => {
+    try {
+      const res = await services.purchasePointUseNewCard(purchase_info)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
     }
-    return rejectWithValue(error.response.data)
   }
-})
+)
 
 export const purchasePointUseOldCard = createAsyncThunk(
-    POINT_PURCHASE_ACTION_TYPE.PURCHASE_POINT_USE_OLD_CARD, 
-    async (purchase_info: services.ParamsPurchasePointUseOldCard, { rejectWithValue }) => {
-  try {
-    const res = await services.purchasePointUseOldCard(purchase_info)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
+  POINT_PURCHASE_ACTION_TYPE.PURCHASE_POINT_USE_OLD_CARD,
+  async (purchase_info: services.ParamsPurchasePointUseOldCard, { rejectWithValue }) => {
+    try {
+      const res = await services.purchasePointUseOldCard(purchase_info)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
     }
-    return rejectWithValue(error.response.data)
   }
-})
+)
