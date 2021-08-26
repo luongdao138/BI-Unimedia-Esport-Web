@@ -50,7 +50,7 @@ const TopicCreate: React.FC = () => {
       const data: TopicParams = {
         ...values.stepOne,
         topic_type: '0',
-        community_hash: String(router.query.community_id),
+        community_hash: String(router.query.hash_key),
       }
       if (submit) {
         submit(data)
