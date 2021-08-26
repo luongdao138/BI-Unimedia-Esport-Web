@@ -274,9 +274,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={i18n.t('common:user_profile.profile')} value={0} />
-          <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} />
-          <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} />
+          <ESTab label={i18n.t('common:user_profile.profile')} value={0} classes={{ root: classes.tabRoot }} />
+          <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} classes={{ root: classes.tabRoot }} />
+          <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} classes={{ root: classes.tabRoot }} />
         </ESTabs>
       </Grid>
     )
@@ -434,5 +434,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  tabRoot: {},
+  [theme.breakpoints.down('sm')]: {
+    tabRoot: {
+      minWidth: 'unset',
+    },
   },
 }))
