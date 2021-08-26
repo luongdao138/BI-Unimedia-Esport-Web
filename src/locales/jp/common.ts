@@ -336,8 +336,6 @@ export default {
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
     },
-    history_retain_true: '保存する',
-    history_retain_false: '保存しない',
     t_public: '公開する',
     t_private: '公開しない',
     has_prize_true: '副賞あり',

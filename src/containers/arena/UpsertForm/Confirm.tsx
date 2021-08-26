@@ -164,7 +164,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.retain_history_short')}
-        value={values.stepTwo.retain_history ? t('common:tournament.history_retain_true') : t('common:tournament.history_retain_false')}
+        value={values.stepTwo.retain_history ? t('common:common.yes') : t('common:common.no')}
         multiline
         disabled={true}
         fullWidth
