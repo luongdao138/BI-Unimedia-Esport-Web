@@ -13,4 +13,6 @@ export enum COMMUNITY_ACTION_TYPE {
   DELETE_TOPIC = 'topic/delete',
   GET_TOPIC_LIST = 'topic/list',
   CLEAR_TOPIC_DETAIL = 'topic/clearDetail',
+  FOLLOW_COMMUNITY = 'community/join',
+  UNFOLLOW_COMMUNITY = 'community/leave',
 }

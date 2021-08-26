@@ -186,3 +186,33 @@ export const deleteTopic = createAsyncThunk<void, services.TopicDetailParams>(
     }
   }
 )
+
+export const followCommunity = createAsyncThunk<services.CommunityFollowResponse, string>(
+  COMMUNITY_ACTION_TYPE.FOLLOW_COMMUNITY,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.followCommunity(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const unfollowCommunity = createAsyncThunk<void, string>(
+  COMMUNITY_ACTION_TYPE.UNFOLLOW_COMMUNITY,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.unfollowCommunity(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Grid, Box, Icon, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -16,14 +16,15 @@ import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
 import ESButton from '@components/Button'
 import ESReport from '@containers/Report'
+import { useRouter } from 'next/router'
 import { REPORT_TYPE } from '@constants/common.constants'
 import SearchContainer from '../SearchContainer'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
-import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import ApproveList from '../ApproveList'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
+import { MEMBER_ROLE, JOIN_CONDITION, IS_OFFICIAL, OPEN_RANGE } from '@constants/community.constants'
 
 type Props = {
   detail: CommunityDetail
@@ -41,17 +42,152 @@ enum TABS {
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
+
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
   const data = detail.attributes
 
-  const isFollowing = true
-  const isAdmin = true
-  const { isAuthenticated } = useCommunityDetail()
+  const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
 
   const router = useRouter()
-  const { community_id } = router.query
+  const { hash_key } = router.query
+
+  const [isAdmin, setIsAdmin] = useState<boolean>(false)
+  const [isCoOrganizer, setIsCoOrganizer] = useState<boolean>(false)
+  const [isFollowing, setIsFollowing] = useState<boolean>(false)
+  const [isRequested, setIsRequested] = useState<boolean>(false)
+  const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
+
+  const setOtherRoleFalse = (setRoleType: string) => {
+    if (setRoleType == 'setIsAdmin') {
+      setIsCoOrganizer(false)
+      setIsFollowing(false)
+      setIsRequested(false)
+    } else if (setRoleType == 'setIsCoOrganizer') {
+      setIsAdmin(false)
+      setIsFollowing(false)
+      setIsRequested(false)
+    } else if (setRoleType == 'setIsFollowing') {
+      setIsAdmin(false)
+      setIsCoOrganizer(false)
+      setIsRequested(false)
+    } else if (setRoleType == 'setIsRequested') {
+      setIsAdmin(false)
+      setIsCoOrganizer(false)
+      setIsFollowing(false)
+    }
+  }
+
+  const handleChangeRole = (setRoleType: string, value: boolean) => {
+    setOtherRoleFalse(setRoleType)
+    if (setRoleType == 'setIsAdmin') {
+      setIsAdmin(value)
+    } else if (setRoleType == 'setIsCoOrganizer') {
+      setIsCoOrganizer(value)
+    } else if (setRoleType == 'setIsFollowing') {
+      setIsFollowing(value)
+    } else if (setRoleType == 'setIsRequested') {
+      setIsRequested(value)
+    }
+  }
+
+  useEffect(() => {
+    if (data.my_role === MEMBER_ROLE.ADMIN) {
+      handleChangeRole('setIsAdmin', true)
+    } else if (data.my_role === MEMBER_ROLE.CO_ORGANIZER) {
+      handleChangeRole('setIsCoOrganizer', true)
+    } else if (data.my_role === MEMBER_ROLE.MEMBER) {
+      handleChangeRole('setIsFollowing', true)
+    } else if (data.my_role === MEMBER_ROLE.LEAVE || data.my_role == null) {
+      handleChangeRole('setIsFollowing', false)
+    } else if (data.my_role === MEMBER_ROLE.REQUESTED) {
+      handleChangeRole('setIsRequested', true)
+    }
+    if (data.join_condition === JOIN_CONDITION.AUTOMATIC) {
+      setIsCommunityAutomatic(true)
+    } else if (data.join_condition === JOIN_CONDITION.MANUAL) {
+      setIsCommunityAutomatic(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (followCommunityMeta.loaded) {
+      handleChangeRole('setIsFollowing', true)
+    }
+  }, [followCommunityMeta])
+
+  useEffect(() => {
+    if (unfollowCommunityMeta.loaded) {
+      handleChangeRole('setIsFollowing', false)
+    }
+  }, [unfollowCommunityMeta])
+
+  const followHandle = () => {
+    followCommunity(String(hash_key))
+    if (!isCommunityAutomatic) {
+      setIsRequested(true)
+    }
+  }
+
+  const unfollowHandle = () => {
+    unfollowCommunity(String(hash_key))
+  }
+
+  const followButton = () => {
+    return (
+      <ESButton variant="outlined" round className={classes.button} disabled={followCommunityMeta.pending} onClick={followHandle}>
+        {t('common:profile.follow_as')}
+      </ESButton>
+    )
+  }
+
+  const applyingButton = () => {
+    return (
+      <ESButton variant="outlined" round className={classes.button} disabled={true}>
+        {t('common:community.applying')}
+      </ESButton>
+    )
+  }
+
+  const unfollowButton = () => {
+    return (
+      <ESButton
+        variant="contained"
+        round
+        className={classes.button}
+        color="primary"
+        disabled={unfollowCommunityMeta.pending}
+        onClick={unfollowHandle}
+      >
+        {t('common:profile.following')}
+      </ESButton>
+    )
+  }
+
+  const editButton = () => {
+    return (
+      <ESButton variant="outlined" round className={classes.button} disabled={false} onClick={toEdit}>
+        {t('common:community.edit')}
+      </ESButton>
+    )
+  }
+
+  const DetailInfoButton = () => {
+    return (
+      <>
+        {isAuthenticated
+          ? isAdmin || isCoOrganizer
+            ? editButton()
+            : isRequested
+            ? applyingButton()
+            : isFollowing
+            ? unfollowButton()
+            : followButton()
+          : null}
+      </>
+    )
+  }
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -73,30 +209,15 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
               {data.name}
             </Typography>
             <Box ml={3.6}>
-              {/* //TODO uncomment when is_official and is_private is in backend */}
-              {/* {data.is_official ? (
+              {data.is_official === IS_OFFICIAL.OFFICIAL ? (
                 <img className={classes.checkIcon} src="/images/check_icon.png" />
               ) : (
-                data.is_private && <Icon className={`fas fa-lock ${classes.lockIcon}`} />
-              )} */}
+                data.open_range === OPEN_RANGE.SEARCHABLE && <Icon className={`fas fa-lock ${classes.lockIcon}`} />
+              )}
             </Box>
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
-            {isAuthenticated ? (
-              isAdmin ? (
-                <ESButton variant="outlined" round className={classes.button} disabled={false} onClick={toEdit}>
-                  {t('common:community.edit')}
-                </ESButton>
-              ) : isFollowing ? (
-                <ESButton variant="contained" color="primary" round className={classes.button} disabled={true}>
-                  {t('common:profile.following')}
-                </ESButton>
-              ) : (
-                <ESButton variant="outlined" round className={classes.button} disabled={false}>
-                  {t('common:profile.follow_as')}
-                </ESButton>
-              )
-            ) : null}
+            {DetailInfoButton()}
             <ESMenu>
               <LoginRequired>
                 <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
@@ -156,7 +277,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }
 
   const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, community_id.toString()))
+    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, hash_key.toString()))
   }
 
   return (

@@ -30,6 +30,11 @@ export const JOIN_CONDITION = {
   AUTOMATIC: 1,
 }
 
+export const IS_OFFICIAL = {
+  NOT_OFFICIAL: 0,
+  OFFICIAL: 1,
+}
+
 export const STATUS = {
   READY: 'ready',
   CANCELLED: 'cancelled',
