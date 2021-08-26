@@ -10,6 +10,7 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 type UserSelectBoxListProps = {
   member: CommunityMember
   isAutomatic?: boolean
+  isApplying?: boolean
   setValue?: (isApplying: boolean, id: number, value: number) => void
 }
 
@@ -19,9 +20,9 @@ type SelectionOptionType = {
 }
 
 const APPLYING_OPTIONS: Array<SelectionOptionType> = [
-  { label: '承認', value: 'approve' },
-  { label: '拒否', value: 'reject' },
-  { label: '保留', value: 'hold' },
+  { label: '承認', value: MEMBER_ROLE.MEMBER },
+  { label: '拒否', value: MEMBER_ROLE.NOT_MEMBER },
+  { label: '保留', value: MEMBER_ROLE.ON_HOLD },
 ]
 
 const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
@@ -30,12 +31,12 @@ const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
   { label: 'キックする', value: MEMBER_ROLE.LEAVE },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomatic, setValue }) => {
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomatic, setValue, isApplying }) => {
   const classes = useStyles()
   const data = member.attributes
 
   const handleSelectOption = (e: any) => {
-    setValue(isAutomatic, data.id, e.target.value)
+    setValue(isApplying, data.id, e.target.value)
   }
 
   return (
@@ -58,8 +59,13 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomat
         </Box>
 
         <Box className={classes.selectBoxContainer}>
-          <ESSelect className={classes.selectWidth} size="small" value={data.member_role || -1} onChange={handleSelectOption}>
-            {isAutomatic && (
+          <ESSelect
+            className={classes.selectWidth}
+            size="small"
+            value={(isApplying && data.member_role == MEMBER_ROLE.REQUESTED && -1) || data.member_role}
+            onChange={handleSelectOption}
+          >
+            {isAutomatic && isApplying && (
               <option disabled value={-1}>
                 {i18n.t('common:community.applying')}
               </option>

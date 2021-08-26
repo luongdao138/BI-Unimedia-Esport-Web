@@ -43,6 +43,8 @@ export const MEMBER_ROLE = {
   REPORTED: 4,
   LEAVE: 5,
   REQUESTED: 6,
+  ON_HOLD: 7,
+  NOT_MEMBER: 8,
 }
 
 export const MEMBER_ACTION_TYPE = {

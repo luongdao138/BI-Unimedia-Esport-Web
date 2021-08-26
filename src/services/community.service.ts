@@ -145,6 +145,11 @@ export type CommunityMembersResponse = {
   }
 }
 
+export type CommunityMembersApproveCancelParams = {
+  member_ids: Array<number>
+  hash_key: string
+}
+
 export type TopicGameTitle = {
   id: number
   parent_id?: number
@@ -316,6 +321,16 @@ export const getCommunityFeatures = async (): Promise<CommunityFeaturesResponse>
 
 export const getCommunityMembers = async (params: CommunityMembersParams): Promise<CommunityMembersResponse> => {
   const { data } = await api.get<CommunityMembersResponse>(URI.COMMUNITY_MEMBERS.replace(/:id/gi, params.hash_key), { params })
+  return data
+}
+
+export const approveCommunityMembers = async (params: CommunityMembersApproveCancelParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_APPROVE.replace(/:id/gi, params.hash_key), { params })
+  return data
+}
+
+export const cancelCommunityMembers = async (params: CommunityMembersApproveCancelParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_APPROVE.replace(/:id/gi, params.hash_key), { params })
   return data
 }
 

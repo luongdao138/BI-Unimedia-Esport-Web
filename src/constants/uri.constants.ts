@@ -43,6 +43,8 @@ export const URI = {
   COMMUNITY_UPDATE: '/v2/communities/:id',
   COMMUNITY_FEATURES: '/v2/communities/features',
   COMMUNITY_MEMBERS: '/v2/communities/:id/members',
+  COMMUNITY_MEMBERS_APPROVE: '/v2/communities/:id/approve',
+  COMMUNITY_MEMBERS_CANCEL: '/v2/communities/:id/cancel',
   TOPIC_LIST: '/v2/communities/topics',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',

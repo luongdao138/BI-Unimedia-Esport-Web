@@ -259,6 +259,7 @@ export default {
       result: '検索結果',
     },
     follow_list: 'フォローリスト',
+    change_applying_members_toast: '更新しました。',
     edit: '編集',
     unapproved_users_title: '未承認ユーザーがいます',
     general_user: '一般ユーザー',

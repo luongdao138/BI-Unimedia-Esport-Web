@@ -157,6 +157,36 @@ export const getCommunityMembers = createAsyncThunk<services.CommunityMembersRes
   }
 )
 
+export const approveCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
+  COMMUNITY_ACTION_TYPE.APPROVE_COMMUNITY_MEMBERS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.approveCommunityMembers(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const cancelCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
+  COMMUNITY_ACTION_TYPE.CANCEL_COMMUNITY_MEMBERS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.cancelCommunityMembers(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const createTopic = createAsyncThunk<services.CreateTopicResponse, services.TopicParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC,
   async (params, { rejectWithValue }) => {

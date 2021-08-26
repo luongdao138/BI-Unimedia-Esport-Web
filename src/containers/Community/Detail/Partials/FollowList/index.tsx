@@ -28,9 +28,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const { isModerator, isAutomatic } = useCommunityHelper(community)
-  const { getMembers, membersList, resetMembers, membersMeta } = useFollowList()
+  const { getMembers, membersList, resetMembers, membersMeta, approveMembers, cancelMembers, sendToast } = useFollowList()
   const [applyingValues, setApplyingValues] = useState<Array<CommunityMember>>([])
   const [participatingValues, setParticipatingValues] = useState<Array<CommunityMember>>([])
+  const [initialValues, setInitialValues] = useState<Array<Array<CommunityMember>>>([])
+  const [hasChosenApplying, setHasChosenApplying] = useState(false)
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -57,15 +59,41 @@ const FollowList: React.FC<Props> = ({ community }) => {
     const applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
     setParticipatingValues(participating)
     setApplyingValues(applying)
+    setInitialValues([applying, participating])
   }, [membersList])
 
-  const userData = (participant) => {
-    const _user = participant.attributes.user
-    return { id: _user.id, attributes: { ..._user, nickname: participant.attributes.name, avatar: participant.attributes.avatar_url } }
+  const handleApplyingParam = (data, role) => {
+    return _.map(
+      _.filter(data, (d) => handleValue(d.attributes.member_role) == role),
+      (m) => m.attributes.id
+    )
+  }
+
+  const handleValue = (value) => {
+    switch (Number(value)) {
+      case MEMBER_ROLE.ON_HOLD:
+        return MEMBER_ROLE.REQUESTED
+      case MEMBER_ROLE.NOT_MEMBER:
+        return null
+      default:
+        return Number(value)
+    }
   }
 
   const handleSubmit = () => {
-    //
+    const data: Array<CommunityMember> = _.differenceWith(applyingValues, initialValues[0], _.isEqual)
+    const approve = handleApplyingParam(data, MEMBER_ROLE.MEMBER)
+    const cancel = handleApplyingParam(data, null)
+
+    if (approve.length > 0) {
+      approveMembers({ hash_key: community.attributes.hash_key, member_ids: approve })
+    }
+    if (cancel.length > 0) {
+      cancelMembers({ hash_key: community.attributes.hash_key, member_ids: cancel })
+    }
+    getMembers({ hash_key: community.attributes.hash_key, role: CommunityMemberRole.all })
+    sendToast(t('common:community.change_applying_members_toast'))
+    setHasChosenApplying(false)
   }
 
   const handleSelectedValue = (isApplying: boolean, id: number, value: number) => {
@@ -73,14 +101,20 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
     _.set(_.find(data, { attributes: { id: id } }), 'attributes.member_role', Number(value))
 
-    isApplying ? setApplyingValues(data) : setParticipatingValues(data)
+    if (isApplying) {
+      setApplyingValues(data)
+    } else {
+      setParticipatingValues(data)
+    }
+    // console.log(data)
+    setHasChosenApplying(true)
   }
 
   const renderMemberList = () => {
     return (
       <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-        {applyingValues.map((participant, i) => (
-          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+        {participatingValues.map((participant, i) => (
+          <UserListItem data={participant} key={i} nicknameYellow={false} />
         ))}
       </div>
     )
@@ -89,12 +123,12 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderAdminMemberList = () => {
     return (
       <Box mt={3}>
-        {isAutomatic && applyingValues.length > 0 && (
+        {!isAutomatic && applyingValues.length > 0 && (
           <>
             <ESLabel label={t('common:community.applying')} />
             <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
               {applyingValues.map((member, i) => {
-                return <UserSelectBoxList key={i} member={member} isAutomatic setValue={handleSelectedValue} />
+                return <UserSelectBoxList key={i} member={member} isAutomatic isApplying setValue={handleSelectedValue} />
               })}
             </Box>
           </>
@@ -116,7 +150,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
           <Box display="flex" className={classes.rowContainer}>
             <Typography>{t('common:following.title')}</Typography>
             <Box display="flex" className={classes.countContainer}>
-              <Typography className={classes.count}>{FormatHelper.kFormatter(999)}</Typography>
+              <Typography className={classes.count}>{FormatHelper.kFormatter(community.attributes.member_count - 1)}</Typography>
               <Typography>{t('common:followers.th')}</Typography>
             </Box>
           </Box>
@@ -126,10 +160,15 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <ESStickyFooter
           disabled={false}
           noScroll
-          show={isModerator}
+          show={isModerator && applyingValues.length > 0}
           content={
             <>
-              <ButtonPrimary round className={`${classes.footerButton} ${classes.confirmButton}`} onClick={handleSubmit}>
+              <ButtonPrimary
+                round
+                className={`${classes.footerButton} ${classes.confirmButton}`}
+                onClick={handleSubmit}
+                disabled={!hasChosenApplying}
+              >
                 {t('common:community.confirm_follow_list')}
               </ButtonPrimary>
             </>

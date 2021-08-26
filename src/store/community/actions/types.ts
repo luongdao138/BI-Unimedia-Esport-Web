@@ -13,6 +13,8 @@ export enum COMMUNITY_ACTION_TYPE {
   DELETE_TOPIC = 'topic/delete',
   CLEAR_TOPIC_DETAIL = 'community/topic/clearDetail',
   GET_COMMUNITY_MEMBERS = 'community/members',
+  APPROVE_COMMUNITY_MEMBERS = 'community/members/approve',
+  CANCEL_COMMUNITY_MEMBERS = 'community/members/cancel',
   RESET_COMMUNITY_MEMBERS = 'community/resetMembers',
   GET_TOPIC_LIST = 'topic/list',
 }
