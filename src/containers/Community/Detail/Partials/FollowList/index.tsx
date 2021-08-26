@@ -28,7 +28,17 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const { isModerator, isAutomatic } = useCommunityHelper(community)
-  const { getMembers, membersList, resetMembers, membersMeta, approveMembers, cancelMembers, sendToast } = useFollowList()
+  const {
+    getMembers,
+    membersList,
+    resetMembers,
+    membersMeta,
+    approveMembers,
+    cancelMembers,
+    changeMemberRole,
+    removeMember,
+    sendToast,
+  } = useFollowList()
   const [applyingValues, setApplyingValues] = useState<Array<CommunityMember>>([])
   const [participatingValues, setParticipatingValues] = useState<Array<CommunityMember>>([])
   const [initialValues, setInitialValues] = useState<Array<Array<CommunityMember>>>([])
@@ -62,6 +72,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
     setInitialValues([applying, participating])
   }, [membersList])
 
+  const getDetailAndToast = () => {
+    getMembers({ hash_key: community.attributes.hash_key, role: CommunityMemberRole.all })
+    sendToast(t('common:community.change_applying_members_toast'))
+  }
+
   const handleApplyingParam = (data, role) => {
     return _.map(
       _.filter(data, (d) => handleValue(d.attributes.member_role) == role),
@@ -80,23 +95,22 @@ const FollowList: React.FC<Props> = ({ community }) => {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const data: Array<CommunityMember> = _.differenceWith(applyingValues, initialValues[0], _.isEqual)
     const approve = handleApplyingParam(data, MEMBER_ROLE.MEMBER)
     const cancel = handleApplyingParam(data, null)
 
     if (approve.length > 0) {
-      approveMembers({ hash_key: community.attributes.hash_key, member_ids: approve })
+      await approveMembers({ hash_key: community.attributes.hash_key, data: { member_ids: approve } })
     }
     if (cancel.length > 0) {
-      cancelMembers({ hash_key: community.attributes.hash_key, member_ids: cancel })
+      await cancelMembers({ hash_key: community.attributes.hash_key, data: { member_ids: cancel } })
     }
-    getMembers({ hash_key: community.attributes.hash_key, role: CommunityMemberRole.all })
-    sendToast(t('common:community.change_applying_members_toast'))
+    getDetailAndToast()
     setHasChosenApplying(false)
   }
 
-  const handleSelectedValue = (isApplying: boolean, id: number, value: number) => {
+  const handleSelectedValue = async (isApplying: boolean, id: number, value: number) => {
     const data = JSON.parse(JSON.stringify(isApplying ? applyingValues : participatingValues))
 
     _.set(_.find(data, { attributes: { id: id } }), 'attributes.member_role', Number(value))
@@ -105,9 +119,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
       setApplyingValues(data)
     } else {
       setParticipatingValues(data)
+      if (Number(value) == MEMBER_ROLE.LEAVE) {
+        await removeMember({ data: { member_id: id }, hash_key: community.attributes.hash_key })
+        getDetailAndToast()
+      } else {
+        changeMemberRole({ data: { member_id: id, member_role: handleValue(value) }, hash_key: community.attributes.hash_key })
+      }
     }
-    // console.log(data)
-    setHasChosenApplying(true)
+    isApplying && setHasChosenApplying(true)
   }
 
   const renderMemberList = () => {
@@ -128,7 +147,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
             <ESLabel label={t('common:community.applying')} />
             <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
               {applyingValues.map((member, i) => {
-                return <UserSelectBoxList key={i} member={member} isAutomatic isApplying setValue={handleSelectedValue} />
+                return <UserSelectBoxList key={i} member={member} isApplying setValue={handleSelectedValue} />
               })}
             </Box>
           </>

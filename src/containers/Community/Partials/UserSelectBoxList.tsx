@@ -9,7 +9,6 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 
 type UserSelectBoxListProps = {
   member: CommunityMember
-  isAutomatic?: boolean
   isApplying?: boolean
   setValue?: (isApplying: boolean, id: number, value: number) => void
 }
@@ -31,7 +30,7 @@ const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
   { label: 'キックする', value: MEMBER_ROLE.LEAVE },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomatic, setValue, isApplying }) => {
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue, isApplying = false }) => {
   const classes = useStyles()
   const data = member.attributes
 
@@ -65,12 +64,12 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, isAutomat
             value={(isApplying && data.member_role == MEMBER_ROLE.REQUESTED && -1) || data.member_role}
             onChange={handleSelectOption}
           >
-            {isAutomatic && isApplying && (
+            {isApplying && (
               <option disabled value={-1}>
                 {i18n.t('common:community.applying')}
               </option>
             )}
-            {(isAutomatic ? APPLYING_OPTIONS : PARTICIPATING_OPTIONS).map((o, index) => (
+            {(isApplying ? APPLYING_OPTIONS : PARTICIPATING_OPTIONS).map((o, index) => (
               <option key={index} value={o.value}>
                 {o.label}
               </option>

@@ -146,7 +146,24 @@ export type CommunityMembersResponse = {
 }
 
 export type CommunityMembersApproveCancelParams = {
-  member_ids: Array<number>
+  data: {
+    member_ids: Array<number>
+  }
+  hash_key: string
+}
+
+export type CommunityMemberChangeRoleParams = {
+  data: {
+    member_id: number
+    member_role: number
+  }
+  hash_key: string
+}
+
+export type CommunityMemberRemoveParams = {
+  data: {
+    member_id: number
+  }
   hash_key: string
 }
 
@@ -325,12 +342,22 @@ export const getCommunityMembers = async (params: CommunityMembersParams): Promi
 }
 
 export const approveCommunityMembers = async (params: CommunityMembersApproveCancelParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_APPROVE.replace(/:id/gi, params.hash_key), { params })
+  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_APPROVE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 
 export const cancelCommunityMembers = async (params: CommunityMembersApproveCancelParams): Promise<void> => {
-  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_APPROVE.replace(/:id/gi, params.hash_key), { params })
+  const { data } = await api.post<void>(URI.COMMUNITY_MEMBERS_CANCEL.replace(/:id/gi, params.hash_key), params.data)
+  return data
+}
+
+export const changeCommunityMemberRole = async (params: CommunityMemberChangeRoleParams): Promise<void> => {
+  const { data } = await api.put<void>(URI.COMMUNITY_MEMBER_CHANGE_ROLE.replace(/:id/gi, params.hash_key), params.data)
+  return data
+}
+
+export const removeCommunityMember = async (params: CommunityMemberRemoveParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_MEMBER_REMOVE.replace(/:id/gi, params.hash_key), params.data)
   return data
 }
 

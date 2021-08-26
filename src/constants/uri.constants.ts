@@ -45,6 +45,8 @@ export const URI = {
   COMMUNITY_MEMBERS: '/v2/communities/:id/members',
   COMMUNITY_MEMBERS_APPROVE: '/v2/communities/:id/approve',
   COMMUNITY_MEMBERS_CANCEL: '/v2/communities/:id/cancel',
+  COMMUNITY_MEMBER_CHANGE_ROLE: '/v2/communities/:id/change_role',
+  COMMUNITY_MEMBER_REMOVE: '/v2/communities/:id/remove_members',
   TOPIC_LIST: '/v2/communities/topics',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',

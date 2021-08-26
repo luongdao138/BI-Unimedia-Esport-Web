@@ -15,6 +15,8 @@ export enum COMMUNITY_ACTION_TYPE {
   GET_COMMUNITY_MEMBERS = 'community/members',
   APPROVE_COMMUNITY_MEMBERS = 'community/members/approve',
   CANCEL_COMMUNITY_MEMBERS = 'community/members/cancel',
+  CHANGE_COMMUNITY_MEMBER_ROLE = 'community/member/changeRole',
+  REMOVE_COMMUNITY_MEMBER = 'community/member/remove',
   RESET_COMMUNITY_MEMBERS = 'community/resetMembers',
   GET_TOPIC_LIST = 'topic/list',
 }
