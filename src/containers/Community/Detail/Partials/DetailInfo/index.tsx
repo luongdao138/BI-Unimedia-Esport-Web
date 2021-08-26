@@ -277,7 +277,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }
 
   const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, hash_key.toString()))
+    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, data.hash_key.toString()))
   }
 
   return (
