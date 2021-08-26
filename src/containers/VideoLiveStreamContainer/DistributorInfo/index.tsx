@@ -1,5 +1,10 @@
-import { Box, Typography, makeStyles } from '@material-ui/core'
+import { Box, Typography, makeStyles, Grid, Theme } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
+import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
+import React from 'react'
+import { useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import SocialDistributionCircle from '@components/Button/SocialDistributionCircle'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 
@@ -11,6 +16,9 @@ interface dataItem {
 const DistributorInfo: React.FC = () => {
   // const { t } = useTranslation('common')
   const classes = useStyles()
+  const theme = useTheme()
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
+
   const getDistributorSocialInfo = () => [
     {
       id: 0,
@@ -25,40 +33,83 @@ const DistributorInfo: React.FC = () => {
       type: 'discord',
     },
   ]
-  const getSocialIconUrl = (type) => {
+
+  const dataLiveVideo = () =>
+    Array(20)
+      .fill('')
+      .map((_, i) => ({
+        id: i,
+        type: 'related',
+        title: `ムービータイトルムービータイトル ...`,
+        user_avatar: '/images/dataVideoFake/fake_avatar.png',
+        thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
+        thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
+        thumbnail: '/images/dataVideoFake/banner_04.png',
+        user_nickname: 'だみだみだみだみ',
+        waitingNumber: 1500,
+        category_name: 'Valorant',
+      }))
+
+  const getSocialIcon = (type) => {
     switch (type) {
       case 'twitter':
-        return '/images/ic_twitter_colored.png'
+        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={type} />
       case 'instagram':
-        return '/images/ic_instagram_colored.png'
+        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={type} />
       default:
-        return '/images/ic_discord_colored.png'
+        return <SocialDistributionCircle onlyIcon={true} className={classes.socialIcon} social={type} />
     }
   }
 
+  const archiveVideo = () => (
+    <Box className={classes.archiveVideoContainer}>
+      <Typography gutterBottom className={classes.archiveVideoTitle}>
+        {'アーカイブ'}
+      </Typography>
+      <Grid container spacing={3} className={classes.contentContainer}>
+        {dataLiveVideo().map((data, i) => (
+          <>
+            {downMd ? (
+              <Box className={classes.xsItemContainer} key={i}>
+                <VideoPreviewItem data={data} key={i} />
+              </Box>
+            ) : (
+              <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={i}>
+                <VideoPreviewItem data={data} key={i} />
+              </Grid>
+            )}
+          </>
+        ))}
+      </Grid>
+    </Box>
+  )
+
   return (
-    <Box className={classes.container}>
-      <ESAvatar className={classes.avatar} src={'/images/avatar.png'} />
-      <Box className={classes.textContainer}>
-        <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography>
-        <Typography className={classes.content}>
-          {'配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-            '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-            '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-            '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-            '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
-            '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。'}
-        </Typography>
+    <Box>
+      <Box className={classes.container}>
+        <ESAvatar className={classes.avatar} src={'/images/avatar.png'} />
+        <Box className={classes.textContainer}>
+          <Typography className={classes.title}>{'配信者の名前がはいります'}</Typography>
+          <Typography className={classes.content}>
+            {'配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
+              '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
+              '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
+              '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
+              '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。\n' +
+              '配信者のプロフィールがここに表示されます。配信者のプロフィールがここに表示されます。'}
+          </Typography>
+        </Box>
+        <Box className={classes.socialMediaContainer}>
+          {getDistributorSocialInfo().map((item: dataItem) => {
+            return getSocialIcon(item.type)
+          })}
+        </Box>
       </Box>
-      <Box className={classes.socialMediaContainer}>
-        {getDistributorSocialInfo().map((item: dataItem) => {
-          return <img className={classes.socialIcon} src={getSocialIconUrl(item.type)} key={item.id} />
-        })}
-      </Box>
+      {archiveVideo()}
     </Box>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     marginTop: 58,
@@ -96,6 +147,33 @@ const useStyles = makeStyles(() => ({
     height: 60,
     marginLeft: 22,
     borderRadius: 30,
+  },
+  archiveVideoTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  archiveVideoContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginTop: 80,
+  },
+  [theme.breakpoints.down(769)]: {
+    contentContainer: {
+      flexWrap: 'nowrap',
+      margin: '0px',
+      paddingBottom: '0px',
+      marginLeft: 10,
+      marginRight: 10,
+    },
+    xsItemContainer: {
+      paddingRight: '24px',
+      '&:last-child': {
+        paddingRight: 0,
+      },
+    },
   },
 }))
 export default DistributorInfo
