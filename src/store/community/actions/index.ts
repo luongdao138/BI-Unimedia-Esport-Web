@@ -140,6 +140,83 @@ export const getCommunityFeatures = createAsyncThunk<services.CommunityFeaturesR
   }
 )
 
+export const resetCommunityMembers = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL)
+
+export const getCommunityMembers = createAsyncThunk<services.CommunityMembersResponse, services.CommunityMembersParams>(
+  COMMUNITY_ACTION_TYPE.GET_COMMUNITY_MEMBERS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getCommunityMembers(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const approveCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
+  COMMUNITY_ACTION_TYPE.APPROVE_COMMUNITY_MEMBERS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.approveCommunityMembers(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const cancelCommunityMembers = createAsyncThunk<void, services.CommunityMembersApproveCancelParams>(
+  COMMUNITY_ACTION_TYPE.CANCEL_COMMUNITY_MEMBERS,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.cancelCommunityMembers(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const changeCommunityMemberRole = createAsyncThunk<void, services.CommunityMemberChangeRoleParams>(
+  COMMUNITY_ACTION_TYPE.CHANGE_COMMUNITY_MEMBER_ROLE,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.changeCommunityMemberRole(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const removeCommunityMember = createAsyncThunk<void, services.CommunityMemberRemoveParams>(
+  COMMUNITY_ACTION_TYPE.REMOVE_COMMUNITY_MEMBER,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.removeCommunityMember(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const createTopic = createAsyncThunk<services.CreateTopicResponse, services.TopicParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC,
   async (params, { rejectWithValue }) => {
