@@ -1,9 +1,10 @@
 import { State } from '../actions/types'
-import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX } from '@constants/socket.constants'
+import { CHAT_ACTION_TYPE, WEBSOCKET_PREFIX, CHAT_PAGING_ACTION_TYPE } from '@constants/socket.constants'
 import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import { ChatHelper } from './utils'
+import { ListHelper } from './utils/listHelper'
 
 const initialState: State = {
   lastKey: null,
@@ -11,6 +12,7 @@ const initialState: State = {
   activeRoom: null,
   socketReady: false,
   actionPending: false,
+  tempList: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
@@ -26,6 +28,7 @@ let roomListDeleted: ChatDataType[] | undefined
 const socketReducer = (state: State = initialState, action: AnyAction): State => {
   switch (action.type) {
     case CHAT_ACTION_TYPE.GET_ALL_ROOMS:
+      //clear tempMessage
       return {
         ...state,
         roomList: ChatHelper.roomUpdateWithUnseen(action.data.content, state.activeRoom),
@@ -154,6 +157,46 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         messages: deleted,
         roomList: roomListDeleted,
+      }
+
+    case CHAT_ACTION_TYPE.MEMBER_ADDED:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.addList(state.roomList, [action.data.content.roomDetail]),
+      }
+    case CHAT_ACTION_TYPE.GET_ROOM_INFO:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.addListForceDate(state.roomList, action.data.content.roomDetail),
+      }
+
+    case CHAT_ACTION_TYPE.ROOM_ADD_REMOVE_NOTIFY:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.roomListAddRemove(state.roomList, action.data.chatRoomId),
+      }
+    //room list paginating
+    case CHAT_PAGING_ACTION_TYPE.STORE_LIST:
+      // unique merge store messages
+      return {
+        ...state,
+        tempList: ListHelper.storeList(state.tempList, action.data.content),
+      }
+
+    case CHAT_PAGING_ACTION_TYPE.PAGING_ENDED:
+      // store last item to temp message end save too roomList
+      return {
+        ...state,
+        roomList: _.union(state.roomList, ListHelper.mergeList(state.tempList, action.data.content)),
+      }
+    case CHAT_PAGING_ACTION_TYPE.CLEAN_TEMP_LIST:
+      // store last item to temp message end save too roomList
+      return {
+        ...state,
+        tempList: undefined,
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {

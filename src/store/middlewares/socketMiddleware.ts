@@ -1,26 +1,23 @@
-import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE, CHAT_PAGING_ACTION_TYPE, ENTRY_TYPE } from '@constants/socket.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
 import { socketActions } from '@store/socket/actions'
 import { logout } from '@store/auth/actions'
+import _ from 'lodash'
 
 const DEVICE_ID = uuidv4()
 
 let socket: any = null
+let i = 0
 
 const onOpen = (store: StoreType) => (_event: Event) => {
   const userId = store.getState().auth.user?.id
   if (userId) {
     // eslint-disable-next-line no-console
-    console.log('connected, end fetching list')
     store.dispatch({ type: `${WEBSOCKET_PREFIX}:CONNECTED` })
-    store.dispatch(
-      socketActions.socketSend({
-        action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
-      })
-    )
+    store.dispatch(socketActions.initRoomList())
   }
 }
 
@@ -32,7 +29,26 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
   const message = JSON.parse(event.data)
 
   if (message && message.action) {
-    if (message.action === CHAT_ACTION_TYPE.REFRESH_MEMBERS) {
+    if (message.action === CHAT_ACTION_TYPE.GET_ALL_ROOMS) {
+      if (_.isObject(message.nextPageInfo) && i < 20) {
+        i++
+        //list has next paging
+        store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.STORE_LIST, data: message })
+        socket.send(
+          JSON.stringify({
+            action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
+            nextPageInfo: message.nextPageInfo,
+          })
+        )
+      } else if (message.ended) {
+        // paging has ended
+        store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.PAGING_ENDED, data: message })
+        i = 0
+      } else {
+        // regular case no paging
+        store.dispatch({ type: message.action, data: message })
+      }
+    } else if (message.action === CHAT_ACTION_TYPE.REFRESH_MEMBERS) {
       const userId = store.getState().auth.user?.id
       if (!userId) return
       socket.send(
@@ -41,13 +57,18 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
           roomId: message.content.roomId,
         })
       )
-    } else if (message.action === CHAT_ACTION_TYPE.MEMBER_ADDED) {
-      socket.send(
-        JSON.stringify({
-          action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
-          roomId: message.content.roomId,
-        })
-      )
+    } else if (message.action === CHAT_ACTION_TYPE.ROOM_ADD_REMOVE_NOTIFY) {
+      if (message.chatRoomId && message.type === ENTRY_TYPE.ADD) {
+        socket.send(
+          JSON.stringify({
+            action: CHAT_ACTION_TYPE.GET_ROOM_INFO,
+            roomId: message.chatRoomId,
+          })
+        )
+      } else {
+        // this case is removed member
+        store.dispatch({ type: message.action, data: message })
+      }
     } else {
       store.dispatch({ type: message.action, data: message })
     }
