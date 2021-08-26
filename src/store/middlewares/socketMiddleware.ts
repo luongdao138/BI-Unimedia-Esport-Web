@@ -1,4 +1,4 @@
-import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE, CHAT_PAGING_ACTION_TYPE } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE, CHAT_PAGING_ACTION_TYPE, ENTRY_TYPE } from '@constants/socket.constants'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v4 as uuidv4 } from 'uuid'
 import { Action, Middleware } from 'redux'
@@ -33,7 +33,6 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
       if (_.isObject(message.nextPageInfo) && i < 20) {
         i++
         //list has next paging
-        // eslint-disable-next-line no-console
         store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.STORE_LIST, data: message })
         socket.send(
           JSON.stringify({
@@ -42,12 +41,10 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
           })
         )
       } else if (message.ended) {
-        // eslint-disable-next-line no-console
         // paging has ended
         store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.PAGING_ENDED, data: message })
         i = 0
       } else {
-        // eslint-disable-next-line no-console
         // regular case no paging
         store.dispatch({ type: message.action, data: message })
       }
@@ -60,6 +57,18 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
           roomId: message.content.roomId,
         })
       )
+    } else if (message.action === CHAT_ACTION_TYPE.ROOM_ADD_REMOVE_NOTIFY) {
+      if (message.chatRoomId && message.type === ENTRY_TYPE.ADD) {
+        socket.send(
+          JSON.stringify({
+            action: CHAT_ACTION_TYPE.GET_ROOM_INFO,
+            roomId: message.chatRoomId,
+          })
+        )
+      } else {
+        // this case is removed member
+        store.dispatch({ type: message.action, data: message })
+      }
     } else {
       store.dispatch({ type: message.action, data: message })
     }

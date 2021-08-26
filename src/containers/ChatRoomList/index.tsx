@@ -88,7 +88,6 @@ const ChatRoomList: React.FC<ChatRoomListProps> = ({ expand, listCliked }) => {
 
   return (
     <MuiList className={classes.root}>
-      {listData && listData.length}
       {renderLoader()}
       {renderList()}
       {renderPlaceHolder()}

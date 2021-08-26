@@ -165,6 +165,11 @@ const addList = (state: ChatDataType[], room: ChatDataType[]): ChatDataType[] =>
   const data = _.uniqBy(_.union(state, room), 'chatRoomId')
   return data
 }
+const addListForceDate = (state: ChatDataType[], room: ChatDataType): ChatDataType[] => {
+  const modifiedRoom = _.assign(room, { lastMsgAt: new Date().getTime() })
+  const data = _.uniqBy(_.union(state, [modifiedRoom]), 'chatRoomId')
+  return data
+}
 
 export const ChatHelper = {
   messagesMerge,
@@ -176,4 +181,5 @@ export const ChatHelper = {
   roomListAddRemove,
   roomUpdateWithUnseen,
   addList,
+  addListForceDate,
 }

@@ -165,6 +165,19 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
         ...state,
         roomList: ChatHelper.addList(state.roomList, [action.data.content.roomDetail]),
       }
+    case CHAT_ACTION_TYPE.GET_ROOM_INFO:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.addListForceDate(state.roomList, action.data.content.roomDetail),
+      }
+
+    case CHAT_ACTION_TYPE.ROOM_ADD_REMOVE_NOTIFY:
+      // unique merge store messages
+      return {
+        ...state,
+        roomList: ChatHelper.roomListAddRemove(state.roomList, action.data.chatRoomId),
+      }
     //room list paginating
     case CHAT_PAGING_ACTION_TYPE.STORE_LIST:
       // unique merge store messages
