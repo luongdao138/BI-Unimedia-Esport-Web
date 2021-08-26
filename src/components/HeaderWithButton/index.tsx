@@ -1,4 +1,3 @@
-import { ESRoutes } from '@constants/route.constants'
 import { Box, Icon, IconButton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
@@ -13,7 +12,7 @@ const HeaderWithButton: React.FC<HeaderWithButtonProps> = ({ title }) => {
   const router = useRouter()
   return (
     <Box className={classes.header}>
-      <IconButton className={classes.iconButton} disableRipple onClick={() => router.push(ESRoutes.VIDEO_STREAMING_MANAGEMENT)}>
+      <IconButton className={classes.iconButton} disableRipple onClick={() => router.back()}>
         <Icon className={`fa fa-arrow-left ${classes.icon}`} />
       </IconButton>
       <Typography variant="body1" className={classes.headerTitle}>
