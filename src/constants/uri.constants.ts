@@ -111,5 +111,8 @@ export const URI = {
   GET_BANNER: '/v2/videos/top/banners',
   GET_VIDEO_FAVORITE: '/v2/videos/follow',
   //purchase points
-  GET_LIST_CARDS: '/gmo/list_card',
+  GET_LIST_CARDS: 'v2/gmo/list_card',
+  DELETE_CARD: '/v2/gmo/delete_card',
+  ADD_CARD: '/v2/gmo/add_card',
+  PURCHASE_POINT: '/v2/gmo/purchase',
 }

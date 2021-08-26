@@ -4,7 +4,7 @@ import ESModal from '@components/Modal'
 import i18n from '@locales/i18n'
 import StepOne from './StepOne'
 import StepTwo from './StepTwo'
-import CardDeleteConfirmModal from '@containers/PointManage/PurchasePoint/CardDeleteConfirmModal'
+// import CardDeleteConfirmModal from '@containers/PointManage/PurchasePoint/CardDeleteConfirmModal'
 import StepThree from './StepThree'
 
 interface DonatePointsProps {
@@ -16,7 +16,7 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ modal, setShowModal }) => {
   const classes = useStyles()
   const [step, setStep] = useState(1)
   const [typeStepTwo, setTypeStepTwo] = useState(null)
-  const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
+  // const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
   const cards = [
     {
       number: 'xxxx xxxx xxxx 4256',
@@ -33,7 +33,7 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ modal, setShowModal }) => {
     setStep(1)
   }, [])
   const deleteCard = (): void => {
-    setIsShowDeleteCardModal(true)
+    // setIsShowDeleteCardModal(true)
   }
   const onNextStep = (new_step: number): void => {
     setStep(new_step)
@@ -132,14 +132,14 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ modal, setShowModal }) => {
           </Box>
         </Box>
       </ESModal>
-      {isShowDeleteCardModal && (
+      {/* {isShowDeleteCardModal && (
         <CardDeleteConfirmModal
           open={isShowDeleteCardModal}
           handleClose={() => {
             setIsShowDeleteCardModal(false)
           }}
         />
-      )}
+      )} */}
     </Box>
   )
 }

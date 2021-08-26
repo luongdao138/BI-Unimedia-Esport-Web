@@ -1,5 +1,5 @@
 import { Box, Typography, makeStyles, withStyles } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
@@ -14,42 +14,101 @@ import { CardAddParams } from '@services/purchasePoints.service'
 import Radio from '@material-ui/core/Radio'
 import { RadioProps } from '@material-ui/core/Radio'
 import usePurchasePointData from './usePurchasePointData'
+import PointPurchaseConfirmModal from './PointPurchaseConfirmModal'
+import CardDeleteConfirmModal from './CardDeleteConfirmModal'
+import ESLoader from '@components/FullScreenLoader'
 interface Step2Props {
-  step: number
   selectedPoint: any
-  cards: Array<any>
-  onNext: (step: number) => void
-  deleteCard: (card: string) => void
 }
 
-const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selectedPoint }) => {
-  const [selectedCardId, setSelectedCardId] = React.useState<any>('')
+const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const { getSavedCards } = usePurchasePointData()
+
+  const { 
+    metaSavedCardsMeta, deleteSavedCard, metaDeleteCardMeta, purchasePointUseNewCard,
+    purchasePointUseOldCard, purchasePointInfo, metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta 
+  } = usePurchasePointData()
+  
+  const [selectedCardId, setSelectedCardId] = React.useState<any>('');
+  const [isShowPurchasePointModal, setIsShowPurchasePointModal] = useState(false)
+  const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
+  const [isPurchasingPoint, setIsPurchasingPoint] = useState(false)
+  const [deletedCard, setDeletedCard] = useState({})
+
+  useEffect(() => {
+    if (metaDeleteCardMeta.loaded) {
+      setIsShowDeleteCardModal(false)
+    }
+  }, [metaDeleteCardMeta])
+
+  useEffect(() => {
+    // only close modal when purchase using old or new card success
+    if (
+      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) || 
+      (metaPurchaseUseOldCardMeta.loaded && !metaPurchaseUseNewCardMeta.pending)
+    ) {
+      setIsPurchasingPoint(false)
+      setIsShowPurchasePointModal(false)
+    }
+  }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
+
+  const isLoading = metaSavedCardsMeta.pending || metaDeleteCardMeta.pending || isPurchasingPoint 
+    || metaPurchaseUseNewCardMeta.pending || metaPurchaseUseOldCardMeta.pending
 
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik<CardAddParams>({
-    initialValues: { card_name: '', card_number: '', card_expire_date: '', card_cvc: '', is_saved_card: false },
+    initialValues: { 
+      card_name: 'DANG THANH SON', card_number: '371449635398433', 
+      card_expire_date: '2112', card_cvc: '1405', 
+      is_saved_card: true 
+    },
     // validationSchema,
     onSubmit: () => {
       // onSubmitClicked(values)
     },
   })
-  // const formik = useFormik({
-  //   initialValues: [],
-  //   // validationSchema: validationLiveSettingsScheme(),
-  //   enableReinitialize: true,
-  //   onSubmit: () => {
-  //     //TODO: smt
-  //   },
-  // })
 
-  useEffect(() => {
-    getSavedCards()
-  }, [])
+  const confirmPurchasePoint = () => {
+    setIsShowPurchasePointModal(true)
+  }
 
-  const onClickNext = () => {
-    onNext(step + 1)
+  const deleteCard = (card): void => {
+    setDeletedCard(card)
+    setIsShowDeleteCardModal(true)
+  }
+
+  const handlePurchasePoint = (): void => {
+    // purchase point use new card
+    if(selectedCardId === '') {
+      const Multipayment = window.Multipayment
+      Multipayment.init("tshop00051538");
+      setIsPurchasingPoint(true)
+      Multipayment.getToken(
+        {
+          cardno: '371449635398433',
+          expire: '2112',
+          securitycode: '1405',
+          holdername: 'DANG THANH SON',
+          tokennumber: '1'
+        },
+        response => {
+          if (response.resultCode == "000") {
+            purchasePointUseNewCard({
+              token: response.tokenObject.token[0],
+              point: selectedPoint,
+              card_type: 1,
+              is_save_card: true
+            })
+          }
+        }
+      );
+    } else {
+      // purchase point use saved card
+      purchasePointUseOldCard({
+        card_seq: selectedCardId,
+        point: selectedPoint
+      })
+    }
   }
 
   return (
@@ -146,44 +205,46 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
           <Box className={classes.card_wrap}>
             <Box className={classes.card_info_title}>{t('purchase_point_tab.card_title')}</Box>
             <Box className={classes.card_info_container + ' ' + classes.second_card_info_container}>
-              {cards.map((card, key) => {
-                return (
-                  <>
-                    <Box className={classes.wrap_all_card}>
-                      <Box className={classes.wrap_check_box}>
-                        <CustomRadio
-                          checked={selectedCardId === key}
-                          onChange={(e) => setSelectedCardId(Number(e.target.value))}
-                          value={key}
-                          name="radio-button"
-                          size="small"
-                        />
-                      </Box>
-                      <Box>
-                        <Box className={classes.wrap_card_number}>{card.number}</Box>
-                        <Box className={classes.wrap_money}>
-                          <img src="/images/visa.svg" />
+              <Box className={classes.wrap_all_cards}>
+                {purchasePointInfo.saved_cards.map((card, key) => {
+                  return (
+                    <>
+                      <Box className={classes.wrap_all_card}>
+                        <Box className={classes.wrap_check_box}>
+                          <CustomRadio
+                            checked={selectedCardId === Number(card.card_seq)}
+                            onChange={e => setSelectedCardId(Number(e.target.value))}
+                            value={card.card_seq}
+                            name="radio-button"
+                            size="small"
+                          />
+                        </Box>
+                        <Box>
+                          <Box className={classes.wrap_card_number}>{card.card_number}</Box>
+                          <Box className={classes.wrap_money}>
+                            <img src="/images/visa.svg" />
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
-                    <Box textAlign="right">
-                      <Box
-                        className={classes.title_delete_card + ' ' + (key + 1 === cards.length ? classes.last_title_delete_card : '')}
-                        onClick={() => {
-                          deleteCard('xxxx xxxx xxxx 4256')
-                        }}
-                      >
-                        {t('purchase_point_tab.title_delete_card')}
+                      <Box textAlign="right">
+                        <Box
+                          className={classes.title_delete_card + ' ' + (key + 1 === purchasePointInfo.saved_cards.length ? classes.last_title_delete_card : '')}
+                          onClick={() => deleteCard(card)}
+                        >
+                          {t('purchase_point_tab.title_delete_card')}
+                        </Box>
                       </Box>
-                    </Box>
-                  </>
-                )
-              })}
-              {cards.length === 0 ? (
+                    </>
+                  )
+                })}
+              </Box>
+              {purchasePointInfo.saved_cards.length === 0 ? (
                 <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>{t('purchase_point_tab.no_card')}</Box>
               ) : (
                 <Box textAlign="center" pb={1}>
-                  <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
+                  <ESButton 
+                    className={classes.clear_section_btn} variant="outlined" round fullWidth size="large"
+                  >
                     {t('purchase_point_tab.clear_section')}
                   </ESButton>
                 </Box>
@@ -193,10 +254,31 @@ const Step2: React.FC<Step2Props> = ({ deleteCard, cards, step, onNext, selected
         </Box>
       </form>
       <Box pb={3} pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
-        <ButtonPrimary type="submit" round fullWidth onClick={onClickNext}>
+        <ButtonPrimary type="submit" round fullWidth onClick={confirmPurchasePoint}>
           {t('purchase_point_tab.btn_buy')}
         </ButtonPrimary>
       </Box>
+      {isShowPurchasePointModal && (
+        <PointPurchaseConfirmModal
+          handlePurchasePoint={handlePurchasePoint}
+          open={isShowPurchasePointModal}
+          selectedPoint={selectedPoint}
+          handleClose={() => {
+            setIsShowPurchasePointModal(false)
+          }}
+        />
+      )}
+      {isShowDeleteCardModal && (
+        <CardDeleteConfirmModal
+          deleteSavedCard={deleteSavedCard}
+          deletedCard={deletedCard}
+          open={isShowDeleteCardModal}
+          handleClose={() => {
+            setIsShowDeleteCardModal(false)
+          }}
+        />
+      )}
+      {(isLoading) && <ESLoader open={isLoading} />}
     </Box>
   )
 }
@@ -206,6 +288,7 @@ export default Step2
 const CustomRadio = withStyles({
   root: {
     color: Colors.white_opacity[30],
+    background: '#212121',
     padding: 0,
     '&$checked': {
       color: Colors.primary,
@@ -292,7 +375,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 16,
   },
   second_card_info_container: {
-    padding: '16px',
+    padding: '16px 0 16px 16px',
   },
   wrap_all_card: {
     borderRadius: 4,
@@ -342,6 +425,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '27px',
     display: 'flex',
     alignItems: 'center',
+  },
+  wrap_all_cards: {
+    height: "280px", 
+    overflow: "auto",
+    paddingRight: '16px'
   },
   [theme.breakpoints.down('lg')]: {
     card_info_wrap: {

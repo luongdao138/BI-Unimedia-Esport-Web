@@ -10,6 +10,8 @@ import { RadioProps } from '@material-ui/core/Radio'
 import { POINTS } from '@constants/common.constants'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { calValueFromTax } from '@utils/helpers/CommonHelper'
+import usePurchasePointData from './usePurchasePointData'
+import ESLoader from '@components/FullScreenLoader'
 
 interface Step1Props {
   step: number
@@ -19,6 +21,10 @@ interface Step1Props {
 
 const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
   const [selectedPoint, changeSelectedPoint] = React.useState<any>('')
+
+  const { 
+    metaSavedCardsMeta
+  } = usePurchasePointData()
 
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -42,6 +48,7 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
 
   return (
     <Box>
+      {(metaSavedCardsMeta.pending) && <ESLoader open={metaSavedCardsMeta.pending} />}
       <Box className={classes.title}>
         <ESLabel label={t('purchase_point_tab.point_number_select')} required={true} />
       </Box>
@@ -90,6 +97,7 @@ export default Step1
 const CustomRadio = withStyles({
   root: {
     color: Colors.white_opacity[30],
+    background: '#212121',
     padding: 0,
     '&$checked': {
       color: Colors.primary,

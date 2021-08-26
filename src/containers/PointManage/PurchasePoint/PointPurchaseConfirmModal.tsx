@@ -4,14 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
-
+import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { calValueFromTax } from '@utils/helpers/CommonHelper'
 interface ModalProps {
   selectedPoint: any
   open: boolean
   handleClose: () => void
+  handlePurchasePoint: () => void
 }
 
-const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose }) => {
+const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose, handlePurchasePoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -23,11 +25,11 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, 
           <Box className={classes.wrap_message}>
             <Typography className={classes.message}>{t('purchase_point_tab.purchase_exe_points')}</Typography>
             <Typography className={classes.message}>
-              {selectedPoint} {t('point_management_tab.eXe_point_text')}
+              {FormatHelper.currencyFormat(selectedPoint.toString())} {t('point_management_tab.eXe_point_text')}
             </Typography>
             <Box pb={3}></Box>
             <Typography className={classes.message}>{t('purchase_point_tab.purchase_fee')}</Typography>
-            <Typography className={classes.message}>1,760{t('common.money')}</Typography>
+            <Typography className={classes.message}>{FormatHelper.currencyFormat(calValueFromTax(selectedPoint).toString())}{t('common.money')}</Typography>
           </Box>
           <Typography className={classes.note_purchase_point}>{t('purchase_point_tab.note_purchase_point')}</Typography>
         </Box>
@@ -35,7 +37,7 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, 
           <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
             {t('common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary className={classes.actionBtnBuy} onClick={handleClose}>
+          <ButtonPrimary className={classes.actionBtnBuy} onClick={handlePurchasePoint}>
             {t('purchase_point_tab.btn_buy')}
           </ButtonPrimary>
         </Box>

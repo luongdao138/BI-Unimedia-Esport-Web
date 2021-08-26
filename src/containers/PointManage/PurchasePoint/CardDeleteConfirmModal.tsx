@@ -6,11 +6,13 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
 
 interface ModalProps {
-  open: boolean
-  handleClose: () => void
+  open: boolean,
+  deletedCard: any,
+  handleClose: () => void,
+  deleteSavedCard: (card_seq) => void,
 }
 
-const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose }) => {
+const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, deletedCard, deleteSavedCard }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -22,7 +24,7 @@ const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose }) => 
           <Box className={classes.wrap_message}>
             <Typography className={classes.message}>{t('purchase_point_tab.delete_confirm_content')}</Typography>
             <Box pb={4}></Box>
-            <Typography className={classes.message}>xxxx xxxx xxxx 4256</Typography>
+            <Typography className={classes.message}>{deletedCard.card_number}</Typography>
             <Box pb={4}></Box>
           </Box>
         </Box>
@@ -30,7 +32,7 @@ const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose }) => 
           <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
             {t('common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary className={classes.actionBtnBuy} onClick={() => ''}>
+          <ButtonPrimary className={classes.actionBtnBuy} onClick={() => deleteSavedCard(deletedCard.card_seq)}>
             {t('purchase_point_tab.btn_delete')}
           </ButtonPrimary>
         </Box>

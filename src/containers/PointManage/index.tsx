@@ -10,6 +10,8 @@ import PurchaseHistory from './PurchaseHistory'
 import PointManagementTab from './PointManagementTab'
 import PurchasePoint from './PurchasePoint'
 import UsageHistory from './UsageHistory'
+import Head from "next/head"
+import usePurchasePointData from './PurchasePoint/usePurchasePointData'
 
 enum TABS {
   POINT_MANAGEMENT = 0,
@@ -22,9 +24,23 @@ const PointManage: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+
   useEffect(() => {
     setTab(0)
   }, [])
+
+  const { metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta } = usePurchasePointData()
+
+  useEffect(() => {
+    // redirect to first tab when purchase point user new or old card success
+    if (
+      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) || 
+      (metaPurchaseUseOldCardMeta.loaded && !metaPurchaseUseNewCardMeta.pending)
+    ) {
+      setTab(0)
+    }
+  }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
+
   const getTabs = () => {
     return (
       <Grid item xs={12}>
@@ -58,6 +74,9 @@ const PointManage: React.FC = () => {
   }
   return (
     <>
+      <Head>
+        <script src={process.env.NEXT_PUBLIC_GMO_ENDPOINT}></script>
+      </Head>
       <HeaderWithButton title={t('point_management_tab.point_management')} />
       <Grid container direction="column">
         {getTabs()}
