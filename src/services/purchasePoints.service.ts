@@ -21,24 +21,24 @@ export type SavedCardsResponse = {
     CardSeq: string
     CardType: string
     GMO_SHOP_ID: string
-  },
+  }
   GMO_SHOP_ID: string
 }
 
 export type GetSavedCardsResponse = {
-  data: SavedCardsResponse,
+  data: SavedCardsResponse
 }
 
 export type ParamsPurchasePointUseNewCard = {
-  token: string,
-  point: number | string,
-  card_type: number,
-  is_save_card: boolean,
+  token: string
+  point: number | string
+  card_type: number
+  is_save_card: boolean
 }
 
 export type ParamsPurchasePointUseOldCard = {
-  card_seq: number | string,
-  point: number | string,
+  card_seq: number | string
+  point: number | string
 }
 
 export const getSavedCards = async (): Promise<GetSavedCardsResponse> => {
@@ -47,7 +47,7 @@ export const getSavedCards = async (): Promise<GetSavedCardsResponse> => {
 }
 
 export const deleteCard = async (card_seq: string): Promise<void> => {
-  const { data } = await api.post<void>(URI.DELETE_CARD, {card_seq: card_seq})
+  const { data } = await api.post<void>(URI.DELETE_CARD, { card_seq: card_seq })
   return data
 }
 

@@ -19,16 +19,16 @@ const usePurchasePointData = () => {
   const metaDeleteCardMeta = useAppSelector(getDeleteCardMeta)
   const metaPurchaseUseNewCardMeta = useAppSelector(getPurchaseUseNewCardMeta)
   const metaPurchaseUseOldCardMeta = useAppSelector(getPurchaseUseOldCardMeta)
-  
+
   const purchasePointInfo = useAppSelector(selectors.getPurchasePoint)
 
   const getSavedCards = () => dispatch(actions.getSavedCards())
-  
+
   const deleteSavedCard = async (card_seq) => {
     const resultAction = await dispatch(actions.deleteCard(card_seq))
     if (actions.deleteCard.fulfilled.match(resultAction)) {
       const getCardsActionResult = await dispatch(actions.getSavedCards())
-      if(getCardsActionResult) {
+      if (getCardsActionResult) {
         dispatch(commonActions.addToast(t('purchase_point_tab.mess_delete_card_success')))
       }
     }
@@ -49,9 +49,16 @@ const usePurchasePointData = () => {
     }
   }
 
-  return { 
-    metaSavedCardsMeta, getSavedCards, purchasePointInfo, deleteSavedCard, metaDeleteCardMeta ,
-    purchasePointUseNewCard, metaPurchaseUseNewCardMeta, purchasePointUseOldCard, metaPurchaseUseOldCardMeta
+  return {
+    metaSavedCardsMeta,
+    getSavedCards,
+    purchasePointInfo,
+    deleteSavedCard,
+    metaDeleteCardMeta,
+    purchasePointUseNewCard,
+    metaPurchaseUseNewCardMeta,
+    purchasePointUseOldCard,
+    metaPurchaseUseOldCardMeta,
   }
 }
 

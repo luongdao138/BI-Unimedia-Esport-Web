@@ -4,19 +4,17 @@ import Step2 from './Step2'
 import { Box, makeStyles } from '@material-ui/core'
 import usePurchasePointData from './usePurchasePointData'
 
-declare global{
+declare global {
   interface Window {
-    Multipayment: any;
+    Multipayment: any
   }
 }
 
 const PurchasePoint: React.FC = () => {
   const [step, setStep] = useState(1)
   const [selectedPoint, setSelectedPoint] = useState(0)
-  
-  const { 
-    getSavedCards, 
-  } = usePurchasePointData()
+
+  const { getSavedCards } = usePurchasePointData()
 
   useEffect(() => {
     // Multipayment.getToken(
@@ -41,7 +39,6 @@ const PurchasePoint: React.FC = () => {
     // );
     getSavedCards()
   }, [])
-    
 
   const classes = useStyles()
 
@@ -60,7 +57,6 @@ const PurchasePoint: React.FC = () => {
           <></>
         )}
       </Box>
-      
     </>
   )
 }

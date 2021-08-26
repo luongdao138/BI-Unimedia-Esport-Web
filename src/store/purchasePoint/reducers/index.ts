@@ -14,7 +14,7 @@ type StateType = {
 
 const initialState: StateType = {
   saved_cards: [],
-  GMO_SHOP_ID: ''
+  GMO_SHOP_ID: '',
 }
 
 const splitCardInfo = (str) => {
@@ -24,18 +24,19 @@ const splitCardInfo = (str) => {
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getSavedCards.fulfilled, (state, action) => {
     const res_saved_cards = action.payload.data.attributes
-    if(res_saved_cards && Object.keys(res_saved_cards).length !== 0 && res_saved_cards.CardNo) {
+    if (res_saved_cards && Object.keys(res_saved_cards).length !== 0 && res_saved_cards.CardNo) {
       const card_numbers = splitCardInfo(res_saved_cards.CardNo)
       const card_seqs = splitCardInfo(res_saved_cards.CardSeq)
       const card_types = splitCardInfo(res_saved_cards.CardType)
       let saved_cards = []
       for (let index = 0; index < card_numbers.length; index++) {
-          saved_cards = [...saved_cards, 
+        saved_cards = [
+          ...saved_cards,
           {
             card_number: card_numbers[index],
             card_seq: card_seqs[index],
             card_type: card_types[index],
-          }
+          },
         ]
       }
       state.GMO_SHOP_ID = action.payload.data.GMO_SHOP_ID

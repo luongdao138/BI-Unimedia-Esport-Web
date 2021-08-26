@@ -167,6 +167,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       title: formik.values.stepSettingOne.title,
       content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
     })
+    setErrPublicTime('')
   }
   const isFirstStep = () => {
     return step === 1 ? true : false

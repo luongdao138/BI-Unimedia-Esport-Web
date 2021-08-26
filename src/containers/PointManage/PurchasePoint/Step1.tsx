@@ -22,9 +22,7 @@ interface Step1Props {
 const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
   const [selectedPoint, changeSelectedPoint] = React.useState<any>('')
 
-  const { 
-    metaSavedCardsMeta
-  } = usePurchasePointData()
+  const { metaSavedCardsMeta } = usePurchasePointData()
 
   const { t } = useTranslation('common')
   const classes = useStyles()
@@ -48,7 +46,7 @@ const Step1: React.FC<Step1Props> = ({ step, onNext, setSelectedPoint }) => {
 
   return (
     <Box>
-      {(metaSavedCardsMeta.pending) && <ESLoader open={metaSavedCardsMeta.pending} />}
+      {metaSavedCardsMeta.pending && <ESLoader open={metaSavedCardsMeta.pending} />}
       <Box className={classes.title}>
         <ESLabel label={t('purchase_point_tab.point_number_select')} required={true} />
       </Box>

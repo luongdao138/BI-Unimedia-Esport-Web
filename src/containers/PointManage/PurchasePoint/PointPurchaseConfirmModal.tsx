@@ -29,7 +29,10 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, 
             </Typography>
             <Box pb={3}></Box>
             <Typography className={classes.message}>{t('purchase_point_tab.purchase_fee')}</Typography>
-            <Typography className={classes.message}>{FormatHelper.currencyFormat(calValueFromTax(selectedPoint).toString())}{t('common.money')}</Typography>
+            <Typography className={classes.message}>
+              {FormatHelper.currencyFormat(calValueFromTax(selectedPoint).toString())}
+              {t('common.money')}
+            </Typography>
           </Box>
           <Typography className={classes.note_purchase_point}>{t('purchase_point_tab.note_purchase_point')}</Typography>
         </Box>

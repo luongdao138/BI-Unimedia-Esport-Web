@@ -10,7 +10,7 @@ import PurchaseHistory from './PurchaseHistory'
 import PointManagementTab from './PointManagementTab'
 import PurchasePoint from './PurchasePoint'
 import UsageHistory from './UsageHistory'
-import Head from "next/head"
+import Head from 'next/head'
 import usePurchasePointData from './PurchasePoint/usePurchasePointData'
 
 enum TABS {
@@ -34,7 +34,7 @@ const PointManage: React.FC = () => {
   useEffect(() => {
     // redirect to first tab when purchase point user new or old card success
     if (
-      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) || 
+      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) ||
       (metaPurchaseUseOldCardMeta.loaded && !metaPurchaseUseNewCardMeta.pending)
     ) {
       setTab(0)

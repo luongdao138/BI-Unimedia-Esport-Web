@@ -916,6 +916,7 @@ export default {
       min_date: '過去日付は登録できません',
       input_required: '未入力の項目があります',
       max_time_schedule_live: '配信可能時間内の日時を入力してください',
+      public_time_less: 'アーカイブ配信終了日時は、配信日時以降の日付を入力してください',
     },
     shared_it: '共有する',
     dont_share: '共有しない',
