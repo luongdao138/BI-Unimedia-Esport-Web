@@ -223,7 +223,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   countContainer: {
-    marginLeft: 8,
+    marginLeft: theme.spacing(1),
     alignItems: 'center',
   },
   count: {

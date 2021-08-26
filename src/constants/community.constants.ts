@@ -47,15 +47,6 @@ export const MEMBER_ROLE = {
   NOT_MEMBER: 8,
 }
 
-export const MEMBER_ACTION_TYPE = {
-  APPROVE_USER: 'approve_user',
-  REJECT_USER: 'reject_user',
-  HOLD_USER: 'hold_user',
-  MAKE_CO_ORGANIZER: 'make_co_organizer',
-  CHANGE_TO_USER: 'change_to_user',
-  KICK_USER: 'kick_user',
-}
-
 export const COMMUNITY_STATUS = {
   CANCELLED: 'cancelled',
   READY: 'ready',
