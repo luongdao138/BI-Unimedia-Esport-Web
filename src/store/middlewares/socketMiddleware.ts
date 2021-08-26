@@ -5,22 +5,19 @@ import { Action, Middleware } from 'redux'
 import { StoreType, AppDispatch } from '@store/store'
 import { socketActions } from '@store/socket/actions'
 import { logout } from '@store/auth/actions'
+import _ from 'lodash'
 
 const DEVICE_ID = uuidv4()
 
 let socket: any = null
+let i = 0 // max number of pagination retry request
 
 const onOpen = (store: StoreType) => (_event: Event) => {
   const userId = store.getState().auth.user?.id
   if (userId) {
     // eslint-disable-next-line no-console
-    console.log('connected, end fetching list')
     store.dispatch({ type: `${WEBSOCKET_PREFIX}:CONNECTED` })
-    store.dispatch(
-      socketActions.socketSend({
-        action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
-      })
-    )
+    store.dispatch(socketActions.initRoomList())
   }
 }
 
@@ -33,19 +30,27 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
 
   if (message && message.action) {
     if (message.action === CHAT_ACTION_TYPE.GET_ALL_ROOMS) {
-      if (message.nextPagingInfo) {
+      if (_.isObject(message.nextPageInfo) && i < 10) {
+        i++
         //list has next paging
+        // eslint-disable-next-line no-console
+        console.log('paginating', i)
         store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.STORE_LIST, data: message })
         socket.send(
           JSON.stringify({
             action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
-            roomId: message.nextPagingInfo,
+            nextPageInfo: message.nextPageInfo,
           })
         )
-      } else if (!message.nextPagingInfo && message.ended) {
+      } else if (message.ended) {
+        // eslint-disable-next-line no-console
+        console.log('paging ended')
         // paging has ended
         store.dispatch({ type: CHAT_PAGING_ACTION_TYPE.PAGING_ENDED, data: message })
+        i = 0
       } else {
+        // eslint-disable-next-line no-console
+        console.log('regular list no paging')
         // regular case no paging
         store.dispatch({ type: message.action, data: message })
       }
@@ -59,12 +64,7 @@ const onMessage = (store: StoreType) => (event: MessageEvent) => {
         })
       )
     } else if (message.action === CHAT_ACTION_TYPE.MEMBER_ADDED) {
-      socket.send(
-        JSON.stringify({
-          action: CHAT_ACTION_TYPE.GET_ALL_ROOMS,
-          roomId: message.content.roomId,
-        })
-      )
+      store.dispatch(socketActions.initRoomList())
     } else {
       store.dispatch({ type: message.action, data: message })
     }

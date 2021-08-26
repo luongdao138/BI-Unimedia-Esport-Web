@@ -4,6 +4,7 @@ import { AnyAction } from 'redux'
 import { MessageType, ChatRoomMemberItem, ChatDataType } from '@components/Chat/types/chat.types'
 import _ from 'lodash'
 import { ChatHelper } from './utils'
+import { ListHelper } from './utils/listHelper'
 
 const initialState: State = {
   lastKey: null,
@@ -162,12 +163,20 @@ const socketReducer = (state: State = initialState, action: AnyAction): State =>
       // unique merge store messages
       return {
         ...state,
+        tempList: ListHelper.storeList(state.tempList, action.data.content),
       }
 
     case CHAT_PAGING_ACTION_TYPE.PAGING_ENDED:
       // store last item to temp message end save too roomList
       return {
         ...state,
+        roomList: ListHelper.mergeList(state.tempList, action.data.content),
+      }
+    case CHAT_PAGING_ACTION_TYPE.CLEAN_TEMP_LIST:
+      // store last item to temp message end save too roomList
+      return {
+        ...state,
+        tempList: undefined,
       }
     case `${WEBSOCKET_PREFIX}:CONNECTED`:
       return {
