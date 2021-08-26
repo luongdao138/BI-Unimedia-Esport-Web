@@ -25,7 +25,7 @@ import ServerError from './ServerError'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import LoginRequired from '@containers/LoginRequired'
-import { FocusContext, FocusContextProvider } from '@containers/arena/hooks/input-focus-context'
+import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail

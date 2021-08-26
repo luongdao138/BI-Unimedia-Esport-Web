@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { createContext, useContext, useState } from 'react'
 
 interface IFocusContext {
@@ -9,7 +10,11 @@ interface IFocusContext {
   }
 }
 
-export const FocusContext = createContext<IFocusContext | undefined>(undefined)
+export const FocusContext = createContext<IFocusContext | undefined>({
+  setIsFocused() {},
+  focusEvent: { onFocus() {}, onBlur() {} },
+  isFocused: false,
+})
 
 export const useFocusState = (): { onFocus: () => void; onBlur: () => void } => {
   const context = useContext(FocusContext)
