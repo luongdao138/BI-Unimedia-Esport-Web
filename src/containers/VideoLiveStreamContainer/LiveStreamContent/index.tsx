@@ -8,6 +8,8 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
 // import ESButton from '@components/Button'
+// import { Player, ControlBar } from 'video-react';
+// import { useRef } from 'react'
 
 const LiveStreamContent: React.FC = () => {
   const { t } = useTranslation('common')
@@ -46,7 +48,13 @@ const LiveStreamContent: React.FC = () => {
   return (
     <Box className={classes.container}>
       <img src="/images/live_stream/live_stream.png" height={isMobile ? '256px' : '448px'} width="100%" />
-
+      {/* <Player
+          ref={player}
+          autoPlay
+        >
+          <source src={'http://media.w3.org/2010/05/sintel/trailer.mp4'} />
+          <ControlBar autoHide={false} />
+        </Player> */}
       {isMobile && mobileRegisterChannelContainer()}
       <Box className={classes.wrap_info}>
         <Box className={classes.wrap_movie_info}>

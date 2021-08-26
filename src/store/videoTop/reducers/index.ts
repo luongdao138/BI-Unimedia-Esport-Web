@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { BannerItem, CategoryPopularData, TypeVideo } from '@services/videoTop.services'
+import { BannerItem, CategoryPopularData, SearchType, TypeVideo } from '@services/videoTop.services'
 import * as actions from '../actions'
 
 type StateType = {
@@ -18,6 +18,7 @@ type StateType = {
     schedule?: Array<TypeVideo>
     archive?: Array<TypeVideo>
   }
+  videoSearch?: SearchType
 }
 const initialState: StateType = {
   listVideoAll: {
@@ -34,6 +35,10 @@ const initialState: StateType = {
     live: [],
     schedule: [],
     archive: [],
+  },
+  videoSearch: {
+    total: 0,
+    videos: [],
   },
 }
 
@@ -74,5 +79,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getListVideoFavorite.fulfilled, (state, action) => {
     const listVideo = action.payload.data
     state.listVideoFavorite = listVideo
+  })
+  builder.addCase(actions.videoSearch.fulfilled, (state, action) => {
+    const listVideo = action.payload.data
+    state.videoSearch = listVideo
   })
 })

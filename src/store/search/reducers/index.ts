@@ -8,9 +8,10 @@ type StateType = {
   searchUsersMeta?: Meta
   type: number
   keyword: string
+  typeSearchVideo: number
 }
 
-const initialState: StateType = { searchUsers: [], type: searchTypes.USER, keyword: '' }
+const initialState: StateType = { searchUsers: [], type: searchTypes.USER, keyword: '', typeSearchVideo: searchTypes.VIDEO }
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.userSearch.fulfilled, (state, action) => {
@@ -31,5 +32,11 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.resetSearchUsers, (state) => {
     state.searchUsers = []
     state.searchUsersMeta = undefined
+  })
+
+  //only search video
+  builder.addCase(actions.setSearchVideoParams, (state, action) => {
+    state.typeSearchVideo = action.payload.type
+    state.keyword = action.payload.keyword
   })
 })

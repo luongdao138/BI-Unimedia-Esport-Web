@@ -42,6 +42,7 @@ export type TypeVideo = {
   user_avatar?: string
   type?: string
   status?: number
+  archived_end_time?: string
 }
 
 export type ListVideoTopResponse = {
@@ -116,6 +117,26 @@ export type VideoTypeArchivedResponse = {
   }
 }
 
+export type SearchVideoResponse = {
+  message?: string
+  code?: number
+  data?: {
+    total: number
+    videos: Array<TypeVideo>
+  }
+}
+
+export type SearchVideoParams = {
+  keyword: string
+  page: number
+  limit: number
+}
+
+export type SearchType = {
+  total: number
+  videos: Array<TypeVideo>
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
@@ -148,5 +169,11 @@ export const ListVideoArchived = async (params: ListVideoTopParams): Promise<Vid
 
 export const ListVideoFavorite = async (): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_VIDEO_FAVORITE)
+  return data
+}
+
+export const VideoSearch = async (params: SearchVideoParams): Promise<SearchVideoResponse> => {
+  const { data } = await api.get<SearchVideoResponse>(URI.SEARCH_VIDEO, { params })
+  // console.log("====VideoSearch config===",config)
   return data
 }

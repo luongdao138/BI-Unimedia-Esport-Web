@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/videoTop.services'
 import { ACTION_VIDEO_TOP } from './types'
 
@@ -141,3 +141,26 @@ export const getListVideoFavorite = createAsyncThunk<services.ListVideoTopRespon
     }
   }
 )
+
+export const videoSearch = createAsyncThunk<services.SearchVideoResponse, services.SearchVideoParams>(
+  ACTION_VIDEO_TOP.SEARCH_VIDEO,
+  async (searchParams, { rejectWithValue }) => {
+    try {
+      const res = await services.VideoSearch(searchParams)
+      if (res?.code === 200) {
+        // console.log("====search res====",res)
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const resetSearchVideo = createAction(ACTION_VIDEO_TOP.RESET_SEARCH_VIDEO)

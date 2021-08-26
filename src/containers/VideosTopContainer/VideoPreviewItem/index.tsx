@@ -6,6 +6,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import moment from 'moment'
+import { FORMAT_DATE_ARCHIVED } from '@constants/common.constants'
 
 type VideoPreviewItemProps = {
   data?: TypeVideo
@@ -62,6 +64,9 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
                   ? FormatHelper.currencyFormat(`${data?.live_view_count}`) + t('common:videos_top_tab.view_count_text')
                   : '2021/06/22'}
               </Typography>
+            )}
+            {data?.status === 2 && data?.archived_end_time && (
+              <Typography className={classes.nameStyle}>{moment(data?.archived_end_time).format(FORMAT_DATE_ARCHIVED)}</Typography>
             )}
             {data?.category_name && <Typography className={classes.valorantStyle}>{data?.category_name}</Typography>}
           </Box>

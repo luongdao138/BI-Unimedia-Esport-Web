@@ -44,12 +44,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
     return (
       <>
         <Box className={classes.titleContainer} key={index}>
-          <TitleSeeMore
-            titleText={item.name}
-            rightText={i18n.t('common:videos_top_tab.view_more')}
-            iconSource={item.image}
-            onPress={onClickSeeMoreLiveStream}
-          />
+          <TitleSeeMore titleText={item.name} rightText={i18n.t('common:videos_top_tab.view_more')} onPress={onClickSeeMoreLiveStream} />
         </Box>
         <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
           <Grid container spacing={3} className={classes.contentContainer}>
