@@ -1,5 +1,5 @@
 import { Box, Typography, makeStyles, withStyles } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ESLabel from '@components/Label'
@@ -9,7 +9,7 @@ import ESInput from '@components/Input'
 import ESSwitchIOS from '@components/Switch'
 import ESButton from '@components/Button'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import { calValueFromTax } from '@utils/helpers/CommonHelper'
+import { calValueFromTax, formatCardNumber, detectCardType } from '@utils/helpers/CommonHelper'
 import { CardAddParams } from '@services/purchasePoints.service'
 import Radio from '@material-ui/core/Radio'
 import { RadioProps } from '@material-ui/core/Radio'
@@ -17,6 +17,11 @@ import usePurchasePointData from './usePurchasePointData'
 import PointPurchaseConfirmModal from './PointPurchaseConfirmModal'
 import CardDeleteConfirmModal from './CardDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
+import { validationPurchasePointScheme } from './ValidationPurchasePointScheme'
+import _ from 'lodash'
+import { TOKEN_ERROR } from '@constants/common.constants'
+import { addToast } from '@store/common/actions'
+import { useAppDispatch } from '@store/hooks'
 interface Step2Props {
   selectedPoint: any
 }
@@ -24,23 +29,23 @@ interface Step2Props {
 const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+  const dispatch = useAppDispatch()
 
-  const {
-    metaSavedCardsMeta,
-    deleteSavedCard,
-    metaDeleteCardMeta,
-    purchasePointUseNewCard,
-    purchasePointUseOldCard,
-    purchasePointInfo,
-    metaPurchaseUseNewCardMeta,
-    metaPurchaseUseOldCardMeta,
+  const { 
+    metaSavedCardsMeta, deleteSavedCard, metaDeleteCardMeta, purchasePointUseNewCard,
+    purchasePointUseOldCard, purchasePointInfo, metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta 
   } = usePurchasePointData()
-
-  const [selectedCardId, setSelectedCardId] = React.useState<any>('')
+  
+  const [selectedCardId, setSelectedCardId] = React.useState<any>('');
   const [isShowPurchasePointModal, setIsShowPurchasePointModal] = useState(false)
   const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
   const [isPurchasingPoint, setIsPurchasingPoint] = useState(false)
   const [deletedCard, setDeletedCard] = useState({})
+
+  const closeModalPurchasePoint = () => {
+    setIsPurchasingPoint(false)
+    setIsShowPurchasePointModal(false)
+  }
 
   useEffect(() => {
     if (metaDeleteCardMeta.loaded) {
@@ -51,34 +56,39 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   useEffect(() => {
     // only close modal when purchase using old or new card success
     if (
-      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) ||
+      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) || 
       (metaPurchaseUseOldCardMeta.loaded && !metaPurchaseUseNewCardMeta.pending)
     ) {
-      setIsPurchasingPoint(false)
-      setIsShowPurchasePointModal(false)
+      closeModalPurchasePoint()
     }
   }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
 
-  const isLoading =
-    metaSavedCardsMeta.pending ||
-    metaDeleteCardMeta.pending ||
-    isPurchasingPoint ||
-    metaPurchaseUseNewCardMeta.pending ||
-    metaPurchaseUseOldCardMeta.pending
+  const isLoading = metaSavedCardsMeta.pending || metaDeleteCardMeta.pending || isPurchasingPoint 
+    || metaPurchaseUseNewCardMeta.pending || metaPurchaseUseOldCardMeta.pending
 
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik<CardAddParams>({
-    initialValues: {
-      card_name: 'DANG THANH SON',
-      card_number: '371449635398433',
-      card_expire_date: '2112',
-      card_cvc: '1405',
-      is_saved_card: true,
-    },
-    // validationSchema,
+  const initialValues = { 
+    card_name: '', card_number: '', 
+    card_expire_date: '', card_cvc: '', 
+    is_saved_card: false 
+    // card_name: 'DANG THANH SON', card_number: '371449635398433', 
+    // card_expire_date: '2112', card_cvc: '1405', 
+    // is_saved_card: true 
+  }
+
+  const formik = useFormik<CardAddParams>({
+    initialValues: {...initialValues},
+    validationSchema: validationPurchasePointScheme(),
     onSubmit: () => {
       // onSubmitClicked(values)
     },
   })
+  const { 
+    values, errors, touched, handleChange, handleSubmit, handleBlur, setFieldValue, resetForm, validateForm
+  } = formik
+
+  useEffect(() => {
+    validateForm()
+  }, [])
 
   const confirmPurchasePoint = () => {
     setIsShowPurchasePointModal(true)
@@ -91,36 +101,79 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
 
   const handlePurchasePoint = (): void => {
     // purchase point use new card
-    if (selectedCardId === '') {
+    if(selectedCardId === '') {
       const Multipayment = window.Multipayment
-      Multipayment.init('tshop00051538')
+      Multipayment.init(purchasePointInfo.GMO_SHOP_ID);
       setIsPurchasingPoint(true)
       Multipayment.getToken(
         {
-          cardno: '371449635398433',
-          expire: '2112',
-          securitycode: '1405',
-          holdername: 'DANG THANH SON',
-          tokennumber: '1',
+          cardno: values.card_number.replace(/\s/g, ''),
+          expire: values.card_expire_date.replace(/[\s/]/g, ''),
+          securitycode: values.card_cvc,
+          holdername: values.card_name,
+          tokennumber: '1'
         },
-        (response) => {
-          if (response.resultCode == '000') {
+        response => {
+          if (response.resultCode == "000") {
             purchasePointUseNewCard({
               token: response.tokenObject.token[0],
               point: selectedPoint,
-              card_type: 1,
-              is_save_card: true,
+              card_type: detectCardType(values.card_number),
+              is_save_card: values.is_saved_card
             })
+          } else if (response.resultCode in TOKEN_ERROR) {
+            // handle error
+            dispatch(addToast(TOKEN_ERROR[response.resultCode]))
+            closeModalPurchasePoint()
+          } else {
+            dispatch(addToast("エラー発生しました。"))
+            closeModalPurchasePoint()
           }
         }
-      )
+      );
     } else {
       // purchase point use saved card
       purchasePointUseOldCard({
         card_seq: selectedCardId,
-        point: selectedPoint,
+        point: selectedPoint
       })
     }
+  }
+
+  const handleChangeCardNumber = (e)=> {
+    // replace space and check is numeric
+    if(/^[0-9]+$/g.test(e.target.value.replace(/\s/g, '')) || !e.target.value){
+      setSelectedCardId('')
+      setFieldValue('card_number', formatCardNumber(e.target.value))
+    }
+  }
+
+  const handleChangeCardExpireDate = (e)=> {
+     // replace space and slash and check is numeric
+    let card_expire_date = e.target.value.replace(/[\s/]/g, '')
+    if(/^[0-9]+$/g.test(card_expire_date) || !e.target.value){
+      setSelectedCardId('')
+      if(card_expire_date.length <= 4) {
+        // only add slash after second element
+        if(card_expire_date.length >= 3)
+          card_expire_date = card_expire_date.match(new RegExp('.{1,2}', 'g')).join(" / ");
+        setFieldValue('card_expire_date', card_expire_date)
+      }
+    }
+  }
+
+  const handleChangeCardCvc = (e)=> {
+    const card_cvc = e.target.value
+    // check is numeric
+    if(/^[0-9]+$/g.test(card_cvc) || !card_cvc){
+      setSelectedCardId('')
+      setFieldValue('card_cvc', card_cvc)
+    }
+  }
+
+  const changeFieldAndResetSelectedCardId = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSelectedCardId('')
+    handleChange(e)
   }
 
   return (
@@ -157,8 +210,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   placeholder={t('purchase_point_tab.card_name_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_name')}
                   fullWidth
-                  onChange={handleChange}
+                  onChange={changeFieldAndResetSelectedCardId}
                   onBlur={handleBlur}
+                  helperText={touched.card_name && errors?.card_name}
                   error={touched.card_name && !!errors?.card_name}
                   size="big"
                 />
@@ -172,8 +226,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   placeholder={t('purchase_point_tab.card_number_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_number')}
                   fullWidth
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={handleChangeCardNumber}
+                  onBlur={handleBlur} 
+                  helperText={touched.card_number && errors?.card_number}
                   error={touched.card_number && !!errors?.card_number}
                   size="big"
                 />
@@ -187,8 +242,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   placeholder={t('purchase_point_tab.card_expire_date_placeholder')}
                   labelPrimary={t('purchase_point_tab.card_expire_date')}
                   fullWidth
-                  onChange={handleChange}
+                  onChange={handleChangeCardExpireDate}
                   onBlur={handleBlur}
+                  helperText={touched.card_expire_date && errors?.card_expire_date}
                   error={touched.card_expire_date && !!errors?.card_expire_date}
                   size="big"
                 />
@@ -202,14 +258,15 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   placeholder=""
                   labelPrimary={t('purchase_point_tab.card_cvc')}
                   fullWidth
-                  onChange={handleChange}
+                  onChange={handleChangeCardCvc}
                   onBlur={handleBlur}
-                  error={touched.card_expire_date && !!errors?.card_expire_date}
+                  helperText={touched.card_cvc && errors?.card_cvc}
+                  error={touched.card_cvc && !!errors?.card_cvc}
                   size="big"
                 />
               </Box>
               <Box className={classes.toggle} pt={2}>
-                <ESSwitchIOS key={'is_saved_card'} handleChange={handleChange} name={'is_saved_card'} checked={values.is_saved_card} />
+                <ESSwitchIOS key={'is_saved_card'} handleChange={changeFieldAndResetSelectedCardId} name={'is_saved_card'} checked={values.is_saved_card} />
                 <Box className={classes.toggle_name}>{t('purchase_point_tab.register_toggle_name')}</Box>
               </Box>
             </Box>
@@ -217,7 +274,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           <Box className={classes.card_wrap}>
             <Box className={classes.card_info_title}>{t('purchase_point_tab.card_title')}</Box>
             <Box className={classes.card_info_container + ' ' + classes.second_card_info_container}>
-              <Box className={classes.wrap_all_cards}>
+              <Box className={classes.wrap_all_cards} style={purchasePointInfo.saved_cards.length >= 3 ? {height: 288 } : null}>
                 {purchasePointInfo.saved_cards.map((card, key) => {
                   return (
                     <>
@@ -225,26 +282,22 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                         <Box className={classes.wrap_check_box}>
                           <CustomRadio
                             checked={selectedCardId === Number(card.card_seq)}
-                            onChange={(e) => setSelectedCardId(Number(e.target.value))}
+                            onChange={e => {
+                              resetForm() 
+                              setSelectedCardId(Number(e.target.value))
+                            }}
                             value={card.card_seq}
                             name="radio-button"
                             size="small"
                           />
                         </Box>
                         <Box>
-                          <Box className={classes.wrap_card_number}>{card.card_number}</Box>
-                          <Box className={classes.wrap_money}>
-                            <img src="/images/visa.svg" />
-                          </Box>
+                          <Box className={classes.wrap_card_number}>{formatCardNumber(card.card_number.replace(/\*/g, 'x'))}</Box>
                         </Box>
                       </Box>
                       <Box textAlign="right">
                         <Box
-                          className={
-                            classes.title_delete_card +
-                            ' ' +
-                            (key + 1 === purchasePointInfo.saved_cards.length ? classes.last_title_delete_card : '')
-                          }
+                          className={classes.title_delete_card + ' ' + (key + 1 === purchasePointInfo.saved_cards.length ? classes.last_title_delete_card : '')}
                           onClick={() => deleteCard(card)}
                         >
                           {t('purchase_point_tab.title_delete_card')}
@@ -258,7 +311,12 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                 <Box className={classes.wrap_all_card + ' ' + classes.wrap_no_card}>{t('purchase_point_tab.no_card')}</Box>
               ) : (
                 <Box textAlign="center" pb={1}>
-                  <ESButton className={classes.clear_section_btn} variant="outlined" round fullWidth size="large">
+                  <ESButton 
+                    onClick={() => {
+                      setSelectedCardId('')
+                    }}
+                    className={classes.clear_section_btn} variant="outlined" round fullWidth size="large"
+                  >
                     {t('purchase_point_tab.clear_section')}
                   </ESButton>
                 </Box>
@@ -268,7 +326,11 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
         </Box>
       </form>
       <Box pb={3} pt={2} justifyContent="center" display="flex" className={classes.actionButton}>
-        <ButtonPrimary type="submit" round fullWidth onClick={confirmPurchasePoint}>
+        <ButtonPrimary 
+          // disable button if has error when use new card and no use old card
+          disabled={!_.isEmpty(errors) && selectedCardId === ''}
+          type="submit" round fullWidth onClick={confirmPurchasePoint}
+        >
           {t('purchase_point_tab.btn_buy')}
         </ButtonPrimary>
       </Box>
@@ -292,7 +354,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           }}
         />
       )}
-      {isLoading && <ESLoader open={isLoading} />}
+      {(isLoading) && <ESLoader open={isLoading} />}
     </Box>
   )
 }
@@ -395,9 +457,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     background: '#000',
     display: 'flex',
-    padding: '24px 0 16px 16px',
-    height: 96,
-    alignItems: 'flex-start',
+    padding: '16px',
+    alignItems: 'center',
     '& .MuiCheckbox-root': {
       marginRight: 27,
       marginTop: 15,
@@ -409,9 +470,9 @@ const useStyles = makeStyles((theme) => ({
   wrap_no_card: {
     padding: 16,
     height: '100%',
+    marginRight: "16px"
   },
   wrap_card_number: {
-    paddingBottom: 12,
     fontSize: '14px',
     color: Colors.white_opacity[30],
   },
@@ -435,15 +496,13 @@ const useStyles = makeStyles((theme) => ({
     borderColor: Colors.white,
   },
   wrap_check_box: {
-    marginTop: '15px',
-    marginRight: '27px',
+    marginRight: '24px',
     display: 'flex',
-    alignItems: 'center',
   },
   wrap_all_cards: {
-    height: '280px',
-    overflow: 'auto',
-    paddingRight: '16px',
+    height: "auto", 
+    overflow: "auto",
+    paddingRight: '16px'
   },
   [theme.breakpoints.down('lg')]: {
     card_info_wrap: {

@@ -1,4 +1,4 @@
-import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX } from '@constants/common.constants'
+import { FORMAT_DATE_TIME_JP, FORMAT_SCHEDULE_TIME, TAX, REGEX_DETECT_BRANCH } from '@constants/common.constants'
 import { StoreType } from '@store/store'
 import moment from 'moment'
 
@@ -211,6 +211,24 @@ const formatTimeVideo = (date: string): string => {
 export const calValueFromTax = (value: number): number => {
   return Math.round(value * (1 + TAX))
 }
+
+export const formatCardNumber = (origin_card_number: string): string => {
+  let card_number = origin_card_number.split(" ").join("");
+  if (card_number.length > 0) {
+    card_number = card_number.match(new RegExp('.{1,4}', 'g')).join(" ");
+  }
+  return card_number
+}
+
+export const detectCardType = (cardNumber: string) : number => {
+  let cardType = 0;
+  REGEX_DETECT_BRANCH.forEach(element => {
+    if (element.regex.test(cardNumber.replace(/\s/g, ''))) {
+      cardType = element.value;
+    }
+  });
+  return cardType;
+};
 
 export const CommonHelper = {
   validateEmail,
