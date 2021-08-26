@@ -15,6 +15,8 @@ import BlankLayout from '@layouts/BlankLayout'
 import { UpsertForm } from '..'
 import { useRouter } from 'next/router'
 import RegularModal from '@components/RegularModal'
+import ESModal from '@components/Modal'
+import Participants from './Participants'
 
 const TournamentDetail: React.FC = () => {
   const { tournament, meta, userProfile, handleBack } = useTournamentDetail()
@@ -59,6 +61,9 @@ const TournamentDetail: React.FC = () => {
           {actionComponent[tournament.attributes.status]}
         </TournamentDetailHeader>
         <DetailInfo toEdit={toEdit} detail={tournament} extended />
+        <ESModal open={router.query.modalName === 'participants'}>
+          <Participants detail={tournament} />
+        </ESModal>
       </>
     )
   }
