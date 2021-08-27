@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Dialog } from '@material-ui/core'
 import Slide from '@material-ui/core/Slide'
 import { TransitionProps } from '@material-ui/core/transitions'
+import { useCounterContext } from '@utils/hooks/counter-context'
 
 export interface ESDialogProps {
   open: boolean
@@ -13,6 +14,14 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
   ref: React.Ref<unknown>
 ) {
+  const { increment, decrement } = useCounterContext()
+  useEffect(() => {
+    if (props.in) {
+      increment()
+    } else {
+      decrement()
+    }
+  }, [props.in])
   return <Slide direction="left" ref={ref} {...props} />
 })
 

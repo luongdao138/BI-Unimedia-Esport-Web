@@ -26,6 +26,7 @@ import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
+import { CounterContextProvider } from '@utils/hooks/counter-context'
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -89,15 +90,17 @@ const App = ({ Component, pageProps }: Props) => {
           }}
         >
           <ThemeProvider theme={theme}>
-            <ESLoader open={loader} />
-            <ToastContainer />
-            <DialogContainer />
-            <SimpleReactLightbox>
-              <Layout>
-                <CssBaseline />
-                <Component {...pageProps} />
-              </Layout>
-            </SimpleReactLightbox>
+            <CounterContextProvider>
+              <ESLoader open={loader} />
+              <ToastContainer />
+              <DialogContainer />
+              <SimpleReactLightbox>
+                <Layout>
+                  <CssBaseline />
+                  <Component {...pageProps} />
+                </Layout>
+              </SimpleReactLightbox>
+            </CounterContextProvider>
           </ThemeProvider>
         </RouteContext.Provider>
       </PersistGate>
