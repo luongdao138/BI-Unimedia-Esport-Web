@@ -24,6 +24,7 @@ import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import ApproveList from '../ApproveList'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { MEMBER_ROLE, JOIN_CONDITION, IS_OFFICIAL, OPEN_RANGE } from '@constants/community.constants'
 
 type Props = {
@@ -46,6 +47,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
+  const [isDiscard, setIsDiscard] = useState(false)
+  const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
 
   const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
@@ -131,7 +134,20 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }
 
   const unfollowHandle = () => {
+    if (!isCommunityAutomatic) {
+      setIsDiscard(true)
+    } else {
+      unfollowCommunity(String(hash_key))
+    }
+  }
+
+  const unfollowDialogHandle = () => {
     unfollowCommunity(String(hash_key))
+    setIsDiscardApplying(false)
+    setIsDiscard(false)
+  }
+  const cancelApplyingHandle = () => {
+    setIsDiscardApplying(true)
   }
 
   const followButton = () => {
@@ -144,7 +160,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const applyingButton = () => {
     return (
-      <ESButton variant="outlined" round className={classes.button} disabled={true}>
+      <ESButton variant="outlined" round className={classes.button} disabled={unfollowCommunityMeta.pending} onClick={cancelApplyingHandle}>
         {t('common:community.applying')}
       </ESButton>
     )
@@ -291,6 +307,26 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             <TopicCreateButton onClick={toCreateTopic} />
           </Box>
         </Box>
+        <DiscardDialog
+          open={isDiscard}
+          onClose={() => {
+            setIsDiscard(false)
+          }}
+          onSubmit={unfollowDialogHandle}
+          title={t('common:community.unfollow_dialog.title')}
+          description={t('common:community.unfollow_dialog.description')}
+          confirmTitle={t('common:community.unfollow_dialog.submit_title')}
+        />
+        <DiscardDialog
+          open={isDiscardApplying}
+          onClose={() => {
+            setIsDiscardApplying(false)
+          }}
+          onSubmit={unfollowDialogHandle}
+          title={t('common:community.unfollow_dialog_applying.title')}
+          description={t('common:community.unfollow_dialog_applying.description')}
+          confirmTitle={t('common:community.unfollow_dialog_applying.submit_title')}
+        />
       </Box>
     </Grid>
   )

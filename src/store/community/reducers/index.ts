@@ -87,7 +87,4 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
     state.community_detail = action.payload.data
   })
-  builder.addCase(actions.unfollowCommunity.fulfilled, (state) => {
-    state.community_detail.attributes.my_role = null
-  })
 })
