@@ -49,6 +49,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     setTimeout(() => {
       if (isBottom) {
         _scrollToBottom(messages.length)
+        setBottom(true)
       } else if (messages.length > 10 && messagesEndRef.current != null && messagesEndRef) {
         messagesEndRef.current.scrollToRow(7)
       }
@@ -77,7 +78,7 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     }
   }
 
-  const updateValue = _.debounce((e) => {
+  const _onScroll = (e) => {
     const scrollPos = e.scrollTop + e.clientHeight
     const height = e.scrollHeight
     const offset = Math.abs(height - scrollPos)
@@ -91,10 +92,6 @@ const MessageList = forwardRef((props: MessageListProps, ref) => {
     } else if (offset > bottomThreshold) {
       setBottom(false)
     }
-  }, 400)
-
-  const _onScroll = (e) => {
-    updateValue(e)
   }
 
   const rowRenderer = ({ index, key, parent, style }) => {

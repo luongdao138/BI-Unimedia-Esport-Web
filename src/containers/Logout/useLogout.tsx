@@ -18,6 +18,8 @@ const useLogout = (handleClose?: () => void) => {
   const meta = useAppSelector(getLogoutMeta)
   const resetMeta = () => dispatch(clearMetaData(actions.logout.typePrefix))
   const handleLogout = () => {
+    handleClose && handleClose()
+    router.push(ESRoutes.TOP)
     dispatch(actions.logout())
     dispatch(searchStore.actions.setSearchParams({ keyword: '', type: 1 }))
     dispatch(arenaStore.actions.clearTournamentResult())
@@ -26,9 +28,7 @@ const useLogout = (handleClose?: () => void) => {
 
   useEffect(() => {
     if (meta.loaded) {
-      handleClose && handleClose()
       resetMeta()
-      router.push(ESRoutes.TOP)
     }
   }, [meta.loaded])
 

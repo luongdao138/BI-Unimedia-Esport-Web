@@ -34,6 +34,15 @@ i18n
     lng: 'en',
     interpolation: {
       escapeValue: false, // react already safes from xss
+      format: function (value, format) {
+        if (format === 'participation_type') {
+          if (value === true) {
+            return 'チーム'
+          }
+          return 'ユーザー'
+        }
+        return value
+      },
     },
   })
 

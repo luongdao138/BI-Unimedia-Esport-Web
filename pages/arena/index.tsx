@@ -21,7 +21,7 @@ const TournamentPage: PageWithLayoutType = () => {
   useEffect(() => {
     if (!isAuth && ['joined', 'organized'].includes(filter)) {
       router.push(ESRoutes.LOGIN)
-    } else if (isAuth || (!isAuth && filter === '')) {
+    } else if (isAuth || (!isAuth && !['joined', 'organized'].includes(filter))) {
       setRender(true)
     }
   }, [isAuth, router.query])
