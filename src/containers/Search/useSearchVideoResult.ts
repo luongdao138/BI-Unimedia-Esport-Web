@@ -11,11 +11,12 @@ const _getVideoSearchMeta = createMetaSelector(actions.videoSearch)
 const useSearchVideoResult = () => {
   const dispatch = useAppDispatch()
   const searchVideosSelector = useAppSelector(selectors.videoSearchResult)
+  const totalResult = useAppSelector(selectors.totalSearchResult)
   const meta = useAppSelector(_getVideoSearchMeta)
   const videoSearch = (param: SearchVideoParams) => dispatch(actions.videoSearch(param))
   const resetMeta = () => dispatch(clearMetaData(actions.videoSearch.typePrefix))
-  const resetSearchVideo = () => dispatch(actions.resetSearchVideo)
-  return { searchVideosSelector, videoSearch, resetMeta, resetSearchVideo, meta }
+  const resetSearchVideo = () => dispatch(actions.resetSearchVideo())
+  return { searchVideosSelector, videoSearch, resetMeta, resetSearchVideo, meta, totalResult }
 }
 
 export default useSearchVideoResult

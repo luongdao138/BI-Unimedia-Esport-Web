@@ -174,6 +174,5 @@ export const ListVideoFavorite = async (): Promise<ListVideoTopResponse> => {
 
 export const VideoSearch = async (params: SearchVideoParams): Promise<SearchVideoResponse> => {
   const { data } = await api.get<SearchVideoResponse>(URI.SEARCH_VIDEO, { params })
-  // console.log("====VideoSearch config===",config)
   return data
 }

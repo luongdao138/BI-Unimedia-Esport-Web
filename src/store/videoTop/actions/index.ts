@@ -65,7 +65,6 @@ export const getVideoLive = createAsyncThunk<services.VideoTypeLiveResponse, ser
     try {
       const res = await services.ListVideoLiveStream(videoParams)
       if (res?.code === 200) {
-        // console.log('=====res LIVE====', res)
         return res
       } else {
         // throw res.message
@@ -86,7 +85,6 @@ export const getVideoSchedule = createAsyncThunk<services.VideoTypeScheduleRespo
     try {
       const res = await services.ListVideoSchedule(videoParams)
       if (res?.code === 200) {
-        // console.log('=====res GET_LIST_SCHEDULE====', res)
         return res
       } else {
         // throw res.message
@@ -107,7 +105,6 @@ export const getVideoArchived = createAsyncThunk<services.VideoTypeArchivedRespo
     try {
       const res = await services.ListVideoArchived(videoParams)
       if (res?.code === 200) {
-        // console.log('=====res GET_LIST_ARCHIVE====', res)
         return res
       } else {
         // throw res.message
@@ -148,7 +145,6 @@ export const videoSearch = createAsyncThunk<services.SearchVideoResponse, servic
     try {
       const res = await services.VideoSearch(searchParams)
       if (res?.code === 200) {
-        // console.log("====search res====",res)
         return res
       } else {
         // throw res.message

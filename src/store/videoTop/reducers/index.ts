@@ -19,6 +19,8 @@ type StateType = {
     archive?: Array<TypeVideo>
   }
   videoSearch?: SearchType
+  listVideoSearch?: Array<TypeVideo>
+  totalResult?: number
 }
 const initialState: StateType = {
   listVideoAll: {
@@ -40,6 +42,8 @@ const initialState: StateType = {
     total: 0,
     videos: [],
   },
+  listVideoSearch: [],
+  totalResult: 0,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -81,7 +85,14 @@ export default createReducer(initialState, (builder) => {
     state.listVideoFavorite = listVideo
   })
   builder.addCase(actions.videoSearch.fulfilled, (state, action) => {
-    const listVideo = action.payload.data
-    state.videoSearch = listVideo
+    let arrayVideo = action.payload.data.videos
+    const total = action.payload.data.total
+    arrayVideo = state.listVideoSearch.concat(action.payload.data.videos)
+    state.listVideoSearch = arrayVideo
+    state.totalResult = total
+  })
+  builder.addCase(actions.resetSearchVideo, (state) => {
+    state.listVideoSearch = []
+    state.totalResult = 0
   })
 })
