@@ -9,31 +9,33 @@ import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
 import { Box } from '@material-ui/core'
-import { TOPIC_STATUS, JOIN_CONDITION } from '@constants/community.constants'
+import { TOPIC_STATUS } from '@constants/community.constants'
+import useFollowList from './Partials/FollowList/useFollowList'
+import { CommunityMemberRole } from '@services/community.service'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
   const { hash_key } = router.query
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
+  const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
+  const { getMembers, membersMeta } = useFollowList()
 
   useEffect(() => {
     if (hash_key) {
       getCommunityDetail(String(hash_key))
+      getMembers({ hash_key: String(hash_key), role: CommunityMemberRole.all, page: 1 })
     }
   }, [router])
 
   useEffect(() => {
-    if (
-      communityDetail &&
-      communityDetail.attributes.join_condition === JOIN_CONDITION.MANUAL &&
-      communityDetail.attributes.my_role === null
-    ) {
+    if (communityDetail && !isAutomatic && isNotMember) {
       setShowTopicListAndSearchTab(false)
     } else {
       if (hash_key) {
         getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
       }
+      setShowTopicListAndSearchTab(true)
     }
   }, [communityDetail])
 
@@ -42,7 +44,7 @@ const CommunityContainer: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        {!!communityDetail && meta.loaded && !meta.pending && (
+        {!!communityDetail && meta.loaded && !meta.pending && membersMeta.loaded && (
           <>
             <CommunityDetailHeader
               title={communityDetail.attributes.name}

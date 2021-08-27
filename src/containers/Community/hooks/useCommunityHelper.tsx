@@ -9,6 +9,7 @@ const useCommunityHelper = (
   toEdit: () => void
   toCreate: () => void
   isModerator: boolean
+  isNotMember: boolean
   isAutomatic: boolean
   isPublic: boolean
 } => {
@@ -18,6 +19,7 @@ const useCommunityHelper = (
   const hash_key = community?.attributes.hash_key
   const myRole = community?.attributes?.my_role
   const isModerator = myRole == MEMBER_ROLE.ADMIN || myRole == MEMBER_ROLE.CO_ORGANIZER
+  const isNotMember = myRole == null || myRole == MEMBER_ROLE.REQUESTED || myRole == MEMBER_ROLE.LEAVE
   const isAutomatic = community?.attributes?.join_condition == JOIN_CONDITION.AUTOMATIC
   const isPublic = community?.attributes?.open_range == OPEN_RANGE.SEARCHABLE
 
@@ -33,6 +35,7 @@ const useCommunityHelper = (
     toEdit,
     toCreate,
     isModerator,
+    isNotMember,
     isAutomatic,
     isPublic,
   }
