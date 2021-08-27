@@ -10,9 +10,10 @@ import PaginationMobile from '../../../Partials/PaginationMobile'
 
 type Props = {
   topicList: TopicDetail[]
+  communityHashKey?: string
 }
 
-const TopicListContainer: React.FC<Props> = ({ topicList }) => {
+const TopicListContainer: React.FC<Props> = ({ topicList, communityHashKey }) => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const chunkSize = 10
@@ -52,6 +53,8 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
               last_comment={attr.last_comment.data}
               latest_date={latestDate}
               comment_count={attr.comment_count}
+              hash_key={attr.hash_key}
+              communityHashKey={communityHashKey}
             />
           )
         })}

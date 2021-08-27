@@ -50,6 +50,7 @@ export const URI = {
   COMMUNITY_MEMBER_CHANGE_ROLE: '/v2/communities/:id/change_role',
   COMMUNITY_MEMBER_REMOVE: '/v2/communities/:id/remove_members',
   TOPIC_LIST: '/v2/communities/topics',
+  TOPIC_COMMENT_CREATE: '/v2/communities/topic/comment/create',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',

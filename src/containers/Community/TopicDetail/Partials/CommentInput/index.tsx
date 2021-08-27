@@ -7,6 +7,12 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
 import ESLoader from '@components/Loader'
+// import { useRouter } from 'next/router'
+import _ from 'lodash'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import { useAppDispatch } from '@store/hooks'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 
 type CommunityHeaderProps = {
   username?: string
@@ -18,7 +24,11 @@ type CommunityHeaderProps = {
 }
 const Comment: React.FC<CommunityHeaderProps> = () => {
   const classes = useStyles()
+  // const { query } = useRouter()
+  // const { topic_id } = query
   const { t } = useTranslation(['common'])
+  const dispatch = useAppDispatch()
+  const { checkNgWord } = useCheckNgWord()
 
   const { uploadArenaCoverImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
@@ -38,9 +48,20 @@ const Comment: React.FC<CommunityHeaderProps> = () => {
     setImageURL('')
   }
 
-  const sent = () => {
-    setImageURL('')
-    setInputText('')
+  const send = () => {
+    if (_.isEmpty(checkNgWord(inputText.trim()))) {
+      // const data = {
+      //   topic_hash: String(topic_id),
+      //   content: inputText,
+      //   reply_to_comment_hash: null,
+      //   attachments: imageURL
+      // }
+      // console.log('data', data)
+      setInputText('')
+      setImageURL('')
+    } else {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
+    }
   }
 
   const handleChange = (event) => {
@@ -65,7 +86,7 @@ const Comment: React.FC<CommunityHeaderProps> = () => {
         </Box>
         <Box className={classes.sendCont}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.iconButton} disableRipple onClick={sent} disabled={imageURL === '' && inputText === ''}>
+            <IconButton className={classes.iconButton} disableRipple onClick={send} disabled={imageURL === '' && inputText === ''}>
               <Icon className={`${classes.icon} fas fa-paper-plane`} />
             </IconButton>
           </Box>
