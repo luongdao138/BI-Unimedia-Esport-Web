@@ -12,7 +12,6 @@ const initialState: State = {
   activeRoom: null,
   socketReady: false,
   actionPending: false,
-  tempList: undefined,
 }
 
 let newMessagesList: MessageType[] | undefined
