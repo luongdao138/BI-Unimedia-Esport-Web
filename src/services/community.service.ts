@@ -296,6 +296,10 @@ export type TopicListResponse = {
   meta: PageMeta
 }
 
+export type CommunityFollowResponse = {
+  data: CommunityDetail
+}
+
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PRIVATE, { params })
   return data
@@ -378,5 +382,15 @@ export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
 
 export const getTopicList = async (params: TopicListParams): Promise<TopicListResponse> => {
   const { data } = await api.post<TopicListResponse>(URI.TOPIC_LIST, params)
+  return data
+}
+
+export const followCommunity = async (hash_key: string): Promise<CommunityFollowResponse> => {
+  const { data } = await api.post<CommunityFollowResponse>(URI.COMMUNITY_FOLLOW.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const unfollowCommunity = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_UNFOLLOW.replace(/:id/gi, hash_key))
   return data
 }

@@ -42,6 +42,8 @@ export const URI = {
   COMMUNITY_CREATE: '/v2/communities',
   COMMUNITY_UPDATE: '/v2/communities/:id',
   COMMUNITY_FEATURES: '/v2/communities/features',
+  COMMUNITY_FOLLOW: '/v2/communities/:id/join',
+  COMMUNITY_UNFOLLOW: '/v2/communities/:id/leave',
   COMMUNITY_MEMBERS: '/v2/communities/:id/members',
   COMMUNITY_MEMBERS_APPROVE: '/v2/communities/:id/approve',
   COMMUNITY_MEMBERS_CANCEL: '/v2/communities/:id/cancel',
