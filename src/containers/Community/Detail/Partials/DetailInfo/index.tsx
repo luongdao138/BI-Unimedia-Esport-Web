@@ -23,6 +23,7 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
+import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 
 type Props = {
   detail: CommunityDetail
@@ -44,6 +45,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
   const data = detail.attributes
+  const { isNotMember } = useCommunityHelper(detail)
 
   const isFollowing = true
   const isAdmin = true
@@ -113,7 +115,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
         <Box marginTop={2} display="flex">
           <FollowList community={detail} />
-          {getRequestedMembers()}
         </Box>
 
         {isAuthenticated && (
@@ -126,14 +127,6 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           />
         )}
       </>
-    )
-  }
-
-  const getRequestedMembers = () => {
-    return (
-      <Typography className={classes.linkUnapproved} variant="body2">
-        {t('common:community.unapproved_users_title')}
-      </Typography>
     )
   }
 
@@ -171,11 +164,13 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {getHeader()}
         {getTabs()}
         {getContent()}
-        <Box className={classes.commentIconContainer}>
-          <Box>
-            <TopicCreateButton onClick={toCreateTopic} />
+        {!!isNotMember && !isNotMember && (
+          <Box className={classes.commentIconContainer}>
+            <Box>
+              <TopicCreateButton onClick={toCreateTopic} />
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </Grid>
   )
@@ -251,13 +246,6 @@ const useStyles = makeStyles((theme) => ({
   },
   boxContainer: {
     display: 'flex',
-  },
-  linkUnapproved: {
-    textDecoration: 'underline',
-    color: 'yellow',
-    marginLeft: theme.spacing(2),
-    display: 'flex',
-    alignItems: 'center',
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {

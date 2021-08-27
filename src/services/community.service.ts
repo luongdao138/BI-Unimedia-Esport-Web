@@ -120,7 +120,7 @@ export enum CommunityMemberRole {
 export type CommunityMembersParams = {
   hash_key: string
   role: CommunityMemberRole
-  pages: number
+  page?: number
 }
 
 export type CommunityMember = {
