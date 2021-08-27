@@ -27,7 +27,6 @@ export default createReducer(initialState, (builder) => {
     if (res_saved_cards && Object.keys(res_saved_cards).length !== 0 && res_saved_cards.CardNo) {
       const card_numbers = splitCardInfo(res_saved_cards.CardNo)
       const card_seqs = splitCardInfo(res_saved_cards.CardSeq)
-      const card_types = splitCardInfo(res_saved_cards.CardType)
       let saved_cards = []
       for (let index = 0; index < card_numbers.length; index++) {
         saved_cards = [
@@ -35,8 +34,7 @@ export default createReducer(initialState, (builder) => {
           {
             card_number: card_numbers[index],
             card_seq: card_seqs[index],
-            card_type: card_types[index],
-          },
+          }
         ]
       }
       state.GMO_SHOP_ID = action.payload.data.GMO_SHOP_ID

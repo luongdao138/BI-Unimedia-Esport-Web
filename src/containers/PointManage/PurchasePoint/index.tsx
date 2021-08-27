@@ -17,26 +17,6 @@ const PurchasePoint: React.FC = () => {
   const { getSavedCards } = usePurchasePointData()
 
   useEffect(() => {
-    // Multipayment.getToken(
-    //   {
-    //     cardno: '371449635398433',
-    //     expire: '2112',
-    //     securitycode: '1405',
-    //     holdername: 'MONKEY',
-    //     tokennumber: '1'
-    //   },
-    //   response => {
-    //     //   if (response.resultCode == "000") {
-    //     //   console.log(response);
-    //     //   document.getElementById("token").value = response.tokenObject.token;
-    //     // //document.getElementById("purchaseForm").submit();
-    //     //   } else if (response.resultCode in tokenError) {
-    //     //     alert(tokenError[response.resultCode]);
-    //     //   } else {
-    //     //     alert("エラー発生しました。");
-    //     //   }
-    //   }
-    // );
     getSavedCards()
   }, [])
 

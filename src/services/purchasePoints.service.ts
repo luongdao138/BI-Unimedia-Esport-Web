@@ -11,8 +11,8 @@ export type CardAddParams = {
 }
 
 export type SavedCards = {
-  card_number: string
-  card_seq: string
+  card_number: string,
+  card_seq: string,
 }
 
 export type SavedCardsResponse = {

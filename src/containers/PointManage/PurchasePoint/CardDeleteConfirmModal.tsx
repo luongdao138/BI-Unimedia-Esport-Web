@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
+import { formatCardNumber } from '@utils/helpers/CommonHelper'
 
 interface ModalProps {
   open: boolean
@@ -24,7 +25,7 @@ const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, delet
           <Box className={classes.wrap_message}>
             <Typography className={classes.message}>{t('purchase_point_tab.delete_confirm_content')}</Typography>
             <Box pb={4}></Box>
-            <Typography className={classes.message}>{deletedCard.card_number}</Typography>
+            <Typography className={classes.message}>{formatCardNumber(deletedCard.card_number.replace(/\*/g, 'x'))}</Typography>
             <Box pb={4}></Box>
           </Box>
         </Box>
