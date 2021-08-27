@@ -14,7 +14,6 @@ import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
-import ESButton from '@components/Button'
 import ESReport from '@containers/Report'
 import { useRouter } from 'next/router'
 import { REPORT_TYPE } from '@constants/common.constants'
@@ -24,7 +23,15 @@ import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
 import { MEMBER_ROLE, JOIN_CONDITION, IS_OFFICIAL, OPEN_RANGE } from '@constants/community.constants'
+
+const ROLE_TYPES = {
+  IS_ADMIN: 'setIsAdmin',
+  IS_CO_ORGANIZER: 'setIsCoOrganizer',
+  IS_FOLLOWING: 'setIsFollowing',
+  IS_REQUESTED: 'setIsRequested',
+}
 
 type Props = {
   detail: CommunityDetail
@@ -62,19 +69,19 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
 
   const setOtherRoleFalse = (setRoleType: string) => {
-    if (setRoleType == 'setIsAdmin') {
+    if (setRoleType === ROLE_TYPES.IS_ADMIN) {
       setIsCoOrganizer(false)
       setIsFollowing(false)
       setIsRequested(false)
-    } else if (setRoleType == 'setIsCoOrganizer') {
+    } else if (setRoleType === ROLE_TYPES.IS_CO_ORGANIZER) {
       setIsAdmin(false)
       setIsFollowing(false)
       setIsRequested(false)
-    } else if (setRoleType == 'setIsFollowing') {
+    } else if (setRoleType === ROLE_TYPES.IS_FOLLOWING) {
       setIsAdmin(false)
       setIsCoOrganizer(false)
       setIsRequested(false)
-    } else if (setRoleType == 'setIsRequested') {
+    } else if (setRoleType === ROLE_TYPES.IS_REQUESTED) {
       setIsAdmin(false)
       setIsCoOrganizer(false)
       setIsFollowing(false)
@@ -83,28 +90,28 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const handleChangeRole = (setRoleType: string, value: boolean) => {
     setOtherRoleFalse(setRoleType)
-    if (setRoleType == 'setIsAdmin') {
+    if (setRoleType === ROLE_TYPES.IS_ADMIN) {
       setIsAdmin(value)
-    } else if (setRoleType == 'setIsCoOrganizer') {
+    } else if (setRoleType === ROLE_TYPES.IS_CO_ORGANIZER) {
       setIsCoOrganizer(value)
-    } else if (setRoleType == 'setIsFollowing') {
+    } else if (setRoleType === ROLE_TYPES.IS_FOLLOWING) {
       setIsFollowing(value)
-    } else if (setRoleType == 'setIsRequested') {
+    } else if (setRoleType === ROLE_TYPES.IS_REQUESTED) {
       setIsRequested(value)
     }
   }
 
   useEffect(() => {
     if (data.my_role === MEMBER_ROLE.ADMIN) {
-      handleChangeRole('setIsAdmin', true)
+      handleChangeRole(ROLE_TYPES.IS_ADMIN, true)
     } else if (data.my_role === MEMBER_ROLE.CO_ORGANIZER) {
-      handleChangeRole('setIsCoOrganizer', true)
+      handleChangeRole(ROLE_TYPES.IS_CO_ORGANIZER, true)
     } else if (data.my_role === MEMBER_ROLE.MEMBER) {
-      handleChangeRole('setIsFollowing', true)
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
     } else if (data.my_role === MEMBER_ROLE.LEAVE || data.my_role == null) {
-      handleChangeRole('setIsFollowing', false)
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
     } else if (data.my_role === MEMBER_ROLE.REQUESTED) {
-      handleChangeRole('setIsRequested', true)
+      handleChangeRole(ROLE_TYPES.IS_REQUESTED, true)
     }
     if (data.join_condition === JOIN_CONDITION.AUTOMATIC) {
       setIsCommunityAutomatic(true)
@@ -115,13 +122,13 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   useEffect(() => {
     if (followCommunityMeta.loaded) {
-      handleChangeRole('setIsFollowing', true)
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
     }
   }, [followCommunityMeta])
 
   useEffect(() => {
     if (unfollowCommunityMeta.loaded) {
-      handleChangeRole('setIsFollowing', false)
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
     }
   }, [unfollowCommunityMeta])
 
@@ -149,57 +156,36 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     setIsDiscardApplying(true)
   }
 
-  const followButton = () => {
-    return (
-      <ESButton variant="outlined" round className={classes.button} disabled={followCommunityMeta.pending} onClick={followHandle}>
-        {t('common:profile.follow_as')}
-      </ESButton>
-    )
-  }
-
-  const applyingButton = () => {
-    return (
-      <ESButton variant="outlined" round className={classes.button} disabled={unfollowCommunityMeta.pending} onClick={cancelApplyingHandle}>
-        {t('common:community.applying')}
-      </ESButton>
-    )
-  }
-
-  const unfollowButton = () => {
-    return (
-      <ESButton
-        variant="contained"
-        round
-        className={classes.button}
-        color="primary"
-        disabled={unfollowCommunityMeta.pending}
-        onClick={unfollowHandle}
-      >
-        {t('common:profile.following')}
-      </ESButton>
-    )
-  }
-
-  const editButton = () => {
-    return (
-      <ESButton variant="outlined" round className={classes.button} disabled={false} onClick={toEdit}>
-        {t('common:community.edit')}
-      </ESButton>
-    )
-  }
-
   const DetailInfoButton = () => {
     return (
       <>
-        {isAuthenticated
-          ? isAdmin || isCoOrganizer
-            ? editButton()
-            : isRequested
-            ? applyingButton()
-            : isFollowing
-            ? unfollowButton()
-            : followButton()
-          : null}
+        {isAuthenticated ? (
+          isAdmin || isCoOrganizer ? (
+            <DetailInfoButtons title={t('common:community.edit')} variant="outlined" disabled={false} onClick={toEdit} />
+          ) : isRequested ? (
+            <DetailInfoButtons
+              title={t('common:community.applying')}
+              variant="outlined"
+              disabled={unfollowCommunityMeta.pending}
+              onClick={cancelApplyingHandle}
+            />
+          ) : isFollowing ? (
+            <DetailInfoButtons
+              title={t('common:profile.following')}
+              variant="contained"
+              color="primary"
+              disabled={unfollowCommunityMeta.pending}
+              onClick={unfollowHandle}
+            />
+          ) : (
+            <DetailInfoButtons
+              title={t('common:profile.follow_as')}
+              variant="outlined"
+              disabled={followCommunityMeta.pending}
+              onClick={followHandle}
+            />
+          )
+        ) : null}
       </>
     )
   }
