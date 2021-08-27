@@ -5,11 +5,13 @@ import {
   CommunityMemberRemoveParams,
   CommunityMembersApproveCancelParams,
   CommunityMembersParams,
+  PageMeta,
 } from '@services/community.service'
 import community from '@store/community'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
 import { addToast } from '@store/common/actions'
+import { clearMetaData } from '@store/metadata/actions'
 
 const { actions, selectors } = community
 const getMeta = createMetaSelector(actions.getCommunityMembers)
@@ -17,8 +19,10 @@ const getMeta = createMetaSelector(actions.getCommunityMembers)
 const useFollowList = (): {
   membersList: Array<CommunityMember>
   getMembers: (params: CommunityMembersParams) => void
+  pages: PageMeta
   membersMeta: Meta
   resetMembers: () => void
+  resetMeta: () => void
   approveMembers: (params: CommunityMembersApproveCancelParams) => void
   cancelMembers: (params: CommunityMembersApproveCancelParams) => void
   changeMemberRole: (params: CommunityMemberChangeRoleParams) => void
@@ -28,7 +32,9 @@ const useFollowList = (): {
   const dispatch = useAppDispatch()
   const membersList = useAppSelector(selectors.getCommunityMembers)
   const getMembers = (params) => dispatch(actions.getCommunityMembers(params))
+  const pages = useAppSelector(selectors.getCommunityMembersMeta)
   const membersMeta = useAppSelector(getMeta)
+  const resetMeta = () => dispatch(clearMetaData(actions.getCommunityMembers.typePrefix))
   const resetMembers = () => dispatch(actions.resetCommunityMembers())
   const approveMembers = (params) => dispatch(actions.approveCommunityMembers(params))
   const cancelMembers = (params) => dispatch(actions.cancelCommunityMembers(params))
@@ -39,7 +45,9 @@ const useFollowList = (): {
   return {
     membersList,
     getMembers,
+    pages,
     membersMeta,
+    resetMeta,
     resetMembers,
     approveMembers,
     cancelMembers,

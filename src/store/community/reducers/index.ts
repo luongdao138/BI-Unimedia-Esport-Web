@@ -24,6 +24,7 @@ type StateType = {
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
   communityMembers?: Array<CommunityMember>
+  communityMembersMeta?: PageMeta
   create_Topic?: TopicParams
   topicDetail: TopicDetail | null
   commentsList?: CommentsListResponse
@@ -84,7 +85,12 @@ export default createReducer(initialState, (builder) => {
     state.community_features = action.payload.data
   })
   builder.addCase(actions.getCommunityMembers.fulfilled, (state, action) => {
-    state.communityMembers = action.payload.data
+    let tmpCommunityMembers = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      tmpCommunityMembers = state.communityMembers.concat(action.payload.data)
+    }
+    state.communityMembers = tmpCommunityMembers
+    state.communityMembersMeta = action.payload.meta
   })
   builder.addCase(actions.getTopicDetail.fulfilled, (state, action) => {
     state.topicDetail = action.payload.data
