@@ -1,12 +1,11 @@
-// import { useState } from 'react'
 import { Box, ButtonBase, makeStyles, Icon, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { SetStateAction, Dispatch } from 'react'
 
 type Props = {
-  page?: number
-  pageNumber?: number
-  setPage?: Dispatch<SetStateAction<number>>
+  page: number
+  pageNumber: number
+  setPage: Dispatch<SetStateAction<number>>
 }
 
 const Pagination: React.FC<Props> = ({ page, pageNumber, setPage }) => {

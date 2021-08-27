@@ -1,5 +1,6 @@
 import { Typography, Box, Theme, makeStyles, Icon } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export interface TopicRowItemProps {
   title?: string
@@ -26,7 +27,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
 
           <Box display="flex" flexDirection="column" width={80} alignItems="flex-end">
             <Box width="100%" justifyContent="flex-end" display="flex">
-              <Typography className={classes.latest_date}>{latest_date}</Typography>
+              <Typography className={classes.latest_date}>{CommonHelper.staticSmartTime(latest_date)}</Typography>
             </Box>
 
             <Box display="flex" flexDirection="row" alignItems="center" width="100%" justifyContent="flex-end">

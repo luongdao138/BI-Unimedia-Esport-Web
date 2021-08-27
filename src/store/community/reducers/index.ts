@@ -95,6 +95,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL, (state) => {
     state.topicDetail = undefined
   })
+  builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
+    state.community_detail = action.payload.data
+  })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined
   })
