@@ -8,17 +8,19 @@ import { Colors } from '@theme/colors'
 import PageWithLayoutType from '@constants/page'
 import useSearch from '@containers/Search/useSearch'
 import StreamLayout from '@layouts/StreamLayout'
+import useVideoSearch from '@containers/Search/useVideoSearch'
 
 const SearchPage: PageWithLayoutType = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { searchType, searchKeyword } = useSearch()
+  const { searchVideoType } = useVideoSearch()
   const [type, setType] = useState<number>(searchType)
   const [keyword, setKeyword] = useState<string>(searchKeyword)
 
   useEffect(() => {
-    setType(searchType)
+    setType(searchVideoType)
     setKeyword(searchKeyword)
   }, [searchType, searchKeyword])
 
@@ -37,7 +39,7 @@ const SearchPage: PageWithLayoutType = () => {
         if (keyword) {
           return t('common:video.video_results').replace(/:key/gi, keyword)
         }
-        return t('common:user.user_results_all')
+        return t('common:video.video_results_all')
       default:
         return <></>
     }

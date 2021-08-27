@@ -32,8 +32,8 @@ const VideosTop: React.FC = () => {
   const dataBanner = [
     // { id: 0, url: '/images/banners/banner_01.png', target: 'image_01' },
     // { id: 1, url: '/images/banners/banner_02.png', target: 'image_02' },
-    // { id: 2, url: '/images/banners/banner_03.png', target: 'image_03' },
-    // { id: 3, url: '/images/banners/banner_04.png', target: 'image_04' },
+    { id: 2, url: '/images/banners/banner_03.png', target: 'image_03' },
+    { id: 3, url: '/images/banners/banner_04.png', target: 'image_04' },
     { id: 4, url: '/images/banners/banner_05.png', target: 'image_05' },
     { id: 5, url: 'https://i.pinimg.com/564x/16/c7/44/16c744a2c5187694bfb9f2d220dc4f16.jpg', target: 'image_06' },
     { id: 6, url: 'https://i.pinimg.com/236x/c4/7e/52/c47e523f07996bd610f1e1ecfa842ebb.jpg', target: 'image_07' },

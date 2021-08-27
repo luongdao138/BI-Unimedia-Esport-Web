@@ -6,4 +6,6 @@ export const ACTION_VIDEO_TOP = {
   GET_VIDEO_POPULAR: 'videoTop/popular',
   GET_BANNER: 'videoTop/banner',
   GET_LIST_FAVORITE: 'videoTop/favorite',
+  SEARCH_VIDEO: 'videoTop/searchVideo',
+  RESET_SEARCH_VIDEO: 'videoTop/resetSearchVideo',
 }

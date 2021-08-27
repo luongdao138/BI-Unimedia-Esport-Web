@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/videoTop.services'
 import { ACTION_VIDEO_TOP } from './types'
 
@@ -65,7 +65,6 @@ export const getVideoLive = createAsyncThunk<services.VideoTypeLiveResponse, ser
     try {
       const res = await services.ListVideoLiveStream(videoParams)
       if (res?.code === 200) {
-        // console.log('=====res LIVE====', res)
         return res
       } else {
         // throw res.message
@@ -86,7 +85,6 @@ export const getVideoSchedule = createAsyncThunk<services.VideoTypeScheduleRespo
     try {
       const res = await services.ListVideoSchedule(videoParams)
       if (res?.code === 200) {
-        // console.log('=====res GET_LIST_SCHEDULE====', res)
         return res
       } else {
         // throw res.message
@@ -107,7 +105,6 @@ export const getVideoArchived = createAsyncThunk<services.VideoTypeArchivedRespo
     try {
       const res = await services.ListVideoArchived(videoParams)
       if (res?.code === 200) {
-        // console.log('=====res GET_LIST_ARCHIVE====', res)
         return res
       } else {
         // throw res.message
@@ -141,3 +138,25 @@ export const getListVideoFavorite = createAsyncThunk<services.ListVideoTopRespon
     }
   }
 )
+
+export const videoSearch = createAsyncThunk<services.SearchVideoResponse, services.SearchVideoParams>(
+  ACTION_VIDEO_TOP.SEARCH_VIDEO,
+  async (searchParams, { rejectWithValue }) => {
+    try {
+      const res = await services.VideoSearch(searchParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const resetSearchVideo = createAction(ACTION_VIDEO_TOP.RESET_SEARCH_VIDEO)

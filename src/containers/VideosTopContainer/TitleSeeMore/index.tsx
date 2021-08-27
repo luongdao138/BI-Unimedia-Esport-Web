@@ -13,13 +13,11 @@ const TitleSeeMore: React.FC<TitleSeeMoreProps> = ({ iconSource, titleText, righ
     <Box className={classes.container}>
       {iconSource && (
         <Box className={classes.boxOut}>
-          <Box className={classes.iconContainer} pr={2}>
-            <img src={iconSource} width={33} height={44} />
-          </Box>
+          <img src={iconSource} width={33} height={44} />
           <ESLabel label={titleText} />
         </Box>
       )}
-      {!iconSource && <ESLabel label={titleText} />}
+      <ESLabel label={titleText} />
       <Box className={classes.viewMoreContainer} onClick={onPress}>
         {rightText && <Typography className={classes.viewMoreStyle}>{rightText}</Typography>}
       </Box>

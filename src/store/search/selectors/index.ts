@@ -7,3 +7,6 @@ export const getSearchUsers = createSelector(getRoot, (state) => state.searchUse
 export const getSearchUsersMeta = createSelector(getRoot, (state) => state.searchUsersMeta)
 export const getSearchType = createSelector(getRoot, (state) => state.type)
 export const getSearchKeyword = createSelector(getRoot, (state) => state.keyword)
+
+//only search video
+export const getSearchVideoType = createSelector(getRoot, (state) => state.typeSearchVideo)

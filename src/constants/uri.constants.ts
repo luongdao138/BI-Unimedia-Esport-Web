@@ -110,6 +110,7 @@ export const URI = {
   GET_CATEGORY_POPULAR_VIDEO: '/v2/categories/hot',
   GET_BANNER: '/v2/videos/top/banners',
   GET_VIDEO_FAVORITE: '/v2/videos/follow',
+  SEARCH_VIDEO: '/v2/videos/search',
   //purchase points
   GET_LIST_CARDS: 'v2/gmo/list_card',
   DELETE_CARD: '/v2/gmo/delete_card',

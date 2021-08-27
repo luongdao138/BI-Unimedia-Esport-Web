@@ -4,4 +4,7 @@ export enum SEARCH_ACTION_TYPE {
   UNFOLLOW = 'search/unfollow',
   SET_SEARCH_PARAMS = 'search/setSearchParams',
   RESET_SEARCH_USERS = 'search/resetSearchUsers',
+
+  //only search video
+  SET_SEARCH_VIDEO_PARAMS = 'search/setSearchVideoParams',
 }

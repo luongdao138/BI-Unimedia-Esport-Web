@@ -169,6 +169,8 @@ export enum FOLLOW_STATES {
 
 export const FORMAT_DATE_TIME_JP = 'YYYY年MM月DD日 HH:mm'
 export const FORMAT_SCHEDULE_TIME = 'YYYY年MM月DD日hh時mm分'
+export const FORMAT_DATE_SIMPLE = 'YYYY年MM月DD日'
+export const FORMAT_DATE_ARCHIVED = 'YYYY/MM/DD'
 
 export const POINTS = [500, 1000, 2000, 3000, 5000, 10000]
 export const TAX = 0.1

@@ -1,67 +1,90 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import useSearchVideoResult from './useSearchVideoResult'
+import ESLoader from '@components/Loader'
+import { TypeVideo } from '@services/videoTop.services'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
+const LIMIT = 15
 const VideoSearchContainer: React.FC = () => {
-  const dataLiveVideo = Array(20)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'live',
-      title: `ムービータイトルムービータイトル ...`,
-      iconStreamer: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnailVideo: '/images/dataVideoFake/banner_04.png',
-      nameStreamer: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category: 'Valorant',
-    }))
+  const page = 1
   const classes = useStyles()
   const { searchKeyword } = useSearch()
-  const [searchVideos, setSearchVideos] = useState([])
   const { t } = useTranslation(['common'])
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const [keyword, setKeyword] = useState<string>('')
+  const { searchVideosSelector, videoSearch, resetMeta, resetSearchVideo, meta, totalResult } = useSearchVideoResult()
 
   useEffect(() => {
-    if (searchKeyword.length <= 0) {
-      setSearchVideos([])
-    } else {
-      setSearchVideos(dataLiveVideo)
+    setKeyword(searchKeyword)
+    videoSearch({ page: 1, keyword: searchKeyword, limit: LIMIT })
+
+    return () => {
+      resetSearchVideo()
+      resetMeta()
     }
   }, [searchKeyword])
 
+  const loadMore = () => {
+    if (searchVideosSelector?.length > 0 && searchVideosSelector?.length <= LIMIT) {
+      videoSearch({ page: page + 1, limit: LIMIT, keyword: keyword })
+    }
+  }
+
+  const renderItem = (item: TypeVideo, index: number) => {
+    return (
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer} key={index}>
+            <VideoPreviewItem data={item} key={index} />
+          </Box>
+        ) : (
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+            <VideoPreviewItem data={item} key={index} />
+          </Grid>
+        )}
+      </>
+    )
+  }
   return (
     <Box className={classes.container}>
       <Grid item xs={12}>
         <Box pt={3} pb={3}>
           <Typography variant="caption" gutterBottom className={classes.title}>
-            {`${t('common:common.search_results')} ${dataLiveVideo.length}${t('common:common.total')}`}
+            {`${t('common:common.search_results')} ${totalResult}${t('common:common.total')}`}
           </Typography>
         </Box>
       </Grid>
       <Box className={classes.wrapContentContainer}>
-        <Grid container spacing={3} className={classes.contentContainer}>
-          {searchVideos.map((data, i) => (
-            <>
-              {downMd ? (
-                <Box className={classes.xsItemContainer} key={i}>
-                  <VideoPreviewItem data={data} key={i} />
-                </Box>
-              ) : (
-                <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={i}>
-                  <VideoPreviewItem data={data} key={i} />
-                </Grid>
-              )}
-            </>
-          ))}
-        </Grid>
+        <InfiniteScroll
+          className={classes.scrollContainer}
+          dataLength={searchVideosSelector?.length}
+          next={loadMore}
+          hasMore={true}
+          loader={null}
+          scrollThreshold={0.8}
+          style={{ overflow: 'hidden' }}
+        >
+          {searchVideosSelector?.length > 0 && (
+            <Grid container spacing={3} className={classes.contentContainer}>
+              {searchVideosSelector?.map(renderItem)}
+            </Grid>
+          )}
+        </InfiniteScroll>
       </Box>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </Box>
   )
 }
