@@ -10,6 +10,7 @@ import { Meta } from '@store/metadata/actions/types'
 import useLobbyHelper from '../hooks/useLobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
+import _ from 'lodash'
 
 const { actions, selectors } = lobbyStore
 const getTournamentMeta = createMetaSelector(actions.createLobby)
@@ -61,7 +62,6 @@ const useLobbyCreate = (): {
     organizer_participated: true,
     cover_image_url: true,
   })
-  const notEditableStatuses = [LOBBY_STATUS.CANCELLED, LOBBY_STATUS.ENDED, LOBBY_STATUS.DELETED]
 
   const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
@@ -98,29 +98,64 @@ const useLobbyCreate = (): {
 
       const _status = lobby.attributes.status
 
-      const _editables = { ...editables }
+      let _editables = { ...editables }
+      _editables = _.mapValues(_editables, () => false)
 
-      // TODO set editables cases here
-      if (_status === LOBBY_STATUS.RECRUITING) {
-        _editables.entry_start_datetime = false
+      if (_status === LOBBY_STATUS.READY) {
+        // 受付前
+        _editables.title = true
+        _editables.game_hardware = true
+        _editables.max_participants = true
+        _editables.organizer_participated = true
+        _editables.cover_image_url = true
+        _editables.entry_start_datetime = true
+        _editables.area = true
+        _editables.address = true
+        _editables.categories = true
+        _editables.message = true
+      } else if (_status === LOBBY_STATUS.RECRUITING) {
+        // 受付中
+        _editables.title = true
+        _editables.game_hardware = true
+        _editables.max_participants = true
+        _editables.organizer_participated = true
+        _editables.cover_image_url = true
+        _editables.entry_start_datetime = true
+        _editables.entry_end_datetime = true
+        _editables.area = true
+        _editables.address = true
+        _editables.categories = true
+        _editables.message = true
       } else if (_status === LOBBY_STATUS.ENTRY_CLOSED) {
-        _editables.entry_start_datetime = false
-        _editables.entry_end_datetime = false
-        _editables.organizer_participated = false
-        _editables.max_participants = false
+        // 受付締め切り
+        _editables.title = true
+        _editables.game_hardware = true
+        _editables.cover_image_url = true
+        _editables.entry_start_datetime = true
+        _editables.entry_end_datetime = true
+        _editables.start_datetime = true
+        _editables.area = true
+        _editables.address = true
+        _editables.categories = true
+        _editables.message = true
       } else if (_status === LOBBY_STATUS.IN_PROGRESS) {
-        _editables.entry_start_datetime = false
-        _editables.entry_end_datetime = false
-        _editables.start_datetime = false
-        _editables.organizer_participated = false
-        _editables.max_participants = false
-      } else if (notEditableStatuses.includes(_status)) {
-        _editables.entry_start_datetime = false
-        _editables.entry_end_datetime = false
-        _editables.start_datetime = false
-        _editables.organizer_participated = false
-        _editables.max_participants = false
-        // _editables = _.mapValues(_editables, () => false)
+        // 本日実施
+        _editables.title = true
+        _editables.game_hardware = true
+        _editables.cover_image_url = true
+        _editables.area = true
+        _editables.address = true
+        _editables.categories = true
+        _editables.message = true
+      } else if (_status === LOBBY_STATUS.ENDED) {
+        // 終了
+        _editables.title = true
+        _editables.game_hardware = true
+        _editables.cover_image_url = true
+        _editables.area = true
+        _editables.address = true
+        _editables.categories = true
+        _editables.message = true
       }
 
       setEditables(_editables)
