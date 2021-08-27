@@ -6,6 +6,7 @@ import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import BlankLayout from '@layouts/BlankLayout'
 import LoginRequired from '@containers/LoginRequired'
 import ESStickyFooter from '@components/StickyFooter'
@@ -26,11 +27,14 @@ type Props = {
 const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
   const { isModerator, isAutomatic } = useCommunityHelper(community)
   const {
     getMembers,
     membersList,
+    pages,
+    resetMeta,
     resetMembers,
     membersMeta,
     approveMembers,
@@ -54,11 +58,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   useEffect(() => {
     if (open) {
-      getMembers({ hash_key: community.attributes.hash_key, role: CommunityMemberRole.all })
+      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, pages: 1 })
     } else {
       resetMembers()
     }
-    return () => resetMembers()
+    return () => {
+      resetMembers()
+      resetMeta()
+    }
   }, [open])
 
   useEffect(() => {
@@ -72,8 +79,16 @@ const FollowList: React.FC<Props> = ({ community }) => {
     setInitialValues([applying, participating])
   }, [membersList])
 
+  const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, pages: Number(pages.current_page) + 1 })
+    }
+  }
+
   const getDetailAndToast = () => {
-    getMembers({ hash_key: community.attributes.hash_key, role: CommunityMemberRole.all })
+    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, pages: pages.current_page })
     sendToast(t('common:community.change_applying_members_toast'))
   }
 
@@ -101,10 +116,10 @@ const FollowList: React.FC<Props> = ({ community }) => {
     const cancel = handleApplyingParam(data, null)
 
     if (approve.length > 0) {
-      await approveMembers({ hash_key: community.attributes.hash_key, data: { member_ids: approve } })
+      await approveMembers({ hash_key: hash_key, data: { member_ids: approve } })
     }
     if (cancel.length > 0) {
-      await cancelMembers({ hash_key: community.attributes.hash_key, data: { member_ids: cancel } })
+      await cancelMembers({ hash_key: hash_key, data: { member_ids: cancel } })
     }
     getDetailAndToast()
     setHasChosenApplying(false)
@@ -120,10 +135,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
     } else {
       setParticipatingValues(data)
       if (Number(value) == MEMBER_ROLE.LEAVE) {
-        await removeMember({ data: { member_id: id }, hash_key: community.attributes.hash_key })
+        await removeMember({ data: { member_id: id }, hash_key: hash_key })
         getDetailAndToast()
       } else {
-        changeMemberRole({ data: { member_id: id, member_role: handleValue(value) }, hash_key: community.attributes.hash_key })
+        changeMemberRole({ data: { member_id: id, member_role: handleValue(value) }, hash_key: hash_key })
+        sendToast(t('common:community.change_applying_members_toast'))
       }
     }
     isApplying && setHasChosenApplying(true)
@@ -131,11 +147,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const renderMemberList = () => {
     return (
-      <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+      <Box>
         {participatingValues.map((participant, i) => (
           <UserListItem data={participant} key={i} nicknameYellow={false} />
         ))}
-      </div>
+      </Box>
     )
   }
 
@@ -203,7 +219,21 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   <Typography variant="h2">{t('common:community.follow_list')}</Typography>
                 </Box>
               </Box>
-              {membersMeta.loaded && (isModerator ? renderAdminMemberList() : renderMemberList())}
+              {membersMeta.loaded && membersList.length > 0 && (
+                <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+                  <InfiniteScroll
+                    dataLength={membersList.length}
+                    next={loadMore}
+                    hasMore={hasNextPage}
+                    scrollableTarget="scrollableDiv"
+                    scrollThreshold={0.99}
+                    style={{ overflow: 'hidden ' }}
+                    loader={null}
+                  >
+                    {isModerator ? renderAdminMemberList() : renderMemberList()}
+                  </InfiniteScroll>
+                </Box>
+              )}
               {membersMeta.pending && (
                 <Box className={classes.loader}>
                   <ESLoader />

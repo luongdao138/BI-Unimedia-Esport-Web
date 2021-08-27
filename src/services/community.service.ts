@@ -120,6 +120,7 @@ export enum CommunityMemberRole {
 export type CommunityMembersParams = {
   hash_key: string
   role: CommunityMemberRole
+  pages: number
 }
 
 export type CommunityMember = {
@@ -137,12 +138,7 @@ export type CommunityMember = {
 
 export type CommunityMembersResponse = {
   data: Array<CommunityMember>
-  links: {
-    links: {
-      self: string
-    }
-    meta: PageMeta
-  }
+  meta: PageMeta
 }
 
 export type CommunityMembersApproveCancelParams = {
