@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Typography, Theme, makeStyles, CardMedia } from '@material-ui/core'
+import { Box, Typography, Theme, makeStyles } from '@material-ui/core'
 import { TypeVideo } from '@services/videoTop.services'
 import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -25,7 +25,10 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   return (
     <Box className={classes.container} key={data?.id} onClick={onNavigateLive}>
       <Box className={classes.videoContainer}>
-        <CardMedia className={classes.video} image={data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER} />
+        <Box
+          className={classes.video}
+          style={{backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})`}} 
+        />
         {data?.status === 1 && (
           <Box className={classes.tagContainer}>
             <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
@@ -98,16 +101,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 6,
   },
   videoContainer: {
-    height: 150,
     borderRadius: 4,
-    display: 'flex',
-    position: 'relative',
+    position: "relative", 
+    paddingBottom: "32.5%", 
+    overflow: "hidden"
   },
   video: {
-    height: '100%',
-    borderRadius: 4,
-    display: 'flex',
-    width: '100%',
+    backgroundSize: "cover", 
+    backgroundPosition: "center", 
+    position: "absolute", 
+    top: "0", 
+    left: "0", 
+    width: "100%", 
+    height: "100%"
   },
   previewUser: {
     position: 'absolute',

@@ -502,7 +502,23 @@ const useStyles = makeStyles((theme) => ({
   wrap_all_cards: {
     height: "auto", 
     overflow: "auto",
-    paddingRight: '16px'
+    paddingRight: '16px',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgb(0 0 0)',
+      borderRadius: 6
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#898989',
+      borderRadius: 6,
+    },
   },
   [theme.breakpoints.down('lg')]: {
     card_info_wrap: {

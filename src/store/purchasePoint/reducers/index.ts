@@ -23,6 +23,7 @@ const splitCardInfo = (str) => {
 
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getSavedCards.fulfilled, (state, action) => {
+    state.GMO_SHOP_ID = action.payload.data.GMO_SHOP_ID
     const res_saved_cards = action.payload.data.attributes
     if (res_saved_cards && Object.keys(res_saved_cards).length !== 0 && res_saved_cards.CardNo) {
       const card_numbers = splitCardInfo(res_saved_cards.CardNo)
@@ -37,8 +38,9 @@ export default createReducer(initialState, (builder) => {
           }
         ]
       }
-      state.GMO_SHOP_ID = action.payload.data.GMO_SHOP_ID
       state.saved_cards = saved_cards
+    } else {
+      state.saved_cards = []
     }
   })
 })

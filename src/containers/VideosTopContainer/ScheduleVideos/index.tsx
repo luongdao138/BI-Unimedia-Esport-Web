@@ -25,7 +25,7 @@ const ScheduleVideos: React.FC = () => {
             <VideoPreviewItem data={item} key={item.id} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} className={classes.itemContainer} key={index}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
         )}
@@ -119,9 +119,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   wrapVideos: {},
-  wrapContentContainer: {},
+  wrapContentContainer: {
+    overflow: 'hidden'
+  },
   spViewMore: {
     display: 'none',
+  },
+  [theme.breakpoints.up(960)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "33.333333%", 
+      flexBasis: "33.333333%"
+    },
+  },
+  [theme.breakpoints.up(1680)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "25%", 
+      flexBasis: "25%", 
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "25%", 
+      flexBasis: "25%", 
+    },
+  },
+  scrollContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    overflow: 'hidden'
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
@@ -132,6 +160,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap',
       margin: '0px',
       paddingBottom: '0px',
+      overflow: 'auto'
     },
     xsItemContainer: {
       paddingRight: '24px',
@@ -147,10 +176,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '15px 0 26px 0',
       textAlign: 'center',
     },
-  },
-  scrollContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
   },
 }))
 export default ScheduleVideos

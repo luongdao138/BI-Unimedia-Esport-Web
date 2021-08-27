@@ -50,7 +50,7 @@ const VideosTop: React.FC = () => {
   }, [])
   const getTabs = () => {
     return (
-      <Grid item xs={12}>
+      <Grid item xs={12} className={classes.tabsContainer}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab className={classes.tabMin} label={t('videos_top_tab.video_list')} value={0} />
           <ESTab className={classes.tabMin} label={t('videos_top_tab.live_stream_video')} value={1} />
@@ -84,12 +84,16 @@ const VideosTop: React.FC = () => {
   }
   return (
     <Box className={classes.root}>
-      <Box className={classes.bannerContainer}>
-        <BannerCarousel data={dataBanner} />
+      <Box className={classes.container}>
+        <Box className={classes.bannerContainer}>
+          <BannerCarousel data={dataBanner} />
+        </Box>
       </Box>
       <Grid container direction="column">
-        {getTabs()}
-        {getContent()}
+        {getTabs()} 
+        <Box className={classes.tabContent}>
+          {getContent()}
+        </Box>
       </Grid>
     </Box>
   )
@@ -97,21 +101,31 @@ const VideosTop: React.FC = () => {
 export default VideosTop
 
 const useStyles = makeStyles((theme) => ({
+  tabsContainer: {
+    paddingRight: 122,
+  },
+  tabContent: {
+    padding: "0 122px 0 24px",
+  },
+  container: {
+    width: "100%", 
+    padding: "0 122px 0 24px",
+    display: "flex", 
+    justifyContent: "center"
+  },
   root: {
     display: 'flex',
     flexDirection: 'column',
     position: 'relative',
     backgroundColor: '#212121',
-    padding: '0 122px 100px 24px',
+    paddingBottom: 100,
   },
   tabs: {
     overflow: 'hidden',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-  },
-  tabMin: {
-    minWidth: 56,
+    paddingLeft: 24
   },
   forbiddenMessageContainer: {
     width: '100%',
@@ -134,7 +148,13 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'center',
   },
   [theme.breakpoints.down(1401)]: {
-    root: {
+    tabsContainer: {
+      paddingRight: '24px',
+    },
+    tabContent: {
+      paddingRight: '24px',
+    },
+    container: {
       paddingRight: '24px',
     },
   },
@@ -143,7 +163,15 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     },
   },
+  [theme.breakpoints.down(769)]: {
+    tabContent: {
+      paddingRight: 0,
+    },
+  },
   [theme.breakpoints.down(415)]: {
+    tabMin: {
+      minWidth: 56,
+    },
     bannerContainer: {
       marginTop: 0,
     },

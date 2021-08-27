@@ -32,7 +32,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             <VideoPreviewItem data={item} key={item.id} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} className={classes.itemContainer} key={index}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
         )}
@@ -74,10 +74,12 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
       <>
         {downMd ? (
           <Box className={classes.xsItemContainer}>
-            <PreLoadContainer />
+            <Box className={classes.wrapPreLoadContainer}>
+              <PreLoadContainer />
+            </Box>
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer}>
+          <Grid item xs={6} className={classes.itemContainer}>
             <PreLoadContainer />
           </Grid>
         )}
@@ -103,7 +105,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             onPress={onClickSeeMoreLiveStream}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {videoTop?.live?.length > 0 ? (
               videoTop?.live.map(renderLiveItem)
@@ -131,7 +133,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             onPress={onClickSeeMoreSchedule}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {videoTop?.schedule?.length > 0 ? (
               videoTop?.schedule.map(renderLiveItem)
@@ -159,7 +161,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             onPress={onClickSeeMoreArchive}
           />
         </Box>
-        <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
+        <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
             {videoTop?.archive?.length > 0 ? (
               videoTop?.archive.map(renderLiveItem)
@@ -189,9 +191,11 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
           ? videoCategoryPopular.map(renderPopularItem)
           : videoCategoryPopular.length === 0 &&
             meta.pending && (
-              <Grid container spacing={3} className={classes.contentContainer}>
-                {renderPreLoad(9)}
-              </Grid>
+              <Box className={classes.wrapContentContainer}>
+                <Grid container spacing={3} className={classes.contentContainer}>
+                  {renderPreLoad(9)}
+                </Grid>
+              </Box>
             )}
       </Box>
     </Box>
@@ -245,6 +249,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   spViewMore: {
     display: 'none',
   },
+  [theme.breakpoints.up(960)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "33.333333%", 
+      flexBasis: "33.333333%"
+    },
+  },
+  [theme.breakpoints.up(1680)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "25%", 
+      flexBasis: "25%", 
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "25%", 
+      flexBasis: "25%", 
+    },
+  },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
       width: 'calc(100vw - 24px)',
@@ -268,6 +293,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'block',
       padding: '16px 0 8px 0',
       textAlign: 'center',
+    },
+    wrapPreLoadContainer: {
+      width: 465,
+    },
+  },
+  [theme.breakpoints.down(415)]: {
+    wrapPreLoadContainer: {
+      width: 299,
     },
   },
 }))

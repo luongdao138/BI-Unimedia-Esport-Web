@@ -25,7 +25,7 @@ const ArchivedVideos: React.FC = () => {
             <VideoPreviewItem data={item} key={item.id} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} className={classes.itemContainer} key={index}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
         )}
@@ -132,6 +132,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap',
       margin: '0px',
       paddingBottom: '0px',
+      overflow: 'auto'
     },
     xsItemContainer: {
       paddingRight: '24px',
