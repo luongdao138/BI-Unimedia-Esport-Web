@@ -115,7 +115,6 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                 button
                 disableRipple
-                selected={isSelected(ESRoutes.VIDEO_TOP)}
               >
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-heart" />
@@ -137,7 +136,6 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                   className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                   button
                   disableRipple
-                  selected={isSelected(ESRoutes.VIDEO_STREAMING_SETTING)}
                 >
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-video" />
@@ -165,7 +163,11 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </Link>
             )}
             {!isStreamer && (
-              <Link href={ESRoutes.TERMS} passHref>
+              <a target="_blank" 
+                href="https://docs.google.com/forms/d/1Jjj0HnsmysqystYIwQTqmHmjO1h3ol7lipAkBDZJzuY/viewform?edit_requested=true" 
+                rel="noopener noreferrer"
+                className={classes.linkTag}
+              >
                 <ListItem
                   className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
                   button
@@ -183,7 +185,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                     />
                   )}
                 </ListItem>
-              </Link>
+              </a>
             )}
             <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem
@@ -442,6 +444,9 @@ const useStyles = makeStyles((theme) => ({
   wrap_footer: {
     paddingLeft: 17,
   },
+  linkTag: {
+    textDecoration: "none"
+  }
 }))
 
 const ListItem = withStyles({

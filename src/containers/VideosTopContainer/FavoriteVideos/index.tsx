@@ -27,7 +27,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
             <VideoPreviewItem data={item} key={item.id} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
+          <Grid item xs={6} className={classes.itemContainer} key={index}>
             <VideoPreviewItem data={item} key={item.id} />
           </Grid>
         )}
@@ -182,6 +182,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapContentContainer: {},
   spViewMore: {
     display: 'none',
+  },
+  [theme.breakpoints.up(960)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "33.333333%", 
+      flexBasis: "33.333333%"
+    },
+  },
+  [theme.breakpoints.up(1680)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "25%", 
+      flexBasis: "25%", 
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: "0", 
+      maxWidth: "25%", 
+      flexBasis: "25%", 
+    },
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {
