@@ -22,7 +22,6 @@ import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
 import useInterval from '@utils/hooks/useInterval'
 import { useRouter } from 'next/router'
 import moment from 'moment'
-import { FreezeMatchItem } from '@services/arena.service'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -225,17 +224,15 @@ const ArenaMatches: React.FC = () => {
           onAction={() => {
             setShowFreeze(false)
 
-            const freezeMatchValues: FreezeMatchItem[] = _.flatten(
-              matches.map((matchItems) => {
-                return matchItems.map((matchItem) => ({
-                  id: matchItem.id,
-                  home_user: matchItem.guest_user.nickname,
-                  guest_user: matchItem.home_user.nickname,
-                }))
-              })
-            )
+            if (_.isArray(matches) && matches.length > 0) {
+              const freezedMatches = _.map(matches[0], (m) => ({
+                id: m.id,
+                home_user: m.home_user ? m.home_user.pid : null,
+                guest_user: m.guest_user ? m.guest_user.pid : null,
+              }))
 
-            freeze({ hash_key: tournament.attributes.hash_key, matches: freezeMatchValues })
+              freeze({ hash_key: tournament.attributes.hash_key, matches: freezedMatches })
+            }
           }}
         />
       </ESStickyFooter>
