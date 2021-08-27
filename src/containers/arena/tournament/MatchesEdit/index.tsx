@@ -223,7 +223,16 @@ const ArenaMatches: React.FC = () => {
           onClose={() => setShowFreeze(false)}
           onAction={() => {
             setShowFreeze(false)
-            freeze(tournament.attributes.hash_key)
+
+            if (_.isArray(matches) && matches.length > 0) {
+              const freezedMatches = _.map(matches[0], (m) => ({
+                id: m.id,
+                home_user: m.home_user ? m.home_user.pid : null,
+                guest_user: m.guest_user ? m.guest_user.pid : null,
+              }))
+
+              freeze({ hash_key: tournament.attributes.hash_key, matches: freezedMatches })
+            }
           }}
         />
       </ESStickyFooter>
