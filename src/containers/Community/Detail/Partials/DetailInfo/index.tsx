@@ -25,7 +25,7 @@ import { CommunityDetail, TopicDetail } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
-import { MEMBER_ROLE, JOIN_CONDITION, IS_OFFICIAL, OPEN_RANGE } from '@constants/community.constants'
+import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -57,7 +57,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isDiscard, setIsDiscard] = useState(false)
   const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
-  const { isNotMember } = useCommunityHelper(detail)
+  const { isNotMember, isPublic } = useCommunityHelper(detail)
 
   const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
 
@@ -212,11 +212,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
               {data.name}
             </Typography>
             <Box ml={3.6}>
-              {data.is_official === IS_OFFICIAL.OFFICIAL ? (
-                <img className={classes.checkIcon} src="/images/check_icon.png" />
-              ) : (
-                data.open_range === OPEN_RANGE.SEARCHABLE && <Icon className={`fas fa-lock ${classes.lockIcon}`} />
+              {!!data.is_official && (
+                <span className={classes.checkIcon}>
+                  <Icon className="fa fa-check" fontSize="small" />
+                </span>
               )}
+              {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
             </Box>
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
@@ -332,7 +333,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
   },
   checkIcon: {
-    height: 20,
+    width: 18,
+    height: 18,
+    minWidth: 18,
+    minHeight: 18,
+    backgroundColor: Colors.primary,
+    borderRadius: '50%',
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& .MuiIcon-fontSizeSmall': {
+      fontSize: '0.7rem',
+    },
   },
   urlCopy: {
     marginLeft: 20,
