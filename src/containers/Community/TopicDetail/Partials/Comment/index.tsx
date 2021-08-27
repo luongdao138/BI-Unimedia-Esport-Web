@@ -16,13 +16,14 @@ import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 
 type CommunityHeaderProps = {
   username: string
+  userAvatar?: string
   mail: string
   discription: string
   date: string
   number: number
   image?: string
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number, userAvatar }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
@@ -65,7 +66,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
           <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{number}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} alt={username} src={userAvatar} />
             </Box>
 
             <Box className={classes.userInfoBox} ml={1} maxWidth="67%">

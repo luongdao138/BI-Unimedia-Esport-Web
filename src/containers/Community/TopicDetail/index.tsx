@@ -8,64 +8,32 @@ import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import _ from 'lodash'
 
 const TopicDetailContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
-  const { topic_id } = router.query
-  const { getTopicDetail, topic, topicDetailMeta, deleteTopic } = useTopicDetail()
+  const { back } = useRouter()
+  const { topic_hash_key } = router.query
+  const { getTopicDetail, topic, topicDetailMeta, deleteTopic, getCommentsList, commentsList } = useTopicDetail()
   const data = topic?.attributes
+  const commentsData = commentsList?.data
+  const commentsDataReversed = _.reverse(_.clone(commentsData))
 
   useEffect(() => {
-    if (topic_id) getTopicDetail({ hash_key: String(topic_id) })
+    if (topic_hash_key) {
+      getTopicDetail({ hash_key: String(topic_hash_key) })
+      getCommentsList({ hash_key: String(topic_hash_key) })
+    }
   }, [router])
 
   const handleDeleteTopic = () => {
-    deleteTopic({ hash_key: String(topic_id) })
+    deleteTopic({ hash_key: String(topic_hash_key) })
   }
 
-  const comments = [
-    {
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 51,
-      discription: 'トピックス本文が入ります。',
-      image:
-        'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F6%2F2019%2F11%2Frick-and-morty-season-4-2000.jpg&q=85',
-    },
-    {
-      discription: 'トピックス本文が入りまが入りトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますます',
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 52,
-    },
-    {
-      discription: 'トピックス本文が。ス本文が入りトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますます',
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 53,
-    },
-    {
-      discription:
-        'トピックス本文が入ります。ス本文がトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入ります入ります',
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi',
-      date: '２時間前',
-      number: 55,
-    },
-    {
-      discription:
-        'トピックス本文が入ります。ス本文トピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますが入ります',
-      username:
-        'コイチコイチコイチココイチコイチコイチコイチコイチコイコイチコイチコイチコイチコイチコイコイチコイチコイチコイチコイチコイイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 91,
-    },
-  ]
+  const handleBack = () => back()
+
+  // console.log(commentsList)
 
   return (
     <>
@@ -73,7 +41,7 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <CommunityDetailHeader title={data.title} isTopic />
+              <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
               <MainTopic
                 username={data.owner_name}
                 user_avatar={data.owner_profile}
@@ -89,19 +57,22 @@ const TopicDetailContainer: React.FC = () => {
           <Box className={classes.link}>
             <Link>↑過去のコメントを表示する</Link>
           </Box>
-          {comments.map((d, i) => {
-            return (
-              <Comment
-                key={i}
-                discription={d.discription}
-                image={d.image}
-                username={d.username}
-                mail={d.mail}
-                date={d.date}
-                number={d.number}
-              />
-            )
-          })}
+          {!!commentsData &&
+            commentsData.length > 0 &&
+            commentsDataReversed.map((d, i) => {
+              return (
+                <Comment
+                  key={i}
+                  discription={d.attributes.content}
+                  image={d.attributes.attachments[0]?.assets_url}
+                  userAvatar={d.attributes.owner_profile}
+                  username={d.attributes.owner_nickname}
+                  mail={d.attributes.user_code}
+                  date={CommonHelper.staticSmartTime(d.attributes.created_at)}
+                  number={d.attributes.comment_no}
+                />
+              )
+            })}
         </Box>
         <Box className={classes.inputContainer}>
           <CommentInput />

@@ -1,4 +1,4 @@
-import { TopicDetail, TopicDetailParams } from '@services/community.service'
+import { TopicDetail, TopicDetailParams, CommentsListResponse, CommentsListParams } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
@@ -15,14 +15,17 @@ const getDeleteTopicMeta = createMetaSelector(actions.deleteTopic)
 const useTopicDetail = (): {
   topic: TopicDetail
   getTopicDetail: (TopicDetailParams) => void
+  getCommentsList: (CommentsListParams) => void
   topicDetailMeta: Meta
   deleteTopic: (TopicDetailParams) => void
   deleteTopicMeta: Meta
+  commentsList: CommentsListResponse
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const topic = useAppSelector(selectors.getTopicDetail)
+  const commentsList = useAppSelector(selectors.getCommentsList)
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
@@ -37,12 +40,16 @@ const useTopicDetail = (): {
     }
   }
 
+  const getCommentsList = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
+
   return {
     topic,
     getTopicDetail,
     topicDetailMeta,
     deleteTopic,
     deleteTopicMeta,
+    getCommentsList,
+    commentsList,
   }
 }
 

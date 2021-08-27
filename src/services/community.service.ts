@@ -300,6 +300,44 @@ export type CommunityFollowResponse = {
   data: CommunityDetail
 }
 
+export type CommentsAttachmentResponse = {
+  id: number
+  assets_url: string
+  comment_id: number
+}
+
+export type CommentsResponse = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    created_at: string
+    comment_no: number
+    deleted_at: string
+    content: string
+    is_mine: true
+    attachments: Array<CommentsAttachmentResponse>
+    owner_nickname: string
+    user_code: string
+    owner_profile: string
+    hash_key: string
+    reply_to_comment_hash_key: string
+  }
+}
+
+export type CommentsListResponse = {
+  data: Array<CommentsResponse>
+  meta: {
+    current_page: number
+    total_pages: number
+    total_count: number
+    per_page: number
+  }
+}
+export type CommentsListParams = {
+  hash_key: string
+}
+
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PRIVATE, { params })
   return data
@@ -392,5 +430,10 @@ export const followCommunity = async (hash_key: string): Promise<CommunityFollow
 
 export const unfollowCommunity = async (hash_key: string): Promise<void> => {
   const { data } = await api.post<void>(URI.COMMUNITY_UNFOLLOW.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const getCommentsList = async (params: CommentsListParams): Promise<CommentsListResponse> => {
+  const { data } = await api.get<CommentsListResponse>(URI.COMMUNITY_COMMENTS_LIST, { params })
   return data
 }

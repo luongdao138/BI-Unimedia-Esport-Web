@@ -10,6 +10,7 @@ import {
   TopicParams,
   TopicDetail,
   CommunityMember,
+  CommentsListResponse,
 } from '@services/community.service'
 
 type StateType = {
@@ -25,6 +26,7 @@ type StateType = {
   communityMembers?: Array<CommunityMember>
   create_Topic?: TopicParams
   topicDetail: TopicDetail | null
+  commentsList?: CommentsListResponse
 }
 
 const initialState: StateType = {
@@ -34,6 +36,7 @@ const initialState: StateType = {
   community_features: [],
   topicList: [],
   topicDetail: null,
+  commentsList: null,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -94,5 +97,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined
+  })
+  builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
+    state.commentsList = action.payload
   })
 })
