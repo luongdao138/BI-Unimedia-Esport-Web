@@ -1,4 +1,4 @@
-import { Box, Typography, makeStyles, Icon, Button, OutlinedInput, IconButton, Input } from '@material-ui/core'
+import { Box, Typography, makeStyles, Icon, Button, OutlinedInput, IconButton, Input, useTheme, useMediaQuery } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState } from 'react'
@@ -6,6 +6,7 @@ import i18n from '@locales/i18n'
 
 type ChatContainerProps = {
   onPressDonate?: () => void
+  onCloseChatPanel?: () => void
 }
 const purchasePoints = {
   p_50: {
@@ -66,7 +67,7 @@ const purchasePoints = {
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
+const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel }) => {
   // const { t } = useTranslation('common')
   const [chatInput, setChatInput] = useState<string>('')
   const [purchaseComment, setPurchaseComment] = useState<string>('')
@@ -74,6 +75,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('')
 
   const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatInput(e.target.value)
@@ -96,46 +99,51 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
 
   const purchaseInfoDialog = () => (
     <Box className={classes.purchaseDialogContainer}>
-      <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
-      <Box className={classes.purchaseCommentInputContainer}>
-        <Input
-          id="comment"
-          multiline
-          rows={6}
-          placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
-          fullWidth
-          value={purchaseComment}
-          onChange={onCommentChange}
-          disableUnderline
-          classes={{ root: classes.purchaseCommentRoot }}
-        />
-        <Typography className={classes.purchaseCommentTextLimit}>{`${purchaseComment.length} / 120`}</Typography>
-      </Box>
-      <Box className={classes.pointList}>
-        <Box className={classes.pointListRow1}>
-          {getPurchasePointList().map((item) => {
-            const itemSelected = item.id === purchaseValueSelected
-            return (
-              <Box
-                onClick={() => {
-                  setPurchaseValueSelected(item.id)
-                }}
-                key={item.id}
-                className={`${classes[item.id]} ${classes.purchaseItem} ${itemSelected ? '' : classes.purchaseItemUnselected}`}
-              >
-                <Typography className={classes.purchaseItemText}>{item.value.toString()}</Typography>
-              </Box>
-            )
-          })}
+      <Box className={classes.purchaseDialogContent}>
+        <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
+        <Box className={classes.purchaseCommentInputContainer}>
+          <Input
+            id="comment"
+            multiline
+            rows={4}
+            placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
+            fullWidth
+            value={purchaseComment}
+            onChange={onCommentChange}
+            disableUnderline
+            classes={{ root: classes.purchaseCommentRoot }}
+          />
+          <Typography className={classes.purchaseCommentTextLimit}>{`${purchaseComment.length} / 120`}</Typography>
+        </Box>
+        <Box className={classes.pointList}>
+          <Box className={classes.pointListRow1}>
+            {getPurchasePointList()
+              .slice(0, isMobile ? 7 : 8)
+              .map((item) => {
+                const itemSelected = item.id === purchaseValueSelected
+                return (
+                  <Box
+                    onClick={() => {
+                      setPurchaseValueSelected(item.id)
+                    }}
+                    key={item.id}
+                    className={`${classes[item.id]} ${classes.purchaseItem} ${itemSelected ? '' : classes.purchaseItemUnselected}`}
+                  >
+                    <Typography className={classes.purchaseItemText}>{item.value.toString()}</Typography>
+                  </Box>
+                )
+              })}
+          </Box>
+        </Box>
+        <Button onClick={onPressDonate} className={classes.purchaseButton}>
+          <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
+        </Button>
+        <Box className={classes.dialogFooter}>
+          <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
+          <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
         </Box>
       </Box>
-      <Button onClick={onPressDonate} className={classes.purchaseButton}>
-        <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
-      </Button>
-      <Box className={classes.dialogFooter}>
-        <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
-        <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchasePoints')}</Typography>
-      </Box>
+      <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />
     </Box>
   )
 
@@ -144,24 +152,27 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
   }
 
   const chatInputComponent = () => (
-    <Box className={classes.chatInputContainer}>
-      {purchaseDialogVisible && purchaseInfoDialog()}
-      <IconButton onClick={purchaseIconClick} className={classes.iconPurchase}>
-        <img src="/images/ic_purchase.svg" />
-      </IconButton>
-      <Box className={classes.chatBox}>
-        <OutlinedInput
-          autoComplete="off"
-          onChange={onChange}
-          placeholder={'チャットを送信'}
-          id={'search'}
-          value={chatInput}
-          classes={{ root: classes.input, input: classes.chatTextInput }}
-          margin="dense"
-        />
-        <Button className={classes.iconButtonBg}>
-          <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
-        </Button>
+    <Box className={classes.chatInputMobileContainer}>
+      {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
+      <Box className={classes.chatInputContainer}>
+        {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
+        <IconButton onClick={purchaseIconClick} className={classes.iconPurchase}>
+          <img src="/images/ic_purchase.svg" />
+        </IconButton>
+        <Box className={classes.chatBox}>
+          <OutlinedInput
+            autoComplete="off"
+            onChange={onChange}
+            placeholder={'チャットを送信'}
+            id={'search'}
+            value={chatInput}
+            classes={{ root: classes.input, input: classes.chatTextInput }}
+            margin="dense"
+          />
+          <Button className={classes.iconButtonBg}>
+            <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
+          </Button>
+        </Box>
       </Box>
     </Box>
   )
@@ -192,12 +203,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
 
   return (
     <Box className={classes.container}>
-      <Box className={classes.chatHeader}>
-        <IconButton className={classes.headerIcon}>
-          <img src="/images/ic_collapse_right.svg" />
-        </IconButton>
-        <Typography className={classes.headerTitle}>{'チャット'}</Typography>
-      </Box>
+      {!isMobile && (
+        <Box className={classes.chatHeader}>
+          <IconButton onClick={onCloseChatPanel} className={classes.headerIcon}>
+            <img src="/images/ic_collapse_right.svg" />
+          </IconButton>
+          <Typography className={classes.headerTitle}>{'チャット'}</Typography>
+        </Box>
+      )}
       <Box className={classes.chatContent}>
         <Box className={classes.userWatchingList}>
           {getUserWatchingList().map(({ id, user_avatar }) => (
@@ -228,13 +241,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate }) => {
     </Box>
   )
 }
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    maxWidth: 482,
-    width: '100%',
+    width: 482,
   },
   purchaseCommentInputContainer: {
     width: '100%',
@@ -243,6 +255,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
+    borderRadius: 4,
   },
   purchaseCommentTextLimit: {
     fontSize: 12,
@@ -290,9 +303,13 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
   },
   purchaseDialogContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: 10,
+  },
+  purchaseDialogContent: {
     padding: 16,
     backgroundColor: '#4D4D4D',
-    marginBottom: 4,
     borderRadius: 4,
     display: 'flex',
     alignItems: 'center',
@@ -403,6 +420,9 @@ const useStyles = makeStyles(() => ({
     paddingRight: 11,
     paddingTop: 14.5,
     paddingBottom: 22,
+    borderRadius: 4,
+  },
+  chatInputMobileContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -490,9 +510,27 @@ const useStyles = makeStyles(() => ({
   },
   purchaseCommentRoot: {
     backgroundColor: '#212121',
-    height: 115,
+    height: 83,
     paddingLeft: 10,
     paddingRight: 10,
+    borderRadius: 4,
+  },
+  downTriangle: {
+    width: 20,
+    height: 14,
+    marginLeft: 10,
+    marginTop: -2,
+  },
+  [theme.breakpoints.down(768)]: {
+    container: {
+      width: '100%',
+    },
+    chatBoard: {
+      height: 253,
+    },
+    purchaseDialogContainer: {
+      width: 318,
+    },
   },
 }))
 export default ChatContainer

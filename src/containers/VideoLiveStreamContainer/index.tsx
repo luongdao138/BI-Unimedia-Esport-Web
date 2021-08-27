@@ -1,7 +1,7 @@
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Box, Grid, IconButton, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,9 +22,14 @@ enum TABS {
 const VideosTop: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   const [tab, setTab] = useState(0)
   const [confirmModal, setConfirmModal] = useState(false)
   const [stepsModal, setStepsModal] = useState(false)
+  const [chatVisible, setChatVisible] = useState(true)
+
   const showConfirmModal = () => {
     setConfirmModal(true)
   }
@@ -66,16 +71,41 @@ const VideosTop: React.FC = () => {
       </Box>
     )
   }
+
+  const onCloseChatPanel = () => {
+    setChatVisible(false)
+  }
+
+  const handleChatPanelOpen = () => {
+    setChatVisible(true)
+  }
+
+  const sideChatContainer = () => {
+    return chatVisible ? (
+      <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} />
+    ) : (
+      <IconButton onClick={handleChatPanelOpen} className={classes.headerIcon}>
+        <img src="/images/ic_collapse_right.svg" />
+      </IconButton>
+    )
+  }
+
   return (
     <Box className={classes.root}>
       <Box className={classes.container}>
         <LiveStreamContent></LiveStreamContent>
-        <Grid container direction="row">
-          {getTabs()}
-          {getContent()}
-        </Grid>
+        {isMobile ? (
+          <Box className={classes.mobileChatContainer}>
+            <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} />
+          </Box>
+        ) : (
+          <Grid container direction="row">
+            {getTabs()}
+            {getContent()}
+          </Grid>
+        )}
       </Box>
-      <ChatContainer onPressDonate={showConfirmModal}></ChatContainer>
+      {!isMobile && sideChatContainer()}
       <DonatePointsConfirmModal
         open={confirmModal}
         handleClose={handleCloseModal}
@@ -93,6 +123,7 @@ const useStyles = makeStyles(() => ({
   root: {
     backgroundColor: '#212121',
     display: 'flex',
+    position: 'relative',
   },
   tabs: {
     overflow: 'hidden',
@@ -112,5 +143,17 @@ const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
+  },
+  headerIcon: {
+    width: 16,
+    height: 12,
+    position: 'absolute',
+    top: 19,
+    right: 113,
+    transform: 'rotate(180deg)',
+  },
+  mobileChatContainer: {
+    width: '100%',
   },
 }))
