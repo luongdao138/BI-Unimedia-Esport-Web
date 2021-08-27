@@ -9,6 +9,7 @@ import {
   PageMeta,
   TopicParams,
   TopicDetail,
+  CommunityMember,
 } from '@services/community.service'
 
 type StateType = {
@@ -21,6 +22,7 @@ type StateType = {
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
   community_features: Array<CommunityFeature>
+  communityMembers?: Array<CommunityMember>
   create_Topic?: TopicParams
   topicDetail: TopicDetail | null
 }
@@ -78,6 +80,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommunityFeatures.fulfilled, (state, action) => {
     state.community_features = action.payload.data
   })
+  builder.addCase(actions.getCommunityMembers.fulfilled, (state, action) => {
+    state.communityMembers = action.payload.data
+  })
   builder.addCase(actions.getTopicDetail.fulfilled, (state, action) => {
     state.topicDetail = action.payload.data
   })
@@ -86,5 +91,8 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
     state.community_detail = action.payload.data
+  })
+  builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
+    state.communityMembers = undefined
   })
 })

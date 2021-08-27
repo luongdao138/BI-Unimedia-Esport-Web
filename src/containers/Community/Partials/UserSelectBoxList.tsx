@@ -4,43 +4,72 @@ import ESAvatar from '@components/Avatar'
 import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
+import { CommunityMember } from '@services/community.service'
+import { MEMBER_ROLE } from '@constants/community.constants'
 
 type UserSelectBoxListProps = {
-  username: string
-  mail: string
-  avatar?: string
+  member: CommunityMember
+  isApplying?: boolean
+  setValue?: (isApplying: boolean, id: number, value: number) => void
 }
 
-const OPTIONS = [
-  { label: '承認', value: 'approve' },
-  { label: '拒否', value: 'reject' },
-  { label: '保留', value: 'hold' },
+type SelectionOptionType = {
+  label: string
+  value: string | number
+}
+
+const APPLYING_OPTIONS: Array<SelectionOptionType> = [
+  { label: i18n.t('common:community.member_list.approve'), value: MEMBER_ROLE.MEMBER },
+  { label: i18n.t('common:community.member_list.cancel'), value: MEMBER_ROLE.NOT_MEMBER },
+  { label: i18n.t('common:community.member_list.hold'), value: MEMBER_ROLE.ON_HOLD },
 ]
 
-const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ username, mail, avatar }) => {
+const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
+  { label: i18n.t('common:community.member_list.user'), value: MEMBER_ROLE.MEMBER },
+  { label: i18n.t('common:community.member_list.co_organizer'), value: MEMBER_ROLE.CO_ORGANIZER },
+  { label: i18n.t('common:community.member_list.kick'), value: MEMBER_ROLE.LEAVE },
+]
+
+const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue, isApplying = false }) => {
   const classes = useStyles()
+  const data = member.attributes
+
+  const handleSelectOption = (e: any) => {
+    setValue(isApplying, data.id, e.target.value)
+  }
 
   return (
     <>
       <Box className={classes.container} mb={3}>
         <Box className={classes.userContainer}>
-          <ESAvatar className={classes.avatar} alt={username} src={avatar !== '' ? avatar : username ? '' : '/images/avatar.png'} />
+          <ESAvatar
+            className={classes.avatar}
+            alt={data.nickname}
+            src={data.profile !== '' ? data.profile : data.nickname ? '' : '/images/avatar.png'}
+          />
           <Box className={classes.userInfoBox} ml={1}>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.username}>{username}</Typography>
+              <Typography className={classes.username}>{data.nickname}</Typography>
             </Box>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.mail}>{mail}</Typography>
+              <Typography className={classes.mail}>{data.user_code}</Typography>
             </Box>
           </Box>
         </Box>
 
         <Box className={classes.selectBoxContainer}>
-          <ESSelect className={classes.selectWidth} size="small">
-            <option disabled value={-1}>
-              {i18n.t('common:community.general_user')}
-            </option>
-            {OPTIONS.map((o, index) => (
+          <ESSelect
+            className={classes.selectWidth}
+            size="small"
+            value={(isApplying && data.member_role == MEMBER_ROLE.REQUESTED && -1) || data.member_role}
+            onChange={handleSelectOption}
+          >
+            {isApplying && (
+              <option disabled value={-1}>
+                {i18n.t('common:community.applying')}
+              </option>
+            )}
+            {(isApplying ? APPLYING_OPTIONS : PARTICIPATING_OPTIONS).map((o, index) => (
               <option key={index} value={o.value}>
                 {o.label}
               </option>

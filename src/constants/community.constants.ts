@@ -40,11 +40,16 @@ export const STATUS = {
   CANCELLED: 'cancelled',
 }
 
-export const ROLE = {
-  ADMIN: 'admin',
-  CO_ORGANIZER: 'co_organizer',
-  PARTICIPANT: 'participant',
-  INTERESTED: 'interested',
+export const MEMBER_ROLE = {
+  SYSTEM: 0,
+  ADMIN: 1,
+  MEMBER: 2,
+  CO_ORGANIZER: 3,
+  REPORTED: 4,
+  LEAVE: 5,
+  REQUESTED: 6,
+  ON_HOLD: 7,
+  NOT_MEMBER: 8,
 }
 
 export const COMMUNITY_STATUS = {
@@ -56,14 +61,4 @@ export const TOPIC_STATUS = {
   ALL: 'all',
   MINE: 'mine',
   NEW: 'new',
-}
-
-export const MEMBER_ROLE = {
-  SYSTEM: 0,
-  ADMIN: 1,
-  MEMBER: 2,
-  CO_ORGANIZER: 3,
-  REPORTED: 4,
-  LEAVE: 5,
-  REQUESTED: 6,
 }

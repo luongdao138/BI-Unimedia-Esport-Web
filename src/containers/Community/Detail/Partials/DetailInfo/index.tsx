@@ -22,7 +22,6 @@ import SearchContainer from '../SearchContainer'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
-import ApproveList from '../ApproveList'
 import { CommunityDetail, TopicDetail } from '@services/community.service'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { MEMBER_ROLE, JOIN_CONDITION, IS_OFFICIAL, OPEN_RANGE } from '@constants/community.constants'
@@ -251,8 +250,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         </Box>
 
         <Box marginTop={2} display="flex">
-          <FollowList />
-          <ApproveList />
+          <FollowList community={detail} />
+          {getRequestedMembers()}
         </Box>
 
         {isAuthenticated && (
@@ -265,6 +264,14 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           />
         )}
       </>
+    )
+  }
+
+  const getRequestedMembers = () => {
+    return (
+      <Typography className={classes.linkUnapproved} variant="body2">
+        {t('common:community.unapproved_users_title')}
+      </Typography>
     )
   }
 
@@ -402,6 +409,13 @@ const useStyles = makeStyles((theme) => ({
   },
   boxContainer: {
     display: 'flex',
+  },
+  linkUnapproved: {
+    textDecoration: 'underline',
+    color: 'yellow',
+    marginLeft: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
