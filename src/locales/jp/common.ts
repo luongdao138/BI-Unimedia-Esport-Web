@@ -1104,8 +1104,8 @@ export default {
     check_content_button: '内容を確認する',
     organizer_joinable: '主催者を参加者として抽選に含める',
     organizer_joined: '開催者を参加者として抽選に含める',
-    organizer_join: '開催者を参加者として抽選に含める含める',
-    organizer_unjoin: '開催者を参加者として抽選に含める含めない',
+    organizer_join: '含める',
+    organizer_unjoin: '含めない',
   },
   community_create: {
     title: 'コミュニティを作成する',
