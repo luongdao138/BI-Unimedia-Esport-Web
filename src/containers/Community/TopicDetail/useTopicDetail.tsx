@@ -11,16 +11,18 @@ import { useTranslation } from 'react-i18next'
 const { selectors, actions } = community
 const getTopicDetailMeta = createMetaSelector(actions.getTopicDetail)
 const getDeleteTopicMeta = createMetaSelector(actions.deleteTopic)
+const getCommentsListMeta = createMetaSelector(actions.getCommentsList)
 
 const useTopicDetail = (): {
   topic: TopicDetail
   getTopicDetail: (TopicDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   getComments: (params: CommentsListParams) => void
-  topicDetailMeta: Meta
-  pages: PageMeta
   deleteTopic: (TopicDetailParams) => void
+  topicDetailMeta: Meta
   deleteTopicMeta: Meta
+  commentsListMeta: Meta
+  pages: PageMeta
   commentsList: Array<CommentsResponse>
 } => {
   const dispatch = useAppDispatch()
@@ -31,8 +33,9 @@ const useTopicDetail = (): {
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
-  const pages = useAppSelector(selectors.getCommunityListMeta)
-  const getComments = (params) => dispatch(actions.getCommentsList(params))
+  const commentsListMeta = useAppSelector(getCommentsListMeta)
+  const pages = useAppSelector(selectors.getCommentsListMeta)
+  const getComments = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
 
   const deleteTopic = async (params: TopicDetailParams) => {
@@ -47,15 +50,16 @@ const useTopicDetail = (): {
   const getCommentsList = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
 
   return {
-    topic,
     getTopicDetail,
-    topicDetailMeta,
     deleteTopic,
-    deleteTopicMeta,
+    getComments,
     getCommentsList,
+    topic,
     commentsList,
     pages,
-    getComments,
+    commentsListMeta,
+    deleteTopicMeta,
+    topicDetailMeta,
   }
 }
 

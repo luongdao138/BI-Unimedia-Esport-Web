@@ -13,31 +13,28 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
+import { CommentsResponse } from '@services/community.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type CommunityHeaderProps = {
-  username: string
-  userAvatar?: string
-  mail: string
-  discription: string
-  date: string
-  number: number
-  image?: string
+  comment: CommentsResponse
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number, userAvatar }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const commentData = comment.attributes
   const detail = {
     attributes: {
-      username: username,
-      mail: mail,
-      description: discription,
-      date: date,
-      image: image,
-      number: number,
+      username: commentData.owner_nickname,
+      mail: commentData.user_code,
+      description: commentData.content,
+      date: CommonHelper.staticSmartTime(commentData.created_at),
+      image: commentData.attachments[0]?.assets_url,
+      number: commentData.comment_no,
     },
   }
 
@@ -54,7 +51,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
   const renderClickableImage = () => {
     return (
       <SRLWrapper options={LIGHTBOX_OPTIONS}>
-        <img className={classes.imageBox} src={image} />
+        <img className={classes.imageBox} src={commentData.attachments[0]?.assets_url} />
       </SRLWrapper>
     )
   }
@@ -64,18 +61,18 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
       <Box className={classes.container}>
         <Box className={classes.userContainer}>
           <Box className={classes.userInfoContainer}>
-            <Typography className={classes.number}>{number}</Typography>
+            <Typography className={classes.number}>{commentData.comment_no}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={username} src={userAvatar} />
+              <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
             </Box>
 
             <Box className={classes.userInfoBox} ml={1}>
-              <Typography className={classes.username}>{username}</Typography>
-              <Typography className={classes.mail}>{mail}</Typography>
+              <Typography className={classes.username}>{commentData.owner_nickname}</Typography>
+              <Typography className={classes.mail}>{commentData.user_code}</Typography>
             </Box>
           </Box>
           <Box className={classes.dateReportContainer}>
-            <Typography className={classes.date}>{date}</Typography>
+            <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
             <ESMenu>
               {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
               <LoginRequired>
@@ -86,11 +83,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
         </Box>
 
         <Box className={classes.discriptionContainer} mb={3}>
-          <Typography className={classes.discription}>{discription}</Typography>
+          <Typography className={classes.discription}>{commentData.content}</Typography>
         </Box>
-        {image && renderClickableImage()}
+        {commentData.attachments[0]?.assets_url && renderClickableImage()}
         <Box mt={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton style={{ padding: 4 }}>
+          <IconButton style={{ padding: 4, marginRight: 8 }}>
             <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
           </IconButton>
         </Box>

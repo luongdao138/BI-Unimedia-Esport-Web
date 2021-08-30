@@ -2,23 +2,33 @@ import React, { useEffect } from 'react'
 import CommunityDetailHeader from '@containers/Community/TopicDetail/Partials/CommunityDetailHeader'
 import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Link, Box } from '@material-ui/core'
+import { Link, Box, Grid } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
+import ESLoader from '@components/Loader'
 import { useRouter } from 'next/router'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import _ from 'lodash'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const TopicDetailContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
   const { topic_hash_key } = router.query
-  const { getTopicDetail, topic, topicDetailMeta, deleteTopic, getCommentsList, commentsList, pages, getComments } = useTopicDetail()
+  const {
+    getTopicDetail,
+    topic,
+    topicDetailMeta,
+    deleteTopic,
+    getCommentsList,
+    commentsList,
+    pages,
+    getComments,
+    commentsListMeta,
+  } = useTopicDetail()
+
   const data = topic?.attributes
-  const commentsDataReversed = _.reverse(_.clone(commentsList))
 
   useEffect(() => {
     if (topic_hash_key) {
@@ -44,19 +54,8 @@ const TopicDetailContainer: React.FC = () => {
   const renderComments = () => {
     return (
       <>
-        {commentsDataReversed.map((d, i) => {
-          return (
-            <Comment
-              key={i}
-              discription={d.attributes.content}
-              image={d.attributes.attachments[0]?.assets_url}
-              userAvatar={d.attributes.owner_profile}
-              username={d.attributes.owner_nickname}
-              mail={d.attributes.user_code}
-              date={CommonHelper.staticSmartTime(d.attributes.created_at)}
-              number={d.attributes.comment_no}
-            />
-          )
+        {commentsList.map((comment, i) => {
+          return <Comment key={i} comment={comment} />
         })}
       </>
     )
@@ -84,36 +83,25 @@ const TopicDetailContainer: React.FC = () => {
           <Box className={classes.link}>
             <Link>↑過去のコメントを表示する</Link>
           </Box>
-          {/* {!!commentsList &&
-            commentsList.length > 0 &&
-            commentsDataReversed.map((d, i) => {
-              return (
-                <Comment
-                  key={i}
-                  discription={d.attributes.content}
-                  image={d.attributes.attachments[0]?.assets_url}
-                  userAvatar={d.attributes.owner_profile}
-                  username={d.attributes.owner_nickname}
-                  mail={d.attributes.user_code}
-                  date={CommonHelper.staticSmartTime(d.attributes.created_at)}
-                  number={d.attributes.comment_no}
-                />
-              )
-            })} */}
           {!!commentsList && commentsList.length > 0 && (
-            <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
-              <InfiniteScroll
-                dataLength={commentsList.length}
-                next={loadMore}
-                hasMore={hasNextPage}
-                scrollableTarget="scrollableDiv"
-                scrollThreshold={0.99}
-                style={{ overflow: 'hidden ' }}
-                loader={null}
-              >
-                {renderComments()}
-              </InfiniteScroll>
-            </Box>
+            <InfiniteScroll
+              dataLength={commentsList.length}
+              next={loadMore}
+              hasMore={hasNextPage}
+              scrollableTarget="scrollableDiv"
+              scrollThreshold={0.99}
+              style={{ overflow: 'hidden ' }}
+              loader={null}
+            >
+              {renderComments()}
+            </InfiniteScroll>
+          )}
+          {commentsListMeta.pending && (
+            <Grid item xs={12}>
+              <Box my={4} mb={10} display="flex" justifyContent="center" alignItems="center">
+                <ESLoader />
+              </Box>
+            </Grid>
           )}
         </Box>
         <Box className={classes.inputContainer}>
