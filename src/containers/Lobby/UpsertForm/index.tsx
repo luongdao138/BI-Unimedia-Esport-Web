@@ -161,16 +161,6 @@ const LobbyCreate: React.FC = () => {
     setTab(value)
   }, [])
 
-  const { hasUCRReturnHref } = useReturnHref()
-
-  useEffect(() => {
-    if (hasUCRReturnHref) {
-      document.body.style.position = 'fixed'
-      document.body.style.width = '100%'
-      document.body.style.height = '100%'
-    }
-  }, [tab])
-
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
