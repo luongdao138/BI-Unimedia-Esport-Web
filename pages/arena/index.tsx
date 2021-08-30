@@ -30,7 +30,7 @@ const TournamentPage: PageWithLayoutType = () => {
     return <></>
   }
   return (
-    <MainLayout>
+    <MainLayout loginRequired={false}>
       <ArenaHomeContainer filter={formatFilter(filter)} />
     </MainLayout>
   )
