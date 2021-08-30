@@ -3,11 +3,14 @@ import { Box, Typography, makeStyles, Icon, Button, OutlinedInput, IconButton, I
 // import i18n from '@locales/i18n'
 import React, { useState } from 'react'
 import i18n from '@locales/i18n'
+import { useTranslation } from 'react-i18next'
 
-type ChatContainerProps = {
+interface ChatContainerProps {
   onPressDonate?: () => void
   onCloseChatPanel?: () => void
+  userHasViewingTicket?: boolean
 }
+
 const purchasePoints = {
   p_50: {
     id: 'p_50',
@@ -67,13 +70,14 @@ const purchasePoints = {
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel }) => {
+const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket }) => {
   // const { t } = useTranslation('common')
   const [chatInput, setChatInput] = useState<string>('')
   const [purchaseComment, setPurchaseComment] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('')
 
+  const { t } = useTranslation('common')
   const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -177,10 +181,26 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     </Box>
   )
 
+  const chatDonateMessage = () => (
+    <Box className={classes.accountInfo}>
+      <Box className={classes.accountInfoHeader}>
+        <Typography className={classes.accountName}>{'AccountName'}</Typography>
+        <Typography className={classes.accountRemain}>{'50'}</Typography>
+        <Typography className={classes.accountRemainUnit}>{'eXeポイント'}</Typography>
+      </Box>
+      <Box className={classes.accountInfoContent}>
+        <Typography className={classes.accountInfoContentText}>
+          {'ここにはコメントが入ります。ここにはコメントが入ります。ここにはコメントが入ります。ここにはコメントが入ります。'}
+        </Typography>
+      </Box>
+    </Box>
+  )
+
   const chatBoardComponent = () => (
     <Box className={classes.chatBoardContainer}>
       <Box className={classes.chatBoard}>
-        {getChatData().map((message) => {
+        {getChatData().map((message, index) => {
+          if (index === 2) return chatDonateMessage()
           const { user, content, id } = message
           return (
             <Typography key={id} className={classes.chatMessage}>
@@ -201,6 +221,25 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
         user_avatar: '/images/dataVideoFake/fake_avatar.png',
       }))
 
+  const userDoesNotHaveViewingTicketView = () => (
+    <Box className={classes.chatPurchaseTicketBox}>
+      <Typography className={classes.chatPurchaseTicketNote}>{t('live_stream_screen.chat_purchase_ticket_note')}</Typography>
+    </Box>
+  )
+
+  const chatContent = () => (
+    <Box className={classes.chatContent}>
+      <Box className={classes.userWatchingList}>
+        {getUserWatchingList().map(({ id, user_avatar }) => (
+          <Box key={id} className={classes.userWatchingItem}>
+            <img src={user_avatar} />
+          </Box>
+        ))}
+      </Box>
+      {chatBoardComponent()}
+    </Box>
+  )
+
   return (
     <Box className={classes.container}>
       {!isMobile && (
@@ -211,28 +250,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
           <Typography className={classes.headerTitle}>{'チャット'}</Typography>
         </Box>
       )}
-      <Box className={classes.chatContent}>
-        <Box className={classes.userWatchingList}>
-          {getUserWatchingList().map(({ id, user_avatar }) => (
-            <Box key={id} className={classes.userWatchingItem}>
-              <img src={user_avatar} />
-            </Box>
-          ))}
-        </Box>
-        <Box className={classes.accountInfo}>
-          <Box className={classes.accountInfoHeader}>
-            <Typography className={classes.accountName}>{'AccountName'}</Typography>
-            <Typography className={classes.accountRemain}>{'50'}</Typography>
-            <Typography className={classes.accountRemainUnit}>{'eXeポイント'}</Typography>
-          </Box>
-          <Box className={classes.accountInfoContent}>
-            <Typography className={classes.accountInfoContentText}>
-              {'ここにはコメントが入ります。ここにはコメントが入ります。ここにはコメントが入ります。ここにはコメントが入ります。'}
-            </Typography>
-          </Box>
-        </Box>
-        {chatBoardComponent()}
-      </Box>
+      {userHasViewingTicket ? chatContent() : userDoesNotHaveViewingTicketView()}
       {/*<Box pt={22 / 8} pb={4} maxWidth={280} className={classes.buttonContainer} onClick={onPressDonate}>*/}
       {/*  <ButtonPrimary type="submit" round fullWidth>*/}
       {/*    {'Donate Points'}*/}
@@ -247,6 +265,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     width: 482,
+  },
+  chatPurchaseTicketBox: {
+    display: 'flex',
+  },
+  chatPurchaseTicketNote: {
+    fontSize: 14,
+    margin: '18px 15px',
   },
   purchaseCommentInputContainer: {
     width: '100%',
@@ -370,7 +395,7 @@ const useStyles = makeStyles((theme) => ({
   },
   accountInfo: {
     display: 'flex',
-    marginTop: 17,
+    marginBottom: 4,
     flexDirection: 'column',
     backgroundColor: 'white',
     borderRadius: 4,

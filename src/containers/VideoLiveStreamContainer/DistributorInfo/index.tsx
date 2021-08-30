@@ -36,7 +36,7 @@ const DistributorInfo: React.FC = () => {
   ]
 
   const dataLiveVideo = () =>
-    Array(20)
+    Array(6)
       .fill('')
       .map((_, i) => ({
         id: i,

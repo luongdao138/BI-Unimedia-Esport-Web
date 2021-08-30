@@ -12,6 +12,7 @@ import ChatContainer from './ChatContainer'
 import LiveStreamContent from './LiveStreamContent'
 import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
+import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -40,6 +41,9 @@ const VideosTop: React.FC = () => {
     setStepsModal(true)
     setConfirmModal(false)
   }
+
+  const userHasViewingTicket = () => true
+
   useEffect(() => {
     setTab(0)
   }, [])
@@ -48,7 +52,7 @@ const VideosTop: React.FC = () => {
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={t('live_stream_screen.program_info')} value={0} />
-          <ESTab label={t('live_stream_screen.distributor_info')} value={1} />
+          {userHasViewingTicket() && <ESTab label={t('live_stream_screen.distributor_info')} value={1} />}
           <ESTab label={t('live_stream_screen.related_videos')} value={2} />
         </ESTabs>
       </Grid>
@@ -57,7 +61,7 @@ const VideosTop: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
-        return <ProgramInfo />
+        return userHasViewingTicket() ? <ProgramInfo /> : <ProgramInfoNoViewingTicket />
       case TABS.DISTRIBUTOR_INFO:
         return <DistributorInfo />
       case TABS.RELATED_VIDEOS:
@@ -82,7 +86,7 @@ const VideosTop: React.FC = () => {
 
   const sideChatContainer = () => {
     return chatVisible ? (
-      <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} />
+      <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} userHasViewingTicket={userHasViewingTicket()} />
     ) : (
       <IconButton onClick={handleChatPanelOpen} className={classes.headerIcon}>
         <img src="/images/ic_collapse_right.svg" />
@@ -93,10 +97,10 @@ const VideosTop: React.FC = () => {
   return (
     <Box className={classes.root}>
       <Box className={classes.container}>
-        <LiveStreamContent></LiveStreamContent>
+        <LiveStreamContent userHasViewingTicket={userHasViewingTicket()} />
         {isMobile ? (
           <Box className={classes.mobileChatContainer}>
-            <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} />
+            <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} userHasViewingTicket={true} />
           </Box>
         ) : (
           <Grid container direction="row">

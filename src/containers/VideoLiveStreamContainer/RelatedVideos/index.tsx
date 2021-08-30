@@ -8,7 +8,7 @@ import { useTheme } from '@material-ui/core/styles'
 const RelatedVideos: React.FC = () => {
   // const { t } = useTranslation('common')
   const dataLiveVideo = () =>
-    Array(20)
+    Array(6)
       .fill('')
       .map((_, i) => ({
         id: i,

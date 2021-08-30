@@ -7,11 +7,16 @@ import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React from 'react'
+import ButtonPrimary from '@components/ButtonPrimary'
 // import ESButton from '@components/Button'
 // import { Player, ControlBar } from 'video-react';
 // import { useRef } from 'react'
 
-const LiveStreamContent: React.FC = () => {
+interface LiveStreamContentProps {
+  userHasViewingTicket?: boolean
+}
+
+const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const { selectors } = userProfileStore
@@ -40,14 +45,33 @@ const LiveStreamContent: React.FC = () => {
   const mobileRegisterChannelContainer = () => (
     <Box className={classes.mobileRegisterChannelContainer}>
       <ESAvatar className={classes.smallAvatar} src={'/images/avatar.png'} />
-      <Typography className={classes.channelName}>{'配信者の名前がはいりますsssssssssss'}</Typography>
+      <Typography className={classes.channelName}>{'配信者の名前がはいります'}</Typography>
       {registerChannelButton()}
     </Box>
   )
 
+  const mediaPlayer = () => <img src="/images/live_stream/live_stream.png" height={isMobile ? '256px' : '448px'} width="100%" />
+
+  const mediaOverlayPurchaseTicketView = () => {
+    const buyTicketPrice = 2500
+    return (
+      <Box className={classes.overlayPurchaseContainer}>
+        <ButtonPrimary className={classes.buyTicketButton}>{t('live_stream_screen.buy_ticket')}</ButtonPrimary>
+        <Typography className={classes.buyTicketAmount}>{`${FormatHelper.currencyFormat(
+          buyTicketPrice.toString()
+        )} eXeポイント`}</Typography>
+        <Typography className={classes.buyTicketNote}>{t('live_stream_screen.purchase_ticket_note')}</Typography>
+      </Box>
+    )
+  }
+
+  const userHasViewingTicket = () => props?.userHasViewingTicket
   return (
     <Box className={classes.container}>
-      <img src="/images/live_stream/live_stream.png" height={isMobile ? '256px' : '448px'} width="100%" />
+      <Box className={classes.mediaPlayerContainer}>
+        {mediaPlayer()}
+        {!userHasViewingTicket() && mediaOverlayPurchaseTicketView()}
+      </Box>
       {/* <Player
           ref={player}
           autoPlay
@@ -79,15 +103,13 @@ const LiveStreamContent: React.FC = () => {
         <Box className={classes.wrap_interactive_info}>
           <Box className={classes.interactive_info}>
             <Typography className={classes.view}>
-              <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10000')}
+              <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(12000)}
             </Typography>
             <Typography className={classes.like}>
-              <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10')}
-              {t('common.ten_thousand')}
+              <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(121231000)}
             </Typography>
             <Typography className={classes.dislike}>
-              <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.currencyFormat('10')}
-              {t('common.ten_thousand')}
+              <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(100)}
             </Typography>
             {!isMobile && shareButton()}
           </Box>
@@ -110,7 +132,7 @@ const LiveStreamContent: React.FC = () => {
             <Box className={classes.registration}>
               <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
               <Typography className={classes.register_person_number}>
-                {FormatHelper.currencyFormat('10000')}
+                {FormatHelper.japaneseWanFormatter(123456)}
                 {t('common.man')}
               </Typography>
             </Box>
@@ -129,6 +151,42 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
+  },
+  mediaPlayerContainer: {
+    width: '100%',
+    position: 'relative',
+  },
+  buyTicketAmount: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'white',
+    marginTop: '16px',
+  },
+  buyTicketNote: {
+    marginTop: '35px',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#F7F735',
+    marginBottom: '91px',
+  },
+  buyTicketButton: {
+    '&.MuiButtonBase-root.button-primary': {
+      paddingLeft: '62px',
+      paddingRight: '62px',
+      height: '50px',
+    },
+  },
+  overlayPurchaseContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'rgba(4, 4, 4, 0.71)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'column',
   },
   wrap_info: {
     padding: '16px 0 16px 24px',
@@ -300,6 +358,9 @@ const useStyles = makeStyles((theme) => ({
       flex: 1,
       marginLeft: '20px',
       marginRight: '20px',
+    },
+    buyTicketNote: {
+      marginBottom: '52px',
     },
   },
 }))
