@@ -43,6 +43,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description
       description: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
       image: topicData?.attachments[0]?.assets_url,
+      hash_key: topicData?.hash_key,
     },
   }
 
@@ -129,7 +130,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC}
-            target_id={detail.attributes.hash_key}
+            target_id={detail?.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}

@@ -35,6 +35,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
       date: CommonHelper.staticSmartTime(commentData.created_at),
       image: commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
+      hash_key: commentData.hash_key,
     },
   }
 
