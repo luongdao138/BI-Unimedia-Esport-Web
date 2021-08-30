@@ -119,11 +119,15 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
           <Typography className={classes.labelColor}>{t('common:lobby.create.category')}</Typography>
         </Box>
         <Typography className={classes.labelColor}>
-          {values.stepOne.categories.map((category, idx) => (
-            <>
-              {idx > 0 && '/'} {category.name}
-            </>
-          ))}
+          {values.stepOne.categories.length > 0 ? (
+            values.stepOne.categories.map((category, idx) => (
+              <>
+                {idx > 0 && '/'} {category.name}
+              </>
+            ))
+          ) : (
+            <ESInput labelPrimary={''} value={''} disabled={true} fullWidth />
+          )}
         </Typography>
       </Box>
 
@@ -169,9 +173,9 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />
+      <ESInput labelPrimary={''} value={values.stepTwo.address} disabled={true} fullWidth multiline />
       <Box pb={2} />
 
-      <ESInput labelPrimary={t('common:lobby_create.area_detail')} value={values.stepTwo.address} disabled={true} fullWidth />
       <Box pb={2} />
       <Box pb={2} />
     </Box>
