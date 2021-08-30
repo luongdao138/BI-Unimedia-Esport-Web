@@ -40,7 +40,7 @@ const ArenaMatches: React.FC = () => {
   } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
-  const { isModerator } = useArenaHelper(tournament)
+  const { isModerator, isTeam } = useArenaHelper(tournament)
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [showFreeze, setShowFreeze] = useState(false)
@@ -105,9 +105,6 @@ const ArenaMatches: React.FC = () => {
   }
 
   const getMatch = (headerText, _match, round) => {
-    const data = tournament.attributes
-    const isTeam = data.participant_type > 1
-
     return (
       <Bracket.Match
         onClick={() => onMatchClick(_match)}
@@ -212,6 +209,7 @@ const ArenaMatches: React.FC = () => {
           {scoreDialog()}
         </div>
         <RandomizeDialog
+          isTeam={isTeam}
           open={showRandomize}
           onClose={() => setShowRandomize(false)}
           onAction={() => {
@@ -225,7 +223,16 @@ const ArenaMatches: React.FC = () => {
           onClose={() => setShowFreeze(false)}
           onAction={() => {
             setShowFreeze(false)
-            freeze(tournament.attributes.hash_key)
+
+            if (_.isArray(matches) && matches.length > 0) {
+              const freezedMatches = _.map(matches[0], (m) => ({
+                id: m.id,
+                home_user: m.home_user ? m.home_user.pid : null,
+                guest_user: m.guest_user ? m.guest_user.pid : null,
+              }))
+
+              freeze({ hash_key: tournament.attributes.hash_key, matches: freezedMatches })
+            }
           }}
         />
       </ESStickyFooter>

@@ -18,4 +18,13 @@ module.exports = {
       path.join(__dirname, 'node_modules/video.js'),
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/tournaments/:slug*',
+        destination: '/arena/:slug*', // Matched parameters can be used in the destination
+        permanent: true,
+      },
+    ]
+  },
 }

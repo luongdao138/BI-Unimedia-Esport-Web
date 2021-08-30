@@ -4,7 +4,7 @@ import { TournamentDetail } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import ESButton from '@components/Button'
 import ActionLabelButton from './ActionLabelButton'
-import Participants from '@containers/arena/Detail/Participants'
+import { ParticipantsButton } from '@containers/arena/Detail/Participants'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
 import LoginRequired from '@containers/LoginRequired'
 
@@ -15,9 +15,18 @@ interface Props {
 const SubActionButtons: React.FC<Props> = ({ tournament }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { toGroupChat, toMatches, toResults, isCompleted, isUnselected, isEntered, isReady, isRecruiting, isModerator } = useArenaHelper(
-    tournament
-  )
+  const {
+    toGroupChat,
+    toMatches,
+    toResults,
+    isCompleted,
+    isUnselected,
+    isEntered,
+    isReady,
+    isRecruiting,
+    isModerator,
+    toParticipants,
+  } = useArenaHelper(tournament)
   const isFreezed = tournament?.attributes?.is_freezed
   const chatDisabled = (!isEntered || isUnselected) && !isModerator
 
@@ -27,22 +36,18 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
         {isCompleted ? (
           <>
             <Box className={classes.actionButton}>
-              <Participants detail={tournament} />
+              <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} />
             </Box>
 
             <Box className={classes.actionButton}>
-              <LoginRequired>
-                <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                  {t('common:tournament.brackets')}
-                </ESButton>
-              </LoginRequired>
+              <ESButton variant="outlined" fullWidth onClick={toMatches}>
+                {t('common:tournament.brackets')}
+              </ESButton>
             </Box>
             <Box className={classes.actionButton}>
-              <LoginRequired>
-                <ESButton variant="outlined" fullWidth onClick={toResults}>
-                  {t('common:tournament.results')}
-                </ESButton>
-              </LoginRequired>
+              <ESButton variant="outlined" fullWidth onClick={toResults}>
+                {t('common:tournament.results')}
+              </ESButton>
             </Box>
           </>
         ) : (
@@ -50,7 +55,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
             {isReady || isRecruiting ? (
               <>
                 <Box className={classes.actionButton}>
-                  <Participants detail={tournament} />
+                  <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} />
                 </Box>
                 {(isModerator || isEntered) && (
                   <Box className={classes.actionButton}>
@@ -71,7 +76,7 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
             ) : (
               <>
                 <Box className={classes.actionButton}>
-                  <Participants detail={tournament} />
+                  <ParticipantsButton isFreezed={isFreezed} onClick={toParticipants} />
                 </Box>
                 <Box className={classes.actionButton}>
                   <LoginRequired>
@@ -87,11 +92,9 @@ const SubActionButtons: React.FC<Props> = ({ tournament }) => {
                   </LoginRequired>
                 </Box>
                 <Box className={classes.actionButton}>
-                  <LoginRequired>
-                    <ESButton variant="outlined" fullWidth onClick={toMatches}>
-                      {t('common:tournament.brackets')}
-                    </ESButton>
-                  </LoginRequired>
+                  <ESButton variant="outlined" fullWidth onClick={toMatches}>
+                    {t('common:tournament.brackets')}
+                  </ESButton>
                 </Box>
               </>
             )}
