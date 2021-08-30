@@ -42,7 +42,6 @@ const LobbyCreate: React.FC = () => {
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
-  const [hasError, setError] = useState(true)
   const isFirstRun = useRef(true)
   const initialValues = getInitialValues(isEdit ? lobby : undefined)
   const [isConfirm, setIsConfirm] = useState(false)
@@ -104,9 +103,6 @@ const LobbyCreate: React.FC = () => {
       isFirstRun.current = false
       return
     } else {
-      const isRequiredFieldsValid = LobbyHelper.checkRequiredFields(formik.errors)
-      setError(!isRequiredFieldsValid)
-
       if (isConfirm) {
         setIsConfirm(false)
 
@@ -178,7 +174,12 @@ const LobbyCreate: React.FC = () => {
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
-        <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
+        <ButtonPrimary
+          onClick={handleSetConfirm}
+          round
+          className={`${classes.footerButton} ${classes.confirmButton}`}
+          disabled={!_.isEmpty(formik.errors)}
+        >
           {i18n.t('common:lobby_create.check_content_button')}
         </ButtonPrimary>
         {!isEnded && !isFreezed ? <CancelDialog lobby={lobby} hashKey={`${router.query.hash_key}`} /> : <Box mt={8} />}
@@ -233,7 +234,13 @@ const LobbyCreate: React.FC = () => {
               <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
                 {i18n.t('common:common.cancel')}
               </ButtonPrimary>
-              <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
+              <ButtonPrimary
+                type="submit"
+                onClick={handleSetConfirm}
+                round
+                disabled={!_.isEmpty(formik.errors)}
+                className={classes.footerButton}
+              >
                 {i18n.t('common:lobby.create.submit')}
               </ButtonPrimary>
             </Box>
@@ -247,7 +254,7 @@ const LobbyCreate: React.FC = () => {
                   onClick={handleSetConfirm}
                   round
                   className={`${classes.footerButton} ${classes.confirmButton}`}
-                  disabled={hasError}
+                  disabled={!_.isEmpty(formik.errors)}
                 >
                   {i18n.t('common:lobby.create.submit')}
                 </ButtonPrimary>
