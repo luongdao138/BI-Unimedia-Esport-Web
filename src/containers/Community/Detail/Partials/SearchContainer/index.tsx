@@ -9,6 +9,8 @@ import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
 import PaginationMobile from '../../../Partials/PaginationMobile'
+// import { useRouter } from 'next/router'
+// import { ESRoutes } from '@constants/route.constants'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -19,6 +21,7 @@ const InfoContainer: React.FC = () => {
   const [showResult, setShowResult] = useState(false)
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  // const router = useRouter()
 
   useEffect(() => {
     if (!_.isEmpty(value)) {

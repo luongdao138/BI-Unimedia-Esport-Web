@@ -7,7 +7,8 @@ export interface TopicRowItemProps {
   last_comment?: string
   latest_date?: string
   comment_count?: number
-  handleClick: () => void
+  // TODO tur zuur optional bolgoson. Communit detial -> Topic Search API holbosonii daraa required bolgoh
+  handleClick?: () => void
 }
 
 const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, handleClick }) => {
