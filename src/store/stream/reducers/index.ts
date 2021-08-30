@@ -44,6 +44,15 @@ const initialState: StateType = {
   //     sell_ticket_start_time: null,
   //   },
   // },
+  getStreamUrlAndKeyInfo: {
+    data: {
+      CHANNEL_ARN: null,
+      INGEST_ENDPOINT: null,
+      PLAYBACK_URL: null,
+      STREAM_KEY_VALUE: null,
+      STREAM_URL: null,
+    },
+  },
 }
 
 export default createReducer(initialState, (builder) => {

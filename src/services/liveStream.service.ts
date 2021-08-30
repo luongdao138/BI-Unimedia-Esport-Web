@@ -6,6 +6,14 @@ export const TYPE_SETTING = {
   LIVE: 'live',
   SCHEDULE: 'schedule',
 }
+export const TYPE_SECRET_KEY = {
+  GET: 'get',
+  RE_NEW: 're-new',
+}
+export const CONSTANTS_SECRET = {
+  CHANNEL_ARN: 'gJvnKLbvCLFj',
+  STREAM_KEY_ARN: '8U1AFmvCZbQ1',
+}
 
 export type LiveStreamSetting = {
   id: number
@@ -116,12 +124,23 @@ export type SetLiveStreamResponse = {
   }
 }
 
+export type StreamUrlAndKeyParams = {
+  type: string
+  CHANNEL_ARN: string
+  STREAM_KEY_ARN: string
+}
+
 export type GetStreamUrlAndKeyResponse = {
-  code: number
-  message: any
-  data: {
-    stream_url: string
-    stream_key: string
+  code?: number
+  message?: any
+  data?: {
+    // stream_url: string
+    // stream_key: string
+    CHANNEL_ARN: string
+    INGEST_ENDPOINT: string
+    PLAYBACK_URL: string
+    STREAM_KEY_VALUE: string
+    STREAM_URL: string
   }
 }
 
@@ -179,13 +198,11 @@ export const getScheduleSetting = async (params: LiveStreamSettingParams): Promi
 
 export const setLiveSetting = async (params: SetLiveStreamParams): Promise<SetLiveStreamResponse> => {
   const { data } = await api.post<SetLiveStreamResponse>(URI.SET_LIVE_SETTING, params)
-  // console.log("====CHECK====",data,)
-  // console.log("====CONFIG====",config,)
   return data
 }
 
-export const getStreamUrlAndKey = async (): Promise<GetStreamUrlAndKeyResponse> => {
-  const { data } = await api.post<GetStreamUrlAndKeyResponse>(URI.STREAM_URL_AND_KEY)
+export const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams): Promise<GetStreamUrlAndKeyResponse> => {
+  const { data } = await api.post<GetStreamUrlAndKeyResponse>(URI.STREAM_URL_AND_KEY, params)
   return data
 }
 

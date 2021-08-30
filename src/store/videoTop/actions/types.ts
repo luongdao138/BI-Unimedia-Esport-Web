@@ -8,4 +8,7 @@ export const ACTION_VIDEO_TOP = {
   GET_LIST_FAVORITE: 'videoTop/favorite',
   SEARCH_VIDEO: 'videoTop/searchVideo',
   RESET_SEARCH_VIDEO: 'videoTop/resetSearchVideo',
+  RESET_LIVE: 'streaming/resetLiveVideo',
+  RESET_SCHEDULE: 'streaming/resetLiveSchedule',
+  RESET_ARCHIVE: 'streaming/resetLiveArchive',
 }

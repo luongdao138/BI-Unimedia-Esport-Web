@@ -95,4 +95,13 @@ export default createReducer(initialState, (builder) => {
     state.listVideoSearch = []
     state.totalResult = 0
   })
+  builder.addCase(actions.resetLive, (state) => {
+    state.videoLive = []
+  })
+  builder.addCase(actions.resetSchedule, (state) => {
+    state.videoSchedule = []
+  })
+  builder.addCase(actions.resetArchive, (state) => {
+    state.videoArchived = []
+  })
 })

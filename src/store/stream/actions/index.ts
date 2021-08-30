@@ -52,12 +52,13 @@ export const setLiveStream = createAsyncThunk<services.SetLiveStreamResponse, se
   }
 )
 
-export const getStreamUrlAndKeyInfo = createAsyncThunk<services.GetStreamUrlAndKeyResponse>(
+export const getStreamUrlAndKeyInfo = createAsyncThunk<services.GetStreamUrlAndKeyResponse, services.StreamUrlAndKeyParams>(
   ACTION_STREAM_TYPES.GET_STREAM_URL_AND_KEY,
-  async (_, { rejectWithValue }) => {
+  async (secretKeyParams, { rejectWithValue }) => {
     try {
-      const res = await services.getStreamUrlAndKey()
+      const res = await services.getStreamUrlAndKey(secretKeyParams)
       if (res?.code === 200) {
+        // console.log("====getStreamUrlAndKey====",res)
         return res
       } else {
         // throw res.message

@@ -43,10 +43,12 @@ const VideosTop: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const [tab, setTab] = useState(0)
+  const [follow, setFollow] = useState(0)
   const { bannerTop } = useListVideoAll()
   useEffect(() => {
     setTab(0)
     bannerTop()
+    setFollow(0)
   }, [])
   const getTabs = () => {
     return (
@@ -64,15 +66,15 @@ const VideosTop: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.VIDEOS_LIST:
-        return <VideosList setTab={setTab} />
+        return <VideosList setTab={setTab} setFollow={setFollow} />
       case TABS.LIVE_VIDEOS:
-        return <LiveStreamVideos />
+        return <LiveStreamVideos follow={follow} setFollow={setFollow} />
       case TABS.SCHEDULE_VIDEOS:
-        return <ScheduleVideos />
+        return <ScheduleVideos follow={follow} setFollow={setFollow} />
       case TABS.ARCHIVED_VIDEOS:
-        return <ArchivedVideos />
+        return <ArchivedVideos follow={follow} setFollow={setFollow} />
       case TABS.FAVORITE_VIDEOS:
-        return <FavoriteVideos setTab={setTab} />
+        return <FavoriteVideos setTab={setTab} setFollow={setFollow} />
       default:
         break
     }

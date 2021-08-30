@@ -127,7 +127,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
               carouselWidth={parentWidth}
               slideWidth={width}
               slideComponent={SlideItem}
-              maxVisibleSlide={checkCurrentVisible()}
+              maxVisibleSlide={currentVisibleSlide}
               currentVisibleSlide={currentVisibleSlide}
               useGrabCursor={true}
               height={height}

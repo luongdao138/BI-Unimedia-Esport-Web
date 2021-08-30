@@ -54,7 +54,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
               <img src={data?.user_avatar ? data.user_avatar : iconDefault} width={36} height={36} className={classes.iconStyle} />
             </Box>
             <Box className={classes.nameContainer}>
-              <Typography className={classes.userNameStyle}>{FormatHelper.textSizeMode(data?.user_nickname, 30)}</Typography>
+              <Typography className={classes.userNameStyle}>{data?.user_nickname}</Typography>
             </Box>
           </Box>
           <Box className={classes.watchContainer}>

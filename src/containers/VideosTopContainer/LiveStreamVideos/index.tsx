@@ -7,14 +7,20 @@ import { useTheme } from '@material-ui/core/styles'
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveVideos from './useLiveVideos'
-import { TypeVideo } from '@services/videoTop.services'
+import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
 import ESLoader from '@components/Loader'
+import PreLoadContainer from '../PreLoadContainer'
 
-const LiveStreamVideos: React.FC = () => {
+interface Props {
+  follow?: number
+  setFollow?: (value: number) => void
+}
+
+const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow }) => {
   const page = 2
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const { loadMore, listLiveVideo, meta } = useLiveVideos()
+  const { loadMore, listLiveVideo, meta, getListVideoTop, resetLiveVideos } = useLiveVideos()
 
   const classes = useStyles()
   const renderLiveItem = (item: TypeVideo, index: number) => {
@@ -34,8 +40,39 @@ const LiveStreamVideos: React.FC = () => {
   }
 
   useEffect(() => {
-    loadMore(page)
+    if (listLiveVideo.length === 0) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: 1, limit: LIMIT_ITEM, follow: follow })
+    }
+    return () => {
+      resetLiveVideos()
+      setFollow(0)
+    }
+  }, [follow])
+
+  useEffect(() => {
+    loadMore(page + 1, follow)
   }, [])
+
+  const renderPreLoad = () => {
+    const arrayPreLoad = Array(9)
+      .fill('')
+      .map((_, i) => ({ i }))
+    return arrayPreLoad.map(() => (
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer}>
+            <Box className={classes.wrapPreLoadContainer}>
+              <PreLoadContainer />
+            </Box>
+          </Box>
+        ) : (
+          <Grid item xs={6} className={classes.itemContainer}>
+            <PreLoadContainer />
+          </Grid>
+        )}
+      </>
+    ))
+  }
 
   return (
     <Box className={classes.container}>
@@ -47,7 +84,7 @@ const LiveStreamVideos: React.FC = () => {
           className={classes.scrollContainer}
           dataLength={listLiveVideo.length}
           next={() => {
-            loadMore(page + 1)
+            loadMore(page, follow)
           }}
           hasMore={true}
           loader={null}
@@ -58,6 +95,10 @@ const LiveStreamVideos: React.FC = () => {
           {listLiveVideo.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>
               {listLiveVideo.map(renderLiveItem)}
+            </Grid>
+          ) : listLiveVideo.length === 0 && meta.pending ? (
+            <Grid container spacing={3} className={classes.contentContainer}>
+              {renderPreLoad()}
             </Grid>
           ) : (
             <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
