@@ -220,14 +220,14 @@ const useStyles = makeStyles((theme) => ({
     height: 17.26,
   },
   marginV: {
-    marginTop: 8,
+    width: 40,
+    height: 40,
   },
   pAvatar: {
     marginLeft: -8,
   },
 
   text: {
-    marginTop: 20,
     fontSize: 20,
     fontFamily: 'Futura Lt BT',
     fontWeight: 300,
@@ -294,10 +294,6 @@ const useStyles = makeStyles((theme) => ({
     firstIcon: {
       marginTop: 10,
       height: 10,
-    },
-    marginV: {
-      height: 30,
-      width: 30,
     },
   },
 }))
