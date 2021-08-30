@@ -35,7 +35,7 @@ export default createReducer(initialState, (builder) => {
           {
             card_number: card_numbers[index],
             card_seq: card_seqs[index],
-          }
+          },
         ]
       }
       state.saved_cards = saved_cards

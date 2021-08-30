@@ -132,7 +132,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexWrap: 'nowrap',
       margin: '0px',
       paddingBottom: '0px',
-      overflow: 'auto'
+      overflow: 'auto',
     },
     xsItemContainer: {
       paddingRight: '24px',
