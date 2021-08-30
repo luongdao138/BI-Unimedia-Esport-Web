@@ -44,7 +44,7 @@ const useTopicDetail = (): {
   const getComments = (params) => dispatch(actions.getCommentsList(params))
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
-  const deleteComment = (params) => dispatch(actions.createTopicComment(params))
+  const deleteComment = (params) => dispatch(actions.deleteTopicComment(params))
 
   const deleteTopic = async (params: TopicDetailParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))

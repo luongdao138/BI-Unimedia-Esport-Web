@@ -13,6 +13,8 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
+import useTopicDetail from '../../useTopicDetail'
+import { useRouter } from 'next/router'
 
 type CommunityHeaderProps = {
   username: string
@@ -22,14 +24,31 @@ type CommunityHeaderProps = {
   date: string
   number: number
   image?: string
+  hash_key?: string
+  handleReply?: (params: { hash_key: string; id: number }) => void
+  id?: number
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number, userAvatar }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({
+  username,
+  mail,
+  discription,
+  date,
+  image,
+  number,
+  userAvatar,
+  hash_key,
+  handleReply,
+  id,
+}) => {
   const classes = useStyles()
+  const { query } = useRouter()
+  const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const isModerator = true
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const { deleteComment, getComments } = useTopicDetail()
   const detail = {
     attributes: {
       username: username,
@@ -47,8 +66,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
   const handleDeleteOpen = () => {
     setOpenDelete(true)
   }
-  const handleDeleteSubmit = () => {
-    //
+  const handleDeleteSubmit = async () => {
+    await deleteComment(hash_key)
+    setOpenDelete(false)
+    getComments({ hash_key: String(topic_hash_key), page: 1 })
+  }
+
+  const handleCommentReply = () => {
+    handleReply({ hash_key: hash_key, id: id })
   }
 
   const renderClickableImage = () => {
@@ -90,7 +115,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
         </Box>
         {image && renderClickableImage()}
         <Box mt={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton style={{ padding: 4 }}>
+          <IconButton style={{ padding: 4 }} onClick={handleCommentReply}>
             <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
           </IconButton>
         </Box>

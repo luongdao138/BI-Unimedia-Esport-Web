@@ -12,7 +12,7 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title, isTopic, onHan
 
   return (
     <>
-      <Box className={classes.backContainer} position={!isTopic && 'fixed'} mb={isTopic && 3}>
+      <Box className={classes.backContainer} position={isTopic ? '' : 'fixed'} mb={isTopic && 3}>
         <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>

@@ -1,4 +1,4 @@
-import { Box, IconButton, Icon } from '@material-ui/core'
+import { Box, IconButton, Icon, Typography, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import InputBase from '@material-ui/core/InputBase'
@@ -7,29 +7,27 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
 import ESLoader from '@components/Loader'
-// import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import _ from 'lodash'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import theme from '@theme/index'
+import useTopicDetail from '../../useTopicDetail'
 
 type CommunityHeaderProps = {
-  username?: string
-  mail?: string
-  discription?: string
-  date?: string
-  number?: number
-  image?: string
+  reply_param?: { hash_key: string; id: number }
+  handleReply?: (params: { hash_key: string; id: number } | any) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = () => {
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) => {
   const classes = useStyles()
-  // const { query } = useRouter()
-  // const { topic_id } = query
+  const { query } = useRouter()
+  const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-
+  const { createComment, getComments } = useTopicDetail()
   const { uploadArenaCoverImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
   const [imageURL, setImageURL] = useState('')
@@ -48,17 +46,19 @@ const Comment: React.FC<CommunityHeaderProps> = () => {
     setImageURL('')
   }
 
-  const send = () => {
+  const send = async () => {
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
-      // const data = {
-      //   topic_hash: String(topic_id),
-      //   content: inputText,
-      //   reply_to_comment_hash: null,
-      //   attachments: imageURL
-      // }
-      // console.log('data', data)
+      const data = {
+        topic_hash: String(topic_hash_key),
+        content: inputText,
+        reply_to_comment_hash: !_.isEmpty(reply_param) && reply_param.hash_key,
+        attachments: imageURL,
+      }
+      await createComment(data)
+      getComments({ hash_key: String(topic_hash_key), page: 1 })
       setInputText('')
       setImageURL('')
+      handleReply({})
     } else {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
     }
@@ -75,10 +75,16 @@ const Comment: React.FC<CommunityHeaderProps> = () => {
           <ImageUploader src={imageURL} onChange={handleUpload} isUploading={isUploading} />
         </Box>
         <Box className={classes.inputCont}>
+          <ButtonBase className={classes.reply} onClick={() => handleReply([])}>
+            <Typography className={classes.replyText} variant="body1">
+              {!_.isEmpty(reply_param) && `>>${reply_param.id}`}
+            </Typography>
+          </ButtonBase>
           <InputBase
             value={inputText}
             onChange={handleChange}
             className={classes.input}
+            style={{ paddingTop: !_.isEmpty(reply_param) && theme.spacing(4) }}
             multiline
             rowsMax={9}
             placeholder={t('common:topic_create.comment_placeholder')}
@@ -86,7 +92,7 @@ const Comment: React.FC<CommunityHeaderProps> = () => {
         </Box>
         <Box className={classes.sendCont}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.iconButton} disableRipple onClick={send} disabled={imageURL === '' && inputText === ''}>
+            <IconButton className={classes.iconButton} onClick={send} disabled={imageURL === '' && inputText === ''}>
               <Icon className={`${classes.icon} fas fa-paper-plane`} />
             </IconButton>
           </Box>
@@ -128,11 +134,22 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5,
   },
   inputCont: {
+    position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    width: '100%',
+    width: 'calc(100% - 97px)',
     marginLeft: 13,
     marginRight: theme.spacing(1),
+  },
+  reply: {
+    position: 'absolute',
+    top: theme.spacing(1),
+    left: theme.spacing(1.5),
+    zIndex: 2,
+  },
+  replyText: {
+    color: Colors.primary,
+    textDecoration: 'underline',
   },
   sendCont: {
     display: 'flex',
@@ -140,7 +157,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     marginRight: 13,
   },
-
   input: {
     borderRadius: 24,
     border: '1px solid #777',
@@ -152,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     fontSize: 24,
-    color: Colors.grey[400],
+    color: Colors.primary,
   },
   removeIcon: {
     fontSize: 14,
@@ -174,6 +190,9 @@ const useStyles = makeStyles((theme) => ({
     },
     '&:hover': {
       background: 'none',
+    },
+    '&.Mui-disabled .MuiIconButton-label .MuiIcon-root': {
+      color: `${Colors.grey[400]} !important`,
     },
   },
   imageContainer: {

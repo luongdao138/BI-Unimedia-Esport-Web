@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CommunityDetailHeader from '@containers/Community/TopicDetail/Partials/CommunityDetailHeader'
 import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
@@ -19,6 +19,7 @@ const TopicDetailContainer: React.FC = () => {
   const { getTopicDetail, topic, topicDetailMeta, deleteTopic, getCommentsList, commentsList, pages, getComments } = useTopicDetail()
   const data = topic?.attributes
   const commentsDataReversed = _.reverse(_.clone(commentsList))
+  const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
 
   useEffect(() => {
     if (topic_hash_key) {
@@ -55,6 +56,9 @@ const TopicDetailContainer: React.FC = () => {
               mail={d.attributes.user_code}
               date={CommonHelper.staticSmartTime(d.attributes.created_at)}
               number={d.attributes.comment_no}
+              hash_key={d.attributes.hash_key}
+              id={d.attributes.id}
+              handleReply={setReply}
             />
           )
         })}
@@ -117,7 +121,7 @@ const TopicDetailContainer: React.FC = () => {
           )}
         </Box>
         <Box className={classes.inputContainer}>
-          <CommentInput />
+          <CommentInput reply_param={reply} handleReply={setReply} />
         </Box>
       </Box>
     </>
