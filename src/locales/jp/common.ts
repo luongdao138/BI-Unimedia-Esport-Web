@@ -753,6 +753,7 @@ export default {
   とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
       please_review: 'を見直してください',
       holding_period: '開催日時',
+      address: '会場詳細',
     },
   },
   lobbySearchFilters: {
