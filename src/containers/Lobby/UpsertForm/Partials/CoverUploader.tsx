@@ -13,17 +13,9 @@ type ProfileAvatarProps = {
   ratio?: number
   onChange?: (file: File, blob: any) => void
   disabled?: boolean
-  onOpenStateChange?: (open: boolean) => void
 }
 
-const CoverUploader: React.FC<ProfileAvatarProps> = ({
-  src,
-  ratio = 3.303 / 1,
-  isUploading = false,
-  onChange,
-  disabled = false,
-  onOpenStateChange,
-}) => {
+const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, ratio = 3.303 / 1, isUploading = false, onChange, disabled = false }) => {
   const classes = useStyles()
   const [drag, setDrag] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
@@ -45,10 +37,6 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
       }
     }
   }
-
-  useEffect(() => {
-    !!onOpenStateChange && onOpenStateChange(open)
-  }, [open])
 
   return (
     <div className={classes.root}>
