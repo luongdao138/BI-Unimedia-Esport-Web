@@ -393,6 +393,11 @@ export const createTopicComment = async (params: CommentCreateParams): Promise<v
   return data
 }
 
+export const deleteTopicComment = async (hash_key: string): Promise<void> => {
+  const { data } = await api.delete<void>(URI.TOPIC_COMMENT_DELETE.replace(/:id/gi, hash_key))
+  return data
+}
+
 export const followCommunity = async (hash_key: string): Promise<CommunityFollowResponse> => {
   const { data } = await api.post<CommunityFollowResponse>(URI.COMMUNITY_FOLLOW.replace(/:id/gi, hash_key))
   return data

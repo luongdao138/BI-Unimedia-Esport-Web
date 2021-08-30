@@ -1,4 +1,4 @@
-import { TopicDetail, TopicDetailParams } from '@services/community.service'
+import { TopicDetail, TopicDetailParams, CommentCreateParams } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
@@ -18,6 +18,8 @@ const useTopicDetail = (): {
   topicDetailMeta: Meta
   deleteTopic: (TopicDetailParams) => void
   deleteTopicMeta: Meta
+  createComment: (params: CommentCreateParams) => void
+  deleteComment: (hash_key: string) => void
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -27,6 +29,8 @@ const useTopicDetail = (): {
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
+  const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
+  const deleteComment = (params) => dispatch(actions.createTopicComment(params))
 
   const deleteTopic = async (params: TopicDetailParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))
@@ -43,6 +47,8 @@ const useTopicDetail = (): {
     topicDetailMeta,
     deleteTopic,
     deleteTopicMeta,
+    createComment,
+    deleteComment,
   }
 }
 
