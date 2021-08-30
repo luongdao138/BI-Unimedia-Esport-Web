@@ -29,17 +29,14 @@ const PointManage: React.FC = () => {
     setTab(0)
   }, [])
 
-  const { metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta } = usePurchasePointData()
+  const { purchasePointInfo } = usePurchasePointData()
 
   useEffect(() => {
     // redirect to first tab when purchase point user new or old card success
-    if (
-      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) ||
-      (metaPurchaseUseOldCardMeta.loaded && !metaPurchaseUseNewCardMeta.pending)
-    ) {
+    if(purchasePointInfo.purchase_success) {
       setTab(0)
     }
-  }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
+  }, [purchasePointInfo.purchase_success])
 
   const getTabs = () => {
     return (

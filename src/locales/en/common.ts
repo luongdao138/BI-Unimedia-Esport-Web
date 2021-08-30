@@ -996,6 +996,8 @@ export default {
     btn_delete: '削除する',
     mess_delete_card_success: '登録済みカードの削除が完了しました',
     mess_purchase_point_success: 'ポイント購入が正常に完了しました',
+    mess_purchase_point_error: 'ポイントの購入できませんでした\nしばらくお時間を空けて、再度ご購入手続きをお願いいたします',
+    mess_delete_card_error: '登録されているクレジットカード情報の削除ができませんでした',
     validation: {
       required: '必須情報が入力されていません',
       wrong_format: '書式が間違っています',
