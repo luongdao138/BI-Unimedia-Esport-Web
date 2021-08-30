@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
-import ESChip from '@components/Chip'
 import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
@@ -115,6 +114,19 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.overview')} multiline value={values.stepOne.message} disabled={true} fullWidth />
       <Box pb={2} />
 
+      <Box pb={2}>
+        <Box display="flex" alignItems="center" pb={1}>
+          <Typography className={classes.labelColor}>{t('common:lobby.create.category')}</Typography>
+        </Box>
+        <Typography className={classes.labelColor}>
+          {values.stepOne.categories.map((category, idx) => (
+            <>
+              {idx > 0 && '/'} {category.name}
+            </>
+          ))}
+        </Typography>
+      </Box>
+
       {values.stepOne.game_title_id[0] ? (
         <>
           <ESInput
@@ -161,10 +173,6 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
 
       <ESInput labelPrimary={t('common:lobby_create.area_detail')} value={values.stepTwo.address} disabled={true} fullWidth />
       <Box pb={2} />
-
-      {values.stepOne.categories.map((category, idx) => (
-        <ESChip key={idx} className={classes.chip} label={category.name} />
-      ))}
       <Box pb={2} />
     </Box>
   )
