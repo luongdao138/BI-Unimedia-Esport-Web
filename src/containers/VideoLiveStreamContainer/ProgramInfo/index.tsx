@@ -8,7 +8,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 
 const ProgramInfo: React.FC = () => {
-  const [descriptionCollapse, setDescriptionCollapse] = useState(false)
+  const [descriptionCollapse, setDescriptionCollapse] = useState(true)
 
   // const { t } = useTranslation('common')
   const dataLiveVideo = () =>
