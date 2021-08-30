@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -16,13 +16,14 @@ import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 
 type CommunityHeaderProps = {
   username: string
+  userAvatar?: string
   mail: string
   discription: string
   date: string
   number: number
   image?: string
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number, userAvatar }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
@@ -65,10 +66,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
           <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{number}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} alt={username} src={userAvatar} />
             </Box>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="67%">
+            <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{username}</Typography>
               <Typography className={classes.mail}>{mail}</Typography>
             </Box>
@@ -88,6 +89,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
           <Typography className={classes.discription}>{discription}</Typography>
         </Box>
         {image && renderClickableImage()}
+        <Box mt={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <IconButton style={{ padding: 4 }}>
+            <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+          </IconButton>
+        </Box>
       </Box>
       {isAuthenticated && (
         <>
@@ -129,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
-    width: '67%',
+    width: 'calc(100% - 150px)',
   },
   userAvatarBox: {
     display: 'flex',
@@ -140,6 +146,7 @@ const useStyles = makeStyles((theme) => ({
   userInfoBox: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
   },
   dateReportContainer: {
     display: 'flex',

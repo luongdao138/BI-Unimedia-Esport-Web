@@ -5,14 +5,15 @@ import { Colors } from '@theme/colors'
 type CommunityHeaderProps = {
   title: string
   isTopic?: boolean
+  onHandleBack: () => void
 }
-const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title, isTopic }) => {
+const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title, isTopic, onHandleBack }) => {
   const classes = useStyles()
 
   return (
     <>
       <Box className={classes.backContainer} position={!isTopic && 'fixed'} mb={isTopic && 3}>
-        <IconButton className={classes.iconButtonBg2}>
+        <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
         <Typography variant="h2" className={classes.wrapOne}>
