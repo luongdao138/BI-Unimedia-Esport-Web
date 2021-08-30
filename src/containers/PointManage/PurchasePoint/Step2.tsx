@@ -19,9 +19,6 @@ import CardDeleteConfirmModal from './CardDeleteConfirmModal'
 import ESLoader from '@components/FullScreenLoader'
 import { validationPurchasePointScheme } from './ValidationPurchasePointScheme'
 import _ from 'lodash'
-import { TOKEN_ERROR } from '@constants/common.constants'
-import { addToast } from '@store/common/actions'
-import { useAppDispatch } from '@store/hooks'
 interface Step2Props {
   selectedPoint: any
 }
@@ -29,7 +26,6 @@ interface Step2Props {
 const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
-  const dispatch = useAppDispatch()
 
   const {
     metaSavedCardsMeta,
@@ -47,6 +43,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
   const [isPurchasingPoint, setIsPurchasingPoint] = useState(false)
   const [deletedCard, setDeletedCard] = useState({})
+  const [hasError, setHasError] = useState(false)
 
   const closeModalPurchasePoint = () => {
     setIsPurchasingPoint(false)
@@ -57,15 +54,22 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     if (metaDeleteCardMeta.loaded) {
       setIsShowDeleteCardModal(false)
     }
+    if(metaDeleteCardMeta.error) {
+      setHasError(true)
+    }
   }, [metaDeleteCardMeta])
 
   useEffect(() => {
-    // only close modal when purchase using old or new card success
-    if (
-      (metaPurchaseUseNewCardMeta.loaded && !metaPurchaseUseOldCardMeta.pending) ||
-      (metaPurchaseUseOldCardMeta.loaded && !metaPurchaseUseNewCardMeta.pending)
-    ) {
+    if(purchasePointInfo.purchase_success) {
       closeModalPurchasePoint()
+    }
+  }, [purchasePointInfo.purchase_success])
+  
+
+  useEffect(() => {
+    if(metaPurchaseUseOldCardMeta.error || metaPurchaseUseNewCardMeta.error) {
+      setIsPurchasingPoint(false)
+      setHasError(true)
     }
   }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
 
@@ -101,11 +105,15 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   }, [])
 
   const confirmPurchasePoint = () => {
+    // reset error and open modal confirm
+    setHasError(false)
     setIsShowPurchasePointModal(true)
   }
 
   const deleteCard = (card): void => {
     setDeletedCard(card)
+    // reset error and open modal confirm
+    setHasError(false)
     setIsShowDeleteCardModal(true)
   }
 
@@ -131,13 +139,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
               card_type: detectCardType(values.card_number),
               is_save_card: values.is_saved_card,
             })
-          } else if (response.resultCode in TOKEN_ERROR) {
-            // handle error
-            dispatch(addToast(TOKEN_ERROR[response.resultCode]))
-            closeModalPurchasePoint()
           } else {
-            dispatch(addToast('エラー発生しました。'))
-            closeModalPurchasePoint()
+            setHasError(true)
+            setIsPurchasingPoint(false)
           }
         }
       )
@@ -364,6 +368,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           handlePurchasePoint={handlePurchasePoint}
           open={isShowPurchasePointModal}
           selectedPoint={selectedPoint}
+          hasError={hasError}
           handleClose={() => {
             setIsShowPurchasePointModal(false)
           }}
@@ -374,6 +379,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           deleteSavedCard={deleteSavedCard}
           deletedCard={deletedCard}
           open={isShowDeleteCardModal}
+          hasError={hasError}
           handleClose={() => {
             setIsShowDeleteCardModal(false)
           }}

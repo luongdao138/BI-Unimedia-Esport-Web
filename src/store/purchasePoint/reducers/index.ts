@@ -9,12 +9,14 @@ import { SavedCards } from '@services/purchasePoints.service'
 
 type StateType = {
   saved_cards: Array<SavedCards>
-  GMO_SHOP_ID: string
+  GMO_SHOP_ID: string,
+  purchase_success: boolean
 }
 
 const initialState: StateType = {
   saved_cards: [],
   GMO_SHOP_ID: '',
+  purchase_success: false
 }
 
 const splitCardInfo = (str) => {
@@ -42,5 +44,17 @@ export default createReducer(initialState, (builder) => {
     } else {
       state.saved_cards = []
     }
+  })
+  builder.addCase(actions.purchasePointUseOldCard.pending, (state) => {
+    state.purchase_success = false
+  })
+  builder.addCase(actions.purchasePointUseOldCard.fulfilled, (state) => {
+    state.purchase_success = true
+  })
+  builder.addCase(actions.purchasePointUseNewCard.pending, (state) => {
+    state.purchase_success = false
+  })
+  builder.addCase(actions.purchasePointUseNewCard.fulfilled, (state) => {
+    state.purchase_success = true
   })
 })

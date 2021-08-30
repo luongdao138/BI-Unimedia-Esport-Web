@@ -9,11 +9,12 @@ import { formatCardNumber } from '@utils/helpers/CommonHelper'
 interface ModalProps {
   open: boolean
   deletedCard: any
+  hasError: any
   handleClose: () => void
   deleteSavedCard: (card_seq) => void
 }
 
-const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, deletedCard, deleteSavedCard }) => {
+const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, deletedCard, deleteSavedCard, hasError }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -27,6 +28,9 @@ const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, delet
             <Box pb={4}></Box>
             <Typography className={classes.message}>{formatCardNumber(deletedCard.card_number.replace(/\*/g, 'x'))}</Typography>
             <Box pb={4}></Box>
+            {hasError &&
+              <Typography className={classes.mess_delete_card_error}>{t('purchase_point_tab.mess_delete_card_error')}</Typography>
+            }
           </Box>
         </Box>
         <Box className={classes.actionBox}>
@@ -104,4 +108,11 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 754,
     },
   },
+  mess_delete_card_error: {
+    fontSize: '14px',
+    color: '#F7F735',
+    paddingBottom: '32px',
+    textAlign: 'center',
+    whiteSpace: "pre-line"
+  }
 }))

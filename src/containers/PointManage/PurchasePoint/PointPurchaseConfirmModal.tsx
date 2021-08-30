@@ -9,11 +9,12 @@ import { calValueFromTax } from '@utils/helpers/CommonHelper'
 interface ModalProps {
   selectedPoint: any
   open: boolean
+  hasError: boolean
   handleClose: () => void
   handlePurchasePoint: () => void
 }
 
-const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose, handlePurchasePoint }) => {
+const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose, handlePurchasePoint, hasError }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -34,7 +35,10 @@ const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, 
               {t('common.money')}
             </Typography>
           </Box>
-          <Typography className={classes.note_purchase_point}>{t('purchase_point_tab.note_purchase_point')}</Typography>
+          {hasError ? 
+            <Typography className={classes.mess_purchase_point_error}>{t('purchase_point_tab.mess_purchase_point_error')}</Typography> 
+            : <Typography className={classes.note_purchase_point}>{t('purchase_point_tab.note_purchase_point')}</Typography>
+          }
         </Box>
         <Box className={classes.actionBox}>
           <ButtonPrimary className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
@@ -111,4 +115,11 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 754,
     },
   },
+  mess_purchase_point_error: {
+    fontSize: '14px',
+    color: '#F7F735',
+    padding: '24px 0 24px 0',
+    textAlign: 'center',
+    whiteSpace: "pre-line"
+  }
 }))
