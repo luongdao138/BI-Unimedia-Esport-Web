@@ -10,8 +10,6 @@ import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
 import { Box } from '@material-ui/core'
 import { TOPIC_STATUS } from '@constants/community.constants'
-import useFollowList from './Partials/FollowList/useFollowList'
-import { CommunityMemberRole } from '@services/community.service'
 
 const CommunityContainer: React.FC = () => {
   const router = useRouter()
@@ -19,12 +17,10 @@ const CommunityContainer: React.FC = () => {
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
-  const { getMembers, membersMeta } = useFollowList()
 
   useEffect(() => {
     if (hash_key) {
       getCommunityDetail(String(hash_key))
-      getMembers({ hash_key: String(hash_key), role: CommunityMemberRole.all, page: 1 })
     }
   }, [router])
 
@@ -44,7 +40,7 @@ const CommunityContainer: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        {!!communityDetail && meta.loaded && !meta.pending && membersMeta.loaded && (
+        {!!communityDetail && meta.loaded && !meta.pending && (
           <>
             <CommunityDetailHeader
               title={communityDetail.attributes.name}

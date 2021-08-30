@@ -82,7 +82,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
           {data.admin && (
             <Box display="flex" flexDirection="row" alignItems="center">
               <LoginRequired>
-                <ButtonBase onClick={() => toProfile(data.admin.id)}>
+                <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
                   <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
                 </ButtonBase>
                 <Typography className={classes.breakWord}>{data.admin.nickname}</Typography>

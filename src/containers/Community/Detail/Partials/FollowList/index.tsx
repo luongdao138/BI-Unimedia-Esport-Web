@@ -182,13 +182,13 @@ const FollowList: React.FC<Props> = ({ community }) => {
             <Box display="flex" className={classes.rowContainer}>
               <Typography>{t('common:following.title')}</Typography>
               <Box display="flex" className={classes.countContainer}>
-                <Typography className={classes.count}>{FormatHelper.kFormatter(participatingValues.length)}</Typography>
+                <Typography className={classes.count}>{FormatHelper.kFormatter(community.attributes.member_count)}</Typography>
                 <Typography>{t('common:followers.th')}</Typography>
               </Box>
             </Box>
           </Button>
         </LoginRequired>
-        {isModerator && !!applyingValues && applyingValues.length > 0 && (
+        {isModerator && community.attributes.has_required && (
           <Typography className={classes.linkUnapproved} variant="body2">
             {t('common:community.unapproved_users_title')}
           </Typography>
