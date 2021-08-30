@@ -170,7 +170,7 @@ const Events: React.FC<IProps> = (props) => {
           }}
         >
           <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-            番組公式サイト
+            eXeLAB ご紹介ページ
           </Button>
         </a>
       )
@@ -184,7 +184,7 @@ const Events: React.FC<IProps> = (props) => {
         }}
       >
         <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-          番組公式サイト
+          eXeLAB ご紹介ページ
         </Button>
       </a>
     ) : (
@@ -199,7 +199,7 @@ const Events: React.FC<IProps> = (props) => {
             }}
           >
             <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-              番組公式サイト
+              eXeLAB ご紹介ページ
             </Button>
           </a>
         </div>
@@ -234,7 +234,7 @@ const Events: React.FC<IProps> = (props) => {
               }}
             >
               <Button variant="contained" color="secondary" fullWidth classes={{ label: classes.bottomBtnLabel }}>
-                info.exelab.jpへのリンク
+                eXeLAB ご紹介ページ
               </Button>
             </a>
           ) : (
