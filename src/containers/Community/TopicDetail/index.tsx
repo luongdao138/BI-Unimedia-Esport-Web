@@ -8,6 +8,7 @@ import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
 import { useRouter } from 'next/router'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import _ from 'lodash'
 
 const TopicDetailContainer: React.FC = () => {
@@ -15,10 +16,9 @@ const TopicDetailContainer: React.FC = () => {
   const router = useRouter()
   const { back } = useRouter()
   const { topic_hash_key } = router.query
-  const { getTopicDetail, topic, topicDetailMeta, deleteTopic, getCommentsList, commentsList } = useTopicDetail()
+  const { getTopicDetail, topic, topicDetailMeta, deleteTopic, getCommentsList, commentsList, pages, getComments } = useTopicDetail()
   const data = topic?.attributes
-  const commentsData = commentsList?.data
-  const commentsDataReversed = _.reverse(_.clone(commentsData))
+  const commentsDataReversed = _.reverse(_.clone(commentsList))
 
   useEffect(() => {
     if (topic_hash_key) {
@@ -33,7 +33,34 @@ const TopicDetailContainer: React.FC = () => {
 
   const handleBack = () => back()
 
-  // console.log(commentsList)
+  const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      getComments({ hash_key: String(topic_hash_key), page: Number(pages.current_page) + 1 })
+    }
+  }
+
+  const renderComments = () => {
+    return (
+      <>
+        {commentsDataReversed.map((d, i) => {
+          return (
+            <Comment
+              key={i}
+              discription={d.attributes.content}
+              image={d.attributes.attachments[0]?.assets_url}
+              userAvatar={d.attributes.owner_profile}
+              username={d.attributes.owner_nickname}
+              mail={d.attributes.user_code}
+              date={CommonHelper.staticSmartTime(d.attributes.created_at)}
+              number={d.attributes.comment_no}
+            />
+          )
+        })}
+      </>
+    )
+  }
 
   return (
     <>
@@ -57,8 +84,8 @@ const TopicDetailContainer: React.FC = () => {
           <Box className={classes.link}>
             <Link>↑過去のコメントを表示する</Link>
           </Box>
-          {!!commentsData &&
-            commentsData.length > 0 &&
+          {/* {!!commentsList &&
+            commentsList.length > 0 &&
             commentsDataReversed.map((d, i) => {
               return (
                 <Comment
@@ -72,7 +99,22 @@ const TopicDetailContainer: React.FC = () => {
                   number={d.attributes.comment_no}
                 />
               )
-            })}
+            })} */}
+          {!!commentsList && commentsList.length > 0 && (
+            <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+              <InfiniteScroll
+                dataLength={commentsList.length}
+                next={loadMore}
+                hasMore={hasNextPage}
+                scrollableTarget="scrollableDiv"
+                scrollThreshold={0.99}
+                style={{ overflow: 'hidden ' }}
+                loader={null}
+              >
+                {renderComments()}
+              </InfiniteScroll>
+            </Box>
+          )}
         </Box>
         <Box className={classes.inputContainer}>
           <CommentInput />
@@ -97,6 +139,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     background: '#101010',
     willChange: 'transform',
+  },
+  scroll: {
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
+  },
+  list: {
+    overflow: 'auto',
+    overflowX: 'hidden',
   },
 }))
 

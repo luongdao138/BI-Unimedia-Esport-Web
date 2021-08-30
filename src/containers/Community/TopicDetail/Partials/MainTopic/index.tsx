@@ -1,4 +1,4 @@
-import { Box, Typography, Icon } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -116,7 +116,9 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                   <Typography className={classes.count}>{count}</Typography>
                 </Box>
                 <Box className={classes.numberBox}>
-                  <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                  <IconButton style={{ padding: 4 }}>
+                    <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                  </IconButton>
                 </Box>
               </Box>
             </Box>

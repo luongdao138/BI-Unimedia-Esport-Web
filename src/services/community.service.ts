@@ -323,15 +323,11 @@ export type CommentsResponse = {
 
 export type CommentsListResponse = {
   data: Array<CommentsResponse>
-  meta: {
-    current_page: number
-    total_pages: number
-    total_count: number
-    per_page: number
-  }
+  meta: PageMeta
 }
 export type CommentsListParams = {
   hash_key: string
+  page?: number
 }
 
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {

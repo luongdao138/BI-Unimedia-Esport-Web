@@ -1,4 +1,4 @@
-import { TopicDetail, TopicDetailParams, CommentsListResponse, CommentsListParams } from '@services/community.service'
+import { TopicDetail, TopicDetailParams, CommentsResponse, CommentsListParams, PageMeta } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { Meta } from '@store/metadata/actions/types'
@@ -16,10 +16,12 @@ const useTopicDetail = (): {
   topic: TopicDetail
   getTopicDetail: (TopicDetailParams) => void
   getCommentsList: (CommentsListParams) => void
+  getComments: (params: CommentsListParams) => void
   topicDetailMeta: Meta
+  pages: PageMeta
   deleteTopic: (TopicDetailParams) => void
   deleteTopicMeta: Meta
-  commentsList: CommentsListResponse
+  commentsList: Array<CommentsResponse>
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -29,6 +31,8 @@ const useTopicDetail = (): {
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
+  const pages = useAppSelector(selectors.getCommunityListMeta)
+  const getComments = (params) => dispatch(actions.getCommentsList(params))
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
 
   const deleteTopic = async (params: TopicDetailParams) => {
@@ -50,6 +54,8 @@ const useTopicDetail = (): {
     deleteTopicMeta,
     getCommentsList,
     commentsList,
+    pages,
+    getComments,
   }
 }
 

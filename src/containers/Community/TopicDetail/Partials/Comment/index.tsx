@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -69,7 +69,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
               <ESAvatar className={classes.avatar} alt={username} src={userAvatar} />
             </Box>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="67%">
+            <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{username}</Typography>
               <Typography className={classes.mail}>{mail}</Typography>
             </Box>
@@ -89,6 +89,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
           <Typography className={classes.discription}>{discription}</Typography>
         </Box>
         {image && renderClickableImage()}
+        <Box mt={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <IconButton style={{ padding: 4 }}>
+            <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+          </IconButton>
+        </Box>
       </Box>
       {isAuthenticated && (
         <>
@@ -130,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
-    width: '67%',
+    width: 'calc(100% - 150px)',
   },
   userAvatarBox: {
     display: 'flex',
@@ -141,6 +146,7 @@ const useStyles = makeStyles((theme) => ({
   userInfoBox: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
   },
   dateReportContainer: {
     display: 'flex',
