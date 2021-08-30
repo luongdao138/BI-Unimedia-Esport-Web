@@ -629,6 +629,7 @@ export default {
     recruiting: '受付中',
   },
   lobby: {
+    copy_toast: 'クリップボードにコピーしました',
     lobby_results: 'ロビー「:key」 の検索結果',
     lobby_results_all: 'ロビーの検索結果',
     until_deadline: '締め切りまであと',

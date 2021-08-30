@@ -45,7 +45,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+    dispatch(commonActions.addToast(t('common:lobby.copy_toast')))
   }
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
