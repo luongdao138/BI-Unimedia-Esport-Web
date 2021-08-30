@@ -572,6 +572,7 @@ export default {
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
     please_review: 'を見直してください',
+    end_time_invalid: '日時は現在の日時より後でなければなりません',
   },
   arenaSearchFilters: {
     all: 'すべて',

@@ -44,6 +44,7 @@ export type EditableTypes = {
 const useTournamentCreate = (): {
   submit(params: TournamentFormParams): void
   update(params: UpdateParams): void
+  showToast(text: string): void
   meta: Meta
   updateMeta: Meta
   isEdit: boolean
@@ -86,6 +87,7 @@ const useTournamentCreate = (): {
   const { isEditable } = useArenaHelper(arena)
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
+  const showToast = (text: string) => dispatch(commonActions.addToast(text))
   const submit = async (params: TournamentFormParams) => {
     const resultAction = await dispatch(actions.createTournament(params))
     if (actions.createTournament.fulfilled.match(resultAction)) {
@@ -168,7 +170,7 @@ const useTournamentCreate = (): {
     }
   }, [arena, router])
 
-  return { submit, update, updateMeta, meta, isEdit, arena, editables }
+  return { submit, update, showToast, updateMeta, meta, isEdit, arena, editables }
 }
 
 export default useTournamentCreate
