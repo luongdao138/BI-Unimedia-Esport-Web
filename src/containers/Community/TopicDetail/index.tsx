@@ -30,6 +30,7 @@ const TopicDetailContainer: React.FC = () => {
       mail: '@koichi',
       date: '２時間前',
       number: 51,
+      hash_key: 'asdfejlksefjlksejfl23423rsekfsdf',
       discription: 'トピックス本文が入ります。',
       image:
         'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F6%2F2019%2F11%2Frick-and-morty-season-4-2000.jpg&q=85',
@@ -40,6 +41,7 @@ const TopicDetailContainer: React.FC = () => {
       mail: '@koichi',
       date: '２時間前',
       number: 52,
+      hash_key: 'asdfejlksefjlksejfl23423rsekfsdf',
     },
     {
       discription: 'トピックス本文が。ス本文が入りトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますます',
@@ -47,6 +49,7 @@ const TopicDetailContainer: React.FC = () => {
       mail: '@koichi',
       date: '２時間前',
       number: 53,
+      hash_key: 'asdfejlksefjlksejfl23423rsekfsdf',
     },
     {
       discription:
@@ -55,6 +58,7 @@ const TopicDetailContainer: React.FC = () => {
       mail: '@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi',
       date: '２時間前',
       number: 55,
+      hash_key: 'asdfejlksefjlksejfl23423rsekfsdf',
     },
     {
       discription:
@@ -64,6 +68,7 @@ const TopicDetailContainer: React.FC = () => {
       mail: '@koichi',
       date: '２時間前',
       number: 91,
+      hash_key: 'asdfejlksefjlksejfl23423rsekfsdf',
     },
   ]
 
@@ -81,6 +86,7 @@ const TopicDetailContainer: React.FC = () => {
                 date={`${CommonHelper.staticSmartTime(data.created_at)}`}
                 count={data.like_count}
                 description={data.content}
+                hash_key={data.hash_key}
                 image={(!!data.attachments && data.attachments[0].assets_url) || ''}
                 handleDelete={handleDeleteTopic}
               />
@@ -99,6 +105,7 @@ const TopicDetailContainer: React.FC = () => {
                 mail={d.mail}
                 date={d.date}
                 number={d.number}
+                hash_key={d.hash_key}
               />
             )
           })}

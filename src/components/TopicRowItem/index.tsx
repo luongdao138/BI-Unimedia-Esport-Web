@@ -7,14 +7,15 @@ export interface TopicRowItemProps {
   last_comment?: string
   latest_date?: string
   comment_count?: number
+  handleClick: () => void
 }
 
-const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count }) => {
+const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, handleClick }) => {
   const classes = useStyles()
 
   return (
     <>
-      <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%">
+      <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%" onClick={handleClick}>
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box className={classes.container}>
             <Box display="flex" flexDirection="row" width="100%">

@@ -21,8 +21,9 @@ type CommunityHeaderProps = {
   date: string
   number: number
   image?: string
+  hash_key: string
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number, hash_key }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
@@ -37,6 +38,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
       date: date,
       image: image,
       number: number,
+      hash_key: hash_key,
     },
   }
 
@@ -93,7 +95,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
-            // target_id={Number(detail.id)}
+            target_id={detail.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
