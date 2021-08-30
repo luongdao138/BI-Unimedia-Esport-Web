@@ -7628,7 +7628,7 @@ react-sortablejs@^6.0.0:
 
 react-stacked-center-carousel@^1.0.2:
   version "1.0.2"
-  resolved "https://registry.npmjs.org/react-stacked-center-carousel/-/react-stacked-center-carousel-1.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/react-stacked-center-carousel/-/react-stacked-center-carousel-1.0.2.tgz#bc228b8e6e29683f20b1ca82a33125b7089f68ad"
   integrity sha512-Cop11FBxO+BnqtbQc3QsSaSzzbHBjARPWNKO0Q5GqfAqhAi9xxx0GxBVuqdb2ejv37EF8vn4feePK/K5a0Q+kA==
   dependencies:
     react-resize-detector "^6.7.2"

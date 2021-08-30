@@ -25,10 +25,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   return (
     <Box className={classes.container} key={data?.id} onClick={onNavigateLive}>
       <Box className={classes.videoContainer}>
-        <Box
-          className={classes.video}
-          style={{backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})`}} 
-        />
+        <Box className={classes.video} style={{ backgroundImage: `url(${data?.thumbnail ? data.thumbnail : IMG_PLACEHOLDER})` }} />
         {data?.status === 1 && (
           <Box className={classes.tagContainer}>
             <Typography className={classes.tagStyle}>{t('common:videos_top_tab.type_live_stream')}</Typography>
@@ -102,18 +99,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   videoContainer: {
     borderRadius: 4,
-    position: "relative", 
-    paddingBottom: "32.5%", 
-    overflow: "hidden"
+    position: 'relative',
+    paddingBottom: '32.5%',
+    overflow: 'hidden',
   },
   video: {
-    backgroundSize: "cover", 
-    backgroundPosition: "center", 
-    position: "absolute", 
-    top: "0", 
-    left: "0", 
-    width: "100%", 
-    height: "100%"
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
   },
   previewUser: {
     position: 'absolute',

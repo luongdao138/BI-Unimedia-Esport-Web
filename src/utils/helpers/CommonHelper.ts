@@ -213,22 +213,22 @@ export const calValueFromTax = (value: number): number => {
 }
 
 export const formatCardNumber = (origin_card_number: string): string => {
-  let card_number = origin_card_number.split(" ").join("");
+  let card_number = origin_card_number.split(' ').join('')
   if (card_number.length > 0) {
-    card_number = card_number.match(new RegExp('.{1,4}', 'g')).join(" ");
+    card_number = card_number.match(new RegExp('.{1,4}', 'g')).join(' ')
   }
   return card_number
 }
 
-export const detectCardType = (cardNumber: string) : number => {
-  let cardType = 0;
-  REGEX_DETECT_BRANCH.forEach(element => {
+export const detectCardType = (cardNumber: string): number => {
+  let cardType = 0
+  REGEX_DETECT_BRANCH.forEach((element) => {
     if (element.regex.test(cardNumber.replace(/\s/g, ''))) {
-      cardType = element.value;
+      cardType = element.value
     }
-  });
-  return cardType;
-};
+  })
+  return cardType
+}
 
 export const CommonHelper = {
   validateEmail,

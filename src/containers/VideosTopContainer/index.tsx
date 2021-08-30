@@ -90,10 +90,8 @@ const VideosTop: React.FC = () => {
         </Box>
       </Box>
       <Grid container direction="column">
-        {getTabs()} 
-        <Box className={classes.tabContent}>
-          {getContent()}
-        </Box>
+        {getTabs()}
+        <Box className={classes.tabContent}>{getContent()}</Box>
       </Grid>
     </Box>
   )
@@ -105,13 +103,13 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 122,
   },
   tabContent: {
-    padding: "0 122px 0 24px",
+    padding: '0 122px 0 24px',
   },
   container: {
-    width: "100%", 
-    padding: "0 122px 0 24px",
-    display: "flex", 
-    justifyContent: "center"
+    width: '100%',
+    padding: '0 122px 0 24px',
+    display: 'flex',
+    justifyContent: 'center',
   },
   root: {
     display: 'flex',
@@ -125,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    paddingLeft: 24
+    paddingLeft: 24,
   },
   forbiddenMessageContainer: {
     width: '100%',

@@ -111,11 +111,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
           )}
           <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
             <Link href={ESRoutes.VIDEO_TOP} passHref>
-              <ListItem
-                className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                button
-                disableRipple
-              >
+              <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                 <ListItemIcon className={classes.icon}>
                   <Icon fontSize="small" className="fa fa-heart" />
                 </ListItemIcon>
@@ -132,11 +128,7 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
                 passHref
                 as={ESRoutes.VIDEO_STREAMING_SETTING}
               >
-                <ListItem
-                  className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)}
-                  button
-                  disableRipple
-                >
+                <ListItem className={classes.list + getAddClass(classes.noMinimizeList, classes.minimizeList)} button disableRipple>
                   <ListItemIcon className={classes.icon}>
                     <Icon fontSize="small" className="fa fa-video" />
                   </ListItemIcon>
@@ -163,8 +155,9 @@ const StreamSideMenu: React.FC<StreamSideMenuProps> = ({ minimizeLayout, isStrea
               </Link>
             )}
             {!isStreamer && (
-              <a target="_blank" 
-                href="https://docs.google.com/forms/d/1Jjj0HnsmysqystYIwQTqmHmjO1h3ol7lipAkBDZJzuY/viewform?edit_requested=true" 
+              <a
+                target="_blank"
+                href="https://docs.google.com/forms/d/1Jjj0HnsmysqystYIwQTqmHmjO1h3ol7lipAkBDZJzuY/viewform?edit_requested=true"
                 rel="noopener noreferrer"
                 className={classes.linkTag}
               >
@@ -445,8 +438,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 17,
   },
   linkTag: {
-    textDecoration: "none"
-  }
+    textDecoration: 'none',
+  },
 }))
 
 const ListItem = withStyles({
