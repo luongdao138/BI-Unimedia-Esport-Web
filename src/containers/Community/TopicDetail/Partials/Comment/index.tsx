@@ -90,7 +90,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage()}
         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton style={{ padding: 4, marginRight: 8 }}>
+          <IconButton className={classes.shareButton}>
             <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
           </IconButton>
         </Box>
@@ -196,6 +196,10 @@ const useStyles = makeStyles((theme) => ({
   },
   number: {
     fontSize: 10,
+  },
+  shareButton: {
+    padding: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {

@@ -19,7 +19,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 type CommunityHeaderProps = {
   user_avatar?: string
   username?: string
-  mail?: string
+  email?: string
   description?: string
   date?: string
   image?: string | null
@@ -28,7 +28,16 @@ type CommunityHeaderProps = {
   handleDelete?: () => void
   topic?: TopicDetail
 }
-const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description, image, user_avatar, isConfirm, handleDelete, topic }) => {
+const MainTopic: React.FC<CommunityHeaderProps> = ({
+  username,
+  email,
+  description,
+  image,
+  user_avatar,
+  isConfirm,
+  handleDelete,
+  topic,
+}) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const isModerator = true
@@ -39,7 +48,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description
   const detail = {
     attributes: {
       username: topicData?.owner_name,
-      mail: topicData?.owner_email,
+      email: topicData?.owner_email,
       description: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
       image: topicData?.attachments[0]?.assets_url,
@@ -75,7 +84,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description
               />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.username}>{isConfirm ? username : topicData.owner_name}</Typography>
-                <Typography className={classes.mail}>{isConfirm ? mail : topicData.owner_email}</Typography>
+                <Typography className={classes.email}>{isConfirm ? email : topicData.owner_email}</Typography>
               </Box>
             </Box>
             {topicData?.created_at && (
@@ -115,7 +124,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description
                   <Typography className={classes.count}>{topicData?.like_count}</Typography>
                 </Box>
                 <Box className={classes.numberBox}>
-                  <IconButton style={{ padding: 4 }}>
+                  <IconButton className={classes.replyButton}>
                     <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
                   </IconButton>
                 </Box>
@@ -208,6 +217,9 @@ const useStyles = makeStyles((theme) => ({
     width: 50,
     height: 50,
   },
+  replyButton: {
+    padding: theme.spacing(0.5),
+  },
   username: {
     fontWeight: 'bold',
     color: 'white',
@@ -217,7 +229,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     fontSize: 16,
   },
-  mail: {
+  email: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
