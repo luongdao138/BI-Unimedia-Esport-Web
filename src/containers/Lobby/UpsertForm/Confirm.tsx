@@ -7,6 +7,7 @@ import { GetPrefecturesResponse, HardwareResponse } from '@services/common.servi
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { UserLoginResponse } from '@services/auth.service'
+import ESChip from '@components/Chip'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -116,10 +117,6 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.overview')} multiline value={values.stepOne.message} disabled={true} fullWidth />
       <Box pb={2} />
 
-      <Box pb={2}>
-        <ESInput labelPrimary={t('common:lobby.create.category')} value={categories} disabled={true} fullWidth multiline />
-      </Box>
-
       {values.stepOne.game_title_id[0] ? (
         <>
           <ESInput
@@ -164,8 +161,12 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />
       <ESInput labelPrimary={''} value={values.stepTwo.address} disabled={true} fullWidth multiline />
       <Box pb={2} />
+      {isEdit ? (
+        <ESInput labelPrimary={t('common:lobby.create.category')} value={categories} disabled={true} fullWidth multiline />
+      ) : (
+        values.stepOne.categories.map((category, idx) => <ESChip key={idx} className={classes.chip} label={category.name} />)
+      )}
 
-      <Box pb={2} />
       <Box pb={2} />
     </Box>
   )
