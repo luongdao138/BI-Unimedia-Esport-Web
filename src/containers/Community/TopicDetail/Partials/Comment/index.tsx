@@ -98,7 +98,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
-            // target_id={Number(detail.id)}
+            target_id={detail.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}

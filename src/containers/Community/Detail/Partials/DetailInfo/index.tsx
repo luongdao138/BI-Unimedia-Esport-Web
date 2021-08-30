@@ -245,7 +245,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {isAuthenticated && (
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
-            target_id={Number(detail.id)}
+            target_id={data.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}

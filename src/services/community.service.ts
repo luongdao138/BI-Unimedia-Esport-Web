@@ -196,8 +196,8 @@ export type TopicAttachments = {
 export type TopicDetail = {
   id: string
   type: string
-  hash_key: string
   attributes: {
+    hash_key: string
     title: string
     content: string
     community_id: number

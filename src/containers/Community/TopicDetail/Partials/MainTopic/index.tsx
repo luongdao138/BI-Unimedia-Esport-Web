@@ -24,6 +24,7 @@ type CommunityHeaderProps = {
   date?: string
   image?: string | null
   isConfirm?: boolean
+  hash_key?: string
   handleDelete?: () => void
   topic?: TopicDetail
 }
@@ -128,7 +129,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, description
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC}
-            // target_id={Number(detail.id)}
+            target_id={detail.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
