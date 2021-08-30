@@ -20,7 +20,6 @@ const useTopicDetail = (): {
   getCommentsList: (CommentsListParams) => void
   getComments: (params: CommentsListParams) => void
   deleteTopic: (TopicDetailParams) => void
-  resetCommentsList: () => void
   resetMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
@@ -41,7 +40,6 @@ const useTopicDetail = (): {
   const getComments = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
-  const resetCommentsList = () => dispatch(actions.resetCommentsList())
 
   const deleteTopic = async (params: TopicDetailParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))
@@ -59,7 +57,6 @@ const useTopicDetail = (): {
     deleteTopic,
     getComments,
     getCommentsList,
-    resetCommentsList,
     resetMeta,
     topic,
     commentsList,
