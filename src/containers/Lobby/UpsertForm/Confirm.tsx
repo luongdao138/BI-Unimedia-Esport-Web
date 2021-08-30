@@ -156,7 +156,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
 
       <ESInput
         labelPrimary={t('common:lobby_create.organizer_joined')}
-        value={values.stepOne.organizer_participated ? 'ON' : 'OFF'}
+        value={values.stepOne.organizer_participated ? t('common:lobby_create.organizer_join') : t('common:lobby_create.organizer_unjoin')}
         disabled={true}
         fullWidth
       />
