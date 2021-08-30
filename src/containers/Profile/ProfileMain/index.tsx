@@ -88,7 +88,7 @@ const ProfileMainContainer: React.FC<Props> = ({ userProfile, isOthers }) => {
             <Typography variant="h2" className={classes.marginRight20}>
               {i18n.t('common:profile.favorite_game.title')}
             </Typography>
-            <Typography variant="h2">{orderedGL?.length}</Typography>
+            <Typography variant="h2">{orderedGL?.length ? orderedGL.length : i18n.t('common:common.unregistered')}</Typography>
           </Box>
           {isOthers ? null : (
             <Box display="flex">

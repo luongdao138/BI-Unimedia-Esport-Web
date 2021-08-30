@@ -14,16 +14,16 @@ export function withAuth<T extends object>(Component: ComponentType<T>, destinat
     useEffect(() => {
       if (isAuth) {
         setRender(true)
+      } else if (render) {
+        setRender(false)
+        router.push(ESRoutes.TOP)
       } else {
         setRender(false)
         router.push(destination || ESRoutes.LOGIN)
       }
     }, [isAuth])
 
-    if (!render) {
-      return <></>
-    }
-    return <Component {...props} />
+    return render ? <Component {...props} /> : <></>
   }
 
   return AppWithAuth

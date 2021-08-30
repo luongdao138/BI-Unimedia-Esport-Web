@@ -6,6 +6,7 @@ import Button from '@components/Button'
 import { Colors } from '@theme/colors'
 import ESLoader from '@components/Loader'
 import ESFastInput from '@components/FastInput'
+import { useFocusState } from '@utils/hooks/input-focus-context'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +58,7 @@ const GameSearchByTitle: React.FC<{ children?: ReactNode }> = ({ children }) => 
   const handleClick = () => {
     getGameByTitle(keyword)
   }
+  const focusEvent = useFocusState()
   return (
     <Box pt={4} px={5} className={classes.root}>
       <Box display="flex">
@@ -68,9 +70,11 @@ const GameSearchByTitle: React.FC<{ children?: ReactNode }> = ({ children }) => 
             setTimeout(() => {
               document.body.classList.remove('has-sticky-div')
             }, 100)
+            focusEvent.onBlur()
           }}
           onFocus={() => {
             document.body.classList.add('has-sticky-div')
+            focusEvent.onFocus()
           }}
           fullWidth
         />

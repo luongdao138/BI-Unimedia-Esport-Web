@@ -184,7 +184,7 @@ const Pr = (props: IProps) => {
             }}
           >
             <ButtonPrimary round gradient={false} fullWidth>
-              番組公式サイト
+              eXeLAB ご紹介ページ
             </ButtonPrimary>
           </a>
         </div>

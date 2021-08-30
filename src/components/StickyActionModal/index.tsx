@@ -16,6 +16,7 @@ type StickyActionModalProps = {
   onReturnClicked: () => void
   onActionButtonClicked: () => void
   hideFooter?: boolean
+  hideFooterOnMobile?: boolean
 }
 const StickyActionModal: React.FC<StickyActionModalProps> = ({
   open,
@@ -27,6 +28,7 @@ const StickyActionModal: React.FC<StickyActionModalProps> = ({
   onReturnClicked,
   onActionButtonClicked,
   hideFooter,
+  hideFooterOnMobile,
 }) => {
   const classes = useStyles()
 
@@ -47,7 +49,7 @@ const StickyActionModal: React.FC<StickyActionModalProps> = ({
         </Box>
 
         {hideFooter === true ? null : (
-          <Box className={classes.stickyFooter}>
+          <Box className={`${classes.stickyFooter} ${hideFooterOnMobile ? classes.hideFooterOnMobile : ''}`}>
             {actionHintText && (
               <Box className={classes.hintTextContainer}>
                 <Typography variant="body2">{actionHintText}</Typography>
@@ -86,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionButtonHolder: {
     display: 'flex',
-    marginBottom: theme.spacing(8),
+    marginBottom: theme.spacing(3),
     justifyContent: 'center',
   },
   buttonContainer: {
@@ -101,6 +103,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     childrenContainer: {
       paddingTop: 0,
       marginBottom: theme.spacing(20),
+    },
+    hideFooterOnMobile: {
+      display: 'none',
     },
   },
   hintTextContainer: {
