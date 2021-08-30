@@ -8,15 +8,21 @@ import useArchivedVideos from './useArchivedVideos'
 import React, { useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
-import { TypeVideo } from '@services/videoTop.services'
+import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
+import PreLoadContainer from '../PreLoadContainer'
 
-const ArchivedVideos: React.FC = () => {
+interface Props {
+  follow?: number
+  setFollow?: (value: number) => void
+}
+
+const ArchivedVideos: React.FC<Props> = ({ follow, setFollow }) => {
   const page = 2
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const { loadMore, listArchivedVideo, meta } = useArchivedVideos()
-
+  const { loadMore, listArchivedVideo, meta, getListVideoTop, resetArchiveVideos } = useArchivedVideos()
   const classes = useStyles()
+
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
       <>
@@ -34,8 +40,39 @@ const ArchivedVideos: React.FC = () => {
   }
 
   useEffect(() => {
-    loadMore(page)
+    if (listArchivedVideo.length === 0) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.ARCHIVE, page: 1, limit: LIMIT_ITEM, follow: follow })
+    }
+    return () => {
+      resetArchiveVideos()
+      setFollow(0)
+    }
+  }, [follow])
+
+  useEffect(() => {
+    loadMore(page + 1, follow)
   }, [])
+
+  const renderPreLoad = () => {
+    const arrayPreLoad = Array(9)
+      .fill('')
+      .map((_, i) => ({ i }))
+    return arrayPreLoad.map(() => (
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer}>
+            <Box className={classes.wrapPreLoadContainer}>
+              <PreLoadContainer />
+            </Box>
+          </Box>
+        ) : (
+          <Grid item xs={6} className={classes.itemContainer}>
+            <PreLoadContainer />
+          </Grid>
+        )}
+      </>
+    ))
+  }
 
   return (
     <Box className={classes.container}>
@@ -47,7 +84,7 @@ const ArchivedVideos: React.FC = () => {
           className={classes.scrollContainer}
           dataLength={listArchivedVideo.length}
           next={() => {
-            loadMore(page + 1)
+            loadMore(page, follow)
           }}
           hasMore={true}
           loader={null}
@@ -57,6 +94,10 @@ const ArchivedVideos: React.FC = () => {
           {listArchivedVideo.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>
               {listArchivedVideo.map(renderLiveItem)}
+            </Grid>
+          ) : listArchivedVideo.length === 0 && meta.pending ? (
+            <Grid container spacing={3} className={classes.contentContainer}>
+              {renderPreLoad()}
             </Grid>
           ) : (
             <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
@@ -119,9 +160,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   wrapVideos: {},
-  wrapContentContainer: {},
+  wrapContentContainer: {
+    overflow: 'hidden',
+  },
   spViewMore: {
     display: 'none',
+  },
+  [theme.breakpoints.up(960)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '33.333333%',
+      flexBasis: '33.333333%',
+    },
+  },
+  [theme.breakpoints.up(1680)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  [theme.breakpoints.up(1920)]: {
+    itemContainer: {
+      flexGrow: '0',
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
+  },
+  scrollContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    overflow: 'hidden',
   },
   [theme.breakpoints.down(769)]: {
     wrapContentContainer: {

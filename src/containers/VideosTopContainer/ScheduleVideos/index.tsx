@@ -5,16 +5,22 @@ import i18n from '@locales/i18n'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useScheduleVideos from './useScheduleVideos'
-import { TypeVideo } from '@services/videoTop.services'
+import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
 import React, { useEffect } from 'react'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import PreLoadContainer from '../PreLoadContainer'
 
-const ScheduleVideos: React.FC = () => {
+interface Props {
+  follow?: number
+  setFollow?: (value: number) => void
+}
+
+const ScheduleVideos: React.FC<Props> = ({ follow, setFollow }) => {
   const page = 2
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const { loadMore, listScheduleVideo, meta } = useScheduleVideos()
+  const { loadMore, listScheduleVideo, meta, resetScheduleVideos, getListVideoTop } = useScheduleVideos()
 
   const classes = useStyles()
   const renderLiveItem = (item: TypeVideo, index: number) => {
@@ -32,10 +38,40 @@ const ScheduleVideos: React.FC = () => {
       </>
     )
   }
+  useEffect(() => {
+    if (listScheduleVideo.length === 0) {
+      getListVideoTop({ type: TYPE_VIDEO_TOP.SCHEDULE, page: 1, limit: LIMIT_ITEM, follow: follow })
+    }
+    return () => {
+      resetScheduleVideos()
+      setFollow(0)
+    }
+  }, [follow])
 
   useEffect(() => {
-    loadMore(page)
+    loadMore(page + 1, follow)
   }, [])
+
+  const renderPreLoad = () => {
+    const arrayPreLoad = Array(9)
+      .fill('')
+      .map((_, i) => ({ i }))
+    return arrayPreLoad.map(() => (
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer}>
+            <Box className={classes.wrapPreLoadContainer}>
+              <PreLoadContainer />
+            </Box>
+          </Box>
+        ) : (
+          <Grid item xs={6} className={classes.itemContainer}>
+            <PreLoadContainer />
+          </Grid>
+        )}
+      </>
+    ))
+  }
 
   return (
     <Box className={classes.container}>
@@ -47,7 +83,7 @@ const ScheduleVideos: React.FC = () => {
           className={classes.scrollContainer}
           dataLength={listScheduleVideo.length}
           next={() => {
-            loadMore(page + 1)
+            loadMore(page, follow)
           }}
           hasMore={true}
           loader={null}
@@ -57,6 +93,10 @@ const ScheduleVideos: React.FC = () => {
           {listScheduleVideo.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>
               {listScheduleVideo.map(renderLiveItem)}
+            </Grid>
+          ) : listScheduleVideo.length === 0 && meta.pending ? (
+            <Grid container spacing={3} className={classes.contentContainer}>
+              {renderPreLoad()}
             </Grid>
           ) : (
             <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>

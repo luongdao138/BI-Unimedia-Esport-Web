@@ -9,19 +9,26 @@ import useListVideoAll from './useListVideoAll'
 import React, { useEffect } from 'react'
 import { CategoryPopularData, TypeVideo } from '@services/videoTop.services'
 import PreLoadContainer from '../PreLoadContainer'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 type VideoListProps = {
   setTab: (value: number) => void
+  setFollow: (value: number) => void
 }
-const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
+const VideosList: React.FC<VideoListProps> = ({ setTab, setFollow }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
+  const router = useRouter()
   const { listLiveVideo, meta, videoTop, videoPopular, videoCategoryPopular } = useListVideoAll()
 
   useEffect(() => {
     listLiveVideo()
     videoPopular()
+    return () => {
+      setFollow(0)
+    }
   }, [])
 
   const renderLiveItem = (item: TypeVideo, index: number) => {
@@ -44,7 +51,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
     return (
       <>
         <Box className={classes.titleContainer} key={index}>
-          <TitleSeeMore titleText={item.name} rightText={i18n.t('common:videos_top_tab.view_more')} onPress={onClickSeeMoreLiveStream} />
+          <TitleSeeMore titleText={item.name} rightText={i18n.t('common:videos_top_tab.view_more')} onPress={onClickSeeMorePopular} />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
@@ -58,12 +65,18 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
 
   const onClickSeeMoreLiveStream = () => {
     setTab(TabsVideo.LIVE_VIDEOS)
+    setFollow(0)
   }
   const onClickSeeMoreSchedule = () => {
     setTab(TabsVideo.SCHEDULE_VIDEOS)
+    setFollow(0)
   }
   const onClickSeeMoreArchive = () => {
     setTab(TabsVideo.ARCHIVED_VIDEOS)
+    setFollow(0)
+  }
+  const onClickSeeMorePopular = () => {
+    router.push(ESRoutes.SEARCH_VIDEO)
   }
 
   const renderPreLoad = (maxLength: number) => {

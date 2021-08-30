@@ -9,10 +9,14 @@ export const TYPE_VIDEO_TOP = {
   POPULAR: 'popular',
   RELATED: 'related',
 }
+
+export const LIMIT_ITEM = 15
+
 export type ListVideoTopParams = {
   type: string
   page?: number
   limit?: number
+  follow?: number
 }
 
 export type TypeVideo = {

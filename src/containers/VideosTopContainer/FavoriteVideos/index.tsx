@@ -6,14 +6,15 @@ import { TabsVideo } from '../index'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useFavoriteVideos from './useFavoriteVideos'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { TypeVideo } from '@services/videoTop.services'
-import ESLoader from '@components/Loader'
+import PreLoadContainer from '../PreLoadContainer'
 
 type FavoriteVideosProps = {
   setTab: (value: number) => void
+  setFollow?: (value: number) => void
 }
-const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
+const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
@@ -41,23 +42,48 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
 
   const onClickSeeMoreLiveStream = () => {
     setTab(TabsVideo.LIVE_VIDEOS)
+    setFollow(1)
   }
   const onClickSeeMoreSchedule = () => {
     setTab(TabsVideo.SCHEDULE_VIDEOS)
+    setFollow(1)
   }
   const onClickSeeMoreArchive = () => {
     setTab(TabsVideo.ARCHIVED_VIDEOS)
+    setFollow(1)
   }
+
+  const renderPreLoad = () => {
+    const arrayPreLoad = Array(6)
+      .fill('')
+      .map((_, i) => ({ i }))
+    return arrayPreLoad.map(() => (
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer}>
+            <Box className={classes.wrapPreLoadContainer}>
+              <PreLoadContainer />
+            </Box>
+          </Box>
+        ) : (
+          <Grid item xs={6} className={classes.itemContainer}>
+            <PreLoadContainer />
+          </Grid>
+        )}
+      </>
+    ))
+  }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.content}>
-        {meta.pending && (
+        {/* {meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
             </Box>
           </Grid>
-        )}
+        )} */}
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_live_videos')}
@@ -69,6 +95,8 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
           <Grid container spacing={3} className={classes.contentContainer}>
             {listFavoriteVideo?.live?.length > 0 ? (
               listFavoriteVideo?.live?.map(renderLiveItem)
+            ) : listFavoriteVideo?.live?.length === 0 && meta.pending ? (
+              renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -94,6 +122,8 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
           <Grid container spacing={3} className={classes.contentContainer}>
             {listFavoriteVideo?.schedule?.length > 0 ? (
               listFavoriteVideo?.schedule?.map(renderLiveItem)
+            ) : listFavoriteVideo?.schedule?.length === 0 && meta.pending ? (
+              renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -119,6 +149,8 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab }) => {
           <Grid container spacing={3} className={classes.contentContainer}>
             {listFavoriteVideo?.archive?.length > 0 ? (
               listFavoriteVideo?.archive?.map(renderLiveItem)
+            ) : listFavoriteVideo?.archive?.length === 0 && meta.pending ? (
+              renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>

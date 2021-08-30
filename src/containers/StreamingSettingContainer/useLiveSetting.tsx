@@ -1,4 +1,4 @@
-import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams } from '@services/liveStream.service'
+import { LiveStreamSettingParams, SetChannelParams, SetLiveStreamParams, StreamUrlAndKeyParams } from '@services/liveStream.service'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import stream from '@store/stream'
@@ -27,10 +27,10 @@ const useLiveSetting = () => {
   const getStreamUrlAndKeyMeta = useAppSelector(_getStreamUrlAndKeyMeta)
   const getChannelMeta = useAppSelector(_getChannelMeta)
 
-  const getStreamUrlAndKey = async (onSuccess: (url, key) => void) => {
-    const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo())
+  const getStreamUrlAndKey = async (onSuccess: (url, key) => void, params?: StreamUrlAndKeyParams) => {
+    const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo(params))
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
-      onSuccess(resultAction.payload.data.stream_url, resultAction.payload.data.stream_key)
+      onSuccess(resultAction.payload.data.STREAM_URL, resultAction.payload.data.STREAM_KEY_VALUE)
     }
   }
   const isPending = meta.pending || getStreamUrlAndKeyMeta.pending || getChannelMeta.pending
