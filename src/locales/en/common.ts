@@ -1055,7 +1055,7 @@ export default {
     tab1: '募集概要',
     tab2: '期間・会場',
     title: '募集を作成する',
-    edit_title: '募集を作成する',
+    edit_title: '募集を編集する',
     name: '募集タイトル',
     has_prize: '副賞あり',
     hint: '副賞提供は各種法令を遵守した形で実施されますよう十分ご注意ください',

@@ -26,6 +26,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
   const [areaName, setAreaName] = useState('')
   const classes = useStyles()
 
+  const categories = values.stepOne.categories.map((category, idx) => (idx > 0 ? ' / ' : '') + category.name)
+
   useEffect(() => {
     if (prefectures) {
       const area = prefectures.find((area) => area.id === String(values.stepTwo.area_id))
@@ -115,20 +117,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <Box pb={2} />
 
       <Box pb={2}>
-        <Box display="flex" alignItems="center" pb={1}>
-          <Typography className={classes.labelColor}>{t('common:lobby.create.category')}</Typography>
-        </Box>
-        <Typography className={classes.labelColor}>
-          {values.stepOne.categories.length > 0 ? (
-            values.stepOne.categories.map((category, idx) => (
-              <>
-                {idx > 0 && '/'} {category.name}
-              </>
-            ))
-          ) : (
-            <ESInput labelPrimary={''} value={''} disabled={true} fullWidth />
-          )}
-        </Typography>
+        <ESInput labelPrimary={t('common:lobby.create.category')} value={categories} disabled={true} fullWidth multiline />
       </Box>
 
       {values.stepOne.game_title_id[0] ? (
