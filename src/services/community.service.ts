@@ -50,7 +50,7 @@ export type CommunityDetail = {
       avatar_image_url: string
     }
     my_role: number | null
-    has_required: boolean
+    has_requested: boolean
   }
 }
 

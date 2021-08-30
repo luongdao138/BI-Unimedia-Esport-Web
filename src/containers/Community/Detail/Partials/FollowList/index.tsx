@@ -188,7 +188,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
             </Box>
           </Button>
         </LoginRequired>
-        {isModerator && community.attributes.has_required && (
+        {isModerator && community.attributes.has_requested && (
           <Typography className={classes.linkUnapproved} variant="body2">
             {t('common:community.unapproved_users_title')}
           </Typography>
