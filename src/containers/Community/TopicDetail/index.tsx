@@ -9,9 +9,10 @@ import useTopicDetail from './useTopicDetail'
 import ESLoader from '@components/Loader'
 import { useRouter } from 'next/router'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { useTranslation } from 'react-i18next'
 
 const TopicDetailContainer: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
@@ -68,21 +69,16 @@ const TopicDetailContainer: React.FC = () => {
           {topicDetailMeta.loaded && (
             <>
               <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
-              <MainTopic
-                username={data.owner_name}
-                user_avatar={data.owner_profile}
-                mail={data.owner_email}
-                date={`${CommonHelper.staticSmartTime(data.created_at)}`}
-                count={data.like_count}
-                description={data.content}
-                image={(!!data.attachments && data.attachments[0].assets_url) || ''}
-                handleDelete={handleDeleteTopic}
-              />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
             </>
           )}
-          <Box className={classes.link}>
-            <Link>↑過去のコメントを表示する</Link>
-          </Box>
+          {hasNextPage && (
+            <Box className={classes.link}>
+              <Link onClick={loadMore} style={{ cursor: 'pointer' }}>
+                {t('common:community.topic.view_past_comments')}
+              </Link>
+            </Box>
+          )}
           {!!commentsList && commentsList.length > 0 && (
             <InfiniteScroll
               dataLength={commentsList.length}

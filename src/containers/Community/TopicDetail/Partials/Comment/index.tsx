@@ -50,9 +50,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
 
   const renderClickableImage = () => {
     return (
-      <SRLWrapper options={LIGHTBOX_OPTIONS}>
-        <img className={classes.imageBox} src={commentData.attachments[0]?.assets_url} />
-      </SRLWrapper>
+      <Box mb={1}>
+        <SRLWrapper options={LIGHTBOX_OPTIONS}>
+          <img className={classes.imageBox} src={commentData.attachments[0]?.assets_url} />
+        </SRLWrapper>
+      </Box>
     )
   }
 
@@ -86,7 +88,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
           <Typography className={classes.discription}>{commentData.content}</Typography>
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage()}
-        <Box mt={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton style={{ padding: 4, marginRight: 8 }}>
             <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
           </IconButton>
