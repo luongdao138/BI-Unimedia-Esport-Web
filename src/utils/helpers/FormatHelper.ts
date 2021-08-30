@@ -25,6 +25,21 @@ const kFormatter = (inputNum: number): number | string => {
   return result
 }
 
+const japaneseWanFormatter = (inputNumber: number): number | string => {
+  /*
+      Reference:
+      400 -> 400
+      4000 -> 4000
+      40000 -> 4万
+      400000 -> 40万
+      43000 -> 4.3万
+      421513000 -> 42151.3万
+    */
+  if (inputNumber < 10000) return inputNumber
+  const wanValue = inputNumber / 10000
+  return `${Math.round(wanValue * 10) / 10}万`
+}
+
 const currencyFormat = (nStr: string): string => {
   nStr += ''
   const x = nStr.split('.')
@@ -84,4 +99,5 @@ export const FormatHelper = {
   spacedLinks,
   currencyFormat,
   textSizeMode,
+  japaneseWanFormatter,
 }

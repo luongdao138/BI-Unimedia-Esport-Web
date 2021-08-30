@@ -2,15 +2,17 @@ import { Box, Typography, Theme, makeStyles, Icon, Grid } from '@material-ui/cor
 // import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
-import React from 'react'
+import React, { useState } from 'react'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 
 const ProgramInfo: React.FC = () => {
+  const [descriptionCollapse, setDescriptionCollapse] = useState(true)
+
   // const { t } = useTranslation('common')
   const dataLiveVideo = () =>
-    Array(20)
+    Array(6)
       .fill('')
       .map((_, i) => ({
         id: i,
@@ -51,16 +53,45 @@ const ProgramInfo: React.FC = () => {
       </Grid>
     </Box>
   )
+  const getDescription = () => {
+    return (
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
+      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります'
+    )
+  }
+
+  const getDescriptionTruncated = () => {
+    return descriptionCollapse ? `${getDescription().substring(0, 200)}...` : getDescription()
+  }
+
   return (
     <Box className={classes.container}>
       <Typography gutterBottom className={classes.label}>
-        {'番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-          '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります…'}
+        {getDescription().length < 200 ? getDescription() : getDescriptionTruncated()}
       </Typography>
-      <Box className={classes.seeMoreContainer}>
-        <Typography className={classes.seeMoreTitle}>{i18n.t('common:profile.read_more')}</Typography>
-        <Icon className={`fa fa-angle-down ${classes.angleDownIcon}`} fontSize="small" />
-      </Box>
+      {getDescription().length > 200 && (
+        <Box
+          onClick={() => {
+            setDescriptionCollapse(!descriptionCollapse)
+          }}
+          className={classes.seeMoreContainer}
+        >
+          <Typography className={classes.seeMoreTitle}>{i18n.t('common:profile.read_more')}</Typography>
+          <Icon className={`fa ${descriptionCollapse ? 'fa-angle-down' : 'fa-angle-up'} ${classes.angleDownIcon}`} fontSize="small" />
+        </Box>
+      )}
       {archiveVideo()}
     </Box>
   )
