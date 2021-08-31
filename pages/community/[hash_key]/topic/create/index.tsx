@@ -3,8 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import TopicCreateContainer from '@containers/Community/Topic/UpsertForm'
 
 const TopicCreatePage: PageWithLayoutType = () => {
-  return <TopicCreateContainer />
+  return (
+    <BlankLayout isWide>
+      <TopicCreateContainer />
+    </BlankLayout>
+  )
 }
 
-TopicCreatePage.Layout = BlankLayout
 export default TopicCreatePage

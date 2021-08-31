@@ -77,7 +77,7 @@ const Atoms: PageWithLayoutType = () => {
   ]
 
   return (
-    <>
+    <MainLayout loginRequired={false}>
       <Box margin={4}>
         <h2>{t('common:welcome')}</h2>
         <ButtonPrimary
@@ -368,10 +368,8 @@ const Atoms: PageWithLayoutType = () => {
       <Box margin={2}>
         <ESStrengthMeter value={100} />
       </Box>
-    </>
+    </MainLayout>
   )
 }
-
-Atoms.Layout = MainLayout
 
 export default Atoms

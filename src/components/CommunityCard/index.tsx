@@ -16,19 +16,21 @@ interface Props {
 type CommunityAttributes = {
   attributes:
     | {
-        title: string
-        cover: string | null
+        name: string
+        description: string
+        address: string
+        cover_image_url: string | null
         hash_key: number | string
         is_official: boolean
+        open_range: boolean
         member_count: number | string
-        tags: {
-          name: string
-        }[]
-        description: string
-        participants: {
-          nickname: string
-          profile_image: any | null
+        members_avatar: {
+          user_id: string
+          avatar: any | null
         }
+        features: {
+          feature: string
+        }[]
       }[]
     | any
 }
@@ -39,14 +41,14 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const router = useRouter()
 
   const attr = community.attributes
-  const cover = attr.cover ? attr.cover : '/images/default_card.png'
+  const cover_image_url = attr.cover_image_url ? attr.cover_image_url : '/images/default_card.png'
 
   const getMediaScreen = () => {
     return (
       <>
         <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="flex-end" p={1}>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
-            {attr.is_official && (
+            {!!attr.is_official && (
               <Chip
                 className={classes.chipPrimary}
                 size="small"
@@ -66,25 +68,28 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const getTitle = () => {
     return (
       <Box color={Colors.white} className={classes.titleContainer} display="flex">
-        <Typography className={classes.title}>{attr.title}</Typography>
-        {attr.is_official && <Icon className={`fas fa-check-circle ${classes.checkIcon}`} fontSize="default" />}
+        <Typography className={classes.title}>{attr.name}</Typography>
+        {!!attr.is_official && (
+          <span className={classes.officialBadge}>
+            <Icon className="fa fa-check" fontSize="small" />
+          </span>
+        )}
       </Box>
     )
   }
   const getDescription = (value: string) => {
     return <Typography className={classes.description}>{value}</Typography>
   }
-  const getTags = (tags: { name: string }[]) => {
+  const getTags = (tags: { feature: string }[]) => {
     return (
-      <Box display="flex" flexDirection="row" mt={1} alignItems="center" flexWrap="wrap" pr={47 / 8}>
+      <Box display="flex" flexDirection="row" mt={1} flexWrap="wrap" flexGrow="1">
         {tags.map((tag, i) => (
           <ESChip
             key={i}
             className={classes.tagChip}
-            size="small"
             label={
               <Box color={Colors.white}>
-                <Typography variant="overline">{tag.name}</Typography>
+                <Typography variant="overline">{tag.feature}</Typography>
               </Box>
             }
           />
@@ -93,11 +98,11 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
     )
   }
   const getParticipants = () => {
-    const participants = attr.participants
+    const participants = attr.members_avatar
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
         {participants && participants.length > 0
-          ? attr.participants
+          ? attr.members_avatar
               .slice(0, 3)
               .map((participant, i) => (
                 <ESAvatar
@@ -105,8 +110,8 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
                   key={`participants${i}`}
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
-                  src={participant.profile_image}
-                  alt={participant.nickname}
+                  src={participant.avatar}
+                  alt={String(participant.user_id)}
                 />
               ))
           : null}
@@ -115,17 +120,19 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   }
   return (
     <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.COMMUNITY}/${attr.hash_key}`)}>
-      <ESCardMedia
-        cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-        image={cover}
-        triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.7)' : null}
-      >
-        {getMediaScreen()}
-      </ESCardMedia>
+      <Box>
+        <ESCardMedia
+          cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
+          image={cover_image_url}
+          triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.8)' : null}
+        >
+          {getMediaScreen()}
+        </ESCardMedia>
+      </Box>
       <ESCardContent>
         {getTitle()}
         {getDescription(attr.description)}
-        {getTags(attr.tags)}
+        {getTags(attr.features)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -133,8 +140,28 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  officialBadge: {
+    width: 18,
+    height: 18,
+    minWidth: 18,
+    minHeight: 18,
+    backgroundColor: Colors.primary,
+    borderRadius: '50%',
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& .MuiIcon-fontSizeSmall': {
+      fontSize: '0.7rem',
+    },
+  },
+
   cardHover: {
     cursor: 'pointer',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 0,
   },
   titleContainer: {
     height: 42,
@@ -147,13 +174,20 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     wordWrap: 'break-word',
-    minHeight: 30,
   },
   tagChip: {
     height: 15,
     backgroundColor: Colors.white_opacity[20],
     marginBottom: theme.spacing(0.5),
     marginRight: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.25),
+    paddingRight: theme.spacing(0.5),
+    paddingLeft: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.125),
+    borderRadius: 2,
+    '& .MuiChip-label': {
+      padding: 0,
+    },
   },
   avatarContainer: {
     height: 20,
@@ -170,9 +204,6 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  checkIcon: {
-    color: Colors.primary,
   },
   pAvatar: {
     marginLeft: theme.spacing(-1),

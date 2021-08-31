@@ -16,14 +16,19 @@ import useCommunityCreate from './useCommunityCreate'
 import { CommunityHelper } from '@utils/helpers/CommunityHelper'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _ from 'lodash'
-import { useAppDispatch } from '@store/hooks'
+import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import DiscardDialog from '../Partials/DiscardDialog'
 import useCommonData from './useCommonData'
 import CancelDialog from './Partials/CancelDialog'
-
+import { useTranslation } from 'react-i18next'
+import { CommunityFeature } from '@services/community.service'
+import { GameTitle } from '@services/game.service'
+import { useRouter } from 'next/router'
+import community from '@store/community'
+const { selectors } = community
 // TODO used once at community edit
 type CommunityCreateProps = {
   communityName?: string
@@ -31,15 +36,21 @@ type CommunityCreateProps = {
 
 const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const dispatch = useAppDispatch()
+
   const { prefectures } = useCommonData()
   const classes = useStyles()
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
-  const initialValues = getInitialValues(undefined)
-  const { editables, isEdit, submit } = useCommunityCreate()
+  const { editables, isEdit, submit, update, getCommunityFeatures, community } = useCommunityCreate()
+  const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
+  const [detailFeatures, setDetailFeatures] = useState([])
+
+  const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
   const [isDiscard, setIsDiscard] = useState(false)
+  const { t } = useTranslation(['common'])
+  const router = useRouter()
 
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
 
@@ -47,12 +58,27 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     initialValues: initialValues,
     validationSchema: getValidationScheme(),
     enableReinitialize: true,
-    onSubmit: () => {
-      if (submit) {
-        submit()
+    onSubmit: (values) => {
+      const data = {
+        ...values.stepOne,
+        features: (values.stepOne.features as CommunityFeature[]).map((feature) => Number(feature.id)),
+        game_titles: (values.stepOne.game_titles as GameTitle['attributes'][]).map((game) => game.id),
+        join_condition: Number(values.stepOne.join_condition),
+      }
+      // console.log(data)
+      if (isEdit) {
+        update({ hash_key: String(router.query.community_id), data })
+      } else {
+        submit(data)
       }
     },
   })
+
+  useEffect(() => {
+    if (community) {
+      formik.validateForm()
+    }
+  }, [community])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -66,6 +92,29 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       }
     }
   }, [formik.errors])
+
+  useEffect(() => {
+    getCommunityFeatures()
+    formik.validateForm()
+  }, [])
+
+  useEffect(() => {
+    if (isEdit) {
+      setDetailFeatures(
+        _.filter(communityFeatures, (communityFeature) => {
+          let isEqual = false
+          _.map(community.attributes.features, (feature) => {
+            if (feature.id === Number(communityFeature.id)) {
+              isEqual = true
+            }
+          })
+          if (isEqual) {
+            return communityFeature
+          }
+        })
+      )
+    }
+  }, [isEdit])
 
   const renderEditButton = () => {
     return (
@@ -88,14 +137,14 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       const { stepOne } = formik.values
 
       const fieldIdentifier = checkNgWordFields({
-        title: stepOne.title,
-        overview: stepOne.overview,
+        name: stepOne.name,
+        description: stepOne.description,
         address: stepOne.address,
       })
 
       const ngFields = checkNgWordByField({
-        [FIELD_TITLES.stepOne.title]: stepOne.title,
-        [FIELD_TITLES.stepOne.overview]: stepOne.overview,
+        [FIELD_TITLES.stepOne.name]: stepOne.name,
+        [FIELD_TITLES.stepOne.description]: stepOne.description,
         [FIELD_TITLES.stepOne.address]: stepOne.address,
       })
 
@@ -157,7 +206,11 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2">
-                {isConfirm ? i18n.t('common:community_create.confirm.title') : i18n.t('common:community_create.title')}
+                {isConfirm
+                  ? i18n.t('common:community_create.confirm.title')
+                  : isEdit
+                  ? i18n.t('common:community_create.edit.title')
+                  : i18n.t('common:community_create.title')}
               </Typography>
             </Box>
           </Box>
@@ -182,7 +235,9 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           setIsDiscard(false)
         }}
         onSubmit={handleReturn}
-        isEdit={isEdit}
+        title={isEdit ? t('common:community_create.discard.edit_title') : t('common:community_create.discard.title')}
+        description={isEdit ? t('common:community_create.discard.edit_message') : t('common:community_create.discard.message')}
+        confirmTitle={isEdit ? t('common:community_create.discard.edit_confirm') : t('common:community_create.discard.confirm')}
       />
     </ESStickyFooter>
   )

@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from 'react'
 import BlankLayout from '@layouts/BlankLayout'
-import React from 'react'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 import UpsertForm from '../UpsertForm'
 import CommunityDetailHeader from './Partials/CommunityDetailHeader'
@@ -7,27 +7,59 @@ import DetailInfo from './Partials/DetailInfo'
 import useCommunityDetail from './useCommunityDetail'
 import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
+import ESLoader from '@components/Loader'
+import { Box } from '@material-ui/core'
+import { TOPIC_STATUS } from '@constants/community.constants'
 
 const CommunityContainer: React.FC = () => {
-  const { handleBack } = useCommunityDetail()
   const router = useRouter()
+  const { hash_key } = router.query
+  const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
+  const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
+  const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
 
-  const detail = {
-    id: 60,
-    attributes: {
-      title: 'Ninjalaコミュニティ',
-      cover: '/images/community_dummy_1.jpg',
-      hash_key: '1231231',
-      my_role: 'admin',
-    },
-  }
-  const { toEdit } = useCommunityHelper(detail)
+  useEffect(() => {
+    if (hash_key) {
+      getCommunityDetail(String(hash_key))
+    }
+  }, [router])
+
+  useEffect(() => {
+    if (communityDetail && !isAutomatic && isNotMember) {
+      setShowTopicListAndSearchTab(false)
+    } else {
+      if (hash_key) {
+        getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
+      }
+      setShowTopicListAndSearchTab(true)
+    }
+  }, [communityDetail])
+
+  const { toEdit } = useCommunityHelper(communityDetail)
 
   const renderBody = () => {
     return (
       <>
-        <CommunityDetailHeader title={detail?.attributes?.title} cover={detail?.attributes?.cover} onHandleBack={handleBack} />
-        <DetailInfo detail={detail} toEdit={toEdit} />
+        {!!communityDetail && meta.loaded && !meta.pending && (
+          <>
+            <CommunityDetailHeader
+              title={communityDetail.attributes.name}
+              cover={communityDetail.attributes.cover_image_url}
+              onHandleBack={handleBack}
+            />
+            <DetailInfo
+              detail={communityDetail}
+              topicList={topicList}
+              toEdit={toEdit}
+              showTopicListAndSearchTab={showTopicListAndSearchTab}
+            />
+          </>
+        )}
+        {meta.pending && (
+          <Box textAlign="center">
+            <ESLoader />
+          </Box>
+        )}
       </>
     )
   }
@@ -37,7 +69,7 @@ const CommunityContainer: React.FC = () => {
       {renderBody()}
       <ESModal open={router.asPath.endsWith('/edit')}>
         <BlankLayout>
-          <UpsertForm communityName={detail.attributes.title} />
+          <UpsertForm communityName={communityDetail?.attributes?.name} />
         </BlankLayout>
       </ESModal>
     </>

@@ -1,86 +1,110 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CommunityDetailHeader from '@containers/Community/TopicDetail/Partials/CommunityDetailHeader'
 import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Link, Box } from '@material-ui/core'
+import { Link, Box, Grid } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
-// import { Colors } from '@theme/colors'
+import CommentInput from './Partials/CommentInput'
+import useTopicDetail from './useTopicDetail'
+import ESLoader from '@components/Loader'
+import { useRouter } from 'next/router'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useTranslation } from 'react-i18next'
 
 const TopicDetailContainer: React.FC = () => {
-  // const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common'])
   const classes = useStyles()
+  const router = useRouter()
+  const { back } = useRouter()
+  const { topic_hash_key } = router.query
+  const {
+    getTopicDetail,
+    topic,
+    topicDetailMeta,
+    deleteTopic,
+    getCommentsList,
+    commentsList,
+    pages,
+    getComments,
+    commentsListMeta,
+  } = useTopicDetail()
+  const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
 
-  const data = [
-    {
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 51,
-      discription: 'トピックス本文が入ります。',
-      image:
-        'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F6%2F2019%2F11%2Frick-and-morty-season-4-2000.jpg&q=85',
-    },
-    {
-      discription: 'トピックス本文が入りまが入りトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますます',
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 52,
-    },
-    {
-      discription: 'トピックス本文が。ス本文が入りトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますます',
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 53,
-    },
-    {
-      discription:
-        'トピックス本文が入ります。ス本文がトピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入ります入ります',
-      username: 'コイチコイチコイチコイチコイ',
-      mail: '@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi@koichi',
-      date: '２時間前',
-      number: 55,
-    },
-    {
-      discription:
-        'トピックス本文が入ります。ス本文トピックス本文が入ります。ス本文が入りますトピックス本文が入ります。ス本文が入りますが入ります',
-      username:
-        'コイチコイチコイチココイチコイチコイチコイチコイチコイコイチコイチコイチコイチコイチコイコイチコイチコイチコイチコイチコイイチコイ',
-      mail: '@koichi',
-      date: '２時間前',
-      number: 91,
-    },
-  ]
+  const data = topic?.attributes
+
+  useEffect(() => {
+    if (topic_hash_key) {
+      getTopicDetail({ hash_key: String(topic_hash_key) })
+      getCommentsList({ hash_key: String(topic_hash_key) })
+    }
+  }, [router])
+
+  const handleDeleteTopic = () => {
+    deleteTopic({ hash_key: String(topic_hash_key) })
+  }
+
+  const handleBack = () => back()
+
+  const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      getComments({ hash_key: String(topic_hash_key), page: Number(pages.current_page) + 1 })
+    }
+  }
+
+  const renderComments = () => {
+    return (
+      <>
+        {commentsList.map((comment, i) => {
+          return <Comment key={i} comment={comment} handleReply={setReply} />
+        })}
+      </>
+    )
+  }
+
   return (
     <>
-      <CommunityDetailHeader title="攻略情報共有"></CommunityDetailHeader>
-
-      <MainTopic
-        username="コイチコイチコイチコイチコイチコイチコイチコイチコイチコイチ"
-        mail="@koichi"
-        date="2020年07月07日"
-        count={900}
-        discription="トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。トピックス本文が入ります。"
-        image="https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F6%2F2019%2F11%2Frick-and-morty-season-4-2000.jpg&q=85"
-      />
-      <Box className={classes.link}>
-        <Link>↑過去のコメントを表示する</Link>
+      <Box display="flex" flexDirection="column" minHeight="100vh">
+        <Box flex={1}>
+          {topicDetailMeta.loaded && (
+            <>
+              <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
+            </>
+          )}
+          {hasNextPage && (
+            <Box className={classes.link}>
+              <Link onClick={loadMore} style={{ cursor: 'pointer' }}>
+                {t('common:community.topic.view_past_comments')}
+              </Link>
+            </Box>
+          )}
+          {!!commentsList && commentsList.length > 0 && (
+            <InfiniteScroll
+              dataLength={commentsList.length}
+              next={loadMore}
+              hasMore={hasNextPage}
+              scrollableTarget="scrollableDiv"
+              scrollThreshold={0.99}
+              style={{ overflow: 'hidden ' }}
+              loader={null}
+            >
+              {renderComments()}
+            </InfiniteScroll>
+          )}
+          {commentsListMeta.pending && (
+            <Grid item xs={12}>
+              <Box my={4} mb={10} display="flex" justifyContent="center" alignItems="center">
+                <ESLoader />
+              </Box>
+            </Grid>
+          )}
+        </Box>
+        <Box className={classes.inputContainer}>
+          <CommentInput reply_param={reply} handleReply={setReply} />
+        </Box>
       </Box>
-      {data.map((d, i) => {
-        return (
-          <Comment
-            key={i}
-            discription={d.discription}
-            image={d.image}
-            username={d.username}
-            mail={d.mail}
-            date={d.date}
-            number={d.number}
-          />
-        )
-      })}
     </>
   )
 }
@@ -89,6 +113,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
+  },
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    position: 'sticky',
+    bottom: 0,
+    padding: 11,
+    width: '100%',
+    background: '#101010',
+    willChange: 'transform',
+  },
+  scroll: {
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
+  },
+  list: {
+    overflow: 'auto',
+    overflowX: 'hidden',
   },
 }))
 

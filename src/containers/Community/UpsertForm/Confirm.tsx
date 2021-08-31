@@ -3,9 +3,13 @@ import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import ESChip from '@components/Chip'
 import { FormType } from './FormModel/FormType'
-import { makeStyles, Box, Theme } from '@material-ui/core'
+import { makeStyles, Box, Theme, Typography } from '@material-ui/core'
 import { GetPrefecturesResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
+import { CommunityFeature } from '@services/community.service'
+import { JOIN_CONDITION, OPEN_RANGE } from '@constants/community.constants'
+import { Colors } from '@theme/colors'
+import { GameTitle } from '@services/game.service'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -18,8 +22,9 @@ ESInput.defaultProps = {
 
 const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
   const { t } = useTranslation(['common'])
-  const [areaName, setAreaName] = useState('')
-  const [approval, setApproval] = useState('')
+  const [areaName, setAreaName] = useState<string>('')
+  const [approval, setApproval] = useState<string>('')
+  const [openRange, setOpenRange] = useState<string>('')
   const classes = useStyles()
 
   useEffect(() => {
@@ -30,11 +35,17 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
   }, [prefectures])
 
   useEffect(() => {
-    if (prefectures) {
-      const area = prefectures.find((area) => area.id === String(values.stepOne.participation_approval))
-      setApproval(area.attributes.area)
-    }
-  }, [prefectures])
+    const approvalName =
+      Number(values.stepOne.join_condition) === JOIN_CONDITION.MANUAL
+        ? t('common:community_create.approval_manual')
+        : t('common:community_create.approval_automatic')
+    setApproval(approvalName)
+    const openRangeName =
+      Number(values.stepOne.open_range) === OPEN_RANGE.UNSEARCHABLE
+        ? t('common:community_create.private')
+        : t('common:community_create.public')
+    setOpenRange(openRangeName)
+  }, [])
 
   return (
     <Box pb={20} className={classes.viewHolder}>
@@ -46,38 +57,42 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
         />
       </Box>
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:community_create.name')} fullWidth value={values.stepOne.title} disabled />
+      <ESInput labelPrimary={t('common:community_create.name')} fullWidth value={values.stepOne.name} disabled />
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:community_create.introduction')}
         multiline
-        value={values.stepOne.overview}
+        value={values.stepOne.description}
         disabled={true}
         fullWidth
       />
       <Box pb={2} />
 
-      <ESInput
-        labelPrimary={t('common:community_create.game')}
-        value={values.stepOne.game_title_id[0]?.display_name || ''}
-        disabled={true}
-        fullWidth
-      />
+      <ESInput labelPrimary={t('common:community_create.game')} disabled={true} fullWidth noValue />
+      {values.stepOne.game_titles.length > 0 && (
+        <Box display="flex" flexWrap="wrap">
+          {(values.stepOne.game_titles as GameTitle['attributes'][]).map((game, i) => (
+            <Typography key={i} className={classes.gameName} variant="body1">
+              {game.display_name}
+            </Typography>
+          ))}
+        </Box>
+      )}
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.area')} value={areaName} disabled={true} fullWidth />
       <ESInput value={values.stepOne.address} disabled={true} fullWidth />
       <Box pb={2} />
 
-      <ESInput labelPrimary={t('common:community_create.public_or_private')} value={values.stepOne.t_type} disabled={true} fullWidth />
+      <ESInput labelPrimary={t('common:community_create.public_or_private')} value={openRange} disabled={true} fullWidth />
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.participation_approval')} value={approval} disabled={true} fullWidth />
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.tag')} disabled={true} fullWidth noValue />
-      {values.stepOne.tag_title_id.map((category, idx) => (
-        <ESChip key={idx} className={classes.chip} label={category.display_name} />
+      {(values.stepOne.features as CommunityFeature[]).map((category, idx) => (
+        <ESChip key={idx} className={classes.chip} label={category.attributes.feature} />
       ))}
       <Box pb={2} />
     </Box>
@@ -85,6 +100,11 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  gameName: {
+    marginRight: theme.spacing(2),
+    color: Colors.white_opacity['30'],
+    fontSize: 14,
+  },
   viewHolder: {
     marginRight: theme.spacing(5),
     marginLeft: theme.spacing(5),

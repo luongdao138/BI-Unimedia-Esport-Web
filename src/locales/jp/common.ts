@@ -10,7 +10,7 @@ export default {
     male: '男性',
     female: '女性',
     other: 'その他',
-    required: '入力必須項目です',
+    required: '必須',
     input_required: '入力必須項目です',
     private: '非公開',
     zero: '0',
@@ -237,6 +237,7 @@ export default {
     community_id: 'コミュニティコード：',
     copy_shared_url: '共有URLをコピー',
     copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
+    copy_shared_url_toast_text: 'クリップボードにコピーしました。',
     info: 'INFO',
     topic_list: 'トピック一覧',
     search: '検索',
@@ -252,6 +253,37 @@ export default {
       result: '検索結果',
     },
     follow_list: 'フォローリスト',
+    member_list: {
+      approve: '承認',
+      cancel: '拒否',
+      hold: '保留',
+      user: '一般ユーザー',
+      co_organizer: '共同管理者',
+      kick: 'キックする',
+    },
+    change_applying_members_toast: '更新しました。',
+    edit: '編集',
+    unapproved_users_title: '未承認ユーザーがいます',
+    general_user: '一般ユーザー',
+    applying: '申請中',
+    participating: '参加中',
+    topic_creation: 'トピック作成',
+    confirm_follow_list: 'フォローリストを確定する',
+    no_data: '該当のコミュニティはありません。',
+    topic: {
+      create_success: 'トピックを削除しました。',
+      view_past_comments: '↑過去のコメントを表示する',
+    },
+    unfollow_dialog: {
+      title: 'フォローを解除する',
+      description: '再フォローには再度フォロー申請が必要となりますが、よろしいでしょうか？',
+      submit_title: 'フォローを解除',
+    },
+    unfollow_dialog_applying: {
+      title: 'フォロー申請を取り消す',
+      description: 'フォロー申請を取り消します。よろしいですか？',
+      submit_title: '申請取消',
+    },
   },
   infinite_scroll: {
     message: 'あなたはそれをすべて見ました',
@@ -539,6 +571,32 @@ export default {
   },
   topic: {
     topic_follower_list: 'フォローしている人の書き込みトピック',
+    report: {
+      button: 'トピックを通報',
+      title: '通報するトピック',
+      chat_topic: '雑談トピック',
+    },
+    delete: {
+      button: 'トピックの削除',
+      title: 'を削除します',
+      description: `削除したトピックはコメントも含めて復元させることはできません。
+      削除してよろしいですか？`,
+      submit: '削除する',
+    },
+  },
+  topic_comment: {
+    report: {
+      button: 'コメントを通報',
+      title: '通報するコメント',
+      chat_topic: '雑談トピック',
+    },
+    delete: {
+      button: 'コメントを削除',
+      title: '投稿されたコメントを削除します',
+      description: `削除したコメントを復元させることはできません。
+      削除してよろしいですか？`,
+      submit: '削除する',
+    },
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',
@@ -764,8 +822,8 @@ export default {
     organized: 'あなたが作成した募集',
   },
   communitySearchFilters: {
-    participating: '参加しているコミュニティ',
-    managing: '管理しているコミュニティ',
+    joined: '参加しているコミュニティ',
+    organized: '管理しているコミュニティ',
   },
   search: {
     search: '検索',
@@ -1111,6 +1169,7 @@ export default {
   },
   community_create: {
     title: 'コミュニティを作成する',
+    input_required: '入力内容が適切ではありません。',
     edit_title: '募集を作成する',
     name: 'コミュニティ名',
     introduction: 'コミュニティ紹介文',
@@ -1120,7 +1179,11 @@ export default {
     area: 'エリア',
     area_name_placeholder: 'エリア情報を記載',
     public_or_private: 'コミュニティ公開設定',
+    public: '公開',
+    private: '非公開',
     participation_approval: '参加承認',
+    approval_automatic: '自動承認',
+    approval_manual: '手動承認',
     choose_tag: 'コミュニティタグを選ぶ',
     tag: 'コミュニティタグ',
     decide: '決定する',
@@ -1150,7 +1213,7 @@ export default {
       description2: '一度解散したコミュニティのトピックやアップロードした画像は復元できません。',
       disbanded_toast: 'コミュニティを解散しました',
     },
-    community_created_toast: 'コミュニティを作成しました',
+    community_created_toast: 'コミュニティを作成しました。',
   },
   topic_create: {
     title: 'トピックを作成する',
@@ -1165,5 +1228,6 @@ export default {
       confirm: '作成内容を破棄して戻る',
     },
     create_success: 'トピックを作成しました',
+    comment_placeholder: 'コメントを入力…',
   },
 }

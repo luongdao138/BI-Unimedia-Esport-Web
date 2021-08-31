@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Grid, Box, Icon, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { useState, useEffect } from 'react'
+import { Grid, Box, Icon, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -8,27 +8,37 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
-// import { FormatHelper } from '@utils/helpers/FormatHelper'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
 import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
-import ESButton from '@components/Button'
 import ESReport from '@containers/Report'
+import { useRouter } from 'next/router'
 import { REPORT_TYPE } from '@constants/common.constants'
 import SearchContainer from '../SearchContainer'
-import Fab from '@material-ui/core/Fab'
-import AddCommentIcon from '@material-ui/icons/AddComment'
-import { useRouter } from 'next/router'
+import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
-import ApproveList from '../ApproveList'
+import { CommunityDetail, TopicDetail } from '@services/community.service'
+import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
+import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
+
+const ROLE_TYPES = {
+  IS_ADMIN: 'setIsAdmin',
+  IS_CO_ORGANIZER: 'setIsCoOrganizer',
+  IS_FOLLOWING: 'setIsFollowing',
+  IS_REQUESTED: 'setIsRequested',
+}
 
 type Props = {
-  detail: any
+  detail: CommunityDetail
   toEdit?: () => void
+  topicList: TopicDetail[]
+  showTopicListAndSearchTab: boolean
 }
 
 enum TABS {
@@ -37,22 +47,150 @@ enum TABS {
   SEARCH = 2,
 }
 
-const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
+const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
+
   const classes = useStyles()
   const [openReport, setOpenReport] = useState(false)
   const [tab, setTab] = useState(0)
+  const [isDiscard, setIsDiscard] = useState(false)
+  const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
+  const { isNotMember, isPublic } = useCommunityHelper(detail)
 
-  const isFollowing = false
-  const isAdmin = true
-  const { isAuthenticated } = useCommunityDetail()
+  const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
 
   const router = useRouter()
-  const _theme = useTheme()
-  const { community_id } = router.query
-  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const { hash_key } = router.query
+
+  const [isAdmin, setIsAdmin] = useState<boolean>(false)
+  const [isCoOrganizer, setIsCoOrganizer] = useState<boolean>(false)
+  const [isFollowing, setIsFollowing] = useState<boolean>(false)
+  const [isRequested, setIsRequested] = useState<boolean>(false)
+  const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
+
+  const setOtherRoleFalse = (setRoleType: string) => {
+    if (setRoleType === ROLE_TYPES.IS_ADMIN) {
+      setIsCoOrganizer(false)
+      setIsFollowing(false)
+      setIsRequested(false)
+    } else if (setRoleType === ROLE_TYPES.IS_CO_ORGANIZER) {
+      setIsAdmin(false)
+      setIsFollowing(false)
+      setIsRequested(false)
+    } else if (setRoleType === ROLE_TYPES.IS_FOLLOWING) {
+      setIsAdmin(false)
+      setIsCoOrganizer(false)
+      setIsRequested(false)
+    } else if (setRoleType === ROLE_TYPES.IS_REQUESTED) {
+      setIsAdmin(false)
+      setIsCoOrganizer(false)
+      setIsFollowing(false)
+    }
+  }
+
+  const handleChangeRole = (setRoleType: string, value: boolean) => {
+    setOtherRoleFalse(setRoleType)
+    if (setRoleType === ROLE_TYPES.IS_ADMIN) {
+      setIsAdmin(value)
+    } else if (setRoleType === ROLE_TYPES.IS_CO_ORGANIZER) {
+      setIsCoOrganizer(value)
+    } else if (setRoleType === ROLE_TYPES.IS_FOLLOWING) {
+      setIsFollowing(value)
+    } else if (setRoleType === ROLE_TYPES.IS_REQUESTED) {
+      setIsRequested(value)
+    }
+  }
+
+  useEffect(() => {
+    if (data.my_role === MEMBER_ROLE.ADMIN) {
+      handleChangeRole(ROLE_TYPES.IS_ADMIN, true)
+    } else if (data.my_role === MEMBER_ROLE.CO_ORGANIZER) {
+      handleChangeRole(ROLE_TYPES.IS_CO_ORGANIZER, true)
+    } else if (data.my_role === MEMBER_ROLE.MEMBER) {
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
+    } else if (data.my_role === MEMBER_ROLE.LEAVE || data.my_role == null) {
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
+    } else if (data.my_role === MEMBER_ROLE.REQUESTED) {
+      handleChangeRole(ROLE_TYPES.IS_REQUESTED, true)
+    }
+    if (data.join_condition === JOIN_CONDITION.AUTOMATIC) {
+      setIsCommunityAutomatic(true)
+    } else if (data.join_condition === JOIN_CONDITION.MANUAL) {
+      setIsCommunityAutomatic(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (followCommunityMeta.loaded) {
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
+    }
+  }, [followCommunityMeta])
+
+  useEffect(() => {
+    if (unfollowCommunityMeta.loaded) {
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
+    }
+  }, [unfollowCommunityMeta])
+
+  const followHandle = () => {
+    followCommunity(String(hash_key))
+    if (!isCommunityAutomatic) {
+      setIsRequested(true)
+    }
+  }
+
+  const unfollowHandle = () => {
+    if (!isCommunityAutomatic) {
+      setIsDiscard(true)
+    } else {
+      unfollowCommunity(String(hash_key))
+    }
+  }
+
+  const unfollowDialogHandle = () => {
+    unfollowCommunity(String(hash_key))
+    setIsDiscardApplying(false)
+    setIsDiscard(false)
+  }
+  const cancelApplyingHandle = () => {
+    setIsDiscardApplying(true)
+  }
+
+  const DetailInfoButton = () => {
+    return (
+      <>
+        {isAuthenticated ? (
+          isAdmin || isCoOrganizer ? (
+            <DetailInfoButtons title={t('common:community.edit')} variant="outlined" disabled={false} onClick={toEdit} />
+          ) : isRequested ? (
+            <DetailInfoButtons
+              title={t('common:community.applying')}
+              variant="outlined"
+              disabled={unfollowCommunityMeta.pending}
+              onClick={cancelApplyingHandle}
+            />
+          ) : isFollowing ? (
+            <DetailInfoButtons
+              title={t('common:profile.following')}
+              variant="contained"
+              color="primary"
+              disabled={unfollowCommunityMeta.pending}
+              onClick={unfollowHandle}
+            />
+          ) : (
+            <DetailInfoButtons
+              title={t('common:profile.follow_as')}
+              variant="outlined"
+              disabled={followCommunityMeta.pending}
+              onClick={followHandle}
+            />
+          )
+        ) : null}
+      </>
+    )
+  }
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -62,34 +200,28 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast')))
+    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast_text')))
   }
 
   const getHeader = () => {
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <Box pt={1} color={Colors.white}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+          <Box pt={1} color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
-              {data.title}
+              {data.name}
             </Typography>
+            <Box ml={3.6}>
+              {!!data.is_official && (
+                <span className={classes.checkIcon}>
+                  <Icon className="fa fa-check" fontSize="small" />
+                </span>
+              )}
+              {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
+            </Box>
           </Box>
           <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
-            {isAuthenticated ? (
-              isAdmin ? (
-                <ESButton variant="outlined" round className={classes.button} disabled={false} onClick={toEdit}>
-                  {t('common:community.edit')}
-                </ESButton>
-              ) : isFollowing ? (
-                <ESButton variant="contained" color="primary" round className={classes.button} disabled={true}>
-                  {t('common:profile.following')}
-                </ESButton>
-              ) : (
-                <ESButton variant="outlined" round className={classes.button} disabled={false}>
-                  {t('common:profile.follow_as')}
-                </ESButton>
-              )
-            ) : null}
+            {DetailInfoButton()}
             <ESMenu>
               <LoginRequired>
                 <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
@@ -107,14 +239,13 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         </Box>
 
         <Box marginTop={2} display="flex">
-          <FollowList />
-          <ApproveList />
+          <FollowList community={detail} />
         </Box>
 
         {isAuthenticated && (
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
-            target_id={Number(detail.id)}
+            target_id={data.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
@@ -129,8 +260,8 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
           <ESTab label={t('common:community.info')} value={TABS.INFO} />
-          <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />
-          <ESTab label={t('common:community.search')} value={TABS.SEARCH} />
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.topic_list')} value={TABS.TOPIC_LIST} />}
+          {showTopicListAndSearchTab && <ESTab label={t('common:community.search')} value={TABS.SEARCH} />}
         </ESTabs>
       </Grid>
     )
@@ -138,18 +269,18 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
   const getContent = () => {
     switch (tab) {
       case TABS.INFO:
-        return <InfoContainer />
+        return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
-        return <TopicListContainer />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} />
       case TABS.SEARCH:
-        return <SearchContainer />
+        return showTopicListAndSearchTab && <SearchContainer />
       default:
         break
     }
   }
 
   const toCreateTopic = () => {
-    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, community_id.toString()))
+    router.push(ESRoutes.TOPIC_CREATE.replace(/:id/gi, data.hash_key.toString()))
   }
 
   return (
@@ -158,27 +289,34 @@ const DetailInfo: React.FC<Props> = ({ detail, toEdit }) => {
         {getHeader()}
         {getTabs()}
         {getContent()}
-        <Box className={classes.commentIconContainer}>
-          <Box />
-          <Box>
-            <Fab
-              variant={isMobile ? 'round' : 'extended'}
-              size="large"
-              color="primary"
-              aria-label="add"
-              className={classes.commentIcon}
-              onClick={() => toCreateTopic()}
-            >
-              <Box className={classes.boxContainer}>
-                <AddCommentIcon className={classes.addCommentIcon} />
-                <Typography className={classes.addCommentText}>
-                  {isMobile ? t('common:community.topic_creation') : t('common:topic_create.title')}
-                </Typography>
-              </Box>
-            </Fab>
+        {!!isNotMember && !isNotMember && (
+          <Box className={classes.commentIconContainer}>
+            <Box>
+              <TopicCreateButton onClick={toCreateTopic} />
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
+      <DiscardDialog
+        open={isDiscard}
+        onClose={() => {
+          setIsDiscard(false)
+        }}
+        onSubmit={unfollowDialogHandle}
+        title={t('common:community.unfollow_dialog.title')}
+        description={t('common:community.unfollow_dialog.description')}
+        confirmTitle={t('common:community.unfollow_dialog.submit_title')}
+      />
+      <DiscardDialog
+        open={isDiscardApplying}
+        onClose={() => {
+          setIsDiscardApplying(false)
+        }}
+        onSubmit={unfollowDialogHandle}
+        title={t('common:community.unfollow_dialog_applying.title')}
+        description={t('common:community.unfollow_dialog_applying.description')}
+        confirmTitle={t('common:community.unfollow_dialog_applying.submit_title')}
+      />
     </Grid>
   )
 }
@@ -189,6 +327,25 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     wordBreak: 'break-word',
+  },
+  lockIcon: {
+    color: Colors.primary,
+    fontSize: 18,
+  },
+  checkIcon: {
+    width: 18,
+    height: 18,
+    minWidth: 18,
+    minHeight: 18,
+    backgroundColor: Colors.primary,
+    borderRadius: '50%',
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& .MuiIcon-fontSizeSmall': {
+      fontSize: '0.7rem',
+    },
   },
   urlCopy: {
     marginLeft: 20,
@@ -236,9 +393,11 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   commentIconContainer: {
+    zIndex: 50,
     display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
+    justifyContent: 'flex-end',
+    width: 99,
+    left: 'calc(100% - 99px)',
     position: 'sticky',
     bottom: theme.spacing(4),
   },

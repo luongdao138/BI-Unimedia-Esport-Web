@@ -4,14 +4,14 @@ import { FormType as TopicFormType } from '@containers/Community/Topic/UpsertFor
 import { FormikErrors } from 'formik'
 import _ from 'lodash'
 
-const getTypeValue = (t_type: string | number): boolean => {
-  if (String(t_type) === T_TYPE.PRIVATE) return false
-  else if (String(t_type) === T_TYPE.PUBLIC) return true
+const getTypeValue = (t_type: number): boolean => {
+  if (Number(t_type) === T_TYPE.PRIVATE) return false
+  else if (Number(t_type) === T_TYPE.PUBLIC) return true
 
   return true
 }
 
-const onTypeChange = (type: string | number): string => {
+const onTypeChange = (type: number): number => {
   if (type == T_TYPE.PUBLIC) return T_TYPE.PRIVATE
   else return T_TYPE.PUBLIC
 }
@@ -21,8 +21,8 @@ const checkCommunityRequiredFields = (errors: FormikErrors<FormType>): boolean =
 
   const requiredFieldErrors = []
   if (stepOne) {
-    requiredFieldErrors.push(stepOne.title)
-    requiredFieldErrors.push(stepOne.participation_approval)
+    requiredFieldErrors.push(stepOne.name)
+    requiredFieldErrors.push(stepOne.join_condition)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)
@@ -36,7 +36,7 @@ const checkTopicRequiredFields = (errors: FormikErrors<TopicFormType>): boolean 
   const requiredFieldErrors = []
   if (stepOne) {
     requiredFieldErrors.push(stepOne.title)
-    requiredFieldErrors.push(stepOne.overview)
+    requiredFieldErrors.push(stepOne.content)
   }
 
   const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

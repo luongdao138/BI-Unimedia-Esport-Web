@@ -9,23 +9,23 @@ import { useTranslation } from 'react-i18next'
 const SecuritySettingsPage: PageWithLayoutType = () => {
   const { t } = useTranslation('common')
   return (
-    <div>
-      <HeaderWithButton title={t('service_info.title')} />
-      <Box>
-        <Link href="https://www.ntte-sports.co.jp" underline={'none'} target="_blank">
-          <SettingsRowItem key="enterprise_info" showLink title={t('service_info.enterprise_info')} showSwitch={false} />
-        </Link>
-        <Link href="https://support.exelab.jp/hc/ja" underline={'none'} target="_blank">
-          <SettingsRowItem key="faq" showLink title={t('service_info.faq')} showSwitch={false} />
-        </Link>
-        <Link href={ESRoutes.INQUIRY_SETTINGS} underline={'none'}>
-          <SettingsRowItem key="inquiry" title={t('service_info.inquiry')} showSwitch={false} />
-        </Link>
-      </Box>
-    </div>
+    <MainLayout loginRequired={false}>
+      <div>
+        <HeaderWithButton title={t('service_info.title')} />
+        <Box>
+          <Link href="https://www.ntte-sports.co.jp" underline={'none'} target="_blank">
+            <SettingsRowItem key="enterprise_info" showLink title={t('service_info.enterprise_info')} showSwitch={false} />
+          </Link>
+          <Link href="https://support.exelab.jp/hc/ja" underline={'none'} target="_blank">
+            <SettingsRowItem key="faq" showLink title={t('service_info.faq')} showSwitch={false} />
+          </Link>
+          <Link href={ESRoutes.INQUIRY_SETTINGS} underline={'none'}>
+            <SettingsRowItem key="inquiry" title={t('service_info.inquiry')} showSwitch={false} />
+          </Link>
+        </Box>
+      </div>
+    </MainLayout>
   )
 }
-
-SecuritySettingsPage.Layout = MainLayout
 
 export default SecuritySettingsPage
