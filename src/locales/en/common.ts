@@ -436,6 +436,7 @@ export default {
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
+    failed_to_update_match: '対戦表の更新に失敗しました',
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
       randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
