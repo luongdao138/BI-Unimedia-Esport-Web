@@ -20,7 +20,7 @@ type CommunityHeaderProps = {
   user_avatar?: string
   nickname?: string
   user_code?: string
-  description?: string
+  content?: string
   date?: string
   image?: string | null
   isConfirm?: boolean
@@ -31,7 +31,7 @@ type CommunityHeaderProps = {
 const MainTopic: React.FC<CommunityHeaderProps> = ({
   nickname,
   user_code,
-  description,
+  content,
   image,
   user_avatar,
   isConfirm,
@@ -48,7 +48,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const detail = {
     attributes: {
       nickname: topicData?.owner_name,
-      user_code: topicData?.owner_email,
+      user_code: topicData?.owner_user_code,
       content: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
       image: topicData?.attachments[0]?.assets_url,
@@ -84,26 +84,25 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
               />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
-                <Typography className={classes.user_code}>{isConfirm ? user_code : topicData.owner_email}</Typography>
+                <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData.owner_user_code}</Typography>
               </Box>
             </Box>
-            {topicData?.created_at && (
+            {!isConfirm && (
               <Box className={classes.dateReportContainer}>
                 <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
+
+                <ESMenu>
+                  {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
+                  <LoginRequired>
+                    <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
+                  </LoginRequired>
+                </ESMenu>
               </Box>
-            )}
-            {!isConfirm && (
-              <ESMenu>
-                {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
-                <LoginRequired>
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
-                </LoginRequired>
-              </ESMenu>
             )}
           </Box>
 
-          <Box className={classes.descriptionContainer} mb={2} mt={1}>
-            <Typography className={classes.description}>{isConfirm ? description : topicData.content}</Typography>
+          <Box className={classes.contentContainer} mb={2} mt={1}>
+            <Typography className={classes.content}>{isConfirm ? content : topicData.content}</Typography>
           </Box>
           {(isConfirm ? image : topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData?.like_count || topicData?.like_count == 0 ? (
@@ -229,7 +228,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     fontSize: 16,
   },
-  user_code: {
+  userCode: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -240,12 +239,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 11,
     color: Colors.white_opacity[30],
   },
-  descriptionContainer: {
+  contentContainer: {
     display: 'flex',
   },
-  description: {
+  content: {
     color: Colors.grey[300],
     fontSize: 14,
+    wordBreak: 'break-word',
   },
   numberBox: {
     display: 'flex',

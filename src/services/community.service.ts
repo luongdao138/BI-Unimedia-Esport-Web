@@ -207,6 +207,7 @@ export type TopicDetail = {
     owner_name: string
     owner_email: string
     owner_profile: string
+    owner_user_code: string
     like_count: number
     game_title: Array<TopicGameTitle>
     is_liked: boolean
