@@ -740,7 +740,8 @@ export default {
       confirm_participant: 'エントリーを締め切りました',
     },
     create: {
-      submit: '内容を確認する',
+      submit: 'この内容で作成する',
+      review: '内容を確認する',
       category: 'カテゴリ',
       choose_category: 'カテゴリを選ぶ',
       name: '募集タイトル',

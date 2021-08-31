@@ -246,7 +246,7 @@ const LobbyCreate: React.FC = () => {
                   className={`${classes.footerButton} ${classes.confirmButton}`}
                   disabled={!_.isEmpty(formik.errors)}
                 >
-                  {i18n.t('common:lobby.create.submit')}
+                  {i18n.t('common:lobby.create.review')}
                 </ButtonPrimary>
               )}
             </Box>
