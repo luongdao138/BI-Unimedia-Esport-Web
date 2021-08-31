@@ -130,7 +130,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <ESInput labelPrimary={t('common:tournament_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
       <Box pb={2} />
       <ESInput
-        labelPrimary={t('common:tournament_create.has_prize')}
+        labelPrimary={t('common:tournament.prize')}
         value={values.stepOne.has_prize ? t('common:common.yes') : t('common:common.no')}
         disabled={true}
         fullWidth
@@ -152,6 +152,13 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <ESInput labelPrimary={t('common:tournament_create.participation')} value={participationType} disabled={true} fullWidth />
       <ESInput value={`${values.stepTwo.max_participants}${peopleText}`} disabled={true} fullWidth />
       <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth multiline />
+      <Box pb={2} />
+      <ESInput
+        labelPrimary={t('common:tournament_create.public_or_private_short')}
+        value={values.stepTwo.t_type === 't_public' ? t('common:tournament.t_public') : t('common:tournament.t_private')}
+        disabled={true}
+        fullWidth
+      />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.precautions')} value={values.stepTwo.notes} multiline disabled={true} fullWidth />
       <Box pb={2} />

@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiDialog-paper': {
       margin: 0,
       maxHeight: '100%',
+      minHeight: '100%',
     },
   },
   [theme.breakpoints.down('sm')]: {
