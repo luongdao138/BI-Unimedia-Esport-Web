@@ -4,28 +4,29 @@ import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 interface ModalProps {
-  selectedPoint: number
-  open: boolean
+  donatedPoint: number
+  showConfirmModal: boolean
   handleClose: () => void
   handleConfirm: () => void
   msgContent: string
 }
 
-const DonatePointsConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose, handleConfirm, msgContent }) => {
+const DonatePointsConfirmModal: React.FC<ModalProps> = ({ showConfirmModal, donatedPoint, handleClose, handleConfirm, msgContent }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
   return (
     <Box>
-      <ConfirmModal open={open}>
+      <ConfirmModal open={showConfirmModal}>
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('donate_points.confirm_message_modal')}</Typography>
           <Box className={classes.wrap_message}>
             <Typography className={classes.message}>{t('donate_points.title_donate_point') + ':'} </Typography>
             <Typography className={classes.message}>
-              {selectedPoint} {t('donate_points.eXe_point_text')}
+              {FormatHelper.currencyFormat(donatedPoint.toString())} {t('donate_points.eXe_point_text')}
             </Typography>
           </Box>
           <Box className={classes.content}>

@@ -1,63 +1,69 @@
 import { Box, Typography, makeStyles, Theme, Icon } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import ESModal from '@components/Modal'
 import i18n from '@locales/i18n'
-import StepOne from './StepOne'
-import StepTwo from './StepTwo'
+import Stage1 from './Stage1'
+import Stage2 from './Stage2'
 // import CardDeleteConfirmModal from '@containers/PointManage/PurchasePoint/CardDeleteConfirmModal'
-import StepThree from './StepThree'
+import Stage3 from './Stage3'
+// import usePurchasePointData from '@containers/PointManage/PurchasePoint/usePurchasePointData'
 
 interface DonatePointsProps {
-  modal: boolean
-  setShowModal: (value: boolean) => void
+  myPoint: any
+  donatedPoint: number
+  showModalPurchasePoint: boolean
+  setShowModalPurchasePoint: (value: boolean) => void
 }
-const DonatePoints: React.FC<DonatePointsProps> = ({ modal, setShowModal }) => {
+const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, setShowModalPurchasePoint, donatedPoint, myPoint }) => {
   // const { t } = useTranslation('common')
   const classes = useStyles()
-  const [step, setStep] = useState(1)
-  const [typeStepTwo, setTypeStepTwo] = useState(null)
-  // const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
-  const cards = [
+  const [stage, setStage] = useState(1)
+  const [isBuyNewPoint, setIsBuyNewPoint] = useState(false)
+  const stages = [
     {
-      number: 'xxxx xxxx xxxx 4256',
+      value: 1,
+      label: i18n.t('common:donate_points.step_one_points')
     },
     {
-      number: 'xxxx xxxx xxxx 4256',
+      value: 2,
+      label: i18n.t('common:donate_points.step_two_purchase')
+    },
+    {
+      value: 3,
+      label: i18n.t('common:donate_points.step_three_complete')
     },
   ]
 
   const onCloseModal = () => {
-    setShowModal(false)
+    setShowModalPurchasePoint(false)
   }
-  useEffect(() => {
-    setStep(1)
-  }, [])
-  const deleteCard = (): void => {
-    // setIsShowDeleteCardModal(true)
-  }
-  const onNextStep = (new_step: number): void => {
-    setStep(new_step)
-  }
+  // useEffect(() => {
+  //   getSavedCards()
+  // }, [])
+
   const onClickPurchaseMissingPoints = () => {
-    setTypeStepTwo('missing_point')
-    setStep(2)
+    setIsBuyNewPoint(false)
+    // setTypeStepTwo('missing_point')
+    setStage(2)
   }
   const onClickPurchaseNewPoints = () => {
-    setTypeStepTwo('new_point')
-    setStep(2)
+    setIsBuyNewPoint(true)
+    // setTypeStepTwo('new_point')
+    setStage(2)
   }
   const onClickBack = () => {
-    if (step === 2) {
-      setStep(1)
+    if (stage === 2) {
+      setStage(1)
     }
   }
 
   return (
     <Box className={classes.container}>
-      <ESModal open={modal} handleClose={() => setShowModal(false)}>
+      <ESModal open={showModalPurchasePoint} handleClose={() => setShowModalPurchasePoint(false)}>
         <Box className={classes.dialogContainer}>
-          <Box className={step === 2 ? classes.closeModalContainerTwo : classes.closeModalContainer}>
-            {step === 2 && (
+          {/* button back stage and close modal */}
+          <Box className={stage === 2 ? classes.closeModalContainerTwo : classes.closeModalContainer}>
+            {stage === 2 && (
               <Box className={classes.buttonBack} onClick={onClickBack}>
                 <Icon className={`fa fa-arrow-left ${classes.iconBack}`} />
               </Box>
@@ -66,80 +72,56 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ modal, setShowModal }) => {
               <Icon className={`fa fa-times ${classes.iconClose}`} fontSize="small" />
             </Box>
           </Box>
+
+          {/* title purchase point */}
           <Box textAlign="center">
             <Typography className={classes.title}>{i18n.t('common:donate_points.purchase_points')}</Typography>
           </Box>
+
+          {/* all stages */}
           <Box className={classes.stepContainer}>
-            <Box className={classes.stepItemContainer}>
-              <Box className={step === 1 ? classes.stepViewActive : classes.stepViewNotActive}>
-                <Typography className={step === 1 ? classes.textStepActive : classes.textStepNotActive}>{'1'}</Typography>
-              </Box>
-              <Box pt={1}>
-                <Typography className={step === 1 ? classes.detailTextStepActive : classes.detailTextStepNotActive}>
-                  {i18n.t('common:donate_points.step_one_points')}
-                </Typography>
-              </Box>
-            </Box>
-            <Box className={classes.stepItemContainer}>
-              <Box className={step === 2 ? classes.stepViewActive : classes.stepViewNotActive}>
-                <Typography className={step === 2 ? classes.textStepActive : classes.textStepNotActive}>{'2'}</Typography>
-              </Box>
-              <Box pt={1}>
-                <Typography className={step === 2 ? classes.detailTextStepActive : classes.detailTextStepNotActive}>
-                  {i18n.t('common:donate_points.step_two_purchase')}
-                </Typography>
-              </Box>
-            </Box>
-            <Box className={classes.stepItemContainer}>
-              <Box className={step === 3 ? classes.stepViewActive : classes.stepViewNotActive}>
-                <Typography className={step === 3 ? classes.textStepActive : classes.textStepNotActive}>{'3'}</Typography>
-              </Box>
-              <Box pt={1}>
-                <Typography className={step === 3 ? classes.detailTextStepActive : classes.detailTextStepNotActive}>
-                  {i18n.t('common:donate_points.step_three_complete')}
-                </Typography>
-              </Box>
-            </Box>
+            {stages.map(stage_item => {
+              return (
+                <Box className={classes.stepItemContainer} key={stage_item.value}>
+                  <Box className={stage === stage_item.value ? classes.stepViewActive : classes.stepViewNotActive}>
+                    <Typography className={stage === stage_item.value ? classes.textStepActive : classes.textStepNotActive}>{stage_item.value}</Typography>
+                  </Box>
+                  <Box pt={1}>
+                    <Typography className={stage === stage_item.value ? classes.detailTextStepActive : classes.detailTextStepNotActive}>
+                      {stage_item.label}
+                    </Typography>
+                  </Box>
+                </Box>
+              )
+            })}
           </Box>
+
           <Box className={classes.contentContainer}>
-            {/* Step One */}
+            {/* Stage 1 */}
             <Box className={classes.stepOneContainer}>
-              {step === 1 && (
-                <StepOne
-                  myPoints={400}
-                  missingPoints={2200}
-                  onLeftButton={onClickPurchaseMissingPoints}
-                  onRightButton={onClickPurchaseNewPoints}
+              {stage === 1 && (
+                <Stage1
+                  myPoints={myPoint}
+                  missingPoints={donatedPoint - myPoint}
+                  onClickPurchaseMissingPoints={onClickPurchaseMissingPoints}
+                  onClickPurchaseNewPoints={onClickPurchaseNewPoints}
                 />
               )}
             </Box>
-            {/* Step Two */}
+            {/* Stage 2 */}
             <Box className={classes.stepTwoContainer}>
-              {step === 2 && (
-                <StepTwo
-                  setTypeStepTwo={setTypeStepTwo}
-                  type={typeStepTwo}
-                  step={step}
-                  cards={cards}
-                  onNext={onNextStep}
-                  deleteCard={deleteCard}
+              {stage === 2 && (
+                <Stage2
+                  isBuyNewPoint={isBuyNewPoint}
                   missingPoints={2200}
                 />
               )}
             </Box>
-            {/* Step Three */}
-            <Box className={classes.stepThreeContainer}>{step === 3 && <StepThree myPoints={300} missingPoints={2200} />}</Box>
+            {/* Stage 3 */}
+            <Box className={classes.stepThreeContainer}>{stage === 3 && <Stage3 myPoints={300} missingPoints={2200} />}</Box>
           </Box>
         </Box>
       </ESModal>
-      {/* {isShowDeleteCardModal && (
-        <CardDeleteConfirmModal
-          open={isShowDeleteCardModal}
-          handleClose={() => {
-            setIsShowDeleteCardModal(false)
-          }}
-        />
-      )} */}
     </Box>
   )
 }
