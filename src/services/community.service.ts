@@ -49,7 +49,14 @@ export type CommunityDetail = {
       user_code: string
       avatar_image_url: string
     }
+    co_organizers: {
+      id: number
+      nickname: string
+      user_code: string
+      avatar_image_url: string
+    }[]
     my_role: number | null
+    has_requested: boolean
   }
 }
 
