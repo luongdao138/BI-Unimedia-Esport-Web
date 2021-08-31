@@ -1,0 +1,40 @@
+diff --git a/node_modules/react-stacked-center-carousel/dist/index.modern.js b/node_modules/react-stacked-center-carousel/dist/index.modern.js
+index 409e2ab..b76f295 100644
+--- a/node_modules/react-stacked-center-carousel/dist/index.modern.js
++++ b/node_modules/react-stacked-center-carousel/dist/index.modern.js
+@@ -88,9 +88,9 @@ var StackedCarousel = /*#__PURE__*/function (_React$PureComponent) {
+           fadeDistance = _this$props.fadeDistance,
+           customScales = _this$props.customScales;
+ 
+-      if (currentVisibleSlide && currentVisibleSlide % 2 !== 1 || maxVisibleSlide % 2 !== 1) {
+-        throw Error('currentVisibleSlide or maxVisibleSlide must be an odd number');
+-      }
++      // if (currentVisibleSlide && currentVisibleSlide % 2 !== 1 || maxVisibleSlide % 2 !== 1) {
++      //   throw Error('currentVisibleSlide or maxVisibleSlide must be an odd number');
++      // }
+ 
+       if (currentVisibleSlide && currentVisibleSlide > maxVisibleSlide) {
+         throw Error('currentVisibleSlide must be smaller than maxVisibleSlide');
+@@ -102,9 +102,9 @@ var StackedCarousel = /*#__PURE__*/function (_React$PureComponent) {
+         }
+       }
+ 
+-      if (customScales && customScales.length !== (maxVisibleSlide + 3) / 2) {
+-        throw Error('customScales must have lengh (maxVisibleSlide + 3) / 2');
+-      }
++      // if (customScales && customScales.length !== (maxVisibleSlide + 3) / 2) {
++      //   throw Error('customScales must have lengh (maxVisibleSlide + 3) / 2');
++      // }
+     };
+ 
+     _this.initializeProperties = function (constructor) {
+@@ -313,7 +313,8 @@ var StackedCarousel = /*#__PURE__*/function (_React$PureComponent) {
+           currentVisibleDisplaySlide = _this$props4.currentVisibleSlide,
+           maxVisibleSlide = _this$props4.maxVisibleSlide;
+       var currentVisibleSlide = currentVisibleDisplaySlide || maxVisibleSlide;
+-      var m = Math.max(data.length, currentVisibleSlide + 2);
++      // var m = Math.max(data.length, currentVisibleSlide + 2);
++      var m = Math.max(data.length, currentVisibleSlide);
+       return (n % m + m) % m;
+     };
+ 

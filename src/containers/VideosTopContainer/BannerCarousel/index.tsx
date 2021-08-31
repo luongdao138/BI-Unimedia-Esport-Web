@@ -96,12 +96,6 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
     if (length === 4 || length === 3) return 3
     if (length <= 2) return 1
   }
-  // const checkCustomScales = () => {
-  //   const length = data.length
-  //   if (length <= 3) return [1, 0.85]
-  //   if (length === 4 || length === 5) return [1, 0.85, 0.7]
-  //   else return [1, 0.85, 0.7, 0.55]
-  // }
 
   return (
     <Box className={classes.container}>
