@@ -1,4 +1,4 @@
-import { Box, Typography, Icon } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -13,30 +13,30 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
+import { TopicDetail } from '@services/community.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type CommunityHeaderProps = {
   user_avatar?: string
-  username: string
-  mail: string
-  description: string
+  nickname?: string
+  user_code?: string
+  description?: string
   date?: string
-  count?: number
   image?: string | null
   isConfirm?: boolean
   hash_key?: string
   handleDelete?: () => void
+  topic?: TopicDetail
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({
-  username,
-  mail,
+  nickname,
+  user_code,
   description,
-  date,
   image,
-  count,
-  isConfirm,
-  hash_key,
   user_avatar,
+  isConfirm,
   handleDelete,
+  topic,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -44,14 +44,15 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const topicData = topic?.attributes
   const detail = {
     attributes: {
-      username: username,
-      mail: mail,
-      description: description,
-      date: date,
-      image: image,
-      hash_key: hash_key,
+      nickname: topicData?.owner_name,
+      user_code: topicData?.owner_email,
+      content: topicData?.content,
+      date: CommonHelper.staticSmartTime(topicData?.created_at),
+      image: topicData?.attachments[0]?.assets_url,
+      hash_key: topicData?.hash_key,
     },
   }
 
@@ -65,7 +66,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const renderClickableImage = () => {
     return (
       <SRLWrapper options={LIGHTBOX_OPTIONS}>
-        <img className={classes.imageBox} src={image} />
+        <img className={classes.imageBox} src={isConfirm ? image : topicData.attachments[0]?.assets_url} />
       </SRLWrapper>
     )
   }
@@ -75,16 +76,20 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
           <Box className={classes.userContainer}>
-            <Box className={date ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ESAvatar className={classes.avatar} alt={username} src={user_avatar} />
+            <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
+              <ESAvatar
+                className={classes.avatar}
+                alt={isConfirm ? nickname : topicData.owner_name}
+                src={isConfirm ? user_avatar : topicData.owner_profile}
+              />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-                <Typography className={classes.username}>{username}</Typography>
-                <Typography className={classes.mail}>{mail}</Typography>
+                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
+                <Typography className={classes.user_code}>{isConfirm ? user_code : topicData.owner_email}</Typography>
               </Box>
             </Box>
-            {date && (
+            {topicData?.created_at && (
               <Box className={classes.dateReportContainer}>
-                <Typography className={classes.date}>{date}</Typography>
+                <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
               </Box>
             )}
             {!isConfirm && (
@@ -98,17 +103,17 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
           </Box>
 
           <Box className={classes.descriptionContainer} mb={2} mt={1}>
-            <Typography className={classes.description}>{description}</Typography>
+            <Typography className={classes.description}>{isConfirm ? description : topicData.content}</Typography>
           </Box>
-          {image && renderClickableImage()}
-          {count || count == 0 ? (
+          {(isConfirm ? image : topicData.attachments[0]?.assets_url) && renderClickableImage()}
+          {topicData?.like_count || topicData?.like_count == 0 ? (
             <Box display="flex" justifyContent="space-between" mt={2}>
               <Box display="flex" justifyContent="flex-end">
                 <Box className={classes.numberBox}>
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{count}</Typography>
+                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
                 </Box>
               </Box>
               <Box display="flex" justifyContent="flex-end">
@@ -116,10 +121,12 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{count}</Typography>
+                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
                 </Box>
                 <Box className={classes.numberBox}>
-                  <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                  <IconButton className={classes.replyButton}>
+                    <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                  </IconButton>
                 </Box>
               </Box>
             </Box>
@@ -132,13 +139,13 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC}
-            target_id={detail.attributes.hash_key}
+            target_id={detail?.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
           />
           <DiscardDialog
-            title={username + t('common:topic.delete.title')}
+            title={nickname + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDelete}
@@ -210,7 +217,10 @@ const useStyles = makeStyles((theme) => ({
     width: 50,
     height: 50,
   },
-  username: {
+  replyButton: {
+    padding: theme.spacing(0.5),
+  },
+  nickname: {
     fontWeight: 'bold',
     color: 'white',
     textOverflow: 'ellipsis',
@@ -219,7 +229,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     fontSize: 16,
   },
-  mail: {
+  user_code: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',

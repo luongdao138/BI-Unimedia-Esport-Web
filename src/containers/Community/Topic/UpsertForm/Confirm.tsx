@@ -35,8 +35,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
 
       <Box>
         <MainTopic
-          username={user.nickname}
-          mail={user.email}
+          nickname={user.nickname}
+          user_code={user.email}
           description={values.stepOne.content}
           image={values.stepOne.attachments}
           user_avatar={user.avatar_url}
