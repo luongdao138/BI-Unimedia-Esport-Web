@@ -296,6 +296,13 @@ export type CommunityFollowResponse = {
   data: CommunityDetail
 }
 
+export type CommentCreateParams = {
+  topic_hash: string
+  content: string
+  reply_to_comment_hash: string
+  attachments: string
+}
+
 export type CommentsAttachmentResponse = {
   id: number
   assets_url: string
@@ -412,6 +419,16 @@ export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
 
 export const getTopicList = async (params: TopicListParams): Promise<TopicListResponse> => {
   const { data } = await api.post<TopicListResponse>(URI.TOPIC_LIST, params)
+  return data
+}
+
+export const createTopicComment = async (params: CommentCreateParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOPIC_COMMENT_CREATE, params)
+  return data
+}
+
+export const deleteTopicComment = async (hash_key: string): Promise<void> => {
+  const { data } = await api.delete<void>(URI.TOPIC_COMMENT_DELETE.replace(/:id/gi, hash_key))
   return data
 }
 

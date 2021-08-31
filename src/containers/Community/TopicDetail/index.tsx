@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CommunityDetailHeader from '@containers/Community/TopicDetail/Partials/CommunityDetailHeader'
 import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
@@ -28,6 +28,7 @@ const TopicDetailContainer: React.FC = () => {
     getComments,
     commentsListMeta,
   } = useTopicDetail()
+  const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
 
   const data = topic?.attributes
 
@@ -56,7 +57,7 @@ const TopicDetailContainer: React.FC = () => {
     return (
       <>
         {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} />
+          return <Comment key={i} comment={comment} handleReply={setReply} />
         })}
       </>
     )
@@ -101,7 +102,7 @@ const TopicDetailContainer: React.FC = () => {
           )}
         </Box>
         <Box className={classes.inputContainer}>
-          <CommentInput />
+          <CommentInput reply_param={reply} handleReply={setReply} />
         </Box>
       </Box>
     </>

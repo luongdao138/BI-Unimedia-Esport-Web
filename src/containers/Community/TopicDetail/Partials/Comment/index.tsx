@@ -15,18 +15,25 @@ import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import useTopicDetail from '../../useTopicDetail'
+import { useRouter } from 'next/router'
 
 type CommunityHeaderProps = {
   comment: CommentsResponse
+  handleReply?: (params: { hash_key: string; id: number }) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
   const classes = useStyles()
+  const { query } = useRouter()
+  const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const isModerator = true
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const { deleteComment, getComments } = useTopicDetail()
   const commentData = comment.attributes
+  const hash_key = commentData.hash_key
   const detail = {
     attributes: {
       nickname: commentData.owner_nickname,
@@ -45,8 +52,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
   const handleDeleteOpen = () => {
     setOpenDelete(true)
   }
-  const handleDeleteSubmit = () => {
-    //
+  const handleDeleteSubmit = async () => {
+    await deleteComment(hash_key)
+    setOpenDelete(false)
+    getComments({ hash_key: String(topic_hash_key), page: 1 })
+  }
+
+  const handleCommentReply = () => {
+    handleReply({ hash_key: hash_key, id: commentData.id })
   }
 
   const renderClickableImage = () => {
@@ -90,7 +103,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage()}
         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton className={classes.shareButton}>
+          <IconButton className={classes.shareButton} onClick={handleCommentReply}>
             <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
           </IconButton>
         </Box>

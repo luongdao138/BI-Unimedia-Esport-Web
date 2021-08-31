@@ -51,6 +51,8 @@ export const URI = {
   COMMUNITY_MEMBER_REMOVE: '/v2/communities/:id/remove_members',
   COMMUNITY_COMMENTS_LIST: '/v2/comments/list',
   TOPIC_LIST: '/v2/communities/topics',
+  TOPIC_COMMENT_CREATE: '/v2/comments',
+  TOPIC_COMMENT_DELETE: '/v2/comments/:id',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
