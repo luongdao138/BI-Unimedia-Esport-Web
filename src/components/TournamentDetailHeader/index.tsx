@@ -57,7 +57,7 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
       <Box
         style={{
           background: `url(${cover})`,
-          paddingTop: '30.27%',
+          paddingTop: '30.21756647864625%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
