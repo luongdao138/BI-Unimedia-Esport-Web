@@ -3,13 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import ESBlockSettings from '@containers/UserSecuritySettings/BlockSettings'
 
 const BlockSettingsSettingsPage: PageWithLayoutType = () => {
-  return <ESBlockSettings />
-}
-
-BlockSettingsSettingsPage.Layout = MainLayout
-
-MainLayout.defaultProps = {
-  loginRequired: true,
+  return (
+    <MainLayout loginRequired={true}>
+      <ESBlockSettings />
+    </MainLayout>
+  )
 }
 
 export default BlockSettingsSettingsPage

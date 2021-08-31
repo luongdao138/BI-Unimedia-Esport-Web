@@ -11,20 +11,22 @@ const TermsPage: PageWithLayoutType = () => {
   const classes = useStyles()
 
   return (
-    <div>
-      <HeaderWithButton title={t('title')} />
-      <Linkify
-        componentDecorator={(decoratedHref, decoratedText, key) => (
-          <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
-            {decoratedText}
-          </a>
-        )}
-      >
-        <Typography className={classes.wrap} paragraph={true}>
-          {t('text')}
-        </Typography>
-      </Linkify>
-    </div>
+    <MainLayout loginRequired={false}>
+      <div>
+        <HeaderWithButton title={t('title')} />
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.link}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <Typography className={classes.wrap} paragraph={true}>
+            {t('text')}
+          </Typography>
+        </Linkify>
+      </div>
+    </MainLayout>
   )
 }
 
@@ -43,7 +45,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none',
   },
 }))
-
-TermsPage.Layout = MainLayout
 
 export default TermsPage
