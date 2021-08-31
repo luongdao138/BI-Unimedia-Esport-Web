@@ -19,7 +19,7 @@ const CommunityContainer: React.FC = () => {
   const [showTopicListAndSearchTab, setShowTopicListAndSearchTab] = useState<boolean>(true)
   const { handleBack, communityDetail, getCommunityDetail, topicList, getTopicList, meta } = useCommunityDetail()
   const { isAutomatic, isNotMember } = useCommunityHelper(communityDetail)
-  const { getMembers } = useFollowList()
+  const { getMembers, membersMeta } = useFollowList()
 
   useEffect(() => {
     if (hash_key) {
@@ -44,7 +44,7 @@ const CommunityContainer: React.FC = () => {
   const renderBody = () => {
     return (
       <>
-        {!!communityDetail && meta.loaded && !meta.pending && (
+        {!!communityDetail && meta.loaded && !meta.pending && membersMeta.loaded && (
           <>
             <CommunityDetailHeader
               title={communityDetail.attributes.name}
