@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Events: React.FC<IProps> = (props) => {
-  const staticTitle = '【JAVCOMセミナー No.158】eスポーツがもたらす映像ビジネス'
+  const staticTitle = '動画配信サービス'
   const classes = useStyles({})
   const dispatch = useDispatch()
   const { top, loading } = useSelector((state: RootState) => state.liveEvent, shallowEqual)
