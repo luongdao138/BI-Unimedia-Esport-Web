@@ -136,7 +136,7 @@ const ArenaWinners: React.FC = () => {
           <Typography className={classes.multiline}>{arena?.attributes?.summary || ''}</Typography>
         </Linkify>
       </div>
-      <Box textAlign="center" pb={4}>
+      <Box textAlign="center" pb={4} className={classes.detailButton}>
         <ESButton className={classes.bottomButton} variant="outlined" round size="large" onClick={toDetail}>
           {t('common:tournament.tournament_detail')}
         </ESButton>
@@ -224,13 +224,18 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   backButtonWrapper: {
-    position: 'absolute',
+    position: 'fixed',
     paddingLeft: theme.spacing(3),
     paddingTop: theme.spacing(3),
+    zIndex: 3,
+  },
+  detailButton: {
+    position: 'sticky',
     zIndex: 1,
   },
   coverWrapper: {
     position: 'sticky',
+    zIndex: 0,
     top: 60,
     height: 560,
     marginBottom: -100,
@@ -268,7 +273,8 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: 'break-word',
   },
   summary: {
-    position: 'relative',
+    position: 'sticky',
+    zIndex: 1,
     marginRight: theme.spacing(3),
     marginLeft: theme.spacing(3),
     overflow: 'visible',
@@ -304,7 +310,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     background: Colors.black_opacity['70'],
-    position: 'relative',
+    position: 'sticky',
+    zIndex: 1,
   },
   listItem: {
     height: 66,

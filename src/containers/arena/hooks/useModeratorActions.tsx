@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import * as actions from '@store/arena/actions'
 import { createMetaSelector } from '@store/metadata/selectors'
-import { SetParticipantParams, SetParticipantsParams } from '@services/arena.service'
+import { FreezeMatchParams, SetParticipantParams, SetParticipantsParams } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'
 import * as commonActions from '@store/common/actions'
@@ -17,7 +17,7 @@ const useModeratorActions = (): {
   setParticipant: (params: SetParticipantParams) => void
   setParticipants: (params: SetParticipantsParams) => void
   randomize: (params: string) => void
-  freeze: (params: string) => void
+  freeze: (params: FreezeMatchParams) => void
   setParticipantMeta: Meta
   setParticipantsMeta: Meta
   randomizeMeta: Meta
@@ -33,7 +33,7 @@ const useModeratorActions = (): {
   const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
   const setParticipants = (param: SetParticipantsParams) => dispatch(actions.setParticipants(param))
   const randomize = (param: string) => dispatch(actions.randomizeTournament(param))
-  const freeze = (param: string) => dispatch(actions.freezeTournament(param))
+  const freeze = (params) => dispatch(actions.freezeTournament(params))
 
   const setParticipantMeta = useAppSelector(_setParticipantMeta)
   const setParticipantsMeta = useAppSelector(_setParticipantsMeta)
