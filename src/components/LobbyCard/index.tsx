@@ -10,6 +10,7 @@ import { Colors } from '@theme/colors'
 import { LobbyResponse } from '@services/lobby.service'
 import i18n from '@locales/i18n'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
+import { DateHelper } from '@utils/helpers/DateHelper'
 
 interface Props {
   lobby: LobbyResponse
@@ -36,6 +37,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const {
     status,
     cover,
+    entry_end_datetime,
     start_datetime,
     hash_key,
     participant_count,
@@ -47,7 +49,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
     game_title,
     entry_status,
   } = lobby.attributes // TODO use lodash get instead
-  const startDate = new Date(start_datetime).toISOString().slice(0, 10).replace(/-/g, '/')
+  const startDate = DateHelper.formatDateTime(start_datetime)
+  const entryEndDate = DateHelper.formatDateTime(entry_end_datetime)
   const value = status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED ? LOBBY_STATUS.ENDED : status
 
   const getMediaScreen = () => {
@@ -110,7 +113,9 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
           size="small"
           label={
             <Box className={classes.chippedRowText}>
-              <Typography variant="overline">{chipLabel}</Typography>
+              <Typography variant="overline" className={classes.chippedValue}>
+                {chipLabel}
+              </Typography>
             </Box>
           }
         />
@@ -161,7 +166,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         {getInfoRow(game_title)}
         {getInfoRow(`${i18n.t('common:lobby.card.organizer')} ${organizer_name}`)}
         {getChippedRow(i18n.t('common:lobby.card.start_date'), startDate)}
-        {getChippedRow(i18n.t('common:lobby.card.entry_period'), startDate, 'まで')}
+        {getChippedRow(i18n.t('common:lobby.card.entry_period'), entryEndDate, 'まで')}
         {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`)}
         {getParticipants()}
       </ESCardContent>
@@ -212,7 +217,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 8,
   },
   chippedRowText: {
-    fontSize: 10,
     marginTop: 2,
     color: Colors.white,
   },
@@ -272,10 +276,19 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.up('lg')]: {
     chippedValue: {
-      fontSize: 10,
+      fontSize: 8,
     },
     chippedExtra: {
-      fontSize: 10,
+      fontSize: 8,
+    },
+    chip: {
+      height: 12,
+      backgroundColor: Colors.white_opacity[20],
+      borderRadius: 2,
+    },
+    chippedRowText: {
+      marginTop: 2,
+      color: Colors.white,
     },
   },
 }))
