@@ -2,7 +2,7 @@ import { Box, Typography, Icon, Button, OutlinedInput, IconButton, Input, useThe
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState } from 'react'
-import sanitizeHtml from 'sanitize-html'
+// import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import { useTranslation } from 'react-i18next'
 import useStyles from './styles'
@@ -124,10 +124,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const sanitizedContent = sanitizeHtml(content, {
-      allowedTags: [],
-      allowedAttributes: {},
-    })
+    // const sanitizedContent = sanitizeHtml(content, {
+    //   allowedTags: [],
+    //   allowedAttributes: {},
+    // })
 
     // Submit chat message
     setPremiumChatValidationError('')
@@ -174,9 +174,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
               })}
           </Box>
         </Box>
-        <Button onClick={handlePremiumChatClick}
-            className={classes.purchaseButton}
-        >
+        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton}>
           <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
         </Button>
         {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
@@ -208,10 +206,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const sanitizedContent = sanitizeHtml(content, {
-      allowedTags: [],
-      allowedAttributes: {},
-    })
+    // const sanitizedContent = sanitizeHtml(content, {
+    //   allowedTags: [],
+    //   allowedAttributes: {},
+    // })
 
     // Submit chat message
     setChatInputValidationError('')
