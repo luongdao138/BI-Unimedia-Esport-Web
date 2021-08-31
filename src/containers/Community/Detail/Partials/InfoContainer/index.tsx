@@ -14,7 +14,6 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
   const router = useRouter()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const valueTrue = true
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
   return (
@@ -99,25 +98,17 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
           <Typography>{t('common:community.deputy_caretaker')}</Typography>
         </Box>
         <Box className={classes.value} flexDirection="column">
-          {valueTrue ? (
-            <>
-              <Box key={`1`} display="flex" flexDirection="row" alignItems="center" mt={0}>
+          {data.co_organizers ? (
+            data.co_organizers.map((organizer, i) => (
+              <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0}>
                 <LoginRequired>
-                  <ButtonBase>
-                    <ESAvatar alt={'グレちゃん'} />{' '}
+                  <ButtonBase onClick={() => toProfile(organizer.user_code)}>
+                    <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} />
                   </ButtonBase>
-                  <Typography className={classes.breakWord}>{'グレちゃん'}</Typography>
+                  <Typography className={classes.breakWord}>{organizer.nickname}</Typography>
                 </LoginRequired>
               </Box>
-              <Box key={`2`} display="flex" flexDirection="row" alignItems="center" mt={1}>
-                <LoginRequired>
-                  <ButtonBase>
-                    <ESAvatar alt={'わたなべ'} />{' '}
-                  </ButtonBase>
-                  <Typography className={classes.breakWord}>{'わたなべ'}</Typography>
-                </LoginRequired>
-              </Box>
-            </>
+            ))
           ) : (
             <Typography>-</Typography>
           )}
