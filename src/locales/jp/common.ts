@@ -26,6 +26,7 @@ export default {
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
     save: '保存する',
+    dont_save: '保存しない',
     cancel: 'キャンセル',
     done: '完了',
     change: '変更する',
