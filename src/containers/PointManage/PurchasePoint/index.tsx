@@ -28,7 +28,7 @@ const PurchasePoint: React.FC = () => {
 
   return (
     <>
-      <Box className={classes.wrap_container}>
+      <Box className={classes.container}>
         {step === 1 ? (
           <Step1 step={step} onNext={onChangeStep} setSelectedPoint={(point) => setSelectedPoint(point)} />
         ) : step === 2 ? (
@@ -44,7 +44,6 @@ const PurchasePoint: React.FC = () => {
 export default PurchasePoint
 
 const useStyles = makeStyles(() => ({
-  wrap_container: {
-    padding: '0 24px',
+  container: {
   },
 }))

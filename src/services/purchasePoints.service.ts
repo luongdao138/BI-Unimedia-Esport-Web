@@ -29,6 +29,14 @@ export type GetSavedCardsResponse = {
   data: SavedCardsResponse
 }
 
+export type PurchasePointResponse = {
+  data: {
+    attributes: {
+      Amount: number
+    }
+  }
+}
+
 export type ParamsPurchasePointUseNewCard = {
   token: string
   point: number | string
@@ -48,15 +56,16 @@ export const getSavedCards = async (): Promise<GetSavedCardsResponse> => {
 
 export const deleteCard = async (card_seq: string): Promise<void> => {
   const { data } = await api.post<void>(URI.DELETE_CARD, { card_seq: card_seq })
+  // const { data } = await api.post<void>(URI.DELETE_CARD)
   return data
 }
 
-export const purchasePointUseNewCard = async (purchase_info: ParamsPurchasePointUseNewCard): Promise<void> => {
-  const { data } = await api.post<void>(URI.ADD_CARD, purchase_info)
+export const purchasePointUseNewCard = async (purchase_info: ParamsPurchasePointUseNewCard): Promise<PurchasePointResponse> => {
+  const { data } = await api.post<PurchasePointResponse>(URI.ADD_CARD, purchase_info)
   return data
 }
 
-export const purchasePointUseOldCard = async (purchase_info: ParamsPurchasePointUseOldCard): Promise<void> => {
-  const { data } = await api.post<void>(URI.PURCHASE_POINT, purchase_info)
+export const purchasePointUseOldCard = async (purchase_info: ParamsPurchasePointUseOldCard): Promise<PurchasePointResponse> => {
+  const { data } = await api.post<PurchasePointResponse>(URI.PURCHASE_POINT, purchase_info)
   return data
 }

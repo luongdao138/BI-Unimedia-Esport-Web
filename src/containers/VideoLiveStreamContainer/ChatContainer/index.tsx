@@ -11,11 +11,13 @@ import _ from 'lodash'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean
+  myPoint: number
 }
 
 export const purchasePoints = {
@@ -77,7 +79,7 @@ export const purchasePoints = {
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket }) => {
+const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket, myPoint }) => {
   // const { t } = useTranslation('common')
   const [chatInput, setChatInput] = useState<string>('')
   const [purchaseComment, setPurchaseComment] = useState<string>('')
@@ -179,7 +181,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
         </Button>
         {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
         <Box className={classes.dialogFooter}>
-          <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
+          <Typography className={classes.totalPointText}>{'所有ポイント：'}{FormatHelper.currencyFormat(myPoint.toString())}{' eXeポイント'}</Typography>
           <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
         </Box>
       </Box>

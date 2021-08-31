@@ -27,7 +27,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
       background: 'linear-gradient(180deg, rgba(16,16,16,1) 0%, rgba(52,52,52,1) 100%)',
       width: '100%',
       '&:first-child': {
-        padding: '44px 24px 40px 24px',
+        padding: '40px 24px 40px 24px',
+        [theme.breakpoints.down(321)]: {
+          padding: '20px 24px 20px 24px',
+        }
       },
     },
   }))(MuiDialogContent)
@@ -60,11 +63,19 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
 
 export default ConfirmModal
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   dialog_container: {
     '& .MuiDialog-paperFullWidth': {
       borderRadius: 10,
       maxWidth: 754,
+    },
+  },
+  [theme.breakpoints.down(321)]: {
+    dialog_container: {
+      '& .MuiDialog-paperFullWidth': {
+        width: 'calc(100% - 32px)',
+        margin: 0,
+      },
     },
   },
 }))

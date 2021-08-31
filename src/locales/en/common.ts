@@ -1074,5 +1074,6 @@ export default {
     title_purchase_point_step_3: '購入ポイント',
     title_total_point_step_3: '合計ポイント',
     success_message_purchase: 'ポイント購入が完了しました。\n' + '右上の「x」ボタンをクリックして動画視聴画面にお戻りください。',
+    lack_point_mess: "所持ポイントが不足しています"
   },
 }

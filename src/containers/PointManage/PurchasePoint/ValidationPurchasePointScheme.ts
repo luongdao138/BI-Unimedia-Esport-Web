@@ -14,6 +14,7 @@ export const validationPurchasePointScheme = (): any => {
         return value.replace(/\s/g, '')
       })
       .matches(/^[0-9]+$/g, wrong_format_mess)
+      .min(14, wrong_format_mess)
       .max(16, wrong_format_mess),
     card_expire_date: Yup.string()
       .required(required_mess)

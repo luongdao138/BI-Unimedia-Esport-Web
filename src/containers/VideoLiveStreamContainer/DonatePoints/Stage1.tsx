@@ -4,25 +4,25 @@ import i18n from '@locales/i18n'
 import PointCardItem from '@components/PointCardItem'
 
 interface StepOneProps {
-  onClickPurchaseMissingPoints: () => void
+  onClickPurchaseLackedPoint: () => void
   onClickPurchaseNewPoints: () => void
   myPoints: number
-  missingPoints?: number
+  lackedPoint?: number
 }
 
-const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseMissingPoints, onClickPurchaseNewPoints, myPoints, missingPoints }) => {
+const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseLackedPoint, onClickPurchaseNewPoints, myPoints, lackedPoint }) => {
   const classes = useStyles()
 
   return (
     <Box className={classes.container}>
       <Box width="100%">
         <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXePoint'} />
-        {missingPoints && (
-          <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={missingPoints} pointText={'eXePoint'} />
+        {lackedPoint && (
+          <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXePoint'} />
         )}
       </Box>
       <Box className={classes.buttonRootContainer}>
-        <Box className={classes.buttonContainer} onClick={onClickPurchaseMissingPoints}>
+        <Box className={classes.buttonContainer} onClick={onClickPurchaseLackedPoint}>
           <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_missing_points')}</Typography>
         </Box>
         <Box className={classes.buttonContainer} onClick={onClickPurchaseNewPoints}>
