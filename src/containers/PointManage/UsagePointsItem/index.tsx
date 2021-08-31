@@ -2,70 +2,78 @@ import { Box, makeStyles, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
-import { UsagePointDataProps } from '../UsageHistory'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import { ListUsedPointsData } from '@services/points.service'
+import moment from 'moment'
 
 interface UsagePointsItemProps {
-  data: UsagePointDataProps
-  letterCount: number
+  data: ListUsedPointsData
+  serialNumber: number
+  setShowDetail?: (value: boolean) => void
+  setPurchasePointId?: (value: number) => void
 }
-const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, letterCount }) => {
+const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShowDetail, setPurchasePointId }) => {
   const classes = useStyles()
-  const isUsedPoints = data?.type === 'used'
   const getAddClass = (firstClass, secClass) => {
-    if (letterCount === 2) {
+    if (serialNumber.toString().length === 2) {
       return firstClass
     }
-    if (letterCount >= 3) {
+    if (serialNumber.toString().length >= 3) {
       return secClass
     }
     return ''
   }
+
+  const dataPurchasePointId = data?.purchased_point_id.split(' / ')
+  const renderPurchasePointId = (item, index) => {
+    const handleShowDetail = (): void => {
+      setShowDetail(true)
+      setPurchasePointId(item)
+    }
+    return (
+      <Box onClick={handleShowDetail} key={index}>
+        <Typography className={classes.purchasePointIdText}>
+          {dataPurchasePointId?.length > 1 ? ' ' : ''}
+          {item}
+          {dataPurchasePointId?.length > 1 ? ' / ' : dataPurchasePointId?.length - 1 === index && ''}
+        </Typography>
+      </Box>
+    )
+  }
   return (
-    <Box className={classes.container} key={data?.serialNumber}>
+    <Box className={classes.container} key={serialNumber}>
       <Box className={classes.wrapTitle}>
         <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
-          <Typography className={classes.serialStyle}>{data?.serialNumber}</Typography>
+          <Typography className={classes.serialStyle}>{serialNumber}</Typography>
         </Box>
         <Box className={`${classes.titleContainer} ${getAddClass(classes.letterSecTitle, classes.letterThirdTitle)}`}>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
+          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_id')}</Typography>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.difference')}</Typography>
-          {isUsedPoints ? (
-            <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.date_time')}</Typography>
-          ) : (
-            <>
-              <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_date')}</Typography>
-              <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.expires_date')}</Typography>
-            </>
-          )}
+          <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.date_time')}</Typography>
         </Box>
       </Box>
       <Box className={classes.dataContainer}>
-        <Typography className={classes.textStyle}>{data?.purchasedPointsId}</Typography>
-        <Typography className={isUsedPoints ? classes.usagePointStyle : classes.pointStyle}>
-          {isUsedPoints ? '-' : ''} {FormatHelper.currencyFormat(data?.points.toString())}{' '}
-          {isUsedPoints ? i18n.t('common:point_management_tab.eXe_point_text') : i18n.t('common:point_management_tab.eXe_point')}
+        <Typography className={classes.textStyle}>{data?.uuid}</Typography>
+        <Typography className={classes.usagePointStyle}>
+          {'-' + FormatHelper.currencyFormat(data?.point.toString())}
+          {i18n.t('common:point_management_tab.eXe_point_text')}
         </Typography>
-        <Typography className={classes.textStyle}>
-          {isUsedPoints
-            ? i18n.t('common:point_management_tab.use_point_information')
-            : i18n.t('common:point_management_tab.purchase_point')}
-        </Typography>
-        {isUsedPoints ? (
-          <Typography className={classes.dateStyle}>{data?.expiresDatePurchased}</Typography>
-        ) : (
-          <>
-            <Typography className={classes.textStyle}>{data?.expiresDatePurchased}</Typography>
-            <Typography className={classes.dateStyle}>{data?.expiresDatePurchased}</Typography>
-          </>
-        )}
+        <Box className={classes.purchasePointsItem}>{dataPurchasePointId.map((item, index) => renderPurchasePointId(item, index))}</Box>
+        <Typography className={classes.textStyle}>{data?.status}</Typography>
+        <Typography className={classes.dateStyle}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
       </Box>
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
+  purchasePointsItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+  },
   wrapTitle: {
     display: 'flex',
     width: '148px',
@@ -93,9 +101,8 @@ const useStyles = makeStyles((theme) => ({
     wordBreak: 'break-all',
   },
   serialStyle: {
-    marginRight: 16,
     textAlign: 'center',
-    marginBottom: 8,
+    // marginBottom: 8,
   },
   titleContainer: {
     display: 'flex',
@@ -129,6 +136,11 @@ const useStyles = makeStyles((theme) => ({
   },
   usagePointStyle: {
     color: Colors.yellow,
+    marginBottom: 8,
+  },
+  purchasePointIdText: {
+    color: Colors.primary,
+    textDecoration: 'underline',
     marginBottom: 8,
   },
   textStyle: {

@@ -6,7 +6,10 @@ import { Colors } from '@theme/colors'
 import { Pagination } from '@material-ui/lab'
 import UsagePointsItem from '../UsagePointsItem'
 import usePointsManage from '../usePointsManage'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
+import moment from 'moment'
+import PurchaseHistoryItem from '../PurchaseHistoryItem'
+import UsagePointDetailItem from '../UsagePointDetailItem'
 
 export interface UsagePointDataProps {
   serialNumber: string
@@ -17,84 +20,88 @@ export interface UsagePointDataProps {
 }
 const UsageHistory: FC = () => {
   const classes = useStyles()
-  const dataUsagePoints = Array(3)
-    .fill('')
-    .map((_, i) => ({
-      id: `${i}`,
-      serialNumber: `${i + 1}`,
-      purchasedPointsId: 202106221234,
-      points: 1000,
-      expiresDatePurchased: '2022年04月09日',
-      type: 'used',
-    }))
-  const dataPurchasePoints = Array(1)
-    .fill('')
-    .map((_, i) => ({
-      id: `${i}`,
-      serialNumber: `${i + 1}`,
-      purchasedPointsId: 202106221234,
-      points: 1000,
-      expiresDatePurchased: '2022年04月09日',
-      type: 'purchase',
-    }))
-  const filterOptionsData = [
-    { label: '選択中', value: '' },
-    { label: i18n.t('common:point_management_tab.thirty_days_ago'), value: i18n.t('common:point_management_tab.thirty_days_ago') },
-    { label: '2020年6月', value: '2020年6月' },
-    { label: '2020年5月', value: '2020年5月' },
-    { label: '2020年4月', value: '2020年4月' },
-  ]
-  const letterCount = dataPurchasePoints.length ? dataPurchasePoints[dataPurchasePoints.length - 1].serialNumber.length : 1
-
+  const filterOptionsData = [{ label: i18n.t('common:point_management_tab.thirty_days_ago'), value: '' }]
+  const limit = 10
   const [page, setPage] = useState<number>(1)
-  const { getUsedPointData, meta_used_points } = usePointsManage()
+  const [pageDetail, setPageDetail] = useState<number>(1)
+  const [querySelected, setQuerySelected] = useState<string>(null)
+  const [filterOptions, setFilterOptions] = useState(filterOptionsData)
+  const [usageHistoryDetail, setUsageHistoryDetail] = useState<boolean>(false)
+  const [purchasePointId, setPurchasePointId] = useState<number>(null)
+  const {
+    getUsedPointData,
+    meta_used_points,
+    usedPointsData,
+    getUsagePointsHistoryData,
+    meta_used_points_detail,
+    usagePointsHistoryDetail,
+  } = usePointsManage()
+
+  const listFilterData = usedPointsData?.date_use_points
+  const listUsageHistoryData = usedPointsData?.points
+  const totalPages = Math.ceil(usedPointsData?.total / 10)
+
+  const detailUsageHistory = usagePointsHistoryDetail
+  const UsagePointsHistoryData = usagePointsHistoryDetail?.point_history
+  const totalPagesDetail = Math.ceil(usagePointsHistoryDetail?.total / 10)
+  const isLoading = meta_used_points.pending || meta_used_points_detail.pending
+  const PurchaseData = {
+    uuid: usagePointsHistoryDetail?.uuid,
+    point: usagePointsHistoryDetail?.point,
+    created_at: usagePointsHistoryDetail?.created_at,
+    expired_date: usagePointsHistoryDetail?.valid_until,
+    divide: '',
+  }
+
+  const paramsPeriod = {
+    page: page,
+    limit: limit,
+    type: 2,
+    period: querySelected,
+  }
   const params = {
     page: page,
-    limit: 10,
+    limit: limit,
+    type: 2,
+  }
+
+  useEffect(() => {
+    getUsedPointData(querySelected != '' ? paramsPeriod : params)
+  }, [page, querySelected])
+
+  useEffect(() => {
+    if (listFilterData) {
+      setFilterOptions(filterOptionsData)
+      const newObjects = listFilterData.map((item) => {
+        return { label: moment(item).format('YYYY年MM月'), value: item }
+      })
+      const newFilterData = filterOptionsData.concat(newObjects)
+      setFilterOptions(newFilterData)
+    }
+  }, [listFilterData])
+
+  const detailParams = {
+    page: pageDetail,
+    limit: limit,
+    uuid: purchasePointId,
   }
   useEffect(() => {
-    getUsedPointData(params)
-  }, [page])
+    getUsagePointsHistoryData(detailParams)
+  }, [purchasePointId, usageHistoryDetail])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
   }
+  const onChangePageDetail = (_event: React.ChangeEvent<unknown>, value: number): void => {
+    setPageDetail(value)
+  }
+  const handleSelectedQuery = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setQuerySelected(event.target.value)
+  }
 
   return (
     <Box className={classes.container}>
-      <Grid item xs={7}>
-        <ESSelect
-          fullWidth
-          placeholder={i18n.t('common:point_management_tab.choosing')}
-          displayEmpty
-          size="big"
-          disabled={false}
-          className={classes.comboBox}
-        >
-          {filterOptionsData.map((rule, index) => (
-            <option key={index} value={rule.value}>
-              {rule.label}
-            </option>
-          ))}
-        </ESSelect>
-      </Grid>
-      {meta_used_points.pending ? (
-        <Grid item xs={12}>
-          <Box className={classes.loadingContainer}>
-            <ESLoader />
-          </Box>
-        </Grid>
-      ) : (
-        <></>
-      )}
-      {dataUsagePoints.length > 0 ? (
-        <Box className={classes.headerContainer}>
-          <Typography className={classes.headerTitle}>
-            {i18n.t('common:point_management_tab.purchase_point') + i18n.t('common:point_management_tab.id')}「202106272123」
-            {i18n.t('common:point_management_tab.title_usage_history')}
-          </Typography>
-        </Box>
-      ) : (
+      {!usageHistoryDetail && (
         <Grid item xs={7}>
           <ESSelect
             fullWidth
@@ -103,8 +110,10 @@ const UsageHistory: FC = () => {
             size="big"
             disabled={false}
             className={classes.comboBox}
+            value={querySelected}
+            onChange={handleSelectedQuery}
           >
-            {filterOptionsData.map((rule, index) => (
+            {filterOptions.map((rule, index) => (
               <option key={index} value={rule.value}>
                 {rule.label}
               </option>
@@ -112,63 +121,122 @@ const UsageHistory: FC = () => {
           </ESSelect>
         </Grid>
       )}
-      <Box className={classes.wrapContent}>
-        {dataPurchasePoints.length > 0 && (
-          <>
-            <Box className={classes.typePurchaseContainer}>
-              <Typography>{i18n.t('common:point_management_tab.purchase_information')}</Typography>
-            </Box>
-            {dataPurchasePoints.map((item, i) => (
-              <UsagePointsItem data={item} key={i} letterCount={letterCount} />
-            ))}
-          </>
+      {/* Title Header */}
+      {usageHistoryDetail && (
+        <Box className={classes.headerContainer}>
+          <Typography className={classes.headerTitle}>
+            {i18n.t('common:point_management_tab.purchase_point') + i18n.t('common:point_management_tab.id')}「{purchasePointId}」
+            {i18n.t('common:point_management_tab.title_usage_history')}
+          </Typography>
+        </Box>
+      )}
+      {/* Content */}
+      <Box className={`${classes.wrapContent} ${listUsageHistoryData?.length > 0 && classes.spacingBottom}`}>
+        {/* Show detail usage point history */}
+        {usageHistoryDetail && (
+          <Box>
+            <>
+              <Box className={classes.typePurchaseContainer}>
+                <Typography>{i18n.t('common:point_management_tab.purchase_information')}</Typography>
+              </Box>
+              {detailUsageHistory && <PurchaseHistoryItem serialNumber={1} data={PurchaseData} type={'usage'} />}
+              <Box className={classes.typeUsageContainer}>
+                <Typography>{i18n.t('common:point_management_tab.usage_details')}</Typography>
+              </Box>
+              <>
+                {UsagePointsHistoryData?.length > 0 ? (
+                  <>
+                    {UsagePointsHistoryData?.map((item, i) => (
+                      <UsagePointDetailItem
+                        key={item.purchase_id}
+                        data={item}
+                        serialNumber={pageDetail > 1 ? (pageDetail - 1) * limit + i + 1 : i + 1}
+                      />
+                    ))}
+                    <Box className={classes.paginationContainer}>
+                      <Pagination
+                        showFirstButton
+                        showLastButton
+                        defaultPage={1}
+                        page={pageDetail}
+                        count={totalPagesDetail}
+                        variant="outlined"
+                        shape="rounded"
+                        className={classes.paginationStyle}
+                        onChange={onChangePageDetail}
+                      />
+                    </Box>
+                  </>
+                ) : (
+                  <Box className={classes.noDataContainer}>
+                    <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+                  </Box>
+                )}
+              </>
+            </>
+          </Box>
         )}
-        {dataUsagePoints.length > 0 && (
-          <>
-            <Box className={classes.typeUsageContainer}>
-              <Typography>{i18n.t('common:point_management_tab.usage_details')}</Typography>
-            </Box>
-            {dataUsagePoints.map((item, i) => (
-              <UsagePointsItem data={item} key={i} letterCount={letterCount} />
-            ))}
-          </>
-        )}
-        {(dataPurchasePoints.length <= 0 || dataUsagePoints.length <= 0) && (
-          <Box className={classes.noDataContainer}>
-            <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_text')}</Typography>
+        {/* Show item purchase point history */}
+        {!usageHistoryDetail && (
+          <Box>
+            <>
+              {listUsageHistoryData?.length > 0 ? (
+                <>
+                  {listUsageHistoryData?.map((item, i) => (
+                    <UsagePointsItem
+                      data={item}
+                      key={i}
+                      serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1}
+                      setShowDetail={setUsageHistoryDetail}
+                      setPurchasePointId={setPurchasePointId}
+                    />
+                  ))}
+                  <Box className={classes.paginationContainer}>
+                    <Pagination
+                      showFirstButton
+                      showLastButton
+                      defaultPage={1}
+                      page={page}
+                      count={totalPages}
+                      variant="outlined"
+                      shape="rounded"
+                      className={classes.paginationStyle}
+                      onChange={onChangePage}
+                    />
+                  </Box>
+                </>
+              ) : (
+                <Box className={classes.noDataContainer}>
+                  <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+                </Box>
+              )}
+            </>
           </Box>
         )}
       </Box>
-      <Box className={classes.paginationContainer}>
-        <Pagination
-          showFirstButton
-          showLastButton
-          defaultPage={1}
-          page={page}
-          count={3}
-          variant="outlined"
-          shape="rounded"
-          className={classes.paginationStyle}
-          onChange={onChangePage}
-        />
-      </Box>
+      {isLoading && <ESLoader open={isLoading} />}
     </Box>
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
   loadingContainer: {
     marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
+    // marginBottom: theme.spacing(4),
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
   },
+  spacingBottom: {
+    paddingBottom: 24,
+  },
   headerContainer: {
     justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
     display: 'flex',
-    marginTop: 8,
-    paddingBottom: 8,
+    marginTop: 16,
+    marginBottom: 24,
   },
   headerTitle: {
     color: Colors.white_opacity['70'],

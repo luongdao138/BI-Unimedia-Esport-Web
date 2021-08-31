@@ -953,6 +953,7 @@ export default {
     points: 'ポイント',
     expires_date: '有効期限',
     id: 'ID',
+    purchase_id: '利用元用購入ID',
     eXe_point_text: 'eXePoint',
     choosing: '選択中',
     thirty_days_ago: '直近30日間',

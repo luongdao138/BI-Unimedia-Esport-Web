@@ -118,5 +118,6 @@ export const URI = {
   PURCHASE_POINT: '/v2/gmo/purchase',
   GET_LIST_MY_POINTS: '/v2/points',
   GET_HISTORY_POINTS: '/v2/points/history',
-  GET_LIST_USED_POINTS: '/v2/points/used',
+  GET_LIST_USED_POINTS: '/v2/points/history',
+  GET_USAGE_POINTS_DETAIL: '/v2/points/detail',
 }

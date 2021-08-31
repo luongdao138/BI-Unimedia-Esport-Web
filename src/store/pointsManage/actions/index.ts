@@ -22,10 +22,12 @@ export const getMyPointData = createAsyncThunk<services.ListMyPointsResponse, se
   }
 )
 
-export const getListHistoryPoints = createAsyncThunk<services.PointHistoryResponse, services.ListPointsParams>(
+export const getListHistoryPoints = createAsyncThunk<services.PointHistoryResponse, services.HistoryPointsParams>(
   POINT_MANAGE_ACTION_TYPE.GET_LIST_HISTORY_POINTS,
   async (pointHistoryParams, { rejectWithValue }) => {
     try {
+      // eslint-disable-next-line no-console
+      console.log('pointHistoryParams >>>>>>>>>>>>>>', pointHistoryParams)
       const res = await services.ListHistoryPoints(pointHistoryParams)
       if (res?.code === 200) {
         return res
@@ -41,11 +43,31 @@ export const getListHistoryPoints = createAsyncThunk<services.PointHistoryRespon
     }
   }
 )
-export const getListUsedPoints = createAsyncThunk<services.PointUsedResponse, services.ListPointsParams>(
+export const getListUsedPoints = createAsyncThunk<services.PointUsedResponse, services.HistoryPointsParams>(
   POINT_MANAGE_ACTION_TYPE.GET_LIST_USED_POINTS,
   async (usedPointParams, { rejectWithValue }) => {
     try {
       const res = await services.ListUsedPoints(usedPointParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getDetailUsagePoint = createAsyncThunk<services.PointUsedDetailResponse, services.DetailUsagePointParams>(
+  POINT_MANAGE_ACTION_TYPE.GET_DETAIL_USAGE_POINTS_HISTORY,
+  async (detailParams, { rejectWithValue }) => {
+    try {
+      const res = await services.ListUsagePointsHistoryDetail(detailParams)
       if (res?.code === 200) {
         return res
       } else {
