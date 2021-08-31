@@ -220,6 +220,27 @@ export type TopicDetail = {
     member_role: string
     community_name: string
     can_remove: boolean
+    last_comment?: {
+      data: {
+        id: string
+        type: string
+        attributes: {
+          id: number
+          content: string
+          user_id: number
+          topic_id: number
+          created_at: string
+          reply_to_comment_id: string | null
+          comment_no: number
+          is_liked: boolean
+          like_count: number
+          is_mine: boolean
+          owner_name: string
+          owner_profile: string
+          attachments: Array<CommentsAttachmentResponse>
+        }
+      }
+    }
   }
 }
 
