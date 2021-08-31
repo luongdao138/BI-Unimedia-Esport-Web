@@ -126,11 +126,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: theme.spacing(20),
     margin: 8,
   },
-  [theme.breakpoints.down('sm')]: {
-    actionButtonContainer: {
-      flexDirection: 'column',
-    },
-  },
   body: {
     display: 'flex',
     flexDirection: 'column',
@@ -142,6 +137,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column',
+    },
   },
 }))
 
