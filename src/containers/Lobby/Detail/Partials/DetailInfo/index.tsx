@@ -259,6 +259,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   multiline: {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   linkify: {
     color: Colors.white,
