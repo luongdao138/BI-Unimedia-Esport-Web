@@ -1,29 +1,22 @@
-import { ESRoutes } from '@constants/route.constants'
 import { Typography, Box, Theme, makeStyles, Icon } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import { useRouter } from 'next/router'
 
 export interface TopicRowItemProps {
   title?: string
   last_comment?: string
   latest_date?: string
   comment_count?: number
-  hash_key?: string
-  communityHashKey?: string
+  // TODO tur zuur optional bolgoson. Communit detial -> Topic Search API holbosonii daraa required bolgoh
+  handleClick?: () => void
 }
 
-const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, hash_key, communityHashKey }) => {
+const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, handleClick }) => {
   const classes = useStyles()
-  const router = useRouter()
-
-  const handleOnClick = () => {
-    router.push(ESRoutes.TOPIC_DETAIL.replace(/:id/gi, communityHashKey).replace(/:topic_id/gi, hash_key))
-  }
 
   return (
     <>
-      <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%" onClick={handleOnClick}>
+      <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%" onClick={handleClick}>
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box className={classes.container}>
             <Box display="flex" flexDirection="row" width="100%">

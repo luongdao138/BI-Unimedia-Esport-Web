@@ -137,7 +137,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             </Box>
           </Box>
 
-          <Box display="flex" mb={3} flexDirection="column">
+          <Box display="flex" mb={1} flexDirection="column">
             <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
               {attr.date}
             </Typography>
@@ -190,7 +190,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             <Box display="flex" alignItems="center" mr={2}>
               <Icon className={`fas fa-users ${classes.communityIcon}`} />
             </Box>
-            <Typography variant="h2">{data.attributes.title}</Typography>
+            <Typography variant="h2">{data.attributes.name}</Typography>
           </Box>
         )
       case REPORT_TYPE.TOPIC:

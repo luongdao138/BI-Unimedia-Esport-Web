@@ -57,6 +57,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
       date: date,
       image: image,
       number: number,
+      hash_key: hash_key,
     },
   }
 
@@ -124,7 +125,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
-            // target_id={Number(detail.id)}
+            target_id={detail.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}

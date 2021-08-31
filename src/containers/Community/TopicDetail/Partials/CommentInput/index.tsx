@@ -92,7 +92,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
         </Box>
         <Box className={classes.sendCont}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.iconButton} onClick={send} disabled={imageURL === '' && inputText === ''}>
+            <IconButton className={classes.iconButton} onClick={send} disabled={imageURL === '' && inputText.trim() === ''}>
               <Icon className={`${classes.icon} fas fa-paper-plane`} />
             </IconButton>
           </Box>

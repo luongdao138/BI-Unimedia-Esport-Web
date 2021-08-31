@@ -245,7 +245,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {isAuthenticated && (
           <ESReport
             reportType={REPORT_TYPE.COMMUNITY}
-            target_id={Number(detail.id)}
+            target_id={data.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
@@ -271,7 +271,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       case TABS.INFO:
         return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
-        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} communityHashKey={String(hash_key)} />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} />
       case TABS.SEARCH:
         return showTopicListAndSearchTab && <SearchContainer />
       default:

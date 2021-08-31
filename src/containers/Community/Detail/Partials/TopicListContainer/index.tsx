@@ -6,20 +6,22 @@ import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
 import { TopicDetail } from '@services/community.service'
 import moment from 'moment'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 import PaginationMobile from '../../../Partials/PaginationMobile'
 
 type Props = {
   topicList: TopicDetail[]
-  communityHashKey?: string
 }
 
-const TopicListContainer: React.FC<Props> = ({ topicList, communityHashKey }) => {
+const TopicListContainer: React.FC<Props> = ({ topicList }) => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const chunkSize = 10
   const classes = useStyles()
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const router = useRouter()
 
   useEffect(() => {
     if (topicList) {
@@ -49,12 +51,11 @@ const TopicListContainer: React.FC<Props> = ({ topicList, communityHashKey }) =>
           return (
             <TopicRowItem
               key={i}
+              handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
               title={attr.topic_title}
               last_comment={attr.last_comment.data}
               latest_date={latestDate}
               comment_count={attr.comment_count}
-              hash_key={attr.hash_key}
-              communityHashKey={communityHashKey}
             />
           )
         })}
