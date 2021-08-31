@@ -117,7 +117,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box
         style={{
           background: `url(${values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'})`,
-          paddingTop: '30.27%',
+          paddingTop: '30.21756647864625%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
