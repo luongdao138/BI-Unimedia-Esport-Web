@@ -93,8 +93,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         <LoginRequired>
           <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
             <AddRounded className={classes.addIcon} />
-            {/* //TODO Change to community title */}
-            {t('common:tournament_create.title')}
+            {t('common:community_create.title')}
           </ButtonPrimary>
         </LoginRequired>
       </Box>

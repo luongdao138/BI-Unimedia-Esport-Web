@@ -12,6 +12,8 @@ export enum COMMUNITY_ACTION_TYPE {
   GET_TOPIC_DETAIL = 'topic/detail',
   DELETE_TOPIC = 'topic/delete',
   CLEAR_TOPIC_DETAIL = 'community/topic/clearDetail',
+  CREATE_TOPIC_COMMENT = 'topic/comment/create',
+  DELETE_TOPIC_COMMENT = 'topic/comment/delete',
   GET_COMMUNITY_MEMBERS = 'community/members',
   APPROVE_COMMUNITY_MEMBERS = 'community/members/approve',
   CANCEL_COMMUNITY_MEMBERS = 'community/members/cancel',
@@ -21,4 +23,5 @@ export enum COMMUNITY_ACTION_TYPE {
   GET_TOPIC_LIST = 'topic/list',
   FOLLOW_COMMUNITY = 'community/join',
   UNFOLLOW_COMMUNITY = 'community/leave',
+  GET_COMMENTS_LIST = 'comments/list',
 }

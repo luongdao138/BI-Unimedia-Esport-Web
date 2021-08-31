@@ -203,8 +203,8 @@ export type TopicAttachments = {
 export type TopicDetail = {
   id: string
   type: string
-  hash_key: string
   attributes: {
+    hash_key: string
     title: string
     content: string
     community_id: number
@@ -303,6 +303,47 @@ export type CommunityFollowResponse = {
   data: CommunityDetail
 }
 
+export type CommentCreateParams = {
+  topic_hash: string
+  content: string
+  reply_to_comment_hash: string
+  attachments: string
+}
+
+export type CommentsAttachmentResponse = {
+  id: number
+  assets_url: string
+  comment_id: number
+}
+
+export type CommentsResponse = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    created_at: string
+    comment_no: number
+    deleted_at: string
+    content: string
+    is_mine: true
+    attachments: Array<CommentsAttachmentResponse>
+    owner_nickname: string
+    user_code: string
+    owner_profile: string
+    hash_key: string
+    reply_to_comment_hash_key: string
+  }
+}
+
+export type CommentsListResponse = {
+  data: Array<CommentsResponse>
+  meta: PageMeta
+}
+export type CommentsListParams = {
+  hash_key: string
+  page?: number
+}
+
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PRIVATE, { params })
   return data
@@ -388,6 +429,16 @@ export const getTopicList = async (params: TopicListParams): Promise<TopicListRe
   return data
 }
 
+export const createTopicComment = async (params: CommentCreateParams): Promise<void> => {
+  const { data } = await api.post<void>(URI.TOPIC_COMMENT_CREATE, params)
+  return data
+}
+
+export const deleteTopicComment = async (hash_key: string): Promise<void> => {
+  const { data } = await api.delete<void>(URI.TOPIC_COMMENT_DELETE.replace(/:id/gi, hash_key))
+  return data
+}
+
 export const followCommunity = async (hash_key: string): Promise<CommunityFollowResponse> => {
   const { data } = await api.post<CommunityFollowResponse>(URI.COMMUNITY_FOLLOW.replace(/:id/gi, hash_key))
   return data
@@ -395,5 +446,10 @@ export const followCommunity = async (hash_key: string): Promise<CommunityFollow
 
 export const unfollowCommunity = async (hash_key: string): Promise<void> => {
   const { data } = await api.post<void>(URI.COMMUNITY_UNFOLLOW.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const getCommentsList = async (params: CommentsListParams): Promise<CommentsListResponse> => {
+  const { data } = await api.get<CommentsListResponse>(URI.COMMUNITY_COMMENTS_LIST, { params })
   return data
 }

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -13,30 +13,36 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
+import { CommentsResponse } from '@services/community.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
+import useTopicDetail from '../../useTopicDetail'
+import { useRouter } from 'next/router'
 
 type CommunityHeaderProps = {
-  username: string
-  mail: string
-  discription: string
-  date: string
-  number: number
-  image?: string
+  comment: CommentsResponse
+  handleReply?: (params: { hash_key: string; id: number }) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, number }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
   const classes = useStyles()
+  const { query } = useRouter()
+  const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const isModerator = true
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const { deleteComment, getComments } = useTopicDetail()
+  const commentData = comment.attributes
+  const hash_key = commentData.hash_key
   const detail = {
     attributes: {
-      username: username,
-      mail: mail,
-      description: discription,
-      date: date,
-      image: image,
-      number: number,
+      nickname: commentData.owner_nickname,
+      user_code: commentData.user_code,
+      content: commentData.content,
+      date: CommonHelper.staticSmartTime(commentData.created_at),
+      image: commentData.attachments[0]?.assets_url,
+      number: commentData.comment_no,
+      hash_key: commentData.hash_key,
     },
   }
 
@@ -46,15 +52,23 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
   const handleDeleteOpen = () => {
     setOpenDelete(true)
   }
-  const handleDeleteSubmit = () => {
-    //
+  const handleDeleteSubmit = async () => {
+    await deleteComment(hash_key)
+    setOpenDelete(false)
+    getComments({ hash_key: String(topic_hash_key), page: 1 })
+  }
+
+  const handleCommentReply = () => {
+    handleReply({ hash_key: hash_key, id: commentData.id })
   }
 
   const renderClickableImage = () => {
     return (
-      <SRLWrapper options={LIGHTBOX_OPTIONS}>
-        <img className={classes.imageBox} src={image} />
-      </SRLWrapper>
+      <Box mb={1}>
+        <SRLWrapper options={LIGHTBOX_OPTIONS}>
+          <img className={classes.imageBox} src={commentData.attachments[0]?.assets_url} />
+        </SRLWrapper>
+      </Box>
     )
   }
 
@@ -63,18 +77,18 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
       <Box className={classes.container}>
         <Box className={classes.userContainer}>
           <Box className={classes.userInfoContainer}>
-            <Typography className={classes.number}>{number}</Typography>
+            <Typography className={classes.number}>{commentData.comment_no}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
+              <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
             </Box>
 
-            <Box className={classes.userInfoBox} ml={1} maxWidth="67%">
-              <Typography className={classes.username}>{username}</Typography>
-              <Typography className={classes.mail}>{mail}</Typography>
+            <Box className={classes.userInfoBox} ml={1}>
+              <Typography className={classes.username}>{commentData.owner_nickname}</Typography>
+              <Typography className={classes.user_code}>{commentData.user_code}</Typography>
             </Box>
           </Box>
           <Box className={classes.dateReportContainer}>
-            <Typography className={classes.date}>{date}</Typography>
+            <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
             <ESMenu>
               {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
               <LoginRequired>
@@ -85,15 +99,20 @@ const Comment: React.FC<CommunityHeaderProps> = ({ username, mail, discription, 
         </Box>
 
         <Box className={classes.discriptionContainer} mb={3}>
-          <Typography className={classes.discription}>{discription}</Typography>
+          <Typography className={classes.content}>{commentData.content}</Typography>
         </Box>
-        {image && renderClickableImage()}
+        {commentData.attachments[0]?.assets_url && renderClickableImage()}
+        <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <IconButton className={classes.shareButton} onClick={handleCommentReply}>
+            <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+          </IconButton>
+        </Box>
       </Box>
       {isAuthenticated && (
         <>
           <ESReport
             reportType={REPORT_TYPE.TOPIC_COMMENT}
-            // target_id={Number(detail.id)}
+            target_id={detail.attributes.hash_key}
             data={detail}
             open={openReport}
             handleClose={() => setOpenReport(false)}
@@ -129,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
-    width: '67%',
+    width: 'calc(100% - 150px)',
   },
   userAvatarBox: {
     display: 'flex',
@@ -140,6 +159,7 @@ const useStyles = makeStyles((theme) => ({
   userInfoBox: {
     display: 'flex',
     flexDirection: 'column',
+    width: '100%',
   },
   dateReportContainer: {
     display: 'flex',
@@ -164,7 +184,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     maxWidth: '100%',
   },
-  mail: {
+  user_code: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -184,11 +204,15 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 7,
     width: '66%',
   },
-  discription: {
+  content: {
     color: Colors.white_opacity[70],
   },
   number: {
     fontSize: 10,
+  },
+  shareButton: {
+    padding: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {

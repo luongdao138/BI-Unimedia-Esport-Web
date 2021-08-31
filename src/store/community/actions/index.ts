@@ -264,6 +264,36 @@ export const deleteTopic = createAsyncThunk<void, services.TopicDetailParams>(
   }
 )
 
+export const createTopicComment = createAsyncThunk<void, services.CommentCreateParams>(
+  COMMUNITY_ACTION_TYPE.CREATE_TOPIC_COMMENT,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.createTopicComment(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const deleteTopicComment = createAsyncThunk<void, string>(
+  COMMUNITY_ACTION_TYPE.DELETE_TOPIC_COMMENT,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.deleteTopicComment(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const followCommunity = createAsyncThunk<services.CommunityFollowResponse, string>(
   COMMUNITY_ACTION_TYPE.FOLLOW_COMMUNITY,
   async (params, { rejectWithValue }) => {
@@ -284,6 +314,21 @@ export const unfollowCommunity = createAsyncThunk<void, string>(
   async (params, { rejectWithValue }) => {
     try {
       const res = await services.unfollowCommunity(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getCommentsList = createAsyncThunk<services.CommentsListResponse, services.CommentsListParams>(
+  COMMUNITY_ACTION_TYPE.GET_COMMENTS_LIST,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.getCommentsList(params)
       return res
     } catch (error) {
       if (!error.response) {

@@ -278,6 +278,7 @@ export default {
     no_data: '該当のコミュニティはありません。',
     topic: {
       create_success: 'トピックを削除しました。',
+      view_past_comments: '↑過去のコメントを表示する',
     },
     unfollow_dialog: {
       title: 'フォローを解除する',
@@ -285,9 +286,9 @@ export default {
       submit_title: 'フォローを解除',
     },
     unfollow_dialog_applying: {
-      title: 'フォローを解除する',
-      description: '再フォローには再度フォロー申請が必要となりますが、よろしいでしょうか？',
-      submit_title: 'フォローを解除',
+      title: 'フォロー申請を取り消す',
+      description: 'フォロー申請を取り消します。よろしいですか？',
+      submit_title: '申請取消',
     },
   },
   infinite_scroll: {
