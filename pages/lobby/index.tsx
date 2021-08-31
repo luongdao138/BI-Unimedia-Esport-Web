@@ -10,7 +10,7 @@ const LobbyPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
   return (
-    <MainLayout>
+    <MainLayout loginRequired={false}>
       <LobbyHomeContainer filter={formatFilter(filter)} />
     </MainLayout>
   )

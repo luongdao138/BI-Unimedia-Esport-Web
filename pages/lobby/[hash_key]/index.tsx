@@ -11,7 +11,7 @@ export const getServerSideProps = async () => {
 
 const LobbyPage: PageWithLayoutType = () => {
   return (
-    <MainLayout>
+    <MainLayout loginRequired={false}>
       <DetailContainer />
     </MainLayout>
   )
