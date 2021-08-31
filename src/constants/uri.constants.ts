@@ -53,6 +53,7 @@ export const URI = {
   TOPIC_LIST: '/v2/communities/topics',
   TOPIC_COMMENT_CREATE: '/v2/comments',
   TOPIC_COMMENT_DELETE: '/v2/comments/:id',
+  TOPIC_SEARCH: '/v2/topics/search',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',

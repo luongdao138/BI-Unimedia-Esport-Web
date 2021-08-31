@@ -257,6 +257,7 @@ export default {
       by_title: 'タイトルのみで検索をかける',
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
+      no_data: '該当するトピックは見つかりませんでした。',
     },
     follow_list: 'フォローリスト',
     member_list: {

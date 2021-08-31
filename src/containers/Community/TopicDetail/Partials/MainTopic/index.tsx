@@ -51,7 +51,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       user_code: topicData?.owner_email,
       content: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
-      image: !!topicData.attachments && topicData.attachments[0]?.assets_url,
+      image: !!topicData?.attachments && topicData.attachments[0]?.assets_url,
       hash_key: topicData?.hash_key,
     },
   }
@@ -66,7 +66,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const renderClickableImage = () => {
     return (
       <SRLWrapper options={LIGHTBOX_OPTIONS}>
-        <img className={classes.imageBox} src={isConfirm ? image : !!topicData.attachments && topicData.attachments[0]?.assets_url} />
+        <img className={classes.imageBox} src={isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url} />
       </SRLWrapper>
     )
   }
@@ -105,7 +105,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
           <Box className={classes.descriptionContainer} mb={2} mt={1}>
             <Typography className={classes.description}>{isConfirm ? description : topicData.content}</Typography>
           </Box>
-          {(isConfirm ? image : !!topicData.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
+          {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData?.like_count || topicData?.like_count == 0 ? (
             <Box display="flex" justifyContent="space-between" mt={2}>
               <Box display="flex" justifyContent="flex-end">
