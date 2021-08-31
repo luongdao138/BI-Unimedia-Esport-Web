@@ -4,7 +4,7 @@ import TopicDetailContainer from '@containers/Community/TopicDetail'
 
 const TopicDetailPage: PageWithLayoutType = () => {
   return (
-    <MainLayout loginRequired={true}>
+    <MainLayout loginRequired={true} patternBg={true}>
       <TopicDetailContainer />
     </MainLayout>
   )

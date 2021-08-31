@@ -31,11 +31,12 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
   }, [])
 
   const handleSelectedGame = useCallback((value) => {
-    formik.setFieldValue('stepOne.game_title_id', value)
+    formik.setFieldValue('stepOne.game_titles', value)
   }, [])
 
   const handleSelectedTag = useCallback((value) => {
-    formik.setFieldValue('stepOne.tag_title_id', value)
+    // value = value.filter((v) => {id: v.id, feature: v.attributes.feature})
+    formik.setFieldValue('stepOne.features', value)
   }, [])
 
   return (
@@ -45,45 +46,45 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
           src={formik.values.stepOne.cover_image_url}
           onChange={handleUpload}
           isUploading={isUploading}
-          disabled={!editables.cover_image}
+          disabled={!editables.cover_image_url}
         />
       </Box>
       <Box pb={4}>
         <ESFastInput
           id="title"
-          name="stepOne.title"
+          name="stepOne.name"
           labelPrimary={i18n.t('common:community_create.name')}
           fullWidth
-          value={formik.values.stepOne.title}
+          value={formik.values.stepOne.name}
           onChange={formik.handleChange}
-          helperText={formik.touched?.stepOne?.title && formik.errors?.stepOne?.title}
-          error={formik.touched?.stepOne?.title && !!formik.errors?.stepOne?.title}
+          helperText={formik.touched?.stepOne?.name && formik.errors?.stepOne?.name}
+          error={formik.touched?.stepOne?.name && !!formik.errors?.stepOne?.name}
           onBlur={formik.handleBlur}
           size="small"
           required
-          disabled={!editables.title}
+          disabled={!editables.name}
         />
       </Box>
       <Box pb={4}>
         <ESFastInput
-          id="stepOne.overview"
-          name="stepOne.overview"
+          id="stepOne.description"
+          name="stepOne.description"
           multiline
           rows={5}
           labelPrimary={i18n.t('common:community_create.introduction')}
           placeholder={i18n.t('common:community_create.introduction_placeholder')}
           fullWidth
-          value={formik.values.stepOne.overview}
+          value={formik.values.stepOne.description}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepOne?.overview && formik.errors?.stepOne?.overview}
-          error={formik.touched?.stepOne?.overview && !!formik.errors?.stepOne?.overview}
+          helperText={formik.touched?.stepOne?.description && formik.errors?.stepOne?.description}
+          error={formik.touched?.stepOne?.description && !!formik.errors?.stepOne?.description}
           size="small"
-          disabled={!editables.overview}
+          disabled={!editables.description}
         />
       </Box>
       <Box pb={3}>
-        <GameSelectorDialog values={formik.values.stepOne.game_title_id} onChange={handleSelectedGame} disabled={!editables.game_title} />
+        <GameSelectorDialog values={formik.values.stepOne.game_titles} onChange={handleSelectedGame} disabled={!editables.game_titles} />
       </Box>
       <Box pb={1} width={200}>
         <ESSelect
@@ -95,9 +96,6 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
           fullWidth
           disabled={!editables.area_id}
         >
-          <option disabled value={-1}>
-            {i18n.t('common:please_select')}
-          </option>
           {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
               {prefecture.attributes.area}
@@ -128,16 +126,16 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
         </Box>
         <ESCheckbox
           disableRipple
-          checked={CommunityHelper.getTypeValue(formik.values.stepOne.t_type)}
-          onChange={() => formik.setFieldValue('stepOne.t_type', CommunityHelper.onTypeChange(formik.values.stepOne.t_type))}
+          checked={CommunityHelper.getTypeValue(formik.values.stepOne.open_range)}
+          onChange={() => formik.setFieldValue('stepOne.open_range', CommunityHelper.onTypeChange(formik.values.stepOne.open_range))}
           label={i18n.t('common:profile.show')}
-          disabled={!editables.t_type}
+          disabled={!editables.open_range}
         />
       </Box>
       <Box pb={4} width={200}>
         <ESSelect
-          name="stepOne.participation_approval"
-          value={formik.values.stepOne.participation_approval}
+          name="stepOne.join_condition"
+          value={formik.values.stepOne.join_condition}
           onChange={formik.handleChange}
           label={i18n.t('common:community_create.participation_approval')}
           size="small"
@@ -148,15 +146,12 @@ const StepOne: React.FC<Props> = ({ formik, prefectures, editables }) => {
           <option disabled value={-1}>
             {i18n.t('common:please_select')}
           </option>
-          {prefectures?.data?.map((prefecture, index) => (
-            <option value={prefecture.id} key={index}>
-              {prefecture.attributes.area}
-            </option>
-          ))}
+          <option value={1}>{i18n.t('common:community_create.approval_automatic')}</option>
+          <option value={0}>{i18n.t('common:community_create.approval_manual')}</option>
         </ESSelect>
       </Box>
       <Box>
-        <TagSelectorDialog values={formik.values.stepOne.tag_title_id} onChange={handleSelectedTag} disabled={!editables.tag_title} />
+        <TagSelectorDialog values={formik.values.stepOne.features} onChange={handleSelectedTag} disabled={!editables.features} />
       </Box>
     </Box>
   )

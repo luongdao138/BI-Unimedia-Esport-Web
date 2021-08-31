@@ -2,64 +2,117 @@ import { Box, Typography, Icon, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
+import ESMenu from '@components/Menu'
+import ESMenuItem from '@components/Menu/MenuItem'
+import LoginRequired from '@containers/LoginRequired'
+import { useTranslation } from 'react-i18next'
+import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
+import { useState } from 'react'
+import { REPORT_TYPE } from '@constants/common.constants'
+import ESReport from '@containers/Report'
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { SRLWrapper } from 'simple-react-lightbox'
+import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
+import { TopicDetail } from '@services/community.service'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type CommunityHeaderProps = {
-  username: string
-  mail: string
-  discription: string
+  user_avatar?: string
+  nickname?: string
+  user_code?: string
+  content?: string
   date?: string
-  count?: number
-  image?: string
+  image?: string | null
   isConfirm?: boolean
+  hash_key?: string
+  handleDelete?: () => void
+  topic?: TopicDetail
 }
-const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription, date, image, count, isConfirm }) => {
+const MainTopic: React.FC<CommunityHeaderProps> = ({
+  nickname,
+  user_code,
+  content,
+  image,
+  user_avatar,
+  isConfirm,
+  handleDelete,
+  topic,
+}) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
+  const isModerator = true
+  const { isAuthenticated } = useCommunityDetail()
+  const [openReport, setOpenReport] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+  const topicData = topic?.attributes
+  const detail = {
+    attributes: {
+      nickname: topicData?.owner_name,
+      user_code: topicData?.owner_user_code,
+      content: topicData?.content,
+      date: CommonHelper.staticSmartTime(topicData?.created_at),
+      image: !!topicData.attachments && topicData.attachments[0]?.assets_url,
+      hash_key: topicData?.hash_key,
+    },
+  }
+
+  const handleReportOpen = () => {
+    setOpenReport(true)
+  }
+  const handleDeleteOpen = () => {
+    setOpenDelete(true)
+  }
+
+  const renderClickableImage = () => {
+    return (
+      <SRLWrapper options={LIGHTBOX_OPTIONS}>
+        <img className={classes.imageBox} src={isConfirm ? image : !!topicData.attachments && topicData.attachments[0]?.assets_url} />
+      </SRLWrapper>
+    )
+  }
 
   return (
     <>
-      <Box className={classes.container}>
+      <Box className={isConfirm ? classes.containerConfirm : classes.container}>
         <Box m={2}>
           <Box className={classes.userContainer}>
-            <Box className={classes.userInfoContainer} ml={isConfirm ? 3 : 0}>
-              <ESAvatar className={classes.avatar} alt={username} src={username ? '' : '/images/avatar.png'} />
+            <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
+              <ESAvatar
+                className={classes.avatar}
+                alt={isConfirm ? nickname : topicData.owner_name}
+                src={isConfirm ? user_avatar : topicData.owner_profile}
+              />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-                <Typography className={classes.username}>{username}</Typography>
-                <Typography className={classes.mail}>{mail}</Typography>
+                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
+                <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData.owner_user_code}</Typography>
               </Box>
             </Box>
-            {date && count && (
+            {!isConfirm && (
               <Box className={classes.dateReportContainer}>
-                <Typography className={classes.date}>{date}</Typography>
-                <Box className={classes.reportButton}>
-                  <IconButton>
-                    <Icon className="fa fa-ellipsis-v" fontSize="small" />
-                  </IconButton>
-                </Box>
+                <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
+
+                <ESMenu>
+                  {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
+                  <LoginRequired>
+                    <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
+                  </LoginRequired>
+                </ESMenu>
               </Box>
             )}
           </Box>
 
-          <Box className={classes.discriptionContainer} mb={3} mt={3}>
-            <Typography className={classes.discription}>{discription}</Typography>
+          <Box className={classes.contentContainer} mb={2} mt={1}>
+            <Typography className={classes.content}>{isConfirm ? content : topicData.content}</Typography>
           </Box>
-          {image ? (
-            <Box
-              className={classes.image}
-              style={{
-                backgroundImage: `url(${image})`,
-              }}
-            ></Box>
-          ) : (
-            <></>
-          )}
-          {count ? (
-            <Box display="flex" justifyContent="space-between" mt={3}>
+          {(isConfirm ? image : !!topicData.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
+          {topicData?.like_count || topicData?.like_count == 0 ? (
+            <Box display="flex" justifyContent="space-between" mt={2}>
               <Box display="flex" justifyContent="flex-end">
                 <Box className={classes.numberBox}>
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{count}</Typography>
+                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
                 </Box>
               </Box>
               <Box display="flex" justifyContent="flex-end">
@@ -67,10 +120,12 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{count}</Typography>
+                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
                 </Box>
                 <Box className={classes.numberBox}>
-                  <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                  <IconButton className={classes.replyButton}>
+                    <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+                  </IconButton>
                 </Box>
               </Box>
             </Box>
@@ -79,6 +134,25 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({ username, mail, discription
           )}
         </Box>
       </Box>
+      {isAuthenticated && (
+        <>
+          <ESReport
+            reportType={REPORT_TYPE.TOPIC}
+            target_id={detail?.attributes.hash_key}
+            data={detail}
+            open={openReport}
+            handleClose={() => setOpenReport(false)}
+          />
+          <DiscardDialog
+            title={nickname + t('common:topic.delete.title')}
+            open={openDelete}
+            onClose={() => setOpenDelete(false)}
+            onSubmit={handleDelete}
+            description={t('common:topic.delete.description')}
+            confirmTitle={t('common:topic.delete.submit')}
+          />
+        </>
+      )}
     </>
   )
 }
@@ -90,7 +164,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'black',
     flexDirection: 'column',
     borderRadius: 5,
-    border: '1px solid rgba(255,255,255,0.3)',
+    border: '1px solid ',
+    borderColor: Colors.white_opacity[30],
+    marginTop: theme.spacing(1),
+  },
+  containerConfirm: {
+    display: 'flex',
+    backgroundColor: 'black',
+    flexDirection: 'column',
+    borderRadius: 5,
+    border: '1px solid ',
+    borderColor: Colors.white_opacity[30],
+    marginTop: theme.spacing(1),
   },
   userContainer: {
     display: 'flex',
@@ -100,6 +185,10 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     display: 'flex',
     width: 'calc(90% - 150px)',
+  },
+  userInfoContainerNoDate: {
+    display: 'flex',
+    width: 'calc(90% - 50px)',
   },
   userAvatarBox: {
     display: 'flex',
@@ -124,11 +213,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start',
   },
   avatar: {
-    zIndex: 30,
     width: 50,
     height: 50,
   },
-  username: {
+  replyButton: {
+    padding: theme.spacing(0.5),
+  },
+  nickname: {
     fontWeight: 'bold',
     color: 'white',
     textOverflow: 'ellipsis',
@@ -137,7 +228,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     fontSize: 16,
   },
-  mail: {
+  userCode: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -148,20 +239,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 11,
     color: Colors.white_opacity[30],
   },
-  discriptionContainer: {
+  contentContainer: {
     display: 'flex',
   },
-  image: {
-    display: 'flex',
-
-    paddingTop: '30.27%',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-  },
-  discription: {
+  content: {
     color: Colors.grey[300],
     fontSize: 14,
+    wordBreak: 'break-word',
   },
   numberBox: {
     display: 'flex',
@@ -169,6 +253,18 @@ const useStyles = makeStyles((theme) => ({
   },
   count: {
     fontSize: 12,
+  },
+  imageBox: {
+    display: 'flex',
+    cursor: 'pointer',
+    transition: 'all 0.5s ease',
+    borderRadius: 7,
+    width: '66%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    imageBox: {
+      width: '80%',
+    },
   },
 }))
 

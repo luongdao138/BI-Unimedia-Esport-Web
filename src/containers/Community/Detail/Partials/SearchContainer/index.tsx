@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -8,6 +8,9 @@ import ESCheckbox from '@components/Checkbox'
 import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
+import PaginationMobile from '../../../Partials/PaginationMobile'
+// import { useRouter } from 'next/router'
+// import { ESRoutes } from '@constants/route.constants'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -16,6 +19,9 @@ const InfoContainer: React.FC = () => {
   const [value, setValue] = useState<string>('')
   const classes = useStyles()
   const [showResult, setShowResult] = useState(false)
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  // const router = useRouter()
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -57,101 +63,87 @@ const InfoContainer: React.FC = () => {
   const dummy_data = [
     {
       title: '自己紹介しよう！ 自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！',
-      mail: '@watanabe @watanabe@watanabe@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 901,
+      last_comment: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 901,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 902,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 902,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 903,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 903,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 904,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 904,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 905,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 905,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 906,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 906,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 907,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 907,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 908,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 908,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 909,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 909,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 910,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 910,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 911,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 911,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 912,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 912,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 913,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 913,
     },
     {
       title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 914,
+      last_comment: 'はじめまして！　ダミーテキストです〜',
+      latest_date: '数秒前',
+      comment_count: 914,
     },
   ]
 
@@ -211,23 +203,30 @@ const InfoContainer: React.FC = () => {
                 <TopicRowItem
                   key={i}
                   title={d.title}
-                  mail={d.mail}
-                  description={d.description}
-                  date={d.date}
-                  comment_number={d.comment_number}
+                  last_comment={d.last_comment}
+                  latest_date={d.latest_date}
+                  comment_count={d.comment_count}
                 />
               )
             })}
             <Box display="flex" justifyContent="center" mt={4}>
-              <Pagination
-                className={classes.pagination}
-                count={count}
-                page={page}
-                onChange={handleChange}
-                variant="outlined"
-                shape="rounded"
-                color="primary"
-              />
+              {isMobile ? (
+                <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
+              ) : (
+                <Pagination
+                  className={classes.pagination}
+                  count={count}
+                  page={page}
+                  onChange={handleChange}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  hideNextButton
+                  hidePrevButton
+                  showFirstButton
+                  showLastButton
+                />
+              )}
             </Box>
           </>
         </>

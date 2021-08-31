@@ -2,9 +2,7 @@ import React, { useState, useEffect, memo } from 'react'
 import { Theme, Box, Typography, makeStyles, Container, List } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import { GameTitle } from '@services/game.service'
 import { useTranslation } from 'react-i18next'
-import useGameTitles from '@components/GameSelector/useGameTitles'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import ButtonPrimary from '@components/ButtonPrimary'
 import BlankLayout from '@layouts/BlankLayout'
@@ -12,12 +10,12 @@ import Icon from '@material-ui/core/Icon'
 import ESModal from '@components/Modal'
 import ESChip from '@components/Chip'
 import _ from 'lodash'
-import useGameGenre from '@components/GameSelector/useGameByGenreId'
+import useCommunityCreate from '../useCommunityCreate'
+import { CommunityFeature } from '@services/community.service'
 
-type GameTitleItem = GameTitle['attributes']
 interface Props {
-  values: GameTitleItem[]
-  onChange: (games: GameTitleItem[]) => void
+  values: CommunityFeature[]
+  onChange: (communityFeatures: CommunityFeature[]) => void
   disabled?: boolean
 }
 
@@ -25,11 +23,8 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const [open, setOpen] = useState(false)
-  const [categoryTitles, setCategoryTitles] = useState<GameTitleItem[]>(values)
-  const { games } = useGameTitles()
-  const { getGameByGenreId, meta } = useGameGenre()
-
-  const handleCategoryGenre = () => getGameByGenreId(1)
+  const [categoryTitles, setCategoryTitles] = useState<CommunityFeature[]>(values)
+  const { getCommunityFeaturesMeta, communityFeatures } = useCommunityCreate()
 
   useEffect(() => {
     if (open === true) {
@@ -41,14 +36,14 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
     onChange(categoryTitles)
     setOpen(false)
   }
-  const checkIsSelected = (id: number) => categoryTitles.some((g) => g.id === id)
+  const checkIsSelected = (id: number) => categoryTitles.some((g) => Number(g.id) === id)
 
-  const handleSelect = (game: GameTitleItem) => {
-    const selectedId = game.id
+  const handleSelect = (feature: CommunityFeature) => {
+    const selectedId = Number(feature.id)
     if (checkIsSelected(selectedId)) {
-      setCategoryTitles(categoryTitles.filter((category) => category.id !== selectedId))
+      setCategoryTitles(categoryTitles.filter((feature) => Number(feature.id) !== selectedId))
     } else {
-      setCategoryTitles([game, ...categoryTitles])
+      setCategoryTitles([feature, ...categoryTitles])
     }
   }
 
@@ -61,7 +56,6 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
         disabled={disabled}
         onClick={() => {
           setOpen(true)
-          handleCategoryGenre()
         }}
         className={classes.inputContainer}
       >
@@ -69,7 +63,7 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
           ) : (
-            values.map((category, idx) => <ESChip key={idx} className={classes.chip} label={category.display_name} />)
+            values.map((feature, idx) => <ESChip key={idx} className={classes.chip} label={feature.attributes.feature} />)
           )}
         </Box>
         <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
@@ -89,16 +83,16 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
 
             <Box pt={8} className={classes.container}>
               <>
-                {meta.loaded && !meta.pending && games.length > 0 && (
+                {getCommunityFeaturesMeta.loaded && !getCommunityFeaturesMeta.pending && communityFeatures.length > 0 && (
                   <Container maxWidth="md" className={classes.listContainer}>
                     <List>
-                      {games.map((g, idx) => (
+                      {communityFeatures.map((g, idx) => (
                         <ESChip
                           key={idx}
                           className={classes.chip}
-                          label={g.display_name}
+                          label={g.attributes.feature}
                           onClick={() => handleSelect(g)}
-                          color={checkIsSelected(g.id) ? 'primary' : 'default'}
+                          color={checkIsSelected(Number(g.id)) ? 'primary' : 'default'}
                           isGameList={true}
                         />
                       ))}

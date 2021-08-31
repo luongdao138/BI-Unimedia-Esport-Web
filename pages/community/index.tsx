@@ -9,7 +9,7 @@ const CommunityPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
   return (
-    <MainLayout loginRequired={true}>
+    <MainLayout loginRequired={false} patternBg={true}>
       <CommunityContainer filter={formatFilter(filter)} />
     </MainLayout>
   )
@@ -17,7 +17,7 @@ const CommunityPage: PageWithLayoutType = () => {
 
 function formatFilter(filterText: string) {
   if (!_.isString(filterText)) return CommunityFilterOption.all
-  const possibleFilters = ['all', 'participating', 'managing']
+  const possibleFilters = ['all', 'joined', 'organized']
   if (possibleFilters.includes(filterText)) {
     return filterText as CommunityFilterOption
   }

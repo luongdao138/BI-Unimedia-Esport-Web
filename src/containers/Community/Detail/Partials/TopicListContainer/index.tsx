@@ -1,118 +1,32 @@
-import { Box } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
 import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
+import { TopicDetail } from '@services/community.service'
+import moment from 'moment'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import PaginationMobile from '../../../Partials/PaginationMobile'
 
-const InfoContainer: React.FC = () => {
-  const dummy_data = [
-    {
-      title: '自己紹介しよう！ 自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！',
-      mail: '@watanabe @watanabe@watanabe@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 901,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 902,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 903,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 904,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 905,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 906,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 907,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 908,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 909,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 910,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 911,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 912,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 913,
-    },
-    {
-      title: '自己紹介しよう！',
-      mail: '@watanabe',
-      description: 'はじめまして！　ダミーテキストです〜',
-      date: '数秒前',
-      comment_number: 914,
-    },
-  ]
+type Props = {
+  topicList: TopicDetail[]
+}
 
+const TopicListContainer: React.FC<Props> = ({ topicList }) => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
   const chunkSize = 10
   const classes = useStyles()
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const router = useRouter()
+
   useEffect(() => {
-    setCount(Math.ceil(dummy_data.length / 10))
+    if (topicList) {
+      setCount(Math.ceil(topicList.length / 10))
+    }
   }, [])
 
   const handleChange = (event, value) => {
@@ -129,22 +43,40 @@ const InfoContainer: React.FC = () => {
   return (
     <>
       <Box mt={2} />
-
-      {chunks(dummy_data, page).map((d, i) => {
-        return (
-          <TopicRowItem key={i} title={d.title} mail={d.mail} description={d.description} date={d.date} comment_number={d.comment_number} />
-        )
-      })}
+      {!!topicList &&
+        topicList.length > 0 &&
+        chunks(topicList, page).map((d, i) => {
+          const attr = d.attributes
+          const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
+          return (
+            <TopicRowItem
+              key={i}
+              handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
+              title={attr.topic_title}
+              last_comment={attr.last_comment.data}
+              latest_date={latestDate}
+              comment_count={attr.comment_count}
+            />
+          )
+        })}
       <Box display="flex" justifyContent="center" mt={4}>
-        <Pagination
-          className={classes.pagination}
-          count={count}
-          page={page}
-          onChange={handleChange}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
-        />
+        {isMobile ? (
+          <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
+        ) : (
+          <Pagination
+            className={classes.pagination}
+            count={count}
+            page={page}
+            onChange={handleChange}
+            variant="outlined"
+            shape="rounded"
+            color="primary"
+            hideNextButton
+            hidePrevButton
+            showFirstButton
+            showLastButton
+          />
+        )}
       </Box>
     </>
   )
@@ -154,6 +86,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1,
     '& .MuiPaginationItem-root': {
       color: Colors.white,
+      borderRadius: 4,
     },
     '& .MuiPaginationItem-outlined': {
       borderColor: Colors.primary,
@@ -162,6 +95,14 @@ const useStyles = makeStyles(() => ({
       backgroundColor: Colors.primary,
       color: Colors.white,
     },
+    '& .MuiPaginationItem-ellipsis': {
+      height: 32,
+      border: '1px solid',
+      borderColor: Colors.primary,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   },
 }))
-export default InfoContainer
+export default TopicListContainer

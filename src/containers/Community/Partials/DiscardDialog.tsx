@@ -1,15 +1,16 @@
 import { Box, Dialog, makeStyles, Typography, withStyles } from '@material-ui/core'
 import MuiDialogContent from '@material-ui/core/DialogContent'
-import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
+import { useTranslation } from 'react-i18next'
 
 interface IndividualEntryModalProps {
-  onClose: () => void
-  onSubmit: () => void
   open: boolean
-  isEdit?: boolean
-  isTopic?: boolean
+  title: string
+  description?: string
+  confirmTitle: string
+  onClose?: () => void
+  onSubmit: () => void
 }
 
 const DialogContent = withStyles((theme) => ({
@@ -24,9 +25,9 @@ const DialogContent = withStyles((theme) => ({
   },
 }))(MuiDialogContent)
 
-const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onSubmit, isEdit, isTopic }) => {
-  const { t } = useTranslation(['common'])
+const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onSubmit, title, description, confirmTitle }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   const handleClose = () => {
     onClose()
@@ -58,30 +59,16 @@ const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onS
       <DialogContent>
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle} gutterBottom>
-            {isEdit
-              ? t('common:community_create.discard.edit_title')
-              : isTopic
-              ? t('common:topic_create.discard.title')
-              : t('common:community_create.discard.title')}
+            {title}
           </Typography>
-          <Typography className={classes.message} gutterBottom>
-            {isEdit
-              ? t('common:community_create.discard.edit_message')
-              : isTopic
-              ? t('common:topic_create.discard.message')
-              : t('common:community_create.discard.message')}
-          </Typography>
+          <Typography className={classes.message}>{description}</Typography>
         </Box>
         <Box className={classes.actionBox}>
           <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
             {t('common:common.cancel')}
           </ButtonPrimary>
           <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
-            {isEdit
-              ? t('common:community_create.discard.edit_confirm')
-              : isTopic
-              ? t('common:topic_create.discard.confirm')
-              : t('common:community_create.discard.confirm')}
+            {confirmTitle}
           </ButtonPrimary>
         </Box>
       </DialogContent>
@@ -102,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   actionBox: {
-    marginTop: theme.spacing(9),
+    marginTop: theme.spacing(14),
     display: 'flex',
     justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
