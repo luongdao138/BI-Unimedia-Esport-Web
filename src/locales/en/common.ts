@@ -26,6 +26,7 @@ export default {
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
     save: '保存する',
+    dont_save: '保存しない',
     cancel: 'キャンセル',
     done: '完了',
     change: '変更する',
@@ -69,6 +70,9 @@ export default {
     username: 'ユーザー名',
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
+  },
+  pr: {
+    static_title: '動画配信サービス',
   },
   page404: {
     title: '404',
@@ -336,6 +340,8 @@ export default {
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
     },
+    t_public: '公開する',
+    t_private: '公開しない',
     has_prize_true: '副賞あり',
     online: 'オンライン',
     offline: 'オフライン',
@@ -434,13 +440,18 @@ export default {
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
+    failed_to_update_match: '対戦表の更新に失敗しました',
     dialog: {
-      randomize_title: 'ユーザーをランダムに配置します',
-      randomize_desc: '現在エントリーしているユーザーをトーナメント表の空欄になっている枠へランダムに配置します',
-      randomize_sub1: '※エントリーしているユーザー数が参加枠数よりも多い場合は、選択されなかったユーザーは落選となります。',
-      randomize_sub2: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+      randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
+      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
+      randomize_sub1:
+        '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
+      randomize_sub2:
+        '※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+      randomize_sub3: '※既に手動で登録されているユーザーはこのランダム配置を行っても移動しません。',
       randomize_warn: 'この時点ではまだエントリー表は確定しません',
       deploy_button: '配置する',
+      confirm_button: '確定する',
       freeze_title: 'トーナメント表を確定する',
       freeze_desc: '現在の対戦表に登録されているユーザーで対戦表を確定させます。よろしいですか？',
       freeze_sub1: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
@@ -552,6 +563,7 @@ export default {
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
     public_or_private: '大会公開設定',
+    public_or_private_short: '大会公開',
     title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
@@ -565,6 +577,7 @@ export default {
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
     please_review: 'を見直してください',
+    end_time_invalid: '日時は現在の日時より後でなければなりません',
   },
   arenaSearchFilters: {
     all: 'すべて',
@@ -775,6 +788,7 @@ export default {
     status: 'ステータス',
     payment_method: '支払い方法',
     payment_type_gmo: 'GMOペイメント',
+    payment_type_none: 'なし',
     questions: 'よくあるお問い合わせ',
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',

@@ -1,0 +1,35 @@
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+  /* IE10+ specific styles go here */
+  body {
+    padding-right: 0 !important;
+  }
+
+  /* Login Logo center Buttons */
+  .headerContent {
+    flex-direction: column;
+  }
+
+  /* slider pagination */
+  .swiper-pagination {
+    left: 0;
+    right: 0;
+  }
+
+  /* player */
+  .vjs-big-play-button .vjs-seek-button.skip-forward,
+  .vjs-big-play-button .vjs-seek-button.skip-back {
+    font-size: 0.7em;
+  }
+
+  .vjs-icon-fullscreen-enter,
+  .video-js .vjs-fullscreen-control .vjs-icon-placeholder {
+    font-size: 5px;
+  }
+
+  @media screen and (max-width: 720px) {
+    .vjs-theme-ntt .vjs-big-play-button .vjs-seek-button.skip-back,
+    .vjs-theme-ntt .vjs-big-play-button .vjs-seek-button.skip-forward {
+      font-size: 1em !important;
+    }
+  }
+}

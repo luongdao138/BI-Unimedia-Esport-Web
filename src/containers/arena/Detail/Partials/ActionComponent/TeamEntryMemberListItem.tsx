@@ -7,6 +7,7 @@ import { TeamMemberSelectItem, MemberSelection } from '@store/arena/actions/type
 import { FormikProps } from 'formik'
 import { TeamJoinBase } from '@services/arena.service'
 import _ from 'lodash'
+import { useFocusState } from '@utils/hooks/input-focus-context'
 
 interface TeamEntryMemberListProps {
   isLeader?: boolean
@@ -33,6 +34,7 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
 }) => {
   const classes = useStyles()
   const nickname = formik.values.members[index - 1].name
+  const focusEvent = useFocusState()
 
   const getNicknameError = (): string => {
     const isTouched = _.get(formik, `touched.members[${index - 1}].name`, false)
@@ -58,7 +60,11 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
               value={nickname}
               onChange={formik.handleChange}
               helperText={getNicknameError()}
-              onBlur={formik.handleBlur}
+              onBlur={(e) => {
+                formik.handleBlur(e)
+                focusEvent.onBlur()
+              }}
+              onFocus={focusEvent.onFocus}
             />
           </Box>
         </Box>
@@ -87,6 +93,7 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
               onSearchInput={(keyword) => onSearchInput(keyword, index)}
               onItemSelected={onItemSelected}
               onScrollEnd={() => null}
+              {...focusEvent}
             />
           </Box>
         )}
@@ -102,7 +109,11 @@ const TeamEntryMemberListItem: React.FC<TeamEntryMemberListProps> = ({
               value={nickname}
               onChange={formik.handleChange}
               helperText={getNicknameError()}
-              onBlur={formik.handleBlur}
+              onBlur={(e) => {
+                formik.handleBlur(e)
+                focusEvent.onBlur()
+              }}
+              onFocus={focusEvent.onFocus}
             />
           ) : (
             <Typography className={classes.nameDisabled}>ユーザーを指定するとエントリーネームが入力できます</Typography>

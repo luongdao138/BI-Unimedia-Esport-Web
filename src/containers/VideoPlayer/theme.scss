@@ -1,0 +1,304 @@
+.vjs-theme-ntt {
+  .vjs-control-bar {
+    height: 70px;
+    padding-top: 20px;
+
+    background: none;
+    background-image: linear-gradient(0deg, #000, transparent);
+  }
+  .vjs-play-progress {
+    &:before {
+      display: none;
+    }
+    background-color: #ff4786;
+  }
+
+  .vjs-progress-control {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    z-index: 199;
+    .vjs-progress-holder {
+      position: absolute;
+      top: 20px;
+      right: 0;
+      left: 0;
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  .vjs-play-control {
+    font-size: 1.75em;
+    outline: 0;
+  }
+  .vjs-fullscreen-control {
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    display: flex;
+  }
+  .vjs-volume-panel {
+    order: 5;
+    flex: 1.8;
+    width: auto;
+    justify-content: flex-end;
+    .vjs-volume-control {
+      opacity: 1;
+      width: auto;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .vjs-mute-control {
+    display: none;
+  }
+
+  .vjs-slider-horizontal {
+    .vjs-volume-level {
+      height: 100%;
+    }
+  }
+}
+.vjs-theme-ntt.vjs-button {
+  > .vjs-icon-placeholder {
+    &:before {
+      line-height: 50px;
+    }
+  }
+}
+
+.vjs-fade-out {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+
+  -webkit-transition: visibility 1.5s, opacity 1.5s;
+  -moz-transition: visibility 1.5s, opacity 1.5s;
+  -ms-transition: visibility 1.5s, opacity 1.5s;
+  -o-transition: visibility 1.5s, opacity 1.5s;
+  transition: visibility 1.5s, opacity 1.5s;
+
+  /* Wait a moment before fading out the control bar */
+  -webkit-transition-delay: 2s;
+  -moz-transition-delay: 2s;
+  -ms-transition-delay: 2s;
+  -o-transition-delay: 2s;
+  transition-delay: 2s;
+}
+
+.vjs-theme-ntt .vjs-remaining-time {
+  display: none;
+  min-width: 1em;
+}
+
+//duration
+
+.video-js .vjs-mute-control {
+  display: inline-block !important;
+}
+
+.vjs-theme-ntt .vjs-picture-in-picture-control {
+  display: none;
+}
+
+.vjs-theme-ntt .vjs-volume-level {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #ae87c7;
+}
+
+.vjs-theme-ntt .vjs-volume-bar.vjs-slider-horizontal {
+  height: 0.25em;
+}
+
+.vjs-theme-ntt .vjs-volume-level:before {
+  font-size: 1em;
+}
+
+.vjs-theme-ntt .vjs-button.vjs-fullscreen-control > .vjs-icon-placeholder:before {
+  font-size: 3em;
+}
+
+.vjs-theme-ntt .vjs-slider-horizontal .vjs-volume-level:before {
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ae87c7;
+}
+
+.vjs-theme-ntt .vjs-volume-panel {
+  &.vjs-hover .vjs-volume-control,
+  &:active .vjs-volume-control,
+  &:focus .vjs-volume-control,
+  & .vjs-volume-control:active,
+  &.vjs-hover .vjs-mute-control ~ .vjs-volume-control,
+  & .vjs-volume-control.vjs-slider-active {
+    &.vjs-volume-horizontal {
+      width: auto;
+      height: 100%;
+      justify-content: flex-end;
+      transition: none;
+      z-index: 200;
+    }
+  }
+
+  &.vjs-volume-panel-horizontal {
+    &.vjs-hover,
+    &:active,
+    &.vjs-slider-active {
+      flex: 1.8;
+      width: auto;
+      height: 100%;
+      transition: none;
+    }
+    &.vjs-mute-toggle-only {
+      width: 4em;
+    }
+  }
+}
+
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before,
+.vjs-button > .vjs-icon-placeholder:before,
+.video-js .vjs-modal-dialog,
+.vjs-modal-dialog .vjs-modal-dialog-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.vjs-theme-ntt .vjs-load-progress div {
+  background: #aaa;
+}
+
+.vjs-theme-ntt .vjs-slider {
+  background: #555;
+}
+
+.video-js.vjs-live .vjs-seek-to-live-control {
+  display: block !important;
+}
+
+.vjs-theme-ntt .vjs-controls-disabled .vjs-big-play-button,
+.vjs-has-started .vjs-big-play-button,
+.vjs-using-native-controls .vjs-big-play-button,
+.vjs-error .vjs-big-play-button {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(59, 57, 57, 0.75) no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0 none;
+  font-size: 10em;
+}
+
+.vjs-theme-ntt.video-js:hover .vjs-big-play-button,
+.vjs-theme-ntt .vjs-big-play-button:focus {
+  background: rgba(59, 57, 57, 0.75) no-repeat;
+}
+
+.vjs-big-play-centered .vjs-big-play-button {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.72) no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0 none;
+  font-size: 10em;
+  border-radius: 0;
+}
+.vjs-theme-ntt.vjs-big-play-centered .vjs-big-play-button:hover {
+  background: rgba(0, 0, 0, 0.75) no-repeat;
+}
+
+.vjs-theme-ntt.vjs-big-play-centered .vjs-big-play-button:hover,
+.vjs-theme-ntt.vjs-big-play-centered .vjs-big-play-button:focus {
+  background: rgba(0, 0, 0, 0.75) no-repeat;
+}
+
+.vjs-theme-ntt.vjs-big-play-centered:not(.vjs-has-started) .vjs-big-play-button .vjs-icon-placeholder:before {
+  font-family: 'Material Icons';
+  content: '\e038';
+  opacity: 0.8;
+}
+
+.vjs-theme-ntt .skip-forward {
+  font-size: 1.75em;
+  width: 3em;
+  opacity: 0.7;
+}
+
+.vjs-theme-ntt .vjs-seek-to-live-control .vjs-icon-placeholder {
+  display: none;
+}
+.vjs-theme-ntt.vjs-live .vjs-duration-display,
+.vjs-theme-ntt.vjs-live .vjs-time-divider {
+  opacity: 0;
+}
+
+.vjs-theme-ntt .vjs-seek-to-live-control .vjs-seek-to-live-text {
+  padding: 4px 10px;
+  background: #3b3939;
+  align-items: center;
+  line-height: 1.7;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+
+.vjs-seek-to-live-control.vjs-control.vjs-at-live-edge .vjs-seek-to-live-text {
+  background: #ff4786;
+}
+
+.vjs-theme-ntt .vjs-subs-caps-button {
+  display: none;
+  //caption control hidden
+}
+
+.vjs-theme-ntt .vjs-button.vjs-fullscreen-control > .vjs-icon-placeholder:before {
+  justify-content: flex-end;
+  padding-right: 0.6rem;
+}
+
+.vjs-error .vjs-error-display .vjs-modal-dialog-content {
+  display: none;
+}
+
+.vjs-error .vjs-error-display:before {
+  display: none;
+}
+.vjs-live-display {
+  display: none;
+}
+.live-duration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex: 0.4;
+  width: 1.1em;
+  order: 2;
+  .vjs-control-text {
+    font-size: 1em;
+    position: relative;
+    width: 1.1em;
+    height: 100%;
+  }
+}
+
+//position control bar list start

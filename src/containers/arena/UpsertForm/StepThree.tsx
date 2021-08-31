@@ -34,7 +34,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date}
           error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
@@ -50,7 +50,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date
@@ -73,7 +73,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.acceptance_start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date) ||
@@ -92,7 +92,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.acceptance_end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
