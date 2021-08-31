@@ -14,8 +14,16 @@ import recruitment from './recruitment'
 import game from '@store/game'
 import notification from '@store/notification'
 import socket from '@store/socket'
+import { videoDetailReducer } from '@store/videoDetail/reducers'
+import liveSocket from '@store/live_socket/reducers'
+import { liveEventsReducer } from '@store/liveEvents/reducers'
+import chatHistory from '@store/chatHistory/reducers'
+import { prReducer as pr } from '@store/pr/reducers'
 
 const reducer = combineReducers({
+  liveSocket,
+  pr,
+  videoDetail: videoDetailReducer,
   auth: auth.reducers,
   metadata: metadata.reducer,
   search: search.reducers,
@@ -31,6 +39,8 @@ const reducer = combineReducers({
   notification: notification.reducers,
   chat: chat.reducers,
   socket: socket.reducers,
+  liveEvent: liveEventsReducer,
+  chatHistory,
 })
 export default reducer
 

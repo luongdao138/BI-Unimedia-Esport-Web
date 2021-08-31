@@ -11,6 +11,7 @@ import { ESRoutes } from '@constants/route.constants'
 import useLogout from '@containers/Logout/useLogout'
 import * as selectors from '@store/common/selectors'
 import { setNotFound } from '@store/common/actions/index'
+import { use100vh } from 'react-div-100vh'
 
 interface MainLayoutProps {
   patternBg?: boolean
@@ -56,6 +57,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequi
   const renderContent = () => {
     return loginRequired ? isAuthenticated && children : children
   }
+  const height = use100vh()
 
   return (
     <div className="main-wrapper">
@@ -63,7 +65,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequi
       <aside className="aside-left">
         <SideMenu />
       </aside>
-      <main role="main" className={patternBg ? 'main' : 'main no-pattern'}>
+      <main role="main" className={patternBg ? 'main' : 'main no-pattern'} style={{ minHeight: height }}>
         <div className="content-wrapper">
           <div className="content">{renderContent()}</div>
         </div>

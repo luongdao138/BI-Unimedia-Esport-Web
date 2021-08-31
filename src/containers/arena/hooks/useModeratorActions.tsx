@@ -61,7 +61,7 @@ const useModeratorActions = (): {
 
   useEffect(() => {
     if (!!freezeMeta.error || !!randomizeMeta.error || !!setParticipantsMeta.error) {
-      dispatch(commonActions.addToast(t('common:error.failed')))
+      dispatch(commonActions.addToast(t('common:arena.failed_to_update_match')))
       resetFreezeMeta()
       resetRandomizeMeta()
       resetParticipantsMeta()

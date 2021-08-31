@@ -26,6 +26,7 @@ export default {
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
     save: '保存する',
+    dont_save: '保存しない',
     cancel: 'キャンセル',
     done: '完了',
     change: '変更する',
@@ -69,6 +70,9 @@ export default {
     username: 'ユーザー名',
     loading: '読み込み中...',
     no_user_available: '一致するデータが見つかりません',
+  },
+  pr: {
+    static_title: '動画配信サービス',
   },
   page404: {
     title: '404',
@@ -436,6 +440,7 @@ export default {
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
+    failed_to_update_match: '対戦表の更新に失敗しました',
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
       randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
@@ -572,6 +577,7 @@ export default {
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
     please_review: 'を見直してください',
+    end_time_invalid: '日時は現在の日時より後でなければなりません',
   },
   arenaSearchFilters: {
     all: 'すべて',
@@ -782,6 +788,7 @@ export default {
     status: 'ステータス',
     payment_method: '支払い方法',
     payment_type_gmo: 'GMOペイメント',
+    payment_type_none: 'なし',
     questions: 'よくあるお問い合わせ',
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',

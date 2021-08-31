@@ -43,7 +43,7 @@ body {
   display: flex;
   flex-direction: row;
   padding-left: calc((100% - 840px) / 2);
-  min-height: 100vh;
+  // min-height: 100vh;
 }
 .chat-main {
   overflow: hidden;
@@ -72,7 +72,7 @@ body {
   height: 100vh;
   justify-content: flex-start;
   display: flex;
-  z-index: 100;
+  z-index: 201;
 }
 .back-drop {
   //backdrop-filter: blur(3px);
@@ -540,7 +540,7 @@ body {
   padding-left: 10px !important;
   flex: 1 1 0%;
   min-height: 0;
-  scrollbar-color: #222 transparent;
+  scrollbar-color: #111 transparent;
   scrollbar-width: thin;
 }
 
@@ -559,7 +559,7 @@ body {
   padding-left: 1px;
 }
 .list-container::-webkit-scrollbar-thumb {
-  background-color: #222;
+  background-color: #111;
   border-radius: 6px;
 }
 body.has-sticky-div .sticky-div {
@@ -590,6 +590,9 @@ body.has-sticky-div .sticky-div {
 }
 
 @media (max-width: 720px) {
+  body {
+    overflow: unset;
+  }
   .chat-flex {
     padding-left: 0;
   }

@@ -117,7 +117,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box
         style={{
           background: `url(${values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'})`,
-          paddingTop: '30.27%',
+          paddingTop: '30.21756647864625%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
@@ -154,8 +154,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth multiline />
       <Box pb={2} />
       <ESInput
-        labelPrimary={t('common:tournament_create.public_or_private_short')}
-        value={values.stepTwo.t_type === 't_public' ? t('common:tournament.t_public') : t('common:tournament.t_private')}
+        labelPrimary={t('common:tournament_create.public_or_private')}
+        value={values.stepTwo.t_type === 't_public' ? t('common:tournament_create.public') : t('common:tournament_create.private')}
         disabled={true}
         fullWidth
       />
@@ -164,7 +164,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.retain_history_short')}
-        value={values.stepTwo.retain_history ? t('common:common.yes') : t('common:common.no')}
+        value={values.stepTwo.retain_history ? t('common:common.save') : t('common:common.dont_save')}
         multiline
         disabled={true}
         fullWidth
