@@ -1,46 +1,27 @@
-import { Box, makeStyles, Theme, Grid, Typography } from '@material-ui/core'
+import { Box, makeStyles, Theme, Typography } from '@material-ui/core'
 import { Pagination } from '@material-ui/lab'
 import React, { FC, useEffect, useState } from 'react'
 import { Colors } from '@theme/colors'
 import PointsPurchasedItem from '../PointsPurchasedItem'
 import MyPointsCard from '../MyPointsCard'
 import usePointsManage from '../usePointsManage'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
 import i18n from '@locales/i18n'
-
-export interface PointsPurchasedDataProps {
-  serialNumber: string
-  purchasedPointsId: number
-  points: number
-  expiresDatePurchased: string
-}
 
 const PointManagementTab: FC = () => {
   const classes = useStyles()
-  const dataPurchasedPoints = Array(2)
-    .fill('')
-    .map((_, i) => ({
-      serialNumber: `${i + 1}`,
-      purchased_id: 202106221234,
-      amount: 1000,
-      valid_until: '2022年04月09日',
-    }))
-  const [page, setPage] = useState<number>(1)
   const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
-
   const totalMyPoints = myPointsData?.total_point
   const listMyPointsData = myPointsData?.aggregate_points
-  // const listMyPointsData = Array(2)
-  //   .fill('')
-  //   .map((_, i) => ({
-  //     serialNumber: `${i + 1}`,
-  //     purchased_id: 202106221234,
-  //     amount: 1000,
-  //     valid_until: '2022年04月09日',
-  //   }))
+  const totalPages = Math.ceil(myPointsData?.total / 10)
+  const isLoading = meta_my_points.pending
+
+  const limit = 10
+  const [page, setPage] = useState<number>(1)
+
   const params = {
     page: page,
-    limit: 10,
+    limit: limit,
   }
   useEffect(() => {
     getMyPointData(params)
@@ -49,46 +30,38 @@ const PointManagementTab: FC = () => {
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
   }
-  const letterCount = dataPurchasedPoints.length ? dataPurchasedPoints[dataPurchasedPoints.length - 1].serialNumber.length : 1
   return (
     <Box className={classes.container}>
-      {meta_my_points.pending ? (
-        <Grid item xs={12}>
-          <Box className={classes.loadingContainer}>
-            <ESLoader />
+      <Box>
+        <MyPointsCard my_points={totalMyPoints ? totalMyPoints : 0} />
+      </Box>
+      <Box className={`${classes.wrapContent} ${listMyPointsData?.length > 0 && classes.spacingBottom} `}>
+        {listMyPointsData?.length > 0 ? (
+          <>
+            {listMyPointsData.map((item, i) => (
+              <PointsPurchasedItem data={item} key={i} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
+            ))}
+            <Box className={classes.paginationContainer}>
+              <Pagination
+                showFirstButton
+                showLastButton
+                defaultPage={1}
+                page={page}
+                count={totalPages}
+                variant="outlined"
+                shape="rounded"
+                className={classes.paginationStyle}
+                onChange={onChangePage}
+              />
+            </Box>
+          </>
+        ) : (
+          <Box className={classes.noDataContainer}>
+            <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
           </Box>
-        </Grid>
-      ) : (
-        <>
-          <Box>{totalMyPoints && <MyPointsCard my_points={totalMyPoints} />}</Box>
-          <Box className={`${classes.wrapContent} ${listMyPointsData?.length > 0 && classes.spacingBottom} `}>
-            {listMyPointsData?.length > 0 ? (
-              <>
-                {listMyPointsData.map((item, i) => (
-                  <PointsPurchasedItem data={item} key={i} serialNumber={i} letterCount={letterCount} />
-                ))}
-                <Box className={classes.paginationContainer}>
-                  <Pagination
-                    showFirstButton
-                    showLastButton
-                    defaultPage={1}
-                    page={page}
-                    count={3}
-                    variant="outlined"
-                    shape="rounded"
-                    className={classes.paginationStyle}
-                    onChange={onChangePage}
-                  />
-                </Box>
-              </>
-            ) : (
-              <Box className={classes.noDataContainer}>
-                <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
-              </Box>
-            )}
-          </Box>
-        </>
-      )}
+        )}
+      </Box>
+      {isLoading && <ESLoader open={isLoading} />}
     </Box>
   )
 }

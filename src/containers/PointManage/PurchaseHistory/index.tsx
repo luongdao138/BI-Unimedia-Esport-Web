@@ -6,40 +6,54 @@ import ESSelect from '@components/Select'
 import i18n from '@locales/i18n'
 import PurchaseHistoryItem from '../PurchaseHistoryItem'
 import usePointsManage from '../usePointsManage'
-import ESLoader from '@components/Loader'
+import ESLoader from '@components/FullScreenLoader'
+import moment from 'moment'
 
+export type FilterOptionsParams = {
+  label: string
+  value: string
+}
 const PurchaseHistory: FC = () => {
   const classes = useStyles()
-  const dataPurchasedPoints = Array(2)
-    .fill('')
-    .map((_, i) => ({
-      id: `${i}`,
-      serialNumber: `${i + 1}`,
-      purchasedPointsId: 202106221234,
-      points: 1000,
-      expiresDatePurchased: '2022年04月09日',
-    }))
-  const filterOptionsData = [
-    // { label: '選択中', value: '' },
-    { label: i18n.t('common:point_management_tab.thirty_days_ago'), value: null },
-    { label: '2020年6月', value: '2020年6月' },
-    { label: '2020年5月', value: '2020年5月' },
-    { label: '2020年4月', value: '2020年4月' },
-  ]
-  const letterCount = dataPurchasedPoints.length ? dataPurchasedPoints[dataPurchasedPoints.length - 1].serialNumber.length : 1
 
+  const filterOptionsData = [{ label: i18n.t('common:point_management_tab.thirty_days_ago'), value: '' }]
+
+  const limit = 10
   const [page, setPage] = useState<number>(1)
-  const [querySelected, setQuerySelected] = useState<string>(null)
-  const { getHistoryPointData, meta_history_points } = usePointsManage()
+  const [querySelected, setQuerySelected] = useState<string>('')
+  const [filterOptions, setFilterOptions] = useState(filterOptionsData)
+  const { getHistoryPointData, meta_history_points, historyPointsData } = usePointsManage()
 
-  const params = {
+  const listFilterData = historyPointsData?.date_by_points
+  const listPurchaseHistoryData = historyPointsData?.points
+  const totalPages = Math.ceil(historyPointsData?.total / 10)
+  const isLoading = meta_history_points.pending
+
+  const paramsPeriod = {
     page: page,
-    limit: 10,
+    limit: limit,
+    type: 1,
     period: querySelected,
   }
+  const params = {
+    page: page,
+    limit: limit,
+    type: 1,
+  }
   useEffect(() => {
-    getHistoryPointData(params)
-  }, [page])
+    getHistoryPointData(querySelected != '' ? paramsPeriod : params)
+  }, [page, querySelected])
+
+  useEffect(() => {
+    if (listFilterData) {
+      setFilterOptions(filterOptionsData)
+      const newObjects = listFilterData.map((item) => {
+        return { label: moment(item).format('YYYY年MM月'), value: item }
+      })
+      const newFilterData = filterOptionsData.concat(newObjects)
+      setFilterOptions(newFilterData)
+    }
+  }, [listFilterData])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
@@ -53,7 +67,6 @@ const PurchaseHistory: FC = () => {
         <ESSelect
           fullWidth
           placeholder={i18n.t('common:point_management_tab.choosing')}
-          defaultValue={null}
           displayEmpty
           size="big"
           name={'query'}
@@ -62,50 +75,43 @@ const PurchaseHistory: FC = () => {
           value={querySelected}
           onChange={handleSelectedQuery}
         >
-          <option disabled value={-1}>
+          {/* <option disabled value={-1}>
             {i18n.t('common:point_management_tab.choosing')}
-          </option>
-          {filterOptionsData.map((rule, index) => (
+          </option> */}
+          {filterOptions.map((rule, index) => (
             <option key={index} value={rule.value}>
               {rule.label}
             </option>
           ))}
         </ESSelect>
       </Grid>
-      {meta_history_points.pending ? (
-        <Grid item xs={12}>
-          <Box className={classes.loadingContainer}>
-            <ESLoader />
-          </Box>
-        </Grid>
-      ) : (
-        <Box className={`${classes.wrapContent} ${dataPurchasedPoints?.length > 0 && classes.spacingBottom}`}>
-          {dataPurchasedPoints?.length > 0 ? (
-            <>
-              {dataPurchasedPoints.map((item, i) => (
-                <PurchaseHistoryItem data={item} key={i} letterCount={letterCount} />
-              ))}
-              <Box className={classes.paginationContainer}>
-                <Pagination
-                  showFirstButton
-                  showLastButton
-                  defaultPage={1}
-                  page={page}
-                  count={3}
-                  variant="outlined"
-                  shape="rounded"
-                  className={classes.paginationStyle}
-                  onChange={onChangePage}
-                />
-              </Box>
-            </>
-          ) : (
-            <Box className={classes.noDataContainer}>
-              <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+      <Box className={`${classes.wrapContent} ${listPurchaseHistoryData?.length > 0 && classes.spacingBottom}`}>
+        {listPurchaseHistoryData?.length > 0 ? (
+          <>
+            {listPurchaseHistoryData.map((item, i) => (
+              <PurchaseHistoryItem data={item} key={i} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
+            ))}
+            <Box className={classes.paginationContainer}>
+              <Pagination
+                showFirstButton
+                showLastButton
+                defaultPage={1}
+                page={page}
+                count={totalPages}
+                variant="outlined"
+                shape="rounded"
+                className={classes.paginationStyle}
+                onChange={onChangePage}
+              />
             </Box>
-          )}
-        </Box>
-      )}
+          </>
+        ) : (
+          <Box className={classes.noDataContainer}>
+            <Typography className={classes.noDataText}>{i18n.t('common:point_management_tab.no_data_purchase_point')}</Typography>
+          </Box>
+        )}
+      </Box>
+      {isLoading && <ESLoader open={isLoading} />}
     </Box>
   )
 }

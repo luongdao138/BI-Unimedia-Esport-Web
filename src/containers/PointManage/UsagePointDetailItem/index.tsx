@@ -2,19 +2,17 @@ import { Box, makeStyles, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
-// import { PointsPurchasedDataProps } from '../PointManagementTab'
+import { ListUsagePointHistoryData } from '@services/points.service'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import { ListHistoryPointsData } from '@services/points.service'
 import moment from 'moment'
 
-interface PointsPurchasedItemProps {
-  data: ListHistoryPointsData
+interface UsagePointDetailItemProps {
+  data: ListUsagePointHistoryData
   serialNumber: number
-  type?: string
 }
-const PurchaseHistoryItem: FC<PointsPurchasedItemProps> = ({ data, serialNumber, type }) => {
+const UsagePointDetailItem: FC<UsagePointDetailItemProps> = ({ data, serialNumber }) => {
   const classes = useStyles()
-  const isUsage = type === 'usage'
+
   const getAddClass = (firstClass, secClass) => {
     if (serialNumber.toString().length === 2) {
       return firstClass
@@ -25,7 +23,7 @@ const PurchaseHistoryItem: FC<PointsPurchasedItemProps> = ({ data, serialNumber,
     return ''
   }
   return (
-    <Box className={classes.container} key={data?.uuid}>
+    <Box className={classes.container} key={serialNumber}>
       <Box className={classes.wrapTitle}>
         <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
           <Typography className={classes.serialStyle}>{serialNumber}</Typography>
@@ -34,24 +32,27 @@ const PurchaseHistoryItem: FC<PointsPurchasedItemProps> = ({ data, serialNumber,
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
           <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.difference')}</Typography>
-          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_date')}</Typography>
-          <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.expires_date')}</Typography>
+          <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.date_time')}</Typography>
         </Box>
       </Box>
       <Box className={classes.dataContainer}>
-        <Typography className={isUsage ? classes.idTextItemNoColor : classes.idTextItem}>{data?.uuid}</Typography>
-        <Typography className={classes.pointStyle}>
-          {FormatHelper.currencyFormat(data?.point.toString())} {i18n.t('common:point_management_tab.eXe_point')}
+        <Typography className={classes.textStyle}>{data?.purchase_id}</Typography>
+        <Typography className={classes.usagePointStyle}>
+          {'-' + FormatHelper.currencyFormat(data?.point.toString())}
+          {i18n.t('common:point_management_tab.eXe_point_text')}
         </Typography>
-        <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_point')}</Typography>
-        <Typography className={classes.titleItemStyle}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
-        <Typography className={classes.dateStyle}>{moment(data?.expired_date).format('YYYY年MM月DD日')}</Typography>
+        <Typography className={classes.textStyle}>{data?.status}</Typography>
+        <Typography className={classes.dateStyle}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
       </Box>
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
+  wrapTitle: {
+    display: 'flex',
+    width: '148px',
+  },
   container: {
     display: 'flex',
     flex: 1,
@@ -65,11 +66,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 16,
     paddingTop: 16,
     paddingBottom: 18,
-    marginTop: 21,
-  },
-  wrapTitle: {
-    display: 'flex',
-    width: '148px',
+    marginTop: 16,
   },
   serialContainer: {
     alignItems: 'center',
@@ -80,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
   serialStyle: {
     textAlign: 'center',
+    // marginBottom: 8,
   },
   titleContainer: {
     display: 'flex',
@@ -107,11 +105,15 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
     marginBottom: 8,
   },
-  idTextItemNoColor: {
+  pointStyle: {
     color: Colors.white_opacity['70'],
     marginBottom: 8,
   },
-  pointStyle: {
+  usagePointStyle: {
+    color: Colors.yellow,
+    marginBottom: 8,
+  },
+  textStyle: {
     color: Colors.white_opacity['70'],
     marginBottom: 8,
   },
@@ -124,6 +126,11 @@ const useStyles = makeStyles((theme) => ({
   letterThirdSerial: {
     width: 34,
   },
+  [theme.breakpoints.down(414)]: {
+    wrapTitle: {
+      width: 135,
+    },
+  },
   [theme.breakpoints.down(375)]: {
     container: {
       margin: 8,
@@ -131,7 +138,10 @@ const useStyles = makeStyles((theme) => ({
     wrapTitle: {
       width: 110,
     },
+    textStyle: {
+      fontSize: 13,
+    },
   },
 }))
 
-export default PurchaseHistoryItem
+export default UsagePointDetailItem

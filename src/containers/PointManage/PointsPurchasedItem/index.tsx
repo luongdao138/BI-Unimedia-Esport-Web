@@ -4,26 +4,26 @@ import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { ListMyPointsData } from '@services/points.service'
+import moment from 'moment'
 
 interface PointsPurchasedItemProps {
   data: ListMyPointsData
-  letterCount: number
   serialNumber: number
 }
-const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, letterCount, serialNumber }) => {
+const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, serialNumber }) => {
   const classes = useStyles()
   const getAddClass = (firstClass, secClass) => {
-    if (letterCount === 2) {
+    if (serialNumber.toString().length === 2) {
       return firstClass
     }
-    if (letterCount >= 3) {
+    if (serialNumber.toString().length >= 3) {
       return secClass
     }
     return ''
   }
 
   return (
-    <Box className={classes.container} key={data?.purchased_id}>
+    <Box className={classes.container} key={data?.uuid}>
       <Box className={classes.wrapTitle}>
         <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
           <Typography className={classes.serialStyle}>{serialNumber}</Typography>
@@ -35,11 +35,11 @@ const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, letterCount, 
         </Box>
       </Box>
       <Box className={classes.dataContainer}>
-        <Typography className={classes.idTextItem}>{data?.purchased_id}</Typography>
+        <Typography className={classes.idTextItem}>{data?.uuid}</Typography>
         <Typography className={classes.pointStyle}>
-          {FormatHelper.currencyFormat(data?.amount.toString())} {i18n.t('common:point_management_tab.eXe_point_text')}
+          {FormatHelper.currencyFormat(data?.point.toString())} {i18n.t('common:point_management_tab.eXe_point_text')}
         </Typography>
-        <Typography className={classes.dateStyle}>{data?.valid_until}</Typography>
+        <Typography className={classes.dateStyle}>{moment(data?.valid_until).format('YYYY年MM月DD日')}</Typography>
       </Box>
     </Box>
   )
