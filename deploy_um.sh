@@ -4,7 +4,7 @@ file_name=um_deployment && \
   current_time=$(date "+%Y%m%d%H%M%S") && \
   new_fileName=$file_name.$current_time && \
   echo "Um deployment starting" > $new_fileName.log && \
-  git checkout um >> $new_fileName.log && \
+  git checkout add-live >> $new_fileName.log && \
   git pull >> $new_fileName.log && \
   zip -r EsportsUmWeb . -x 'node_modules*' -x '.next*' -x '.git*' && \
   aws s3 cp EsportsUmWeb.zip s3://esports-deploy-src/um/EsportsUmWeb.zip >> $new_fileName.log && \
