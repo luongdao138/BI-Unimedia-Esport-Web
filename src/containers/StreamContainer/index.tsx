@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react'
 import { Grid, Tabs, Tab, Container, Typography, Box, Paper } from '@material-ui/core'
 import { TabContext, TabPanel } from '@material-ui/lab/'
@@ -47,7 +48,8 @@ const StreamContainer: React.FC = () => {
   const hash = _.get(data, 'attributes.shared_hash', undefined)
   const hasTicked = _.get(data, 'attributes.has_ticket', undefined)
   const url = useShareHash(hash)
-
+  console.log('connected ', connected)
+  console.log('status ', status)
   const handleChange = (_, newValue) => {
     setValue(newValue)
   }
