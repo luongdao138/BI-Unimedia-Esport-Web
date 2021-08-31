@@ -154,8 +154,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user,
       <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth multiline />
       <Box pb={2} />
       <ESInput
-        labelPrimary={t('common:tournament_create.public_or_private_short')}
-        value={values.stepTwo.t_type === 't_public' ? t('common:tournament.t_public') : t('common:tournament.t_private')}
+        labelPrimary={t('common:tournament_create.public_or_private')}
+        value={values.stepTwo.t_type === 't_public' ? t('common:tournament_create.public') : t('common:tournament_create.private')}
         disabled={true}
         fullWidth
       />
