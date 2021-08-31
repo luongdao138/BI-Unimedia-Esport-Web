@@ -278,6 +278,7 @@ export default {
     no_data: '該当のコミュニティはありません。',
     topic: {
       create_success: 'トピックを削除しました。',
+      view_past_comments: '↑過去のコメントを表示する',
     },
     unfollow_dialog: {
       title: 'フォローを解除する',
