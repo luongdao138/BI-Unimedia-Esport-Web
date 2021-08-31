@@ -6,13 +6,14 @@ import ESAvatar from '@components/Avatar'
 import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import ButtonPrimary from '@components/ButtonPrimary'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
 // import ESButton from '@components/Button'
-// import { Player, ControlBar } from 'video-react';
-// import { useRef } from 'react'
+import { Player, ControlBar, BigPlayButton, LoadingSpinner, ProgressControl } from 'video-react'
+import { useRef } from 'react'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -30,6 +31,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const { selectors } = userProfileStore
   const userProfile = useAppSelector(selectors.getUserProfile)
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const playerRef = useRef(null)
+  const [currentTime, setCurrentTime] = useState(0)
+  // const [playState, setPlayState] = useState();
+  const [duration, setDuration] = useState(0)
 
   const isSubscribed = () => subscribe
 
@@ -120,16 +125,51 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
+        <Player
+          ref={playerRef}
+          src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}
+          autoPlay={true}
+          fluid={false}
+          height={isMobile ? '256px' : '448px'}
+          width="100%"
+          videoWidth={'100%'}
+          videoHeight={'448px'}
+          poster="/images/live_stream/exelab_thumb.png"
+        >
+          <BigPlayButton className={classes.bigPlayButton} />
+          <ProgressControl className={classes.process} />
+          <LoadingSpinner />
+          <ControlBar disableDefaultControls={true} disableCompletely={true}>
+            {/* <ReplayControl seconds={10} order={2.2} /> */}
+          </ControlBar>
+          {/* <div className={classes.playOverView}>
+            <Icon fontSize="large" className={`fas fa-play ${classes.fontSizeLarge}`} />
+          </div> */}
+          <div className={classes.controlBar}>
+            <div className={classes.controlLeft}>
+              <div className={classes.buttonNormal}>
+                <Icon fontSize="small" className={`fas fa-play ${classes.fontSizeSmall}`} />
+              </div>
+              <div className={classes.buttonNormal}>
+                <Icon fontSize="small" className={`fas fa-undo`} />
+              </div>
+              <div className={classes.buttonNormal}>
+                <Icon fontSize="small" className={`fas fa-volume-up`} />
+              </div>
+              <div className={classes.time}>
+                <Typography>{`${FormatHelper.formatTime(currentTime)} / ${FormatHelper.formatTime(duration)}`}</Typography>
+              </div>
+            </div>
+            <div className={classes.buttonNormal}>
+              <Icon fontSize="small" className={`fas fa-expand`} />
+            </div>
+          </div>
+        </Player>
+        {/* <div style={{ width: getPercent(), backgroundColor: 'pink', height: 20,  }} className={classes.seekBar} /> */}
         {mediaPlayer()}
         {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
       </Box>
-      {/* <Player
-          ref={player}
-          autoPlay
-        >
-          <source src={'http://media.w3.org/2010/05/sintel/trailer.mp4'} />
-          <ControlBar autoHide={false} />
-        </Player> */}
+
       {isMobile && mobileRegisterChannelContainer()}
       <Box className={classes.wrap_info}>
         <Box className={classes.wrap_movie_info}>
@@ -465,6 +505,97 @@ const useStyles = makeStyles((theme) => ({
     buyTicketNote: {
       marginBottom: '52px',
     },
+  },
+  process: {
+    zIndex: 1,
+    '& .video-react-slider-bar': {},
+    '& .video-react-play-progress': {
+      backgroundColor: '#FF4786',
+      height: 7,
+      '& :before': {
+        position: 'absolute',
+        content: 'o',
+        display: 'block',
+        color: 'red',
+        fontSize: '3.9em',
+        bottom: '0',
+        left: '0',
+        width: 6.5,
+        height: 6.5,
+        borderWidth: '2px 0 0 2px',
+      },
+    },
+    '& .video-react-progress-holder': {
+      backgroundColor: '#4D4D4D',
+      position: 'absolute',
+      bottom: 40,
+      width: '100%',
+      height: 7,
+    },
+    '& .video-react-control-text': {
+      display: 'none',
+    },
+    '& .video-react-load-progress': {},
+  },
+  seekBar: {
+    '&:before': {
+      position: 'absolute',
+      content: 'o',
+      display: 'block',
+      color: 'red',
+      fontSize: '3.9em',
+      bottom: '0',
+      left: '0',
+      width: 6.5,
+      height: 6.5,
+      borderWidth: '2px 0 0 2px',
+    },
+  },
+  bigPlayButton: {
+    display: 'none',
+    '& .video-react-big-play-button': {},
+    '& .video-react-big-play-button-left': {},
+    '& .video-react-control-text': {
+      display: 'none',
+    },
+  },
+  playOverView: {
+    backgroundColor: 'rgba(0,100,0,0.4)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fontSizeLarge: {
+    fontSize: 100,
+  },
+  fontSizeSmall: {
+    fontSize: 17,
+  },
+  controlLeft: {
+    display: 'flex',
+  },
+  controlBar: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'rgba(255,71,134,0.5)',
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: 26,
+    justifyContent: 'space-between',
+  },
+  buttonNormal: {
+    width: 40,
+    // borderWidth:1,
+    // borderStyle:'solid',
+    alignItems: 'center',
   },
 }))
 export default LiveStreamContent
