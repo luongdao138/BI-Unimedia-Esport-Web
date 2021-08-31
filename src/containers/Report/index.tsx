@@ -126,14 +126,14 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           )}
           <Box display="flex" mb={2}>
             <Box ml={1}>
-              <Avatar className={classes.topicAvatar} alt={attr.username} src={attr.username ? '' : '/images/avatar.png'} />
+              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.nickname ? '' : '/images/avatar.png'} />
             </Box>
 
             <Box className={classes.userInfoBox} ml={1} maxWidth="77%">
               <Typography variant="h3" style={{ color: Colors.white }}>
-                {attr.username}
+                {attr.nickname}
               </Typography>
-              <Typography variant="body2">{attr.mail}</Typography>
+              <Typography variant="body2">{attr.user_code}</Typography>
             </Box>
           </Box>
 
@@ -141,7 +141,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
               {attr.date}
             </Typography>
-            <Typography variant="body1">{attr.description}</Typography>
+            <Typography variant="body1">{attr.content}</Typography>
           </Box>
           {attr.image ? (
             <Box

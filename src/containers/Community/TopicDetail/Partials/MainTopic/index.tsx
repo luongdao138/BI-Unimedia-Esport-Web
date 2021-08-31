@@ -18,8 +18,8 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 type CommunityHeaderProps = {
   user_avatar?: string
-  username?: string
-  email?: string
+  nickname?: string
+  user_code?: string
   description?: string
   date?: string
   image?: string | null
@@ -29,8 +29,8 @@ type CommunityHeaderProps = {
   topic?: TopicDetail
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({
-  username,
-  email,
+  nickname,
+  user_code,
   description,
   image,
   user_avatar,
@@ -47,9 +47,9 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const topicData = topic?.attributes
   const detail = {
     attributes: {
-      username: topicData?.owner_name,
-      email: topicData?.owner_email,
-      description: topicData?.content,
+      nickname: topicData?.owner_name,
+      user_code: topicData?.owner_email,
+      content: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
       image: topicData?.attachments[0]?.assets_url,
       hash_key: topicData?.hash_key,
@@ -79,12 +79,12 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
               <ESAvatar
                 className={classes.avatar}
-                alt={isConfirm ? username : topicData.owner_name}
+                alt={isConfirm ? nickname : topicData.owner_name}
                 src={isConfirm ? user_avatar : topicData.owner_profile}
               />
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
-                <Typography className={classes.username}>{isConfirm ? username : topicData.owner_name}</Typography>
-                <Typography className={classes.email}>{isConfirm ? email : topicData.owner_email}</Typography>
+                <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
+                <Typography className={classes.user_code}>{isConfirm ? user_code : topicData.owner_email}</Typography>
               </Box>
             </Box>
             {topicData?.created_at && (
@@ -145,7 +145,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             handleClose={() => setOpenReport(false)}
           />
           <DiscardDialog
-            title={username + t('common:topic.delete.title')}
+            title={nickname + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDelete}
@@ -220,7 +220,7 @@ const useStyles = makeStyles((theme) => ({
   replyButton: {
     padding: theme.spacing(0.5),
   },
-  username: {
+  nickname: {
     fontWeight: 'bold',
     color: 'white',
     textOverflow: 'ellipsis',
@@ -229,7 +229,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     fontSize: 16,
   },
-  email: {
+  user_code: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',

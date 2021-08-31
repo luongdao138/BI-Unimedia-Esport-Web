@@ -29,9 +29,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
   const commentData = comment.attributes
   const detail = {
     attributes: {
-      username: commentData.owner_nickname,
-      mail: commentData.user_code,
-      description: commentData.content,
+      nickname: commentData.owner_nickname,
+      user_code: commentData.user_code,
+      content: commentData.content,
       date: CommonHelper.staticSmartTime(commentData.created_at),
       image: commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
@@ -71,7 +71,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
 
             <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{commentData.owner_nickname}</Typography>
-              <Typography className={classes.mail}>{commentData.user_code}</Typography>
+              <Typography className={classes.user_code}>{commentData.user_code}</Typography>
             </Box>
           </Box>
           <Box className={classes.dateReportContainer}>
@@ -86,7 +86,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment }) => {
         </Box>
 
         <Box className={classes.discriptionContainer} mb={3}>
-          <Typography className={classes.discription}>{commentData.content}</Typography>
+          <Typography className={classes.content}>{commentData.content}</Typography>
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage()}
         <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     maxWidth: '100%',
   },
-  mail: {
+  user_code: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -191,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 7,
     width: '66%',
   },
-  discription: {
+  content: {
     color: Colors.white_opacity[70],
   },
   number: {
