@@ -64,10 +64,12 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({
         }}
       >
         {localSrc.toString() !== '' && <img className={classes.image} src={localSrc.toString()} />}
-        <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
-          <Camera fontSize="large" className={classes.camera} />
-          <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
-        </Box>
+        {!isUploading ? (
+          <Box display="flex" flexDirection="column" alignItems="center" position="absolute" zIndex="100" className={classes.logoWhite}>
+            <Camera fontSize="large" className={classes.camera} />
+            <Typography>{t('common:tournament.cover_upload_select_img')}</Typography>
+          </Box>
+        ) : null}
         <img src="/images/logo.svg" className={classes.logo} />
         <div className={classes.outerBackdrop} />
         {drag || isUploading ? <div className={classes.backdrop} /> : null}
@@ -176,6 +178,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     position: 'absolute',
     zIndex: 50,
+    top: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
