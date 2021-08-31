@@ -129,5 +129,14 @@ export default createMuiTheme({
         },
       },
     },
+    MuiOutlinedInput: {
+      input: {
+        '&:-webkit-autofill': {
+          WebkitBoxShadow: '0 0 0 100px #000000 inset',
+          WebkitTextFillColor: '#fff',
+          transition: 'background-color 5000s ease-in-out 0s',
+        },
+      },
+    },
   },
 })

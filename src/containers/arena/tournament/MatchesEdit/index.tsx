@@ -40,7 +40,7 @@ const ArenaMatches: React.FC = () => {
   } = useTournamentMatches()
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
-  const { isModerator } = useArenaHelper(tournament)
+  const { isModerator, isTeam } = useArenaHelper(tournament)
   const [selectedMatch, setSelectedMatch] = useState()
   const [showRandomize, setShowRandomize] = useState(false)
   const [showFreeze, setShowFreeze] = useState(false)
@@ -105,9 +105,6 @@ const ArenaMatches: React.FC = () => {
   }
 
   const getMatch = (headerText, _match, round) => {
-    const data = tournament.attributes
-    const isTeam = data.participant_type > 1
-
     return (
       <Bracket.Match
         onClick={() => onMatchClick(_match)}
@@ -212,6 +209,7 @@ const ArenaMatches: React.FC = () => {
           {scoreDialog()}
         </div>
         <RandomizeDialog
+          isTeam={isTeam}
           open={showRandomize}
           onClose={() => setShowRandomize(false)}
           onAction={() => {

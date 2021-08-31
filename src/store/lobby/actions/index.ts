@@ -1,31 +1,20 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import * as services from '@services/lobby.service'
-import { SEARCH_ACTION_TYPE, TOURNAMENT_ACTION_TYPE, CLEAR_RECOMMENDED_USERS, CLEAR_TOURNAMENT_RESULT } from './types'
-import * as types from './types'
+import { CLEAR_LOBBY_DETAIL, LOBBY_ACTION_TYPE, RESET_LOBBY_PARTICIPANTS } from './types'
+import { follow, FollowActionResponse, FollowParams, unfollow, UnFollowResponse } from '@services/user.service'
+import { UnblockParams, UnblockResponse, unblockUser } from '@services/block.service'
+import { AppDispatch } from '@store/store'
 
-export const lobbySearch = createAsyncThunk<services.LobbySearchResponse, services.LobbySearchParams>(
-  SEARCH_ACTION_TYPE.TOURNAMENT_SEARCH,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.tournamentSearch(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const resetSearchLobbys = createAction(SEARCH_ACTION_TYPE.RESET_SEARCH_TOURNAMENTS)
-
-export const getLobbyFollowers = createAsyncThunk<services.LobbyFollowersResponse, services.LobbyFollowersParams>(
-  TOURNAMENT_ACTION_TYPE.TOURNAMENT_FOLLOWERS,
+export const entryLobby = createAsyncThunk<services.EntryLobbyResponse, string>(
+  LOBBY_ACTION_TYPE.LOBBY_ENTRY,
   async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getLobbyFollowers(params)
-      return res
+      await services.entry(params)
+      const data = {
+        data: params,
+        status: 'success',
+      }
+      return data
     } catch (error) {
       if (!error.response) {
         throw error
@@ -35,12 +24,16 @@ export const getLobbyFollowers = createAsyncThunk<services.LobbyFollowersRespons
   }
 )
 
-export const getLobbyResults = createAsyncThunk<services.LobbyResultsResponse, services.LobbyResultsParams>(
-  TOURNAMENT_ACTION_TYPE.TOURNAMENT_RESULTS,
+export const unjoinLobby = createAsyncThunk<services.EntryLobbyResponse, string>(
+  LOBBY_ACTION_TYPE.LOBBY_UNJOIN,
   async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getLobbyResults(params)
-      return res
+      await services.unjoin(params)
+      const data = {
+        data: params,
+        status: 'success',
+      }
+      return data
     } catch (error) {
       if (!error.response) {
         throw error
@@ -50,12 +43,16 @@ export const getLobbyResults = createAsyncThunk<services.LobbyResultsResponse, s
   }
 )
 
-export const getRecruitingLobbys = createAsyncThunk<services.RecruitingLobbyResponse, services.RecruitingLobbyParams>(
-  TOURNAMENT_ACTION_TYPE.RECRUITING_TOURNAMENT,
+export const cancelLobby = createAsyncThunk<services.EntryLobbyResponse, string>(
+  LOBBY_ACTION_TYPE.LOBBY_CANCEL,
   async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getRecruitingLobbys(params)
-      return res
+      await services.cancel(params)
+      const data = {
+        data: params,
+        status: 'success',
+      }
+      return data
     } catch (error) {
       if (!error.response) {
         throw error
@@ -65,109 +62,11 @@ export const getRecruitingLobbys = createAsyncThunk<services.RecruitingLobbyResp
   }
 )
 
-export const getLobbyDetail = createAsyncThunk<services.LobbyDetailResponse, string | string[]>(
-  types.GET_TOURNAMENT_DETAIL,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.getLobbyDetail(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const getEntryStatus = createAsyncThunk<services.EntryStatusResponse, string>(
-  types.GET_ENTRY_STATUS,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.getEntryStatus(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const joinLobby = createAsyncThunk<{ team_id: number | null }, services.JoinParams>(
-  types.JOIN_TOURNAMENT,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.joinLobby(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const leaveLobby = createAsyncThunk<void, string>(types.LEAVE_TOURNAMENT, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.leaveLobby(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
-    }
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const closeLobby = createAsyncThunk<void, string>(types.CLOSE_TOURNAMENT, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.closeLobby(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
-    }
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const cancelLobby = createAsyncThunk<void, string>(types.CANCEL_TOURNAMENT, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.cancelLobby(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
-    }
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const getLobbyParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
-  types.GET_TOURNAMENT_PARTICIPANTS,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.getLobbyParticipants(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const resetParticipants = createAction(types.RESET_TOURNAMENT_PARTICIPANTS)
-
-export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTeamMembersResponse, services.GetSuggestedTeamMembersParams>(
-  types.GET_SUGGESTED_TEAM_MEMBERS,
+export const searchLobby = createAsyncThunk<services.LobbySearchResponse, services.LobbySearchParams>(
+  LOBBY_ACTION_TYPE.LOBBY_SEARCH,
   async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getSuggestedTeamMembers(params)
+      const res = await services.search(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -178,11 +77,14 @@ export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTea
   }
 )
 
-export const getLobbyInteresteds = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
-  types.GET_TOURNAMENT_INTERESTEDS,
-  async (param, { rejectWithValue }) => {
+export const resetSearchLobbies = createAction(LOBBY_ACTION_TYPE.RESET_SEARCH_LOBBIES)
+export const clearLobbyResult = createAction(LOBBY_ACTION_TYPE.CLEAR_LOBBY_RESULT)
+
+export const getParticipants = createAsyncThunk<services.ParticipantsResponse, services.ParticipantParams>(
+  LOBBY_ACTION_TYPE.LOBBY_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getLobbyInteresteds(param)
+      const res = await services.participants(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -193,11 +95,11 @@ export const getLobbyInteresteds = createAsyncThunk<services.GetParticipantsResp
   }
 )
 
-export const getLobbyMatches = createAsyncThunk<services.LobbyMatchResponse, string>(
-  types.GET_TOURNAMENT_MATCHES,
-  async (param, { rejectWithValue }) => {
+export const randomizeParticipants = createAsyncThunk<services.ParticipantsResponse, string>(
+  LOBBY_ACTION_TYPE.LOBBY_RANDOMIZE_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getLobbyMatches(param)
+      const res = await services.randomizeParticipants(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -208,11 +110,11 @@ export const getLobbyMatches = createAsyncThunk<services.LobbyMatchResponse, str
   }
 )
 
-export const setParticipant = createAsyncThunk<void, services.SetParticipantParams>(
-  types.SET_TOURNAMENT_PARTICIPANT,
-  async (param, { rejectWithValue }) => {
+export const confirmParticipants = createAsyncThunk<void, services.ConfirmParticipantParams>(
+  LOBBY_ACTION_TYPE.LOBBY_CONFIRM_PARTICIPANTS,
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.setParticipant(param)
+      const res = await services.confirmParticipants(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -223,55 +125,8 @@ export const setParticipant = createAsyncThunk<void, services.SetParticipantPara
   }
 )
 
-export const setParticipants = createAsyncThunk<void, services.SetParticipantsParams>(
-  types.SET_ARENA_PARTICIPANTS,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.setParticipants(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const getArenaWinners = createAsyncThunk<services.GetArenaWinnersResponse, string | string[]>(
-  types.GET_ARENA_WINNERS,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.getArenaWinners(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-export const getRecommendedUsersByName = createAsyncThunk<services.RecommendedUsersResponse, services.RecommendedUsersParams>(
-  types.GET_RECOMMENDED_USERS,
-  async (param, { rejectWithValue }) => {
-    try {
-      const res = await services.getRecommendedUsersByName(param)
-      return res
-    } catch (error) {
-      if (!error.response) {
-        throw error
-      }
-      return rejectWithValue(error.response.data)
-    }
-  }
-)
-
-export const clearRecommendedUsers = createAction(CLEAR_RECOMMENDED_USERS)
-export const clearLobbyResult = createAction(CLEAR_TOURNAMENT_RESULT)
-
-export const createLobby = createAsyncThunk<services.CreateLobbyResponse, services.LobbyFormParams>(
-  types.CREATE_TOURNAMENT,
+export const createLobby = createAsyncThunk<services.CreateLobbyResponse, services.LobbyUpsertParams>(
+  LOBBY_ACTION_TYPE.LOBBY_CREATE,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.createLobby(param)
@@ -286,7 +141,7 @@ export const createLobby = createAsyncThunk<services.CreateLobbyResponse, servic
 )
 
 export const updateLobby = createAsyncThunk<services.UpdateLobbyResponse, services.UpdateParams>(
-  types.UPDATE_TOURNAMENT,
+  LOBBY_ACTION_TYPE.LOBBY_UPDATE,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.updateLobby(param)
@@ -300,35 +155,11 @@ export const updateLobby = createAsyncThunk<services.UpdateLobbyResponse, servic
   }
 )
 
-export const setScore = createAsyncThunk<void, services.SetScoreParams>(types.SET_TOURNAMENT_SCORE, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.setScore(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
-    }
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const randomizeLobby = createAsyncThunk<void, string>(types.RANDOMIZE_TOURNAMENT, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.randomizeLobby(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
-    }
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const freezeLobby = createAsyncThunk<services.LobbyDetailResponse, string>(
-  types.FREEZE_TOURNAMENT,
+export const getLobbyDetail = createAsyncThunk<services.LobbyDetailResponse, string | string[]>(
+  LOBBY_ACTION_TYPE.LOBBY_DETAIL,
   async (param, { rejectWithValue }) => {
     try {
-      const res = await services.freezeLobby(param)
+      const res = await services.getLobbyDetail(param)
       return res
     } catch (error) {
       if (!error.response) {
@@ -339,23 +170,11 @@ export const freezeLobby = createAsyncThunk<services.LobbyDetailResponse, string
   }
 )
 
-export const summaryLobby = createAsyncThunk<void, services.SummaryParams>(types.SUMMARY_TOURNAMENT, async (param, { rejectWithValue }) => {
-  try {
-    const res = await services.summaryLobby(param)
-    return res
-  } catch (error) {
-    if (!error.response) {
-      throw error
-    }
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const getParticipantName = createAsyncThunk<services.ParticipantNameResponse, services.ParticipantNameParam>(
-  types.GET_PARTICIPANT_NAME,
-  async (param, { rejectWithValue }) => {
+export const getLobbyCategories = createAsyncThunk<services.LobbyCategoriesResponse, void>(
+  LOBBY_ACTION_TYPE.LOBBY_CATEGORIES,
+  async (_, { rejectWithValue }) => {
     try {
-      const res = await services.getParticipantName(param)
+      const res = await services.getLobbyCategories()
       return res
     } catch (error) {
       if (!error.response) {
@@ -366,11 +185,13 @@ export const getParticipantName = createAsyncThunk<services.ParticipantNameRespo
   }
 )
 
-export const changeParticipantName = createAsyncThunk<{ name: string }, services.ParticipantNameParams>(
-  types.CHANGE_PARTICIPANT_NAME,
-  async (param, { rejectWithValue }) => {
+export const resetParticipants = createAction(RESET_LOBBY_PARTICIPANTS)
+
+export const lobbyFollow = createAsyncThunk<FollowActionResponse, FollowParams>(
+  LOBBY_ACTION_TYPE.LOBBY_FOLLOW,
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.changeParticipantName(param)
+      const res = await follow(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -381,11 +202,11 @@ export const changeParticipantName = createAsyncThunk<{ name: string }, services
   }
 )
 
-export const getLobbyTeamDetail = createAsyncThunk<services.LobbyTeamDetailResponse, number>(
-  types.GET_TOURNAMENT_TEAM_DETAIL,
-  async (teamId, { rejectWithValue }) => {
+export const lobbyUnfollow = createAsyncThunk<UnFollowResponse, FollowParams>(
+  LOBBY_ACTION_TYPE.LOBBY_UNFOLLOW,
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.getLobbyTeamDetail(teamId)
+      const res = await unfollow(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -396,11 +217,11 @@ export const getLobbyTeamDetail = createAsyncThunk<services.LobbyTeamDetailRespo
   }
 )
 
-export const updateLobbyTeamDetail = createAsyncThunk<void, services.UpdateLobbyTeamParams>(
-  types.UPDATE_TOURNAMENT_TEAM_DETAIL,
-  async (param, { rejectWithValue }) => {
+export const lobbyUnblock = createAsyncThunk<UnblockResponse, UnblockParams>(
+  LOBBY_ACTION_TYPE.LOBBY_UNBLOCK,
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.updateLobbyTeamDetail(param)
+      const res = await unblockUser(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -410,3 +231,12 @@ export const updateLobbyTeamDetail = createAsyncThunk<void, services.UpdateLobby
     }
   }
 )
+
+export const clearLobbyDetail = createAction(CLEAR_LOBBY_DETAIL)
+
+export const getDetailWithClear = (hashKey: string) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  return (dispatch: AppDispatch) => {
+    Promise.resolve(dispatch(clearLobbyDetail())).then(() => dispatch(getLobbyDetail(hashKey)))
+  }
+}

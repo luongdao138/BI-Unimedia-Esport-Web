@@ -8,6 +8,7 @@ import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
 
 const { actions } = communityStore
+
 // TODO change when data is ready
 export type EditableTypes = {
   title: boolean

@@ -8,14 +8,11 @@ import { CommunityFilterOption } from '@services/community.service'
 const CommunityPage: PageWithLayoutType = () => {
   const router = useRouter()
   const filter = _.get(router, 'query.filter', '') as string
-  return <CommunityContainer filter={formatFilter(filter)} />
-}
-
-CommunityPage.Layout = MainLayout
-
-MainLayout.defaultProps = {
-  loginRequired: false,
-  patternBg: true,
+  return (
+    <MainLayout loginRequired={false} patternBg={true}>
+      <CommunityContainer filter={formatFilter(filter)} />
+    </MainLayout>
+  )
 }
 
 function formatFilter(filterText: string) {

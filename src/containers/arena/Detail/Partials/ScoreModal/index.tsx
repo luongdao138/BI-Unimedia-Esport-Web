@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { SetScoreParams, TournamentDetail, TournamentMatchItem } from '@services/arena.service'
 import {
@@ -45,7 +46,6 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
   const [editingMatch, setEditingMatch] = useState<any | undefined>()
   const [refresh, setRefresh] = useState<boolean>(false)
   const [targetMatch, setTargetMatch] = useState<TournamentMatchItem | undefined>()
-
   const isAdmin = data.my_role === ROLE.ADMIN || data.my_role === ROLE.CO_ORGANIZER
   const ownScoreEditable =
     !selectedMatch.is_fixed_score &&
@@ -116,7 +116,15 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         <Box pt={6} display="flex" alignItems="flex-end">
           <ThemeProvider theme={theme}>
             <Box color={winner ? Colors.yellow : Colors.white}>
-              {_score == undefined || _score == null ? <Box pt={10.2}></Box> : <Typography variant="h3">{_score}</Typography>}
+              {_score == undefined || _score == null || _.isNaN(_score) ? (
+                match.winner ? (
+                  <Typography variant="h3">0</Typography>
+                ) : (
+                  <Box pt={10.2} />
+                )
+              ) : (
+                <Typography variant="h3">{_score}</Typography>
+              )}
             </Box>
           </ThemeProvider>
         </Box>
