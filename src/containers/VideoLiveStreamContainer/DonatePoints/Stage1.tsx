@@ -4,13 +4,13 @@ import i18n from '@locales/i18n'
 import PointCardItem from '@components/PointCardItem'
 
 interface StepOneProps {
-  onLeftButton: () => void
-  onRightButton: () => void
+  onClickPurchaseMissingPoints: () => void
+  onClickPurchaseNewPoints: () => void
   myPoints: number
   missingPoints?: number
 }
 
-const StepOne: React.FC<StepOneProps> = ({ onLeftButton, onRightButton, myPoints, missingPoints }) => {
+const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseMissingPoints, onClickPurchaseNewPoints, myPoints, missingPoints }) => {
   const classes = useStyles()
 
   return (
@@ -22,10 +22,10 @@ const StepOne: React.FC<StepOneProps> = ({ onLeftButton, onRightButton, myPoints
         )}
       </Box>
       <Box className={classes.buttonRootContainer}>
-        <Box className={classes.buttonContainer} onClick={onLeftButton}>
+        <Box className={classes.buttonContainer} onClick={onClickPurchaseMissingPoints}>
           <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_missing_points')}</Typography>
         </Box>
-        <Box className={classes.buttonContainer} onClick={onRightButton}>
+        <Box className={classes.buttonContainer} onClick={onClickPurchaseNewPoints}>
           <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_new_points')}</Typography>
         </Box>
       </Box>

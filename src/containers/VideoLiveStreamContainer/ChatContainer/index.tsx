@@ -5,8 +5,8 @@ import React, { useState } from 'react'
 import i18n from '@locales/i18n'
 import { useTranslation } from 'react-i18next'
 
-interface ChatContainerProps {
-  onPressDonate?: () => void
+type ChatContainerProps = {
+  onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean
 }
@@ -139,7 +139,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
               })}
           </Box>
         </Box>
-        <Button onClick={onPressDonate} className={classes.purchaseButton}>
+        <Button onClick={() => {
+          const donatedPoint = purchasePoints[purchaseValueSelected].value
+          onPressDonate(donatedPoint, purchaseComment)
+          }} 
+            className={classes.purchaseButton}
+        >
           <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
         </Button>
         <Box className={classes.dialogFooter}>

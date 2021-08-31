@@ -13,6 +13,8 @@ import LiveStreamContent from './LiveStreamContent'
 import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
+import usePointsManage from '@containers/PointManage/usePointsManage'
+import ESLoader from '@components/FullScreenLoader'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -26,20 +28,36 @@ const VideosTop: React.FC = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const [tab, setTab] = useState(0)
-  const [confirmModal, setConfirmModal] = useState(false)
-  const [stepsModal, setStepsModal] = useState(false)
-  const [chatVisible, setChatVisible] = useState(true)
+  const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
+  const myPoint = myPointsData?.total_point || 400
 
-  const showConfirmModal = () => {
-    setConfirmModal(true)
+  const [tab, setTab] = useState(0)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
+  const [chatVisible, setChatVisible] = useState(true)
+  const [donatedPoint, setDonatedPoint] = useState(0)
+  const [purchaseComment, setPurchaseComment] = useState<string>('')
+
+  const params = {
+    page: 1,
+    limit: 10,
   }
-  const handleCloseModal = () => {
-    setConfirmModal(false)
+
+  useEffect(() => {
+    getMyPointData(params)
+  }, [])
+
+  const confirmDonatePoint = (point, comment) => {
+    setDonatedPoint(point)
+    setPurchaseComment(comment)
+    setShowConfirmModal(true)
   }
-  const handleConfirmModal = () => {
-    setStepsModal(true)
-    setConfirmModal(false)
+  const handleClose = () => {
+    setShowConfirmModal(false)
+  }
+  const handleConfirm = () => {
+    setShowModalPurchasePoint(true)
+    setShowConfirmModal(false)
   }
 
   const userHasViewingTicket = () => true
@@ -86,7 +104,7 @@ const VideosTop: React.FC = () => {
 
   const sideChatContainer = () => {
     return chatVisible ? (
-      <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} userHasViewingTicket={userHasViewingTicket()} />
+      <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={confirmDonatePoint} userHasViewingTicket={userHasViewingTicket()} />
     ) : (
       <IconButton onClick={handleChatPanelOpen} className={classes.headerIcon}>
         <img src="/images/ic_collapse_right.svg" />
@@ -96,11 +114,12 @@ const VideosTop: React.FC = () => {
 
   return (
     <Box className={classes.root}>
+      {meta_my_points.pending && <ESLoader open={meta_my_points.pending} />}
       <Box className={classes.container}>
         <LiveStreamContent userHasViewingTicket={userHasViewingTicket()} />
         {isMobile ? (
           <Box className={classes.mobileChatContainer}>
-            <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={showConfirmModal} userHasViewingTicket={true} />
+            <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={confirmDonatePoint} userHasViewingTicket={true} />
           </Box>
         ) : (
           <Grid container direction="row">
@@ -111,13 +130,20 @@ const VideosTop: React.FC = () => {
       </Box>
       {!isMobile && sideChatContainer()}
       <DonatePointsConfirmModal
-        open={confirmModal}
-        handleClose={handleCloseModal}
-        selectedPoint={700}
-        msgContent={'abc'}
-        handleConfirm={handleConfirmModal}
+        showConfirmModal={showConfirmModal}
+        handleClose={handleClose}
+        donatedPoint={donatedPoint}
+        msgContent={purchaseComment}
+        handleConfirm={handleConfirm}
       />
-      {stepsModal && <DonatePoints modal={stepsModal} setShowModal={setStepsModal} />}
+      {
+        showModalPurchasePoint && 
+        <DonatePoints 
+          myPoint={myPoint}
+          donatedPoint={donatedPoint}
+          showModalPurchasePoint={showModalPurchasePoint} setShowModalPurchasePoint={setShowModalPurchasePoint} 
+        />
+      }
     </Box>
   )
 }
