@@ -37,8 +37,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const {
     status,
     cover,
-    entry_end_datetime,
     start_datetime,
+    entry_end_datetime,
     hash_key,
     participant_count,
     max_participants,
@@ -49,8 +49,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
     game_title,
     entry_status,
   } = lobby.attributes // TODO use lodash get instead
-  const startDate = DateHelper.formatDateTime(start_datetime)
-  const entryEndDate = DateHelper.formatDateTime(entry_end_datetime)
+  const startDate = DateHelper.formatDate(start_datetime)
+  const entryEndDate = DateHelper.formatDate(entry_end_datetime)
   const value = status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED ? LOBBY_STATUS.ENDED : status
 
   const getMediaScreen = () => {
@@ -113,9 +113,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
           size="small"
           label={
             <Box className={classes.chippedRowText}>
-              <Typography variant="overline" className={classes.chippedValue}>
-                {chipLabel}
-              </Typography>
+              <Typography variant="overline">{chipLabel}</Typography>
             </Box>
           }
         />
@@ -217,6 +215,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 8,
   },
   chippedRowText: {
+    fontSize: 10,
     marginTop: 2,
     color: Colors.white,
   },
@@ -276,19 +275,10 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.up('lg')]: {
     chippedValue: {
-      fontSize: 8,
+      fontSize: 10,
     },
     chippedExtra: {
-      fontSize: 8,
-    },
-    chip: {
-      height: 12,
-      backgroundColor: Colors.white_opacity[20],
-      borderRadius: 2,
-    },
-    chippedRowText: {
-      marginTop: 2,
-      color: Colors.white,
+      fontSize: 10,
     },
   },
 }))

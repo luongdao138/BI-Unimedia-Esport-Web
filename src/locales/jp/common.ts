@@ -644,7 +644,7 @@ export default {
       organizer: '開催者',
       start_date: '開催日',
       entry_period: 'エントリー期間',
-      entries: 'エントリー',
+      entries: 'エントリー人数',
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
