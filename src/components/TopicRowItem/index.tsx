@@ -1,10 +1,11 @@
 import { Typography, Box, Theme, makeStyles, Icon } from '@material-ui/core'
+import { TopicDetail } from '@services/community.service'
 import { Colors } from '@theme/colors'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export interface TopicRowItemProps {
   title?: string
-  last_comment?: string
+  last_comment?: TopicDetail['attributes']['last_comment']['data']
   latest_date?: string
   comment_count?: number
   // TODO tur zuur optional bolgoson. Communit detial -> Topic Search API holbosonii daraa required bolgoh
@@ -23,7 +24,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              <Typography className={classes.last_comment}>{last_comment}</Typography>
+              <Typography className={classes.last_comment}>{last_comment.attributes.content}</Typography>
             </Box>
           </Box>
 

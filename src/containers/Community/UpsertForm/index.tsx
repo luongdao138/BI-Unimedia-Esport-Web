@@ -206,7 +206,11 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             </IconButton>
             <Box pl={2}>
               <Typography variant="h2">
-                {isConfirm ? i18n.t('common:community_create.confirm.title') : i18n.t('common:community_create.title')}
+                {isConfirm
+                  ? i18n.t('common:community_create.confirm.title')
+                  : isEdit
+                  ? i18n.t('common:community_create.edit.title')
+                  : i18n.t('common:community_create.title')}
               </Typography>
             </Box>
           </Box>
