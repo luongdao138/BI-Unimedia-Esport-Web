@@ -52,6 +52,10 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   useLayoutEffect(() => {
     const updateSize = () => {
       cache.clearAll()
+      if (listRef && listRef.current)
+        setTimeout(() => {
+          listRef.current.forceUpdateGrid()
+        })
     }
     window.addEventListener('resize', updateSize)
     updateSize()
