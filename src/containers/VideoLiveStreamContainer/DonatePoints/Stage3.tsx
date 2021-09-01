@@ -14,17 +14,21 @@ const StepThree: React.FC<StepThreeProps> = () => {
   const { meta_my_points, myPointsData } = usePointsManage()
   const { purchasePointInfo } = usePurchasePointData()
   const myPoint = myPointsData.total_point ? Number(myPointsData.total_point) : 0
-  
+
   return (
     <Box className={classes.container}>
       {meta_my_points.pending && <ESLoader open={meta_my_points.pending} />}
       <Box width="100%">
-        <PointCardItem titleText={i18n.t('common:donate_points.title_purchase_point_step_3')} points={purchasePointInfo.purchased_point} pointText={'eXePoint'} />
+        <PointCardItem
+          titleText={i18n.t('common:donate_points.title_purchase_point_step_3')}
+          points={purchasePointInfo.purchased_point}
+          pointText={i18n.t('common:point_management_tab.eXe_point_text')}
+        />
         {myPoint && (
           <PointCardItem
             titleText={i18n.t('common:donate_points.title_total_point_step_3')}
             points={myPoint}
-            pointText={'eXePoint'}
+            pointText={i18n.t('common:point_management_tab.eXe_point_text')}
           />
         )}
       </Box>

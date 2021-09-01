@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   totalPointText: {
     fontSize: 10,
     color: '#FFFFFF',
+    whiteSpace: 'pre',
   },
   purchasePointText: {
     fontSize: 10,

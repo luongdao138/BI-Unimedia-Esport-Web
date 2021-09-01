@@ -33,9 +33,8 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
     return (
       <Box onClick={handleShowDetail} key={index}>
         <Typography className={classes.purchasePointIdText}>
-          {dataPurchasePointId?.length > 1 ? ' ' : ''}
-          {item}
-          {dataPurchasePointId?.length > 1 ? ' / ' : dataPurchasePointId?.length - 1 === index && ''}
+          {index >= 1 ? ` ${item}` : item}
+          {dataPurchasePointId?.length > 1 && index < dataPurchasePointId?.length - 1 ? ' /' : ''}
         </Typography>
       </Box>
     )
@@ -55,7 +54,7 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
         </Box>
       </Box>
       <Box className={classes.dataContainer}>
-        <Typography className={classes.textStyle}>{data?.uuid}</Typography>
+        <Typography className={classes.titleItemStyle}>{data?.uuid}</Typography>
         <Typography className={classes.usagePointStyle}>
           {'-' + FormatHelper.currencyFormat(data?.point.toString())}
           {i18n.t('common:point_management_tab.eXe_point_text')}
@@ -73,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignContent: 'center',
+    width: '100%',
   },
   wrapTitle: {
     display: 'flex',
@@ -142,6 +142,7 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
     textDecoration: 'underline',
     marginBottom: 8,
+    whiteSpace: 'pre',
   },
   textStyle: {
     color: Colors.white_opacity['70'],

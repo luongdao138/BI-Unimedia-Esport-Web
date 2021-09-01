@@ -41,19 +41,21 @@ const PointManagementTab: FC = () => {
             {listMyPointsData.map((item, i) => (
               <PointsPurchasedItem data={item} key={i} serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1} />
             ))}
-            <Box className={classes.paginationContainer}>
-              <Pagination
-                showFirstButton
-                showLastButton
-                defaultPage={1}
-                page={page}
-                count={totalPages}
-                variant="outlined"
-                shape="rounded"
-                className={classes.paginationStyle}
-                onChange={onChangePage}
-              />
-            </Box>
+            {totalPages > 1 && (
+              <Box className={classes.paginationContainer}>
+                <Pagination
+                  showFirstButton
+                  showLastButton
+                  defaultPage={1}
+                  page={page}
+                  count={totalPages}
+                  variant="outlined"
+                  shape="rounded"
+                  className={classes.paginationStyle}
+                  onChange={onChangePage}
+                />
+              </Box>
+            )}
           </>
         ) : (
           <Box className={classes.noDataContainer}>
@@ -70,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
     marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   loadingContainer: {
     marginTop: theme.spacing(4),
@@ -86,7 +89,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: Colors.grey['200'],
     borderStyle: 'solid',
     marginTop: 18,
-    justifyContent: 'center',
   },
   spacingBottom: {
     paddingBottom: 24,
@@ -95,7 +97,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 30,
     display: 'flex',
     justifyContent: 'center',
-    // paddingBottom: 30,
   },
   noDataContainer: {
     backgroundColor: '#171717',

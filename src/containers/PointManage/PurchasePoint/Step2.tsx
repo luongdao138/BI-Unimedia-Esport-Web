@@ -55,31 +55,26 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     if (metaDeleteCardMeta.loaded) {
       setIsShowDeleteCardModal(false)
     }
-    if(metaDeleteCardMeta.error) {
+    if (metaDeleteCardMeta.error) {
       setHasError(true)
     }
   }, [metaDeleteCardMeta])
-  
 
   useEffect(() => {
-    if(purchasePointInfo.purchase_success) {
+    if (purchasePointInfo.purchase_success) {
       closeModalPurchasePoint()
     }
   }, [purchasePointInfo.purchase_success])
-  
 
   useEffect(() => {
-    if(metaPurchaseUseOldCardMeta.error || metaPurchaseUseNewCardMeta.error) {
+    if (metaPurchaseUseOldCardMeta.error || metaPurchaseUseNewCardMeta.error) {
       setIsPurchasingPoint(false)
       setHasError(true)
     }
   }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
 
   const isLoading =
-    metaDeleteCardMeta.pending ||
-    isPurchasingPoint ||
-    metaPurchaseUseNewCardMeta.pending ||
-    metaPurchaseUseOldCardMeta.pending
+    metaDeleteCardMeta.pending || isPurchasingPoint || metaPurchaseUseNewCardMeta.pending || metaPurchaseUseOldCardMeta.pending
 
   const initialValues = {
     card_name: '',
@@ -100,7 +95,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     },
   })
   const { values, errors, touched, handleChange, handleSubmit, handleBlur, setFieldValue, resetForm, validateForm } = formik
-  
+
   useEffect(() => {
     validateForm()
   }, [])
@@ -160,7 +155,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     // replace space and check is numeric
     if (/^[0-9]+$/g.test(card_number) || !e.target.value) {
       setSelectedCardId('')
-      if(card_number.length <= 16){
+      if (card_number.length <= 16) {
         setFieldValue('card_number', formatCardNumber(e.target.value))
       }
     }

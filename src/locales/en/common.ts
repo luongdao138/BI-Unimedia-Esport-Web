@@ -1046,6 +1046,7 @@ export default {
     report: '通報',
     chat_premium_text_validate_msg_empty: 'コメントを入力して下さい',
     chat_premium_text_validate_no_donate_selected: '使いたいポイントを選択して下さい',
+    total_point_title: '所有ポイント',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
@@ -1074,6 +1075,6 @@ export default {
     title_purchase_point_step_3: '購入ポイント',
     title_total_point_step_3: '合計ポイント',
     success_message_purchase: 'ポイント購入が完了しました。\n' + '右上の「x」ボタンをクリックして動画視聴画面にお戻りください。',
-    lack_point_mess: "所持ポイントが不足しています"
+    lack_point_mess: '所持ポイントが不足しています',
   },
 }

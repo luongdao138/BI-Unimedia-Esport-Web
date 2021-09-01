@@ -62,7 +62,7 @@ const VideosTop: React.FC = () => {
     setShowConfirmModal(false)
   }
   const handleConfirm = () => {
-    if(lackedPoint > 0) {
+    if (lackedPoint > 0) {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
       setShowConfirmModal(false)
@@ -113,7 +113,12 @@ const VideosTop: React.FC = () => {
 
   const sideChatContainer = () => {
     return chatVisible ? (
-      <ChatContainer myPoint={myPoint} onCloseChatPanel={onCloseChatPanel} onPressDonate={confirmDonatePoint} userHasViewingTicket={userHasViewingTicket()} />
+      <ChatContainer
+        myPoint={myPoint}
+        onCloseChatPanel={onCloseChatPanel}
+        onPressDonate={confirmDonatePoint}
+        userHasViewingTicket={userHasViewingTicket()}
+      />
     ) : (
       <IconButton onClick={handleChatPanelOpen} className={classes.headerIcon}>
         <img src="/images/ic_collapse_right.svg" />
@@ -128,7 +133,12 @@ const VideosTop: React.FC = () => {
         <LiveStreamContent userHasViewingTicket={userHasViewingTicket()} />
         {isMobile ? (
           <Box className={classes.mobileChatContainer}>
-            <ChatContainer myPoint={myPoint} onCloseChatPanel={onCloseChatPanel} onPressDonate={confirmDonatePoint} userHasViewingTicket={true} />
+            <ChatContainer
+              myPoint={myPoint}
+              onCloseChatPanel={onCloseChatPanel}
+              onPressDonate={confirmDonatePoint}
+              userHasViewingTicket={true}
+            />
           </Box>
         ) : (
           <Grid container direction="row" className={classes.tabContainer}>
@@ -145,14 +155,14 @@ const VideosTop: React.FC = () => {
         msgContent={purchaseComment}
         handleConfirm={handleConfirm}
       />
-      {
-        showModalPurchasePoint &&
+      {showModalPurchasePoint && (
         <DonatePoints
           myPoint={myPoint}
           lackedPoint={lackedPoint}
-          showModalPurchasePoint={showModalPurchasePoint} setShowModalPurchasePoint={setShowModalPurchasePoint} 
+          showModalPurchasePoint={showModalPurchasePoint}
+          setShowModalPurchasePoint={setShowModalPurchasePoint}
         />
-      }
+      )}
     </Box>
   )
 }

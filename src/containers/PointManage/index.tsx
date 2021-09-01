@@ -33,7 +33,7 @@ const PointManage: React.FC = () => {
 
   useEffect(() => {
     // redirect to first tab when purchase point user new or old card success
-    if(purchasePointInfo.purchase_success) {
+    if (purchasePointInfo.purchase_success) {
       setTab(0)
     }
   }, [purchasePointInfo.purchase_success])
@@ -55,9 +55,11 @@ const PointManage: React.FC = () => {
       case TABS.POINT_MANAGEMENT:
         return <PointManagementTab />
       case TABS.PURCHASE_POINT:
-        return <Box className={classes.wrap_container}>
-                <PurchasePoint />
-              </Box>
+        return (
+          <Box className={classes.wrap_container}>
+            <PurchasePoint />
+          </Box>
+        )
       case TABS.PURCHASE_HISTORY:
         return <PurchaseHistory />
       case TABS.USAGE_HISTORY:

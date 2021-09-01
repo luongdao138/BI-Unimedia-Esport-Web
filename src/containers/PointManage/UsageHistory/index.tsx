@@ -153,19 +153,21 @@ const UsageHistory: FC = () => {
                         serialNumber={pageDetail > 1 ? (pageDetail - 1) * limit + i + 1 : i + 1}
                       />
                     ))}
-                    <Box className={classes.paginationContainer}>
-                      <Pagination
-                        showFirstButton
-                        showLastButton
-                        defaultPage={1}
-                        page={pageDetail}
-                        count={totalPagesDetail}
-                        variant="outlined"
-                        shape="rounded"
-                        className={classes.paginationStyle}
-                        onChange={onChangePageDetail}
-                      />
-                    </Box>
+                    {totalPagesDetail > 1 && (
+                      <Box className={classes.paginationContainer}>
+                        <Pagination
+                          showFirstButton
+                          showLastButton
+                          defaultPage={1}
+                          page={pageDetail}
+                          count={totalPagesDetail}
+                          variant="outlined"
+                          shape="rounded"
+                          className={classes.paginationStyle}
+                          onChange={onChangePageDetail}
+                        />
+                      </Box>
+                    )}
                   </>
                 ) : (
                   <Box className={classes.noDataContainer}>
@@ -191,19 +193,21 @@ const UsageHistory: FC = () => {
                       setPurchasePointId={setPurchasePointId}
                     />
                   ))}
-                  <Box className={classes.paginationContainer}>
-                    <Pagination
-                      showFirstButton
-                      showLastButton
-                      defaultPage={1}
-                      page={page}
-                      count={totalPages}
-                      variant="outlined"
-                      shape="rounded"
-                      className={classes.paginationStyle}
-                      onChange={onChangePage}
-                    />
-                  </Box>
+                  {totalPages > 1 && (
+                    <Box className={classes.paginationContainer}>
+                      <Pagination
+                        showFirstButton
+                        showLastButton
+                        defaultPage={1}
+                        page={page}
+                        count={totalPages}
+                        variant="outlined"
+                        shape="rounded"
+                        className={classes.paginationStyle}
+                        onChange={onChangePage}
+                      />
+                    </Box>
+                  )}
                 </>
               ) : (
                 <Box className={classes.noDataContainer}>
@@ -259,6 +263,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
     marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   wrapContent: {
     backgroundColor: Colors.black,

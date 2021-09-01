@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 16,
     paddingTop: 16,
     paddingBottom: 18,
-    marginTop: 21,
+    marginTop: 24,
   },
   wrapTitle: {
     display: 'flex',

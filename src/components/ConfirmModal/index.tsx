@@ -30,7 +30,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ children, open }) => {
         padding: '40px 24px 40px 24px',
         [theme.breakpoints.down(321)]: {
           padding: '20px 24px 20px 24px',
-        }
+        },
       },
     },
   }))(MuiDialogContent)
