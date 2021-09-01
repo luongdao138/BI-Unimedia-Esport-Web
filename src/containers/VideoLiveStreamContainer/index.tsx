@@ -24,7 +24,6 @@ enum TABS {
 
 const VideosTop: React.FC = () => {
   const { t } = useTranslation('common')
-  const classes = useStyles()
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -46,6 +45,7 @@ const VideosTop: React.FC = () => {
   useEffect(() => {
     getMyPointData(params)
   }, [])
+  const classes = useStyles({ padded: !isMobile && !chatVisible })
 
   const confirmDonatePoint = (point, comment) => {
     setDonatedPoint(point)
@@ -122,7 +122,7 @@ const VideosTop: React.FC = () => {
             <ChatContainer onCloseChatPanel={onCloseChatPanel} onPressDonate={confirmDonatePoint} userHasViewingTicket={true} />
           </Box>
         ) : (
-          <Grid container direction="row">
+          <Grid container direction="row" className={classes.tabContainer}>
             {getTabs()}
             {getContent()}
           </Grid>
@@ -137,11 +137,11 @@ const VideosTop: React.FC = () => {
         handleConfirm={handleConfirm}
       />
       {
-        showModalPurchasePoint && 
-        <DonatePoints 
+        showModalPurchasePoint &&
+        <DonatePoints
           myPoint={myPoint}
           donatedPoint={donatedPoint}
-          showModalPurchasePoint={showModalPurchasePoint} setShowModalPurchasePoint={setShowModalPurchasePoint} 
+          showModalPurchasePoint={showModalPurchasePoint} setShowModalPurchasePoint={setShowModalPurchasePoint}
         />
       }
     </Box>
@@ -155,6 +155,10 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     position: 'relative',
   },
+  tabContainer: (props: { padded?: boolean }) => ({
+    display: 'flex',
+    paddingRight: props?.padded ? 120 : 0,
+  }),
   tabs: {
     overflow: 'hidden',
     borderBottomColor: Colors.text[300],

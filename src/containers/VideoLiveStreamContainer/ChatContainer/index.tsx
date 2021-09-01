@@ -1,9 +1,16 @@
-import { Box, Typography, makeStyles, Icon, Button, OutlinedInput, IconButton, Input, useTheme, useMediaQuery } from '@material-ui/core'
+import { Box, Typography, Icon, Button, OutlinedInput, IconButton, Input, useTheme, useMediaQuery } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState } from 'react'
+// import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import { useTranslation } from 'react-i18next'
+import useStyles from './styles'
+import useCheckNgWord from '@utils/hooks/useCheckNgWord'
+import _ from 'lodash'
+import { showDialog } from '@store/common/actions'
+import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
+import { useAppDispatch } from '@store/hooks'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -11,7 +18,7 @@ type ChatContainerProps = {
   userHasViewingTicket?: boolean
 }
 
-const purchasePoints = {
+export const purchasePoints = {
   p_50: {
     id: 'p_50',
     value: 50,
@@ -75,12 +82,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   const [chatInput, setChatInput] = useState<string>('')
   const [purchaseComment, setPurchaseComment] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
-  const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('')
+  const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>(null)
+  const [chatInputValidationError, setChatInputValidationError] = useState<string>('')
+  const [premiumChatValidationError, setPremiumChatValidationError] = useState<string>('')
 
   const { t } = useTranslation('common')
-  const classes = useStyles()
+  const classes = useStyles({ chatValidationError: !!chatInputValidationError })
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const { checkNgWord } = useCheckNgWord()
+  const dispatch = useAppDispatch()
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatInput(e.target.value)
@@ -101,6 +112,30 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
         content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
       }))
 
+  const handlePremiumChatClick = () => {
+    const content = purchaseComment
+    if (content.length === 0) {
+      setPremiumChatValidationError(t('live_stream_screen.chat_premium_text_validate_msg_empty'))
+      return
+    }
+    if (!purchaseValueSelected) {
+      setPremiumChatValidationError(t('live_stream_screen.chat_premium_text_validate_no_donate_selected'))
+      return
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const sanitizedContent = sanitizeHtml(content, {
+    //   allowedTags: [],
+    //   allowedAttributes: {},
+    // })
+
+    // Submit chat message
+    setPremiumChatValidationError('')
+    setPurchaseComment('')
+
+    const donatedPoint = purchasePoints[purchaseValueSelected].value
+    onPressDonate(donatedPoint, purchaseComment)
+  }
   const purchaseInfoDialog = () => (
     <Box className={classes.purchaseDialogContainer}>
       <Box className={classes.purchaseDialogContent}>
@@ -115,7 +150,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
             value={purchaseComment}
             onChange={onCommentChange}
             disableUnderline
-            classes={{ root: classes.purchaseCommentRoot }}
+            classes={{ root: classes.purchaseCommentRoot, input: classes.purchaseCommentInput }}
           />
           <Typography className={classes.purchaseCommentTextLimit}>{`${purchaseComment.length} / 120`}</Typography>
         </Box>
@@ -139,14 +174,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
               })}
           </Box>
         </Box>
-        <Button onClick={() => {
-          const donatedPoint = purchasePoints[purchaseValueSelected].value
-          onPressDonate(donatedPoint, purchaseComment)
-          }} 
-            className={classes.purchaseButton}
-        >
+        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton}>
           <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
         </Button>
+        {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
         <Box className={classes.dialogFooter}>
           <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
           <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
@@ -158,6 +189,31 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
 
   const purchaseIconClick = () => {
     setPurchaseDialogVisible(!purchaseDialogVisible)
+  }
+
+  const handleSubmitChatContent = () => {
+    const content = chatInput
+    if (content.length === 0) {
+      setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
+    }
+    if (content.length > 50) {
+      setChatInputValidationError('live_stream_screen.chat_input_text_validate_msg_50_char_exceed')
+    }
+    dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: 'aaaaaaaa' }))
+
+    if (!_.isEmpty(checkNgWord(content))) {
+      setChatInputValidationError('チャットが未入力です')
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const sanitizedContent = sanitizeHtml(content, {
+    //   allowedTags: [],
+    //   allowedAttributes: {},
+    // })
+
+    // Submit chat message
+    setChatInputValidationError('')
+    setChatInput('')
   }
 
   const chatInputComponent = () => (
@@ -178,10 +234,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
             classes={{ root: classes.input, input: classes.chatTextInput }}
             margin="dense"
           />
-          <Button className={classes.iconButtonBg}>
+          <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
             <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
           </Button>
         </Box>
+        {chatInputValidationError && <Typography className={classes.chatInputErrorText}>{chatInputValidationError}</Typography>}
       </Box>
     </Box>
   )
@@ -264,303 +321,5 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     </Box>
   )
 }
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: 482,
-  },
-  chatPurchaseTicketBox: {
-    display: 'flex',
-  },
-  chatPurchaseTicketNote: {
-    fontSize: 14,
-    margin: '18px 15px',
-  },
-  purchaseCommentInputContainer: {
-    width: '100%',
-    marginTop: 12,
-    backgroundColor: '#212121',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    borderRadius: 4,
-  },
-  purchaseCommentTextLimit: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginRight: 16,
-    marginBottom: 10,
-    marginTop: 10,
-  },
-  dialogTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  pointList: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    marginTop: 10,
-  },
-  pointListRow1: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    flexWrap: 'wrap',
-  },
-  totalPointText: {
-    fontSize: 10,
-  },
-  purchasePointText: {
-    fontSize: 10,
-    textDecoration: 'underline',
-  },
-  dialogFooter: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 10,
-  },
-  purchaseButton: {
-    backgroundColor: '#FF4786',
-    width: '100%',
-  },
-  purchaseButtonText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  purchaseDialogContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: 10,
-  },
-  purchaseDialogContent: {
-    padding: 16,
-    backgroundColor: '#4D4D4D',
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  chatBoard: {
-    overflow: 'auto',
-    height: 525,
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: 13,
-    paddingBottom: 111,
-  },
-  chatBoardContainer: {
-    position: 'relative',
-  },
-  chatMessage: {
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  chatMessageUser: {
-    fontSize: 14,
-    color: '#FF4786',
-  },
-  buttonContainer: {
-    display: 'flex',
-    width: '100%',
-    margin: '0 auto',
-  },
-  label: {
-    textAlign: 'center',
-  },
-  chatHeader: {
-    display: 'flex',
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: 'black',
-  },
-  headerIcon: {
-    marginLeft: 17,
-    width: 16,
-    height: 12,
-  },
-  headerTitle: {
-    marginLeft: 126,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  chatContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    paddingTop: 18,
-    paddingLeft: 15,
-    paddingRight: 13,
-    width: '100%',
-  },
-  accountInfo: {
-    display: 'flex',
-    marginBottom: 4,
-    flexDirection: 'column',
-    backgroundColor: 'white',
-    borderRadius: 4,
-  },
-  accountInfoHeader: {
-    display: 'flex',
-    paddingTop: 7,
-    paddingBottom: 11,
-    paddingLeft: 16,
-    paddingRight: 32,
-    flexDirection: 'row',
-    backgroundColor: 'rgba(71,106,255, 0.75)',
-    alignItems: 'flex-end',
-  },
-  accountInfoContent: {
-    paddingLeft: 14,
-    paddingRight: 14,
-    paddingTop: 14,
-    paddingBottom: 38,
-    backgroundColor: '#476AFF',
-    borderBottomRightRadius: 4,
-    borderBottomLeftRadius: 4,
-  },
-  accountInfoContentText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  accountName: {
-    fontSize: 14,
-    color: 'black',
-    flex: 1,
-  },
-  accountRemain: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  accountRemainUnit: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: 'black',
-    marginLeft: 17,
-  },
-  chatInputContainer: {
-    backgroundColor: '#0A0A0A',
-    paddingLeft: 11,
-    paddingRight: 11,
-    paddingTop: 14.5,
-    paddingBottom: 22,
-    borderRadius: 4,
-  },
-  chatInputMobileContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-  },
-  chatBox: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  input: {
-    borderBottomRightRadius: 'unset',
-    zIndex: 11,
-    width: '100%',
-    borderTopRightRadius: 'unset',
-    backgroundColor: '#4D4D4D',
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderWidth: 1,
-      borderColor: '#FFFFFF',
-    },
-    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
-      background: 'rgba(247, 247, 53, 0.1)',
-    },
-    '&.Mui-disabled': {
-      backgroundColor: 'transparent',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'transparent',
-      },
-    },
-    '& :-webkit-autofill': {
-      WebkitBoxShadow: '0 0 0 100px #000000 inset',
-    },
-  },
-  iconButtonBg: {
-    backgroundColor: '#FF4786',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 4,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 4,
-  },
-  sendIcon: {
-    width: 30,
-  },
-  chatTextInput: {
-    fontSize: 14,
-    color: 'white',
-  },
-  iconPurchase: {
-    width: 20,
-    height: 20,
-    marginBottom: 12.5,
-    marginLeft: 8,
-  },
-  userWatchingList: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    overflow: 'hidden',
-  },
-  userWatchingItem: {
-    display: 'flex',
-    width: 40,
-    height: 40,
-    backgroundColor: '#476AFF',
-    borderRadius: 4,
-    marginRight: 4,
-    padding: 4,
-  },
-  ...purchasePoints,
-  purchaseItem: {
-    height: 28,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  purchaseItemUnselected: {
-    backgroundColor: 'transparent',
-  },
-  purchaseItemText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  purchaseCommentRoot: {
-    backgroundColor: '#212121',
-    height: 83,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 4,
-  },
-  downTriangle: {
-    width: 20,
-    height: 14,
-    marginLeft: 10,
-    marginTop: -2,
-  },
-  [theme.breakpoints.down(768)]: {
-    container: {
-      width: '100%',
-    },
-    chatBoard: {
-      height: 253,
-    },
-    purchaseDialogContainer: {
-      width: 318,
-    },
-  },
-}))
+
 export default ChatContainer

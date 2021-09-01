@@ -1041,6 +1041,11 @@ export default {
     archive_publication_period: 'アーカイブ公開期間',
     point_required_for_viewing: '配信視聴に必要なeXeポイント',
     explanation: '説明',
+    chat_input_text_validate_msg_50_char_exceed: 'メッセージは50文字までです',
+    chat_input_text_validate_msg_empty: 'メッセージが未入力です',
+    report: '通報',
+    chat_premium_text_validate_msg_empty: 'コメントを入力して下さい',
+    chat_premium_text_validate_no_donate_selected: '使いたいポイントを選択して下さい',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

@@ -1,7 +1,6 @@
 import { Box, Typography, Theme, makeStyles, Icon, Grid } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
-import { Colors } from '@theme/colors'
 import React, { useState } from 'react'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -109,21 +108,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 14,
     marginTop: 8,
     fontSize: 14,
-    color: Colors.grey['400'],
+    color: '#FFFFFF',
+    opacity: 0.7,
   },
   seeMoreContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 36,
+    cursor: 'pointer',
   },
   seeMoreTitle: {
-    color: Colors.grey['400'],
+    color: '#FFFFFF',
+    opacity: 0.7,
     fontSize: 14,
     marginRight: 6,
   },
   angleDownIcon: {
-    color: Colors.grey['400'],
+    color: '#FFFFFF',
+    opacity: 0.7,
     fontSize: 12,
   },
   archiveVideoTitle: {

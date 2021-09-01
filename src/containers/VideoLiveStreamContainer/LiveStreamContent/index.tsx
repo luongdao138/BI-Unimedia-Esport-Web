@@ -6,8 +6,9 @@ import ESAvatar from '@components/Avatar'
 import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React from 'react'
+import React, { useState } from 'react'
 import ButtonPrimary from '@components/ButtonPrimary'
+import ESMenuItem from '@components/Menu/MenuItem'
 // import ESButton from '@components/Button'
 // import { Player, ControlBar } from 'video-react';
 // import { useRef } from 'react'
@@ -17,6 +18,8 @@ interface LiveStreamContentProps {
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
+  const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
+
   const { t } = useTranslation('common')
   const classes = useStyles()
   const { selectors } = userProfileStore
@@ -114,32 +117,52 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
             {!isMobile && shareButton()}
           </Box>
           {!isMobile && (
-            <Typography className={classes.three_dot}>
-              <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
-            </Typography>
+            <Box className={classes.dropDownMenu}>
+              <Typography
+                onClick={() => {
+                  setShowReportMenu(true)
+                }}
+                className={classes.three_dot}
+              >
+                <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
+              </Typography>
+              {showReportMenu && (
+                <Box className={`${classes.dropDownContent} MuiPaper-elevation8 MuiPaper-rounded`}>
+                  <ESMenuItem
+                    onClick={() => {
+                      setShowReportMenu(false)
+                    }}
+                  >
+                    {t('live_stream_screen.report')}
+                  </ESMenuItem>
+                </Box>
+              )}
+            </Box>
           )}
         </Box>
       </Box>
-      <Box className={classes.wrap_streamer_info}>
-        <Box className={classes.streamer_info}>
-          <ESAvatar
-            className={classes.avatar}
-            alt={userProfile?.attributes?.nickname}
-            src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
-          />
-          <Box className={classes.streamer_data}>
-            <Box className={classes.streamer_name}>{t('live_stream_screen.streamer_name')}</Box>
-            <Box className={classes.registration}>
-              <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
-              <Typography className={classes.register_person_number}>
-                {FormatHelper.japaneseWanFormatter(123456)}
-                {t('common.man')}
-              </Typography>
+      {!isMobile && (
+        <Box className={classes.wrap_streamer_info}>
+          <Box className={classes.streamer_info}>
+            <ESAvatar
+              className={classes.avatar}
+              alt={userProfile?.attributes?.nickname}
+              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
+            />
+            <Box className={classes.streamer_data}>
+              <Box className={classes.streamer_name}>{t('live_stream_screen.streamer_name')}</Box>
+              <Box className={classes.registration}>
+                <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
+                <Typography className={classes.register_person_number}>
+                  {FormatHelper.japaneseWanFormatter(123456)}
+                  {t('common.man')}
+                </Typography>
+              </Box>
             </Box>
           </Box>
+          {registerChannelButton()}
         </Box>
-        {!isMobile && registerChannelButton()}
-      </Box>
+      )}
     </Box>
   )
 }
@@ -151,6 +174,25 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     flexWrap: 'wrap',
     background: '#000000',
+  },
+  dropDownMenu: {
+    position: 'relative',
+    display: 'inline-block',
+  },
+  dropDownContent: {
+    overflow: 'hidden',
+    position: 'absolute',
+    background: 'white',
+    right: 0,
+    willChange: 'all',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    width: 'auto',
+    visiblity: 'visible',
+    opocity: 1,
+    transition: 'all 0.5s ease',
+    height: 'auto',
+    display: 'block',
   },
   mediaPlayerContainer: {
     width: '100%',
