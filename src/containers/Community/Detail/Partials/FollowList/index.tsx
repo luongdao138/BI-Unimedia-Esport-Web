@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme, Button } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, Button, Grid } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLabel from '@components/Label'
 import UserListItem from '@components/UserItem'
@@ -69,8 +69,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       if (isYellow) {
         getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
       } else {
-        // TODO Change when api adds new case
-        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.moderator_member, page: 1 })
       }
     } else {
       resetMembers()
@@ -99,8 +98,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       if (isYellow) {
         getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
       } else {
-        // TODO Change when api adds new case
-        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.moderator_member, page: Number(pages.current_page) + 1 })
       }
     }
   }
@@ -246,7 +244,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   <Typography variant="h2">{t('common:community.follow_list')}</Typography>
                 </Box>
               </Box>
-              {!!membersList && membersList.length > 0 && (
+              {!!membersList && membersList.length > 0 && membersMeta.loaded && (
                 <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
                   <InfiniteScroll
                     dataLength={membersList.length}
@@ -262,9 +260,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
                 </Box>
               )}
               {membersMeta.pending && (
-                <Box className={classes.loader}>
-                  <ESLoader />
-                </Box>
+                <Grid item xs={12}>
+                  <Box my={4} display="flex" justifyContent="center" alignItems="center">
+                    <ESLoader />
+                  </Box>
+                </Grid>
               )}
             </Box>
           </BlankLayout>
@@ -294,9 +294,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-  },
-  loaderCenter: {
-    textAlign: 'center',
   },
   scroll: {
     scrollbarColor: '#222 transparent',
