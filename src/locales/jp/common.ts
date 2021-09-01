@@ -681,6 +681,7 @@ export default {
     recruiting: '受付中',
   },
   lobby: {
+    copy_toast: 'クリップボードにコピーしました',
     lobby_results: 'ロビー「:key」 の検索結果',
     lobby_results_all: 'ロビーの検索結果',
     until_deadline: '締め切りまであと',
@@ -701,7 +702,7 @@ export default {
       organizer: '開催者',
       start_date: '開催日',
       entry_period: 'エントリー期間',
-      entries: 'エントリー',
+      entries: 'エントリー人数',
     },
     cancel_lobby_dialog: {
       title: '募集を中止しますか？',
@@ -791,7 +792,8 @@ export default {
       confirm_participant: 'エントリーを締め切りました',
     },
     create: {
-      submit: '内容を確認する',
+      submit: 'この内容で作成する',
+      review: '内容を確認する',
       category: 'カテゴリ',
       choose_category: 'カテゴリを選ぶ',
       name: '募集タイトル',
@@ -810,6 +812,7 @@ export default {
   とくにオンラインで開催する際は、何のツールを使うのか、明記することをおすすめいたします。`,
       please_review: 'を見直してください',
       holding_period: '開催日時',
+      address: '会場詳細',
     },
   },
   lobbySearchFilters: {
@@ -1105,7 +1108,7 @@ export default {
     tab1: '募集概要',
     tab2: '期間・会場',
     title: '募集を作成する',
-    edit_title: '募集を作成する',
+    edit_title: '募集を編集する',
     name: '募集タイトル',
     has_prize: '副賞あり',
     hint: '副賞提供は各種法令を遵守した形で実施されますよう十分ご注意ください',
@@ -1160,7 +1163,9 @@ export default {
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
     organizer_joinable: '主催者を参加者として抽選に含める',
-    organizer_joined: '主催者を参加者として抽選に含めるチェック',
+    organizer_joined: '開催者を参加者として抽選に含める',
+    organizer_join: '含める',
+    organizer_unjoin: '含めない',
   },
   community_create: {
     title: 'コミュニティを作成する',

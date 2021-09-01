@@ -153,6 +153,8 @@ const lobbyFormLabelNames = {
   area_id: 'common:lobby.create.area',
   start_datetime: 'common:lobby.create.holding_period',
   acceptance_end_start_date: 'common:lobby.create.holding_period',
+  address: 'common:lobby.create.address',
+  message: 'common:lobby.create.overview',
 }
 
 const getLabelName = (field: string): string => {
