@@ -1,3 +1,6 @@
+import { TournamentFilterOption } from '@services/arena.service'
+import i18n from '@locales/i18n'
+
 export const PARTICIPATION_TYPES = [
   { label: '個人戦', value: 1 },
   { label: '2on2', value: 2 },
@@ -9,6 +12,51 @@ export const PARTICIPATION_TYPES = [
   { label: '8on8', value: 8 },
   { label: '9on9', value: 9 },
   { label: '10on10', value: 10 },
+]
+
+export const defaultFilterOptions = [
+  {
+    type: TournamentFilterOption.all,
+    label: i18n.t('common:arenaSearchFilters.all'),
+    loginRequired: false,
+  },
+  {
+    type: TournamentFilterOption.ready,
+    label: i18n.t('common:arenaSearchFilters.ready'),
+    loginRequired: false,
+  },
+  {
+    type: TournamentFilterOption.recruiting,
+    label: i18n.t('common:arenaSearchFilters.recruiting'),
+    loginRequired: false,
+  },
+  {
+    type: TournamentFilterOption.beforeStart,
+    label: i18n.t('common:arenaSearchFilters.beforeStart'),
+    loginRequired: false,
+  },
+  {
+    type: TournamentFilterOption.inProgress,
+    label: i18n.t('common:arenaSearchFilters.inProgress'),
+  },
+  {
+    type: TournamentFilterOption.completed,
+    label: i18n.t('common:arenaSearchFilters.completed'),
+    loginRequired: false,
+  },
+]
+
+export const loginRequiredFilterOptions = [
+  {
+    type: TournamentFilterOption.joined,
+    label: i18n.t('common:arenaSearchFilters.joined'),
+    loginRequired: true,
+  },
+  {
+    type: TournamentFilterOption.organized,
+    label: i18n.t('common:arenaSearchFilters.organized'),
+    loginRequired: true,
+  },
 ]
 
 // TEMPORARY: battle royale removed
