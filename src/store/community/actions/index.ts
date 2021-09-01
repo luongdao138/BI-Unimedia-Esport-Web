@@ -249,7 +249,7 @@ export const getTopicDetail = createAsyncThunk<services.TopicDetailResponse, ser
 
 export const clearTopicDetail = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL)
 
-export const deleteTopic = createAsyncThunk<void, services.TopicDetailParams>(
+export const deleteTopic = createAsyncThunk<void, services.TopicDeleteParams>(
   COMMUNITY_ACTION_TYPE.DELETE_TOPIC,
   async (params, { rejectWithValue }) => {
     try {
