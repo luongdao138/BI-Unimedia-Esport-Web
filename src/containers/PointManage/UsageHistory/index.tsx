@@ -188,6 +188,7 @@ const UsageHistory: FC = () => {
                     <UsagePointsItem
                       data={item}
                       key={i}
+                      maxPage={(page - 1) * limit + listUsageHistoryData.length}
                       serialNumber={page > 1 ? (page - 1) * limit + i + 1 : i + 1}
                       setShowDetail={setUsageHistoryDetail}
                       setPurchasePointId={setPurchasePointId}

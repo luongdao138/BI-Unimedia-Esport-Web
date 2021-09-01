@@ -9,16 +9,17 @@ import moment from 'moment'
 interface UsagePointsItemProps {
   data: ListUsedPointsData
   serialNumber: number
+  maxPage: number
   setShowDetail?: (value: boolean) => void
   setPurchasePointId?: (value: number) => void
 }
-const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShowDetail, setPurchasePointId }) => {
+const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShowDetail, setPurchasePointId, maxPage }) => {
   const classes = useStyles()
   const getAddClass = (firstClass, secClass) => {
-    if (serialNumber.toString().length === 2) {
+    if (maxPage.toString().length === 3) {
       return firstClass
     }
-    if (serialNumber.toString().length >= 3) {
+    if (maxPage.toString().length >= 4) {
       return secClass
     }
     return ''
@@ -41,42 +42,52 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
   }
   return (
     <Box className={classes.container} key={serialNumber}>
-      <Box className={classes.wrapTitle}>
-        <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
-          <Typography className={classes.serialStyle}>{serialNumber}</Typography>
-        </Box>
-        <Box className={`${classes.titleContainer} ${getAddClass(classes.letterSecTitle, classes.letterThirdTitle)}`}>
-          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.id')}</Typography>
-          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.points')}</Typography>
-          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_id')}</Typography>
-          <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.difference')}</Typography>
-          <Typography className={classes.dateStyle}>{i18n.t('common:point_management_tab.date_time')}</Typography>
-        </Box>
+      <Box className={`${classes.serialContainer} ${getAddClass(classes.letterSecSerial, classes.letterThirdSerial)}`}>
+        <Typography className={classes.serialStyle}>{serialNumber}</Typography>
       </Box>
-      <Box className={classes.dataContainer}>
-        <Typography className={classes.titleItemStyle}>{data?.uuid}</Typography>
-        <Typography className={classes.usagePointStyle}>
-          {'-' + FormatHelper.currencyFormat(data?.point.toString())}
-          {i18n.t('common:point_management_tab.eXe_point_text')}
-        </Typography>
-        <Box className={classes.purchasePointsItem}>{dataPurchasePointId.map((item, index) => renderPurchasePointId(item, index))}</Box>
-        <Typography className={classes.textStyle}>{data?.status}</Typography>
-        <Typography className={classes.dateStyle}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
+      <Box className={classes.wrapTitle}>
+        <Box className={classes.wrapRow}>
+          <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.id')}</Typography>
+          <Typography className={classes.textStyle}>{data?.uuid}</Typography>
+        </Box>
+        <Box className={classes.wrapRow}>
+          <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.points')}</Typography>
+          <Typography className={classes.usagePointStyle}>
+            {'-' + FormatHelper.currencyFormat(data?.point.toString())}
+            {i18n.t('common:point_management_tab.eXe_point_text')}
+          </Typography>
+        </Box>
+        <Box className={classes.wrapRow}>
+          <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.purchase_id')}</Typography>
+          <Box className={classes.purchasePointsItem}>{dataPurchasePointId.map((item, index) => renderPurchasePointId(item, index))}</Box>
+        </Box>
+        <Box className={classes.wrapRow}>
+          <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.difference')}</Typography>
+          <Typography className={classes.textStyle}>{data?.status}</Typography>
+        </Box>
+        <Box className={classes.wrapRow}>
+          <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>{i18n.t('common:point_management_tab.date_time')}</Typography>
+          <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
+        </Box>
       </Box>
     </Box>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
+  titleStyle: {
+    marginBottom: 0,
+  },
   purchasePointsItem: {
     display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    width: '100%',
+    flexWrap: 'wrap',
+    flex: 1,
+  },
+  wrapRow: {
+    display: 'flex',
   },
   wrapTitle: {
-    display: 'flex',
-    width: '148px',
+    flex: 1,
   },
   container: {
     display: 'flex',
@@ -102,7 +113,6 @@ const useStyles = makeStyles((theme) => ({
   },
   serialStyle: {
     textAlign: 'center',
-    // marginBottom: 8,
   },
   titleContainer: {
     display: 'flex',
@@ -116,9 +126,10 @@ const useStyles = makeStyles((theme) => ({
   letterThirdTitle: {
     width: 'calc(100% - 34px)',
   },
-  titleItemStyle: {
+  titleCommon: {
     color: Colors.white_opacity['70'],
     marginBottom: 8,
+    width: 126,
   },
   dataContainer: {
     flex: 1,
@@ -142,35 +153,43 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
     textDecoration: 'underline',
     marginBottom: 8,
-    whiteSpace: 'pre',
+    whiteSpace: 'pre'
   },
   textStyle: {
     color: Colors.white_opacity['70'],
     marginBottom: 8,
   },
-  dateStyle: {
-    color: Colors.white_opacity['70'],
-  },
   letterSecSerial: {
-    width: 25,
+    width: 32,
   },
   letterThirdSerial: {
     width: 34,
   },
   [theme.breakpoints.down(414)]: {
     wrapTitle: {
-      width: 135,
     },
   },
-  [theme.breakpoints.down(375)]: {
+  [theme.breakpoints.down(376)]: {
     container: {
       margin: 8,
     },
-    wrapTitle: {
-      width: 110,
+    titleCommon: {
+      width: 124,
     },
     textStyle: {
       fontSize: 13,
+    },
+  },
+  [theme.breakpoints.down(321)]: {
+    titleCommon: {
+      width: 90,
+      fontSize: 12,
+    },
+    purchasePointIdText: {
+      fontSize: 12,
+    },
+    textStyle: {
+      fontSize: 12,
     },
   },
 }))
