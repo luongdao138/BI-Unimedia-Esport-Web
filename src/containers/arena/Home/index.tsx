@@ -117,7 +117,13 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
       <div ref={contentRef}>
         <div className={classes.container}>
-          <InfiniteScroll dataLength={arenas.length} next={loadMore} hasMore={!hasUCRReturnHref} loader={null} scrollThreshold={0.8}>
+          <InfiniteScroll
+            dataLength={arenas.length}
+            next={!meta.pending && loadMore}
+            hasMore={!hasUCRReturnHref}
+            loader={null}
+            scrollThreshold={'1px'}
+          >
             <WindowScroller>
               {({ height, scrollTop }) => (
                 <AutoSizer disableHeight>
