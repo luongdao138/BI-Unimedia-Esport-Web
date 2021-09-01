@@ -10,7 +10,7 @@ import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
-import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
+import TwitterPopUpShareButton from './../../../Partials/TwitterPopUpShareButton'
 import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
@@ -69,6 +69,8 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
   const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
+
+  const url = window.location.href
 
   const setOtherRoleFalse = (setRoleType: string) => {
     if (setRoleType === ROLE_TYPES.IS_ADMIN) {
@@ -235,7 +237,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
             <Typography>{t('common:community.copy_shared_url')}</Typography>
           </Box>
-          <ESButtonTwitterCircle className={classes.marginLeft} link={'blabla'} />
+          <TwitterPopUpShareButton className={classes.marginLeft} url={url} title={detail.attributes.name} />
         </Box>
 
         <Box marginTop={2} display="flex">
