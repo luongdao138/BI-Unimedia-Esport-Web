@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme, Typography, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -9,19 +9,27 @@ import ESLabel from '@components/Label'
 import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
 import PaginationMobile from '../../../Partials/PaginationMobile'
-// import { useRouter } from 'next/router'
-// import { ESRoutes } from '@constants/route.constants'
+import useTopicSearch from '../useTopicSearch'
+import moment from 'moment'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import ESLoader from '@components/Loader'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
-  // TODO change useSearch when data is ready
+  const router = useRouter()
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [value, setValue] = useState<string>('')
   const classes = useStyles()
   const [showResult, setShowResult] = useState(false)
+  const [isOnlyTitle, setIsOnlyTitle] = useState(false)
+  const { topicList, getTopicList, topicListMeta, pages } = useTopicSearch()
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
-  // const router = useRouter()
+  const hash_key = String(router.query.hash_key)
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(1)
+  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -32,10 +40,11 @@ const InfoContainer: React.FC = () => {
   }, [value])
 
   const handleCheckbox = () => {
-    //
+    setIsOnlyTitle(!isOnlyTitle)
   }
 
   const handleSearch = () => {
+    getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle, page: 1 })
     setShowResult(true)
   }
 
@@ -60,110 +69,20 @@ const InfoContainer: React.FC = () => {
     }
   }
 
-  const dummy_data = [
-    {
-      title: '自己紹介しよう！ 自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜 はじめまして！　ダミーテキストです〜はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 901,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 902,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 903,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 904,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 905,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 906,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 907,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 908,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 909,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 910,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 911,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 912,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 913,
-    },
-    {
-      title: '自己紹介しよう！',
-      last_comment: 'はじめまして！　ダミーテキストです〜',
-      latest_date: '数秒前',
-      comment_count: 914,
-    },
-  ]
-
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(1)
-  const chunkSize = 10
+  useEffect(() => {
+    if (topicList) {
+      setCount(pages.total_pages)
+    }
+  }, [pages])
 
   useEffect(() => {
-    setCount(Math.ceil(dummy_data.length / 10))
-  }, [])
+    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle, page: pageNumber })
+  }, [pageNumber])
 
-  const handleChange = (event, value) => {
-    setPage(value)
+  const handleChange = (event, val) => {
+    setPageNumber(val)
+    setPage(val)
     return event
-  }
-
-  const chunks = (arr, index) => {
-    const chunk_array = []
-    for (let i = 0; i < arr.length; i += chunkSize) chunk_array.push(arr.slice(i, i + chunkSize))
-    return chunk_array[index - 1]
   }
 
   return (
@@ -190,45 +109,60 @@ const InfoContainer: React.FC = () => {
       </Box>
 
       <Box mb={5}>
-        <ESCheckbox disableRipple onChange={handleCheckbox} label={t('common:community.detail_search.by_title')} />
+        <ESCheckbox disableRipple onChange={handleCheckbox} label={t('common:community.detail_search.by_title')} value={isOnlyTitle} />
       </Box>
       {showResult && (
         <>
           <Box mb={2}>
             <ESLabel label={t('common:community.detail_search.result')} bold />
           </Box>
-          <>
-            {chunks(dummy_data, page).map((d, i) => {
-              return (
-                <TopicRowItem
-                  key={i}
-                  title={d.title}
-                  last_comment={d.last_comment}
-                  latest_date={d.latest_date}
-                  comment_count={d.comment_count}
-                />
-              )
-            })}
-            <Box display="flex" justifyContent="center" mt={4}>
-              {isMobile ? (
-                <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
-              ) : (
-                <Pagination
-                  className={classes.pagination}
-                  count={count}
-                  page={page}
-                  onChange={handleChange}
-                  variant="outlined"
-                  shape="rounded"
-                  color="primary"
-                  hideNextButton
-                  hidePrevButton
-                  showFirstButton
-                  showLastButton
-                />
-              )}
-            </Box>
-          </>
+          {!!topicList && topicList.length > 0 && topicListMeta.loaded && (
+            <>
+              {topicList.map((d, i) => {
+                const attr = d.attributes
+                const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
+                return (
+                  <TopicRowItem
+                    key={i}
+                    handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
+                    title={attr.topic_title}
+                    last_comment={attr.last_comment.data}
+                    latest_date={latestDate}
+                    comment_count={attr.comment_count}
+                  />
+                )
+              })}
+              <Box display="flex" justifyContent="center" mt={4}>
+                {isMobile ? (
+                  <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
+                ) : (
+                  <Pagination
+                    className={classes.pagination}
+                    count={count}
+                    page={page}
+                    onChange={handleChange}
+                    variant="outlined"
+                    shape="rounded"
+                    color="primary"
+                    hideNextButton
+                    hidePrevButton
+                    showFirstButton
+                    showLastButton
+                  />
+                )}
+              </Box>
+            </>
+          )}
+          {topicListMeta.loaded && topicList.length == 0 && (
+            <Typography variant="body1">{t('common:community.detail_search.no_data')}</Typography>
+          )}
+          {topicListMeta.pending && (
+            <Grid item xs={12}>
+              <Box my={4} display="flex" justifyContent="center" alignItems="center">
+                <ESLoader />
+              </Box>
+            </Grid>
+          )}
         </>
       )}
     </Box>
@@ -306,6 +240,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
     '& .MuiPaginationItem-root': {
       color: Colors.white,
+      borderRadius: 4,
     },
     '& .MuiPaginationItem-outlined': {
       borderColor: Colors.primary,
@@ -313,6 +248,14 @@ const useStyles = makeStyles((theme) => ({
     '& .Mui-selected': {
       backgroundColor: Colors.primary,
       color: Colors.white,
+    },
+    '& .MuiPaginationItem-ellipsis': {
+      height: 32,
+      border: '1px solid',
+      borderColor: Colors.primary,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   },
 }))

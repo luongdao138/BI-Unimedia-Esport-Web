@@ -84,7 +84,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
   }
 
   const getDetailAndToast = () => {
-    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: pages.current_page })
+    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     sendToast(t('common:community.change_applying_members_toast'))
   }
 

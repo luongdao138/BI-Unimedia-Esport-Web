@@ -11,6 +11,7 @@ import {
   TopicDetail,
   CommunityMember,
   CommentsResponse,
+  TopicSearchItem,
 } from '@services/community.service'
 
 type StateType = {
@@ -29,6 +30,8 @@ type StateType = {
   topicDetail: TopicDetail | null
   commentsList?: Array<CommentsResponse>
   commentsListMeta?: PageMeta
+  topicSearchList?: Array<TopicSearchItem>
+  topicSearchListMeta?: PageMeta
 }
 
 const initialState: StateType = {
@@ -98,6 +101,10 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL, (state) => {
     state.topicDetail = undefined
+  })
+  builder.addCase(actions.searchTopic.fulfilled, (state, action) => {
+    state.topicSearchList = action.payload.data
+    state.topicSearchListMeta = action.payload.meta
   })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
     state.community_detail = action.payload.data

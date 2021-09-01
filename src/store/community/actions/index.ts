@@ -249,7 +249,7 @@ export const getTopicDetail = createAsyncThunk<services.TopicDetailResponse, ser
 
 export const clearTopicDetail = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL)
 
-export const deleteTopic = createAsyncThunk<void, services.TopicDetailParams>(
+export const deleteTopic = createAsyncThunk<void, services.TopicDeleteParams>(
   COMMUNITY_ACTION_TYPE.DELETE_TOPIC,
   async (params, { rejectWithValue }) => {
     try {
@@ -284,6 +284,21 @@ export const deleteTopicComment = createAsyncThunk<void, string>(
   async (params, { rejectWithValue }) => {
     try {
       const res = await services.deleteTopicComment(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const searchTopic = createAsyncThunk<services.TopicSearchResponse, services.TopicSearchParams>(
+  COMMUNITY_ACTION_TYPE.SEARCH_TOPIC,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.searchTopic(params)
       return res
     } catch (error) {
       if (!error.response) {

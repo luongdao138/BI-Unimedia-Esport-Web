@@ -53,6 +53,7 @@ export const URI = {
   TOPIC_LIST: '/v2/communities/topics',
   TOPIC_COMMENT_CREATE: '/v2/comments',
   TOPIC_COMMENT_DELETE: '/v2/comments/:id',
+  TOPIC_SEARCH: '/v2/topics/search',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
@@ -77,6 +78,7 @@ export const URI = {
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic', //TODO skip 2.0
   TOPICS: '/v2/topics/:id',
+  TOPICS_DETAILS: '/v2/topics/details',
   TOPIC_CREATE: '/v2/topic/create',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',
