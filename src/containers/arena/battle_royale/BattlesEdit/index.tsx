@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next'
 import RandomizeDialog from '@containers/arena/tournament/MatchesEdit/Partials/RandomizeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
-import { ESRoutes } from '@constants/route.constants'
 
 const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -24,10 +23,6 @@ const ArenaBattlesEdit: React.FC = () => {
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, meta: participantsMeta, getParticipants, resetMeta } = useParticipants()
   const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
-
-  useEffect(() => {
-    if (router.query.hash_key) router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
-  }, [router])
 
   const [data, setData] = useState<any>()
   const [showParticipants, setShowParticipants] = useState<boolean>(false)
