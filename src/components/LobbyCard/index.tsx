@@ -7,92 +7,87 @@ import ESCardContent from '@components/Card/CardContent'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { LobbyListItem } from '@services/lobby.service'
-import { useTranslation } from 'react-i18next'
-import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
+import { LobbyResponse } from '@services/lobby.service'
 import i18n from '@locales/i18n'
+import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 interface Props {
-  lobby: LobbyListItem
+  lobby: LobbyResponse
 }
 
+const statusText = [
+  i18n.t('common:lobby.tabs.ready'),
+  i18n.t('common:lobby.tabs.recruiting'),
+  i18n.t('common:lobby.tabs.entry_closed'),
+  i18n.t('common:lobby.tabs.in_progress'),
+  i18n.t('common:lobby.tabs.ended'),
+]
+
+const entryStatusText = [
+  i18n.t('common:lobby.status.entered'),
+  i18n.t('common:lobby.status.participated'),
+  i18n.t('common:lobby.status.not_participated'),
+]
+
 const LobbyCard: React.FC<Props> = ({ lobby }) => {
-  const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
 
-  const attr = lobby.attributes
-  const winner = lobby.attributes.winner
-  const cover = attr.cover ? attr.cover : '/images/default_card.png'
-  // const organizer = attr.organizer_name ? attr.organizer_name : ''
-  const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
+  const {
+    status,
+    cover,
+    start_datetime,
+    hash_key,
+    participant_count,
+    max_participants,
+    participants,
+    organizer_avatar,
+    organizer_name,
+    title,
+    game_title,
+    entry_status,
+  } = lobby.attributes // TODO use lodash get instead
+  const startDate = new Date(start_datetime).toISOString().slice(0, 10).replace(/-/g, '/')
+  const value = status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED ? LOBBY_STATUS.ENDED : status
 
   const getMediaScreen = () => {
-    const p_type =
-      attr.participant_type === 1 ? i18n.t('common:tournament:type_single') : `${attr.participant_type}on${attr.participant_type}`
     return (
       <>
-        <Box
-          className={classes.mediaOverlay}
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          // alignItems="flex-end"
-          padding={1}
-        >
+        <Box className={classes.mediaOverlay} display="flex" flexDirection="row" justifyContent="space-between" padding={1}>
           <Box alignSelf="flex-end">
-            <ESAvatar size={36} src={attr.organizer_avatar} alt={attr.organizer_name} />
+            <ESAvatar size={36} src={organizer_avatar} alt={organizer_name} />
           </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="space-between">
-            <Chip
-              className={classes.chipPrimary}
-              size="small"
-              label={
-                <Box color={Colors.white} justifySelf="flex-start">
-                  <Typography variant="overline">
-                    {attr.rule === TR.BATTLE_ROYAL
-                      ? t('common:arena.participate_status.participating')
-                      : t('common:arena.participate_status.loss')}
-                  </Typography>
-                </Box>
-              }
-            />
+            {entry_status !== null ? (
+              <Chip
+                className={classes.chipPrimary}
+                size="small"
+                variant="outlined"
+                label={
+                  <Box color={Colors.grey[300]} justifySelf="flex-start">
+                    <Typography variant="overline" className={classes.label}>
+                      {entryStatusText[entry_status]}
+                    </Typography>
+                  </Box>
+                }
+              />
+            ) : (
+              <Box />
+            )}
             <Chip
               className={classes.chipSecondary}
               size="small"
+              variant="outlined"
               label={
-                <Box color={Colors.black} justifyContent="flex-">
-                  <Typography variant="overline">{p_type}</Typography>
+                <Box color={Colors.grey[350]} justifyContent="flex-">
+                  <Typography variant="overline" className={classes.label}>
+                    {statusText[value]}
+                  </Typography>
                 </Box>
               }
             />
           </Box>
         </Box>
-        {winner && attr.status === TS.COMPLETED && (
-          <Box
-            zIndex={2}
-            className={`${classes.mediaOverlay} ${classes.blurOverlay}`}
-            display="flex"
-            justifyContent="center"
-            flexDirection="column"
-            alignItems="center"
-          >
-            <img className={classes.firstIcon} src="/images/first_icon.png" />
-            <ESAvatar
-              onClick={() => {
-                winner?.user_code ? router.push(`${ESRoutes.PROFILE}/${winner.user_code}`) : null
-              }}
-              className={classes.marginV}
-              alt={winner?.name}
-              src={winner?.profile_image ? winner.profile_image : attr.is_single ? null : '/images/avatar.png'}
-            />
-            <Box className={classes.captionTitle}>
-              <Typography noWrap variant="overline">
-                {winner?.name}
-              </Typography>
-            </Box>
-          </Box>
-        )}
       </>
     )
   }
@@ -100,38 +95,43 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const getTitle = () => {
     return (
       <Box color={Colors.white} className={classes.titleContainer}>
-        <Typography className={classes.title}>{attr.title}</Typography>
+        <Typography className={classes.title}>{title}</Typography>
       </Box>
     )
   }
   const getInfoRow = (value: string) => {
     return <Typography className={classes.organizer}>{value}</Typography>
   }
-  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
+  const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number) => {
     return (
-      <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center">
+      <Box display="flex" flexDirection="row" mt={0.5} alignItems="center" color={Colors.white}>
         <ESChip
           className={classes.chip}
           size="small"
           label={
-            <Box color={Colors.white}>
+            <Box className={classes.chippedRowText}>
               <Typography variant="overline">{chipLabel}</Typography>
             </Box>
           }
         />
         <Box ml={1} color={Colors.white}>
-          <Typography variant="caption">{value}</Typography>
+          <Typography variant="caption" className={classes.chippedValue}>
+            {`${value}`}
+          </Typography>
         </Box>
-        {extra ? <Typography variant="caption">{extra}</Typography> : null}
+        {extra ? (
+          <Typography variant="caption" className={classes.chippedExtra}>
+            &nbsp;{extra}
+          </Typography>
+        ) : null}
       </Box>
     )
   }
   const getParticipants = () => {
-    const participants = attr.participants
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
         {participants && participants.length > 0
-          ? attr.participants
+          ? participants
               .slice(0, 3)
               .map((participant, i) => (
                 <ESAvatar
@@ -139,8 +139,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
                   key={`participants${i}`}
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
-                  src={participant.profile_image}
-                  alt={participant.nickname}
+                  src={participant?.profile_image}
+                  alt={participant?.nickname}
                 />
               ))
           : null}
@@ -148,28 +148,21 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
     )
   }
 
-  const pCount = () => {
-    const count = attr.is_freezed ? attr.participant_count : Number(attr.participant_count) + Number(attr.interested_count)
-    return isNaN(count) || !count ? 0 : count
-  }
-
   return (
-    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.LOBBY}/${attr.hash_key}`)}>
+    <ESCard classes={{ root: classes.cardHover }} onClick={() => router.push(`${ESRoutes.LOBBY}/${hash_key}`)}>
       <ESCardMedia
-        cornerIcon={
-          <Icon className={/* attr.rule === TR.BATTLE_ROYAL ? */ 'fas fa-university' /*  : 'fas fa-trophy' */} fontSize="small" />
-        }
-        image={cover}
+        cornerIcon={<Icon className={'fas fa-university'} fontSize="small" />}
+        image={cover ? cover : '/images/default_card.png'}
       >
         {getMediaScreen()}
       </ESCardMedia>
       <ESCardContent>
         {getTitle()}
-        {getInfoRow(attr.game_of_title)}
-        {/* {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)} */}
-        {getChippedRow(t('common:tournament_create.start_date'), startDate)}
-        {getChippedRow(t('common:tournament_create.entry_period'), startDate, ' まで')}
-        {getChippedRow(t('common:tournament.entry_number'), pCount(), `/${attr.max_participants}`, 0.5)}
+        {getInfoRow(game_title)}
+        {getInfoRow(`${i18n.t('common:lobby.card.organizer')} ${organizer_name}`)}
+        {getChippedRow(i18n.t('common:lobby.card.start_date'), startDate)}
+        {getChippedRow(i18n.t('common:lobby.card.entry_period'), startDate, 'まで')}
+        {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -181,33 +174,47 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   titleContainer: {
-    height: 42,
+    height: 45,
   },
   organizer: {
     fontSize: 10,
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    minHeight: 15,
   },
   chip: {
     height: 15,
     backgroundColor: Colors.white_opacity[20],
+    borderRadius: 2,
   },
   avatarContainer: {
     height: 20,
     marginTop: theme.spacing(2),
   },
   chipPrimary: {
-    height: 20,
-    marginBottom: 5,
-    backgroundColor: Colors.black_opacity[90],
-    borderRadius: 10,
+    width: 64,
+    height: 17,
+    backgroundColor: Colors.black_opacity[70],
+    borderRadius: 4,
+    border: `0.2px solid ${Colors.grey[300]}`,
   },
   chipSecondary: {
-    height: 20,
-    marginBottom: 5,
-    backgroundColor: Colors.white_opacity[90],
-    borderRadius: 10,
+    width: 64,
+    height: 17,
+    backgroundColor: Colors.white_opacity[87],
+    borderRadius: 4,
+    borderColor: Colors.grey[350],
+    borderWidth: 1,
+  },
+  label: {
+    fontWeight: 'bold',
+    fontSize: 8,
+  },
+  chippedRowText: {
+    fontSize: 10,
+    marginTop: 2,
+    color: Colors.white,
   },
   mediaOverlay: {
     position: 'absolute',
@@ -228,6 +235,13 @@ const useStyles = makeStyles((theme) => ({
   },
   pAvatar: {
     marginLeft: -8,
+  },
+  chippedValue: {
+    fontSize: 12,
+  },
+  chippedExtra: {
+    fontSize: 12,
+    wordBreak: 'keep-all',
   },
   title: {
     display: '-webkit-box',
@@ -254,6 +268,14 @@ const useStyles = makeStyles((theme) => ({
     marginV: {
       height: 30,
       width: 30,
+    },
+  },
+  [theme.breakpoints.up('lg')]: {
+    chippedValue: {
+      fontSize: 10,
+    },
+    chippedExtra: {
+      fontSize: 10,
     },
   },
 }))

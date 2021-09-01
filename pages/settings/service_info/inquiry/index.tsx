@@ -3,9 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import ESInquiry from '@containers/Inquiry'
 
 const InquirySetingsPage: PageWithLayoutType = () => {
-  return <ESInquiry />
+  return (
+    <MainLayout loginRequired={false}>
+      <ESInquiry />
+    </MainLayout>
+  )
 }
-
-InquirySetingsPage.Layout = MainLayout
 
 export default InquirySetingsPage

@@ -2,6 +2,7 @@ export enum MESSAGE_ACTION_TYPE {
   GET_FRIEND_LIST = 'chat/getFriendList',
   DIRECT_ROOM_CHECK = 'chat/directRoomCheck',
   GET_TOURNAMENT_DETAIL = 'chat/tournamentDetail',
+  GET_LOBBY_DETAIL = 'chat/lobbyDetail',
   RESET_ADD_USERS = 'chat/resetAddUsers',
   RESET_DM_ROOM = 'chat/resetDmRoom',
 }

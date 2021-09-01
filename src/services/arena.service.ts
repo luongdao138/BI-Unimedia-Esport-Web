@@ -523,7 +523,7 @@ export type UpdateTournamentTeamParams = {
     team_name: string
     team_icon_url: string
     members: {
-      user_id: string
+      user_id: number
       name: string
     }[]
   }

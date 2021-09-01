@@ -11,6 +11,7 @@ import { TournamentListItem } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
 import i18n from '@locales/i18n'
+import moment from 'moment'
 
 interface Props {
   tournament: TournamentListItem
@@ -25,7 +26,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
   const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
-  const startDate = new Date(attr.start_date).toISOString().slice(0, 10).replace(/-/g, '/')
+  const startDate = moment(attr.start_date).format('YYYY/MM/DD')
 
   const getMediaScreen = () => {
     const p_type =

@@ -84,7 +84,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
 
             <Box className={classes.userInfoBox} ml={1}>
               <Typography className={classes.username}>{commentData.owner_nickname}</Typography>
-              <Typography className={classes.user_code}>{commentData.user_code}</Typography>
+              <Typography className={classes.userCode}>{'@' + commentData.user_code}</Typography>
             </Box>
           </Box>
           <Box className={classes.dateReportContainer}>
@@ -98,7 +98,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
           </Box>
         </Box>
 
-        <Box className={classes.discriptionContainer} mb={3}>
+        <Box className={classes.contentContainer} mb={3}>
           <Typography className={classes.content}>{commentData.content}</Typography>
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage()}
@@ -184,7 +184,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     maxWidth: '100%',
   },
-  user_code: {
+  userCode: {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -194,7 +194,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 11,
     color: Colors.white_opacity[30],
   },
-  discriptionContainer: {
+  contentContainer: {
     display: 'flex',
   },
   imageBox: {
@@ -206,6 +206,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     color: Colors.white_opacity[70],
+    wordBreak: 'break-word',
   },
   number: {
     fontSize: 10,

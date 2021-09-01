@@ -133,7 +133,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
               <Typography variant="h3" style={{ color: Colors.white }}>
                 {attr.nickname}
               </Typography>
-              <Typography variant="body2">{attr.user_code}</Typography>
+              <Typography variant="body2">{'@' + attr.user_code}</Typography>
             </Box>
           </Box>
 
