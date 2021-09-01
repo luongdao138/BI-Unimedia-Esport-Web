@@ -3,13 +3,12 @@ import useArenaHome from './useArenaHome'
 import TournamentCard from '@components/TournamentCard'
 import { TournamentFilterOption } from '@services/arena.service'
 import useArenaHelper from '../hooks/useArenaHelper'
-import { useEffect, useRef, useState, createRef } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
 import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useRect } from '@utils/hooks/useRect'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -24,15 +23,12 @@ interface ArenaHomeProps {
   filter: TournamentFilterOption
 }
 
-const contentRef = createRef<HTMLDivElement>()
-
 const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const { arenas, meta, loadMore, onFilterChange } = useArenaHome()
   const [itemsPerRow, setPerRow] = useState<number>(4)
   const rowCount = Math.ceil(arenas.length / itemsPerRow)
   const classes = useStyles()
   const router = useRouter()
-  const contentRect = useRect(contentRef)
   const { toCreate } = useArenaHelper()
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
@@ -53,13 +49,14 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
 
   const listRef = useRef<any>(null)
 
-  useEffect(() => {
-    cache.clearAll()
-    if (listRef && listRef.current)
-      setTimeout(() => {
-        listRef.current.forceUpdateGrid()
-      })
-  }, [contentRect?.width, rowCount])
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      cache.clearAll()
+    }
+    window.addEventListener('resize', updateSize)
+    updateSize()
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
 
   useEffect(() => {
     if (!hasUCRReturnHref) {
@@ -115,7 +112,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   return (
     <>
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <div ref={contentRef}>
+      <div>
         <div className={classes.container}>
           <InfiniteScroll
             dataLength={arenas.length}
