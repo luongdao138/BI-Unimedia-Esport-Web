@@ -1,7 +1,7 @@
 import ESTab from '@components/Tab'
 import ESTabs from '@components/Tabs'
 import i18n from '@locales/i18n'
-import { Box, Grid, IconButton, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Grid, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +22,13 @@ enum TABS {
   PROGRAM_INFO = 0,
   DISTRIBUTOR_INFO = 1,
   RELATED_VIDEOS = 2,
+  COMMENT = 3,
+}
+
+export enum VIDEO_TYPE {
+  LIVE_STREAM = 0,
+  SCHEDULE = 1,
+  ARCHIVED = 2,
 }
 
 const VideosTop: React.FC = () => {
@@ -37,7 +44,6 @@ const VideosTop: React.FC = () => {
   const [tab, setTab] = useState(0)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
-  const [chatVisible, setChatVisible] = useState(true)
   const [lackedPoint, setLackedPoint] = useState(0)
   const [purchaseComment, setPurchaseComment] = useState<string>('')
 
@@ -49,7 +55,7 @@ const VideosTop: React.FC = () => {
   useEffect(() => {
     getMyPointData(params)
   }, [])
-  const classes = useStyles({ padded: !isMobile && !chatVisible })
+  const classes = useStyles()
 
   const confirmDonatePoint = (donated_point, comment) => {
     // reset lack point
@@ -69,8 +75,6 @@ const VideosTop: React.FC = () => {
     }
   }
 
-  const userHasViewingTicket = () => true
-
   useEffect(() => {
     setTab(0)
   }, [])
@@ -78,9 +82,12 @@ const VideosTop: React.FC = () => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={t('live_stream_screen.program_info')} value={0} />
-          {userHasViewingTicket() && <ESTab label={t('live_stream_screen.distributor_info')} value={1} />}
-          <ESTab label={t('live_stream_screen.related_videos')} value={2} />
+          {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
+          <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
+          {userHasViewingTicket() && (
+            <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
+          )}
+          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )
@@ -93,6 +100,8 @@ const VideosTop: React.FC = () => {
         return <DistributorInfo />
       case TABS.RELATED_VIDEOS:
         return <RelatedVideos />
+      case TABS.COMMENT:
+        return sideChatContainer()
       default:
         break
     }
@@ -103,49 +112,30 @@ const VideosTop: React.FC = () => {
     )
   }
 
-  const onCloseChatPanel = () => {
-    setChatVisible(false)
-  }
+  const sideChatContainer = () => (
+    <ChatContainer myPoint={myPoint} onPressDonate={confirmDonatePoint} userHasViewingTicket={userHasViewingTicket()} />
+  )
 
-  const handleChatPanelOpen = () => {
-    setChatVisible(true)
-  }
-
-  const sideChatContainer = () => {
-    return chatVisible ? (
-      <ChatContainer
-        myPoint={myPoint}
-        onCloseChatPanel={onCloseChatPanel}
-        onPressDonate={confirmDonatePoint}
-        userHasViewingTicket={userHasViewingTicket()}
-      />
-    ) : (
-      <IconButton onClick={handleChatPanelOpen} className={classes.headerIcon}>
-        <img src="/images/ic_collapse_right.svg" />
-      </IconButton>
-    )
-  }
+  const getVideoType = () => VIDEO_TYPE.LIVE_STREAM
+  const isVideoFreeToWatch = () => true
+  const isTicketAvailableForSale = () => true
+  const userHasViewingTicket = () => true
 
   return (
     <Box className={classes.root}>
       {meta_my_points.pending && <ESLoader open={meta_my_points.pending} />}
       <Box className={classes.container}>
-        <LiveStreamContent userHasViewingTicket={userHasViewingTicket()} />
-        {isMobile ? (
-          <Box className={classes.mobileChatContainer}>
-            <ChatContainer
-              myPoint={myPoint}
-              onCloseChatPanel={onCloseChatPanel}
-              onPressDonate={confirmDonatePoint}
-              userHasViewingTicket={true}
-            />
-          </Box>
-        ) : (
-          <Grid container direction="row" className={classes.tabContainer}>
-            {getTabs()}
-            {getContent()}
-          </Grid>
-        )}
+        <LiveStreamContent
+          userHasViewingTicket={userHasViewingTicket()}
+          videoType={getVideoType()}
+          freeToWatch={isVideoFreeToWatch()}
+          ticketAvailableForSale={isTicketAvailableForSale()}
+        />
+        <Grid container direction="row" className={classes.tabContainer}>
+          {getTabs()}
+          {getContent()}
+        </Grid>
+        {/*)}*/}
       </Box>
       {!isMobile && sideChatContainer()}
       <DonatePointsConfirmModal
@@ -174,16 +164,18 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     position: 'relative',
   },
-  tabContainer: (props: { padded?: boolean }) => ({
+  tabContainer: {
     display: 'flex',
-    paddingRight: props?.padded ? 120 : 0,
-  }),
+  },
   tabs: {
     overflow: 'hidden',
     borderBottomColor: Colors.text[300],
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     paddingLeft: 24,
+  },
+  singleTab: {
+    minWidth: 0,
   },
   forbiddenMessageContainer: {
     width: '100%',

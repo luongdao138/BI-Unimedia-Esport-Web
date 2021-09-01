@@ -151,6 +151,7 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     backgroundColor: 'black',
   },
@@ -160,7 +161,6 @@ const useStyles = makeStyles((theme) => ({
     height: 12,
   },
   headerTitle: {
-    marginLeft: 126,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#FFFFFF',
