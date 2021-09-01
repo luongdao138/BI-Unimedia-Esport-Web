@@ -8,7 +8,7 @@ import useCommunityDetail from './useCommunityDetail'
 import ESModal from '@components/Modal'
 import { useRouter } from 'next/router'
 import ESLoader from '@components/Loader'
-import { Box } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 import { TOPIC_STATUS } from '@constants/community.constants'
 
 const CommunityContainer: React.FC = () => {
@@ -56,9 +56,11 @@ const CommunityContainer: React.FC = () => {
           </>
         )}
         {meta.pending && (
-          <Box textAlign="center">
-            <ESLoader />
-          </Box>
+          <Grid item xs={12}>
+            <Box my={4} display="flex" justifyContent="center" alignItems="center">
+              <ESLoader />
+            </Box>
+          </Grid>
         )}
       </>
     )

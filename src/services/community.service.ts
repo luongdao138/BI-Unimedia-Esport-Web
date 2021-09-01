@@ -122,6 +122,7 @@ export enum CommunityMemberRole {
   requested = 'requested',
   reported = 'reported',
   system = 'system',
+  moderator_member = 'moderator_member',
 }
 
 export type CommunityMembersParams = {
@@ -200,6 +201,28 @@ export type TopicAttachments = {
   deleted_at?: string
 }
 
+export type LastComment = {
+  data: {
+    id: string
+    type: string
+    attributes: {
+      id: number
+      content: string
+      user_id: number
+      topic_id: number
+      created_at: string
+      reply_to_comment_id: string | null
+      comment_no: number
+      is_liked: boolean
+      like_count: number
+      is_mine: boolean
+      owner_name: string
+      owner_profile: string
+      attachments: Array<CommentsAttachmentResponse>
+    }
+  }
+}
+
 export type TopicDetail = {
   id: string
   type: string
@@ -221,27 +244,7 @@ export type TopicDetail = {
     member_role: string
     community_name: string
     can_remove: boolean
-    last_comment?: {
-      data: {
-        id: string
-        type: string
-        attributes: {
-          id: number
-          content: string
-          user_id: number
-          topic_id: number
-          created_at: string
-          reply_to_comment_id: string | null
-          comment_no: number
-          is_liked: boolean
-          like_count: number
-          is_mine: boolean
-          owner_name: string
-          owner_profile: string
-          attachments: Array<CommentsAttachmentResponse>
-        }
-      }
-    }
+    last_comment?: LastComment
   }
 }
 
@@ -250,7 +253,13 @@ export type TopicDetailResponse = {
 }
 
 export type TopicDetailParams = {
+  topic_hash: string
+  community_hash?: string
+}
+
+export type TopicDeleteParams = {
   hash_key: string
+  community_hash?: string
 }
 
 export type TopicFollowersResponse = {
@@ -325,6 +334,46 @@ export type CommunityFollowResponse = {
   data: CommunityDetail
 }
 
+export type TopicSearchParams = {
+  community_hash: string
+  keyword: string
+  only_title: boolean
+  page: number
+}
+
+export type TopicSearchItem = {
+  id: string
+  type: string
+  attributes: {
+    content: string
+    created_at: string
+    last_comment_date: string
+    like_count: number
+    topic_title: string
+    hash_key: string
+    community_hash: string
+    community_name: string
+    community_cover: string
+    comment_count: number
+    unseen_count: number
+    is_liked: boolean
+    topic_owner: string
+    owner_name: string
+    game_title: string
+    last_comment: LastComment
+    is_mine: boolean
+    sequence_no: any
+    member_role: CommunityMemberRole
+    is_new: boolean
+    can_remove: boolean
+  }
+}
+
+export type TopicSearchResponse = {
+  data: Array<TopicSearchItem>
+  meta: PageMeta
+}
+
 export type CommentCreateParams = {
   topic_hash: string
   content: string
@@ -354,6 +403,17 @@ export type CommentsResponse = {
     owner_profile: string
     hash_key: string
     reply_to_comment_hash_key: string
+    main_comment: {
+      id: number
+      comment_no: number
+      content: string
+      owner_nickname: string
+      owner_profile: string
+      user_code: string
+      created_at: string
+      assets_url: string
+      attachment_id: number
+    }
   }
 }
 
@@ -437,11 +497,11 @@ export const createTopic = async (params: TopicParams): Promise<CreateTopicRespo
 }
 
 export const getTopicDetail = async (params: TopicDetailParams): Promise<TopicDetailResponse> => {
-  const { data } = await api.get<TopicDetailResponse>(URI.TOPICS.replace(/:id/gi, params.hash_key))
+  const { data } = await api.post<TopicDetailResponse>(URI.TOPICS_DETAILS, params)
   return data
 }
 
-export const deleteTopic = async (params: TopicDetailParams): Promise<void> => {
+export const deleteTopic = async (params: TopicDeleteParams): Promise<void> => {
   const { data } = await api.delete<void>(URI.TOPICS.replace(/:id/gi, params.hash_key))
   return data
 }
@@ -458,6 +518,11 @@ export const createTopicComment = async (params: CommentCreateParams): Promise<v
 
 export const deleteTopicComment = async (hash_key: string): Promise<void> => {
   const { data } = await api.delete<void>(URI.TOPIC_COMMENT_DELETE.replace(/:id/gi, hash_key))
+  return data
+}
+
+export const searchTopic = async (params: TopicSearchParams): Promise<TopicSearchResponse> => {
+  const { data } = await api.post<TopicSearchResponse>(URI.TOPIC_SEARCH, params)
   return data
 }
 

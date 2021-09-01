@@ -17,7 +17,7 @@ import theme from '@theme/index'
 import useTopicDetail from '../../useTopicDetail'
 
 type CommunityHeaderProps = {
-  reply_param?: { hash_key: string; id: number }
+  reply_param?: { hash_key: string; comment_no: number }
   handleReply?: (params: { hash_key: string; id: number } | any) => void
 }
 const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) => {
@@ -77,7 +77,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
         <Box className={classes.inputCont}>
           <ButtonBase className={classes.reply} onClick={() => handleReply([])}>
             <Typography className={classes.replyText} variant="body1">
-              {!_.isEmpty(reply_param) && `>>${reply_param.id}`}
+              {!_.isEmpty(reply_param) && `>>${reply_param.comment_no}`}
             </Typography>
           </ButtonBase>
           <InputBase

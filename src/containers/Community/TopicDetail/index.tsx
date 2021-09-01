@@ -16,7 +16,7 @@ const TopicDetailContainer: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
-  const { topic_hash_key } = router.query
+  const { topic_hash_key, hash_key } = router.query
   const {
     getTopicDetail,
     topic,
@@ -28,13 +28,13 @@ const TopicDetailContainer: React.FC = () => {
     getComments,
     commentsListMeta,
   } = useTopicDetail()
-  const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
+  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
 
   const data = topic?.attributes
 
   useEffect(() => {
     if (topic_hash_key) {
-      getTopicDetail({ hash_key: String(topic_hash_key) })
+      getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: hash_key })
       getCommentsList({ hash_key: String(topic_hash_key) })
     }
   }, [router])

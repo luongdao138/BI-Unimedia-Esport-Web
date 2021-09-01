@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme, Button } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, Button, Grid } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLabel from '@components/Label'
 import UserListItem from '@components/UserItem'
@@ -22,6 +22,7 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 
 type Props = {
   community: CommunityDetail
+  isYellow?: boolean
 }
 
 const FollowList: React.FC<Props> = ({ community }) => {
@@ -29,12 +30,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const classes = useStyles()
   const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
+  const [isYellow, setIsYellow] = useState(false)
   const { isModerator, isAutomatic } = useCommunityHelper(community)
   const {
     getMembers,
     membersList,
     pages,
     resetMeta,
+    resetMembers,
     membersMeta,
     approveMembers,
     cancelMembers,
@@ -53,25 +56,38 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleClose = () => {
     setOpen(false)
+    setIsYellow(false)
+  }
+
+  const handleYellowOpen = () => {
+    setOpen(true)
+    setIsYellow(true)
   }
 
   useEffect(() => {
     if (open) {
-      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+      if (isYellow) {
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+      } else {
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.moderator_member, page: 1 })
+      }
+    } else {
+      resetMembers()
     }
     return () => {
       resetMeta()
+      resetMembers()
     }
   }, [open])
 
   useEffect(() => {
-    const participating = _.filter(
-      membersList,
-      (m) => m.attributes.member_role != MEMBER_ROLE.ADMIN && m.attributes.member_role != MEMBER_ROLE.REQUESTED
-    )
-    const applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
+    let applying = []
+    if (isYellow) {
+      applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
+      setApplyingValues(applying)
+    }
+    const participating = _.filter(membersList, (m) => m.attributes.member_role != MEMBER_ROLE.REQUESTED)
     setParticipatingValues(participating)
-    setApplyingValues(applying)
     setInitialValues([applying, participating])
   }, [membersList])
 
@@ -79,12 +95,16 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const loadMore = () => {
     if (hasNextPage) {
-      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      if (isYellow) {
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      } else {
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.moderator_member, page: Number(pages.current_page) + 1 })
+      }
     }
   }
 
   const getDetailAndToast = () => {
-    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: pages.current_page })
+    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     sendToast(t('common:community.change_applying_members_toast'))
   }
 
@@ -154,7 +174,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderAdminMemberList = () => {
     return (
       <Box mt={3}>
-        {!isAutomatic && applyingValues.length > 0 && (
+        {!isAutomatic && applyingValues.length > 0 && isYellow && (
           <>
             <ESLabel label={t('common:community.applying')} />
             <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
@@ -189,9 +209,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
           </Button>
         </LoginRequired>
         {isModerator && community.attributes.has_requested && (
-          <Typography className={classes.linkUnapproved} variant="body2">
-            {t('common:community.unapproved_users_title')}
-          </Typography>
+          <Button onClick={handleYellowOpen}>
+            <Typography className={classes.linkUnapproved} variant="body2">
+              {t('common:community.unapproved_users_title')}
+            </Typography>
+          </Button>
         )}
       </Box>
       <ESModal open={open} handleClose={handleClose}>
@@ -222,7 +244,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   <Typography variant="h2">{t('common:community.follow_list')}</Typography>
                 </Box>
               </Box>
-              {!!membersList && membersList.length > 0 && (
+              {!!membersList && membersList.length > 0 && membersMeta.loaded && (
                 <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
                   <InfiniteScroll
                     dataLength={membersList.length}
@@ -238,9 +260,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
                 </Box>
               )}
               {membersMeta.pending && (
-                <Box className={classes.loader}>
-                  <ESLoader />
-                </Box>
+                <Grid item xs={12}>
+                  <Box my={4} display="flex" justifyContent="center" alignItems="center">
+                    <ESLoader />
+                  </Box>
+                </Grid>
               )}
             </Box>
           </BlankLayout>
@@ -271,9 +295,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
-  loaderCenter: {
-    textAlign: 'center',
-  },
   scroll: {
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
@@ -298,7 +319,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkUnapproved: {
     textDecoration: 'underline',
     color: 'yellow',
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
   },

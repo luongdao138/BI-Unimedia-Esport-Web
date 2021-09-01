@@ -10,7 +10,6 @@ import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
-import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
@@ -26,6 +25,8 @@ import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
 import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
+import { TwitterShareButton } from 'react-share'
+import _ from 'lodash'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -235,7 +236,9 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
             <Typography>{t('common:community.copy_shared_url')}</Typography>
           </Box>
-          <ESButtonTwitterCircle className={classes.marginLeft} link={'blabla'} />
+          <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')}>
+            <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
+          </TwitterShareButton>
         </Box>
 
         <Box marginTop={2} display="flex">
@@ -289,7 +292,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {getHeader()}
         {getTabs()}
         {getContent()}
-        {!!isNotMember && !isNotMember && (
+        {!isNotMember && (
           <Box className={classes.commentIconContainer}>
             <Box>
               <TopicCreateButton onClick={toCreateTopic} />
@@ -322,6 +325,11 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 }
 
 const useStyles = makeStyles((theme) => ({
+  twitter_logo: {
+    height: 23,
+    width: '100%',
+    paddingLeft: 12,
+  },
   container: {
     padding: theme.spacing(3),
   },
