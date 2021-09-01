@@ -7,14 +7,14 @@ import ConfirmModal from '@components/ConfirmModal'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 interface ModalProps {
-  donatedPoint: number
+  myPoint: number
   showConfirmModal: boolean
   handleClose: () => void
   handleConfirm: () => void
   msgContent: string
 }
 
-const DonatePointsConfirmModal: React.FC<ModalProps> = ({ showConfirmModal, donatedPoint, handleClose, handleConfirm, msgContent }) => {
+const DonatePointsConfirmModal: React.FC<ModalProps> = ({ showConfirmModal, myPoint, handleClose, handleConfirm, msgContent }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -24,17 +24,17 @@ const DonatePointsConfirmModal: React.FC<ModalProps> = ({ showConfirmModal, dona
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('donate_points.confirm_message_modal')}</Typography>
           <Box className={classes.wrap_message}>
-            <Typography className={classes.message}>{t('donate_points.title_donate_point') + ':'} </Typography>
+            <Typography className={classes.message}>{t('donate_points.title_donate_point') + '：'} </Typography>
             <Typography className={classes.message}>
-              {FormatHelper.currencyFormat(donatedPoint.toString())} {t('donate_points.eXe_point_text')}
+              {FormatHelper.currencyFormat(myPoint.toString())} {t('donate_points.eXe_point_text')}
             </Typography>
           </Box>
           <Box className={classes.content}>
             <Typography className={classes.contentMsg}>{t('donate_points.title_send_message')}</Typography>
             <Typography className={classes.contentMsg}>{msgContent}</Typography>
-            <Box className={classes.warning}>
-              <Typography className={classes.warningText}>{t('donate_points.warning_text')}</Typography>
-            </Box>
+          </Box>
+          <Box className={classes.warning}>
+            <Typography className={classes.warningText}>{t('donate_points.warning_text')}</Typography>
           </Box>
         </Box>
         <Box className={classes.actionBox}>
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   warningText: {
     fontSize: '16px',
     color: '#F7F735',
-    padding: '0 0 16px 0',
+    padding: '0 0 31px 0',
     textAlign: 'center',
   },
   contentMsg: {
@@ -117,13 +117,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   content: {
-    paddingTop: theme.spacing(10),
+    padding: '64px 0 73px 0',
     [theme.breakpoints.down('sm')]: {
       paddingTop: 16,
+      paddingBottom: 16,
     },
   },
   warning: {
-    paddingTop: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       paddingTop: 16,
     },

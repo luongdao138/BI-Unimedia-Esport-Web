@@ -1,22 +1,19 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-// import { TournamentListItem } from '@services/arena.service'
 import { SavedCards } from '@services/purchasePoints.service'
-// import { registerProfile, logout } from '@store/auth/actions'
-// import { blockUser, unblockUser } from '@store/block/actions'
-// import { UPLOADER_TYPE } from '@constants/image.constants'
-// import { FOLLOW_STATES } from '@constants/common.constants'
 
 type StateType = {
   saved_cards: Array<SavedCards>
   GMO_SHOP_ID: string,
-  purchase_success: boolean
+  purchase_success: boolean,
+  purchased_point: number,
 }
 
 const initialState: StateType = {
   saved_cards: [],
   GMO_SHOP_ID: '',
-  purchase_success: false
+  purchase_success: false,
+  purchased_point: 0
 }
 
 const splitCardInfo = (str) => {
@@ -45,13 +42,15 @@ export default createReducer(initialState, (builder) => {
       state.saved_cards = []
     }
   })
-  builder.addCase(actions.purchasePointUseOldCard.pending, (state) => {
+  builder.addCase(actions.purchasePointUseOldCard.pending, (state, action) => {
+    state.purchased_point = Number(action.meta.arg.point)
     state.purchase_success = false
   })
   builder.addCase(actions.purchasePointUseOldCard.fulfilled, (state) => {
     state.purchase_success = true
   })
-  builder.addCase(actions.purchasePointUseNewCard.pending, (state) => {
+  builder.addCase(actions.purchasePointUseNewCard.pending, (state, action) => {
+    state.purchased_point = Number(action.meta.arg.point)
     state.purchase_success = false
   })
   builder.addCase(actions.purchasePointUseNewCard.fulfilled, (state) => {

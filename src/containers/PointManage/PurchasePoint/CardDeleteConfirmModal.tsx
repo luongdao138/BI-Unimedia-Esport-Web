@@ -5,8 +5,10 @@ import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
 import { formatCardNumber } from '@utils/helpers/CommonHelper'
+import ESLoader from '@components/FullScreenLoader'
 
 interface ModalProps {
+  isLoading: boolean
   open: boolean
   deletedCard: any
   hasError: any
@@ -14,13 +16,14 @@ interface ModalProps {
   deleteSavedCard: (card_seq) => void
 }
 
-const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, deletedCard, deleteSavedCard, hasError }) => {
+const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, deletedCard, deleteSavedCard, hasError, isLoading }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
   return (
     <Box>
       <ConfirmModal open={open}>
+        {isLoading && <ESLoader open={isLoading} />}
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('purchase_point_tab.delete_confirm')}</Typography>
           <Box className={classes.wrap_message}>

@@ -43,6 +43,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   const [isShowDeleteCardModal, setIsShowDeleteCardModal] = useState(false)
   const [isPurchasingPoint, setIsPurchasingPoint] = useState(false)
   const [deletedCard, setDeletedCard] = useState({})
+  // const [deletedCard, setDeletedCard] = useState({card_number: '1234'})
   const [hasError, setHasError] = useState(false)
 
   const closeModalPurchasePoint = () => {
@@ -58,6 +59,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       setHasError(true)
     }
   }, [metaDeleteCardMeta])
+  
 
   useEffect(() => {
     if(purchasePointInfo.purchase_success) {
@@ -74,7 +76,6 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   }, [metaPurchaseUseNewCardMeta, metaPurchaseUseOldCardMeta])
 
   const isLoading =
-    metaSavedCardsMeta.pending ||
     metaDeleteCardMeta.pending ||
     isPurchasingPoint ||
     metaPurchaseUseNewCardMeta.pending ||
@@ -99,7 +100,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     },
   })
   const { values, errors, touched, handleChange, handleSubmit, handleBlur, setFieldValue, resetForm, validateForm } = formik
-
+  
   useEffect(() => {
     validateForm()
   }, [])
@@ -155,10 +156,13 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
   }
 
   const handleChangeCardNumber = (e) => {
+    const card_number = e.target.value.replace(/\s/g, '')
     // replace space and check is numeric
-    if (/^[0-9]+$/g.test(e.target.value.replace(/\s/g, '')) || !e.target.value) {
+    if (/^[0-9]+$/g.test(card_number) || !e.target.value) {
       setSelectedCardId('')
-      setFieldValue('card_number', formatCardNumber(e.target.value))
+      if(card_number.length <= 16){
+        setFieldValue('card_number', formatCardNumber(e.target.value))
+      }
     }
   }
 
@@ -180,7 +184,9 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
     // check is numeric
     if (/^[0-9]+$/g.test(card_cvc) || !card_cvc) {
       setSelectedCardId('')
-      setFieldValue('card_cvc', card_cvc)
+      if (card_cvc.length <= 4) {
+        setFieldValue('card_cvc', card_cvc)
+      }
     }
   }
 
@@ -336,6 +342,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
                   <ESButton
                     onClick={() => {
                       setSelectedCardId('')
+                      validateForm()
                     }}
                     className={classes.clear_section_btn}
                     variant="outlined"
@@ -365,6 +372,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       </Box>
       {isShowPurchasePointModal && (
         <PointPurchaseConfirmModal
+          isLoading={isLoading}
           handlePurchasePoint={handlePurchasePoint}
           open={isShowPurchasePointModal}
           selectedPoint={selectedPoint}
@@ -376,6 +384,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
       )}
       {isShowDeleteCardModal && (
         <CardDeleteConfirmModal
+          isLoading={isLoading}
           deleteSavedCard={deleteSavedCard}
           deletedCard={deletedCard}
           open={isShowDeleteCardModal}
@@ -385,7 +394,7 @@ const Step2: React.FC<Step2Props> = ({ selectedPoint }) => {
           }}
         />
       )}
-      {isLoading && <ESLoader open={isLoading} />}
+      {metaSavedCardsMeta.pending && <ESLoader open={metaSavedCardsMeta.pending} />}
     </Box>
   )
 }

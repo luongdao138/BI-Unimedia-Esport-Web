@@ -4,17 +4,15 @@ import ESModal from '@components/Modal'
 import i18n from '@locales/i18n'
 import Stage1 from './Stage1'
 import Stage2 from './Stage2'
-// import CardDeleteConfirmModal from '@containers/PointManage/PurchasePoint/CardDeleteConfirmModal'
 import Stage3 from './Stage3'
-// import usePurchasePointData from '@containers/PointManage/PurchasePoint/usePurchasePointData'
-
+import Head from 'next/head'
 interface DonatePointsProps {
-  myPoint: any
-  donatedPoint: number
+  myPoint: number
+  lackedPoint: number
   showModalPurchasePoint: boolean
   setShowModalPurchasePoint: (value: boolean) => void
 }
-const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, setShowModalPurchasePoint, donatedPoint, myPoint }) => {
+const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, setShowModalPurchasePoint, lackedPoint, myPoint }) => {
   // const { t } = useTranslation('common')
   const classes = useStyles()
   const [stage, setStage] = useState(1)
@@ -37,18 +35,13 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
   const onCloseModal = () => {
     setShowModalPurchasePoint(false)
   }
-  // useEffect(() => {
-  //   getSavedCards()
-  // }, [])
 
-  const onClickPurchaseMissingPoints = () => {
+  const onClickPurchaseLackedPoint = () => {
     setIsBuyNewPoint(false)
-    // setTypeStepTwo('missing_point')
     setStage(2)
   }
   const onClickPurchaseNewPoints = () => {
     setIsBuyNewPoint(true)
-    // setTypeStepTwo('new_point')
     setStage(2)
   }
   const onClickBack = () => {
@@ -57,8 +50,17 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
     }
   }
 
+  const onChangeStage = (nextStage) => {
+    if (nextStage) {
+      setStage(nextStage)
+    }
+  }
+
   return (
     <Box className={classes.container}>
+      <Head>
+        <script src={process.env.NEXT_PUBLIC_GMO_ENDPOINT}></script>
+      </Head>
       <ESModal open={showModalPurchasePoint} handleClose={() => setShowModalPurchasePoint(false)}>
         <Box className={classes.dialogContainer}>
           {/* button back stage and close modal */}
@@ -98,27 +100,32 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
 
           <Box className={classes.contentContainer}>
             {/* Stage 1 */}
-            <Box className={classes.stepOneContainer}>
-              {stage === 1 && (
-                <Stage1
-                  myPoints={myPoint}
-                  missingPoints={donatedPoint - myPoint}
-                  onClickPurchaseMissingPoints={onClickPurchaseMissingPoints}
-                  onClickPurchaseNewPoints={onClickPurchaseNewPoints}
-                />
-              )}
-            </Box>
+            {stage === 1 && (
+              <Box className={classes.stepOneContainer}>
+                  <Stage1
+                    myPoints={myPoint}
+                    lackedPoint={lackedPoint}
+                    onClickPurchaseLackedPoint={onClickPurchaseLackedPoint}
+                    onClickPurchaseNewPoints={onClickPurchaseNewPoints}
+                  />
+              </Box>
+            )}
             {/* Stage 2 */}
-            <Box className={classes.stepTwoContainer}>
-              {stage === 2 && (
+            {stage === 2 && (
+              <Box className={classes.stepTwoContainer}>
                 <Stage2
                   isBuyNewPoint={isBuyNewPoint}
-                  missingPoints={2200}
+                  lackedPoint={lackedPoint}
+                  onChangeStage={onChangeStage}
                 />
-              )}
-            </Box>
+              </Box>
+            )}
             {/* Stage 3 */}
-            <Box className={classes.stepThreeContainer}>{stage === 3 && <Stage3 myPoints={300} missingPoints={2200} />}</Box>
+            {stage === 3 && 
+              <Box className={classes.stepThreeContainer}>
+                <Stage3 />
+              </Box>
+            }
           </Box>
         </Box>
       </ESModal>
@@ -137,8 +144,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     height: '100%',
     width: 754,
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
     marginTop: 114,
     margin: '0 auto',
   },
@@ -268,10 +273,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     margin: '0 auto',
   },
+  [theme.breakpoints.down(769)]: {
+    dialogContainer: {
+      padding: '0 24px',
+    }
+  },
   [theme.breakpoints.down(415)]: {
     dialogContainer: {
       width: '100%',
-      marginTop: 24,
+      marginTop: 40,
     },
     closeModalContainer: {
       paddingRight: 0,

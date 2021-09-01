@@ -6,7 +6,10 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ConfirmModal from '@components/ConfirmModal'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { calValueFromTax } from '@utils/helpers/CommonHelper'
+import ESLoader from '@components/FullScreenLoader'
+
 interface ModalProps {
+  isLoading: boolean
   selectedPoint: any
   open: boolean
   hasError: boolean
@@ -14,13 +17,14 @@ interface ModalProps {
   handlePurchasePoint: () => void
 }
 
-const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose, handlePurchasePoint, hasError }) => {
+const PointPurchaseConfirmModal: React.FC<ModalProps> = ({ open, selectedPoint, handleClose, handlePurchasePoint, hasError, isLoading }) => {
   const { t } = useTranslation('common')
   const classes = useStyles()
 
   return (
     <Box>
       <ConfirmModal open={open}>
+        {isLoading && <ESLoader open={isLoading} />}
         <Box className={classes.container}>
           <Typography className={classes.dialogTitle}>{t('purchase_point_tab.purchase_confirm')}</Typography>
           <Box className={classes.wrap_message}>

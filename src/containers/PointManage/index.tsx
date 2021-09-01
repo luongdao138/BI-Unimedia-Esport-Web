@@ -55,7 +55,9 @@ const PointManage: React.FC = () => {
       case TABS.POINT_MANAGEMENT:
         return <PointManagementTab />
       case TABS.PURCHASE_POINT:
-        return <PurchasePoint />
+        return <Box className={classes.wrap_container}>
+                <PurchasePoint />
+              </Box>
       case TABS.PURCHASE_HISTORY:
         return <PurchaseHistory />
       case TABS.USAGE_HISTORY:
@@ -85,6 +87,9 @@ const PointManage: React.FC = () => {
 export default PointManage
 
 const useStyles = makeStyles((theme) => ({
+  wrap_container: {
+    padding: '0 24px',
+  },
   tabs: {
     overflow: 'hidden',
     borderBottomColor: Colors.text[300],
