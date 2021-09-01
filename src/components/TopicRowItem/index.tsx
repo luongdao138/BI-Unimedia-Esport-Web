@@ -24,7 +24,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              <Typography className={classes.last_comment}>{last_comment.attributes.content}</Typography>
+              <Typography className={classes.last_comment}>{last_comment?.attributes.content}</Typography>
             </Box>
           </Box>
 

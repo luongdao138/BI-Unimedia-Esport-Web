@@ -5,6 +5,7 @@ import {
   CommentsResponse,
   CommentsListParams,
   PageMeta,
+  TopicDeleteParams,
 } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -26,7 +27,7 @@ const useTopicDetail = (): {
   getTopicDetail: (TopicDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   getComments: (params: CommentsListParams) => void
-  deleteTopic: (TopicDetailParams) => void
+  deleteTopic: (TopicDeleteParams) => void
   resetMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
@@ -52,7 +53,7 @@ const useTopicDetail = (): {
   const deleteComment = (params) => dispatch(actions.deleteTopicComment(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
 
-  const deleteTopic = async (params: TopicDetailParams) => {
+  const deleteTopic = async (params: TopicDeleteParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))
     if (actions.deleteTopic.fulfilled.match(resultAction)) {
       dispatch(commonActions.addToast(t('common:community.topic.create_success')))

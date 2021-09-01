@@ -292,7 +292,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {getHeader()}
         {getTabs()}
         {getContent()}
-        {!!isNotMember && !isNotMember && (
+        {!isNotMember && (
           <Box className={classes.commentIconContainer}>
             <Box>
               <TopicCreateButton onClick={toCreateTopic} />
