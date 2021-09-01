@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState } from 'react'
 import { Grid, Tabs, Tab, Container, Typography, Box, Paper } from '@material-ui/core'
 import { TabContext, TabPanel } from '@material-ui/lab/'
@@ -47,7 +48,8 @@ const StreamContainer: React.FC = () => {
   const hash = _.get(data, 'attributes.shared_hash', undefined)
   const hasTicked = _.get(data, 'attributes.has_ticket', undefined)
   const url = useShareHash(hash)
-
+  console.log('connected ', connected)
+  console.log('status ', status)
   const handleChange = (_, newValue) => {
     setValue(newValue)
   }
@@ -61,6 +63,7 @@ const StreamContainer: React.FC = () => {
           type: `${WEBSOCKET_STREAM_PREFIX}:CONNECT`,
           payload: { eventRoomId: data.attributes.chat_room_id },
         })
+        console.log('connecting...')
       }
       const url = data.attributes.archive_messages
       if (url) dispatch(videoDetailActions.getArchiveData(url))
@@ -70,6 +73,7 @@ const StreamContainer: React.FC = () => {
   useEffect(() => {
     dispatch(videoDetailActions.detail())
     dispatch(socketActions.resetConnection())
+    console.log('connection reset ...->')
   }, [])
 
   const _onSend = (message: string) => {
