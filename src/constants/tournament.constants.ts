@@ -14,7 +14,7 @@ export const PARTICIPATION_TYPES = [
 // TEMPORARY: battle royale removed
 export const RULES = [
   { label: 'トーナメント', value: 'single' },
-  // { label: 'バトルロイヤル', value: 'battle_royale' },
+  { label: 'バトルロイヤル', value: 'battle_royale' },
 ]
 
 export const T_TYPES = [
