@@ -144,7 +144,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             handleClose={() => setOpenReport(false)}
           />
           <DiscardDialog
-            title={nickname + t('common:topic.delete.title')}
+            title={topicData?.title + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDelete}

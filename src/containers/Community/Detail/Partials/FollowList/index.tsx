@@ -161,11 +161,16 @@ const FollowList: React.FC<Props> = ({ community }) => {
     isApplying && setHasChosenApplying(true)
   }
 
+  const userData = (participant) => {
+    const _user = participant.attributes
+    return { id: _user.id, attributes: { ..._user, avatar: _user.profile } }
+  }
+
   const renderMemberList = () => {
     return (
       <Box>
         {participatingValues.map((participant, i) => (
-          <UserListItem data={participant} key={i} nicknameYellow={false} />
+          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
         ))}
       </Box>
     )
@@ -220,7 +225,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <ESStickyFooter
           disabled={false}
           noScroll
-          show={isModerator && applyingValues.length > 0}
+          show={isModerator && applyingValues.length > 0 && isYellow}
           content={
             <>
               <ButtonPrimary

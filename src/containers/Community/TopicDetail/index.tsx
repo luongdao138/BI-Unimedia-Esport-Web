@@ -30,8 +30,6 @@ const TopicDetailContainer: React.FC = () => {
   } = useTopicDetail()
   const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
 
-  const data = topic?.attributes
-
   useEffect(() => {
     if (topic_hash_key) {
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: hash_key })
@@ -69,7 +67,7 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
+              <CommunityDetailHeader title={topic?.attributes.title} isTopic onHandleBack={handleBack} />
               <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
             </>
           )}
