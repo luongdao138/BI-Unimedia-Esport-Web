@@ -22,6 +22,7 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 
 type Props = {
   community: CommunityDetail
+  isYellow?: boolean
 }
 
 const FollowList: React.FC<Props> = ({ community }) => {
@@ -29,12 +30,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const classes = useStyles()
   const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
+  const [isYellow, setIsYellow] = useState(false)
   const { isModerator, isAutomatic } = useCommunityHelper(community)
   const {
     getMembers,
     membersList,
     pages,
     resetMeta,
+    resetMembers,
     membersMeta,
     approveMembers,
     cancelMembers,
@@ -53,25 +56,39 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleClose = () => {
     setOpen(false)
+    setIsYellow(false)
+  }
+
+  const handleYellowOpen = () => {
+    setOpen(true)
+    setIsYellow(true)
   }
 
   useEffect(() => {
     if (open) {
-      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+      if (isYellow) {
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+      } else {
+        // TODO Change when api adds new case
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
+      }
+    } else {
+      resetMembers()
     }
     return () => {
       resetMeta()
+      resetMembers()
     }
   }, [open])
 
   useEffect(() => {
-    const participating = _.filter(
-      membersList,
-      (m) => m.attributes.member_role != MEMBER_ROLE.ADMIN && m.attributes.member_role != MEMBER_ROLE.REQUESTED
-    )
-    const applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
+    let applying = []
+    if (isYellow) {
+      applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
+      setApplyingValues(applying)
+    }
+    const participating = _.filter(membersList, (m) => m.attributes.member_role != MEMBER_ROLE.REQUESTED)
     setParticipatingValues(participating)
-    setApplyingValues(applying)
     setInitialValues([applying, participating])
   }, [membersList])
 
@@ -79,7 +96,12 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const loadMore = () => {
     if (hasNextPage) {
-      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      if (isYellow) {
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      } else {
+        // TODO Change when api adds new case
+        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      }
     }
   }
 
@@ -154,7 +176,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderAdminMemberList = () => {
     return (
       <Box mt={3}>
-        {!isAutomatic && applyingValues.length > 0 && (
+        {!isAutomatic && applyingValues.length > 0 && isYellow && (
           <>
             <ESLabel label={t('common:community.applying')} />
             <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
@@ -189,9 +211,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
           </Button>
         </LoginRequired>
         {isModerator && community.attributes.has_requested && (
-          <Typography className={classes.linkUnapproved} variant="body2">
-            {t('common:community.unapproved_users_title')}
-          </Typography>
+          <Button onClick={handleYellowOpen}>
+            <Typography className={classes.linkUnapproved} variant="body2">
+              {t('common:community.unapproved_users_title')}
+            </Typography>
+          </Button>
         )}
       </Box>
       <ESModal open={open} handleClose={handleClose}>
@@ -298,7 +322,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkUnapproved: {
     textDecoration: 'underline',
     color: 'yellow',
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
   },
