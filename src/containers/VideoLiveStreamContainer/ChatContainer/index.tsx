@@ -15,59 +15,51 @@ import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
-  onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean
   myPoint: number
 }
 
 export const purchasePoints = {
-  p_50: {
-    id: 'p_50',
-    value: 50,
+  p_100: {
+    id: 'p_100',
+    value: 100,
     backgroundColor: '#2680EB',
     borderColor: '#2680EB',
-    width: 65.5,
+    width: 82,
   },
-  p_160: {
-    id: 'p_160',
-    value: 160,
+  p_300: {
+    id: 'p_300',
+    value: 300,
     backgroundColor: '#01B7FB',
     borderColor: '#01B7FB',
-    width: 65.5,
+    width: 82,
   },
-  p_320: {
-    id: 'p_320',
-    value: 320,
+  p_500: {
+    id: 'p_500',
+    value: 500,
     backgroundColor: '#0FB732',
     borderColor: '#0FB732',
-    width: 65.5,
+    width: 82,
   },
-  p_700: {
-    id: 'p_700',
-    value: 700,
+  p_1000: {
+    id: 'p_1000',
+    value: 1000,
     backgroundColor: '#EBD600',
     borderColor: '#EBD600',
-    width: 65.5,
+    width: 82,
   },
-  p_1500: {
-    id: 'p_1500',
-    value: 1500,
+  p_3000: {
+    id: 'p_3000',
+    value: 3000,
     backgroundColor: '#FF6A1C',
     borderColor: '#FF6A1C',
-    width: 90,
-  },
-  p_2500: {
-    id: 'p_2500',
-    value: 2500,
-    backgroundColor: '#9147F9',
-    borderColor: '#9147F9',
     width: 90,
   },
   p_5000: {
     id: 'p_5000',
     value: 5000,
-    backgroundColor: '#C91315',
-    borderColor: '#C91315',
+    backgroundColor: '#9147F9',
+    borderColor: '#9147F9',
     width: 90,
   },
   p_10000: {
@@ -79,7 +71,7 @@ export const purchasePoints = {
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket, myPoint }) => {
+const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasViewingTicket, myPoint }) => {
   // const { t } = useTranslation('common')
   const [chatInput, setChatInput] = useState<string>('')
   const [purchaseComment, setPurchaseComment] = useState<string>('')
@@ -311,10 +303,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     <Box className={classes.container}>
       {!isMobile && (
         <Box className={classes.chatHeader}>
-          <IconButton onClick={onCloseChatPanel} className={classes.headerIcon}>
-            <img src="/images/ic_collapse_right.svg" />
-          </IconButton>
-          <Typography className={classes.headerTitle}>{'チャット'}</Typography>
+          <Typography className={classes.headerTitle}>{t('live_stream_screen.chat_header')}</Typography>
         </Box>
       )}
       {userHasViewingTicket ? chatContent() : userDoesNotHaveViewingTicketView()}

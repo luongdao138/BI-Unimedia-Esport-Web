@@ -1,4 +1,4 @@
-import { Box, Typography, makeStyles, Icon, ButtonBase, useTheme, useMediaQuery } from '@material-ui/core'
+import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
 import userProfileStore from '@store/userProfile'
@@ -7,32 +7,46 @@ import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useState } from 'react'
-import ButtonPrimary from '@components/ButtonPrimary'
 import ESMenuItem from '@components/Menu/MenuItem'
+import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
+import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
 // import ESButton from '@components/Button'
 // import { Player, ControlBar } from 'video-react';
 // import { useRef } from 'react'
 
 interface LiveStreamContentProps {
+  videoType?: VIDEO_TYPE
+  freeToWatch?: boolean
   userHasViewingTicket?: boolean
+  ticketAvailableForSale?: boolean
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
+  const [subscribe, setSubscribe] = useState(true)
 
+  const theme = useTheme()
   const { t } = useTranslation('common')
-  const classes = useStyles()
   const { selectors } = userProfileStore
   const userProfile = useAppSelector(selectors.getUserProfile)
-  const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
+  const isSubscribed = () => subscribe
+
+  const classes = useStyles({ isSubscribed: isSubscribed() })
+
+  const handleSubscribeClick = () => {
+    setSubscribe(!subscribe)
+  }
+
   const registerChannelButton = () => (
-    <ButtonBase onClick={() => ''} className={classes.register_channel_btn}>
+    <ButtonBase onClick={handleSubscribeClick} className={classes.register_channel_btn}>
       <Box>
-        <Icon className={`far fa-heart ${classes.icon}`} fontSize="small" />
+        <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
-      <Box pl={1}>{t('live_stream_screen.channel_register')}</Box>
+      <Box pl={1} className={classes.subscribeLabel}>
+        {t('live_stream_screen.channel_register')}
+      </Box>
     </ButtonBase>
   )
 
@@ -55,25 +69,59 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mediaPlayer = () => <img src="/images/live_stream/live_stream.png" height={isMobile ? '256px' : '448px'} width="100%" />
 
-  const mediaOverlayPurchaseTicketView = () => {
+  const getOverlayButtonText = () => {
+    const { userHasViewingTicket, freeToWatch } = props
+
+    if (!freeToWatch && !userHasViewingTicket) {
+      return t('live_stream_screen.buy_ticket')
+    }
+    return null
+  }
+
+  const getOverlayButtonDescriptionText = () => {
+    const { userHasViewingTicket, freeToWatch } = props
     const buyTicketPrice = 2500
+    if (!freeToWatch && !userHasViewingTicket) {
+      return `${FormatHelper.currencyFormat(buyTicketPrice.toString())} ${t('common.eXe_points')}`
+    }
+    return null
+  }
+
+  const getOverlayMessage = () => {
+    const { videoType, freeToWatch, userHasViewingTicket } = props
+    if (!freeToWatch && !userHasViewingTicket) {
+      return t('live_stream_screen.purchase_ticket_note')
+    }
+    if (videoType === VIDEO_TYPE.SCHEDULE && (freeToWatch || (!freeToWatch && userHasViewingTicket))) {
+      return t('live_stream_screen.livestream_not_start')
+    }
+    return null
+  }
+  const mediaOverlayPurchaseTicketView = () => {
     return (
       <Box className={classes.overlayPurchaseContainer}>
-        <ButtonPrimary className={classes.buyTicketButton}>{t('live_stream_screen.buy_ticket')}</ButtonPrimary>
-        <Typography className={classes.buyTicketAmount}>{`${FormatHelper.currencyFormat(
-          buyTicketPrice.toString()
-        )} eXeポイント`}</Typography>
-        <Typography className={classes.buyTicketNote}>{t('live_stream_screen.purchase_ticket_note')}</Typography>
+        <OverlayContent
+          buttonText={getOverlayButtonText()}
+          buttonDescriptionText={getOverlayButtonDescriptionText()}
+          message={getOverlayMessage()}
+        />
       </Box>
     )
   }
 
-  const userHasViewingTicket = () => props?.userHasViewingTicket
+  const showOverlayOnMediaPlayer = () => {
+    const { userHasViewingTicket, videoType, freeToWatch } = props
+    if (videoType === VIDEO_TYPE.SCHEDULE) {
+      return true
+    }
+    return !freeToWatch && !userHasViewingTicket
+  }
+
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
         {mediaPlayer()}
-        {!userHasViewingTicket() && mediaOverlayPurchaseTicketView()}
+        {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
       </Box>
       {/* <Player
           ref={player}
@@ -309,6 +357,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   icon: {},
+  heartIcon: (props: { isSubscribed?: boolean }) => ({
+    color: !props?.isSubscribed ? Colors.white : Colors.primary,
+  }),
+  subscribeLabel: (props: { isSubscribed?: boolean }) => ({
+    color: !props?.isSubscribed ? Colors.white : Colors.primary,
+  }),
   wrap_streamer_info: {
     height: '112px',
     display: 'flex',
@@ -341,8 +395,14 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '34px',
   },
   register_person_number: {},
-  register_channel_btn: {
-    background: Colors.primary,
+  register_channel_btn: (props: { isSubscribed?: boolean }) => ({
+    background: !props?.isSubscribed ? Colors.primary : Colors.transparent,
+    ...(props?.isSubscribed && {
+      borderRadius: 4,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: Colors.primary,
+    }),
     padding: '6px 10px',
     borderRadius: '5px',
     fontSize: '14px',
@@ -351,7 +411,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '16px',
     alignItems: 'center',
     display: 'flex',
-  },
+  }),
   [theme.breakpoints.down(768)]: {
     movie_title: {
       fontSize: '12px',
@@ -378,6 +438,7 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: '24px',
       paddingTop: '5px',
       paddingBottom: '5px',
+      width: '100%',
     },
     register_channel_btn: {
       padding: '1px 8px',

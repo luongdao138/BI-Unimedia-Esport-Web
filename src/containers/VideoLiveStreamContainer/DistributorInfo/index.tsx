@@ -107,7 +107,9 @@ const DistributorInfo: React.FC = () => {
         }}
         className={classes.seeMore}
       >
-        <Typography className={classes.seeMoreTitle}>{i18n.t('common:profile.read_more')}</Typography>
+        <Typography className={classes.seeMoreTitle}>
+          {descriptionCollapse ? i18n.t('common:live_stream_screen.view_more') : i18n.t('common:live_stream_screen.view_less')}
+        </Typography>
         <Icon className={`fa ${descriptionCollapse ? 'fa-angle-down' : 'fa-angle-up'} ${classes.angleDownIcon}`} fontSize="small" />
       </Box>
     </Box>

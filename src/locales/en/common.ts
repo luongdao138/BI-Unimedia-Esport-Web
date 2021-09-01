@@ -1047,6 +1047,11 @@ export default {
     chat_premium_text_validate_msg_empty: 'コメントを入力して下さい',
     chat_premium_text_validate_no_donate_selected: '使いたいポイントを選択して下さい',
     total_point_title: '所有ポイント',
+    view_more: 'もっと見る',
+    view_less: '一部を表示',
+    comment: 'コメント',
+    livestream_not_start: '配信開始をお待ち下さい。',
+    chat_header: 'チャット',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',
