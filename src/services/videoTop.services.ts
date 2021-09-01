@@ -12,6 +12,47 @@ export const TYPE_VIDEO_TOP = {
 
 export const LIMIT_ITEM = 15
 
+export type VideoPlayerType = {
+  currentSrc?: string
+  duration?: number
+  currentTime?: number
+  seekingTime?: number
+  buffered?: any
+  waiting?: boolean
+  seeking?: boolean
+  paused?: boolean
+  autoPaused?: boolean
+  ended?: boolean
+  playbackRate?: number
+  muted?: boolean
+  volume?: number //0->1
+  readyState?: number
+  networkState?: number
+  videoWidth?: number
+  videoHeight?: number
+  hasStarted?: boolean
+  userActivity?: boolean
+  isActive?: boolean
+  isFullscreen?: boolean
+  activeTextTrack?: any
+  error?: any
+  src?: string
+  srcObject?: any
+  crossOrigin?: any
+  preload?: any
+  defaultPlaybackRate?: number
+  played?: any
+  seekable?: any
+  autoplay?: boolean
+  loop?: boolean
+  controls?: boolean
+  defaultMuted?: boolean
+  textTracks?: any
+  width?: number
+  height?: number
+  poster?: string
+}
+
 export type ListVideoTopParams = {
   type: string
   page?: number
