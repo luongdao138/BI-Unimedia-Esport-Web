@@ -4,16 +4,16 @@ import { SavedCards } from '@services/purchasePoints.service'
 
 type StateType = {
   saved_cards: Array<SavedCards>
-  GMO_SHOP_ID: string,
-  purchase_success: boolean,
-  purchased_point: number,
+  GMO_SHOP_ID: string
+  purchase_success: boolean
+  purchased_point: number
 }
 
 const initialState: StateType = {
   saved_cards: [],
   GMO_SHOP_ID: '',
   purchase_success: false,
-  purchased_point: 0
+  purchased_point: 0,
 }
 
 const splitCardInfo = (str) => {

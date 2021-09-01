@@ -20,15 +20,15 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
   const stages = [
     {
       value: 1,
-      label: i18n.t('common:donate_points.step_one_points')
+      label: i18n.t('common:donate_points.step_one_points'),
     },
     {
       value: 2,
-      label: i18n.t('common:donate_points.step_two_purchase')
+      label: i18n.t('common:donate_points.step_two_purchase'),
     },
     {
       value: 3,
-      label: i18n.t('common:donate_points.step_three_complete')
+      label: i18n.t('common:donate_points.step_three_complete'),
     },
   ]
 
@@ -82,11 +82,13 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
 
           {/* all stages */}
           <Box className={classes.stepContainer}>
-            {stages.map(stage_item => {
+            {stages.map((stage_item) => {
               return (
                 <Box className={classes.stepItemContainer} key={stage_item.value}>
                   <Box className={stage === stage_item.value ? classes.stepViewActive : classes.stepViewNotActive}>
-                    <Typography className={stage === stage_item.value ? classes.textStepActive : classes.textStepNotActive}>{stage_item.value}</Typography>
+                    <Typography className={stage === stage_item.value ? classes.textStepActive : classes.textStepNotActive}>
+                      {stage_item.value}
+                    </Typography>
                   </Box>
                   <Box pt={1}>
                     <Typography className={stage === stage_item.value ? classes.detailTextStepActive : classes.detailTextStepNotActive}>
@@ -102,30 +104,26 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
             {/* Stage 1 */}
             {stage === 1 && (
               <Box className={classes.stepOneContainer}>
-                  <Stage1
-                    myPoints={myPoint}
-                    lackedPoint={lackedPoint}
-                    onClickPurchaseLackedPoint={onClickPurchaseLackedPoint}
-                    onClickPurchaseNewPoints={onClickPurchaseNewPoints}
-                  />
+                <Stage1
+                  myPoints={myPoint}
+                  lackedPoint={lackedPoint}
+                  onClickPurchaseLackedPoint={onClickPurchaseLackedPoint}
+                  onClickPurchaseNewPoints={onClickPurchaseNewPoints}
+                />
               </Box>
             )}
             {/* Stage 2 */}
             {stage === 2 && (
               <Box className={classes.stepTwoContainer}>
-                <Stage2
-                  isBuyNewPoint={isBuyNewPoint}
-                  lackedPoint={lackedPoint}
-                  onChangeStage={onChangeStage}
-                />
+                <Stage2 isBuyNewPoint={isBuyNewPoint} lackedPoint={lackedPoint} onChangeStage={onChangeStage} />
               </Box>
             )}
             {/* Stage 3 */}
-            {stage === 3 && 
+            {stage === 3 && (
               <Box className={classes.stepThreeContainer}>
                 <Stage3 />
               </Box>
-            }
+            )}
           </Box>
         </Box>
       </ESModal>
@@ -276,7 +274,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down(769)]: {
     dialogContainer: {
       padding: '0 24px',
-    }
+    },
   },
   [theme.breakpoints.down(415)]: {
     dialogContainer: {

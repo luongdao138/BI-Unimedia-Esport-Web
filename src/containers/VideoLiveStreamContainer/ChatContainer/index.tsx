@@ -181,7 +181,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
         </Button>
         {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
         <Box className={classes.dialogFooter}>
-          <Typography className={classes.totalPointText}>{'所有ポイント：'}{FormatHelper.currencyFormat(myPoint.toString())}{' eXeポイント'}</Typography>
+          <Typography className={classes.totalPointText}>
+            {i18n.t('common:live_stream_screen.total_point_title') + ':'}
+            {' ' + FormatHelper.currencyFormat(myPoint.toString())} {' ' + i18n.t('common:point_management_tab.eXe_point')}
+          </Typography>
           <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
         </Box>
       </Box>

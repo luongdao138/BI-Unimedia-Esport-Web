@@ -31,9 +31,9 @@ const CardDeleteConfirmModal: React.FC<ModalProps> = ({ open, handleClose, delet
             <Box pb={4}></Box>
             <Typography className={classes.message}>{formatCardNumber(deletedCard.card_number.replace(/\*/g, 'x'))}</Typography>
             <Box pb={4}></Box>
-            {hasError &&
+            {hasError && (
               <Typography className={classes.mess_delete_card_error}>{t('purchase_point_tab.mess_delete_card_error')}</Typography>
-            }
+            )}
           </Box>
         </Box>
         <Box className={classes.actionBox}>
@@ -116,6 +116,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#F7F735',
     paddingBottom: '32px',
     textAlign: 'center',
-    whiteSpace: "pre-line"
-  }
+    whiteSpace: 'pre-line',
+  },
 }))

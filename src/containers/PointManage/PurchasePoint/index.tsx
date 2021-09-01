@@ -44,6 +44,5 @@ const PurchasePoint: React.FC = () => {
 export default PurchasePoint
 
 const useStyles = makeStyles(() => ({
-  container: {
-  },
+  container: {},
 }))
