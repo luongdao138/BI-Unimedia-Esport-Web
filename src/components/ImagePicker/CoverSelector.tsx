@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Box, Typography, Slider, Link, Theme } from '@material-ui/core'
 import getCroppedImg from './Partials/cropImage'
-// import { calculateDimensionsCover } from './Partials/calculateDimensions'
+import { calculateDimensionsCover } from './Partials/calculateDimensions'
 import ESDialog from '@components/Dialog'
 import ButtonPrimary from '@components/ButtonPrimary'
 import Image from 'next/image'
@@ -60,8 +60,8 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
-  const [fitType] = useState<'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
-  // const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
+  const [fitType, setFit] = useState<'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
+  const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
   const [error, setError] = useState<boolean>(false)
@@ -106,16 +106,16 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
       reader.onload = (e) => {
         const img = document.createElement('img')
         img.src = e.target.result as string
-        // img.onload = function () {
-        //   const w = img.naturalWidth || img.width
-        //   const h = img.naturalHeight || img.height
-        //   setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
-        //   if (h >= w) {
-        //     setFit('horizontal-cover')
-        //   } else if (w > h) {
-        //     setFit('vertical-cover')
-        //   }
-        // }
+        img.onload = function () {
+          const w = img.naturalWidth || img.width
+          const h = img.naturalHeight || img.height
+          setMediaDimensions(calculateDimensionsCover(w, h, dynamicWidth, STATIC_HEIGHT))
+          if (h >= w) {
+            setFit('horizontal-cover')
+          } else if (w > h) {
+            setFit('vertical-cover')
+          }
+        }
         setFile(reader.result)
       }
       reader.readAsDataURL(f)
@@ -176,10 +176,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
               zoom={zoom}
               objectFit={fitType}
               aspect={ratio || 4 / 1}
-              // style={{
-              //   containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
-              //   mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
-              // }}
+              style={{
+                containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
+                mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
+              }}
               showGrid={false}
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
