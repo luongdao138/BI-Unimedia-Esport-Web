@@ -122,6 +122,7 @@ export enum CommunityMemberRole {
   requested = 'requested',
   reported = 'reported',
   system = 'system',
+  moderator_member = 'moderator_member',
 }
 
 export type CommunityMembersParams = {
