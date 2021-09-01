@@ -34,7 +34,7 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (topic_hash_key) {
-      getTopicDetail({ hash_key: String(topic_hash_key), community_hash: hash_key })
+      getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: hash_key })
       getCommentsList({ hash_key: String(topic_hash_key) })
     }
   }, [router])

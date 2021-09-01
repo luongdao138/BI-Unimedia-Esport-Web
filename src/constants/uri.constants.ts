@@ -78,6 +78,7 @@ export const URI = {
   TOURNAMENTS_HISTORY_SEARCH: '/v2/tournaments/history_search',
   TOPICS_FOLLOWERS: '/v2/users/followings_topic', //TODO skip 2.0
   TOPICS: '/v2/topics/:id',
+  TOPICS_DETAILS: '/v2/topics/details',
   TOPIC_CREATE: '/v2/topic/create',
   PROFILE_ACTIVITY_LOG: '/v2/activity_logs',
   NICKNAMES_2: '/v2/users/get_nicknames2',

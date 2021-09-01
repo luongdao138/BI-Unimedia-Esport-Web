@@ -1,4 +1,4 @@
-import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme, Typography } from '@material-ui/core'
+import { Box, IconButton, OutlinedInput, Icon, Button, useMediaQuery, useTheme, Typography, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import _ from 'lodash'
@@ -13,6 +13,7 @@ import useTopicSearch from '../useTopicSearch'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import ESLoader from '@components/Loader'
 
 const InfoContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -26,6 +27,9 @@ const InfoContainer: React.FC = () => {
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const hash_key = String(router.query.hash_key)
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(1)
+  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -65,18 +69,19 @@ const InfoContainer: React.FC = () => {
     }
   }
 
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(1)
-
   useEffect(() => {
     if (topicList) {
       setCount(pages.total_pages)
     }
   }, [pages])
 
-  const handleChange = (event, value) => {
-    getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle, page: value })
-    setPage(value)
+  useEffect(() => {
+    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle, page: pageNumber })
+  }, [pageNumber])
+
+  const handleChange = (event, val) => {
+    setPageNumber(val)
+    setPage(val)
     return event
   }
 
@@ -111,7 +116,7 @@ const InfoContainer: React.FC = () => {
           <Box mb={2}>
             <ESLabel label={t('common:community.detail_search.result')} bold />
           </Box>
-          {!!topicList && topicList.length > 0 && (
+          {!!topicList && topicList.length > 0 && topicListMeta.loaded && (
             <>
               {topicList.map((d, i) => {
                 const attr = d.attributes
@@ -150,6 +155,13 @@ const InfoContainer: React.FC = () => {
           )}
           {topicListMeta.loaded && topicList.length == 0 && (
             <Typography variant="body1">{t('common:community.detail_search.no_data')}</Typography>
+          )}
+          {topicListMeta.pending && (
+            <Grid item xs={12}>
+              <Box my={4} display="flex" justifyContent="center" alignItems="center">
+                <ESLoader />
+              </Box>
+            </Grid>
           )}
         </>
       )}
