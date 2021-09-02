@@ -1,6 +1,6 @@
 import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
 import useArenaHome from './useArenaHome'
-import TournamentCard from '@components/TournamentCard'
+import TournamentCard from '@components/TournamentCard/HomeCard'
 import { TournamentFilterOption } from '@services/arena.service'
 import useArenaHelper from '../hooks/useArenaHelper'
 import { useEffect, useRef, useState, useLayoutEffect } from 'react'
