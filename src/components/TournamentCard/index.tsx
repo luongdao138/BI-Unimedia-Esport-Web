@@ -15,9 +15,9 @@ import i18n from '@locales/i18n'
 import _ from 'lodash'
 
 export interface TournamentListFiltered extends TournamentListItem {
-  total: number
-  participantsLimited: ParticipantType[]
-  startDate: string
+  total?: number
+  participantsLimited?: ParticipantType[]
+  startDate?: string
 }
 
 interface Props {
