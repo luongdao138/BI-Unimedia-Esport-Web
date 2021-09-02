@@ -8,14 +8,20 @@ import ESCardContent from '@components/Card/CardContent'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { TournamentListItem } from '@services/arena.service'
+import { TournamentListItem, ParticipantType } from '@services/arena.service'
 import { useTranslation } from 'react-i18next'
 import { TOURNAMENT_STATUS as TS, TOURNAMENT_RULE as TR } from '@constants/common.constants'
 import i18n from '@locales/i18n'
-import moment from 'moment'
+import _ from 'lodash'
+
+interface TournamentListFiltered extends TournamentListItem {
+  total: number
+  participantsLimited: ParticipantType[]
+  startDate: string
+}
 
 interface Props {
-  tournament: TournamentListItem
+  tournament: TournamentListFiltered
 }
 
 const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
@@ -27,7 +33,7 @@ const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
   const participant = tournament.attributes.participant ? tournament.attributes.participant : tournament.attributes.winner
   const cover = attr.cover ? attr.cover : '/images/default_card.png'
   const organizer = attr.organizer_name ? attr.organizer_name : ''
-  const startDate = moment(attr.start_date).format('YYYY/MM/DD')
+  const startDate = tournament.startDate
 
   const getMediaScreen = () => {
     const p_type =
@@ -59,7 +65,7 @@ const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
               className={classes.chipPrimary}
               size="small"
               label={
-                <Box color={Colors.white} justifyContent="flex-">
+                <Box color={Colors.white}>
                   <Typography variant="overline">{p_type}</Typography>
                 </Box>
               }
@@ -75,8 +81,6 @@ const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
             flexDirection="column"
             alignItems="center"
           >
-            {/* <img className={classes.firstIcon} src="/images/first_icon.png" /> */}
-
             <span
               className={`${classes.text} ${participant.position === 1 && classes.first} ${participant.position === 2 && classes.second} ${
                 participant.position === 3 && classes.third
@@ -106,16 +110,6 @@ const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
     )
   }
 
-  const getTitle = () => {
-    return (
-      <Box color={Colors.white} className={classes.titleContainer}>
-        <Typography className={classes.title}>{attr.title}</Typography>
-      </Box>
-    )
-  }
-  const getInfoRow = (value: string) => {
-    return <Typography className={classes.organizer}>{value}</Typography>
-  }
   const getChippedRow = (chipLabel: string, value: string | number, extra?: string | number, topGutter?: number) => {
     return (
       <Box display="flex" flexDirection="row" mt={topGutter ? topGutter : 1} alignItems="center">
@@ -139,27 +133,19 @@ const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
     const participants = attr.participants
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
-        {participants && participants.length > 0
-          ? attr.participants
-              .slice(0, 3)
-              .map((participant, i) => (
-                <ESAvatar
-                  size={20}
-                  key={`participants${i}`}
-                  style={{ zIndex: participants.length - i }}
-                  className={classes.pAvatar}
-                  src={participant.profile_image}
-                  alt={participant.nickname}
-                />
-              ))
-          : null}
+        {!_.isEmpty(tournament.participantsLimited) &&
+          tournament.participantsLimited.map((participant, i) => (
+            <ESAvatar
+              size={20}
+              key={`participants${i}`}
+              style={{ zIndex: participants.length - i }}
+              className={classes.pAvatar}
+              src={participant.profile_image}
+              alt={participant.nickname}
+            />
+          ))}
       </Box>
     )
-  }
-
-  const pCount = () => {
-    const count = attr.is_freezed ? attr.participant_count : Number(attr.participant_count) + Number(attr.interested_count)
-    return isNaN(count) || !count ? 0 : count
   }
 
   return (
@@ -168,11 +154,13 @@ const TournamentCardNew: React.FC<Props> = ({ tournament }) => {
         {getMediaScreen()}
       </ESCardMedia>
       <ESCardContent>
-        {getTitle()}
-        {getInfoRow(attr.game_of_title)}
-        {getInfoRow(`${t('common:tournament.organizer')} ${organizer}`)}
+        <Box color={Colors.white} className={classes.titleContainer}>
+          <Typography className={classes.title}>{attr.title}</Typography>
+        </Box>
+        <Typography className={classes.organizer}>{attr.game_of_title}</Typography>
+        <Typography className={classes.organizer}>{`${t('common:tournament.organizer')} ${organizer}`}</Typography>
         {getChippedRow(t('common:tournament.card_date'), startDate)}
-        {getChippedRow(t('common:tournament.entry'), pCount(), `/${attr.max_participants}`, 0.5)}
+        {getChippedRow(t('common:tournament.entry'), tournament.total, `/${attr.max_participants}`, 0.5)}
         {getParticipants()}
       </ESCardContent>
     </ESCard>
@@ -271,9 +259,6 @@ const useStyles = makeStyles((theme) => ({
       WebkitTextStroke: '1px #FFC962',
     },
   },
-  first: {},
-  second: {},
-  third: {},
   title: {
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
