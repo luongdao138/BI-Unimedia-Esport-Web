@@ -45,7 +45,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    dispatch(commonActions.addToast(t('common:arena.copy_toast')))
+    dispatch(commonActions.addToast(t('common:lobby.copy_toast')))
   }
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
@@ -65,7 +65,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
               {helper.isEditable && toEdit && (
                 <LoginRequired>
-                  <ButtonPrimary style={{ padding: '12px 8px' }} size="small" gradient={false} onClick={toEdit}>
+                  <ButtonPrimary className={classes.editButton} size="small" gradient={false} onClick={toEdit}>
                     {t('common:arena.edit_arena_info')}
                   </ButtonPrimary>
                 </LoginRequired>
@@ -171,16 +171,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </Box>
             </Box>
 
-            {/* organizer name */}
-            {/* <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-              <Box className={classes.label}>
-                <Typography>{t('common:lobby_create.organizer_name')}</Typography>
-              </Box>
-              <Box className={classes.value}>
-                <Typography>{_.isEmpty(data.organizer_name) ? '-' : data.organizer_name}</Typography>
-              </Box>
-            </Box> */}
-
             {/* game */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
@@ -197,7 +187,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.game_hardware')}</Typography>
               </Box>
               <Box className={classes.value}>
-                {/* TODO: array bolj bgaa yum shig bna */}
                 <Typography>{hardware}</Typography>
               </Box>
             </Box>
@@ -216,17 +205,6 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             <Box mt={1} mr={1}>
               <ESChip label={data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')} />
             </Box>
-            <Box mt={1} mr={1}>
-              {/* <ESChip label={LobbyHelper.participantTypeText(data.participant_type)} /> */}
-            </Box>
-            <Box mt={1} mr={1}>
-              {/* <ESChip label={LobbyHelper.ruleText(data.rule)} /> */}
-            </Box>
-            {/* {!!data.has_prize && (
-              <Box mt={1} mr={1}>
-                <ESChip label={t('common:tournament.has_prize_true')} />
-              </Box>
-            )} */}
             <Box mt={1}>
               <ESChip label={hardware} />
             </Box>
@@ -252,13 +230,23 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  editButton: {
+    padding: '12px 8px',
+    '&.MuiButtonBase-root.button-primary:active': {
+      background: 'transparent',
+    },
+    '&.MuiButtonBase-root.button-primary:focus': {
+      background: 'transparent',
+    },
+  },
   twitter_logo: {
     height: 23,
-    width: '100%',
-    paddingLeft: 12,
+    width: 23,
+    marginLeft: 12,
   },
   multiline: {
     whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   linkify: {
     color: Colors.white,

@@ -10,6 +10,7 @@ import { Colors } from '@theme/colors'
 import { LobbyResponse } from '@services/lobby.service'
 import i18n from '@locales/i18n'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
+import { DateHelper } from '@utils/helpers/DateHelper'
 
 interface Props {
   lobby: LobbyResponse
@@ -37,6 +38,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
     status,
     cover,
     start_datetime,
+    entry_end_datetime,
     hash_key,
     participant_count,
     max_participants,
@@ -47,7 +49,8 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
     game_title,
     entry_status,
   } = lobby.attributes // TODO use lodash get instead
-  const startDate = new Date(start_datetime).toISOString().slice(0, 10).replace(/-/g, '/')
+  const startDate = DateHelper.formatDate(start_datetime)
+  const entryEndDate = DateHelper.formatDate(entry_end_datetime)
   const value = status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED ? LOBBY_STATUS.ENDED : status
 
   const getMediaScreen = () => {
@@ -161,7 +164,7 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
         {getInfoRow(game_title)}
         {getInfoRow(`${i18n.t('common:lobby.card.organizer')} ${organizer_name}`)}
         {getChippedRow(i18n.t('common:lobby.card.start_date'), startDate)}
-        {getChippedRow(i18n.t('common:lobby.card.entry_period'), startDate, 'まで')}
+        {getChippedRow(i18n.t('common:lobby.card.entry_period'), entryEndDate, 'まで')}
         {getChippedRow(i18n.t('common:lobby.card.entries'), participant_count, `/${max_participants}`)}
         {getParticipants()}
       </ESCardContent>
