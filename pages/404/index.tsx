@@ -4,7 +4,7 @@ import PageWithLayoutType from '@constants/page'
 
 const Custom404: PageWithLayoutType = () => {
   return (
-    <PlainLayout patternBg={true}>
+    <PlainLayout>
       <Custom404Container />
     </PlainLayout>
   )
