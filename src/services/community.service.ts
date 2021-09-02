@@ -424,6 +424,7 @@ export type CommentsListResponse = {
 export type CommentsListParams = {
   hash_key: string
   page?: number
+  comment_hash_key?: string
 }
 
 export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
@@ -536,7 +537,17 @@ export const unfollowCommunity = async (hash_key: string): Promise<void> => {
   return data
 }
 
+export const getCommentsListPage = async (params: CommentsListParams): Promise<CommentsListResponse> => {
+  const { data } = await api.get<CommentsListResponse>(URI.COMMUNITY_COMMENTS_LIST, { params })
+  return data
+}
+
 export const getCommentsList = async (params: CommentsListParams): Promise<CommentsListResponse> => {
+  const { data } = await api.get<CommentsListResponse>(URI.COMMUNITY_COMMENTS_LIST, { params })
+  return data
+}
+
+export const getCommentsListNext = async (params: CommentsListParams): Promise<CommentsListResponse> => {
   const { data } = await api.get<CommentsListResponse>(URI.COMMUNITY_COMMENTS_LIST, { params })
   return data
 }
