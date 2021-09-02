@@ -1,6 +1,7 @@
 import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children, ...rest }) => {
   const classes = useStyles()
@@ -17,8 +18,11 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
         </div>
       )}
       <Box className={classes.mediaWrap}>
-        <CardMedia className={classes.media} image={rest?.image ? rest.image : IMG_PLACEHOLDER}>
-          {children}
+        <CardMedia className={classes.media}>
+          <>
+            <LazyLoadImage className={classes.coverImage} alt={'cover-image'} src={rest?.image ? rest.image : IMG_PLACEHOLDER} />
+            {children}
+          </>
         </CardMedia>
       </Box>
     </>
@@ -26,6 +30,16 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
 }
 
 const useStyles = makeStyles(() => ({
+  coverImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    right: 0,
+    height: '100%',
+    objectFit: 'cover',
+    bottom: 0,
+  },
   mediaWrap: {
     position: 'relative',
     paddingTop: '50%',
