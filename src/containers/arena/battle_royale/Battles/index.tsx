@@ -2,18 +2,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
 import { ArrowBack } from '@material-ui/icons'
 import BRListItem from './BRListItem'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { ESRoutes } from '@constants/route.constants'
 
 const ArenaBattles: React.FC = () => {
   const [score, setScore] = useState('')
   const classes = useStyles()
   const router = useRouter()
-
-  useEffect(() => {
-    if (router.query.hash_key) router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
-  }, [router])
 
   return (
     <>

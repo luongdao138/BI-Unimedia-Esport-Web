@@ -106,12 +106,15 @@ const ArenaBattlesEdit: React.FC = () => {
 
   const body = () => {
     const freezable = selecteds.length == data.maxCapacity
-
     return (
       <ESStickyFooter
         disabled={false}
         title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
-        onClick={freezable ? () => freeze({ hash_key: tournament.attributes.hash_key, matches: null }) : () => setShowRandomize(true)}
+        onClick={
+          freezable
+            ? () => freeze({ hash_key: tournament.attributes.hash_key, matches: selecteds.map((p) => Number(p.id)) })
+            : () => setShowRandomize(true)
+        }
         show={data.memberSelectable}
         noScroll
         classes={{ nextBtnHolder: classes.buttonHolder }}

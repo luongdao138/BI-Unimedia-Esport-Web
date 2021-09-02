@@ -246,7 +246,7 @@ export type FreezeMatchItem = {
 
 export type FreezeMatchParams = {
   hash_key: string
-  matches: FreezeMatchItem[]
+  matches: FreezeMatchItem[] | number[]
 }
 
 export type TournamentDetailResponse = {
