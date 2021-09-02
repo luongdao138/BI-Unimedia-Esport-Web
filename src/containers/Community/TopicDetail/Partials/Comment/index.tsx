@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, Popover, Link } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -17,10 +17,11 @@ import { CommentsResponse } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useTopicDetail from '../../useTopicDetail'
 import { useRouter } from 'next/router'
+import { Close as IconClose } from '@material-ui/icons'
 
 type CommunityHeaderProps = {
   comment: CommentsResponse
-  handleReply?: (params: { hash_key: string; id: number }) => void
+  handleReply?: (params: { hash_key: string; comment_no: number }) => void
 }
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
   const classes = useStyles()
@@ -31,6 +32,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const [replyAnchorEl, setReplyAnchorEl] = useState(null)
+
+  const handleClickReply = (event) => {
+    setReplyAnchorEl(event.currentTarget)
+  }
+
+  const handleCloseReply = () => {
+    setReplyAnchorEl(null)
+  }
+
   const { deleteComment, getComments } = useTopicDetail()
   const commentData = comment.attributes
   const hash_key = commentData.hash_key
@@ -59,7 +70,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
   }
 
   const handleCommentReply = () => {
-    handleReply({ hash_key: hash_key, id: commentData.id })
+    handleReply({ hash_key: hash_key, comment_no: commentData.comment_no })
   }
 
   const renderClickableImage = () => {
@@ -97,8 +108,55 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
             </ESMenu>
           </Box>
         </Box>
-
-        <Box className={classes.contentContainer} mb={3}>
+        {!!commentData && !!commentData.main_comment && (
+          <>
+            <Link aria-describedby={'reply'} onClick={handleClickReply} className={classes.reply}>
+              <Typography>{`>>${commentData.main_comment.comment_no}`}</Typography>
+            </Link>
+            <Popover
+              id={'reply'}
+              open={Boolean(replyAnchorEl)}
+              anchorEl={replyAnchorEl}
+              className={classes.mainComment}
+              onClose={handleCloseReply}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
+                <Box className={classes.userInfoContainerMain}>
+                  <Typography className={classes.number}>{commentData.main_comment.comment_no}</Typography>
+                  <Box ml={1}>
+                    <ESAvatar
+                      className={classes.avatar}
+                      alt={commentData.main_comment.owner_nickname}
+                      src={commentData.main_comment.owner_profile}
+                    />
+                  </Box>
+                  <Box className={classes.userInfoBox} ml={1}>
+                    <Typography className={classes.username}>{commentData.main_comment.owner_nickname}</Typography>
+                    <Typography className={classes.userCode}>{'@' + commentData.main_comment.user_code}</Typography>
+                  </Box>
+                </Box>
+                <Box display="flex" alignItems="center">
+                  <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.main_comment.created_at)}</Typography>
+                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                  </IconButton>
+                </Box>
+              </Box>
+              <Box mb={5}>
+                <Typography className={classes.content}>{commentData.main_comment.content}</Typography>
+              </Box>
+            </Popover>
+          </>
+        )}
+        <Box className={classes.contentContainer} mb={1}>
           <Typography className={classes.content}>{commentData.content}</Typography>
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage()}
@@ -132,6 +190,21 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  closeMainComment: {
+    marginLeft: 14,
+    padding: theme.spacing(0.5),
+    backgroundColor: Colors.grey[200],
+  },
+  closeMainCommentIcon: {
+    fontSize: 10,
+  },
+  reply: {
+    width: 'fit-content',
+    textDecoration: 'underline',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   container: {
     display: 'flex',
     margin: theme.spacing(3),
@@ -149,6 +222,9 @@ const useStyles = makeStyles((theme) => ({
   userInfoContainer: {
     display: 'flex',
     width: 'calc(100% - 150px)',
+  },
+  userInfoContainerMain: {
+    display: 'flex',
   },
   userAvatarBox: {
     display: 'flex',
@@ -191,7 +267,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
   },
   date: {
-    fontSize: 11,
+    fontSize: 12,
     color: Colors.white_opacity[30],
   },
   contentContainer: {
@@ -205,7 +281,7 @@ const useStyles = makeStyles((theme) => ({
     width: '66%',
   },
   content: {
-    color: Colors.white_opacity[70],
+    color: Colors.grey[300],
     wordBreak: 'break-word',
   },
   number: {
@@ -214,7 +290,9 @@ const useStyles = makeStyles((theme) => ({
   shareButton: {
     padding: theme.spacing(0.5),
     marginRight: theme.spacing(1),
+    color: Colors.white_opacity[70],
   },
+  mainComment: {},
   [theme.breakpoints.down('sm')]: {
     imageBox: {
       width: '80%',

@@ -403,6 +403,17 @@ export type CommentsResponse = {
     owner_profile: string
     hash_key: string
     reply_to_comment_hash_key: string
+    main_comment: {
+      id: number
+      comment_no: number
+      content: string
+      owner_nickname: string
+      owner_profile: string
+      user_code: string
+      created_at: string
+      assets_url: string
+      attachment_id: number
+    }
   }
 }
 

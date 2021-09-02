@@ -28,7 +28,7 @@ const TopicDetailContainer: React.FC = () => {
     getComments,
     commentsListMeta,
   } = useTopicDetail()
-  const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
+  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
 
   useEffect(() => {
     if (topic_hash_key) {
