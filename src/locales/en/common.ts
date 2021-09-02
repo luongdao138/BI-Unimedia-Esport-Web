@@ -18,7 +18,7 @@ export default {
     at: '@',
     search_results: '検索結果',
     total: '件',
-    error: '入力内容が適切ではありません',
+    error: 'エラー文言が入ります',
     game_display_name_error: '入力内容が適切ではありません',
     too_long: '{{max}}文字以内で入力してください',
     at_least: '2文字以上入力してください。',
