@@ -24,9 +24,9 @@ interface ArenaHomeProps {
 }
 
 const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
-  const { arenas, meta, loadMore, onFilterChange } = useArenaHome()
+  const { arenasFiltered, meta, loadMore, onFilterChange } = useArenaHome()
   const [itemsPerRow, setPerRow] = useState<number>(4)
-  const rowCount = Math.ceil(arenas.length / itemsPerRow)
+  const rowCount = Math.ceil(arenasFiltered.length / itemsPerRow)
   const classes = useStyles()
   const router = useRouter()
   const { toCreate } = useArenaHelper()
@@ -67,7 +67,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
       if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
       loadMore()
     }
-  }, [arenas])
+  }, [arenasFiltered])
 
   useEffect(() => {
     if (!router.isReady) return
@@ -90,10 +90,10 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   const rowRenderer = ({ index, key, style, parent }) => {
     const items = []
     const fromIndex = index * itemsPerRow
-    const toIndex = Math.min(fromIndex + itemsPerRow, arenas.length)
+    const toIndex = Math.min(fromIndex + itemsPerRow, arenasFiltered.length)
 
     for (let i = fromIndex; i < toIndex; i++) {
-      const data = arenas[i]
+      const data = arenasFiltered[i]
 
       items.push(
         <Grid key={i} item sm={12} lg={4} xl={3} xs={12}>
@@ -119,7 +119,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
       <div>
         <div className={classes.container}>
           <InfiniteScroll
-            dataLength={arenas.length}
+            dataLength={arenasFiltered.length}
             next={!meta.pending && loadMore}
             hasMore={!hasUCRReturnHref}
             loader={null}

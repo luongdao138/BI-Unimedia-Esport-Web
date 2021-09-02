@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/arena'
-import { TournamentSearchParams, PageMeta, TournamentFilterOption } from '@services/arena.service'
+import { TournamentSearchParams, PageMeta, TournamentFilterOption, TournamentListItem } from '@services/arena.service'
 import { TournamentListFiltered } from '@components/TournamentCard'
 import { useEffect, useState } from 'react'
 import { Meta } from '@store/metadata/actions/types'
@@ -11,7 +11,8 @@ const { selectors, actions } = searchStore
 const getTournamentSearchMeta = createMetaSelector(actions.tournamentSearch)
 
 const useArenaHome = (): {
-  arenas: TournamentListFiltered[]
+  arenas: TournamentListItem[]
+  arenasFiltered: TournamentListFiltered[]
   meta: Meta
   page: PageMeta
   loadMore: () => void
@@ -20,7 +21,8 @@ const useArenaHome = (): {
   setSelectedFilter: (filter: TournamentFilterOption) => void
 } => {
   const dispatch = useAppDispatch()
-  const arenas = useAppSelector(selectors.getSearchFilteredTournaments)
+  const arenas = useAppSelector(selectors.getSearchTournaments)
+  const arenasFiltered = useAppSelector(selectors.getSearchFilteredTournaments)
   const page = useAppSelector(selectors.getSearchTournamentsMeta)
   const meta = useAppSelector(getTournamentSearchMeta)
   const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
@@ -41,7 +43,7 @@ const useArenaHome = (): {
   useEffect(() => {
     return () => resetMeta()
   }, [])
-  return { arenas, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter }
+  return { arenas, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter, arenasFiltered }
 }
 
 export default useArenaHome
