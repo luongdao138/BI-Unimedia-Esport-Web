@@ -10,6 +10,7 @@ import { makeStyles, styled, useTheme } from '@material-ui/core/styles'
 import { useUtils } from '@material-ui/pickers'
 import { convertToMeridiem, getMeridiem } from '@material-ui/pickers/_helpers/time-utils'
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
+import i18n from '@locales/i18n'
 
 export const useStyles = makeStyles(
   (_) => ({
@@ -87,7 +88,7 @@ export const DateTimePickerToolbar: React.FC<ToolbarComponentProps> = ({
                 variant="h4"
                 onClick={() => setOpenView('date')}
                 selected={openView === 'date'}
-                label={utils.getDateTimePickerHeaderText(date) + '日'}
+                label={utils.getDateTimePickerHeaderText(date) + i18n.t('common:common.day')}
               />
             </div>
           </Grid>
