@@ -337,7 +337,7 @@ export type CommunityFollowResponse = {
 export type TopicSearchParams = {
   community_hash: string
   keyword: string
-  only_title: boolean
+  only_title: string
   page: number
 }
 
