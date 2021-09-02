@@ -117,7 +117,6 @@ const ArenaBattlesEdit: React.FC = () => {
   }
 
   const freezable = selecteds.length === data?.maxCapacity
-
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && (
