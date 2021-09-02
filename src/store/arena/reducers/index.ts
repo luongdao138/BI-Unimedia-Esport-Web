@@ -111,7 +111,9 @@ export default createReducer(initialState, (builder) => {
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
       _participants = state.tournamentParticipants.concat(action.payload.data)
     }
-    state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
+    if (!action.meta.arg.role) {
+      state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
+    }
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
   })

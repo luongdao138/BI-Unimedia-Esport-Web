@@ -50,7 +50,7 @@ const ArenaBattlesEdit: React.FC = () => {
   }, [participants])
 
   useEffect(() => {
-    if ((router.query.hash_key, detailMeta.loaded)) {
+    if (router.query.hash_key && detailMeta.loaded) {
       getParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
     }
 
