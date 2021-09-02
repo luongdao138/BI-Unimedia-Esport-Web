@@ -4,61 +4,67 @@ import TopicRowItem from '@components/TopicRowItem'
 import Pagination from '@material-ui/lab/Pagination'
 import { Colors } from '@theme/colors'
 import { useState, useEffect } from 'react'
-import { TopicDetail } from '@services/community.service'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import PaginationMobile from '../../../Partials/PaginationMobile'
+import useCommunityDetail from '../../useCommunityDetail'
+import ESLoader from '@components/Loader'
+import { TOPIC_STATUS } from '@constants/community.constants'
 
-type Props = {
-  topicList: TopicDetail[]
-}
-
-const TopicListContainer: React.FC<Props> = ({ topicList }) => {
+const TopicListContainer: React.FC = () => {
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const chunkSize = 10
   const classes = useStyles()
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const router = useRouter()
 
+  const { topicList, getTopicList, topicListMeta, topicListPageMeta } = useCommunityDetail()
+  const { hash_key } = router.query
+
   useEffect(() => {
+    getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
     if (topicList) {
-      setCount(Math.ceil(topicList.length / 10))
+      setCount(topicListPageMeta.total_pages)
     }
   }, [])
+
+  useEffect(() => {
+    getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: page })
+  }, [page])
 
   const handleChange = (event, value) => {
     setPage(value)
     return event
   }
 
-  const chunks = (arr, index) => {
-    const chunk_array = []
-    for (let i = 0; i < arr.length; i += chunkSize) chunk_array.push(arr.slice(i, i + chunkSize))
-    return chunk_array[index - 1]
-  }
-
   return (
     <>
       <Box mt={2} />
-      {!!topicList &&
+      {topicListMeta.pending ? (
+        <Box className={classes.loaderBox}>
+          <ESLoader />
+        </Box>
+      ) : (
+        !!topicList &&
         topicList.length > 0 &&
-        chunks(topicList, page).map((d, i) => {
+        // chunks(topicList, page).map((d, i) => {
+        topicList.map((d, i) => {
           const attr = d.attributes
           const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
           return (
             <TopicRowItem
               key={i}
-              handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
+              handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.hash_key)}/${attr.hash_key}`)}
               title={attr.topic_title}
               last_comment={attr.last_comment.data}
               latest_date={latestDate}
               comment_count={attr.comment_count}
             />
           )
-        })}
+        })
+      )}
       <Box display="flex" justifyContent="center" mt={4}>
         {isMobile ? (
           <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
@@ -82,6 +88,11 @@ const TopicListContainer: React.FC<Props> = ({ topicList }) => {
   )
 }
 const useStyles = makeStyles(() => ({
+  loaderBox: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   pagination: {
     zIndex: 1,
     '& .MuiPaginationItem-root': {

@@ -228,10 +228,12 @@ export type TopicDetail = {
   type: string
   attributes: {
     hash_key: string
-    title: string
+    topic_title: string
     content: string
-    community_id: number
+    community_hash: string
+    community_cover: string
     created_at: string
+    last_comment_date: string
     user_id: number
     attachments: Array<TopicAttachments> | null
     owner_name: string
@@ -242,6 +244,11 @@ export type TopicDetail = {
     game_title: Array<TopicGameTitle>
     is_liked: boolean
     member_role: string
+    comment_count: number
+    topic_owner: string
+    sequence_no?: number
+    is_new: boolean
+    unseen_count: number
     community_name: string
     can_remove: boolean
     last_comment?: LastComment

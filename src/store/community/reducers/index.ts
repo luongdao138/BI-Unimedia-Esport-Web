@@ -34,6 +34,7 @@ type StateType = {
   topicSearchList?: Array<TopicSearchItem>
   topicSearchListMeta?: PageMeta
   commentsListNextMeta?: PageMeta
+  topicListMeta?: PageMeta
 }
 
 const initialState: StateType = {
@@ -49,6 +50,7 @@ const initialState: StateType = {
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicList.fulfilled, (state, action) => {
     state.topicList = action.payload.data
+    state.topicListMeta = action.payload.meta
   })
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
