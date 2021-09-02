@@ -18,7 +18,7 @@ export default {
     at: '@',
     search_results: '検索結果',
     total: '件',
-    error: 'エラー文言が入ります',
+    error: '入力内容が適切ではありません',
     too_long: '{{max}}文字以内で入力してください',
     at_least: '2文字以上入力してください。',
     at_least_8: '8文字以上で入力してください',
