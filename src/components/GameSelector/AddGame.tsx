@@ -43,7 +43,7 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const { createGame, meta, createdGame } = useAddGame()
   const focusEvent = useFocusState()
   const validationSchema = Yup.object().shape({
-    display_name: Yup.string().required(i18n.t('common:common.error')).max(60),
+    display_name: Yup.string().required(i18n.t('common:common.game_display_name_error')).max(60),
     game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
       return value !== -1
     }),
