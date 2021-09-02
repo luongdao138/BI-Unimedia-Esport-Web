@@ -142,7 +142,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
           next={loadMore}
           hasMore={!hasUCRReturnHref}
           loader={null}
-          scrollThreshold={0.8}
+          scrollThreshold={'1px'}
         >
           {arenas.map((tournament, i) => (
             <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
