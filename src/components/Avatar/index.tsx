@@ -32,9 +32,11 @@ const ESAvatar: React.FC<Props> = (props) => {
     backgroundColor = '#4D4D4D'
   }
 
+  const restProps = _.omit(props, ['src'])
+
   if (props.src) {
     return (
-      <Avatar classes={classes}>
+      <Avatar classes={classes} {...restProps}>
         {props.children ? props.children : <LazyLoadImage class="MuiAvatar-img" alt={props.alt} src={props.src} />}
       </Avatar>
     )
