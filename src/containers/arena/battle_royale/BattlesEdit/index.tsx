@@ -1,8 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
-import { ArrowBack } from '@material-ui/icons'
+import { Box, Container, Typography } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
@@ -14,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import RandomizeDialog from '@containers/arena/tournament/MatchesEdit/Partials/RandomizeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
+import HeaderWithButton from '@components/HeaderWithButton'
 
 const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -119,16 +119,10 @@ const ArenaBattlesEdit: React.FC = () => {
         noScroll
         classes={{ nextBtnHolder: classes.buttonHolder }}
       >
-        <AppBar className={classes.appbar}>
-          <Container maxWidth="lg">
-            <Toolbar className={classes.toolbar}>
-              <IconButton className={classes.backButton} onClick={() => router.back()}>
-                <ArrowBack />
-              </IconButton>
-              <Typography variant="h2">{tournament.attributes.title}</Typography>
-            </Toolbar>
-          </Container>
-        </AppBar>
+        <HeaderWithButton title={tournament.attributes.title} />
+        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+          <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
+        </Box>
         <div className={classes.content}>
           <Container maxWidth="lg">{data && participants && renderItems()}</Container>
         </div>
@@ -177,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 0,
   },
   content: {
-    paddingTop: 128,
+    paddingTop: 24,
   },
   backButton: {
     backgroundColor: '#4D4D4D',

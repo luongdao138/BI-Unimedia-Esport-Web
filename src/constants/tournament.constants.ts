@@ -11,7 +11,6 @@ export const PARTICIPATION_TYPES = [
   { label: '10on10', value: 10 },
 ]
 
-// TEMPORARY: battle royale removed
 export const RULES = [
   { label: 'トーナメント', value: 'single' },
   { label: 'バトルロイヤル', value: 'battle_royale' },
