@@ -120,9 +120,11 @@ const ArenaBattlesEdit: React.FC = () => {
         classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <HeaderWithButton title={tournament.attributes.title} />
-        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-          <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
-        </Box>
+        {freezable && (
+          <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+            <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
+          </Box>
+        )}
         <div className={classes.content}>
           <Container maxWidth="lg">{data && participants && renderItems()}</Container>
         </div>
