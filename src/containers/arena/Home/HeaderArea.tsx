@@ -34,6 +34,7 @@ const HeaderArea: React.FC<HeaderAreaProps> = ({ onFilter, toCreate, filter }) =
           {defaultFilterOptions.map((option) => (
             <ESChip
               key={option.type}
+              isGameList={true}
               color={option.type === filter ? 'primary' : undefined}
               className={classes.filterChip}
               label={option.label}
@@ -46,6 +47,7 @@ const HeaderArea: React.FC<HeaderAreaProps> = ({ onFilter, toCreate, filter }) =
             <LoginRequired key={option.type}>
               <ESChip
                 key={option.type}
+                isGameList={true}
                 color={option.type === filter ? 'primary' : undefined}
                 className={classes.filterChip}
                 label={option.label}
