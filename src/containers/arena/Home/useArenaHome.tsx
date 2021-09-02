@@ -3,7 +3,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/arena'
 import { TournamentSearchParams, PageMeta, TournamentFilterOption, TournamentListItem } from '@services/arena.service'
-import { TournamentListFiltered } from '@components/TournamentCard'
+import { TournamentListFiltered } from '@components/TournamentCard/HomeCard'
 import { useEffect, useState } from 'react'
 import { Meta } from '@store/metadata/actions/types'
 
