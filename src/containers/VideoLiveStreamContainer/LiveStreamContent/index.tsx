@@ -12,7 +12,6 @@ import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
 // import ESButton from '@components/Button'
 import VideoPlayer from './VideoPlayer'
-
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
   freeToWatch?: boolean

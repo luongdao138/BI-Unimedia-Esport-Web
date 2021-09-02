@@ -2,7 +2,7 @@ import { Box, Icon, makeStyles, Slider, Typography } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useState } from 'react'
-
+import ReactTooltip from 'react-tooltip'
 interface ControlProps {
   currentTime: number
   duration: number
@@ -63,19 +63,32 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
       onChangeVolume()
     }
   }
+
+  //Tooltip
+  const PlayerTooltip = (id: string, title: string, offset?: any) => {
+    return (
+      <ReactTooltip id={id} type="dark" effect="solid" className={classes.playerTooltip} offset={offset || { top: -10, left: 10 }}>
+        <span>{title}</span>
+      </ReactTooltip>
+    )
+  }
+
   return (
     // <div className={classes.controlBar}>
     <>
       <div className={classes.controlLeft}>
-        <Box pr={2} className={classes.buttonNormal} onClick={onTogglePlay}>
+        <Box pr={2} className={classes.buttonNormal} onClick={onTogglePlay} data-tip data-for="togglePlay">
           {paused ? (
             <img src={'/images/ic_play_small.svg'} />
           ) : (
             <Icon fontSize={'small'} className={`fas fa-pause ${classes.pauseSmall}`} />
           )}
+          {PlayerTooltip('togglePlay', paused ? '再生' : '一時停止')}
         </Box>
-        <Box pr={2} className={classes.buttonNormal} onClick={onReLoad}>
+
+        <Box pr={2} className={classes.buttonNormal} onClick={onReLoad} data-tip data-for="reload">
           <img src={'/images/ic_reload.svg'} />
+          {PlayerTooltip('reload', '再読み込み')}
         </Box>
         <Box className={classes.buttonVolume}>
           <Box
@@ -84,6 +97,8 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
               matchMuteVolume()
               onMuteVolume()
             }}
+            data-tip
+            data-for="mute"
           >
             {!isMuted && (volumeValue !== 0 || volume !== 0) ? (
               <img src={'/images/ic_volume.svg'} />
@@ -91,7 +106,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
               <Icon fontSize={'small'} className={`fas fa-volume-mute ${classes.mutedIcon}`} />
             )}
           </Box>
-
+          {PlayerTooltip('mute', !isMuted && (volumeValue !== 0 || volume !== 0) ? 'ミュート' : 'ミュート解除', { top: 0, left: 0 })}
           <div className={classes.slider}>
             <Slider
               max={1}
@@ -117,12 +132,13 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
           <img src={'/images/ic_next.svg'} />
         </Box>
       </div>
-      <Box pr={2} className={classes.buttonNormal} onClick={fullScreen}>
+      <Box pr={2} className={classes.buttonNormal} onClick={fullScreen} data-tip data-for="toggleFullScreen">
         {!isFullscreen ? (
           <img src={'/images/ic_full_screen.svg'} />
         ) : (
           <Icon fontSize={'small'} className={`fas fa-compress ${classes.pauseSmall}`} />
         )}
+        {PlayerTooltip('toggleFullScreen', !isFullscreen ? '全画面モード' : '全画面モードの終了', { top: 0, left: 10 })}
       </Box>
     </>
     // </div>
@@ -218,6 +234,10 @@ const useStyles = makeStyles(() => ({
   boxIconVolume: {
     alignItems: 'center',
     display: 'flex',
+  },
+  playerTooltip: {
+    padding: '5px 7px !important',
+    transition: 'opacity 0.3s ease-out',
   },
 }))
 

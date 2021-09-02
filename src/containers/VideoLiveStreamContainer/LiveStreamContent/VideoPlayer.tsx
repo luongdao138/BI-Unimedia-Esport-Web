@@ -1,10 +1,10 @@
-import { makeStyles } from '@material-ui/core'
+import ESLoader from '@components/Loader'
+import { Icon, makeStyles, Theme } from '@material-ui/core'
 import { VideoPlayerType } from '@services/videoTop.services'
 import { Colors } from '@theme/colors'
 import React, { useEffect, useRef, useState } from 'react'
-import { Player, ControlBar, BigPlayButton, LoadingSpinner, ProgressControl } from 'video-react'
+import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
 import ControlBarPlayer from './ControlBar'
-
 interface PlayerProps {
   src: string
   thumbnail?: string
@@ -29,6 +29,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail }) => {
 
   useEffect(() => {
     const { player } = playerRef.current.getState()
+    // console.log("======player===>>>>>>",player)
     setCurrentTime(player.currentTime)
     setDuration(player.duration)
   }, [currentTime])
@@ -95,17 +96,19 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail }) => {
       >
         <BigPlayButton className={classes.bigPlayButton} />
         <ProgressControl className={classes.process} />
-        <LoadingSpinner />
-        <ControlBar disableDefaultControls={true}>
-          {/* <VolumeMenuButton /> */}
-          {/* <ReplayControl seconds={10} order={2.2} /> */}
-        </ControlBar>
+        <ControlBar disableDefaultControls={true} />
         {playState?.paused && (
           <div className={classes.playOverView}>
-            {/* <Icon fontSize="large" className={`fas fa-play ${classes.fontSizeLarge}`} /> */}
-            <img src={'/images/ic_play_big.svg'} />
+            <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+            {/* <img src={'/images/ic_play_big.svg'} /> */}
           </div>
         )}
+        {(playState?.error === null && !playState.waiting) ||
+          (playState?.readyState !== 0 && (
+            <div className={classes.playOverView}>
+              <ESLoader />
+            </div>
+          ))}
         <div className={classes.controlBar}>
           <ControlBarPlayer
             currentTime={currentTime}
@@ -129,7 +132,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail }) => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   process: {
     zIndex: 1,
     opacity: 0,
@@ -168,6 +171,11 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  [theme.breakpoints.down('xs')]: {
+    fontSizeLarge: {
+      fontSize: '50px',
+    },
   },
   //video-react-video
   videoPlayerCustom: {

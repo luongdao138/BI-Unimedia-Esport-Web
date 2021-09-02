@@ -66,8 +66,12 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
           <Typography className={classes.textStyle}>{data?.status}</Typography>
         </Box>
         <Box className={classes.wrapRow}>
-          <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>{i18n.t('common:point_management_tab.date_time')}</Typography>
-          <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
+          <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>
+            {i18n.t('common:point_management_tab.date_time')}
+          </Typography>
+          <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>
+            {moment(data?.created_at).format('YYYY年MM月DD日')}
+          </Typography>
         </Box>
       </Box>
     </Box>
@@ -153,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
     textDecoration: 'underline',
     marginBottom: 8,
-    whiteSpace: 'pre'
+    whiteSpace: 'pre',
   },
   textStyle: {
     color: Colors.white_opacity['70'],
@@ -166,8 +170,7 @@ const useStyles = makeStyles((theme) => ({
     width: 34,
   },
   [theme.breakpoints.down(414)]: {
-    wrapTitle: {
-    },
+    wrapTitle: {},
   },
   [theme.breakpoints.down(376)]: {
     container: {

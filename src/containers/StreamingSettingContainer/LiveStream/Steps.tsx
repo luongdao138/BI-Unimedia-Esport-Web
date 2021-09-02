@@ -1,4 +1,4 @@
-import { Box, FormHelperText, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
+import { Box, Grid, Icon, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import ESInput from '@components/Input'
@@ -69,7 +69,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const { checkNgWordFields, checkNgWordByField } = useCheckNgWord()
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [showReNew, setShowReNew] = useState<boolean>(false)
-  const [errPublicTime, setErrPublicTime] = useState('')
+  const [errPublicTime, setErrPublicTime] = useState(false)
 
   useEffect(() => {
     getLiveSetting()
@@ -156,10 +156,15 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     } else {
       // setShowStreamKey(false)
       // setShowStreamURL(false)
-      onNext(step + 1, stepSettingOne.share_sns_flag, {
-        title: stepSettingOne.title,
-        content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
-      })
+      if (checkPublicTime(stepSettingOne.video_publish_end_time)) {
+        setErrPublicTime(false)
+        onNext(step + 1, stepSettingOne.share_sns_flag, {
+          title: stepSettingOne.title,
+          content: `${baseViewingURL}${stepSettingOne.linkUrl}`,
+        })
+      } else {
+        setErrPublicTime(true)
+      }
     }
   }
   const onClickPrev = () => {
@@ -167,7 +172,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       title: formik.values.stepSettingOne.title,
       content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
     })
-    setErrPublicTime('')
+    setErrPublicTime(false)
   }
   const isFirstStep = () => {
     return step === 1 ? true : false
@@ -225,17 +230,12 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
       stream_key: stream_key,
       video_publish_end_time: video_publish_end_time !== null ? CommonHelper.formatDateTimeJP(video_publish_end_time) : null,
     }
-    if (checkPublicTime(video_publish_end_time)) {
-      setErrPublicTime('')
-      setLiveStreamConfirm(data, () => {
-        onNext(step + 1, share_sns_flag, {
-          title: formik.values.stepSettingOne.title,
-          content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
-        })
+    setLiveStreamConfirm(data, () => {
+      onNext(step + 1, share_sns_flag, {
+        title: formik.values.stepSettingOne.title,
+        content: `${baseViewingURL}${formik.values.stepSettingOne.linkUrl}`,
       })
-    } else {
-      setErrPublicTime(i18n.t('common:streaming_setting_screen.validation.public_time_less'))
-    }
+    })
   }
 
   const checkPublicTime = (time: string): boolean => {
@@ -435,7 +435,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     formik?.touched?.stepSettingOne?.video_publish_end_time && formik?.errors?.stepSettingOne?.video_publish_end_time
                   }
                   error={
-                    formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time
+                    (formik?.touched?.stepSettingOne?.video_publish_end_time && !!formik?.errors?.stepSettingOne?.video_publish_end_time) ||
+                    errPublicTime
                   }
                 />
               ) : (
@@ -445,7 +446,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       ? moment(formik.values.stepSettingOne.video_publish_end_time).format(FORMAT_DATE_TIME_JP)
                       : i18n.t('common:streaming_setting_screen.public_time_title')}
                   </Typography>
-                  {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>}
+                  {/* {errPublicTime && <FormHelperText error>{errPublicTime}</FormHelperText>} */}
                 </Box>
               )}
             </Box>
