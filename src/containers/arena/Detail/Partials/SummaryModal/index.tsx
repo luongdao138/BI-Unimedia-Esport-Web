@@ -146,6 +146,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   childrenContainer: {
     display: 'flex',
     flexDirection: 'column',
+    paddingBottom: 200,
   },
   title: {
     fontSize: '1.5rem',
@@ -191,7 +192,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
     childrenContainer: {
-      paddingBottom: 100,
+      paddingBottom: 120,
     },
   },
 }))
