@@ -434,6 +434,7 @@ export default {
     no_third_place: '（3位決定戦なし）',
     randomize_button: 'ランダムに配置する',
     freeze_button: 'トーナメント表を確定する',
+    freeze_br_button: '対戦表を確定する',
     randomize_success: 'ユーザーをランダムに配置しました',
     freeze_success: 'トーナメント表が確定しました',
     join_success: ' エントリー完了しました',

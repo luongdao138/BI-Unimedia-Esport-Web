@@ -92,7 +92,7 @@ const checkRoles = (roles, role): boolean => {
   return roles.includes(role)
 }
 
-const getDetailData = (tournament: TournamentDetail): any => {
+const getDetailData = (tournament: TournamentDetail) => {
   const _data = { ...tournament.attributes }
   const isTeam = _data.participant_type > 1
   const isAdmin = _data.my_role === ROLE.ADMIN || _data.my_role === ROLE.CO_ORGANIZER
