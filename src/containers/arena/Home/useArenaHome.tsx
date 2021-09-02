@@ -2,7 +2,8 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/arena'
-import { TournamentResponse, TournamentSearchParams, PageMeta, TournamentFilterOption } from '@services/arena.service'
+import { TournamentSearchParams, PageMeta, TournamentFilterOption } from '@services/arena.service'
+import { TournamentListFiltered } from '@components/TournamentCard'
 import { useEffect, useState } from 'react'
 import { Meta } from '@store/metadata/actions/types'
 
@@ -10,7 +11,7 @@ const { selectors, actions } = searchStore
 const getTournamentSearchMeta = createMetaSelector(actions.tournamentSearch)
 
 const useArenaHome = (): {
-  arenas: TournamentResponse[]
+  arenas: TournamentListFiltered[]
   meta: Meta
   page: PageMeta
   loadMore: () => void
