@@ -3,6 +3,7 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useState } from 'react'
 import ReactTooltip from 'react-tooltip'
+import { VIDEO_TYPE } from '..'
 interface ControlProps {
   currentTime: number
   duration: number
@@ -10,6 +11,7 @@ interface ControlProps {
   isFullscreen: boolean
   muted: boolean
   volume?: number
+  statusVideo?: number
   onTogglePlay: () => void
   onReLoad: () => void
   onPrevious: () => void
@@ -27,6 +29,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   isFullscreen = false,
   muted = false,
   volume,
+  statusVideo,
   onTogglePlay,
   onReLoad,
   onPrevious,
@@ -70,6 +73,16 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
       <ReactTooltip id={id} type="dark" effect="solid" className={classes.playerTooltip} offset={offset || { top: -10, left: 10 }}>
         <span>{title}</span>
       </ReactTooltip>
+    )
+  }
+  const TimeBar = () => {
+    if (statusVideo === VIDEO_TYPE.LIVE_STREAM) {
+      return <Typography className={classes.textTime}>{FormatHelper.formatTime(currentTime)}</Typography>
+    }
+    return (
+      <Typography className={classes.textTime}>{`${FormatHelper.formatTime(currentTime)} / ${FormatHelper.formatTime(
+        duration
+      )}`}</Typography>
     )
   }
 
@@ -120,11 +133,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
           </div>
         </Box>
 
-        <div className={classes.time}>
-          <Typography className={classes.textTime}>{`${FormatHelper.formatTime(currentTime)} / ${FormatHelper.formatTime(
-            duration
-          )}`}</Typography>
-        </div>
+        <div className={classes.time}>{TimeBar()}</div>
         <Box pl={2} className={classes.buttonNormal} onClick={onPrevious}>
           <img src={'/images/ic_previous.svg'} />
         </Box>

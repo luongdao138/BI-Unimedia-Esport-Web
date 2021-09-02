@@ -5,6 +5,7 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { ListUsedPointsData } from '@services/points.service'
 import moment from 'moment'
+import { FORMAT_DATE_SIMPLE } from '@constants/common.constants'
 
 interface UsagePointsItemProps {
   data: ListUsedPointsData
@@ -70,7 +71,7 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
             {i18n.t('common:point_management_tab.date_time')}
           </Typography>
           <Typography className={`${classes.titleCommon} ${classes.titleStyle}`}>
-            {moment(data?.created_at).format('YYYY年MM月DD日')}
+            {moment(data?.created_at).format(FORMAT_DATE_SIMPLE)}
           </Typography>
         </Box>
       </Box>

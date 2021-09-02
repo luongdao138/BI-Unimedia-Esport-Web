@@ -50,7 +50,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const shareButton = () => (
     <Box className={classes.shareButton}>
-      <ButtonBase onClick={() => ''}>
+      <ButtonBase
+        onClick={() =>
+          window
+            .open(
+              `https://twitter.com/intent/tweet?text=${'配信者の名前がはいります'}\n${'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}`,
+              '_blank'
+            )
+            ?.focus()
+        }
+      >
         <Icon className={`fa fa-share-alt ${classes.icon}`} fontSize="small" />
         <Box pl={1}>{t('live_stream_screen.share_btn')}</Box>
       </ButtonBase>
@@ -70,6 +79,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       <VideoPlayer
         src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}
         thumbnail={'/images/live_stream/exelab_thumb.png'}
+        statusVideo={props.videoType}
       />
     )
   }
@@ -276,6 +286,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'column',
+    zIndex: 100,
   },
   wrap_info: {
     padding: '16px 0 16px 24px',

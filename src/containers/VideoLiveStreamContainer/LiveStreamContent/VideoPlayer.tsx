@@ -8,10 +8,12 @@ import ControlBarPlayer from './ControlBar'
 interface PlayerProps {
   src: string
   thumbnail?: string
+  statusVideo?: number
 }
 
-const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail }) => {
-  const classes = useStyles()
+const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => {
+  const checkStatusVideo = 1
+  const classes = useStyles({ checkStatusVideo })
   const playerRef = useRef(null)
   const [currentTime, setCurrentTime] = useState(0)
   const [playState, setPlayState] = useState<VideoPlayerType>()
@@ -109,6 +111,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail }) => {
               <ESLoader />
             </div>
           ))}
+
         <div className={classes.controlBar}>
           <ControlBarPlayer
             currentTime={currentTime}
@@ -125,33 +128,37 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail }) => {
             onMuteVolume={onMuteVolume()}
             onChangeVolume={onHandleVolume()}
             setVolume={setVolume}
+            statusVideo={statusVideo}
           />
         </div>
       </Player>
+      {playState?.ended && <div className={classes.blurBackground} />}
     </>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  process: {
-    zIndex: 1,
-    opacity: 0,
-    '& .video-react-slider-bar': {},
-    '& .video-react-play-progress': {
-      backgroundColor: '#FF4786',
-      height: 7,
-    },
-    '& .video-react-progress-holder': {
-      backgroundColor: '#4D4D4D',
-      position: 'absolute',
-      bottom: 40,
-      width: '100%',
-      height: 7,
-    },
-    '& .video-react-control-text': {
-      display: 'none',
-    },
-    '& .video-react-load-progress': {},
+  process: (props: { checkStatusVideo: number }) => {
+    return {
+      zIndex: 1,
+      opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
+      '& .video-react-slider-bar': {},
+      '& .video-react-play-progress': {
+        backgroundColor: '#FF4786',
+        height: 7,
+      },
+      '& .video-react-progress-holder': {
+        backgroundColor: '#4D4D4D',
+        position: 'absolute',
+        bottom: 40,
+        width: '100%',
+        height: 7,
+      },
+      '& .video-react-control-text': {
+        display: 'none',
+      },
+      '& .video-react-load-progress': {},
+    }
   },
   bigPlayButton: {
     display: 'none',
@@ -193,24 +200,38 @@ const useStyles = makeStyles((theme: Theme) => ({
       transition: 'opacity 0.3s ease-in',
     },
   },
-  controlBar: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    height: 40,
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: 26,
-    justifyContent: 'space-between',
-    zIndex: 99,
-    transition: 'opacity 0.3s ease-in',
-    opacity: 0,
+  controlBar: (props: { checkStatusVideo: number }) => {
+    return {
+      width: '100%',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      height: 40,
+      display: 'flex',
+      alignItems: 'center',
+      paddingLeft: 26,
+      justifyContent: 'space-between',
+      zIndex: 9,
+      transition: 'opacity 0.3s ease-in',
+      opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
+    }
   },
   fontSizeLarge: {
     fontSize: 100,
     color: Colors.white,
+  },
+  blurBackground: {
+    backgroundColor: 'rgba(4,4,4,0.71)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100,
   },
 }))
 
