@@ -34,8 +34,8 @@ const ESAvatar: React.FC<Props> = (props) => {
 
   if (props.src) {
     return (
-      <Avatar classes={classes} alt={props.alt}>
-        <LazyLoadImage alt={props.alt} src={props.src} />
+      <Avatar classes={classes}>
+        {props.children ? props.children : <LazyLoadImage class="MuiAvatar-img" alt={props.alt} src={props.src} />}
       </Avatar>
     )
   }
