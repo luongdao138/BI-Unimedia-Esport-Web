@@ -444,7 +444,7 @@ export default {
     failed_to_update_match: '対戦表の更新に失敗しました',
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
-      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
+      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}を{{isBattle}}の空欄になっている枠へランダムに配置します',
       randomize_sub1:
         '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
       randomize_sub2:
