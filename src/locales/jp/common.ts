@@ -19,7 +19,7 @@ export default {
     search_results: '検索結果',
     total: '件',
     error: 'エラー文言が入ります',
-    game_display_name_error: '入力内容が適切ではありません',
+    game_display_name_error: '入力必須項目です',
     too_long: '{{max}}文字以内で入力してください',
     at_least: '2文字以上入力してください。',
     at_least_8: '8文字以上で入力してください',
@@ -579,6 +579,7 @@ export default {
     check_content_button: '内容を確認する',
     please_review: 'を見直してください',
     end_time_invalid: '日時は現在の日時より後でなければなりません',
+    status_changed: '大会の開催ステータスが変更されました',
   },
   arenaSearchFilters: {
     all: 'すべて',
