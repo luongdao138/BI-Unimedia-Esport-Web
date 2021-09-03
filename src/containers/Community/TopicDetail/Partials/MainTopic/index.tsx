@@ -21,8 +21,7 @@ type CommunityHeaderProps = {
   nickname?: string
   user_code?: string
   content?: string
-  date?: string
-  image?: string | null
+  image?: string
   isConfirm?: boolean
   hash_key?: string
   handleDelete?: () => void
@@ -144,7 +143,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             handleClose={() => setOpenReport(false)}
           />
           <DiscardDialog
-            title={topicData?.topic_title + t('common:topic.delete.title')}
+            title={topicData?.title + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDelete}
@@ -184,11 +183,11 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
-    width: 'calc(90% - 150px)',
+    width: 'calc(100% - 150px)',
   },
   userInfoContainerNoDate: {
     display: 'flex',
-    width: 'calc(90% - 50px)',
+    width: 'calc(100% - 50px)',
   },
   userAvatarBox: {
     display: 'flex',

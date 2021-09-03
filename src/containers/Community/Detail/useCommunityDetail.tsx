@@ -4,7 +4,7 @@ import auth from '@store/auth'
 import community from '@store/community'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
-import { CommunityDetail, TopicDetail, TopicListParams, PageMeta } from '@services/community.service'
+import { CommunityDetail, TopicDetailList, TopicListParams, PageMeta } from '@services/community.service'
 const { selectors, actions } = community
 const getCommunityDetailMeta = createMetaSelector(actions.getCommunityDetail)
 const getFollowCommmutyMeta = createMetaSelector(actions.followCommunity)
@@ -15,7 +15,7 @@ const useCommunityDetail = (): {
   isAuthenticated: boolean
   meta: Meta
   handleBack: () => void
-  topicList: Array<TopicDetail>
+  topicList: Array<TopicDetailList>
   communityDetail: CommunityDetail
   getCommunityDetail: (hash_key?: string) => void
   getTopicList: (params: TopicListParams) => void
