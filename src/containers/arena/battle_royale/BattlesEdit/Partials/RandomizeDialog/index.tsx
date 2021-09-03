@@ -24,7 +24,7 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
       <BlankLayout>
         <Box className={classes.childrenContainer}>
           <Box pb={4} color={Colors.white} alignItems="center">
-            <Typography className={classes.title}>{t('common:arena.dialog.randomize_title', { isTeam })}</Typography>
+            <Typography className={classes.title}>{t('common:arena.dialog.randomize_title', { isTeam, isBattle: true })}</Typography>
           </Box>
           <Box pb={4}>
             <Typography variant="h2" className={classes.desc}>
