@@ -272,7 +272,7 @@ export default {
     confirm_follow_list: 'フォローリストを確定する',
     no_data: '該当のコミュニティはありません。',
     topic: {
-      create_success: 'トピックを削除しました。',
+      delete_success: 'トピックを削除しました。',
       view_past_comments: '↑過去のコメントを表示する',
     },
     unfollow_dialog: {
@@ -597,6 +597,7 @@ export default {
       description: `削除したコメントを復元させることはできません。
       削除してよろしいですか？`,
       submit: '削除する',
+      success_toast: 'コメントを削除しました。',
     },
   },
   tournament_cancel: {
@@ -817,7 +818,8 @@ export default {
     },
   },
   lobbySearchFilters: {
-    recommended: 'おすすめの募集',
+    all: 'すべて',
+    suggested: 'おすすめの募集',
     beforeStart: 'エントリー受付中',
     inProgress: 'エントリー中の募集',
     organized: 'あなたが作成した募集',
@@ -1215,6 +1217,7 @@ export default {
       disbanded_toast: 'コミュニティを解散しました',
     },
     community_created_toast: 'コミュニティを作成しました。',
+    title_already_in_use: '「コミュニティ名が既に使用中です。」',
   },
   topic_create: {
     title: 'トピックを作成する',

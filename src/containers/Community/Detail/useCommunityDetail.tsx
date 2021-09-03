@@ -4,17 +4,18 @@ import auth from '@store/auth'
 import community from '@store/community'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { Meta } from '@store/metadata/actions/types'
-import { CommunityDetail, TopicDetail, TopicListParams } from '@services/community.service'
+import { CommunityDetail, TopicDetailList, TopicListParams, PageMeta } from '@services/community.service'
 const { selectors, actions } = community
 const getCommunityDetailMeta = createMetaSelector(actions.getCommunityDetail)
 const getFollowCommmutyMeta = createMetaSelector(actions.followCommunity)
 const getUnfollowCommmutyMeta = createMetaSelector(actions.unfollowCommunity)
+const getTopicListMeta = createMetaSelector(actions.getTopicList)
 
 const useCommunityDetail = (): {
   isAuthenticated: boolean
   meta: Meta
   handleBack: () => void
-  topicList: Array<TopicDetail>
+  topicList: Array<TopicDetailList>
   communityDetail: CommunityDetail
   getCommunityDetail: (hash_key?: string) => void
   getTopicList: (params: TopicListParams) => void
@@ -22,6 +23,8 @@ const useCommunityDetail = (): {
   unfollowCommunity: (hash_key?: string) => void
   followCommunityMeta: Meta
   unfollowCommunityMeta: Meta
+  topicListMeta: Meta
+  topicListPageMeta: PageMeta
 } => {
   const { back } = useRouter()
   const authSelectors = auth.selectors
@@ -35,6 +38,8 @@ const useCommunityDetail = (): {
 
   const getCommunityDetail = (hash_key: string) => dispatch(actions.getCommunityDetail(hash_key))
   const getTopicList = (params: TopicListParams) => dispatch(actions.getTopicList(params))
+  const topicListMeta = useAppSelector(getTopicListMeta)
+  const topicListPageMeta = useAppSelector(selectors.getTopicListMeta)
 
   const followCommunityMeta = useAppSelector(getFollowCommmutyMeta)
   const unfollowCommunityMeta = useAppSelector(getUnfollowCommmutyMeta)
@@ -53,6 +58,8 @@ const useCommunityDetail = (): {
     unfollowCommunity,
     followCommunityMeta,
     unfollowCommunityMeta,
+    topicListMeta,
+    topicListPageMeta,
   }
 }
 

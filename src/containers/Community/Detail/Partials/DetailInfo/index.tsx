@@ -20,7 +20,7 @@ import SearchContainer from '../SearchContainer'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
-import { CommunityDetail, TopicDetail } from '@services/community.service'
+import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
@@ -38,7 +38,7 @@ const ROLE_TYPES = {
 type Props = {
   detail: CommunityDetail
   toEdit?: () => void
-  topicList: TopicDetail[]
+  topicList: Array<TopicDetailList>
   showTopicListAndSearchTab: boolean
 }
 
@@ -124,7 +124,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }, [])
 
   useEffect(() => {
-    if (followCommunityMeta.loaded) {
+    if (followCommunityMeta.loaded && isCommunityAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
     }
   }, [followCommunityMeta])
@@ -276,7 +276,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       case TABS.INFO:
         return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
-        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer />
       case TABS.SEARCH:
         return showTopicListAndSearchTab && <SearchContainer />
       default:
