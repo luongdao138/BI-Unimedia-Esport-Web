@@ -49,14 +49,13 @@ const TopicListContainer: React.FC = () => {
       ) : (
         !!topicList &&
         topicList.length > 0 &&
-        // chunks(topicList, page).map((d, i) => {
         topicList.map((d, i) => {
           const attr = d.attributes
           const latestDate = moment(attr.created_at).isSameOrAfter(attr.last_comment_date) ? attr.created_at : attr.last_comment_date
           return (
             <TopicRowItem
               key={i}
-              handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.hash_key)}/${attr.hash_key}`)}
+              handleClick={() => router.push(`${ESRoutes.TOPIC.replace(/:id/gi, attr.community_hash)}/${attr.hash_key}`)}
               title={attr.topic_title}
               last_comment={attr.last_comment.data}
               latest_date={latestDate}
