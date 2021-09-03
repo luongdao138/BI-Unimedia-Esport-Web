@@ -172,10 +172,9 @@ export default ArenaMatches
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#212121',
     paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
     width: '100vw',
+    height: '100vh',
     overflow: 'auto',
   },
   content: {

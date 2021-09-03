@@ -26,7 +26,6 @@ import ArenaAvatar from '@containers/arena/Winners/ArenaAvatar'
 import ScoreEdit from './ScoreEdit'
 import ESStickyFooter from '@components/StickyFooter'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
-import LoginRequired from '@containers/LoginRequired'
 
 interface ScoreModalProps {
   meta: Meta
@@ -146,11 +145,9 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
             >
               <Box paddingTop={7.5} paddingBottom={10} className={classes.topContainer}>
                 <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
-                  <LoginRequired>
-                    <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
-                      <Icon className="fa fa-arrow-left" fontSize="small" />
-                    </IconButton>
-                  </LoginRequired>
+                  <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
+                    <Icon className="fa fa-arrow-left" fontSize="small" />
+                  </IconButton>
                   <Box pl={2}>
                     <Typography variant="h2">
                       {isModerator ? t('common:tournament.match_result') : t('common:tournament.match_setting')}

@@ -276,6 +276,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  first: {},
+  second: {},
+  third: {},
   [theme.breakpoints.down('sm')]: {
     firstIcon: {
       marginTop: 10,

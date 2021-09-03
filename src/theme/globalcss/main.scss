@@ -2,12 +2,12 @@
 .content-wrapper {
   max-width: 840px;
   background: url('/images/pattern.png') center 60px repeat-x #212121;
-  will-change: transform;
   width: 100%;
   padding-top: 60px;
   position: relative;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  will-change: transform;
 }
 
 body {
@@ -87,7 +87,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  will-change: all;
+  will-change: auto;
   z-index: -1;
 }
 

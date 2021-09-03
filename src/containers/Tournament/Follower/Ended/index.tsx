@@ -22,7 +22,7 @@ const FollowerEndedContainer: React.FC = () => {
   const loadMore = () => {
     if (hasNextPage) {
       getTournamentResults({
-        page: pages.current_page + 1,
+        page: Number(pages.current_page) + 1,
       })
     }
   }

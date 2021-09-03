@@ -11,12 +11,6 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
 
   return (
     <>
-      {cornerIcon && (
-        <div className={classes.cornerWrap}>
-          <div className={classes.iconWrap}>{cornerIcon}</div>
-          <div className={classes.triangle}></div>
-        </div>
-      )}
       <Box className={classes.mediaWrap}>
         <CardMedia className={classes.media}>
           <>
@@ -24,6 +18,10 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
             {children}
           </>
         </CardMedia>
+      </Box>
+      <Box className={classes.cornerWrap}>
+        <Box className={classes.iconWrap}>{cornerIcon}</Box>
+        <Box className={classes.triangle}></Box>
       </Box>
     </>
   )
@@ -59,6 +57,9 @@ const useStyles = makeStyles(() => ({
     top: 0,
     left: 0,
     zIndex: 3,
+    willChange: 'transform',
+    transform: 'translateZ(0)',
+    WebkitTransform: 'translateZ(0)',
   },
   triangle: {
     width: 0,

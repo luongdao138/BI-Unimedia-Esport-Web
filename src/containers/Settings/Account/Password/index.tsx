@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box, makeStyles, Theme, IconButton, Icon, Typography, InputAdornment } from '@material-ui/core'
-import ESInput from '@components/Input'
+import { Box, makeStyles, Theme, IconButton, Icon, Typography } from '@material-ui/core'
 import ESStickyFooter from '@components/StickyFooter'
 import { Colors } from '@theme/colors'
 import { useRouter } from 'next/router'
@@ -12,13 +11,13 @@ import _ from 'lodash'
 import ESLoader from '@components/FullScreenLoader'
 import usePassword from './usePassword'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import ESPasswordInput from '@components/PasswordInput'
 
 const AccountSettingsPasswordContainer: React.FC = () => {
   const { t } = useTranslation('common')
   const classes = useStyles()
   const router = useRouter()
   const [scoreCurrentPassword, setCurrentPasswordScore] = useState(0)
-  const [showPassword, setShowPassword] = useState(false)
   const { changeEmailCheck, meta } = usePassword()
 
   const validationSchema = Yup.object().shape({
@@ -32,7 +31,7 @@ const AccountSettingsPasswordContainer: React.FC = () => {
       .min(8, t('error.too_short')),
   })
 
-  const { handleChange, values, handleSubmit, errors, touched, handleBlur, setFieldError } = useFormik<services.ChangeEmailCheckParams>({
+  const { values, handleSubmit, errors, touched, handleBlur, setFieldError, setFieldValue } = useFormik<services.ChangeEmailCheckParams>({
     initialValues: {
       current_password: '',
     },
@@ -62,29 +61,15 @@ const AccountSettingsPasswordContainer: React.FC = () => {
         </Typography>
       </Box>
       <Box mt={12} ml={5} className={classes.formWrap}>
-        <ESInput
+        <ESPasswordInput
           id="current_password"
           autoFocus
           placeholder={t('common.password')}
           labelPrimary={t('common.password')}
           fullWidth
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end" className={classes.inputContainer}>
-              <div className={classes.borderLeft}></div>
-              <IconButton
-                aria-label="toggle password visibility"
-                size="small"
-                disableRipple
-                onMouseDown={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-              </IconButton>
-            </InputAdornment>
-          }
           onBlur={handleBlur}
           value={values.current_password}
-          onChange={handleChange}
+          onChange={(e) => setFieldValue('current_password', CommonHelper.replaceSingleByteString(e.target.value))}
           helperText={touched.current_password && errors.current_password}
           error={touched.current_password && !!errors.current_password}
         />
@@ -120,17 +105,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(4),
       marginLeft: theme.spacing(2),
     },
-  },
-  inputContainer: {
-    position: 'relative',
-    paddingRigth: 7,
-  },
-  borderLeft: {
-    width: 1,
-    height: 24,
-    backgroundColor: '#4B4B4D',
-    position: 'absolute',
-    left: -8,
   },
 }))
 
