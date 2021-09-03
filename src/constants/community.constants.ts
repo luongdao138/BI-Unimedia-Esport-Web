@@ -15,7 +15,7 @@ export const INITIAL_VALUES = {
   ADDRESS: '',
   AREA_ID: 1,
   OPEN_RANGE: 0,
-  JOIN_CONDITION: -1,
+  JOIN_CONDITION: 1,
   FEATURES: [],
   GAME_TITLES: [],
 }
@@ -28,6 +28,11 @@ export const OPEN_RANGE = {
 export const JOIN_CONDITION = {
   MANUAL: 0,
   AUTOMATIC: 1,
+}
+
+export enum OFFICIAL {
+  NOT_OFFICIAL,
+  OFFICIAL,
 }
 
 export const STATUS = {

@@ -13,7 +13,7 @@ export const getInitialValues = (data?: LobbyDetail): FormType => {
       game_title_id: gameTitle ? [gameTitle] : [],
       game_hardware_id: _.get(data, 'attributes.game_hardware.data.attributes.id', -1),
       max_participants: data ? data.attributes.max_participants : 0,
-      organizer_participated: data ? data.attributes.organizer_participated : true,
+      organizer_participated: data ? data.attributes.organizer_participated : false,
     },
     stepTwo: {
       entry_start_datetime: data ? data.attributes.entry_start_datetime : null,

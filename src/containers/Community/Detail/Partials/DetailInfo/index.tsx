@@ -58,7 +58,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isDiscard, setIsDiscard] = useState(false)
   const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
-  const { isNotMember, isPublic } = useCommunityHelper(detail)
+  const { isNotMember, isPublic, isOfficial } = useCommunityHelper(detail)
 
   const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
 
@@ -213,7 +213,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
               {data.name}
             </Typography>
             <Box ml={3.6}>
-              {!!data.is_official && (
+              {isOfficial && (
                 <span className={classes.checkIcon}>
                   <Icon className="fa fa-check" fontSize="small" />
                 </span>
@@ -221,13 +221,15 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
               {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
             </Box>
           </Box>
-          <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
+          <Box className={classes.detailCommonButtons}>
             {DetailInfoButton()}
-            <ESMenu>
-              <LoginRequired>
-                <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
-              </LoginRequired>
-            </ESMenu>
+            {!isOfficial && (
+              <ESMenu>
+                <LoginRequired>
+                  <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
+                </LoginRequired>
+              </ESMenu>
+            )}
           </Box>
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
@@ -236,7 +238,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
             <Typography>{t('common:community.copy_shared_url')}</Typography>
           </Box>
-          <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')}>
+          <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')} style={{ marginLeft: 12 }}>
             <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
           </TwitterShareButton>
         </Box>
@@ -327,8 +329,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 const useStyles = makeStyles((theme) => ({
   twitter_logo: {
     height: 23,
-    width: '100%',
-    paddingLeft: 12,
+    width: 23,
   },
   container: {
     padding: theme.spacing(3),
@@ -374,6 +375,13 @@ const useStyles = makeStyles((theme) => ({
   },
   marginLeft: {
     marginLeft: theme.spacing(2),
+  },
+  detailCommonButtons: {
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    flexShrink: 0,
+    height: '36px',
   },
   button: {
     paddingTop: 2,

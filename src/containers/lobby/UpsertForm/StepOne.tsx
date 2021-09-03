@@ -13,6 +13,7 @@ import ESFastInput from '@components/FastInput'
 import ESSwitchIOS from '@components/Switch'
 import ESNumberInput from '@components/NumberInputLobby'
 import i18n from '@locales/i18n'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 type Props = {
   formik: FormikProps<FormType>
@@ -38,6 +39,15 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
     formik.setFieldValue('stepOne.categories', value)
   }, [])
 
+  const { hasUCRReturnHref } = useReturnHref()
+  const handleCoverDailogStateChange = (_open: boolean) => {
+    if (hasUCRReturnHref) {
+      document.body.style.position = 'fixed'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
+    }
+  }
+
   return (
     <Box pb={9}>
       <Box pb={4}>
@@ -46,6 +56,7 @@ const StepOne: React.FC<Props> = ({ formik, hardwares, editables }) => {
           onChange={handleUpload}
           isUploading={isUploading}
           disabled={!editables.cover_image_url}
+          onOpenStateChange={handleCoverDailogStateChange}
         />
       </Box>
       <Box pb={4}>

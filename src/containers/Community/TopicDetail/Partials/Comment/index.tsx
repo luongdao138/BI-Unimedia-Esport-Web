@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton, Popover, Link } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, Popover, Link, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -16,8 +16,9 @@ import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useTopicDetail from '../../useTopicDetail'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
+import { ESRoutes } from '@constants/route.constants'
 
 type CommunityHeaderProps = {
   comment: CommentsResponse
@@ -90,7 +91,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
           <Box className={classes.userInfoContainer}>
             <Typography className={classes.number}>{commentData.comment_no}</Typography>
             <Box ml={1}>
-              <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
+              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)}>
+                <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
+              </ButtonBase>
             </Box>
 
             <Box className={classes.userInfoBox} ml={1}>
@@ -292,7 +295,27 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     color: Colors.white_opacity[70],
   },
-  mainComment: {},
+  mainComment: {
+    '& .MuiPopover-paper': {
+      padding: 16,
+      border: '3px solid #646464',
+      background: 'rgba(33,33,33,.9)',
+      borderRadius: 4,
+      position: 'relative',
+      overflow: 'initial !important',
+      width: 754,
+      '&:before': {
+        content: "''",
+        position: 'absolute',
+        top: 'Calc(100% + 3px)',
+        left: 8,
+        marginLeft: -5,
+        borderWidth: 5,
+        borderStyle: 'solid',
+        borderColor: '#646464 transparent transparent transparent',
+      },
+    },
+  },
   [theme.breakpoints.down('sm')]: {
     imageBox: {
       width: '80%',

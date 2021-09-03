@@ -27,7 +27,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   const router = useRouter()
   const { toCreate } = useCommunityHelper()
   const [selectedFilter, setSelectedFilter] = useState(CommunityFilterOption.all)
-  const { communities, meta, pages, fetchCommunityData, resetMeta, clearCommunityData } = useCommunityData()
+  const { communities, meta, pages, fetchCommunityData, clearCommunityData } = useCommunityData()
 
   const defaultFilterOptions = [
     {
@@ -49,11 +49,6 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
       loginRequired: false,
     },
   ]
-
-  useEffect(() => {
-    fetchCommunityData({ page: 1, filter: filter })
-    return () => resetMeta()
-  }, [])
 
   useEffect(() => {
     let filterVal = CommunityFilterOption.all

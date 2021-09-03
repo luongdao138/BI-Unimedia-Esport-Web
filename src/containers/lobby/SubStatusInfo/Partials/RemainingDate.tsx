@@ -59,11 +59,11 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
   const renderDueDate = () => {
     return (
       <>
-        <Typography className={classes.highlightedNumberSmall}>{targetDate.format('YYYY/MM/DD HH')}</Typography>
-        <Typography className={classes.text}>{t('common:common.hour')}</Typography>
-        <Typography className={classes.highlightedNumberSmall}>{targetDate.format('mm')}</Typography>
-        <Typography className={classes.text}>{t('common:lobby.remaining_date.from_minutes')}</Typography>
-        <Typography className={classes.text}>{status === LOBBY_STATUS.READY ? entry + start : start}</Typography>
+        <Typography className={classes.highlightedNumber}>{targetDate.format('YYYY/MM/DD HH')}</Typography>
+        <Typography>{t('common:common.hour')}</Typography>
+        <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
+        <Typography>{t('common:lobby.remaining_date.from_minutes')}</Typography>
+        <Typography>{status === LOBBY_STATUS.READY ? entry + start : start}</Typography>
       </>
     )
   }
@@ -85,23 +85,13 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'baseline',
   },
   highlightedNumber: {
-    fontSize: 24,
+    fontSize: '1.5rem',
     fontWeight: 'bold',
-  },
-  highlightedNumberSmall: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  text: {
-    fontSize: 14,
   },
   [theme.breakpoints.down('sm')]: {
-    highlightedNumberSmall: {
-      fontSize: 16,
+    highlightedNumber: {
+      fontSize: '1rem',
       fontWeight: 'bold',
-    },
-    text: {
-      fontSize: 10,
     },
   },
 }))

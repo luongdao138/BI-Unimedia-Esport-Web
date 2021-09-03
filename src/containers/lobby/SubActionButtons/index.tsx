@@ -8,6 +8,8 @@ import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
 
+// import { useTranslation } from 'react-i18next'
+
 interface Props {
   lobby: LobbyDetail
   openChat: () => void
@@ -18,7 +20,6 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
   const classes = useStyles()
   const status = _.get(lobby, 'attributes.status', 0)
   const isFreezed = _.get(lobby, 'attributes.is_freezed', false)
-  const isOwner = _.get(lobby, 'attributes.is_owner', false)
   const participantStatus: LOBBY_PARTICIPANT_STATUS | null = _.get(lobby, 'attributes.participant_status', null)
 
   const afterClosed = [LOBBY_STATUS.ENTRY_CLOSED, LOBBY_STATUS.IN_PROGRESS, LOBBY_STATUS.ENDED]
@@ -48,25 +49,9 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
    * [1] Show other than ready, deleted, canceled status
    * [2] Temporary message top of button before freeze
    * [3] Show entered or selected users
-   * [4] Admin always sees except ready
    * [?] Additional condition might be needed for not selected user show or not
    */
-    if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED && isOwner) {
-      return (
-        <Box className={classes.actionButton}>
-          <LoginRequired>
-            <ActionLabelButton
-              actionLabel={isFreezed ? undefined : i18n.t('common:lobby.buttons.temporary')}
-              variant="outlined"
-              fullWidth
-              onClick={openChat && openChat}
-            >
-              {i18n.t('common:tournament.group_chat')}
-            </ActionLabelButton>
-          </LoginRequired>
-        </Box>
-      )
-    } else if (
+    if (
       status !== LOBBY_STATUS.READY &&
       status !== LOBBY_STATUS.DELETED &&
       status !== LOBBY_STATUS.CANCELLED &&
@@ -81,6 +66,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
               variant="outlined"
               fullWidth
               onClick={openChat && openChat}
+              // disabled={chatDisabled}
             >
               {i18n.t('common:tournament.group_chat')}
             </ActionLabelButton>
@@ -102,6 +88,7 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
               variant="outlined"
               fullWidth
               onClick={openChat && openChat}
+              // disabled={chatDisabled}
             >
               {i18n.t('common:tournament.group_chat')}
             </ActionLabelButton>
@@ -126,6 +113,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: theme.spacing(20),
     margin: 8,
   },
+  [theme.breakpoints.down('sm')]: {
+    actionButtonContainer: {
+      flexDirection: 'column',
+    },
+  },
   body: {
     display: 'flex',
     flexDirection: 'column',
@@ -137,11 +129,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  [theme.breakpoints.down('sm')]: {
-    actionButtonContainer: {
-      flexDirection: 'column',
-    },
   },
 }))
 

@@ -76,7 +76,7 @@ const useCommunityCreate = (): {
     if (actions.updateCommunity.fulfilled.match(resultAction)) {
       router.push(`${ESRoutes.COMMUNITY}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getCommunityDetail(String(resultAction.meta.arg.hash_key)))
-      dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+      dispatch(commonActions.addToast(t('common:community_create.community_updated_toast')))
     }
   }
 

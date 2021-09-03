@@ -138,26 +138,5 @@ export default createMuiTheme({
         },
       },
     },
-    MuiPopover: {
-      paper: {
-        padding: 16,
-        border: '3px solid #646464',
-        background: 'rgba(33,33,33,.9)',
-        borderRadius: 4,
-        position: 'relative',
-        overflow: 'initial !important',
-        width: 754,
-        '&:before': {
-          content: "''",
-          position: 'absolute',
-          top: 'Calc(100% + 3px)',
-          left: 8,
-          marginLeft: -5,
-          borderWidth: 5,
-          borderStyle: 'solid',
-          borderColor: '#646464 transparent transparent transparent',
-        },
-      },
-    },
   },
 })

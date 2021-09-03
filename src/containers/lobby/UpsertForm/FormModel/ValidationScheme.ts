@@ -60,6 +60,12 @@ export const getValidationScheme = (data: LobbyDetail, editables: EditableTypes)
         },
         then: Yup.string().required(i18n.t('common:common.validation.before_entry_end_date')),
       }),
+      acceptance_dates: Yup.string().when(['entry_start_datetime', 'entry_end_datetime'], {
+        is: (entry_start_datetime, entry_end_datetime) => {
+          return Date.parse(entry_start_datetime) >= Date.parse(entry_end_datetime)
+        },
+        then: Yup.string().required(i18n.t('common:common.validation.acceptance_dates')),
+      }),
       acceptance_end_start_date: Yup.string().when(['entry_end_datetime', 'start_datetime'], {
         is: (entry_end_datetime, start_datetime) => {
           return Date.parse(entry_end_datetime) > Date.parse(start_datetime)

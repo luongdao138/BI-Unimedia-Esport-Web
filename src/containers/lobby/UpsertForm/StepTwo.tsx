@@ -58,6 +58,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepTwo?.entry_end_datetime && formik.errors?.stepTwo?.entry_end_datetime) ||
+            formik.errors?.stepTwo?.acceptance_dates ||
             formik.errors?.stepTwo?.acceptance_end_start_date
           }
           error={formik.touched?.stepTwo?.entry_end_datetime && !!formik.errors?.stepTwo?.entry_end_datetime}

@@ -2,12 +2,12 @@ import { Box, Icon, IconButton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 
-type CommunityHeaderProps = {
+type TopicDetailHeaderProps = {
   title: string
   isTopic?: boolean
   onHandleBack: () => void
 }
-const CommunityHeader: React.FC<CommunityHeaderProps> = ({ title, isTopic, onHandleBack }) => {
+const TopicDetailHeader: React.FC<TopicDetailHeaderProps> = ({ title, isTopic, onHandleBack }) => {
   const classes = useStyles()
 
   return (
@@ -46,9 +46,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 20,
   },
   wrapOne: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    wordBreak: 'break-all',
   },
 
   ['@media (max-width: 960px)']: {
@@ -58,4 +56,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default CommunityHeader
+export default TopicDetailHeader

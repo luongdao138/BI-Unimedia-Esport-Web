@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
+import ESChip from '@components/Chip'
 import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
 import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { UserLoginResponse } from '@services/auth.service'
-import ESChip from '@components/Chip'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
@@ -26,8 +26,6 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
   const [hardwareName, setHardwareName] = useState('')
   const [areaName, setAreaName] = useState('')
   const classes = useStyles()
-
-  const categories = values.stepOne.categories.map((category, idx) => (idx > 0 ? ' / ' : '') + category.name)
 
   useEffect(() => {
     if (prefectures) {
@@ -105,7 +103,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
         {isEdit ? t('common:tournament_create.confirm_edit_title') : t('common:tournament_create.comfirm_title')}
       </Typography>
       <Box pb={4.25} />
-      <Box className={classes.imageContainer}>
+      <Box>
         <img
           src={values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'}
           className={classes.coverImg}
@@ -146,7 +144,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
 
       <ESInput
         labelPrimary={t('common:lobby_create.organizer_joined')}
-        value={values.stepOne.organizer_participated ? t('common:lobby_create.organizer_join') : t('common:lobby_create.organizer_unjoin')}
+        value={values.stepOne.organizer_participated ? 'ON' : 'OFF'}
         disabled={true}
         fullWidth
       />
@@ -159,14 +157,14 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, isEdi
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:lobby_create.area')} value={areaName} disabled={true} fullWidth />
-      <ESInput labelPrimary={''} value={values.stepTwo.address} disabled={true} fullWidth multiline />
       <Box pb={2} />
-      {isEdit ? (
-        <ESInput labelPrimary={t('common:lobby.create.category')} value={categories} disabled={true} fullWidth multiline />
-      ) : (
-        values.stepOne.categories.map((category, idx) => <ESChip key={idx} className={classes.chip} label={category.name} />)
-      )}
 
+      <ESInput labelPrimary={t('common:lobby_create.area_detail')} value={values.stepTwo.address} disabled={true} fullWidth />
+      <Box pb={2} />
+
+      {values.stepOne.categories.map((category, idx) => (
+        <ESChip key={idx} className={classes.chip} label={category.name} />
+      ))}
       <Box pb={2} />
     </Box>
   )
@@ -179,14 +177,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   coverImg: {
     width: '100%',
-    height: '100%',
-    objectFit: 'contain',
+    height: 116,
+    objectFit: 'cover',
+    objectPosition: '50% 50%',
     borderRadius: 4,
-    top: 0,
-    left: 0,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
   },
   time: {
     maxWidth: 340,
@@ -198,13 +192,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   valueColor: {
     color: '#ffffff4d',
-  },
-  imageContainer: {
-    paddingTop: '30.21756647864625%',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    position: 'relative',
   },
   [theme.breakpoints.down('sm')]: {
     viewHolder: {
