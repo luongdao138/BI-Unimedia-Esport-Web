@@ -579,6 +579,7 @@ export default {
     check_content_button: '内容を確認する',
     please_review: 'を見直してください',
     end_time_invalid: '日時は現在の日時より後でなければなりません',
+    status_changed: '大会の開催ステータスが変更されました',
   },
   arenaSearchFilters: {
     all: 'すべて',
