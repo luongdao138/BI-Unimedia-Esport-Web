@@ -260,6 +260,7 @@ export type TopicDetail = {
     community_name: string
     can_remove: boolean
     last_comment?: LastComment
+    comment_count: number
   }
 }
 

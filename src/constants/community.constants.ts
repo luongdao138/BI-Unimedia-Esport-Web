@@ -15,7 +15,7 @@ export const INITIAL_VALUES = {
   ADDRESS: '',
   AREA_ID: 1,
   OPEN_RANGE: 0,
-  JOIN_CONDITION: -1,
+  JOIN_CONDITION: 1,
   FEATURES: [],
   GAME_TITLES: [],
 }

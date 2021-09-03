@@ -112,7 +112,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
+                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
                 </Box>
               </Box>
               <Box display="flex" justifyContent="flex-end">
@@ -120,7 +120,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
+                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
                 </Box>
                 <Box className={classes.numberBox}>
                   <IconButton className={classes.replyButton}>
