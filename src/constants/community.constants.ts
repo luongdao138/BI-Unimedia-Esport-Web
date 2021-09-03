@@ -30,6 +30,11 @@ export const JOIN_CONDITION = {
   AUTOMATIC: 1,
 }
 
+export enum OFFICIAL {
+  NOT_OFFICIAL,
+  OFFICIAL,
+}
+
 export const STATUS = {
   READY: 'ready',
   CANCELLED: 'cancelled',
