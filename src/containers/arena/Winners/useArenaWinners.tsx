@@ -42,7 +42,13 @@ const useWinners = (
     }
   }, [router.query.hash_key])
 
-  const toDetail = () => router.push(router.asPath.replace('/placements', ''))
+  const toDetail = () => {
+    const placementsUrl = '/placements'
+    if (router.asPath.includes(placementsUrl)) {
+      router.push(router.asPath.replace(placementsUrl, ''))
+    }
+  }
+
   const handleBack = () => router.back()
 
   return {
