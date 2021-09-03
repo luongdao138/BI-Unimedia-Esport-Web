@@ -9,6 +9,7 @@ import ESLabel from '@components/Label'
 import { Box, makeStyles, Typography, Theme, Icon, IconButton } from '@material-ui/core'
 import LinkButton from '@components/LinkButton'
 import useCancelDialog from './useCancelDialog'
+import { useRouter } from 'next/router'
 
 type CancelDialogProps = {
   communityName: string
@@ -17,7 +18,9 @@ type CancelDialogProps = {
 const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   const [modal, setModal] = useState(false)
   const classes = useStyles()
-  const { cancelTournament } = useCancelDialog()
+  const { closeCommunity } = useCancelDialog()
+  const { query } = useRouter()
+  const { hash_key } = query
   const { t } = useTranslation(['common'])
 
   const handleClose = () => {
@@ -25,7 +28,7 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   }
 
   const handleSubmit = () => {
-    cancelTournament()
+    closeCommunity(String(hash_key))
     setModal(false)
   }
 

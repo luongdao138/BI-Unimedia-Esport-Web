@@ -49,6 +49,7 @@ export const URI = {
   COMMUNITY_MEMBERS_CANCEL: '/v2/communities/:id/cancel',
   COMMUNITY_MEMBER_CHANGE_ROLE: '/v2/communities/:id/change_role',
   COMMUNITY_MEMBER_REMOVE: '/v2/communities/:id/remove_members',
+  COMMUNITY_CLOSE: '/v2/communities/:id/close',
   COMMUNITY_COMMENTS_LIST: '/v2/comments/list',
   TOPIC_LIST: '/v2/communities/topics',
   TOPIC_COMMENT_CREATE: '/v2/comments',

@@ -140,7 +140,7 @@ export const getCommunityFeatures = createAsyncThunk<services.CommunityFeaturesR
   }
 )
 
-export const resetCommunityMembers = createAction(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL)
+export const resetCommunityMembers = createAction(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS)
 
 export const getCommunityMembers = createAsyncThunk<services.CommunityMembersResponse, services.CommunityMembersParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_MEMBERS,
@@ -216,6 +216,18 @@ export const removeCommunityMember = createAsyncThunk<void, services.CommunityMe
     }
   }
 )
+
+export const closeCommunity = createAsyncThunk<void, string>(COMMUNITY_ACTION_TYPE.CLOSE_COMMUNITY, async (params, { rejectWithValue }) => {
+  try {
+    const res = await services.closeCommunity(params)
+    return res
+  } catch (error) {
+    if (!error.response) {
+      throw error
+    }
+    return rejectWithValue(error.response.data)
+  }
+})
 
 export const createTopic = createAsyncThunk<services.CreateTopicResponse, services.TopicParams>(
   COMMUNITY_ACTION_TYPE.CREATE_TOPIC,

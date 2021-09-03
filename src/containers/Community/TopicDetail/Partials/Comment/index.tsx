@@ -150,7 +150,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
                   </IconButton>
                 </Box>
               </Box>
-              <Box mb={5}>
+              <Box mb={3}>
                 <Typography className={classes.content}>{commentData.main_comment.content}</Typography>
               </Box>
             </Popover>

@@ -5,13 +5,11 @@ import ESInput from '@components/Input'
 import ESLabel from '@components/Label'
 import { FormType } from './FormModel/FormType'
 import { Box } from '@material-ui/core'
-import { GetPrefecturesResponse } from '@services/common.service'
 import { useAppSelector } from '@store/hooks'
 import { getAuth } from '@store/auth/selectors'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
-  prefectures?: GetPrefecturesResponse['data']
 }
 
 ESInput.defaultProps = {

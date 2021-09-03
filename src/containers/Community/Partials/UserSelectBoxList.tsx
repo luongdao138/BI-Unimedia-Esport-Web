@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import ESSelect from '@components/Select'
@@ -6,6 +6,8 @@ import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
 import { CommunityMember } from '@services/community.service'
 import { MEMBER_ROLE } from '@constants/community.constants'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 type UserSelectBoxListProps = {
   member: CommunityMember
@@ -31,6 +33,7 @@ const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
 ]
 
 const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue, isApplying = false }) => {
+  const router = useRouter()
   const classes = useStyles()
   const data = member.attributes
 
@@ -38,15 +41,21 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
     setValue(isApplying, data.id, e.target.value)
   }
 
+  const toProfile = () => {
+    router.push(`${ESRoutes.PROFILE}/${data.user_code}`)
+  }
+
   return (
     <>
       <Box className={classes.container} mb={3}>
         <Box className={classes.userContainer}>
-          <ESAvatar
-            className={classes.avatar}
-            alt={data.nickname}
-            src={data.profile !== '' ? data.profile : data.nickname ? '' : '/images/avatar.png'}
-          />
+          <ButtonBase onClick={toProfile}>
+            <ESAvatar
+              className={classes.avatar}
+              alt={data.nickname}
+              src={data.profile !== '' ? data.profile : data.nickname ? '' : '/images/avatar.png'}
+            />
+          </ButtonBase>
           <Box className={classes.userInfoBox} ml={1}>
             <Box display="flex" alignItems="center" height="50%">
               <Typography className={classes.username}>{data.nickname}</Typography>

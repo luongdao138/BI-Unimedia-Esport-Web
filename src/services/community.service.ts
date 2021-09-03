@@ -344,7 +344,7 @@ export type CommunityFollowResponse = {
 export type TopicSearchParams = {
   community_hash: string
   keyword: string
-  only_title: boolean
+  only_title: string
   page: number
 }
 
@@ -496,6 +496,11 @@ export const changeCommunityMemberRole = async (params: CommunityMemberChangeRol
 
 export const removeCommunityMember = async (params: CommunityMemberRemoveParams): Promise<void> => {
   const { data } = await api.post<void>(URI.COMMUNITY_MEMBER_REMOVE.replace(/:id/gi, params.hash_key), params.data)
+  return data
+}
+
+export const closeCommunity = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_CLOSE.replace(/:id/gi, hash_key))
   return data
 }
 

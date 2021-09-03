@@ -103,16 +103,8 @@ const useLobbyCreate = (): {
 
       if (_status === LOBBY_STATUS.READY) {
         // 受付前
-        _editables.title = true
-        _editables.game_hardware = true
-        _editables.max_participants = true
-        _editables.organizer_participated = true
-        _editables.cover_image_url = true
-        _editables.entry_start_datetime = true
-        _editables.area = true
-        _editables.address = true
-        _editables.categories = true
-        _editables.message = true
+        _editables = _.mapValues(_editables, () => true)
+        _editables.game_title = false
       } else if (_status === LOBBY_STATUS.RECRUITING) {
         // 受付中
         _editables.title = true
@@ -120,8 +112,8 @@ const useLobbyCreate = (): {
         _editables.max_participants = true
         _editables.organizer_participated = true
         _editables.cover_image_url = true
-        _editables.entry_start_datetime = true
         _editables.entry_end_datetime = true
+        _editables.start_datetime = true
         _editables.area = true
         _editables.address = true
         _editables.categories = true
@@ -131,8 +123,6 @@ const useLobbyCreate = (): {
         _editables.title = true
         _editables.game_hardware = true
         _editables.cover_image_url = true
-        _editables.entry_start_datetime = true
-        _editables.entry_end_datetime = true
         _editables.start_datetime = true
         _editables.area = true
         _editables.address = true

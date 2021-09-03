@@ -113,6 +113,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
     state.community_detail = action.payload.data
   })
+  builder.addCase(actions.unfollowCommunity.fulfilled, (state) => {
+    state.community_detail.attributes.member_count -= 1
+  })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined
   })
