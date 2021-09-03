@@ -9,7 +9,6 @@ export interface TopicRowItemProps {
   last_comment?: TopicDetail['attributes']['last_comment']['data']
   latest_date?: string
   comment_count?: number
-  // TODO tur zuur optional bolgoson. Communit detial -> Topic Search API holbosonii daraa required bolgoh
   handleClick?: () => void
 }
 
@@ -26,11 +25,9 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              {last_comment?.attributes.content ? (
-                <Typography className={classes.last_comment}>{last_comment?.attributes.content}</Typography>
-              ) : (
-                <Typography className={classes.last_comment}>{'「' + t('common:chat.uploaded_image') + '」'}</Typography>
-              )}
+              <Typography className={classes.last_comment}>
+                {last_comment?.attributes.content ? last_comment?.attributes.content : '「' + t('common:chat.uploaded_image') + '」'}
+              </Typography>
             </Box>
           </Box>
 

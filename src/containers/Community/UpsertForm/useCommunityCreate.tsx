@@ -14,7 +14,7 @@ import { clearMetaData } from '@store/metadata/actions'
 const { actions, selectors } = community
 const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
 const createCommunityMeta = createMetaSelector(actions.createCommunity)
-// TODO change when data is ready
+
 export type EditableTypes = {
   name: boolean
   description: boolean

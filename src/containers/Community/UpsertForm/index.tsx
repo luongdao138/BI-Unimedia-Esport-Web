@@ -29,10 +29,12 @@ import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
 import community from '@store/community'
 const { selectors } = community
-// TODO used once at community edit
+
 type CommunityCreateProps = {
   communityName?: string
 }
+
+const SUBMIT_TITLE_ERROR_MESSAGE = 'Validation failed: Name has already been taken'
 
 const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const dispatch = useAppDispatch()
@@ -84,7 +86,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }, [community])
 
   useEffect(() => {
-    if (getCreateCommunityMeta.error['message'] === i18n.t('common:community_create.submit_title_error_msg')) {
+    if (getCreateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
       setIsAlreadyUsedTitle(true)
     }
   }, [getCreateCommunityMeta])
@@ -189,7 +191,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       content={
         <>
           {isConfirm ? (
-            <Box flexDirection="column" display="flex" justifyContent="center" alignItems="center">
+            <Box className={classes.footerErrorContainer}>
               {isAlreadyUsedTitle && (
                 <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
                   <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
@@ -313,6 +315,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     cancelButton: {
       marginTop: theme.spacing(2),
     },
+  },
+  footerErrorContainer: {
+    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   [theme.breakpoints.up('md')]: {
     formContainer: {

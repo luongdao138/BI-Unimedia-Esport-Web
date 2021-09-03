@@ -52,7 +52,7 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (commentsList) {
-      setLastCommentHashKey(String(commentsList[_.size(commentsList) - 1]?.attributes?.hash_key))
+      setLastCommentHashKey(String(commentsList[_.findLastIndex(commentsList)]?.attributes?.hash_key))
     }
   }, [commentsList])
 
