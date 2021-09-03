@@ -120,12 +120,14 @@ const ArenaBattlesEdit: React.FC = () => {
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && (
-        <div style={{ height: `calc(${height}px - 60px)`, overflowY: 'auto', paddingBottom: 60 }} className="list-container">
+        <div style={{ height: `calc(${height}px - 60px)`, overflowY: 'auto', paddingBottom: 60 }} className={classes.scroll}>
           <HeaderWithButton title={tournament.attributes.title} />
           <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
             <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
           </Box>
-          <Container maxWidth="lg">{data && participants && renderItems()}</Container>
+          <Container maxWidth="lg" className={classes.listContainer}>
+            {data && participants && renderItems()}
+          </Container>
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
               <ButtonPrimaryOutlined
@@ -171,6 +173,26 @@ const ArenaBattlesEdit: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  scroll: {
+    scrollbarColor: '#000 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.3)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#000',
+      borderRadius: 6,
+    },
+  },
+  listContainer: {
+    paddingBottom: 80,
+  },
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -227,6 +249,9 @@ const useStyles = makeStyles((theme) => ({
       position: 'absolute',
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
+    },
+    listContainer: {
+      paddingBottom: 120,
     },
   },
 }))
