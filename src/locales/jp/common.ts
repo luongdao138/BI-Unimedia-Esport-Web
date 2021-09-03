@@ -445,10 +445,8 @@ export default {
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
       randomize_desc: '現在エントリーしている{{isTeam, participation_type}}を{{isBattle}}の空欄になっている枠へランダムに配置します',
-      //  randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
       randomize_sub1:
         '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
-      // randomize_sub1: '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
       randomize_sub2:
         '※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
       randomize_sub3: '※既に手動で登録されているユーザーはこのランダム配置を行っても移動しません。',
