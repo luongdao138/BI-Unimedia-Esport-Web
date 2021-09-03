@@ -43,12 +43,15 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
-  const { editables, isEdit, submit, update, getCommunityFeatures, community } = useCommunityCreate()
+  const { editables, isEdit, submit, update, getCommunityFeatures, community, getCreateCommunityMeta } = useCommunityCreate()
   const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const [detailFeatures, setDetailFeatures] = useState([])
 
   const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
   const [isDiscard, setIsDiscard] = useState(false)
+
+  const [isAlreadyUsedTitle, setIsAlreadyUsedTitle] = useState(false)
+
   const { t } = useTranslation(['common'])
   const router = useRouter()
 
@@ -79,6 +82,12 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       formik.validateForm()
     }
   }, [community])
+
+  useEffect(() => {
+    if (getCreateCommunityMeta.error['message'] === i18n.t('common:community_create.submit_title_error_msg')) {
+      setIsAlreadyUsedTitle(true)
+    }
+  }, [getCreateCommunityMeta])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -128,8 +137,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }
 
   const handleBack = () => {
-    if (isConfirm) setIsConfirm(false)
-    else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
+    if (isConfirm) {
+      setIsConfirm(false)
+      setIsAlreadyUsedTitle(false)
+    } else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
   }
 
   const handleSetConfirm = () => {
@@ -165,7 +176,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     })
   }
 
-  const handleUnsetConfirm = () => setIsConfirm(false)
+  const handleUnsetConfirm = () => {
+    setIsConfirm(false)
+    setIsAlreadyUsedTitle(false)
+  }
 
   return (
     <ESStickyFooter
@@ -175,13 +189,20 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       content={
         <>
           {isConfirm ? (
-            <Box className={classes.reviewButtonContainer}>
-              <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
-                {i18n.t('common:common.cancel')}
-              </ButtonPrimary>
-              <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:community_create.confirm.submit')}
-              </ButtonPrimary>
+            <Box flexDirection="column" display="flex" justifyContent="center" alignItems="center">
+              {isAlreadyUsedTitle && (
+                <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+                  <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
+                </Box>
+              )}
+              <Box className={classes.reviewButtonContainer}>
+                <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
+                  {i18n.t('common:common.cancel')}
+                </ButtonPrimary>
+                <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
+                  {i18n.t('common:community_create.confirm.submit')}
+                </ButtonPrimary>
+              </Box>
             </Box>
           ) : isEdit ? (
             renderEditButton()

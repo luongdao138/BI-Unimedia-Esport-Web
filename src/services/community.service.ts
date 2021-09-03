@@ -228,6 +228,31 @@ export type TopicDetail = {
   type: string
   attributes: {
     hash_key: string
+    title: string
+    content: string
+    community_id: number
+    created_at: string
+    user_id: number
+    attachments: Array<TopicAttachments> | null
+    owner_name: string
+    owner_email: string
+    owner_profile: string
+    owner_user_code: string
+    like_count: number
+    game_title: Array<TopicGameTitle>
+    is_liked: boolean
+    member_role: string
+    community_name: string
+    can_remove: boolean
+    last_comment?: LastComment
+  }
+}
+
+export type TopicDetailList = {
+  id: string
+  type: string
+  attributes: {
+    hash_key: string
     topic_title: string
     content: string
     community_hash: string
@@ -333,7 +358,7 @@ export type TopicListParams = {
 }
 
 export type TopicListResponse = {
-  data: Array<TopicDetail>
+  data: Array<TopicDetailList>
   meta: PageMeta
 }
 

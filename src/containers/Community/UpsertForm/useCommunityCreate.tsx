@@ -13,6 +13,7 @@ import { clearMetaData } from '@store/metadata/actions'
 
 const { actions, selectors } = community
 const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
+const createCommunityMeta = createMetaSelector(actions.createCommunity)
 // TODO change when data is ready
 export type EditableTypes = {
   name: boolean
@@ -34,6 +35,7 @@ const useCommunityCreate = (): {
   submit(params: CommunityFormParams): void
   update(params: UpdateParams): void
   getCommunityFeaturesMeta: Meta
+  getCreateCommunityMeta: Meta
   getCommunityFeatures: () => void
 } => {
   const { t } = useTranslation(['common'])
@@ -43,7 +45,9 @@ const useCommunityCreate = (): {
   const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const getCommunityFeatures = () => dispatch(actions.getCommunityFeatures())
   const getCommunityFeaturesMeta = useAppSelector(_getCommunityFeaturesMeta)
+  const getCreateCommunityMeta = useAppSelector(createCommunityMeta)
   const [isEdit, setIsEdit] = useState(false)
+
   const [editables, setEditables] = useState<EditableTypes>({
     name: true,
     description: true,
@@ -105,7 +109,17 @@ const useCommunityCreate = (): {
     }
   }, [community, router])
 
-  return { isEdit, update, community, communityFeatures, editables, submit, getCommunityFeaturesMeta, getCommunityFeatures }
+  return {
+    isEdit,
+    update,
+    community,
+    communityFeatures,
+    editables,
+    submit,
+    getCommunityFeaturesMeta,
+    getCommunityFeatures,
+    getCreateCommunityMeta,
+  }
 }
 
 export default useCommunityCreate

@@ -818,7 +818,8 @@ export default {
     },
   },
   lobbySearchFilters: {
-    recommended: 'おすすめの募集',
+    all: 'すべて',
+    suggested: 'おすすめの募集',
     beforeStart: 'エントリー受付中',
     inProgress: 'エントリー中の募集',
     organized: 'あなたが作成した募集',
@@ -1216,6 +1217,8 @@ export default {
       disbanded_toast: 'コミュニティを解散しました',
     },
     community_created_toast: 'コミュニティを作成しました。',
+    title_already_in_use: '「コミュニティ名が既に使用中です。」',
+    submit_title_error_msg: 'Validation failed: Name has already been taken',
   },
   topic_create: {
     title: 'トピックを作成する',

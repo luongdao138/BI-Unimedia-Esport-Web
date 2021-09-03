@@ -52,7 +52,7 @@ const TopicDetailContainer: React.FC = () => {
 
   useEffect(() => {
     if (commentsList) {
-      setLastCommentHashKey(String(commentsList[_.findLastIndex(commentsList)].attributes?.hash_key))
+      setLastCommentHashKey(String(commentsList[_.size(commentsList) - 1]?.attributes?.hash_key))
     }
   }, [commentsList])
 
@@ -96,7 +96,7 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <CommunityDetailHeader title={data.topic_title} isTopic onHandleBack={handleBack} />
+              <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
               <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
             </>
           )}
@@ -144,7 +144,7 @@ const TopicDetailContainer: React.FC = () => {
           )}
         </Box>
         <Box className={classes.inputContainer}>
-          <CommentInput reply_param={reply} handleReply={setReply} />
+          <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
         </Box>
       </Box>
     </>

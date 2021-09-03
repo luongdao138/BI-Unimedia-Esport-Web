@@ -13,11 +13,12 @@ import {
   CommunityMember,
   CommentsResponse,
   TopicSearchItem,
+  TopicDetailList,
 } from '@services/community.service'
 
 type StateType = {
   communitiesList?: Array<CommunityResponse>
-  topicList?: Array<TopicDetail>
+  topicList?: Array<TopicDetailList>
   communitiesListMeta?: PageMeta
   communitiesListByUser?: Array<CommunityResponse>
   communitiesListByUserMeta?: PageMeta
@@ -124,7 +125,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
     let tmpCommentsList = action.payload.data
-    if (action.payload.meta != undefined && action.payload.meta.current_page > 0 && state.commentsList != null) {
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1 && state.commentsList != null) {
       tmpCommentsList = _.concat(tmpCommentsList, state.commentsList)
     }
     state.commentsList = tmpCommentsList
