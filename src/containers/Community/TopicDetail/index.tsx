@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CommunityDetailHeader from '@containers/Community/TopicDetail/Partials/CommunityDetailHeader'
+import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
 import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Link, Box, Grid } from '@material-ui/core'
@@ -69,7 +69,7 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
+              <TopicDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
               <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
             </>
           )}

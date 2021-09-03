@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -15,6 +15,8 @@ import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { TopicDetail } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import router from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -77,11 +79,13 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
         <Box m={2}>
           <Box className={classes.userContainer}>
             <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ESAvatar
-                className={classes.avatar}
-                alt={isConfirm ? nickname : topicData.owner_name}
-                src={isConfirm ? user_avatar : topicData.owner_profile}
-              />
+              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData.owner_user_code}`)}>
+                <ESAvatar
+                  className={classes.avatar}
+                  alt={isConfirm ? nickname : topicData.owner_name}
+                  src={isConfirm ? user_avatar : topicData.owner_profile}
+                />
+              </ButtonBase>
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
                 <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData.owner_user_code}</Typography>
