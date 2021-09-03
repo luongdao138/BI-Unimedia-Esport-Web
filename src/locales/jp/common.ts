@@ -442,9 +442,28 @@ export default {
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
     failed_to_update_match: '対戦表の更新に失敗しました',
+    battles: {
+      dialog: {
+        randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
+        randomize_desc: '現在エントリーしている{{isTeam, participation_type}}を対戦表の空欄になっている枠へランダムに配置します',
+        randomize_sub1:
+          '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
+        randomize_sub2:
+          '※落選する{{isTeam, participation_type}}を出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+        randomize_warn: 'この時点ではまだエントリー表は確定しません',
+        deploy_button: '配置する',
+        confirm_button: '確定する',
+        freeze_title: 'トーナメント表を確定する',
+        freeze_desc: '現在の対戦表に登録されているユーザーで対戦表を確定させます。よろしいですか？',
+        freeze_sub1: '※落選するユーザーを出したくない場合は、大会管理から参加枠数を変更した後に配置を行ってください。',
+        freeze_sub2:
+          '※エントリーしているユーザーであっても、対戦表に反映されていないまま確定を行った場合は残りの枠数を問わず落選となります。',
+        freeze_warn: '確定以降の参加枠の変更はできません。',
+      },
+    },
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
-      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}を{{isBattle}}の空欄になっている枠へランダムに配置します',
+      randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
       randomize_sub1:
         '※エントリーしている{{isTeam, participation_type}}数が参加枠数よりも多い場合は、選択されなかった{{isTeam, participation_type}}は落選となります。',
       randomize_sub2:
