@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { MatchItemType } from '@services/arena.service'
 import { RootState } from '@store/store'
+import moment from 'moment'
 
 const getRoot = (state: RootState) => state.arena
 const getUserId = (state: RootState) => state.auth?.user?.id
@@ -52,3 +53,18 @@ export const getTournamentResultsMeta = createSelector(getRoot, (state) => state
 export const getRecruitingTournamentsMeta = createSelector(getRoot, (state) => state.recruitingTournamentsMeta)
 export const getParticipant = createSelector(getRoot, (state) => state.selectedParticipant)
 export const getTeamDetail = createSelector(getRoot, (state) => state.selectedTeamDetail)
+export const getSearchFilteredTournaments = createSelector(getRoot, (state) => {
+  return state.searchTournaments.map((item) => {
+    return {
+      ...item,
+      participantsLimited: item.attributes.practicipants ? item.attributes.practicipants.slice(0, 3) : [],
+      total: _.defaultTo(
+        item.attributes.is_freezed
+          ? item.attributes.participant_count
+          : Number(item.attributes.participant_count) + Number(item.attributes.interested_count),
+        0
+      ),
+      startDate: moment(item.attributes.start_date).format('YYYY/MM/DD'),
+    }
+  })
+})
