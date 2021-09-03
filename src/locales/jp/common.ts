@@ -272,7 +272,7 @@ export default {
     confirm_follow_list: 'フォローリストを確定する',
     no_data: '該当のコミュニティはありません。',
     topic: {
-      create_success: 'トピックを削除しました。',
+      delete_success: 'トピックを削除しました。',
       view_past_comments: '↑過去のコメントを表示する',
     },
     unfollow_dialog: {
@@ -597,6 +597,7 @@ export default {
       description: `削除したコメントを復元させることはできません。
       削除してよろしいですか？`,
       submit: '削除する',
+      success_toast: 'コメントを削除しました。',
     },
   },
   tournament_cancel: {

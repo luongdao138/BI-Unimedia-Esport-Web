@@ -50,14 +50,20 @@ const useTopicDetail = (): {
   const getComments = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
-  const deleteComment = (params) => dispatch(actions.deleteTopicComment(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
+
+  const deleteComment = async (params) => {
+    const resultAction = await dispatch(actions.deleteTopicComment(params))
+    if (actions.deleteTopicComment.fulfilled.match(resultAction)) {
+      dispatch(commonActions.addToast(t('common:topic_comment.delete.success_toast')))
+    }
+  }
 
   const deleteTopic = async (params: TopicDeleteParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))
     if (actions.deleteTopic.fulfilled.match(resultAction)) {
-      dispatch(commonActions.addToast(t('common:community.topic.create_success')))
-      await router.push(`${ESRoutes.COMMUNITY}/${router.query.community_id}`)
+      dispatch(commonActions.addToast(t('common:community.topic.delete_success')))
+      await router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}`)
       resetTopicMeta()
     }
   }

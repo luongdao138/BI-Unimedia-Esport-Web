@@ -9,6 +9,8 @@ import { CommunityDetail } from '@services/community.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
+import Linkify from 'react-linkify'
+import { Colors } from '@theme/colors'
 
 const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data }) => {
   const router = useRouter()
@@ -34,7 +36,15 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
       )}
       <Box marginTop={2}>
-        <Typography>{data.description}</Typography>
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+              {decoratedText}
+            </a>
+          )}
+        >
+          <Typography>{data.description}</Typography>
+        </Linkify>
       </Box>
 
       <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={3}>
@@ -98,7 +108,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
           <Typography>{t('common:community.deputy_caretaker')}</Typography>
         </Box>
         <Box className={classes.value} flexDirection="column">
-          {data.co_organizers ? (
+          {!_.isEmpty(data.co_organizers) ? (
             data.co_organizers.map((organizer, i) => (
               <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0}>
                 <LoginRequired>
@@ -122,6 +132,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1),
+  },
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
   },
   label: {
     display: 'flex',

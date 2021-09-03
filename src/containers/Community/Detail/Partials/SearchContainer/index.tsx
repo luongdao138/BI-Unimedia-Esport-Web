@@ -44,7 +44,7 @@ const InfoContainer: React.FC = () => {
   }
 
   const handleSearch = () => {
-    getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle, page: 1 })
+    getTopicList({ community_hash: hash_key, keyword: value.trim(), only_title: isOnlyTitle.toString(), page: 1 })
     setShowResult(true)
   }
 
@@ -76,7 +76,7 @@ const InfoContainer: React.FC = () => {
   }, [pages])
 
   useEffect(() => {
-    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle, page: pageNumber })
+    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: pageNumber })
   }, [pageNumber])
 
   const handleChange = (event, val) => {

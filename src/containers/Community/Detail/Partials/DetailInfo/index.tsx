@@ -124,7 +124,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }, [])
 
   useEffect(() => {
-    if (followCommunityMeta.loaded) {
+    if (followCommunityMeta.loaded && isCommunityAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
     }
   }, [followCommunityMeta])
