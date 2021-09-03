@@ -53,17 +53,10 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
           <Typography>{t('common:community.area')}</Typography>
         </Box>
         <Box className={classes.value}>
-          {data.address ? (
-            <Box display="flex" flexDirection="column">
-              <Typography>{data.area_name}</Typography>
-              <Typography>{data.address}</Typography>
-            </Box>
-          ) : (
-            <Box display="flex" flexDirection="column">
-              <Typography>{data.area_name}</Typography>
-              <Typography>{t('common:common.dash')}</Typography>
-            </Box>
-          )}
+          <Box display="flex" flexDirection="column">
+            <Typography>{data.area_name}</Typography>
+            {data.address ? <Typography>{data.address}</Typography> : <Typography>{t('common:common.dash')}</Typography>}
+          </Box>
         </Box>
       </Box>
 
