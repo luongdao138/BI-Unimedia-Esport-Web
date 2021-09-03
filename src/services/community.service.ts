@@ -61,7 +61,22 @@ export type CommunityDetail = {
 }
 
 export type CommunityResponse = {
-  attributes: any
+  id: string
+  type: string
+  attributes: {
+    name: string
+    description: string
+    cover_image_url: string | null
+    open_range: number
+    is_official: number
+    members_avatar: {
+      id: number | null
+      nickname: string
+      profile_image: string | null
+    }[]
+    features: any[]
+    hash_key: string
+  }
 }
 
 export type CommunityFormParams = {
