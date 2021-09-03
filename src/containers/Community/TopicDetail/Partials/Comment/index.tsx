@@ -42,7 +42,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
     setReplyAnchorEl(null)
   }
 
-  const { deleteComment, getComments } = useTopicDetail()
+  const { deleteComment, getCommentsList } = useTopicDetail()
   const commentData = comment.attributes
   const hash_key = commentData.hash_key
   const detail = {
@@ -66,7 +66,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
   const handleDeleteSubmit = async () => {
     await deleteComment(hash_key)
     setOpenDelete(false)
-    getComments({ hash_key: String(topic_hash_key), page: 1 })
+    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
   }
 
   const handleCommentReply = () => {

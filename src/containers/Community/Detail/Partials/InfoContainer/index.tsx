@@ -18,6 +18,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
   const { t } = useTranslation(['common'])
 
   const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+
   return (
     <>
       {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
@@ -52,7 +53,17 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
           <Typography>{t('common:community.area')}</Typography>
         </Box>
         <Box className={classes.value}>
-          <Typography>{data.area_name}</Typography>
+          {data.address ? (
+            <Box display="flex" flexDirection="column">
+              <Typography>{data.area_name}</Typography>
+              <Typography>{data.address}</Typography>
+            </Box>
+          ) : (
+            <Box display="flex" flexDirection="column">
+              <Typography>{data.area_name}</Typography>
+              <Typography>{t('common:common.dash')}</Typography>
+            </Box>
+          )}
         </Box>
       </Box>
 
@@ -83,18 +94,19 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
       </Box>
 
       {/* caretaker */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-        <Box className={classes.label}>
+      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
+        <Box className={classes.userLabel}>
           <Typography>{t('common:community.caretaker')}</Typography>
         </Box>
-        <Box className={classes.value} flexDirection="column">
+        <Box className={classes.userValue}>
           {data.admin && (
             <Box display="flex" flexDirection="row" alignItems="center">
               <LoginRequired>
                 <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
                   <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
                 </ButtonBase>
-                <Typography className={classes.breakWord}>{data.admin.nickname}</Typography>
+
+                <Typography className={classes.ellipsis}>{data.admin.nickname}</Typography>
               </LoginRequired>
             </Box>
           )}
@@ -103,11 +115,11 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
 
       {/* //TODO when co organizer added to backend */}
       {/* deputy caretaker */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
-        <Box className={classes.label}>
+      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
+        <Box className={classes.userLabel}>
           <Typography>{t('common:community.deputy_caretaker')}</Typography>
         </Box>
-        <Box className={classes.value} flexDirection="column">
+        <Box className={classes.userValue}>
           {!_.isEmpty(data.co_organizers) ? (
             data.co_organizers.map((organizer, i) => (
               <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0}>
@@ -115,12 +127,13 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
                   <ButtonBase onClick={() => toProfile(organizer.user_code)}>
                     <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} />
                   </ButtonBase>
-                  <Typography className={classes.breakWord}>{organizer.nickname}</Typography>
+
+                  <Typography className={classes.ellipsis}>{organizer.nickname}</Typography>
                 </LoginRequired>
               </Box>
             ))
           ) : (
-            <Typography>-</Typography>
+            <Typography>{t('common:common.dash')}</Typography>
           )}
         </Box>
       </Box>
@@ -147,16 +160,44 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-word',
     whiteSpace: 'pre-wrap',
   },
+  userLabel: {
+    display: 'flex',
+    width: '20%',
+  },
+  userValue: {
+    display: 'flex',
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    flexDirection: 'column',
+    width: '80%',
+  },
   breakWord: {
     wordBreak: 'break-word',
     marginLeft: theme.spacing(1),
   },
+  ellipsis: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    marginLeft: theme.spacing(1),
+  },
+
   [theme.breakpoints.down('xs')]: {
     label: {
       flex: 3.5,
     },
     value: {
       flex: 6.5,
+    },
+    userLabel: {
+      display: 'flex',
+      width: '35%',
+    },
+    userValue: {
+      display: 'flex',
+      wordBreak: 'break-word',
+      whiteSpace: 'pre-wrap',
+      width: '65%',
     },
   },
 }))

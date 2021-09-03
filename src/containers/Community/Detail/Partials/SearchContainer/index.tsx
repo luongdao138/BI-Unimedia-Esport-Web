@@ -29,7 +29,6 @@ const InfoContainer: React.FC = () => {
   const hash_key = String(router.query.hash_key)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(1)
-  const [pageNumber, setPageNumber] = useState(1)
 
   useEffect(() => {
     if (!_.isEmpty(value)) {
@@ -76,11 +75,10 @@ const InfoContainer: React.FC = () => {
   }, [pages])
 
   useEffect(() => {
-    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: pageNumber })
-  }, [pageNumber])
+    getTopicList({ community_hash: hash_key, keyword: value, only_title: isOnlyTitle.toString(), page: page })
+  }, [page])
 
   const handleChange = (event, val) => {
-    setPageNumber(val)
     setPage(val)
     return event
   }

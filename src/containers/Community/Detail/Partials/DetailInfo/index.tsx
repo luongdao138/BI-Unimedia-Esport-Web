@@ -274,7 +274,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       case TABS.INFO:
         return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
-        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer />
       case TABS.SEARCH:
         return showTopicListAndSearchTab && <SearchContainer />
       default:

@@ -27,7 +27,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment, getComments } = useTopicDetail()
+  const { createComment, getCommentsList } = useTopicDetail()
   const { uploadArenaCoverImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
   const [imageURL, setImageURL] = useState('')
@@ -55,7 +55,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
         attachments: imageURL,
       }
       await createComment(data)
-      getComments({ hash_key: String(topic_hash_key), page: 1 })
+      getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
       setInputText('')
       setImageURL('')
       handleReply({})
