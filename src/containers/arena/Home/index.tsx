@@ -140,7 +140,7 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
                         deferredMeasurementCache={cache}
                         rowRenderer={rowRenderer}
                         rowCount={rowCount}
-                        overscanRowCount={12}
+                        overscanRowCount={6}
                       />
                     )
                   }}
