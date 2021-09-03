@@ -1,28 +1,66 @@
-import { Grid, Box, makeStyles } from '@material-ui/core'
+import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
 import useArenaHome from './useArenaHome'
-import ESLoader from '@components/Loader'
-import HomeCard from '@components/TournamentCard/HomeCard'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import TournamentCard from '@components/TournamentCard/HomeCard'
 import { TournamentFilterOption } from '@services/arena.service'
-import { Colors } from '@theme/colors'
 import useArenaHelper from '../hooks/useArenaHelper'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
-import useReturnHref from '@utils/hooks/useReturnHref'
 import _ from 'lodash'
+import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import ESLoader from '@components/Loader'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import HeaderArea from './HeaderArea'
+
+const cache = new CellMeasurerCache({
+  fixedWidth: true,
+  defaultHeight: 270,
+})
 
 interface ArenaHomeProps {
   filter: TournamentFilterOption
 }
 
 const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
-  const classes = useStyles()
   const { arenasFiltered, meta, loadMore, onFilterChange } = useArenaHome()
+  const [itemsPerRow, setPerRow] = useState<number>(4)
+  const rowCount = Math.ceil(arenasFiltered.length / itemsPerRow)
+  const classes = useStyles()
   const router = useRouter()
   const { toCreate } = useArenaHelper()
+  const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
+  const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
+  const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
+  useEffect(() => {
+    if (listRef && listRef.current) listRef.current.recomputeRowHeights()
+    if (matchesXL === true) {
+      setPerRow(4)
+    } else if (matchesLG === true) {
+      setPerRow(3)
+    } else if (matchesSM === true) {
+      setPerRow(1)
+    }
+  }, [matchesXL, matchesLG, matchesSM])
+
   const { hasUCRReturnHref } = useReturnHref()
+
+  const listRef = useRef<any>(null)
+
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      cache.clearAll()
+      if (listRef && listRef.current)
+        setTimeout(() => {
+          listRef.current.forceUpdateGrid()
+        })
+    }
+    window.addEventListener('resize', updateSize)
+    updateSize()
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
 
   useEffect(() => {
     if (!hasUCRReturnHref) {
@@ -49,50 +87,84 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
     return null
   }
 
+  const rowRenderer = ({ index, key, style, parent }) => {
+    const items = []
+    const fromIndex = index * itemsPerRow
+    const toIndex = Math.min(fromIndex + itemsPerRow, arenasFiltered.length)
+
+    for (let i = fromIndex; i < toIndex; i++) {
+      const data = arenasFiltered[i]
+
+      items.push(
+        <Grid key={i} item sm={12} lg={4} xl={3} xs={12}>
+          <TournamentCard tournament={data} />
+        </Grid>
+      )
+    }
+
+    return (
+      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
+        {({ registerChild }) => (
+          <Grid key={key} style={style} ref={registerChild} container>
+            {items}
+          </Grid>
+        )}
+      </CellMeasurer>
+    )
+  }
+
   return (
     <>
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <Grid container className={classes.content}>
-        <InfiniteScroll
-          className={classes.scrollContainer}
-          dataLength={arenasFiltered.length}
-          next={!meta.pending && loadMore}
-          hasMore={!hasUCRReturnHref}
-          loader={null}
-          scrollThreshold={'1px'}
-        >
-          {arenasFiltered.map((tournament, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
-              <HomeCard tournament={tournament} />
-            </Grid>
-          ))}
-        </InfiniteScroll>
-        {meta.pending && (
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
-          </Grid>
-        )}
-      </Grid>
+      <div>
+        <div className={classes.container}>
+          <InfiniteScroll
+            dataLength={arenasFiltered.length}
+            next={!meta.pending && loadMore}
+            hasMore={!hasUCRReturnHref}
+            loader={null}
+            scrollThreshold={'1px'}
+          >
+            <WindowScroller>
+              {({ height, scrollTop }) => (
+                <AutoSizer disableHeight>
+                  {({ width }) => {
+                    return (
+                      <List
+                        ref={listRef}
+                        autoHeight
+                        height={height}
+                        width={width}
+                        scrollTop={scrollTop}
+                        rowHeight={cache.rowHeight}
+                        deferredMeasurementCache={cache}
+                        rowRenderer={rowRenderer}
+                        rowCount={rowCount}
+                        overscanRowCount={6}
+                      />
+                    )
+                  }}
+                </AutoSizer>
+              )}
+            </WindowScroller>
+          </InfiniteScroll>
+        </div>
+      </div>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    backgroundColor: Colors.black,
-    '& .MuiButtonBase-root.button-primary': {
-      padding: '12px 16px',
-    },
+  container: {
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   content: {
     paddingLeft: theme.spacing(2),

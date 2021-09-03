@@ -129,7 +129,6 @@ const TournamentHomeCard: React.FC<Props> = ({ tournament }) => {
       </Box>
     )
   }
-
   const getParticipants = () => {
     const participants = attr.participants
     return (

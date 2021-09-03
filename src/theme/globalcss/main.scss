@@ -339,9 +339,10 @@ body {
 
 .plain-main .content-wrapper {
   max-width: 100%;
-  background: url('/images/pattern.png') center 60px repeat-x #212121 fixed;
+  background: url('/images/pattern.png') center 60px repeat-x #060606;
   width: 100%;
   padding-top: 60px;
+  will-change: transform;
   position: relative;
 }
 .parallax {
@@ -352,6 +353,7 @@ body {
   background: url('/images/lp_image.jpg') center 60px no-repeat #212121;
   background-size: cover;
   position: fixed;
+  will-change: transform;
   top: 0;
   left: 0;
 }
