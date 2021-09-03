@@ -1,6 +1,7 @@
 import { CardMedia, CardMediaProps, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children, ...rest }) => {
   const classes = useStyles()
@@ -10,22 +11,33 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
 
   return (
     <>
-      {cornerIcon && (
-        <div className={classes.cornerWrap}>
-          <div className={classes.iconWrap}>{cornerIcon}</div>
-          <div className={classes.triangle}></div>
-        </div>
-      )}
       <Box className={classes.mediaWrap}>
-        <CardMedia className={classes.media} image={rest?.image ? rest.image : IMG_PLACEHOLDER}>
-          {children}
+        <CardMedia className={classes.media}>
+          <>
+            <LazyLoadImage className={classes.coverImage} alt={'cover-image'} src={rest?.image ? rest.image : IMG_PLACEHOLDER} />
+            {children}
+          </>
         </CardMedia>
+      </Box>
+      <Box className={classes.cornerWrap}>
+        <Box className={classes.iconWrap}>{cornerIcon}</Box>
+        <Box className={classes.triangle}></Box>
       </Box>
     </>
   )
 }
 
 const useStyles = makeStyles(() => ({
+  coverImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    right: 0,
+    height: '100%',
+    objectFit: 'cover',
+    bottom: 0,
+  },
   mediaWrap: {
     position: 'relative',
     paddingTop: '50%',
@@ -45,6 +57,9 @@ const useStyles = makeStyles(() => ({
     top: 0,
     left: 0,
     zIndex: 3,
+    willChange: 'transform',
+    transform: 'translateZ(0)',
+    WebkitTransform: 'translateZ(0)',
   },
   triangle: {
     width: 0,
