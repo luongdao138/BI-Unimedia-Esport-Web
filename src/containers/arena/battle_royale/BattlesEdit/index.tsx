@@ -120,7 +120,7 @@ const ArenaBattlesEdit: React.FC = () => {
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && (
-        <div style={{ height: `calc(${height} - 60px)` }}>
+        <div style={{ height: `calc(${height}px - 60px)`, overflowY: 'auto', paddingBottom: 60 }} className="list-container">
           <HeaderWithButton title={tournament.attributes.title} />
           <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
             <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
