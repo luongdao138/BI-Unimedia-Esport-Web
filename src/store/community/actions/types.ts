@@ -20,6 +20,7 @@ export enum COMMUNITY_ACTION_TYPE {
   CANCEL_COMMUNITY_MEMBERS = 'community/members/cancel',
   CHANGE_COMMUNITY_MEMBER_ROLE = 'community/member/changeRole',
   REMOVE_COMMUNITY_MEMBER = 'community/member/remove',
+  CLOSE_COMMUNITY = 'community/close',
   RESET_COMMUNITY_MEMBERS = 'community/resetMembers',
   GET_TOPIC_LIST = 'topic/list',
   FOLLOW_COMMUNITY = 'community/join',

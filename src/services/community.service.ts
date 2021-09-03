@@ -491,6 +491,11 @@ export const removeCommunityMember = async (params: CommunityMemberRemoveParams)
   return data
 }
 
+export const closeCommunity = async (hash_key: string): Promise<void> => {
+  const { data } = await api.post<void>(URI.COMMUNITY_CLOSE.replace(/:id/gi, hash_key))
+  return data
+}
+
 export const createTopic = async (params: TopicParams): Promise<CreateTopicResponse> => {
   const { data } = await api.post<CreateTopicResponse>(URI.TOPIC_CREATE, params)
   return data
