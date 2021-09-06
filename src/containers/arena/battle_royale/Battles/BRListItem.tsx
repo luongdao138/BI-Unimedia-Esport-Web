@@ -12,6 +12,8 @@ interface BRListItemProps {
   score?: string | null
   editable?: boolean
   onChange?: (score: string) => void
+  onClick?: () => void
+  clickable: boolean
 }
 
 const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
@@ -22,8 +24,8 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
     props.onChange(e.target.value.replace(/[^0-9.]/g, ''))
   }
   return (
-    <div className={classes.match}>
-      <div className={classes.matchContent}>
+    <div className={classes.match} onClick={props.onClick}>
+      <div className={`${classes.matchContent} ${props.clickable ? classes.pointer : ''}`}>
         <div className={classes.matchHeader}>{props.index}</div>
         <div className={classes.participantWrapper}>
           <div className={classes.participant}>
@@ -49,6 +51,10 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
       </div>
     </div>
   )
+}
+
+BRListItem.defaultProps = {
+  clickable: false,
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -134,6 +140,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     fontWeight: 'bold',
     textAlign: 'start',
+  },
+  pointer: {
+    cursor: 'pointer',
   },
 }))
 

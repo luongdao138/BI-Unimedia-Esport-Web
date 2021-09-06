@@ -306,7 +306,10 @@ export type GetParticipantsResponse = {
 
 export type ParticipantsResponse = {
   id: number
-  attributes: any
+  attributes: {
+    avatar_url: string | null
+    name: string
+  }
 }
 
 export interface TeamMemberBase {
