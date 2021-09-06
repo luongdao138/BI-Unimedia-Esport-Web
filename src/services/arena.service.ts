@@ -309,6 +309,15 @@ export type ParticipantsResponse = {
   attributes: {
     avatar_url: string | null
     name: string
+    team?: {
+      data: {
+        attributes: {
+          members: {
+            user_id: number
+          }[]
+        }
+      }
+    }
   }
 }
 

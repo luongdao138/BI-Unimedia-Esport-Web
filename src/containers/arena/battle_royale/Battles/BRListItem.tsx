@@ -13,7 +13,7 @@ interface BRListItemProps {
   editable?: boolean
   onChange?: (score: string) => void
   onClick?: () => void
-  clickable: boolean
+  clickable?: boolean
 }
 
 const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
