@@ -166,7 +166,7 @@ const ArenaMatches: React.FC = () => {
             </Box>
           </Box>
         }
-        classes={{ nextBtnHolder: classes.buttonHolder, root: classes.StickyFooter }}
+        classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <Box className={classes.backContainer}>
           <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
