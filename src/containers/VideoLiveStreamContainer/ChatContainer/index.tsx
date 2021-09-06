@@ -1,21 +1,20 @@
-import { Box, Typography, Icon, Button, OutlinedInput, IconButton, Input, useTheme, useMediaQuery } from '@material-ui/core'
+import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState } from 'react'
 // import sanitizeHtml from 'sanitize-html'
-import i18n from '@locales/i18n'
-import { useTranslation } from 'react-i18next'
 import useStyles from './styles'
-import useCheckNgWord from '@utils/hooks/useCheckNgWord'
-import _ from 'lodash'
-import { showDialog } from '@store/common/actions'
-import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
-import { useAppDispatch } from '@store/hooks'
+import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
+import PremiumChatBox from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
+import * as Yup from 'yup'
+import i18n from '@locales/i18n'
+import { useFormik } from 'formik'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
-  onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean
+  myPoint: number
+  handleKeyboardVisibleState?: (visible?: boolean) => void
 }
 
 export const purchasePoints = {
@@ -24,85 +23,90 @@ export const purchasePoints = {
     value: 100,
     backgroundColor: '#2680EB',
     borderColor: '#2680EB',
-    width: 65.5,
+    flex: 65.5,
+    maxLengthInput: 50,
   },
   p_300: {
     id: 'p_300',
     value: 300,
     backgroundColor: '#01B7FB',
     borderColor: '#01B7FB',
-    width: 65.5,
+    flex: 86,
+    maxLengthInput: 50,
   },
   p_500: {
     id: 'p_500',
     value: 500,
     backgroundColor: '#0FB732',
     borderColor: '#0FB732',
-    width: 65.5,
+    flex: 94,
+    maxLengthInput: 150,
   },
   p_1000: {
     id: 'p_1000',
     value: 1000,
     backgroundColor: '#EBD600',
     borderColor: '#EBD600',
-    width: 65.5,
+    flex: 94,
+    maxLengthInput: 200,
   },
   p_3000: {
     id: 'p_3000',
     value: 3000,
     backgroundColor: '#FF6A1C',
     borderColor: '#FF6A1C',
-    width: 90,
+    flex: 98,
+    maxLengthInput: 225,
   },
-  // p_2500: {
-  //   id: 'p_2500',
-  //   value: 5000,
-  //   backgroundColor: '#9147F9',
-  //   borderColor: '#9147F9',
-  //   width: 90,
-  // },
   p_5000: {
     id: 'p_5000',
     value: 5000,
-    backgroundColor: '#C91315',
-    borderColor: '#C91315',
-    width: 90,
+    backgroundColor: '#9147F9',
+    borderColor: '#9147F9',
+    flex: 112,
+    maxLengthInput: 250,
   },
   p_10000: {
     id: 'p_10000',
     value: 10000,
     backgroundColor: '#C91315',
     borderColor: '#C91315',
-    width: 188.5,
+    flex: 151,
+    maxLengthInput: 270,
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket }) => {
+type MessageValidationType = {
+  message: string
+}
+
+const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasViewingTicket, myPoint, handleKeyboardVisibleState }) => {
   // const { t } = useTranslation('common')
-  const [chatInput, setChatInput] = useState<string>('')
-  const [purchaseComment, setPurchaseComment] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
-  const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>(null)
-  const [chatInputValidationError, setChatInputValidationError] = useState<string>('')
-  const [premiumChatValidationError, setPremiumChatValidationError] = useState<string>('')
   const [messActiveUser, setMessActiveUser] = useState<string | number>('')
 
-  const { t } = useTranslation('common')
-  const classes = useStyles({ chatValidationError: !!chatInputValidationError })
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const { checkNgWord } = useCheckNgWord()
-  const dispatch = useAppDispatch()
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChatInput(e.target.value)
-  }
+  const validationSchema = Yup.object().shape({
+    message: Yup.string()
+      .required(i18n.t('common:live_stream_screen.chat_input_text_validate_msg_empty'))
+      .max(50, i18n.t('common:live_stream_screen.chat_input_text_validate_msg_50_char_exceed'))
+      .trim(),
+  })
 
-  const onCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPurchaseComment(e.target.value)
-  }
-
-  const getPurchasePointList = () => Object.values(purchasePoints)
+  const { handleChange, values, handleSubmit, errors } = useFormik<MessageValidationType>({
+    initialValues: {
+      message: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      if (values.message) {
+        return
+      }
+    },
+  })
+  const classes = useStyles({ chatValidationError: !!errors.message })
 
   const getChatData = () =>
     Array(30)
@@ -113,79 +117,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
         content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
       }))
 
-  const handlePremiumChatClick = () => {
-    const content = purchaseComment
-    if (content.length === 0) {
-      setPremiumChatValidationError(t('live_stream_screen.chat_premium_text_validate_msg_empty'))
-      return
-    }
-    if (!purchaseValueSelected) {
-      setPremiumChatValidationError(t('live_stream_screen.chat_premium_text_validate_no_donate_selected'))
-      return
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const sanitizedContent = sanitizeHtml(content, {
-    //   allowedTags: [],
-    //   allowedAttributes: {},
-    // })
-
-    // Submit chat message
-    setPremiumChatValidationError('')
-    setPurchaseComment('')
-
-    const donatedPoint = purchasePoints[purchaseValueSelected].value
-    onPressDonate(donatedPoint, purchaseComment)
+  const handleChatInputOnFocus = () => {
+    handleKeyboardVisibleState(true)
   }
+
+  const handleChatInputOnBlur = () => {
+    handleKeyboardVisibleState(false)
+  }
+
+  const handlePremiumChatBoxClickOutside = () => {
+    setPurchaseDialogVisible(false)
+  }
+
   const purchaseInfoDialog = () => (
-    <Box className={classes.purchaseDialogContainer}>
-      <Box className={classes.purchaseDialogContent}>
-        <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
-        <Box className={classes.purchaseCommentInputContainer}>
-          <Input
-            id="comment"
-            multiline
-            rows={4}
-            placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
-            fullWidth
-            value={purchaseComment}
-            onChange={onCommentChange}
-            disableUnderline
-            classes={{ root: classes.purchaseCommentRoot, input: classes.purchaseCommentInput }}
-          />
-          <Typography className={classes.purchaseCommentTextLimit}>{`${purchaseComment.length} / 120`}</Typography>
-        </Box>
-        <Box className={classes.pointList}>
-          <Box className={classes.pointListRow1}>
-            {getPurchasePointList()
-              .slice(0, isMobile ? 7 : 8)
-              .map((item) => {
-                const itemSelected = item.id === purchaseValueSelected
-                return (
-                  <Box
-                    onClick={() => {
-                      setPurchaseValueSelected(item.id)
-                    }}
-                    key={item.id}
-                    className={`${classes[item.id]} ${classes.purchaseItem} ${itemSelected ? '' : classes.purchaseItemUnselected}`}
-                  >
-                    <Typography className={classes.purchaseItemText}>{item.value.toString()}</Typography>
-                  </Box>
-                )
-              })}
-          </Box>
-        </Box>
-        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton}>
-          <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
-        </Button>
-        {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
-        <Box className={classes.dialogFooter}>
-          <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
-          <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
-        </Box>
-      </Box>
-      <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />
-    </Box>
+    <PremiumChatBox onClickOutside={handlePremiumChatBoxClickOutside} onPressDonate={onPressDonate} myPoint={myPoint} />
   )
 
   const purchaseIconClick = () => {
@@ -193,28 +138,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   }
 
   const handleSubmitChatContent = () => {
-    const content = chatInput
-    if (content.length === 0) {
-      setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
-    }
-    if (content.length > 50) {
-      setChatInputValidationError('live_stream_screen.chat_input_text_validate_msg_50_char_exceed')
-    }
-    dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: 'aaaaaaaa' }))
-
-    if (!_.isEmpty(checkNgWord(content))) {
-      setChatInputValidationError('チャットが未入力です')
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const sanitizedContent = sanitizeHtml(content, {
-    //   allowedTags: [],
-    //   allowedAttributes: {},
-    // })
-
-    // Submit chat message
-    setChatInputValidationError('')
-    setChatInput('')
+    handleSubmit()
   }
 
   const chatInputComponent = () => (
@@ -222,24 +146,28 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
       <Box className={classes.chatInputContainer}>
         {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-        <IconButton onClick={purchaseIconClick} className={classes.iconPurchase}>
-          <img src="/images/ic_purchase.svg" />
-        </IconButton>
         <Box className={classes.chatBox}>
+          <IconButton id="btnOpenPremiumChatDialog" onClick={purchaseIconClick} className={classes.iconPurchase}>
+            <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+          </IconButton>
           <OutlinedInput
-            autoComplete="off"
-            onChange={onChange}
-            placeholder={'チャットを送信'}
-            id={'search'}
-            value={chatInput}
+            id={'message'}
+            multiline
+            rows={3}
+            autoComplete="nope"
+            onChange={handleChange}
+            placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
+            value={values.message}
             classes={{ root: classes.input, input: classes.chatTextInput }}
             margin="dense"
+            onFocus={handleChatInputOnFocus}
+            onBlur={handleChatInputOnBlur}
           />
           <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
             <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
           </Button>
         </Box>
-        {chatInputValidationError && <Typography className={classes.chatInputErrorText}>{chatInputValidationError}</Typography>}
+        {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>}
       </Box>
     </Box>
   )
@@ -274,12 +202,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
         {getChatData().map((message, index) => {
           if (index === 2) return chatDonateMessage()
           const { user, content, id } = message
-          return (
-            <Typography key={id} className={classes.chatMessage} id={`chat_${id}`}>
-              <span className={classes.chatMessageUser}>{`${user}: `}</span>
-              {content}
-            </Typography>
-          )
+          return <ChatTextMessage key={id} message={content} user={user} />
         })}
       </Box>
       {chatInputComponent()}
@@ -295,7 +218,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
 
   const userDoesNotHaveViewingTicketView = () => (
     <Box className={classes.chatPurchaseTicketBox}>
-      <Typography className={classes.chatPurchaseTicketNote}>{t('live_stream_screen.chat_purchase_ticket_note')}</Typography>
+      <Typography className={classes.chatPurchaseTicketNote}>{i18n.t('common:live_stream_screen.chat_purchase_ticket_note')}</Typography>
     </Box>
   )
 
@@ -333,9 +256,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     <Box className={classes.container}>
       {!isMobile && (
         <Box className={classes.chatHeader}>
-          <IconButton onClick={onCloseChatPanel} className={classes.headerIcon}>
-            <img src="/images/ic_collapse_right.svg" />
-          </IconButton>
           <Typography className={classes.headerTitle}>{'チャット'}</Typography>
         </Box>
       )}
