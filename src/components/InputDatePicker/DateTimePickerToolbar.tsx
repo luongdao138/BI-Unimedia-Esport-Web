@@ -49,7 +49,7 @@ export function useMeridiemMode(
 
 const ToolbarDateTimeButton = styled(ToolbarButton)({
   '& .MuiTypography-h4': {
-    fontSize: '1.9rem',
+    fontSize: '1.5rem',
   },
 })
 
