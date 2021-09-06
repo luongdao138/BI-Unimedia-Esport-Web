@@ -188,6 +188,8 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
   const handleChange = (_event, value: string, reason: string) => {
     if (reason === 'input') {
       inputDebounce(value)
+    } else if (reason === 'reset') {
+      setShow(false)
     }
   }
 
