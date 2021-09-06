@@ -20,7 +20,7 @@ const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   //status = 0-schedule|1-live|2-archive
   const router = useRouter()
   const onNavigateLive = () => {
-    router.push(ESRoutes.VIDEO_LIVE_STREAM)
+    router.push({ pathname: ESRoutes.VIDEO_LIVE_STREAM, query: { vid: data?.uuid } })
   }
   return (
     <Box className={classes.container} key={data?.id} onClick={onNavigateLive}>

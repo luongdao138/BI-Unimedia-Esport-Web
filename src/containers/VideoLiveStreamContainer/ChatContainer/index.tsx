@@ -11,12 +11,11 @@ import _ from 'lodash'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
 import { useAppDispatch } from '@store/hooks'
-import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
+  onCloseChatPanel?: () => void
   userHasViewingTicket?: boolean
-  myPoint: number
 }
 
 export const purchasePoints = {
@@ -25,28 +24,28 @@ export const purchasePoints = {
     value: 100,
     backgroundColor: '#2680EB',
     borderColor: '#2680EB',
-    width: 82,
+    width: 65.5,
   },
   p_300: {
     id: 'p_300',
     value: 300,
     backgroundColor: '#01B7FB',
     borderColor: '#01B7FB',
-    width: 82,
+    width: 65.5,
   },
   p_500: {
     id: 'p_500',
     value: 500,
     backgroundColor: '#0FB732',
     borderColor: '#0FB732',
-    width: 82,
+    width: 65.5,
   },
   p_1000: {
     id: 'p_1000',
     value: 1000,
     backgroundColor: '#EBD600',
     borderColor: '#EBD600',
-    width: 82,
+    width: 65.5,
   },
   p_3000: {
     id: 'p_3000',
@@ -55,11 +54,18 @@ export const purchasePoints = {
     borderColor: '#FF6A1C',
     width: 90,
   },
+  // p_2500: {
+  //   id: 'p_2500',
+  //   value: 5000,
+  //   backgroundColor: '#9147F9',
+  //   borderColor: '#9147F9',
+  //   width: 90,
+  // },
   p_5000: {
     id: 'p_5000',
     value: 5000,
-    backgroundColor: '#9147F9',
-    borderColor: '#9147F9',
+    backgroundColor: '#C91315',
+    borderColor: '#C91315',
     width: 90,
   },
   p_10000: {
@@ -71,7 +77,7 @@ export const purchasePoints = {
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasViewingTicket, myPoint }) => {
+const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket }) => {
   // const { t } = useTranslation('common')
   const [chatInput, setChatInput] = useState<string>('')
   const [purchaseComment, setPurchaseComment] = useState<string>('')
@@ -173,10 +179,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
         </Button>
         {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
         <Box className={classes.dialogFooter}>
-          <Typography className={classes.totalPointText}>
-            {i18n.t('common:live_stream_screen.total_point_title') + ':'}
-            {' ' + FormatHelper.currencyFormat(myPoint.toString())} {' ' + i18n.t('common:point_management_tab.eXe_point')}
-          </Typography>
+          <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
           <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
         </Box>
       </Box>
@@ -303,7 +306,10 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
     <Box className={classes.container}>
       {!isMobile && (
         <Box className={classes.chatHeader}>
-          <Typography className={classes.headerTitle}>{t('live_stream_screen.chat_header')}</Typography>
+          <IconButton onClick={onCloseChatPanel} className={classes.headerIcon}>
+            <img src="/images/ic_collapse_right.svg" />
+          </IconButton>
+          <Typography className={classes.headerTitle}>{'チャット'}</Typography>
         </Box>
       )}
       {userHasViewingTicket ? chatContent() : userDoesNotHaveViewingTicketView()}

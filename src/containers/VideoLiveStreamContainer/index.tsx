@@ -17,6 +17,9 @@ import usePointsManage from '@containers/PointManage/usePointsManage'
 import ESLoader from '@components/FullScreenLoader'
 import { addToast } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
+import PurchaseTicketSuperChat from './PurchaseTicketSuperChat'
+import { useRouter } from 'next/router'
+import usePurchaseTicketSuperChat from './usePurchaseTicket'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -32,24 +35,45 @@ export enum VIDEO_TYPE {
 }
 
 const VideosTop: React.FC = () => {
+  const PURCHASE_TYPE = {
+    PURCHASE_TICKET: 1,
+    PURCHASE_SUPER_CHAT: 2,
+  }
   const { t } = useTranslation('common')
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const dispatch = useAppDispatch()
+  const router = useRouter()
+  const video_id = router.query?.vid // uuid video
 
   const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
+  const { purchaseTicketSuperChat, dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
-  // const myPoint = 400
 
   const [tab, setTab] = useState(0)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
   const [lackedPoint, setLackedPoint] = useState(0)
   const [purchaseComment, setPurchaseComment] = useState<string>('')
+  const [showPurchaseTicketModal, setShowPurchaseTicketModal] = useState<boolean>(false)
+  const [purchaseType, setPurchaseType] = useState<number>(null)
+  const [donatedPoints, setDonatedPoints] = useState<number>(0)
+
+  const ticket_points = 100
 
   const params = {
     page: 1,
     limit: 10,
+  }
+  const super_chat_params = {
+    point: donatedPoints,
+    type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
+    video_id: video_id,
+  }
+  const ticket_params = {
+    point: ticket_points,
+    type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
+    video_id: video_id,
   }
 
   useEffect(() => {
@@ -58,6 +82,9 @@ const VideosTop: React.FC = () => {
   const classes = useStyles()
 
   const confirmDonatePoint = (donated_point, comment) => {
+    // reset donate point
+    setDonatedPoints(0)
+    setDonatedPoints(donated_point)
     // reset lack point
     setLackedPoint(0)
     setLackedPoint(donated_point - myPoint)
@@ -67,11 +94,35 @@ const VideosTop: React.FC = () => {
   const handleClose = () => {
     setShowConfirmModal(false)
   }
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
     if (lackedPoint > 0) {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
       setShowConfirmModal(false)
+    } else {
+      // purchase super chat
+      await purchaseTicketSuperChat(super_chat_params)
+      if (dataPurchaseTicketSuperChat?.code === 200) {
+        handleClose()
+        dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
+      }
+    }
+  }
+  const handlePurchaseTicket = () => {
+    setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
+    if (myPoint >= ticket_points) {
+      setShowPurchaseTicketModal(true)
+    } else {
+      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+      setShowModalPurchasePoint(true)
+    }
+  }
+  // purchase ticket
+  const doConfirmPurchaseTicket = async () => {
+    await purchaseTicketSuperChat(ticket_params)
+    if (dataPurchaseTicketSuperChat?.code === 200) {
+      dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
     }
   }
 
@@ -112,8 +163,31 @@ const VideosTop: React.FC = () => {
     )
   }
 
+  const buttonPurchaseTicket = (onClick) => (
+    <Box
+      style={{
+        backgroundColor: Colors.primary,
+        display: 'flex',
+        position: 'relative',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+        marginLeft: theme.spacing(5),
+        marginRight: theme.spacing(5),
+        marginTop: theme.spacing(5),
+      }}
+      onClick={onClick}
+    >
+      <Typography style={{ textAlign: 'center', fontSize: 20 }}>Purchase Ticket</Typography>
+    </Box>
+  )
+
   const sideChatContainer = () => (
-    <ChatContainer myPoint={myPoint} onPressDonate={confirmDonatePoint} userHasViewingTicket={userHasViewingTicket()} />
+    <Box style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <ChatContainer onPressDonate={confirmDonatePoint} userHasViewingTicket={userHasViewingTicket()} />
+      {buttonPurchaseTicket(handlePurchaseTicket)}
+    </Box>
   )
 
   const getVideoType = () => VIDEO_TYPE.LIVE_STREAM
@@ -135,7 +209,15 @@ const VideosTop: React.FC = () => {
           {getTabs()}
           {getContent()}
         </Grid>
-        {/*)}*/}
+        {showPurchaseTicketModal && (
+          <PurchaseTicketSuperChat
+            myPoints={myPoint}
+            donatedPoints={ticket_points}
+            showModal={showPurchaseTicketModal}
+            setShowModal={setShowPurchaseTicketModal}
+            handlePurchaseTicket={doConfirmPurchaseTicket}
+          />
+        )}
       </Box>
       {!isMobile && sideChatContainer()}
       <DonatePointsConfirmModal
@@ -148,7 +230,7 @@ const VideosTop: React.FC = () => {
       {showModalPurchasePoint && (
         <DonatePoints
           myPoint={myPoint}
-          lackedPoint={lackedPoint}
+          lackedPoint={purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT ? lackedPoint : ticket_points}
           showModalPurchasePoint={showModalPurchasePoint}
           setShowModalPurchasePoint={setShowModalPurchasePoint}
         />

@@ -7,9 +7,10 @@ interface PointCardItemProps {
   titleText: string
   points: number
   pointText: string
+  minus?: boolean
 }
 
-const PointCardItem: FC<PointCardItemProps> = ({ points, titleText, pointText }) => {
+const PointCardItem: FC<PointCardItemProps> = ({ points, titleText, pointText, minus }) => {
   const classes = useStyles()
   return (
     <Box className={classes.container}>
@@ -17,7 +18,10 @@ const PointCardItem: FC<PointCardItemProps> = ({ points, titleText, pointText })
         {titleText}
       </Typography>
       <Box className={classes.contentContainer}>
-        <Typography className={classes.pointStyle}>{FormatHelper.currencyFormat(points.toString())}</Typography>
+        <Typography className={minus ? classes.minusPointStyle : classes.pointStyle}>
+          {minus ? '-' : ''}
+          {FormatHelper.currencyFormat(points.toString())}
+        </Typography>
         <Typography className={classes.pointText}>{pointText}</Typography>
       </Box>
     </Box>
@@ -48,16 +52,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   titleText: {
     color: Colors.white,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   pointText: {
     color: Colors.grey['200'],
+    fontSize: 12,
+    textAlign: 'center',
   },
   pointStyle: {
     color: Colors.white,
     marginRight: 18,
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  minusPointStyle: {
+    color: Colors.yellow,
+    marginRight: 18,
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 }))
 export default PointCardItem

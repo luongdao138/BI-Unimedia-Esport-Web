@@ -5,6 +5,7 @@ import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { ListMyPointsData } from '@services/points.service'
 import moment from 'moment'
+import { FORMAT_DATE_SIMPLE } from '@constants/common.constants'
 
 interface PointsPurchasedItemProps {
   data: ListMyPointsData
@@ -39,7 +40,7 @@ const PointsPurchasedItem: FC<PointsPurchasedItemProps> = ({ data, serialNumber 
         <Typography className={classes.pointStyle}>
           {FormatHelper.currencyFormat(data?.point.toString())} {i18n.t('common:point_management_tab.eXe_point_text')}
         </Typography>
-        <Typography className={classes.dateStyle}>{moment(data?.valid_until).format('YYYY年MM月DD日')}</Typography>
+        <Typography className={classes.dateStyle}>{moment(data?.valid_until).format(FORMAT_DATE_SIMPLE)}</Typography>
       </Box>
     </Box>
   )
