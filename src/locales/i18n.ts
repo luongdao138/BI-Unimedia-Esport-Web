@@ -40,16 +40,6 @@ i18n
             return 'チーム'
           }
           return 'ユーザー'
-        } else if (format === 'isTeam') {
-          if (value === true) {
-            return 'チーム'
-          }
-          return 'ユーザー'
-        } else if (format === 'isBattle') {
-          if (value === true) {
-            return '対戦表'
-          }
-          return 'トーナメント表'
         }
         return value
       },

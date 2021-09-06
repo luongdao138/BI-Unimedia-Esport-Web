@@ -24,39 +24,33 @@ const RandomizeDialog: React.FC<RandomizeDialogProps> = ({ onAction, onClose, op
       <BlankLayout>
         <Box className={classes.childrenContainer}>
           <Box pb={4} color={Colors.white} alignItems="center">
-            <Typography className={classes.title}>{t('common:arena.dialog.randomize_title', { isTeam, isBattle: true })}</Typography>
+            <Typography className={classes.title}>
+              {t('common:arena.battles.dialog.randomize_title', { isTeam, isBattle: true })}
+            </Typography>
           </Box>
           <Box pb={4}>
             <Typography variant="h2" className={classes.desc}>
-              {t('common:arena.dialog.randomize_desc', { isTeam })}
+              {t('common:arena.battles.dialog.randomize_desc', { isTeam })}
             </Typography>
           </Box>
           <Typography variant="caption" gutterBottom>
-            {t('common:arena.dialog.randomize_sub1', { isTeam })}
+            {t('common:arena.battles.dialog.randomize_sub1', { isTeam })}
           </Typography>
           <Typography variant="caption" gutterBottom>
-            {t('common:arena.dialog.randomize_sub2', { isTeam })}
+            {t('common:arena.battles.dialog.randomize_sub2', { isTeam })}
           </Typography>
-          {isTeam ? (
-            <> </>
-          ) : (
-            <Typography variant="caption" gutterBottom>
-              {t('common:arena.dialog.randomize_sub3')}
-            </Typography>
-          )}
-
           <Box className={classes.actionButtonContainer}>
             <ESButton variant="outlined" round size="large" onClick={onClose} className={classes.button}>
               {t('common:common.cancel')}
             </ESButton>
             <ButtonPrimary round onClick={onAction} className={classes.button}>
-              {t('common:arena.dialog.deploy_button')}
+              {t('common:arena.battles.dialog.deploy_button')}
             </ButtonPrimary>
           </Box>
 
           <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
             <WarningRounded fontSize="small" />
-            <Typography variant="body2">{t('common:arena.dialog.randomize_warn')}</Typography>
+            <Typography variant="body2">{t('common:arena.battles.dialog.randomize_warn')}</Typography>
           </Box>
         </Box>
       </BlankLayout>
