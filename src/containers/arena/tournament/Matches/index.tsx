@@ -123,6 +123,7 @@ const ArenaMatches: React.FC = () => {
           onClick={() => setShowSummaryModal(true)}
           show={!tournament.attributes.is_freezed}
           noScroll
+          noWrapperMargin
           content={
             <Box>
               <Typography className={classes.notYetLabel}>{t('common:arena.match_not_yet')}</Typography>
