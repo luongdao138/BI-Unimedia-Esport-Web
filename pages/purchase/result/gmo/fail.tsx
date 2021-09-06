@@ -1,4 +1,4 @@
-import MainLayout from '@layouts/PlainLayout'
+import PlainLayout from '@layouts/PlainLayout'
 import Link from 'next/link'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
@@ -25,23 +25,24 @@ const useStyles = makeStyles((theme) => ({
 const GmoResultFailPage: PageWithLayoutType = () => {
   const classes = useStyles({})
   return (
-    <Container maxWidth="lg" disableGutters>
-      <div className={classes.contaianer}>
-        <Typography variant="subtitle1" className={classes.title}>
-          チケットの購入ができませんでした
-        </Typography>
-        <div style={{ marginBottom: 40 }}>しばらくお時間を空けて、再度ご購入手続きをお願いいたします。</div>
-        <div className={classes.spacingButton}>
-          <Link href="/events">
-            <Button variant="contained" color="primary" fullWidth>
-              ホームへ
-            </Button>
-          </Link>
+    <PlainLayout>
+      <Container maxWidth="lg" disableGutters>
+        <div className={classes.contaianer}>
+          <Typography variant="subtitle1" className={classes.title}>
+            チケットの購入ができませんでした
+          </Typography>
+          <div style={{ marginBottom: 40 }}>しばらくお時間を空けて、再度ご購入手続きをお願いいたします。</div>
+          <div className={classes.spacingButton}>
+            <Link href="/events">
+              <Button variant="contained" color="primary" fullWidth>
+                ホームへ
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </PlainLayout>
   )
 }
 
-GmoResultFailPage.Layout = MainLayout
 export default GmoResultFailPage

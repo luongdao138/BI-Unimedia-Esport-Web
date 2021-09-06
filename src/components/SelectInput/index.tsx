@@ -104,11 +104,12 @@ const useStyles = makeStyles((theme) =>
       },
     },
     inputWrapper: {
-      maxHeight: 104,
+      maxHeight: 110,
       width: '100%',
       display: 'flex',
       padding: 4,
       border: '1px solid #666',
+      cursor: 'text',
       outline: '0 none',
       flexWrap: 'wrap',
       overflow: 'auto',
@@ -154,13 +155,23 @@ const useStyles = makeStyles((theme) =>
         display: 'none',
       },
     },
+    [theme.breakpoints.down('xs')]: {
+      listBox: {
+        width: '200px',
+      },
+    },
   })
 )
 
 const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, loading }) => {
+  const setFocus = () => {
+    if (textRef && textRef.current !== undefined) {
+      textRef.current.focus()
+    }
+  }
   const classes = useStyles()
   const { t } = useTranslation()
-  const textRef = useRef()
+  const textRef = useRef<HTMLInputElement>()
   const [show, setShow] = useState<boolean>(false)
   const inputDebounce = useCallback(
     _.debounce((keyword: string) => {
@@ -177,6 +188,8 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
   const handleChange = (_event, value: string, reason: string) => {
     if (reason === 'input') {
       inputDebounce(value)
+    } else if (reason === 'reset') {
+      setShow(false)
     }
   }
 
@@ -194,7 +207,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
       <NoSsr>
         <div>
           <div {...getRootProps()}>
-            <Box className={`${focused ? 'focused' : ''} ${classes.inputWrapper}`}>
+            <Box className={`${focused ? 'focused' : ''} ${classes.inputWrapper}`} onClick={() => setFocus()}>
               {value.map((option: SelectInputItem, index: number) => (
                 <ESChip
                   size="small"

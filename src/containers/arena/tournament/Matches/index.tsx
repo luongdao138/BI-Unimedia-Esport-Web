@@ -174,7 +174,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: 60,
     width: '100vw',
-    height: '100vh',
+    height: `calc(100vh - 60px)`,
     overflow: 'auto',
   },
   content: {

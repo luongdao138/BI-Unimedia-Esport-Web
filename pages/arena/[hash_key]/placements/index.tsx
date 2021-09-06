@@ -19,13 +19,11 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 })
 
 const ArenaPlacementPage: PageWithLayoutType = () => {
-  return <WinnersContainer />
+  return (
+    <MainLayout patternBg={false} loginRequired={false}>
+      <WinnersContainer />
+    </MainLayout>
+  )
 }
-
-MainLayout.defaultProps = {
-  patternBg: false,
-}
-
-ArenaPlacementPage.Layout = MainLayout
 
 export default ArenaPlacementPage
