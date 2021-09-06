@@ -43,10 +43,8 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
       case LOBBY_STATUS.ENTRY_CLOSED: {
         if (is_owner) return <RemainingDate lobby={lobby} />
         else {
-          if (!is_freezed) {
-            return <StatusText value={entryClosedText} />
-          }
-          if (is_freezed) {
+          if (!is_freezed) return <StatusText value={entryClosedText} />
+          else if (is_freezed) {
             if (isNotEntered) return <RemainingDate lobby={lobby} />
             else if (isParticipant) return <RemainingDate lobby={lobby} />
             else if (isNotParticipant) return <StatusText value={notParticipatedText} />
@@ -55,10 +53,14 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
         break
       }
       case LOBBY_STATUS.IN_PROGRESS: {
-        if (isNotEntered) return <StatusText value={notEnteredText} />
-        else if (isParticipant) return <StatusText value={participatedText} />
-        else if (isNotParticipant) return <StatusText value={notParticipatedText} />
-        break
+        if (is_owner) {
+          if (isParticipant) return <StatusText value={participatedText} />
+          else return <StatusText value={notEnteredText} />
+        } else {
+          if (isParticipant) return <StatusText value={participatedText} />
+          else if (isNotParticipant) return <StatusText value={notParticipatedText} />
+          else return <StatusText value={notEnteredText} />
+        }
       }
       case LOBBY_STATUS.ENDED:
         return <StatusText value={t('common:lobby.status.ended')} /> // 終了
