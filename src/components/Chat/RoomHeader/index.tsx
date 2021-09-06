@@ -170,7 +170,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         </>
       )}
       <Box className={classes.row}>
-        {hasNoRoomInfo ? null : <RoomImgView roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />}
+        {hasNoRoomInfo ? null : (
+          <RoomImgView roomType={roomInfo.groupType} roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />
+        )}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true} className={classes.title}>
             {roomName}
