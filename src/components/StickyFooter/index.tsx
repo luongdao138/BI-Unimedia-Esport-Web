@@ -12,7 +12,6 @@ export type Props = {
   content?: JSX.Element
   noSpacing?: boolean
   noBottomSpace?: boolean
-  noWrapperMargin?: boolean
   classes?: {
     nextBtnHolder?: string
   }
@@ -28,17 +27,12 @@ const ESStickyFooter: React.FC<Props> = ({
   content,
   noSpacing,
   noBottomSpace,
-  noWrapperMargin,
   classes: classesOverrides,
 }) => {
   const classes = useStyles()
   const isNoBottmSpace = noBottomSpace === true
   return (
-    <Box
-      className={`${show ? classes.wrapper : classes.wrapper2} ${!noScroll && classes.scroll} ${
-        noWrapperMargin && classes.noWrapperMargin
-      }`}
-    >
+    <Box className={`${show ? classes.wrapper : classes.wrapper2} ${!noScroll && classes.scroll}`}>
       {children}
       {show && (
         <Box className={classes.stickyFooter}>
@@ -71,9 +65,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 163,
   },
   wrapper2: {
-    marginBottom: 0,
-  },
-  noWrapperMargin: {
     marginBottom: 0,
   },
   stickyFooter: {
