@@ -13,10 +13,10 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any }> = ({ children
     <>
       <Box className={classes.mediaWrap}>
         <CardMedia className={classes.media}>
-          <>
-            <LazyLoadImage className={classes.coverImage} alt={'cover-image'} src={rest?.image ? rest.image : IMG_PLACEHOLDER} />
-            {children}
-          </>
+          <Box className={classes.coverImage}>
+            <LazyLoadImage className={classes.coverImageInner} alt={'cover-image'} src={rest?.image ? rest.image : IMG_PLACEHOLDER} />
+          </Box>
+          {children}
         </CardMedia>
       </Box>
       <Box className={classes.cornerWrap}>
@@ -35,8 +35,12 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     right: 0,
     height: '100%',
-    objectFit: 'cover',
     bottom: 0,
+  },
+  coverImageInner: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
   },
   mediaWrap: {
     position: 'relative',
