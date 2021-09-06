@@ -81,9 +81,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
   const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
   const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
+    maxSize: MAX_SIZE,
+    multiple: false,
     accept: FILE_TYPES,
     onDrop: (files: any) => handleChange(files),
-    maxSize: MAX_SIZE,
   }
   const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
 

@@ -3,13 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import ESMessageSettings from '@containers/UserSecuritySettings/MessageSettings'
 
 const MessageSettingsSettingsPage: PageWithLayoutType = () => {
-  return <ESMessageSettings />
-}
-
-MessageSettingsSettingsPage.Layout = MainLayout
-
-MainLayout.defaultProps = {
-  loginRequired: true,
+  return (
+    <MainLayout loginRequired={true}>
+      <ESMessageSettings />
+    </MainLayout>
+  )
 }
 
 export default MessageSettingsSettingsPage

@@ -77,6 +77,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, 
   const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
     accept: FILE_TYPES,
+    multiple: false,
     onDrop: (files: any) => handleChange(files),
     maxSize: MAX_SIZE,
   }

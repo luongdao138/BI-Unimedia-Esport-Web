@@ -4,19 +4,24 @@ import { makeStyles, Box } from '@material-ui/core'
 import ESLoader from '@components/Loader'
 import { AVATAR_PATH } from '@constants/common.constants'
 import _ from 'lodash'
+import { CHAT_ROOM_TYPE } from '@constants/socket.constants'
 
 export interface RoomImgViewProps {
   roomImg: string
   roomName: string
   loading: boolean
+  roomType: CHAT_ROOM_TYPE
 }
 
-const RoomImgView: React.FC<RoomImgViewProps> = ({ roomImg, roomName, loading }) => {
+const RoomImgView: React.FC<RoomImgViewProps> = ({ roomImg, roomName, loading, roomType }) => {
   const classes = useStyles()
 
   const getRoomImg = () => {
-    if (!_.isString(roomImg)) return AVATAR_PATH
-    if (roomImg.length < 2) return AVATAR_PATH
+    if (
+      (!_.isString(roomImg) && roomType !== CHAT_ROOM_TYPE.CHAT_DIRECT) ||
+      (_.isEmpty(roomImg) && roomType !== CHAT_ROOM_TYPE.CHAT_DIRECT)
+    )
+      return AVATAR_PATH
     return roomImg
   }
 
