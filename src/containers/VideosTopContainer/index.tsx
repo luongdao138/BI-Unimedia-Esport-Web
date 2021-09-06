@@ -66,7 +66,7 @@ const VideosTop: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.VIDEOS_LIST:
-        return <VideosList setTab={setTab} setFollow={setFollow} />
+        return <VideosList setTab={setTab} />
       case TABS.LIVE_VIDEOS:
         return <LiveStreamVideos follow={follow} setFollow={setFollow} />
       case TABS.SCHEDULE_VIDEOS:

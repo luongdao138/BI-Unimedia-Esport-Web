@@ -1,6 +1,17 @@
 import api from './api'
 import { URI } from '@constants/uri.constants'
-// import { UserProfile } from './user.service'
+
+export type PurchaseTicketParams = {
+  user_id?: number
+  point: number
+  type: number //1 : mua ticket, 2 : supper chat
+  video_id: string | string[]
+}
+export type PurchaseTicketResponse = {
+  message?: string
+  code?: number
+  data?: Array<any>
+}
 
 export type ListPointsParams = {
   page?: number
@@ -94,16 +105,21 @@ export const ListMyPoints = async (params: ListPointsParams): Promise<ListMyPoin
 }
 
 export const ListHistoryPoints = async (params: ListPointsParams): Promise<PointHistoryResponse> => {
-  const { data } = await api.get<any>(URI.GET_HISTORY_POINTS, { params })
+  const { data } = await api.get<PointHistoryResponse>(URI.GET_HISTORY_POINTS, { params })
   return data
 }
 
 export const ListUsedPoints = async (params: ListPointsParams): Promise<PointUsedResponse> => {
-  const { data } = await api.get<any>(URI.GET_LIST_USED_POINTS, { params })
+  const { data } = await api.get<PointUsedResponse>(URI.GET_LIST_USED_POINTS, { params })
   return data
 }
 
 export const ListUsagePointsHistoryDetail = async (params: DetailUsagePointParams): Promise<PointUsedDetailResponse> => {
-  const { data } = await api.get<any>(URI.GET_USAGE_POINTS_DETAIL, { params })
+  const { data } = await api.get<PointUsedDetailResponse>(URI.GET_USAGE_POINTS_DETAIL, { params })
+  return data
+}
+
+export const PurchaseTicketSuperChat = async (params: PurchaseTicketParams): Promise<PurchaseTicketResponse> => {
+  const { data } = await api.post<PurchaseTicketResponse>(URI.PURCHASE_TICKET_SUPER_CHAT, params)
   return data
 }

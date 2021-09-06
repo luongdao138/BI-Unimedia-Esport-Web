@@ -5,6 +5,7 @@ import { Colors } from '@theme/colors'
 import { ListUsagePointHistoryData } from '@services/points.service'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import moment from 'moment'
+import { FORMAT_DATE_SIMPLE } from '@constants/common.constants'
 
 interface UsagePointDetailItemProps {
   data: ListUsagePointHistoryData
@@ -39,10 +40,10 @@ const UsagePointDetailItem: FC<UsagePointDetailItemProps> = ({ data, serialNumbe
         <Typography className={classes.textStyle}>{data?.purchase_id}</Typography>
         <Typography className={classes.usagePointStyle}>
           {'-' + FormatHelper.currencyFormat(data?.point.toString())}
-          {i18n.t('common:point_management_tab.eXe_point_text')}
+          {' ' + i18n.t('common:point_management_tab.eXe_point_text')}
         </Typography>
         <Typography className={classes.textStyle}>{data?.status}</Typography>
-        <Typography className={classes.dateStyle}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
+        <Typography className={classes.dateStyle}>{moment(data?.created_at).format(FORMAT_DATE_SIMPLE)}</Typography>
       </Box>
     </Box>
   )

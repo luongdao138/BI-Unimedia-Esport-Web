@@ -26,12 +26,18 @@ type StateType = {
     total: number
     point_history: Array<ListUsagePointHistoryData>
   }
+  purchase_ticket_super_chat: {
+    message?: string
+    code?: number
+    data?: Array<any>
+  }
 }
 const initialState: StateType = {
   list_my_points: null,
   list_history_points: null,
   list_used_points: null,
   detail_usage_points_history: null,
+  purchase_ticket_super_chat: null,
 }
 
 export default createReducer(initialState, (builder) => {
@@ -54,5 +60,10 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getDetailUsagePoint.fulfilled, (state, action) => {
     const listUsedPoints = action.payload.data.purchase_point
     state.detail_usage_points_history = listUsedPoints
+  })
+  // purchase ticket super chat
+  builder.addCase(actions.purchaseTicketSuperChat.fulfilled, (state, action) => {
+    const purchaseTicket = action.payload
+    state.purchase_ticket_super_chat = purchaseTicket
   })
 })

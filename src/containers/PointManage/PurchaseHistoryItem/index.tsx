@@ -2,10 +2,10 @@ import { Box, makeStyles, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import i18n from '@locales/i18n'
 import { Colors } from '@theme/colors'
-// import { PointsPurchasedDataProps } from '../PointManagementTab'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { ListHistoryPointsData } from '@services/points.service'
 import moment from 'moment'
+import { FORMAT_DATE_SIMPLE } from '@constants/common.constants'
 
 interface PointsPurchasedItemProps {
   data: ListHistoryPointsData
@@ -44,8 +44,8 @@ const PurchaseHistoryItem: FC<PointsPurchasedItemProps> = ({ data, serialNumber,
           {FormatHelper.currencyFormat(data?.point.toString())} {i18n.t('common:point_management_tab.eXe_point')}
         </Typography>
         <Typography className={classes.titleItemStyle}>{i18n.t('common:point_management_tab.purchase_point')}</Typography>
-        <Typography className={classes.titleItemStyle}>{moment(data?.created_at).format('YYYY年MM月DD日')}</Typography>
-        <Typography className={classes.dateStyle}>{moment(data?.expired_date).format('YYYY年MM月DD日')}</Typography>
+        <Typography className={classes.titleItemStyle}>{moment(data?.created_at).format(FORMAT_DATE_SIMPLE)}</Typography>
+        <Typography className={classes.dateStyle}>{moment(data?.expired_date).format(FORMAT_DATE_SIMPLE)}</Typography>
       </Box>
     </Box>
   )

@@ -10,6 +10,7 @@ import ESLoader from '@components/FullScreenLoader'
 import moment from 'moment'
 import PurchaseHistoryItem from '../PurchaseHistoryItem'
 import UsagePointDetailItem from '../UsagePointDetailItem'
+import { FORMAT_YEAR_MONTH } from '@constants/common.constants'
 
 export interface UsagePointDataProps {
   serialNumber: string
@@ -73,7 +74,7 @@ const UsageHistory: FC = () => {
     if (listFilterData) {
       setFilterOptions(filterOptionsData)
       const newObjects = listFilterData.map((item) => {
-        return { label: moment(item).format('YYYY年MM月'), value: item }
+        return { label: moment(item).format(FORMAT_YEAR_MONTH), value: item }
       })
       const newFilterData = filterOptionsData.concat(newObjects)
       setFilterOptions(newFilterData)

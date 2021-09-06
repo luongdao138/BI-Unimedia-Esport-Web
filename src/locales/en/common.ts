@@ -1081,5 +1081,10 @@ export default {
     title_total_point_step_3: '合計ポイント',
     success_message_purchase: 'ポイント購入が完了しました。\n' + '右上の「x」ボタンをクリックして動画視聴画面にお戻りください。',
     lack_point_mess: '所持ポイントが不足しています',
+    title_purchase_ticket: 'チケット交換',
+    purchase_ticket_button_text: '交換する',
+    title_required_points: '必要ポイント',
+    title_points_left_after_purchase: '交換後の残ポイント',
+    purchase_ticket_success: 'チケット交換が完了しました。',
   },
 }

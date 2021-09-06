@@ -26,8 +26,6 @@ export const getListHistoryPoints = createAsyncThunk<services.PointHistoryRespon
   POINT_MANAGE_ACTION_TYPE.GET_LIST_HISTORY_POINTS,
   async (pointHistoryParams, { rejectWithValue }) => {
     try {
-      // eslint-disable-next-line no-console
-      console.log('pointHistoryParams >>>>>>>>>>>>>>', pointHistoryParams)
       const res = await services.ListHistoryPoints(pointHistoryParams)
       if (res?.code === 200) {
         return res
@@ -68,6 +66,26 @@ export const getDetailUsagePoint = createAsyncThunk<services.PointUsedDetailResp
   async (detailParams, { rejectWithValue }) => {
     try {
       const res = await services.ListUsagePointsHistoryDetail(detailParams)
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const purchaseTicketSuperChat = createAsyncThunk<services.PurchaseTicketResponse, services.PurchaseTicketParams>(
+  POINT_MANAGE_ACTION_TYPE.PURCHASE_TICKET_SUPER_CHAT,
+  async (purchaseParams, { rejectWithValue }) => {
+    try {
+      const res = await services.PurchaseTicketSuperChat(purchaseParams)
       if (res?.code === 200) {
         return res
       } else {
