@@ -21,7 +21,6 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
   const { status, is_freezed, participant_status, is_owner, entry_count, participants_count, max_participants } = lobby.attributes
 
   const isNotEntered = participant_status === null
-  const isEntered = participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
   const isParticipant = participant_status === LOBBY_PARTICIPANT_STATUS.SELECTED
   const isNotParticipant = participant_status === LOBBY_PARTICIPANT_STATUS.NOT_SELECTED
 
@@ -42,20 +41,16 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
       case LOBBY_STATUS.RECRUITING:
         return <RemainingDate lobby={lobby} />
       case LOBBY_STATUS.ENTRY_CLOSED: {
-        if (!is_freezed) {
-          if (isNotEntered) {
-            if (is_owner) return <RemainingDate lobby={lobby} />
-            return <StatusText value={entryClosedText} />
-          } else if (isEntered) {
-            if (is_owner) return <RemainingDate lobby={lobby} />
+        if (is_owner) return <RemainingDate lobby={lobby} />
+        else {
+          if (!is_freezed) {
             return <StatusText value={entryClosedText} />
           }
-        }
-
-        if (is_freezed) {
-          if (isNotEntered) return <RemainingDate lobby={lobby} />
-          else if (isParticipant) return <RemainingDate lobby={lobby} />
-          else if (isNotParticipant) return <StatusText value={notParticipatedText} />
+          if (is_freezed) {
+            if (isNotEntered) return <RemainingDate lobby={lobby} />
+            else if (isParticipant) return <RemainingDate lobby={lobby} />
+            else if (isNotParticipant) return <StatusText value={notParticipatedText} />
+          }
         }
         break
       }
