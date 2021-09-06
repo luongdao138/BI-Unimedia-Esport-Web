@@ -20,7 +20,6 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
   const { t } = useTranslation(['common'])
   const { status, is_freezed, participant_status, is_owner, entry_count, participants_count, max_participants } = lobby.attributes
 
-  const isNotEntered = participant_status === null
   const isParticipant = participant_status === LOBBY_PARTICIPANT_STATUS.SELECTED
   const isNotParticipant = participant_status === LOBBY_PARTICIPANT_STATUS.NOT_SELECTED
 
@@ -45,9 +44,9 @@ const SubStatusInfo: React.FC<Props> = ({ lobby }) => {
         else {
           if (!is_freezed) return <StatusText value={entryClosedText} />
           else if (is_freezed) {
-            if (isNotEntered) return <RemainingDate lobby={lobby} />
-            else if (isParticipant) return <RemainingDate lobby={lobby} />
+            if (isParticipant) return <RemainingDate lobby={lobby} />
             else if (isNotParticipant) return <StatusText value={notParticipatedText} />
+            else return <RemainingDate lobby={lobby} />
           }
         }
         break
