@@ -173,6 +173,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
   const { t } = useTranslation()
   const textRef = useRef<HTMLInputElement>()
   const [show, setShow] = useState<boolean>(false)
+  const [isComposing, setComposing] = useState<boolean>(false)
   const inputDebounce = useCallback(
     _.debounce((keyword: string) => {
       if (keyword.trim().length > 0) {
@@ -185,7 +186,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
     []
   )
 
-  const handleChange = (_event, value: string, reason: string) => {
+  const handleChange = (_e, value: string, reason: string) => {
     if (reason === 'input') {
       inputDebounce(value)
     } else if (reason === 'reset') {
@@ -193,11 +194,19 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
     }
   }
 
+  const handleSelect = (values) => {
+    onItemsSelected(values)
+    if (isComposing && textRef.current) textRef.current.blur()
+    setComposing(false)
+  }
+
   const { getRootProps, getInputProps, getTagProps, getListboxProps, getOptionProps, groupedOptions, value, focused } = useAutocomplete({
     multiple: true,
     options: items,
     getOptionLabel: (option) => option.nickName,
-    onChange: (_, values) => onItemsSelected(values),
+    onChange: (_, values) => {
+      handleSelect(values)
+    },
     getOptionSelected: (option, value) => option.id === value.id,
     onInputChange: handleChange,
   })
@@ -224,6 +233,12 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
                 InputProps={{
                   ...getInputProps(),
                   endAdornment: <>{loading ? <CircularProgress className={classes.loader} color="inherit" size={20} /> : null}</>,
+                  onCompositionStart: () => {
+                    setComposing(true)
+                  },
+                  onCompositionEnd: () => {
+                    setComposing(false)
+                  },
                 }}
               />
             </Box>
