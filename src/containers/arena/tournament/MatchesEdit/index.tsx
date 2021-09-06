@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { IconButton, Typography, Icon, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
-import ESStickyFooter from '@components/StickyFooter'
+import ESContentFooter from './../ContentFooter'
 import SelectParticipantModal from '../../Detail/Partials/SelectParticipantModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
@@ -22,6 +22,7 @@ import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
 import useInterval from '@utils/hooks/useInterval'
 import { useRouter } from 'next/router'
 import moment from 'moment'
+import { use100vh } from 'react-div-100vh'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -38,6 +39,7 @@ const ArenaMatches: React.FC = () => {
     setScore,
     scoreMeta,
   } = useTournamentMatches()
+  const height = use100vh() - 60
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
   const { isModerator, isTeam } = useArenaHelper(tournament)
@@ -143,7 +145,7 @@ const ArenaMatches: React.FC = () => {
     const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
 
     return (
-      <ESStickyFooter
+      <ESContentFooter
         disabled={false}
         show={data.memberSelectable}
         noScroll
@@ -164,7 +166,7 @@ const ArenaMatches: React.FC = () => {
             </Box>
           </Box>
         }
-        classes={{ nextBtnHolder: classes.buttonHolder }}
+        classes={{ nextBtnHolder: classes.buttonHolder, root: classes.StickyFooter }}
       >
         <Box className={classes.backContainer}>
           <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -177,6 +179,24 @@ const ArenaMatches: React.FC = () => {
           )}
         </Box>
         <div className={classes.content}>
+          <Bracket.Container activeRound={0}>
+            {matches.map((round, rid) => (
+              <Bracket.Round key={rid} roundNo={rid}>
+                <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
+                {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match, rid))}
+                {!_.isEmpty(third_place_match) && lastRound === rid + 1 && (
+                  <div className={classes.thirdPlaceContainer}>
+                    <Bracket.Container activeRound={-1}>
+                      <Bracket.Round key={'3rd'} roundNo={0}>
+                        <Typography variant="h3">3位決定戦</Typography>
+                        {getMatch(`${rid + 1}-2`, third_place_match[0], null)}
+                      </Bracket.Round>
+                    </Bracket.Container>
+                  </div>
+                )}
+              </Bracket.Round>
+            ))}
+          </Bracket.Container>
           <Bracket.Container activeRound={0}>
             {matches.map((round, rid) => (
               <Bracket.Round key={rid} roundNo={rid}>
@@ -235,12 +255,12 @@ const ArenaMatches: React.FC = () => {
             }
           }}
         />
-      </ESStickyFooter>
+      </ESContentFooter>
     )
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ height: `${height}px` }}>
       {matches && matchesMeta.loaded && data && body()}
       <ESLoader open={meta.pending || matchesMeta.pending || randomizeMeta.pending || freezeMeta.pending} />
     </div>
@@ -250,16 +270,33 @@ const ArenaMatches: React.FC = () => {
 export default ArenaMatches
 
 const useStyles = makeStyles((theme) => ({
+  StickyFooter: {
+    position: 'absolute',
+  },
   root: {
     paddingTop: 60,
     width: '100vw',
-    height: `calc(100vh - 60px)`,
     overflow: 'auto',
   },
   content: {
     padding: theme.spacing(3),
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(16),
+    height: '100%',
+    overflowY: 'auto',
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
   },
   thirdPlaceContainer: {
     position: 'absolute',

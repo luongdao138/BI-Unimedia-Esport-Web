@@ -16,6 +16,7 @@ import { Colors } from '@theme/colors'
 import useInterval from '@utils/hooks/useInterval'
 import { useRouter } from 'next/router'
 import moment from 'moment'
+import { use100vh } from 'react-div-100vh'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -32,6 +33,7 @@ const ArenaMatches: React.FC = () => {
     scoreMeta,
     handleBack,
   } = useTournamentMatches()
+  const height = use100vh()
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
@@ -116,7 +118,7 @@ const ArenaMatches: React.FC = () => {
   const lastRound = matches.length
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ height: `${height - 60}` }}>
       {matches && tournament && (
         <ESStickyFooter
           disabled={false}
@@ -174,7 +176,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: 60,
     width: '100vw',
-    height: `calc(100vh - 60px)`,
     overflow: 'auto',
   },
   content: {
