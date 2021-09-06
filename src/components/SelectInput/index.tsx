@@ -155,6 +155,11 @@ const useStyles = makeStyles((theme) =>
         display: 'none',
       },
     },
+    [theme.breakpoints.down('xs')]: {
+      listBox: {
+        width: '200px',
+      },
+    },
   })
 )
 
