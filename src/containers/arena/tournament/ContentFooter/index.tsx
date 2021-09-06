@@ -10,13 +10,7 @@ export type Props = {
   title?: string
   onClick?: () => void
   show?: boolean
-  noScroll?: boolean
   content?: JSX.Element
-  noSpacing?: boolean
-  noBottomSpace?: boolean
-  classes?: {
-    nextBtnHolder?: string
-  }
   style?: {
     position?: string
   }
@@ -24,33 +18,17 @@ export type Props = {
 
 const contentRef = createRef<HTMLDivElement>()
 
-const ESContentFooter: React.FC<Props> = ({
-  disabled,
-  title,
-  onClick,
-  children,
-  show,
-  noScroll,
-  content,
-  noSpacing,
-  noBottomSpace,
-  classes: classesOverrides,
-}) => {
+const ESContentFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, content }) => {
   const classes = useStyles()
-  const isNoBottmSpace = noBottomSpace === true
   const contentRect = useRect(contentRef)
   const bottomHeight = contentRect.height
 
   return (
-    <Box className={`${classes.wrapper} ${!noScroll && classes.scroll}`} style={{ paddingBottom: bottomHeight }}>
+    <Box className={`${classes.wrapper}`} style={{ paddingBottom: bottomHeight }}>
       {children}
       {show && (
         <div className={classes.stickyFooter} ref={contentRef}>
-          <Box
-            className={`${isNoBottmSpace ? classes.nextBtnHolderNoSpace : classes.nextBtnHolder} ${noSpacing && classes.noSpacing} ${
-              classesOverrides?.nextBtnHolder ? classesOverrides?.nextBtnHolder : ''
-            }`}
-          >
+          <Box className={`${classes.nextBtnHolder}`}>
             {content ? (
               content
             ) : (
@@ -68,17 +46,13 @@ const ESContentFooter: React.FC<Props> = ({
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  scroll: {
-    overflow: 'scroll',
-  },
   wrapper: {
     marginBottom: 0,
     height: '100%',
+    position: 'relative',
   },
   stickyFooter: {
     position: 'absolute',
-    left: 0,
-    bottom: 0,
     width: '100%',
     background: Colors.black,
     borderTop: `1px solid`,
@@ -90,24 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     justifyContent: 'center',
   },
-  nextBtnHolderNoSpace: {
-    display: 'flex',
-    marginBottom: theme.spacing(5),
-    marginTop: theme.spacing(3),
-    justifyContent: 'center',
-  },
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
-  },
-  [theme.breakpoints.down('md')]: {
-    nextBtnHolder: {
-      marginBottom: theme.spacing(5),
-    },
-  },
-  noSpacing: {
-    marginBottom: 0,
-    marginTop: 0,
   },
 }))
 
@@ -115,7 +74,6 @@ ESContentFooter.defaultProps = {
   disabled: false,
   title: '',
   show: true,
-  noScroll: false,
 }
 
 export default ESContentFooter

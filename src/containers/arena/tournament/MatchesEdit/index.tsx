@@ -148,7 +148,6 @@ const ArenaMatches: React.FC = () => {
       <ESContentFooter
         disabled={false}
         show={data.memberSelectable}
-        noScroll
         content={
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
@@ -166,7 +165,6 @@ const ArenaMatches: React.FC = () => {
             </Box>
           </Box>
         }
-        classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <Box className={classes.backContainer}>
           <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -179,24 +177,6 @@ const ArenaMatches: React.FC = () => {
           )}
         </Box>
         <div className={classes.content}>
-          <Bracket.Container activeRound={0}>
-            {matches.map((round, rid) => (
-              <Bracket.Round key={rid} roundNo={rid}>
-                <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
-                {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match, rid))}
-                {!_.isEmpty(third_place_match) && lastRound === rid + 1 && (
-                  <div className={classes.thirdPlaceContainer}>
-                    <Bracket.Container activeRound={-1}>
-                      <Bracket.Round key={'3rd'} roundNo={0}>
-                        <Typography variant="h3">3位決定戦</Typography>
-                        {getMatch(`${rid + 1}-2`, third_place_match[0], null)}
-                      </Bracket.Round>
-                    </Bracket.Container>
-                  </div>
-                )}
-              </Bracket.Round>
-            ))}
-          </Bracket.Container>
           <Bracket.Container activeRound={0}>
             {matches.map((round, rid) => (
               <Bracket.Round key={rid} roundNo={rid}>
@@ -270,33 +250,16 @@ const ArenaMatches: React.FC = () => {
 export default ArenaMatches
 
 const useStyles = makeStyles((theme) => ({
-  StickyFooter: {
-    position: 'absolute',
-  },
   root: {
-    paddingTop: 60,
     width: '100vw',
     overflow: 'auto',
   },
   content: {
     padding: theme.spacing(3),
+    paddingTop: 84,
+    paddingBottom: 0,
     height: '100%',
     overflowY: 'auto',
-    scrollbarColor: '#222 transparent',
-    scrollbarWidth: 'thin',
-    '&::-webkit-scrollbar': {
-      width: 5,
-      opacity: 1,
-      padding: 2,
-    },
-    '&::-webkit-scrollbar-track': {
-      paddingLeft: 1,
-      background: 'rgba(0,0,0,0.5)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
-      borderRadius: 6,
-    },
   },
   thirdPlaceContainer: {
     position: 'absolute',
@@ -355,12 +318,8 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
     backContainer: {
-      position: 'absolute',
       backgroundColor: 'transparent',
       borderBottom: 'none',
     },
-  },
-  buttonHolder: {
-    marginBottom: theme.spacing(3),
   },
 }))
