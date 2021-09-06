@@ -36,8 +36,8 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, patternBg }) => {
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
-  if (!isValidProfile && isAuth && !hasUCRReturnHref) return null
-  return (
+
+  return !isValidProfile && isAuth && !hasUCRReturnHref ? null : (
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
       <div className={patternBg ? 'plain-main' : 'plain-main no-pattern'}>
