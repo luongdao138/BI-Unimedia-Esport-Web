@@ -71,6 +71,10 @@ const TopicDetailContainer: React.FC = () => {
   const hasPrevious = pages && Number(pages.current_page) > 1
 
   const loadMore = () => {
+    if (_.isEmpty(commentsList)) {
+      getCommentsListNext({ hash_key: String(topic_hash_key) })
+      return
+    }
     getCommentsListNext({ hash_key: String(topic_hash_key), comment_hash_key: lastCommentHashKey })
   }
 
@@ -124,7 +128,7 @@ const TopicDetailContainer: React.FC = () => {
               style={{ overflow: 'hidden ' }}
               loader={null}
               onScroll={() => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - (commentsListNextMeta.pending ? 314 : 200)) {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - (commentsListNextMeta.pending ? 164 : 50)) {
                   setIsBottomOfPage(true)
                 } else {
                   setIsBottomOfPage(false)

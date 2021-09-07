@@ -26,7 +26,11 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
               <Typography className={classes.last_comment}>
-                {last_comment?.attributes.content ? last_comment?.attributes.content : '「' + t('common:chat.uploaded_image') + '」'}
+                {last_comment?.attributes.content
+                  ? last_comment?.attributes.content
+                  : comment_count === 0
+                  ? ''
+                  : '「' + t('common:chat.uploaded_image') + '」'}
               </Typography>
             </Box>
           </Box>
