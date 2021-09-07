@@ -39,7 +39,18 @@ const ProgramInfoNoViewingTicket: React.FC = () => {
 
   return (
     <Box className={classes.container}>
-      <BannerCarousel data={dataBanner} />
+      <BannerCarousel
+        data={dataBanner}
+        bannerHeight={189}
+        bannerCurrentVisibleSlide={0}
+        bannerMaxVisibleSlide={1}
+        buttonLeftContainer={{
+          top: '33%',
+        }}
+        buttonRightContainer={{
+          top: '33%',
+        }}
+      />
       <Box className={classes.infoFirstRow}>
         <InfoSection title={t('live_stream_screen.delivery_start_date_and_time')} content={'2021年7月31日 18時00分～19時30分'} />
         <InfoSection

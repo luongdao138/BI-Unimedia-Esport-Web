@@ -17,6 +17,7 @@ interface LiveStreamContentProps {
   freeToWatch?: boolean
   userHasViewingTicket?: boolean
   ticketAvailableForSale?: boolean
+  softKeyboardIsShown?: boolean
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
@@ -132,72 +133,76 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
     return !freeToWatch && !userHasViewingTicket
   }
 
+  const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
+  const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
+
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
         {mediaPlayer()}
         {showOverlayOnMediaPlayer() && mediaOverlayPurchaseTicketView()}
       </Box>
-
-      {isMobile && mobileRegisterChannelContainer()}
-      <Box className={classes.wrap_info}>
-        <Box className={classes.wrap_movie_info}>
-          <Box className={classes.wrap_title}>
-            <Typography className={classes.movie_title}>ムービータイトルムービータイトル…</Typography>
-            <Typography className={classes.device_name}>APEX Legends(PC&Console)</Typography>
-          </Box>
-          {!isMobile ? (
-            <Box className={classes.live_stream_status}>
-              <ESChip
-                color={'primary'}
-                className={classes.statusChip}
-                label={t('live_stream_screen.live_stream_status')}
-                onClick={() => ''}
-              />
+      {mobileRegisterChannelVisible() && mobileRegisterChannelContainer()}
+      {liveBasicContentVisible() && (
+        <Box className={classes.wrap_info}>
+          <Box className={classes.wrap_movie_info}>
+            <Box className={classes.wrap_title}>
+              <Typography className={classes.movie_title}>ムービータイトルムービータイトル…</Typography>
+              <Typography className={classes.device_name}>APEX Legends(PC&Console)</Typography>
             </Box>
-          ) : (
-            shareButton()
-          )}
-        </Box>
-
-        <Box className={classes.wrap_interactive_info}>
-          <Box className={classes.interactive_info}>
-            <Typography className={classes.view}>
-              <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(12000)}
-            </Typography>
-            <Typography className={classes.like}>
-              <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(121231000)}
-            </Typography>
-            <Typography className={classes.dislike}>
-              <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(100)}
-            </Typography>
-            {!isMobile && shareButton()}
+            {!isMobile ? (
+              <Box className={classes.live_stream_status}>
+                <ESChip
+                  color={'primary'}
+                  className={classes.statusChip}
+                  label={t('live_stream_screen.live_stream_status')}
+                  onClick={() => ''}
+                />
+              </Box>
+            ) : (
+              shareButton()
+            )}
           </Box>
-          {!isMobile && (
-            <Box className={classes.dropDownMenu}>
-              <Typography
-                onClick={() => {
-                  setShowReportMenu(true)
-                }}
-                className={classes.three_dot}
-              >
-                <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
+
+          <Box className={classes.wrap_interactive_info}>
+            <Box className={classes.interactive_info}>
+              <Typography className={classes.view}>
+                <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(12000)}
               </Typography>
-              {showReportMenu && (
-                <Box className={`${classes.dropDownContent} MuiPaper-elevation8 MuiPaper-rounded`}>
-                  <ESMenuItem
-                    onClick={() => {
-                      setShowReportMenu(false)
-                    }}
-                  >
-                    {t('live_stream_screen.report')}
-                  </ESMenuItem>
-                </Box>
-              )}
+              <Typography className={classes.like}>
+                <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(121231000)}
+              </Typography>
+              <Typography className={classes.dislike}>
+                <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(100)}
+              </Typography>
+              {!isMobile && shareButton()}
             </Box>
-          )}
+            {!isMobile && (
+              <Box className={classes.dropDownMenu}>
+                <Typography
+                  onClick={() => {
+                    setShowReportMenu(true)
+                  }}
+                  className={classes.three_dot}
+                >
+                  <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
+                </Typography>
+                {showReportMenu && (
+                  <Box className={`${classes.dropDownContent} MuiPaper-elevation8 MuiPaper-rounded`}>
+                    <ESMenuItem
+                      onClick={() => {
+                        setShowReportMenu(false)
+                      }}
+                    >
+                      {t('live_stream_screen.report')}
+                    </ESMenuItem>
+                  </Box>
+                )}
+              </Box>
+            )}
+          </Box>
         </Box>
-      </Box>
+      )}
       {!isMobile && (
         <Box className={classes.wrap_streamer_info}>
           <Box className={classes.streamer_info}>

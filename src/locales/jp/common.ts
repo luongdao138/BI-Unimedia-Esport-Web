@@ -1051,6 +1051,11 @@ export default {
     comment: 'コメント',
     livestream_not_start: '配信開始をお待ち下さい。',
     chat_header: 'チャット',
+    delete_message: '削除する',
+    owned_points: '所有ポイント',
+    premium_message_too_long_pre: 'メッセージは',
+    premium_message_too_long_post: '文字までです',
+    message_placeholder: 'チャットを送信',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

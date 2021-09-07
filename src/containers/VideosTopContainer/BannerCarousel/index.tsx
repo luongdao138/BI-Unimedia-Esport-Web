@@ -8,9 +8,15 @@ import { BannerItem } from '@services/videoTop.services'
 
 type BannerCarouselProps = {
   data: Array<BannerItem>
+  bannerHeight?: number
+  bannerMaxVisibleSlide?: number
+  bannerCurrentVisibleSlide?: number
+  buttonLeftContainer?: any
+  buttonRightContainer?: any
 }
+
 function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerItem> }) {
-  const classes = useStyles()
+  const classes = useStyles({ buttonLeftContainer: {}, buttonRightContainer: {} })
   const { centerSlideDataIndex, data } = props
   return (
     <Box className={classes.paginationContainer}>
@@ -34,10 +40,11 @@ function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerIte
     </Box>
   )
 }
+
 const SlideItem = React.memo(function (props: StackedCarouselSlideProps) {
   const { data, dataIndex } = props
   const cover = data[dataIndex]?.url
-  const classes = useStyles()
+  const classes = useStyles({ buttonLeftContainer: {}, buttonRightContainer: {} })
   // const [load, setLoad] = useState<boolean>(true);
   // const [error, setError] = useState<boolean>(false);
   const refImage = useRef<any>(null)
@@ -64,9 +71,10 @@ const SlideItem = React.memo(function (props: StackedCarouselSlideProps) {
     </Box>
   )
 })
-const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
+const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
   const ref = React.useRef<any>()
-  const classes = useStyles()
+  const { buttonLeftContainer, buttonRightContainer } = props
+  const classes = useStyles({ buttonLeftContainer, buttonRightContainer })
   const [centerSlideDataIndex, setCenterSlideDataIndex] = React.useState(0)
   const onCenterSlideDataIndexChange = (activeSlide: number) => {
     setCenterSlideDataIndex(activeSlide)
@@ -111,6 +119,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
           let currentVisibleSlide = checkCurrentVisible() //1|3|5
           if (parentWidth <= 992) currentVisibleSlide = 3
           if (parentWidth <= 768) currentVisibleSlide = 1
+          const { bannerHeight, bannerMaxVisibleSlide, bannerCurrentVisibleSlide } = props
 
           let width = 700
           let height = 340
@@ -127,10 +136,10 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data }) => {
               carouselWidth={parentWidth}
               slideWidth={width}
               slideComponent={SlideItem}
-              maxVisibleSlide={checkCurrentVisible()}
-              currentVisibleSlide={currentVisibleSlide}
+              maxVisibleSlide={bannerMaxVisibleSlide ?? checkCurrentVisible()}
+              currentVisibleSlide={bannerCurrentVisibleSlide ?? currentVisibleSlide}
               useGrabCursor={true}
-              height={height}
+              height={bannerHeight ?? height}
               onActiveSlideChange={onCenterSlideDataIndexChange}
             />
           )
@@ -182,7 +191,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     objectFit: 'cover',
   },
-  buttonLeftContainer: {
+  buttonLeftContainer: (props: { buttonLeftContainer?: any; buttonRightContainer?: any }) => ({
     position: 'absolute',
     width: 48,
     height: 48,
@@ -195,11 +204,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignSelf: 'center',
     zIndex: 3,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     opacity: 0,
     transition: 'all 500ms',
-  },
-  buttonRightContainer: {
+    ...props.buttonLeftContainer,
+  }),
+  buttonRightContainer: (props: { buttonLeftContainer?: any; buttonRightContainer?: any }) => ({
     position: 'absolute',
     width: 48,
     height: 48,
@@ -212,10 +222,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignSelf: 'center',
     zIndex: 3,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     opacity: 0,
     transition: 'all 500ms',
-  },
+    ...props.buttonRightContainer,
+  }),
   iconBtnStyle: {
     fontSize: 30,
     justifyContent: 'center',

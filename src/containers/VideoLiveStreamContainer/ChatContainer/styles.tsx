@@ -8,20 +8,23 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: 482,
   },
+  chatMessageContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    '&:hover $three_dot': {
+      display: 'flex',
+    },
+  },
+  icon: {},
   chatInputErrorText: {
-    marginTop: '4px',
-    marginLeft: '8px',
+    marginTop: '8px',
+    marginLeft: '28px',
     marginRight: '8px',
     fontSize: '12px',
     color: '#F7F735',
     fontFamily: 'Meiryo',
   },
-  premiumChatError: {
-    marginTop: '6px',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    color: '#F7F735',
-  },
+
   chatPurchaseTicketBox: {
     display: 'flex',
   },
@@ -51,44 +54,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
-  pointList: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    marginTop: 10,
-  },
   pointListRow1: {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
-    flexWrap: 'wrap',
-  },
-  totalPointText: {
-    fontSize: 10,
-    color: '#FFFFFF',
-    whiteSpace: 'pre',
-  },
-  purchasePointText: {
-    fontSize: 10,
-    textDecoration: 'underline',
-    color: '#FFFFFF',
-    cursor: 'pointer',
-  },
-  dialogFooter: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 10,
-  },
-  purchaseButton: {
-    backgroundColor: '#FF4786',
-    width: '100%',
-  },
-  purchaseButtonText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
   },
   purchaseDialogContainer: {
     display: 'flex',
@@ -112,29 +81,28 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 13,
     paddingBottom: 111,
     scrollbarColor: '#222 transparent',
-    scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
-      width: 10,
+      width: '20px',
       opacity: 1,
       padding: 2,
+      cursor: 'pointer',
     },
     '&::-webkit-scrollbar-track': {
-      paddingLeft: 1,
-      background: 'rgba(0,0,0,0.5)',
+      background: '#4D4D4D',
+      border: 'solid 3px transparent',
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222222',
-      borderRadius: 6,
+      backgroundColor: '#212121',
+      backgroundClip: 'padding-box',
+      border: '4px solid rgba(0, 0, 0, 0)',
+      width: '14px',
+      cursor: 'pointer',
     },
   },
   chatBoardContainer: {
     position: 'relative',
   },
-  chatMessage: {
-    fontSize: 14,
-    marginBottom: 4,
-    color: '#FFFFFF',
-  },
+
   chatMessageUser: {
     fontSize: 14,
     color: '#FF4786',
@@ -248,6 +216,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
   },
   input: (props: { chatValidationError?: boolean }) => ({
+    height: '60px',
     borderBottomRightRadius: 'unset',
     zIndex: 11,
     width: '100%',
@@ -292,7 +261,7 @@ const useStyles = makeStyles((theme) => ({
     width: 20,
     height: 20,
     marginBottom: 12.5,
-    marginLeft: 8,
+    marginRight: 8,
   },
   userWatchingList: {
     display: 'flex',
@@ -326,38 +295,12 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   ...purchasePoints,
-  purchaseItem: {
-    height: 28,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  purchaseItemUnselected: {
-    backgroundColor: 'transparent',
-  },
-  purchaseItemText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
   purchaseCommentRoot: {
     backgroundColor: '#212121',
     height: 83,
     paddingLeft: 10,
     paddingRight: 10,
     borderRadius: 4,
-  },
-  purchaseCommentInput: {
-    fontSize: '12px',
-    color: '#FFFFFF',
-    '&::placeholder': {
-      color: '#FFFFFF',
-      opacity: 1,
-    },
   },
   downTriangle: {
     width: 20,
