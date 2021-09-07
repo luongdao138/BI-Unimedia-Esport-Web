@@ -104,6 +104,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   chatBoard: {
+    position: 'relative',
     overflow: 'auto',
     height: 525,
     display: 'flex',
@@ -322,6 +323,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     marginRight: 4,
     padding: 4,
+    cursor: 'pointer',
   },
   ...purchasePoints,
   purchaseItem: {
@@ -362,6 +364,25 @@ const useStyles = makeStyles((theme) => ({
     height: 14,
     marginLeft: 10,
     marginTop: -2,
+  },
+  dialogMess: {
+    position: "absolute", 
+    background: "#000000ab", 
+    height: "100%", 
+    zIndex: 18, 
+    right: 9,
+    display: 'flex',
+    flexDirection: 'column',
+    opacity: 0,
+    visibility: 'hidden',
+    transition: 'all 0.5s'
+  },
+  dialogMessShow:{
+    opacity: 1,
+    visibility: 'visible'
+  },
+  messContentOuter: {
+    flex: 1
   },
   [theme.breakpoints.down(1100)]: {
     container: {
