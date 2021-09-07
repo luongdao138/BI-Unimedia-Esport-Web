@@ -7,13 +7,13 @@ import ESCardContent from '@components/Card/CardContent'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Colors } from '@theme/colors'
-import { LobbyResponse } from '@services/lobby.service'
+import { LobbyListItem } from '@services/lobby.service'
 import i18n from '@locales/i18n'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
-import { DateHelper } from '@utils/helpers/DateHelper'
+import _ from 'lodash'
 
 interface Props {
-  lobby: LobbyResponse
+  lobby: LobbyListItem
 }
 
 const statusText = [
@@ -37,20 +37,18 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const {
     status,
     cover,
-    start_datetime,
-    entry_end_datetime,
     hash_key,
     participant_count,
     max_participants,
-    participants,
     organizer_avatar,
     organizer_name,
     title,
     game_title,
     entry_status,
   } = lobby.attributes // TODO use lodash get instead
-  const startDate = DateHelper.formatDate(start_datetime)
-  const entryEndDate = DateHelper.formatDate(entry_end_datetime)
+
+  const { startDate, entryEndDate, participantsLimited } = lobby
+
   const value = status === LOBBY_STATUS.CANCELLED || status === LOBBY_STATUS.DELETED ? LOBBY_STATUS.ENDED : status
 
   const getMediaScreen = () => {
@@ -133,20 +131,17 @@ const LobbyCard: React.FC<Props> = ({ lobby }) => {
   const getParticipants = () => {
     return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" className={classes.avatarContainer}>
-        {participants && participants.length > 0
-          ? participants
-              .slice(0, 3)
-              .map((participant, i) => (
-                <ESAvatar
-                  size={20}
-                  key={`participants${i}`}
-                  style={{ zIndex: participants.length - i }}
-                  className={classes.pAvatar}
-                  src={participant?.profile_image}
-                  alt={participant?.nickname}
-                />
-              ))
-          : null}
+        {!_.isEmpty(participantsLimited) &&
+          participantsLimited.map((participant, i) => (
+            <ESAvatar
+              size={20}
+              key={`participants${i}`}
+              style={{ zIndex: participantsLimited.length - i }}
+              className={classes.pAvatar}
+              src={participant?.profile_image}
+              alt={participant?.nickname}
+            />
+          ))}
       </Box>
     )
   }

@@ -1,4 +1,5 @@
 import i18n from '@locales/i18n'
+import { LobbyFilterItem, LobbyFilterOption } from '@services/lobby.service'
 
 // TEMPORARY: battle royale removed
 export const PARTICIPANT_TYPE = {
@@ -112,3 +113,31 @@ export const LOBBY_DIALOGS = {
     cancellationText: i18n.t('common:lobby.cancel_lobby_dialog.cancellationText'),
   },
 }
+
+export const defaultFilterOptions: LobbyFilterItem[] = [
+  {
+    type: LobbyFilterOption.all,
+    label: i18n.t('common:arenaSearchFilters.all'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.suggested,
+    label: i18n.t('common:lobbySearchFilters.suggested'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.recruiting,
+    label: i18n.t('common:lobbySearchFilters.beforeStart'),
+    loginRequired: false,
+  },
+  {
+    type: LobbyFilterOption.joined,
+    label: i18n.t('common:lobbySearchFilters.inProgress'),
+    loginRequired: true,
+  },
+  {
+    type: LobbyFilterOption.organized,
+    label: i18n.t('common:lobbySearchFilters.organized'),
+    loginRequired: true,
+  },
+]

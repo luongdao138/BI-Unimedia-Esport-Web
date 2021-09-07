@@ -1,11 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import { ParticipantsData, PageMeta, LobbyResponse, CategoryItem, LobbyDetail, ParticipantsItem } from '@services/lobby.service'
+import { ParticipantsData, PageMeta, LobbyListItem, CategoryItem, LobbyDetail, ParticipantsItem } from '@services/lobby.service'
 
 type StateType = {
   participants: ParticipantsData
   recommendedParticipants: ParticipantsData
-  searchLobbies?: Array<LobbyResponse>
+  searchLobbies?: Array<LobbyListItem>
   searchLobbiesMeta?: PageMeta
   lobbyCategories: CategoryItem['attributes'][]
   lobbyDetail?: LobbyDetail

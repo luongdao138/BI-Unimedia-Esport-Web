@@ -6,6 +6,7 @@ import LobbyCard from '@components/LobbyCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import useSearch from '@containers/Search/useSearch'
+import { LobbyFilterOption } from '@services/lobby.service'
 
 const LobbySearchContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -16,7 +17,7 @@ const LobbySearchContainer: React.FC = () => {
 
   useEffect(() => {
     setKeyword(searchKeyword)
-    searchLobby({ page: 1, keyword: searchKeyword })
+    searchLobby({ page: 1, keyword: searchKeyword, filter: LobbyFilterOption.all })
 
     return () => {
       resetSearchLobbies()
@@ -26,7 +27,7 @@ const LobbySearchContainer: React.FC = () => {
 
   const loadMore = () => {
     if (page && page.current_page !== page.total_pages) {
-      searchLobby({ page: page.current_page + 1, keyword: keyword })
+      searchLobby({ page: page.current_page + 1, keyword: keyword, filter: LobbyFilterOption.all })
     }
   }
 
