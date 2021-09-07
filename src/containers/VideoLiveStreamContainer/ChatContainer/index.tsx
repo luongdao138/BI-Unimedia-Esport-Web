@@ -160,16 +160,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
     return false;
   }
 
-  async function deleteMsg(idDelete: string, e: any) {
-    const input = {
-      id: idDelete
-    };
-    const deleteAt: any = await API.graphql(graphqlOperation(deleteMessage, {input: input}));
-    console.log(deleteAt);
-    if (deleteAt.data) {
-      setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
-    }
-  }
+  // async function deleteMsg(idDelete: string, e: any) {
+  //   const input = {
+  //     id: idDelete
+  //   };
+  //   const deleteAt: any = await API.graphql(graphqlOperation(deleteMessage, {input: input}));
+  //   console.log(deleteAt);
+  //   if (deleteAt.data) {
+  //     setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
+  //   }
+  // }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageText(e.target.value)
@@ -195,14 +195,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
   })
   const classes = useStyles({ chatValidationError: !!errors.message })
 
-  const getChatData = () =>
-    Array(30)
-      .fill('')
-      .map((_, i) => ({
-        id: i,
-        user: 'Account Name',
-        content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-      }))
+  // const getChatData = () =>
+  //   Array(30)
+  //     .fill('')
+  //     .map((_, i) => ({
+  //       id: i,
+  //       user: 'Account Name',
+  //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+  //     }))
 
   const handleChatInputOnFocus = () => {
     handleKeyboardVisibleState(true)
