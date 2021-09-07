@@ -96,6 +96,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         <Box className={classes.filters}>
           {defaultFilterOptions.map((option) => (
             <ESChip
+              isGameList
               key={option.type}
               color={option.type === filter ? 'primary' : undefined}
               className={classes.filterChip}
@@ -106,6 +107,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           {loginRequiredFilterOptions.map((option) => (
             <LoginRequired key={option.type}>
               <ESChip
+                isGameList
                 key={option.type}
                 color={option.type === filter ? 'primary' : undefined}
                 className={classes.filterChip}
@@ -195,7 +197,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   card: {
     paddingTop: 0,
     paddingRight: theme.spacing(1),
-    paddingBottom: theme.spacing(3.6),
+    paddingBottom: theme.spacing(3),
     paddingLeft: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
       paddingBottom: theme.spacing(1),
