@@ -20,7 +20,14 @@ import { getInitialScheduleValues } from '@containers/arena/UpsertForm/FormLiveS
 import { validationScheduleScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
+import {
+  baseViewingURL,
+  GetCategoryResponse,
+  SetLiveStreamParams,
+  StreamUrlAndKeyParams,
+  TYPE_SECRET_KEY,
+  TYPE_SETTING,
+} from '@services/liveStream.service'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { FORMAT_DATE_TIME_JP, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
@@ -63,6 +70,9 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [categoryName, setCategoryName] = useState('')
   const [showReNew, setShowReNew] = useState<boolean>(false)
+  const [isLive, setIsLive] = useState<boolean>(false)
+  const [status, setStatus] = useState<number>(0)
+  const [counter, setCounter] = useState<number>(0)
 
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
@@ -86,17 +96,40 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const checkStatusRecord = (data) => {
     if (!data?.data?.created_at) {
-      onReNewUrlAndKey(KEY_TYPE.URL)
+      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
       setShowReNew(true)
     }
+    checkStatus(data?.data)
+  }
+
+  const checkStatus = (data) => {
+    //check live stream isn't it? 1 - live
+    const status = data?.status === 1 ? true : false
+    setIsLive(status)
+    setStatus(data?.status)
   }
 
   useEffect(() => {
+    setCounter(counter + 1)
+    onHandleError()
+  }, [formik.errors.stepSettingTwo])
+
+  const onHandleError = () => {
+    removeField()
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(2, formik.errors)
     setError(!isRequiredFieldsValid)
-  }, [formik.errors.stepSettingTwo])
+  }
+
+  const removeField = () => {
+    if (counter <= 1) {
+      formik.errors.stepSettingTwo?.stream_notify_time && delete formik.errors.stepSettingTwo?.stream_notify_time
+      formik.errors.stepSettingTwo?.video_publish_end_time && delete formik.errors.stepSettingTwo?.video_publish_end_time
+      formik.errors.stepSettingTwo?.sell_ticket_start_time && delete formik.errors.stepSettingTwo?.sell_ticket_start_time
+    }
+    return formik.errors
+  }
 
   useEffect(() => {
     category?.data.forEach((h) => {
@@ -194,16 +227,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     formik.setFieldValue('stepSettingTwo.sell_ticket_start_time', !formik.values.stepSettingTwo.use_ticket ? new Date().toString() : null)
   }
 
-  const onReNewUrlAndKey = (type: number, showToast?: boolean) => {
-    getStreamUrlAndKey((url, key) => {
-      if (type === KEY_TYPE.URL) {
-        formik.setFieldValue('stepSettingTwo.stream_url', url)
-        formik.setFieldValue('stepSettingTwo.stream_key', key)
-        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      } else {
-        formik.setFieldValue('stepSettingTwo.stream_key', key)
-        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      }
+  const onReNewUrlAndKey = (type: string, method: string, showToast?: boolean) => {
+    const params: StreamUrlAndKeyParams = {
+      type: method,
+      objected: type,
+      is_live: TYPE_SECRET_KEY.LIVE,
+    }
+    getStreamUrlAndKey(params, (url, key) => {
+      // if (type === KEY_TYPE.URL) {
+      formik.setFieldValue('stepSettingTwo.stream_url', url)
+      formik.setFieldValue('stepSettingTwo.stream_key', key)
+      showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+      // } else {
+      //   formik.setFieldValue('stepSettingTwo.stream_key', key)
+      //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+      // }
     })
   }
 
@@ -368,7 +406,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   label={i18n.t('common:delivery_reservation_tab.category')}
                   required={true}
                   size="big"
-                  disabled={false}
+                  disabled={isLive}
                   helperText={formik?.touched?.stepSettingTwo?.category && formik?.errors?.stepSettingTwo?.category}
                   error={formik?.touched?.stepSettingTwo?.category && !!formik?.errors?.stepSettingTwo?.category}
                 >
@@ -415,13 +453,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     formik?.errors?.stepSettingTwo?.notify_live_end_date
                   }
                   error={formik?.touched?.stepSettingTwo?.stream_notify_time && !!formik?.errors?.stepSettingTwo?.stream_notify_time}
-                  disabled={false}
+                  disabled={status === 0 ? false : true}
+                  minDateMessage={''}
+                  InputProps={{
+                    classes: { root: classes.root },
+                  }}
                   // readOnly={!isFirstStep()}
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.stream_notify_time).format('YYYY年MM月DD日 HH:mm')}
+                    {moment(formik.values.stepSettingTwo.stream_notify_time).format(FORMAT_DATE_TIME_JP)}
                   </Typography>
                 </Box>
               )}
@@ -448,12 +490,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     formik?.touched?.stepSettingTwo?.stream_schedule_start_time &&
                     !!formik?.errors?.stepSettingTwo?.stream_schedule_start_time
                   }
-                  disabled={false}
+                  disabled={status === 0 ? false : true}
+                  minDateMessage={''}
+                  InputProps={{
+                    classes: { root: classes.root },
+                  }}
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.stream_schedule_start_time).format('YYYY年MM月DD日 HH:mm')}
+                    {moment(formik.values.stepSettingTwo.stream_schedule_start_time).format(FORMAT_DATE_TIME_JP)}
                   </Typography>
                 </Box>
               )}
@@ -479,12 +525,16 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   error={
                     formik?.touched?.stepSettingTwo?.stream_schedule_end_time && !!formik?.errors?.stepSettingTwo?.stream_schedule_end_time
                   }
-                  disabled={false}
+                  disabled={status === 0 ? false : true}
+                  minDateMessage={''}
+                  InputProps={{
+                    classes: { root: classes.root },
+                  }}
                 />
               ) : (
                 <Box pt={1}>
                   <Typography className={classes.date}>
-                    {moment(formik.values.stepSettingTwo.stream_schedule_end_time).format('YYYY年MM月DD日 HH:mm')}
+                    {moment(formik.values.stepSettingTwo.stream_schedule_end_time).format(FORMAT_DATE_TIME_JP)}
                   </Typography>
                 </Box>
               )}
@@ -513,6 +563,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   error={
                     formik?.touched?.stepSettingTwo?.video_publish_end_time && !!formik?.errors?.stepSettingTwo?.video_publish_end_time
                   }
+                  minDateMessage={''}
                 />
               ) : (
                 <Box pt={1}>
@@ -536,6 +587,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     }}
                     label={t('common:streaming_setting_screen.ticket_use')}
                     name="stepSettingTwo.use_ticket"
+                    disabled={status === 0 ? false : true}
                   />
                 </Box>
               ) : (
@@ -617,12 +669,19 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       }}
                       onBlur={formik.values.stepSettingTwo.use_ticket && formik.handleBlur}
                       helperText={
-                        formik?.touched?.stepSettingTwo?.sell_ticket_start_time && formik?.errors?.stepSettingTwo?.sell_ticket_start_time
+                        (formik?.touched?.stepSettingTwo?.sell_ticket_start_time &&
+                          formik?.errors?.stepSettingTwo?.sell_ticket_start_time) ||
+                        formik?.errors?.stepSettingTwo?.sell_less_than_start
                       }
                       error={
                         formik?.touched?.stepSettingTwo?.sell_ticket_start_time && !!formik?.errors?.stepSettingTwo?.sell_ticket_start_time
                       }
                       readOnly={!formik.values.stepSettingTwo.use_ticket}
+                      minDateMessage={''}
+                      disabled={isLive}
+                      InputProps={{
+                        classes: { root: classes.root },
+                      }}
                     />
                   ) : (
                     <Box pt={1}>
@@ -644,6 +703,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 onChange={() => formik.setFieldValue('stepSettingTwo.share_sns_flag', !formik.values.stepSettingTwo.share_sns_flag)}
                 label={t('common:streaming_setting_screen.share_SNS')}
                 name="isShareSNS"
+                disabled={isLive}
               />
             </Box>
           ) : (
@@ -719,8 +779,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL, true)}
+                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -789,8 +849,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY, true)}
+                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -1006,5 +1066,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addPaddingNote: {
     paddingTop: 8,
+  },
+  root: {
+    backgroundColor: Colors.black,
+    borderRadius: 4,
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderWidth: 1,
+      borderColor: '#fff',
+    },
+    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+      background: 'rgba(247, 247, 53, 0.1)',
+    },
+    '&.Mui-disabled': {
+      borderWidth: 1,
+      // backgroundColor:'transparent',
+      '& .MuiOutlinedInput-notchedOutline': {
+        // borderColor: 'transparent',
+      },
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #000000 inset',
+    },
   },
 }))

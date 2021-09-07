@@ -366,23 +366,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -2,
   },
   dialogMess: {
-    position: "absolute", 
-    background: "#000000ab", 
-    height: "100%", 
-    zIndex: 18, 
+    position: 'absolute',
+    background: '#000000ab',
+    height: '100%',
+    zIndex: 18,
     right: 9,
     display: 'flex',
     flexDirection: 'column',
     opacity: 0,
     visibility: 'hidden',
-    transition: 'all 0.5s'
+    transition: 'all 0.5s',
   },
-  dialogMessShow:{
+  dialogMessShow: {
     opacity: 1,
-    visibility: 'visible'
+    visibility: 'visible',
   },
   messContentOuter: {
-    flex: 1
+    flex: 1,
   },
   [theme.breakpoints.down(1100)]: {
     container: {

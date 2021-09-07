@@ -132,7 +132,7 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => 
           />
         </div>
       </Player>
-      {playState?.ended && <div className={classes.blurBackground} />}
+      {/* {playState?.ended && <div className={classes.blurBackground} />} */}
     </>
   )
 }

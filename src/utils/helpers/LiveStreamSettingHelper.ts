@@ -11,6 +11,7 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>): b
         requiredFieldErrors.push(stepSettingOne.title)
         requiredFieldErrors.push(stepSettingOne.description)
         requiredFieldErrors.push(stepSettingOne.category)
+        requiredFieldErrors.push(stepSettingOne.video_publish_end_time)
         if (stepSettingOne.ticket_price) {
           requiredFieldErrors.push(stepSettingOne.ticket_price)
         }
@@ -26,7 +27,7 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>): b
         requiredFieldErrors.push(stepSettingTwo.stream_notify_time)
         requiredFieldErrors.push(stepSettingTwo.stream_schedule_start_time)
         requiredFieldErrors.push(stepSettingTwo.stream_schedule_end_time)
-        if (stepSettingTwo.ticket_price && stepSettingTwo.sell_ticket_start_time) {
+        if (stepSettingTwo.sell_optional && stepSettingTwo.sell_ticket_start_time) {
           requiredFieldErrors.push(stepSettingTwo.ticket_price)
           requiredFieldErrors.push(stepSettingTwo.sell_ticket_start_time)
         }

@@ -19,7 +19,14 @@ import { getInitialLiveSettingValues } from '@containers/arena/UpsertForm/FormLi
 import { validationLiveSettingsScheme } from '@containers/arena/UpsertForm/FormLiveSettingsModel/ValidationLiveSettingsScheme'
 import { LiveStreamSettingHelper } from '@utils/helpers/LiveStreamSettingHelper'
 import useLiveSetting from '../useLiveSetting'
-import { baseViewingURL, GetCategoryResponse, SetLiveStreamParams, TYPE_SETTING } from '@services/liveStream.service'
+import {
+  baseViewingURL,
+  GetCategoryResponse,
+  SetLiveStreamParams,
+  StreamUrlAndKeyParams,
+  TYPE_SECRET_KEY,
+  TYPE_SETTING,
+} from '@services/liveStream.service'
 import useReturnHref from '@utils/hooks/useReturnHref'
 import { FIELD_TITLES } from '../field_titles.constants'
 import { showDialog } from '@store/common/actions'
@@ -70,12 +77,17 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
   const paid_delivery_flag = userProfile?.attributes?.paid_delivery_flag
   const [showReNew, setShowReNew] = useState<boolean>(false)
   const [errPublicTime, setErrPublicTime] = useState(false)
+  const [isLive, setIsLive] = useState<boolean>(false)
+  // const [status, setStatus] = useState<number>(0)
+  const [counter, setCounter] = useState<number>(0)
 
   useEffect(() => {
     getLiveSetting()
   }, [])
 
   useEffect(() => {
+    setCounter(counter + 1)
+    removeField()
     const isRequiredFieldsValid = LiveStreamSettingHelper.checkRequiredFields(1, formik.errors)
     setError(!isRequiredFieldsValid)
   }, [formik.errors.stepSettingOne])
@@ -88,20 +100,35 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     })
   }, [formik.values.stepSettingOne.category])
 
+  const removeField = () => {
+    if (counter <= 1) {
+      formik?.errors?.stepSettingOne?.video_publish_end_time && delete formik?.errors?.stepSettingOne?.video_publish_end_time
+    }
+    return formik.errors
+  }
+
   const getLiveSetting = () => {
     getLiveSettingTab({ type: TYPE_SETTING.LIVE }).then((res) => {
-      checkStatusRecord(res.payload)
       formik.validateForm()
+      checkStatusRecord(res.payload)
     })
   }
 
   const checkStatusRecord = (data) => {
     if (!data?.data?.created_at) {
-      onReNewUrlAndKey(KEY_TYPE.URL)
+      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
       setShowReNew(true)
     }
+    checkStatus(data?.data)
+  }
+
+  const checkStatus = (data) => {
+    //check live stream isn't it? 1 - live
+    const status = data?.status === 1 ? true : false
+    setIsLive(status)
+    // setStatus(data?.status)
   }
 
   const { uploadLiveStreamThumbnailImage, isUploading } = useUploadImage()
@@ -245,16 +272,21 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     return false
   }
 
-  const onReNewUrlAndKey = (type: number, showToast?: boolean) => {
-    getStreamUrlAndKey((url, key) => {
-      if (type === KEY_TYPE.URL) {
-        formik.setFieldValue('stepSettingOne.stream_url', url)
-        formik.setFieldValue('stepSettingOne.stream_key', key)
-        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      } else {
-        formik.setFieldValue('stepSettingOne.stream_key', key)
-        showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
-      }
+  const onReNewUrlAndKey = (type: string, method: string, showToast?: boolean) => {
+    const params: StreamUrlAndKeyParams = {
+      type: method,
+      objected: type,
+      is_live: TYPE_SECRET_KEY.LIVE,
+    }
+    getStreamUrlAndKey(params, (url, key) => {
+      // if (type === KEY_TYPE.URL) {
+      formik.setFieldValue('stepSettingOne.stream_url', url)
+      formik.setFieldValue('stepSettingOne.stream_key', key)
+      showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+      // } else {
+      //   formik.setFieldValue('stepSettingOne.stream_key', key)
+      //   showToast && dispatch(commonActions.addToast(t('common:streaming_setting_screen.renew_success_toast')))
+      // }
     })
   }
   // console.log('formik.values.stepSettingOne.description.trim()', formik.values.stepSettingOne.description);
@@ -306,7 +338,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     src={formik.values.stepSettingOne.thumbnail}
                     onChange={handleUpload}
                     isUploading={isUploading}
-                    disabled={!isFirstStep()}
+                    disabled={true}
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />
@@ -462,6 +494,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     }}
                     label={t('common:streaming_setting_screen.ticket_use')}
                     name="stepSettingOne.use_ticket"
+                    disabled={isLive}
                   />
                 </Box>
               ) : (
@@ -491,7 +524,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                       size="big"
                       isNumber={true}
                       formik={formik}
-                      disabled={!isFirstStep()}
+                      disabled={isLive}
                       className={getAddClassByStep(classes.input_text)}
                       readOnly={!formik.values.stepSettingOne.use_ticket}
                       nowrapHelperText
@@ -504,6 +537,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                           <></>
                         )
                       }
+                      classes={{ root: classes.root }}
                     />
                   </Box>
                 </Box>
@@ -527,6 +561,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                 }}
                 label={t('common:streaming_setting_screen.share_SNS')}
                 name="share_sns_flag"
+                disabled={isLive}
               />
             </Box>
           ) : (
@@ -596,8 +631,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.URL, true)}
+                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -660,8 +695,8 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                   py={1}
                   display="flex"
                   justifyContent="flex-end"
-                  className={showReNew ? classes.urlCopy : classes.linkDisable}
-                  onClick={() => showReNew && onReNewUrlAndKey(KEY_TYPE.KEY, true)}
+                  className={showReNew && !isLive ? classes.urlCopy : classes.linkDisable}
+                  onClick={() => showReNew && !isLive && onReNewUrlAndKey(TYPE_SECRET_KEY.KEY, TYPE_SECRET_KEY.RE_NEW, true)}
                 >
                   <Typography className={classes.textLink}>{t('common:streaming_setting_screen.reissue')}</Typography>
                 </Box>
@@ -869,5 +904,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addPaddingNote: {
     paddingTop: 8,
+  },
+  root: {
+    backgroundColor: Colors.black,
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderWidth: 1,
+      borderColor: '#fff',
+    },
+    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+      background: 'rgba(247, 247, 53, 0.1)',
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #000000 inset',
+    },
   },
 }))
