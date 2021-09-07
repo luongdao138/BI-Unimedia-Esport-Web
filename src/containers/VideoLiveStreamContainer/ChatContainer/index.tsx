@@ -15,7 +15,8 @@ import { useFormik } from 'formik'
 
 import API, {GraphQLResult, graphqlOperation} from '@aws-amplify/api';
 import { listMessages } from "src/graphql/queries";
-import { createMessage, deleteMessage } from "src/graphql/mutations";
+import { createMessage } from "src/graphql/mutations";
+// import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage } from "src/graphql/subscriptions";
 import * as APIt from 'src/types/graphqlAPI';
 
