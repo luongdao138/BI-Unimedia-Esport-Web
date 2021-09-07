@@ -108,14 +108,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply, loa
           </Box>
 
           <img src={imageURL} className={classes.coverImg} />
-
-          {isUploading ? (
-            <Box className={classes.loader}>
-              <ESLoader />
-            </Box>
-          ) : null}
         </Box>
       )}
+      {isUploading ? (
+        <Box className={classes.loader}>
+          <ESLoader />
+        </Box>
+      ) : null}
     </>
   )
 }
@@ -213,8 +212,8 @@ const useStyles = makeStyles((theme) => ({
   },
   loader: {
     display: 'flex',
-    position: 'absolute',
-    zIndex: 50,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     justifyContent: 'center',
     alignItems: 'center',
   },
