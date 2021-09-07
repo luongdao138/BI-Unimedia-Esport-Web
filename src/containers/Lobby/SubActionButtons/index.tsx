@@ -30,11 +30,15 @@ const SubActionButtons: React.FC<Props> = ({ lobby, openChat, openMemberList }) 
    * [2] Different text for after confirmed
    */
     if (status !== LOBBY_STATUS.READY && status !== LOBBY_STATUS.DELETED && status !== LOBBY_STATUS.CANCELLED) {
+      let buttonText = isFreezed ? i18n.t('common:lobby.buttons.member_list_confirmed') : i18n.t('common:lobby.buttons.member_list')
+      if (status === LOBBY_STATUS.IN_PROGRESS || status === LOBBY_STATUS.ENDED)
+        buttonText = i18n.t('common:lobby.buttons.member_list_confirmed')
+
       return (
         <Box className={classes.actionButton}>
           <LoginRequired>
             <ESButton variant="outlined" fullWidth onClick={openMemberList}>
-              {isFreezed ? i18n.t('common:lobby.buttons.member_list_confirmed') : i18n.t('common:lobby.buttons.member_list')}
+              {buttonText}
             </ESButton>
           </LoginRequired>
         </Box>
