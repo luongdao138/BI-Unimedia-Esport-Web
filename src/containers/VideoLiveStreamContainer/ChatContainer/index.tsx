@@ -85,6 +85,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>(null)
   const [chatInputValidationError, setChatInputValidationError] = useState<string>('')
   const [premiumChatValidationError, setPremiumChatValidationError] = useState<string>('')
+  const [messActiveUser, setMessActiveUser] = useState<string | number>('')
 
   const { t } = useTranslation('common')
   const classes = useStyles({ chatValidationError: !!chatInputValidationError })
@@ -259,13 +260,20 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   )
 
   const chatBoardComponent = () => (
-    <Box className={classes.chatBoardContainer}>
+    <Box className={`${classes.chatBoardContainer}`}>
+      <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
+        {chatDonateMessage()}
+        <Box className={`${classes.messContentOuter}`} onClick={() => {
+            setMessActiveUser('')
+        }}>
+        </Box>
+      </Box>
       <Box className={classes.chatBoard}>
         {getChatData().map((message, index) => {
           if (index === 2) return chatDonateMessage()
           const { user, content, id } = message
           return (
-            <Typography key={id} className={classes.chatMessage}>
+            <Typography key={id} className={classes.chatMessage} id={`chat_${id}`}>
               <span className={classes.chatMessageUser}>{`${user}: `}</span>
               {content}
             </Typography>
@@ -289,11 +297,26 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     </Box>
   )
 
+  const scrollToCurrentMess = () => {
+    const current_mess = document.getElementById('chat_23')
+    const mess_container = current_mess.parentNode as Element
+    mess_container.scrollTop = current_mess.offsetTop 
+  }
+
   const chatContent = () => (
     <Box className={classes.chatContent}>
+      <Button onClick={scrollToCurrentMess}>
+        Scroll to chat mess
+      </Button>
       <Box className={classes.userWatchingList}>
         {getUserWatchingList().map(({ id, user_avatar }) => (
-          <Box key={id} className={classes.userWatchingItem}>
+          <Box key={id} className={classes.userWatchingItem} onClick={() => {
+            if(messActiveUser || messActiveUser === 0) {
+              setMessActiveUser('')
+            } else {
+              setMessActiveUser(id)
+            }
+          }}>
             <img src={user_avatar} />
           </Box>
         ))}
