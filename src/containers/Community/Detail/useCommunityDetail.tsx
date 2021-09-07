@@ -9,6 +9,7 @@ const { selectors, actions } = community
 const getCommunityDetailMeta = createMetaSelector(actions.getCommunityDetail)
 const getFollowCommmutyMeta = createMetaSelector(actions.followCommunity)
 const getUnfollowCommmutyMeta = createMetaSelector(actions.unfollowCommunity)
+const getUnfollowCommmutyMetaPending = createMetaSelector(actions.unfollowCommunityPending)
 const getTopicListMeta = createMetaSelector(actions.getTopicList)
 
 const useCommunityDetail = (): {
@@ -21,8 +22,10 @@ const useCommunityDetail = (): {
   getTopicList: (params: TopicListParams) => void
   followCommunity: (hash_key?: string) => void
   unfollowCommunity: (hash_key?: string) => void
+  unfollowCommunityPending: (hash_key?: string) => void
   followCommunityMeta: Meta
   unfollowCommunityMeta: Meta
+  unfollowCommunityPendingMeta: Meta
   topicListMeta: Meta
   topicListPageMeta: PageMeta
 } => {
@@ -43,8 +46,10 @@ const useCommunityDetail = (): {
 
   const followCommunityMeta = useAppSelector(getFollowCommmutyMeta)
   const unfollowCommunityMeta = useAppSelector(getUnfollowCommmutyMeta)
+  const unfollowCommunityPendingMeta = useAppSelector(getUnfollowCommmutyMetaPending)
   const followCommunity = (hash_key: string) => dispatch(actions.followCommunity(hash_key))
   const unfollowCommunity = (hash_key: string) => dispatch(actions.unfollowCommunity(hash_key))
+  const unfollowCommunityPending = (hash_key: string) => dispatch(actions.unfollowCommunityPending(hash_key))
 
   return {
     handleBack,
@@ -56,8 +61,10 @@ const useCommunityDetail = (): {
     meta,
     followCommunity,
     unfollowCommunity,
+    unfollowCommunityPending,
     followCommunityMeta,
     unfollowCommunityMeta,
+    unfollowCommunityPendingMeta,
     topicListMeta,
     topicListPageMeta,
   }

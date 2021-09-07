@@ -350,6 +350,22 @@ export const unfollowCommunity = createAsyncThunk<void, string>(
     }
   }
 )
+
+export const unfollowCommunityPending = createAsyncThunk<void, string>(
+  COMMUNITY_ACTION_TYPE.UNFOLLOW_COMMUNITY_PENDING,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.unfollowCommunity(params)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const getCommentsList = createAsyncThunk<services.CommentsListResponse, services.CommentsListParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMENTS_LIST,
   async (params, { rejectWithValue }) => {

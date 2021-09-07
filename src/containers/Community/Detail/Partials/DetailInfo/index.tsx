@@ -60,7 +60,15 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const data = detail.attributes
   const { isNotMember, isPublic, isOfficial } = useCommunityHelper(detail)
 
-  const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
+  const {
+    isAuthenticated,
+    followCommunity,
+    unfollowCommunity,
+    followCommunityMeta,
+    unfollowCommunityMeta,
+    unfollowCommunityPending,
+    unfollowCommunityPendingMeta,
+  } = useCommunityDetail()
 
   const router = useRouter()
   const { hash_key } = router.query
@@ -135,6 +143,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     }
   }, [unfollowCommunityMeta])
 
+  useEffect(() => {
+    if (unfollowCommunityPendingMeta.loaded) {
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
+    }
+  }, [unfollowCommunityPendingMeta])
+
   const followHandle = () => {
     followCommunity(String(hash_key))
     if (!isCommunityAutomatic) {
@@ -152,8 +166,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const unfollowDialogHandle = () => {
     unfollowCommunity(String(hash_key))
-    setIsDiscardApplying(false)
     setIsDiscard(false)
+  }
+
+  const unfollowApplyingDialogHandle = () => {
+    unfollowCommunityPending(String(hash_key))
+    setIsDiscardApplying(false)
   }
   const cancelApplyingHandle = () => {
     setIsDiscardApplying(true)
@@ -317,7 +335,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         onClose={() => {
           setIsDiscardApplying(false)
         }}
-        onSubmit={unfollowDialogHandle}
+        onSubmit={unfollowApplyingDialogHandle}
         title={t('common:community.unfollow_dialog_applying.title')}
         description={t('common:community.unfollow_dialog_applying.description')}
         confirmTitle={t('common:community.unfollow_dialog_applying.submit_title')}
