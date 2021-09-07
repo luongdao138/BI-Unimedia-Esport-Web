@@ -13,7 +13,8 @@ import { clearMetaData } from '@store/metadata/actions'
 
 const { actions, selectors } = community
 const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
-// TODO change when data is ready
+const createCommunityMeta = createMetaSelector(actions.createCommunity)
+
 export type EditableTypes = {
   name: boolean
   description: boolean
@@ -34,6 +35,7 @@ const useCommunityCreate = (): {
   submit(params: CommunityFormParams): void
   update(params: UpdateParams): void
   getCommunityFeaturesMeta: Meta
+  getCreateCommunityMeta: Meta
   getCommunityFeatures: () => void
 } => {
   const { t } = useTranslation(['common'])
@@ -43,7 +45,9 @@ const useCommunityCreate = (): {
   const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const getCommunityFeatures = () => dispatch(actions.getCommunityFeatures())
   const getCommunityFeaturesMeta = useAppSelector(_getCommunityFeaturesMeta)
+  const getCreateCommunityMeta = useAppSelector(createCommunityMeta)
   const [isEdit, setIsEdit] = useState(false)
+
   const [editables, setEditables] = useState<EditableTypes>({
     name: true,
     description: true,
@@ -72,7 +76,7 @@ const useCommunityCreate = (): {
     if (actions.updateCommunity.fulfilled.match(resultAction)) {
       router.push(`${ESRoutes.COMMUNITY}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getCommunityDetail(String(resultAction.meta.arg.hash_key)))
-      dispatch(commonActions.addToast(t('common:community_create.community_created_toast')))
+      dispatch(commonActions.addToast(t('common:community_create.community_updated_toast')))
     }
   }
 
@@ -105,7 +109,17 @@ const useCommunityCreate = (): {
     }
   }, [community, router])
 
-  return { isEdit, update, community, communityFeatures, editables, submit, getCommunityFeaturesMeta, getCommunityFeatures }
+  return {
+    isEdit,
+    update,
+    community,
+    communityFeatures,
+    editables,
+    submit,
+    getCommunityFeaturesMeta,
+    getCommunityFeatures,
+    getCreateCommunityMeta,
+  }
 }
 
 export default useCommunityCreate

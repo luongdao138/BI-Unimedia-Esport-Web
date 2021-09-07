@@ -10,7 +10,6 @@ import * as commonActions from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import ESTabs from '@components/Tabs'
 import ESTab from '@components/Tab'
-import ESButtonTwitterCircle from '@components/Button/TwitterCircle'
 import InfoContainer from './../InfoContainer'
 import TopicListContainer from './../TopicListContainer'
 import useCommunityDetail from './../../useCommunityDetail'
@@ -21,11 +20,13 @@ import SearchContainer from '../SearchContainer'
 import TopicCreateButton from '@containers/Community/Partials/TopicCreateButton'
 import { ESRoutes } from '@constants/route.constants'
 import FollowList from '../FollowList'
-import { CommunityDetail, TopicDetail } from '@services/community.service'
+import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
 import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
+import { TwitterShareButton } from 'react-share'
+import _ from 'lodash'
 
 const ROLE_TYPES = {
   IS_ADMIN: 'setIsAdmin',
@@ -37,7 +38,7 @@ const ROLE_TYPES = {
 type Props = {
   detail: CommunityDetail
   toEdit?: () => void
-  topicList: TopicDetail[]
+  topicList: Array<TopicDetailList>
   showTopicListAndSearchTab: boolean
 }
 
@@ -57,9 +58,17 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isDiscard, setIsDiscard] = useState(false)
   const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
-  const { isNotMember, isPublic } = useCommunityHelper(detail)
+  const { isNotMember, isPublic, isOfficial } = useCommunityHelper(detail)
 
-  const { isAuthenticated, followCommunity, unfollowCommunity, followCommunityMeta, unfollowCommunityMeta } = useCommunityDetail()
+  const {
+    isAuthenticated,
+    followCommunity,
+    unfollowCommunity,
+    followCommunityMeta,
+    unfollowCommunityMeta,
+    unfollowCommunityPending,
+    unfollowCommunityPendingMeta,
+  } = useCommunityDetail()
 
   const router = useRouter()
   const { hash_key } = router.query
@@ -123,7 +132,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   }, [])
 
   useEffect(() => {
-    if (followCommunityMeta.loaded) {
+    if (followCommunityMeta.loaded && isCommunityAutomatic) {
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, true)
     }
   }, [followCommunityMeta])
@@ -133,6 +142,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
     }
   }, [unfollowCommunityMeta])
+
+  useEffect(() => {
+    if (unfollowCommunityPendingMeta.loaded) {
+      handleChangeRole(ROLE_TYPES.IS_FOLLOWING, false)
+    }
+  }, [unfollowCommunityPendingMeta])
 
   const followHandle = () => {
     followCommunity(String(hash_key))
@@ -151,8 +166,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const unfollowDialogHandle = () => {
     unfollowCommunity(String(hash_key))
-    setIsDiscardApplying(false)
     setIsDiscard(false)
+  }
+
+  const unfollowApplyingDialogHandle = () => {
+    unfollowCommunityPending(String(hash_key))
+    setIsDiscardApplying(false)
   }
   const cancelApplyingHandle = () => {
     setIsDiscardApplying(true)
@@ -206,13 +225,13 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getHeader = () => {
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
-          <Box pt={1} color={Colors.white} display="flex">
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
               {data.name}
             </Typography>
-            <Box ml={3.6}>
-              {!!data.is_official && (
+            <Box>
+              {isOfficial && (
                 <span className={classes.checkIcon}>
                   <Icon className="fa fa-check" fontSize="small" />
                 </span>
@@ -220,22 +239,28 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
               {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
             </Box>
           </Box>
-          <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
+          <Box className={classes.detailCommonButtons}>
             {DetailInfoButton()}
-            <ESMenu>
-              <LoginRequired>
-                <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
-              </LoginRequired>
-            </ESMenu>
+            {!isOfficial && (
+              <Box ml={3}>
+                <ESMenu>
+                  <LoginRequired>
+                    <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
+                  </LoginRequired>
+                </ESMenu>
+              </Box>
+            )}
           </Box>
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:community.community_id')}${detail.id}`}</Typography>
           <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-            <Typography>{t('common:community.copy_shared_url')}</Typography>
+            <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
           </Box>
-          <ESButtonTwitterCircle className={classes.marginLeft} link={'blabla'} />
+          <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')} style={{ marginLeft: 12 }}>
+            <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
+          </TwitterShareButton>
         </Box>
 
         <Box marginTop={2} display="flex">
@@ -271,7 +296,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
       case TABS.INFO:
         return <InfoContainer data={data} />
       case TABS.TOPIC_LIST:
-        return !!topicList && showTopicListAndSearchTab && <TopicListContainer topicList={topicList} />
+        return !!topicList && showTopicListAndSearchTab && <TopicListContainer />
       case TABS.SEARCH:
         return showTopicListAndSearchTab && <SearchContainer />
       default:
@@ -289,7 +314,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         {getHeader()}
         {getTabs()}
         {getContent()}
-        {!!isNotMember && !isNotMember && (
+        {!isNotMember && (
           <Box className={classes.commentIconContainer}>
             <Box>
               <TopicCreateButton onClick={toCreateTopic} />
@@ -312,7 +337,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
         onClose={() => {
           setIsDiscardApplying(false)
         }}
-        onSubmit={unfollowDialogHandle}
+        onSubmit={unfollowApplyingDialogHandle}
         title={t('common:community.unfollow_dialog_applying.title')}
         description={t('common:community.unfollow_dialog_applying.description')}
         confirmTitle={t('common:community.unfollow_dialog_applying.submit_title')}
@@ -322,6 +347,13 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 }
 
 const useStyles = makeStyles((theme) => ({
+  sharedUrl: {
+    textDecoration: 'underline',
+  },
+  twitter_logo: {
+    height: 23,
+    width: 23,
+  },
   container: {
     padding: theme.spacing(3),
   },
@@ -366,6 +398,13 @@ const useStyles = makeStyles((theme) => ({
   },
   marginLeft: {
     marginLeft: theme.spacing(2),
+  },
+  detailCommonButtons: {
+    marginLeft: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'row',
+    flexShrink: 0,
+    height: '36px',
   },
   button: {
     paddingTop: 2,

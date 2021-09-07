@@ -1,4 +1,4 @@
-import { Box, Typography, Icon, IconButton } from '@material-ui/core'
+import { Box, Typography, Icon, IconButton, ButtonBase } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
@@ -15,14 +15,15 @@ import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { TopicDetail } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import router from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
 
 type CommunityHeaderProps = {
   user_avatar?: string
   nickname?: string
   user_code?: string
   content?: string
-  date?: string
-  image?: string | null
+  image?: string
   isConfirm?: boolean
   hash_key?: string
   handleDelete?: () => void
@@ -51,7 +52,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
       user_code: topicData?.owner_user_code,
       content: topicData?.content,
       date: CommonHelper.staticSmartTime(topicData?.created_at),
-      image: !!topicData.attachments && topicData.attachments[0]?.assets_url,
+      image: !!topicData?.attachments && topicData.attachments[0]?.assets_url,
       hash_key: topicData?.hash_key,
     },
   }
@@ -66,7 +67,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const renderClickableImage = () => {
     return (
       <SRLWrapper options={LIGHTBOX_OPTIONS}>
-        <img className={classes.imageBox} src={isConfirm ? image : !!topicData.attachments && topicData.attachments[0]?.assets_url} />
+        <img className={classes.imageBox} src={isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url} />
       </SRLWrapper>
     )
   }
@@ -77,11 +78,13 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
         <Box m={2}>
           <Box className={classes.userContainer}>
             <Box className={topicData?.created_at ? classes.userInfoContainer : classes.userInfoContainerNoDate}>
-              <ESAvatar
-                className={classes.avatar}
-                alt={isConfirm ? nickname : topicData.owner_name}
-                src={isConfirm ? user_avatar : topicData.owner_profile}
-              />
+              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${topicData.owner_user_code}`)}>
+                <ESAvatar
+                  className={classes.avatar}
+                  alt={isConfirm ? nickname : topicData.owner_name}
+                  src={isConfirm ? user_avatar : topicData.owner_profile}
+                />
+              </ButtonBase>
               <Box className={classes.userInfoBox} ml={1} maxWidth="100%">
                 <Typography className={classes.nickname}>{isConfirm ? nickname : topicData.owner_name}</Typography>
                 <Typography className={classes.userCode}>{isConfirm ? '@' + user_code : '@' + topicData.owner_user_code}</Typography>
@@ -104,7 +107,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
           <Box className={classes.contentContainer} mb={2} mt={1}>
             <Typography className={classes.content}>{isConfirm ? content : topicData.content}</Typography>
           </Box>
-          {(isConfirm ? image : !!topicData.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
+          {(isConfirm ? image : !!topicData?.attachments && topicData.attachments[0]?.assets_url) && renderClickableImage()}
           {topicData?.like_count || topicData?.like_count == 0 ? (
             <Box display="flex" justifyContent="space-between" mt={2}>
               <Box display="flex" justifyContent="flex-end">
@@ -112,7 +115,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
+                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
                 </Box>
               </Box>
               <Box display="flex" justifyContent="flex-end">
@@ -120,7 +123,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                   <Icon className="fas fa-comment-alt" fontSize="small" />
                 </Box>
                 <Box className={classes.numberBox} mr={1} ml={1}>
-                  <Typography className={classes.count}>{topicData?.like_count}</Typography>
+                  <Typography className={classes.count}>{topicData?.comment_count}</Typography>
                 </Box>
                 <Box className={classes.numberBox}>
                   <IconButton className={classes.replyButton}>
@@ -144,7 +147,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
             handleClose={() => setOpenReport(false)}
           />
           <DiscardDialog
-            title={nickname + t('common:topic.delete.title')}
+            title={topicData?.title + t('common:topic.delete.title')}
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onSubmit={handleDelete}
@@ -184,11 +187,11 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfoContainer: {
     display: 'flex',
-    width: 'calc(90% - 150px)',
+    width: 'calc(100% - 150px)',
   },
   userInfoContainerNoDate: {
     display: 'flex',
-    width: 'calc(90% - 50px)',
+    width: 'calc(100% - 50px)',
   },
   userAvatarBox: {
     display: 'flex',

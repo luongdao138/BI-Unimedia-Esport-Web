@@ -151,7 +151,7 @@ const TopicCreate: React.FC = () => {
         <form onSubmit={formik.handleSubmit}>
           <Box>
             {isConfirm ? (
-              <Confirm values={formik.values} prefectures={prefectures.data || null} />
+              <Confirm values={formik.values} />
             ) : (
               <>
                 <Box py={4} className={classes.formContainer}>

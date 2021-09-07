@@ -1,6 +1,7 @@
 import { Typography, Box, Theme, makeStyles, Icon } from '@material-ui/core'
 import { TopicDetail } from '@services/community.service'
 import { Colors } from '@theme/colors'
+import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 export interface TopicRowItemProps {
@@ -8,12 +9,12 @@ export interface TopicRowItemProps {
   last_comment?: TopicDetail['attributes']['last_comment']['data']
   latest_date?: string
   comment_count?: number
-  // TODO tur zuur optional bolgoson. Communit detial -> Topic Search API holbosonii daraa required bolgoh
   handleClick?: () => void
 }
 
 const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, handleClick }) => {
   const classes = useStyles()
+  const { t } = useTranslation(['common'])
 
   return (
     <>
@@ -24,7 +25,13 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              <Typography className={classes.last_comment}>{last_comment.attributes.content}</Typography>
+              <Typography className={classes.last_comment}>
+                {last_comment?.attributes.content
+                  ? last_comment?.attributes.content
+                  : comment_count === 0
+                  ? ''
+                  : '「' + t('common:chat.uploaded_image') + '」'}
+              </Typography>
             </Box>
           </Box>
 

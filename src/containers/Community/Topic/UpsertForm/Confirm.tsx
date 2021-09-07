@@ -5,13 +5,11 @@ import ESInput from '@components/Input'
 import ESLabel from '@components/Label'
 import { FormType } from './FormModel/FormType'
 import { Box } from '@material-ui/core'
-import { GetPrefecturesResponse } from '@services/common.service'
 import { useAppSelector } from '@store/hooks'
 import { getAuth } from '@store/auth/selectors'
 
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
-  prefectures?: GetPrefecturesResponse['data']
 }
 
 ESInput.defaultProps = {
@@ -36,7 +34,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values }) => {
       <Box>
         <MainTopic
           nickname={user.nickname}
-          user_code={user.email}
+          user_code={user.user_code}
           content={values.stepOne.content}
           image={values.stepOne.attachments}
           user_avatar={user.avatar_url}

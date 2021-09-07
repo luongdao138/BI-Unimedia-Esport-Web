@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import { CommunityDetail } from '@services/community.service'
-import { JOIN_CONDITION, OPEN_RANGE, MEMBER_ROLE } from '@constants/community.constants'
+import { JOIN_CONDITION, OPEN_RANGE, MEMBER_ROLE, OFFICIAL } from '@constants/community.constants'
 
 const useCommunityHelper = (
   community?: CommunityDetail
@@ -12,6 +12,7 @@ const useCommunityHelper = (
   isNotMember: boolean
   isAutomatic: boolean
   isPublic: boolean
+  isOfficial: boolean
 } => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -22,6 +23,7 @@ const useCommunityHelper = (
   const isNotMember = myRole == null || myRole == MEMBER_ROLE.REQUESTED || myRole == MEMBER_ROLE.LEAVE
   const isAutomatic = community?.attributes?.join_condition == JOIN_CONDITION.AUTOMATIC
   const isPublic = community?.attributes?.open_range == OPEN_RANGE.SEARCHABLE
+  const isOfficial = community?.attributes?.is_official == OFFICIAL.OFFICIAL
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/community/create' }), '/community/create', { shallow: true })
 
@@ -38,6 +40,7 @@ const useCommunityHelper = (
     isNotMember,
     isAutomatic,
     isPublic,
+    isOfficial,
   }
 }
 
