@@ -31,7 +31,7 @@ export type LobbyFilterItem = {
 }
 
 export type LobbySearchResponse = {
-  data: Array<LobbyResponse>
+  data: Array<LobbyListItem>
   meta: PageMeta
 }
 
@@ -48,7 +48,7 @@ export enum LobbyEntryStatus {
   notselected = 2,
 }
 
-export type LobbyResponse = {
+export type LobbyListItem = {
   id: string
   type: string
   attributes: {
@@ -67,6 +67,9 @@ export type LobbyResponse = {
     participant_count: number
     participants: Array<ParticipantsItem['attributes']>
   }
+  participantsLimited?: ParticipantType[]
+  startDate?: string
+  entryEndDate?: string
 }
 
 export type CategoryItem = {
@@ -102,6 +105,11 @@ export type LobbyUpsertParams = {
 export type ParticipantsResponse = {
   data: ParticipantsData
   meta: PageMeta
+}
+
+export type ParticipantType = {
+  nickname?: string
+  profile_image?: string | null
 }
 
 export type ParticipantsData = Array<ParticipantsItem>

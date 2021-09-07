@@ -2,13 +2,21 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/lobby'
-import { LobbySearchParams } from '@services/lobby.service'
+import { PageMeta, LobbySearchParams, LobbyListItem } from '@services/lobby.service'
+import { Meta } from '@store/metadata/actions/types'
 
 const { selectors, actions } = searchStore
 const getLobbySearchMeta = createMetaSelector(actions.searchLobby)
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useLobbySearch = () => {
+const useLobbySearch = (): {
+  searchLobbies: LobbyListItem[]
+  meta: Meta
+  page: PageMeta
+  resetMeta: () => void
+  searchLobby: (param: LobbySearchParams) => void
+  resetSearchLobbies: () => void
+} => {
   const dispatch = useAppDispatch()
   const searchLobbies = useAppSelector(selectors.getSearchLobbies)
   const page = useAppSelector(selectors.getSearchLobbiesMeta)
