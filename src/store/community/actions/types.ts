@@ -25,6 +25,7 @@ export enum COMMUNITY_ACTION_TYPE {
   GET_TOPIC_LIST = 'topic/list',
   FOLLOW_COMMUNITY = 'community/join',
   UNFOLLOW_COMMUNITY = 'community/leave',
+  UNFOLLOW_COMMUNITY_PENDING = 'community/leave/pending',
   GET_COMMENTS_LIST = 'comments/list',
   GET_COMMENTS_LIST_PAGE = 'comments/list/page',
   GET_COMMENTS_LIST_NEXT = 'comments/list/next',
