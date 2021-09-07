@@ -1,0 +1,17 @@
+export enum LIVE_EVENTS_ACTION_TYPE {
+  LIVE_EVENTS_TOP_GET_REQUEST = 'LIVE_EVENTS_TOP_GET_REQUEST',
+  LIVE_EVENTS_TOP_GET_SUCCESS = 'LIVE_EVENTS_TOP_GET_SUCCESS',
+  LIVE_EVENTS_TOP_GET_FAIL = 'LIVE_EVENTS_TOP_GET_FAIL',
+
+  LIVE_EVENTS_CHANGE_LOADER = 'LIVE_EVENTS_CHANGE_LOADER',
+}
+
+export type LiveEventsAction = {
+  type: LIVE_EVENTS_ACTION_TYPE
+  data: any
+}
+
+export type LiveEventsState = {
+  top: any
+  loading: boolean
+}

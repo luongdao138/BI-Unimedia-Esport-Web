@@ -118,6 +118,11 @@ export const URI = {
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
   MESSAGE_LOBBY_ID: '/v2/recruitments',
   PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
+  PR_TOP: '/v1/live_events/pr',
+  LIVE_EVENTS_TOP: '/v1/live_events/top',
+  LIVE_EVENTS_TICKET_PURCHASE_URI: '/v1/purchases',
+  LIVE_EVENT_PURCHASE_GMO_CALLBACK: '/v1/purchases/gmo_response_handle',
+  LIVE_EVENT_ARCHIVE_PLAY: '/v1/live_events/archive_view_count',
   IMAGE_REMOVE: '/v2/profile_images/remove',
   // Lobby
   LOBBY_ENTRY: '/v2/recruitments/:hash_key/do_entry',

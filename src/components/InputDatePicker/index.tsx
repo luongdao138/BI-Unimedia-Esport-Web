@@ -3,6 +3,7 @@ import MomentUtils from '@date-io/moment'
 import { makeStyles } from '@material-ui/core/styles'
 import { FormHelperText, FormControl } from '@material-ui/core'
 import { Colors } from '@theme/colors'
+import { DateTimePickerToolbar } from './DateTimePickerToolbar'
 
 type Props = {
   helperText?: string
@@ -18,6 +19,7 @@ const ESInputDatePicker: React.FC<Props & DateTimePickerProps> = ({ helperText, 
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <DateTimePicker
           ampm={false}
+          ToolbarComponent={DateTimePickerToolbar}
           format="YYYY年MM月DD日 HH:mm"
           inputVariant="outlined"
           minutesStep={5}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE } from '@constants/socket.constants'
+import { WEBSOCKET_PREFIX, CHAT_ACTION_TYPE, CHAT_PAGING_ACTION_TYPE } from '@constants/socket.constants'
 import { AppDispatch } from '@store/store'
 import _ from 'lodash'
 
@@ -47,6 +47,13 @@ export const socketActions = {
       Promise.resolve(dispatch(socketCreators.paginating())).then(() => dispatch(socketCreators.socketSend(payload)))
     }
   },
+  initRoomList: () => {
+    return (dispatch: AppDispatch) => {
+      Promise.resolve(dispatch(socketCreators.cleanTempList())).then(() =>
+        dispatch(socketCreators.socketSend({ action: CHAT_ACTION_TYPE.GET_ALL_ROOMS }))
+      )
+    }
+  },
 }
 
 export const socketCreators = {
@@ -69,5 +76,8 @@ export const socketCreators = {
   }),
   cleanRoom: () => ({
     type: CHAT_ACTION_TYPE.CLEAN_ROOM,
+  }),
+  cleanTempList: () => ({
+    type: CHAT_PAGING_ACTION_TYPE.CLEAN_TEMP_LIST,
   }),
 }

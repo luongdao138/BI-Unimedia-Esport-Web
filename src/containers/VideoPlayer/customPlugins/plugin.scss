@@ -1,0 +1,134 @@
+/* Sass for videojs-seek-buttons */
+
+/* Using material icon font */
+
+.video-js {
+  /* This class is added to the video.js element by the plugin by default. */
+  & .vjs-seek-button {
+    font-family: 'Material Icons';
+    cursor: pointer;
+    &.skip-back .vjs-icon-placeholder::before {
+      content: '\e042';
+    }
+    &.skip-back.skip-10 .vjs-icon-placeholder::before {
+      content: '\e059';
+    }
+    &.skip-back.skip-5 .vjs-icon-placeholder::before {
+      content: '\e05b';
+    }
+    &.skip-back.skip-30 .vjs-icon-placeholder::before {
+      content: '\e05a';
+    }
+    &.skip-forward .vjs-icon-placeholder::before {
+      content: '\e5d5';
+    }
+    &.skip-forward.skip-10 .vjs-icon-placeholder::before {
+      content: '\e056';
+    }
+    &.skip-forward.skip-5 .vjs-icon-placeholder::before {
+      content: '\e058';
+    }
+    &.skip-forward.skip-30 .vjs-icon-placeholder::before {
+      content: '\e057';
+    }
+  }
+}
+.video-js {
+  position: relative;
+}
+.vjs-big-play-button .vjs-seek-button.skip-back {
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 80px;
+  z-index: 200;
+  display: none;
+}
+
+.skip-forward .vjs-control-text,
+.skip-back .vjs-control-text {
+  font-size: 6px;
+  width: 10px;
+  height: 10px;
+  color: #fff;
+  clip: inherit;
+  font-family: 'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  font-weight: 500;
+  padding-top: 3px;
+  text-align: center;
+  display: none;
+}
+
+.vjs-big-play-button .vjs-seek-button.skip-forward {
+  position: absolute;
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  display: none;
+  height: 80px;
+  z-index: 200;
+}
+.vjs-has-started .vjs-seek-button.skip-forward,
+.vjs-has-started .vjs-seek-button.skip-back {
+  display: block;
+}
+
+.vjs-big-play-button .vjs-seek-button.skip-forward .vjs-icon-placeholder::before {
+  font-family: 'Material Icons';
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-size: 0.6em;
+  text-align: center;
+  justify-content: center;
+}
+
+.vjs-big-play-button .vjs-seek-button.skip-back .vjs-icon-placeholder::before {
+  font-family: 'Material Icons';
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  font-size: 0.6em;
+  text-align: center;
+}
+
+.vjs-big-play-button .vjs-seek-button.skip-forward .vjs-control-text {
+  width: 100%;
+  height: 100%;
+  /* overflow: visible; */
+  clip: none;
+  font-size: 12px;
+  color: #fff;
+  font-family: Arial;
+  justify-content: center;
+  display: none;
+  align-items: center;
+  position: relative;
+}
+
+.vjs-big-play-button .vjs-seek-button.skip-back .vjs-control-text {
+  width: 100%;
+  height: 100%;
+  /* overflow: visible; */
+  clip: none;
+  font-size: 12px;
+  color: #fff;
+  display: none;
+  font-family: Arial;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding-top: 5px;
+}

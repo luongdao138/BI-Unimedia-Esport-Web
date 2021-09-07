@@ -3,8 +3,8 @@ import moment from 'moment'
 
 /* eslint-disable no-useless-escape */
 const validateEmail = (email: string): boolean => {
-  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return re.test(String(email).toLowerCase())
+  const emailValidationRegex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return emailValidationRegex.test(String(email).toLowerCase())
 }
 
 const replaceSingleByteString = (value: string): string => {
@@ -159,7 +159,7 @@ const getIndicesOf = (searchStr: string, str: string, caseSensitive?: string): A
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const cutLinksIntoPieces = (textMain: string) => {
+export const cutLinksIntoPieces = (textMain: string) => {
   const urlRegex = /(\b(https?):\/\/[^\s]+)/gim
   const text = textMain.replace(urlRegex, (url) => `<a>${url}</a>`)
   const aTagBegins = getIndicesOf('<a>', text)
@@ -194,6 +194,10 @@ const cutLinksIntoPieces = (textMain: string) => {
   }
   separations.push({ text: text.slice(spliceEnd), type: 'text' })
   return separations
+}
+
+export function getPriceWithTax(price: number, taxPercent: number): number {
+  return Math.floor(price + price / taxPercent)
 }
 
 function isDoubleByte(str: string): boolean {

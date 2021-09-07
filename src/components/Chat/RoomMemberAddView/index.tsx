@@ -210,7 +210,7 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
           </Box>
           {renderLoader()}
           {open ? (
-            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`} style={{ paddingBottom: contentRect?.height + 50 }}>
               {_.filter(
                 memberList,
                 ({ id }) =>
@@ -311,7 +311,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     overflowX: 'hidden',
     height: '100%',
-    paddingBottom: 30,
   },
   scroll: {
     scrollbarColor: '#222 transparent',

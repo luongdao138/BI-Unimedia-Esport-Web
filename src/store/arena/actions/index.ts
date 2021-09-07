@@ -339,11 +339,11 @@ export const randomizeTournament = createAsyncThunk<void, string>(types.RANDOMIZ
   }
 })
 
-export const freezeTournament = createAsyncThunk<services.TournamentDetailResponse, string>(
+export const freezeTournament = createAsyncThunk<services.TournamentDetailResponse, services.FreezeMatchParams>(
   types.FREEZE_TOURNAMENT,
-  async (param, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.freezeTournament(param)
+      const res = await services.freezeTournament(params)
       return res
     } catch (error) {
       if (!error.response) {

@@ -40,7 +40,7 @@ const TournamentCreate: React.FC = () => {
   const dispatch = useAppDispatch()
   const actionSelector = useAppSelector(getAction)
   const { hardwares, prefectures, user } = useCommonData()
-  const { submit, update, meta, updateMeta, isEdit, arena, editables } = useTournamentCreate()
+  const { submit, update, showToast, meta, updateMeta, isEdit, arena, editables, resetUpdateMeta } = useTournamentCreate()
   const { handleReturn } = useReturnHref()
   const classes = useStyles()
   const [tab, setTab] = useState(0)
@@ -77,6 +77,10 @@ const TournamentCreate: React.FC = () => {
   useEffect(() => {
     if (updateMeta.error || meta.error) {
       setIsConfirm(false)
+      resetUpdateMeta()
+      if (_.get(updateMeta, 'error.code') === 422408) {
+        showToast(i18n.t('common:tournament_create.end_time_invalid'))
+      }
     }
   }, [updateMeta.error, meta.error])
 
