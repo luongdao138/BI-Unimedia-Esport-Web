@@ -8,11 +8,11 @@ export const TYPE_SETTING = {
 }
 export const TYPE_SECRET_KEY = {
   GET: 'get',
-  RE_NEW: 're-new',
-}
-export const CONSTANTS_SECRET = {
-  CHANNEL_ARN: 'gJvnKLbvCLFj',
-  STREAM_KEY_ARN: '8U1AFmvCZbQ1',
+  RE_NEW: 'new',
+  KEY: 'key',
+  URL: 'url',
+  LIVE: 1,
+  SCHEDULE: 0,
 }
 
 export type LiveStreamSetting = {
@@ -38,6 +38,7 @@ export type LiveStreamSetting = {
   stream_schedule_end_time?: string
   sell_ticket_start_time?: string
   video_publish_end_time?: string
+  status?: number
 }
 
 export type DistributorStepSetting = {
@@ -73,6 +74,7 @@ export type LiveStreamSettingResponse = {
     stream_schedule_end_time?: string
     sell_ticket_start_time?: string
     created_at?: string
+    status?: number
   }
 }
 export type LiveStreamSettingParams = {
@@ -126,8 +128,8 @@ export type SetLiveStreamResponse = {
 
 export type StreamUrlAndKeyParams = {
   type: string
-  CHANNEL_ARN: string
-  STREAM_KEY_ARN: string
+  objected: string
+  is_live: number
 }
 
 export type GetStreamUrlAndKeyResponse = {
@@ -141,6 +143,7 @@ export type GetStreamUrlAndKeyResponse = {
     PLAYBACK_URL: string
     STREAM_KEY_VALUE: string
     STREAM_URL: string
+    STREAM_KEY_ARN: string
   }
 }
 

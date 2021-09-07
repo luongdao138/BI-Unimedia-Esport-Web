@@ -51,6 +51,7 @@ const initialState: StateType = {
       PLAYBACK_URL: null,
       STREAM_KEY_VALUE: null,
       STREAM_URL: null,
+      STREAM_KEY_ARN: null,
     },
   },
 }

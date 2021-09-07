@@ -263,10 +263,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     <Box className={`${classes.chatBoardContainer}`}>
       <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
         {chatDonateMessage()}
-        <Box className={`${classes.messContentOuter}`} onClick={() => {
+        <Box
+          className={`${classes.messContentOuter}`}
+          onClick={() => {
             setMessActiveUser('')
-        }}>
-        </Box>
+          }}
+        ></Box>
       </Box>
       <Box className={classes.chatBoard}>
         {getChatData().map((message, index) => {
@@ -300,23 +302,25 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   const scrollToCurrentMess = () => {
     const current_mess = document.getElementById('chat_23')
     const mess_container = current_mess.parentNode as Element
-    mess_container.scrollTop = current_mess.offsetTop 
+    mess_container.scrollTop = current_mess.offsetTop
   }
 
   const chatContent = () => (
     <Box className={classes.chatContent}>
-      <Button onClick={scrollToCurrentMess}>
-        Scroll to chat mess
-      </Button>
+      <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button>
       <Box className={classes.userWatchingList}>
         {getUserWatchingList().map(({ id, user_avatar }) => (
-          <Box key={id} className={classes.userWatchingItem} onClick={() => {
-            if(messActiveUser || messActiveUser === 0) {
-              setMessActiveUser('')
-            } else {
-              setMessActiveUser(id)
-            }
-          }}>
+          <Box
+            key={id}
+            className={classes.userWatchingItem}
+            onClick={() => {
+              if (messActiveUser || messActiveUser === 0) {
+                setMessActiveUser('')
+              } else {
+                setMessActiveUser(id)
+              }
+            }}
+          >
             <img src={user_avatar} />
           </Box>
         ))}

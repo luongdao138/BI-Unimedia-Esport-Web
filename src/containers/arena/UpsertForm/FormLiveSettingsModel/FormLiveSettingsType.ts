@@ -12,6 +12,7 @@ export type FormLiveType = {
     share_sns_flag: boolean
     publish_flag: boolean
     video_publish_end_time?: string
+    status?: number
   }
   stepSettingTwo?: {
     uuid: string
@@ -30,6 +31,7 @@ export type FormLiveType = {
     stream_key: string
     publish_flag: boolean
     video_publish_end_time?: string
+    status?: number
     //cross-fields validations
     schedule_live_date?: string
     notify_live_start_date?: string
@@ -37,6 +39,8 @@ export type FormLiveType = {
     max_schedule_live_date?: string
     public_time_less_than_start?: string
     public_time_more_than_end?: string
+    sell_less_than_start?: string
+    sell_optional?: string
   }
   stepSettingThree?: {
     name?: string

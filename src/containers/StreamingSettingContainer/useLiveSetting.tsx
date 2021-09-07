@@ -27,7 +27,7 @@ const useLiveSetting = () => {
   const getStreamUrlAndKeyMeta = useAppSelector(_getStreamUrlAndKeyMeta)
   const getChannelMeta = useAppSelector(_getChannelMeta)
 
-  const getStreamUrlAndKey = async (onSuccess: (url, key) => void, params?: StreamUrlAndKeyParams) => {
+  const getStreamUrlAndKey = async (params: StreamUrlAndKeyParams, onSuccess?: (url, key) => void) => {
     const resultAction = await dispatch(actions.getStreamUrlAndKeyInfo(params))
     if (actions.getStreamUrlAndKeyInfo.fulfilled.match(resultAction)) {
       onSuccess(resultAction.payload.data.STREAM_URL, resultAction.payload.data.STREAM_KEY_VALUE)
