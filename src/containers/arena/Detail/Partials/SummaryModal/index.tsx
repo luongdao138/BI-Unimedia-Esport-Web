@@ -104,11 +104,9 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
             <Box pt={4}>
               <Typography className={classes.summaryTitle}>{data.title}</Typography>
             </Box>
-
             <Box width="100%" pb={4} pt={4}>
               <CoverUploader ratio={25 / 7} src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
             </Box>
-
             <Box width="100%" pb={1}>
               <ESFastInput
                 id="summary"
@@ -126,7 +124,6 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
                 rows={7}
               />
             </Box>
-
             <Box className={classes.stickyFooter}>
               <Box className={classes.nextBtnHolder}>
                 <Box maxWidth={280} className={classes.buttonContainer}>
@@ -149,6 +146,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   childrenContainer: {
     display: 'flex',
     flexDirection: 'column',
+    paddingBottom: 200,
   },
   title: {
     fontSize: '1.5rem',
@@ -167,6 +165,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   stickyFooter: {
     position: 'fixed',
     left: 0,
+    zIndex: 100,
     bottom: 0,
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.9)',
@@ -176,6 +175,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(11),
     marginTop: theme.spacing(3),
     justifyContent: 'center',
+    zIndex: 100,
   },
   buttonContainer: {
     width: '100%',
@@ -184,6 +184,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     childrenContainer: {
       paddingTop: 0,
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    nextBtnHolder: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
+    },
+    childrenContainer: {
+      paddingBottom: 120,
     },
   },
 }))

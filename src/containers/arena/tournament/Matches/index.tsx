@@ -5,7 +5,7 @@ import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
-import ESStickyFooter from '@components/StickyFooter'
+import ESContentFooter from './../ContentFooter'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../../hooks/useTournamentDetail'
 import useGetProfile from '@utils/hooks/useGetProfile'
@@ -16,6 +16,7 @@ import { Colors } from '@theme/colors'
 import useInterval from '@utils/hooks/useInterval'
 import { useRouter } from 'next/router'
 import moment from 'moment'
+import { use100vh } from 'react-div-100vh'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -32,6 +33,7 @@ const ArenaMatches: React.FC = () => {
     scoreMeta,
     handleBack,
   } = useTournamentMatches()
+  const height = use100vh() - 60
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
@@ -116,19 +118,17 @@ const ArenaMatches: React.FC = () => {
   const lastRound = matches.length
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ height: `${height}px` }}>
       {matches && tournament && (
-        <ESStickyFooter
+        <ESContentFooter
           disabled={false}
           onClick={() => setShowSummaryModal(true)}
           show={!tournament.attributes.is_freezed}
-          noScroll
           content={
             <Box>
               <Typography className={classes.notYetLabel}>{t('common:arena.match_not_yet')}</Typography>
             </Box>
           }
-          classes={{ nextBtnHolder: classes.buttonHolder }}
         >
           <Box className={classes.backContainer}>
             <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -161,7 +161,7 @@ const ArenaMatches: React.FC = () => {
             {scoreDialog()}
           </div>
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
-        </ESStickyFooter>
+        </ESContentFooter>
       )}
       <ESLoader open={meta.pending || matchesMeta.pending} />
     </div>
@@ -172,17 +172,14 @@ export default ArenaMatches
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#212121',
-    paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
     width: '100vw',
-    height: '100vh',
     overflow: 'auto',
   },
   content: {
     padding: theme.spacing(3),
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(16),
+    paddingTop: 84,
+    height: '100%',
+    overflowY: 'auto',
   },
   backButton: {
     backgroundColor: Colors.grey[200],
@@ -232,12 +229,8 @@ const useStyles = makeStyles((theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     backContainer: {
-      position: 'absolute',
       backgroundColor: 'transparent',
       borderBottom: 'none',
     },
-  },
-  buttonHolder: {
-    marginBottom: theme.spacing(3),
   },
 }))

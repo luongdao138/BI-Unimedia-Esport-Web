@@ -253,6 +253,9 @@ const useStyles = makeStyles((theme) => ({
   menuWrap: {
     height: '100%',
     overflowY: 'auto',
+    willChange: 'transform',
+    transform: 'translateZ(0)',
+    webkitTransform: 'translateZ(0)',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {
