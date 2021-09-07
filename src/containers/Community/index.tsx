@@ -255,10 +255,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(2),
   },
-  container: {
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
   addIcon: {
     position: 'relative',
     left: theme.spacing(-1),
