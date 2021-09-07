@@ -1,7 +1,10 @@
-import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
+/* eslint-disable prefer-const */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Box, Typography, Icon, Button, OutlinedInput, IconButton, Input, useTheme, useMediaQuery } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 // import sanitizeHtml from 'sanitize-html'
 import useStyles from './styles'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
@@ -9,6 +12,12 @@ import PremiumChatBox from '@containers/VideoLiveStreamContainer/ChatContainer/P
 import * as Yup from 'yup'
 import i18n from '@locales/i18n'
 import { useFormik } from 'formik'
+
+import API, {GraphQLResult, graphqlOperation} from '@aws-amplify/api';
+import { listMessages } from "src/graphql/queries";
+import { createMessage, deleteMessage } from "src/graphql/mutations";
+import { onCreateMessage } from "src/graphql/subscriptions";
+import * as APIt from 'src/types/graphqlAPI';
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -82,11 +91,89 @@ type MessageValidationType = {
 
 const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasViewingTicket, myPoint, handleKeyboardVisibleState }) => {
   // const { t } = useTranslation('common')
+  const [messageText, setMessageText] = useState<string>('')
+  const [purchaseComment, setPurchaseComment] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
   const [messActiveUser, setMessActiveUser] = useState<string | number>('')
 
+  const initialFruits: APIt.Message[] = [];
+  const [stateMessages, setStateMessages] = useState(initialFruits);
+
+  const { t } = useTranslation('common')
+  const classes = useStyles({ chatValidationError: !!chatInputValidationError })
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const { checkNgWord } = useCheckNgWord()
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+     // Subscribe to creation of message
+     // Subscriptions is a GraphQL feature allowing the server to send data to its clients when a specific event happens. You can enable real-time data integration in your app with a subscription.
+    const pubSubClient = API.graphql(
+      graphqlOperation(onCreateMessage)
+    );
+    pubSubClient.subscribe({
+      next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subMessage = sub?.value;
+        console.log('new mess: ',JSON.stringify(subMessage));
+        
+        setStateMessages((stateMessages) => [
+          ...stateMessages,
+          subMessage.data.onCreateMessage
+        ]);
+      },
+      error: (error) => console.warn(error)
+    });
+
+    async function getMessages() {
+      try {
+        const listQV: APIt.ListMessagesQueryVariables = {
+        };
+        const messagesReq: any = await API.graphql(
+          graphqlOperation(listMessages, listQV),
+        );
+        console.log('messagesRes; ',messagesReq);
+        
+        setStateMessages(messagesReq.data.listMessages.items);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getMessages();
+  }, []);
+
+  function getUrlParameter(sParam: string) {
+    let sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return false;
+  }
+
+  async function deleteMsg(idDelete: string, e: any) {
+    const input = {
+      id: idDelete
+    };
+    const deleteAt: any = await API.graphql(graphqlOperation(deleteMessage, {input: input}));
+    console.log(deleteAt);
+    if (deleteAt.data) {
+      setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
+    }
+  }
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessageText(e.target.value)
+  }
 
   const validationSchema = Yup.object().shape({
     message: Yup.string()
@@ -137,8 +224,38 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
     setPurchaseDialogVisible(!purchaseDialogVisible)
   }
 
-  const handleSubmitChatContent = () => {
-    handleSubmit()
+  const handleSubmitChatContent = async() => {
+    const input = {
+      // id is auto populated by AWS Amplify
+      message: messageText, // the message content the user submitted (from state)
+      owner: getUrlParameter('name'), // this is the username of the current user
+      video_id: 'bc69fa88-1716-46ad-a54e-16343cb0179d',
+      uuid_user: getUrlParameter('uuid_user')
+    };
+    await API.graphql(graphqlOperation(createMessage, {input: input}));
+
+    const content = messageText
+    if (content.length === 0) {
+      setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
+    }
+    if (content.length > 50) {
+      setChatInputValidationError('live_stream_screen.chat_input_text_validate_msg_50_char_exceed')
+    }
+    dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: 'aaaaaaaa' }))
+
+    if (!_.isEmpty(checkNgWord(content))) {
+      setChatInputValidationError('チャットが未入力です')
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const sanitizedContent = sanitizeHtml(content, {
+    //   allowedTags: [],
+    //   allowedAttributes: {},
+    // })
+
+    // Submit chat message
+    setChatInputValidationError('')
+    setMessageText('')
   }
 
   const chatInputComponent = () => (
@@ -151,13 +268,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
             <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
           </IconButton>
           <OutlinedInput
-            id={'message'}
-            multiline
-            rows={3}
-            autoComplete="nope"
-            onChange={handleChange}
-            placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
-            value={values.message}
+            autoComplete="off"
+            onChange={onChange}
+            placeholder={'チャットを送信'}
+            id={'search'}
+            value={messageText}
             classes={{ root: classes.input, input: classes.chatTextInput }}
             margin="dense"
             onFocus={handleChatInputOnFocus}
@@ -199,11 +314,27 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
         ></Box>
       </Box>
       <Box className={classes.chatBoard}>
-        {getChatData().map((message, index) => {
+        {stateMessages
+          // sort messages oldest to newest client-side
+          .sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt))
+          .map((msg: any, i) => {
+            return (
+              <Typography key={i} className={classes.chatMessage} id={`chat_${i}`}>
+                <span className={classes.chatMessageUser}>{`Account ${msg.owner}: `}</span>
+                {msg.message}
+              </Typography>
+            )
+        })}
+        {/* {getChatData().map((message, index) => {
           if (index === 2) return chatDonateMessage()
           const { user, content, id } = message
-          return <ChatTextMessage key={id} message={content} user={user} />
-        })}
+          return (
+            <Typography key={id} className={classes.chatMessage} id={`chat_${id}`}>
+              <span className={classes.chatMessageUser}>{`${user}: `}</span>
+              {content}
+            </Typography>
+          )
+        })} */}
       </Box>
       {chatInputComponent()}
     </Box>
