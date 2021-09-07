@@ -19,6 +19,7 @@ export default {
     search_results: '検索結果',
     total: '件',
     error: 'エラー文言が入ります',
+    game_display_name_error: '入力必須項目です',
     too_long: '{{max}}文字以内で入力してください',
     at_least: '2文字以上入力してください。',
     at_least_8: '8文字以上で入力してください',
@@ -26,6 +27,7 @@ export default {
     user_code_invalid: 'ユーザーIDには（英数字、_、-）のみ入力可能です',
     not_selected: '選択されていません',
     save: '保存する',
+    dont_save: '保存しない',
     cancel: 'キャンセル',
     done: '完了',
     change: '変更する',
@@ -79,6 +81,9 @@ export default {
     sub_title: 'メンバーを確定する',
     total_participants: '現在',
     from: '人',
+  },
+  pr: {
+    static_title: '動画配信サービス',
   },
   page404: {
     title: '404',
@@ -401,6 +406,8 @@ export default {
       single: 'トーナメント',
       battle_royale: 'バトルロイヤル',
     },
+    t_public: '公開する',
+    t_private: '公開しない',
     has_prize_true: '副賞あり',
     online: 'オンライン',
     offline: 'オフライン',
@@ -499,6 +506,7 @@ export default {
     leave_success: 'エントリーを辞退しました',
     close_entry_success: 'エントリーを締め切りました。',
     edit_entry_success: 'エントリー情報を編集しました',
+    failed_to_update_match: '対戦表の更新に失敗しました',
     dialog: {
       randomize_title: '{{isTeam, participation_type}}をランダムに配置します',
       randomize_desc: '現在エントリーしている{{isTeam, participation_type}}をトーナメント表の空欄になっている枠へランダムに配置します',
@@ -658,6 +666,7 @@ export default {
     user_hint: '指定できるのは相互フォローユーザーのみです',
     not_found: '一致するユーザーは見つかりませんでした',
     public_or_private: '大会公開設定',
+    public_or_private_short: '大会公開',
     title_placeholder: '60文字まで入力することができます。',
     overview_placeholder: `大会の概要などを任意で入力することができます。
 
@@ -671,6 +680,8 @@ export default {
     confirm_edit_title: 'この内容で編集しますか？',
     check_content_button: '内容を確認する',
     please_review: 'を見直してください',
+    end_time_invalid: '日時は現在の日時より後でなければなりません',
+    status_changed: '大会の開催ステータスが変更されました、編集内容の見直しをお願いします',
   },
   arenaSearchFilters: {
     all: 'すべて',
@@ -1028,6 +1039,7 @@ export default {
     status: 'ステータス',
     payment_method: '支払い方法',
     payment_type_gmo: 'GMOペイメント',
+    payment_type_none: 'なし',
     questions: 'よくあるお問い合わせ',
     about_purchase_status: '購入ステータスについて',
     about_cancellation: 'キャンセルについて',

@@ -284,7 +284,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     overflowX: 'hidden',
     height: '100%',
-    paddingBottom: 30,
+    paddingBottom: 50,
   },
   scroll: {
     scrollbarColor: '#222 transparent',

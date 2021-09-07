@@ -12,6 +12,7 @@ import _ from 'lodash'
 import useArenaHelper from '../hooks/useArenaHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { actions, selectors } = tournamentStore
 const getTournamentMeta = createMetaSelector(actions.createTournament)
@@ -44,11 +45,13 @@ export type EditableTypes = {
 const useTournamentCreate = (): {
   submit(params: TournamentFormParams): void
   update(params: UpdateParams): void
+  showToast(text: string): void
   meta: Meta
   updateMeta: Meta
   isEdit: boolean
   arena: TournamentDetail
   editables: EditableTypes
+  resetUpdateMeta(): void
 } => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
@@ -84,8 +87,10 @@ const useTournamentCreate = (): {
     acceptance_end_date: true,
   })
   const { isEditable } = useArenaHelper(arena)
+  const { handleReturn } = useReturnHref()
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
+  const showToast = (text: string) => dispatch(commonActions.addToast(text))
   const submit = async (params: TournamentFormParams) => {
     const resultAction = await dispatch(actions.createTournament(params))
     if (actions.createTournament.fulfilled.match(resultAction)) {
@@ -102,6 +107,13 @@ const useTournamentCreate = (): {
       router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
       dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
       dispatch(commonActions.addToast(t('common:arena.update_success')))
+    } else if (actions.updateTournament.rejected.match(resultAction)) {
+      if (_.get(resultAction.payload, 'error.code') === 422409) {
+        resetUpdateMeta()
+        handleReturn()
+        dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
+        dispatch(commonActions.addToast(t('common:tournament_create.status_changed')))
+      }
     }
   }
 
@@ -168,7 +180,7 @@ const useTournamentCreate = (): {
     }
   }, [arena, router])
 
-  return { submit, update, updateMeta, meta, isEdit, arena, editables }
+  return { submit, update, showToast, updateMeta, meta, isEdit, arena, editables, resetUpdateMeta }
 }
 
 export default useTournamentCreate

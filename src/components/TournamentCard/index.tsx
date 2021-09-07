@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
@@ -302,4 +303,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default TournamentCard
+export default memo(TournamentCard)

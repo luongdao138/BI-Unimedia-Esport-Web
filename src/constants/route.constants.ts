@@ -60,6 +60,10 @@ export const ESRoutes = {
   COMMUNITY_CREATE: '/community/create',
   TOPIC: '/community/:id/topic',
   TOPIC_CREATE: '/community/:id/topic/create',
+  EVENTS: '/events',
+  STREAM: '/stream',
+  ARCHIVE: '/archive',
+  PR: '/pr',
   LINE_CALLBACK: '/line/callback',
   TWITTER_CALLBACK: '/twitter/callback',
 }

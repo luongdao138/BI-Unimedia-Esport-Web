@@ -60,8 +60,11 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
   }
 
   const getRoomImg = () => {
-    if (!_.isString(roomImg)) return AVATAR_PATH
-    if (roomImg.length < 2) return AVATAR_PATH
+    if (
+      (!_.isString(roomImg) && groupType !== CHAT_ROOM_TYPE.CHAT_DIRECT) ||
+      (_.isEmpty(roomImg) && groupType !== CHAT_ROOM_TYPE.CHAT_DIRECT)
+    )
+      return AVATAR_PATH
     return roomImg
   }
 
@@ -78,7 +81,9 @@ const RoomListItem: React.FC<RoomListItemProps> = ({ expand, item, selected, onC
             badgeContent={unseenCount}
             showZero={false}
           >
-            <Avatar src={getRoomImg()} alt={name} />
+            <Avatar src={getRoomImg()} alt={name}>
+              <img className="MuiAvatar-img" src={getRoomImg()} />
+            </Avatar>
           </Badge>
         </>
       </ListItemAvatar>

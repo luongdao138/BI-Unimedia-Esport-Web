@@ -116,7 +116,7 @@ const ArenaBattlesEdit: React.FC = () => {
       <ESStickyFooter
         disabled={false}
         title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
-        onClick={freezable ? () => freeze(tournament.attributes.hash_key) : () => setShowRandomize(true)}
+        onClick={freezable ? () => freeze({ hash_key: tournament.attributes.hash_key, matches: null }) : () => setShowRandomize(true)}
         show={data.memberSelectable}
         noScroll
         classes={{ nextBtnHolder: classes.buttonHolder }}
