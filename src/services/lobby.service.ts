@@ -24,6 +24,12 @@ export enum LobbyFilterOption {
   organized = 'organized',
 }
 
+export type LobbyFilterItem = {
+  type: LobbyFilterOption
+  label: string
+  loginRequired: boolean
+}
+
 export type LobbySearchResponse = {
   data: Array<LobbyResponse>
   meta: PageMeta
