@@ -2,24 +2,22 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateMessageInput = {
+export type CreateUserInput = {
   id?: string | null
-  owner: string
-  uuid_user: string
-  message: string
-  video_id: string
+  uuid: string
+  avatar: string
+  user_name: string
   delete_flag?: boolean | null
 }
 
-export type ModelMessageConditionInput = {
-  owner?: ModelStringInput | null
-  uuid_user?: ModelStringInput | null
-  message?: ModelStringInput | null
-  video_id?: ModelStringInput | null
+export type ModelUserConditionInput = {
+  uuid?: ModelStringInput | null
+  avatar?: ModelStringInput | null
+  user_name?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
-  and?: Array<ModelMessageConditionInput | null> | null
-  or?: Array<ModelMessageConditionInput | null> | null
-  not?: ModelMessageConditionInput | null
+  and?: Array<ModelUserConditionInput | null> | null
+  or?: Array<ModelUserConditionInput | null> | null
+  not?: ModelUserConditionInput | null
 }
 
 export type ModelStringInput = {
@@ -68,74 +66,83 @@ export type ModelBooleanInput = {
   attributeType?: ModelAttributeTypes | null
 }
 
-export type Message = {
-  __typename: 'Message'
+export type User = {
+  __typename: 'User'
   id: string
-  owner: string
-  uuid_user: string
-  message: string
-  video_id: string
+  uuid: string
+  avatar: string
+  user_name: string
   delete_flag?: boolean | null
+  messages?: ModelMessageConnection | null
   createdAt: string
   updatedAt: string
 }
 
-export type UpdateMessageInput = {
+export type ModelMessageConnection = {
+  __typename: 'ModelMessageConnection'
+  items?: Array<Message | null> | null
+  nextToken?: string | null
+}
+
+export type Message = {
+  __typename: 'Message'
   id: string
-  owner?: string | null
-  uuid_user?: string | null
-  message?: string | null
-  video_id?: string | null
+  owner: string
+  uuid: string
+  text: string
+  video_id: string
   delete_flag?: boolean | null
-}
-
-export type DeleteMessageInput = {
-  id: string
-}
-
-export type CreateUserInput = {
-  id?: string | null
-  uiid: string
-  avatar: string
-}
-
-export type ModelUserConditionInput = {
-  uiid?: ModelStringInput | null
-  avatar?: ModelStringInput | null
-  and?: Array<ModelUserConditionInput | null> | null
-  or?: Array<ModelUserConditionInput | null> | null
-  not?: ModelUserConditionInput | null
-}
-
-export type User = {
-  __typename: 'User'
-  id: string
-  uiid: string
-  avatar: string
+  video_time: string
+  point: string
+  use_point_id: string
+  is_premium?: boolean | null
+  user_id: string
+  users?: User | null
   createdAt: string
   updatedAt: string
 }
 
 export type UpdateUserInput = {
   id: string
-  uiid?: string | null
+  uuid?: string | null
   avatar?: string | null
+  user_name?: string | null
+  delete_flag?: boolean | null
 }
 
 export type DeleteUserInput = {
   id: string
 }
 
-export type ModelMessageFilterInput = {
-  id?: ModelIDInput | null
+export type CreateMessageInput = {
+  id?: string | null
+  owner: string
+  uuid: string
+  text: string
+  video_id: string
+  delete_flag?: boolean | null
+  video_time: string
+  point: string
+  use_point_id: string
+  is_premium?: boolean | null
+  user_id: string
+  messageUsersId?: string | null
+}
+
+export type ModelMessageConditionInput = {
   owner?: ModelStringInput | null
-  uuid_user?: ModelStringInput | null
-  message?: ModelStringInput | null
+  uuid?: ModelStringInput | null
+  text?: ModelStringInput | null
   video_id?: ModelStringInput | null
   delete_flag?: ModelBooleanInput | null
-  and?: Array<ModelMessageFilterInput | null> | null
-  or?: Array<ModelMessageFilterInput | null> | null
-  not?: ModelMessageFilterInput | null
+  video_time?: ModelStringInput | null
+  point?: ModelStringInput | null
+  use_point_id?: ModelStringInput | null
+  is_premium?: ModelBooleanInput | null
+  user_id?: ModelIDInput | null
+  and?: Array<ModelMessageConditionInput | null> | null
+  or?: Array<ModelMessageConditionInput | null> | null
+  not?: ModelMessageConditionInput | null
 }
 
 export type ModelIDInput = {
@@ -154,16 +161,31 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null
 }
 
-export type ModelMessageConnection = {
-  __typename: 'ModelMessageConnection'
-  items?: Array<Message | null> | null
-  nextToken?: string | null
+export type UpdateMessageInput = {
+  id: string
+  owner?: string | null
+  uuid?: string | null
+  text?: string | null
+  video_id?: string | null
+  delete_flag?: boolean | null
+  video_time?: string | null
+  point?: string | null
+  use_point_id?: string | null
+  is_premium?: boolean | null
+  user_id?: string | null
+  messageUsersId?: string | null
+}
+
+export type DeleteMessageInput = {
+  id: string
 }
 
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null
-  uiid?: ModelStringInput | null
+  uuid?: ModelStringInput | null
   avatar?: ModelStringInput | null
+  user_name?: ModelStringInput | null
+  delete_flag?: ModelBooleanInput | null
   and?: Array<ModelUserFilterInput | null> | null
   or?: Array<ModelUserFilterInput | null> | null
   not?: ModelUserFilterInput | null
@@ -173,6 +195,89 @@ export type ModelUserConnection = {
   __typename: 'ModelUserConnection'
   items?: Array<User | null> | null
   nextToken?: string | null
+}
+
+export type ModelMessageFilterInput = {
+  id?: ModelIDInput | null
+  owner?: ModelStringInput | null
+  uuid?: ModelStringInput | null
+  text?: ModelStringInput | null
+  video_id?: ModelStringInput | null
+  delete_flag?: ModelBooleanInput | null
+  video_time?: ModelStringInput | null
+  point?: ModelStringInput | null
+  use_point_id?: ModelStringInput | null
+  is_premium?: ModelBooleanInput | null
+  user_id?: ModelIDInput | null
+  and?: Array<ModelMessageFilterInput | null> | null
+  or?: Array<ModelMessageFilterInput | null> | null
+  not?: ModelMessageFilterInput | null
+}
+
+export type CreateUserMutationVariables = {
+  input: CreateUserInput
+  condition?: ModelUserConditionInput | null
+}
+
+export type CreateUserMutation = {
+  createUser?: {
+    __typename: 'User'
+    id: string
+    uuid: string
+    avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type UpdateUserMutationVariables = {
+  input: UpdateUserInput
+  condition?: ModelUserConditionInput | null
+}
+
+export type UpdateUserMutation = {
+  updateUser?: {
+    __typename: 'User'
+    id: string
+    uuid: string
+    avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
+    createdAt: string
+    updatedAt: string
+  } | null
+}
+
+export type DeleteUserMutationVariables = {
+  input: DeleteUserInput
+  condition?: ModelUserConditionInput | null
+}
+
+export type DeleteUserMutation = {
+  deleteUser?: {
+    __typename: 'User'
+    id: string
+    uuid: string
+    avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
+    createdAt: string
+    updatedAt: string
+  } | null
 }
 
 export type CreateMessageMutationVariables = {
@@ -185,10 +290,25 @@ export type CreateMessageMutation = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null
@@ -204,10 +324,25 @@ export type UpdateMessageMutation = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null
@@ -223,60 +358,71 @@ export type DeleteMessageMutation = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null
 }
 
-export type CreateUserMutationVariables = {
-  input: CreateUserInput
-  condition?: ModelUserConditionInput | null
+export type GetUserQueryVariables = {
+  id: string
 }
 
-export type CreateUserMutation = {
-  createUser?: {
+export type GetUserQuery = {
+  getUser?: {
     __typename: 'User'
     id: string
-    uiid: string
+    uuid: string
     avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
     createdAt: string
     updatedAt: string
   } | null
 }
 
-export type UpdateUserMutationVariables = {
-  input: UpdateUserInput
-  condition?: ModelUserConditionInput | null
+export type ListUsersQueryVariables = {
+  filter?: ModelUserFilterInput | null
+  limit?: number | null
+  nextToken?: string | null
 }
 
-export type UpdateUserMutation = {
-  updateUser?: {
-    __typename: 'User'
-    id: string
-    uiid: string
-    avatar: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type DeleteUserMutationVariables = {
-  input: DeleteUserInput
-  condition?: ModelUserConditionInput | null
-}
-
-export type DeleteUserMutation = {
-  deleteUser?: {
-    __typename: 'User'
-    id: string
-    uiid: string
-    avatar: string
-    createdAt: string
-    updatedAt: string
+export type ListUsersQuery = {
+  listUsers?: {
+    __typename: 'ModelUserConnection'
+    items?: Array<{
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null> | null
+    nextToken?: string | null
   } | null
 }
 
@@ -289,10 +435,25 @@ export type GetMessageQuery = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null
@@ -311,10 +472,15 @@ export type ListMessagesQuery = {
       __typename: 'Message'
       id: string
       owner: string
-      uuid_user: string
-      message: string
+      uuid: string
+      text: string
       video_id: string
       delete_flag?: boolean | null
+      video_time: string
+      point: string
+      use_point_id: string
+      is_premium?: boolean | null
+      user_id: string
       createdAt: string
       updatedAt: string
     } | null> | null
@@ -322,39 +488,54 @@ export type ListMessagesQuery = {
   } | null
 }
 
-export type GetUserQueryVariables = {
-  id: string
-}
-
-export type GetUserQuery = {
-  getUser?: {
+export type OnCreateUserSubscription = {
+  onCreateUser?: {
     __typename: 'User'
     id: string
-    uiid: string
+    uuid: string
     avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
     createdAt: string
     updatedAt: string
   } | null
 }
 
-export type ListUsersQueryVariables = {
-  filter?: ModelUserFilterInput | null
-  limit?: number | null
-  nextToken?: string | null
+export type OnUpdateUserSubscription = {
+  onUpdateUser?: {
+    __typename: 'User'
+    id: string
+    uuid: string
+    avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
+    createdAt: string
+    updatedAt: string
+  } | null
 }
 
-export type ListUsersQuery = {
-  listUsers?: {
-    __typename: 'ModelUserConnection'
-    items?: Array<{
-      __typename: 'User'
-      id: string
-      uiid: string
-      avatar: string
-      createdAt: string
-      updatedAt: string
-    } | null> | null
-    nextToken?: string | null
+export type OnDeleteUserSubscription = {
+  onDeleteUser?: {
+    __typename: 'User'
+    id: string
+    uuid: string
+    avatar: string
+    user_name: string
+    delete_flag?: boolean | null
+    messages?: {
+      __typename: 'ModelMessageConnection'
+      nextToken?: string | null
+    } | null
+    createdAt: string
+    updatedAt: string
   } | null
 }
 
@@ -363,10 +544,25 @@ export type OnCreateMessageSubscription = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null
@@ -377,10 +573,25 @@ export type OnUpdateMessageSubscription = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null
@@ -391,43 +602,25 @@ export type OnDeleteMessageSubscription = {
     __typename: 'Message'
     id: string
     owner: string
-    uuid_user: string
-    message: string
+    uuid: string
+    text: string
     video_id: string
     delete_flag?: boolean | null
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnCreateUserSubscription = {
-  onCreateUser?: {
-    __typename: 'User'
-    id: string
-    uiid: string
-    avatar: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnUpdateUserSubscription = {
-  onUpdateUser?: {
-    __typename: 'User'
-    id: string
-    uiid: string
-    avatar: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
-export type OnDeleteUserSubscription = {
-  onDeleteUser?: {
-    __typename: 'User'
-    id: string
-    uiid: string
-    avatar: string
+    video_time: string
+    point: string
+    use_point_id: string
+    is_premium?: boolean | null
+    user_id: string
+    users?: {
+      __typename: 'User'
+      id: string
+      uuid: string
+      avatar: string
+      user_name: string
+      delete_flag?: boolean | null
+      createdAt: string
+      updatedAt: string
+    } | null
     createdAt: string
     updatedAt: string
   } | null

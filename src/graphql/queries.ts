@@ -2,15 +2,61 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      uuid
+      avatar
+      user_name
+      delete_flag
+      messages {
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+export const listUsers = /* GraphQL */ `
+  query ListUsers($filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        uuid
+        avatar
+        user_name
+        delete_flag
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`
 export const getMessage = /* GraphQL */ `
   query GetMessage($id: ID!) {
     getMessage(id: $id) {
       id
       owner
-      uuid_user
-      message
+      uuid
+      text
       video_id
       delete_flag
+      video_time
+      point
+      use_point_id
+      is_premium
+      user_id
+      users {
+        id
+        uuid
+        avatar
+        user_name
+        delete_flag
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -22,35 +68,15 @@ export const listMessages = /* GraphQL */ `
       items {
         id
         owner
-        uuid_user
-        message
+        uuid
+        text
         video_id
         delete_flag
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`
-export const getUser = /* GraphQL */ `
-  query GetUser($id: ID!) {
-    getUser(id: $id) {
-      id
-      uiid
-      avatar
-      createdAt
-      updatedAt
-    }
-  }
-`
-export const listUsers = /* GraphQL */ `
-  query ListUsers($filter: ModelUserFilterInput, $limit: Int, $nextToken: String) {
-    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        uiid
-        avatar
+        video_time
+        point
+        use_point_id
+        is_premium
+        user_id
         createdAt
         updatedAt
       }
