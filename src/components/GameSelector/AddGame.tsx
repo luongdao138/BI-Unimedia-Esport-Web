@@ -15,6 +15,7 @@ import { showDialog } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import ESFastInput from '@components/FastInput'
+import { useFocusState } from '@utils/hooks/input-focus-context'
 
 interface Props {
   genres: GameGenre[]
@@ -40,9 +41,9 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
   const { createGame, meta, createdGame } = useAddGame()
-
+  const focusEvent = useFocusState()
   const validationSchema = Yup.object().shape({
-    display_name: Yup.string().required(i18n.t('common:common.error')).max(60),
+    display_name: Yup.string().required(i18n.t('common:common.game_display_name_error')).max(60),
     game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
       return value !== -1
     }),
@@ -119,9 +120,11 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
             setTimeout(() => {
               document.body.classList.remove('has-sticky-div')
             }, 100)
+            focusEvent.onBlur()
           }}
           onFocus={() => {
             document.body.classList.add('has-sticky-div')
+            focusEvent.onFocus()
           }}
         />
         <Box pb={4} />

@@ -97,6 +97,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     nextBtnHolder: {
       marginBottom: theme.spacing(5),
     },
+    wrapper: {
+      marginBottom: theme.spacing(10),
+    },
   },
   noSpacing: {
     marginBottom: 0,

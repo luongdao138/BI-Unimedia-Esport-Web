@@ -1,5 +1,4 @@
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
-import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
@@ -22,7 +21,7 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerProfile, meta, backAction, isSocial, resetMeta } = useProfile()
+  const { registerProfile, meta, isSocial, resetMeta } = useProfile()
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
 
@@ -80,13 +79,8 @@ const RegisterProfileContainer: React.FC = () => {
       <ESStickyFooter disabled={!buttonActive()} title={t('common:register_by_email.button')} onClick={handleSubmit} noScroll>
         <form onSubmit={handleSubmit}>
           <Box pt={7.5} pb={9} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={backAction}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
-              </Box>
+            <Box className={classes.titleContainer}>
+              <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
             </Box>
 
             <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
@@ -138,12 +132,6 @@ const RegisterProfileContainer: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  iconButtonBg: {
-    backgroundColor: `${Colors.grey[200]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[200]}80`,
-    },
-  },
   iconMargin: {
     marginRight: theme.spacing(1 / 2),
   },
@@ -157,6 +145,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   blankSpace: {
     height: 169,
   },
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '16px 40px',
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -167,6 +161,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
+    },
+    titleContainer: {
+      padding: '16px 0px',
     },
   },
 }))
