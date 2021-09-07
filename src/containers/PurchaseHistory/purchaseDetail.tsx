@@ -155,7 +155,9 @@ const PurchaseDetail: React.FC = () => {
             </Box>
             <Box display="flex">
               <Typography className={classes.title}>{t('common:purchase_history.payment_method')}</Typography>
-              <Typography>{t('common:purchase_history.payment_type_gmo')}</Typography>
+              <Typography>
+                {price === 0 ? t('common:purchase_history.payment_type_none') : t('common:purchase_history.payment_type_gmo')}
+              </Typography>
             </Box>
             <Box padding={2} my={2} className={classes.detailWrap}>
               <Box display="flex" my={1}>

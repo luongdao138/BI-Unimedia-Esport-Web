@@ -238,6 +238,17 @@ export type UpdateParams = {
   data: TournamentFormParams
 }
 
+export type FreezeMatchItem = {
+  id: number
+  home_user: number
+  guest_user: number
+}
+
+export type FreezeMatchParams = {
+  hash_key: string
+  matches: FreezeMatchItem[]
+}
+
 export type TournamentDetailResponse = {
   data: TournamentDetail
 }
@@ -644,8 +655,10 @@ export const randomizeTournament = async (hash_key: string): Promise<void> => {
   return data
 }
 
-export const freezeTournament = async (hash_key: string): Promise<TournamentDetailResponse> => {
-  const { data } = await api.post<TournamentDetailResponse>(URI.TOURNAMENTS_FREEZE_PARTICIPANTS.replace(/:id/gi, hash_key))
+export const freezeTournament = async (params: FreezeMatchParams): Promise<TournamentDetailResponse> => {
+  const { data } = await api.post<TournamentDetailResponse>(URI.TOURNAMENTS_FREEZE_PARTICIPANTS.replace(/:id/gi, params.hash_key), {
+    matches: params.matches,
+  })
   return data
 }
 

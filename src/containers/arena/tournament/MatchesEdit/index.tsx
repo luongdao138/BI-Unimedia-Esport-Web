@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { IconButton, Typography, Icon, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
-import ESStickyFooter from '@components/StickyFooter'
+import ESContentFooter from './../ContentFooter'
 import SelectParticipantModal from '../../Detail/Partials/SelectParticipantModal'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
@@ -22,6 +22,7 @@ import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
 import useInterval from '@utils/hooks/useInterval'
 import { useRouter } from 'next/router'
 import moment from 'moment'
+import { use100vh } from 'react-div-100vh'
 
 const ArenaMatches: React.FC = () => {
   const _theme = useTheme()
@@ -38,6 +39,7 @@ const ArenaMatches: React.FC = () => {
     setScore,
     scoreMeta,
   } = useTournamentMatches()
+  const height = use100vh() - 60
   const { tournament, meta } = useTournamentDetail()
   const { freeze, randomize, setParticipant, randomizeMeta, freezeMeta, setParticipantMeta } = useModeratorActions()
   const { isModerator, isTeam } = useArenaHelper(tournament)
@@ -143,10 +145,9 @@ const ArenaMatches: React.FC = () => {
     const freezable = TournamentHelper.checkParticipantsSelected(matches, data.interested_count, data.max_participants)
 
     return (
-      <ESStickyFooter
+      <ESContentFooter
         disabled={false}
         show={data.memberSelectable}
-        noScroll
         content={
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
@@ -164,7 +165,6 @@ const ArenaMatches: React.FC = () => {
             </Box>
           </Box>
         }
-        classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <Box className={classes.backContainer}>
           <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
@@ -223,15 +223,24 @@ const ArenaMatches: React.FC = () => {
           onClose={() => setShowFreeze(false)}
           onAction={() => {
             setShowFreeze(false)
-            freeze(tournament.attributes.hash_key)
+
+            if (_.isArray(matches) && matches.length > 0) {
+              const freezedMatches = _.map(matches[0], (m) => ({
+                id: m.id,
+                home_user: m.home_user ? m.home_user.pid : null,
+                guest_user: m.guest_user ? m.guest_user.pid : null,
+              }))
+
+              freeze({ hash_key: tournament.attributes.hash_key, matches: freezedMatches })
+            }
           }}
         />
-      </ESStickyFooter>
+      </ESContentFooter>
     )
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ height: `${height}px` }}>
       {matches && matchesMeta.loaded && data && body()}
       <ESLoader open={meta.pending || matchesMeta.pending || randomizeMeta.pending || freezeMeta.pending} />
     </div>
@@ -242,16 +251,15 @@ export default ArenaMatches
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#212121',
-    paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
     width: '100vw',
     overflow: 'auto',
   },
   content: {
     padding: theme.spacing(3),
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(16),
+    paddingTop: 84,
+    paddingBottom: 0,
+    height: '100%',
+    overflowY: 'auto',
   },
   thirdPlaceContainer: {
     position: 'absolute',
@@ -310,12 +318,8 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
     backContainer: {
-      position: 'absolute',
       backgroundColor: 'transparent',
       borderBottom: 'none',
     },
-  },
-  buttonHolder: {
-    marginBottom: theme.spacing(3),
   },
 }))

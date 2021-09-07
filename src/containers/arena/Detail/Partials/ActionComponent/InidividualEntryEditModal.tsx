@@ -25,6 +25,7 @@ import ServerError from './ServerError'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import LoginRequired from '@containers/LoginRequired'
+import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 interface EntryEditModalProps {
   tournament: TournamentDetail
@@ -138,63 +139,71 @@ const InidividualEntryEditModal: React.FC<EntryEditModalProps> = ({
   }
 
   return (
-    <Box>
-      <StickyActionModal
-        open={open}
-        returnText={editMode ? t('common:tournament.update_entry_info') : t('common:arena.entry_information')}
-        actionButtonText={editMode ? t('common:arena.update_with_content') : t('common:tournament.update_entry_info')}
-        actionButtonDisabled={!isValid}
-        onReturnClicked={handleClose}
-        onActionButtonClicked={onSubmit}
-        hideFooter={!me || !isRecruiting}
-      >
-        {!!changeMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
-        <Box mt={3} />
-        <form onSubmit={onSubmit}>
-          <BlackBox>
-            <DetailInfo
-              detail={tournament}
-              bottomButton={
-                <LoginRequired>
-                  <ESButton
-                    className={classes.bottomButton}
-                    variant="outlined"
-                    round
-                    size="large"
-                    onClick={toDetail ? toDetail : handleClose}
-                  >
-                    {t('common:tournament.tournament_detail')}
-                  </ESButton>
-                </LoginRequired>
-              }
-            />
-          </BlackBox>
+    <FocusContextProvider>
+      <FocusContext.Consumer>
+        {({ isFocused, focusEvent }) => (
+          <>
+            <StickyActionModal
+              open={open}
+              returnText={editMode ? t('common:tournament.update_entry_info') : t('common:arena.entry_information')}
+              actionButtonText={editMode ? t('common:arena.update_with_content') : t('common:tournament.update_entry_info')}
+              actionButtonDisabled={!isValid}
+              onReturnClicked={handleClose}
+              onActionButtonClicked={onSubmit}
+              hideFooter={!me || !isRecruiting}
+              hideFooterOnMobile={isFocused}
+            >
+              {!!changeMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
+              <Box mt={3} />
+              <form onSubmit={onSubmit}>
+                <BlackBox>
+                  <DetailInfo
+                    detail={tournament}
+                    bottomButton={
+                      <LoginRequired>
+                        <ESButton
+                          className={classes.bottomButton}
+                          variant="outlined"
+                          round
+                          size="large"
+                          onClick={toDetail ? toDetail : handleClose}
+                        >
+                          {t('common:tournament.tournament_detail')}
+                        </ESButton>
+                      </LoginRequired>
+                    }
+                  />
+                </BlackBox>
 
-          {editMode ? (
-            <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={4}>
-              <Box>
-                <ESInput
-                  id="nickname"
-                  autoFocus
-                  labelPrimary={t('common:tournament.join_nickname')}
-                  fullWidth
-                  value={values.nickname}
-                  onChange={handleChange}
-                  helperText={errors.nickname}
-                  error={!!errors.nickname}
-                  required
-                />
-              </Box>
-            </Box>
-          ) : (
-            <Box width="100%" flexDirection="column" alignItems="center" pt={4.5} style={isPending ? { display: 'none' } : undefined}>
-              <UserListItem data={userData(participant)} handleClick={() => onUserClick(participant)} nicknameYellow={me} />
-            </Box>
-          )}
-        </form>
-        {isPending && <ESLoader open={isPending} />}
-      </StickyActionModal>
-    </Box>
+                {editMode ? (
+                  <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={4}>
+                    <Box>
+                      <ESInput
+                        id="nickname"
+                        autoFocus
+                        labelPrimary={t('common:tournament.join_nickname')}
+                        fullWidth
+                        value={values.nickname}
+                        onChange={handleChange}
+                        helperText={errors.nickname}
+                        error={!!errors.nickname}
+                        required
+                        {...focusEvent}
+                      />
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box width="100%" flexDirection="column" alignItems="center" pt={4.5} style={isPending ? { display: 'none' } : undefined}>
+                    <UserListItem data={userData(participant)} handleClick={() => onUserClick(participant)} nicknameYellow={me} />
+                  </Box>
+                )}
+              </form>
+              {isPending && <ESLoader open={isPending} />}
+            </StickyActionModal>
+          </>
+        )}
+      </FocusContext.Consumer>
+    </FocusContextProvider>
   )
 }
 

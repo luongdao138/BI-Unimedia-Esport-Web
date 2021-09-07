@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { makeStyles, Theme, Typography, Box, InputAdornment } from '@material-ui/core'
+import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
 import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
@@ -19,13 +19,13 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import ESPasswordInput from '@components/PasswordInput'
 
 const RegisterByEmailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const { registerByEmail, meta, backAction, resetMeta } = useRegisterByEmail()
   const [score, setScore] = useState(0)
-  const [showPassword, setShowPassword] = useState(false)
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
   const validationSchema = Yup.object().shape({
@@ -108,26 +108,10 @@ const RegisterByEmailContainer: React.FC = () => {
               </Box>
 
               <Box pt={3} pb={1}>
-                <ESInput
+                <ESPasswordInput
                   id="password"
                   labelPrimary={t('common:register_by_email.password')}
-                  type={showPassword ? 'text' : 'password'}
                   labelSecondary={<ESStrengthMeter value={score} />}
-                  endAdornment={
-                    <InputAdornment position="end" className={classes.inputContainer}>
-                      <div className={classes.borderLeft}></div>
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        size="small"
-                        disableRipple
-                        color="inherit"
-                        onMouseDown={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  fullWidth
                   value={values.password}
                   onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
                   onBlur={handleBlur}
@@ -156,17 +140,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-  },
-  inputContainer: {
-    position: 'relative',
-    paddingRigth: 7,
-  },
-  borderLeft: {
-    width: 1,
-    height: 24,
-    backgroundColor: '#4B4B4D',
-    position: 'absolute',
-    left: -8,
   },
   hint: {
     color: Colors.white_opacity[30],

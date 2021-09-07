@@ -114,6 +114,14 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem> */}
+            <Link href={ESRoutes.EVENTS} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.EVENTS)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-play-circle" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.video')} />
+              </ListItem>
+            </Link>
             <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
                 <ListItemIcon className={classes.icon}>
@@ -255,6 +263,9 @@ const useStyles = makeStyles((theme) => ({
   menuWrap: {
     height: '100%',
     overflowY: 'auto',
+    willChange: 'transform',
+    transform: 'translateZ(0)',
+    webkitTransform: 'translateZ(0)',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {

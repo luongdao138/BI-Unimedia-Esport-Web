@@ -59,6 +59,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
+  const [imgLoad, setImgLoad] = useState<boolean>(false)
   const [uploading, setUploading] = useState<boolean>(false)
   const [fitType, setFit] = useState<'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
   const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
@@ -80,9 +81,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
   const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
   const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
+    maxSize: MAX_SIZE,
+    multiple: false,
     accept: FILE_TYPES,
     onDrop: (files: any) => handleChange(files),
-    maxSize: MAX_SIZE,
   }
   const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
 
@@ -115,6 +117,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
           } else if (w > h) {
             setFit('vertical-cover')
           }
+          setImgLoad(true)
         }
         setFile(reader.result)
       }
@@ -169,7 +172,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, 
           </Typography>
         )}
         <Box className={classes.cropContainer}>
-          {file ? (
+          {file && imgLoad ? (
             <Cropper
               image={file}
               crop={crop}
