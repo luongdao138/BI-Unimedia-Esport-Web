@@ -338,7 +338,7 @@ const useStyles = makeStyles((theme) => ({
     height: 26,
     width: 26,
     marginRight: 12,
-    fontSize: 16,
+    fontSize: '16px !important',
   },
   avatarWinner: {
     border: `2px solid ${Colors.yellow}`,
