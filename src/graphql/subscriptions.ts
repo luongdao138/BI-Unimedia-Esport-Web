@@ -55,16 +55,16 @@ export const onCreateMessage = /* GraphQL */ `
     onCreateMessage {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar
@@ -83,16 +83,16 @@ export const onUpdateMessage = /* GraphQL */ `
     onUpdateMessage {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar
@@ -111,16 +111,16 @@ export const onDeleteMessage = /* GraphQL */ `
     onDeleteMessage {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar

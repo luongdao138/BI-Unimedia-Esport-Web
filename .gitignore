@@ -41,7 +41,6 @@ yarn-error.log*
 package-lock.json
 
 #amplify-do-not-edit-begin
-amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -53,7 +52,6 @@ build/
 dist/
 node_modules/
 aws-exports.js
-aws-exports.ts
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart

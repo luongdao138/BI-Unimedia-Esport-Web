@@ -134,15 +134,12 @@ const VideosTop: React.FC = () => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          {isMobile &&
-          <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
+          {isMobile && <ESTab label={t('live_stream_screen.comment')} value={TABS.COMMENT} className={classes.singleTab} />}
           <ESTab label={t('live_stream_screen.program_info')} value={TABS.PROGRAM_INFO} className={classes.singleTab} />
           {userHasViewingTicket() && (
-            <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO}
-                   className={classes.singleTab} />
+            <ESTab label={t('live_stream_screen.distributor_info')} value={TABS.DISTRIBUTOR_INFO} className={classes.singleTab} />
           )}
-          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS}
-                 className={classes.singleTab} />
+          <ESTab label={t('live_stream_screen.related_videos')} value={TABS.RELATED_VIDEOS} className={classes.singleTab} />
         </ESTabs>
       </Grid>
     )
@@ -162,7 +159,7 @@ const VideosTop: React.FC = () => {
     }
     return (
       <Box className={classes.forbiddenMessageContainer}>
-        <Typography variant='h3'>{i18n.t('common:common:private')}</Typography>
+        <Typography variant="h3">{i18n.t('common:common:private')}</Typography>
       </Box>
     )
   }
@@ -219,7 +216,7 @@ const VideosTop: React.FC = () => {
           ticketAvailableForSale={isTicketAvailableForSale()}
           softKeyboardIsShown={softKeyboardIsShown}
         />
-        <Grid container direction='row' className={classes.tabContainer}>
+        <Grid container direction="row" className={classes.tabContainer}>
           {getTabs()}
           {getContent()}
         </Grid>

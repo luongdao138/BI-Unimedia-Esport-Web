@@ -39,16 +39,16 @@ export const getMessage = /* GraphQL */ `
     getMessage(id: $id) {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar
@@ -68,15 +68,15 @@ export const listMessages = /* GraphQL */ `
       items {
         id
         owner
-        uuid
         text
+        uuid
         video_id
         delete_flag
         video_time
         point
         use_point_id
         is_premium
-        user_id
+        userId
         createdAt
         updatedAt
       }

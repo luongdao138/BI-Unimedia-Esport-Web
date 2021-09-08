@@ -2,8 +2,11 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUser = /* GraphQL */ `
-  mutation CreateUser($input: CreateUserInput!, $condition: ModelUserConditionInput) {
+export const createUser = /* GraphQlistUsers */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     createUser(input: $input, condition: $condition) {
       id
       uuid
@@ -55,16 +58,16 @@ export const createMessage = /* GraphQL */ `
     createMessage(input: $input, condition: $condition) {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar
@@ -83,16 +86,16 @@ export const updateMessage = /* GraphQL */ `
     updateMessage(input: $input, condition: $condition) {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar
@@ -111,16 +114,16 @@ export const deleteMessage = /* GraphQL */ `
     deleteMessage(input: $input, condition: $condition) {
       id
       owner
-      uuid
       text
+      uuid
       video_id
       delete_flag
       video_time
       point
       use_point_id
       is_premium
-      user_id
-      users {
+      userId
+      user {
         id
         uuid
         avatar
