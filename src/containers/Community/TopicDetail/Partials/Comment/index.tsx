@@ -13,20 +13,21 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
-import { CommentsResponse } from '@services/community.service'
+import { CommentsResponse, CommunityDetail } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useTopicDetail from '../../useTopicDetail'
 import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
 import useTopicHelper from '../../useTopicHelper'
+import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 
 type CommunityHeaderProps = {
   comment: CommentsResponse
-  isModerator?: boolean
+  community?: CommunityDetail
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment, isModerator, handleReply }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleReply }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -36,6 +37,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, isModerator, handleR
   const [openDelete, setOpenDelete] = useState(false)
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isSelf } = useTopicHelper(comment.attributes.user_code)
+  const { isModerator, isPublic, isNotMember } = useCommunityHelper(community)
 
   const handleClickReply = (event) => {
     setReplyAnchorEl(event.currentTarget)
@@ -105,14 +107,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, isModerator, handleR
           </Box>
           <Box className={classes.dateReportContainer}>
             <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
-            <ESMenu>
-              {(isModerator || isSelf) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
-              {!isSelf && (
-                <LoginRequired>
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                </LoginRequired>
-              )}
-            </ESMenu>
+            {(isPublic || !isNotMember) && (
+              <ESMenu>
+                {(isModerator || isSelf) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
+                {!isSelf && (
+                  <LoginRequired>
+                    <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                  </LoginRequired>
+                )}
+              </ESMenu>
+            )}
           </Box>
         </Box>
         {!!commentData && !!commentData.main_comment && (

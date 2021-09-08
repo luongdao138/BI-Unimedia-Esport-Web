@@ -38,7 +38,7 @@ const TopicDetailContainer: React.FC = () => {
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
   const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
-  const { isNotMember, isModerator } = useCommunityHelper(communityDetail)
+  const { isNotMember } = useCommunityHelper(communityDetail)
   const data = topic?.attributes
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const TopicDetailContainer: React.FC = () => {
     return (
       <>
         {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} isModerator={isModerator} handleReply={setReply} />
+          return <Comment key={i} comment={comment} community={communityDetail} handleReply={setReply} />
         })}
       </>
     )
@@ -106,7 +106,7 @@ const TopicDetailContainer: React.FC = () => {
           {topicDetailMeta.loaded && (
             <>
               <TopicDetailHeader title={data.title} isTopic={true} onHandleBack={handleBack} />
-              <MainTopic topic={topic} handleDelete={handleDeleteTopic} isModerator={isModerator} />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
             </>
           )}
           {hasPrevious && (

@@ -363,6 +363,7 @@ const useStyles = makeStyles((theme) => ({
   lockIcon: {
     color: Colors.primary,
     fontSize: 18,
+    marginLeft: theme.spacing(1),
   },
   checkIcon: {
     width: 18,
