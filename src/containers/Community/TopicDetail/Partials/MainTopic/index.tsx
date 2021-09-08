@@ -17,6 +17,7 @@ import { TopicDetail } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
+import useTopicHelper from '../../useTopicHelper'
 
 type CommunityHeaderProps = {
   user_avatar?: string
@@ -28,6 +29,7 @@ type CommunityHeaderProps = {
   hash_key?: string
   handleDelete?: () => void
   topic?: TopicDetail
+  isModerator?: boolean
 }
 const MainTopic: React.FC<CommunityHeaderProps> = ({
   nickname,
@@ -38,14 +40,15 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   isConfirm,
   handleDelete,
   topic,
+  isModerator,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const isModerator = true
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const topicData = topic?.attributes
+  const { isSelf } = useTopicHelper(topicData.owner_user_code)
   const detail = {
     attributes: {
       nickname: topicData?.owner_name,
@@ -95,10 +98,12 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
                 <Typography className={classes.date}>{CommonHelper.staticSmartTime(topicData?.created_at)}</Typography>
 
                 <ESMenu>
-                  {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic.delete.button')}</ESMenuItem>}
-                  <LoginRequired>
-                    <ESMenuItem onClick={handleReportOpen}>{t('common:topic.report.button')}</ESMenuItem>
-                  </LoginRequired>
+                  {(isModerator || isSelf) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
+                  {!isSelf && (
+                    <LoginRequired>
+                      <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                    </LoginRequired>
+                  )}
                 </ESMenu>
               </Box>
             )}
