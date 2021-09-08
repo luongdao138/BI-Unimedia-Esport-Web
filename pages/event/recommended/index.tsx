@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const EventRecommendedPage: PageWithLayoutType = () => {
-  return <EventRecommendedContainer />
+  return (
+    <MainLayout loginRequired={true}>
+      <EventRecommendedContainer />
+    </MainLayout>
+  )
 }
-
-EventRecommendedPage.Layout = MainLayout
 
 export default EventRecommendedPage

@@ -8,7 +8,7 @@ import BlackBox from '@components/BlackBox'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -17,6 +17,8 @@ import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import _ from 'lodash'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
+import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 interface IndividualEntryModalProps {
   tournament: TournamentDetail
@@ -27,22 +29,22 @@ interface IndividualEntryModalProps {
 
 const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament, userProfile, onClose, open }) => {
   const { t } = useTranslation(['common'])
-  const { join, joinMeta } = useEntry()
+  const { join, joinMeta, resetJoinMeta } = useEntry()
   const { resetTitle, changeTitle } = useDocTitle()
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       handleClose()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
-    nickname: Yup.string().required(t('common:common.error')).max(40, t('common:common.too_long')),
+    nickname: Yup.string().required(t('common:common.input_required')).max(40),
   })
 
-  const { values, errors, touched, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
+  const { values, errors, isValid, handleSubmit, handleChange, setFieldValue } = useFormik({
     initialValues: {
       nickname: '',
     },
@@ -70,44 +72,55 @@ const IndividualEntryModal: React.FC<IndividualEntryModalProps> = ({ tournament,
   }, [])
 
   const handleClose = () => {
+    resetJoinMeta()
     resetTitle()
     onClose()
   }
 
   return (
-    <Box>
-      <StickyActionModal
-        open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
-        actionButtonDisabled={!isValid}
-        onReturnClicked={handleClose}
-        onActionButtonClicked={handleSubmit}
-      >
-        <form onSubmit={handleSubmit}>
-          <BlackBox>
-            <DetailInfo detail={tournament} />
-          </BlackBox>
+    <FocusContextProvider>
+      <FocusContext.Consumer>
+        {({ isFocused, focusEvent }) => (
+          <>
+            <StickyActionModal
+              open={open}
+              returnText={t('common:tournament.join')}
+              actionButtonText={t('common:tournament.join_with_this')}
+              actionButtonDisabled={!isValid}
+              onReturnClicked={handleClose}
+              onActionButtonClicked={handleSubmit}
+              hideFooterOnMobile={isFocused}
+            >
+              {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+              <Box mt={3} />
+              <form onSubmit={handleSubmit}>
+                <BlackBox>
+                  <DetailInfo detail={tournament} />
+                </BlackBox>
 
-          <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8}>
-            <Box>
-              <ESInput
-                id="nickname"
-                autoFocus
-                labelPrimary={t('common:tournament.join_nickname')}
-                fullWidth
-                value={values.nickname}
-                onChange={handleChange}
-                helperText={touched.nickname && errors.nickname}
-                error={touched.nickname && !!errors.nickname}
-              />
-            </Box>
-          </Box>
-        </form>
-      </StickyActionModal>
+                <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8}>
+                  <Box>
+                    <ESInput
+                      id="nickname"
+                      autoFocus
+                      labelPrimary={t('common:tournament.join_nickname')}
+                      fullWidth
+                      value={values.nickname}
+                      onChange={handleChange}
+                      helperText={errors.nickname}
+                      error={!!errors.nickname}
+                      {...focusEvent}
+                    />
+                  </Box>
+                </Box>
+              </form>
+            </StickyActionModal>
 
-      {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
-    </Box>
+            {joinMeta.pending && <ESLoader open={joinMeta.pending} />}
+          </>
+        )}
+      </FocusContext.Consumer>
+    </FocusContextProvider>
   )
 }
 

@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const FollowerEndedPage: PageWithLayoutType = () => {
-  return <FollowerEndedContainer />
+  return (
+    <MainLayout loginRequired={true}>
+      <FollowerEndedContainer />
+    </MainLayout>
+  )
 }
-
-FollowerEndedPage.Layout = MainLayout
 
 export default FollowerEndedPage

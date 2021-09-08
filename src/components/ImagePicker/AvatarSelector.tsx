@@ -11,12 +11,15 @@ import i18n from '@locales/i18n'
 import { CameraAlt as Camera, Crop169 as RectIcon } from '@material-ui/icons'
 import ESLoader from '@components/Loader'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { REMOVE_TYPE } from '@constants/image.constants'
 
 interface AvatarSelectorProps {
   src?: string
   alt: string
+  is_required?: boolean | true
   cancel: () => void
   onUpdate: (file: File, blob: any, blobUrl: string) => void
+  onRemove?: (path: string, file_type: number) => void
 }
 
 const ImageSlider = withStyles({
@@ -48,7 +51,7 @@ const ImageSlider = withStyles({
 
 const WH = 200
 
-const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpdate }) => {
+const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, is_required, cancel, onUpdate, onRemove }) => {
   const classes = useStyles()
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
@@ -56,8 +59,11 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
   const [uploading, setUploading] = useState<boolean>(false)
+  const [error, setError] = useState<boolean>(false)
   const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: WH, height: WH })
   const [fitType, setFit] = useState<'contain' | 'vertical-cover' | 'horizontal-cover'>('contain')
+  const [imgSrc, setImgSrc] = useState<any>(null)
+  const [is_clicked_reset, setIsClickedReset] = useState<boolean>(false)
 
   useEffect(() => {
     return setUploading(false)
@@ -67,11 +73,27 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   //   setFileLocation(src)
   // }, [src])
 
+  const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
+  const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
-    accept: 'image/*',
+    accept: FILE_TYPES,
+    multiple: false,
     onDrop: (files: any) => handleChange(files),
+    maxSize: MAX_SIZE,
   }
-  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
+
+  useEffect(() => {
+    setImgSrc(src)
+  }, [src])
+
+  useEffect(() => {
+    if (fileRejections.length > 0 && fileRejections[0].file) {
+      setError(fileRejections[0].file.size > MAX_SIZE || !FILE_TYPES.includes(fileRejections[0].file.type))
+    } else {
+      setError(false)
+    }
+  }, [fileRejections])
 
   const handleChange = (files: Array<File>) => {
     const f = files[0]
@@ -100,7 +122,22 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
   }
 
   const reset = () => {
-    setFile(null)
+    if (file) {
+      setFile(null)
+      setRawFile(null)
+      setIsClickedReset(false)
+    } else {
+      setImgSrc(null)
+      if (src) setIsClickedReset(true)
+    }
+    setCroppedAreaPixels(null)
+    setZoom(1)
+  }
+
+  const disableUseButton = () => {
+    if (file !== null && rawFile !== null) return false
+    else if (is_required == false && is_clicked_reset) return false
+    return true
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -117,10 +154,19 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
     }
   }, [croppedAreaPixels])
 
+  const remove = useCallback(async () => {
+    onRemove(src, REMOVE_TYPE.profile)
+  }, [])
+
   return (
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
+        {error && (
+          <Typography color="secondary" className={classes.warning}>
+            {i18n.t('common:messages.file_size_limit')}
+          </Typography>
+        )}
         <Box className={classes.cropContainer}>
           {file ? (
             <Cropper
@@ -141,7 +187,7 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
             />
           ) : (
             <label htmlFor="cover-upload" className={classes.touch}>
-              <ESAvatar className={classes.avatar} src={src ?? '/images/avatar.png'} alt={alt} />
+              <ESAvatar className={classes.avatar} src={imgSrc ?? '/images/avatar.png'} alt={alt} />
               <Camera fontSize="large" className={classes.camera} />
               <div className={classes.backdrop} />
               <div {...getRootProps()} className={classes.dropZone}>
@@ -166,10 +212,10 @@ const AvatarSelector: React.FC<AvatarSelectorProps> = ({ src, alt, cancel, onUpd
         ) : null}
         <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
-          <ButtonPrimary round gradient={false} onClick={cancel}>
+          <ButtonPrimary round className={classes.button} gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}>
+          <ButtonPrimary round className={classes.button} onClick={file && rawFile ? update : remove} disabled={disableUseButton()}>
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
@@ -219,6 +265,9 @@ const useStyles = makeStyles(() => ({
   title: {
     marginTop: 40,
     marginBottom: 40,
+  },
+  warning: {
+    marginBottom: 20,
   },
   description: {
     marginTop: 40,
@@ -314,6 +363,15 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     textDecoration: 'underline',
   },
+  linkDisabled: {
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    marginTop: 20,
+    textDecoration: 'underline',
+    cursor: 'default',
+  },
   rect: {
     color: '#FFFFFF30',
     marginRight: 10,
@@ -321,5 +379,10 @@ const useStyles = makeStyles(() => ({
   rect2: {
     color: '#FFFFFF30',
     marginLeft: 10,
+  },
+  button: {
+    minWidth: 170,
+    marginLeft: 20,
+    marginTop: 10,
   },
 }))

@@ -22,7 +22,7 @@ const FollowerEndedContainer: React.FC = () => {
   const loadMore = () => {
     if (hasNextPage) {
       getTournamentResults({
-        page: pages.current_page + 1,
+        page: Number(pages.current_page) + 1,
       })
     }
   }
@@ -37,6 +37,11 @@ const FollowerEndedContainer: React.FC = () => {
           {t('common:tournament.follower_ended')}
         </Typography>
       </Box>
+      {meta && meta.loaded && !tournamentResults.length && (
+        <Box display="flex" py={3} justifyContent="center" alignItems="center">
+          <Typography>{t('common:tournament.no_data.followers_entering_results')}</Typography>
+        </Box>
+      )}
       <InfiniteScroll
         className={classes.container}
         dataLength={tournamentResults.length}

@@ -12,6 +12,7 @@ import _ from 'lodash'
 import useArenaHelper from '../hooks/useArenaHelper'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 const { actions, selectors } = tournamentStore
 const getTournamentMeta = createMetaSelector(actions.createTournament)
@@ -29,7 +30,7 @@ export type EditableTypes = {
   acceptance_end_date: boolean
   participant_type: boolean
   area_id: boolean
-  area_name: boolean
+  address: boolean
   prize: boolean
   terms_of_participation: boolean
   organizer_name: boolean
@@ -44,11 +45,13 @@ export type EditableTypes = {
 const useTournamentCreate = (): {
   submit(params: TournamentFormParams): void
   update(params: UpdateParams): void
+  showToast(text: string): void
   meta: Meta
   updateMeta: Meta
   isEdit: boolean
   arena: TournamentDetail
   editables: EditableTypes
+  resetUpdateMeta(): void
 } => {
   const { t } = useTranslation(['common'])
   const router = useRouter()
@@ -68,7 +71,7 @@ const useTournamentCreate = (): {
     t_type: true,
     notes: true,
     area_id: true,
-    area_name: true,
+    address: true,
     co_organizers: true,
     organizer_name: true,
     // always not editable
@@ -84,8 +87,10 @@ const useTournamentCreate = (): {
     acceptance_end_date: true,
   })
   const { isEditable } = useArenaHelper(arena)
+  const { handleReturn } = useReturnHref()
   const resetMeta = () => dispatch(clearMetaData(actions.createTournament.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateTournament.typePrefix))
+  const showToast = (text: string) => dispatch(commonActions.addToast(text))
   const submit = async (params: TournamentFormParams) => {
     const resultAction = await dispatch(actions.createTournament(params))
     if (actions.createTournament.fulfilled.match(resultAction)) {
@@ -100,7 +105,15 @@ const useTournamentCreate = (): {
     if (actions.updateTournament.fulfilled.match(resultAction)) {
       resetUpdateMeta()
       router.push(`${ESRoutes.ARENA}/${resultAction.meta.arg.hash_key}`)
+      dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
       dispatch(commonActions.addToast(t('common:arena.update_success')))
+    } else if (actions.updateTournament.rejected.match(resultAction)) {
+      if (_.get(resultAction.payload, 'error.code') === 422409) {
+        resetUpdateMeta()
+        handleReturn()
+        dispatch(actions.getTournamentDetail(String(resultAction.meta.arg.hash_key)))
+        dispatch(commonActions.addToast(t('common:tournament_create.status_changed')))
+      }
     }
   }
 
@@ -139,7 +152,7 @@ const useTournamentCreate = (): {
         _editables.t_type = true
         _editables.notes = true
         _editables.area_id = true
-        _editables.area_name = true
+        _editables.address = true
         _editables.co_organizers = true
         _editables.organizer_name = true
 
@@ -147,18 +160,19 @@ const useTournamentCreate = (): {
         if (_status === TOURNAMENT_STATUS.RECRUITING) {
           _editables.max_participants = true
           _editables.retain_history = true
-          _editables.acceptance_start_date = true
+          _editables.acceptance_start_date = false
           _editables.acceptance_end_date = true
           _editables.start_date = true
           _editables.end_date = true
-        } else if (
-          _status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED ||
-          _status === TOURNAMENT_STATUS.READY_TO_START ||
-          _status === TOURNAMENT_STATUS.IN_PROGRESS
-        ) {
+        } else if (_status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || _status === TOURNAMENT_STATUS.READY_TO_START) {
           // max_participants, retain_history,
           // acceptance_start_date, acceptance_end_date are already false on top
           _editables.start_date = true
+          _editables.end_date = true
+        } else if (_status === TOURNAMENT_STATUS.IN_PROGRESS) {
+          // max_participants, retain_history,
+          // acceptance_start_date, acceptance_end_date are already false on top
+          _editables.start_date = false
           _editables.end_date = true
         }
       }
@@ -166,7 +180,7 @@ const useTournamentCreate = (): {
     }
   }, [arena, router])
 
-  return { submit, update, updateMeta, meta, isEdit, arena, editables }
+  return { submit, update, showToast, updateMeta, meta, isEdit, arena, editables, resetUpdateMeta }
 }
 
 export default useTournamentCreate

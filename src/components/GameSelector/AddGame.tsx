@@ -1,11 +1,10 @@
 import { useFormik } from 'formik'
 import { Box, makeStyles } from '@material-ui/core'
 import { CreateGameTitleParams, GameGenre, GameTitle } from '@services/game.service'
-import Input from '@components/Input'
 import Select from '@components/Select'
 import Button from '@components/Button'
 import Toast from '@components/Toast'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import _ from 'lodash'
 import useAddGame from './useAddGame'
 import { useEffect, useState } from 'react'
@@ -15,6 +14,8 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { showDialog } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
+import ESFastInput from '@components/FastInput'
+import { useFocusState } from '@utils/hooks/input-focus-context'
 
 interface Props {
   genres: GameGenre[]
@@ -40,9 +41,9 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
   const { createGame, meta, createdGame } = useAddGame()
-
+  const focusEvent = useFocusState()
   const validationSchema = Yup.object().shape({
-    display_name: Yup.string().required(i18n.t('common:common.error')).max(60, i18n.t('common:common.too_long')),
+    display_name: Yup.string().required(i18n.t('common:common.game_display_name_error')).max(60),
     game_genre_id: Yup.number().test('game_genre_id', '', (value) => {
       return value !== -1
     }),
@@ -103,18 +104,28 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
           ))}
         </Select>
         <Box pb={4} />
-        <Input
+        <ESFastInput
           id="display_name"
           name="display_name"
           value={formik.values.display_name}
           onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
           fullWidth
           required
           size="small"
           helperText={formik.touched.display_name && formik.errors.display_name}
           error={formik.touched.display_name && !!formik.errors.display_name}
           labelPrimary={t('profile.favorite_game.title_label')}
+          onBlur={(e) => {
+            formik.handleBlur(e)
+            setTimeout(() => {
+              document.body.classList.remove('has-sticky-div')
+            }, 100)
+            focusEvent.onBlur()
+          }}
+          onFocus={() => {
+            document.body.classList.add('has-sticky-div')
+            focusEvent.onFocus()
+          }}
         />
         <Box pb={4} />
         <Box textAlign="center">

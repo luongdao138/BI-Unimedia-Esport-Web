@@ -3,7 +3,7 @@ import { FormikProps } from 'formik'
 import ESInput from '@components/Input'
 import { FormType } from './FormModel/FormType'
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core'
-import { HardwareResponse } from '@services/common.service'
+import { GetPrefecturesResponse, HardwareResponse } from '@services/common.service'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { RULES, PARTICIPATION_TYPES } from '@constants/tournament.constants'
@@ -13,18 +13,28 @@ import _ from 'lodash'
 interface ConfirmProps {
   values: FormikProps<FormType>['values']
   hardwares: HardwareResponse['data']
+  prefectures: GetPrefecturesResponse['data']
   user: UserLoginResponse
+  isEdit: boolean
 }
 
 ESInput.defaultProps = {
   size: 'small',
 }
 
-const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
+const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, prefectures, user, isEdit }) => {
   const { t } = useTranslation(['common'])
   const [hardwareName, setHardwareName] = useState('')
   const [coOrganizers, setCoOrganizers] = useState('')
+  const [areaName, setAreaName] = useState('')
   const classes = useStyles()
+
+  useEffect(() => {
+    if (prefectures) {
+      const area = prefectures.find((area) => area.id === String(values.stepThree.area_id))
+      setAreaName(area.attributes.area)
+    }
+  }, [prefectures])
 
   useEffect(() => {
     hardwares.forEach((h) => {
@@ -100,21 +110,27 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
   return (
     <Box pb={20} className={classes.viewHolder}>
       <Box pb={8} />
-      <Typography variant="h2">{t('common:tournament_create.comfirm_title')}</Typography>
+      <Typography variant="h2">
+        {isEdit ? t('common:tournament_create.confirm_edit_title') : t('common:tournament_create.comfirm_title')}
+      </Typography>
       <Box pb={4.25} />
-      <Box>
-        <img
-          src={values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'}
-          className={classes.coverImg}
-        />
-      </Box>
+      <Box
+        style={{
+          background: `url(${values.stepOne.cover_image_url ? values.stepOne.cover_image_url : '/images/default_card.png'})`,
+          paddingTop: '30.21756647864625%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+        }}
+        className={classes.coverWrapper}
+      ></Box>
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.name')} fullWidth value={values.stepOne.title} disabled />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.overview')} multiline value={values.stepOne.overview} disabled={true} fullWidth />
       <Box pb={2} />
       <ESInput
-        labelPrimary={t('common:tournament_create.has_prize')}
+        labelPrimary={t('common:tournament.prize')}
         value={values.stepOne.has_prize ? t('common:common.yes') : t('common:common.no')}
         disabled={true}
         fullWidth
@@ -123,7 +139,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.game')}
-        value={values.stepOne.game_title_id[0].display_name}
+        value={_.get(values, 'stepOne.game_title_id[0].display_name', '')}
         disabled={true}
         fullWidth
       />
@@ -135,13 +151,20 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.participation')} value={participationType} disabled={true} fullWidth />
       <ESInput value={`${values.stepTwo.max_participants}${peopleText}`} disabled={true} fullWidth />
-      <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth />
+      <ESInput value={values.stepTwo.terms_of_participation} disabled={true} fullWidth multiline />
+      <Box pb={2} />
+      <ESInput
+        labelPrimary={t('common:tournament_create.public_or_private')}
+        value={values.stepTwo.t_type === 't_public' ? t('common:tournament_create.public') : t('common:tournament_create.private')}
+        disabled={true}
+        fullWidth
+      />
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.precautions')} value={values.stepTwo.notes} multiline disabled={true} fullWidth />
       <Box pb={2} />
       <ESInput
         labelPrimary={t('common:tournament_create.retain_history_short')}
-        value={values.stepTwo.retain_history ? t('common:common.yes') : t('common:common.no')}
+        value={values.stepTwo.retain_history ? t('common:common.save') : t('common:common.dont_save')}
         multiline
         disabled={true}
         fullWidth
@@ -151,8 +174,8 @@ const Confirm: React.FC<ConfirmProps> = ({ values, hardwares, user }) => {
       <Box pb={2} />
       {formatDate(t('common:tournament_create.holding_period'), values.stepThree.start_date, values.stepThree.end_date)}
       <Box pb={2} />
-      <ESInput labelPrimary={t('common:tournament_create.area')} value={ruleName} disabled={true} fullWidth />
-      {values.stepThree.area_name && <ESInput value={values.stepThree.area_name} disabled={true} fullWidth />}
+      <ESInput labelPrimary={t('common:tournament_create.area')} value={areaName} disabled={true} fullWidth />
+      {values.stepThree.address && <ESInput value={values.stepThree.address} disabled={true} fullWidth multiline />}
       <Box pb={2} />
       <ESInput labelPrimary={t('common:tournament_create.organizer')} value={user.nickname} disabled={true} fullWidth />
       <Box pb={2} />
@@ -174,13 +197,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 40,
     marginLeft: 40,
   },
-  coverImg: {
-    width: '100%',
-    height: 116,
-    objectFit: 'cover',
-    objectPosition: '50% 50%',
-    borderRadius: 4,
-  },
   time: {
     maxWidth: 340,
     display: 'grid',
@@ -194,8 +210,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   [theme.breakpoints.down('sm')]: {
     viewHolder: {
-      marginLeft: 24,
-      marginRight: 24,
+      marginLeft: 0,
+      marginRight: 0,
     },
   },
 }))

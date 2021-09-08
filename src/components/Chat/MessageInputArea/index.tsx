@@ -86,7 +86,9 @@ const MessageInputArea: React.FC<MessageInputAreaProps> = forwardRef<ClearInputr
   return (
     <>
       <Box className={classes.root}>
-        <Actions onPressActions={onPressActionButton} disabled={disabled || isBlocked} />
+        <Box className={classes.toolbarCont}>
+          <Actions onPressActions={onPressActionButton} disabled={disabled || isBlocked} />
+        </Box>
         <Box className={classes.input}>
           <Composer
             renderSuggestion={renderSuggestion}
@@ -115,6 +117,11 @@ MessageInputArea.defaultProps = {
 }
 
 const useStyles = makeStyles(() => ({
+  toolbarCont: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+  },
   toolbar: {
     flexDirection: 'row',
     display: 'flex',
@@ -124,14 +131,19 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexShrink: 0,
     maxWidth: '100%',
+    paddingLeft: 50,
+    paddingRight: 40,
+    position: 'relative',
   },
   input: {
     position: 'relative',
     flexGrow: 1,
-    maxWidth: 533,
     width: '100%',
   },
   send: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
     '&:hover $icon': {
       color: Colors.primary,
       transition: 'all 0.3s ease',

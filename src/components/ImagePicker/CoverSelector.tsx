@@ -12,11 +12,15 @@ import ESLoader from '@components/Loader'
 import i18n from '@locales/i18n'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useWindowDimensions } from '@utils/hooks/useWindowDimensions'
+import { REMOVE_TYPE } from '@constants/image.constants'
 
 interface CoverSelectorProps {
   src?: string
+  ratio?: number
+  is_required?: boolean | true
   cancel: () => void
   onUpdate: (file: File, blob: any, blobUrl: string) => void
+  onRemove?: (path: string, file_type: number) => void
 }
 
 const ImageSlider = withStyles({
@@ -49,18 +53,22 @@ const ImageSlider = withStyles({
 const STATIC_WIDTH = 600
 const STATIC_HEIGHT = 200
 
-const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) => {
+const CoverSelector: React.FC<CoverSelectorProps> = ({ src, ratio, is_required, cancel, onUpdate, onRemove }) => {
   const [rawFile, setRawFile] = useState<null | File>(null)
   const [file, setFile] = useState<any>(null)
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [zoom, setZoom] = useState<number>(1)
+  const [imgLoad, setImgLoad] = useState<boolean>(false)
   const [uploading, setUploading] = useState<boolean>(false)
   const [fitType, setFit] = useState<'vertical-cover' | 'horizontal-cover'>('horizontal-cover')
   const [mediaDimensions, setMediaDimensions] = useState<{ width: number; height: number }>({ width: STATIC_WIDTH, height: STATIC_HEIGHT })
   const { width: containerWidth } = useWindowDimensions(64)
   const [dynamicWidth, setDynamicWidth] = useState<number>(STATIC_WIDTH)
+  const [error, setError] = useState<boolean>(false)
   const classes = useStyles({ width: dynamicWidth })
+  const [imgSrc, setImgSrc] = useState<any>(null)
+  const [is_clicked_reset, setIsClickedReset] = useState<boolean>(false)
 
   useEffect(() => {
     return setUploading(false)
@@ -70,11 +78,27 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
     setDynamicWidth(containerWidth > STATIC_WIDTH ? STATIC_WIDTH : containerWidth)
   }, [containerWidth])
 
+  const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
+  const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
   const dropZoneConfig = {
-    accept: 'image/*',
+    maxSize: MAX_SIZE,
+    multiple: false,
+    accept: FILE_TYPES,
     onDrop: (files: any) => handleChange(files),
   }
-  const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
+  const { getRootProps, getInputProps, fileRejections } = useDropzone(dropZoneConfig)
+
+  useEffect(() => {
+    if (fileRejections.length > 0 && fileRejections[0].file) {
+      setError(fileRejections[0].file.size > MAX_SIZE || !FILE_TYPES.includes(fileRejections[0].file.type))
+    } else {
+      setError(false)
+    }
+  }, [fileRejections])
+
+  useEffect(() => {
+    setImgSrc(src)
+  }, [src])
 
   const handleChange = (files: Array<File>) => {
     const f = files[0]
@@ -93,6 +117,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
           } else if (w > h) {
             setFit('vertical-cover')
           }
+          setImgLoad(true)
         }
         setFile(reader.result)
       }
@@ -101,10 +126,22 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
   }
 
   const reset = () => {
-    setFile(null)
-    setRawFile(null)
+    if (file) {
+      setFile(null)
+      setRawFile(null)
+      setIsClickedReset(false)
+    } else {
+      setImgSrc(null)
+      if (src) setIsClickedReset(true)
+    }
     setCroppedAreaPixels(null)
-    setZoom(null)
+    setZoom(1)
+  }
+
+  const disableUseButton = () => {
+    if (file !== null && rawFile !== null) return false
+    else if (is_required == false && is_clicked_reset) return false
+    return true
   }
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -121,19 +158,27 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
     }
   }, [croppedAreaPixels])
 
+  const remove = useCallback(async () => {
+    onRemove(src, REMOVE_TYPE.cover)
+  }, [])
+
   return (
     <ESDialog open={true} title={i18n.t('common:profile.update_image')} handleClose={cancel} bkColor={'#2C2C2C'} alignTop={true}>
       <Box className={classes.container}>
         <Typography className={classes.title}>{i18n.t('common:profile.update_image')}</Typography>
-
+        {error && (
+          <Typography color="secondary" className={classes.warning}>
+            {i18n.t('common:messages.file_size_limit')}
+          </Typography>
+        )}
         <Box className={classes.cropContainer}>
-          {file ? (
+          {file && imgLoad ? (
             <Cropper
               image={file}
               crop={crop}
               zoom={zoom}
               objectFit={fitType}
-              aspect={4 / 1}
+              aspect={ratio || 4 / 1}
               style={{
                 containerStyle: { width: dynamicWidth, height: STATIC_HEIGHT, position: 'relative' },
                 mediaStyle: { width: mediaDimensions.width, height: mediaDimensions.height, position: 'relative' },
@@ -145,7 +190,7 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
             />
           ) : (
             <div className={classes.imageContainer}>
-              {src ? <img src={src} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
+              {imgSrc ? <img src={imgSrc} className={classes.image} /> : <Image height="148" width="116" src="/images/big_logo.png" />}
               <div className={classes.backdrop} />
               <Camera fontSize="large" className={classes.camera} />
               <div {...getRootProps()} className={classes.dropZone}>
@@ -170,10 +215,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
         ) : null}
         <Typography className={classes.description}>{i18n.t('common:messages.image_update')}</Typography>
         <Box>
-          <ButtonPrimary round gradient={false} onClick={cancel}>
+          <ButtonPrimary round className={classes.button} gradient={false} onClick={cancel}>
             {i18n.t('common:common.cancel')}
           </ButtonPrimary>
-          <ButtonPrimary round onClick={update} style={{ marginLeft: 20 }} disabled={file === null || rawFile === null}>
+          <ButtonPrimary round className={classes.button} onClick={file && rawFile ? update : remove} disabled={disableUseButton()}>
             {i18n.t('common:button.use')}
           </ButtonPrimary>
         </Box>
@@ -190,6 +235,10 @@ const CoverSelector: React.FC<CoverSelectorProps> = ({ src, cancel, onUpdate }) 
       </Box>
     </ESDialog>
   )
+}
+
+CoverSelector.defaultProps = {
+  ratio: null,
 }
 
 export default CoverSelector
@@ -227,6 +276,9 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     marginTop: 40,
     marginBottom: 40,
   },
+  warning: {
+    marginBottom: 20,
+  },
   description: {
     marginTop: 40,
     marginBottom: 100,
@@ -243,6 +295,14 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
       color: '#ffffff9c',
     },
     cursor: 'pointer',
+    textDecoration: 'underline',
+  },
+  linkDisabled: {
+    color: '#FFFFFF30',
+    '&:focus': {
+      color: '#ffffff9c',
+    },
+    cursor: 'default',
     textDecoration: 'underline',
   },
   //--------Control--------------------
@@ -335,5 +395,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     zIndex: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button: {
+    minWidth: 170,
+    marginLeft: 20,
+    marginTop: 10,
   },
 }))

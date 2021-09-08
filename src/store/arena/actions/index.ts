@@ -134,7 +134,7 @@ export const closeTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNA
   }
 })
 
-export const cancelTournament = createAsyncThunk<void, string>(types.CLOSE_TOURNAMENT, async (param, { rejectWithValue }) => {
+export const cancelTournament = createAsyncThunk<void, string>(types.CANCEL_TOURNAMENT, async (param, { rejectWithValue }) => {
   try {
     const res = await services.cancelTournament(param)
     return res
@@ -195,6 +195,21 @@ export const getTournamentInteresteds = createAsyncThunk<services.GetParticipant
 
 export const getTournamentMatches = createAsyncThunk<services.TournamentMatchResponse, string>(
   types.GET_TOURNAMENT_MATCHES,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getTournamentMatches(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getTournamentMatchesInterval = createAsyncThunk<services.TournamentMatchResponse, string>(
+  types.GET_TOURNAMENT_MATCHES_INTERVAL,
   async (param, { rejectWithValue }) => {
     try {
       const res = await services.getTournamentMatches(param)
@@ -324,11 +339,11 @@ export const randomizeTournament = createAsyncThunk<void, string>(types.RANDOMIZ
   }
 })
 
-export const freezeTournament = createAsyncThunk<services.TournamentDetailResponse, string>(
+export const freezeTournament = createAsyncThunk<services.TournamentDetailResponse, services.FreezeMatchParams>(
   types.FREEZE_TOURNAMENT,
-  async (param, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const res = await services.freezeTournament(param)
+      const res = await services.freezeTournament(params)
       return res
     } catch (error) {
       if (!error.response) {
@@ -412,4 +427,8 @@ export const updateTournamentTeamDetail = createAsyncThunk<void, services.Update
       return rejectWithValue(error.response.data)
     }
   }
+)
+
+export const teamMemberFollowStageChanged = createAction<{ userId: number; state: number }>(
+  TOURNAMENT_ACTION_TYPE.TEAM_MEMBER_FOLLOW_STATE_CHANGED
 )

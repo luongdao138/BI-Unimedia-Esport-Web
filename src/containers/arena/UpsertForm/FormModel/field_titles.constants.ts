@@ -26,7 +26,7 @@ export const FIELD_TITLES = {
     acceptance_end_start_date: i18n.t('common:tournament_create.holding_period'),
     start_end_date: i18n.t('common:tournament_create.holding_period'),
     area_id: i18n.t('common:tournament_create.area'),
-    area_name: i18n.t('common:tournament_create.area'),
+    address: i18n.t('common:tournament_create.area'),
   },
   stepFour: {
     organizer_name: i18n.t('common:tournament_create.organizer_name'),

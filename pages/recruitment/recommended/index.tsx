@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const RecruitmentRecommendedPage: PageWithLayoutType = () => {
-  return <RecruitmentRecommendedContainer />
+  return (
+    <MainLayout loginRequired={true}>
+      <RecruitmentRecommendedContainer />
+    </MainLayout>
+  )
 }
-
-RecruitmentRecommendedPage.Layout = MainLayout
 
 export default RecruitmentRecommendedPage

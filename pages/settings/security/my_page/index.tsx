@@ -3,9 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import ESMyPageInfoSettings from '@containers/UserSecuritySettings/MyPageInfoSettings'
 
 const MyPageInfoSettingsSettingsPage: PageWithLayoutType = () => {
-  return <ESMyPageInfoSettings />
+  return (
+    <MainLayout loginRequired={true}>
+      <ESMyPageInfoSettings />
+    </MainLayout>
+  )
 }
-
-MyPageInfoSettingsSettingsPage.Layout = MainLayout
 
 export default MyPageInfoSettingsSettingsPage

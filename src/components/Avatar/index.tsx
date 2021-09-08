@@ -1,6 +1,8 @@
 import { Avatar, AvatarProps } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import _ from 'lodash'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 interface StyleProps {
   src: string
@@ -30,16 +32,22 @@ const ESAvatar: React.FC<Props> = (props) => {
     backgroundColor = '#4D4D4D'
   }
 
+  const restProps = _.omit(props, ['src'])
+
   if (props.src) {
     return (
-      <Avatar {...props} classes={classes} alt={props.alt}>
-        <img src="/images/avatar_o.png" width={props.size} height={props.size} className={classes.root} />
+      <Avatar classes={classes} {...restProps}>
+        {props.children ? props.children : <LazyLoadImage className="MuiAvatar-img" alt={props.alt} src={props.src} />}
       </Avatar>
     )
   }
-
+  const zIndex = _.get(props, 'style.zIndex')
   return (
-    <Avatar classes={classes} {...props} style={{ backgroundColor: backgroundColor, fontSize: (props.size * 33) / 50 }}>
+    <Avatar
+      classes={classes}
+      {...props}
+      style={{ backgroundColor: backgroundColor, fontSize: (props.size * 33) / 50, zIndex: _.isNumber(zIndex) ? zIndex : undefined }}
+    >
       {props.alt ? props.alt.toUpperCase().charAt(0) : ''}
     </Avatar>
   )

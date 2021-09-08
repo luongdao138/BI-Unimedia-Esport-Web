@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { TournamentDetail, TournamentMatchItem } from '@services/arena.service'
-import { Typography, Box, IconButton, Icon, ThemeProvider, createMuiTheme, Divider, useMediaQuery, useTheme } from '@material-ui/core'
+import { Typography, Box, IconButton, Icon, Divider, useMediaQuery, useTheme } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
@@ -37,13 +37,12 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
     e.preventDefault()
     const _val = parseInt(e.target.value.replace(/[^0-9]/g, ''))
     if (_val > 99999 || _val < 0) return
-
     const _match = { ...match }
     type == PARTICIPANT_TYPE.GUEST ? (_match.score_guest = _val) : (_match.score_home = _val)
     setMatch(_match)
   }
-
   const participantItem = (user, avatar, type) => {
+    const scoreValue = type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home
     const _name = isTeam ? user?.team_name : user?.name
     const isWin = type == match?.winner
     const borderWidth = isWin ? 2.5 : 1.5
@@ -71,7 +70,7 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
             placeholder={t('common:arena.double_zero')}
             pattern="\d*"
             autoComplete="off"
-            value={type == PARTICIPANT_TYPE.GUEST ? match.score_guest : match.score_home}
+            value={scoreValue || ''}
             onChange={(e) => handleOnChange(type, e)}
           />
         </Box>
@@ -83,24 +82,25 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
     <ESModal open={!!match}>
       {!!match && (
         <BlankLayout>
-          <ESStickyFooter disabled={false} title={t('common:tournament_create.decide')} onClick={() => onScoreEntered(match)} noScroll>
+          <ESStickyFooter
+            disabled={!match?.winner}
+            title={`${t('common:tournament_create.decide')}`}
+            onClick={() => onScoreEntered(match)}
+            noScroll
+          >
             <Box paddingY={7.5} className={classes.topContainer}>
               <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
                 <IconButton className={classes.iconButtonBg} onClick={() => handleClose()}>
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
-                  <Typography variant="h2">{t('common:tournament.edit_match_result')}</Typography>
+                  <Typography variant="h2">
+                    {t('common:tournament.edit_match_result')}
+                    {` (#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
+                  </Typography>
                 </Box>
               </Box>
               <Divider />
-              {!isMobile && (
-                <Box pb={2} pt={3} textAlign="center">
-                  <ThemeProvider theme={theme}>
-                    <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                  </ThemeProvider>
-                </Box>
-              )}
               <Box pb={5} pt={5} textAlign="center">
                 <Typography variant="body1">{t('common:arena.please_select_winner')}</Typography>
               </Box>
@@ -120,18 +120,6 @@ const ScoreEdit: React.FC<ScoreEditProps> = ({ meta, tournament, selectedMatch, 
   )
 }
 
-const theme = createMuiTheme({
-  overrides: {
-    MuiTypography: {
-      body1: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.white,
-      },
-    },
-  },
-})
-
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
@@ -145,9 +133,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     width: '100%',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     textAlign: 'center',
+    wordBreak: 'break-word',
   },
   customRadio: {
     display: 'flex',
@@ -155,7 +142,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: 196,
-    height: 240,
+    minHeight: 240,
+    height: '100%',
     cursor: 'pointer',
     backgroundColor: Colors.black,
     borderRadius: 5,
@@ -198,7 +186,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     customRadio: {
       width: 155,
-      height: 220,
+      minHeight: 220,
       paddingRight: theme.spacing(2),
       paddingLeft: theme.spacing(2),
     },

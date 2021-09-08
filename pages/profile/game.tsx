@@ -1,5 +1,6 @@
 import GameEditContainer from '@containers/Profile/GameEdit'
 import BlankLayout from '@layouts/BlankLayout'
+import { withAuth } from '@utils/withAuth'
 
 const GameEditPage: React.FC = () => {
   return (
@@ -9,4 +10,4 @@ const GameEditPage: React.FC = () => {
   )
 }
 
-export default GameEditPage
+export default withAuth(GameEditPage)

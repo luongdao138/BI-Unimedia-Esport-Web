@@ -1,8 +1,11 @@
-import React, { forwardRef, Ref, useImperativeHandle } from 'react'
+import React, { forwardRef, Ref, useImperativeHandle, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { getPreSignedUrl, upload } from '@services/image.service'
 import { UPLOADER_TYPE, ACTION_TYPE } from '@constants/image.constants'
 import _ from 'lodash'
+import { useAppDispatch } from '@store/hooks'
+import * as commonActions from '@store/common/actions'
+import i18n from '@locales/i18n'
 
 export interface ImageUploaderRef {
   handleUpload: () => void
@@ -20,16 +23,27 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
   ({ onResponse, onImageSelected, onError, roomId }, ref) => {
     useImperativeHandle(ref, () => ({
       handleUpload: () => {
-        dropZone.open()
+        open()
       },
     }))
-    const dropZone = useDropzone({
+
+    const dispatch = useAppDispatch()
+    const MAX_SIZE = 1048576 * 5 //1MB * 5 = 5MB
+    const FILE_TYPES = 'image/jpeg, image/jpg, image/png, image/gif'
+    const dropZoneConfig = {
       noClick: true,
       noKeyboard: true,
       multiple: false,
-      accept: 'image/*',
+      accept: FILE_TYPES,
+      maxSize: MAX_SIZE,
       onDrop: (files) => handleFile(files),
-    })
+    }
+
+    const { getRootProps, getInputProps, fileRejections, open } = useDropzone(dropZoneConfig)
+
+    useEffect(() => {
+      if (fileRejections.length > 0 && fileRejections[0].file) dispatch(commonActions.addToast(i18n.t('common:messages.file_size_limit')))
+    }, [fileRejections])
 
     const handleFile = (files: File[]) => {
       const file = files[0]
@@ -70,8 +84,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = forwardRef<ImageUploaderRef,
     }
 
     return (
-      <div style={{ display: 'none' }} {...dropZone.getRootProps()}>
-        <input {...dropZone.getInputProps()} />
+      <div style={{ display: 'none' }} {...getRootProps()}>
+        <input {...getInputProps()} />
       </div>
     )
   }

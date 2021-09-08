@@ -14,6 +14,11 @@ export type AvatarPresignedDataParams = {
   content_type: string
 }
 
+export type CoverPresignedDataParams = {
+  file_name: string
+  content_type: string
+}
+
 export const getPreSignedUrl = async (params: PresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.S3_PRESIGNED_URL, params)
   return data
@@ -21,6 +26,11 @@ export const getPreSignedUrl = async (params: PresignedDataParams): Promise<any>
 
 export const getAvatarPreSignedUrl = async (params: AvatarPresignedDataParams): Promise<any> => {
   const { data } = await api.post<any>(URI.AVATAR_PRESIGNED_URL, params)
+  return data
+}
+
+export const getCoverPreSignedUrl = async (params: CoverPresignedDataParams): Promise<any> => {
+  const { data } = await api.post<any>(URI.COVER_PRESIGNED_URL, params)
   return data
 }
 

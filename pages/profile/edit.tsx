@@ -1,5 +1,6 @@
 import ProfileEditContainer from '@containers/Profile/ProfileEdit'
 import BlankLayout from '@layouts/BlankLayout'
+import { withAuth } from '@utils/withAuth'
 
 const ProfileEditPage: React.FC = () => {
   return (
@@ -9,4 +10,4 @@ const ProfileEditPage: React.FC = () => {
   )
 }
 
-export default ProfileEditPage
+export default withAuth(ProfileEditPage)

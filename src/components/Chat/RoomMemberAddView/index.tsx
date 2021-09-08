@@ -60,6 +60,12 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
     }
   }, [friends])
 
+  useEffect(() => {
+    return function () {
+      cleanFriendsData()
+    }
+  }, [])
+
   const filterItems = () => {
     if (_.isArray(friends) && _.isArray(roomMembers)) {
       const filtered = _.filter(friends, (friend) => {
@@ -201,11 +207,10 @@ const RoomMemberAddView: React.FC<RoomMemberAddViewProps> = ({ roomId, open, hid
                 </>
               }
             />
-            <Typography> 指定できるのは相互フォローユーザーのみです</Typography>
           </Box>
           {renderLoader()}
           {open ? (
-            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`} style={{ paddingBottom: contentRect?.height + 50 }}>
               {_.filter(
                 memberList,
                 ({ id }) =>
@@ -306,7 +311,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     overflowX: 'hidden',
     height: '100%',
-    paddingBottom: 30,
   },
   scroll: {
     scrollbarColor: '#222 transparent',

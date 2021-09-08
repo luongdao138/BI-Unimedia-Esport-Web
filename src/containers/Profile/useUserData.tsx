@@ -6,7 +6,7 @@ import { createMetaSelector } from '@store/metadata/selectors'
 // import { clearMetaData } from '@store/metadata/actions'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 import { RESPONSE_STATUS } from '@constants/common.constants'
-import { getAvatarPreSignedUrl, upload } from '@services/image.service'
+import { getAvatarPreSignedUrl, getCoverPreSignedUrl, upload } from '@services/image.service'
 import { UserProfile } from '@services/user.service'
 import { CommunityResponse } from '@services/community.service'
 import { Meta } from '@store/metadata/actions/types'
@@ -24,6 +24,7 @@ const useUserData = (
   getCommunityList: () => void
   getMemberProfile: (userCode: string) => void
   profileImageChange: (file: File, user_id: number, type: number, blob?: any) => void
+  profileImageRemove: (path: string, file_type: number) => void
   setFollowState: () => void
   clearMemberProfile: () => void
 } => {
@@ -67,10 +68,15 @@ const useUserData = (
   const profileImageChange = async (file: File, type: number, blob?: any) => {
     const params = {
       file_name: file.name,
-      content_type: file.type,
+      content_type: file.type == 'image/gif' ? 'image/png' : file.type,
     }
     try {
-      const res = await getAvatarPreSignedUrl(params)
+      let res = null as any | null
+      if (UPLOADER_TYPE.COVER) {
+        res = await getCoverPreSignedUrl(params)
+      } else {
+        res = await getAvatarPreSignedUrl(params)
+      }
       const file_url = res.file_url
       const signed_url = res.url
       const u_res = await upload(blob ? blob : file, signed_url, undefined)
@@ -84,6 +90,19 @@ const useUserData = (
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log('useUserData.tsx 44 getPreSignedUrl failed', error)
+    }
+  }
+
+  const profileImageRemove = async (path: string, file_type: number) => {
+    const params = {
+      path: path,
+      file_type: file_type,
+    }
+    try {
+      dispatch(userActions.profileImageRemove(params))
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('useUserData.tsx profileImageRemove failed', error)
     }
   }
 
@@ -110,6 +129,7 @@ const useUserData = (
     getCommunityList,
     getMemberProfile,
     profileImageChange,
+    profileImageRemove,
     setFollowState,
     clearMemberProfile,
   }

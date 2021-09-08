@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { SetScoreParams, TournamentDetail, TournamentMatchItem } from '@services/arena.service'
 import {
@@ -24,6 +25,8 @@ import { Meta } from '@store/metadata/actions/types'
 import ArenaAvatar from '@containers/arena/Winners/ArenaAvatar'
 import ScoreEdit from './ScoreEdit'
 import ESStickyFooter from '@components/StickyFooter'
+import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import LoginRequired from '@containers/LoginRequired'
 
 interface ScoreModalProps {
   meta: Meta
@@ -43,7 +46,6 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
   const [editingMatch, setEditingMatch] = useState<any | undefined>()
   const [refresh, setRefresh] = useState<boolean>(false)
   const [targetMatch, setTargetMatch] = useState<TournamentMatchItem | undefined>()
-
   const isAdmin = data.my_role === ROLE.ADMIN || data.my_role === ROLE.CO_ORGANIZER
   const ownScoreEditable =
     !selectedMatch.is_fixed_score &&
@@ -54,6 +56,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
   let scoreEditable = false
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
+  const { isModerator } = useArenaHelper(tournament)
 
   if (statusAvailable && !isAutowin && (isAdmin || ownScoreEditable)) {
     scoreEditable = selectedMatch.is_editable ? true : false
@@ -97,14 +100,14 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         <div className={classes.winnerAvatarWrapper}>
           <ArenaAvatar alt_name={_name || ''} src={avatar} win={winner} size={isMobile ? 'medium' : 'large'} nameWhite />
         </div>
-        <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center">
-          <Box color={Colors.grey[300]}>
+        <Box marginTop={-5} display="flex" flexDirection="column" alignItems="center" width="100%">
+          <Box color={Colors.grey[300]} width="100%">
             <Typography className={classes.label} variant="h3">
               {_name || ''}
             </Typography>
           </Box>
           {!isTeam && (
-            <Box color={Colors.grey[400]}>
+            <Box color={Colors.grey[400]} width="100%">
               <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>
             </Box>
           )}
@@ -113,16 +116,20 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
         <Box pt={6} display="flex" alignItems="flex-end">
           <ThemeProvider theme={theme}>
             <Box color={winner ? Colors.yellow : Colors.white}>
-              {_score == undefined || _score == null ? <Box pt={10.2}></Box> : <Typography variant="h3">{_score}</Typography>}
+              {_score == undefined || _score == null || _.isNaN(_score) ? (
+                match.winner ? (
+                  <Typography variant="h3">0</Typography>
+                ) : (
+                  <Box pt={10.2} />
+                )
+              ) : (
+                <Typography variant="h3">{_score}</Typography>
+              )}
             </Box>
           </ThemeProvider>
         </Box>
       </Box>
     )
-  }
-
-  const matchName = () => {
-    return `${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`
   }
 
   return (
@@ -139,22 +146,20 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ meta, targetIds, tournament, se
             >
               <Box paddingTop={7.5} paddingBottom={10} className={classes.topContainer}>
                 <Box pt={2} pb={3} display="flex" flexDirection="row" alignItems="center">
-                  <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
-                    <Icon className="fa fa-arrow-left" fontSize="small" />
-                  </IconButton>
+                  <LoginRequired>
+                    <IconButton className={classes.iconButtonBg} onClick={() => handleClose(refresh)}>
+                      <Icon className="fa fa-arrow-left" fontSize="small" />
+                    </IconButton>
+                  </LoginRequired>
                   <Box pl={2}>
-                    <Typography variant="h2">{isMobile ? matchName() : t('common:tournament.match_result')}</Typography>
+                    <Typography variant="h2">
+                      {isModerator ? t('common:tournament.match_result') : t('common:tournament.match_setting')}
+                      {` (#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
-                {!isMobile && (
-                  <Box pb={6} pt={3} textAlign="center">
-                    <ThemeProvider theme={theme}>
-                      <Typography variant="body1">{matchName()}</Typography>
-                    </ThemeProvider>
-                  </Box>
-                )}
-                <Box display="flex" justifyContent="space-between" alignItems="center" padding={1}>
+                <Box display="flex" justifyContent="space-between" padding={1}>
                   {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
                   <Box display="flex" alignItems="center" paddingX={1} paddingTop={8} height={isMobile ? 220 : 240}>
                     <Typography className={classes.vsLabel}>{t('common:tournament.vs')}</Typography>
@@ -207,9 +212,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     width: '100%',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     textAlign: 'center',
+    wordBreak: 'break-word',
   },
   vsLabel: {
     fontSize: 40,
@@ -223,12 +227,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   itemWrapper: {
     width: 196,
-    height: 240,
   },
   [theme.breakpoints.down('sm')]: {
     itemWrapper: {
       width: 133,
-      height: 220,
     },
     topContainer: {
       paddingTop: 0,

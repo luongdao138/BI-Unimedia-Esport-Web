@@ -39,6 +39,11 @@ const FollowerEnteringContainer: React.FC = () => {
           {t('common:tournament.follower_entering')}
         </Typography>
       </Box>
+      {meta && meta.loaded && !tournamentFollowers.length && (
+        <Box display="flex" py={3} justifyContent="center" alignItems="center">
+          <Typography>{t('common:tournament.no_data.followers_entering')}</Typography>
+        </Box>
+      )}
       <InfiniteScroll
         className={classes.container}
         dataLength={tournamentFollowers.length}

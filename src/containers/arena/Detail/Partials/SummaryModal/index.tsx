@@ -9,7 +9,7 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import useSummary from './useSummary'
 import ESLoader from '@components/FullScreenLoader'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import { useFormik } from 'formik'
 import CoverUploader from '@containers/arena/UpsertForm/Partials/CoverUploader'
 import useUploadImage from '@utils/hooks/useUploadImage'
@@ -37,7 +37,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
   const { checkNgWord } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const validationSchema = Yup.object().shape({
-    summary: Yup.string().required(t('common:common.required')).max(190, t('common:common.too_long')),
+    summary: Yup.string().required(t('common:common.input_required')).max(190),
   })
 
   const { handleChange, handleBlur, values, errors, touched, setFieldValue, validateForm, handleSubmit } = useFormik({
@@ -72,10 +72,10 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
     }
   }, [summaryMeta.loaded, summaryMeta.error])
 
-  const handleImageUpload = (file: File) => {
+  const handleImageUpload = (file: File, blob: any) => {
     setUploading(true)
 
-    uploadArenaSummaryImage(file, undefined, 1, true, (imageUrl) => {
+    uploadArenaSummaryImage(file, blob, 1, true, (imageUrl) => {
       setUploading(false)
       setFieldValue('summary_image', imageUrl)
     })
@@ -96,19 +96,17 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
               >
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
-              <Box pl={2}>
+              <Box pl={2} width="100%">
                 <Typography variant="h2">{t('common:arena.summary_title')}</Typography>
               </Box>
             </Box>
             <Divider />
             <Box pt={4}>
-              <Typography>{data.title}</Typography>
+              <Typography className={classes.summaryTitle}>{data.title}</Typography>
             </Box>
-
             <Box width="100%" pb={4} pt={4}>
-              <CoverUploader src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
+              <CoverUploader ratio={25 / 7} src={values.summary_image} onChange={handleImageUpload} isUploading={isUploading} />
             </Box>
-
             <Box width="100%" pb={1}>
               <ESFastInput
                 id="summary"
@@ -126,7 +124,6 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ tournament, open, handleClo
                 rows={7}
               />
             </Box>
-
             <Box className={classes.stickyFooter}>
               <Box className={classes.nextBtnHolder}>
                 <Box maxWidth={280} className={classes.buttonContainer}>
@@ -149,6 +146,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   childrenContainer: {
     display: 'flex',
     flexDirection: 'column',
+    paddingBottom: 200,
   },
   title: {
     fontSize: '1.5rem',
@@ -161,9 +159,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: `${Colors.grey[200]}80`,
     },
   },
+  summaryTitle: {
+    wordBreak: 'break-word',
+  },
   stickyFooter: {
     position: 'fixed',
     left: 0,
+    zIndex: 100,
     bottom: 0,
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.9)',
@@ -173,6 +175,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(11),
     marginTop: theme.spacing(3),
     justifyContent: 'center',
+    zIndex: 100,
   },
   buttonContainer: {
     width: '100%',
@@ -181,6 +184,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('sm')]: {
     childrenContainer: {
       paddingTop: 0,
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    nextBtnHolder: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
+    },
+    childrenContainer: {
+      paddingBottom: 120,
     },
   },
 }))

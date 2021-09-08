@@ -4,7 +4,7 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 
@@ -19,46 +19,40 @@ const FreezeDialog: React.FC<FreezeDialogProps> = ({ onAction, onClose, open }) 
   const classes = useStyles()
 
   return (
-    <Box>
-      <ESModal open={open}>
-        <BlankLayout>
-          <Box paddingY={16} className={classes.childrenContainer}>
-            <Box pb={4} color={Colors.white} alignItems="center">
-              <Typography className={classes.title}>{t('common:arena.dialog.freeze_title')}</Typography>
-            </Box>
-            <Box pb={4}>
-              <Typography variant="h2" className={classes.desc}>
-                {t('common:arena.dialog.freeze_desc')}
-              </Typography>
-            </Box>
-            <Typography variant="caption" gutterBottom>
-              {t('common:arena.dialog.freeze_sub1')}
-            </Typography>
-            <Typography variant="caption" gutterBottom>
-              {t('common:arena.dialog.freeze_sub2')}
-            </Typography>
-
-            <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
-              <Box className={classes.actionButton}>
-                <ESButton variant="outlined" round fullWidth size="large" onClick={onClose}>
-                  {t('common:common.cancel')}
-                </ESButton>
-              </Box>
-              <Box className={classes.actionButton}>
-                <ButtonPrimary round fullWidth onClick={onAction}>
-                  {t('common:arena.dialog.deploy_button')}
-                </ButtonPrimary>
-              </Box>
-            </Box>
-
-            <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
-              <WarningRounded fontSize="small" />
-              <Typography variant="body2">{t('common:arena.dialog.freeze_warn')}</Typography>
-            </Box>
+    <ESPopup open={open}>
+      <BlankLayout>
+        <Box paddingY={2} className={classes.childrenContainer}>
+          <Box pb={4} color={Colors.white} alignItems="center">
+            <Typography className={classes.title}>{t('common:arena.dialog.freeze_title')}</Typography>
           </Box>
-        </BlankLayout>
-      </ESModal>
-    </Box>
+          <Box pb={4}>
+            <Typography variant="h2" className={classes.desc}>
+              {t('common:arena.dialog.freeze_desc')}
+            </Typography>
+          </Box>
+          <Typography variant="caption" gutterBottom>
+            {t('common:arena.dialog.freeze_sub1')}
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            {t('common:arena.dialog.freeze_sub2')}
+          </Typography>
+
+          <Box className={classes.actionButtonContainer}>
+            <ESButton variant="outlined" round size="large" onClick={onClose} className={classes.button}>
+              {t('common:common.cancel')}
+            </ESButton>
+            <ButtonPrimary round onClick={onAction} className={classes.button}>
+              {t('common:arena.dialog.confirm_button')}
+            </ButtonPrimary>
+          </Box>
+
+          <Box paddingTop={1} display="flex" flexDirection="row" alignItems="center" justifyContent="center" color={Colors.yellow}>
+            <WarningRounded fontSize="small" />
+            <Typography variant="body2">{t('common:arena.dialog.freeze_warn')}</Typography>
+          </Box>
+        </Box>
+      </BlankLayout>
+    </ESPopup>
   )
 }
 
@@ -70,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   childrenContainer: {
+    marginTop: '21vh',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -83,21 +78,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.white,
   },
   actionButtonContainer: {
+    marginTop: '14vh',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingLeft: 12,
+    paddingRight: 12,
   },
-  actionButton: {
-    width: theme.spacing(35),
-    margin: 8,
+  button: {
+    minWidth: 220,
+    margin: theme.spacing(1),
   },
   [theme.breakpoints.down('sm')]: {
+    childrenContainer: {
+      marginTop: '10vh',
+    },
     container: {
       paddingLeft: 0,
       paddingRight: 0,
     },
     actionButtonContainer: {
+      marginTop: '2vh',
       flexDirection: 'column-reverse',
     },
     title: {

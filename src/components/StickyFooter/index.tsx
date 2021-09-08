@@ -11,17 +11,36 @@ export type Props = {
   noScroll?: boolean
   content?: JSX.Element
   noSpacing?: boolean
+  noBottomSpace?: boolean
+  classes?: {
+    nextBtnHolder?: string
+  }
 }
 
-const ESStickyFooter: React.FC<Props> = ({ disabled, title, onClick, children, show, noScroll, content, noSpacing }) => {
+const ESStickyFooter: React.FC<Props> = ({
+  disabled,
+  title,
+  onClick,
+  children,
+  show,
+  noScroll,
+  content,
+  noSpacing,
+  noBottomSpace,
+  classes: classesOverrides,
+}) => {
   const classes = useStyles()
-
+  const isNoBottmSpace = noBottomSpace === true
   return (
     <Box className={`${show ? classes.wrapper : classes.wrapper2} ${!noScroll && classes.scroll}`}>
       {children}
       {show && (
         <Box className={classes.stickyFooter}>
-          <Box className={`${classes.nextBtnHolder} ${noSpacing && classes.noSpacing}`}>
+          <Box
+            className={`${isNoBottmSpace ? classes.nextBtnHolderNoSpace : classes.nextBtnHolder} ${noSpacing && classes.noSpacing} ${
+              classesOverrides?.nextBtnHolder ? classesOverrides?.nextBtnHolder : ''
+            }`}
+          >
             {content ? (
               content
             ) : (
@@ -63,6 +82,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     justifyContent: 'center',
   },
+  nextBtnHolderNoSpace: {
+    display: 'flex',
+    marginBottom: theme.spacing(5),
+    marginTop: theme.spacing(3),
+    justifyContent: 'center',
+  },
   buttonContainer: {
     width: '100%',
     margin: '0 auto',
@@ -70,6 +95,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   [theme.breakpoints.down('md')]: {
     nextBtnHolder: {
       marginBottom: theme.spacing(5),
+    },
+    wrapper: {
+      marginBottom: theme.spacing(10),
     },
   },
   noSpacing: {

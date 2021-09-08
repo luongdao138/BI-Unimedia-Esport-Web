@@ -1,178 +1,170 @@
-import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
+import { Grid, Box, makeStyles, Theme } from '@material-ui/core'
 import useArenaHome from './useArenaHome'
-import ESLoader from '@components/Loader'
-import TournamentCard from '@components/TournamentCard'
-import ButtonPrimary from '@components/ButtonPrimary'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import TournamentCard from '@components/TournamentCard/HomeCard'
 import { TournamentFilterOption } from '@services/arena.service'
-import { useTranslation } from 'react-i18next'
-import { Colors } from '@theme/colors'
-import { AddRounded } from '@material-ui/icons'
-import ESChip from '@components/Chip'
 import useArenaHelper from '../hooks/useArenaHelper'
-import LoginRequired from '@containers/LoginRequired'
-import { useState } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import _ from 'lodash'
+import { WindowScroller, List, CellMeasurer, AutoSizer, CellMeasurerCache } from 'react-virtualized'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import ESLoader from '@components/Loader'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import HeaderArea from './HeaderArea'
 
-const ArenaHome: React.FC = () => {
-  const { t } = useTranslation()
+const cache = new CellMeasurerCache({
+  fixedWidth: true,
+  defaultHeight: 270,
+})
+
+interface ArenaHomeProps {
+  filter: TournamentFilterOption
+}
+
+const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
+  const { arenasFiltered, meta, loadMore, onFilterChange } = useArenaHome()
+  const [itemsPerRow, setPerRow] = useState<number>(4)
+  const rowCount = Math.ceil(arenasFiltered.length / itemsPerRow)
   const classes = useStyles()
-  const { arenas, page, meta, loadMore, onFilterChange } = useArenaHome()
+  const router = useRouter()
   const { toCreate } = useArenaHelper()
-  const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
+  const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
+  const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
+  const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
+  useEffect(() => {
+    if (listRef && listRef.current) listRef.current.recomputeRowHeights()
+    if (matchesXL === true) {
+      setPerRow(4)
+    } else if (matchesLG === true) {
+      setPerRow(3)
+    } else if (matchesSM === true) {
+      setPerRow(1)
+    }
+  }, [matchesXL, matchesLG, matchesSM])
+
+  const { hasUCRReturnHref } = useReturnHref()
+
+  const listRef = useRef<any>(null)
+
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      cache.clearAll()
+      if (listRef && listRef.current)
+        setTimeout(() => {
+          listRef.current.forceUpdateGrid()
+        })
+    }
+    window.addEventListener('resize', updateSize)
+    updateSize()
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
+
+  useEffect(() => {
+    if (!hasUCRReturnHref) {
+      if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
+      loadMore()
+    }
+  }, [arenasFiltered])
+
+  useEffect(() => {
+    if (!router.isReady) return
+
+    let filterVal = TournamentFilterOption.all
+
+    if (_.has(router.query, 'filter')) {
+      const queryFilterVal = _.get(router.query, 'filter') as TournamentFilterOption
+      if (Object.values(TournamentFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
+    }
+
+    onFilterChange(filterVal)
+  }, [router.query])
 
   const onFilter = (filter: TournamentFilterOption) => {
-    if (selectedFilter !== filter) {
-      onFilterChange(filter)
-    }
-    setSelectedFilter(filter)
+    router.push(`${ESRoutes.ARENA}?filter=${filter}`, undefined, { shallow: true })
+    return null
   }
 
-  const defaultFilterOptions = [
-    {
-      type: TournamentFilterOption.all,
-      label: t('common:arenaSearchFilters.all'),
-      loginRequired: false,
-    },
-    {
-      type: TournamentFilterOption.ready,
-      label: t('common:arenaSearchFilters.ready'),
-      loginRequired: false,
-    },
-    {
-      type: TournamentFilterOption.recruiting,
-      label: t('common:arenaSearchFilters.recruiting'),
-      loginRequired: false,
-    },
-    {
-      type: TournamentFilterOption.beforeStart,
-      label: t('common:arenaSearchFilters.beforeStart'),
-      loginRequired: false,
-    },
-    {
-      type: TournamentFilterOption.inProgress,
-      label: t('common:arenaSearchFilters.inProgress'),
-    },
-    {
-      type: TournamentFilterOption.completed,
-      label: t('common:arenaSearchFilters.completed'),
-      loginRequired: false,
-    },
-  ]
+  const rowRenderer = ({ index, key, style, parent }) => {
+    const items = []
+    const fromIndex = index * itemsPerRow
+    const toIndex = Math.min(fromIndex + itemsPerRow, arenasFiltered.length)
 
-  const loginRequiredFilterOptions = [
-    {
-      type: TournamentFilterOption.joined,
-      label: t('common:arenaSearchFilters.joined'),
-      loginRequired: true,
-    },
-    {
-      type: TournamentFilterOption.organized,
-      label: t('common:arenaSearchFilters.organized'),
-      loginRequired: true,
-    },
-  ]
+    for (let i = fromIndex; i < toIndex; i++) {
+      const data = arenasFiltered[i]
+
+      items.push(
+        <Grid key={i} item sm={12} lg={4} xl={3} xs={12}>
+          <TournamentCard tournament={data} />
+        </Grid>
+      )
+    }
+
+    return (
+      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
+        {({ registerChild }) => (
+          <Grid key={key} style={style} ref={registerChild} container>
+            {items}
+          </Grid>
+        )}
+      </CellMeasurer>
+    )
+  }
 
   return (
     <>
-      <div className={classes.header}>
-        <Typography variant="h2">アリーナ</Typography>
-
-        <LoginRequired>
-          <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
-            <AddRounded className={classes.addIcon} />
-            {t('common:tournament_create.title')}
-          </ButtonPrimary>
-        </LoginRequired>
+      <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
+      <div>
+        <div className={classes.container}>
+          <InfiniteScroll
+            dataLength={arenasFiltered.length}
+            next={!meta.pending && loadMore}
+            hasMore={!hasUCRReturnHref}
+            loader={null}
+            scrollThreshold={'1px'}
+          >
+            <WindowScroller>
+              {({ height, scrollTop }) => (
+                <AutoSizer disableHeight>
+                  {({ width }) => {
+                    return (
+                      <List
+                        ref={listRef}
+                        autoHeight
+                        height={height}
+                        width={width}
+                        scrollTop={scrollTop}
+                        rowHeight={cache.rowHeight}
+                        deferredMeasurementCache={cache}
+                        rowRenderer={rowRenderer}
+                        rowCount={rowCount}
+                        overscanRowCount={6}
+                      />
+                    )
+                  }}
+                </AutoSizer>
+              )}
+            </WindowScroller>
+          </InfiniteScroll>
+        </div>
       </div>
-      <Grid container className={classes.content}>
-        <Box className={classes.filters}>
-          {defaultFilterOptions.map((option) => (
-            <ESChip
-              key={option.type}
-              color={option.type === selectedFilter ? 'primary' : undefined}
-              className={classes.filterChip}
-              label={option.label}
-              onClick={() => onFilter(option.type)}
-            />
-          ))}
-        </Box>
-        <Box className={classes.filtersLoginRequired}>
-          {loginRequiredFilterOptions.map((option) => (
-            <LoginRequired key={option.type}>
-              <ESChip
-                key={option.type}
-                color={option.type === selectedFilter ? 'primary' : undefined}
-                className={classes.filterChip}
-                label={option.label}
-                onClick={() => onFilter(option.type)}
-              />
-            </LoginRequired>
-          ))}
-        </Box>
-        <InfiniteScroll
-          className={classes.scrollContainer}
-          dataLength={arenas.length}
-          next={loadMore}
-          hasMore={page && page.current_page !== page.total_pages}
-          loader={null}
-          scrollThreshold="1px"
-        >
-          {arenas.map((tournament, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
-              <TournamentCard tournament={tournament} />
-            </Grid>
-          ))}
-        </InfiniteScroll>
-        {meta.pending && (
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
-          </Grid>
-        )}
-      </Grid>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    backgroundColor: Colors.black,
-    '& .MuiButtonBase-root.button-primary': {
-      padding: '12px 16px',
-    },
-  },
-  filters: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-  },
-  filtersLoginRequired: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 8,
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-  },
-  filterChip: {
-    maxWidth: 'none',
-    marginBottom: 16,
-    marginRight: 16,
-  },
-  addIcon: {
-    position: 'relative',
-    left: -8,
+  container: {
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   content: {
     paddingLeft: theme.spacing(2),

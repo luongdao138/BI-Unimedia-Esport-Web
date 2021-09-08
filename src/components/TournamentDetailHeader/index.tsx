@@ -12,8 +12,9 @@ type TournamentHeaderProps = {
   cover: string | null
   children?: ReactNode
   onHandleBack: () => void
+  showTab?: boolean
 }
-const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, children, cover, onHandleBack }) => {
+const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, children, cover, onHandleBack, showTab = true }) => {
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
@@ -45,35 +46,39 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ title, status, chil
         <IconButton onClick={onHandleBack} className={classes.iconButtonBg2}>
           <Icon className="fa fa-arrow-left" fontSize="small" />
         </IconButton>
-        {!isMobile && (
-          <Typography variant="h2" className={classes.wrapOne}>
-            {title}
-          </Typography>
-        )}
+        <div style={{ overflow: 'hidden' }}>
+          {!isMobile && (
+            <Typography variant="h2" className={classes.wrapOne}>
+              {title}
+            </Typography>
+          )}
+        </div>
       </Box>
       <Box
         style={{
           background: `url(${cover})`,
-          paddingTop: '56.25%',
+          paddingTop: '30.21756647864625%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
         }}
-        mb={3}
+        className={classes.coverWrapper}
       ></Box>
       <div className={classes.root}>
-        <Tabs
-          value={tab}
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onChange={() => {}}
-          classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
-        >
-          <Tab label="エントリー" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
-          <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
-          <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
-          <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
-          <Tab style={{ display: 'none' }} />
-        </Tabs>
+        {showTab && (
+          <Tabs
+            value={tab}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onChange={() => {}}
+            classes={{ indicator: classes.tabIndicator, flexContainer: classes.flexContainer, fixed: classes.tabsFixed }}
+          >
+            <Tab label="受付中" icon={<Icon className="fa fa-door-open" />} classes={{ root: classes.tabRoot }} />
+            <Tab label="開催前" icon={<Icon className="fa fa-hourglass-start" />} classes={{ root: classes.tabRoot }} />
+            <Tab label="開催中" icon={<Icon className="fa fa-headset" />} classes={{ root: classes.tabRoot }} />
+            <Tab label="大会終了" icon={<Icon className="fa fa-trophy" />} classes={{ root: classes.tabRoot }} />
+            <Tab style={{ display: 'none' }} />
+          </Tabs>
+        )}
         <Box>{children}</Box>
       </div>
     </>
@@ -88,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
     backgroundColor: Colors.black,
+  },
+  coverWrapper: {
+    marginBottom: theme.spacing(3),
   },
   tabIndicator: {
     visibility: 'hidden',
@@ -110,11 +118,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     width: '100%',
     paddingLeft: theme.spacing(3),
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 10,
+    paddingBottom: 10,
     backgroundColor: Colors.black,
     opacity: 0.7,
     zIndex: 100,
+    maxWidth: 840,
   },
   iconButtonBg2: {
     backgroundColor: Colors.grey[200],
@@ -122,7 +131,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: Colors.grey[200],
     },
     marginRight: 20,
-    marginTop: 5,
   },
   wrapOne: {
     overflow: 'hidden',
@@ -161,8 +169,18 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
+    coverWrapper: {
+      marginBottom: theme.spacing(2),
+    },
+    backContainer: {
+      paddingLeft: theme.spacing(1.5),
+    },
   },
-  backButton: { backgroundColor: `${Colors.grey['200']}80`, margin: 24, marginTop: 16, padding: 6 },
+  ['@media (max-width: 960px)']: {
+    backContainer: {
+      maxWidth: 'none',
+    },
+  },
 }))
 
 export default TournamentHeader

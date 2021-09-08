@@ -1,11 +1,14 @@
 import RegisterByEmailContainer from '@containers/RegisterByEmail'
 import AuthenticationLayout from '@layouts/AuthenticationLayout'
 import PageWithLayoutType from '@constants/page'
+import withNoAuth from '@utils/withNoAuth'
 
 const RegisterByEmailPage: PageWithLayoutType = () => {
-  return <RegisterByEmailContainer />
+  return (
+    <AuthenticationLayout>
+      <RegisterByEmailContainer />
+    </AuthenticationLayout>
+  )
 }
 
-RegisterByEmailPage.Layout = AuthenticationLayout
-
-export default RegisterByEmailPage
+export default withNoAuth(RegisterByEmailPage)

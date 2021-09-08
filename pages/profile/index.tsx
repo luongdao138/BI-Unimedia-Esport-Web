@@ -3,9 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import MainLayout from '@layouts/MainLayout'
 
 const ProfilePage: PageWithLayoutType = () => {
-  return <ProfileContainer />
+  return (
+    <MainLayout loginRequired={true}>
+      <ProfileContainer />
+    </MainLayout>
+  )
 }
-
-ProfilePage.Layout = MainLayout
 
 export default ProfilePage

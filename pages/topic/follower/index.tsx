@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const TopicFollowerPage: PageWithLayoutType = () => {
-  return <TopicFollowerContainer />
+  return (
+    <MainLayout loginRequired={true}>
+      <TopicFollowerContainer />
+    </MainLayout>
+  )
 }
-
-TopicFollowerPage.Layout = MainLayout
 
 export default TopicFollowerPage

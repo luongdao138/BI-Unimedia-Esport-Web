@@ -1,6 +1,5 @@
 import React, { ReactNode, useState, useEffect } from 'react'
 import { Header } from '@layouts/Header'
-import { Footer } from '@layouts/Footer'
 import { ESDrawer } from '@layouts/Drawer'
 import * as selectors from '@store/common/selectors'
 import { setNotFound } from '@store/common/actions/index'
@@ -8,20 +7,23 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { useRouter } from 'next/router'
 import useProfileValid from '@utils/hooks/useProfileValid'
 import { ESRoutes } from '@constants/route.constants'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import { use100vh } from 'react-div-100vh'
 
 interface PlainLayoutProps {
   children: ReactNode
-  noFooter?: boolean
   patternBg?: boolean
 }
 
-const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg }) => {
+const PlainLayout: React.FC<PlainLayoutProps> = ({ children, patternBg }) => {
   const [open, setOpen] = useState<boolean>(false)
-  useProfileValid()
+  const { isValidProfile, isAuth } = useProfileValid()
+  const { hasUCRReturnHref } = useReturnHref()
 
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)
   const router = useRouter()
+  const height = use100vh()
 
   useEffect(() => {
     dispatch(setNotFound({ notFound: null }))
@@ -37,22 +39,20 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, noFooter, patternBg
     setOpen(open)
   }
 
-  return (
+  return !isValidProfile && isAuth && !hasUCRReturnHref ? null : (
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
-      <div className={patternBg ? 'plain-main' : 'plain-main no-pattern'}>
+      <div className={patternBg ? 'plain-main' : 'plain-main no-pattern'} style={{ minHeight: height }}>
         <div className="content-wrapper">
           <div>{children}</div>
         </div>
       </div>
-      {!noFooter && <Footer />}
       <ESDrawer toggleDrawer={toggleDrawer} open={open} />
     </div>
   )
 }
 
 PlainLayout.defaultProps = {
-  noFooter: false,
   patternBg: false,
 }
 

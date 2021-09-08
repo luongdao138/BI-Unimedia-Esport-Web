@@ -1,5 +1,5 @@
 import { Box, createStyles, makeStyles, Typography, CircularProgress } from '@material-ui/core'
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import ESChip from '@components/Chip'
 import SelectInputTextField from './SelectInputTextField'
 import ESAvatar from '@components/Avatar'
@@ -104,10 +104,12 @@ const useStyles = makeStyles((theme) =>
       },
     },
     inputWrapper: {
-      maxHeight: 104,
+      maxHeight: 110,
       width: '100%',
       display: 'flex',
       padding: 4,
+      border: '1px solid #666',
+      cursor: 'text',
       outline: '0 none',
       flexWrap: 'wrap',
       overflow: 'auto',
@@ -136,13 +138,14 @@ const useStyles = makeStyles((theme) =>
         boxSizing: 'border-box',
         padding: '8px 6px',
         width: '0',
-        minWidth: '100px',
+        minWidth: '140px',
         flexGrow: 1,
         border: '0',
         margin: '0',
         outline: '0',
       },
     },
+    hide: { display: 'none' },
 
     [theme.breakpoints.down('sm')]: {
       listBox: {
@@ -152,31 +155,58 @@ const useStyles = makeStyles((theme) =>
         display: 'none',
       },
     },
+    [theme.breakpoints.down('xs')]: {
+      listBox: {
+        width: '200px',
+      },
+    },
   })
 )
 
 const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onSearchInput, loading }) => {
+  const setFocus = () => {
+    if (textRef && textRef.current !== undefined) {
+      textRef.current.focus()
+    }
+  }
   const classes = useStyles()
   const { t } = useTranslation()
-  const textRef = useRef()
+  const textRef = useRef<HTMLInputElement>()
+  const [show, setShow] = useState<boolean>(false)
+  const [isComposing, setComposing] = useState<boolean>(false)
   const inputDebounce = useCallback(
     _.debounce((keyword: string) => {
-      onSearchInput(keyword)
+      if (keyword.trim().length > 0) {
+        setShow(true)
+        onSearchInput(keyword)
+      } else if (keyword.trim().length === 0) {
+        setShow(false)
+      }
     }, 500),
     []
   )
 
-  const handleChange = (_event, value: string, reason: string) => {
+  const handleChange = (_e, value: string, reason: string) => {
     if (reason === 'input') {
       inputDebounce(value)
+    } else if (reason === 'reset') {
+      setShow(false)
     }
+  }
+
+  const handleSelect = (values) => {
+    onItemsSelected(values)
+    if (isComposing && textRef.current) textRef.current.blur()
+    setComposing(false)
   }
 
   const { getRootProps, getInputProps, getTagProps, getListboxProps, getOptionProps, groupedOptions, value, focused } = useAutocomplete({
     multiple: true,
     options: items,
     getOptionLabel: (option) => option.nickName,
-    onChange: (_, values) => onItemsSelected(values),
+    onChange: (_, values) => {
+      handleSelect(values)
+    },
     getOptionSelected: (option, value) => option.id === value.id,
     onInputChange: handleChange,
   })
@@ -186,7 +216,7 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
       <NoSsr>
         <div>
           <div {...getRootProps()}>
-            <Box className={`${focused ? 'focused' : ''} ${classes.inputWrapper}`}>
+            <Box className={`${focused ? 'focused' : ''} ${classes.inputWrapper}`} onClick={() => setFocus()}>
               {value.map((option: SelectInputItem, index: number) => (
                 <ESChip
                   size="small"
@@ -203,12 +233,18 @@ const ESSelectInput: React.FC<SelectInputProps> = ({ items, onItemsSelected, onS
                 InputProps={{
                   ...getInputProps(),
                   endAdornment: <>{loading ? <CircularProgress className={classes.loader} color="inherit" size={20} /> : null}</>,
+                  onCompositionStart: () => {
+                    setComposing(true)
+                  },
+                  onCompositionEnd: () => {
+                    setComposing(false)
+                  },
                 }}
               />
             </Box>
           </div>
           {groupedOptions.length > 0 ? (
-            <Box className={classes.listBox} {...getListboxProps()}>
+            <Box className={`${classes.listBox} ${show ? '' : classes.hide}`} {...getListboxProps()}>
               {groupedOptions.map((option, index) => {
                 const isSelected = getOptionProps({ option, index })['aria-selected']
                 if (!isSelected)

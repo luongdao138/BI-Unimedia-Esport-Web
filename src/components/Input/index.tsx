@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 export type InputProps = {
   helperText?: string
+  nowrapHelperText?: boolean
   labelPrimary?: string | ReactElement
   labelSecondary?: ReactElement
   required?: boolean
@@ -18,13 +19,14 @@ const ESInput: React.FC<OutlinedInputProps & InputProps> = ({
   labelPrimary,
   labelSecondary,
   required = false,
+  nowrapHelperText = false,
   ...rest
 }) => {
   const classes = useStyles({ hasSecondary: !!labelSecondary, isBig: size === 'big', isNumber: rest.type === 'number' })
   const { t } = useTranslation(['common'])
 
   return (
-    <FormControl fullWidth={rest.fullWidth}>
+    <FormControl fullWidth={rest.fullWidth} className={nowrapHelperText ? classes.nowrapHelperText : ''}>
       {(labelPrimary || labelSecondary) && (
         <Box display="flex" justifyContent="space-between" alignItems="center" pb={1}>
           {typeof labelPrimary === 'string' && (
@@ -99,6 +101,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   end: {
     paddingRight: theme.spacing(1),
+  },
+  nowrapHelperText: {
+    whiteSpace: 'nowrap',
   },
 }))
 

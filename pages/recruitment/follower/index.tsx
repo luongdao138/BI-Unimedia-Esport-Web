@@ -3,9 +3,11 @@ import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 
 const RecruitmentFollowerPage: PageWithLayoutType = () => {
-  return <RecruitmentFollowerContainer />
+  return (
+    <MainLayout loginRequired={true}>
+      <RecruitmentFollowerContainer />
+    </MainLayout>
+  )
 }
-
-RecruitmentFollowerPage.Layout = MainLayout
 
 export default RecruitmentFollowerPage

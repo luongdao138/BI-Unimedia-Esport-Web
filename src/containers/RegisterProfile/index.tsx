@@ -1,10 +1,9 @@
 import { makeStyles, Theme, Typography, Box } from '@material-ui/core'
-import { IconButton } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon'
 import ESInput from '@components/Input'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import { useFormik } from 'formik'
 import * as services from '@services/auth.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
@@ -22,24 +21,26 @@ import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants
 const RegisterProfileContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
-  const { registerProfile, meta, backAction, isSocial, resetMeta } = useProfile()
+  const { registerProfile, meta, isSocial, resetMeta } = useProfile()
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
+
   const validationSchema = Yup.object().shape({
     user_code: Yup.string()
       .required(t('common:common.user_id_at_least'))
-      .max(50, t('common:common.too_long'))
+      .max(50)
+      .test('user_code', t('common:common.validation.only_single_byte'), function (value) {
+        return !CommonHelper.isDoubleByte(value)
+      })
       .min(2, t('common:common.user_id_at_least'))
       .test('user_code', t('common:common.user_code_invalid'), function (value) {
         return CommonHelper.userCodeValid(value)
       }),
-    nickname: Yup.string()
-      .required(t('common:common.nickname_at_least'))
-      .max(50, t('common:common.too_long'))
-      .min(2, t('common:common.nickname_at_least')),
+
+    nickname: Yup.string().required(t('common:common.nickname_at_least')).max(50).min(2, t('common:common.nickname_at_least')),
   })
 
-  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue } = useFormik<services.UserProfileParams>({
+  const { values, handleSubmit, errors, touched, handleBlur, setFieldValue, handleChange } = useFormik<services.UserProfileParams>({
     initialValues: {
       user_code: '',
       nickname: '',
@@ -78,13 +79,8 @@ const RegisterProfileContainer: React.FC = () => {
       <ESStickyFooter disabled={!buttonActive()} title={t('common:register_by_email.button')} onClick={handleSubmit} noScroll>
         <form onSubmit={handleSubmit}>
           <Box pt={7.5} pb={9} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={backAction}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
-              </Box>
+            <Box className={classes.titleContainer}>
+              <Typography variant="h2">{isSocial ? t('common:register_by_email.sns') : t('common:register_by_email.back')}</Typography>
             </Box>
 
             <Box width="100%" px={5} flexDirection="column" alignItems="center" pt={8} className={classes.container}>
@@ -95,7 +91,7 @@ const RegisterProfileContainer: React.FC = () => {
                   labelPrimary={t('common:register_profile.user_id')}
                   fullWidth
                   value={values.user_code}
-                  onChange={(e) => setFieldValue('user_code', CommonHelper.replaceSingleByteString(e.target.value))}
+                  onChange={handleChange}
                   onBlur={handleBlur}
                   helperText={touched.user_code && errors.user_code}
                   error={touched.user_code && !!errors.user_code}
@@ -136,12 +132,6 @@ const RegisterProfileContainer: React.FC = () => {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  iconButtonBg: {
-    backgroundColor: `${Colors.grey[200]}80`,
-    '&:focus': {
-      backgroundColor: `${Colors.grey[200]}80`,
-    },
-  },
   iconMargin: {
     marginRight: theme.spacing(1 / 2),
   },
@@ -155,6 +145,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   blankSpace: {
     height: 169,
   },
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: '16px 40px',
+  },
   [theme.breakpoints.down('sm')]: {
     container: {
       paddingLeft: 0,
@@ -165,6 +161,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
+    },
+    titleContainer: {
+      padding: '16px 0px',
     },
   },
 }))

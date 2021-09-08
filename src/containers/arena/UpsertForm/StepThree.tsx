@@ -34,12 +34,9 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.start_date', date.toISOString())}
           onBlur={formik.handleBlur}
-          helperText={
-            (formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date) ||
-            formik.errors?.stepThree?.acceptance_end_start_date
-          }
+          helperText={formik.touched?.stepThree?.start_date && formik.errors?.stepThree?.start_date}
           error={formik.touched?.stepThree?.start_date && !!formik.errors?.stepThree?.start_date}
           disabled={!editables.start_date}
         />
@@ -53,7 +50,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.end_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.end_date && formik.errors?.stepThree?.end_date) || formik.errors?.stepThree?.start_end_date
@@ -76,7 +73,7 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.acceptance_start_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.acceptance_start_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_start_date && formik.errors?.stepThree?.acceptance_start_date) ||
@@ -95,11 +92,12 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepThree.acceptance_end_date}
-          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepThree.acceptance_end_date', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepThree?.acceptance_end_date && formik.errors?.stepThree?.acceptance_end_date) ||
-            formik.errors?.stepThree?.acceptance_dates
+            formik.errors?.stepThree?.acceptance_dates ||
+            formik.errors?.stepThree?.acceptance_end_start_date
           }
           error={formik.touched?.stepThree?.acceptance_end_date && !!formik.errors?.stepThree?.acceptance_end_date}
           disabled={!editables.acceptance_end_date}
@@ -116,9 +114,6 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
           fullWidth
           disabled={!editables.area_id}
         >
-          <option disabled value={-1}>
-            {i18n.t('common:please_select')}
-          </option>
           {prefectures?.data?.map((prefecture, index) => (
             <option value={prefecture.id} key={index}>
               {prefecture.attributes.area}
@@ -130,17 +125,17 @@ const StepThree: React.FC<Props> = ({ formik, prefectures, editables }) => {
         <ESFastInput
           multiline
           rows={5}
-          name="stepThree.area_name"
+          name="stepThree.address"
           fullWidth
           placeholder={i18n.t('common:tournament_create.area_name_placeholder')}
-          value={formik.values.stepThree.area_name}
+          value={formik.values.stepThree.address}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          helperText={formik.touched?.stepThree?.area_name && formik.errors?.stepThree?.area_name}
-          error={formik.touched?.stepThree?.area_name && !!formik.errors?.stepThree?.area_name}
+          helperText={formik.touched?.stepThree?.address && formik.errors?.stepThree?.address}
+          error={formik.touched?.stepThree?.address && !!formik.errors?.stepThree?.address}
           size="small"
           required
-          disabled={!editables.area_name}
+          disabled={!editables.address}
         />
       </Box>
     </Box>

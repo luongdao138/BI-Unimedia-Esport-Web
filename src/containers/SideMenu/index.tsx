@@ -17,11 +17,11 @@ import QrContainer from '@containers/Qr'
 import LogoutContainer from '@containers/Logout'
 import LoginRequired from '@containers/LoginRequired'
 import SideFooter from './SideFooter'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useTheme } from '@material-ui/core/styles'
+import AppDialog from './AppDialog'
 
 const SideMenu: React.FC = () => {
   const [modal, setModal] = useState(false)
+  const [appModal, setAppModal] = useState(false)
   const [content, setContent] = useState('')
   const { t } = useTranslation(['common'])
   const classes = useStyles()
@@ -29,8 +29,6 @@ const SideMenu: React.FC = () => {
   const { selectors } = userProfileStore
   const isAuthenticated = useAppSelector(getIsAuthenticated)
   const userProfile = useAppSelector(selectors.getUserProfile)
-  const theme = useTheme()
-  const downSm = useMediaQuery(theme.breakpoints.down('sm'))
   const isSelected = (routeName: string): boolean => {
     return router.pathname && router.pathname.startsWith(routeName)
   }
@@ -38,6 +36,10 @@ const SideMenu: React.FC = () => {
   const handleModal = (contentType: string) => {
     setModal(true)
     setContent(contentType)
+  }
+
+  const handleAppModal = (value: boolean) => {
+    setAppModal(value)
   }
 
   return (
@@ -102,6 +104,14 @@ const SideMenu: React.FC = () => {
             </ListItemIcon>
             <ListItemText className={classes.listText} primary={t('common:home.video')} />
           </ListItem> */}
+            <Link href={ESRoutes.EVENTS} passHref>
+              <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.EVENTS)}>
+                <ListItemIcon className={classes.icon}>
+                  <Icon fontSize="small" className="fa fa-play-circle" />
+                </ListItemIcon>
+                <ListItemText className={classes.listText} primary={t('common:home.video')} />
+              </ListItem>
+            </Link>
             <Link href={ESRoutes.SETTINGS} passHref>
               <ListItem className={classes.list} button disableRipple selected={isSelected(ESRoutes.SETTINGS)}>
                 <ListItemIcon className={classes.icon}>
@@ -130,7 +140,7 @@ const SideMenu: React.FC = () => {
               <ListItemText className={classes.listText} primary={t('common:logout')} />
             </ListItem>
           )}
-          {!downSm && <SideFooter />}
+          <SideFooter handleAppModal={handleAppModal} />
         </Box>
       </Box>
 
@@ -139,6 +149,7 @@ const SideMenu: React.FC = () => {
           {content === 'qr' ? <QrContainer handleClose={() => setModal(false)} /> : <LogoutContainer handleClose={() => setModal(false)} />}
         </BlankLayout>
       </ESModal>
+      <AppDialog open={appModal} handleClose={() => setAppModal(false)} />
     </>
   )
 }
@@ -187,10 +198,10 @@ const useStyles = makeStyles((theme) => ({
   },
   userInfo: {
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    width: 128,
+    alignItems: 'center',
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+    width: '100%',
     display: 'flex',
     paddingTop: 40,
     flexDirection: 'column',
@@ -213,7 +224,8 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    maxWidth: 80,
+    maxWidth: '100%',
+    fontSize: 14,
   },
   usercode: {
     color: theme.palette.text.secondary,
@@ -221,7 +233,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    maxWidth: 80,
+    maxWidth: 130,
   },
   clickable: {
     cursor: 'pointer',
@@ -241,6 +253,9 @@ const useStyles = makeStyles((theme) => ({
   menuWrap: {
     height: '100%',
     overflowY: 'auto',
+    willChange: 'transform',
+    transform: 'translateZ(0)',
+    webkitTransform: 'translateZ(0)',
     scrollbarColor: '#222 transparent',
     scrollbarWidth: 'thin',
     '&::-webkit-scrollbar': {

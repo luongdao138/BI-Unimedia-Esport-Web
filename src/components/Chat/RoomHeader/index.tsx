@@ -20,6 +20,7 @@ import { tournamentDetail } from '@store/chat/selectors'
 import { useRouter } from 'next/router'
 import AvatarSelector from '@components/ImagePicker/AvatarSelector'
 import useRoomImageUploader from './useRoomImageUploader'
+import { TOURNAMENT_ADMIN_ROLES } from '@constants/socket.constants'
 
 export interface RoomHeaderProps {
   roomId: string | string[]
@@ -77,12 +78,16 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return _.get(roomInfo, 'sortKey', '').startsWith('chat_direct')
   }
 
-  const hasPermission = !_.get(tournament, 'is_freezed', false)
+  const hasPermission = _.get(tournament, 'is_freezed', false)
+
+  const role = _.get(tournament, 'my_role.role', null)
+
+  const isOrganizer = _.includes(TOURNAMENT_ADMIN_ROLES, role)
 
   const memberAddItem = () => {
-    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission) {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
-    } else if (!isDirect()) {
+    } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
       return <ESMenuItem onClick={() => setDialogOpen(MENU.ADD_MEMBER)}>{t('common:chat.room_options.add_member')}</ESMenuItem>
     }
     return null
@@ -120,10 +125,21 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
     return null
   }
 
+  const renderMemberList = () => {
+    if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission && isOrganizer) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+    } else if (!isDirect() && roomInfo.groupType === CHAT_ROOM_TYPE.CHAT_ROOM) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+    } else if (roomInfo.groupType === CHAT_ROOM_TYPE.TOURNAMENT && hasPermission === false) {
+      return <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+    }
+    return null
+  }
+
   const MenuItems = () => (
     <Box className={classes.menu}>
       <ESMenu>
-        <ESMenuItem onClick={() => setDialogOpen(MENU.MEMBER_LIST)}>{t('common:chat.room_options.member_list')}</ESMenuItem>
+        {renderMemberList()}
         {memberAddItem()}
         {renderRoomNameChange()}
         {renderTournamentDetailItem()}
@@ -154,7 +170,9 @@ const RoomHeader: React.FC<RoomHeaderProps> = ({ roomId }) => {
         </>
       )}
       <Box className={classes.row}>
-        {hasNoRoomInfo ? null : <RoomImgView roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />}
+        {hasNoRoomInfo ? null : (
+          <RoomImgView roomType={roomInfo.groupType} roomImg={roomImg} roomName={roomName} loading={uploadMeta.uploading} />
+        )}
         <Box pl={2} className={classes.roomName}>
           <Typography variant="h2" noWrap={true} className={classes.title}>
             {roomName}

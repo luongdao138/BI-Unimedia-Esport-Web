@@ -1,5 +1,4 @@
-import { makeStyles, Typography, Box, Theme, InputAdornment } from '@material-ui/core'
-import { IconButton } from '@material-ui/core'
+import { makeStyles, Typography, Box, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { ESRoutes } from '@constants/route.constants'
@@ -12,8 +11,10 @@ import i18n from '@locales/i18n'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { UserLoginParams } from '@services/auth.service'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import _, { NotVoid } from 'lodash'
+import ESPasswordInput from '@components/PasswordInput'
+import { CommonHelper } from '@utils/helpers/CommonHelper'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required(i18n.t('common:common.input_required')),
@@ -26,11 +27,10 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmitClicked }) => {
   const classes = useStyles()
-  const [showPassword, setShowPassword] = useState(false)
 
   const { handleLink } = useReturnHref()
 
-  const { values, errors, touched, handleChange, handleSubmit, handleBlur, validateForm } = useFormik<UserLoginParams>({
+  const { values, errors, touched, handleChange, handleSubmit, handleBlur, validateForm, setFieldValue } = useFormik<UserLoginParams>({
     initialValues: { email: '', password: '', registration_id: undefined },
     validationSchema,
     onSubmit: (values) => {
@@ -72,10 +72,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmitClicked }) => {
         </Box>
 
         <Box pt={3}>
-          <ESInput
+          <ESPasswordInput
             id="password"
             labelPrimary={i18n.t('common:login.password_label_primary')}
-            type={showPassword ? 'text' : 'password'}
             labelSecondary={
               <Link href={handleLink(ESRoutes.FORGOT_PASSWORD)} as={ESRoutes.FORGOT_PASSWORD} shallow>
                 <a className={classes.noLink}>
@@ -85,23 +84,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmitClicked }) => {
                 </a>
               </Link>
             }
-            endAdornment={
-              <InputAdornment position="end" className={classes.inputContainer}>
-                <div className={classes.borderLeft}></div>
-                <IconButton
-                  aria-label="toggle password visibility"
-                  size="small"
-                  disableRipple
-                  color="inherit"
-                  onMouseDown={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <img src="/images/password_show.svg" /> : <img src="/images/password_hide.svg" />}
-                </IconButton>
-              </InputAdornment>
-            }
             fullWidth
             value={values.password}
-            onChange={handleChange}
+            onChange={(e) => setFieldValue('password', CommonHelper.replaceSingleByteString(e.target.value))}
             onBlur={handleBlur}
             helperText={touched.password && errors.password}
             error={touched.password && !!errors.password}
@@ -138,17 +123,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noLink: {
     textDecoration: 'none',
-  },
-  inputContainer: {
-    position: 'relative',
-    paddingRigth: 7,
-  },
-  borderLeft: {
-    width: 1,
-    height: 24,
-    backgroundColor: '#4B4B4D',
-    position: 'absolute',
-    left: -8,
   },
   buttonContainer: {
     width: '100%',

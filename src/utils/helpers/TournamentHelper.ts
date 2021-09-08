@@ -184,6 +184,7 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
   }
   if (stepTwo) {
     requiredFieldErrors.push(stepTwo.rule)
+    requiredFieldErrors.push(stepTwo.participant_type)
     requiredFieldErrors.push(stepTwo.max_participants)
   }
   if (stepThree) {
@@ -203,6 +204,39 @@ const checkRequiredFields = (errors: FormikErrors<FormType>): boolean => {
   return _.isEmpty(filteredErrors)
 }
 
+const arenaFormLabelNames = {
+  title: 'common:tournament_create.name',
+  overview: 'common:tournament_create.overview',
+  has_prize: 'common:tournament_create.has_prize',
+  prize_amount: 'common:tournament_create.has_prize',
+  game_title_id: 'common:tournament_create.game',
+  game_hardware_id: 'common:tournament_create.game_hardware',
+  rule: 'common:tournament_create.holding_format',
+  participant_type: 'common:tournament_create.participation',
+  max_participants: 'common:tournament_create.max_participants',
+  terms_of_participation: 'common:tournament_create.participation_term',
+  notes: 'common:tournament_create.precautions',
+  start_date: 'common:tournament_create.holding_period',
+  end_date: 'common:tournament_create.holding_period',
+  acceptance_start_date: 'common:tournament_create.entry_period',
+  acceptance_end_date: 'common:tournament_create.entry_period',
+  area_id: 'common:tournament_create.area',
+  address: 'common:tournament_create.area_address',
+  recruit_date: 'common:tournament_create.entry_period',
+  acceptance_dates: 'common:tournament_create.entry_period',
+  acceptance_end_start_date: 'common:tournament_create.entry_period',
+  start_end_date: 'common:tournament_create.holding_period',
+  organizer_name: 'common:tournament_create.organizer_name',
+}
+
+const getLabelName = (field: string): string => {
+  const name = _.get(arenaFormLabelNames, field)
+  if (_.isString(name)) {
+    return name
+  }
+  return ''
+}
+
 export const TournamentHelper = {
   participantTypeText,
   ruleText,
@@ -216,4 +250,5 @@ export const TournamentHelper = {
   onTypeChange,
   isStatusPassed,
   checkRequiredFields,
+  getLabelName,
 }

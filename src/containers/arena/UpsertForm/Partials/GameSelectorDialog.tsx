@@ -11,6 +11,7 @@ import BlankLayout from '@layouts/BlankLayout'
 import Icon from '@material-ui/core/Icon'
 import ESModal from '@components/Modal'
 import _ from 'lodash'
+import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 type GameTitleItem = GameTitle['attributes']
 interface Props {
@@ -46,7 +47,11 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
         <Typography className={classes.labelColor}>{t('common:tournament_create.game')}</Typography>
         <Typography className={classes.required}>{t('common:common.required')}</Typography>
       </Box>
-      <ButtonBase disabled={disabled} onClick={() => setOpen(true)} className={classes.inputContainer}>
+      <ButtonBase
+        disabled={disabled}
+        onClick={() => setOpen(true)}
+        className={`${classes.inputContainer} ${disabled ? classes.disabled : ''}`}
+      >
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:please_select')}</Typography>
@@ -58,38 +63,43 @@ const GameSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => 
             ))
           )}
         </Box>
-        <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
+        <Icon className={`fa fa-chevron-right ${classes.icon} ${disabled ? classes.disabled : ''}`} fontSize="small" />
       </ButtonBase>
 
       <ESModal open={open} handleClose={() => setOpen(false)}>
-        <BlankLayout>
-          <Box pt={7.5} pb={9} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
-                <Icon className="fa fa-arrow-left" fontSize="small" />
-              </IconButton>
-              <Box pl={2}>
-                <Typography variant="h2">{t('common:user_profile.choose_game')}</Typography>
+        <FocusContextProvider>
+          <BlankLayout>
+            <Box pt={7.5} pb={9} className={classes.topContainer}>
+              <Box py={2} display="flex" flexDirection="row" alignItems="center">
+                <IconButton className={classes.iconButtonBg} onClick={() => setOpen(false)}>
+                  <Icon className="fa fa-arrow-left" fontSize="small" />
+                </IconButton>
+                <Box pl={2}>
+                  <Typography variant="h2">{t('common:user_profile.choose_game')}</Typography>
+                </Box>
+              </Box>
+
+              <Box pt={8} className={classes.container}>
+                <GameSelector values={gameTitles} onChange={onGameChange} single />
               </Box>
             </Box>
 
-            <Box pt={8} className={classes.container}>
-              <GameSelector values={gameTitles} onChange={onGameChange} single />
-            </Box>
-          </Box>
-
-          <Box className={classes.blankSpace} />
-
-          <Box className={classes.stickyFooter}>
-            <Box className={classes.nextBtnHolder}>
-              <Box maxWidth={280} className={classes.buttonContainer}>
-                <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={gameTitles.length === 0}>
-                  {t('common:tournament_create.decide')}
-                </ButtonPrimary>
-              </Box>
-            </Box>
-          </Box>
-        </BlankLayout>
+            <Box className={classes.blankSpace} />
+            <FocusContext.Consumer>
+              {({ isFocused }) => (
+                <Box className={`${classes.stickyFooter} ${isFocused ? classes.hideOnMobile : ''}`}>
+                  <Box className={classes.nextBtnHolder}>
+                    <Box maxWidth={280} className={classes.buttonContainer}>
+                      <ButtonPrimary type="submit" round fullWidth onClick={onSubmit} disabled={gameTitles.length === 0}>
+                        {t('common:tournament_create.decide')}
+                      </ButtonPrimary>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+            </FocusContext.Consumer>
+          </BlankLayout>
+        </FocusContextProvider>
       </ESModal>
     </>
   )
@@ -168,5 +178,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     topContainer: {
       paddingTop: 0,
     },
+    hideOnMobile: {
+      display: 'none',
+    },
+  },
+  disabled: {
+    color: Colors.white_opacity['30'],
   },
 }))

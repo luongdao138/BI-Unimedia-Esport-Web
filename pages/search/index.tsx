@@ -52,17 +52,19 @@ const SearchPage: PageWithLayoutType = () => {
   }
 
   return (
-    <Box>
-      <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
-        <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
-          <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
-        </IconButton>
-        <Typography variant="h2" className={classes.label}>
-          {renderKeyword()}
-        </Typography>
+    <MainLayout loginRequired={false}>
+      <Box>
+        <Box py={2} pl={3} display="flex" flexDirection="row" alignItems="center" borderBottom="1px solid #70707070">
+          <IconButton className={classes.iconButtonBg} onClick={() => router.back()}>
+            <Icon className={`fa fa-arrow-left ${classes.icon}`} fontSize="small" />
+          </IconButton>
+          <Typography variant="h2" className={classes.label}>
+            {renderKeyword()}
+          </Typography>
+        </Box>
+        <Box p={3}>{renderSwitch()}</Box>
       </Box>
-      <Box p={3}>{renderSwitch()}</Box>
-    </Box>
+    </MainLayout>
   )
 }
 
@@ -83,7 +85,5 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
 }))
-
-SearchPage.Layout = MainLayout
 
 export default SearchPage

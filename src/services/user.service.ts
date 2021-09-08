@@ -2,6 +2,7 @@ import api from './api'
 import { URI } from '@constants/uri.constants'
 import { GameTitle } from './game.service'
 import { TournamentListItem } from './arena.service'
+import { FOLLOW_STATES } from '@constants/common.constants'
 
 export type HistorySearchParams = {
   page?: number
@@ -190,12 +191,19 @@ export type FollowActionResponse = {
   data: Array<FollowResponse>
 }
 
+export type FollowActionResponse2 = {
+  res: FollowActionResponse
+  param: FollowParams
+}
+
 export type UnFollowResponse = {
   success: 'success'
 }
 
 export type FollowParams = {
   user_code: string
+  isOthers?: boolean
+  fromType?: FOLLOW_STATES.FOLLOWERS | FOLLOW_STATES.FOLLOWING
 }
 
 export type FollowersParams = {
@@ -259,6 +267,15 @@ export type ChangeEmailResponse = {
 
 export type ChangeEmailConfirmResponse = {
   email: string
+}
+
+export type RemoveProfileImageParams = {
+  path: string
+  file_type: number
+}
+
+export type RemoveProfileImageResponse = {
+  success: string
 }
 
 export const getUserProfile = async (param?: string): Promise<ProfileResponse> => {
@@ -353,5 +370,10 @@ export const changeEmail = async (params: ChangeEmailParams): Promise<ChangeEmai
 
 export const changeEmailConfirm = async (params: ChangeEmailConfirmParams): Promise<ChangeEmailConfirmResponse> => {
   const { data } = await api.post(URI.USER_EMAIL_CHANGE_CONFIRM, params)
+  return data
+}
+
+export const profileImageRemove = async (params: RemoveProfileImageParams): Promise<RemoveProfileImageResponse> => {
+  const { data } = await api.put<RemoveProfileImageResponse>(URI.IMAGE_REMOVE, params)
   return data
 }

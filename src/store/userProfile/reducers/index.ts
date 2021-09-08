@@ -4,7 +4,8 @@ import { TournamentListItem } from '@services/arena.service'
 import { CommonResponse, ProfileResponse, Nickname2, Meta, ChangeEmailSteps, FollowResponse } from '@services/user.service'
 import { registerProfile, logout } from '@store/auth/actions'
 import { blockUser, unblockUser } from '@store/block/actions'
-import { UPLOADER_TYPE } from '@constants/image.constants'
+import { UPLOADER_TYPE, REMOVE_TYPE } from '@constants/image.constants'
+import { FOLLOW_STATES } from '@constants/common.constants'
 
 type StateType = {
   data?: ProfileResponse['data']
@@ -65,6 +66,14 @@ export default createReducer(initialState, (builder) => {
     }
   })
 
+  builder.addCase(actions.profileImageRemove.fulfilled, (state, action) => {
+    if (action.payload.file_type === REMOVE_TYPE.cover) {
+      state.data.attributes.cover_url = null
+    } else if (action.payload.file_type === REMOVE_TYPE.profile) {
+      state.data.attributes.avatar_url = null
+    }
+  })
+
   builder.addCase(registerProfile.fulfilled, (state, action) => {
     state.data.attributes = { ...state.data.attributes, ...action.payload.data.attributes }
   })
@@ -114,6 +123,10 @@ export default createReducer(initialState, (builder) => {
     state.recommendations = action.payload.data
   })
 
+  builder.addCase(logout.pending, (state) => {
+    state.data = undefined
+  })
+
   builder.addCase(logout.fulfilled, (state) => {
     state.data = undefined
   })
@@ -158,14 +171,17 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.follow.fulfilled, (state, action) => {
       if (state.lastSeenUserData) {
         state.lastSeenUserData.attributes.is_following = true
+        const myData = action.payload.data[0]
+        myData.attributes.is_followed = undefined
+        myData.attributes.is_following = undefined
         const updatedUserItem = state.followers.filter((user) => {
           if (user.attributes.user_code === state.data?.attributes?.user_code) {
-            user.attributes = action.payload.data[0]?.attributes
+            user.attributes = myData?.attributes
             return true
           }
         })
         if (updatedUserItem.length === 0) {
-          state.followers.push(action.payload.data[0])
+          state.followers.push(myData)
         }
         if (state.followersMeta) state.followersMeta.total_count = state.followersMeta.total_count + 1
       }
@@ -182,6 +198,63 @@ export default createReducer(initialState, (builder) => {
         }
       }
     })
+    .addCase(actions.followFromList.fulfilled, (state, action) => {
+      const param = action.payload.param
+      //zovhon ooriin profile aas handaj baigaa ued doorh code ajillana
+      if (!param.isOthers) {
+        //followers list dotroos follow hiisen bol
+        if (param.fromType === FOLLOW_STATES.FOLLOWERS) {
+          //find followed user from followers list
+          const followedUser = state.followers.filter((user) => {
+            return user.attributes.user_code === param.user_code
+          })
+          //add to following list found user
+          if (followedUser.length !== 0) {
+            followedUser[0].attributes.is_following = true
+            // following list dotor tuhain follow hiisen user row baival update hiine
+            const updatedUserItem = state.following.filter((user) => {
+              if (user.attributes.user_code === param.user_code) {
+                user.attributes = followedUser[0].attributes
+                return true
+              }
+            })
+            // following list dotor tuhain follow hiisen user row baihgui bol add hiine
+            if (updatedUserItem.length === 0) {
+              state.following.push(followedUser[0])
+            }
+          }
+        }
+        if (state.followingMeta) state.followingMeta.total_count = state.followingMeta.total_count + 1
+      }
+      state.following.filter((user) => {
+        if (user.attributes.user_code === param.user_code) user.attributes.is_following = true
+      })
+      state.followers.filter((user) => {
+        if (user.attributes.user_code === param.user_code) user.attributes.is_following = true
+      })
+    })
+    .addCase(actions.unfollowFromList.fulfilled, (state, action) => {
+      //zovhon ooriin profile aas handaj baigaa ued doorh code ajillana
+      if (!action.payload.isOthers) {
+        //followers list dotroos unfollow hiisen bol
+        if (action.payload.fromType === FOLLOW_STATES.FOLLOWERS) {
+          const restFollowings = state.following.filter((user) => {
+            return user.attributes.user_code !== action.payload.user_code
+          })
+          state.following = restFollowings
+        }
+        if (state.followingMeta && state.followingMeta.total_count > 0)
+          state.followingMeta.total_count = state.followingMeta.total_count - 1
+      }
+      state.following.filter((user) => {
+        if (user.attributes.user_code === action.payload.user_code) {
+          user.attributes.is_following = false
+        }
+      })
+      state.followers.filter((user) => {
+        if (user.attributes.user_code === action.payload.user_code) user.attributes.is_following = false
+      })
+    })
     .addCase(actions.followers.fulfilled, (state, action) => {
       let tmpFollowers = action.payload.data
       if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
@@ -193,6 +266,7 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.clearFollowers, (state) => {
       state.followers = []
+      state.followersMeta = undefined
     })
     .addCase(actions.following.fulfilled, (state, action) => {
       let tmpFollowing = action.payload.data
@@ -205,53 +279,7 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(actions.clearFollowing, (state) => {
       state.following = []
-    })
-    .addCase(actions.increaseFollowing.fulfilled, (state, action) => {
-      if (state.following) {
-        state.following.filter((user) => {
-          if (user.attributes.user_code === action.payload.user_code) {
-            user.attributes.is_following = true
-          }
-        })
-      }
-    })
-    .addCase(actions.decreaseFollowing.fulfilled, (state, action) => {
-      if (state.following) {
-        if (action.payload.isOthers) {
-          state.following.filter((user) => {
-            if (user.attributes.user_code === action.payload.user_code) {
-              user.attributes.is_following = false
-            }
-          })
-        } else {
-          const restFollowings = state.following.filter((user) => {
-            return user.attributes.user_code !== action.payload.user_code
-          })
-          state.following = restFollowings
-          if (state.followingMeta && state.followingMeta.total_count > 0)
-            state.followingMeta.total_count = state.followingMeta.total_count - 1
-        }
-      }
-    })
-    .addCase(actions.increaseFollowers.fulfilled, (state, action) => {
-      if (state.followers) {
-        state.followers.filter((user) => {
-          if (user.attributes.user_code === action.payload.user_code) {
-            user.attributes.is_following = true
-          }
-        })
-      }
-    })
-    .addCase(actions.decreaseFollowers.fulfilled, (state, action) => {
-      if (state.followers) {
-        if (action.payload.isOthers) {
-          state.followers.filter((user) => {
-            if (user.attributes.user_code === action.payload.user_code) {
-              user.attributes.is_following = false
-            }
-          })
-        }
-      }
+      state.followingMeta = undefined
     })
 
   builder.addCase(actions.clearHomeSettings, (state) => {

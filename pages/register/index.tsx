@@ -1,11 +1,9 @@
 import RegisterContainer from '@containers/Register'
-import AuthenticationLayout from '@layouts/AuthenticationLayout'
 import PageWithLayoutType from '@constants/page'
+import withNoAuth from '@utils/withNoAuth'
 
 const RegisterPage: PageWithLayoutType = () => {
   return <RegisterContainer />
 }
 
-RegisterPage.Layout = AuthenticationLayout
-
-export default RegisterPage
+export default withNoAuth(RegisterPage)

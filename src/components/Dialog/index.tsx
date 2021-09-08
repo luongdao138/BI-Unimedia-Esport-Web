@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { makeStyles, Theme, withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 import _ from 'lodash'
 
@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiDialog-paper': {
       margin: 0,
       maxHeight: '100%',
+      minHeight: '100%',
     },
   },
   [theme.breakpoints.down('sm')]: {
@@ -100,11 +101,7 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
 
 const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children, bkColor, alignTop, fixedFooter, ...rest }) => {
   const classes = useStyles()
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [])
+
   return (
     <Dialog
       fullWidth
@@ -127,6 +124,15 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
             : 'rgba(0,0,30,0.6)',
         },
         children: fixedFooter ? fixedFooter : undefined,
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
       }}
       PaperProps={{
         style: {
@@ -135,9 +141,6 @@ const ESDialog: React.FC<ESDialogProps> = ({ title, open, handleClose, children,
         },
       }}
       className={classes.dialog}
-      onEntered={() => {
-        document.body.style.overflow = 'hidden'
-      }}
       {...rest}
     >
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>

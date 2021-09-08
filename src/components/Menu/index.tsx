@@ -41,6 +41,7 @@ const ESMenu: React.FC<MenuProps> = ({ className, children, disableRipple, iconC
       <StyledMenu
         anchorEl={anchorEl}
         getContentAnchorEl={null}
+        disableScrollLock={false}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',

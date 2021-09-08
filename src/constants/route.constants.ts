@@ -1,6 +1,5 @@
 export const ESRoutes = {
   TOP: '/',
-  WELCOME: '/welcome',
   HOME: '/home',
   HOME_ORDER: '/home/order',
   LOGIN: '/login',
@@ -44,8 +43,7 @@ export const ESRoutes = {
   USER_ACCOUNT_SETTINGS_PASSWORD: '/settings/account/password',
   USER_ACCOUNT_SETTINGS_CHANGE_EMAIL: '/settings/account/change-email',
   USER_ACCOUNT_SETTINGS_EMAIL_CONFIRM: '/settings/account/confirm',
-  USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD: '/settings/change-password',
-  RECRUITING_TOURNAMENTS: '/tournament/recruiting',
+  USER_ACCOUNT_SETTINGS_CHANGE_PASSWORD: '/settings/account/change-password',
   ARENA_MATCHES_EDIT: '/arena/:id/matches/edit',
   ARENA_BATTLES_EDIT: '/arena/:id/battles/edit',
   ARENA_MATCHES: '/arena/:id/matches',
@@ -54,4 +52,10 @@ export const ESRoutes = {
   ARENA_DETAIL: '/arena/:id',
   GROUP_CHAT: '/message/:id',
   SEARCH: '/search',
+  EVENTS: '/events',
+  STREAM: '/stream',
+  ARCHIVE: '/archive',
+  PR: '/pr',
+  LINE_CALLBACK: '/line/callback',
+  TWITTER_CALLBACK: '/twitter/callback',
 }

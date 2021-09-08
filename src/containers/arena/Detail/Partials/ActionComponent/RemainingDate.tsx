@@ -15,27 +15,38 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
   const { t } = useTranslation(['common'])
 
   const status = tournament.attributes.status
-  const isRecruiting = status === TOURNAMENT_STATUS.RECRUITING
-  const isOnHold = status === TOURNAMENT_STATUS.RECRUITMENT_CLOSED || status === TOURNAMENT_STATUS.READY_TO_START
+  const beforeOnhold = status === TOURNAMENT_STATUS.RECRUITING
+  const beforeRecruit = status === TOURNAMENT_STATUS.READY
 
   const accEndDate = moment(tournament.attributes.acceptance_end_date)
+  const recruitStartDate = moment(tournament.attributes.acceptance_start_date)
   const startDate = moment(tournament.attributes.start_date)
-  const targetDate = isRecruiting ? accEndDate : startDate
+  const targetDate = beforeOnhold ? accEndDate : beforeRecruit ? recruitStartDate : startDate
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')
   const hours = targetDate.diff(nowDate, 'hours')
 
-  const untilDatePrefix = isRecruiting ? t('common:tournament.until_deadline') : isOnHold ? t('common:tournament.until_event') : ''
+  const untilDatePrefix = beforeOnhold
+    ? t('common:tournament.until_deadline')
+    : beforeRecruit
+    ? t('common:tournament.until_start_recruit')
+    : t('common:tournament.until_event')
+
+  let inHourSuffix = t('common:tournament.end_from_minutes')
+  if (!beforeOnhold) {
+    inHourSuffix = t('common:tournament.start_from_minutes')
+    if (beforeRecruit) inHourSuffix = t('common:tournament.recruit_start_from_minutes')
+  }
 
   return (
     <Box display="flex" flexDirection="row" color={Colors.grey[300]} alignItems="baseline">
-      {days > 1 ? (
+      {days >= 1 ? (
         <>
           <Typography>{untilDatePrefix}</Typography>
           <Typography className={classes.highlightedNumber}>{days}</Typography>
           <Typography>{t('common:common.day')}</Typography>
         </>
-      ) : hours > 1 ? (
+      ) : hours >= 1 ? (
         <>
           <Typography>{untilDatePrefix}</Typography>
           <Typography className={classes.highlightedNumber}>{hours}</Typography>
@@ -44,12 +55,12 @@ const RemainingDate: React.FC<Props> = ({ tournament }) => {
       ) : (
         <>
           <Box mr={1}>
-            <Typography className={classes.highlightedNumber}>{startDate.format('YYYY/MM/DD')}</Typography>
+            <Typography className={classes.highlightedNumber}>{targetDate.format('YYYY/MM/DD')}</Typography>
           </Box>
-          <Typography className={classes.highlightedNumber}>{startDate.hours()}</Typography>
+          <Typography className={classes.highlightedNumber}>{targetDate.format('HH')}</Typography>
           <Typography>{t('common:common.hour')}</Typography>
-          <Typography className={classes.highlightedNumber}>{startDate.minutes()}</Typography>
-          <Typography>{t('common:tournament.start_from_minutes')}</Typography>
+          <Typography className={classes.highlightedNumber}>{targetDate.format('mm')}</Typography>
+          <Typography>{inHourSuffix}</Typography>
         </>
       )}
     </Box>

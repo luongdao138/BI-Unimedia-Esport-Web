@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Dialog } from '@material-ui/core'
 import Slide from '@material-ui/core/Slide'
@@ -18,24 +18,27 @@ const Transition = React.forwardRef(function Transition(
 
 const Modal: React.FC<ESDialogProps> = ({ open, handleClose, children }) => {
   const classes = useStyles()
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [])
-
   return (
     <Dialog
+      disableScrollLock={false}
       fullScreen
       TransitionComponent={Transition}
       aria-labelledby="modal"
       open={open}
       onClose={handleClose}
-      BackdropProps={{ classes: { root: classes.backDrop } }}
-      PaperProps={{ classes: { root: classes.paper } }}
-      onEntered={() => {
-        document.body.style.overflow = 'hidden'
+      BackdropProps={{
+        classes: { root: classes.backDrop },
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
       }}
+      PaperProps={{ classes: { root: classes.paper } }}
     >
       {children}
     </Dialog>

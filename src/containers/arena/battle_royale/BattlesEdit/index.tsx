@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import RandomizeDialog from '@containers/arena/tournament/MatchesEdit/Partials/RandomizeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
+import { ESRoutes } from '@constants/route.constants'
 
 const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -23,6 +24,10 @@ const ArenaBattlesEdit: React.FC = () => {
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, meta: participantsMeta, getParticipants, resetMeta } = useParticipants()
   const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
+
+  useEffect(() => {
+    if (router.query.hash_key) router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
+  }, [router])
 
   const [data, setData] = useState<any>()
   const [showParticipants, setShowParticipants] = useState<boolean>(false)
@@ -111,9 +116,10 @@ const ArenaBattlesEdit: React.FC = () => {
       <ESStickyFooter
         disabled={false}
         title={freezable ? t('common:arena.freeze_button') : t('common:arena.randomize_button')}
-        onClick={freezable ? () => freeze(tournament.attributes.hash_key) : () => setShowRandomize(true)}
+        onClick={freezable ? () => freeze({ hash_key: tournament.attributes.hash_key, matches: null }) : () => setShowRandomize(true)}
         show={data.memberSelectable}
         noScroll
+        classes={{ nextBtnHolder: classes.buttonHolder }}
       >
         <AppBar className={classes.appbar}>
           <Container maxWidth="lg">
@@ -157,7 +163,7 @@ const ArenaBattlesEdit: React.FC = () => {
   )
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#212121',
     paddingTop: 60,
@@ -185,6 +191,9 @@ const useStyles = makeStyles(() => ({
   },
   pointer: {
     cursor: 'pointer',
+  },
+  buttonHolder: {
+    marginBottom: theme.spacing(3),
   },
 }))
 

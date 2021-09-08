@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react'
-import { Grid, Box, makeStyles, Typography, Theme, Icon } from '@material-ui/core'
+import { Grid, Box, makeStyles, Typography, Theme, Icon, ButtonBase } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
@@ -20,6 +20,8 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESAvatar from '@components/Avatar'
 import Linkify from 'react-linkify'
 import { RULE } from '@constants/tournament.constants'
+import { ESRoutes } from '@constants/route.constants'
+import { useRouter } from 'next/router'
 
 interface Props {
   detail: TournamentDetail
@@ -30,6 +32,7 @@ interface Props {
 
 const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton }) => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const data = detail.attributes
@@ -46,6 +49,8 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
     dispatch(commonActions.addToast(t('common:arena.copy_toast')))
   }
 
+  const toProfile = (user_code) => router.push(`${ESRoutes.PROFILE}/${user_code}`)
+
   const handleReportOpen = () => setOpenReport(true)
 
   return (
@@ -60,9 +65,11 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
           {extended && (
             <Box ml={1} display="flex" flexDirection="row" flexShrink={0}>
               {helper.isEditable && toEdit && (
-                <ButtonPrimary style={{ padding: '12px 8px' }} size="small" gradient={false} onClick={toEdit}>
-                  {t('common:arena.edit_arena_info')}
-                </ButtonPrimary>
+                <LoginRequired>
+                  <ButtonPrimary px={12} size="small" gradient={false} onClick={toEdit}>
+                    {t('common:arena.edit_arena_info')}
+                  </ButtonPrimary>
+                </LoginRequired>
               )}
               <ESMenu>
                 <LoginRequired>
@@ -74,10 +81,12 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
         </Box>
         <Box display="flex" flexDirection="row" alignItems="center">
           <Typography>{`${t('common:tournament.tournament_id')}${detail.id}`}</Typography>
-          <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-            <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-            <Typography>{t('common:tournament.copy_shared_url')}</Typography>
-          </Box>
+          {extended && (
+            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+              <Typography>{t('common:tournament.copy_shared_url')}</Typography>
+            </Box>
+          )}
         </Box>
 
         <Box marginTop={2}>
@@ -92,7 +101,7 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               </a>
             )}
           >
-            <Typography>{data.overview}</Typography>
+            <Typography className={classes.multiline}>{data.overview}</Typography>
           </Linkify>
         </Box>
 
@@ -154,8 +163,16 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 <Typography>{t('common:tournament.venue')}</Typography>
               </Box>
               <Box className={classes.value} flexDirection="column">
-                <Typography>{data.area_name == t('common:tournament.online') ? data.area_name : t('common:tournament.offline')}</Typography>
-                <Typography>{data.address}</Typography>
+                <Typography>{data.area_name ? data.area_name : '-'}</Typography>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{data.address}</Typography>
+                </Linkify>
               </Box>
             </Box>
 
@@ -182,10 +199,36 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
             {/* Participation conditions */}
             <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
               <Box className={classes.label}>
-                <Typography>{t('common:tournament.participation_condition')}</Typography>
+                <Typography>{t('common:tournament_create.participation_term')}</Typography>
               </Box>
               <Box className={classes.value}>
-                <Typography>{_.isEmpty(data.terms_of_participation) ? '-' : data.terms_of_participation}</Typography>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{_.isEmpty(data.terms_of_participation) ? '-' : data.terms_of_participation}</Typography>
+                </Linkify>
+              </Box>
+            </Box>
+
+            {/* Notes conditions */}
+            <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+              <Box className={classes.label}>
+                <Typography>注意事項</Typography>
+              </Box>
+              <Box className={classes.value}>
+                <Linkify
+                  componentDecorator={(decoratedHref, decoratedText, key) => (
+                    <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                      {decoratedText}
+                    </a>
+                  )}
+                >
+                  <Typography>{_.isEmpty(data.notes) ? '-' : data.notes}</Typography>
+                </Linkify>
               </Box>
             </Box>
 
@@ -197,7 +240,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
               <Box className={classes.value}>
                 {data.owner && (
                   <Box display="flex" flexDirection="row" alignItems="center">
-                    <ESAvatar alt="Avatar" src={data.owner.data.attributes.avatar} />
+                    <ButtonBase onClick={() => toProfile(data.owner.data.attributes.user_code)}>
+                      <ESAvatar alt={data.owner.data.attributes.nickname} src={data.owner.data.attributes.avatar} />
+                    </ButtonBase>
                     <Typography className={classes.breakWord}>{data.owner.data.attributes.nickname}</Typography>
                   </Box>
                 )}
@@ -213,7 +258,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
                 {data.co_organizers && data.co_organizers.data && data.co_organizers.data.length > 0 ? (
                   data.co_organizers.data.map((co: CommonResponse, i) => (
                     <Box key={`co${i}`} display="flex" flexDirection="row" alignItems="center" mt={i > 0 ? 1 : 0}>
-                      <ESAvatar alt="Avatar" src={co.attributes.avatar} />
+                      <ButtonBase onClick={() => toProfile(co.attributes.user_code)}>
+                        <ESAvatar alt={co.attributes.nickname} src={co.attributes.avatar} />{' '}
+                      </ButtonBase>
                       <Typography className={classes.breakWord}>{co.attributes.nickname}</Typography>
                     </Box>
                   ))
@@ -296,6 +343,9 @@ const DetailInfo: React.FC<Props> = ({ detail, extended, toEdit, bottomButton })
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  multiline: {
+    whiteSpace: 'pre-wrap',
+  },
   linkify: {
     color: Colors.white,
     textDecoration: 'underline',
@@ -304,8 +354,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 24,
   },
   gameChip: {
-    minWidth: 177,
-    width: 177,
+    maxWidth: 'auto',
+    minWidth: 'auto',
+    justifyContent: 'center',
   },
   label: {
     display: 'flex',
@@ -315,6 +366,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flex: 8,
     wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
   },
   title: {
     wordBreak: 'break-word',

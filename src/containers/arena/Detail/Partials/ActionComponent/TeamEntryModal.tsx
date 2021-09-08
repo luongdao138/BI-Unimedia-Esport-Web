@@ -9,7 +9,7 @@ import BlackBox from '@components/BlackBox'
 import DetailInfo from '@containers/arena/Detail/Partials/DetailInfo'
 import StickyActionModal from '@components/StickyActionModal'
 import { UserProfile } from '@services/user.service'
-import * as Yup from 'yup'
+import Yup from '@utils/Yup'
 import useSuggestedTeamMembers from './useSuggestedTeamMembers'
 import ESLabel from '@components/Label'
 import useUploadImage from '@utils/hooks/useUploadImage'
@@ -25,6 +25,8 @@ import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import useDocTitle from '@utils/hooks/useDocTitle'
+import ServerError from './ServerError'
+import { FocusContext, FocusContextProvider } from '@utils/hooks/input-focus-context'
 
 interface TeamEntryModalProps {
   tournament: TournamentDetail
@@ -49,18 +51,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   const teamMemberHook = useTeamSelectedMember()
   const { uploadArenaTeamImage } = useUploadImage()
   const { join, joinMeta, updateTeam, updateTeamMeta, resetJoinMeta, resetUpdateTeamMeta } = useEntry()
-  const { checkNgWord } = useCheckNgWord()
+  const { checkNgWordByField } = useCheckNgWord()
   const dispatch = useAppDispatch()
   const { resetTitle, changeTitle } = useDocTitle()
 
   const isPending = joinMeta.pending || updateTeamMeta.pending
 
   useEffect(() => {
-    if (joinMeta.loaded || joinMeta.error) {
+    if (joinMeta.loaded) {
       onClose()
       reset()
     }
-  }, [joinMeta.loaded, joinMeta.error])
+  }, [joinMeta.loaded])
 
   useEffect(() => {
     changeTitle(`${t('common:page_head.arena_entry_title')}｜${tournament?.attributes?.title || ''}`)
@@ -69,14 +71,14 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [])
 
   useEffect(() => {
-    if (updateTeamMeta.loaded || updateTeamMeta.error) {
+    if (updateTeamMeta.loaded) {
       onClose()
       if (updateTeamMeta.loaded && _.isFunction(updateDone)) {
         updateDone()
       }
       reset()
     }
-  }, [updateTeamMeta.loaded, updateTeamMeta.error])
+  }, [updateTeamMeta.loaded])
 
   useEffect(() => {
     if (userProfile) {
@@ -105,12 +107,12 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }, [])
 
   const membersValidationSchema = Yup.object().shape({
-    name: Yup.string().required(t('common:common.input_required')).max(40, t('common:common.too_long')),
+    name: Yup.string().required(t('common:common.input_required')).max(40),
   })
 
   const validationSchema = Yup.object().shape({
-    team_name: Yup.string().required('').max(40, t('common:common.too_long')),
-    team_icon_url: Yup.string().required(),
+    team_name: Yup.string().required(t('common:common.input_required')).max(40),
+    team_icon_url: Yup.string().nullable(),
     members: Yup.array().of(membersValidationSchema),
   })
 
@@ -152,7 +154,7 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
               leader_name: _.get(values, 'members[0].name'),
               team_name: values.team_name,
               team_icon_url: values.team_icon_url,
-              members: newMembers.map((member) => ({ user_id: `${member.user_id}`, name: member.name })),
+              members: newMembers.map((member) => ({ user_id: Number(member.user_id), name: member.name })),
             },
           })
         } else {
@@ -178,18 +180,18 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
   }
 
   const handleActionButton = () => {
-    let handle = true
-    if (!_.isEmpty(checkNgWord(formik.values.team_name))) {
-      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.team_name }))
-      handle = false
-    }
+    let fields = { [NG_WORD_AREA.team_name]: formik.values.team_name }
+
     formik.values.members.forEach((member, i) => {
-      if (!_.isEmpty(checkNgWord(member.name))) {
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: `メンバー${i + 1}` }))
-        handle = false
-      }
+      fields = { ...fields, [`メンバー${i + 1}`]: member.name }
     })
-    if (handle) formik.handleSubmit()
+
+    const ngFields = checkNgWordByField(fields)
+    if (!!ngFields && ngFields.length > 0) {
+      dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
+    } else {
+      formik.handleSubmit()
+    }
   }
 
   const handleImageUpload = (file: File) => {
@@ -208,64 +210,71 @@ const TeamEntryModal: React.FC<TeamEntryModalProps> = ({ tournament, userProfile
     teamMemberHook.setSelectedMember(selection)
   }
 
-  const teamForm = () => {
-    const { values, handleChange, errors } = formik
-    return (
-      <Box mt={6}>
-        <BlackBox>
-          <DetailInfo detail={tournament} />
-        </BlackBox>
-
-        <Box className={classes.formContainer}>
-          <ESLabel label={t('common:icon')} required />
-          <Box m={1} />
-          <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
-
-          <Box mt={4} />
-          <ESInput
-            id="team_name"
-            autoFocus
-            labelPrimary={t('common:team_name')}
-            fullWidth
-            required
-            value={values.team_name}
-            onChange={handleChange}
-            helperText={errors.team_name}
-          />
-
-          <Box mt={4} />
-          <ESLabel label={t('common:tournament.entry_members')} required />
-
-          <TeamEntryMemberList
-            tournament={tournament}
-            userProfile={userProfile}
-            formik={formik}
-            setSelectedMember={setSelectedMember}
-            removeSelectedMember={teamMemberHook.removeSelectedMember}
-            getSelectedMember={teamMemberHook.getSelectedMember}
-            selectedMembers={teamMemberHook.selectedMembers}
-            isEdit={isEdit === true}
-          />
-        </Box>
-      </Box>
-    )
-  }
-
+  const { values, handleChange, errors } = formik
   return (
-    <>
-      <StickyActionModal
-        open={open}
-        returnText={t('common:tournament.join')}
-        actionButtonText={t('common:tournament.join_with_this')}
-        actionButtonDisabled={!formik.isValid || !isMembersComplete()}
-        onReturnClicked={handleReturn}
-        onActionButtonClicked={handleActionButton}
-      >
-        <form onSubmit={handleActionButton}>{teamForm()}</form>
-      </StickyActionModal>
+    <FocusContextProvider>
+      <FocusContext.Consumer>
+        {({ isFocused, focusEvent }) => (
+          <>
+            <StickyActionModal
+              open={open}
+              returnText={isEdit ? t('common:tournament.update_entry_info') : t('common:tournament.join')}
+              actionButtonText={isEdit ? t('common:arena.update_with_content') : t('common:tournament.join_with_this')}
+              actionButtonDisabled={!formik.isValid || !isMembersComplete()}
+              onReturnClicked={handleReturn}
+              onActionButtonClicked={handleActionButton}
+              hideFooterOnMobile={isFocused}
+            >
+              <Box mt={2} />
+              {!!joinMeta.error && <ServerError message={t('common:error.join_arena_failed')} />}
+              {!!updateTeamMeta.error && <ServerError message={t('common:error.edit_entry_failed')} />}
+              <form onSubmit={handleActionButton}>
+                <Box mt={4}>
+                  <BlackBox>
+                    <DetailInfo detail={tournament} />
+                  </BlackBox>
 
-      {isPending && <ESLoader open={isPending} />}
-    </>
+                  <Box className={classes.formContainer}>
+                    <ESLabel label={t('common:icon')} />
+                    <Box m={1} />
+                    <ESTeamIconUploader src={values.team_icon_url} editable onChange={handleImageUpload} isUploading={isUploading} />
+
+                    <Box mt={4} />
+                    <ESInput
+                      id="team_name"
+                      autoFocus
+                      labelPrimary={t('common:team_name')}
+                      fullWidth
+                      required
+                      value={values.team_name}
+                      onChange={handleChange}
+                      helperText={errors.team_name}
+                      {...focusEvent}
+                    />
+
+                    <Box mt={4} />
+                    <ESLabel label={t('common:tournament.entry_members')} required />
+
+                    <TeamEntryMemberList
+                      tournament={tournament}
+                      userProfile={userProfile}
+                      formik={formik}
+                      setSelectedMember={setSelectedMember}
+                      removeSelectedMember={teamMemberHook.removeSelectedMember}
+                      getSelectedMember={teamMemberHook.getSelectedMember}
+                      selectedMembers={teamMemberHook.selectedMembers}
+                      isEdit={isEdit === true}
+                    />
+                  </Box>
+                </Box>
+              </form>
+            </StickyActionModal>
+
+            {isPending && <ESLoader open={isPending} />}
+          </>
+        )}
+      </FocusContext.Consumer>
+    </FocusContextProvider>
   )
 }
 

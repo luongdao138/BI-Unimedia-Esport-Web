@@ -1,9 +1,10 @@
 import { CheckboxProps, Checkbox, FormControlLabel } from '@material-ui/core'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { ReactNode } from 'react'
 
 type Props = {
-  label?: string
+  label?: ReactNode
 }
 
 const ESCheckbox: React.FC<CheckboxProps & Props> = ({ label, ...rest }) => {

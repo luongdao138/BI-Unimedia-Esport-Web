@@ -8,8 +8,8 @@ import { SetScoreParams, TournamentMatchRound } from '@services/arena.service'
 import { Meta } from '@store/metadata/actions/types'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
-import { getIsAuthenticated } from '@store/auth/selectors'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
+import useInterval from '@utils/hooks/useInterval'
 
 const getMeta = createMetaSelector(actions.getTournamentMatches)
 const setScoreMeta = createMetaSelector(actions.setScore)
@@ -26,25 +26,40 @@ const useTournamentMatches = (): {
   roundTitles: RoundTitles
   handleBack: () => void
 } => {
+  const [delay, setDelay] = useState((30 * 1000) as number | null)
+  const [initialPathName, setInitialPathName] = useState(null as string | null)
   const { t } = useTranslation(['common'])
-  const { query, push, back } = useRouter()
+  const { query, push, back, pathname } = useRouter()
   const dispatch = useAppDispatch()
   const [roundTitles, setRoundTitles] = useState<RoundTitles>({ matches: [], third_place_match: [] })
   const meta = useAppSelector(getMeta)
   const scoreMeta = useAppSelector(setScoreMeta)
   const { matches, third_place_match } = useAppSelector(selectors.getTournamentMatches)
-  const isAuth = useAppSelector(getIsAuthenticated)
   const arena = useAppSelector(selectors.getTournamentDetail)
-  const { isNotHeld } = useArenaHelper(arena)
-  useEffect(() => {
-    if (isNotHeld) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
-  }, [isNotHeld])
+  const { isNotHeld, isBattleRoyale } = useArenaHelper(arena)
+  useInterval(() => fetchMatchesInterval(), delay)
+  const fetchMatches = () => {
+    if (query.hash_key) {
+      dispatch(actions.getTournamentMatches(String(query.hash_key)))
+    }
+  }
+  const fetchMatchesInterval = () => {
+    if (query.hash_key) {
+      // eslint-disable-next-line no-console
+      console.log('fetching matches')
+      dispatch(actions.getTournamentMatchesInterval(String(query.hash_key)))
+    }
+  }
 
   useEffect(() => {
-    if (!isAuth) {
-      push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
-    } else fetchMatches()
-  }, [query.hash_key, isAuth])
+    if (isNotHeld || isBattleRoyale) push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, String(query.hash_key)))
+  }, [isNotHeld, isBattleRoyale])
+
+  useEffect(() => {
+    fetchMatches()
+    setInitialPathName(pathname)
+  }, [query.hash_key])
+
   useEffect(() => {
     if (meta.loaded) {
       const matchesLength = matches.length
@@ -53,7 +68,7 @@ const useTournamentMatches = (): {
           setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.final_game')] })
           break
         case 2:
-          setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.final_game'), t('common:arena.matches.semi_final')] })
+          setRoundTitles({ ...roundTitles, matches: [t('common:arena.matches.semi_final'), t('common:arena.matches.final_game')] })
           break
         default: {
           const rounds = Array.from({ length: matchesLength }, (_, i) => i)
@@ -66,11 +81,28 @@ const useTournamentMatches = (): {
     }
   }, [meta.loaded])
 
-  const fetchMatches = () => {
-    if (query.hash_key) {
-      dispatch(actions.getTournamentMatches(String(query.hash_key)))
+  useEffect(() => {
+    if (initialPathName !== null && initialPathName !== pathname) {
+      // eslint-disable-next-line no-console
+      console.log('removing interval')
+      setDelay(null)
     }
-  }
+  }, [pathname])
+
+  useEffect(() => {
+    return () => {
+      try {
+        if (delay !== null) {
+          // eslint-disable-next-line no-console
+          console.log('removing interval')
+          setDelay(null)
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      }
+    }
+  }, [])
 
   const handleBack = () => back()
 

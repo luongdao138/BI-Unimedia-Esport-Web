@@ -3,7 +3,6 @@ import PageWithLayoutType from '@constants/page'
 import { WinnersContainer } from '@containers/arena'
 import { storeWrapper, AppDispatch } from '@store/store'
 import i18n from '@locales/i18n'
-
 import * as selectors from '@store/arena/selectors'
 import * as actions from '@store/arena/actions'
 
@@ -20,13 +19,11 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 })
 
 const ArenaPlacementPage: PageWithLayoutType = () => {
-  return <WinnersContainer />
+  return (
+    <MainLayout patternBg={false} loginRequired={false}>
+      <WinnersContainer />
+    </MainLayout>
+  )
 }
-
-MainLayout.defaultProps = {
-  footer: false,
-  patternBg: false,
-}
-ArenaPlacementPage.Layout = MainLayout
 
 export default ArenaPlacementPage

@@ -1,21 +1,26 @@
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { ArrowBack } from '@material-ui/icons'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
+import { IconButton, Typography, Icon, Box, useMediaQuery, useTheme } from '@material-ui/core'
 import Bracket from '@components/Bracket'
 import ESLoader from '@components/FullScreenLoader'
 import ScoreModal from '@containers/arena/Detail/Partials/ScoreModal'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
-import ESStickyFooter from '@components/StickyFooter'
+import ESContentFooter from './../ContentFooter'
 import useTournamentMatches from './useTournamentMatches'
 import useTournamentDetail from '../../hooks/useTournamentDetail'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-import { TOURNAMENT_STATUS, ROLE } from '@constants/tournament.constants'
 import { TournamentMatchItem } from '@services/arena.service'
+import { Colors } from '@theme/colors'
+import useInterval from '@utils/hooks/useInterval'
+import { useRouter } from 'next/router'
+import moment from 'moment'
+import { use100vh } from 'react-div-100vh'
 
 const ArenaMatches: React.FC = () => {
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const {
@@ -28,10 +33,23 @@ const ArenaMatches: React.FC = () => {
     scoreMeta,
     handleBack,
   } = useTournamentMatches()
+  const height = use100vh() - 60
   const { tournament, meta } = useTournamentDetail()
   const { userProfile } = useGetProfile()
   const [scoreMatch, setScoreMatch] = useState()
   const [showSummaryModal, setShowSummaryModal] = useState(false)
+
+  const router = useRouter()
+  const startDate = moment(tournament?.attributes?.start_date).add(1, 'minutes')
+  const intervalSeconds = 30
+  const delay = intervalSeconds * 1000
+
+  useInterval(() => {
+    const currentDate = moment()
+    const diffSeconds = startDate.diff(currentDate, 'seconds')
+
+    if (diffSeconds < 0 && Math.abs(diffSeconds) <= intervalSeconds) router.reload()
+  }, delay)
 
   const onMatchClick = (match) => {
     if (!match) return
@@ -58,13 +76,6 @@ const ArenaMatches: React.FC = () => {
         }}
       />
     )
-  }
-
-  const showSummary = () => {
-    const data = tournament.attributes
-    const isAdmin = data.my_role === ROLE.ADMIN || data.my_role === ROLE.CO_ORGANIZER
-    const isCompleted = data.status === TOURNAMENT_STATUS.COMPLETED
-    return isAdmin && isCompleted
   }
 
   const getMatch = (headerText: string, _match: TournamentMatchItem) => {
@@ -104,46 +115,53 @@ const ArenaMatches: React.FC = () => {
     )
   }
 
+  const lastRound = matches.length
+
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ height: `${height}px` }}>
       {matches && tournament && (
-        <ESStickyFooter
+        <ESContentFooter
           disabled={false}
-          title={t('common:arena.freeze_button')}
           onClick={() => setShowSummaryModal(true)}
-          show={showSummary()}
-          noScroll
+          show={!tournament.attributes.is_freezed}
+          content={
+            <Box>
+              <Typography className={classes.notYetLabel}>{t('common:arena.match_not_yet')}</Typography>
+            </Box>
+          }
         >
-          <AppBar className={classes.appbar}>
-            <Container maxWidth="lg">
-              <Toolbar className={classes.toolbar}>
-                <IconButton className={classes.backButton} onClick={handleBack}>
-                  <ArrowBack />
-                </IconButton>
-                <Typography variant="h2">{tournament.attributes.title}</Typography>
-              </Toolbar>
-            </Container>
-          </AppBar>
+          <Box className={classes.backContainer}>
+            <IconButton onClick={handleBack} className={classes.iconButtonBg2}>
+              <Icon className="fa fa-arrow-left" fontSize="small" />
+            </IconButton>
+            {!isMobile && (
+              <Typography variant="h2" className={classes.wrapOne}>
+                {tournament.attributes.title}
+              </Typography>
+            )}
+          </Box>
           <div className={classes.content}>
             <Bracket.Container activeRound={10}>
               {matches.map((round, rid) => (
                 <Bracket.Round key={rid} roundNo={rid}>
                   <Typography variant="h3">{roundTitles.matches[rid]}</Typography>
                   {round.map((match, mid) => getMatch(`${rid + 1}-${mid + 1}`, match))}
+                  {!_.isEmpty(third_place_match) && lastRound === rid + 1 && (
+                    <div className={classes.thirdPlaceContainer}>
+                      <Bracket.Round key={'3rd'} roundNo={0}>
+                        <Typography variant="h3">3位決定戦</Typography>
+                        {getMatch(`${rid + 1}-2`, third_place_match[0])}
+                      </Bracket.Round>
+                    </div>
+                  )}
                 </Bracket.Round>
               ))}
             </Bracket.Container>
-            {!_.isEmpty(third_place_match) && (
-              <Bracket.Container activeRound={0}>
-                <Bracket.Round key={'3rd'} roundNo={0}>
-                  {getMatch('1-1', third_place_match[0])}
-                </Bracket.Round>
-              </Bracket.Container>
-            )}
+
             {scoreDialog()}
           </div>
           <SummaryModal open={showSummaryModal} tournament={tournament} handleClose={() => setShowSummaryModal(false)} />
-        </ESStickyFooter>
+        </ESContentFooter>
       )}
       <ESLoader open={meta.pending || matchesMeta.pending} />
     </div>
@@ -154,31 +172,65 @@ export default ArenaMatches
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#212121',
-    paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
     width: '100vw',
     overflow: 'auto',
   },
-  appbar: {
-    top: 60,
-    backgroundColor: '#000000',
-    borderBottom: '1px solid #FFFFFF30',
-    borderTop: '1px solid #FFFFFF30',
-  },
-  toolbar: {
-    paddingLeft: 0,
-  },
   content: {
     padding: theme.spacing(3),
-    paddingTop: theme.spacing(6),
+    paddingTop: 84,
+    height: '100%',
+    overflowY: 'auto',
   },
   backButton: {
-    backgroundColor: '#4D4D4D',
-    padding: 7,
-    marginRight: 16,
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+    marginRight: 20,
+    marginTop: 5,
+  },
+  backContainer: {
+    position: 'fixed',
+    top: 60,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingLeft: theme.spacing(3),
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: Colors.black,
+    opacity: 0.7,
+    zIndex: 100,
+    borderBottom: '1px solid #FFFFFF30',
+  },
+  thirdPlaceContainer: {
+    position: 'absolute',
+    left: 40,
+    top: 'calc(50% + 96px)',
+    '& h3': {
+      top: '12px !important',
+    },
+  },
+  iconButtonBg2: {
+    backgroundColor: Colors.grey[200],
+    '&:focus': {
+      backgroundColor: Colors.grey[200],
+    },
+    marginRight: 20,
+  },
+  wrapOne: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  notYetLabel: {
+    color: Colors.grey[400],
+  },
+  [theme.breakpoints.down('sm')]: {
+    backContainer: {
+      backgroundColor: 'transparent',
+      borderBottom: 'none',
     },
   },
 }))

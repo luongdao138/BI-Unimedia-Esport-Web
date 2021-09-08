@@ -7,11 +7,12 @@ import ButtonPrimary from '@components/ButtonPrimary'
 import ESButton from '@components/Button'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
-import ESModal from '@components/Modal'
+import ESPopup from '@components/Popup'
 import BlankLayout from '@layouts/BlankLayout'
 import { WarningRounded } from '@material-ui/icons'
 import useEntry from './useEntry'
 import ESLoader from '@components/FullScreenLoader'
+import LoginRequired from '@containers/LoginRequired'
 interface CloseRecruitmentModalProps {
   tournament: TournamentDetail
   isRecruiting: boolean
@@ -33,18 +34,20 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
   return (
     <Box>
       <Box className={classes.button}>
-        <ButtonPrimaryOutlined
-          disabled={!isRecruiting}
-          onClick={() => setOpen(true)}
-          leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}
-        >
-          {t('common:tournament.close_recruitment.button_text')}
-        </ButtonPrimaryOutlined>
+        <LoginRequired>
+          <ButtonPrimaryOutlined
+            disabled={!isRecruiting}
+            onClick={() => setOpen(true)}
+            leadingIcon={<Icon className="fas fa-user-slash" fontSize="small" />}
+          >
+            {t('common:tournament.close_recruitment.button_text')}
+          </ButtonPrimaryOutlined>
+        </LoginRequired>
       </Box>
 
-      <ESModal open={open}>
+      <ESPopup open={open}>
         <BlankLayout>
-          <Box paddingY={16} className={classes.childrenContainer}>
+          <Box paddingY={2} className={classes.childrenContainer}>
             <Box pb={4} color={Colors.white} alignItems="center">
               <Typography className={classes.title}>{t('common:tournament.close_recruitment.dialog_title')}</Typography>
             </Box>
@@ -56,14 +59,18 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
 
             <Box className={classes.actionButtonContainer} paddingX={3} paddingTop={18.5}>
               <Box className={classes.actionButton}>
-                <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
-                  {t('common:common.cancel')}
-                </ESButton>
+                <LoginRequired>
+                  <ESButton variant="outlined" round fullWidth size="large" onClick={() => setOpen(false)}>
+                    {t('common:common.cancel')}
+                  </ESButton>
+                </LoginRequired>
               </Box>
               <Box className={classes.actionButton}>
-                <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
-                  {t('common:tournament.close_recruitment.confirm')}
-                </ButtonPrimary>
+                <LoginRequired>
+                  <ButtonPrimary round fullWidth onClick={() => close(tournament.attributes.hash_key)}>
+                    {t('common:tournament.close_recruitment.confirm')}
+                  </ButtonPrimary>
+                </LoginRequired>
               </Box>
             </Box>
 
@@ -73,7 +80,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ tournamen
             </Box>
           </Box>
         </BlankLayout>
-      </ESModal>
+      </ESPopup>
 
       {closeMeta.pending && <ESLoader open={closeMeta.pending} />}
     </Box>

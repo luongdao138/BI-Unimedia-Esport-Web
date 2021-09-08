@@ -55,7 +55,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
   const deselectBtn = (handle, label) => {
     return (
       <Box flexShrink={0} height="100%" display="flex" justifyContent="center" alignItems="center">
-        <ButtonPrimary style={{ padding: '12px' }} size="small" gradient={false} onClick={handle}>
+        <ButtonPrimary px={12} size="small" gradient={false} onClick={handle}>
           {label}
         </ButtonPrimary>
       </Box>
@@ -83,7 +83,7 @@ const InterestedList: React.FC<InterestedListProps> = ({ pid, tournament, open, 
               <Icon className="fa fa-arrow-left" fontSize="small" />
             </IconButton>
             <Box pl={2}>
-              <Typography variant="h2">{t('common:tournament.select_user')}</Typography>
+              <Typography variant="h2">{isTeam ? t('common:tournament.select_team') : t('common:tournament.select_user')}</Typography>
             </Box>
           </Box>
           {selectedItem()}

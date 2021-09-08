@@ -12,7 +12,7 @@ const LoginRequired: React.FC = ({ children }) => {
 
   const handleAuthenticated = (onClick?: () => void) => {
     if (!isAuthenticated) {
-      router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+      router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
     } else {
       if (onClick) onClick()
     }
@@ -20,7 +20,7 @@ const LoginRequired: React.FC = ({ children }) => {
 
   const handleLink = (href: string) => {
     if (!isAuthenticated) {
-      return makeContextualHref({ pathName: ESRoutes.WELCOME })
+      return makeContextualHref({ pathName: ESRoutes.LOGIN })
     }
 
     return href
@@ -33,7 +33,7 @@ const LoginRequired: React.FC = ({ children }) => {
           if (child.props.href) {
             return React.cloneElement(child, {
               href: handleLink(child.props.href),
-              as: isAuthenticated ? child.props.href : ESRoutes.WELCOME,
+              as: isAuthenticated ? child.props.href : ESRoutes.LOGIN,
             })
           }
 

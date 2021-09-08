@@ -5,19 +5,18 @@ import moment from 'moment'
 import { TournamentDetail } from '@services/arena.service'
 import { EditableTypes } from '../useTournamentCreate'
 
-export const getValidationScheme = (data: TournamentDetail, editables: EditableTypes): any => {
+export const getValidationScheme = (data: TournamentDetail, editables: EditableTypes, isEdit: boolean): any => {
   let recruitMinDate = new Date()
   let recruitEndMinDate = new Date()
   let minStartDate = new Date()
-  let minEndDate = new Date()
-  if (!!data && !!data.attributes.status) {
+  const minEndDate = new Date()
+  if (!!data && !!data.attributes.status && isEdit) {
     const beforeRecruit = TournamentHelper.checkStatus(data.attributes.status, 'recruiting')
     const beforeRecruitEnd = TournamentHelper.checkStatus(data.attributes.status, 'recruitment_closed')
     if (!beforeRecruit && data.attributes.acceptance_start_date) recruitMinDate = new Date(data.attributes.acceptance_start_date)
     if (!beforeRecruitEnd && data.attributes.acceptance_end_date) recruitEndMinDate = new Date(data.attributes.acceptance_end_date)
 
     if (!editables.start_date && data.attributes.start_date) minStartDate = new Date(data.attributes.start_date)
-    if (!editables.end_date && data.attributes.end_date) minEndDate = new Date(data.attributes.end_date)
   }
 
   return Yup.object({
@@ -26,7 +25,9 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
         .required(i18n.t('common:common.input_required'))
         .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 }))
         .min(2, i18n.t('common:common.at_least')),
-      overview: Yup.string().max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+      overview: Yup.string()
+        .nullable()
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
       has_prize: Yup.boolean(),
       prize_amount: Yup.string().when('has_prize', {
         is: true,
@@ -35,23 +36,32 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
           .max(40, i18n.t('common:common.validation.char_limit', { char_limit: 40 })),
       }),
       game_title_id: Yup.array().min(1, i18n.t('common:common.input_required')),
-      game_hardware_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
+      game_hardware_id: Yup.number()
+        .min(1, i18n.t('common:common.input_required'))
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1], i18n.t('common:common.input_required')),
     }),
     stepTwo: Yup.object({
       rule: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .matches(/single|battle_royale/, { excludeEmptyString: false }),
+        .matches(/single|battle_royale/, { excludeEmptyString: false, message: i18n.t('common:common.input_required') }),
       participant_type: Yup.number()
         .min(1, i18n.t('common:common.input_required'))
-        .max(10, i18n.t('common:common.too_long'))
-        .integer(i18n.t('common:common.integer')),
-      max_participants: Yup.number()
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1], i18n.t('common:common.input_required')),
+      max_participants: Yup.string()
         .required(i18n.t('common:common.input_required'))
-        .min(2, i18n.t('common:arena.participants_limit'))
-        .max(128, i18n.t('common:arena.participants_limit'))
-        .integer(i18n.t('common:common.integer')),
-      terms_of_participation: Yup.string().max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
-      notes: Yup.string().max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
+        .matches(/^-?(0|[1-9]\d*)$/, { excludeEmptyString: false, message: i18n.t('common:common.validation.only_digit') })
+        .test('participant_boundary', i18n.t('common:arena.participants_limit'), (val) => {
+          const num = parseInt(val)
+          return num >= 2 && num <= 128
+        }),
+      terms_of_participation: Yup.string()
+        .nullable()
+        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
+      notes: Yup.string()
+        .nullable()
+        .max(191, i18n.t('common:common.validation.char_limit', { char_limit: 191 })),
     }),
     stepThree: Yup.object({
       start_date: Yup.date()
@@ -61,7 +71,7 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
       end_date: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))
-        .min(minEndDate, i18n.t('common:common.validation.min_date')),
+        .min(minEndDate, i18n.t('common:tournament_create.end_time_invalid')),
       acceptance_start_date: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))
@@ -69,9 +79,19 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
       acceptance_end_date: Yup.date()
         .nullable()
         .required(i18n.t('common:common.input_required'))
-        .min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
-      area_id: Yup.number().min(1, i18n.t('common:common.input_required')).integer(i18n.t('common:common.integer')),
-      area_name: Yup.string().max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
+        .when('acceptance_start_date', {
+          is: (acceptance_start_date) => {
+            return acceptance_start_date !== null && isEdit
+          },
+          then: Yup.date().min(recruitEndMinDate, i18n.t('common:common.validation.min_date')),
+        }),
+      area_id: Yup.number()
+        .min(1, i18n.t('common:common.input_required'))
+        .integer(i18n.t('common:common.integer'))
+        .notOneOf([-1], i18n.t('common:common.input_required')),
+      address: Yup.string()
+        .nullable()
+        .max(60, i18n.t('common:common.validation.char_limit', { char_limit: 60 })),
       // for cross-fields validations
       recruit_date: Yup.string().when(['acceptance_start_date'], {
         is: (acceptance_start_date) => {
@@ -99,7 +119,9 @@ export const getValidationScheme = (data: TournamentDetail, editables: EditableT
       }),
     }),
     stepFour: Yup.object({
-      organizer_name: Yup.string().max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
+      organizer_name: Yup.string()
+        .nullable()
+        .max(190, i18n.t('common:common.validation.char_limit', { char_limit: 190 })),
     }),
   })
 }

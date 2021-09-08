@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { OutlinedInput, Box, Select, withStyles, IconButton, Icon } from '@material-ui/core'
+import { OutlinedInput, Select, withStyles, IconButton, Icon } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '@components/Button'
@@ -9,6 +9,8 @@ import useSearch from '@containers/Search/useSearch'
 
 interface SearchAreaProps {
   selectData: dataItem[]
+  isLoggedIn: boolean
+  userCode: string
   onSearch: (data: returnItem) => void
 }
 
@@ -24,7 +26,7 @@ interface returnItem {
 
 const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const { t } = useTranslation(['common'])
-  const { searchType, searchKeyword } = useSearch()
+  const { searchType, searchKeyword, setSearch } = useSearch()
   const { selectData, onSearch } = props
   const [hasValue, setHasvalue] = useState<boolean>(false)
   const [option, setOption] = useState<number>(1)
@@ -51,13 +53,15 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
   const onClear = () => {
     setHasvalue(false)
     setValue('')
+    setSearch({ type: searchType, keyword: '' })
   }
 
   const onSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOption(Number(e.target.value))
   }
 
-  const handleSearch = () => {
+  const handleSearch = (event) => {
+    event.preventDefault()
     onSearch({
       value: value,
       type: option,
@@ -76,17 +80,41 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
     }
   }
 
+  const renderSearchInput = () => {
+    if (props.isLoggedIn) {
+      return (
+        <OutlinedInput
+          autoComplete="on"
+          onChange={onChange}
+          placeholder={t('common:search.search_placeholder')}
+          id={`es_${props.userCode}`}
+          name={`es_${props.userCode}`}
+          value={value}
+          classes={{ root: classes.input }}
+          margin="dense"
+          endAdornment={renderIcon()}
+        />
+      )
+    } else {
+      return (
+        <OutlinedInput
+          autoComplete={'off'}
+          onChange={onChange}
+          placeholder={t('common:search.search_placeholder')}
+          id={'search'}
+          name="search"
+          value={value}
+          classes={{ root: classes.input }}
+          margin="dense"
+          endAdornment={renderIcon()}
+        />
+      )
+    }
+  }
+
   return (
-    <Box className={classes.searchCont}>
-      <OutlinedInput
-        onChange={onChange}
-        placeholder={t('common:search.search_placeholder')}
-        id={'search'}
-        value={value}
-        classes={{ root: classes.input }}
-        margin="dense"
-        endAdornment={renderIcon()}
-      />
+    <form onSubmit={handleSearch} className={classes.searchCont}>
+      {renderSearchInput()}
       <Select
         id={'input'}
         variant="outlined"
@@ -108,7 +136,7 @@ const SearchArea: React.FC<SearchAreaProps> = (props) => {
       <Button onClick={handleSearch} className={classes.searchBtn} variant="contained" color="primary">
         {t('common:search.search')}
       </Button>
-    </Box>
+    </form>
   )
 }
 

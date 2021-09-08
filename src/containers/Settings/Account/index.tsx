@@ -84,6 +84,7 @@ const AccountSettingsContainer: React.FC = () => {
           route={hasEmail && !user.is_social ? '/account_settings' : SNS}
           onChangeEmail={openEmailModal}
           showButton={!user.is_social}
+          is_social_email={user.is_social && hasEmail}
         />
         <SettingsItem
           title={t('common.password')}
@@ -109,6 +110,17 @@ const AccountSettingsContainer: React.FC = () => {
           onClose={handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          BackdropProps={{
+            onTouchMove: (e) => {
+              e.preventDefault()
+            },
+            onTouchStart: (e) => {
+              e.preventDefault()
+            },
+            onTouchEnd: (e) => {
+              e.preventDefault()
+            },
+          }}
         >
           <DialogContent>
             <Box className={classes.container}>

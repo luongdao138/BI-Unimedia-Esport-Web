@@ -10,7 +10,6 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { Colors } from '@theme/colors'
 import { TournamentDetail } from '@services/arena.service'
 import { UserProfile } from '@services/user.service'
-import ESLink from '@components/Link'
 import ButtonPrimary from '@components/ButtonPrimary'
 import SummaryModal from '@containers/arena/Detail/Partials/SummaryModal'
 import useArenaHelper from '@containers/arena/hooks/useArenaHelper'
@@ -18,6 +17,7 @@ import LoginRequired from '@containers/LoginRequired'
 import TeamEntryEditModal from './TeamEntryEditModal'
 import UnjoinModal from './UnjoinModal'
 import InidividualEntryEditModal from './InidividualEntryEditModal'
+import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 
 interface Props {
   tournament: TournamentDetail
@@ -30,10 +30,8 @@ const ActionComponent: React.FC<Props> = (props) => {
   const { t } = useTranslation(['common'])
 
   const {
-    toMatches,
     isModerator,
     isTeam,
-    isInProgress,
     isRecruiting,
     isReady,
     isCompleted,
@@ -41,6 +39,7 @@ const ActionComponent: React.FC<Props> = (props) => {
     isRecruitmentClosed,
     isNotHeld,
     isAdminJoined,
+    isTeamLeader,
     isEntered,
   } = useArenaHelper(tournament)
 
@@ -51,39 +50,40 @@ const ActionComponent: React.FC<Props> = (props) => {
   const [teamEntryEditShow, setTeamEntryEditShow] = useState<boolean>(false)
 
   const buildArenaPeriodValue = () => {
-    const entryStartDate = TournamentHelper.formatDate(tournament.attributes.acceptance_start_date)
-    const entryEndDate = TournamentHelper.formatDate(tournament.attributes.acceptance_end_date)
+    const beforeEntry = isReady || isRecruiting
+    const targetStartDate = beforeEntry ? tournament.attributes.acceptance_start_date : tournament.attributes.start_date
+    const targetEndDate = beforeEntry ? tournament.attributes.acceptance_end_date : tournament.attributes.end_date
+    const entryStartDate = TournamentHelper.formatDate(targetStartDate)
+    const entryEndDate = TournamentHelper.formatDate(targetEndDate)
 
     return `${entryStartDate} ～ ${entryEndDate}`
   }
   const buildArenaTitle = () => {
-    const arenaStatus = isRecruiting
-      ? t('common:tournament.entry_period')
-      : isRecruitmentClosed || isInProgress || isCompleted
-      ? t('common:tournament.holding_period')
-      : ''
+    const arenaStatus = isReady || isRecruiting ? t('common:tournament.entry_period') : t('common:tournament.holding_period')
 
     return `${arenaStatus}`
   }
 
   const entryButton = () => {
     return (
-      <LoginRequired>
-        <Box className={classes.actionButton}>
+      <Box className={classes.actionButton}>
+        <LoginRequired>
           <ButtonPrimary disabled={isReady} round fullWidth onClick={() => (isTeam ? setTeamEntryShow(true) : setSoloEntryShow(true))}>
             {t('common:tournament.join')}
           </ButtonPrimary>
-        </Box>
-      </LoginRequired>
+        </LoginRequired>
+      </Box>
     )
   }
 
   const entryEditButton = () => {
     return (
       <Box className={classes.actionButton}>
-        <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
-          {t('common:tournament.check_entry')}
-        </ButtonPrimary>
+        <LoginRequired>
+          <ButtonPrimary round fullWidth onClick={() => (isTeam ? setTeamEntryEditShow(true) : setSoloEntryEditShow(true))}>
+            {t('common:tournament.check_entry')}
+          </ButtonPrimary>
+        </LoginRequired>
       </Box>
     )
   }
@@ -102,10 +102,24 @@ const ActionComponent: React.FC<Props> = (props) => {
   }
 
   const renderEntry = () => {
-    if (isEntered || isAdminJoined) {
+    if ((isEntered && isTeamLeader) || isAdminJoined) {
       return entryEditButton()
+    } else if (isRecruiting || isReady) {
+      return entryButton()
     }
-    return entryButton()
+  }
+
+  const renderSubActionButton = () => {
+    const { is_freezed, participant_count, status } = tournament.attributes
+    if (status === TOURNAMENT_STATUS.COMPLETED) {
+      if (is_freezed) {
+        if (participant_count > 1) {
+          return <SubActionButtons tournament={tournament} />
+        }
+      }
+    } else if (!isCancelled && !isNotHeld) {
+      return <SubActionButtons tournament={tournament} />
+    }
   }
 
   return (
@@ -120,35 +134,30 @@ const ActionComponent: React.FC<Props> = (props) => {
           </Box>
         </Box>
         {children}
-        {!isCancelled && !isNotHeld && <SubActionButtons tournament={tournament} />}
+        {renderSubActionButton()}
       </Box>
 
-      {isRecruitmentClosed && isModerator && (
-        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
-          <Typography color="primary">{t('common:tournament.confirm_brackets')}</Typography>
-          <Box color={Colors.grey[300]} maxWidth={400} textAlign="center" mt={2}>
-            <Typography variant="body2">
-              {t('common:tournament.until_deadline')}
-              <ESLink onClick={toMatches}>{t('common:tournament.brackets')}</ESLink>
-              {t('common:tournament.confirm_brackets_desc_tail')}
-            </Typography>
-          </Box>
-        </Box>
-      )}
-
-      {(isRecruiting || isReady) && (
+      {isRecruiting || isReady ? (
         <>
           {isModerator ? renderAdminEntry() : renderEntry()}
-          {isAdminJoined || isEntered ? <UnjoinModal tournament={tournament} /> : null}
+          {isAdminJoined || (isEntered && isTeamLeader) ? <UnjoinModal tournament={tournament} /> : null}
           {isModerator && isRecruiting && (
             <Box pb={2} className={classes.description}>
               <Typography variant="body2">{t('common:tournament.close_recruitment.description')}</Typography>
             </Box>
           )}
         </>
+      ) : (
+        !TournamentHelper.isStatusPassed(tournament.attributes.status, TOURNAMENT_STATUS.COMPLETED) && renderEntry()
       )}
 
-      {isModerator && isCompleted && !isNotHeld && (
+      {isRecruitmentClosed && isModerator && !tournament.attributes.is_freezed && (
+        <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+          <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
+        </Box>
+      )}
+
+      {isModerator && isCompleted && !isNotHeld && tournament.attributes.participant_count > 1 && (
         <Box className={classes.actionButton}>
           <ButtonPrimary round fullWidth onClick={() => setShowSummaryModal(true)}>
             {t('common:tournament.summary')}

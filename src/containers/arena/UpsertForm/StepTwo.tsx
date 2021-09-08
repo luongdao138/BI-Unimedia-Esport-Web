@@ -70,6 +70,9 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           size="small"
           disabled={!editables.participant_type}
         >
+          <option disabled value={-1}>
+            {i18n.t('common:please_select')}
+          </option>
           {PARTICIPATION_TYPES.map((type, index) => (
             <option value={type.value} key={index}>
               {type.label}
@@ -80,7 +83,6 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
       <Box pb={4} display="flex" flexDirection="row" alignItems="center" width={122}>
         <ESFastInput
           id="max_participants"
-          type="number"
           required={true}
           className={classes.input}
           labelPrimary={i18n.t('common:tournament_create.max_participants')}
@@ -93,6 +95,7 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           error={formik.touched?.stepTwo?.max_participants && !!formik.errors?.stepTwo?.max_participants}
           size="small"
           disabled={!editables.max_participants}
+          nowrapHelperText
         />
       </Box>
       <Box pb={4}>

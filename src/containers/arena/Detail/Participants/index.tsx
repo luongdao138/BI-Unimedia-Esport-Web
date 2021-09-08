@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { MouseEventHandler, useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
-import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
 import useParticipants from './useParticipants'
 import UserListItem from '@components/UserItem'
@@ -10,13 +9,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import BlankLayout from '@layouts/BlankLayout'
 import TeamMemberItemExpanded from '../Partials/TeamMemberItemExpanded'
-import ESButton from '@components/Button'
 import { ParticipantsResponse, TournamentDetail } from '@services/arena.service'
 import { ROLE } from '@constants/tournament.constants'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import _ from 'lodash'
 import TeamEntryEditModal from '../Partials/ActionComponent/TeamEntryEditModal'
 import InidividualEntryEditModal from '../Partials/ActionComponent/InidividualEntryEditModal'
+import ESButton from '@components/Button'
+import useReturnHref from '@utils/hooks/useReturnHref'
 
 export interface ParticipantsProps {
   detail: TournamentDetail
@@ -24,39 +24,28 @@ export interface ParticipantsProps {
 
 const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
   const { t } = useTranslation(['common'])
-  const data = detail.attributes
-  const isTeam = data.participant_type > 1
+  const data = detail?.attributes
+  const isTeam = data?.participant_type > 1
   const unit = isTeam ? t('common:common.team') : t('common:common.man')
-  const hash_key = data.hash_key
+  const hash_key = data?.hash_key
   const classes = useStyles()
-  const [open, setOpen] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [selectedParticipant, setSelectedParticipant] = useState(null as ParticipantsResponse | null)
   const [members, setMembers] = useState([])
 
-  const { participants, getParticipants, resetParticipants, resetMeta, page, meta } = useParticipants()
+  const { participants, getParticipants, resetParticipants, resetMeta, page, meta, followStateChanged } = useParticipants()
   const { userProfile } = useGetProfile()
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const { handleReturn } = useReturnHref()
 
   useEffect(() => {
-    if (open) {
+    if (data) {
       getParticipants({ page: 1, hash_key: hash_key, role: data.is_freezed ? ROLE.PARTICIPANT : undefined })
-    } else {
-      resetParticipants()
     }
-
     return () => {
       resetParticipants()
       resetMeta()
     }
-  }, [open])
+  }, [data])
 
   useEffect(() => {
     setMembers(participants)
@@ -80,9 +69,11 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   const isMyTeam = (participant: ParticipantsResponse) => {
     const myInfo = _.get(detail, 'attributes.my_info', [])
-    const interestedInfo = myInfo.find((info) => info.role === 'interested')
-    if (!interestedInfo) return false
-    return `${interestedInfo.team_id}` === `${getTeamId(participant)}`
+    const interestedInfos = myInfo
+      .filter((info) => info.role === ROLE.INTERESTED || info.role === ROLE.PARTICIPANT)
+      .map((info) => `${info.team_id}`)
+    if (!interestedInfos || !interestedInfos.length) return false
+    return interestedInfos.includes(`${getTeamId(participant)}`)
   }
 
   const isMe = (participant: ParticipantsResponse) => {
@@ -95,18 +86,17 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
 
   return (
     <div>
-      <ESButton variant="outlined" fullWidth onClick={handleClickOpen}>
-        {data.is_freezed ? t('common:tournament.participants') : t('common:tournament.entry_members')}
-      </ESButton>
-      <ESModal open={open} handleClose={handleClose}>
+      {data && (
         <BlankLayout>
           <Box pt={7.5} className={classes.topContainer}>
             <Box py={2} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+              <IconButton className={classes.iconButtonBg} onClick={handleReturn}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
-                <Typography variant="h2">{t('common:tournament.participant.back')}</Typography>
+                <Typography variant="h2">
+                  {data.is_freezed ? t('common:tournament.participant.back') : t('common:tournament.entry_back')}
+                </Typography>
               </Box>
             </Box>
             <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
@@ -114,7 +104,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 <Box display="flex" flexDirection="row" alignItems="flex-end">
                   <Box mr={2}>
                     <Typography variant="h3" className={classes.countLabel}>
-                      {t('common:tournament.number_of_entries')}
+                      {data.is_freezed ? t('common:tournament.number_of_participants') : t('common:tournament.number_of_entries')}
                     </Typography>
                   </Box>
                   <Typography variant="h3" style={{ fontSize: 24, fontWeight: 'bold' }}>
@@ -136,7 +126,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 </Box>
               </Box>
             </Box>
-            <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
               <InfiniteScroll
                 dataLength={participants.length}
                 next={fetchMoreData}
@@ -151,20 +141,17 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                     </div>
                   )
                 }
-                endMessage={
-                  <p style={{ textAlign: 'center' }}>
-                    <b>{t('common:infinite_scroll.message')}</b>
-                  </p>
-                }
               >
                 {isTeam
                   ? members.map((participant, i) => (
                       <Box key={`team${i}`} py={1}>
                         <TeamMemberItemExpanded
+                          hideFollow={isMyTeam(participant) ? true : false}
                           team={participant}
                           yellowTitle={isMyTeam(participant)}
                           handleClick={() => onTeamClick(participant)}
                           memberClick={() => onTeamClick(participant)}
+                          onFollowStateChange={followStateChanged}
                         />
                       </Box>
                     ))
@@ -179,39 +166,51 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                       />
                     ))}
               </InfiniteScroll>
-              {!selectedParticipant ? null : isTeam ? (
-                <TeamEntryEditModal
-                  tournament={detail}
-                  userProfile={userProfile}
-                  previewMode
-                  open={true}
-                  initialTeamId={getTeamId(selectedParticipant)}
-                  onClose={() => setSelectedParticipant(null)}
-                  myTeam={isMyTeam(selectedParticipant)}
-                  toDetail={() => {
-                    setSelectedParticipant(null)
-                    setOpen(false)
-                  }}
-                />
-              ) : (
-                <InidividualEntryEditModal
-                  tournament={detail}
-                  previewMode
-                  open={true}
-                  initialParticipantId={`${selectedParticipant.id}`}
-                  onClose={() => setSelectedParticipant(null)}
-                  me={isMe(selectedParticipant)}
-                  toDetail={() => {
-                    setSelectedParticipant(null)
-                    setOpen(false)
-                  }}
-                />
-              )}
             </div>
           </Box>
         </BlankLayout>
-      </ESModal>
+      )}
+      {!selectedParticipant ? null : isTeam ? (
+        <TeamEntryEditModal
+          tournament={detail}
+          userProfile={userProfile}
+          previewMode
+          open={true}
+          initialTeamId={getTeamId(selectedParticipant)}
+          onClose={() => setSelectedParticipant(null)}
+          myTeam={isMyTeam(selectedParticipant)}
+          toDetail={() => {
+            setSelectedParticipant(null)
+          }}
+        />
+      ) : (
+        <InidividualEntryEditModal
+          tournament={detail}
+          previewMode
+          open={true}
+          initialParticipantId={`${selectedParticipant.id}`}
+          onClose={() => setSelectedParticipant(null)}
+          me={isMe(selectedParticipant)}
+          toDetail={() => {
+            setSelectedParticipant(null)
+          }}
+        />
+      )}
     </div>
+  )
+}
+
+interface ParticipantsButtonProps {
+  onClick?: MouseEventHandler<HTMLButtonElement>
+  isFreezed: boolean
+}
+
+export const ParticipantsButton: React.FC<ParticipantsButtonProps> = ({ onClick, isFreezed }) => {
+  const { t } = useTranslation('common')
+  return (
+    <ESButton variant="outlined" fullWidth onClick={onClick}>
+      {isFreezed ? t('tournament.participants') : t('tournament.entry_members')}
+    </ESButton>
   )
 }
 
@@ -252,6 +251,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+    height: 600,
+    paddingRight: 10,
   },
   [theme.breakpoints.down('sm')]: {
     container: {
@@ -260,6 +261,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    topContainer: {
+      paddingTop: 0,
+    },
+    list: {
+      height: 'Calc(100vh - 131px)',
     },
   },
 }))

@@ -4,14 +4,14 @@ import { Close as CloseIcon } from '@material-ui/icons'
 import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
-  root: (props: { isGameList: boolean }) => ({
+  root: {
     fontSize: theme.typography.body1.fontSize,
     height: 36,
-    maxWidth: props.isGameList ? '100%' : theme.spacing(20),
+    maxWidth: theme.spacing(20),
     borderRadius: 4,
     color: theme.palette.text.primary,
     backgroundColor: Colors.grey['200'],
-  }),
+  },
   colorPrimary: {
     backgroundColor: `${Colors.primary} !important`,
   },
@@ -46,7 +46,7 @@ const ESChip: React.FC<ChipProps & { isGameList?: boolean }> = ({ classes: _clas
   const iconProps: ChipProps = {
     deleteIcon: <CloseIcon />,
   }
-  return <Chip classes={classes} {...rest} {...iconProps} />
+  return <Chip classes={classes} {...rest} style={{ maxWidth: isGameList ? '100%' : 160 }} {...iconProps} />
 }
 
 export default ESChip

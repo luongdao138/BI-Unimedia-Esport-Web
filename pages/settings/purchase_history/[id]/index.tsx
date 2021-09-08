@@ -5,7 +5,7 @@ import PurchaseDetail from '@containers/PurchaseHistory/purchaseDetail'
 
 const PurchaseHistoryDetail: PageWithLayoutType = () => {
   return (
-    <MainLayout footer={false}>
+    <MainLayout loginRequired={true}>
       <PurchaseDetail />
     </MainLayout>
   )

@@ -3,11 +3,15 @@ import PageWithLayoutType from '@constants/page'
 import ArenaCreateContainer from '@containers/arena/UpsertForm'
 import { GetStaticProps } from 'next'
 import i18n from '@locales/i18n'
-const ArenaCreatePage: PageWithLayoutType = () => {
-  return <ArenaCreateContainer />
-}
+import { withAuth } from '@utils/withAuth'
 
-ArenaCreatePage.Layout = BlankLayout
+const ArenaCreatePage: PageWithLayoutType = () => {
+  return (
+    <BlankLayout>
+      <ArenaCreateContainer />
+    </BlankLayout>
+  )
+}
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
@@ -17,4 +21,4 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default ArenaCreatePage
+export default withAuth(ArenaCreatePage)

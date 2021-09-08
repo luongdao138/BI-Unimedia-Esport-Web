@@ -73,6 +73,7 @@ export const URI = {
   NOTIFICATION_UPDATE_SETTINGS: '/v2/notification/settings_update',
   S3_PRESIGNED_URL: '/v2/s3/presigned_url',
   AVATAR_PRESIGNED_URL: '/v2/avatar_presigned_url',
+  COVER_PRESIGNED_URL: '/v2/cover_presigned_url',
   LOGOUT: '/v2/auth/logout',
   USER_RECOMMENDED_EVENT: '/v2/users/recommended_events', //TODO skip 2.0
   TOURNAMENT_FOLLOWERS: '/v2/users/followings_tournament',
@@ -97,4 +98,10 @@ export const URI = {
   PURCHASE_HISTORY_DETAIL: '/v2/purchases/:id/details',
   MESSAGE_TOURNAMENT_ID: '/v2/tournaments',
   PURCHASE_CANCEL: '/v1/purchases/:id/cancel',
+  PR_TOP: '/v1/live_events/pr',
+  LIVE_EVENTS_TOP: '/v1/live_events/top',
+  LIVE_EVENTS_TICKET_PURCHASE_URI: '/v1/purchases',
+  LIVE_EVENT_PURCHASE_GMO_CALLBACK: '/v1/purchases/gmo_response_handle',
+  LIVE_EVENT_ARCHIVE_PLAY: '/v1/live_events/archive_view_count',
+  IMAGE_REMOVE: '/v2/profile_images/remove',
 }

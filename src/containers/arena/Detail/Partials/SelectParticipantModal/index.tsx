@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SetParticipantParams, TournamentDetail, TournamentMatchItem, MatchParticipant } from '@services/arena.service'
-import {
-  Typography,
-  Box,
-  makeStyles,
-  Theme,
-  IconButton,
-  Icon,
-  ThemeProvider,
-  createMuiTheme,
-  useMediaQuery,
-  useTheme,
-} from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, IconButton, Icon, useMediaQuery, useTheme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import BlankLayout from '@layouts/BlankLayout'
@@ -21,6 +10,7 @@ import ESModal from '@components/Modal'
 import InterestedList from './InterestedList'
 import { PARTICIPANT_TYPE, ROLE } from '@constants/tournament.constants'
 import { Meta } from '@store/metadata/actions/types'
+import LoginRequired from '@containers/LoginRequired'
 
 interface SelectParticipantModalProps {
   meta: Meta
@@ -115,27 +105,18 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
         <Box width={'100%'} display="flex" flexDirection="column" alignItems="center">
           <ESAvatar size={120} alt={_name || ''} src={avatar} />
           <Box pt={1}></Box>
-          <Typography noWrap className={classes.label} variant="h3">
+          <Typography className={classes.label} variant="h3">
             {_name || ''}
           </Typography>
-          {!isTeam && (
-            <Typography noWrap className={classes.label}>
-              {user ? `${t('common:common.at')}${user.user_code}` : ''}
-            </Typography>
-          )}
+          {!isTeam && <Typography className={classes.label}>{user ? `${t('common:common.at')}${user.user_code}` : ''}</Typography>}
         </Box>
 
-        <Box display="flex" alignItems="flex-end">
-          <ButtonPrimary
-            style={{ padding: '12px 24px' }}
-            disabled={meta.pending}
-            size="small"
-            round={false}
-            gradient={false}
-            onClick={() => handleSelect(type)}
-          >
-            {t('common:tournament.set_participants')}
-          </ButtonPrimary>
+        <Box display="flex" alignItems="flex-end" pt={2}>
+          <LoginRequired>
+            <ButtonPrimary px={12} disabled={meta.pending} size="small" round={false} gradient={false} onClick={() => handleSelect(type)}>
+              {t('common:tournament.set_participants')}
+            </ButtonPrimary>
+          </LoginRequired>
         </Box>
       </Box>
     )
@@ -152,13 +133,11 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
                   <Icon className="fa fa-arrow-left" fontSize="small" />
                 </IconButton>
                 <Box pl={2}>
-                  <Typography variant="h2">{t('common:tournament.match_setting')}</Typography>
+                  <Typography variant="h2">
+                    {t('common:tournament.match_setting')}
+                    {` (#${match.round_no + 1}${t('common:common.dash')}${match.match_no + 1})`}
+                  </Typography>
                 </Box>
-              </Box>
-              <Box pb={6} pt={6} textAlign="center">
-                <ThemeProvider theme={theme}>
-                  <Typography variant="body1">{`${match.round_no + 1} ${t('common:common.dash')} ${match.match_no + 1}`}</Typography>
-                </ThemeProvider>
               </Box>
               <Box display="flex" justifyContent="space-between" padding={1}>
                 {participantItem(match.home_user, match.home_avatar, PARTICIPANT_TYPE.HOME)}
@@ -193,18 +172,6 @@ const SelectParticipantModal: React.FC<SelectParticipantModalProps> = ({
   )
 }
 
-const theme = createMuiTheme({
-  overrides: {
-    MuiTypography: {
-      body1: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.white,
-      },
-    },
-  },
-})
-
 const useStyles = makeStyles((theme: Theme) => ({
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
@@ -217,9 +184,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     width: '100%',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     textAlign: 'center',
+    wordBreak: 'break-word',
   },
   vsLabel: {
     fontSize: 40,
@@ -227,12 +193,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   itemWrapper: {
     width: 196,
-    height: 240,
+    minHeight: 240,
   },
   [theme.breakpoints.down('sm')]: {
     itemWrapper: {
       width: 133,
-      height: 220,
+      minHeight: 220,
     },
     topContainer: {
       paddingTop: 0,

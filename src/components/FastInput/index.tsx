@@ -8,22 +8,23 @@ export type InputProps = {
   labelPrimary?: string | ReactElement
   labelSecondary?: ReactElement
   required?: boolean
+  nowrapHelperText?: boolean
   size?: 'big' | 'small'
 }
 
 const ESFastInput: React.FC<OutlinedInputProps & InputProps> = (props) => {
-  const [value, setValue] = useState(props.value)
+  const [value, setValue] = useState('')
 
   useEffect(() => {
-    if (_.isEmpty(props.value)) {
-      setValue(props.value)
+    if (props.value !== null && props.value !== undefined) {
+      setValue(String(props.value))
     }
   }, [props.value])
 
   const debouncedChangeHandler = useCallback(
     _.debounce((e) => {
       props.onChange(e)
-    }, 500),
+    }, 300),
     []
   )
 

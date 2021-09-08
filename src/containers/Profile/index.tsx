@@ -17,15 +17,14 @@ import { Colors } from '@theme/colors'
 import useUserData from './useUserData'
 import useBlock from './useBlock'
 import useUnblock from './useUnblock'
-import ESFollowers from '@containers/Followers'
-import ESFollowing from '@containers/Following'
+import FollowUsers from '@containers/FollowUsers'
 import { useContextualRouting } from 'next-use-contextual-routing'
 import ESReport from '@containers/Report'
 import ESLoader from '@components/Loader'
 import ESToast from '@components/Toast'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
-import { REPORT_TYPE } from '@constants/common.constants'
+import { FOLLOW_STATES, REPORT_TYPE } from '@constants/common.constants'
 import { UPLOADER_TYPE } from '@constants/image.constants'
 interface WithRouterProps {
   router: NextRouter
@@ -65,6 +64,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     meta,
     getMemberProfile,
     profileImageChange,
+    profileImageRemove,
     setFollowState,
     clearMemberProfile,
   } = useUserData(raw_code)
@@ -119,7 +119,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
   const cover = attr.cover_url ?? null
   const isFollowing = attr.is_following
 
-  const edit = () => router.push(ESRoutes.PROFILE_EDIT)
+  const edit = () => {
+    router.push(makeContextualHref({ pathName: ESRoutes.PROFILE_EDIT }), ESRoutes.PROFILE_EDIT, { shallow: true })
+  }
   const dm = () => router.push(`${ESRoutes.MESSAGE}dm/${attr.user_code}`)
 
   const handleReportOpen = () => setOpenReport(true)
@@ -133,6 +135,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             editable={!isOthers}
             onChange={(f: File, blob: any) => {
               isOthers ? null : profileImageChange(f, UPLOADER_TYPE.COVER, blob)
+            }}
+            onRemove={(path: string, file_type: number) => {
+              isOthers ? null : profileImageRemove(path, file_type)
             }}
           />
           {offset > 150 ? (
@@ -157,6 +162,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
               onChange={(f: File, blob: any) => {
                 isOthers ? null : profileImageChange(f, UPLOADER_TYPE.AVATAR, blob)
               }}
+              onRemove={(path: string, file_type: number) => {
+                isOthers ? null : profileImageRemove(path, file_type)
+              }}
             />
             {isOthers ? (
               <Box className={classes.menu}>
@@ -180,7 +188,14 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                       {i18n.t('common:profile.unblock')}
                     </ESButton>
                   ) : isFollowing ? (
-                    <ESButton variant="outlined" round className={classes.button} disabled={disable} onClick={setFollowState}>
+                    <ESButton
+                      variant="contained"
+                      color="primary"
+                      round
+                      className={classes.button}
+                      disabled={disable}
+                      onClick={setFollowState}
+                    >
                       {i18n.t('common:profile.following')}
                     </ESButton>
                   ) : (
@@ -217,7 +232,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
                     onClick={() =>
                       isAuthenticated
                         ? handleReportOpen()
-                        : router.push(makeContextualHref({ pathName: ESRoutes.WELCOME }), ESRoutes.WELCOME, { shallow: true })
+                        : router.push(makeContextualHref({ pathName: ESRoutes.LOGIN }), ESRoutes.LOGIN, { shallow: true })
                     }
                   >
                     {i18n.t('common:user_report.report_menu')}
@@ -239,8 +254,8 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
             <Typography className={classes.wrapOne}>@{userCode}</Typography>
           </Box>
           <Box display="flex">
-            <ESFollowing user_code={isOthers ? userCode : null} isOthers={isOthers} />
-            <ESFollowers user_code={isOthers ? userCode : null} isOthers={isOthers} />
+            <FollowUsers user_code={isOthers ? userCode : null} fromType={FOLLOW_STATES.FOLLOWING} />
+            <FollowUsers user_code={isOthers ? userCode : null} fromType={FOLLOW_STATES.FOLLOWERS} />
           </Box>
         </Grid>
         {isAuthenticated ? (
@@ -259,9 +274,9 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     return (
       <Grid item xs={12}>
         <ESTabs value={tab} onChange={(_, v) => setTab(v)} className={classes.tabs}>
-          <ESTab label={i18n.t('common:user_profile.profile')} value={0} />
-          <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} />
-          <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} />
+          <ESTab label={i18n.t('common:user_profile.profile')} value={0} classes={{ root: classes.tabRoot }} />
+          <ESTab label={i18n.t('common:user_profile.tournament_history')} value={1} classes={{ root: classes.tabRoot }} />
+          <ESTab label={i18n.t('common:user_profile.activity_log')} value={2} classes={{ root: classes.tabRoot }} />
         </ESTabs>
       </Grid>
     )
@@ -419,5 +434,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  tabRoot: {},
+  [theme.breakpoints.down('sm')]: {
+    tabRoot: {
+      minWidth: 'unset',
+    },
   },
 }))

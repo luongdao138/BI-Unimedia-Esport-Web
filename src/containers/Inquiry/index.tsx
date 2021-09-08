@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next'
 import HeaderWithButton from '@components/HeaderWithButton'
 import ESInput from '@components/Input'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
-
+import Yup from '@utils/Yup'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { InquiryParams } from '@services/settings.service'
 import useInquiry from './useInquiry'
@@ -34,16 +33,16 @@ const ESInquiry: React.FC = () => {
   const hasEmail = CommonHelper.hasEmail(currentUserEmail)
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required(t('inquiry.title_required')).max(100, t('common.too_long')),
+    title: Yup.string().required(t('inquiry.title_required')).max(100),
 
     email: Yup.string()
-      .required(t('inquiry.email_required'))
-      .max(100, t('common.too_long'))
+      .required(t('inquiry.error.email'))
+      .max(100)
       .test('email', t('inquiry.error.email'), (value) => {
         return CommonHelper.validateEmail(value)
       }),
 
-    content: Yup.string().required(t('inquiry.desc_required')).max(1000, t('common.too_long')),
+    content: Yup.string().required(t('inquiry.desc_required')).max(255),
   })
 
   const { handleChange, values, handleSubmit, errors, touched, handleBlur } = useFormik<InquiryParams>({
@@ -178,7 +177,7 @@ const ESInquiry: React.FC = () => {
                 helperText={touched.email && errors.email}
                 error={touched.email && !!errors.email}
                 rows={8}
-                disabled={showPreview}
+                disabled={!!hasEmail || showPreview}
                 readOnly={!!hasEmail}
                 size="small"
               />

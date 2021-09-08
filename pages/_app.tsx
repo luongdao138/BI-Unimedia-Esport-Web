@@ -21,11 +21,18 @@ import 'src/locales/i18n'
 import 'swiper/swiper.min.css'
 import 'swiper/components/pagination/pagination.min.css'
 import 'swiper/components/navigation/navigation.min.css'
+import '/src/components/LiveSlider/pagination.scss'
 import SimpleReactLightbox from 'simple-react-lightbox'
 import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
+import 'video.js/src/css/video-js.scss'
+import 'src/containers/VideoPlayer/theme.scss'
+import 'src/containers/VideoPlayer/position.scss'
+import 'src/containers/VideoPlayer/customPlugins/plugin.scss'
+import 'src/theme/globalcss/layout.scss'
+
 type Props = AppProps & {
   Component: PageWithLayoutType
   pageProps: any
@@ -44,7 +51,6 @@ const App = ({ Component, pageProps }: Props) => {
   const accessToken = store.getState().auth.user?.accessToken
   authorizationProvider(store)
   useNgWords(store)
-
   useEffect(() => {
     store.dispatch({
       type: `${WEBSOCKET_PREFIX}:CONNECT`,

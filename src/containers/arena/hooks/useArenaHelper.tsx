@@ -23,10 +23,13 @@ const useArenaHelper = (
   isNotHeld: boolean
   isReady: boolean
   isEntered: boolean
+  isUnselected: boolean
   toEdit: () => void
   toCreate: () => void
   isAdminJoined: boolean
+  isTeamLeader: boolean
   toDetail: () => void
+  toParticipants: () => void
 } => {
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
@@ -48,16 +51,24 @@ const useArenaHelper = (
   const isNotHeld = isCompleted && !isFreezed
   const isReady = status === TOURNAMENT_STATUS.READY
   const isEntered = tournament?.attributes?.is_entered
+  const isUnselected = isEntered && isFreezed && myRole === ROLE.INTERESTED
 
   const checkAdminJoined = () => {
+    if (!isModerator) return false
     const myInfoList = _.get(tournament, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return false
-    for (const myInfo of myInfoList) {
-      if (_.get(myInfo, 'role', '') === 'interested') return true
-    }
-    return false
+
+    return _.some(myInfoList, { role: ROLE.INTERESTED })
   }
   const isAdminJoined = checkAdminJoined()
+
+  const checkTeamLeader = () => {
+    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    if (!_.isArray(myInfoList)) return false
+
+    return _.some(myInfoList, { is_leader: true })
+  }
+  const isTeamLeader = checkTeamLeader()
 
   const toCreate = () => router.push(makeContextualHref({ pathName: '/arena/create' }), '/arena/create', { shallow: true })
   const toEdit = () =>
@@ -66,7 +77,7 @@ const useArenaHelper = (
     })
 
   const toMatches = () => {
-    if (isModerator && isRecruitmentClosed) {
+    if (isModerator && !isFreezed) {
       const matchEditRoute = isBattleRoyale ? ESRoutes.ARENA_BATTLES_EDIT : ESRoutes.ARENA_MATCHES_EDIT
       router.push(matchEditRoute.replace(/:id/gi, hashKey))
     } else {
@@ -87,6 +98,8 @@ const useArenaHelper = (
     router.push(ESRoutes.ARENA_DETAIL.replace(/:id/gi, hashKey))
   }
 
+  const toParticipants = () => router.push(makeContextualHref({ modalName: 'participants' }), `${hashKey}/participants`, { shallow: true })
+
   return {
     toGroupChat,
     toMatches,
@@ -102,11 +115,14 @@ const useArenaHelper = (
     isEditable,
     isNotHeld,
     isReady,
+    isUnselected,
     toEdit,
     toCreate,
     isAdminJoined,
+    isTeamLeader,
     toDetail,
     isEntered,
+    toParticipants,
   }
 }
 

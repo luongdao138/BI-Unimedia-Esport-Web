@@ -83,10 +83,22 @@ const SearchModal: React.FC<SearchModalProps> = ({ show, selectData, onSearch, h
       fullScreen
       aria-labelledby="modal"
       open={show}
+      style={{ pointerEvents: 'none' }}
       className={classes.root}
       onClose={handleClose}
-      BackdropProps={{ classes: { root: classes.bg } }}
-      PaperProps={{ classes: { root: classes.bg } }}
+      BackdropProps={{
+        classes: { root: classes.bg },
+        onTouchMove: (e) => {
+          e.preventDefault()
+        },
+        onTouchStart: (e) => {
+          e.preventDefault()
+        },
+        onTouchEnd: (e) => {
+          e.preventDefault()
+        },
+      }}
+      PaperProps={{ classes: { root: classes.bg }, style: { pointerEvents: 'auto' } }}
     >
       <Box pt={2} paddingX={2} display="flex" flexDirection="column">
         <Select

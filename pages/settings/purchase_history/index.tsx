@@ -7,13 +7,13 @@ import ESPurchaseHistory from '@containers/PurchaseHistory'
 const PurchaseHistoryPage: PageWithLayoutType = () => {
   const { t } = useTranslation('common')
   return (
-    <div>
-      <HeaderWithButton title={t('purchase_history.title')} />
-      <ESPurchaseHistory />
-    </div>
+    <MainLayout loginRequired={true}>
+      <div>
+        <HeaderWithButton title={t('purchase_history.title')} />
+        <ESPurchaseHistory />
+      </div>
+    </MainLayout>
   )
 }
-
-PurchaseHistoryPage.Layout = MainLayout
 
 export default PurchaseHistoryPage

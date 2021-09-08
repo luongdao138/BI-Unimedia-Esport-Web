@@ -9,7 +9,7 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> => {
   if (req.method === 'GET') {
     try {
-      const oauth_token = await getToken()
+      const oauth_token = await getToken(req.query.type, req.query.redirect)
       res.status(200).json({ oauth_token })
     } catch (error) {
       res.status(500).json({ error: error.message })
@@ -19,14 +19,14 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>): Promise<
   }
 }
 
-const getToken = (): Promise<string> => {
+const getToken = (type: string | string[], redirect: string | string[]): Promise<string> => {
   const oauth_token = new OAuth.OAuth(
     'https://api.twitter.com/oauth/request_token',
     'https://api.twitter.com/oauth/access_token',
     process.env.TWITTER_APP_ID,
     process.env.TWITTER_APP_SECRET,
     '1.0',
-    process.env.TWITTER_CALLBACK,
+    `${process.env.TWITTER_CALLBACK}?type=${type}&redirectTo=${redirect}`,
     'HMAC-SHA1'
   )
   return new Promise((resolve, reject) => {
