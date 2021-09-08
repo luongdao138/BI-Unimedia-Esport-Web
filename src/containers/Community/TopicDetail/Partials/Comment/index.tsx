@@ -172,11 +172,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
           <Typography className={classes.content}>{commentData.content}</Typography>
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
-        <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton className={classes.shareButton} onClick={handleCommentReply}>
-            <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
-          </IconButton>
-        </Box>
+        {!isSelf && (
+          <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <IconButton className={classes.shareButton} onClick={handleCommentReply}>
+              <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+            </IconButton>
+          </Box>
+        )}
       </Box>
       {isAuthenticated && (
         <>
