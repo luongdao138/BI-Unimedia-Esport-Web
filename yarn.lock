@@ -9195,10 +9195,10 @@ react-sortablejs@^6.0.0:
     classnames "^2.2.6"
     tiny-invariant "^1.1.0"
 
-react-stacked-center-carousel@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-stacked-center-carousel/-/react-stacked-center-carousel-1.0.2.tgz#bc228b8e6e29683f20b1ca82a33125b7089f68ad"
-  integrity sha512-Cop11FBxO+BnqtbQc3QsSaSzzbHBjARPWNKO0Q5GqfAqhAi9xxx0GxBVuqdb2ejv37EF8vn4feePK/K5a0Q+kA==
+react-stacked-center-carousel@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-stacked-center-carousel/-/react-stacked-center-carousel-1.0.3.tgz#ce825a65c3fe7d2f25441398cb32ab8c8c3fabef"
+  integrity sha512-uqO4D1d/sVsdnGxqCZPYa5xxGtLfhLugC6in8fk2TxYe8WciB8Q21+MkLies7EeWJ1nB7auek0Dbe4w2tRoUcg==
   dependencies:
     react-resize-detector "^6.7.2"
 
