@@ -60,7 +60,8 @@ const VideosTop: React.FC = () => {
   const [purchaseType, setPurchaseType] = useState<number>(null)
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
-  const { getVideoDetail, meta } = useDetailVideo()
+  const { getVideoDetail, meta, detailVideoResult } = useDetailVideo()
+
   const isPending = meta.pending || meta_my_points.pending
 
   const ticket_points = 100
@@ -72,12 +73,12 @@ const VideosTop: React.FC = () => {
   const super_chat_params = {
     point: donatedPoints,
     type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
-    video_id: video_id,
+    video_id,
   }
   const ticket_params = {
     point: ticket_points,
     type: PURCHASE_TYPE.PURCHASE_SUPER_CHAT,
-    video_id: video_id,
+    video_id,
   }
 
   useEffect(() => {
@@ -192,6 +193,7 @@ const VideosTop: React.FC = () => {
     <Box style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
       <ChatContainer
         myPoint={myPoint}
+        key_video_id={detailVideoResult?.key_video_id}
         onPressDonate={confirmDonatePoint}
         userHasViewingTicket={userHasViewingTicket()}
         handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
