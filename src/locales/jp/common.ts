@@ -54,6 +54,7 @@ export default {
     },
     no_data: '対象データありません',
     dash: '-',
+    dash_separator: 'ー',
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',

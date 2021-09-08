@@ -3,14 +3,14 @@ import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import { clearMetaData } from '@store/metadata/actions'
 import searchStore from '@store/lobby'
-import { PageMeta, LobbyFilterOption, LobbySearchParams, LobbyResponse } from '@services/lobby.service'
+import { PageMeta, LobbyFilterOption, LobbySearchParams, LobbyListItem } from '@services/lobby.service'
 import { Meta } from '@store/metadata/actions/types'
 
 const { selectors, actions } = searchStore
 const getTournamentSearchMeta = createMetaSelector(actions.searchLobby)
 
 const useLobbyHome = (): {
-  lobbies: LobbyResponse[]
+  lobbies: LobbyListItem[]
   meta: Meta
   page: PageMeta
   loadMore: () => void
@@ -40,6 +40,7 @@ const useLobbyHome = (): {
   useEffect(() => {
     return () => resetMeta()
   }, [])
+
   return { lobbies, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter }
 }
 

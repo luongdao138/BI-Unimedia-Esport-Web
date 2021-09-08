@@ -217,7 +217,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <LoginRequired>
           <Button style={{ marginLeft: -6 }} onClick={handleClickOpen}>
             <Box display="flex" className={classes.rowContainer}>
-              <Typography>{t('common:following.title')}</Typography>
+              <Typography>{t('common:followers.title')}</Typography>
               <Box display="flex" className={classes.countContainer}>
                 <Typography className={classes.count}>{FormatHelper.kFormatter(community.attributes.member_count)}</Typography>
                 <Typography>{t('common:followers.th')}</Typography>
@@ -294,16 +294,16 @@ const FollowList: React.FC<Props> = ({ community }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   rowContainer: {
     flexWrap: 'wrap',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   countContainer: {
-    marginLeft: theme.spacing(1),
-    alignItems: 'center',
+    marginLeft: theme.spacing(0.5),
+    alignItems: 'flex-end',
   },
   count: {
-    marginRight: theme.spacing(1.25),
     fontWeight: 'bold',
     fontSize: 24,
+    lineHeight: '28px',
     color: Colors.white,
   },
   label: {

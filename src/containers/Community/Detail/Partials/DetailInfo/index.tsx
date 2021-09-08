@@ -225,12 +225,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getHeader = () => {
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
-          <Box pt={1} color={Colors.white} display="flex">
+        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box color={Colors.white} display="flex">
             <Typography className={classes.title} variant="h3">
               {data.name}
             </Typography>
-            <Box ml={3.6}>
+            <Box>
               {isOfficial && (
                 <span className={classes.checkIcon}>
                   <Icon className="fa fa-check" fontSize="small" />
@@ -242,11 +242,13 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           <Box className={classes.detailCommonButtons}>
             {DetailInfoButton()}
             {!isOfficial && (
-              <ESMenu>
-                <LoginRequired>
-                  <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
-                </LoginRequired>
-              </ESMenu>
+              <Box ml={3}>
+                <ESMenu>
+                  <LoginRequired>
+                    <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
+                  </LoginRequired>
+                </ESMenu>
+              </Box>
             )}
           </Box>
         </Box>
@@ -254,7 +256,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           <Typography>{`${t('common:community.community_id')}${detail.id}`}</Typography>
           <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
             <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-            <Typography>{t('common:community.copy_shared_url')}</Typography>
+            <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
           </Box>
           <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')} style={{ marginLeft: 12 }}>
             <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
@@ -345,6 +347,9 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 }
 
 const useStyles = makeStyles((theme) => ({
+  sharedUrl: {
+    textDecoration: 'underline',
+  },
   twitter_logo: {
     height: 23,
     width: 23,
