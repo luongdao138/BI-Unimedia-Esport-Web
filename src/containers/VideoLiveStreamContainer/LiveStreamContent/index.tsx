@@ -470,6 +470,7 @@ const useStyles = makeStyles((theme) => ({
     register_channel_btn: {
       padding: '1px 8px',
       marginRight: '8px',
+      fontSize: '16px',
     },
     icon: {
       marginRight: '11px',
