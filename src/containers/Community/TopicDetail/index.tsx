@@ -105,7 +105,7 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <TopicDetailHeader title={data.title} isTopic={true} onHandleBack={handleBack} />
+              <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
               <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
             </>
           )}
