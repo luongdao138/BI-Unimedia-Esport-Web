@@ -48,7 +48,7 @@ const TeamMemberItemExpanded: React.FC<Props> = ({
               <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
                 <Box display="flex" overflow="hidden">
                   <ButtonBase>
-                    <ESAvatar alt={data.name} src={data.team_avatar} onClick={handleClick} />
+                    <ESAvatar alt={data.name} src={data.team_avatar ? data.team_avatar : '/images/avatar.png'} onClick={handleClick} />
                   </ButtonBase>
                   <Box
                     style={{ cursor: 'pointer' }}
