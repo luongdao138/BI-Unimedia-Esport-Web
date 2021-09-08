@@ -5,11 +5,30 @@ import { Colors } from '@theme/colors'
 import React, { useEffect, useRef, useState } from 'react'
 import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
 import ControlBarPlayer from './ControlBar'
+import Head from 'next/head'
+// import { MediaPlayer, isPlayerSupported, PlayerState, PlayerEventType, create,registerIVSTech  } from 'amazon-ivs-player';
+
+// import wasmBinaryPath from 'amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm';
+// import wasmWorkerPath from 'amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.js';
+// import videojs from 'video.js';
+
 interface PlayerProps {
   src: string
   thumbnail?: string
   statusVideo?: number
 }
+
+declare global {
+  interface Window {
+    IVSPlayer: any
+  }
+}
+// const playerConfig = {
+//   //amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.js
+//   // amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm
+//   wasmBinary: "amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm",
+//   wasmWorker: "amazon-ivs-player/dist/assets/amazon-ivs-worker.min.js"
+// }
 
 const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => {
   const checkStatusVideo = 1
@@ -19,6 +38,15 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => 
   const [playState, setPlayState] = useState<VideoPlayerType>()
   const [duration, setDuration] = useState(0)
   const [volume, setVolumeValue] = useState<number>(1)
+
+  // const {IVSPlayer}=window
+  // const {isPlayerSupported} = IVSPlayer
+  // const player = useRef(null);
+  // const videoEl = useRef(null);
+  // const mediaPlayer = create(playerConfig)
+  // const {attachHTMLVideoElement, load, play, getState, addEventListener, removeEventListener} = MediaPlayer()
+
+  // const STREAM_PLAYBACK_URL = 'https://usher.ttvnw.net/api/lvs/hls/lvs.lvs-client-example.c6341be8-a3c7-42bc-b89a-8dabe040eae9.m3u8'
 
   useEffect(() => {
     playerRef.current.subscribeToStateChange(handleStateChange)
@@ -82,8 +110,55 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => 
   //   return process
   // }
 
+  // useEffect(() => {
+  //   const { ENDED, PLAYING, READY } = PlayerState
+  //   const { ERROR } = PlayerEventType;
+  //   console.warn(
+  //     'isPlayerSupported',isPlayerSupported
+  //   );
+
+  //   if (!isPlayerSupported) {
+  //     console.warn(
+  //       'The current browser does not support the Amazon IVS player.',
+  //     );
+
+  //     return;
+  //   }
+
+  //   const onStateChange = () => {
+  //     const playerState = mediaPlayer.getState()
+
+  //     console.log(`Player State - ${playerState} `);
+  //   };
+
+  //   const onError = (err) => {
+  //     console.warn('Player Event - ERROR:', err);
+  //   };
+
+  //   create(playerConfig)
+  //   // mediaPlayer.attachHTMLVideoElement(videoEl.current);
+  //   mediaPlayer.load(STREAM_PLAYBACK_URL);
+  //   mediaPlayer.play();
+
+  //   mediaPlayer.addEventListener(READY, onStateChange);
+  //   mediaPlayer.addEventListener(PLAYING, onStateChange);
+  //   mediaPlayer.addEventListener(ENDED, onStateChange);
+  //   mediaPlayer.addEventListener(ERROR, onError);
+
+  //   return () => {
+  //     mediaPlayer.removeEventListener(READY, onStateChange);
+  //     mediaPlayer.removeEventListener(PLAYING, onStateChange);
+  //     mediaPlayer.removeEventListener(ENDED, onStateChange);
+  //     mediaPlayer.removeEventListener(ERROR, onError);
+  //   };
+  // }, )
+
   return (
     <>
+      <Head>
+        <script src="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js"></script>
+      </Head>
+      {/* <video ref={videoEl} playsInline></video> */}
       <Player
         ref={playerRef}
         src={src}

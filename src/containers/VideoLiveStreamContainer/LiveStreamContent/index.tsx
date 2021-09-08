@@ -1,17 +1,17 @@
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
-import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
-import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ESMenuItem from '@components/Menu/MenuItem'
 import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
 // import ESButton from '@components/Button'
 import VideoPlayer from './VideoPlayer'
+import useDetailVideo from '../useDetailVideo'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
   freeToWatch?: boolean
@@ -26,10 +26,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const theme = useTheme()
   const { t } = useTranslation('common')
-  const { selectors } = userProfileStore
-  const userProfile = useAppSelector(selectors.getUserProfile)
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-
+  const { detailVideoResult, userResult } = useDetailVideo()
+  const [likeNumber, setLikeNumber] = useState(detailVideoResult.like_count)
+  const [disLikeNumber, setDisLikeNumber] = useState(detailVideoResult.unlike_count)
   const isSubscribed = () => subscribe
 
   const classes = useStyles({ isSubscribed: isSubscribed() })
@@ -55,7 +55,9 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         onClick={() =>
           window
             .open(
-              `https://twitter.com/intent/tweet?text=${'配信者の名前がはいります'}\n${'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}`,
+              `https://twitter.com/intent/tweet?text=${detailVideoResult.title}\n${
+                detailVideoResult.archived_file_url ? detailVideoResult.archived_file_url : ''
+              }`,
               '_blank'
             )
             ?.focus()
@@ -69,8 +71,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mobileRegisterChannelContainer = () => (
     <Box className={classes.mobileRegisterChannelContainer}>
-      <ESAvatar className={classes.smallAvatar} src={'/images/avatar.png'} />
-      <Typography className={classes.channelName}>{'配信者の名前がはいります'}</Typography>
+      <ESAvatar className={classes.smallAvatar} src={detailVideoResult ? detailVideoResult?.user_avatar : '/images/avatar.png'} />
+      <Typography className={classes.channelName}>{detailVideoResult?.user_nickname}</Typography>
       {registerChannelButton()}
     </Box>
   )
@@ -136,6 +138,13 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
   const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
 
+  useEffect(() => {
+    // console.log("====PROSP===",detailVideoResult, userResult)
+    setLikeNumber(detailVideoResult.like_count)
+    setDisLikeNumber(detailVideoResult.unlike_count)
+    setSubscribe(userResult.follow === 1 ? true : false)
+  }, [detailVideoResult, userResult])
+
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
@@ -147,10 +156,10 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         <Box className={classes.wrap_info}>
           <Box className={classes.wrap_movie_info}>
             <Box className={classes.wrap_title}>
-              <Typography className={classes.movie_title}>ムービータイトルムービータイトル…</Typography>
-              <Typography className={classes.device_name}>APEX Legends(PC&Console)</Typography>
+              <Typography className={classes.movie_title}>{FormatHelper.textSizeMode(detailVideoResult?.title, 30)}</Typography>
+              <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
             </Box>
-            {!isMobile ? (
+            {!isMobile && detailVideoResult.status === STATUS_VIDEO.LIVE_STREAM ? (
               <Box className={classes.live_stream_status}>
                 <ESChip
                   color={'primary'}
@@ -167,13 +176,16 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           <Box className={classes.wrap_interactive_info}>
             <Box className={classes.interactive_info}>
               <Typography className={classes.view}>
-                <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(12000)}
+                <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" />{' '}
+                {FormatHelper.japaneseWanFormatter(
+                  detailVideoResult.status === STATUS_VIDEO.LIVE_STREAM ? detailVideoResult.live_view_count : detailVideoResult.view_count
+                )}
               </Typography>
               <Typography className={classes.like}>
-                <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(121231000)}
+                <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(likeNumber)}
               </Typography>
               <Typography className={classes.dislike}>
-                <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(100)}
+                <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(disLikeNumber)}
               </Typography>
               {!isMobile && shareButton()}
             </Box>
@@ -208,15 +220,15 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           <Box className={classes.streamer_info}>
             <ESAvatar
               className={classes.avatar}
-              alt={userProfile?.attributes?.nickname}
-              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
+              alt={detailVideoResult?.user_nickname}
+              src={detailVideoResult ? detailVideoResult?.user_avatar : '/images/avatar.png'}
             />
             <Box className={classes.streamer_data}>
-              <Box className={classes.streamer_name}>{t('live_stream_screen.streamer_name')}</Box>
+              <Box className={classes.streamer_name}>{detailVideoResult?.user_nickname}</Box>
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>
-                  {FormatHelper.japaneseWanFormatter(123456)}
+                  {FormatHelper.japaneseWanFormatter(detailVideoResult?.channel_follow_count ? detailVideoResult?.channel_follow_count : 0)}
                   {t('common.man')}
                 </Typography>
               </Box>
@@ -250,8 +262,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     width: 'auto',
-    visiblity: 'visible',
-    opocity: 1,
+    visibility: 'visible',
+    opacity: 1,
     transition: 'all 0.5s ease',
     height: 'auto',
     display: 'block',

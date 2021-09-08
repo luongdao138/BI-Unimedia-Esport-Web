@@ -10,6 +10,12 @@ export const TYPE_VIDEO_TOP = {
   RELATED: 'related',
 }
 
+export const STATUS_VIDEO = {
+  SCHEDULE: 0,
+  LIVE_STREAM: 1,
+  ARCHIVE: 2,
+}
+
 export const LIMIT_ITEM = 15
 
 export type VideoPlayerType = {
@@ -182,6 +188,58 @@ export type SearchType = {
   videos: Array<TypeVideo>
 }
 
+export type VideoDetailParams = {
+  video_id: string
+}
+
+export type VideoDetailData = {
+  uuid?: string
+  archived_file_url?: string
+  thumbnail?: string
+  title?: string
+  description?: string
+  use_ticket?: string
+  ticket_price?: string
+  duration?: any
+  archived_end_time?: string
+  sell_ticket_start_time?: string
+  video_publish_end_time?: string
+  scheduled_flag?: number
+  view_count?: number
+  live_view_count?: number
+  like_count?: number
+  unlike_count?: number
+  status?: number
+  user_nickname?: string
+  user_avatar?: string
+  channel_id?: number
+  channel_name?: string
+  channel_description?: string
+  channel_discord_link?: string
+  channel_twitter_link?: string
+  channel_instagram_link?: string
+  channel_follow_count?: number
+  category_name?: string
+  key_video_id?: string
+}
+
+export type DetailUserData = {
+  uuid?: string
+  like?: number
+  unlike?: number
+  follow?: number
+  buy_ticket?: number
+}
+
+export type VideoDetailResponse = {
+  message?: string
+  code?: number
+  data?: {
+    video?: VideoDetailData
+    user?: DetailUserData
+  }
+}
+
 export const ListVideoAll = async (params: ListVideoTopParams): Promise<ListVideoTopResponse> => {
   const { data } = await api.get<ListVideoTopResponse>(URI.GET_LIST_VIDEO_TOP, { params })
   return data
@@ -219,5 +277,10 @@ export const ListVideoFavorite = async (): Promise<ListVideoTopResponse> => {
 
 export const VideoSearch = async (params: SearchVideoParams): Promise<SearchVideoResponse> => {
   const { data } = await api.get<SearchVideoResponse>(URI.SEARCH_VIDEO, { params })
+  return data
+}
+
+export const DetailVideo = async (params: VideoDetailParams): Promise<VideoDetailResponse> => {
+  const { data } = await api.get<VideoDetailResponse>(URI.VIDEO_DETAIL, { params })
   return data
 }

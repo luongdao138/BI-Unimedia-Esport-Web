@@ -35,6 +35,7 @@ const japaneseWanFormatter = (inputNumber: number): number | string => {
       43000 -> 4.3万
       421513000 -> 42151.3万
     */
+  if (!inputNumber) return 0
   if (inputNumber < 10000) return inputNumber
   const wanValue = inputNumber / 10000
   return `${Math.round(wanValue * 10) / 10}万`
@@ -87,8 +88,8 @@ const spacedLinks = function (content: string): string {
   return content
 }
 
-const textSizeMode = (str: string, limit?: number): string => {
-  const text = str.length <= limit ? str : `${str.slice(0, limit)}...`
+const textSizeMode = (str?: string, limit?: number): string => {
+  const text = !str ? '...' : str?.length <= limit ? str : `${str?.slice(0, limit)}...`
   return text
 }
 

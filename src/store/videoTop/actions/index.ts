@@ -163,3 +163,24 @@ export const resetSearchVideo = createAction(ACTION_VIDEO_TOP.RESET_SEARCH_VIDEO
 export const resetLive = createAction(ACTION_VIDEO_TOP.RESET_LIVE)
 export const resetSchedule = createAction(ACTION_VIDEO_TOP.RESET_SCHEDULE)
 export const resetArchive = createAction(ACTION_VIDEO_TOP.RESET_ARCHIVE)
+
+export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
+  ACTION_VIDEO_TOP.VIDEO_DETAIL,
+  async (params, { rejectWithValue }) => {
+    try {
+      const res = await services.DetailVideo(params)
+      // console.log("=====DETAIL====",res)
+      if (res?.code === 200) {
+        return res
+      } else {
+        // throw res.message
+        return rejectWithValue(JSON.stringify(res.message))
+      }
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)

@@ -15,3 +15,5 @@ export const archivedVideos = createSelector(getRoot, (state) => state.videoArch
 export const getAllVideoFavorite = createSelector(getRoot, (state) => state.listVideoFavorite)
 export const videoSearchResult = createSelector(getRoot, (state) => state.listVideoSearch)
 export const totalSearchResult = createSelector(getRoot, (state) => state.totalResult)
+export const videoDetailResult = createSelector(getRoot, (state) => state.videoDetailData)
+export const userStreamerResult = createSelector(getRoot, (state) => state.userDetailData)

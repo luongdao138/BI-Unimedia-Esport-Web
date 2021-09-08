@@ -1,7 +1,8 @@
 import { Box, Theme, makeStyles, Grid } from '@material-ui/core'
-import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import React from 'react'
+import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 
