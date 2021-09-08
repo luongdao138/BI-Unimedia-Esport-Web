@@ -6,11 +6,9 @@ import useUploadImage from '@utils/hooks/useUploadImage'
 import CoverUploader from '../UpsertForm/Partials/CoverUploader'
 import ESFastInput from '@components/FastInput'
 import i18n from '@locales/i18n'
-import { GetPrefecturesResponse } from '@services/common.service'
 
 type Props = {
   formik: FormikProps<FormType>
-  prefectures: GetPrefecturesResponse
 }
 
 const StepOne: React.FC<Props> = ({ formik }) => {

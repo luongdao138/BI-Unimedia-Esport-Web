@@ -142,6 +142,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkify: {
     color: Colors.white,
     textDecoration: 'underline',
+    wordBreak: 'break-all',
   },
   label: {
     display: 'flex',

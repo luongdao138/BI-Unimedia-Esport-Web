@@ -11,6 +11,8 @@ import { useRouter } from 'next/router'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import useCommunityDetail from '../Detail/useCommunityDetail'
+import useCommunityHelper from '../hooks/useCommunityHelper'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -32,13 +34,16 @@ const TopicDetailContainer: React.FC = () => {
     getCommentsListNext,
     commentsListNextMeta,
   } = useTopicDetail()
+  const { getCommunityDetail, communityDetail } = useCommunityDetail()
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
   const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
+  const { isNotMember } = useCommunityHelper(communityDetail)
   const data = topic?.attributes
 
   useEffect(() => {
     if (topic_hash_key) {
+      getCommunityDetail(String(hash_key))
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsListPage({ hash_key: String(topic_hash_key) })
     }
@@ -88,7 +93,7 @@ const TopicDetailContainer: React.FC = () => {
     return (
       <>
         {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} handleReply={setReply} />
+          return <Comment key={i} comment={comment} community={communityDetail} handleReply={setReply} />
         })}
       </>
     )
@@ -101,7 +106,7 @@ const TopicDetailContainer: React.FC = () => {
           {topicDetailMeta.loaded && (
             <>
               <TopicDetailHeader title={data.title} isTopic={true} onHandleBack={handleBack} />
-              <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
             </>
           )}
           {hasPrevious && (
@@ -147,9 +152,11 @@ const TopicDetailContainer: React.FC = () => {
             </Grid>
           )}
         </Box>
-        <Box className={classes.inputContainer}>
-          <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
-        </Box>
+        {!isNotMember && (
+          <Box className={classes.inputContainer}>
+            <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
+          </Box>
+        )}
       </Box>
     </>
   )
