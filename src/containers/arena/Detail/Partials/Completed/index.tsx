@@ -23,23 +23,26 @@ const Completed: React.FC<CompletedProps> = (props) => {
     if (!!tournament && tournament.attributes.is_freezed) fetchWinners()
   }, [tournament])
 
-  const renderArenaWinner = () => {
-    const winner = arenaWinners['1'][0]
-    const isTeam = tournament.attributes.participant_type > 1
-    const winnerAvatar = isTeam ? (winner.avatar ? winner.avatar : '/images/avatar.png') : winner.avatar
-    return (
-      <Box className={classes.body}>
-        <div className={classes.winnerAvatarWrapper} onClick={() => {}}>
-          <ArenaAvatar src={winnerAvatar} name={winner.name} user_code={winner.user?.user_code} win leaf nameWhite size="small" />
-        </div>
-      </Box>
-    )
-  }
-
   return (
     <ActionComponent {...props}>
       {tournament.attributes.is_freezed && tournament.attributes.participant_count > 1 ? (
-        arenaWinners && arenaWinners['1'] && arenaWinners['1'][0] && renderArenaWinner()
+        arenaWinners &&
+        arenaWinners['1'] &&
+        arenaWinners['1'][0] && (
+          <Box className={classes.body}>
+            <div className={classes.winnerAvatarWrapper} onClick={() => {}}>
+              <ArenaAvatar
+                src={arenaWinners['1'][0].avatar}
+                name={arenaWinners['1'][0].name}
+                user_code={arenaWinners['1'][0].user?.user_code}
+                win
+                leaf
+                nameWhite
+                size="small"
+              />
+            </div>
+          </Box>
+        )
       ) : (
         <Box className={classes.body}>
           <Box display="flex" flexDirection="row">
