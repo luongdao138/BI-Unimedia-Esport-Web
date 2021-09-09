@@ -5,7 +5,6 @@ import Stepper from '@components/Stepper'
 import Step from '@components/Step'
 import TagSelect from '@components/TagSelect'
 import ESButton from '@components/Button'
-import ESToast from '@components/Toast'
 import ESLoader from '@components/FullScreenLoader'
 import BasicInfo from '@components/BasicInfo'
 import useUpdateProfile from './useUpdateProfile'
@@ -21,6 +20,7 @@ import GameSelector from '@components/GameSelector'
 import { GameTitle } from '@services/game.service'
 import { ESRoutes } from '@constants/route.constants'
 import { UserProfile } from '@services/user.service'
+import useToast from '@utils/hooks/useToast'
 
 const FINAL_STEP = 3
 
@@ -36,6 +36,14 @@ const UserSettingsContainer: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile['attributes'] | null>(null)
   const [isValidDate, setValidDate] = useState(false)
   const stepsTitles = [t('common:profile.basic_info'), t('common:profile.tag'), t('common:profile.favorite_game.title')]
+  const { addToast } = useToast()
+
+  useEffect(() => {
+    if (profileUpdateMeta.error) {
+      addToast(t('common:error.user_settings_failed'))
+      resetProfileUpdateMeta()
+    }
+  }, [profileUpdateMeta.error])
 
   useEffect(() => {
     if (userProfile) {
@@ -150,9 +158,6 @@ const UserSettingsContainer: React.FC = () => {
           </Container>
         </Box>
       </Box>
-      {!!profileUpdateMeta.error && (
-        <ESToast open={!!profileUpdateMeta.error} message={t('common:error.user_settings_failed')} resetMeta={resetProfileUpdateMeta} />
-      )}
     </>
   ) : (
     <ESLoader open={getUserProfileMeta.pending} />

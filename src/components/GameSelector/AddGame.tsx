@@ -3,11 +3,10 @@ import { Box, makeStyles } from '@material-ui/core'
 import { CreateGameTitleParams, GameGenre, GameTitle } from '@services/game.service'
 import Select from '@components/Select'
 import Button from '@components/Button'
-import Toast from '@components/Toast'
 import Yup from '@utils/Yup'
 import _ from 'lodash'
 import useAddGame from './useAddGame'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
@@ -16,6 +15,7 @@ import { useAppDispatch } from '@store/hooks'
 import { NG_WORD_DIALOG_CONFIG, NG_WORD_AREA } from '@constants/common.constants'
 import ESFastInput from '@components/FastInput'
 import { useFocusState } from '@utils/hooks/input-focus-context'
+import useToast from '@utils/hooks/useToast'
 
 interface Props {
   genres: GameGenre[]
@@ -63,17 +63,16 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
       }
     },
   })
-  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     formik.validateForm()
   }, [])
-
+  const { addToast } = useToast()
   useEffect(() => {
     if (meta.loaded) {
-      setOpen(true)
       formik.resetForm()
       handleAdd(createdGame)
+      addToast(t('profile.favorite_game.add_success'))
     }
   }, [meta.loaded])
 
@@ -81,7 +80,6 @@ const AddGame: React.FC<Props> = ({ genres, handleAdd }) => {
 
   return (
     <Box pt={4} px={5} className={classes.container}>
-      <Toast open={open} message={t('profile.favorite_game.add_success')} onClose={() => setOpen(false)} />
       <form onSubmit={formik.handleSubmit}>
         <Select
           id="game_genre_id"
