@@ -52,14 +52,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, patternBg, loginRequi
     }
   }, [notFound, router.query.hash_key])
 
-  if (loginRequired && !isValidProfile) return null
-
   const renderContent = () => {
     return loginRequired ? isAuthenticated && children : children
   }
   const height = use100vh()
 
-  return (
+  return loginRequired && !isValidProfile ? null : (
     <div className="main-wrapper">
       <Header open={open} toggleDrawer={toggleDrawer} />
       <aside className="aside-left">

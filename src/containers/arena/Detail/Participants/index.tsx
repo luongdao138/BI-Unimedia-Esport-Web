@@ -126,7 +126,7 @@ const Participants: React.FC<ParticipantsProps> = ({ detail }) => {
                 </Box>
               </Box>
             </Box>
-            <div id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+            <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
               <InfiniteScroll
                 dataLength={participants.length}
                 next={fetchMoreData}
@@ -251,6 +251,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+    height: 600,
+    paddingRight: 10,
   },
   [theme.breakpoints.down('sm')]: {
     container: {
@@ -259,6 +261,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    topContainer: {
+      paddingTop: 0,
+    },
+    list: {
+      height: 'Calc(100vh - 131px)',
     },
   },
 }))

@@ -1,4 +1,4 @@
-import MainLayout from '@layouts/PlainLayout'
+import PlainLayout from '@layouts/PlainLayout'
 import Link from 'next/link'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
@@ -25,30 +25,31 @@ const useStyles = makeStyles((theme) => ({
 const GmoResultSuccessPage: PageWithLayoutType = () => {
   const classes = useStyles({})
   return (
-    <Container maxWidth="lg" disableGutters>
-      <div className={classes.contaianer}>
-        <Typography variant="subtitle1" className={classes.title}>
-          チケットの購入を確認しました
-        </Typography>
-        <div style={{ marginBottom: 40 }}>注文情報は設定画面内の【購入履歴】よりご確認いただくことが可能です。</div>
-        <div className={classes.spacingButton}>
-          <Link href="/events">
-            <Button variant="contained" color="primary" fullWidth>
-              ホームへ
-            </Button>
-          </Link>
+    <PlainLayout>
+      <Container maxWidth="lg" disableGutters>
+        <div className={classes.contaianer}>
+          <Typography variant="subtitle1" className={classes.title}>
+            チケットの購入を確認しました
+          </Typography>
+          <div style={{ marginBottom: 40 }}>注文情報は設定画面内の【購入履歴】よりご確認いただくことが可能です。</div>
+          <div className={classes.spacingButton}>
+            <Link href="/events">
+              <Button variant="contained" color="primary" fullWidth>
+                ホームへ
+              </Button>
+            </Link>
+          </div>
+          <div className={classes.spacingButton}>
+            <Link href="/settings/payment_histories">
+              <Button variant="contained" color="primary" fullWidth>
+                購入履歴へ
+              </Button>
+            </Link>
+          </div>
         </div>
-        <div className={classes.spacingButton}>
-          <Link href="/settings/payment_histories">
-            <Button variant="contained" color="primary" fullWidth>
-              購入履歴へ
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </Container>
+      </Container>
+    </PlainLayout>
   )
 }
 
-GmoResultSuccessPage.Layout = MainLayout
 export default GmoResultSuccessPage

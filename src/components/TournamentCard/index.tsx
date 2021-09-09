@@ -92,7 +92,7 @@ const TournamentCard: React.FC<Props> = ({ tournament }) => {
               }}
               className={classes.marginV}
               alt={participant?.name}
-              src={participant?.profile_image ? participant.profile_image : attr.is_single ? null : '/images/avatar.png'}
+              src={participant?.profile_image}
             />
             <Box className={classes.captionTitle}>
               <Typography noWrap variant="overline">

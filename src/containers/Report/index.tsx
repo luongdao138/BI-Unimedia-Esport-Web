@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Box, Typography, Grid, FormControlLabel, DialogActions, Radio, Hidden, IconButton, Icon } from '@material-ui/core'
+import { Box, Typography, Grid, FormControlLabel, DialogActions, Radio, Hidden, IconButton, Icon, useTheme } from '@material-ui/core'
 import Input from '@components/Input'
 import RadioVertical from '@components/RadioVertical'
 import ESLoader from '@components/Loader'
@@ -39,6 +39,7 @@ export interface ESReportProps {
 }
 
 const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, reportType, msg_body, open, handleClose }) => {
+  const _theme = useTheme()
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const { checkNgWordByField } = useCheckNgWord()
@@ -104,6 +105,59 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
     },
   })
 
+  const renderTopic = (isComment?: boolean) => {
+    return (
+      <>
+        <Box
+          className={classes.userInfoContainer}
+          flexDirection="column"
+          style={{ alignItems: 'flex-start', marginTop: _theme.spacing(1) }}
+        >
+          <Box display="flex" mr={2} mb={2}>
+            <Icon className={'fas fa-comment-alt'} fontSize="small" style={{ color: Colors.white, paddingTop: _theme.spacing(0.5) }} />
+            <Box color={Colors.white} fontSize={14} ml={1}>
+              {isComment ? t('topic_comment.report.chat_topic') : t('topic.report.chat_topic')}
+            </Box>
+          </Box>
+          {isComment && (
+            <Typography variant="body1" style={{ marginBottom: _theme.spacing(1) }}>
+              {attr.number}
+            </Typography>
+          )}
+          <Box display="flex" mb={2}>
+            <Box ml={1}>
+              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.nickname ? '' : '/images/avatar.png'} />
+            </Box>
+
+            <Box className={classes.userInfoBox} ml={1} maxWidth="77%">
+              <Typography variant="h3" style={{ color: Colors.white }}>
+                {attr.nickname}
+              </Typography>
+              <Typography variant="body2">{'@' + attr.user_code}</Typography>
+            </Box>
+          </Box>
+
+          <Box display="flex" mb={1} flexDirection="column">
+            <Typography variant="body1" style={{ color: Colors.white_opacity[70] }}>
+              {attr.date}
+            </Typography>
+            <Typography variant="body1">{attr.content}</Typography>
+          </Box>
+          {attr.image ? (
+            <Box
+              className={classes.topicCover}
+              style={{
+                backgroundImage: `url(${attr.image})`,
+              }}
+            ></Box>
+          ) : (
+            <></>
+          )}
+        </Box>
+      </>
+    )
+  }
+
   const reportInfo = () => {
     switch (reportType) {
       case REPORT_TYPE.USER_LIST:
@@ -130,6 +184,33 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
         )
       case REPORT_TYPE.TOURNAMENT:
         return <Typography variant="h2">{data.attributes.title}</Typography>
+      case REPORT_TYPE.COMMUNITY:
+        return (
+          <Box className={classes.userInfoContainer}>
+            <Box display="flex" alignItems="center" mr={2}>
+              <Icon className={`fas fa-users ${classes.communityIcon}`} />
+            </Box>
+            <Typography variant="h2">{data.attributes.name}</Typography>
+          </Box>
+        )
+      case REPORT_TYPE.TOPIC:
+        return (
+          <>
+            <Typography variant="body1" style={{ marginTop: _theme.spacing(2) }}>
+              {t('topic.report.title')}
+            </Typography>
+            {renderTopic()}
+          </>
+        )
+      case REPORT_TYPE.TOPIC_COMMENT:
+        return (
+          <>
+            <Typography variant="body1" style={{ marginTop: _theme.spacing(2) }}>
+              {t('topic_comment.report.title')}
+            </Typography>
+            {renderTopic(true)}
+          </>
+        )
       default:
         break
     }
@@ -280,10 +361,24 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 }
 
 const useStyles = makeStyles((theme) => ({
+  topicCover: {
+    display: 'flex',
+    paddingTop: '30.27%',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    borderRadius: 7,
+    width: '66%',
+  },
+  topicAvatar: {
+    zIndex: 2,
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
   userInfoContainer: {
     backgroundColor: Colors.black,
-    marginTop: 24,
-    padding: 16,
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(2),
     borderStyle: 'solid',
     borderColor: Colors.grey[400],
     borderRadius: 4,
@@ -384,6 +479,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  communityIcon: {
+    fontSize: 20,
+    color: Colors.white,
+  },
   [theme.breakpoints.down('sm')]: {
     actionButtonContainer: {
       flexDirection: 'column',
@@ -393,6 +492,9 @@ const useStyles = makeStyles((theme) => ({
     },
     blankSpace: {
       height: theme.spacing(15),
+    },
+    topicCover: {
+      width: '80%',
     },
   },
 }))

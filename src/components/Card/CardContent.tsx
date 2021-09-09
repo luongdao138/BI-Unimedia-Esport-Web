@@ -5,11 +5,14 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(() => ({
   contentRoot: {
     background: Colors.black_card,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
   },
 }))
 
-const ESCardContent: React.FC<CardContentProps> = ({ children, ...rest }) => {
-  const classes = useStyles(rest)
+const ESCardContent: React.FC<CardContentProps> = ({ children }) => {
+  const classes = useStyles()
   return <CardContent classes={{ root: classes.contentRoot }}>{children}</CardContent>
 }
 

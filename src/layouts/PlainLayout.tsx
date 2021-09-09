@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import useProfileValid from '@utils/hooks/useProfileValid'
 import { ESRoutes } from '@constants/route.constants'
 import useReturnHref from '@utils/hooks/useReturnHref'
+import { use100vh } from 'react-div-100vh'
 
 interface PlainLayoutProps {
   children: ReactNode
@@ -22,6 +23,7 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, patternBg }) => {
   const dispatch = useAppDispatch()
   const notFound = useAppSelector(selectors.getNotFound)
   const router = useRouter()
+  const height = use100vh()
 
   useEffect(() => {
     dispatch(setNotFound({ notFound: null }))
@@ -36,11 +38,11 @@ const PlainLayout: React.FC<PlainLayoutProps> = ({ children, patternBg }) => {
   const toggleDrawer = (open: boolean) => {
     setOpen(open)
   }
-  if (!isValidProfile && isAuth && !hasUCRReturnHref) return null
-  return (
+
+  return !isValidProfile && isAuth && !hasUCRReturnHref ? null : (
     <div>
       <Header open={open} toggleDrawer={toggleDrawer} />
-      <div className={patternBg ? 'plain-main' : 'plain-main no-pattern'}>
+      <div className={patternBg ? 'plain-main' : 'plain-main no-pattern'} style={{ minHeight: height }}>
         <div className="content-wrapper">
           <div>{children}</div>
         </div>

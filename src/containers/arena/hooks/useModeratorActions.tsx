@@ -7,6 +7,7 @@ import { Meta } from '@store/metadata/actions/types'
 import { clearMetaData } from '@store/metadata/actions'
 import * as commonActions from '@store/common/actions'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'next/router'
 
 const _setParticipantMeta = createMetaSelector(actions.setParticipant)
 const _setParticipantsMeta = createMetaSelector(actions.setParticipants)
@@ -29,6 +30,7 @@ const useModeratorActions = (): {
 } => {
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
   const setParticipants = (param: SetParticipantsParams) => dispatch(actions.setParticipants(param))
@@ -65,6 +67,7 @@ const useModeratorActions = (): {
       resetFreezeMeta()
       resetRandomizeMeta()
       resetParticipantsMeta()
+      setTimeout(() => router.reload(), 3000)
     }
   }, [freezeMeta.error, randomizeMeta.error, setParticipantsMeta.error])
 
