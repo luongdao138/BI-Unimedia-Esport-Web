@@ -20,6 +20,7 @@ import { useAppDispatch } from '@store/hooks'
 import PurchaseTicketSuperChat from './PurchaseTicketSuperChat'
 import { useRouter } from 'next/router'
 import usePurchaseTicketSuperChat from './usePurchaseTicket'
+import useDetailVideo from './useDetailVideo'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -59,6 +60,8 @@ const VideosTop: React.FC = () => {
   const [purchaseType, setPurchaseType] = useState<number>(null)
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
+  const { getVideoDetail, meta } = useDetailVideo()
+  const isPending = meta.pending || meta_my_points.pending
 
   const ticket_points = 100
 
@@ -79,7 +82,8 @@ const VideosTop: React.FC = () => {
 
   useEffect(() => {
     getMyPointData(params)
-  }, [])
+    getVideoDetail({ video_id: `${video_id}` })
+  }, [video_id])
   const classes = useStyles()
 
   const confirmDonatePoint = (donated_point, comment) => {
@@ -205,9 +209,14 @@ const VideosTop: React.FC = () => {
     setSoftKeyboardIsShown(visible)
   }
 
+  //video detail
+  // useEffect(() => {
+  //   getVideoDetail({video_id:`${video_id}`})
+  // }, [video_id])
+
   return (
     <Box className={classes.root}>
-      {meta_my_points.pending && <ESLoader open={meta_my_points.pending} />}
+      {isPending && <ESLoader open={meta_my_points.pending} />}
       <Box className={classes.container}>
         <LiveStreamContent
           userHasViewingTicket={userHasViewingTicket()}

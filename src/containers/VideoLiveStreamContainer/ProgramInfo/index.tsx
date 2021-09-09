@@ -2,9 +2,9 @@ import { Box, Typography, Theme, makeStyles, Icon, Grid } from '@material-ui/cor
 // import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
 import React, { useState } from 'react'
-import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
+import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 
 const ProgramInfo: React.FC = () => {
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
