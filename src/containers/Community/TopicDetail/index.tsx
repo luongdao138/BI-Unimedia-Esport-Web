@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 import useCommunityDetail from '../Detail/useCommunityDetail'
 import useCommunityHelper from '../hooks/useCommunityHelper'
+import useTopicHelper from './useTopicHelper'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -38,8 +39,16 @@ const TopicDetailContainer: React.FC = () => {
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
   const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
-  const { isNotMember } = useCommunityHelper(communityDetail)
+  const { isNotMember, isModerator, isPublic } = useCommunityHelper(communityDetail)
   const data = topic?.attributes
+  const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
+
+  const menuParams = {
+    isNotMember: isNotMember,
+    isModerator: isModerator,
+    isPublic: isPublic,
+    isTopicOwner: isOwner,
+  }
 
   useEffect(() => {
     if (topic_hash_key) {
@@ -93,7 +102,7 @@ const TopicDetailContainer: React.FC = () => {
     return (
       <>
         {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} community={communityDetail} topic={topic} handleReply={setReply} />
+          return <Comment key={i} comment={comment} menuParams={menuParams} handleReply={setReply} />
         })}
       </>
     )

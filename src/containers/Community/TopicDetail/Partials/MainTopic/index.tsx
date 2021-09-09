@@ -49,7 +49,7 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const topicData = topic?.attributes
-  const { isSelf } = useTopicHelper(topicData?.owner_user_code)
+  const { isOwner } = useTopicHelper(topicData?.owner_user_code)
   const { isModerator, isPublic, isNotMember } = useCommunityHelper(community)
   const detail = {
     attributes: {
@@ -101,10 +101,10 @@ const MainTopic: React.FC<CommunityHeaderProps> = ({
 
                 {(isPublic || !isNotMember) && (
                   <ESMenu>
-                    {(isModerator || isSelf) && (
+                    {(isModerator || isOwner) && (
                       <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
                     )}
-                    {!isSelf && (
+                    {!isOwner && (
                       <LoginRequired>
                         <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
                       </LoginRequired>
