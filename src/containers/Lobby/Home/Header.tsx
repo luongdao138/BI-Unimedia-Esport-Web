@@ -20,6 +20,7 @@ const Header: React.FC<HeaderAreaProps> = ({ onFilter, toCreate, filter }) => {
   const filterItem = (option: LobbyFilterItem) => (
     <ESChip
       key={option.type}
+      isGameList={true}
       color={option.type === filter ? 'primary' : undefined}
       className={classes.filterChip}
       label={option.label}
