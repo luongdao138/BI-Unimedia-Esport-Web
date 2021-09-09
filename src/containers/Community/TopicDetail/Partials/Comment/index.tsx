@@ -95,12 +95,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   }
 
   const newLineText = (text) => {
-    const newText = _.map(_.split(text, '\n'), (str, i) => (
+    return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {str}
       </Typography>
     ))
-    return newText
   }
 
   return (
