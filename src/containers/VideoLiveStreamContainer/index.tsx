@@ -14,7 +14,7 @@ import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
 import usePointsManage from '@containers/PointManage/usePointsManage'
-import ESLoader from '@components/FullScreenLoader'
+// import ESLoader from '@components/FullScreenLoader'
 import { addToast } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import PurchaseTicketSuperChat from './PurchaseTicketSuperChat'
@@ -47,7 +47,7 @@ const VideosTop: React.FC = () => {
   const router = useRouter()
   const video_id = router.query?.vid // uuid video
 
-  const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
+  const { getMyPointData, myPointsData } = usePointsManage()
   const { purchaseTicketSuperChat, dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
 
@@ -60,9 +60,10 @@ const VideosTop: React.FC = () => {
   const [purchaseType, setPurchaseType] = useState<number>(null)
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
-  const { getVideoDetail, meta, detailVideoResult } = useDetailVideo()
 
-  const isPending = meta.pending || meta_my_points.pending
+  const { getVideoDetail, detailVideoResult } = useDetailVideo()
+
+  // const isPending = meta.pending || meta_my_points.pending
 
   const ticket_points = 100
 
@@ -156,11 +157,11 @@ const VideosTop: React.FC = () => {
   const getContent = () => {
     switch (tab) {
       case TABS.PROGRAM_INFO:
-        return userHasViewingTicket() ? <ProgramInfo /> : <ProgramInfoNoViewingTicket />
+        return userHasViewingTicket() ? <ProgramInfo video_id={video_id} /> : <ProgramInfoNoViewingTicket />
       case TABS.DISTRIBUTOR_INFO:
-        return <DistributorInfo />
+        return <DistributorInfo video_id={video_id} />
       case TABS.RELATED_VIDEOS:
-        return <RelatedVideos />
+        return <RelatedVideos video_id={video_id} />
       case TABS.COMMENT:
         return sideChatContainer()
       default:
@@ -222,9 +223,10 @@ const VideosTop: React.FC = () => {
 
   return (
     <Box className={classes.root}>
-      {isPending && <ESLoader open={meta_my_points.pending} />}
+      {/* {isPending && <ESLoader open={meta_my_points.pending} />} */}
       <Box className={classes.container}>
         <LiveStreamContent
+          video_id={video_id}
           userHasViewingTicket={userHasViewingTicket()}
           videoType={getVideoType()}
           freeToWatch={isVideoFreeToWatch()}

@@ -18,6 +18,7 @@ import stream from '@store/stream'
 import videoTop from '@store/videoTop'
 import purchasePoint from '@store/purchasePoint'
 import pointsManage from '@store/pointsManage'
+import liveStreamDetail from '@store/liveStreamDetail'
 
 const reducer = combineReducers({
   auth: auth.reducers,
@@ -39,6 +40,7 @@ const reducer = combineReducers({
   videoTop: videoTop.reducers,
   purchasePoint: purchasePoint.reducers,
   pointsManage: pointsManage.reducers,
+  liveStreamDetail: liveStreamDetail.reducers,
 })
 export default reducer
 

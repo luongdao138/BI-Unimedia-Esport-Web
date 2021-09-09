@@ -1,56 +1,57 @@
 import { Box, Typography, Theme, makeStyles, Icon, Grid } from '@material-ui/core'
-// import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import { PreloadDescription, PreloadPreviewItem } from '../PreloadContainer'
-import { TypeVideo } from '@services/videoTop.services'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import useLiveStreamDetail from '../useLiveStreamDetail'
+import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import useDetailVideo from '../useDetailVideo'
 
-const ProgramInfo: React.FC = () => {
-  const [descriptionCollapse, setDescriptionCollapse] = useState(true)
-  const isLoading = false
-
-  // const { t } = useTranslation('common')
-  const dataLiveVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'related',
-      title: `ムービータイトルムービータイトル ...`,
-      user_avatar: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnail: '/images/dataVideoFake/banner_04.png',
-      user_nickname: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category_name: 'Valorant',
-    }))
-  const getDescription = () => {
-    return (
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。番組の説明や情報がここに入ります。\n' +
-      '番組の説明や情報がここに入ります。番組の説明や情報がここに入ります'
-    )
-  }
-
+type ProgramInfoProps = {
+  video_id?: string | string[]
+}
+const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const renderArchiveVideoItem = (item: TypeVideo, index: number) => {
+
+  const {
+    meta_archived_video_stream,
+    archivedVideoStreamData,
+    getArchivedVideoStream,
+    resetArchivedVideoStream,
+    loadMoreArchived,
+  } = useLiveStreamDetail()
+  const { detailVideoResult } = useDetailVideo()
+  const isLoadingData = meta_archived_video_stream?.pending
+  const getDescription = detailVideoResult?.description
+
+  const [descriptionCollapse, setDescriptionCollapse] = useState(true)
+  const page = 1
+
+  const params = {
+    video_id: video_id,
+    page: page,
+    limit: LIMIT_ITEM,
+  }
+
+  useEffect(() => {
+    if (archivedVideoStreamData.length === 0) {
+      getArchivedVideoStream(params)
+    }
+    return () => {
+      resetArchivedVideoStream()
+    }
+  }, [video_id])
+
+  useEffect(() => {
+    loadMoreArchived(page + 1, video_id)
+  }, [])
+
+  const renderArchiveVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
       <>
         {downMd ? (
@@ -66,7 +67,7 @@ const ProgramInfo: React.FC = () => {
     )
   }
   const renderPreLoadArchiveVideoItem = () => {
-    const arrayPreLoad = Array(10)
+    const arrayPreLoad = Array(6)
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map(() => (
@@ -86,15 +87,15 @@ const ProgramInfo: React.FC = () => {
     ))
   }
   const getDescriptionTruncated = () => {
-    return descriptionCollapse ? `${getDescription().substring(0, downMd ? 70 : 200)}...` : getDescription()
+    return descriptionCollapse ? `${getDescription.substring(0, downMd ? 70 : 200)}...` : getDescription
   }
   const renderDescription = () => {
     return (
       <>
         <Typography gutterBottom className={classes.label}>
-          {getDescription().length < 200 ? getDescription() : getDescriptionTruncated()}
+          {getDescription?.length < 200 ? getDescription : getDescriptionTruncated()}
         </Typography>
-        {getDescription().length > 200 && (
+        {getDescription?.length > 200 && (
           <Box
             onClick={() => {
               setDescriptionCollapse(!descriptionCollapse)
@@ -116,12 +117,12 @@ const ProgramInfo: React.FC = () => {
         {downMd ? (
           <Box className={classes.xsItemContainer}>
             <Box className={classes.wrapPreLoadDescription}>
-              <PreloadDescription height={50} />
+              <PreloadDescription />
             </Box>
           </Box>
         ) : (
           <Grid item xs={6} className={classes.itemContainer}>
-            <PreloadDescription height={100} />
+            <PreloadDescription />
           </Grid>
         )}
       </>
@@ -131,7 +132,7 @@ const ProgramInfo: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.descriptionContainer}>
-        {getDescription().length > 0 && !isLoading ? <>{renderDescription()}</> : <>{renderPreloadDescription()}</>}
+        {getDescription?.length > 0 ? <>{renderDescription()}</> : <>{renderPreloadDescription()}</>}
       </Box>
       <Box className={classes.archiveVideoTitleContainer}>
         <Typography className={classes.archiveVideoTitle}>{i18n.t('common:live_stream_screen.archived_stream_video')}</Typography>
@@ -139,20 +140,20 @@ const ProgramInfo: React.FC = () => {
       <Box className={classes.wrapContentContainer}>
         <InfiniteScroll
           className={classes.scrollContainer}
-          dataLength={dataLiveVideo.length}
+          dataLength={archivedVideoStreamData?.length}
           next={() => {
-            // loadMore(page, follow)
+            loadMoreArchived(page, video_id)
           }}
           hasMore={true}
           loader={null}
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
         >
-          {dataLiveVideo?.length > 0 ? (
+          {archivedVideoStreamData?.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>
-              {dataLiveVideo.map(renderArchiveVideoItem)}
+              {archivedVideoStreamData.map(renderArchiveVideoItem)}
             </Grid>
-          ) : dataLiveVideo?.length === 0 && isLoading ? (
+          ) : archivedVideoStreamData?.length === 0 && isLoadingData ? (
             <Grid container spacing={3} className={classes.contentContainer}>
               {renderPreLoadArchiveVideoItem()}
             </Grid>
@@ -172,13 +173,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     marginTop: theme.spacing(2),
     flexDirection: 'column',
+    width: '100%',
   },
   descriptionContainer: {
     display: 'flex',
     width: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   label: {
     marginLeft: 10,

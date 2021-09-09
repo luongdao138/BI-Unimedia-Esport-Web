@@ -1,30 +1,40 @@
 import { Box, Typography, makeStyles, Grid, Theme, Icon } from '@material-ui/core'
 import ESAvatar from '@components/Avatar'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import SocialDistributionCircle from '@components/Button/SocialDistributionCircle'
 import i18n from '@locales/i18n'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { TypeVideo } from '@services/videoTop.services'
 import { PreloadChannel, PreloadPreviewItem } from '../PreloadContainer'
-// import { useTranslation } from 'react-i18next'
-// import i18n from '@locales/i18n'
+import useLiveStreamDetail from '../useLiveStreamDetail'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 
 interface dataItem {
   id: number
   type: string
 }
+type DistributorInfoProps = {
+  video_id?: string | string[]
+}
 
-const DistributorInfo: React.FC = () => {
-  const [descriptionCollapse, setDescriptionCollapse] = useState(true)
-
-  // const { t } = useTranslation('common')
+const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const isLoading = false
+  const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream } = useLiveStreamDetail()
+  const isLoadingData = meta_archived_video_stream?.pending
+
+  const [descriptionCollapse, setDescriptionCollapse] = useState(true)
+
+  const params = {
+    video_id,
+  }
+  useEffect(() => {
+    getArchivedVideoStream(params)
+  }, [video_id])
 
   const getDistributorSocialInfo = () => [
     {
@@ -41,21 +51,6 @@ const DistributorInfo: React.FC = () => {
     },
   ]
 
-  const dataLiveVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'related',
-      title: `ムービータイトルムービータイトル ...`,
-      user_avatar: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnail: '/images/dataVideoFake/banner_04.png',
-      user_nickname: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category_name: 'Valorant',
-    }))
-
   const getSocialIcon = (type) => {
     switch (type) {
       case 'twitter':
@@ -67,7 +62,7 @@ const DistributorInfo: React.FC = () => {
     }
   }
 
-  const renderArchiveVideo = (item: TypeVideo, index: number) => {
+  const renderArchiveVideo = (item: TypeVideoArchived, index: number) => {
     return (
       <>
         {downMd ? (
@@ -83,7 +78,7 @@ const DistributorInfo: React.FC = () => {
     )
   }
   const renderPreLoadArchiveVideoItem = () => {
-    const arrayPreLoad = Array(10)
+    const arrayPreLoad = Array(6)
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map(() => (
@@ -182,7 +177,7 @@ const DistributorInfo: React.FC = () => {
       <Box className={classes.wrapContentContainer}>
         <InfiniteScroll
           className={classes.scrollContainer}
-          dataLength={dataLiveVideo.length}
+          dataLength={archivedVideoStreamData.length}
           next={() => {
             // loadMore(page, follow)
           }}
@@ -191,11 +186,11 @@ const DistributorInfo: React.FC = () => {
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
         >
-          {dataLiveVideo?.length > 0 ? (
+          {archivedVideoStreamData?.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>
-              {dataLiveVideo.map(renderArchiveVideo)}
+              {archivedVideoStreamData.map(renderArchiveVideo)}
             </Grid>
-          ) : dataLiveVideo?.length === 0 && isLoading ? (
+          ) : archivedVideoStreamData?.length === 0 && isLoadingData ? (
             <Grid container spacing={3} className={classes.contentContainer}>
               {renderPreLoadArchiveVideoItem()}
             </Grid>

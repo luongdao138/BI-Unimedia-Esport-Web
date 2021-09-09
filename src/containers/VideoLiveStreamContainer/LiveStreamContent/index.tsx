@@ -1,7 +1,9 @@
 import { Box, ButtonBase, Icon, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import ESChip from '@components/Chip'
+import userProfileStore from '@store/userProfile'
 import ESAvatar from '@components/Avatar'
+import { useAppSelector } from '@store/hooks'
 import { Colors } from '@theme/colors'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import React, { useEffect, useState } from 'react'
@@ -10,36 +12,110 @@ import { VIDEO_TYPE } from '@containers/VideoLiveStreamContainer'
 import OverlayContent from '@containers/VideoLiveStreamContainer/LiveStreamContent/OverlayContent'
 // import ESButton from '@components/Button'
 import VideoPlayer from './VideoPlayer'
+import useLiveStreamDetail from '../useLiveStreamDetail'
+import ReactionButton from './ReactionButton'
 import useDetailVideo from '../useDetailVideo'
-import { STATUS_VIDEO } from '@services/videoTop.services'
+import PreloadButtonReaction from '../PreloadContainer/PreloadButtonReaction'
+import PreloadVideoInfo from '../PreloadContainer/PreloadVideoInfo'
+
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
   freeToWatch?: boolean
   userHasViewingTicket?: boolean
   ticketAvailableForSale?: boolean
   softKeyboardIsShown?: boolean
+  video_id?: string | string[]
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const [showReportMenu, setShowReportMenu] = useState<boolean>(false)
-  const [subscribe, setSubscribe] = useState(true)
 
   const theme = useTheme()
   const { t } = useTranslation('common')
+  const { selectors } = userProfileStore
+  const userProfile = useAppSelector(selectors.getUserProfile)
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const { detailVideoResult, userResult } = useDetailVideo()
-  const [likeNumber, setLikeNumber] = useState(detailVideoResult.like_count)
-  const [disLikeNumber, setDisLikeNumber] = useState(detailVideoResult.unlike_count)
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const { detailVideoResult, meta, userResult } = useDetailVideo()
+  const { meta_reaction_video_stream, userReactionVideoStream, userFollowChannel, meta_follow_channel } = useLiveStreamDetail()
+  const isLoadingReaction = meta_reaction_video_stream?.pending
+  const isLoadingVideoDetail = meta?.pending
+  const [like, setLike] = useState(!isLoadingVideoDetail ? userResult.like : 0)
+  const [unlike, setUnlike] = useState(!isLoadingVideoDetail ? userResult.unlike : 0)
+  const [likeCount, setLikeCount] = useState(detailVideoResult?.like_count)
+  const [unlikeCount, setUnlikeCount] = useState(detailVideoResult?.unlike_count)
+  const [subscribe, setSubscribe] = useState(userResult?.follow !== null ? userResult.follow : 0)
+
   const isSubscribed = () => subscribe
 
   const classes = useStyles({ isSubscribed: isSubscribed() })
 
-  const handleSubscribeClick = () => {
-    setSubscribe(!subscribe)
+  const followParams = {
+    video_id: props?.video_id,
+    channel_id: detailVideoResult?.channel_id,
+    follow: subscribe,
+  }
+  const toggleSubscribeClick = () => {
+    if (subscribe === 0) {
+      setSubscribe(1)
+    } else {
+      setSubscribe(0)
+    }
+  }
+  const handleSubscribe = () => {
+    if (!meta_follow_channel?.pending) {
+      userFollowChannel(followParams)
+    }
+  }
+  const paramsReaction = {
+    video_id: props?.video_id,
+    like: like,
+    unlike: unlike,
+  }
+  const toggleLikeVideo = () => {
+    if (like === 0) {
+      setLike(1)
+      if (unlike === 1) {
+        setUnlike(0)
+      }
+    } else {
+      setLike(0)
+    }
   }
 
+  const toggleUnLikeVideo = () => {
+    if (unlike === 0) {
+      setUnlike(1)
+      if (like === 1) {
+        setLike(0)
+      }
+    } else {
+      setUnlike(0)
+    }
+  }
+  const handleReactionVideo = () => {
+    if (!isLoadingReaction) {
+      userReactionVideoStream(paramsReaction)
+    }
+  }
+  useEffect(() => {
+    handleReactionVideo()
+  }, [like, unlike])
+
+  useEffect(() => {
+    handleSubscribe()
+  }, [subscribe])
+
+  useEffect(() => {
+    setLike(userResult?.like)
+    setUnlike(userResult?.unlike)
+    setLikeCount(detailVideoResult?.like_count)
+    setUnlikeCount(detailVideoResult?.unlike_count)
+    setSubscribe(userResult?.follow)
+  }, [userResult, detailVideoResult])
+
   const registerChannelButton = () => (
-    <ButtonBase onClick={handleSubscribeClick} className={classes.register_channel_btn}>
+    <ButtonBase onClick={toggleSubscribeClick} className={classes.register_channel_btn}>
       <Box>
         <Icon className={`far fa-heart ${classes.heartIcon}`} fontSize="small" />
       </Box>
@@ -55,9 +131,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
         onClick={() =>
           window
             .open(
-              `https://twitter.com/intent/tweet?text=${detailVideoResult.title}\n${
-                detailVideoResult.archived_file_url ? detailVideoResult.archived_file_url : ''
-              }`,
+              `https://twitter.com/intent/tweet?text=${'配信者の名前がはいります'}\n${'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}`,
               '_blank'
             )
             ?.focus()
@@ -71,8 +145,8 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mobileRegisterChannelContainer = () => (
     <Box className={classes.mobileRegisterChannelContainer}>
-      <ESAvatar className={classes.smallAvatar} src={detailVideoResult ? detailVideoResult?.user_avatar : '/images/avatar.png'} />
-      <Typography className={classes.channelName}>{detailVideoResult?.user_nickname}</Typography>
+      <ESAvatar className={classes.smallAvatar} src={'/images/avatar.png'} />
+      <Typography className={classes.channelName}>{'配信者の名前がはいります'}</Typography>
       {registerChannelButton()}
     </Box>
   )
@@ -126,6 +200,36 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       </Box>
     )
   }
+  const renderPreloadButtonReaction = () => {
+    return (
+      <>
+        {downMd ? (
+          <Box className={classes.wrapPreLoadReactionButton}>
+            <PreloadButtonReaction />
+          </Box>
+        ) : (
+          <Box style={{ width: '100%', height: 100 }}>
+            <PreloadButtonReaction />
+          </Box>
+        )}
+      </>
+    )
+  }
+  const renderPreloadVideoInfo = () => {
+    return (
+      <>
+        {downMd ? (
+          <Box className={classes.wrapPreLoadReactionButton}>
+            <PreloadVideoInfo />
+          </Box>
+        ) : (
+          <Box style={{ width: '100%', height: 100 }}>
+            <PreloadVideoInfo />
+          </Box>
+        )}
+      </>
+    )
+  }
 
   const showOverlayOnMediaPlayer = () => {
     const { userHasViewingTicket, videoType, freeToWatch } = props
@@ -138,13 +242,6 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   const liveBasicContentVisible = () => !isMobile || !props.softKeyboardIsShown
   const mobileRegisterChannelVisible = () => isMobile && !props.softKeyboardIsShown
 
-  useEffect(() => {
-    // console.log("====PROSP===",detailVideoResult, userResult)
-    setLikeNumber(detailVideoResult.like_count)
-    setDisLikeNumber(detailVideoResult.unlike_count)
-    setSubscribe(userResult.follow === 1 ? true : false)
-  }, [detailVideoResult, userResult])
-
   return (
     <Box className={classes.container}>
       <Box className={classes.mediaPlayerContainer}>
@@ -154,63 +251,66 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       {mobileRegisterChannelVisible() && mobileRegisterChannelContainer()}
       {liveBasicContentVisible() && (
         <Box className={classes.wrap_info}>
-          <Box className={classes.wrap_movie_info}>
-            <Box className={classes.wrap_title}>
-              <Typography className={classes.movie_title}>{FormatHelper.textSizeMode(detailVideoResult?.title, 30)}</Typography>
-              <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
-            </Box>
-            {!isMobile && detailVideoResult.status === STATUS_VIDEO.LIVE_STREAM ? (
-              <Box className={classes.live_stream_status}>
-                <ESChip
-                  color={'primary'}
-                  className={classes.statusChip}
-                  label={t('live_stream_screen.live_stream_status')}
-                  onClick={() => ''}
-                />
+          {!detailVideoResult ? (
+            <>{renderPreloadVideoInfo()}</>
+          ) : (
+            <Box className={classes.wrap_movie_info}>
+              <Box className={classes.wrap_title}>
+                <Typography className={classes.movie_title}>{detailVideoResult?.title}</Typography>
+                <Typography className={classes.device_name}>{detailVideoResult?.category_name}</Typography>
               </Box>
-            ) : (
-              shareButton()
-            )}
-          </Box>
+              {!isMobile ? (
+                <Box className={classes.live_stream_status}>
+                  <ESChip
+                    color={'primary'}
+                    className={classes.statusChip}
+                    label={t('live_stream_screen.live_stream_status')}
+                    onClick={() => ''}
+                  />
+                </Box>
+              ) : (
+                shareButton()
+              )}
+            </Box>
+          )}
 
           <Box className={classes.wrap_interactive_info}>
-            <Box className={classes.interactive_info}>
-              <Typography className={classes.view}>
-                <Icon className={`fa fa-eye ${classes.icon}`} fontSize="small" />{' '}
-                {FormatHelper.japaneseWanFormatter(
-                  detailVideoResult.status === STATUS_VIDEO.LIVE_STREAM ? detailVideoResult.live_view_count : detailVideoResult.view_count
-                )}
-              </Typography>
-              <Typography className={classes.like}>
-                <Icon className={`fa fa-thumbs-up ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(likeNumber)}
-              </Typography>
-              <Typography className={classes.dislike}>
-                <Icon className={`fa fa-thumbs-down ${classes.icon}`} fontSize="small" /> {FormatHelper.japaneseWanFormatter(disLikeNumber)}
-              </Typography>
-              {!isMobile && shareButton()}
-            </Box>
-            {!isMobile && (
-              <Box className={classes.dropDownMenu}>
-                <Typography
-                  onClick={() => {
-                    setShowReportMenu(true)
-                  }}
-                  className={classes.three_dot}
-                >
-                  <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
-                </Typography>
-                {showReportMenu && (
-                  <Box className={`${classes.dropDownContent} MuiPaper-elevation8 MuiPaper-rounded`}>
-                    <ESMenuItem
-                      onClick={() => {
-                        setShowReportMenu(false)
-                      }}
-                    >
-                      {t('live_stream_screen.report')}
-                    </ESMenuItem>
+            {!detailVideoResult ? (
+              <>{renderPreloadButtonReaction()}</>
+            ) : (
+              detailVideoResult !== '' && (
+                <>
+                  <Box className={classes.interactive_info}>
+                    <ReactionButton iconName={'fa fa-eye'} value={detailVideoResult?.view_count} status={1} />
+                    <ReactionButton iconName={'fa fa-thumbs-up'} value={likeCount} onPress={toggleLikeVideo} status={like} />
+                    <ReactionButton iconName={'fa fa-thumbs-down'} value={unlikeCount} onPress={toggleUnLikeVideo} status={unlike} />
+                    {!isMobile && shareButton()}
                   </Box>
-                )}
-              </Box>
+                  {!isMobile && (
+                    <Box className={classes.dropDownMenu}>
+                      <Typography
+                        onClick={() => {
+                          setShowReportMenu(true)
+                        }}
+                        className={classes.three_dot}
+                      >
+                        <Icon className={`fa fa-ellipsis-v ${classes.icon}`} fontSize="small" />
+                      </Typography>
+                      {showReportMenu && (
+                        <Box className={`${classes.dropDownContent} MuiPaper-elevation8 MuiPaper-rounded`}>
+                          <ESMenuItem
+                            onClick={() => {
+                              setShowReportMenu(false)
+                            }}
+                          >
+                            {t('live_stream_screen.report')}
+                          </ESMenuItem>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </>
+              )
             )}
           </Box>
         </Box>
@@ -220,15 +320,15 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
           <Box className={classes.streamer_info}>
             <ESAvatar
               className={classes.avatar}
-              alt={detailVideoResult?.user_nickname}
-              src={detailVideoResult ? detailVideoResult?.user_avatar : '/images/avatar.png'}
+              alt={userProfile?.attributes?.nickname}
+              src={userProfile ? userProfile?.attributes?.avatar_url : '/images/avatar.png'}
             />
             <Box className={classes.streamer_data}>
-              <Box className={classes.streamer_name}>{detailVideoResult?.user_nickname}</Box>
+              <Box className={classes.streamer_name}>{t('live_stream_screen.streamer_name')}</Box>
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>
-                  {FormatHelper.japaneseWanFormatter(detailVideoResult?.channel_follow_count ? detailVideoResult?.channel_follow_count : 0)}
+                  {FormatHelper.japaneseWanFormatter(123456)}
                   {t('common.man')}
                 </Typography>
               </Box>
@@ -252,6 +352,7 @@ const useStyles = makeStyles((theme) => ({
   dropDownMenu: {
     position: 'relative',
     display: 'inline-block',
+    paddingRight: 30,
   },
   dropDownContent: {
     overflow: 'hidden',
@@ -317,7 +418,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '110px',
   },
   movie_title: {
-    maxWidth: '254px',
+    // maxWidth: '254px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -337,7 +438,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '16px',
     justifyContent: 'space-between',
     width: '100%',
-    paddingRight: '30px',
+    // paddingRight: '30px',
   },
   interactive_info: {
     display: 'flex',
@@ -384,11 +485,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   icon: {},
-  heartIcon: (props: { isSubscribed?: boolean }) => ({
-    color: !props?.isSubscribed ? Colors.white : Colors.primary,
+  heartIcon: (props: { isSubscribed?: number }) => ({
+    color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
-  subscribeLabel: (props: { isSubscribed?: boolean }) => ({
-    color: !props?.isSubscribed ? Colors.white : Colors.primary,
+  subscribeLabel: (props: { isSubscribed?: number }) => ({
+    color: props?.isSubscribed === 1 ? Colors.white : Colors.primary,
   }),
   wrap_streamer_info: {
     height: '112px',
@@ -422,9 +523,9 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '34px',
   },
   register_person_number: {},
-  register_channel_btn: (props: { isSubscribed?: boolean }) => ({
-    background: !props?.isSubscribed ? Colors.primary : Colors.transparent,
-    ...(props?.isSubscribed && {
+  register_channel_btn: (props: { isSubscribed?: number }) => ({
+    background: props?.isSubscribed === 1 ? Colors.primary : Colors.transparent,
+    ...(props?.isSubscribed === 0 && {
       borderRadius: 4,
       borderWidth: 1,
       borderStyle: 'solid',
@@ -440,6 +541,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   }),
   [theme.breakpoints.down(768)]: {
+    wrap_movie_info: {},
+    wrapPreLoadReactionButton: {
+      width: 'calc(100vw)',
+    },
     movie_title: {
       fontSize: '12px',
       maxWidth: '200px',
@@ -470,7 +575,6 @@ const useStyles = makeStyles((theme) => ({
     register_channel_btn: {
       padding: '1px 8px',
       marginRight: '8px',
-      fontSize: '16px',
     },
     icon: {
       marginRight: '11px',
