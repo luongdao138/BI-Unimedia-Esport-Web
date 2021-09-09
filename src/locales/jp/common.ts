@@ -1224,9 +1224,9 @@ export default {
     disband: {
       title: 'コミュニティを解散する',
       submit: 'コミュニティを解散する',
-      dispand_community: '解散させるコミュニティ',
-      description: 'コミュニティを解散します。',
-      description2: '一度解散したコミュニティのトピックやアップロードした画像は復元できません。',
+      disband_community: '解散させるコミュニティ',
+      description: `コミュニティを解散します。
+      一度解散したコミュニティのトピックやアップロードした画像は復元できません。`,
       disbanded_toast: 'コミュニティを解散しました',
     },
     community_created_toast: 'コミュニティを作成しました。',

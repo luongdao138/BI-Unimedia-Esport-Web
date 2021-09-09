@@ -4,7 +4,7 @@ import CommunityDetailContainer from '@containers/Community/Detail'
 
 const CommunityDetailPage: PageWithLayoutType = () => {
   return (
-    <MainLayout patternBg={true}>
+    <MainLayout loginRequired={false} patternBg={true}>
       <CommunityDetailContainer />
     </MainLayout>
   )

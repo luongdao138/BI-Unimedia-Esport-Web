@@ -14,6 +14,7 @@ import _ from 'lodash'
 import useCommunityDetail from '../Detail/useCommunityDetail'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 import useTopicHelper from './useTopicHelper'
+import { ESRoutes } from '@constants/route.constants'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -39,7 +40,8 @@ const TopicDetailContainer: React.FC = () => {
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
   const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
-  const { isNotMember, isModerator, isPublic } = useCommunityHelper(communityDetail)
+  const [render, setRender] = useState(false)
+  const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
   const data = topic?.attributes
   const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
 
@@ -57,6 +59,14 @@ const TopicDetailContainer: React.FC = () => {
       getCommentsListPage({ hash_key: String(topic_hash_key) })
     }
   }, [router])
+
+  useEffect(() => {
+    if (communityDetail && !isAutomatic && isNotMember) {
+      router.push(ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)))
+    } else {
+      setRender(true)
+    }
+  }, [communityDetail])
 
   useEffect(() => {
     if (commentsListPageMeta.loaded) {
@@ -106,6 +116,10 @@ const TopicDetailContainer: React.FC = () => {
         })}
       </>
     )
+  }
+
+  if (!render) {
+    return <></>
   }
 
   return (

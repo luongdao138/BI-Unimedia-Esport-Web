@@ -24,7 +24,7 @@ import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
-import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
+import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
 
@@ -40,12 +40,6 @@ type Props = {
   toEdit?: () => void
   topicList: Array<TopicDetailList>
   showTopicListAndSearchTab: boolean
-}
-
-enum TABS {
-  INFO = 0,
-  TOPIC_LIST = 1,
-  SEARCH = 2,
 }
 
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
@@ -81,7 +75,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   useEffect(() => {
     if (router?.query) {
-      setTab(isAutomatic ? 1 : isNotMember ? 0 : 1)
+      setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
     }
   }, [router.query])
 

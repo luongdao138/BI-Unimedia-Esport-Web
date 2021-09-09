@@ -3,6 +3,12 @@ export const PARTICIPANT_TYPE = {
   GUEST: 'guest',
 }
 
+export enum TABS {
+  INFO,
+  TOPIC_LIST,
+  SEARCH,
+}
+
 export const T_TYPE = {
   PUBLIC: 0,
   PRIVATE: 1,
