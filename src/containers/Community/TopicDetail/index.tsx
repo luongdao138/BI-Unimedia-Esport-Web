@@ -93,7 +93,7 @@ const TopicDetailContainer: React.FC = () => {
     return (
       <>
         {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} community={communityDetail} handleReply={setReply} />
+          return <Comment key={i} comment={comment} community={communityDetail} topic={topic} handleReply={setReply} />
         })}
       </>
     )
