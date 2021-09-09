@@ -115,43 +115,45 @@ const LobbyCreate: React.FC = () => {
   }, [formik.errors])
 
   const handleSetConfirm = () => {
-    formik.validateForm().then(() => {
-      const { stepOne, stepTwo } = formik.values
+    formik.setValues(formik.values).then(() => {
+      formik.validateForm().then((errors) => {
+        const { stepOne, stepTwo } = formik.values
 
-      const fieldIdentifier = checkNgWordFields({
-        title: stepOne.title,
-        message: stepOne.message,
-        address: stepTwo.address,
-      })
+        const fieldIdentifier = checkNgWordFields({
+          title: stepOne.title,
+          message: stepOne.message,
+          address: stepTwo.address,
+        })
 
-      const ngFields = checkNgWordByField({
-        [FIELD_TITLES.stepOne.title]: stepOne.title,
-        [FIELD_TITLES.stepOne.message]: stepOne.message,
-        [FIELD_TITLES.stepTwo.address]: stepTwo.address,
-      })
+        const ngFields = checkNgWordByField({
+          [FIELD_TITLES.stepOne.title]: stepOne.title,
+          [FIELD_TITLES.stepOne.message]: stepOne.message,
+          [FIELD_TITLES.stepTwo.address]: stepTwo.address,
+        })
 
-      if (fieldIdentifier) {
-        if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
-        else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
+        if (fieldIdentifier) {
+          if (_.has(FIELD_TITLES.stepOne, fieldIdentifier)) activeTabIndex = 0
+          else if (_.has(FIELD_TITLES.stepTwo, fieldIdentifier)) activeTabIndex = 1
 
-        dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
-      } else {
-        if (_.isEmpty(formik.errors)) {
-          if (isConfirm) {
-            formik.submitForm()
-          } else {
-            setIsConfirm(true)
-          }
-          return
+          dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: ngFields.join(', ') }))
         } else {
-          if (isConfirm) {
-            setIsConfirm(false)
+          if (_.isEmpty(errors)) {
+            if (isConfirm) {
+              formik.submitForm()
+            } else {
+              setIsConfirm(true)
+            }
+            return
+          } else {
+            if (isConfirm) {
+              setIsConfirm(false)
+            }
+            if (_.has(errors, 'stepOne')) activeTabIndex = 0
+            else if (_.has(errors, 'stepTwo')) activeTabIndex = 1
+            setTab(activeTabIndex)
           }
-          if (_.has(formik.errors, 'stepOne')) activeTabIndex = 0
-          else if (_.has(formik.errors, 'stepTwo')) activeTabIndex = 1
-          setTab(activeTabIndex)
         }
-      }
+      })
     })
   }
 
