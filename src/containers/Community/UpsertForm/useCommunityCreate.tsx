@@ -30,7 +30,7 @@ export type EditableTypes = {
 const useCommunityCreate = (): {
   isEdit: boolean
   community: CommunityDetail
-  communityFeatures: Array<CommunityFeature>
+  communityFeatures: CommunityFeature[]
   editables: EditableTypes
   submit(params: CommunityFormParams): void
   update(params: UpdateParams): void

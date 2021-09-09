@@ -38,7 +38,7 @@ const ROLE_TYPES = {
 type Props = {
   detail: CommunityDetail
   toEdit?: () => void
-  topicList: Array<TopicDetailList>
+  topicList: TopicDetailList[]
   showTopicListAndSearchTab: boolean
 }
 

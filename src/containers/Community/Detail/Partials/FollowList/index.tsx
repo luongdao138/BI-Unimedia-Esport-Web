@@ -25,7 +25,7 @@ type Props = {
 
 type GroupedMembers = {
   title: string
-  value: Array<CommunityMember>
+  value: CommunityMember[]
   isApplying: boolean
 }
 
@@ -53,8 +53,8 @@ const FollowList: React.FC<Props> = ({ community }) => {
     sendToast,
   } = useFollowList()
   const [hasChanged, setHasChanged] = useState(false)
-  const [groupedMembers, setGroupedMembers] = useState<Array<GroupedMembers>>([])
-  const [initialValue, setInitialValue] = useState<Array<GroupedMembers>>([])
+  const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
+  const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
 
   useEffect(() => {
     const data = _.map(
@@ -123,12 +123,12 @@ const FollowList: React.FC<Props> = ({ community }) => {
   }
 
   const handleSubmit = async () => {
-    const applyingData: Array<CommunityMember> = _.differenceWith(
+    const applyingData: CommunityMember[] = _.differenceWith(
       groupedMembers[MemberSection.applying].value,
       initialValue[MemberSection.applying].value,
       _.isEqual
     )
-    const participatingData: Array<CommunityMember> = _.differenceWith(
+    const participatingData: CommunityMember[] = _.differenceWith(
       groupedMembers[MemberSection.participating].value,
       initialValue[MemberSection.participating].value,
       _.isEqual

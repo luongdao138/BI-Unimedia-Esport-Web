@@ -33,7 +33,7 @@ const CoverUploader: React.FC<ProfileAvatarProps> = ({ src, isUploading, onChang
     }
   }, [src])
 
-  const handleChange = (files: Array<File>) => {
+  const handleChange = (files: File[]) => {
     setDrag(false)
     const file = files[0]
     const reader = new FileReader()
