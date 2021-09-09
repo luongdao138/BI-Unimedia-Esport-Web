@@ -161,6 +161,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       }
       getDetailAndToast()
     }
+    setHasChanged(false)
   }
 
   const handleSelectedValue = async (isApplying: boolean, id: number, value: number) => {
