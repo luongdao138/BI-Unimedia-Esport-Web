@@ -102,7 +102,7 @@ const ProfileContainer: React.FC<ProfileProps> = ({ router }) => {
     if (blockMeta.loaded) {
       addToast(i18n.t('common:profile.block_success_message'))
     }
-  }, [blockMeta.loaded, blockMeta.pending])
+  }, [blockMeta.loaded])
 
   useEffect(() => {
     if (meta.error) {
