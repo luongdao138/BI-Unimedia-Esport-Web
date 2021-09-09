@@ -13,7 +13,7 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
-import { CommentsResponse, CommunityDetail } from '@services/community.service'
+import { CommentsResponse } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useTopicDetail from '../../useTopicDetail'
 import router, { useRouter } from 'next/router'
@@ -21,14 +21,19 @@ import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
-import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 
+type MenuParams = {
+  isTopicOwner: boolean
+  isModerator: boolean
+  isNotMember: boolean
+  isPublic: boolean
+}
 type CommunityHeaderProps = {
   comment: CommentsResponse
-  community?: CommunityDetail
+  menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleReply }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -37,8 +42,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
-  const { isSelf } = useTopicHelper(comment.attributes.user_code)
-  const { isModerator, isPublic, isNotMember } = useCommunityHelper(community)
+  const { isOwner } = useTopicHelper(comment.attributes.user_code)
+  const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
 
   const handleClickReply = (event) => {
     setReplyAnchorEl(event.currentTarget)
@@ -90,12 +95,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
   }
 
   const newLineText = (text) => {
-    const newText = _.map(_.split(text, '\n'), (str, i) => (
+    return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {str}
       </Typography>
     ))
-    return newText
   }
 
   return (
@@ -119,8 +123,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
             <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
             {(isPublic || !isNotMember) && (
               <ESMenu>
-                {(isModerator || isSelf) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
-                {!isSelf && (
+                {(isModerator || isOwner || isTopicOwner) && (
+                  <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                )}
+                {!isOwner && (
                   <LoginRequired>
                     <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
                   </LoginRequired>
@@ -182,7 +188,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
           {newLineText(commentData.content)}
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
-        {!isSelf && (
+        {!isOwner && (
           <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <IconButton className={classes.shareButton} onClick={handleCommentReply}>
               <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />

@@ -24,7 +24,7 @@ import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
-import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
+import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
 
@@ -42,12 +42,6 @@ type Props = {
   showTopicListAndSearchTab: boolean
 }
 
-enum TABS {
-  INFO = 0,
-  TOPIC_LIST = 1,
-  SEARCH = 2,
-}
-
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
@@ -58,7 +52,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isDiscard, setIsDiscard] = useState(false)
   const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
-  const { isNotMember, isPublic, isOfficial } = useCommunityHelper(detail)
+  const { isNotMember, isPublic, isOfficial, isAutomatic } = useCommunityHelper(detail)
 
   const {
     isAuthenticated,
@@ -78,6 +72,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
   const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (router?.query) {
+      setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+    }
+  }, [router.query])
 
   const setOtherRoleFalse = (setRoleType: string) => {
     if (setRoleType === ROLE_TYPES.IS_ADMIN) {
@@ -179,35 +179,33 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const DetailInfoButton = () => {
     return (
-      <>
-        {isAuthenticated ? (
-          isAdmin || isCoOrganizer ? (
-            <DetailInfoButtons title={t('common:community.edit')} variant="outlined" disabled={false} onClick={toEdit} />
-          ) : isRequested ? (
-            <DetailInfoButtons
-              title={t('common:community.applying')}
-              variant="outlined"
-              disabled={unfollowCommunityMeta.pending}
-              onClick={cancelApplyingHandle}
-            />
-          ) : isFollowing ? (
-            <DetailInfoButtons
-              title={t('common:profile.following')}
-              variant="contained"
-              color="primary"
-              disabled={unfollowCommunityMeta.pending}
-              onClick={unfollowHandle}
-            />
-          ) : (
-            <DetailInfoButtons
-              title={t('common:profile.follow_as')}
-              variant="outlined"
-              disabled={followCommunityMeta.pending}
-              onClick={followHandle}
-            />
-          )
-        ) : null}
-      </>
+      <LoginRequired>
+        {isAdmin || isCoOrganizer ? (
+          <DetailInfoButtons title={t('common:community.edit')} variant="outlined" disabled={false} onClick={toEdit} />
+        ) : isRequested ? (
+          <DetailInfoButtons
+            title={t('common:community.applying')}
+            variant="outlined"
+            disabled={unfollowCommunityMeta.pending}
+            onClick={cancelApplyingHandle}
+          />
+        ) : isFollowing ? (
+          <DetailInfoButtons
+            title={t('common:profile.following')}
+            variant="contained"
+            color="primary"
+            disabled={unfollowCommunityMeta.pending}
+            onClick={unfollowHandle}
+          />
+        ) : (
+          <DetailInfoButtons
+            title={t('common:profile.follow_as')}
+            variant="outlined"
+            disabled={followCommunityMeta.pending}
+            onClick={followHandle}
+          />
+        )}
+      </LoginRequired>
     )
   }
 
