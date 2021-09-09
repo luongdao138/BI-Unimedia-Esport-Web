@@ -437,7 +437,7 @@ const useStyles = makeStyles((theme) => ({
     width: 99,
     left: 'calc(100% - 99px)',
     position: 'sticky',
-    bottom: theme.spacing(4),
+    bottom: theme.spacing(2),
   },
   boxContainer: {
     display: 'flex',
@@ -461,6 +461,9 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    commentIconContainer: {
+      bottom: theme.spacing(10),
     },
   },
 }))
