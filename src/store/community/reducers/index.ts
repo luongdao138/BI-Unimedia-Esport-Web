@@ -116,6 +116,7 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.unfollowCommunity.fulfilled, (state) => {
     state.community_detail.attributes.member_count -= 1
+    state.community_detail.attributes.my_role = null
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined

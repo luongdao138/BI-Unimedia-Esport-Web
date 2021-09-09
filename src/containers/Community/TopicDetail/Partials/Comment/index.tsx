@@ -13,28 +13,32 @@ import ESReport from '@containers/Report'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
-import { CommentsResponse } from '@services/community.service'
+import { CommentsResponse, CommunityDetail } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
 import useTopicDetail from '../../useTopicDetail'
 import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
+import useTopicHelper from '../../useTopicHelper'
+import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 
 type CommunityHeaderProps = {
   comment: CommentsResponse
+  community?: CommunityDetail
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleReply }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
-  const isModerator = true
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
+  const { isSelf } = useTopicHelper(comment.attributes.user_code)
+  const { isModerator, isPublic, isNotMember } = useCommunityHelper(community)
 
   const handleClickReply = (event) => {
     setReplyAnchorEl(event.currentTarget)
@@ -75,11 +79,11 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
     handleReply({ hash_key: hash_key, comment_no: commentData.comment_no })
   }
 
-  const renderClickableImage = () => {
+  const renderClickableImage = (image_url: string, isPopOver?: boolean) => {
     return (
       <Box mb={1}>
         <SRLWrapper options={LIGHTBOX_OPTIONS}>
-          <img className={classes.imageBox} src={commentData.attachments[0]?.assets_url} />
+          <img className={`${classes.imageBox} ${isPopOver && classes.popOverImage}`} src={image_url} />
         </SRLWrapper>
       </Box>
     )
@@ -113,12 +117,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
           </Box>
           <Box className={classes.dateReportContainer}>
             <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
-            <ESMenu>
-              {isModerator && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
-              <LoginRequired>
-                <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
-              </LoginRequired>
-            </ESMenu>
+            {(isPublic || !isNotMember) && (
+              <ESMenu>
+                {(isModerator || isSelf) && <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>}
+                {!isSelf && (
+                  <LoginRequired>
+                    <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                  </LoginRequired>
+                )}
+              </ESMenu>
+            )}
           </Box>
         </Box>
         {!!commentData && !!commentData.main_comment && (
@@ -165,6 +173,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
               </Box>
               <Box mb={3}>
                 <Typography className={classes.content}>{commentData.main_comment.content}</Typography>
+                {commentData.main_comment?.assets_url && renderClickableImage(commentData.main_comment?.assets_url, true)}
               </Box>
             </Popover>
           </>
@@ -172,12 +181,14 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, handleReply }) => {
         <Box className={classes.contentContainer} mb={1}>
           {newLineText(commentData.content)}
         </Box>
-        {commentData.attachments[0]?.assets_url && renderClickableImage()}
-        <Box style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-          <IconButton className={classes.shareButton} onClick={handleCommentReply}>
-            <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
-          </IconButton>
-        </Box>
+        {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
+        {!isSelf && (
+          <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <IconButton className={classes.shareButton} onClick={handleCommentReply}>
+              <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+            </IconButton>
+          </Box>
+        )}
       </Box>
       {isAuthenticated && (
         <>
@@ -293,6 +304,10 @@ const useStyles = makeStyles((theme) => ({
     transition: 'all 0.5s ease',
     borderRadius: 7,
     width: '66%',
+  },
+  popOverImage: {
+    maxHeight: '50vh',
+    objectFit: 'cover',
   },
   content: {
     color: Colors.grey[300],

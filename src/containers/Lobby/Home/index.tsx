@@ -1,11 +1,5 @@
-import { Grid, Box, Typography, makeStyles } from '@material-ui/core'
-import ButtonPrimary from '@components/ButtonPrimary'
+import { Grid, Box, makeStyles, useMediaQuery, Theme } from '@material-ui/core'
 import { LobbyFilterOption } from '@services/lobby.service'
-import { useTranslation } from 'react-i18next'
-import { Colors } from '@theme/colors'
-import { AddRounded } from '@material-ui/icons'
-import ESChip from '@components/Chip'
-import LoginRequired from '@containers/LoginRequired'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import useLobbyHelper from '../hooks/useLobbyHelper'
@@ -13,156 +7,161 @@ import LobbyCard from '@components/LobbyCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 import useLobbyHome from './useLobbyHome'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import Header from './Header'
+import { AutoSizer, WindowScroller, List, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+import useReturnHref from '@utils/hooks/useReturnHref'
+import _ from 'lodash'
+
+const cache = new CellMeasurerCache({
+  fixedWidth: true,
+  defaultHeight: 270,
+})
 
 interface LobbyHomeProps {
   filter: LobbyFilterOption
 }
 
 const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
-  const { t } = useTranslation()
   const classes = useStyles()
   const { lobbies, meta, loadMore, onFilterChange } = useLobbyHome()
   const router = useRouter()
   const { toCreate } = useLobbyHelper()
 
+  const listRef = useRef<any>(null)
+  const [itemsPerRow, setPerRow] = useState<number>(4)
+  const rowCount = Math.ceil(lobbies.length / itemsPerRow)
+  const { hasUCRReturnHref } = useReturnHref()
+
+  const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
+  const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
+  const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
+
   useEffect(() => {
-    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
-    loadMore()
+    if (listRef && listRef.current) listRef.current.recomputeRowHeights()
+    if (matchesXL === true) {
+      setPerRow(4)
+    } else if (matchesLG === true) {
+      setPerRow(3)
+    } else if (matchesSM === true) {
+      setPerRow(1)
+    }
+  }, [matchesXL, matchesLG, matchesSM])
+
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      cache.clearAll()
+      if (listRef && listRef.current)
+        setTimeout(() => {
+          listRef.current.forceUpdateGrid()
+        })
+    }
+    window.addEventListener('resize', updateSize)
+    updateSize()
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
+
+  useEffect(() => {
+    if (!hasUCRReturnHref) {
+      if (document.documentElement.scrollHeight > document.documentElement.clientHeight) return
+      loadMore()
+    }
   }, [lobbies])
 
   useEffect(() => {
-    onFilterChange(filter)
-  }, [filter])
+    if (!router.isReady) return
+
+    let filterVal = LobbyFilterOption.all
+
+    if (_.has(router.query, 'filter')) {
+      const queryFilterVal = _.get(router.query, 'filter') as LobbyFilterOption
+      if (Object.values(LobbyFilterOption).includes(queryFilterVal)) filterVal = queryFilterVal
+    }
+
+    onFilterChange(filterVal)
+  }, [router.query])
 
   const onFilter = (filter: LobbyFilterOption) => {
     router.push(`${ESRoutes.LOBBY}?filter=${filter}`, undefined, { shallow: true })
     return null
   }
 
-  const defaultFilterOptions = [
-    {
-      type: LobbyFilterOption.all,
-      label: t('common:arenaSearchFilters.all'),
-      loginRequired: false,
-    },
-    {
-      type: LobbyFilterOption.suggested,
-      label: t('common:lobbySearchFilters.suggested'),
-      loginRequired: false,
-    },
-    {
-      type: LobbyFilterOption.recruiting,
-      label: t('common:lobbySearchFilters.beforeStart'),
-      loginRequired: false,
-    },
-    {
-      type: LobbyFilterOption.joined,
-      label: t('common:lobbySearchFilters.inProgress'),
-      loginRequired: false,
-    },
-    {
-      type: LobbyFilterOption.organized,
-      label: t('common:lobbySearchFilters.organized'),
-    },
-  ]
+  const rowRenderer = ({ index, key, style, parent }) => {
+    const items = []
+    const fromIndex = index * itemsPerRow
+    const toIndex = Math.min(fromIndex + itemsPerRow, lobbies.length)
+
+    for (let i = fromIndex; i < toIndex; i++) {
+      const data = lobbies[i]
+
+      items.push(
+        <Grid key={i} item sm={12} lg={4} xl={3} xs={12}>
+          <LobbyCard lobby={data} />
+        </Grid>
+      )
+    }
+
+    return (
+      <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
+        {({ registerChild }) => (
+          <Grid key={key} style={style} ref={registerChild} container>
+            {items}
+          </Grid>
+        )}
+      </CellMeasurer>
+    )
+  }
 
   return (
     <>
-      <div className={classes.header}>
-        <Typography variant="h2">{t('common:home.lobby')}</Typography>
-
-        <LoginRequired>
-          <ButtonPrimary round gradient={false} onClick={toCreate} size="small">
-            <AddRounded className={classes.addIcon} />
-            {t('common:lobby_create.title')}
-          </ButtonPrimary>
-        </LoginRequired>
-      </div>
-      <Grid container className={classes.content}>
-        <Box className={classes.filters}>
-          {defaultFilterOptions.map((option) => (
-            <ESChip
-              key={option.type}
-              color={option.type === filter ? 'primary' : 'default'}
-              className={classes.filterChip}
-              label={option.label}
-              onClick={() => onFilter(option.type)}
-            />
-          ))}
-        </Box>
+      <Header onFilter={onFilter} toCreate={toCreate} filter={filter} />
+      <div className={classes.container}>
         <InfiniteScroll
-          className={classes.scrollContainer}
           dataLength={lobbies.length}
-          next={loadMore}
-          hasMore={true}
+          next={!meta.pending && loadMore}
+          hasMore={!hasUCRReturnHref}
           loader={null}
-          scrollThreshold={0.8}
+          scrollThreshold={'1px'}
         >
-          {lobbies.map((Lobby, i) => (
-            <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={3}>
-              <LobbyCard lobby={Lobby} />
-            </Grid>
-          ))}
+          <WindowScroller>
+            {({ height, scrollTop }) => (
+              <AutoSizer disableHeight>
+                {({ width }) => {
+                  return (
+                    <List
+                      ref={listRef}
+                      autoHeight
+                      height={height}
+                      width={width}
+                      scrollTop={scrollTop}
+                      rowHeight={cache.rowHeight}
+                      deferredMeasurementCache={cache}
+                      rowRenderer={rowRenderer}
+                      rowCount={rowCount}
+                      overscanRowCount={6}
+                    />
+                  )
+                }}
+              </AutoSizer>
+            )}
+          </WindowScroller>
         </InfiniteScroll>
-        {meta.pending && (
-          <Grid item xs={12}>
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
-              <ESLoader />
-            </Box>
-          </Grid>
-        )}
-      </Grid>
+      </div>
+      {meta.pending && (
+        <Grid item xs={12}>
+          <Box my={4} display="flex" justifyContent="center" alignItems="center">
+            <ESLoader />
+          </Box>
+        </Grid>
+      )}
     </>
   )
 }
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    backgroundColor: Colors.black,
-    '& .MuiButtonBase-root.button-primary': {
-      padding: '12px 16px',
-    },
-  },
-  filters: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-  },
-  filtersLoginRequired: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 8,
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-  },
-  filterChip: {
-    maxWidth: 'none',
-    marginBottom: 16,
-    marginRight: 16,
-  },
-  addIcon: {
-    position: 'relative',
-    left: -8,
-  },
-  content: {
+  container: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-  },
-  scrollContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
   },
 }))
 
