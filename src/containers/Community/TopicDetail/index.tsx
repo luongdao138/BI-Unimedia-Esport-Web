@@ -62,7 +62,7 @@ const TopicDetailContainer: React.FC = () => {
   }, [commentsList])
 
   useEffect(() => {
-    if (isBottomOfPage) {
+    if (isBottomOfPage && !commentsListNextMeta.pending) {
       loadMore()
     }
   }, [isBottomOfPage])
@@ -84,7 +84,7 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   const loadPrevious = () => {
-    if (hasPrevious) {
+    if (hasPrevious && !commentsListMeta.pending) {
       getCommentsList({ hash_key: String(topic_hash_key), page: Number(pages.current_page) - 1 })
     }
   }
@@ -166,6 +166,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   inputContainer: {
     display: 'flex',

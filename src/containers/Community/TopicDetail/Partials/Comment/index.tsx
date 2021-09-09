@@ -19,6 +19,7 @@ import useTopicDetail from '../../useTopicDetail'
 import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
+import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 
@@ -86,6 +87,15 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
         </SRLWrapper>
       </Box>
     )
+  }
+
+  const newLineText = (text) => {
+    const newText = _.map(_.split(text, '\n'), (str, i) => (
+      <Typography key={i} className={classes.content}>
+        {str}
+      </Typography>
+    ))
+    return newText
   }
 
   return (
@@ -169,7 +179,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, community, handleRep
           </>
         )}
         <Box className={classes.contentContainer} mb={1}>
-          <Typography className={classes.content}>{commentData.content}</Typography>
+          {newLineText(commentData.content)}
         </Box>
         {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
         {!isSelf && (
@@ -221,15 +231,15 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     display: 'flex',
-    margin: theme.spacing(3),
-    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
     flexDirection: 'column',
     borderTop: '2px solid rgba(255,255,255,0.1)',
-    padding: `${theme.spacing(3)}px ${theme.spacing(2)}px 0`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0`,
   },
   userContainer: {
     display: 'flex',
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(1),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -286,6 +296,7 @@ const useStyles = makeStyles((theme) => ({
   },
   contentContainer: {
     display: 'flex',
+    flexDirection: 'column',
   },
   imageBox: {
     display: 'flex',
