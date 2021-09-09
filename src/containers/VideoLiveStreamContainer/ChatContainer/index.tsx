@@ -9,6 +9,7 @@ import PremiumChatBox from '@containers/VideoLiveStreamContainer/ChatContainer/P
 import * as Yup from 'yup'
 import i18n from '@locales/i18n'
 import { useFormik } from 'formik'
+import { PreloadUserItem } from '../PreloadContainer'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -87,6 +88,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
 
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const isLoading = true
 
   const validationSchema = Yup.object().shape({
     message: Yup.string()
@@ -108,14 +111,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
   })
   const classes = useStyles({ chatValidationError: !!errors.message })
 
-  const getChatData = () =>
-    Array(30)
-      .fill('')
-      .map((_, i) => ({
-        id: i,
-        user: 'Account Name',
-        content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-      }))
+  const getChatData = []
+  Array(30)
+    .fill('')
+    .map((_, i) => ({
+      id: i,
+      user: 'Account Name',
+      content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+    }))
 
   const handleChatInputOnFocus = () => {
     handleKeyboardVisibleState(true)
@@ -199,22 +202,26 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
         ></Box>
       </Box>
       <Box className={classes.chatBoard}>
-        {getChatData().map((message, index) => {
-          if (index === 2) return chatDonateMessage()
-          const { user, content, id } = message
-          return <ChatTextMessage key={id} message={content} user={user} />
-        })}
+        {getChatData?.length > 0 && !isLoading ? (
+          getChatData.map((message, index) => {
+            if (index === 2) return chatDonateMessage()
+            const { user, content, id } = message
+            return <ChatTextMessage key={id} message={content} user={user} />
+          })
+        ) : (
+          <Box style={{ display: 'flex', width: '100%', height: '100%', flexDirection: 'column' }}></Box>
+        )}
       </Box>
       {chatInputComponent()}
     </Box>
   )
-  const getUserWatchingList = () =>
-    Array(20)
-      .fill('')
-      .map((_, i) => ({
-        id: i,
-        user_avatar: '/images/dataVideoFake/fake_avatar.png',
-      }))
+  const getUserWatchingList = []
+  Array(20)
+    .fill('')
+    .map((_, i) => ({
+      id: i,
+      user_avatar: '/images/dataVideoFake/fake_avatar.png',
+    }))
 
   const userDoesNotHaveViewingTicketView = () => (
     <Box className={classes.chatPurchaseTicketBox}>
@@ -228,27 +235,56 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, userHasVie
     mess_container.scrollTop = current_mess.offsetTop
   }
 
+  const renderPreLoadUserAvatarItem = () => {
+    return (
+      <>
+        {downMd ? (
+          <Box style={{ flexDirection: 'row', width: 50, marginRight: 16, justifyContent: 'center', alignItems: 'center' }}>
+            <PreloadUserItem />
+          </Box>
+        ) : (
+          <Box
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignSelf: 'center',
+              width: 50,
+              marginRight: 16,
+            }}
+          >
+            <PreloadUserItem />
+          </Box>
+        )}
+      </>
+    )
+  }
+
   const chatContent = () => (
     <Box className={classes.chatContent}>
       <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button>
       <Box className={classes.userWatchingList}>
-        {getUserWatchingList().map(({ id, user_avatar }) => (
-          <Box
-            key={id}
-            className={classes.userWatchingItem}
-            onClick={() => {
-              if (messActiveUser || messActiveUser === 0) {
-                setMessActiveUser('')
-              } else {
-                setMessActiveUser(id)
-              }
-            }}
-          >
-            <img src={user_avatar} />
-          </Box>
-        ))}
+        {getUserWatchingList.length > 0 && !isLoading ? (
+          getUserWatchingList.map(({ id, user_avatar }) => (
+            <Box
+              key={id}
+              className={classes.userWatchingItem}
+              onClick={() => {
+                if (messActiveUser || messActiveUser === 0) {
+                  setMessActiveUser('')
+                } else {
+                  setMessActiveUser(id)
+                }
+              }}
+            >
+              <img src={user_avatar} />
+            </Box>
+          ))
+        ) : (
+          <Box style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>{renderPreLoadUserAvatarItem()}</Box>
+        )}
       </Box>
-      {chatBoardComponent()}
+      <Box style={{ display: 'flex', width: '100%', flexDirection: 'column' }}>{chatBoardComponent()}</Box>
     </Box>
   )
 

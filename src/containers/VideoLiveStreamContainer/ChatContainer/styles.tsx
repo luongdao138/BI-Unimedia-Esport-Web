@@ -327,6 +327,17 @@ const useStyles = makeStyles((theme) => ({
   messContentOuter: {
     flex: 1,
   },
+  purchaseItem: {},
+  purchaseItemText: {},
+  purchaseItemUnselected: {},
+  pointList: {},
+  pointListRow: {},
+  purchaseButton: {},
+  purchaseButtonText: {},
+  premiumChatError: {},
+  dialogFooter: {},
+  totalPointText: {},
+  purchasePointText: {},
   [theme.breakpoints.down(1100)]: {
     container: {
       width: 350,

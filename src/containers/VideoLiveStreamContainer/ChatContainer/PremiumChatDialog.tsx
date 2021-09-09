@@ -1,7 +1,7 @@
 import { Box, Button, Input, makeStyles, Typography } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import React, { useEffect, useRef, useState } from 'react'
-import { purchasePoints } from '@containers/VideoLiveStreamContainer/ChatContainer/index'
+import { purchasePoints } from './index'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
