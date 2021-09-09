@@ -106,7 +106,6 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
       </Box>
 
-      {/* //TODO when co organizer added to backend */}
       {/* deputy caretaker */}
       <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
         <Box className={classes.userLabel}>
