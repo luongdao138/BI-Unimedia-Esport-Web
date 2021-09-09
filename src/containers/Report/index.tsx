@@ -190,7 +190,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
             <Box display="flex" alignItems="center" mr={2}>
               <Icon className={`fas fa-users ${classes.communityIcon}`} />
             </Box>
-            <Typography variant="h2">{data.attributes.name}</Typography>
+            <Typography variant="h2" className={classes.wordBreak}>
+              {data.attributes.name}
+            </Typography>
           </Box>
         )
       case REPORT_TYPE.TOPIC:
@@ -361,6 +363,9 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
 }
 
 const useStyles = makeStyles((theme) => ({
+  wordBreak: {
+    wordBreak: 'break-all',
+  },
   topicCover: {
     display: 'flex',
     paddingTop: '30.27%',

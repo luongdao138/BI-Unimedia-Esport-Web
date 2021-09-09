@@ -173,7 +173,7 @@ export type CommunityMembersApproveCancelParams = {
 
 export type CommunityMemberChangeRoleParams = {
   data: {
-    member_id: number
+    member_ids: number[]
     member_role: number
   }
   hash_key: string
@@ -181,7 +181,7 @@ export type CommunityMemberChangeRoleParams = {
 
 export type CommunityMemberRemoveParams = {
   data: {
-    member_id: number
+    member_ids: number[]
   }
   hash_key: string
 }
