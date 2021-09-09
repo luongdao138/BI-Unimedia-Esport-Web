@@ -40,7 +40,7 @@ const useTopicDetail = (): {
   commentsListPageMeta: Meta
   commentsListNextMeta: Meta
   pages: PageMeta
-  commentsList: Array<CommentsResponse>
+  commentsList: CommentsResponse[]
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])

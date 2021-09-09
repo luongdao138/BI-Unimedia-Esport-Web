@@ -16,7 +16,7 @@ const useCommunityDetail = (): {
   isAuthenticated: boolean
   meta: Meta
   handleBack: () => void
-  topicList: Array<TopicDetailList>
+  topicList: TopicDetailList[]
   communityDetail: CommunityDetail
   getCommunityDetail: (hash_key?: string) => void
   getTopicList: (params: TopicListParams) => void

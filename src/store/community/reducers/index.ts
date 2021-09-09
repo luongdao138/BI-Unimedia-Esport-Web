@@ -17,22 +17,22 @@ import {
 } from '@services/community.service'
 
 type StateType = {
-  communitiesList?: Array<CommunityResponse>
-  topicList?: Array<TopicDetailList>
+  communitiesList?: CommunityResponse[]
+  topicList?: TopicDetailList[]
   communitiesListMeta?: PageMeta
-  communitiesListByUser?: Array<CommunityResponse>
+  communitiesListByUser?: CommunityResponse[]
   communitiesListByUserMeta?: PageMeta
-  topicFollowersList: Array<FollowersTopicResponse> | null
+  topicFollowersList: FollowersTopicResponse[] | null
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
-  community_features: Array<CommunityFeature>
-  communityMembers?: Array<CommunityMember>
+  community_features: CommunityFeature[]
+  communityMembers?: CommunityMember[]
   communityMembersMeta?: PageMeta
   create_Topic?: TopicParams
   topicDetail: TopicDetail | null
-  commentsList?: Array<CommentsResponse>
+  commentsList?: CommentsResponse[]
   commentsListMeta?: PageMeta
-  topicSearchList?: Array<TopicSearchItem>
+  topicSearchList?: TopicSearchItem[]
   topicSearchListMeta?: PageMeta
   commentsListNextMeta?: PageMeta
   topicListMeta?: PageMeta

@@ -19,7 +19,7 @@ export type CommunityListByUserParams = {
 }
 
 export type CommunityListResponse = {
-  data: Array<CommunityResponse>
+  data: CommunityResponse[]
   meta: PageMeta
 }
 
@@ -118,7 +118,7 @@ export type CommunityFeature = {
 }
 
 export type CommunityFeaturesResponse = {
-  data: Array<CommunityFeature>
+  data: CommunityFeature[]
 }
 
 export type PageMeta = {
@@ -160,13 +160,13 @@ export type CommunityMember = {
 }
 
 export type CommunityMembersResponse = {
-  data: Array<CommunityMember>
+  data: CommunityMember[]
   meta: PageMeta
 }
 
 export type CommunityMembersApproveCancelParams = {
   data: {
-    member_ids: Array<number>
+    member_ids: number[]
   }
   hash_key: string
 }
@@ -233,7 +233,7 @@ export type LastComment = {
       is_mine: boolean
       owner_name: string
       owner_profile: string
-      attachments: Array<CommentsAttachmentResponse>
+      attachments: CommentsAttachmentResponse[]
     }
   }
 }
@@ -248,13 +248,13 @@ export type TopicDetail = {
     community_id: number
     created_at: string
     user_id: number
-    attachments: Array<TopicAttachments> | null
+    attachments: TopicAttachments[] | null
     owner_name: string
     owner_email: string
     owner_profile: string
     owner_user_code: string
     like_count: number
-    game_title: Array<TopicGameTitle>
+    game_title: TopicGameTitle[]
     is_liked: boolean
     member_role: string
     community_name: string
@@ -276,13 +276,13 @@ export type TopicDetailList = {
     created_at: string
     last_comment_date: string
     user_id: number
-    attachments: Array<TopicAttachments> | null
+    attachments: TopicAttachments[] | null
     owner_name: string
     owner_email: string
     owner_profile: string
     owner_user_code: string
     like_count: number
-    game_title: Array<TopicGameTitle>
+    game_title: TopicGameTitle[]
     is_liked: boolean
     member_role: string
     comment_count: number
@@ -311,7 +311,7 @@ export type TopicDeleteParams = {
 }
 
 export type TopicFollowersResponse = {
-  data: Array<FollowersTopicResponse>
+  data: FollowersTopicResponse[]
   meta: PageMeta
 }
 
@@ -374,7 +374,7 @@ export type TopicListParams = {
 }
 
 export type TopicListResponse = {
-  data: Array<TopicDetailList>
+  data: TopicDetailList[]
   meta: PageMeta
 }
 
@@ -418,7 +418,7 @@ export type TopicSearchItem = {
 }
 
 export type TopicSearchResponse = {
-  data: Array<TopicSearchItem>
+  data: TopicSearchItem[]
   meta: PageMeta
 }
 
@@ -445,7 +445,7 @@ export type CommentsResponse = {
     deleted_at: string
     content: string
     is_mine: true
-    attachments: Array<CommentsAttachmentResponse>
+    attachments: CommentsAttachmentResponse[]
     owner_nickname: string
     user_code: string
     owner_profile: string
@@ -466,7 +466,7 @@ export type CommentsResponse = {
 }
 
 export type CommentsListResponse = {
-  data: Array<CommentsResponse>
+  data: CommentsResponse[]
   meta: PageMeta
 }
 export type CommentsListParams = {
