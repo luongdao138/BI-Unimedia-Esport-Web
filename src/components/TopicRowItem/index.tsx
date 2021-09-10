@@ -77,9 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: Colors.white_opacity[70],
     fontSize: 14,
     wordBreak: 'break-all',
-    // textOverflow: 'ellipsis',
-    // overflow: 'hidden',
-    // whiteSpace: 'nowrap',
   },
   mail: {
     color: Colors.white_opacity[30],
