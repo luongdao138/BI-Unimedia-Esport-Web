@@ -3,7 +3,10 @@
 // this is an auto generated file. This will be overwritten
 
 export const createUser = /* GraphQL */ `
-  mutation CreateUser($input: CreateUserInput!, $condition: ModelUserConditionInput) {
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     createUser(input: $input, condition: $condition) {
       id
       uuid
@@ -17,9 +20,12 @@ export const createUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateUser = /* GraphQL */ `
-  mutation UpdateUser($input: UpdateUserInput!, $condition: ModelUserConditionInput) {
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     updateUser(input: $input, condition: $condition) {
       id
       uuid
@@ -33,9 +39,12 @@ export const updateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser($input: DeleteUserInput!, $condition: ModelUserConditionInput) {
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
+  ) {
     deleteUser(input: $input, condition: $condition) {
       id
       uuid
@@ -49,9 +58,12 @@ export const deleteUser = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const createMessage = /* GraphQL */ `
-  mutation CreateMessage($input: CreateMessageInput!, $condition: ModelMessageConditionInput) {
+  mutation CreateMessage(
+    $input: CreateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
     createMessage(input: $input, condition: $condition) {
       id
       owner
@@ -60,6 +72,7 @@ export const createMessage = /* GraphQL */ `
       video_id
       delete_flag
       video_time
+      display_avatar_time
       point
       use_point_id
       is_premium
@@ -77,9 +90,12 @@ export const createMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const updateMessage = /* GraphQL */ `
-  mutation UpdateMessage($input: UpdateMessageInput!, $condition: ModelMessageConditionInput) {
+  mutation UpdateMessage(
+    $input: UpdateMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
     updateMessage(input: $input, condition: $condition) {
       id
       owner
@@ -88,6 +104,7 @@ export const updateMessage = /* GraphQL */ `
       video_id
       delete_flag
       video_time
+      display_avatar_time
       point
       use_point_id
       is_premium
@@ -105,9 +122,12 @@ export const updateMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;
 export const deleteMessage = /* GraphQL */ `
-  mutation DeleteMessage($input: DeleteMessageInput!, $condition: ModelMessageConditionInput) {
+  mutation DeleteMessage(
+    $input: DeleteMessageInput!
+    $condition: ModelMessageConditionInput
+  ) {
     deleteMessage(input: $input, condition: $condition) {
       id
       owner
@@ -116,6 +136,7 @@ export const deleteMessage = /* GraphQL */ `
       video_id
       delete_flag
       video_time
+      display_avatar_time
       point
       use_point_id
       is_premium
@@ -133,4 +154,4 @@ export const deleteMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`
+`;

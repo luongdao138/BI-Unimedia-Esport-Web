@@ -109,12 +109,16 @@ const VideosTop: React.FC = () => {
     } else {
       // purchase super chat
       await purchaseTicketSuperChat(super_chat_params)
-      if (dataPurchaseTicketSuperChat?.code === 200) {
-        handleClose()
-        dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
-      }
     }
   }
+
+  useEffect(() => {
+    if (dataPurchaseTicketSuperChat?.code === 200) {
+      handleClose()
+      dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
+    }
+  }, [dataPurchaseTicketSuperChat])
+
   const handlePurchaseTicket = () => {
     setPurchaseType(PURCHASE_TYPE.PURCHASE_TICKET)
     if (myPoint >= ticket_points) {

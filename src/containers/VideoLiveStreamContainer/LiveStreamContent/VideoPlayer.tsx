@@ -20,6 +20,7 @@ declare global {
 const VideoPlayer: React.FC<PlayerProps> = () => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
+  
   const player = useRef(null)
   const videoEl = useRef(null)
   const STREAM_PLAYBACK_URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'

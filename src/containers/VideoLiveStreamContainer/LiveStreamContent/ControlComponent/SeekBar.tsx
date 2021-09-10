@@ -1,7 +1,7 @@
 import { Slider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo, useEffect, useState } from 'react'
-
+import useDetailVideo from '../../useDetailVideo'
 interface Props {
   currentTime?: number
   durations?: number
@@ -13,9 +13,14 @@ const SeekBar: React.FC<Props> = ({ currentTime, videoRef }) => {
   // const [currentTimeState, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
+  const { changeStreamingSecond, streamingSecond } = useDetailVideo()
+
   useEffect(() => {
     const onTimeUpdate = (event) => {
       // console.log("===CHECK TIME PLAYED ===",event, videoRef.current.duration)
+      if(Math.floor(event.target.currentTime) !== streamingSecond) {
+        changeStreamingSecond(Math.floor(event.target.currentTime))
+      }
       // setCurrentTime(event.target.currentTime)
       setTimePlayed(((event.target.currentTime ? event.target.currentTime : 0) / duration) * 100)
     }

@@ -1056,6 +1056,7 @@ export default {
     premium_message_too_long_pre: 'メッセージは',
     premium_message_too_long_post: '文字までです',
     message_placeholder: 'チャットを送信',
+    deleted_message: "削除済み"
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

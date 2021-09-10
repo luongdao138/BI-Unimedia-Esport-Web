@@ -229,6 +229,11 @@ export type DetailUserData = {
   unlike?: number
   follow?: number
   buy_ticket?: number
+  streamer?: number
+}
+
+export type StreamingChangeParams = {
+  streaming_second: number
 }
 
 export type VideoDetailResponse = {

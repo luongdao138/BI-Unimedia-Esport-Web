@@ -23,6 +23,7 @@ type StateType = {
   totalResult?: number
   videoDetailData?: VideoDetailData
   userDetailData?: DetailUserData
+  streaming_second?: number
 }
 const initialState: StateType = {
   listVideoAll: {
@@ -48,6 +49,7 @@ const initialState: StateType = {
   totalResult: 0,
   videoDetailData: {},
   userDetailData: {},
+  streaming_second: 0
 }
 
 export default createReducer(initialState, (builder) => {
@@ -113,5 +115,8 @@ export default createReducer(initialState, (builder) => {
     const userData = action.payload.data.user
     state.videoDetailData = videoData
     state.userDetailData = userData
+  })
+  builder.addCase(actions.changeStreamingSecond, (state, action) => {
+    state.streaming_second = action.payload.streaming_second
   })
 })
