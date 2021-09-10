@@ -132,7 +132,11 @@ const ArenaBattlesEdit: React.FC = () => {
     })
   }
 
-  const freezable = selecteds.length === data?.maxCapacity
+  const [freezable, setFreezable] = useState(false)
+  useEffect(() => {
+    const selectedLength = _.compact(getParticipantIds(selecteds)).length
+    setFreezable(selectedLength === data?.maxCapacity)
+  }, [selecteds])
   return (
     <>
       {detailMeta.loaded && participantsMeta.loaded && (
