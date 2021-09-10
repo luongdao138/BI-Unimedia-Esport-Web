@@ -61,7 +61,7 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
               <Typography className={classes.username}>{data.nickname}</Typography>
             </Box>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.mail}>{data.user_code}</Typography>
+              <Typography className={classes.mail}>{'@' + data.user_code}</Typography>
             </Box>
           </Box>
         </Box>

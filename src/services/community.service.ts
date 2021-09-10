@@ -226,6 +226,7 @@ export type LastComment = {
       user_id: number
       topic_id: number
       created_at: string
+      deleted_at: string
       reply_to_comment_id: string | null
       comment_no: number
       is_liked: boolean

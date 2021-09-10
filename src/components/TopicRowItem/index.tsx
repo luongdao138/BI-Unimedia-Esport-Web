@@ -15,27 +15,29 @@ export interface TopicRowItemProps {
 const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, handleClick }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const lastCommentData = last_comment?.attributes
+
+  const renderContent = () => {
+    if (lastCommentData?.deleted_at) {
+      return t('common:topic_comment.has_deleted')
+    }
+    return lastCommentData?.content ? lastCommentData?.content : comment_count === 0 ? '' : t('common:chat.uploaded_image')
+  }
 
   return (
     <>
-      <Box mt={2} display="flex" maxHeight={66} alignItems="flex-start" width="100%" onClick={handleClick}>
+      <Box mt={1} display="flex" alignItems="flex-start" width="100%" onClick={handleClick}>
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box className={classes.container}>
-            <Box display="flex" flexDirection="row" width="100%">
+            <Box display="flex" flexDirection="row" width="100%" mb={0.25}>
               <Typography className={classes.title}>{title}</Typography>
             </Box>
             <Box display="flex" flexDirection="row" width="100%">
-              <Typography className={classes.last_comment}>
-                {last_comment?.attributes.content
-                  ? last_comment?.attributes.content
-                  : comment_count === 0
-                  ? ''
-                  : '「' + t('common:chat.uploaded_image') + '」'}
-              </Typography>
+              <Typography className={classes.last_comment}>{renderContent()}</Typography>
             </Box>
           </Box>
 
-          <Box display="flex" flexDirection="column" width={80} alignItems="flex-end">
+          <Box display="flex" flexDirection="column" width={80} alignItems="flex-end" justifyContent="space-between">
             <Box width="100%" justifyContent="flex-end" display="flex">
               <Typography className={classes.latest_date}>{CommonHelper.staticSmartTime(latest_date)}</Typography>
             </Box>
@@ -74,9 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     color: Colors.white_opacity[70],
     fontSize: 14,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
+    wordBreak: 'break-all',
   },
   mail: {
     color: Colors.white_opacity[30],
