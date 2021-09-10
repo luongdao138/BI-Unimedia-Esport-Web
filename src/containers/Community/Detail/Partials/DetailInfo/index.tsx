@@ -223,45 +223,49 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getHeader = () => {
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" mb={2}>
-          <Box color={Colors.white} display="flex">
-            <Typography className={classes.title} variant="h3">
-              {data.name}
-            </Typography>
-            <Box>
-              {isOfficial && (
-                <span className={classes.checkIcon}>
-                  <Icon className="fa fa-check" fontSize="small" />
-                </span>
+        <Box mb={2}>
+          <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Box color={Colors.white} display="flex">
+              <Typography className={classes.title} variant="h3">
+                {data.name}
+              </Typography>
+              <Box>
+                {isOfficial && (
+                  <span className={classes.checkIcon}>
+                    <Icon className="fa fa-check" fontSize="small" />
+                  </span>
+                )}
+                {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
+              </Box>
+            </Box>
+            <Box className={classes.detailCommonButtons}>
+              {DetailInfoButton()}
+              {!isOfficial && (
+                <Box className={classes.menuOuter}>
+                  <ESMenu>
+                    <LoginRequired>
+                      <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
+                    </LoginRequired>
+                  </ESMenu>
+                </Box>
               )}
-              {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
             </Box>
           </Box>
-          <Box className={classes.detailCommonButtons}>
-            {DetailInfoButton()}
-            {!isOfficial && (
-              <Box ml={3}>
-                <ESMenu>
-                  <LoginRequired>
-                    <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
-                  </LoginRequired>
-                </ESMenu>
-              </Box>
-            )}
-          </Box>
         </Box>
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Typography>{`${t('common:community.community_id')}${detail.id}`}</Typography>
-          <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-            <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-            <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
+        <Box>
+          <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap">
+            <Typography className={classes.communityId}>{`${t('common:community.community_id')}${detail.id}`}</Typography>
+            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+              <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
+            </Box>
+            <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')}>
+              <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
+            </TwitterShareButton>
           </Box>
-          <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')} style={{ marginLeft: 12 }}>
-            <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
-          </TwitterShareButton>
         </Box>
 
-        <Box marginTop={2} display="flex">
+        <Box mt={2}>
           <FollowList community={detail} />
         </Box>
 
@@ -378,8 +382,9 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '0.7rem',
     },
   },
+  communityId: { marginRight: 20 },
   urlCopy: {
-    marginLeft: 20,
+    marginRight: 12,
     cursor: 'pointer',
     color: '#EB5686',
   },
@@ -442,6 +447,9 @@ const useStyles = makeStyles((theme) => ({
   boxContainer: {
     display: 'flex',
   },
+  menuOuter: {
+    marginLeft: theme.spacing(3),
+  },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
       '&.MuiFab-root': {
@@ -464,6 +472,9 @@ const useStyles = makeStyles((theme) => ({
     },
     commentIconContainer: {
       bottom: theme.spacing(10),
+    },
+    menuOuter: {
+      marginLeft: theme.spacing(0),
     },
   },
 }))
