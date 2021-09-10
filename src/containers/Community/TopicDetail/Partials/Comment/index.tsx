@@ -96,7 +96,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const newLineText = (text) => {
     if (commentData.deleted_at) {
-      return <Typography className={classes.content}>{'「' + t('common:topic_comment.has_deleted') + '」'}</Typography>
+      return <Typography className={classes.content}>{t('common:topic_comment.has_deleted')}</Typography>
     }
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>

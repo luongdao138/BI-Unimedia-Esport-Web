@@ -19,9 +19,9 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
 
   const renderContent = () => {
     if (lastCommentData.deleted_at) {
-      return '「' + t('common:topic_comment.has_deleted') + '」'
+      return t('common:topic_comment.has_deleted')
     }
-    return lastCommentData.content ? lastCommentData.content : comment_count === 0 ? '' : '「' + t('common:chat.uploaded_image') + '」'
+    return lastCommentData.content ? lastCommentData.content : comment_count === 0 ? '' : t('common:chat.uploaded_image')
   }
 
   return (
