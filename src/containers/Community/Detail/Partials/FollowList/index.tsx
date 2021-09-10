@@ -179,6 +179,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const userData = (participant) => {
     const _user = participant.attributes
+
     return { id: _user.id, attributes: { ..._user, avatar: _user.profile } }
   }
 

@@ -608,6 +608,7 @@ export default {
       submit: '削除する',
       success_toast: 'コメントを削除しました。',
     },
+    has_deleted: 'この投稿は削除されました。',
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',
