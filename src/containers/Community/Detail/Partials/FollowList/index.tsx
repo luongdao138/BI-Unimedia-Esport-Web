@@ -128,11 +128,9 @@ const FollowList: React.FC<Props> = ({ community }) => {
       initialValue[MemberSection.applying].value,
       _.isEqual
     )
-    const participatingData: CommunityMember[] = _.differenceWith(
-      groupedMembers[MemberSection.participating].value,
-      initialValue[MemberSection.participating].value,
-      _.isEqual
-    )
+    const participatingData: CommunityMember[] =
+      groupedMembers[MemberSection.participating] &&
+      _.differenceWith(groupedMembers[MemberSection.participating].value, initialValue[MemberSection.participating].value, _.isEqual)
 
     let approveUsers, cancelUsers, makeCoOrganizers, makeUsers, kickUsers
     if (!_.isEmpty(applyingData)) {
@@ -179,15 +177,18 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const userData = (participant) => {
     const _user = participant.attributes
+
     return { id: _user.id, attributes: { ..._user, avatar: _user.profile } }
   }
 
   const renderMemberList = () => {
     return (
       <Box>
-        {groupedMembers[MemberSection.participating].value.map((participant, i) => (
-          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
-        ))}
+        {groupedMembers[community.attributes.has_requested ? MemberSection.participating : MemberSection.applying].value.map(
+          (participant, i) => (
+            <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+          )
+        )}
       </Box>
     )
   }

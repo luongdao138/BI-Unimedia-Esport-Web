@@ -25,10 +25,13 @@ const TopicListContainer: React.FC = () => {
 
   useEffect(() => {
     getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: 1 })
-    if (topicList) {
+  }, [])
+
+  useEffect(() => {
+    if (!topicListMeta.pending && topicListMeta.loaded) {
       setCount(topicListPageMeta?.total_pages)
     }
-  }, [])
+  }, [topicListMeta])
 
   useEffect(() => {
     getTopicList({ community_hash: String(hash_key), filter: TOPIC_STATUS.ALL, page: page })

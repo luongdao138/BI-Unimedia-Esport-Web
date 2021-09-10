@@ -611,6 +611,7 @@ export default {
       submit: '削除する',
       success_toast: 'コメントを削除しました。',
     },
+    has_deleted: 'この投稿は削除されました',
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',
@@ -1234,7 +1235,7 @@ export default {
     },
     community_created_toast: 'コミュニティを作成しました',
     community_updated_toast: 'コミュニティを編集しました',
-    title_already_in_use: '「コミュニティ名が既に使用中です。」',
+    title_already_in_use: 'コミュニティ名が既に使用中です。',
   },
   topic_create: {
     title: 'トピックを作成する',
