@@ -70,7 +70,6 @@ const FollowList: React.FC<Props> = ({ community }) => {
         }
       }
     )
-    !community.attributes.has_requested && [].concat(data)
     setGroupedMembers(data)
     setInitialValue(data)
   }, [membersList])
