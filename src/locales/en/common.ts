@@ -1115,6 +1115,7 @@ export default {
     arena_members_title: 'eXeLAB｜出場メンバー',
     arena_entry_title: 'eXeLAB｜エントリー',
     arena_summary_title: 'eXeLAB｜大会総括',
+    lobby_default_title: 'eXeLAB｜ロビー',
     lobby_detail_title: 'eXeLAB｜ロビー情報',
   },
   lobby_create: {
