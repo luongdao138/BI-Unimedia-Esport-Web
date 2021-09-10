@@ -1,7 +1,8 @@
-import { Avatar, Typography, Box } from '@material-ui/core'
+import { Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import ESInput from '@components/Input'
+import Avatar from '@components/Avatar'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -29,7 +30,7 @@ const BRListItem: React.FC<BRListItemProps> = (props: BRListItemProps) => {
         <div className={classes.matchHeader}>{props.index}</div>
         <div className={classes.participantWrapper}>
           <div className={classes.participant}>
-            <Avatar className={classes.avatar} alt={props.label || ''} src={props.avatar} />
+            <Avatar className={classes.avatar} alt={props.label || ''} src={props.avatar} size={26} />
             <Box color={props.label ? Colors.white : Colors.grey[400]}>
               <Typography className={classes.label} noWrap={true}>
                 {props.label || t('common:common.not_sure')}
@@ -134,7 +135,6 @@ const useStyles = makeStyles((theme) => ({
     height: 26,
     width: 26,
     marginRight: 8,
-    fontSize: 16,
   },
   label: {
     fontSize: 12,

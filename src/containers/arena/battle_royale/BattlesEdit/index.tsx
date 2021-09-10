@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Container, Typography, Icon } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
@@ -25,20 +26,17 @@ const participantDefault = {
   attributes: { avatar_url: null, name: '' },
 }
 
+const getDefaultParticipants = (length: number) => Array.from({ length: length }, (_, i) => i).map((_) => participantDefault)
+
+const getParticipantIds = (participants: ReturnType<typeof getDefaultParticipants>) => _.compact(participants.map((p) => Number(p.id)))
+
 const ArenaBattlesEdit: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
   const { participants, meta: participantsMeta, getParticipants, resetMeta } = useParticipants()
-  const {
-    freeze,
-    randomize,
-    // setParticipants,
-    randomizeMeta,
-    freezeMeta,
-    setParticipantsMeta,
-  } = useModeratorActions()
+  const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
 
   const [showFreeze, setShowFreeze] = useState(false)
   const [data, setData] = useState<ReturnType<typeof TournamentHelper.getDetailData> | undefined>(undefined)
@@ -49,10 +47,17 @@ const ArenaBattlesEdit: React.FC = () => {
 
   const height = use100vh()
 
+  const closeParticipantsDialog = () => {
+    setShowParticipants((prev) => ({
+      ...prev,
+      pid: undefined,
+      open: false,
+    }))
+  }
+
   useEffect(() => {
     if (detailMeta.loaded) {
       const tempData = TournamentHelper.getDetailData(tournament)
-      setSelecteds(Array.from({ length: tempData.max_participants }, (_, i) => i).map((_) => participantDefault))
       setData(tempData)
     }
     return () => {
@@ -62,21 +67,13 @@ const ArenaBattlesEdit: React.FC = () => {
 
   useEffect(() => {
     if (participantsMeta.loaded) {
-      setSelecteds((prev) => {
-        const diff = data.max_participants + participants.length
-        return [
-          ...participants.map((p) => {
-            return {
-              id: p.id,
-              attributes: {
-                avatar_url: p.attributes.avatar_url,
-                name: p.attributes.name,
-              },
-            }
-          }),
-          ...prev,
-        ].slice(-diff)
-      })
+      setSelecteds(
+        _.slice(
+          [...participants, ...getDefaultParticipants(tournament.attributes.max_participants)],
+          0,
+          tournament.attributes.max_participants
+        )
+      )
     }
   }, [participantsMeta])
 
@@ -88,13 +85,7 @@ const ArenaBattlesEdit: React.FC = () => {
     return () => {
       resetMeta()
     }
-  }, [router.query.hash_key, detailMeta])
-
-  // useEffect(() => {
-  //   if (participants) {
-  //     setSelecteds(participants)
-  //   }
-  // }, [participants])
+  }, [router.query.hash_key, detailMeta.loaded])
 
   useEffect(() => {
     setShowFreeze(false)
@@ -106,46 +97,39 @@ const ArenaBattlesEdit: React.FC = () => {
     }
   }, [randomizeMeta.loaded])
 
-  // useEffect(() => {
-  //   const _selected = [...selecteds]
-  //   _selected[clickIndex] = targetParticipant
-  //   setSelecteds(_selected)
-  //   setShowParticipants({ open: false, pid: undefined })
-  // }, [setParticipantsMeta.loaded])
-
   const selectedHandler = (participant: ParticipantsResponse) => {
-    setSelecteds(
-      selecteds.map((v, i) => {
-        if (i === clickIndex) {
-          return {
-            id: participant.id,
-            attributes: {
-              avatar_url: participant.attributes.avatar_url,
-              name: participant.attributes.name,
-            },
-          }
+    const newSelecteds = selecteds.map((v, i) => {
+      if (i === clickIndex) {
+        return {
+          id: participant.id,
+          attributes: {
+            avatar_url: participant.attributes.avatar_url,
+            name: participant.attributes.name,
+          },
         }
-        return v
-      })
-    )
-    setShowParticipants((prev) => ({ ...prev, pid: participant.id }))
+      }
+      return v
+    })
+    setParticipants({ hash_key: tournament.attributes.hash_key, pids: getParticipantIds(newSelecteds) }, () => {
+      setSelecteds(newSelecteds)
+      closeParticipantsDialog()
+    })
   }
 
   const removeHandler = () => {
-    setSelecteds(
-      selecteds.map((v, i) => {
-        if (i === clickIndex) {
-          return participantDefault
-        }
-        return v
-      })
-    )
-    setShowParticipants((prev) => ({ ...prev, pid: undefined }))
-    // setTargetParticipant(participant)
-    // const _selecteds = [...selecteds]
-    // if (clickIndex >= _selecteds.length) _selecteds.push(participant)
-    // else _selecteds[clickIndex] = participant
-    // setParticipants({ hash_key: data.hash_key, pids: _selecteds.map((p) => p.id) })
+    const newSelecteds = selecteds.map((v, i) => {
+      if (i === clickIndex) {
+        return participantDefault
+      }
+      return v
+    })
+    setParticipants({ hash_key: tournament.attributes.hash_key, pids: getParticipantIds(newSelecteds) }, () => {
+      setSelecteds(newSelecteds)
+      setShowParticipants((prev) => ({
+        ...prev,
+        pid: undefined,
+      }))
+    })
   }
 
   const freezable = selecteds.length === data?.maxCapacity
@@ -158,23 +142,22 @@ const ArenaBattlesEdit: React.FC = () => {
             <Typography variant="body2">{t('common:tournament.confirm_brackets')}</Typography>
           </Box>
           <Container maxWidth="lg" className={classes.listContainer}>
-            {data &&
-              selecteds.map((v, i) => (
-                <BRListItem
-                  key={i}
-                  index={`${i + 1}`}
-                  avatar={v.attributes.avatar_url}
-                  label={v.attributes.name}
-                  editable={false}
-                  clickable={data.memberSelectable}
-                  onClick={() => {
-                    if (data.memberSelectable) {
-                      setShowParticipants({ open: true, pid: Number(v.id) })
-                      setClickIndex(i)
-                    }
-                  }}
-                />
-              ))}
+            {selecteds.map((v, i) => (
+              <BRListItem
+                key={i}
+                index={`${i + 1}`}
+                avatar={v.attributes.avatar_url}
+                label={v.attributes.name}
+                editable={false}
+                clickable={!!data.memberSelectable}
+                onClick={() => {
+                  if (data?.memberSelectable) {
+                    setShowParticipants({ open: true, pid: Number(v.id) })
+                    setClickIndex(i)
+                  }
+                }}
+              />
+            ))}
           </Container>
           <Box className={classes.actionButtonContainer}>
             <Box className={classes.actionButton}>
@@ -195,7 +178,7 @@ const ArenaBattlesEdit: React.FC = () => {
             pid={showParticipants.pid}
             tournament={tournament}
             open={showParticipants.open}
-            handleClose={() => setShowParticipants({ open: false, pid: undefined })}
+            handleClose={closeParticipantsDialog}
             onSelect={(participant) => selectedHandler(participant)}
             handleUnset={removeHandler}
           />

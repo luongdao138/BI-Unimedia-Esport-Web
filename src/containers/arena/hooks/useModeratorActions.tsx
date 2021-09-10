@@ -16,7 +16,7 @@ const _freezeMeta = createMetaSelector(actions.freezeTournament)
 
 const useModeratorActions = (): {
   setParticipant: (params: SetParticipantParams) => void
-  setParticipants: (params: SetParticipantsParams) => void
+  setParticipants: (params: SetParticipantsParams, cb?: () => void) => void
   randomize: (params: string) => void
   freeze: (params: FreezeMatchParams) => void
   setParticipantMeta: Meta
@@ -33,7 +33,12 @@ const useModeratorActions = (): {
   const router = useRouter()
 
   const setParticipant = (param: SetParticipantParams) => dispatch(actions.setParticipant(param))
-  const setParticipants = (param: SetParticipantsParams) => dispatch(actions.setParticipants(param))
+  const setParticipants = async (param: SetParticipantsParams, cb?: () => void) => {
+    const resultAction = await dispatch(actions.setParticipants(param))
+    if (actions.setParticipants.fulfilled.match(resultAction) && !!cb) {
+      cb()
+    }
+  }
   const randomize = (param: string) => dispatch(actions.randomizeTournament(param))
   const freeze = (params) => dispatch(actions.freezeTournament(params))
 
