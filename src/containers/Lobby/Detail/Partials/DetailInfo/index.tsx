@@ -256,8 +256,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 24,
   },
   gameChip: {
-    maxWidth: '85vw',
-    minWidth: 177,
+    maxWidth: 'auto',
+    minWidth: 'auto',
     justifyContent: 'flex-start',
   },
   tagChip: {

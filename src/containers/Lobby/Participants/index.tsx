@@ -68,7 +68,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
       setHasMore(false)
       return
     }
-    getParticipants({ page: page.current_page + 1, hash_key: hash_key })
+    getParticipants({ page: Number(page.current_page) + 1, hash_key: hash_key })
   }
 
   const onFollow = (userCode: string) => {
