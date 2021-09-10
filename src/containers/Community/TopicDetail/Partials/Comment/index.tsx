@@ -95,7 +95,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   }
 
   const newLineText = (text) => {
-    if (commentData.deleted_at) {
+    if (commentData?.deleted_at) {
       return <Typography className={classes.content}>{t('common:topic_comment.has_deleted') + '。'}</Typography>
     }
     return _.map(_.split(text, '\n'), (str, i) => (
@@ -271,7 +271,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     borderTop: '2px solid rgba(255,255,255,0.1)',
     padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
   },
