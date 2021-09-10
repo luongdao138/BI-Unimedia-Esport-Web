@@ -26,9 +26,9 @@ import useRouteUrlHistory from '@utils/hooks/useRouterUrlHistory'
 import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
-import Amplify from 'aws-amplify'
-import aws_mobile from '@constants/aws-exports'
-Amplify.configure({ ...aws_mobile, ssr: true })
+// import Amplify from 'aws-amplify'
+// import aws_mobile from '@constants/aws-exports'
+// Amplify.configure({ ...aws_mobile, ssr: true })
 
 type Props = AppProps & {
   Component: PageWithLayoutType

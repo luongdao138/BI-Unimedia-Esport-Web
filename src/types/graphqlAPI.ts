@@ -5,7 +5,7 @@
 export type CreateUserInput = {
   id?: string | null
   uuid: string
-  avatar: string
+  avatar?: string | null
   user_name: string
   delete_flag?: boolean | null
 }
@@ -70,7 +70,7 @@ export type User = {
   __typename: 'User'
   id: string
   uuid: string
-  avatar: string
+  avatar?: string | null
   user_name: string
   delete_flag?: boolean | null
   messages?: ModelMessageConnection | null
@@ -93,8 +93,8 @@ export type Message = {
   video_id: string
   delete_flag?: boolean | null
   video_time: string
-  point: string
-  use_point_id: string
+  point?: string | null
+  use_point_id?: string | null
   is_premium?: boolean | null
   userId?: string | null
   user?: User | null
@@ -122,8 +122,8 @@ export type CreateMessageInput = {
   video_id: string
   delete_flag?: boolean | null
   video_time: string
-  point: string
-  use_point_id: string
+  point?: string | null
+  use_point_id?: string | null
   is_premium?: boolean | null
   userId?: string | null
 }
@@ -222,7 +222,7 @@ export type CreateUserMutation = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -244,7 +244,7 @@ export type UpdateUserMutation = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -266,7 +266,7 @@ export type DeleteUserMutation = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -293,15 +293,15 @@ export type CreateMessageMutation = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -327,15 +327,15 @@ export type UpdateMessageMutation = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -361,15 +361,15 @@ export type DeleteMessageMutation = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -389,7 +389,7 @@ export type GetUserQuery = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -414,7 +414,7 @@ export type ListUsersQuery = {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -438,15 +438,15 @@ export type GetMessageQuery = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -475,8 +475,8 @@ export type ListMessagesQuery = {
       video_id: string
       delete_flag?: boolean | null
       video_time: string
-      point: string
-      use_point_id: string
+      point?: string | null
+      use_point_id?: string | null
       is_premium?: boolean | null
       userId?: string | null
       createdAt: string
@@ -491,7 +491,7 @@ export type OnCreateUserSubscription = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -508,7 +508,7 @@ export type OnUpdateUserSubscription = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -525,7 +525,7 @@ export type OnDeleteUserSubscription = {
     __typename: 'User'
     id: string
     uuid: string
-    avatar: string
+    avatar?: string | null
     user_name: string
     delete_flag?: boolean | null
     messages?: {
@@ -547,15 +547,15 @@ export type OnCreateMessageSubscription = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -576,15 +576,15 @@ export type OnUpdateMessageSubscription = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
@@ -605,15 +605,15 @@ export type OnDeleteMessageSubscription = {
     video_id: string
     delete_flag?: boolean | null
     video_time: string
-    point: string
-    use_point_id: string
+    point?: string | null
+    use_point_id?: string | null
     is_premium?: boolean | null
     userId?: string | null
     user?: {
       __typename: 'User'
       id: string
       uuid: string
-      avatar: string
+      avatar?: string | null
       user_name: string
       delete_flag?: boolean | null
       createdAt: string
