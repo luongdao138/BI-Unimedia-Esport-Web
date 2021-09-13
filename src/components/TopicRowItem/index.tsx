@@ -19,21 +19,25 @@ export interface TopicRowItemProps {
   isSearched?: boolean
 }
 
-const Highlight = ({ search = '', children = '', isSearched = false, contentRect }) => {
+const Highlight = ({ search = '', children = '', isSearched = false, contentRect = undefined, isTitle = false }) => {
   if (search && isSearched) {
-    const regexJapanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/
-    const isJapanese = regexJapanese.test(children)
+    let parts
     const keyword = new RegExp(`(${_.escapeRegExp(search)})`, 'i')
-    let content = children
+    if (isTitle) {
+      parts = String(children).split(keyword)
+    } else {
+      const regexJapanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/
+      const isJapanese = regexJapanese.test(children)
+      let content = children
 
-    const range = _.toLower(content).lastIndexOf(_.toLower(search))
-    const divisor = isJapanese ? 12 : 5.65
+      const range = _.toLower(content).lastIndexOf(_.toLower(search))
+      const divisor = isJapanese ? 12 : 5.65
+      if (range > contentRect.width / divisor) {
+        content = '...'.concat(content.slice(range - contentRect.width / (divisor * 2)))
+      }
 
-    if (range > contentRect.width / divisor) {
-      content = '...'.concat(content.slice(range - contentRect.width / (divisor * 2)))
+      parts = String(content).split(keyword)
     }
-
-    const parts = String(content).split(keyword)
     return <>{parts.map((part, index) => (keyword.test(part) ? <mark key={index}>{part}</mark> : part))}</>
   }
   return <>{children}</>
@@ -76,7 +80,11 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box className={classes.container}>
             <Box display="flex" flexDirection="row" width="100%" mb={0.25}>
-              <Typography className={classes.title}>{title}</Typography>
+              <Typography className={classes.title}>
+                <Highlight isTitle={true} isSearched={isSearched} search={keyword}>
+                  {title}
+                </Highlight>
+              </Typography>
             </Box>
             <StyledBox display="flex" flexDirection="row" width="100%" ref={contentRef}>
               <Typography className={classes.last_comment}>{renderContent(contentRect)}</Typography>
