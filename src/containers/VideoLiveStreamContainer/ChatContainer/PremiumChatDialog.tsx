@@ -26,7 +26,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   onClickOutside,
   onPressDonate,
   myPoint,
-  createMess
+  createMess,
 }) => {
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
@@ -166,7 +166,9 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
         )}
         <Box className={classes.dialogFooter}>
           <Typography className={classes.totalPointText}>
-            {`${i18n.t('common:live_stream_screen.owned_points')}: ${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t('common:common.eXe_points')}`}
+            {`${i18n.t('common:live_stream_screen.owned_points')}: ${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t(
+              'common:common.eXe_points'
+            )}`}
           </Typography>
           <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
         </Box>

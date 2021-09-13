@@ -328,7 +328,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
               <Box className={classes.registration}>
                 <Typography className={classes.register_person_label}>{t('live_stream_screen.register_person_label')}</Typography>
                 <Typography className={classes.register_person_number}>
-                  {FormatHelper.japaneseWanFormatter(123456)}
+                  {FormatHelper.japaneseWanFormatter(detailVideoResult?.channel_follow_count && 0)}
                   {t('common.man')}
                 </Typography>
               </Box>

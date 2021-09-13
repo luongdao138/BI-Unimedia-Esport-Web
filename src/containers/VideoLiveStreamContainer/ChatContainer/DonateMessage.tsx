@@ -1,10 +1,10 @@
 import { Box, makeStyles, Typography } from '@material-ui/core'
-import React, { ReactNode, } from 'react'
+import React, { ReactNode } from 'react'
 import { purchasePoints } from './index'
 import * as APIt from 'src/types/graphqlAPI'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
 import { useTranslation } from 'react-i18next'
-import {hexToRgba} from '@utils/helpers/CommonHelper'
+import { hexToRgba } from '@utils/helpers/CommonHelper'
 import ESMenuItem from '@components/Menu/MenuItem'
 import ESMenu from '@components/Menu'
 
@@ -15,26 +15,21 @@ type DonateMessageProps = {
   getMessageWithoutNgWords: (chatMessContent: string) => ReactNode
 }
 
-const DonateMessage: React.FC<DonateMessageProps> = ({
-  message, deleteMess, getMessageWithoutNgWords, is_streamer
-}) => {
+const DonateMessage: React.FC<DonateMessageProps> = ({ message, deleteMess, getMessageWithoutNgWords, is_streamer }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
 
   const bgColor = message.delete_flag ? '#7e7c80' : purchasePoints[`p_${message.point}`].backgroundColor
-  
-  const getClassDeletedMess = () : string => {
-    if(message.delete_flag) {
+
+  const getClassDeletedMess = (): string => {
+    if (message.delete_flag) {
       return 'line_through_text'
     } else return ''
   }
 
   return (
     <Box className={classes.accountInfo}>
-      <Box 
-        className={classes.accountInfoHeader} 
-        style={{backgroundColor: hexToRgba(bgColor, 0.8)}}
-      >
+      <Box className={classes.accountInfoHeader} style={{ backgroundColor: hexToRgba(bgColor, 0.8) }}>
         <Typography className={classes.accountName}>
           <span className={getClassDeletedMess()}>{message.owner}</span>
         </Typography>
@@ -46,24 +41,19 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
         </Typography>
         {is_streamer ? (
           <ESMenu className={classes.menu_del_mess} iconClass={classes.iconClass}>
-            {
-              message.delete_flag ? (
-                <ESMenuItem disabled className={classes.menu_item_disabled}>
-                  {t('live_stream_screen.deleted_message')}
-                </ESMenuItem> 
-              ) : (
-                <ESMenuItem onClick={() => deleteMess(message.id)}>
-                  {t('live_stream_screen.delete_message')}
-                </ESMenuItem> 
-              )
-            }
-          </ESMenu> 
-        ) : ''}
+            {message.delete_flag ? (
+              <ESMenuItem disabled className={classes.menu_item_disabled}>
+                {t('live_stream_screen.deleted_message')}
+              </ESMenuItem>
+            ) : (
+              <ESMenuItem onClick={() => deleteMess(message.id)}>{t('live_stream_screen.delete_message')}</ESMenuItem>
+            )}
+          </ESMenu>
+        ) : (
+          ''
+        )}
       </Box>
-      <Box 
-        className={classes.accountInfoContent} 
-        style={{backgroundColor: bgColor}}
-      >
+      <Box className={classes.accountInfoContent} style={{ backgroundColor: bgColor }}>
         <Typography className={classes.accountInfoContentText}>
           <span className={getClassDeletedMess()}>{getMessageWithoutNgWords(message.text) + ' ' + message.video_time + 's'}</span>
         </Typography>
@@ -74,21 +64,21 @@ const DonateMessage: React.FC<DonateMessageProps> = ({
 
 const useStyles = makeStyles(() => ({
   menu_del_mess: {
-    position: "absolute", 
-    right: "5px", 
-    top: "13px"
+    position: 'absolute',
+    right: '5px',
+    top: '13px',
   },
   menu_item_disabled: {
     '&.MuiListItem-root.Mui-disabled': {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
-  iconClass:{
+  iconClass: {
     display: 'none',
     padding: 4,
     '& .MuiIcon-fontSizeSmall': {
-      fontSize: "0.82rem"
-    }
+      fontSize: '0.82rem',
+    },
   },
   accountInfo: {
     display: 'flex',
@@ -101,7 +91,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   accountInfoHeader: {
-    position: "relative", 
+    position: 'relative',
     display: 'flex',
     paddingTop: 7,
     paddingBottom: 11,

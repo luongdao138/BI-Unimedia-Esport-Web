@@ -987,7 +987,7 @@ export default {
     register_toggle_name: 'このカードを支払い手段に登録する',
     title_delete_card: 'このカードの登録を削除する',
     clear_section: '選択をクリア',
-    btn_buy: '購入する',
+    btn_buy: '確認する',
     purchase_confirm: '購入確認',
     purchase_exe_points: '購入eXeポイント',
     purchase_fee: '購入料金',
@@ -1058,7 +1058,7 @@ export default {
     premium_message_too_long_pre: 'メッセージは',
     premium_message_too_long_post: '文字までです',
     message_placeholder: 'チャットを送信',
-    deleted_message: "削除済み"
+    deleted_message: '削除済み',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

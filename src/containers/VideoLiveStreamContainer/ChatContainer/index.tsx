@@ -47,7 +47,7 @@ export const purchasePoints = {
     borderColor: '#2680EB',
     flex: 65.5,
     maxLengthInput: 50,
-    displayTime: 0
+    displayTime: 0,
   },
   p_300: {
     id: 'p_300',
@@ -56,7 +56,7 @@ export const purchasePoints = {
     borderColor: '#01B7FB',
     flex: 86,
     maxLengthInput: 50,
-    displayTime: 0
+    displayTime: 0,
   },
   p_500: {
     id: 'p_500',
@@ -65,7 +65,7 @@ export const purchasePoints = {
     borderColor: '#0FB732',
     flex: 94,
     maxLengthInput: 150,
-    displayTime: 120
+    displayTime: 120,
   },
   p_1000: {
     id: 'p_1000',
@@ -74,7 +74,7 @@ export const purchasePoints = {
     borderColor: '#EBD600',
     flex: 94,
     maxLengthInput: 200,
-    displayTime: 300
+    displayTime: 300,
   },
   p_3000: {
     id: 'p_3000',
@@ -83,7 +83,7 @@ export const purchasePoints = {
     borderColor: '#FF6A1C',
     flex: 98,
     maxLengthInput: 225,
-    displayTime: 600
+    displayTime: 600,
   },
   // p_2500: {
   //   id: 'p_2500',
@@ -99,7 +99,7 @@ export const purchasePoints = {
     borderColor: '#9147F9',
     flex: 112,
     maxLengthInput: 250,
-    displayTime: 1800
+    displayTime: 1800,
   },
   p_10000: {
     id: 'p_10000',
@@ -108,7 +108,7 @@ export const purchasePoints = {
     borderColor: '#C91315',
     flex: 151,
     maxLengthInput: 270,
-    displayTime: 3600
+    displayTime: 3600,
   },
 }
 
@@ -116,7 +116,7 @@ type MessageValidationType = {
   message: string
 }
 
-export const sanitizeMess = (content: string) :string =>
+export const sanitizeMess = (content: string): string =>
   sanitizeHtml(content, {
     allowedTags: [],
     allowedAttributes: {},
@@ -242,18 +242,17 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         const updatedMess = subMessage.data.onUpdateMessage
         if (updatedMess.video_id === key_video_id) {
           setStateMessages((stateMessages) => {
-            const foundIndex = stateMessages.findIndex(item => {
+            const foundIndex = stateMessages.findIndex((item) => {
               return item.id === updatedMess.id
             })
             const newStateMess = [...stateMessages]
-            if(foundIndex !== -1) {
+            if (foundIndex !== -1) {
               newStateMess[foundIndex] = updatedMess
               return [...newStateMess]
             } else {
               return [...stateMessages]
             }
           })
-          
         }
       },
       error: (error) => console.warn(error),
@@ -264,7 +263,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     getListUser()
   }, [])
 
-  const getMessages = async() => {
+  const getMessages = async () => {
     try {
       const listQV: APIt.ListMessagesQueryVariables = key_video_id ? { filter: { video_id: { eq: key_video_id } } } : {}
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
@@ -274,7 +273,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     } catch (error) {
       console.error(error)
     }
-  }  
+  }
 
   const checkUserExist = (checkedAllUsers: any) => {
     if (!checkedAllUsers) {
@@ -324,9 +323,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   async function deleteMsg(idDelete: string) {
     const input = {
       id: idDelete,
-      delete_flag: true
-    };
-    const deleteAt: any = await API.graphql(graphqlOperation(updateMessage, {input: input}));
+      delete_flag: true,
+    }
+    const deleteAt: any = await API.graphql(graphqlOperation(updateMessage, { input: input }))
     // console.log(deleteAt);
     if (deleteAt.data) {
       // setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
@@ -366,9 +365,11 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   const purchaseInfoDialog = () => (
-    <PremiumChatDialog 
+    <PremiumChatDialog
       createMess={createMess}
-      onClickOutside={handlePremiumChatBoxClickOutside} onPressDonate={onPressDonate} myPoint={myPoint} 
+      onClickOutside={handlePremiumChatBoxClickOutside}
+      onPressDonate={onPressDonate}
+      myPoint={myPoint}
     />
   )
 
@@ -410,7 +411,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           //@ts-ignore
           point: point.toString(),
           is_premium: true,
-          display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime
+          display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime,
         }
       }
       console.log('input', input)
@@ -483,22 +484,28 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           // sort messages oldest to newest client-side
           .sort((a: any, b: any) => a.createdAt.localeCompare(b.createdAt))
           .map((msg: any, i) => {
-            // only display message is not deleted or display all mess if user is streamer 
-            return (!msg.delete_flag || userResult.streamer) ? (msg.is_premium ? (
-                <DonateMessage 
-                  message={msg} deleteMess={deleteMsg} 
-                  getMessageWithoutNgWords={getMessageWithoutNgWords} 
+            // only display message is not deleted or display all mess if user is streamer
+            return !msg.delete_flag || userResult.streamer ? (
+              msg.is_premium ? (
+                <DonateMessage
+                  message={msg}
+                  deleteMess={deleteMsg}
+                  getMessageWithoutNgWords={getMessageWithoutNgWords}
                   is_streamer={userResult?.streamer}
                 />
               ) : (
-                <ChatTextMessage 
-                  key={i} message={msg} getMessageWithoutNgWords={getMessageWithoutNgWords}
+                <ChatTextMessage
+                  key={i}
+                  message={msg}
+                  getMessageWithoutNgWords={getMessageWithoutNgWords}
                   deleteMess={deleteMsg}
                   is_streamer={userResult?.streamer}
                 />
               )
-          ) : ''
-        })}
+            ) : (
+              ''
+            )
+          })}
       </Box>
       {chatInputComponent()}
     </Box>

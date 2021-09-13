@@ -230,20 +230,20 @@ export const detectCardType = (cardNumber: string): number => {
   return cardType
 }
 
-export const hexToRgba = (hex: string, opacity: number) : string => {
-    if(!/^[#]*([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/i.test(hex)) {
-        return '';
-    }
-    hex = hex.replace('#', '');
-    if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-    }
-    const rgba = [];
-    rgba.push(parseInt(hex.slice(0, 2), 16));
-    rgba.push(parseInt(hex.slice(2, 4), 16));
-    rgba.push(parseInt(hex.slice(4, 6), 16));
-    rgba.push(opacity);
-    return "rgb(" + rgba.toString() + ")"
+export const hexToRgba = (hex: string, opacity: number): string => {
+  if (!/^[#]*([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/i.test(hex)) {
+    return ''
+  }
+  hex = hex.replace('#', '')
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+  }
+  const rgba = []
+  rgba.push(parseInt(hex.slice(0, 2), 16))
+  rgba.push(parseInt(hex.slice(2, 4), 16))
+  rgba.push(parseInt(hex.slice(4, 6), 16))
+  rgba.push(opacity)
+  return 'rgb(' + rgba.toString() + ')'
 }
 
 export const CommonHelper = {

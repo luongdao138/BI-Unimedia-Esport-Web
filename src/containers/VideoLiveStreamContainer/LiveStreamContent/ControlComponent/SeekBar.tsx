@@ -18,7 +18,7 @@ const SeekBar: React.FC<Props> = ({ currentTime, videoRef }) => {
   useEffect(() => {
     const onTimeUpdate = (event) => {
       // console.log("===CHECK TIME PLAYED ===",event, videoRef.current.duration)
-      if(Math.floor(event.target.currentTime) !== streamingSecond) {
+      if (Math.floor(event.target.currentTime) !== streamingSecond) {
         changeStreamingSecond(Math.floor(event.target.currentTime))
       }
       // setCurrentTime(event.target.currentTime)
