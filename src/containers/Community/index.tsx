@@ -135,8 +135,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
 
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
-        {({ registerChild }) => (
-          <Grid key={key} style={style} ref={registerChild} container>
+        {({ registerChild, measure }) => (
+          <Grid key={key} style={style} ref={registerChild} container onLoad={measure}>
             {items}
           </Grid>
         )}
