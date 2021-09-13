@@ -239,9 +239,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '0px',
       paddingBottom: '0px',
     },
-    wrapPreLoadContainer: {
-      width: 290,
-    },
     xsItemContainer: {
       paddingRight: '24px',
       '&:last-child': {

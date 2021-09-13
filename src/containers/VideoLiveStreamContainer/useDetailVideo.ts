@@ -6,6 +6,7 @@ import videoTop from '@store/videoTop'
 const { selectors, actions } = videoTop
 const _getDetailMeta = createMetaSelector(actions.videoDetail)
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useDetailVideo = () => {
   const dispatch = useAppDispatch()
 

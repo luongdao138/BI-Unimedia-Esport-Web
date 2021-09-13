@@ -122,4 +122,6 @@ export const URI = {
   GET_LIST_USED_POINTS: '/v2/points/history',
   GET_USAGE_POINTS_DETAIL: '/v2/points/detail',
   PURCHASE_TICKET_SUPER_CHAT: '/v2/purchase/use_points',
+  VIDEOS: '/v2/videos/',
+  FOLLOW_CHANNEL: '/v2/channels/follow',
 }

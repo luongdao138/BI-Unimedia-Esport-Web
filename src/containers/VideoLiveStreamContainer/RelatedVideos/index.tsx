@@ -2,36 +2,50 @@ import { Box, Theme, makeStyles, Grid, Typography } from '@material-ui/core'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { PreloadPreviewItem } from '../PreloadContainer'
-import { TypeVideo } from '@services/videoTop.services'
 import InfiniteScroll from 'react-infinite-scroll-component'
-// import { useTranslation } from 'react-i18next'
 import i18n from '@locales/i18n'
+import useLiveStreamDetail from '../useLiveStreamDetail'
+import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
 
-const RelatedVideos: React.FC = () => {
-  // const { t } = useTranslation('common')
-  const isLoading = false
-  const dataLiveVideo = Array(6)
-    .fill('')
-    .map((_, i) => ({
-      id: i,
-      type: 'related',
-      title: `ムービータイトルムービータイトル ...`,
-      user_avatar: '/images/dataVideoFake/fake_avatar.png',
-      thumbnailLive: '/images/dataVideoFake/thumbnailLive.png',
-      thumbnailStreamer: '/images/dataVideoFake/banner_01.png',
-      thumbnail: '/images/dataVideoFake/banner_04.png',
-      user_nickname: 'だみだみだみだみ',
-      waitingNumber: 1500,
-      category_name: 'Valorant',
-    }))
-
+type RelatedVideosProps = {
+  video_id?: string | string[]
+}
+const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
+  const page = 1
+  const {
+    meta_related_video_stream,
+    relatedVideoStreamData,
+    getRelatedVideoStream,
+    resetRelatedVideoStream,
+    loadMoreRelated,
+  } = useLiveStreamDetail()
+  // const relatedVideoStreamData = []
+  const isLoading = meta_related_video_stream?.pending
 
-  const renderRelatedVideoItem = (item: TypeVideo, index: number) => {
+  const params = {
+    video_id: video_id,
+    page: page,
+    limit: LIMIT_ITEM,
+  }
+  useEffect(() => {
+    if (relatedVideoStreamData?.length === 0) {
+      getRelatedVideoStream(params)
+    }
+    return () => {
+      resetRelatedVideoStream()
+    }
+  }, [video_id])
+
+  useEffect(() => {
+    loadMoreRelated(page + 1, video_id)
+  }, [])
+
+  const renderRelatedVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
       <>
         {downMd ? (
@@ -48,7 +62,7 @@ const RelatedVideos: React.FC = () => {
   }
 
   const renderPreLoadRelatedVideoItem = () => {
-    const arrayPreLoad = Array(10)
+    const arrayPreLoad = Array(6)
       .fill('')
       .map((_, i) => ({ i }))
     return arrayPreLoad.map(() => (
@@ -73,20 +87,20 @@ const RelatedVideos: React.FC = () => {
       <Box className={classes.wrapContentContainer}>
         <InfiniteScroll
           className={classes.scrollContainer}
-          dataLength={dataLiveVideo.length}
+          dataLength={relatedVideoStreamData.length}
           next={() => {
-            // loadMore(page, follow)
+            loadMoreRelated(page, video_id)
           }}
           hasMore={true}
           loader={null}
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
         >
-          {dataLiveVideo?.length > 0 ? (
+          {relatedVideoStreamData?.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>
-              {dataLiveVideo.map(renderRelatedVideoItem)}
+              {relatedVideoStreamData.map(renderRelatedVideoItem)}
             </Grid>
-          ) : dataLiveVideo?.length === 0 && isLoading ? (
+          ) : relatedVideoStreamData?.length === 0 && isLoading ? (
             <Grid container spacing={3} className={classes.contentContainer}>
               {renderPreLoadRelatedVideoItem()}
             </Grid>
@@ -105,7 +119,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     marginTop: theme.spacing(2),
-    flexDirection: 'column',
+    width: '100%',
   },
   wrapContentContainer: {
     justifyContent: 'center',
@@ -119,6 +133,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     overflow: 'hidden',
+  },
+  contentContainer: {
+    marginTop: theme.spacing(0),
+    paddingBottom: theme.spacing(2),
+    display: 'flex',
+    width: '100%',
+  },
+  itemContainer: {
+    width: '100%',
   },
   [theme.breakpoints.up(960)]: {
     itemContainer: {
@@ -146,7 +169,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 10,
       width: 'calc(100vw)',
       overflow: 'auto',
-      justifycContent: 'center',
+      justifyContent: 'center',
     },
     wrapPreLoadContainer: {
       width: 290,

@@ -8,9 +8,10 @@ import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import moment from 'moment'
 import { FORMAT_DATE_ARCHIVED } from '@constants/common.constants'
+import { TypeVideoArchived } from '@services/liveStreamDetail.service'
 
 type VideoPreviewItemProps = {
-  data?: TypeVideo
+  data?: TypeVideo | TypeVideoArchived
 }
 const VideoPreviewItem: React.FC<VideoPreviewItemProps> = ({ data }) => {
   const classes = useStyles()
