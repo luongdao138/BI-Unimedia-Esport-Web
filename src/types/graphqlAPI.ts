@@ -68,14 +68,14 @@ export type ModelBooleanInput = {
 
 export type User = {
   __typename: 'User'
-  id: string
-  uuid: string
-  avatar: string
-  user_name: string
+  id?: string
+  uuid?: string
+  avatar?: string
+  user_name?: string
   delete_flag?: boolean | null
-  messages?: ModelMessageConnection | null
-  createdAt: string
-  updatedAt: string
+  messages?: ModelMessageConnection
+  createdAt?: string
+  updatedAt?: string
 }
 
 export type ModelMessageConnection = {
@@ -86,21 +86,21 @@ export type ModelMessageConnection = {
 
 export type Message = {
   __typename: 'Message'
-  id: string
-  owner: string
-  text: string
+  id?: string
+  owner?: string
+  text?: string
   uuid?: string | null
-  video_id: string
+  video_id?: string
   delete_flag?: boolean | null
-  video_time: string
+  video_time?: string
   display_avatar_time?: string | null
   point?: string | null
   use_point_id?: string | null
   is_premium?: boolean | null
-  userId: string
-  user?: User | null
-  createdAt: string
-  updatedAt: string
+  userId?: string
+  parent?: User
+  createdAt?: string
+  updatedAt?: string
 }
 
 export type UpdateUserInput = {
@@ -218,7 +218,7 @@ export type ModelMessageFilterInput = {
 }
 
 export type CreateUserMutationVariables = {
-  input: CreateUserInput
+  input?: CreateUserInput
   condition?: ModelUserConditionInput | null
 }
 
@@ -240,7 +240,7 @@ export type CreateUserMutation = {
 }
 
 export type UpdateUserMutationVariables = {
-  input: UpdateUserInput
+  input?: UpdateUserInput
   condition?: ModelUserConditionInput | null
 }
 
@@ -262,7 +262,7 @@ export type UpdateUserMutation = {
 }
 
 export type DeleteUserMutationVariables = {
-  input: DeleteUserInput
+  input?: DeleteUserInput
   condition?: ModelUserConditionInput | null
 }
 
@@ -284,7 +284,7 @@ export type DeleteUserMutation = {
 }
 
 export type CreateMessageMutationVariables = {
-  input: CreateMessageInput
+  input?: CreateMessageInput
   condition?: ModelMessageConditionInput | null
 }
 
@@ -303,7 +303,7 @@ export type CreateMessageMutation = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string
@@ -319,7 +319,7 @@ export type CreateMessageMutation = {
 }
 
 export type UpdateMessageMutationVariables = {
-  input: UpdateMessageInput
+  input?: UpdateMessageInput
   condition?: ModelMessageConditionInput | null
 }
 
@@ -338,7 +338,7 @@ export type UpdateMessageMutation = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string
@@ -354,7 +354,7 @@ export type UpdateMessageMutation = {
 }
 
 export type DeleteMessageMutationVariables = {
-  input: DeleteMessageInput
+  input?: DeleteMessageInput
   condition?: ModelMessageConditionInput | null
 }
 
@@ -373,7 +373,7 @@ export type DeleteMessageMutation = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string
@@ -389,7 +389,7 @@ export type DeleteMessageMutation = {
 }
 
 export type GetUserQueryVariables = {
-  id: string
+  id?: string
 }
 
 export type GetUserQuery = {
@@ -433,7 +433,7 @@ export type ListUsersQuery = {
 }
 
 export type GetMessageQueryVariables = {
-  id: string
+  id?: string
 }
 
 export type GetMessageQuery = {
@@ -451,7 +451,7 @@ export type GetMessageQuery = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string
@@ -562,7 +562,7 @@ export type OnCreateMessageSubscription = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string
@@ -592,7 +592,7 @@ export type OnUpdateMessageSubscription = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string
@@ -622,7 +622,7 @@ export type OnDeleteMessageSubscription = {
     use_point_id?: string | null
     is_premium?: boolean | null
     userId: string
-    user?: {
+    parent?: {
       __typename: 'User'
       id: string
       uuid: string

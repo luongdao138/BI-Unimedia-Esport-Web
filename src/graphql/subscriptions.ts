@@ -65,7 +65,7 @@ export const onCreateMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
-      user {
+      parent {
         id
         uuid
         avatar
@@ -94,7 +94,7 @@ export const onUpdateMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
-      user {
+      parent {
         id
         uuid
         avatar
@@ -123,7 +123,7 @@ export const onDeleteMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
-      user {
+      parent {
         id
         uuid
         avatar

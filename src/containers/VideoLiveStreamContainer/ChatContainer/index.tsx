@@ -399,7 +399,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         text: sanitizeMess(message),
         uuid: chatUser.uuid,
         video_id: key_video_id,
-        video_time: videoTime,
+        video_time: videoTime + '',
         // point: 500,//optional : show when Post is use pOint
         is_premium: false,
         userId: chatUser.uuid,
@@ -416,7 +416,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       }
       console.log('input', input)
 
-      await API.graphql(graphqlOperation(createMessage, { input }))
+      // await API.graphql(graphqlOperation(createMessage, { input }))
     }
   }
 
