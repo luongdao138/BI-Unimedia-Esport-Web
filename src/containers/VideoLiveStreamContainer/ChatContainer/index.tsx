@@ -1,13 +1,12 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Typography, Icon, Button, OutlinedInput, IconButton, Input, useTheme, useMediaQuery } from '@material-ui/core'
+import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState, useEffect } from 'react'
-// import sanitizeHtml from 'sanitize-html'
+import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
-import { useTranslation } from 'react-i18next'
 import useStyles from './styles'
 import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import _, { size } from 'lodash'
@@ -19,10 +18,17 @@ import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { listMessages, listUsers } from 'src/graphql/queries'
-import { createMessage, createUser } from 'src/graphql/mutations'
+import { createMessage, createUser, updateMessage } from 'src/graphql/mutations'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
-import { onCreateMessage } from 'src/graphql/subscriptions'
+import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
+import useDetailVideo from '../useDetailVideo'
+// import usePurchaseTicketSuperChat from '../usePurchaseTicket'
+import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
+import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
+import DonateMessage from './DonateMessage'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -39,35 +45,45 @@ export const purchasePoints = {
     value: 100,
     backgroundColor: '#2680EB',
     borderColor: '#2680EB',
-    width: 65.5,
+    flex: 65.5,
+    maxLengthInput: 50,
+    displayTime: 0
   },
   p_300: {
     id: 'p_300',
     value: 300,
     backgroundColor: '#01B7FB',
     borderColor: '#01B7FB',
-    width: 65.5,
+    flex: 86,
+    maxLengthInput: 50,
+    displayTime: 0
   },
   p_500: {
     id: 'p_500',
     value: 500,
     backgroundColor: '#0FB732',
     borderColor: '#0FB732',
-    width: 65.5,
+    flex: 94,
+    maxLengthInput: 150,
+    displayTime: 120
   },
   p_1000: {
     id: 'p_1000',
     value: 1000,
     backgroundColor: '#EBD600',
     borderColor: '#EBD600',
-    width: 65.5,
+    flex: 94,
+    maxLengthInput: 200,
+    displayTime: 300
   },
   p_3000: {
     id: 'p_3000',
     value: 3000,
     backgroundColor: '#FF6A1C',
     borderColor: '#FF6A1C',
-    width: 90,
+    flex: 98,
+    maxLengthInput: 225,
+    displayTime: 600
   },
   // p_2500: {
   //   id: 'p_2500',
@@ -79,27 +95,43 @@ export const purchasePoints = {
   p_5000: {
     id: 'p_5000',
     value: 5000,
-    backgroundColor: '#C91315',
-    borderColor: '#C91315',
-    width: 90,
+    backgroundColor: '#9147F9',
+    borderColor: '#9147F9',
+    flex: 112,
+    maxLengthInput: 250,
+    displayTime: 1800
   },
   p_10000: {
     id: 'p_10000',
     value: 10000,
     backgroundColor: '#C91315',
     borderColor: '#C91315',
-    width: 188.5,
+    flex: 151,
+    maxLengthInput: 270,
+    displayTime: 3600
   },
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseChatPanel, userHasViewingTicket, key_video_id }) => {
-  const { t } = useTranslation('common')
-  const [messageText, setMessageText] = useState<string>('')
-  const [purchaseComment, setPurchaseComment] = useState<string>('')
+type MessageValidationType = {
+  message: string
+}
+
+export const sanitizeMess = (content: string) :string =>
+  sanitizeHtml(content, {
+    allowedTags: [],
+    allowedAttributes: {},
+  })
+
+const ChatContainer: React.FC<ChatContainerProps> = ({
+  onPressDonate,
+  userHasViewingTicket,
+  key_video_id,
+  myPoint,
+  handleKeyboardVisibleState,
+}) => {
+  // const { t } = useTranslation('common')
+  // const [messageText, setMessageText] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
-  const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>(null)
-  const [chatInputValidationError, setChatInputValidationError] = useState<string>('')
-  const [premiumChatValidationError, setPremiumChatValidationError] = useState<string>('')
   const [messActiveUser, setMessActiveUser] = useState<string | number>('')
   const [allUsers, setAllUsers] = useState([])
   const [successFlagGetListUSer, setSuccessFlagGetListUSer] = useState(false)
@@ -110,11 +142,33 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   const initialFruits: APIt.Message[] = []
   const [stateMessages, setStateMessages] = useState(initialFruits)
   const [chatUser, setChatUser] = useState<any>([])
-  const classes = useStyles({ chatValidationError: !!chatInputValidationError })
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { checkNgWord } = useCheckNgWord()
+
+  const { userResult, streamingSecond } = useDetailVideo()
+  // const userResult = {streamer: 0}
+  // const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
+
+  const validationSchema = Yup.object().shape({
+    message: Yup.string()
+      .required(i18n.t('common:live_stream_screen.chat_input_text_validate_msg_empty'))
+      .max(50, i18n.t('common:live_stream_screen.chat_input_text_validate_msg_50_char_exceed'))
+      .trim(),
+  })
+
+  const { handleChange, values, handleSubmit, errors } = useFormik<MessageValidationType>({
+    initialValues: {
+      message: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      createMess(sanitizeMess(values.message))
+      values.message = ''
+    },
+  })
+  const classes = useStyles({ chatValidationError: !!errors.message })
 
   const handleCreateUserDB = async () => {
     console.log(
@@ -165,36 +219,62 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     }
   }
 
-  useEffect(() => {
-    // Subscribe to creation of message
-    // Subscriptions is a GraphQL feature allowing the server to send data to its clients when a specific event happens. You can enable real-time data integration in your app with a subscription.
+  const subscribeAction = () => {
     const pubSubClient = API.graphql(graphqlOperation(onCreateMessage))
     pubSubClient.subscribe({
       next: (sub: GraphQLResult<APIt.OnCreateMessageSubscription>) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const subMessage = sub?.value
-        console.log('New Messages: ', JSON.stringify(subMessage))
-
-        setStateMessages((stateMessages) => [...stateMessages, subMessage.data.onCreateMessage])
+        if (subMessage.data.onCreateMessage.video_id === key_video_id) {
+          setStateMessages((stateMessages) => [...stateMessages, subMessage.data.onCreateMessage])
+        }
       },
       error: (error) => console.warn(error),
     })
 
-    async function getMessages() {
-      try {
-        const listQV: APIt.ListMessagesQueryVariables = {}
-        const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
-        console.log('getMessages Results; ', messagesResults)
+    const updateMessSubscription = API.graphql(graphqlOperation(onUpdateMessage))
+    updateMessSubscription.subscribe({
+      next: (sub: GraphQLResult<APIt.OnUpdateMessageSubscription>) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        const subMessage = sub?.value
+        const updatedMess = subMessage.data.onUpdateMessage
+        if (updatedMess.video_id === key_video_id) {
+          setStateMessages((stateMessages) => {
+            const foundIndex = stateMessages.findIndex(item => {
+              return item.id === updatedMess.id
+            })
+            const newStateMess = [...stateMessages]
+            if(foundIndex !== -1) {
+              newStateMess[foundIndex] = updatedMess
+              return [...newStateMess]
+            } else {
+              return [...stateMessages]
+            }
+          })
+          
+        }
+      },
+      error: (error) => console.warn(error),
+    })
+  }
 
-        setStateMessages(messagesResults.data.listMessages.items)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    getMessages()
+  useEffect(() => {
     getListUser()
   }, [])
+
+  const getMessages = async() => {
+    try {
+      const listQV: APIt.ListMessagesQueryVariables = key_video_id ? { filter: { video_id: { eq: key_video_id } } } : {}
+      const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
+      console.log('getMessages Results; ', messagesResults)
+      setStateMessages(messagesResults.data.listMessages.items)
+      subscribeAction()
+    } catch (error) {
+      console.error(error)
+    }
+  }  
 
   const checkUserExist = (checkedAllUsers: any) => {
     if (!checkedAllUsers) {
@@ -228,42 +308,41 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     }
   }, [userProfile, successFlagGetListUSer])
 
-  // function getUrlParameter(sParam: string) {
-  //   let sPageURL = window.location.search.substring(1),
-  //     sURLVariables = sPageURL.split('&'),
-  //     sParameterName,
-  //     i
+  useEffect(() => {
+    if (key_video_id) {
+      getMessages()
+    }
+  }, [key_video_id])
 
-  //   for (i = 0; i < sURLVariables.length; i++) {
-  //     sParameterName = sURLVariables[i].split('=')
-
-  //     if (sParameterName[0] === sParam) {
-  //       return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1])
-  //     }
+  // useEffect(() => {
+  //   if (dataPurchaseTicketSuperChat?.code === 200 && purchaseComment) {
+  //     createMess(purchaseComment, purchasePoints[purchaseValueSelected].value)
+  //     setPurchaseComment('')
   //   }
-  //   return false
-  // }
+  // }, [dataPurchaseTicketSuperChat])
 
-  // async function deleteMsg(idDelete: string, e: any) {
+  async function deleteMsg(idDelete: string) {
+    const input = {
+      id: idDelete,
+      delete_flag: true
+    };
+    const deleteAt: any = await API.graphql(graphqlOperation(updateMessage, {input: input}));
+    // console.log(deleteAt);
+    if (deleteAt.data) {
+      // setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
+    }
+  }
+
+  // async function deleteMsg(idDelete: string) {
   //   const input = {
   //     id: idDelete
   //   };
   //   const deleteAt: any = await API.graphql(graphqlOperation(deleteMessage, {input: input}));
   //   console.log(deleteAt);
   //   if (deleteAt.data) {
-  //     setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
+  //     // setStateMessages(stateMessages.filter(({ id }) => id !== idDelete));
   //   }
   // }
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessageText(e.target.value)
-  }
-
-  const onCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPurchaseComment(e.target.value)
-  }
-
-  const getPurchasePointList = () => Object.values(purchasePoints)
 
   // const getChatData = () =>
   //   Array(30)
@@ -274,125 +353,87 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
   //     }))
 
-  const handlePremiumChatClick = () => {
-    const content = purchaseComment
-    if (content.length === 0) {
-      setPremiumChatValidationError(t('live_stream_screen.chat_premium_text_validate_msg_empty'))
-      return
-    }
-    if (!purchaseValueSelected) {
-      setPremiumChatValidationError(t('live_stream_screen.chat_premium_text_validate_no_donate_selected'))
-      return
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const sanitizedContent = sanitizeHtml(content, {
-    //   allowedTags: [],
-    //   allowedAttributes: {},
-    // })
-
-    // Submit chat message
-    setPremiumChatValidationError('')
-    setPurchaseComment('')
-
-    const donatedPoint = purchasePoints[purchaseValueSelected].value
-    onPressDonate(donatedPoint, purchaseComment)
+  const handleChatInputOnFocus = () => {
+    handleKeyboardVisibleState(true)
   }
+
+  const handleChatInputOnBlur = () => {
+    handleKeyboardVisibleState(false)
+  }
+
+  const handlePremiumChatBoxClickOutside = () => {
+    setPurchaseDialogVisible(false)
+  }
+
   const purchaseInfoDialog = () => (
-    <Box className={classes.purchaseDialogContainer}>
-      <Box className={classes.purchaseDialogContent}>
-        <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
-        <Box className={classes.purchaseCommentInputContainer}>
-          <Input
-            id="comment"
-            multiline
-            rows={4}
-            placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
-            fullWidth
-            value={purchaseComment}
-            onChange={onCommentChange}
-            disableUnderline
-            classes={{ root: classes.purchaseCommentRoot, input: classes.purchaseCommentInput }}
-          />
-          <Typography className={classes.purchaseCommentTextLimit}>{`${purchaseComment.length} / 120`}</Typography>
-        </Box>
-        <Box className={classes.pointList}>
-          <Box className={classes.pointListRow1}>
-            {getPurchasePointList()
-              .slice(0, isMobile ? 7 : 8)
-              .map((item) => {
-                const itemSelected = item.id === purchaseValueSelected
-                return (
-                  <Box
-                    onClick={() => {
-                      setPurchaseValueSelected(item.id)
-                    }}
-                    key={item.id}
-                    className={`${classes[item.id]} ${classes.purchaseItem} ${itemSelected ? '' : classes.purchaseItemUnselected}`}
-                  >
-                    <Typography className={classes.purchaseItemText}>{item.value.toString()}</Typography>
-                  </Box>
-                )
-              })}
-          </Box>
-        </Box>
-        <Button onClick={handlePremiumChatClick} className={classes.purchaseButton}>
-          <Typography className={classes.purchaseButtonText}>{i18n.t('common:live_stream_screen.send')}</Typography>
-        </Button>
-        {premiumChatValidationError && <Typography className={classes.premiumChatError}>{premiumChatValidationError}</Typography>}
-        <Box className={classes.dialogFooter}>
-          <Typography className={classes.totalPointText}>{'所有ポイント：5,500 eXeポイント'}</Typography>
-          <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
-        </Box>
-      </Box>
-      <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />
-    </Box>
+    <PremiumChatDialog 
+      createMess={createMess}
+      onClickOutside={handlePremiumChatBoxClickOutside} onPressDonate={onPressDonate} myPoint={myPoint} 
+    />
   )
 
   const purchaseIconClick = () => {
     setPurchaseDialogVisible(!purchaseDialogVisible)
   }
 
-  const handleSubmitChatContent = async () => {
-    const content = messageText
-    if (content.length === 0) {
-      setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
+  const getMessageWithoutNgWords = (chatMessContent) => {
+    const ngWords = checkNgWord(chatMessContent)
+    if (ngWords.length !== 0) {
+      ngWords.map((item) => {
+        if (chatMessContent.includes(item)) {
+          const regex = new RegExp(item, 'g')
+          chatMessContent = chatMessContent.replace(regex, '*'.repeat(item.length))
+        }
+      })
     }
-    if (content.length > 50) {
-      setChatInputValidationError('live_stream_screen.chat_input_text_validate_msg_50_char_exceed')
-    }
-    // dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: 'aaaaaaaa' }))
+    return chatMessContent
+  }
 
-    if (!_.isEmpty(checkNgWord(content))) {
-      setChatInputValidationError('チャットが未入力です')
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const sanitizedContent = sanitizeHtml(content, {
-    //   allowedTags: [],
-    //   allowedAttributes: {},
-    // })
-
-    if (successFlagGetAddUSer || chatUser) {
-      const input = {
+  const createMess = async (message: string, point = 0): Promise<void> => {
+    if ((successFlagGetAddUSer || chatUser) && message) {
+      const videoTime = streamingSecond
+      let input = {
         // id is auto populated by AWS Amplify
         owner: chatUser.user_name,
-        text: messageText,
+        text: sanitizeMess(message),
         uuid: chatUser.uuid,
         video_id: key_video_id,
-        video_time: '20',
+        video_time: videoTime,
         // point: 500,//optional : show when Post is use pOint
-        // is_premium: false,
+        is_premium: false,
         userId: chatUser.uuid,
+      }
+      if (point) {
+        input = {
+          ...input,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          point: point.toString(),
+          is_premium: true,
+          display_avatar_time: videoTime + purchasePoints[`p_${point}`].displayTime
+        }
       }
       console.log('input', input)
 
       await API.graphql(graphqlOperation(createMessage, { input }))
     }
+  }
 
+  const handleSubmitChatContent = async () => {
+    // const content = messageText
+    // if (content.length === 0) {
+    //   setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
+    // }
+    // if (content.length > 50) {
+    //   setChatInputValidationError('live_stream_screen.chat_input_text_validate_msg_50_char_exceed')
+    // }
+    // // dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: 'aaaaaaaa' }))
+
+    // if (!_.isEmpty(checkNgWord(content))) {
+    //   setChatInputValidationError('チャットが未入力です')
+    // }
+    handleSubmit()
     // // Submit chat message
-    setChatInputValidationError('')
-    setMessageText('')
   }
 
   const chatInputComponent = () => (
@@ -400,39 +441,28 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
       <Box className={classes.chatInputContainer}>
         {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
-        <IconButton onClick={purchaseIconClick} className={classes.iconPurchase}>
-          <img src="/images/ic_purchase.svg" />
-        </IconButton>
         <Box className={classes.chatBox}>
+          <IconButton id="btnOpenPremiumChatDialog" onClick={purchaseIconClick} className={classes.iconPurchase}>
+            <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+          </IconButton>
           <OutlinedInput
-            autoComplete="off"
-            onChange={onChange}
-            placeholder={'チャットを送信'}
-            id={'search'}
-            value={messageText}
+            id={'message'}
+            multiline
+            rows={3}
+            autoComplete="nope"
+            onChange={handleChange}
+            placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
+            value={values.message}
             classes={{ root: classes.input, input: classes.chatTextInput }}
             margin="dense"
+            onFocus={handleChatInputOnFocus}
+            onBlur={handleChatInputOnBlur}
           />
           <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
             <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
           </Button>
         </Box>
-        {chatInputValidationError && <Typography className={classes.chatInputErrorText}>{chatInputValidationError}</Typography>}
-      </Box>
-    </Box>
-  )
-
-  const chatDonateMessage = () => (
-    <Box className={classes.accountInfo}>
-      <Box className={classes.accountInfoHeader}>
-        <Typography className={classes.accountName}>{'AccountName'}</Typography>
-        <Typography className={classes.accountRemain}>{'50'}</Typography>
-        <Typography className={classes.accountRemainUnit}>{'eXeポイント'}</Typography>
-      </Box>
-      <Box className={classes.accountInfoContent}>
-        <Typography className={classes.accountInfoContentText}>
-          {'ここにはコメントが入ります。ここにはコメントが入ります。ここにはコメントが入ります。ここにはコメントが入ります。'}
-        </Typography>
+        {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>}
       </Box>
     </Box>
   )
@@ -440,7 +470,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
   const chatBoardComponent = () => (
     <Box className={`${classes.chatBoardContainer}`}>
       <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
-        {chatDonateMessage()}
+        {/* <DonateMessage message={msg}/> */}
         <Box
           className={`${classes.messContentOuter}`}
           onClick={() => {
@@ -451,25 +481,24 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
       <Box className={classes.chatBoard}>
         {stateMessages
           // sort messages oldest to newest client-side
-          .sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt))
+          .sort((a: any, b: any) => a.createdAt.localeCompare(b.createdAt))
           .map((msg: any, i) => {
-            return (
-              <Typography key={i} className={classes.chatMessage} id={`chat_${i}`}>
-                <span className={classes.chatMessageUser}>{`Account ${msg.owner}: `}</span>
-                {msg.text}
-              </Typography>
-            )
-          })}
-        {/* {getChatData().map((message, index) => {
-          if (index === 2) return chatDonateMessage()
-          const { user, content, id } = message
-          return (
-            <Typography key={id} className={classes.chatMessage} id={`chat_${id}`}>
-              <span className={classes.chatMessageUser}>{`${user}: `}</span>
-              {content}
-            </Typography>
-          )
-        })} */}
+            // only display message is not deleted or display all mess if user is streamer 
+            return (!msg.delete_flag || userResult.streamer) ? (msg.is_premium ? (
+                <DonateMessage 
+                  message={msg} deleteMess={deleteMsg} 
+                  getMessageWithoutNgWords={getMessageWithoutNgWords} 
+                  is_streamer={userResult?.streamer}
+                />
+              ) : (
+                <ChatTextMessage 
+                  key={i} message={msg} getMessageWithoutNgWords={getMessageWithoutNgWords}
+                  deleteMess={deleteMsg}
+                  is_streamer={userResult?.streamer}
+                />
+              )
+          ) : ''
+        })}
       </Box>
       {chatInputComponent()}
     </Box>
@@ -484,7 +513,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
 
   const userDoesNotHaveViewingTicketView = () => (
     <Box className={classes.chatPurchaseTicketBox}>
-      <Typography className={classes.chatPurchaseTicketNote}>{t('live_stream_screen.chat_purchase_ticket_note')}</Typography>
+      <Typography className={classes.chatPurchaseTicketNote}>{i18n.t('common:live_stream_screen.chat_purchase_ticket_note')}</Typography>
     </Box>
   )
 
@@ -522,9 +551,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onPressDonate, onCloseCha
     <Box className={classes.container}>
       {!isMobile && (
         <Box className={classes.chatHeader}>
-          <IconButton onClick={onCloseChatPanel} className={classes.headerIcon}>
-            <img src="/images/ic_collapse_right.svg" />
-          </IconButton>
           <Typography className={classes.headerTitle}>{'チャット'}</Typography>
         </Box>
       )}

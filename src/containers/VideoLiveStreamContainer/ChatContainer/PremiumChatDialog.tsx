@@ -1,9 +1,11 @@
 import { Box, Button, Input, makeStyles, Typography } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import React, { useEffect, useRef, useState } from 'react'
-import { purchasePoints } from './index'
+import { purchasePoints, sanitizeMess } from './index'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import usePurchaseTicketSuperChat from '../usePurchaseTicket'
+import { FormatHelper } from '@utils/helpers/FormatHelper'
 
 type PremiumChatBoxProps = {
   handleChatInputOnFocus?: () => void
@@ -11,6 +13,7 @@ type PremiumChatBoxProps = {
   onClickOutside?: () => void
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   myPoint: number
+  createMess: (message: string, point?: number) => Promise<void>
 }
 
 type PremiumMessageValidationType = {
@@ -23,10 +26,12 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   onClickOutside,
   onPressDonate,
   myPoint,
+  createMess
 }) => {
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
   const [premiumChatValidationError, setPremiumChatValidationError] = useState<string>(null)
+  const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
 
   const ref = useRef<any>()
   const classes = useStyles()
@@ -50,20 +55,30 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
     onSubmit: (values) => {
       if (values.message) {
         const donatedPoint = purchasePoints[purchaseValueSelected].value
-        onPressDonate(donatedPoint, values.message)
+        onPressDonate(donatedPoint, sanitizeMess(values.message))
       }
     },
   })
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+    if (dataPurchaseTicketSuperChat?.code === 200 && values.message) {
+      createMess(sanitizeMess(values.message), purchasePoints[purchaseValueSelected].value)
+      values.message = ''
     }
+  }, [dataPurchaseTicketSuperChat])
+
+  useEffect(() => {
+    // document.addEventListener('mousedown', handleClickOutside)
+    // return () => {
+    //   document.removeEventListener('mousedown', handleClickOutside)
+    // }
   }, [])
 
   const excludeItemTriggeredHideDialog = ['btnOpenPremiumChatDialogImage', 'btnOpenPremiumChatDialog']
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleClickOutside = (event) => {
     if (excludeItemTriggeredHideDialog.includes(event.target.id)) {
       return
@@ -151,7 +166,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
         )}
         <Box className={classes.dialogFooter}>
           <Typography className={classes.totalPointText}>
-            {`${i18n.t('common:live_stream_screen.owned_points')}: ${myPoint} ${i18n.t('common:common.eXe_points')}`}
+            {`${i18n.t('common:live_stream_screen.owned_points')}: ${FormatHelper.currencyFormat(myPoint.toString())} ${i18n.t('common:common.eXe_points')}`}
           </Typography>
           <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
         </Box>

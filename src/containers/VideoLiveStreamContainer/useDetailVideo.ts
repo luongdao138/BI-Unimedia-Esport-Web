@@ -13,12 +13,16 @@ const useDetailVideo = () => {
   const userResult = useAppSelector(selectors.userStreamerResult)
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actions.videoDetail(params))
   const meta = useAppSelector(_getDetailMeta)
+  const streamingSecond = useAppSelector(selectors.streamingSecond)
+  const changeStreamingSecond = (streaming_second) => dispatch(actions.changeStreamingSecond({ streaming_second }))
 
   return {
     meta,
     detailVideoResult,
     userResult,
     getVideoDetail,
+    changeStreamingSecond,
+    streamingSecond
   }
 }
 

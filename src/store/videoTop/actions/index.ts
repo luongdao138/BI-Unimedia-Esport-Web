@@ -163,6 +163,7 @@ export const resetSearchVideo = createAction(ACTION_VIDEO_TOP.RESET_SEARCH_VIDEO
 export const resetLive = createAction(ACTION_VIDEO_TOP.RESET_LIVE)
 export const resetSchedule = createAction(ACTION_VIDEO_TOP.RESET_SCHEDULE)
 export const resetArchive = createAction(ACTION_VIDEO_TOP.RESET_ARCHIVE)
+export const changeStreamingSecond = createAction<services.StreamingChangeParams>(ACTION_VIDEO_TOP.CHANGE_STREAMING_SECOND)
 
 export const videoDetail = createAsyncThunk<services.VideoDetailResponse, services.VideoDetailParams>(
   ACTION_VIDEO_TOP.VIDEO_DETAIL,
