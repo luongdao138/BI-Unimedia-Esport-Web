@@ -326,7 +326,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   return (
     <Grid container className={classes.container}>
-      <Box color={Colors.grey[300]}>
+      <Box color={Colors.grey[300]} width="100%">
         {getHeader()}
         {getTabs()}
         {getContent()}

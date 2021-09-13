@@ -87,6 +87,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   }, [])
 
   useEffect(() => {
+    if (!router.isReady) return
+
     let filterVal = CommunityFilterOption.all
 
     if (_.has(router.query, 'filter')) {

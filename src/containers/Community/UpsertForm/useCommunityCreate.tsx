@@ -14,6 +14,7 @@ import { clearMetaData } from '@store/metadata/actions'
 const { actions, selectors } = community
 const _getCommunityFeaturesMeta = createMetaSelector(actions.getCommunityFeatures)
 const createCommunityMeta = createMetaSelector(actions.createCommunity)
+const updateCommunityMeta = createMetaSelector(actions.updateCommunity)
 
 export type EditableTypes = {
   name: boolean
@@ -36,6 +37,7 @@ const useCommunityCreate = (): {
   update(params: UpdateParams): void
   getCommunityFeaturesMeta: Meta
   getCreateCommunityMeta: Meta
+  getUpdateCommunityMeta: Meta
   getCommunityFeatures: () => void
 } => {
   const { t } = useTranslation(['common'])
@@ -46,6 +48,7 @@ const useCommunityCreate = (): {
   const getCommunityFeatures = () => dispatch(actions.getCommunityFeatures())
   const getCommunityFeaturesMeta = useAppSelector(_getCommunityFeaturesMeta)
   const getCreateCommunityMeta = useAppSelector(createCommunityMeta)
+  const getUpdateCommunityMeta = useAppSelector(updateCommunityMeta)
   const [isEdit, setIsEdit] = useState(false)
 
   const [editables, setEditables] = useState<EditableTypes>({
@@ -119,6 +122,7 @@ const useCommunityCreate = (): {
     getCommunityFeaturesMeta,
     getCommunityFeatures,
     getCreateCommunityMeta,
+    getUpdateCommunityMeta,
   }
 }
 

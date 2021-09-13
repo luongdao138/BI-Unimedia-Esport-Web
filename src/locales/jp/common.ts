@@ -53,6 +53,7 @@ export default {
       before_start_date: 'エントリー終了日時は開催日時より前にしてください',
     },
     no_data: '対象データありません',
+    failed_to_get_data: 'データの取得に失敗しました。',
     dash: '-',
     dash_separator: 'ー',
     team: 'チーム',
