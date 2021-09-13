@@ -1,165 +1,109 @@
-import ESLoader from '@components/Loader'
-import { Icon, makeStyles, Theme } from '@material-ui/core'
-import { VideoPlayerType } from '@services/videoTop.services'
+// import ESLoader from '@components/Loader'
+import { makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useEffect, useRef, useState } from 'react'
-import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
+import React, { useEffect, useRef } from 'react'
+// import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
 import ControlBarPlayer from './ControlBar'
-import Head from 'next/head'
-// import { MediaPlayer, isPlayerSupported, PlayerState, PlayerEventType, create,registerIVSTech  } from 'amazon-ivs-player';
-
-// import wasmBinaryPath from 'amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm';
-// import wasmWorkerPath from 'amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.js';
-// import videojs from 'video.js';
+import SeekBar from './ControlComponent/SeekBar'
 
 interface PlayerProps {
-  src: string
+  src?: string
   thumbnail?: string
   statusVideo?: number
 }
-
 declare global {
   interface Window {
     IVSPlayer: any
   }
 }
-// const playerConfig = {
-//   //amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.js
-//   // amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm
-//   wasmBinary: "amazon-ivs-player/dist/assets/amazon-ivs-wasmworker.min.wasm",
-//   wasmWorker: "amazon-ivs-player/dist/assets/amazon-ivs-worker.min.js"
-// }
 
-const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => {
+const VideoPlayer: React.FC<PlayerProps> = () => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
-  const playerRef = useRef(null)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [playState, setPlayState] = useState<VideoPlayerType>()
-  const [duration, setDuration] = useState(0)
-  const [volume, setVolumeValue] = useState<number>(1)
+  const player = useRef(null)
+  const videoEl = useRef(null)
+  const STREAM_PLAYBACK_URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'
 
-  // const {IVSPlayer}=window
-  // const {isPlayerSupported} = IVSPlayer
-  // const player = useRef(null);
-  // const videoEl = useRef(null);
-  // const mediaPlayer = create(playerConfig)
-  // const {attachHTMLVideoElement, load, play, getState, addEventListener, removeEventListener} = MediaPlayer()
-
-  // const STREAM_PLAYBACK_URL = 'https://usher.ttvnw.net/api/lvs/hls/lvs.lvs-client-example.c6341be8-a3c7-42bc-b89a-8dabe040eae9.m3u8'
+  const { IVSPlayer } = window
+  const { isPlayerSupported } = IVSPlayer
 
   useEffect(() => {
-    playerRef.current.subscribeToStateChange(handleStateChange)
-  })
+    const { ENDED, PLAYING, READY } = IVSPlayer.PlayerState
+    const { ERROR } = IVSPlayer.PlayerEventType
+    if (!isPlayerSupported) {
+      console.warn('The current browser does not support the Amazon IVS player.')
 
-  const handleStateChange = (state) => {
-    setPlayState(state)
-    setCurrentTime(state.currentTime)
-  }
-
-  useEffect(() => {
-    const { player } = playerRef.current.getState()
-    // console.log("======player===>>>>>>",player)
-    setCurrentTime(player.currentTime)
-    setDuration(player.duration)
-  }, [currentTime])
-
-  const onTogglePlay = () => {
-    if (playState?.paused) {
-      playerRef.current.play()
-    } else {
-      playerRef.current.pause()
+      return
     }
-  }
 
-  const onReLoad = () => {
-    playerRef.current.load()
-  }
+    const onStateChange = () => {
+      const playerState = player.current.getState()
+      console.warn(`Player State - ${playerState} `)
+    }
+    const onError = (err) => {
+      console.warn('Player Event - ERROR:', err)
+    }
+    // const metaData = (cue) => {
+    //   const metadataText = cue.text;
+    //   const position = player.current.getPosition().toFixed(2);
+    //   console.warn(
+    //     `PlayerEvent - TEXT_METADATA_CUE: "${metadataText}". Observed ${position}s after playback started.`
+    //   );
+    // };
 
-  const onChangeCurrentTime = (seconds: number) => {
+    player.current = IVSPlayer.create() //MediaPlayer
+    player.current.attachHTMLVideoElement(videoEl.current)
+    player.current.load(STREAM_PLAYBACK_URL)
+    player.current.play()
+    player.current.setAutoplay(true)
+
+    player.current.addEventListener(READY, onStateChange)
+    player.current.addEventListener(PLAYING, onStateChange)
+    player.current.addEventListener(ENDED, onStateChange)
+    player.current.addEventListener(ERROR, onError)
+    // player.current.addEventListener(TEXT_METADATA_CUE, metaData);
+
     return () => {
-      const { player } = playerRef.current.getState()
-      playerRef.current.seek(player.currentTime + seconds) // previous/next 10s
+      player.current.removeEventListener(READY, onStateChange)
+      player.current.removeEventListener(PLAYING, onStateChange)
+      player.current.removeEventListener(ENDED, onStateChange)
+      player.current.removeEventListener(ERROR, onError)
+      // player.current.removeEventListener(TEXT_METADATA_CUE, metaData);
     }
-  }
-
-  const toggleFullscreen = () => {
-    playerRef.current.toggleFullscreen()
-  }
-
-  const onMuteVolume = () => {
-    return () => {
-      const { player } = playerRef.current.getState()
-      playerRef.current.muted = !player.muted
-    }
-  }
-
-  const onHandleVolume = () => {
-    return () => {
-      playerRef.current.volume = volume
-    }
-  }
-  const setVolume = (value?: number) => {
-    setVolumeValue(value)
-  }
-
-  // const getPercent = () => {
-  //   const time = currentTime;
-  //   const percent = time / duration;
-  //   const process = ((percent >= 1 ? 1 : percent) * 100).toFixed(2) + "%";
-  //   return process
-  // }
+  }, [IVSPlayer, isPlayerSupported, STREAM_PLAYBACK_URL])
 
   // useEffect(() => {
-  //   const { ENDED, PLAYING, READY } = PlayerState
-  //   const { ERROR } = PlayerEventType;
-  //   console.warn(
-  //     'isPlayerSupported',isPlayerSupported
-  //   );
+  //   setCurrentTime(player.current.getPosition())
+  //   setDuration(player.current.getDuration())
+  //   setIsMuted(videoEl.current.muted)
+  //   setVolumeValue(videoEl.current.muted ? 1 : 0)
+  // })
 
-  //   if (!isPlayerSupported) {
-  //     console.warn(
-  //       'The current browser does not support the Amazon IVS player.',
-  //     );
-
-  //     return;
-  //   }
-
-  //   const onStateChange = () => {
-  //     const playerState = mediaPlayer.getState()
-
-  //     console.log(`Player State - ${playerState} `);
-  //   };
-
-  //   const onError = (err) => {
-  //     console.warn('Player Event - ERROR:', err);
-  //   };
-
-  //   create(playerConfig)
-  //   // mediaPlayer.attachHTMLVideoElement(videoEl.current);
-  //   mediaPlayer.load(STREAM_PLAYBACK_URL);
-  //   mediaPlayer.play();
-
-  //   mediaPlayer.addEventListener(READY, onStateChange);
-  //   mediaPlayer.addEventListener(PLAYING, onStateChange);
-  //   mediaPlayer.addEventListener(ENDED, onStateChange);
-  //   mediaPlayer.addEventListener(ERROR, onError);
-
-  //   return () => {
-  //     mediaPlayer.removeEventListener(READY, onStateChange);
-  //     mediaPlayer.removeEventListener(PLAYING, onStateChange);
-  //     mediaPlayer.removeEventListener(ENDED, onStateChange);
-  //     mediaPlayer.removeEventListener(ERROR, onError);
-  //   };
-  // }, )
+  const onHandleVolume = (value) => {
+    videoEl.current.muted = false
+    videoEl.current.volume = value
+    player.current.setVolume(value)
+  }
 
   return (
-    <>
-      <Head>
-        <script src="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js"></script>
-      </Head>
-      {/* <video ref={videoEl} playsInline></video> */}
-      <Player
+    <div className={classes.videoPlayer}>
+      <video ref={videoEl} playsInline style={{ width: '100%', height: '100%' }} src={STREAM_PLAYBACK_URL} autoPlay id={'videoId'} />
+      <div className={classes.seekSlider}>
+        <SeekBar videoRef={videoEl} />
+      </div>
+
+      <div className={classes.controlBar}>
+        <ControlBarPlayer
+          onChangeVolume={(value) => {
+            onHandleVolume(value)
+          }}
+          videoRef={videoEl}
+          videoId={document.getElementById('videoId')}
+        />
+      </div>
+      {/* <div className={classes.blurBackground} /> */}
+      {/* </div> */}
+      {/* <Player
         ref={playerRef}
         src={src}
         autoPlay={true}
@@ -176,9 +120,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => 
         <ControlBar disableDefaultControls={true} />
         {playState?.paused && (
           <div className={classes.playOverView}>
-            <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
-            {/* <img src={'/images/ic_play_big.svg'} /> */}
-          </div>
+            <Icon className={`fas fa-play ${classes.fontSizeLarge}`} /> */}
+      {/* <img src={'/images/ic_play_big.svg'} /> */}
+      {/* </div>
         )}
         {(playState?.error === null && !playState.waiting) ||
           (playState?.readyState !== 0 && (
@@ -187,8 +131,8 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => 
             </div>
           ))}
 
-        <div className={classes.controlBar}>
-          <ControlBarPlayer
+        <div className={classes.controlBar}> */}
+      {/* <ControlBarPlayer
             currentTime={currentTime}
             duration={duration}
             paused={playState?.paused}
@@ -206,9 +150,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src, thumbnail, statusVideo }) => 
             statusVideo={statusVideo}
           />
         </div>
-      </Player>
+      </Player> */}
       {/* {playState?.ended && <div className={classes.blurBackground} />} */}
-    </>
+    </div>
   )
 }
 
@@ -307,6 +251,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 100,
+  },
+  sliderSeek: {
+    width: '100%',
+    display: 'block',
+    transition: 'width 0.4s ease-in',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    backgroundColor: 'white',
+  },
+  seekSlider: {
+    position: 'relative',
+    bottom: 60,
+    left: 0,
+  },
+  videoPlayer: {
+    height: '100%',
   },
 }))
 
