@@ -7,7 +7,13 @@
     "allowJs": false,
     "strict": false,
     "moduleResolution": "node",
-    "outDir": "dist/esnextdir",
+    //add for video
+    // "outDir": "dist/esnextdir",
+    // "types": [
+    //   "node",
+    //   "video.js"
+    // ],
+
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

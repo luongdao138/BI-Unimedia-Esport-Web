@@ -27,6 +27,7 @@ class Document extends NextDocument<Props> {
           `,
             }}
           />
+          <script src="https://player.live-video.net/1.4.0/amazon-ivs-player.min.js"></script>
         </Head>
         <body>
           <Main />
