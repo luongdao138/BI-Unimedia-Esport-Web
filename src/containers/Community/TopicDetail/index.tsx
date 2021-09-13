@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import CommunityDetailHeader from '@containers/Community/TopicDetail/Partials/CommunityDetailHeader'
+import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
 import Comment from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Link, Box, Grid } from '@material-ui/core'
@@ -10,34 +10,57 @@ import ESLoader from '@components/Loader'
 import { useRouter } from 'next/router'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
+import _ from 'lodash'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
-  const { topic_hash_key } = router.query
+  const { topic_hash_key, hash_key } = router.query
   const {
     getTopicDetail,
     topic,
     topicDetailMeta,
     deleteTopic,
     getCommentsList,
+    getCommentsListPage,
     commentsList,
     pages,
-    getComments,
     commentsListMeta,
+    commentsListPageMeta,
+    getCommentsListNext,
+    commentsListNextMeta,
   } = useTopicDetail()
-  const [reply, setReply] = useState<{ hash_key: string; id: number } | any>({})
-
+  const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
+  const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
+  const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
   const data = topic?.attributes
 
   useEffect(() => {
     if (topic_hash_key) {
-      getTopicDetail({ hash_key: String(topic_hash_key) })
-      getCommentsList({ hash_key: String(topic_hash_key) })
+      getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
+      getCommentsListPage({ hash_key: String(topic_hash_key) })
     }
   }, [router])
+
+  useEffect(() => {
+    if (commentsListPageMeta.loaded) {
+      getCommentsList({ hash_key: String(topic_hash_key), page: Number(pages.total_pages) })
+    }
+  }, [commentsListPageMeta])
+
+  useEffect(() => {
+    if (commentsList) {
+      setLastCommentHashKey(String(commentsList[_.findLastIndex(commentsList)]?.attributes?.hash_key))
+    }
+  }, [commentsList])
+
+  useEffect(() => {
+    if (isBottomOfPage) {
+      loadMore()
+    }
+  }, [isBottomOfPage])
 
   const handleDeleteTopic = () => {
     deleteTopic({ hash_key: String(topic_hash_key) })
@@ -45,11 +68,19 @@ const TopicDetailContainer: React.FC = () => {
 
   const handleBack = () => back()
 
-  const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
+  const hasPrevious = pages && Number(pages.current_page) > 1
 
   const loadMore = () => {
-    if (hasNextPage) {
-      getComments({ hash_key: String(topic_hash_key), page: Number(pages.current_page) + 1 })
+    if (_.isEmpty(commentsList)) {
+      getCommentsListNext({ hash_key: String(topic_hash_key) })
+      return
+    }
+    getCommentsListNext({ hash_key: String(topic_hash_key), comment_hash_key: lastCommentHashKey })
+  }
+
+  const loadPrevious = () => {
+    if (hasPrevious) {
+      getCommentsList({ hash_key: String(topic_hash_key), page: Number(pages.current_page) - 1 })
     }
   }
 
@@ -69,40 +100,55 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <CommunityDetailHeader title={data.title} isTopic onHandleBack={handleBack} />
+              <TopicDetailHeader title={data.title} isTopic={true} onHandleBack={handleBack} />
               <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
             </>
           )}
-          {hasNextPage && (
+          {hasPrevious && (
             <Box className={classes.link}>
-              <Link onClick={loadMore} style={{ cursor: 'pointer' }}>
+              <Link onClick={loadPrevious} style={{ cursor: 'pointer' }}>
                 {t('common:community.topic.view_past_comments')}
               </Link>
+            </Box>
+          )}
+          {commentsListMeta.pending && (
+            <Box my={4} display="flex" justifyContent="center" alignItems="center">
+              <ESLoader />
             </Box>
           )}
           {!!commentsList && commentsList.length > 0 && (
             <InfiniteScroll
               dataLength={commentsList.length}
-              next={loadMore}
-              hasMore={hasNextPage}
+              next={() => {
+                return
+              }}
+              hasMore={true}
               scrollableTarget="scrollableDiv"
               scrollThreshold={0.99}
               style={{ overflow: 'hidden ' }}
               loader={null}
+              onScroll={() => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - (commentsListNextMeta.pending ? 164 : 50)) {
+                  setIsBottomOfPage(true)
+                } else {
+                  setIsBottomOfPage(false)
+                }
+              }}
             >
               {renderComments()}
             </InfiniteScroll>
           )}
-          {commentsListMeta.pending && (
+
+          {commentsListNextMeta.pending && (
             <Grid item xs={12}>
-              <Box my={4} mb={10} display="flex" justifyContent="center" alignItems="center">
+              <Box my={4} mb={6} display="flex" justifyContent="center" alignItems="center">
                 <ESLoader />
               </Box>
             </Grid>
           )}
         </Box>
         <Box className={classes.inputContainer}>
-          <CommentInput reply_param={reply} handleReply={setReply} />
+          <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
         </Box>
       </Box>
     </>
@@ -124,27 +170,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     background: '#101010',
     willChange: 'transform',
-  },
-  scroll: {
-    scrollbarColor: '#222 transparent',
-    scrollbarWidth: 'thin',
-    '&::-webkit-scrollbar': {
-      width: 5,
-      opacity: 1,
-      padding: 2,
-    },
-    '&::-webkit-scrollbar-track': {
-      paddingLeft: 1,
-      background: 'rgba(0,0,0,0.5)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#222',
-      borderRadius: 6,
-    },
-  },
-  list: {
-    overflow: 'auto',
-    overflowX: 'hidden',
   },
 }))
 

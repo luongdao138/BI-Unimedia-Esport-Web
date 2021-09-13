@@ -17,17 +17,18 @@ import theme from '@theme/index'
 import useTopicDetail from '../../useTopicDetail'
 
 type CommunityHeaderProps = {
-  reply_param?: { hash_key: string; id: number }
+  reply_param?: { hash_key: string; comment_no: number }
   handleReply?: (params: { hash_key: string; id: number } | any) => void
+  loadMore: () => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply, loadMore }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment, getComments } = useTopicDetail()
+  const { createComment } = useTopicDetail()
   const { uploadArenaCoverImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
   const [imageURL, setImageURL] = useState('')
@@ -55,7 +56,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
         attachments: imageURL,
       }
       await createComment(data)
-      getComments({ hash_key: String(topic_hash_key), page: 1 })
+      loadMore()
       setInputText('')
       setImageURL('')
       handleReply({})
@@ -77,7 +78,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
         <Box className={classes.inputCont}>
           <ButtonBase className={classes.reply} onClick={() => handleReply([])}>
             <Typography className={classes.replyText} variant="body1">
-              {!_.isEmpty(reply_param) && `>>${reply_param.id}`}
+              {!_.isEmpty(reply_param) && `>>${reply_param.comment_no}`}
             </Typography>
           </ButtonBase>
           <InputBase
@@ -107,14 +108,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply }) =
           </Box>
 
           <img src={imageURL} className={classes.coverImg} />
-
-          {isUploading ? (
-            <Box className={classes.loader}>
-              <ESLoader />
-            </Box>
-          ) : null}
         </Box>
       )}
+      {isUploading ? (
+        <Box className={classes.loader}>
+          <ESLoader />
+        </Box>
+      ) : null}
     </>
   )
 }
@@ -212,8 +212,8 @@ const useStyles = makeStyles((theme) => ({
   },
   loader: {
     display: 'flex',
-    position: 'absolute',
-    zIndex: 50,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     justifyContent: 'center',
     alignItems: 'center',
   },

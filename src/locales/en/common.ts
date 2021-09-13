@@ -54,6 +54,7 @@ export default {
     },
     no_data: '対象データありません',
     dash: '-',
+    dash_separator: 'ー',
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
@@ -256,6 +257,7 @@ export default {
       by_title: 'タイトルのみで検索をかける',
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
+      no_data: '該当するトピックは見つかりませんでした。',
     },
     follow_list: 'フォローリスト',
     member_list: {
@@ -276,7 +278,7 @@ export default {
     confirm_follow_list: 'フォローリストを確定する',
     no_data: '該当のコミュニティはありません。',
     topic: {
-      create_success: 'トピックを削除しました。',
+      delete_success: 'トピックを削除しました。',
       view_past_comments: '↑過去のコメントを表示する',
     },
     unfollow_dialog: {
@@ -604,6 +606,7 @@ export default {
       description: `削除したコメントを復元させることはできません。
       削除してよろしいですか？`,
       submit: '削除する',
+      success_toast: 'コメントを削除しました。',
     },
   },
   tournament_cancel: {
@@ -1227,7 +1230,9 @@ export default {
       description2: '一度解散したコミュニティのトピックやアップロードした画像は復元できません。',
       disbanded_toast: 'コミュニティを解散しました',
     },
-    community_created_toast: 'コミュニティを作成しました。',
+    community_created_toast: 'コミュニティを作成しました',
+    community_updated_toast: 'コミュニティを編集しました',
+    title_already_in_use: '「コミュニティ名が既に使用中です。」',
   },
   topic_create: {
     title: 'トピックを作成する',

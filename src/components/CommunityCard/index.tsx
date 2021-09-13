@@ -8,31 +8,10 @@ import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
+import { CommunityResponse } from '@services/community.service'
 
 interface Props {
-  community: CommunityAttributes | null
-}
-
-type CommunityAttributes = {
-  attributes:
-    | {
-        name: string
-        description: string
-        address: string
-        cover_image_url: string | null
-        hash_key: number | string
-        is_official: boolean
-        open_range: boolean
-        member_count: number | string
-        members_avatar: {
-          user_id: string
-          avatar: any | null
-        }
-        features: {
-          feature: string
-        }[]
-      }[]
-    | any
+  community: CommunityResponse
 }
 
 const CommunityCard: React.FC<Props> = ({ community }) => {
@@ -110,8 +89,8 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
                   key={`participants${i}`}
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
-                  src={participant.avatar}
-                  alt={String(participant.user_id)}
+                  src={participant.profile_image}
+                  alt={String(participant.id)}
                 />
               ))
           : null}
