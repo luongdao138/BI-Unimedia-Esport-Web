@@ -68,3 +68,9 @@ export const TOPIC_STATUS = {
   MINE: 'mine',
   NEW: 'new',
 }
+
+// width to character_count divisor for font size 12
+export const TOPIC_ROW_ITEM_DIVISOR = {
+  NORMAL: 5.65,
+  JAPANESE: 12,
+}

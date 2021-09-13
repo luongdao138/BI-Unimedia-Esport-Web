@@ -117,7 +117,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       return
     } else {
       const isRequiredFieldsValid = CommunityHelper.checkCommunityRequiredFields(formik.errors)
-      setHasError(!isRequiredFieldsValid)
+      setHasError(_.has(formik.errors, 'stepOne') || !isRequiredFieldsValid)
       if (isConfirm) {
         setIsConfirm(false)
       }

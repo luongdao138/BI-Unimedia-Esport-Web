@@ -57,21 +57,25 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
 
   useEffect(() => {
-    const data = _.map(
-      _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
-      (m) => {
-        return {
-          title:
-            m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
-              ? t('common:community.applying')
-              : t('common:community.participating'),
-          value: m,
-          isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+    if (membersList) {
+      const data = _.map(
+        _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
+        (m) => {
+          return {
+            title:
+              m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
+                ? t('common:community.applying')
+                : t('common:community.participating'),
+            value: m,
+            isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+          }
         }
-      }
-    )
-    setGroupedMembers(data)
-    setInitialValue(data)
+      )
+      !data[MemberSection.applying]?.isApplying && data.unshift({ value: [] } as GroupedMembers)
+      !data[MemberSection.participating] && data.push({ value: [] } as GroupedMembers)
+      setGroupedMembers(data)
+      setInitialValue(data)
+    }
   }, [membersList])
 
   const handleClickOpen = () => {
@@ -197,18 +201,21 @@ const FollowList: React.FC<Props> = ({ community }) => {
     return (
       <Box mt={4} height="100%" className={`${classes.scroll} ${classes.list}`}>
         {_.isArray(groupedMembers) &&
-          groupedMembers.map((member, i) => {
-            return (
-              <Box key={i}>
-                <Typography key={i} variant="h3" className={classes.label}>
-                  {member.title}
-                </Typography>
-                {(!_.isEmpty(member) && member.value).map((m, j) => {
-                  return <UserSelectBoxList key={j} isApplying={member.isApplying} member={m} setValue={handleSelectedValue} />
-                })}
-              </Box>
-            )
-          })}
+          groupedMembers
+            .filter((g) => !_.isEmpty(g.value))
+            .map((member, i) => {
+              return (
+                <Box key={i}>
+                  <Typography key={i} variant="h3" className={classes.label}>
+                    {member.title}
+                  </Typography>
+                  {!_.isEmpty(member) &&
+                    member.value.map((m, j) => {
+                      return <UserSelectBoxList key={j} isApplying={member.isApplying} member={m} setValue={handleSelectedValue} />
+                    })}
+                </Box>
+              )
+            })}
       </Box>
     )
   }

@@ -3,25 +3,76 @@ import { TopicDetail } from '@services/community.service'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
+import { createRef } from 'react'
+import { useRect } from '@utils/hooks/useRect'
+import _ from 'lodash'
+import styled from 'styled-components'
+import { TOPIC_ROW_ITEM_DIVISOR } from '@constants/community.constants'
 
+const StyledBox = styled(Box)``
 export interface TopicRowItemProps {
   title?: string
   last_comment?: TopicDetail['attributes']['last_comment']['data']
   latest_date?: string
   comment_count?: number
   handleClick?: () => void
+  keyword?: string
+  isSearched?: boolean
 }
 
-const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest_date, comment_count, handleClick }) => {
+const Highlight = ({ search = '', children = '', isSearched = false, contentRect = undefined, isTitle = false }) => {
+  if (search && isSearched) {
+    let parts
+    const keyword = new RegExp(`(${_.escapeRegExp(search)})`, 'i')
+    if (isTitle) {
+      parts = String(children).split(keyword)
+    } else {
+      const regexJapanese = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/
+      const isJapanese = regexJapanese.test(children)
+      let content = children
+
+      const range = _.toLower(content).lastIndexOf(_.toLower(search))
+      const divisor = isJapanese ? TOPIC_ROW_ITEM_DIVISOR.JAPANESE : TOPIC_ROW_ITEM_DIVISOR.NORMAL
+      if (range > contentRect.width / divisor) {
+        content = '...'.concat(content.slice(range - contentRect.width / (divisor * 2)))
+      }
+
+      parts = String(content).split(keyword)
+    }
+    return <>{parts.map((part, index) => (keyword.test(part) ? <mark key={index}>{part}</mark> : part))}</>
+  }
+  return <>{children}</>
+}
+
+const contentRef = createRef<HTMLDivElement>()
+const TopicRowItem: React.FC<TopicRowItemProps> = ({
+  title,
+  last_comment,
+  latest_date,
+  comment_count,
+  handleClick,
+  keyword,
+  isSearched,
+}) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const lastCommentData = last_comment?.attributes
 
-  const renderContent = () => {
+  const contentRect = useRect(contentRef)
+
+  const renderContent = (contentRect) => {
     if (lastCommentData?.deleted_at) {
       return t('common:topic_comment.has_deleted')
     }
-    return lastCommentData?.content ? lastCommentData?.content : comment_count === 0 ? '' : t('common:chat.uploaded_image')
+    return lastCommentData?.content ? (
+      <Highlight search={keyword} isSearched={isSearched} contentRect={contentRect}>
+        {lastCommentData.content}
+      </Highlight>
+    ) : comment_count === 0 ? (
+      ''
+    ) : (
+      t('common:chat.uploaded_image')
+    )
   }
 
   return (
@@ -30,11 +81,15 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({ title, last_comment, latest
         <Box display="flex" overflow="hidden" justifyContent="space-between" className={classes.wrap}>
           <Box className={classes.container}>
             <Box display="flex" flexDirection="row" width="100%" mb={0.25}>
-              <Typography className={classes.title}>{title}</Typography>
+              <Typography className={classes.title}>
+                <Highlight isTitle={true} isSearched={isSearched} search={keyword}>
+                  {title}
+                </Highlight>
+              </Typography>
             </Box>
-            <Box display="flex" flexDirection="row" width="100%">
-              <Typography className={classes.last_comment}>{renderContent()}</Typography>
-            </Box>
+            <StyledBox display="flex" flexDirection="row" width="100%" ref={contentRef}>
+              <Typography className={classes.last_comment}>{renderContent(contentRect)}</Typography>
+            </StyledBox>
           </Box>
 
           <Box display="flex" flexDirection="column" width={80} alignItems="flex-end" justifyContent="space-between">
