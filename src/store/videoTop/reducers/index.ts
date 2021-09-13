@@ -49,7 +49,7 @@ const initialState: StateType = {
   totalResult: 0,
   videoDetailData: {},
   userDetailData: {},
-  streaming_second: 0
+  streaming_second: 0,
 }
 
 export default createReducer(initialState, (builder) => {

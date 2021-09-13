@@ -43,7 +43,7 @@ function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerIte
 
 const SlideItem = React.memo(function (props: StackedCarouselSlideProps) {
   const { data, dataIndex } = props
-  const cover = data[dataIndex]?.url
+  const cover = data[dataIndex]?.image
   const classes = useStyles({ buttonLeftContainer: {}, buttonRightContainer: {} })
   // const [load, setLoad] = useState<boolean>(true);
   // const [error, setError] = useState<boolean>(false);

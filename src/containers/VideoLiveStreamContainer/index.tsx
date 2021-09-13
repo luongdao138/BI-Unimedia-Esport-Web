@@ -96,21 +96,26 @@ const VideosTop: React.FC = () => {
     setLackedPoint(0)
     setLackedPoint(donated_point - myPoint)
     setPurchaseComment(comment)
-    setShowConfirmModal(true)
+    if (myPoint >= donated_point) {
+      setShowConfirmModal(true)
+    } else {
+      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+      setShowModalPurchasePoint(true)
+    }
   }
   const handleClose = () => {
     setShowConfirmModal(false)
   }
   const handleConfirm = async () => {
     setPurchaseType(PURCHASE_TYPE.PURCHASE_SUPER_CHAT)
-    if (lackedPoint > 0) {
-      dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
-      setShowModalPurchasePoint(true)
-      setShowConfirmModal(false)
-    } else {
-      // purchase super chat
-      await purchaseTicketSuperChat(super_chat_params)
-    }
+    // if (lackedPoint > 0) {
+    //   dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
+    //   setShowModalPurchasePoint(true)
+    //   setShowConfirmModal(false)
+    // } else {
+    // purchase super chat
+    await purchaseTicketSuperChat(super_chat_params)
+    // }
   }
 
   useEffect(() => {

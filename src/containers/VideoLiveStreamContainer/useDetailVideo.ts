@@ -23,7 +23,7 @@ const useDetailVideo = () => {
     userResult,
     getVideoDetail,
     changeStreamingSecond,
-    streamingSecond
+    streamingSecond,
   }
 }
 
