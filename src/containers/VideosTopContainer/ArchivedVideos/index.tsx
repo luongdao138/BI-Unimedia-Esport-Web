@@ -173,13 +173,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '33.333333%',
     },
   },
-  [theme.breakpoints.up(1680)]: {
-    itemContainer: {
-      flexGrow: '0',
-      maxWidth: '25%',
-      flexBasis: '25%',
-    },
-  },
   [theme.breakpoints.up(1920)]: {
     itemContainer: {
       flexGrow: '0',
