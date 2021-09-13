@@ -95,6 +95,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   }
 
   const newLineText = (text) => {
+    if (commentData?.deleted_at) {
+      return <Typography className={classes.content}>{t('common:topic_comment.has_deleted') + '。'}</Typography>
+    }
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {str}
@@ -102,121 +105,140 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     ))
   }
 
-  return (
-    <>
-      <Box className={classes.container}>
-        <Box className={classes.userContainer}>
-          <Box className={classes.userInfoContainer}>
-            <Typography className={classes.number}>{commentData.comment_no}</Typography>
-            <Box ml={1}>
-              <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)}>
-                <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
-              </ButtonBase>
-            </Box>
+  const notDeletedComment = () => {
+    return (
+      <>
+        <Box className={classes.container}>
+          <Box className={classes.userContainer}>
+            <Box className={classes.userInfoContainer}>
+              <Typography className={classes.number}>{commentData.comment_no}</Typography>
 
-            <Box className={classes.userInfoBox} ml={1}>
-              <Typography className={classes.username}>{commentData.owner_nickname}</Typography>
-              <Typography className={classes.userCode}>{'@' + commentData.user_code}</Typography>
+              <Box ml={1}>
+                <ButtonBase onClick={() => router.push(`${ESRoutes.PROFILE}/${commentData.user_code}`)}>
+                  <ESAvatar className={classes.avatar} alt={commentData.owner_nickname} src={commentData.owner_profile} />
+                </ButtonBase>
+              </Box>
+
+              <Box className={classes.userInfoBox} ml={1}>
+                <Typography className={classes.username}>{commentData.owner_nickname}</Typography>
+                <Typography className={classes.userCode}>{'@' + commentData.user_code}</Typography>
+              </Box>
+            </Box>
+            <Box className={classes.dateReportContainer}>
+              <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
+              {(isPublic || !isNotMember) && (
+                <ESMenu>
+                  {(isModerator || isOwner || isTopicOwner) && (
+                    <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
+                  )}
+                  {!isOwner && (
+                    <LoginRequired>
+                      <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                    </LoginRequired>
+                  )}
+                </ESMenu>
+              )}
             </Box>
           </Box>
-          <Box className={classes.dateReportContainer}>
-            <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.created_at)}</Typography>
-            {(isPublic || !isNotMember) && (
-              <ESMenu>
-                {(isModerator || isOwner || isTopicOwner) && (
-                  <ESMenuItem onClick={handleDeleteOpen}>{t('common:topic_comment.delete.button')}</ESMenuItem>
-                )}
-                {!isOwner && (
-                  <LoginRequired>
-                    <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
-                  </LoginRequired>
-                )}
-              </ESMenu>
-            )}
-          </Box>
+          {!!commentData && !!commentData.main_comment && (
+            <>
+              <Link aria-describedby={'reply'} onClick={handleClickReply} className={classes.reply}>
+                <Typography>{`>>${commentData.main_comment.comment_no}`}</Typography>
+              </Link>
+              <Popover
+                id={'reply'}
+                open={Boolean(replyAnchorEl)}
+                anchorEl={replyAnchorEl}
+                className={classes.mainComment}
+                onClose={handleCloseReply}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+              >
+                <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
+                  <Box className={classes.userInfoContainerMain}>
+                    <Typography className={classes.number}>{commentData.main_comment.comment_no}</Typography>
+                    <Box ml={1}>
+                      <ESAvatar
+                        className={classes.avatar}
+                        alt={commentData.main_comment.owner_nickname}
+                        src={commentData.main_comment.owner_profile}
+                      />
+                    </Box>
+                    <Box className={classes.userInfoBox} ml={1}>
+                      <Typography className={classes.username}>{commentData.main_comment.owner_nickname}</Typography>
+                      <Typography className={classes.userCode}>{'@' + commentData.main_comment.user_code}</Typography>
+                    </Box>
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.main_comment.created_at)}</Typography>
+                    <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                      <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                    </IconButton>
+                  </Box>
+                </Box>
+                <Box mb={3}>
+                  <Typography className={classes.content}>{commentData.main_comment.content}</Typography>
+                  {commentData.main_comment?.assets_url && renderClickableImage(commentData.main_comment?.assets_url, true)}
+                </Box>
+              </Popover>
+            </>
+          )}
+          <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
+          {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
+          {!isOwner && (
+            <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <IconButton className={classes.shareButton} onClick={handleCommentReply}>
+                <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
+              </IconButton>
+            </Box>
+          )}
         </Box>
-        {!!commentData && !!commentData.main_comment && (
+        {isAuthenticated && (
           <>
-            <Link aria-describedby={'reply'} onClick={handleClickReply} className={classes.reply}>
-              <Typography>{`>>${commentData.main_comment.comment_no}`}</Typography>
-            </Link>
-            <Popover
-              id={'reply'}
-              open={Boolean(replyAnchorEl)}
-              anchorEl={replyAnchorEl}
-              className={classes.mainComment}
-              onClose={handleCloseReply}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-            >
-              <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-                <Box className={classes.userInfoContainerMain}>
-                  <Typography className={classes.number}>{commentData.main_comment.comment_no}</Typography>
-                  <Box ml={1}>
-                    <ESAvatar
-                      className={classes.avatar}
-                      alt={commentData.main_comment.owner_nickname}
-                      src={commentData.main_comment.owner_profile}
-                    />
-                  </Box>
-                  <Box className={classes.userInfoBox} ml={1}>
-                    <Typography className={classes.username}>{commentData.main_comment.owner_nickname}</Typography>
-                    <Typography className={classes.userCode}>{'@' + commentData.main_comment.user_code}</Typography>
-                  </Box>
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.main_comment.created_at)}</Typography>
-                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-                  </IconButton>
-                </Box>
-              </Box>
-              <Box mb={3}>
-                <Typography className={classes.content}>{commentData.main_comment.content}</Typography>
-                {commentData.main_comment?.assets_url && renderClickableImage(commentData.main_comment?.assets_url, true)}
-              </Box>
-            </Popover>
+            <ESReport
+              reportType={REPORT_TYPE.TOPIC_COMMENT}
+              target_id={detail.attributes.hash_key}
+              data={detail}
+              open={openReport}
+              handleClose={() => setOpenReport(false)}
+            />
+            <DiscardDialog
+              title={t('common:topic_comment.delete.title')}
+              open={openDelete}
+              onClose={() => setOpenDelete(false)}
+              onSubmit={handleDeleteSubmit}
+              description={t('common:topic_comment.delete.description')}
+              confirmTitle={t('common:topic_comment.delete.submit')}
+            />
           </>
         )}
-        <Box className={classes.contentContainer} mb={1}>
-          {newLineText(commentData.content)}
-        </Box>
-        {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
-        {!isOwner && (
-          <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <IconButton className={classes.shareButton} onClick={handleCommentReply}>
-              <Icon className="fas fa-share" fontSize="small" style={{ transform: 'scaleX(-1)' }} />
-            </IconButton>
+      </>
+    )
+  }
+
+  const deletedComment = () => {
+    return (
+      <>
+        <Box className={classes.containerDeleted}>
+          <Box flex={1}>
+            <Typography className={classes.number}>{commentData.comment_no}</Typography>
           </Box>
-        )}
-      </Box>
-      {isAuthenticated && (
-        <>
-          <ESReport
-            reportType={REPORT_TYPE.TOPIC_COMMENT}
-            target_id={detail.attributes.hash_key}
-            data={detail}
-            open={openReport}
-            handleClose={() => setOpenReport(false)}
-          />
-          <DiscardDialog
-            title={t('common:topic_comment.delete.title')}
-            open={openDelete}
-            onClose={() => setOpenDelete(false)}
-            onSubmit={handleDeleteSubmit}
-            description={t('common:topic_comment.delete.description')}
-            confirmTitle={t('common:topic_comment.delete.submit')}
-          />
-        </>
-      )}
-    </>
-  )
+          <Box display="flex" justifyContent="center" flex={8} textAlign="center">
+            {newLineText(commentData.content)}
+          </Box>
+          <Box flex={1} />
+        </Box>
+      </>
+    )
+  }
+
+  return commentData.deleted_at ? deletedComment() : notDeletedComment()
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -241,7 +263,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flexDirection: 'column',
     borderTop: '2px solid rgba(255,255,255,0.1)',
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+  },
+  containerDeleted: {
+    display: 'flex',
+    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTop: '2px solid rgba(255,255,255,0.1)',
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
   },
   userContainer: {
     display: 'flex',

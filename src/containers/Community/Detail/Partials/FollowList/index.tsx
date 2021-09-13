@@ -188,9 +188,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderMemberList = () => {
     return (
       <Box>
-        {groupedMembers[MemberSection.participating].value.map((participant, i) => (
-          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
-        ))}
+        {groupedMembers[community.attributes.has_requested ? MemberSection.participating : MemberSection.applying].value.map(
+          (participant, i) => (
+            <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+          )
+        )}
       </Box>
     )
   }

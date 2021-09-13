@@ -153,6 +153,9 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     followCommunity(String(hash_key))
     if (!isCommunityAutomatic) {
       setIsRequested(true)
+      dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
+    } else {
+      dispatch(commonActions.addToast(t('common:community.toast_follow')))
     }
   }
 
@@ -171,6 +174,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const unfollowApplyingDialogHandle = () => {
     unfollowCommunityPending(String(hash_key))
+    dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
     setIsDiscardApplying(false)
   }
   const cancelApplyingHandle = () => {
@@ -181,16 +185,25 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     return (
       <LoginRequired>
         {isAdmin || isCoOrganizer ? (
-          <DetailInfoButtons title={t('common:community.edit')} variant="outlined" disabled={false} onClick={toEdit} />
+          <DetailInfoButtons
+            primaryTextColor={false}
+            title={t('common:community.edit')}
+            variant="outlined"
+            disabled={false}
+            onClick={toEdit}
+          />
         ) : isRequested ? (
           <DetailInfoButtons
             title={t('common:community.applying')}
             variant="outlined"
+            color="primary"
+            primaryTextColor={true}
             disabled={unfollowCommunityMeta.pending}
             onClick={cancelApplyingHandle}
           />
         ) : isFollowing ? (
           <DetailInfoButtons
+            primaryTextColor={false}
             title={t('common:profile.following')}
             variant="contained"
             color="primary"
@@ -199,6 +212,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
           />
         ) : (
           <DetailInfoButtons
+            primaryTextColor={false}
             title={t('common:profile.follow_as')}
             variant="outlined"
             disabled={followCommunityMeta.pending}
@@ -217,7 +231,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast_text')))
+    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast')))
   }
 
   const getHeader = () => {
@@ -312,7 +326,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   return (
     <Grid container className={classes.container}>
-      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column" width="100%">
+      <Box color={Colors.grey[300]}>
         {getHeader()}
         {getTabs()}
         {getContent()}
@@ -442,7 +456,7 @@ const useStyles = makeStyles((theme) => ({
     width: 99,
     left: 'calc(100% - 99px)',
     position: 'sticky',
-    bottom: theme.spacing(4),
+    bottom: theme.spacing(2),
   },
   boxContainer: {
     display: 'flex',
@@ -469,6 +483,9 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    commentIconContainer: {
+      bottom: theme.spacing(10),
     },
     menuOuter: {
       marginLeft: theme.spacing(0),

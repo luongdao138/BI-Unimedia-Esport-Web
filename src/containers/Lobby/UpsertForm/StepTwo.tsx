@@ -34,7 +34,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepTwo.entry_start_datetime}
-          onChange={(date) => formik.setFieldValue('stepTwo.entry_start_datetime', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepTwo.entry_start_datetime', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepTwo?.entry_start_datetime && formik.errors?.stepTwo?.entry_start_datetime) ||
@@ -54,7 +54,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepTwo.entry_end_datetime}
-          onChange={(date) => formik.setFieldValue('stepTwo.entry_end_datetime', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepTwo.entry_end_datetime', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={
             (formik.touched?.stepTwo?.entry_end_datetime && formik.errors?.stepTwo?.entry_end_datetime) ||
@@ -78,7 +78,7 @@ const StepTwo: React.FC<Props> = ({ formik, prefectures, editables }) => {
           multiline
           rows={2}
           value={formik.values.stepTwo.start_datetime}
-          onChange={(date) => formik.setFieldValue('stepTwo.start_datetime', date.toString())}
+          onChange={(date) => formik.setFieldValue('stepTwo.start_datetime', date.toISOString())}
           onBlur={formik.handleBlur}
           helperText={formik.touched?.stepTwo?.start_datetime && formik.errors?.stepTwo?.start_datetime}
           error={formik.touched?.stepTwo?.start_datetime && !!formik.errors?.stepTwo?.start_datetime}
