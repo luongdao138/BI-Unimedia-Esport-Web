@@ -7,6 +7,7 @@ import { createRef } from 'react'
 import { useRect } from '@utils/hooks/useRect'
 import _ from 'lodash'
 import styled from 'styled-components'
+import { TOPIC_ROW_ITEM_DIVISOR } from '@constants/community.constants'
 
 const StyledBox = styled(Box)``
 export interface TopicRowItemProps {
@@ -31,7 +32,7 @@ const Highlight = ({ search = '', children = '', isSearched = false, contentRect
       let content = children
 
       const range = _.toLower(content).lastIndexOf(_.toLower(search))
-      const divisor = isJapanese ? 12 : 5.65
+      const divisor = isJapanese ? TOPIC_ROW_ITEM_DIVISOR.JAPANESE : TOPIC_ROW_ITEM_DIVISOR.NORMAL
       if (range > contentRect.width / divisor) {
         content = '...'.concat(content.slice(range - contentRect.width / (divisor * 2)))
       }
