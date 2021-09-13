@@ -1,6 +1,6 @@
 projects:
   cowellchat:
-    schemaPath: amplify/backend/api/cowellchat/build/schema.graphql
+    schemaPath: amplify/backend/api/nttcowell/build/schema.graphql
     includes:
       - src/graphql/**/*.ts
     excludes:

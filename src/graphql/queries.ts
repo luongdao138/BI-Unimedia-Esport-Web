@@ -49,7 +49,7 @@ export const getMessage = /* GraphQL */ `
       use_point_id
       is_premium
       userId
-      user {
+      parent {
         id
         uuid
         avatar
