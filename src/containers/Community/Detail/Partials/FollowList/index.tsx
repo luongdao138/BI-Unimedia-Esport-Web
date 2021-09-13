@@ -57,22 +57,25 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
 
   useEffect(() => {
-    const data = _.map(
-      _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
-      (m) => {
-        return {
-          title:
-            m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
-              ? t('common:community.applying')
-              : t('common:community.participating'),
-          value: m,
-          isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+    if (membersList) {
+      const data = _.map(
+        _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
+        (m) => {
+          return {
+            title:
+              m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
+                ? t('common:community.applying')
+                : t('common:community.participating'),
+            value: m,
+            isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+          }
         }
-      }
-    )
-    !data[MemberSection.applying]?.isApplying && data.unshift({} as GroupedMembers)
-    setGroupedMembers(data)
-    setInitialValue(data)
+      )
+      !data[MemberSection.applying]?.isApplying && data.unshift({ value: [] } as GroupedMembers)
+      !data[MemberSection.participating] && data.push({ value: [] } as GroupedMembers)
+      setGroupedMembers(data)
+      setInitialValue(data)
+    }
   }, [membersList])
 
   const handleClickOpen = () => {
@@ -185,11 +188,9 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const renderMemberList = () => {
     return (
       <Box>
-        {groupedMembers[community.attributes.has_requested ? MemberSection.participating : MemberSection.applying].value.map(
-          (participant, i) => (
-            <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
-          )
-        )}
+        {groupedMembers[MemberSection.participating].value.map((participant, i) => (
+          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+        ))}
       </Box>
     )
   }
@@ -199,7 +200,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
       <Box mt={4} height="100%" className={`${classes.scroll} ${classes.list}`}>
         {_.isArray(groupedMembers) &&
           groupedMembers
-            .filter((g) => !_.isEmpty(g))
+            .filter((g) => !_.isEmpty(g.value))
             .map((member, i) => {
               return (
                 <Box key={i}>
