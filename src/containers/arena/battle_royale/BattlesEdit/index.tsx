@@ -139,7 +139,7 @@ const ArenaBattlesEdit: React.FC = () => {
   }, [selecteds])
   return (
     <>
-      {detailMeta.loaded && participantsMeta.loaded && (
+      {detailMeta.loaded && participantsMeta.loaded && data && (
         <div style={{ height: `calc(${height}px - 60px)`, overflowY: 'auto', paddingBottom: 60 }} className={classes.scroll}>
           <HeaderWithButton title={tournament.attributes.title} />
           <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
@@ -163,21 +163,23 @@ const ArenaBattlesEdit: React.FC = () => {
               />
             ))}
           </Container>
-          <Box className={classes.actionButtonContainer}>
-            <Box className={classes.actionButton}>
-              <ButtonPrimaryOutlined
-                onClick={() => setShowRandomize(true)}
-                leadingIcon={<Icon className="fas fa-random" fontSize="small" />}
-              >
-                {t('common:arena.randomize_button')}
-              </ButtonPrimaryOutlined>
+          {data.is_freezed ? null : (
+            <Box className={classes.actionButtonContainer}>
+              <Box className={classes.actionButton}>
+                <ButtonPrimaryOutlined
+                  onClick={() => setShowRandomize(true)}
+                  leadingIcon={<Icon className="fas fa-random" fontSize="small" />}
+                >
+                  {t('common:arena.randomize_button')}
+                </ButtonPrimaryOutlined>
+              </Box>
+              <Box className={classes.actionButton}>
+                <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => setShowFreeze(true)}>
+                  {t('common:arena.freeze_br_button')}
+                </ButtonPrimary>
+              </Box>
             </Box>
-            <Box className={classes.actionButton}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => setShowFreeze(true)}>
-                {t('common:arena.freeze_br_button')}
-              </ButtonPrimary>
-            </Box>
-          </Box>
+          )}
           <InterestedList
             pid={showParticipants.pid}
             tournament={tournament}
