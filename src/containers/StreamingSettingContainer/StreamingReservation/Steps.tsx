@@ -96,7 +96,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
 
   const checkStatusRecord = (data) => {
     if (!data?.data?.created_at) {
-      onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
+      // onReNewUrlAndKey(TYPE_SECRET_KEY.URL, TYPE_SECRET_KEY.GET, false)
       setShowReNew(false)
     } else {
       setShowReNew(true)
@@ -231,7 +231,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
     const params: StreamUrlAndKeyParams = {
       type: method,
       objected: type,
-      is_live: TYPE_SECRET_KEY.LIVE,
+      is_live: TYPE_SECRET_KEY.SCHEDULE,
     }
     getStreamUrlAndKey(params, (url, key) => {
       // if (type === KEY_TYPE.URL) {

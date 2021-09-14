@@ -141,15 +141,15 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow }) =>
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_archived_videos')}
-            rightText={listFavoriteVideo?.archive?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={listFavoriteVideo?.archived?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreArchive}
           />
         </Box>
         <Box className={classes.wrapContentContainer}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {listFavoriteVideo?.archive?.length > 0 ? (
-              listFavoriteVideo?.archive?.map(renderLiveItem)
-            ) : listFavoriteVideo?.archive?.length === 0 && meta.pending ? (
+            {listFavoriteVideo?.archived?.length > 0 ? (
+              listFavoriteVideo?.archived?.map(renderLiveItem)
+            ) : listFavoriteVideo?.archived?.length === 0 && meta.pending ? (
               renderPreLoad()
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
@@ -158,7 +158,7 @@ const FavoriteVideos: React.FC<FavoriteVideosProps> = ({ setTab, setFollow }) =>
             )}
           </Grid>
         </Box>
-        {listFavoriteVideo?.archive?.length > 0 && (
+        {listFavoriteVideo?.archived?.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreArchive}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>

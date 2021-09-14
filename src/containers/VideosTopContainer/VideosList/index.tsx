@@ -6,17 +6,23 @@ import { TabsVideo } from '../index'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useListVideoAll from './useListVideoAll'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { CategoryPopularData, TypeVideo } from '@services/videoTop.services'
-import ESLoader from '@components/Loader'
+import PreLoadContainer from '../PreLoadContainer'
+import { searchTypes } from '@constants/common.constants'
+import { useRouter } from 'next/router'
+import { ESRoutes } from '@constants/route.constants'
+import useSearch from '@containers/Search/useSearch'
 
 type VideoListProps = {
   setTab: (value: number) => void
 }
 const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
+  const router = useRouter()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const classes = useStyles()
+  const { setSearch } = useSearch()
   const { listLiveVideo, meta, videoTop, videoPopular, videoCategoryPopular } = useListVideoAll()
 
   useEffect(() => {
@@ -47,8 +53,8 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
           <TitleSeeMore
             titleText={item.name}
             rightText={i18n.t('common:videos_top_tab.view_more')}
-            iconSource={item.image}
-            onPress={onClickSeeMoreLiveStream}
+            // iconSource={item.image}
+            onPress={() => onClickSeeMorePopular(item)}
           />
         </Box>
         <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
@@ -76,17 +82,55 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
   const onClickSeeMoreArchive = () => {
     setTab(TabsVideo.ARCHIVED_VIDEOS)
   }
+  const onClickSeeMorePopular = (item) => {
+    setSearch({ type: searchTypes.VIDEO, keyword: item.name })
+    router.push(ESRoutes.SEARCH_VIDEO)
+  }
+
+  const renderPreLoad = (number) => {
+    const arrayPreLoad = Array(number)
+      .fill('')
+      .map((_, i) => ({ i }))
+    return arrayPreLoad.map(() => (
+      <>
+        {downMd ? (
+          <Box className={classes.xsItemContainer}>
+            <Box className={classes.wrapPreLoadContainer}>
+              <PreLoadContainer />
+            </Box>
+          </Box>
+        ) : (
+          <Grid item xs={6} className={classes.itemContainer}>
+            <PreLoadContainer />
+          </Grid>
+        )}
+      </>
+    ))
+  }
+
+  const renderPreLoadPopular = () => {
+    return (
+      <>
+        <Box className={classes.popularCategoryTitle}>
+          <Typography className={classes.popularText}> {i18n.t('common:videos_top_tab.popular_category')} </Typography>
+        </Box>
+        <Grid container spacing={3} className={classes.contentContainer}>
+          {renderPreLoad(9)}
+        </Grid>
+      </>
+    )
+  }
 
   return (
     <Box className={classes.container}>
       <Box className={classes.content}>
-        {meta.pending && (
+        {/* {meta.pending && (
           <Grid item xs={12}>
             <Box my={4} display="flex" justifyContent="center" alignItems="center">
               <ESLoader />
             </Box>
           </Grid>
-        )}
+        )} */}
         {/* live video */}
         <Box className={classes.titleContainer}>
           <TitleSeeMore
@@ -99,6 +143,8 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
           <Grid container spacing={3} className={classes.contentContainer}>
             {videoTop?.live?.length > 0 ? (
               videoTop?.live.map(renderLiveItem)
+            ) : videoTop?.live?.length === 0 && meta.pending ? (
+              renderPreLoad(6)
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -125,6 +171,8 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
           <Grid container spacing={3} className={classes.contentContainer}>
             {videoTop?.schedule?.length > 0 ? (
               videoTop?.schedule.map(renderLiveItem)
+            ) : videoTop?.schedule?.length === 0 && meta.pending ? (
+              renderPreLoad(6)
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -143,14 +191,16 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
         <Box className={classes.titleContainer}>
           <TitleSeeMore
             titleText={i18n.t('common:videos_top_tab.title_archived_videos')}
-            rightText={videoTop?.archive?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
+            rightText={videoTop?.archived?.length > 0 ? i18n.t('common:videos_top_tab.view_more') : ''}
             onPress={onClickSeeMoreArchive}
           />
         </Box>
         <Box className={classes.wrapContentContainer} style={{ overflow: 'hidden' }}>
           <Grid container spacing={3} className={classes.contentContainer}>
-            {videoTop?.archive?.length > 0 ? (
-              videoTop?.archive.map(renderLiveItem)
+            {videoTop?.archived?.length > 0 ? (
+              videoTop?.archived.map(renderLiveItem)
+            ) : videoTop?.archived?.length === 0 && meta.pending ? (
+              renderPreLoad(6)
             ) : (
               <Box paddingTop={2} paddingBottom={2} paddingLeft={2}>
                 <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.no_data_text')}</Typography>
@@ -158,7 +208,7 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
             )}
           </Grid>
         </Box>
-        {videoTop?.archive?.length > 0 && (
+        {videoTop?.archived?.length > 0 && (
           <Box className={classes.spViewMore} onClick={onClickSeeMoreArchive}>
             <Typography className={classes.viewMoreStyle}>{i18n.t('common:videos_top_tab.view_more')}</Typography>
           </Box>
@@ -167,13 +217,13 @@ const VideosList: React.FC<VideoListProps> = ({ setTab }) => {
 
         {/* popular category */}
         {videoCategoryPopular.length > 0 && (
-          <>
-            <Box className={classes.popularCategoryTitle}>
-              <Typography className={classes.popularText}> {i18n.t('common:videos_top_tab.popular_category')} </Typography>
-            </Box>
-            {videoCategoryPopular.map(renderPopularItem)}
-          </>
+          <Box className={classes.popularCategoryTitle}>
+            <Typography className={classes.popularText}> {i18n.t('common:videos_top_tab.popular_category')} </Typography>
+          </Box>
         )}
+        {videoCategoryPopular.length > 0
+          ? videoCategoryPopular.map(renderPopularItem)
+          : videoCategoryPopular.length === 0 && meta.pending && renderPreLoadPopular()}
       </Box>
     </Box>
   )

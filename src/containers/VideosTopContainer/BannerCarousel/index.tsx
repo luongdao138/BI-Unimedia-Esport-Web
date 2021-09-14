@@ -58,7 +58,7 @@ const SlideItem = React.memo(function (props: StackedCarouselSlideProps) {
   //   setError(true)
   // }
   return (
-    <Box className={classes.sliderContainer} key={data[dataIndex]?.id}>
+    <Box className={classes.sliderContainer} key={data[dataIndex]?.id} onClick={() => window.open(data[dataIndex]?.url, '_blank')?.focus()}>
       <img
         ref={refImage}
         className={classes.sliderStyle}
