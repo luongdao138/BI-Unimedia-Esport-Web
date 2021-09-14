@@ -42,13 +42,13 @@ const ArenaBattlesEdit: React.FC = () => {
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
-  const confirmFreeze = useFreezeDialog(false)
-  const confirmRandomize = useRandomizeDialog(false)
+  const confirmFreeze = useFreezeDialog(data?.isTeam)
+  const confirmRandomize = useRandomizeDialog(data?.isTeam)
   const height = use100vh()
 
   const handleFreeze = () => {
     confirmFreeze().then(() => {
-      freeze({ hash_key: tournament.attributes.hash_key, matches: selecteds.map((p) => Number(p.id)) })
+      freeze({ hash_key: tournament.attributes.hash_key, matches: getParticipantIds(selecteds) })
     })
   }
 
@@ -145,7 +145,7 @@ const ArenaBattlesEdit: React.FC = () => {
 
   const [freezable, setFreezable] = useState(false)
   useEffect(() => {
-    const selectedLength = _.compact(getParticipantIds(selecteds)).length
+    const selectedLength = getParticipantIds(selecteds).length
     setFreezable(selectedLength === data?.maxCapacity)
   }, [selecteds])
   return (
