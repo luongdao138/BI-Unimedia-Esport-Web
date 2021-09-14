@@ -1,40 +1,47 @@
 import { Box, Icon, makeStyles } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import PlayerTooltip from './PlayerTooltip'
 
 interface Props {
-  videoRef?: any
-  PlayerTooltip?: () => void
+  //new lib
+  onPlayPause?: () => void
+  playing?: boolean
 }
 
-const Play: React.FC<Props> = ({ videoRef }) => {
+const Play: React.FC<Props> = ({ onPlayPause, playing = false }) => {
   const classes = useStyles()
-  const [paused, setPaused] = useState<boolean>(true)
-  useEffect(() => {
-    const onTogglePlay = () => {
-      setPaused(videoRef.current.paused)
-    }
-    videoRef.current.addEventListener('play', onTogglePlay)
-    videoRef.current.addEventListener('pause', onTogglePlay)
-    return () => {
-      videoRef.current.removeEventListener('play', onTogglePlay)
-      videoRef.current.removeEventListener('pause', onTogglePlay)
-    }
-  })
-  const handlePlay = () => {
-    if (videoRef.current.paused || videoRef.current.ended) {
-      setPaused(false)
-      videoRef.current.play()
-    } else {
-      setPaused(true)
-      videoRef.current.pause()
-    }
-  }
+  const { t } = useTranslation('common')
+  // useEffect(() => {
+  //   const onTogglePlay = () => {
+  //     setPaused(videoRef.current.paused)
+  //   }
+  //   videoRef.current.addEventListener('play', onTogglePlay)
+  //   videoRef.current.addEventListener('pause', onTogglePlay)
+  //   return () => {
+  //     videoRef.current.removeEventListener('play', onTogglePlay)
+  //     videoRef.current.removeEventListener('pause', onTogglePlay)
+  //   }
+  // })
+  // const handlePlay = () => {
+  //   if (videoRef.current.paused || videoRef.current.ended) {
+  //     setPaused(false)
+  //     videoRef.current.play()
+  //   } else {
+  //     setPaused(true)
+  //     videoRef.current.pause()
+  //   }
+  // }
+
   return (
-    <Box pr={2} className={classes.buttonNormal} onClick={handlePlay} data-tip data-for="togglePlay">
-      {paused ? <img src={'/images/ic_play_small.svg'} /> : <Icon fontSize={'small'} className={`fas fa-pause ${classes.pauseSmall}`} />}
-      <PlayerTooltip id={'togglePlay'} title={paused ? '再生' : '一時停止'} />
+    <Box pr={2} className={classes.buttonNormal} onClick={onPlayPause} data-tip data-for="togglePlay">
+      {!playing ? <img src={'/images/ic_play_small.svg'} /> : <Icon fontSize={'small'} className={`fas fa-pause ${classes.pauseSmall}`} />}
+      <PlayerTooltip
+        id={'togglePlay'}
+        title={!playing ? t('videos_top_tab.play') : t('videos_top_tab.pause')}
+        offset={{ top: -10, left: 0 }}
+      />
     </Box>
   )
 }
@@ -42,6 +49,7 @@ const useStyles = makeStyles(() => ({
   buttonNormal: {
     alignItems: 'center',
     display: 'flex',
+    paddingLeft: 16,
   },
   pauseSmall: {
     color: Colors.white,

@@ -1,59 +1,38 @@
 import { Slider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo, useEffect, useState } from 'react'
-import useDetailVideo from '../../useDetailVideo'
+// import useDetailVideo from '../../useDetailVideo'
 interface Props {
   currentTime?: number
-  durations?: number
+  durationsPlayer?: number
   videoRef: any
 }
 
-const SeekBar: React.FC<Props> = ({ currentTime, videoRef }) => {
+{
+  /*currentTime: seconds
+timePlayed: time by 100*/
+}
+
+const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) => {
   const classes = useStyles()
   // const [currentTimeState, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0)
+  // const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
-  const { changeStreamingSecond, streamingSecond } = useDetailVideo()
+  // const { changeStreamingSecond, streamingSecond } = useDetailVideo()
 
   useEffect(() => {
-    const onTimeUpdate = (event) => {
-      // console.log("===CHECK TIME PLAYED ===",event, videoRef.current.duration)
-      if (Math.floor(event.target.currentTime) !== streamingSecond) {
-        changeStreamingSecond(Math.floor(event.target.currentTime))
-      }
-      // setCurrentTime(event.target.currentTime)
-      setTimePlayed(((event.target.currentTime ? event.target.currentTime : 0) / duration) * 100)
-    }
-    videoRef.current.addEventListener('timeupdate', onTimeUpdate)
-
-    return () => {
-      videoRef.current.removeEventListener('timeupdate', onTimeUpdate)
-    }
-  }, [currentTime, timePlayed])
-
-  useEffect(() => {
-    const onDurationChange = (event) => {
-      setDuration(videoRef.current.duration)
-      if (videoRef.current.duration == Infinity) {
-        setDuration(event.target.currentTime)
-      }
-    }
-    videoRef.current.addEventListener('durationchange', onDurationChange)
-    return () => {
-      videoRef.current.removeEventListener('durationchange', onDurationChange)
-    }
+    // setCurrentTime(videoRef.current.getCurrentTime()) //
+    setTimePlayed((currentTime / durationsPlayer) * 100)
   })
 
   const handleChange = (_, value) => {
     setTimePlayed(value)
-    // setCurrentTime((value/duration)*100)
-    videoRef.current.currentTime = (value * duration) / 100
+    videoRef.current.seekTo((value * durationsPlayer) / 100, 'seconds')
   }
 
   const handleCommit = (_, value) => {
     setTimePlayed(value)
-    // setCurrentTime((value/duration)*100)
-    videoRef.current.currentTime = (value * duration) / 100
+    videoRef.current.seekTo((value * durationsPlayer) / 100, 'seconds')
   }
 
   return (
@@ -78,7 +57,7 @@ const useStyles = makeStyles(() => ({
     transition: 'width 0.4s ease-in',
     alignItems: 'flex-end',
     justifyContent: 'center',
-    // backgroundColor: 'white',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     // height:20,
   },
   seekBar: {
@@ -98,7 +77,7 @@ const useStyles = makeStyles(() => ({
       borderRadius: 2,
     },
     '& .MuiSlider-thumb': {
-      color: 'transparent', //circle
+      color: '#FF4786', //circle
       width: 14,
       height: 14,
       borderRadius: 7,

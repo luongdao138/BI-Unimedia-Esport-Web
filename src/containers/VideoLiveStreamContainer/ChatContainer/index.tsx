@@ -18,7 +18,7 @@ import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { listMessages, listUsers } from 'src/graphql/queries'
-import { createMessage, createUser, updateMessage } from 'src/graphql/mutations'
+import { createUser, updateMessage } from 'src/graphql/mutations'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
