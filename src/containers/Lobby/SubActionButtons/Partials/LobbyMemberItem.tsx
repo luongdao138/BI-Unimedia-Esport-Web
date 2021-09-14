@@ -125,18 +125,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'flex-start',
     listStyle: 'none',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
   listItem: {
     paddingRight: 140,
   },
   button: {},
   [theme.breakpoints.down('sm')]: {
-    root: {
-      paddingRight: 0,
-      paddingLeft: 0,
-    },
     secondaryAction: {
-      right: 0,
+      right: theme.spacing(2),
     },
   },
   loader: {
