@@ -63,7 +63,7 @@ const TagSelectorDialog: React.FC<Props> = ({ values, onChange, disabled }) => {
           {_.isEmpty(values) ? (
             <Typography className={classes.hintColor}>{t('common:common.not_selected')}</Typography>
           ) : (
-            values.map((feature, idx) => <ESChip key={idx} className={classes.chip} label={feature.attributes.feature} />)
+            values.map((feature, idx) => <ESChip key={idx} isGameList={true} className={classes.chip} label={feature.attributes.feature} />)
           )}
         </Box>
         <Icon className={`fa fa-chevron-right ${classes.icon}`} fontSize="small" />
