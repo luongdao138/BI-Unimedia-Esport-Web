@@ -6,7 +6,7 @@ type StateType = {
   listVideoAll?: {
     live?: Array<TypeVideo>
     schedule?: Array<TypeVideo>
-    archive?: Array<TypeVideo>
+    archived?: Array<TypeVideo>
   }
   listVideoPopular?: Array<CategoryPopularData>
   listBanner?: Array<BannerItem>
@@ -16,7 +16,7 @@ type StateType = {
   listVideoFavorite?: {
     live?: Array<TypeVideo>
     schedule?: Array<TypeVideo>
-    archive?: Array<TypeVideo>
+    archived?: Array<TypeVideo>
   }
   videoSearch?: SearchType
   listVideoSearch?: Array<TypeVideo>
@@ -29,7 +29,7 @@ const initialState: StateType = {
   listVideoAll: {
     live: [],
     schedule: [],
-    archive: [],
+    archived: [],
   },
   listVideoPopular: [],
   listBanner: [],
@@ -39,7 +39,7 @@ const initialState: StateType = {
   listVideoFavorite: {
     live: [],
     schedule: [],
-    archive: [],
+    archived: [],
   },
   videoSearch: {
     total: 0,

@@ -15,6 +15,8 @@ interface ControlProps {
   durationsPlayer?: number
   handleFullScreen?: () => void
   onChangeVolume?: (value?: number) => void
+  muted?: boolean
+  onMute?: () => void
 }
 
 const ControlBarPlayer: React.FC<ControlProps> = ({
@@ -25,11 +27,13 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   currentTime,
   durationsPlayer,
   handleFullScreen,
+  muted,
+  onMute,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
   const [volumeValue, setVolumeValue] = useState<number>(1)
-  const [isMuted, setIsMuted] = useState<boolean>(false)
+  const [isMuted, setIsMuted] = useState<boolean>(muted)
   const [isFull, setFull] = useState<boolean>(false)
 
   const handleChange = (_, newValue) => {
@@ -48,6 +52,7 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
     setIsMuted(!isMuted)
     setVolumeValue(!isMuted ? 0 : 1)
     onChangeVolume(!isMuted ? 0 : 1)
+    onMute()
   }
 
   //Tooltip

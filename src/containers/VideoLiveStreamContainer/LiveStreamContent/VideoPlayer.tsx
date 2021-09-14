@@ -36,6 +36,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
   const [isLive, setIsLive] = useState(false)
   const [state, setState] = useState({
     playing: false,
+    muted: false,
   })
   const [volumePlayer, setVolumePlayer] = useState(1)
 
@@ -105,6 +106,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
 
   const onHandleVolume = (value) => {
     setVolumePlayer(value)
+    setState({ ...state, muted: value > 0 ? false : true })
   }
 
   const toggleFullScreen = () => {
@@ -113,7 +115,11 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     screenfull.toggle(playerContainerRef.current)
   }
 
-  const { playing } = state
+  const handleMute = () => {
+    setState({ ...state, muted: !state.muted })
+  }
+
+  const { playing, muted } = state
   return (
     <div className={classes.videoPlayer}>
       <div ref={playerContainerRef} className={classes.playerContainer}>
@@ -131,6 +137,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
           onPlay={onPlay}
           onPause={onPause}
           volume={volumePlayer}
+          muted={muted}
           className={classes.reactPlayer}
         />
 
@@ -144,9 +151,11 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
               videoRef={reactPlayerRef}
               onPlayPause={handlePlayPause}
               playing={playing}
+              muted={muted}
               durationsPlayer={durationPlayer}
               currentTime={playedSeconds}
               handleFullScreen={toggleFullScreen}
+              onMute={handleMute}
             />
           </div>
         </div>
@@ -305,7 +314,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   playerContainer: {},
   reactPlayer: {
-    '&:hover $.videoPlayer': {
+    '&:hover $.processControl': {
       transition: 'opacity 0.3s ease-in',
       opacity: 1,
       backgroundColor: 'yellow',
