@@ -22,7 +22,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
   return (
     <>
       {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
-        <Box marginTop={2}>
+        <Box mt={2}>
           {!_.isEmpty(data.game_titles) && (
             <Box mr={1} display="inline">
               {data.game_titles.map((game) => {
@@ -73,7 +73,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
       </Box>
 
       {/* approval method */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+      <Box display="flex" flexDirection="row" alignContent="flex-start" mt={1}>
         <Box className={classes.label}>
           <Typography>{t('common:community.approval_method')}</Typography>
         </Box>
@@ -87,7 +87,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
       </Box>
 
       {/* caretaker */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
+      <Box display="flex" flexDirection="row" alignContent="flex-start" mt={1}>
         <Box className={classes.userLabel}>
           <Typography>{t('common:community.caretaker')}</Typography>
         </Box>
@@ -98,7 +98,6 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
                 <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
                   <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
                 </ButtonBase>
-
                 <Typography className={classes.ellipsis}>{data.admin.nickname}</Typography>
               </LoginRequired>
             </Box>
@@ -106,9 +105,8 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
       </Box>
 
-      {/* //TODO when co organizer added to backend */}
       {/* deputy caretaker */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
+      <Box display="flex" flexDirection="row" alignContent="flex-start" mt={1}>
         <Box className={classes.userLabel}>
           <Typography>{t('common:community.deputy_caretaker')}</Typography>
         </Box>
@@ -142,6 +140,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkify: {
     color: Colors.white,
     textDecoration: 'underline',
+    wordBreak: 'break-all',
   },
   label: {
     display: 'flex',
@@ -187,9 +186,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '35%',
     },
     userValue: {
-      display: 'flex',
-      wordBreak: 'break-word',
-      whiteSpace: 'pre-wrap',
       width: '65%',
     },
   },

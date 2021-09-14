@@ -8,7 +8,7 @@ const { selectors, actions } = community
 const getTopicMeta = createMetaSelector(actions.searchTopic)
 
 const useTopicSearch = (): {
-  topicList: Array<TopicSearchItem>
+  topicList: TopicSearchItem[]
   getTopicList: (params: TopicSearchParams) => void
   topicListMeta: Meta
   pages: PageMeta

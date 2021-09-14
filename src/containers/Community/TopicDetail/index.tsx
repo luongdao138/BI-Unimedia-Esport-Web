@@ -11,6 +11,10 @@ import { useRouter } from 'next/router'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+import useCommunityDetail from '../Detail/useCommunityDetail'
+import useCommunityHelper from '../hooks/useCommunityHelper'
+import useTopicHelper from './useTopicHelper'
+import { ESRoutes } from '@constants/route.constants'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -32,17 +36,37 @@ const TopicDetailContainer: React.FC = () => {
     getCommentsListNext,
     commentsListNextMeta,
   } = useTopicDetail()
+  const { getCommunityDetail, communityDetail } = useCommunityDetail()
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
   const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
   const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
+  const [render, setRender] = useState(false)
+  const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
   const data = topic?.attributes
+  const { isOwner } = useTopicHelper(topic?.attributes?.owner_user_code)
+
+  const menuParams = {
+    isNotMember: isNotMember,
+    isModerator: isModerator,
+    isPublic: isPublic,
+    isTopicOwner: isOwner,
+  }
 
   useEffect(() => {
     if (topic_hash_key) {
+      getCommunityDetail(String(hash_key))
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
       getCommentsListPage({ hash_key: String(topic_hash_key) })
     }
   }, [router])
+
+  useEffect(() => {
+    if (communityDetail && !isAutomatic && isNotMember) {
+      router.push(ESRoutes.COMMUNITY_DETAIL.replace(/:id/gi, String(hash_key)))
+    } else {
+      setRender(true)
+    }
+  }, [communityDetail])
 
   useEffect(() => {
     if (commentsListPageMeta.loaded) {
@@ -57,7 +81,7 @@ const TopicDetailContainer: React.FC = () => {
   }, [commentsList])
 
   useEffect(() => {
-    if (isBottomOfPage) {
+    if (isBottomOfPage && !commentsListNextMeta.pending) {
       loadMore()
     }
   }, [isBottomOfPage])
@@ -79,7 +103,7 @@ const TopicDetailContainer: React.FC = () => {
   }
 
   const loadPrevious = () => {
-    if (hasPrevious) {
+    if (hasPrevious && !commentsListMeta.pending) {
       getCommentsList({ hash_key: String(topic_hash_key), page: Number(pages.current_page) - 1 })
     }
   }
@@ -88,10 +112,14 @@ const TopicDetailContainer: React.FC = () => {
     return (
       <>
         {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} handleReply={setReply} />
+          return <Comment key={i} comment={comment} menuParams={menuParams} handleReply={setReply} />
         })}
       </>
     )
+  }
+
+  if (!render) {
+    return <></>
   }
 
   return (
@@ -100,8 +128,8 @@ const TopicDetailContainer: React.FC = () => {
         <Box flex={1}>
           {topicDetailMeta.loaded && (
             <>
-              <TopicDetailHeader title={data.title} isTopic={true} onHandleBack={handleBack} />
-              <MainTopic topic={topic} handleDelete={handleDeleteTopic} />
+              <TopicDetailHeader title={data?.title} isTopic={true} onHandleBack={handleBack} />
+              <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
             </>
           )}
           {hasPrevious && (
@@ -147,9 +175,11 @@ const TopicDetailContainer: React.FC = () => {
             </Grid>
           )}
         </Box>
-        <Box className={classes.inputContainer}>
-          <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
-        </Box>
+        {!isNotMember && (
+          <Box className={classes.inputContainer}>
+            <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
+          </Box>
+        )}
       </Box>
     </>
   )
@@ -159,6 +189,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   inputContainer: {
     display: 'flex',

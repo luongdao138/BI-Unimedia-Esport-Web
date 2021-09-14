@@ -90,7 +90,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
                   src={participant.profile_image}
-                  alt={String(participant.id)}
+                  alt={String(participant.nickname)}
                 />
               ))
           : null}

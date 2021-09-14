@@ -21,12 +21,11 @@ import { MEMBER_ROLE } from '@constants/community.constants'
 
 type Props = {
   community: CommunityDetail
-  isYellow?: boolean
 }
 
 type GroupedMembers = {
   title: string
-  value: Array<CommunityMember>
+  value: CommunityMember[]
   isApplying: boolean
 }
 
@@ -40,7 +39,6 @@ const FollowList: React.FC<Props> = ({ community }) => {
   const classes = useStyles()
   const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
-  const [isYellow, setIsYellow] = useState(false)
   const { isModerator } = useCommunityHelper(community)
   const {
     getMembers,
@@ -54,26 +52,30 @@ const FollowList: React.FC<Props> = ({ community }) => {
     removeMember,
     sendToast,
   } = useFollowList()
-  const [hasChosenApplying, setHasChosenApplying] = useState(false)
-  const [groupedMembers, setGroupedMembers] = useState<Array<GroupedMembers>>([])
-  const [initialValue, setInitialValue] = useState<Array<CommunityMember>>([])
+  const [hasChanged, setHasChanged] = useState(false)
+  const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
+  const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
 
   useEffect(() => {
-    const data = _.map(
-      _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
-      (m) => {
-        return {
-          title:
-            m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
-              ? t('common:community.applying')
-              : t('common:community.participating'),
-          value: m,
-          isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+    if (membersList) {
+      const data = _.map(
+        _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
+        (m) => {
+          return {
+            title:
+              m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
+                ? t('common:community.applying')
+                : t('common:community.participating'),
+            value: m,
+            isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+          }
         }
-      }
-    )
-    setGroupedMembers(data)
-    setInitialValue(data[MemberSection.applying]?.value)
+      )
+      !data[MemberSection.applying]?.isApplying && data.unshift({ value: [] } as GroupedMembers)
+      !data[MemberSection.participating] && data.push({ value: [] } as GroupedMembers)
+      setGroupedMembers(data)
+      setInitialValue(data)
+    }
   }, [membersList])
 
   const handleClickOpen = () => {
@@ -82,21 +84,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleClose = () => {
     setOpen(false)
-    setIsYellow(false)
-  }
-
-  const handleYellowOpen = () => {
-    setOpen(true)
-    setIsYellow(true)
   }
 
   useEffect(() => {
     if (open) {
-      if (isYellow) {
-        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
-      } else {
-        getMembers({ hash_key: hash_key, role: CommunityMemberRole.moderator_member, page: 1 })
-      }
+      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     } else {
       resetMembers()
     }
@@ -106,12 +98,8 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const loadMore = () => {
     if (hasNextPage) {
-      if (isYellow) {
-        getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
-      } else {
-        getMembers({ hash_key: hash_key, role: CommunityMemberRole.moderator_member, page: Number(pages.current_page) + 1 })
-      }
-      setHasChosenApplying(false)
+      getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      setHasChanged(false)
     }
   }
 
@@ -139,54 +127,72 @@ const FollowList: React.FC<Props> = ({ community }) => {
   }
 
   const handleSubmit = async () => {
-    const data: Array<CommunityMember> = _.differenceWith(groupedMembers[MemberSection.applying].value, initialValue, _.isEqual)
-    const approve = handleApplyingParam(data, MEMBER_ROLE.MEMBER)
-    const cancel = handleApplyingParam(data, null)
+    const applyingData: CommunityMember[] = _.differenceWith(
+      groupedMembers[MemberSection.applying].value,
+      initialValue[MemberSection.applying].value,
+      _.isEqual
+    )
+    const participatingData: CommunityMember[] =
+      groupedMembers[MemberSection.participating] &&
+      _.differenceWith(groupedMembers[MemberSection.participating].value, initialValue[MemberSection.participating].value, _.isEqual)
 
-    if (approve.length > 0) {
-      await approveMembers({ hash_key: hash_key, data: { member_ids: approve } })
+    let approveUsers, cancelUsers, makeCoOrganizers, makeUsers, kickUsers
+    if (!_.isEmpty(applyingData)) {
+      approveUsers = handleApplyingParam(applyingData, MEMBER_ROLE.MEMBER)
+      cancelUsers = handleApplyingParam(applyingData, null)
+      if (!_.isEmpty(approveUsers)) {
+        await approveMembers({ hash_key: hash_key, data: { member_ids: approveUsers } })
+      }
+      if (!_.isEmpty(cancelUsers)) {
+        await cancelMembers({ hash_key: hash_key, data: { member_ids: cancelUsers } })
+      }
+      getDetailAndToast()
     }
-    if (cancel.length > 0) {
-      await cancelMembers({ hash_key: hash_key, data: { member_ids: cancel } })
+    if (!_.isEmpty(participatingData)) {
+      makeCoOrganizers = handleApplyingParam(participatingData, MEMBER_ROLE.CO_ORGANIZER)
+      makeUsers = handleApplyingParam(participatingData, MEMBER_ROLE.MEMBER)
+      kickUsers = handleApplyingParam(participatingData, MEMBER_ROLE.LEAVE)
+      if (!_.isEmpty(makeCoOrganizers)) {
+        await changeMemberRole({ hash_key: hash_key, data: { member_ids: makeCoOrganizers, member_role: MEMBER_ROLE.CO_ORGANIZER } })
+      }
+      if (!_.isEmpty(makeUsers)) {
+        await changeMemberRole({ hash_key: hash_key, data: { member_ids: makeUsers, member_role: MEMBER_ROLE.MEMBER } })
+      }
+      if (!_.isEmpty(kickUsers)) {
+        await removeMember({ hash_key: hash_key, data: { member_ids: kickUsers } })
+      }
+      getDetailAndToast()
     }
-    getDetailAndToast()
-    setHasChosenApplying(false)
+    setHasChanged(false)
   }
 
   const handleSelectedValue = async (isApplying: boolean, id: number, value: number) => {
     const data = JSON.parse(JSON.stringify(groupedMembers))
 
     _.set(
-      _.find(data[!isApplying && isYellow ? MemberSection.participating : MemberSection.applying].value, { attributes: { id: id } }),
+      _.find(data[!isApplying ? MemberSection.participating : MemberSection.applying].value, { attributes: { id: id } }),
       'attributes.member_role',
       Number(value)
     )
 
     setGroupedMembers(data)
-    if (isApplying) {
-      setHasChosenApplying(true)
-    } else {
-      if (Number(value) == MEMBER_ROLE.LEAVE) {
-        await removeMember({ data: { member_id: id }, hash_key: hash_key })
-        getDetailAndToast()
-      } else {
-        changeMemberRole({ data: { member_id: id, member_role: handleValue(value) }, hash_key: hash_key })
-        sendToast(t('common:community.change_applying_members_toast'))
-      }
-    }
+    setHasChanged(true)
   }
 
   const userData = (participant) => {
     const _user = participant.attributes
+
     return { id: _user.id, attributes: { ..._user, avatar: _user.profile } }
   }
 
   const renderMemberList = () => {
     return (
       <Box>
-        {groupedMembers[MemberSection.applying].value.map((participant, i) => (
-          <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
-        ))}
+        {groupedMembers[community.attributes.has_requested ? MemberSection.participating : MemberSection.applying].value.map(
+          (participant, i) => (
+            <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+          )
+        )}
       </Box>
     )
   }
@@ -195,18 +201,21 @@ const FollowList: React.FC<Props> = ({ community }) => {
     return (
       <Box mt={4} height="100%" className={`${classes.scroll} ${classes.list}`}>
         {_.isArray(groupedMembers) &&
-          groupedMembers.map((member, i) => {
-            return (
-              <Box key={i}>
-                <Typography key={i} variant="h3" className={classes.label}>
-                  {member.title}
-                </Typography>
-                {(!_.isEmpty(member) && member.value).map((m, j) => {
-                  return <UserSelectBoxList key={j} isApplying={member.isApplying} member={m} setValue={handleSelectedValue} />
-                })}
-              </Box>
-            )
-          })}
+          groupedMembers
+            .filter((g) => !_.isEmpty(g.value))
+            .map((member, i) => {
+              return (
+                <Box key={i}>
+                  <Typography key={i} variant="h3" className={classes.label}>
+                    {member.title}
+                  </Typography>
+                  {!_.isEmpty(member) &&
+                    member.value.map((m, j) => {
+                      return <UserSelectBoxList key={j} isApplying={member.isApplying} member={m} setValue={handleSelectedValue} />
+                    })}
+                </Box>
+              )
+            })}
       </Box>
     )
   }
@@ -226,7 +235,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
           </Button>
         </LoginRequired>
         {isModerator && community.attributes.has_requested && (
-          <Button onClick={handleYellowOpen}>
+          <Button onClick={handleClickOpen}>
             <Typography className={classes.linkUnapproved} variant="body2">
               {t('common:community.unapproved_users_title')}
             </Typography>
@@ -237,14 +246,14 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <ESStickyFooter
           disabled={false}
           noScroll
-          show={isModerator && isYellow}
+          show={isModerator}
           content={
             <>
               <ButtonPrimary
                 round
                 className={`${classes.footerButton} ${classes.confirmButton}`}
                 onClick={handleSubmit}
-                disabled={!hasChosenApplying}
+                disabled={!hasChanged}
               >
                 {t('common:community.confirm_follow_list')}
               </ButtonPrimary>
