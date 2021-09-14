@@ -148,5 +148,6 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.resetParticipants, (state, _) => {
     state.participants = []
+    state.recommendedParticipants = []
   })
 })

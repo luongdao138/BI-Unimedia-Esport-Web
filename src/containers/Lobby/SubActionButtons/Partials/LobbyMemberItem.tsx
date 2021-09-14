@@ -106,7 +106,7 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
           {nickName}
         </Typography>
         <Typography noWrap={true} variant="body2">
-          {!_.isEmpty(userCode) ? '@' + userCode : ''}
+          {!_.isEmpty(userCode) ? i18n.t('common:common.at') + userCode : ''}
         </Typography>
       </ListItemText>
 
