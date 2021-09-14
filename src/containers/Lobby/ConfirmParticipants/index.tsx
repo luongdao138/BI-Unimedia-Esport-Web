@@ -34,7 +34,10 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
-  const [selectedParticipants, setSelectedParticipants] = useState<ConfirmParticipantItem[]>([])
+  // const [selectedParticipants, setSelectedParticipants] = useState<ConfirmParticipantItem[]>([])
+  const [selected, setSelected] = useState<number[]>([])
+  const [filtered, setFiltered] = useState<ConfirmParticipantItem[]>([])
+
   const router = useRouter()
   const confirm = useConfirm()
 
@@ -62,21 +65,21 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   useEffect(() => {
     if (open) {
       getParticipants({ page: 1, hash_key: hash_key })
-    } else {
-      resetParticipants()
-      resetMeta()
-      setHasMore(true)
-    }
-
-    return () => {
-      resetParticipants()
-      resetMeta()
     }
   }, [open])
 
   useEffect(() => {
     if (confirmParticipantsMeta.loaded) handleClose()
   }, [confirmParticipantsMeta.loaded])
+
+  useEffect(() => {
+    setFiltered(
+      participants.map((user: ConfirmParticipantItem) => {
+        const item = selected.includes(Number(user.id))
+        return { ...user, checked: item }
+      })
+    )
+  }, [selected, participants])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
@@ -87,42 +90,45 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   }
 
   useEffect(() => {
-    if (!_.isEmpty(participants)) {
-      const _participants = _.map(participants, (participant) => _.extend({}, participant, { checked: false }))
-      setSelectedParticipants(_participants)
-    }
-  }, [participants])
-
-  useEffect(() => {
     if (!_.isEmpty(recommendedParticipants)) {
-      const arr = selectedParticipants.map((a) => {
-        const item = _.find(recommendedParticipants, (p) => p.id === a.id)
-        return { ...a, checked: _.isObject(item) }
+      const arr = recommendedParticipants.map((a) => {
+        return Number(a.id)
       })
-      setSelectedParticipants(arr)
+      setSelected(arr)
     }
   }, [recommendedParticipants])
 
   const handleChange = (index: number) => {
-    const _selectedParticipants = [...selectedParticipants]
-    if (_selectedParticipants.filter((a) => a.checked).length < max_participants || _selectedParticipants[index].checked) {
-      _selectedParticipants[index].checked = !_selectedParticipants[index].checked
-      setSelectedParticipants(_selectedParticipants)
+    if (selected.length < max_participants && !selected.includes(index)) {
+      setSelected(_.concat(selected, index))
+    } else if (
+      (selected.length < max_participants && selected.includes(index)) ||
+      (selected.length === max_participants && selected.includes(index))
+    ) {
+      setSelected(_.filter(selected, (a) => a !== index))
     }
   }
 
   const handleToProfile = (userCode: string) => {
-    handleClose()
+    onClose()
     router.push(`${ESRoutes.PROFILE}/${userCode}`)
+  }
+
+  const onClose = () => {
+    resetParticipants()
+    resetMeta()
+    setHasMore(true)
+    handleClose()
+    setSelected([])
   }
 
   return (
     <Box>
-      <ESModal open={open} handleClose={handleClose}>
+      <ESModal open={open} handleClose={onClose}>
         <Container className={classes.container} maxWidth={'md'}>
           <div id="scrollableDiv" style={{ height: windowHeight }} className={`${classes.scroll} ${classes.list}`}>
             <Box className={classes.header} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+              <IconButton className={classes.iconButtonBg} onClick={onClose}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
@@ -133,7 +139,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
             <Box display="flex" className={classes.rowContainer} textAlign="center">
               <Typography className={classes.subTitle}>{t('common:confirm_member.total_participants')}</Typography>
               <Box display="flex" className={classes.countContainer}>
-                <Typography className={classes.selectedNumber}>{selectedParticipants.filter((p) => p.checked).length}</Typography>
+                <Typography className={classes.selectedNumber}>{selected.length}</Typography>
               </Box>
               <Box display="flex" className={classes.countContainer}>
                 <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
@@ -148,9 +154,9 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                 <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
               </Box>
             </Box>
-            {_.isArray(selectedParticipants) && !_.isEmpty(selectedParticipants) && open ? (
+            {_.isArray(participants) && !_.isEmpty(participants) && open ? (
               <InfiniteScroll
-                dataLength={selectedParticipants.length}
+                dataLength={participants.length}
                 next={fetchMoreData}
                 hasMore={hasMore}
                 scrollableTarget="scrollableDiv"
@@ -164,9 +170,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                   )
                 }
               >
-                {selectedParticipants.map((user: ConfirmParticipantItem, i) => (
-                  <ParticipantRow key={i} data={user} toProfile={handleToProfile} handleChange={() => handleChange(i)} />
-                ))}
+                {filtered.map((user: ConfirmParticipantItem, i) => {
+                  return (
+                    <ParticipantRow key={i} data={user} toProfile={handleToProfile} handleChange={() => handleChange(Number(user.id))} />
+                  )
+                })}
                 <Box style={{ height: 40 }} />
               </InfiniteScroll>
             ) : null}
@@ -180,12 +188,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                     round
                     fullWidth
                     size="large"
-                    disabled={selectedParticipants.filter((p) => p.checked).length === 0}
+                    disabled={selected.length === 0}
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
                         .then(() => {
-                          const _selectedParticipants = _.filter(selectedParticipants, (p) => p.checked).map((a) => a.attributes.user_id)
-                          confirmParticipants(hash_key, _selectedParticipants)
+                          confirmParticipants(hash_key, selected)
                         })
                         .catch(() => {
                           /* ... */
