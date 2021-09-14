@@ -756,16 +756,9 @@ export default {
         title: '選択したメンバーで確定しますか？',
         description: '',
         additionalText: '確定後はメンバーの変更はできません',
-        confirmationText: '確定する',
+        confirmationText: 'はい',
         cancellationText: 'いいえ',
       },
-    },
-    entry_deadline_dialog: {
-      title: '選択したメンバーで確定しますか？',
-      description: '',
-      additionalText: '確定後はメンバーの変更はできません',
-      confirmationText: '確定する',
-      cancellationText: 'いいえ',
     },
     status: {
       entry_closed: '受付終了',
