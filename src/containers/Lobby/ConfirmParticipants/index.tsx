@@ -21,6 +21,7 @@ import ESModal from '@components/Modal'
 import { useConfirm } from '@components/Confirm'
 import { use100vh } from 'react-div-100vh'
 import { useRect } from '@utils/hooks/useRect'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 interface CloseRecruitmentModalProps {
   lobby: LobbyDetail
@@ -34,7 +35,6 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
-  // const [selectedParticipants, setSelectedParticipants] = useState<ConfirmParticipantItem[]>([])
   const [selected, setSelected] = useState<number[]>([])
   const [filtered, setFiltered] = useState<ConfirmParticipantItem[]>([])
 
@@ -61,6 +61,8 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   const { status, max_participants, hash_key } = lobby.attributes
 
   const page = participantsPageMeta
+
+  const { userProfile } = useGetProfile()
 
   useEffect(() => {
     if (open) {
@@ -172,7 +174,13 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
               >
                 {filtered.map((user: ConfirmParticipantItem, i) => {
                   return (
-                    <ParticipantRow key={i} data={user} toProfile={handleToProfile} handleChange={() => handleChange(Number(user.id))} />
+                    <ParticipantRow
+                      key={i}
+                      data={user}
+                      toProfile={handleToProfile}
+                      handleChange={() => handleChange(Number(user.id))}
+                      isMe={Number(userProfile.id) === _.get(user, 'attributes.user_id', '')}
+                    />
                   )
                 })}
                 <Box style={{ height: 40 }} />
