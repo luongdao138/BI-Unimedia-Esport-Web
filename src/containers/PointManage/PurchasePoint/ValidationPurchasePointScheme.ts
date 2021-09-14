@@ -22,7 +22,7 @@ export const validationPurchasePointScheme = (): any => {
         return value.replace(/[\s/]/g, '')
       })
       // validate expire date
-      .matches(/^([0-9]{2})(0[1-9]|1[0-2])$/g, wrong_format_mess)
+      .matches(/^(0[1-9]|1[0-2])([0-9]{2})$/g, wrong_format_mess)
       .length(4, wrong_format_mess),
     card_cvc: Yup.string()
       .required(required_mess)

@@ -49,13 +49,13 @@ const UsagePointsItem: FC<UsagePointsItemProps> = ({ data, serialNumber, setShow
       <Box className={classes.wrapTitle}>
         <Box className={classes.wrapRow}>
           <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.id')}</Typography>
-          <Typography className={classes.textStyle}>{data?.uuid}</Typography>
+          <Typography className={classes.textStyle}>{data?.uuid + 'U'}</Typography>
         </Box>
         <Box className={classes.wrapRow}>
           <Typography className={classes.titleCommon}>{i18n.t('common:point_management_tab.points')}</Typography>
           <Typography className={classes.usagePointStyle}>
             {'-' + FormatHelper.currencyFormat(data?.point.toString())}
-            {i18n.t('common:point_management_tab.eXe_point_text')}
+            {' ' + i18n.t('common:point_management_tab.eXe_point_text')}
           </Typography>
         </Box>
         <Box className={classes.wrapRow}>

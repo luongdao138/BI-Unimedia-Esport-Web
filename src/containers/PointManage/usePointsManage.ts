@@ -27,6 +27,10 @@ const usePointsManage = () => {
   const getHistoryPointData = (params: HistoryPointsParams) => dispatch(actions.getListHistoryPoints(params))
   const getUsedPointData = (params: HistoryPointsParams) => dispatch(actions.getListUsedPoints(params))
   const getUsagePointsHistoryData = (params: DetailUsagePointParams) => dispatch(actions.getDetailUsagePoint(params))
+  const resetDetailUsagePointsHistory = () => dispatch(actions.resetDetailUsagePointsHistory())
+  const resetMyPointsActive = () => dispatch(actions.resetPointsActive())
+  const resetPointsHistory = () => dispatch(actions.resetPointsHistory())
+  const resetUsagePoints = () => dispatch(actions.resetUsagePoints())
 
   return {
     myPointsData,
@@ -41,6 +45,10 @@ const usePointsManage = () => {
     getHistoryPointData,
     getUsedPointData,
     getUsagePointsHistoryData,
+    resetDetailUsagePointsHistory,
+    resetUsagePoints,
+    resetPointsHistory,
+    resetMyPointsActive,
   }
 }
 
