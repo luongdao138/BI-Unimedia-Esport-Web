@@ -117,6 +117,17 @@ export default createReducer(initialState, (builder) => {
     state.tournamentParticipants = _participants
     state.participantsMeta = action.payload.meta
   })
+  builder.addCase(actions.getBattleRoyaleParticipants.fulfilled, (state, action) => {
+    let _participants = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      _participants = state.tournamentParticipants.concat(action.payload.data)
+    }
+    if (!action.meta.arg.role) {
+      state.tournamentDetail.attributes.interested_count = action.payload.meta.total_count
+    }
+    state.tournamentParticipants = _participants
+    state.participantsMeta = action.payload.meta
+  })
   builder.addCase(actions.resetParticipants, (state) => {
     state.tournamentParticipants = []
     state.participantsMeta = undefined
