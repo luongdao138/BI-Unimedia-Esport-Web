@@ -11,6 +11,22 @@ export const createUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -27,6 +43,22 @@ export const updateUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -43,6 +75,22 @@ export const deleteUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -71,6 +119,9 @@ export const createMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -100,6 +151,9 @@ export const updateMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -129,6 +183,9 @@ export const deleteMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }

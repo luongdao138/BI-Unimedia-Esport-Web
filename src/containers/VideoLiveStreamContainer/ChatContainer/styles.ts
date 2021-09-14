@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { purchasePoints } from './index'
+import { Colors } from '@theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -74,11 +75,12 @@ const useStyles = makeStyles((theme) => ({
   chatBoard: {
     position: 'relative',
     overflow: 'auto',
-    height: 525,
+    // height: 565,
+    height: 400,
     display: 'flex',
     flexDirection: 'column',
-    marginTop: 13,
-    paddingBottom: 111,
+    // marginTop: 16,
+    paddingTop: 8,
     scrollbarColor: '#222 transparent',
     '&::-webkit-scrollbar': {
       width: '20px',
@@ -135,22 +137,19 @@ const useStyles = makeStyles((theme) => ({
   chatContent: {
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: 18,
-    paddingLeft: 15,
-    paddingRight: 13,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 0,
     width: '100%',
   },
   chatInputContainer: {
     backgroundColor: '#0A0A0A',
-    paddingLeft: 11,
-    paddingRight: 11,
-    paddingTop: 14.5,
-    paddingBottom: 22,
+    padding: 16,
     borderRadius: 4,
   },
   chatInputMobileContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -116.5,
     left: 0,
     width: '100%',
   },
@@ -159,6 +158,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
   },
   input: (props: { chatValidationError?: boolean }) => ({
+    height: 48,
     borderBottomRightRadius: 'unset',
     zIndex: 11,
     width: '100%',
@@ -268,6 +268,32 @@ const useStyles = makeStyles((theme) => ({
   },
   messContentOuter: {
     flex: 1,
+  },
+  btn_show_more: {
+    background: Colors.primary,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: Colors.primary,
+    padding: '4px 6px',
+    fontSize: 10,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginRight: '16px',
+    alignItems: 'center',
+    display: 'flex',
+    position: "absolute", 
+    bottom: "9px", 
+    left: "50%", 
+    transform: "translateX(-50%)", 
+    zIndex: 2,
+    visibility: "hidden", 
+    opacity: "0", 
+    transition: "all 0.5s"
+  },
+  displaySeeMore: {
+    visibility: "visible", 
+    opacity: "1", 
   },
   // purchaseItem: {},
   // purchaseItemText: {},
