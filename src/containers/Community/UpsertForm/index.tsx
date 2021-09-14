@@ -28,6 +28,8 @@ import { CommunityFeature } from '@services/community.service'
 import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
 import community from '@store/community'
+import * as commonActions from '@store/common/actions'
+
 const { selectors } = community
 
 type CommunityCreateProps = {
@@ -45,7 +47,16 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
-  const { editables, isEdit, submit, update, getCommunityFeatures, community, getCreateCommunityMeta } = useCommunityCreate()
+  const {
+    editables,
+    isEdit,
+    submit,
+    update,
+    getCommunityFeatures,
+    community,
+    getCreateCommunityMeta,
+    getUpdateCommunityMeta,
+  } = useCommunityCreate()
   const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const [detailFeatures, setDetailFeatures] = useState([])
 
@@ -70,7 +81,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         game_titles: (values.stepOne.game_titles as GameTitle['attributes'][]).map((game) => game.id),
         join_condition: Number(values.stepOne.join_condition),
       }
-      // console.log(data)
       if (isEdit) {
         update({ hash_key: String(router.query.community_id), data })
       } else {
@@ -88,8 +98,18 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   useEffect(() => {
     if (getCreateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
       setIsAlreadyUsedTitle(true)
+    } else if (getCreateCommunityMeta.error['message']) {
+      renderFailedDataToast()
     }
   }, [getCreateCommunityMeta])
+
+  useEffect(() => {
+    if (getUpdateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
+      setIsAlreadyUsedTitle(true)
+    } else if (getCreateCommunityMeta.error['message']) {
+      renderFailedDataToast()
+    }
+  }, [getUpdateCommunityMeta])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -97,7 +117,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       return
     } else {
       const isRequiredFieldsValid = CommunityHelper.checkCommunityRequiredFields(formik.errors)
-      setHasError(!isRequiredFieldsValid)
+      setHasError(_.has(formik.errors, 'stepOne') || !isRequiredFieldsValid)
       if (isConfirm) {
         setIsConfirm(false)
       }
@@ -126,6 +146,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       )
     }
   }, [isEdit])
+
+  const renderFailedDataToast = () => {
+    dispatch(commonActions.addToast(t('common:common.failed_to_get_data')))
+  }
 
   const renderEditButton = () => {
     return (

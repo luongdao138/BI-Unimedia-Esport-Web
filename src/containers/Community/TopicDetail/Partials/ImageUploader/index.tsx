@@ -21,7 +21,7 @@ const ImageUploader: React.FC<ProfileAvatarProps> = ({ onChange, isUploading }) 
   }
   const { getRootProps, getInputProps } = useDropzone(dropZoneConfig)
 
-  const handleChange = (files: Array<File>) => {
+  const handleChange = (files: File[]) => {
     const file = files[0]
     const reader = new FileReader()
     if (file) {

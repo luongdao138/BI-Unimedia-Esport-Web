@@ -39,16 +39,13 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   const matchesXL = useMediaQuery((theme: Theme) => theme.breakpoints.up('xl'))
   const matchesLG = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'))
   const matchesSM = useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'))
-  const matchesMD = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
   const listRef = useRef<any>(null)
 
   useEffect(() => {
     if (listRef && listRef.current) listRef.current.recomputeRowHeights()
     if (matchesXL === true) {
-      setPerRow(3)
+      setPerRow(4)
     } else if (matchesLG === true) {
-      setPerRow(3)
-    } else if (matchesMD === true) {
       setPerRow(3)
     } else if (matchesSM === true) {
       setPerRow(1)
@@ -90,6 +87,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
   }, [])
 
   useEffect(() => {
+    if (!router.isReady) return
+
     let filterVal = CommunityFilterOption.all
 
     if (_.has(router.query, 'filter')) {
@@ -128,7 +127,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
       const data = communities[i]
 
       items.push(
-        <Grid key={i} item xs={12} sm={12} md={4} lg={4} xl={4} className={classes.card}>
+        <Grid key={i} item xs={12} lg={4} xl={3} sm={12} className={classes.card}>
           <CommunityCard community={data} />
         </Grid>
       )
@@ -136,8 +135,8 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
 
     return (
       <CellMeasurer cache={cache} columnIndex={0} columnCount={1} key={key} parent={parent} rowIndex={index}>
-        {({ registerChild }) => (
-          <Grid key={key} style={style} ref={registerChild} container>
+        {({ registerChild, measure }) => (
+          <Grid key={key} style={style} ref={registerChild} container onLoad={measure}>
             {items}
           </Grid>
         )}
