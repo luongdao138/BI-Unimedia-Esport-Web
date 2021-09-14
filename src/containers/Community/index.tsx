@@ -79,7 +79,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
       if (listRef && listRef.current)
         setTimeout(() => {
           listRef.current?.forceUpdateGrid()
-        })
+        }, 100)
     }
     window.addEventListener('resize', updateSize)
     updateSize()

@@ -341,7 +341,6 @@ export type CommunityDetailResponse = {
 export type TopicParams = {
   title: string
   content: string
-  topic_type: string
   community_hash: string
   attachments?: string
 }
