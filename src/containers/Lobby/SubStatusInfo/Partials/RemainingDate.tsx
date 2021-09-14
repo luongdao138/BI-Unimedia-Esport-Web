@@ -17,8 +17,9 @@ const RemainingDate: React.FC<Props> = ({ lobby }) => {
   const { status, is_freezed, is_owner } = lobby.attributes
 
   const entryStartDate = moment(lobby.attributes.entry_start_datetime)
+  const entryEndDate = moment(lobby.attributes.entry_end_datetime)
   const startDate = moment(lobby.attributes.start_datetime)
-  const targetDate = status === LOBBY_STATUS.READY ? entryStartDate : startDate
+  const targetDate = status === LOBBY_STATUS.READY ? entryStartDate : status === LOBBY_STATUS.RECRUITING ? entryEndDate : startDate
 
   const nowDate = moment()
   const days = targetDate.diff(nowDate, 'days')

@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, createRef } from 'react'
 import { ConfirmParticipantItem } from '@services/lobby.service'
 import { useState } from 'react'
-import { Typography, Box, makeStyles, Theme, DialogContent } from '@material-ui/core'
+import { Typography, Box, makeStyles, Theme, IconButton, Icon, Container } from '@material-ui/core'
 import ButtonPrimaryOutlined from '@components/ButtonPrimaryOutlined'
 import ButtonPrimary from '@components/ButtonPrimary'
 import { Colors } from '@theme/colors'
 import { useTranslation } from 'react-i18next'
 import LoginRequired from '@containers/LoginRequired'
-import ESDialog from '@components/Dialog'
 import ParticipantRow from './ParticipantRow'
 import ESFullLoader from '@components/FullScreenLoader'
 import _ from 'lodash'
@@ -18,9 +17,11 @@ import ESLoader from '@components/Loader'
 import { LOBBY_STATUS, LOBBY_DIALOGS } from '@constants/lobby.constants'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
-import ESStickyFooter from '@components/StickyFooter'
-import BlankLayout from '@layouts/BlankLayout'
+import ESModal from '@components/Modal'
 import { useConfirm } from '@components/Confirm'
+import { use100vh } from 'react-div-100vh'
+import { useRect } from '@utils/hooks/useRect'
+import useGetProfile from '@utils/hooks/useGetProfile'
 
 interface CloseRecruitmentModalProps {
   lobby: LobbyDetail
@@ -28,13 +29,21 @@ interface CloseRecruitmentModalProps {
   handleClose: () => void
 }
 
+const contentRef = createRef<HTMLDivElement>()
+
 const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, open, handleClose }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
-  const [selectedParticipants, setSelectedParticipants] = useState<ConfirmParticipantItem[]>([])
+  const [selected, setSelected] = useState<number[]>([])
+  const [filtered, setFiltered] = useState<ConfirmParticipantItem[]>([])
+
   const router = useRouter()
   const confirm = useConfirm()
+
+  const windowHeight = use100vh()
+
+  const { height } = useRect(contentRef)
 
   const {
     participants,
@@ -53,22 +62,26 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
 
   const page = participantsPageMeta
 
+  const { userProfile } = useGetProfile()
+
   useEffect(() => {
     if (open) {
       getParticipants({ page: 1, hash_key: hash_key })
-    } else {
-      resetParticipants()
-    }
-
-    return () => {
-      resetParticipants()
-      resetMeta()
     }
   }, [open])
 
   useEffect(() => {
     if (confirmParticipantsMeta.loaded) handleClose()
   }, [confirmParticipantsMeta.loaded])
+
+  useEffect(() => {
+    setFiltered(
+      participants.map((user: ConfirmParticipantItem) => {
+        const item = selected.includes(Number(user.id))
+        return { ...user, checked: item }
+      })
+    )
+  }, [selected, participants])
 
   const fetchMoreData = () => {
     if (page.current_page >= page.total_pages) {
@@ -79,102 +92,56 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   }
 
   useEffect(() => {
-    if (!_.isEmpty(participants)) {
-      const _participants = _.map(participants, (participant) => _.extend({}, participant, { checked: false }))
-      setSelectedParticipants(_participants)
-    }
-  }, [participants])
-
-  useEffect(() => {
     if (!_.isEmpty(recommendedParticipants)) {
-      const arr = selectedParticipants.map((a) => {
-        const item = _.find(recommendedParticipants, (p) => p.id === a.id)
-        return { ...a, checked: _.isObject(item) }
+      const arr = recommendedParticipants.map((a) => {
+        return Number(a.id)
       })
-      setSelectedParticipants(arr)
+      setSelected(arr)
     }
   }, [recommendedParticipants])
 
   const handleChange = (index: number) => {
-    const _selectedParticipants = [...selectedParticipants]
-    if (_selectedParticipants.filter((a) => a.checked).length < max_participants || _selectedParticipants[index].checked) {
-      _selectedParticipants[index].checked = !_selectedParticipants[index].checked
-      setSelectedParticipants(_selectedParticipants)
+    if (selected.length < max_participants && !selected.includes(index)) {
+      setSelected(_.concat(selected, index))
+    } else if (
+      (selected.length < max_participants && selected.includes(index)) ||
+      (selected.length === max_participants && selected.includes(index))
+    ) {
+      setSelected(_.filter(selected, (a) => a !== index))
     }
   }
 
   const handleToProfile = (userCode: string) => {
-    handleClose()
+    onClose()
     router.push(`${ESRoutes.PROFILE}/${userCode}`)
+  }
+
+  const onClose = () => {
+    resetParticipants()
+    resetMeta()
+    setHasMore(true)
+    handleClose()
+    setSelected([])
   }
 
   return (
     <Box>
-      <ESDialog
-        title={t('common:confirm_member.title')}
-        open={open}
-        handleClose={handleClose}
-        classes={{
-          paperFullWidth: classes.dialogFullWidth,
-        }}
-        bkColor="rgba(0,0,0,0.8)"
-      >
-        <BlankLayout>
-          <ESStickyFooter
-            classes={{ root: classes.stickyFooter }}
-            disabled
-            noSpacing
-            content={
-              <Box className={classes.actionButtonContainer}>
-                <Box className={classes.actionButton}>
-                  <LoginRequired>
-                    <ButtonPrimary
-                      round
-                      fullWidth
-                      size="large"
-                      disabled={selectedParticipants.filter((p) => p.checked).length === 0}
-                      onClick={() => {
-                        confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
-                          .then(() => {
-                            const _selectedParticipants = _.filter(selectedParticipants, (p) => p.checked).map((a) => a.attributes.user_id)
-                            confirmParticipants(hash_key, _selectedParticipants)
-                          })
-                          .catch(() => {
-                            /* ... */
-                          })
-                      }}
-                    >
-                      {t('common:confirm_member.confirm')}
-                    </ButtonPrimary>
-                  </LoginRequired>
-                </Box>
-                <Box className={classes.actionButton}>
-                  <LoginRequired>
-                    <ButtonPrimaryOutlined
-                      onClick={() => {
-                        confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
-                          .then(() => {
-                            if (status === LOBBY_STATUS.RECRUITING) {
-                              getRecommendedParticipants(hash_key)
-                            }
-                          })
-                          .catch(() => {
-                            /* ... */
-                          })
-                      }}
-                    >
-                      {t('common:confirm_member.shuffle')}
-                    </ButtonPrimaryOutlined>
-                  </LoginRequired>
-                </Box>
+      <ESModal open={open} handleClose={onClose}>
+        <Container className={classes.container} maxWidth={'md'}>
+          <div id="scrollableDiv" style={{ height: windowHeight }} className={`${classes.scroll} ${classes.list}`}>
+            <Box className={classes.header} display="flex" flexDirection="row" alignItems="center">
+              <IconButton className={classes.iconButtonBg} onClick={onClose}>
+                <Icon className="fa fa-arrow-left" fontSize="small" />
+              </IconButton>
+              <Box pl={2}>
+                <Typography variant="h2">{t('common:confirm_member.title')}</Typography>
               </Box>
-            }
-          >
+            </Box>
             <Typography className={classes.subTitle}>{t('common:confirm_member.sub_title')}</Typography>
             <Box display="flex" className={classes.rowContainer} textAlign="center">
               <Typography className={classes.subTitle}>{t('common:confirm_member.total_participants')}</Typography>
               <Box display="flex" className={classes.countContainer}>
-                <Typography className={classes.selectedNumber}>{selectedParticipants.filter((p) => p.checked).length}</Typography>
+                <Typography className={classes.selectedNumber}>{selected.length}</Typography>
               </Box>
               <Box display="flex" className={classes.countContainer}>
                 <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
@@ -189,34 +156,87 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                 <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
               </Box>
             </Box>
-            <DialogContent style={{ paddingRight: 0, paddingLeft: 0 }}>
-              <div id="scrollableDiv" className={`${classes.scroll} ${classes.list}`}>
-                {_.isArray(selectedParticipants) && !_.isEmpty(selectedParticipants) && open ? (
-                  <InfiniteScroll
-                    dataLength={selectedParticipants.length}
-                    next={fetchMoreData}
-                    hasMore={hasMore}
-                    scrollableTarget="scrollableDiv"
-                    scrollThreshold={0.99}
-                    style={{ overflow: 'hidden' }}
-                    loader={
-                      participantsMeta.pending && (
-                        <div className={classes.loaderCenter}>
-                          <ESLoader />
-                        </div>
-                      )
-                    }
+            {_.isArray(participants) && !_.isEmpty(participants) && open ? (
+              <InfiniteScroll
+                dataLength={participants.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                scrollableTarget="scrollableDiv"
+                scrollThreshold={0.99}
+                style={{ overflow: 'hidden' }}
+                loader={
+                  participantsMeta.pending && (
+                    <div className={classes.loaderCenter}>
+                      <ESLoader />
+                    </div>
+                  )
+                }
+              >
+                {filtered.map((user: ConfirmParticipantItem, i) => {
+                  return (
+                    <ParticipantRow
+                      key={i}
+                      data={user}
+                      toProfile={handleToProfile}
+                      handleChange={() => handleChange(Number(user.id))}
+                      isMe={Number(userProfile.id) === _.get(user, 'attributes.user_id', '')}
+                    />
+                  )
+                })}
+                <Box style={{ height: 40 }} />
+              </InfiniteScroll>
+            ) : null}
+            <Box style={{ height: height }} />
+          </div>
+          <div ref={contentRef} className={classes.footer}>
+            <Box className={classes.actionButtonContainer}>
+              <Box className={classes.actionButton}>
+                <LoginRequired>
+                  <ButtonPrimary
+                    round
+                    fullWidth
+                    size="large"
+                    disabled={selected.length === 0}
+                    onClick={() => {
+                      confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
+                        .then(() => {
+                          const selectedParticipants = participants
+                            .filter((p) => selected.includes(p.attributes.id))
+                            .map((a) => a.attributes.user_id)
+                          confirmParticipants(hash_key, selectedParticipants)
+                        })
+                        .catch(() => {
+                          /* ... */
+                        })
+                    }}
                   >
-                    {selectedParticipants.map((user: ConfirmParticipantItem, i) => (
-                      <ParticipantRow key={i} data={user} toProfile={handleToProfile} handleChange={() => handleChange(i)} />
-                    ))}
-                  </InfiniteScroll>
-                ) : null}
-              </div>
-            </DialogContent>
-          </ESStickyFooter>
-        </BlankLayout>
-      </ESDialog>
+                    {t('common:confirm_member.confirm')}
+                  </ButtonPrimary>
+                </LoginRequired>
+              </Box>
+              <Box className={classes.actionButton}>
+                <LoginRequired>
+                  <ButtonPrimaryOutlined
+                    onClick={() => {
+                      confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
+                        .then(() => {
+                          if (status === LOBBY_STATUS.RECRUITING) {
+                            getRecommendedParticipants(hash_key)
+                          }
+                        })
+                        .catch(() => {
+                          /* ... */
+                        })
+                    }}
+                  >
+                    {t('common:confirm_member.shuffle')}
+                  </ButtonPrimaryOutlined>
+                </LoginRequired>
+              </Box>
+            </Box>
+          </div>
+        </Container>
+      </ESModal>
 
       {recommendedParticipantsMeta.pending && <ESFullLoader open={recommendedParticipantsMeta.pending} />}
     </Box>
@@ -224,9 +244,26 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  stickyFooter: {
+  footer: {
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    borderTop: `1px solid`,
+    borderTopColor: Colors.text['300'],
     backdropFilter: 'blur(3px)',
     background: 'rgba(0, 0, 0, 0.8)',
+  },
+  loaderCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+  },
+  header: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(2),
   },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
@@ -289,6 +326,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   dialogFullWidth: {
     maxHeight: '100%',
     margin: 0,
+  },
+  scroll: {
+    scrollbarColor: '#222 transparent',
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: 5,
+      opacity: 1,
+      padding: 2,
+    },
+    '&::-webkit-scrollbar-track': {
+      paddingLeft: 1,
+      background: 'rgba(0,0,0,0.5)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#222',
+      borderRadius: 6,
+    },
+  },
+  list: {
+    overflow: 'auto',
+    overflowX: 'hidden',
+    willChange: 'transform',
+  },
+  [theme.breakpoints.down('md')]: {
+    container: {
+      padding: 0,
+    },
+    header: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+    },
   },
   [theme.breakpoints.down('sm')]: {
     container: {

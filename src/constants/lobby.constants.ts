@@ -98,13 +98,6 @@ export const LOBBY_DIALOGS = {
       cancellationText: i18n.t('common:lobby.confirm_member_dialog.confirm.cancellationText'),
     },
   },
-  ENTRY_DEADLINE: {
-    title: i18n.t('common:lobby.entry_deadline_dialog.title'),
-    description: i18n.t('common:lobby.entry_deadline_dialog.description'),
-    additionalText: i18n.t('common:lobby.entry_deadline_dialog.additionalText'),
-    confirmationText: i18n.t('common:lobby.entry_deadline_dialog.confirmationText'),
-    cancellationText: i18n.t('common:lobby.entry_deadline_dialog.cancellationText'),
-  },
   CANCEL_LOBBY: {
     title: i18n.t('common:lobby.cancel_lobby_dialog.title'),
     description: i18n.t('common:lobby.cancel_lobby_dialog.description'),
