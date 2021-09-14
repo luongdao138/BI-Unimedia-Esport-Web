@@ -200,7 +200,10 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.confirm })
                         .then(() => {
-                          confirmParticipants(hash_key, selected)
+                          const selectedParticipants = participants
+                            .filter((p) => selected.includes(p.attributes.id))
+                            .map((a) => a.attributes.user_id)
+                          confirmParticipants(hash_key, selectedParticipants)
                         })
                         .catch(() => {
                           /* ... */
