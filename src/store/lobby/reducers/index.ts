@@ -146,4 +146,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.clearLobbyDetail, (state, _) => {
     state.lobbyDetail = undefined
   })
+  builder.addCase(actions.resetParticipants, (state, _) => {
+    state.participants = []
+  })
 })

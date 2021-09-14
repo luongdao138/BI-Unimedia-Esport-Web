@@ -48,13 +48,6 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   useEffect(() => {
     if (open) {
       getParticipants({ page: 1, hash_key: hash_key })
-    } else {
-      resetParticipants()
-    }
-
-    return () => {
-      resetParticipants()
-      resetMeta()
     }
   }, [open])
 
@@ -77,17 +70,24 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   }
 
   const goToProfile = (userCode: string) => {
-    handleClose()
+    onClose()
     router.push(`${ESRoutes.PROFILE}/${userCode}`)
   }
 
+  const onClose = () => {
+    handleClose()
+    resetParticipants()
+    resetMeta()
+    setHasMore(true)
+  }
+
   return (
-    <ESModal open={open} handleClose={handleClose}>
+    <ESModal open={open} handleClose={onClose}>
       <Container className={classes.container} maxWidth="md">
         <div id="scrollableDiv" style={{ height: windowHeight }} className={`${classes.scroll} ${classes.list}`}>
           <Box className={classes.topContainer}>
             <Box className={classes.header} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
+              <IconButton className={classes.iconButtonBg} onClick={onClose}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
