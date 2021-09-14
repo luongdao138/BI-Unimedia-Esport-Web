@@ -150,7 +150,7 @@ const ArenaBattlesEdit: React.FC = () => {
   }, [selecteds])
   return (
     <>
-      {detailMeta.loaded && participantsMeta.loaded && (
+      {detailMeta.loaded && participantsMeta.loaded && data && (
         <div style={{ height: `calc(${height}px - 60px)`, overflowY: 'auto', paddingBottom: 60 }} className={classes.scroll}>
           <HeaderWithButton title={tournament.attributes.title} />
           <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
