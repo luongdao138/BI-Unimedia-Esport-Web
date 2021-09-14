@@ -35,8 +35,7 @@ const ParticipantRow: React.FC<Props> = ({ data, isMe, toProfile, handleChange }
             </Typography>
           </Box>
           <Typography variant="caption" noWrap>
-            {i18n.t('common:common.at')}
-            {userCode}
+            {!_.isEmpty(userCode) ? i18n.t('common:common.at') + userCode : ''}
           </Typography>
         </Box>
       </Box>
