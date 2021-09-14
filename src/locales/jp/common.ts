@@ -756,16 +756,9 @@ export default {
         title: '選択したメンバーで確定しますか？',
         description: '',
         additionalText: '確定後はメンバーの変更はできません',
-        confirmationText: '確定する',
+        confirmationText: 'はい',
         cancellationText: 'いいえ',
       },
-    },
-    entry_deadline_dialog: {
-      title: '選択したメンバーで確定しますか？',
-      description: '',
-      additionalText: '確定後はメンバーの変更はできません',
-      confirmationText: '確定する',
-      cancellationText: 'いいえ',
     },
     status: {
       entry_closed: '受付終了',
@@ -1123,6 +1116,7 @@ export default {
     arena_members_title: 'eXeLAB｜出場メンバー',
     arena_entry_title: 'eXeLAB｜エントリー',
     arena_summary_title: 'eXeLAB｜大会総括',
+    lobby_default_title: 'eXeLAB｜ロビー',
     lobby_detail_title: 'eXeLAB｜ロビー情報',
   },
   lobby_create: {

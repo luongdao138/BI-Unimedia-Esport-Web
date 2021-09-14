@@ -97,7 +97,9 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, memberConfi
           </Box>
           {status === LOBBY_STATUS.RECRUITING && (
             <Box pb={2} className={classes.description}>
-              <Typography variant="body2">{i18n.t('common:lobby.buttons.description')}</Typography>
+              <Typography variant="body2" className={classes.descriptionText}>
+                {i18n.t('common:lobby.buttons.description')}
+              </Typography>
             </Box>
           )}
         </>
@@ -126,6 +128,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   description: {
     marginTop: theme.spacing(3),
     textAlign: 'center',
+  },
+  descriptionText: {},
+  [theme.breakpoints.down('sm')]: {
+    descriptionText: {
+      fontSize: 11,
+    },
   },
 }))
 
