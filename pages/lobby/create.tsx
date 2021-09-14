@@ -7,7 +7,7 @@ import i18n from '@locales/i18n'
 
 const LobbyCreatePage: PageWithLayoutType = () => {
   return (
-    <BlankLayout>
+    <BlankLayout isWide={false}>
       <LobbyCreateContainer />
     </BlankLayout>
   )
