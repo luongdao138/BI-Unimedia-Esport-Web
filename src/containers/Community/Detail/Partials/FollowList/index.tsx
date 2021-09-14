@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, IconButton, Icon, Theme, Button } from '@material-ui/core'
+import { Box, Typography, IconButton, Icon, Theme, Button, Grid } from '@material-ui/core'
 import ESModal from '@components/Modal'
-import ESLabel from '@components/Label'
 import UserListItem from '@components/UserItem'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
@@ -24,17 +23,28 @@ type Props = {
   community: CommunityDetail
 }
 
+type GroupedMembers = {
+  title: string
+  value: CommunityMember[]
+  isApplying: boolean
+}
+
+enum MemberSection {
+  applying,
+  participating,
+}
+
 const FollowList: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const hash_key = community.attributes.hash_key
   const [open, setOpen] = useState(false)
-  const { isModerator, isAutomatic } = useCommunityHelper(community)
+  const { isModerator } = useCommunityHelper(community)
   const {
     getMembers,
     membersList,
     pages,
-    resetMeta,
+    resetMembers,
     membersMeta,
     approveMembers,
     cancelMembers,
@@ -42,10 +52,31 @@ const FollowList: React.FC<Props> = ({ community }) => {
     removeMember,
     sendToast,
   } = useFollowList()
-  const [applyingValues, setApplyingValues] = useState<Array<CommunityMember>>([])
-  const [participatingValues, setParticipatingValues] = useState<Array<CommunityMember>>([])
-  const [initialValues, setInitialValues] = useState<Array<Array<CommunityMember>>>([])
-  const [hasChosenApplying, setHasChosenApplying] = useState(false)
+  const [hasChanged, setHasChanged] = useState(false)
+  const [groupedMembers, setGroupedMembers] = useState<GroupedMembers[]>([])
+  const [initialValue, setInitialValue] = useState<GroupedMembers[]>([])
+
+  useEffect(() => {
+    if (membersList) {
+      const data = _.map(
+        _.groupBy(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED),
+        (m) => {
+          return {
+            title:
+              m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED
+                ? t('common:community.applying')
+                : t('common:community.participating'),
+            value: m,
+            isApplying: m[MemberSection.applying].attributes.member_role == MEMBER_ROLE.REQUESTED ? true : false,
+          }
+        }
+      )
+      !data[MemberSection.applying]?.isApplying && data.unshift({ value: [] } as GroupedMembers)
+      !data[MemberSection.participating] && data.push({ value: [] } as GroupedMembers)
+      setGroupedMembers(data)
+      setInitialValue(data)
+    }
+  }, [membersList])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -58,33 +89,22 @@ const FollowList: React.FC<Props> = ({ community }) => {
   useEffect(() => {
     if (open) {
       getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
-    }
-    return () => {
-      resetMeta()
+    } else {
+      resetMembers()
     }
   }, [open])
-
-  useEffect(() => {
-    const participating = _.filter(
-      membersList,
-      (m) => m.attributes.member_role != MEMBER_ROLE.ADMIN && m.attributes.member_role != MEMBER_ROLE.REQUESTED
-    )
-    const applying = _.filter(membersList, (m) => m.attributes.member_role == MEMBER_ROLE.REQUESTED)
-    setParticipatingValues(participating)
-    setApplyingValues(applying)
-    setInitialValues([applying, participating])
-  }, [membersList])
 
   const hasNextPage = pages && Number(pages.current_page) !== Number(pages.total_pages)
 
   const loadMore = () => {
     if (hasNextPage) {
       getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: Number(pages.current_page) + 1 })
+      setHasChanged(false)
     }
   }
 
   const getDetailAndToast = () => {
-    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: pages.current_page })
+    getMembers({ hash_key: hash_key, role: CommunityMemberRole.all, page: 1 })
     sendToast(t('common:community.change_applying_members_toast'))
   }
 
@@ -107,69 +127,95 @@ const FollowList: React.FC<Props> = ({ community }) => {
   }
 
   const handleSubmit = async () => {
-    const data: Array<CommunityMember> = _.differenceWith(applyingValues, initialValues[0], _.isEqual)
-    const approve = handleApplyingParam(data, MEMBER_ROLE.MEMBER)
-    const cancel = handleApplyingParam(data, null)
+    const applyingData: CommunityMember[] = _.differenceWith(
+      groupedMembers[MemberSection.applying].value,
+      initialValue[MemberSection.applying].value,
+      _.isEqual
+    )
+    const participatingData: CommunityMember[] =
+      groupedMembers[MemberSection.participating] &&
+      _.differenceWith(groupedMembers[MemberSection.participating].value, initialValue[MemberSection.participating].value, _.isEqual)
 
-    if (approve.length > 0) {
-      await approveMembers({ hash_key: hash_key, data: { member_ids: approve } })
+    let approveUsers, cancelUsers, makeCoOrganizers, makeUsers, kickUsers
+    if (!_.isEmpty(applyingData)) {
+      approveUsers = handleApplyingParam(applyingData, MEMBER_ROLE.MEMBER)
+      cancelUsers = handleApplyingParam(applyingData, null)
+      if (!_.isEmpty(approveUsers)) {
+        await approveMembers({ hash_key: hash_key, data: { member_ids: approveUsers } })
+      }
+      if (!_.isEmpty(cancelUsers)) {
+        await cancelMembers({ hash_key: hash_key, data: { member_ids: cancelUsers } })
+      }
+      getDetailAndToast()
     }
-    if (cancel.length > 0) {
-      await cancelMembers({ hash_key: hash_key, data: { member_ids: cancel } })
+    if (!_.isEmpty(participatingData)) {
+      makeCoOrganizers = handleApplyingParam(participatingData, MEMBER_ROLE.CO_ORGANIZER)
+      makeUsers = handleApplyingParam(participatingData, MEMBER_ROLE.MEMBER)
+      kickUsers = handleApplyingParam(participatingData, MEMBER_ROLE.LEAVE)
+      if (!_.isEmpty(makeCoOrganizers)) {
+        await changeMemberRole({ hash_key: hash_key, data: { member_ids: makeCoOrganizers, member_role: MEMBER_ROLE.CO_ORGANIZER } })
+      }
+      if (!_.isEmpty(makeUsers)) {
+        await changeMemberRole({ hash_key: hash_key, data: { member_ids: makeUsers, member_role: MEMBER_ROLE.MEMBER } })
+      }
+      if (!_.isEmpty(kickUsers)) {
+        await removeMember({ hash_key: hash_key, data: { member_ids: kickUsers } })
+      }
+      getDetailAndToast()
     }
-    getDetailAndToast()
-    setHasChosenApplying(false)
+    setHasChanged(false)
   }
 
   const handleSelectedValue = async (isApplying: boolean, id: number, value: number) => {
-    const data = JSON.parse(JSON.stringify(isApplying ? applyingValues : participatingValues))
+    const data = JSON.parse(JSON.stringify(groupedMembers))
 
-    _.set(_.find(data, { attributes: { id: id } }), 'attributes.member_role', Number(value))
+    _.set(
+      _.find(data[!isApplying ? MemberSection.participating : MemberSection.applying].value, { attributes: { id: id } }),
+      'attributes.member_role',
+      Number(value)
+    )
 
-    if (isApplying) {
-      setApplyingValues(data)
-    } else {
-      setParticipatingValues(data)
-      if (Number(value) == MEMBER_ROLE.LEAVE) {
-        await removeMember({ data: { member_id: id }, hash_key: hash_key })
-        getDetailAndToast()
-      } else {
-        changeMemberRole({ data: { member_id: id, member_role: handleValue(value) }, hash_key: hash_key })
-        sendToast(t('common:community.change_applying_members_toast'))
-      }
-    }
-    isApplying && setHasChosenApplying(true)
+    setGroupedMembers(data)
+    setHasChanged(true)
+  }
+
+  const userData = (participant) => {
+    const _user = participant.attributes
+
+    return { id: _user.id, attributes: { ..._user, avatar: _user.profile } }
   }
 
   const renderMemberList = () => {
     return (
       <Box>
-        {participatingValues.map((participant, i) => (
-          <UserListItem data={participant} key={i} nicknameYellow={false} />
-        ))}
+        {groupedMembers[community.attributes.has_requested ? MemberSection.participating : MemberSection.applying].value.map(
+          (participant, i) => (
+            <UserListItem data={userData(participant)} key={i} nicknameYellow={false} />
+          )
+        )}
       </Box>
     )
   }
 
   const renderAdminMemberList = () => {
     return (
-      <Box mt={3}>
-        {!isAutomatic && applyingValues.length > 0 && (
-          <>
-            <ESLabel label={t('common:community.applying')} />
-            <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
-              {applyingValues.map((member, i) => {
-                return <UserSelectBoxList key={i} member={member} isApplying setValue={handleSelectedValue} />
-              })}
-            </Box>
-          </>
-        )}
-        <ESLabel label={t('common:community.participating')} />
-        <Box mt={4} height="100%" paddingRight={10} className={`${classes.scroll} ${classes.list}`}>
-          {participatingValues.map((member, i) => {
-            return <UserSelectBoxList key={i} member={member} setValue={handleSelectedValue} />
-          })}
-        </Box>
+      <Box mt={4} height="100%" className={`${classes.scroll} ${classes.list}`}>
+        {_.isArray(groupedMembers) &&
+          groupedMembers
+            .filter((g) => !_.isEmpty(g.value))
+            .map((member, i) => {
+              return (
+                <Box key={i}>
+                  <Typography key={i} variant="h3" className={classes.label}>
+                    {member.title}
+                  </Typography>
+                  {!_.isEmpty(member) &&
+                    member.value.map((m, j) => {
+                      return <UserSelectBoxList key={j} isApplying={member.isApplying} member={m} setValue={handleSelectedValue} />
+                    })}
+                </Box>
+              )
+            })}
       </Box>
     )
   }
@@ -180,7 +226,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
         <LoginRequired>
           <Button style={{ marginLeft: -6 }} onClick={handleClickOpen}>
             <Box display="flex" className={classes.rowContainer}>
-              <Typography>{t('common:following.title')}</Typography>
+              <Typography>{t('common:followers.title')}</Typography>
               <Box display="flex" className={classes.countContainer}>
                 <Typography className={classes.count}>{FormatHelper.kFormatter(community.attributes.member_count)}</Typography>
                 <Typography>{t('common:followers.th')}</Typography>
@@ -189,23 +235,25 @@ const FollowList: React.FC<Props> = ({ community }) => {
           </Button>
         </LoginRequired>
         {isModerator && community.attributes.has_requested && (
-          <Typography className={classes.linkUnapproved} variant="body2">
-            {t('common:community.unapproved_users_title')}
-          </Typography>
+          <Button onClick={handleClickOpen}>
+            <Typography className={classes.linkUnapproved} variant="body2">
+              {t('common:community.unapproved_users_title')}
+            </Typography>
+          </Button>
         )}
       </Box>
       <ESModal open={open} handleClose={handleClose}>
         <ESStickyFooter
           disabled={false}
           noScroll
-          show={isModerator && applyingValues.length > 0}
+          show={isModerator}
           content={
             <>
               <ButtonPrimary
                 round
                 className={`${classes.footerButton} ${classes.confirmButton}`}
                 onClick={handleSubmit}
-                disabled={!hasChosenApplying}
+                disabled={!hasChanged}
               >
                 {t('common:community.confirm_follow_list')}
               </ButtonPrimary>
@@ -222,7 +270,7 @@ const FollowList: React.FC<Props> = ({ community }) => {
                   <Typography variant="h2">{t('common:community.follow_list')}</Typography>
                 </Box>
               </Box>
-              {!!membersList && membersList.length > 0 && (
+              {!_.isEmpty(groupedMembers) && !_.isEmpty(membersList) && (
                 <Box id="scrollableDiv" style={{ height: 600, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
                   <InfiniteScroll
                     dataLength={membersList.length}
@@ -238,9 +286,11 @@ const FollowList: React.FC<Props> = ({ community }) => {
                 </Box>
               )}
               {membersMeta.pending && (
-                <Box className={classes.loader}>
-                  <ESLoader />
-                </Box>
+                <Grid item xs={12}>
+                  <Box my={4} display="flex" justifyContent="center" alignItems="center">
+                    <ESLoader />
+                  </Box>
+                </Grid>
               )}
             </Box>
           </BlankLayout>
@@ -253,26 +303,27 @@ const FollowList: React.FC<Props> = ({ community }) => {
 const useStyles = makeStyles((theme: Theme) => ({
   rowContainer: {
     flexWrap: 'wrap',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   countContainer: {
-    marginLeft: theme.spacing(1),
-    alignItems: 'center',
+    marginLeft: theme.spacing(0.5),
+    alignItems: 'flex-end',
   },
   count: {
-    marginRight: theme.spacing(1.25),
     fontWeight: 'bold',
     fontSize: 24,
+    lineHeight: '28px',
     color: Colors.white,
+  },
+  label: {
+    fontWeight: 'normal',
+    marginBottom: theme.spacing(3.5),
   },
   iconButtonBg: {
     backgroundColor: `${Colors.grey[200]}80`,
     '&:focus': {
       backgroundColor: `${Colors.grey[200]}80`,
     },
-  },
-  loaderCenter: {
-    textAlign: 'center',
   },
   scroll: {
     scrollbarColor: '#222 transparent',
@@ -298,7 +349,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkUnapproved: {
     textDecoration: 'underline',
     color: 'yellow',
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
   },

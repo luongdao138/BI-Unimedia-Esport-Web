@@ -7,7 +7,7 @@ const ESCardMedia: React.FC<CardMediaProps & { cornerIcon?: any; triangleColor?:
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cornerIcon, triangleColor } = rest
   const classes = useStyles({ triangleColor })
-  const IMG_PLACEHOLDER = '/images/img_404.jpg'
+  const IMG_PLACEHOLDER = '/images/default_card.png'
 
   return (
     <>

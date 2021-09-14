@@ -53,7 +53,9 @@ export default {
       before_start_date: 'エントリー終了日時は開催日時より前にしてください',
     },
     no_data: '対象データありません',
+    failed_to_get_data: 'データの取得に失敗しました。',
     dash: '-',
+    dash_separator: 'ー',
     team: 'チーム',
     send: '送信する',
     select_an_image: '画像を選択',
@@ -242,7 +244,10 @@ export default {
     community_id: 'コミュニティコード：',
     copy_shared_url: '共有URLをコピー',
     copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
-    copy_shared_url_toast_text: 'クリップボードにコピーしました。',
+    toast_follow: 'このコミュニティに参加しました',
+    toast_unfollowed: 'フォローを解除しました',
+    toast_follow_manual_approval: 'フォローを申請しました',
+    toast_cancel_follow_request: 'フォロー申請を取り消しました',
     info: 'INFO',
     topic_list: 'トピック一覧',
     search: '検索',
@@ -256,6 +261,7 @@ export default {
       by_title: 'タイトルのみで検索をかける',
       placeholder: 'キーワードからトピックを検索します',
       result: '検索結果',
+      no_data: '該当するトピックは見つかりませんでした。',
     },
     follow_list: 'フォローリスト',
     member_list: {
@@ -276,7 +282,7 @@ export default {
     confirm_follow_list: 'フォローリストを確定する',
     no_data: '該当のコミュニティはありません。',
     topic: {
-      create_success: 'トピックを削除しました。',
+      delete_success: 'トピックを削除しました。',
       view_past_comments: '↑過去のコメントを表示する',
     },
     unfollow_dialog: {
@@ -604,7 +610,9 @@ export default {
       description: `削除したコメントを復元させることはできません。
       削除してよろしいですか？`,
       submit: '削除する',
+      success_toast: 'コメントを削除しました。',
     },
+    has_deleted: 'この投稿は削除されました',
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',
@@ -748,16 +756,9 @@ export default {
         title: '選択したメンバーで確定しますか？',
         description: '',
         additionalText: '確定後はメンバーの変更はできません',
-        confirmationText: '確定する',
+        confirmationText: 'はい',
         cancellationText: 'いいえ',
       },
-    },
-    entry_deadline_dialog: {
-      title: '選択したメンバーで確定しますか？',
-      description: '',
-      additionalText: '確定後はメンバーの変更はできません',
-      confirmationText: '確定する',
-      cancellationText: 'いいえ',
     },
     status: {
       entry_closed: '受付終了',
@@ -827,7 +828,8 @@ export default {
     },
   },
   lobbySearchFilters: {
-    recommended: 'おすすめの募集',
+    all: 'すべて',
+    suggested: 'おすすめの募集',
     beforeStart: 'エントリー受付中',
     inProgress: 'エントリー中の募集',
     organized: 'あなたが作成した募集',
@@ -1221,12 +1223,14 @@ export default {
     disband: {
       title: 'コミュニティを解散する',
       submit: 'コミュニティを解散する',
-      dispand_community: '解散させるコミュニティ',
-      description: 'コミュニティを解散します。',
-      description2: '一度解散したコミュニティのトピックやアップロードした画像は復元できません。',
+      disband_community: '解散させるコミュニティ',
+      description: `コミュニティを解散します。
+      一度解散したコミュニティのトピックやアップロードした画像は復元できません。`,
       disbanded_toast: 'コミュニティを解散しました',
     },
-    community_created_toast: 'コミュニティを作成しました。',
+    community_created_toast: 'コミュニティを作成しました',
+    community_updated_toast: 'コミュニティを編集しました',
+    title_already_in_use: 'コミュニティ名が既に使用中です。',
   },
   topic_create: {
     title: 'トピックを作成する',

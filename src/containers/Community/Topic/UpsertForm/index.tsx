@@ -21,14 +21,12 @@ import { FIELD_TITLES } from './FormModel/field_titles.constants'
 import { showDialog } from '@store/common/actions'
 import DiscardDialog from '../../Partials/DiscardDialog'
 import { NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
-import useCommonData from './useCommonData'
 import { useTranslation } from 'react-i18next'
 import { TopicParams } from '@services/community.service'
 import { useRouter } from 'next/router'
 
 const TopicCreate: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { prefectures } = useCommonData()
   const classes = useStyles()
   const { handleReturn } = useReturnHref()
   const [isConfirm, setIsConfirm] = useState(false)
@@ -151,11 +149,11 @@ const TopicCreate: React.FC = () => {
         <form onSubmit={formik.handleSubmit}>
           <Box>
             {isConfirm ? (
-              <Confirm values={formik.values} prefectures={prefectures.data || null} />
+              <Confirm values={formik.values} />
             ) : (
               <>
                 <Box py={4} className={classes.formContainer}>
-                  {<StepOne formik={formik} prefectures={prefectures || null} />}
+                  {<StepOne formik={formik} />}
                 </Box>
               </>
             )}

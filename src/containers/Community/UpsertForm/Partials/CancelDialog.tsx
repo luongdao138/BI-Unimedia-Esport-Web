@@ -9,6 +9,7 @@ import ESLabel from '@components/Label'
 import { Box, makeStyles, Typography, Theme, Icon, IconButton } from '@material-ui/core'
 import LinkButton from '@components/LinkButton'
 import useCancelDialog from './useCancelDialog'
+import { useRouter } from 'next/router'
 
 type CancelDialogProps = {
   communityName: string
@@ -17,7 +18,9 @@ type CancelDialogProps = {
 const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   const [modal, setModal] = useState(false)
   const classes = useStyles()
-  const { cancelTournament } = useCancelDialog()
+  const { closeCommunity } = useCancelDialog()
+  const { query } = useRouter()
+  const { hash_key } = query
   const { t } = useTranslation(['common'])
 
   const handleClose = () => {
@@ -25,7 +28,7 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   }
 
   const handleSubmit = () => {
-    cancelTournament()
+    closeCommunity(String(hash_key))
     setModal(false)
   }
 
@@ -60,17 +63,16 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   const renderDetailContainer = () => {
     return (
       <Box py={4} className={classes.detailContainer}>
-        <ESLabel label={t('common:community_create.disband.dispand_community')} size="small" />
+        <ESLabel label={t('common:community_create.disband.disband_community')} size="small" />
         <Box className={classes.userInfoContainer} mb={4}>
           <Box display="flex" alignItems="center" mr={2}>
             <Icon className={`fas fa-users ${classes.communityIcon}`} />
           </Box>
-          <Typography variant="body1" style={{ color: Colors.white }}>
+          <Typography variant="body1" className={classes.communityTitle}>
             {communityName}
           </Typography>
         </Box>
         <ESLabel label={t('common:community_create.disband.description')} size="small" />
-        <ESLabel label={t('common:community_create.disband.description2')} size="small" />
       </Box>
     )
   }
@@ -110,6 +112,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   communityIcon: {
     fontSize: 16,
     color: Colors.white,
+  },
+  communityTitle: {
+    color: Colors.white,
+    wordBreak: 'break-all',
   },
   confirmButton: {},
   cancelButton: {},

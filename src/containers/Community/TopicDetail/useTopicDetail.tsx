@@ -5,6 +5,7 @@ import {
   CommentsResponse,
   CommentsListParams,
   PageMeta,
+  TopicDeleteParams,
 } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -20,12 +21,15 @@ const { selectors, actions } = community
 const getTopicDetailMeta = createMetaSelector(actions.getTopicDetail)
 const getDeleteTopicMeta = createMetaSelector(actions.deleteTopic)
 const getCommentsListMeta = createMetaSelector(actions.getCommentsList)
+const getCommentsListPageMeta = createMetaSelector(actions.getCommentsListPage)
+const getCommentsListNextMeta = createMetaSelector(actions.getCommentsListNext)
 
 const useTopicDetail = (): {
   topic: TopicDetail
   getTopicDetail: (TopicDetailParams) => void
   getCommentsList: (CommentsListParams) => void
-  getComments: (params: CommentsListParams) => void
+  getCommentsListNext: (CommentsListParams) => void
+  getCommentsListPage: (CommentsListParams) => void
   deleteTopic: (TopicDetailParams) => void
   resetMeta: () => void
   topicDetailMeta: Meta
@@ -33,35 +37,46 @@ const useTopicDetail = (): {
   createComment: (params: CommentCreateParams) => void
   deleteComment: (hash_key: string) => void
   commentsListMeta: Meta
+  commentsListPageMeta: Meta
+  commentsListNextMeta: Meta
   pages: PageMeta
-  commentsList: Array<CommentsResponse>
+  commentsList: CommentsResponse[]
 } => {
   const dispatch = useAppDispatch()
   const { t } = useTranslation(['common'])
   const router = useRouter()
   const topic = useAppSelector(selectors.getTopicDetail)
-  const commentsList = useAppSelector(selectors.getCommentsList)
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
-  const commentsListMeta = useAppSelector(getCommentsListMeta)
-  const pages = useAppSelector(selectors.getCommentsListMeta)
-  const getComments = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
-  const deleteComment = (params) => dispatch(actions.deleteTopicComment(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
 
-  const deleteTopic = async (params: TopicDetailParams) => {
+  const deleteComment = async (params) => {
+    const resultAction = await dispatch(actions.deleteTopicComment(params))
+    if (actions.deleteTopicComment.fulfilled.match(resultAction)) {
+      dispatch(commonActions.addToast(t('common:topic_comment.delete.success_toast')))
+    }
+  }
+
+  const deleteTopic = async (params: TopicDeleteParams) => {
     const resultAction = await dispatch(actions.deleteTopic(params))
     if (actions.deleteTopic.fulfilled.match(resultAction)) {
-      dispatch(commonActions.addToast(t('common:community.topic.create_success')))
-      await router.push(`${ESRoutes.COMMUNITY}/${router.query.community_id}`)
+      dispatch(commonActions.addToast(t('common:community.topic.delete_success')))
+      await router.push(`${ESRoutes.COMMUNITY}/${router.query.hash_key}`)
       resetTopicMeta()
     }
   }
 
+  const pages = useAppSelector(selectors.getCommentsListMeta)
+  const commentsListMeta = useAppSelector(getCommentsListMeta)
+  const commentsListPageMeta = useAppSelector(getCommentsListPageMeta)
+  const commentsListNextMeta = useAppSelector(getCommentsListNextMeta)
+  const commentsList = useAppSelector(selectors.getCommentsList)
   const getCommentsList = (param: CommentsListParams) => dispatch(actions.getCommentsList(param))
+  const getCommentsListNext = (param: CommentsListParams) => dispatch(actions.getCommentsListNext(param))
+  const getCommentsListPage = (param: CommentsListParams) => dispatch(actions.getCommentsListPage(param))
 
   return {
     getTopicDetail,
@@ -69,14 +84,17 @@ const useTopicDetail = (): {
     deleteTopicMeta,
     createComment,
     deleteComment,
-    getComments,
     getCommentsList,
+    getCommentsListNext,
     resetMeta,
     topic,
     commentsList,
     pages,
     commentsListMeta,
     topicDetailMeta,
+    getCommentsListPage,
+    commentsListPageMeta,
+    commentsListNextMeta,
   }
 }
 

@@ -1,6 +1,7 @@
 import { Box, ButtonBase, makeStyles, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import AddCommentIcon from '@material-ui/icons/AddComment'
 import { useTranslation } from 'react-i18next'
+import { Colors } from '@theme/colors'
 
 type Props = {
   onClick?: () => void
@@ -17,7 +18,7 @@ const TopicCreateButton: React.FC<Props> = ({ onClick }) => {
       {isMobile ? (
         <ButtonBase
           onClick={onClick}
-          className={`gradient button-primary primary-rounded primary-small`}
+          className={`${classes.button} gradient button-primary primary-rounded primary-small`}
           style={{ width: 99, height: 99, borderRadius: 50 }}
         >
           <div className="circle"></div>
@@ -29,7 +30,7 @@ const TopicCreateButton: React.FC<Props> = ({ onClick }) => {
       ) : (
         <ButtonBase
           onClick={onClick}
-          className={`gradient button-primary primary-rounded primary-small`}
+          className={`${classes.button} gradient button-primary primary-rounded primary-small`}
           style={{ width: 220, height: 50 }}
         >
           <div className="circle"></div>
@@ -44,6 +45,16 @@ const TopicCreateButton: React.FC<Props> = ({ onClick }) => {
 }
 
 const useStyles = makeStyles((theme) => ({
+  button: {
+    '&:hover': {
+      '& .MuiSvgIcon-root': {
+        color: Colors.primary,
+      },
+      '& .MuiTypography-root': {
+        color: Colors.primary,
+      },
+    },
+  },
   boxContainer: {
     display: 'flex',
   },
@@ -56,10 +67,12 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   addCommentText: {
-    letterSpacing: -1,
+    letterSpacing: 0,
     margin: theme.spacing(1),
     whiteSpace: 'nowrap',
+    zIndex: 1,
   },
+
   [theme.breakpoints.down('sm')]: {
     addCommentIcon: {
       fontSize: 30,

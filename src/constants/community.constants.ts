@@ -3,6 +3,12 @@ export const PARTICIPANT_TYPE = {
   GUEST: 'guest',
 }
 
+export enum TABS {
+  INFO,
+  TOPIC_LIST,
+  SEARCH,
+}
+
 export const T_TYPE = {
   PUBLIC: 0,
   PRIVATE: 1,
@@ -15,7 +21,7 @@ export const INITIAL_VALUES = {
   ADDRESS: '',
   AREA_ID: 1,
   OPEN_RANGE: 0,
-  JOIN_CONDITION: -1,
+  JOIN_CONDITION: 1,
   FEATURES: [],
   GAME_TITLES: [],
 }
@@ -28,6 +34,11 @@ export const OPEN_RANGE = {
 export const JOIN_CONDITION = {
   MANUAL: 0,
   AUTOMATIC: 1,
+}
+
+export enum OFFICIAL {
+  NOT_OFFICIAL,
+  OFFICIAL,
 }
 
 export const STATUS = {
@@ -56,4 +67,10 @@ export const TOPIC_STATUS = {
   ALL: 'all',
   MINE: 'mine',
   NEW: 'new',
+}
+
+// width to character_count divisor for font size 12
+export const TOPIC_ROW_ITEM_DIVISOR = {
+  NORMAL: 5.65,
+  JAPANESE: 12,
 }

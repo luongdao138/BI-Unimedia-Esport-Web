@@ -28,11 +28,15 @@ import { CommunityFeature } from '@services/community.service'
 import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
 import community from '@store/community'
+import * as commonActions from '@store/common/actions'
+
 const { selectors } = community
-// TODO used once at community edit
+
 type CommunityCreateProps = {
   communityName?: string
 }
+
+const SUBMIT_TITLE_ERROR_MESSAGE = 'Validation failed: Name has already been taken'
 
 const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const dispatch = useAppDispatch()
@@ -43,12 +47,24 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
-  const { editables, isEdit, submit, update, getCommunityFeatures, community } = useCommunityCreate()
+  const {
+    editables,
+    isEdit,
+    submit,
+    update,
+    getCommunityFeatures,
+    community,
+    getCreateCommunityMeta,
+    getUpdateCommunityMeta,
+  } = useCommunityCreate()
   const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const [detailFeatures, setDetailFeatures] = useState([])
 
   const initialValues = getInitialValues(isEdit ? community : undefined, isEdit && detailFeatures)
   const [isDiscard, setIsDiscard] = useState(false)
+
+  const [isAlreadyUsedTitle, setIsAlreadyUsedTitle] = useState(false)
+
   const { t } = useTranslation(['common'])
   const router = useRouter()
 
@@ -65,7 +81,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         game_titles: (values.stepOne.game_titles as GameTitle['attributes'][]).map((game) => game.id),
         join_condition: Number(values.stepOne.join_condition),
       }
-      // console.log(data)
       if (isEdit) {
         update({ hash_key: String(router.query.community_id), data })
       } else {
@@ -81,12 +96,28 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }, [community])
 
   useEffect(() => {
+    if (getCreateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
+      setIsAlreadyUsedTitle(true)
+    } else if (getCreateCommunityMeta.error['message']) {
+      renderFailedDataToast()
+    }
+  }, [getCreateCommunityMeta])
+
+  useEffect(() => {
+    if (getUpdateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
+      setIsAlreadyUsedTitle(true)
+    } else if (getCreateCommunityMeta.error['message']) {
+      renderFailedDataToast()
+    }
+  }, [getUpdateCommunityMeta])
+
+  useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false
       return
     } else {
       const isRequiredFieldsValid = CommunityHelper.checkCommunityRequiredFields(formik.errors)
-      setHasError(!isRequiredFieldsValid)
+      setHasError(_.has(formik.errors, 'stepOne') || !isRequiredFieldsValid)
       if (isConfirm) {
         setIsConfirm(false)
       }
@@ -116,6 +147,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     }
   }, [isEdit])
 
+  const renderFailedDataToast = () => {
+    dispatch(commonActions.addToast(t('common:common.failed_to_get_data')))
+  }
+
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
@@ -128,8 +163,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   }
 
   const handleBack = () => {
-    if (isConfirm) setIsConfirm(false)
-    else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
+    if (isConfirm) {
+      setIsConfirm(false)
+      setIsAlreadyUsedTitle(false)
+    } else _.isEqual(formik.values, initialValues) ? handleReturn() : setIsDiscard(true)
   }
 
   const handleSetConfirm = () => {
@@ -165,7 +202,10 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     })
   }
 
-  const handleUnsetConfirm = () => setIsConfirm(false)
+  const handleUnsetConfirm = () => {
+    setIsConfirm(false)
+    setIsAlreadyUsedTitle(false)
+  }
 
   return (
     <ESStickyFooter
@@ -175,13 +215,20 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       content={
         <>
           {isConfirm ? (
-            <Box className={classes.reviewButtonContainer}>
-              <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
-                {i18n.t('common:common.cancel')}
-              </ButtonPrimary>
-              <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                {i18n.t('common:community_create.confirm.submit')}
-              </ButtonPrimary>
+            <Box className={classes.footerErrorContainer}>
+              {isAlreadyUsedTitle && (
+                <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+                  <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
+                </Box>
+              )}
+              <Box className={classes.reviewButtonContainer}>
+                <ButtonPrimary onClick={handleUnsetConfirm} gradient={false} className={`${classes.footerButton} ${classes.cancelButton}`}>
+                  {i18n.t('common:common.cancel')}
+                </ButtonPrimary>
+                <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
+                  {i18n.t('common:community_create.confirm.submit')}
+                </ButtonPrimary>
+              </Box>
             </Box>
           ) : isEdit ? (
             renderEditButton()
@@ -292,6 +339,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     cancelButton: {
       marginTop: theme.spacing(2),
     },
+  },
+  footerErrorContainer: {
+    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   [theme.breakpoints.up('md')]: {
     formContainer: {

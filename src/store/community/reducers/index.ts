@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
+import _ from 'lodash'
 import { COMMUNITY_ACTION_TYPE } from '../actions/types'
 import {
   CommunityDetail,
@@ -11,24 +12,30 @@ import {
   TopicDetail,
   CommunityMember,
   CommentsResponse,
+  TopicSearchItem,
+  TopicDetailList,
 } from '@services/community.service'
 
 type StateType = {
-  communitiesList?: Array<CommunityResponse>
-  topicList?: Array<TopicDetail>
+  communitiesList?: CommunityResponse[]
+  topicList?: TopicDetailList[]
   communitiesListMeta?: PageMeta
-  communitiesListByUser?: Array<CommunityResponse>
+  communitiesListByUser?: CommunityResponse[]
   communitiesListByUserMeta?: PageMeta
-  topicFollowersList: Array<FollowersTopicResponse> | null
+  topicFollowersList: FollowersTopicResponse[] | null
   topicFollowersListMeta?: PageMeta
   community_detail?: CommunityDetail
-  community_features: Array<CommunityFeature>
-  communityMembers?: Array<CommunityMember>
+  community_features: CommunityFeature[]
+  communityMembers?: CommunityMember[]
   communityMembersMeta?: PageMeta
   create_Topic?: TopicParams
   topicDetail: TopicDetail | null
-  commentsList?: Array<CommentsResponse>
+  commentsList?: CommentsResponse[]
   commentsListMeta?: PageMeta
+  topicSearchList?: TopicSearchItem[]
+  topicSearchListMeta?: PageMeta
+  commentsListNextMeta?: PageMeta
+  topicListMeta?: PageMeta
 }
 
 const initialState: StateType = {
@@ -44,6 +51,7 @@ const initialState: StateType = {
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getTopicList.fulfilled, (state, action) => {
     state.topicList = action.payload.data
+    state.topicListMeta = action.payload.meta
   })
   builder.addCase(actions.getCommunityList.fulfilled, (state, action) => {
     let tmpCommunitiesList = action.payload.data
@@ -99,18 +107,37 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(COMMUNITY_ACTION_TYPE.CLEAR_TOPIC_DETAIL, (state) => {
     state.topicDetail = undefined
   })
+  builder.addCase(actions.searchTopic.fulfilled, (state, action) => {
+    state.topicSearchList = action.payload.data
+    state.topicSearchListMeta = action.payload.meta
+  })
   builder.addCase(actions.followCommunity.fulfilled, (state, action) => {
     state.community_detail = action.payload.data
+  })
+  builder.addCase(actions.unfollowCommunity.fulfilled, (state) => {
+    state.community_detail.attributes.member_count -= 1
+    state.community_detail.attributes.my_role = null
   })
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined
   })
+  builder.addCase(actions.getCommentsListPage.fulfilled, (state, action) => {
+    state.commentsListMeta = action.payload.meta
+  })
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
     let tmpCommentsList = action.payload.data
-    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      tmpCommentsList = state.commentsList.concat(action.payload.data)
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1 && state.commentsList != null) {
+      tmpCommentsList = _.concat(tmpCommentsList, state.commentsList)
     }
     state.commentsList = tmpCommentsList
     state.commentsListMeta = action.payload.meta
+  })
+  builder.addCase(actions.getCommentsListNext.fulfilled, (state, action) => {
+    let tempCommentsList = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 0 && tempCommentsList) {
+      tempCommentsList = _.concat(state.commentsList, tempCommentsList)
+      state.commentsList = tempCommentsList
+      state.commentsListNextMeta = action.payload.meta
+    }
   })
 })
