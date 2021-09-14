@@ -161,6 +161,21 @@ export const getTournamentParticipants = createAsyncThunk<services.GetParticipan
   }
 )
 
+export const getBattleRoyaleParticipants = createAsyncThunk<services.GetParticipantsResponse, services.GetParticipantsParams>(
+  types.GET_BATTLE_ROYALE_PARTICIPANTS,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.getBattleRoyaleParticipants(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 export const resetParticipants = createAction(types.RESET_TOURNAMENT_PARTICIPANTS)
 
 export const getSuggestedTeamMembers = createAsyncThunk<services.GetSuggestedTeamMembersResponse, services.GetSuggestedTeamMembersParams>(

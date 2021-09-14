@@ -35,7 +35,7 @@ const ArenaBattlesEdit: React.FC = () => {
   const classes = useStyles()
   const router = useRouter()
   const { tournament, meta: detailMeta } = useTournamentDetail()
-  const { participants, meta: participantsMeta, getParticipants, resetMeta } = useParticipants()
+  const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
   const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
 
   const [data, setData] = useState<ReturnType<typeof TournamentHelper.getDetailData> | undefined>(undefined)
@@ -90,7 +90,7 @@ const ArenaBattlesEdit: React.FC = () => {
 
   useEffect(() => {
     if (router.query.hash_key && detailMeta.loaded) {
-      getParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+      getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
     }
 
     return () => {
@@ -104,7 +104,7 @@ const ArenaBattlesEdit: React.FC = () => {
 
   useEffect(() => {
     if (randomizeMeta.loaded) {
-      getParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+      getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
     }
   }, [randomizeMeta.loaded])
 

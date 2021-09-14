@@ -57,6 +57,7 @@ export const URI = {
   TOPIC_SEARCH: '/v2/topics/search',
   TOURNAMENTS_SEARCH: '/v2/tournaments/search',
   TOURNAMENTS_MEMBERS: '/v2/tournaments/:id/participants',
+  BATTLE_ROYALE_MEMBERS: '/v2/tournaments/:id/br_participants',
   SUGGESTED_TEAM_MEMBERS: '/v2/tournaments/team_recommended',
   TOURNAMENTS_INTERESTEDS: '/v2/tournaments/:id/interested',
   TOURNAMENTS_MATCHES: '/v2/tournaments/matches/:id',

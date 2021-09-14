@@ -588,6 +588,11 @@ export const getTournamentParticipants = async (params: GetParticipantsParams): 
   return data
 }
 
+export const getBattleRoyaleParticipants = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
+  const { data } = await api.post<GetParticipantsResponse>(URI.BATTLE_ROYALE_MEMBERS.replace(/:id/gi, params.hash_key), params)
+  return data
+}
+
 export const getTournamentInteresteds = async (params: GetParticipantsParams): Promise<GetParticipantsResponse> => {
   const { data } = await api.post<GetParticipantsResponse>(URI.TOURNAMENTS_INTERESTEDS.replace(/:id/gi, params.hash_key), params)
   return data
