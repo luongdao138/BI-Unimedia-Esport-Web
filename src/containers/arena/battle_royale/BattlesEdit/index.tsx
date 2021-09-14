@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { makeStyles } from '@material-ui/core/styles'
-import { Box, Container, Typography, Icon } from '@material-ui/core'
+import { Box, Container, Icon, Typography } from '@material-ui/core'
 import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
 import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
@@ -10,8 +10,8 @@ import { TournamentHelper } from '@utils/helpers/TournamentHelper'
 import { ROLE } from '@constants/tournament.constants'
 import InterestedList from '@containers/arena/Detail/Partials/SelectParticipantModal/InterestedList'
 import { useTranslation } from 'react-i18next'
-import RandomizeDialog from './Partials/RandomizeDialog'
-import FreezeDialog from './Partials/FreezeDialog'
+import { useRandomizeDialog } from './Partials/RandomizeDialog'
+import { useFreezeDialog } from './Partials/FreezeDialog'
 import ESLoader from '@components/FullScreenLoader'
 import useModeratorActions from '@containers/arena/hooks/useModeratorActions'
 import HeaderWithButton from '@components/HeaderWithButton'
@@ -38,14 +38,25 @@ const ArenaBattlesEdit: React.FC = () => {
   const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
   const { freeze, randomize, setParticipants, randomizeMeta, freezeMeta, setParticipantsMeta } = useModeratorActions()
 
-  const [showFreeze, setShowFreeze] = useState(false)
   const [data, setData] = useState<ReturnType<typeof TournamentHelper.getDetailData> | undefined>(undefined)
   const [showParticipants, setShowParticipants] = useState<{ pid: number | undefined; open: boolean }>({ pid: undefined, open: false })
-  const [showRandomize, setShowRandomize] = useState(false)
   const [selecteds, setSelecteds] = useState<ParticipantsResponse[]>([])
   const [clickIndex, setClickIndex] = useState<number>(0)
-
+  const confirmFreeze = useFreezeDialog(false)
+  const confirmRandomize = useRandomizeDialog(false)
   const height = use100vh()
+
+  const handleFreeze = () => {
+    confirmFreeze().then(() => {
+      freeze({ hash_key: tournament.attributes.hash_key, matches: selecteds.map((p) => Number(p.id)) })
+    })
+  }
+
+  const handleRandomize = () => {
+    confirmRandomize().then(() => {
+      randomize(tournament.attributes.hash_key)
+    })
+  }
 
   const closeParticipantsDialog = () => {
     setShowParticipants((prev) => ({
@@ -87,9 +98,9 @@ const ArenaBattlesEdit: React.FC = () => {
     }
   }, [router.query.hash_key, detailMeta.loaded])
 
-  useEffect(() => {
-    setShowFreeze(false)
-  }, [freezeMeta.loaded])
+  // useEffect(() => {
+  //   setShowFreeze(false)
+  // }, [freezeMeta.loaded])
 
   useEffect(() => {
     if (randomizeMeta.loaded) {
@@ -163,23 +174,18 @@ const ArenaBattlesEdit: React.FC = () => {
               />
             ))}
           </Container>
-          {data.is_freezed ? null : (
-            <Box className={classes.actionButtonContainer}>
-              <Box className={classes.actionButton}>
-                <ButtonPrimaryOutlined
-                  onClick={() => setShowRandomize(true)}
-                  leadingIcon={<Icon className="fas fa-random" fontSize="small" />}
-                >
-                  {t('common:arena.randomize_button')}
-                </ButtonPrimaryOutlined>
-              </Box>
-              <Box className={classes.actionButton}>
-                <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={() => setShowFreeze(true)}>
-                  {t('common:arena.freeze_br_button')}
-                </ButtonPrimary>
-              </Box>
+          <Box className={classes.actionButtonContainer}>
+            <Box className={classes.actionButton}>
+              <ButtonPrimaryOutlined onClick={handleRandomize} leadingIcon={<Icon className="fas fa-random" fontSize="small" />}>
+                {t('common:arena.randomize_button')}
+              </ButtonPrimaryOutlined>
             </Box>
-          )}
+            <Box className={classes.actionButton}>
+              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={handleFreeze}>
+                {t('common:arena.freeze_br_button')}
+              </ButtonPrimary>
+            </Box>
+          </Box>
           <InterestedList
             pid={showParticipants.pid}
             tournament={tournament}
@@ -187,19 +193,6 @@ const ArenaBattlesEdit: React.FC = () => {
             handleClose={closeParticipantsDialog}
             onSelect={(participant) => selectedHandler(participant)}
             handleUnset={removeHandler}
-          />
-          <RandomizeDialog
-            open={showRandomize}
-            onClose={() => setShowRandomize(false)}
-            onAction={() => {
-              setShowRandomize(false)
-              randomize(tournament.attributes.hash_key)
-            }}
-          />
-          <FreezeDialog
-            open={showFreeze}
-            onClose={() => setShowFreeze(false)}
-            onAction={() => freeze({ hash_key: tournament.attributes.hash_key, matches: selecteds.map((p) => Number(p.id)) })}
           />
         </div>
       )}
