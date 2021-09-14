@@ -17,6 +17,7 @@ import ReactionButton from './ReactionButton'
 import useDetailVideo from '../useDetailVideo'
 import PreloadButtonReaction from '../PreloadContainer/PreloadButtonReaction'
 import PreloadVideoInfo from '../PreloadContainer/PreloadVideoInfo'
+import { STATUS_VIDEO } from '@services/videoTop.services'
 
 interface LiveStreamContentProps {
   videoType?: VIDEO_TYPE
@@ -25,6 +26,7 @@ interface LiveStreamContentProps {
   ticketAvailableForSale?: boolean
   softKeyboardIsShown?: boolean
   video_id?: string | string[]
+  ticketPrice?: number
 }
 
 const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
@@ -162,31 +164,42 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const getOverlayButtonText = () => {
-    const { userHasViewingTicket, freeToWatch } = props
-
-    if (!freeToWatch && !userHasViewingTicket) {
+    const { userHasViewingTicket, freeToWatch, videoType, ticketAvailableForSale } = props
+    if (!freeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
       return t('live_stream_screen.buy_ticket')
     }
+    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+      return null
+    }
+
     return null
   }
 
   const getOverlayButtonDescriptionText = () => {
-    const { userHasViewingTicket, freeToWatch } = props
-    const buyTicketPrice = 2500
-    if (!freeToWatch && !userHasViewingTicket) {
+    const { userHasViewingTicket, freeToWatch, videoType, ticketAvailableForSale, ticketPrice } = props
+    const buyTicketPrice = ticketPrice ? ticketPrice : 0
+    if (!freeToWatch && !userHasViewingTicket && ticketAvailableForSale) {
       return `${FormatHelper.currencyFormat(buyTicketPrice.toString())} ${t('common.eXe_points')}`
     }
+    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+      return null
+    }
+
     return null
   }
 
   const getOverlayMessage = () => {
-    const { videoType, freeToWatch, userHasViewingTicket } = props
+    const { videoType, freeToWatch, userHasViewingTicket, ticketAvailableForSale } = props
+    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+      return t('live_stream_screen.not_begin_sell_ticket')
+    }
     if (!freeToWatch && !userHasViewingTicket) {
       return t('live_stream_screen.purchase_ticket_note')
     }
-    if (videoType === VIDEO_TYPE.SCHEDULE && (freeToWatch || (!freeToWatch && userHasViewingTicket))) {
+    if (videoType === STATUS_VIDEO.SCHEDULE && (freeToWatch || (!freeToWatch && userHasViewingTicket))) {
       return t('live_stream_screen.livestream_not_start')
     }
+
     return null
   }
   const mediaOverlayPurchaseTicketView = () => {
@@ -232,8 +245,14 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
   }
 
   const showOverlayOnMediaPlayer = () => {
-    const { userHasViewingTicket, videoType, freeToWatch } = props
-    if (videoType === VIDEO_TYPE.SCHEDULE) {
+    const { userHasViewingTicket, videoType, freeToWatch, ticketAvailableForSale } = props
+    if (videoType === STATUS_VIDEO.SCHEDULE && freeToWatch) {
+      return true
+    }
+    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && !ticketAvailableForSale) {
+      return true
+    }
+    if (videoType === STATUS_VIDEO.SCHEDULE && !freeToWatch && userHasViewingTicket) {
       return true
     }
     return !freeToWatch && !userHasViewingTicket

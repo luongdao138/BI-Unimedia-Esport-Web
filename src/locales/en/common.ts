@@ -1068,6 +1068,7 @@ export default {
     premium_message_too_long_post: '文字までです',
     message_placeholder: 'チャットを送信',
     deleted_message: '削除済み',
+    not_begin_sell_ticket: '本配信のチケット販売はまだ開始されていません',
   },
   video_search: {
     video_results: '動画「:key」 の検索結果',

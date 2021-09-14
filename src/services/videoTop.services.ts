@@ -198,8 +198,8 @@ export type VideoDetailData = {
   thumbnail?: string
   title?: string
   description?: string
-  use_ticket?: string
-  ticket_price?: string
+  use_ticket?: number
+  ticket_price?: number
   duration?: any
   archived_end_time?: string
   sell_ticket_start_time?: string

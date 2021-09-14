@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import PlayerTooltip from './PlayerTooltip'
 
 interface Props {
-  //new lib
   onPlayPause?: () => void
   playing?: boolean
 }
@@ -13,26 +12,6 @@ interface Props {
 const Play: React.FC<Props> = ({ onPlayPause, playing = false }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  // useEffect(() => {
-  //   const onTogglePlay = () => {
-  //     setPaused(videoRef.current.paused)
-  //   }
-  //   videoRef.current.addEventListener('play', onTogglePlay)
-  //   videoRef.current.addEventListener('pause', onTogglePlay)
-  //   return () => {
-  //     videoRef.current.removeEventListener('play', onTogglePlay)
-  //     videoRef.current.removeEventListener('pause', onTogglePlay)
-  //   }
-  // })
-  // const handlePlay = () => {
-  //   if (videoRef.current.paused || videoRef.current.ended) {
-  //     setPaused(false)
-  //     videoRef.current.play()
-  //   } else {
-  //     setPaused(true)
-  //     videoRef.current.pause()
-  //   }
-  // }
 
   return (
     <Box pr={2} className={classes.buttonNormal} onClick={onPlayPause} data-tip data-for="togglePlay">

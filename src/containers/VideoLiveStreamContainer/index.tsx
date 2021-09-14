@@ -21,6 +21,7 @@ import PurchaseTicketSuperChat from './PurchaseTicketSuperChat'
 import { useRouter } from 'next/router'
 import usePurchaseTicketSuperChat from './usePurchaseTicket'
 import useDetailVideo from './useDetailVideo'
+import moment from 'moment'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -61,7 +62,7 @@ const VideosTop: React.FC = () => {
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
 
-  const { getVideoDetail, detailVideoResult } = useDetailVideo()
+  const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
 
   // const isPending = meta.pending || meta_my_points.pending
 
@@ -212,10 +213,26 @@ const VideosTop: React.FC = () => {
     </Box>
   )
 
-  const getVideoType = () => VIDEO_TYPE.LIVE_STREAM
-  const isVideoFreeToWatch = () => true
-  const isTicketAvailableForSale = () => true
-  const userHasViewingTicket = () => true
+  const getVideoType = () => detailVideoResult?.status
+  const isVideoFreeToWatch = () => (detailVideoResult?.use_ticket === 0 ? true : false)
+  const isTicketAvailableForSale = () => {
+    const current = moment().valueOf()
+    if (detailVideoResult?.sell_ticket_start_time && detailVideoResult?.use_ticket === 1) {
+      const available = moment(detailVideoResult?.sell_ticket_start_time).valueOf()
+      return available > current
+    }
+    return false
+  }
+  const userHasViewingTicket = () => (userResult?.buy_ticket === 0 ? false : true)
+
+  // const getVideoType = () => 1
+  // const isVideoFreeToWatch = () => false
+  // const isTicketAvailableForSale = () => {
+  //   const current = moment().valueOf()
+  //   const available = moment(detailVideoResult?.sell_ticket_start_time).valueOf()
+  //   return true
+  // }
+  // const userHasViewingTicket = () => false
 
   const changeSoftKeyboardVisibleState = (visible: boolean) => {
     setSoftKeyboardIsShown(visible)
@@ -237,6 +254,7 @@ const VideosTop: React.FC = () => {
           freeToWatch={isVideoFreeToWatch()}
           ticketAvailableForSale={isTicketAvailableForSale()}
           softKeyboardIsShown={softKeyboardIsShown}
+          ticketPrice={detailVideoResult?.ticket_price}
         />
         <Grid container direction="row" className={classes.tabContainer}>
           {getTabs()}
