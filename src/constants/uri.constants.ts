@@ -51,6 +51,7 @@ export const URI = {
   COMMUNITY_MEMBER_REMOVE: '/v2/communities/:id/remove_members',
   COMMUNITY_CLOSE: '/v2/communities/:id/close',
   COMMUNITY_COMMENTS_LIST: '/v2/comments/list',
+  COMMUNITY_SEARCH: '/v2/communities/search',
   TOPIC_LIST: '/v2/communities/topics',
   TOPIC_COMMENT_CREATE: '/v2/comments',
   TOPIC_COMMENT_DELETE: '/v2/comments/:id',
