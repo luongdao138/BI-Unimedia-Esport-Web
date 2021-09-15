@@ -6,7 +6,7 @@ import ESLoader from '@components/FullScreenLoader'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
 import { ROLE } from '@constants/tournament.constants'
 import { useRouter } from 'next/router'
-import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
+import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import { makeStyles } from '@material-ui/core/styles'
 
 const ArenaBattles: React.FC = () => {

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Container, Icon, Typography } from '@material-ui/core'
-import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
+import BRListItem from '@containers/arena/battle_royale/Partials/BRListItem'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
