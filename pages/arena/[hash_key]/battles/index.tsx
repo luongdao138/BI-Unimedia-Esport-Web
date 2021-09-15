@@ -1,4 +1,4 @@
-import PlainLayout from '@layouts/PlainLayout'
+import MainLayout from '@layouts/MainLayout'
 import PageWithLayoutType from '@constants/page'
 import { BattlesContainer } from '@containers/arena'
 import { storeWrapper, AppDispatch } from '@store/store'
@@ -22,9 +22,9 @@ export const getServerSideProps = storeWrapper.getServerSideProps(async ({ store
 
 const ArenaBattlesPage: PageWithLayoutType = () => {
   return (
-    <PlainLayout>
+    <MainLayout loginRequired={false}>
       <BattlesContainer />
-    </PlainLayout>
+    </MainLayout>
   )
 }
 

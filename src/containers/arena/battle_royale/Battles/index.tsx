@@ -1,68 +1,47 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Container, IconButton, Toolbar, Typography } from '@material-ui/core'
-import { ArrowBack } from '@material-ui/icons'
-import BRListItem from './BRListItem'
-import { useState } from 'react'
+import React, { useEffect } from 'react'
+import { Container } from '@material-ui/core'
+import useTournamentDetail from '@containers/arena/hooks/useTournamentDetail'
+import HeaderWithButton from '@components/HeaderWithButton'
+import ESLoader from '@components/FullScreenLoader'
+import useParticipants from '@containers/arena/Detail/Participants/useParticipants'
+import { ROLE } from '@constants/tournament.constants'
 import { useRouter } from 'next/router'
+import BRListItem from '@containers/arena/battle_royale/Battles/BRListItem'
+import { makeStyles } from '@material-ui/core/styles'
 
 const ArenaBattles: React.FC = () => {
-  const [score, setScore] = useState('')
-  const classes = useStyles()
   const router = useRouter()
+  const classes = useStyles()
+
+  const { tournament, meta: detailMeta } = useTournamentDetail()
+  const { participants, brMeta: participantsMeta, getBattleRoyaleParticipants, resetMeta } = useParticipants()
+
+  useEffect(() => {
+    if (router.query.hash_key && detailMeta.loaded) {
+      getBattleRoyaleParticipants({ page: 1, hash_key: router.query.hash_key, role: ROLE.PARTICIPANT })
+    }
+
+    return () => {
+      resetMeta()
+    }
+  }, [router.query.hash_key, detailMeta.loaded])
 
   return (
     <>
-      <AppBar className={classes.appbar}>
-        <Container maxWidth="lg">
-          <Toolbar className={classes.toolbar}>
-            <IconButton className={classes.backButton} onClick={() => router.back()}>
-              <ArrowBack />
-            </IconButton>
-            <Typography variant="h2">第1回 exeCUP -STREET FIGHTER V CE部門-</Typography>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <div className={classes.content}>
-        <Container maxWidth="lg">
-          <BRListItem
-            index="1"
-            avatar="https://s3-ap-northeast-1.amazonaws.com/dev-esports-avatar/users/avatar/30/1618455315-30.jpg"
-            label="わたなべ 1"
-            editable={true}
-            onChange={(value) => setScore(value)}
-            score={score}
-          />
-        </Container>
-      </div>
+      {detailMeta.loaded && <HeaderWithButton title={tournament.attributes.title} />}
+      <Container maxWidth="lg" className={classes.listContainer}>
+        {participants.map((v, i) => (
+          <BRListItem key={i} index={`${i + 1}`} avatar={v.attributes.avatar_url} label={v.attributes.name} editable={false} />
+        ))}
+      </Container>
+      <ESLoader open={detailMeta.pending || participantsMeta.pending} />
     </>
   )
 }
 
 const useStyles = makeStyles(() => ({
-  root: {
-    backgroundColor: '#212121',
-    paddingTop: 60,
-    background: 'url("/images/pattern.png") center 60px repeat-x #212121 fixed',
-  },
-  appbar: {
-    top: 60,
-    backgroundColor: '#000000',
-    borderBottom: '1px solid #FFFFFF30',
-    borderTop: '1px solid #FFFFFF30',
-  },
-  toolbar: {
-    paddingLeft: 0,
-  },
-  content: {
-    paddingTop: 108,
-  },
-  backButton: {
-    backgroundColor: '#4D4D4D',
-    padding: 7,
-    marginRight: 16,
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
+  listContainer: {
+    paddingBottom: 80,
   },
 }))
 

@@ -174,18 +174,20 @@ const ArenaBattlesEdit: React.FC = () => {
               />
             ))}
           </Container>
-          <Box className={classes.actionButtonContainer}>
-            <Box className={classes.actionButton}>
-              <ButtonPrimaryOutlined onClick={handleRandomize} leadingIcon={<Icon className="fas fa-random" fontSize="small" />}>
-                {t('common:arena.randomize_button')}
-              </ButtonPrimaryOutlined>
+          {data.is_freezed ? null : (
+            <Box className={classes.actionButtonContainer}>
+              <Box className={classes.actionButton}>
+                <ButtonPrimaryOutlined onClick={handleRandomize} leadingIcon={<Icon className="fas fa-random" fontSize="small" />}>
+                  {t('common:arena.randomize_button')}
+                </ButtonPrimaryOutlined>
+              </Box>
+              <Box className={classes.actionButton}>
+                <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={handleFreeze}>
+                  {t('common:arena.freeze_br_button')}
+                </ButtonPrimary>
+              </Box>
             </Box>
-            <Box className={classes.actionButton}>
-              <ButtonPrimary type="submit" round fullWidth disabled={!freezable} onClick={handleFreeze}>
-                {t('common:arena.freeze_br_button')}
-              </ButtonPrimary>
-            </Box>
-          </Box>
+          )}
           <InterestedList
             pid={showParticipants.pid}
             tournament={tournament}
