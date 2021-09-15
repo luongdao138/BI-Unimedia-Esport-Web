@@ -601,6 +601,7 @@ export default {
     },
   },
   topic_comment: {
+    there_is_no_topic: '該当のトピックはありません。',
     report: {
       button: 'コメントを通報',
       title: '通報するコメント',
@@ -614,7 +615,8 @@ export default {
       submit: '削除する',
       success_toast: 'コメントを削除しました。',
     },
-    has_deleted: 'この投稿は削除されました',
+    has_deleted_comment: 'この投稿は削除されました。',
+    has_deleted_last_comment: 'この投稿は削除されました',
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',

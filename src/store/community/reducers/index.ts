@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
-import _ from 'lodash'
 import { COMMUNITY_ACTION_TYPE } from '../actions/types'
+import _ from 'lodash'
 import {
   CommunityDetail,
   CommunityResponse,
@@ -36,7 +36,6 @@ type StateType = {
   commentsListMeta?: PageMeta
   topicSearchList?: TopicSearchItem[]
   topicSearchListMeta?: PageMeta
-  commentsListNextMeta?: PageMeta
   topicListMeta?: PageMeta
 }
 
@@ -48,7 +47,7 @@ const initialState: StateType = {
   community_features: [],
   topicList: [],
   topicDetail: null,
-  commentsList: null,
+  commentsList: [],
 }
 
 export default createReducer(initialState, (builder) => {
@@ -132,23 +131,15 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(COMMUNITY_ACTION_TYPE.RESET_COMMUNITY_MEMBERS, (state) => {
     state.communityMembers = undefined
   })
-  builder.addCase(actions.getCommentsListPage.fulfilled, (state, action) => {
-    state.commentsListMeta = action.payload.meta
-  })
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
-    let tmpCommentsList = action.payload.data
-    if (action.payload.meta != undefined && action.payload.meta.current_page > 1 && state.commentsList != null) {
-      tmpCommentsList = _.concat(tmpCommentsList, state.commentsList)
-    }
-    state.commentsList = tmpCommentsList
+    state.commentsList = action.payload.data
     state.commentsListMeta = action.payload.meta
   })
-  builder.addCase(actions.getCommentsListNext.fulfilled, (state, action) => {
-    let tempCommentsList = action.payload.data
-    if (action.payload.meta != undefined && action.payload.meta.current_page > 0 && tempCommentsList) {
-      tempCommentsList = _.concat(state.commentsList, tempCommentsList)
-      state.commentsList = tempCommentsList
-      state.commentsListNextMeta = action.payload.meta
-    }
+  builder.addCase(actions.deleteTopicComment.fulfilled, (state, action) => {
+    state.commentsList = _.map(state.commentsList, (comment) => {
+      return comment.attributes.hash_key === action.meta.arg
+        ? { ...comment, attributes: { ...comment.attributes, deleted_at: 'date' } }
+        : comment
+    })
   })
 })
