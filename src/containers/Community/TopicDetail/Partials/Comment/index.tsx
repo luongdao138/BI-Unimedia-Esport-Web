@@ -28,6 +28,19 @@ type MenuParams = {
   isNotMember: boolean
   isPublic: boolean
 }
+
+export type ReportData = {
+  attributes: {
+    nickname: string
+    user_code: string
+    content: string
+    date: string
+    image: string
+    number: number
+    hash_key: string
+  }
+}
+
 type CommunityHeaderProps = {
   comment: CommentsResponse
   menuParams?: MenuParams
@@ -341,7 +354,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     transition: 'all 0.5s ease',
     borderRadius: 7,
-    width: '66%',
+    maxHeight: 300,
+    maxWidth: 300,
+    objectFit: 'contain',
   },
   popOverImage: {
     maxHeight: '50vh',

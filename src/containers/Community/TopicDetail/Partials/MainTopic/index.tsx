@@ -273,7 +273,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     transition: 'all 0.5s ease',
     borderRadius: 7,
-    width: '66%',
+    maxHeight: 300,
+    maxWidth: 300,
+    objectFit: 'contain',
   },
   [theme.breakpoints.down('sm')]: {
     imageBox: {
