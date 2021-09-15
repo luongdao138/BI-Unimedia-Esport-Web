@@ -160,7 +160,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
         <Box className={classes.filters}>
           {defaultFilterOptions.map((option) => (
             <ESChip
-              isGameList
+              isGameList={true}
               key={option.type}
               color={option.type === filter ? 'primary' : undefined}
               className={classes.filterChip}
@@ -171,7 +171,7 @@ const CommunityContainer: React.FC<CommunityContainerProps> = ({ filter }) => {
           {loginRequiredFilterOptions.map((option) => (
             <LoginRequired key={option.type}>
               <ESChip
-                isGameList
+                isGameList={true}
                 key={option.type}
                 color={option.type === filter ? 'primary' : undefined}
                 className={classes.filterChip}
