@@ -3,9 +3,11 @@ import PageWithLayoutType from '@constants/page'
 import CommunityCreateContainer from '@containers/Community/UpsertForm'
 
 const CommunityCreatePage: PageWithLayoutType = () => {
-  return <CommunityCreateContainer />
+  return (
+    <BlankLayout isWide={false}>
+      <CommunityCreateContainer />
+    </BlankLayout>
+  )
 }
-
-CommunityCreatePage.Layout = BlankLayout
 
 export default CommunityCreatePage

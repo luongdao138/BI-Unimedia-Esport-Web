@@ -17,6 +17,8 @@ import {
 } from '@services/community.service'
 
 type StateType = {
+  searchCommunity?: CommunityResponse[]
+  searchCommunityMeta?: PageMeta
   communitiesList?: CommunityResponse[]
   topicList?: TopicDetailList[]
   communitiesListMeta?: PageMeta
@@ -38,6 +40,7 @@ type StateType = {
 }
 
 const initialState: StateType = {
+  searchCommunity: [],
   communitiesList: [],
   communitiesListByUser: [],
   topicFollowersList: [],
@@ -48,6 +51,14 @@ const initialState: StateType = {
 }
 
 export default createReducer(initialState, (builder) => {
+  builder.addCase(actions.communitySearch.fulfilled, (state, action) => {
+    let searchCommunity = action.payload.data
+    if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
+      searchCommunity = state.searchCommunity.concat(action.payload.data)
+    }
+    state.searchCommunity = searchCommunity
+    state.searchCommunityMeta = action.payload.meta
+  })
   builder.addCase(actions.getTopicList.fulfilled, (state, action) => {
     state.topicList = action.payload.data
     state.topicListMeta = action.payload.meta

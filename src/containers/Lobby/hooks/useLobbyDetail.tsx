@@ -12,12 +12,10 @@ import { getIsAuthenticated } from '@store/auth/selectors'
 import { LobbyDetail } from '@services/lobby.service'
 
 const getMeta = createMetaSelector(actions.getLobbyDetail)
-// const getEntryStatusMeta = createMetaSelector(actions.getEntryStatus)
-// TODO useTournamentDetail-тэй яг адилхан байгаа
+
 const useLobbyDetail = (): {
   lobby: LobbyDetail
   meta: Meta
-  // entryMeta: Meta
   handleBack: () => void
   userProfile: UserProfile
   getUserProfileMeta: Meta
@@ -27,7 +25,6 @@ const useLobbyDetail = (): {
   const isAuth = useAppSelector(getIsAuthenticated)
   const lobby = useAppSelector(selectors.getLobbyDetail)
   const meta = useAppSelector(getMeta)
-  // const entryMeta = useAppSelector(getEntryStatusMeta)
   const { userProfile, getUserProfileMeta } = useGetProfile()
 
   useEffect(() => {
@@ -35,12 +32,6 @@ const useLobbyDetail = (): {
       dispatch(actions.getDetailWithClear(String(query.hash_key)))
     }
   }, [query.hash_key, isAuth])
-
-  // useEffect(() => {
-  //   if (query.hash_key && tournament && userProfile?.id) {
-  //     dispatch(actions.getEntryStatus(String(query.hash_key)))
-  //   }
-  // }, [tournament])
 
   useEffect(() => {
     return function () {
@@ -56,7 +47,6 @@ const useLobbyDetail = (): {
     handleBack,
     userProfile,
     getUserProfileMeta,
-    // entryMeta,
   }
 }
 

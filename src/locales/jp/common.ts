@@ -243,6 +243,8 @@ export default {
     report: '通報',
     community_id: 'コミュニティコード：',
     copy_shared_url: '共有URLをコピー',
+    community_results: 'コミュニティ「:key」 の検索結果',
+    community_results_all: 'コミュニティの検索結果',
     copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
     toast_follow: 'このコミュニティに参加しました',
     toast_unfollowed: 'フォローを解除しました',
@@ -758,16 +760,9 @@ export default {
         title: '選択したメンバーで確定しますか？',
         description: '',
         additionalText: '確定後はメンバーの変更はできません',
-        confirmationText: '確定する',
+        confirmationText: 'はい',
         cancellationText: 'いいえ',
       },
-    },
-    entry_deadline_dialog: {
-      title: '選択したメンバーで確定しますか？',
-      description: '',
-      additionalText: '確定後はメンバーの変更はできません',
-      confirmationText: '確定する',
-      cancellationText: 'いいえ',
     },
     status: {
       entry_closed: '受付終了',
@@ -834,6 +829,9 @@ export default {
       please_review: 'を見直してください',
       holding_period: '開催日時',
       address: '会場詳細',
+    },
+    edit: {
+      submit: 'この内容で編集する',
     },
   },
   lobbySearchFilters: {
@@ -1125,6 +1123,7 @@ export default {
     arena_members_title: 'eXeLAB｜出場メンバー',
     arena_entry_title: 'eXeLAB｜エントリー',
     arena_summary_title: 'eXeLAB｜大会総括',
+    lobby_default_title: 'eXeLAB｜ロビー',
     lobby_detail_title: 'eXeLAB｜ロビー情報',
   },
   lobby_create: {
@@ -1200,6 +1199,7 @@ export default {
     game: 'ゲーム',
     game_placeholder: '選択されていません',
     area: 'エリア',
+    area_detail: 'エリア詳細',
     area_name_placeholder: 'エリア情報を記載',
     public_or_private: 'コミュニティ公開設定',
     public: '公開',
@@ -1221,7 +1221,9 @@ export default {
     },
     confirm: {
       title: 'この内容で作成しますか？',
+      title_edit: 'この内容で編集しますか？',
       submit: '作成する',
+      submit_edit: '編集する',
     },
     edit: {
       title: 'コミュニティを編集する',
@@ -1234,7 +1236,7 @@ export default {
       disband_community: '解散させるコミュニティ',
       description: `コミュニティを解散します。
       一度解散したコミュニティのトピックやアップロードした画像は復元できません。`,
-      disbanded_toast: 'コミュニティを解散しました',
+      disbanded_toast: 'コミュニティを解散しました。',
     },
     community_created_toast: 'コミュニティを作成しました',
     community_updated_toast: 'コミュニティを編集しました',

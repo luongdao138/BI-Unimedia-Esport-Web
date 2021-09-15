@@ -1,4 +1,4 @@
-import { Box, Dialog, makeStyles, Typography, withStyles } from '@material-ui/core'
+import { Box, Dialog, makeStyles, Typography, withStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -28,6 +28,8 @@ const DialogContent = withStyles((theme) => ({
 const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onSubmit, title, description, confirmTitle }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('md'))
 
   const handleClose = () => {
     onClose()
@@ -57,10 +59,10 @@ const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onS
       }}
       PaperProps={{
         style: {
-          margin: 0,
-          maxHeight: '100vh',
-          height: '100vh',
-          width: '100%',
+          margin: isMobile ? 0 : 32,
+          maxHeight: isMobile ? '100vh' : 'calc(100% - 64px)',
+          height: isMobile ? '100vh' : 'initial',
+          width: isMobile ? '100%' : 'calc(100% - 64px)',
         },
       }}
     >

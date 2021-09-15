@@ -16,7 +16,8 @@ export const getTopicList = createAsyncThunk<services.TopicListResponse, service
     }
   }
 )
-export const getCommunityList = createAsyncThunk<services.CommunityListResponse, services.CommunitySearchParams>(
+
+export const getCommunityList = createAsyncThunk<services.CommunityListResponse, services.CommunityListParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_LIST,
   async (param, { rejectWithValue }) => {
     try {
@@ -31,7 +32,22 @@ export const getCommunityList = createAsyncThunk<services.CommunityListResponse,
   }
 )
 
-export const getCommunityListPublic = createAsyncThunk<services.CommunityListResponse, services.CommunitySearchParams>(
+export const communitySearch = createAsyncThunk<services.CommunitySearchResponse, services.CommunitySearchParams>(
+  COMMUNITY_ACTION_TYPE.SEARCH_COMMUNITY,
+  async (param, { rejectWithValue }) => {
+    try {
+      const res = await services.communitySearch(param)
+      return res
+    } catch (error) {
+      if (!error.response) {
+        throw error
+      }
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
+export const getCommunityListPublic = createAsyncThunk<services.CommunityListResponse, services.CommunityListParams>(
   COMMUNITY_ACTION_TYPE.GET_COMMUNITY_LIST,
   async (param, { rejectWithValue }) => {
     try {
@@ -379,3 +395,5 @@ export const getCommentsList = createAsyncThunk<services.CommentsListResponse, s
     }
   }
 )
+
+export const resetSearchCommunity = createAction(COMMUNITY_ACTION_TYPE.RESET_SEARCH_COMMUNITY)

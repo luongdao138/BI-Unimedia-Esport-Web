@@ -8,9 +8,14 @@ export enum CommunityFilterOption {
   organized = 'organized',
 }
 
-export type CommunitySearchParams = {
+export type CommunityListParams = {
   page: number
   filter?: CommunityFilterOption
+}
+
+export type CommunitySearchParams = {
+  page: number
+  keyword: string
 }
 
 export type CommunityListByUserParams = {
@@ -19,6 +24,11 @@ export type CommunityListByUserParams = {
 }
 
 export type CommunityListResponse = {
+  data: CommunityResponse[]
+  meta: PageMeta
+}
+
+export type CommunitySearchResponse = {
   data: CommunityResponse[]
   meta: PageMeta
 }
@@ -331,7 +341,6 @@ export type CommunityDetailResponse = {
 export type TopicParams = {
   title: string
   content: string
-  topic_type: string
   community_hash: string
   attachments?: string
 }
@@ -476,12 +485,17 @@ export type CommentsListParams = {
   comment_hash_key?: string
 }
 
-export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
+export const communitySearch = async (params: CommunitySearchParams): Promise<CommunitySearchResponse> => {
+  const { data } = await api.get<CommunitySearchResponse>(URI.COMMUNITY_SEARCH, { params })
+  return data
+}
+
+export const communityList = async (params: CommunityListParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PRIVATE, { params })
   return data
 }
 
-export const communityListPublic = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
+export const communityListPublic = async (params: CommunityListParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PUBLIC, { params })
   return data
 }

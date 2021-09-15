@@ -1,5 +1,7 @@
 export enum COMMUNITY_ACTION_TYPE {
   GET_COMMUNITY_LIST = 'community/list',
+  SEARCH_COMMUNITY = 'community/search',
+  RESET_SEARCH_COMMUNITY = 'community/reset_search',
   GET_COMMUNITY_LIST_BY_USER = 'community/list_by_user',
   GET_FOLLOWERS_TOPIC_LIST = 'community/topic_followers',
   CLEAR_COMMUNITY_LIST = 'community/clearList',
