@@ -7,7 +7,6 @@ import { LobbyDetail, UpdateParams } from '@services/lobby.service'
 import { useRouter } from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { Meta } from '@store/metadata/actions/types'
-import useLobbyHelper from '../hooks/useLobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
 import _ from 'lodash'
@@ -63,7 +62,6 @@ const useLobbyCreate = (): {
     cover_image_url: true,
   })
 
-  const { isEditable } = useLobbyHelper(lobby)
   const resetMeta = () => dispatch(clearMetaData(actions.createLobby.typePrefix))
   const resetUpdateMeta = () => dispatch(clearMetaData(actions.updateLobby.typePrefix))
   const submit = async (params: LobbyUpsertParams) => {
@@ -91,11 +89,6 @@ const useLobbyCreate = (): {
 
   useEffect(() => {
     if (lobby && router.asPath.endsWith('/edit') && router.query.hash_key) {
-      if (!isEditable) {
-        router.push(ESRoutes.LOBBY_DETAIL.replace(/:id/gi, String(router.query.hash_key)))
-        return
-      }
-
       const _status = lobby.attributes.status
 
       let _editables = { ...editables }

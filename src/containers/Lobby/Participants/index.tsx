@@ -14,6 +14,8 @@ import _ from 'lodash'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { use100vh } from 'react-div-100vh'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { useAppSelector } from '@store/hooks'
 
 export interface ParticipantsProps {
   open: boolean
@@ -28,6 +30,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
   const windowHeight = use100vh()
+  const isAuth = useAppSelector(getIsAuthenticated)
 
   const {
     participants,
@@ -157,7 +160,8 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                   unFollow={onUnFollow}
                   unBlock={onUnBlock}
                   goToProfile={goToProfile}
-                  isMe={Number(userProfile.id) === _.get(p, 'attributes.user_id', '')}
+                  isMe={Number(_.get(userProfile, 'id', -1)) === _.get(p, 'attributes.user_id', '')}
+                  isAuth={isAuth}
                   data={p}
                   key={i}
                 />
