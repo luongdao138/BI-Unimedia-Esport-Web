@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
-import Comment from '@containers/Community/TopicDetail/Partials/Comment'
+import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
 import { Box, useMediaQuery, useTheme, makeStyles, Theme } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
@@ -15,9 +15,11 @@ import useCommunityHelper from '../hooks/useCommunityHelper'
 import useTopicHelper from './useTopicHelper'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
+import { REPORT_TYPE } from '@constants/common.constants'
 
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { useTranslation } from 'react-i18next'
+import ESReport from '@containers/Report'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
@@ -55,6 +57,7 @@ const TopicDetailContainer: React.FC = () => {
 
   const [openDelete, setOpenDelete] = useState(false)
   const [selectedCommentHashKey, setSelectedCommentHashKey] = useState('')
+  const [reportData, setReportData] = useState<ReportData | null>(null)
 
   const handleDeleteComment = () => {
     deleteComment(selectedCommentHashKey)
@@ -103,6 +106,10 @@ const TopicDetailContainer: React.FC = () => {
     deleteTopic({ hash_key: String(topic_hash_key) })
   }
 
+  const handleReportComment = (detail: ReportData) => {
+    setReportData(detail)
+  }
+
   const handleBack = () => back()
 
   if (!render) {
@@ -136,6 +143,7 @@ const TopicDetailContainer: React.FC = () => {
                   handleReply={setReply}
                   setOpenDelete={setOpenDelete}
                   setSelectedCommentHashKey={setSelectedCommentHashKey}
+                  onReport={handleReportComment}
                 />
               )
             })
@@ -170,7 +178,7 @@ const TopicDetailContainer: React.FC = () => {
           </Box>
         )}
 
-        {isAuthenticated && (
+        {isAuthenticated && reportData && (
           <>
             <DiscardDialog
               title={t('common:topic_comment.delete.title')}
@@ -179,6 +187,13 @@ const TopicDetailContainer: React.FC = () => {
               onSubmit={handleDeleteComment}
               description={t('common:topic_comment.delete.description')}
               confirmTitle={t('common:topic_comment.delete.submit')}
+            />
+            <ESReport
+              reportType={REPORT_TYPE.TOPIC_COMMENT}
+              target_id={reportData.attributes.hash_key}
+              data={reportData}
+              open={reportData !== null}
+              handleClose={() => setReportData(null)}
             />
           </>
         )}

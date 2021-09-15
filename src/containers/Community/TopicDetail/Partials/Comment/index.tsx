@@ -45,8 +45,16 @@ type CommunityHeaderProps = {
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
   setOpenDelete?: Dispatch<SetStateAction<boolean>>
   setSelectedCommentHashKey?: Dispatch<SetStateAction<string>>
+  onReport?: (comment: ReportData) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentHashKey }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({
+  comment,
+  menuParams,
+  handleReply,
+  setOpenDelete,
+  setSelectedCommentHashKey,
+  onReport,
+}) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
   const { isAuthenticated } = useCommunityDetail()
@@ -63,7 +71,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     setReplyAnchorEl(null)
   }
 
-  // const { deleteComment, getCommentsList } = useTopicDetail()
   const commentData = comment.attributes
   const hash_key = commentData.hash_key
 
@@ -76,15 +83,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       image: commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
+      avatar_image: commentData.owner_profile,
     },
   }
 
-  const handleReportOpen = () => {
-    setOpenReport(true)
-  }
   const handleDeleteOpen = () => {
     setSelectedCommentHashKey(hash_key)
     setOpenDelete(true)
+  }
+  const handleReport = () => {
+    onReport && onReport(detail)
   }
 
   const handleCommentReply = () => {
@@ -140,7 +148,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
                   )}
                   {!isOwner && (
                     <LoginRequired>
-                      <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                      <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
                     </LoginRequired>
                   )}
                 </ESMenu>
