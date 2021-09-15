@@ -11,6 +11,22 @@ export const getUser = /* GraphQL */ `
       user_name
       delete_flag
       messages {
+        items {
+          id
+          owner
+          text
+          uuid
+          video_id
+          delete_flag
+          video_time
+          display_avatar_time
+          point
+          use_point_id
+          is_premium
+          userId
+          createdAt
+          updatedAt
+        }
         nextToken
       }
       createdAt
@@ -27,6 +43,9 @@ export const listUsers = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -55,6 +74,9 @@ export const getMessage = /* GraphQL */ `
         avatar
         user_name
         delete_flag
+        messages {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -79,6 +101,15 @@ export const listMessages = /* GraphQL */ `
         use_point_id
         is_premium
         userId
+        parent {
+          id
+          uuid
+          avatar
+          user_name
+          delete_flag
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

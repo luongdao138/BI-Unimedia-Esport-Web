@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
+import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery, ButtonBase } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState, useEffect } from 'react'
@@ -18,17 +18,18 @@ import userProfileStore from '@store/userProfile'
 import { UserProfile } from '@services/user.service'
 import API, { GraphQLResult, graphqlOperation } from '@aws-amplify/api'
 import { listMessages, listUsers } from 'src/graphql/queries'
-import { createUser, updateMessage } from 'src/graphql/mutations'
+import { createMessage, createUser, updateMessage } from 'src/graphql/mutations'
 // import { createMessage, deleteMessage } from "src/graphql/mutations";
 import { onCreateMessage, onUpdateMessage } from 'src/graphql/subscriptions'
 import * as APIt from 'src/types/graphqlAPI'
 import useDetailVideo from '../useDetailVideo'
-// import usePurchaseTicketSuperChat from '../usePurchaseTicket'
+import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import ChatTextMessage from '@containers/VideoLiveStreamContainer/ChatContainer/ChatTextMessage'
 import PremiumChatDialog from '@containers/VideoLiveStreamContainer/ChatContainer/PremiumChatDialog'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import DonateMessage from './DonateMessage'
+import Avatar from '@components/Avatar/'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -136,8 +137,31 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [allUsers, setAllUsers] = useState([])
   const [successFlagGetListUSer, setSuccessFlagGetListUSer] = useState(false)
   const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
+  const [messagesDonate, setMessagesDonate] = useState([])
+  const [displaySeeMore, setDisplaySeeMore] = useState(false)
+  const [isMessInBottom, setIsMessInBottom] = useState(false)
+
+  // const getChatData = () =>
+  //   Array(30)
+  //     .fill('')
+  //     .map((_, i) => ({
+  //       id: i,
+  //       user: 'Account Name',
+  //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+  //     }))
+
+  // const [chartDataFake, setChartDataFake] = useState(getChatData())
+  
+
   const { selectors } = userProfileStore
+  
   const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
+  // const userProfile={
+  //   attributes: {
+  //     uuid: "2fdb07560f07e403659fa3ebcdc1ab20"
+  //   }
+  // }
+
   // console.log('userProfile', JSON.stringify(userProfile));
   const initialFruits: APIt.Message[] = []
   const [stateMessages, setStateMessages] = useState(initialFruits)
@@ -148,7 +172,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const { userResult, streamingSecond } = useDetailVideo()
   // const userResult = {streamer: 0}
-  // const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
+  const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
 
   const validationSchema = Yup.object().shape({
@@ -219,6 +243,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }
 
+  const isPremiumChat = (message) => +message.point > 300 && (+message.display_avatar_time > +streamingSecond)
+
   const subscribeAction = () => {
     const pubSubClient = API.graphql(graphqlOperation(onCreateMessage))
     pubSubClient.subscribe({
@@ -227,7 +253,12 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         //@ts-ignore
         const subMessage = sub?.value
         if (subMessage.data.onCreateMessage.video_id === key_video_id) {
-          setStateMessages((stateMessages) => [...stateMessages, subMessage.data.onCreateMessage])
+          const createdMessage = subMessage.data.onCreateMessage
+          setStateMessages((stateMessages) => [...stateMessages, createdMessage])
+          if(isPremiumChat(createdMessage)) {
+            console.log("🚀 ~ subscribeAction ~ isPremiumChat(createdMessage)", isPremiumChat(createdMessage))
+            setMessagesDonate((messages) => [...messages, createdMessage])
+          }
         }
       },
       error: (error) => console.warn(error),
@@ -260,15 +291,55 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   }
 
   useEffect(() => {
+    // console.log("🚀 ~ useEffect ~ streamingSecond", streamingSecond)
+    const newMessagesDonate = messagesDonate.filter(item => isPremiumChat(item))
+    setMessagesDonate(newMessagesDonate)
+  }, [streamingSecond])
+
+  useEffect(() => {
     getListUser()
+    // getUsersDonate()
+    // setInterval(() => {
+    //   // handleSubmitChatContent()
+    //   checkMessIsInBottom()
+    //   setChartDataFake(chartDataFake => [...chartDataFake, {
+    //     id: chartDataFake.length + 2,
+    //     user: 'Account Name ' + (chartDataFake.length + 2),
+    //     content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+    //   }])
+    // }, 2000)
   }, [])
+
+  const filterMessagesDonate = (messages) => {
+    const foundMessages = messages.filter(item => {
+      return isPremiumChat(item)
+    });
+    return foundMessages
+  }
+
+  const getUsersDonate = async () => {
+    try {
+      // point + streaming time 
+      const listQV: APIt.ListMessagesQueryVariables = { filter: { 
+        // video_id: { eq: "2f1141b031696738c1eb72cc450afadb"},
+        video_id: { eq: key_video_id},
+        is_premium: { eq: true },
+        delete_flag: { ne: true },
+      }}
+      const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
+      console.log('getUsersDonate Results; ', messagesResults)
+      setMessagesDonate(filterMessagesDonate(messagesResults.data.listMessages.items.filter(item => item.parent))) 
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const getMessages = async () => {
     try {
       const listQV: APIt.ListMessagesQueryVariables = key_video_id ? { filter: { video_id: { eq: key_video_id } } } : {}
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       console.log('getMessages Results; ', messagesResults)
-      setStateMessages(messagesResults.data.listMessages.items)
+      setStateMessages(messagesResults.data.listMessages.items.filter(item => item.parent))
       subscribeAction()
     } catch (error) {
       console.error(error)
@@ -280,22 +351,22 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       console.log('tạo mới tài khoản vì k tồn tại checkedAllUsers')
       handleCreateUserDB()
     } else {
-      console.log(
-        'checkedAllUsers; ',
-        JSON.stringify(checkedAllUsers),
-        '\nuserProfile; ',
-        JSON.stringify(userProfile),
-        'userProfile.uuid ',
-        userProfile?.attributes?.uuid
-      )
+      // console.log(
+      //   'checkedAllUsers; ',
+      //   JSON.stringify(checkedAllUsers),
+      //   '\nuserProfile; ',
+      //   JSON.stringify(userProfile),
+      //   'userProfile.uuid ',
+      //   userProfile?.attributes?.uuid
+      // )
 
       const currentUser = checkedAllUsers.find((user) => user.uuid === userProfile?.attributes?.uuid)
       if (currentUser) {
-        console.log('Tồn tại currentUser ', currentUser)
+        // console.log('Tồn tại currentUser ', currentUser)
         setChatUser(currentUser)
         setSuccessFlagGetAddUSer(true)
       } else {
-        console.log('tồn tại checkedAllUsers nhưng  userProfile chưa có trong listUser của DynamoDB nên cần tạo mới', userProfile)
+        // console.log('tồn tại checkedAllUsers nhưng  userProfile chưa có trong listUser của DynamoDB nên cần tạo mới', userProfile)
         handleCreateUserDB()
       }
     }
@@ -310,15 +381,15 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   useEffect(() => {
     if (key_video_id) {
       getMessages()
+      getUsersDonate()
     }
   }, [key_video_id])
 
-  // useEffect(() => {
-  //   if (dataPurchaseTicketSuperChat?.code === 200 && purchaseComment) {
-  //     createMess(purchaseComment, purchasePoints[purchaseValueSelected].value)
-  //     setPurchaseComment('')
-  //   }
-  // }, [dataPurchaseTicketSuperChat])
+  useEffect(() => {
+    if (dataPurchaseTicketSuperChat?.code === 200) {
+      setPurchaseDialogVisible(false)
+    }
+  }, [dataPurchaseTicketSuperChat])
 
   async function deleteMsg(idDelete: string) {
     const input = {
@@ -402,7 +473,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         video_time: videoTime + '',
         // point: 500,//optional : show when Post is use pOint
         is_premium: false,
-        userId: chatUser.uuid,
+        userId: chatUser.id,
       }
       if (point) {
         input = {
@@ -416,11 +487,102 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       }
       console.log('input', input)
 
-      // await API.graphql(graphqlOperation(createMessage, { input }))
+      await API.graphql(graphqlOperation(createMessage, { input }))
     }
   }
 
+  // const checkMessIsInBottom = () => {
+  //   const mess_container = document.getElementById('chatBoard')
+  //   // mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
+  //   // // if scrollbar is not in container bottom
+  //   // // height of scroll to top + max height < height of container
+  //   // if(!isMessInBottom){ 
+  //     console.log("🚀 ~ 222 ~ scrollHeight", mess_container.scrollHeight)
+  //   console.log("🚀 ~ 2222 ~ offsetHeight", mess_container.offsetHeight)
+  //   console.log("🚀 ~ 2222 ~ scrollTop", mess_container.scrollTop)
+  //     console.log("🚀 ~ false => Mess Is InBottom: ", mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight)
+  //     if(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
+  //       setIsMessInBottom(false)
+  //       setDisplaySeeMore(true)
+  //     } else {
+  //       // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
+  //       if(mess_container.offsetHeight < mess_container.scrollHeight) {
+  //         setIsMessInBottom(true)
+  //         setDisplaySeeMore(false)
+  //       }
+  //     }
+  //   // }
+   
+  // }
+
+  // console.log("🚀 ~ scrollToCurrentMess ~ offsetTop", current_mess.offsetTop)
+    // mess_container.scrollTop = mess_container.scrollHeight 
+    // current_mess.scrollIntoView()   
+
+    // let scrollDiv = current_mess.offsetTop;
+
+// mess_container.scrollTo({ top: current_mess.offsetTop - (142 - 21), behavior: 'smooth'});
+// mess_container.scrollTo({ top: current_mess.offsetTop - (414 - 42), behavior: 'smooth'});
+
+    // if scrollbar is not in container bottom
+    // height of scroll to top + max height < height of container
+    // if(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
+    //   console.log("🚀 ~1111", mess_container.scrollTop + mess_container.offsetHeight)
+    //   setDisplaySeeMore(true)
+    // } else {
+    //   // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
+    //   if(mess_container.offsetHeight < mess_container.scrollHeight) {
+    //     console.log("🚀 ~2222", mess_container.scrollTop + mess_container.offsetHeight)
+    //     console.log("🚀 ~3", mess_container.scrollHeight)
+    //     mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
+    //     setDisplaySeeMore(false)
+    //   }
+    // }
+  const scrollToCurrentMess = () => {
+    // const current_mess = document.getElementById('chat_20')
+    // console.log("🚀 ~ scrollToCurrentMess ~ current_mess", current_mess)
+    // const mess_container = current_mess.parentNode as Element
+    const mess_container = document.getElementById('chatBoard')
+    // const mess_container = current_mess.parentNode as Element
+    console.log("🚀 ~ scrollToCurrentMess ~ scrollHeight", mess_container.scrollHeight)
+    console.log("🚀 ~ scrollToCurrentMess ~ offsetHeight", mess_container.offsetHeight)
+    console.log("🚀 ~ scrollToCurrentMess ~ scrollTop", mess_container.scrollTop)
+    
+    console.log("🚀 ~ scrollToCurrentMess ~ isMessInBottom", isMessInBottom)
+    if(isMessInBottom) {
+      mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
+      setDisplaySeeMore(false)
+      setIsMessInBottom(false)
+    } else {
+      setDisplaySeeMore(true)
+      // setIsMessInBottom(false)
+    }
+// mess_container.scrollTop = current_mess.offsetTop - (414 - 42);
+  }
+  
+  useEffect(() => { 
+    console.log("🚀 ~ 555555", isMessInBottom)
+    if(isMessInBottom) {
+      scrollToCurrentMess()
+    }
+
+  }, [isMessInBottom])
+    
+
   const handleSubmitChatContent = async () => {
+    // checkMessIsInBottom()
+    // setChartDataFake([...chartDataFake, {
+    //   id: chartDataFake.length + 2,
+    //   user: 'Account Name ' + (chartDataFake.length + 2),
+    //   content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+    // }])
+    
+    // setTimeout(() => {
+      
+      
+      // scrollToCurrentMess()
+    // }, 1000);
+    
     // const content = messageText
     // if (content.length === 0) {
     //   setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
@@ -442,14 +604,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       {purchaseDialogVisible && isMobile && purchaseInfoDialog()}
       <Box className={classes.chatInputContainer}>
         {purchaseDialogVisible && !isMobile && purchaseInfoDialog()}
+        <IconButton id="btnOpenPremiumChatDialog" onClick={purchaseIconClick} className={classes.iconPurchase}>
+          <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
+        </IconButton>
         <Box className={classes.chatBox}>
-          <IconButton id="btnOpenPremiumChatDialog" onClick={purchaseIconClick} className={classes.iconPurchase}>
-            <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
-          </IconButton>
           <OutlinedInput
             id={'message'}
             multiline
-            rows={3}
+            rows={1}
             autoComplete="nope"
             onChange={handleChange}
             placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
@@ -470,6 +632,23 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const chatBoardComponent = () => (
     <Box className={`${classes.chatBoardContainer}`}>
+      <ButtonBase onClick={() => ''} className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}>
+        {i18n.t('common:live_stream_screen.show_more_mess')}
+      </ButtonBase>
+
+     
+      {/* <ESButton
+        onClick={() => {
+          return ''
+        }}
+        className={classes.btn_show_more}
+        variant="outlined"
+        round
+        fullWidth
+        size="large"
+      >
+        {i18n.t('common:live_stream_screen.show_more_mess')}
+      </ESButton> */}
       <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
         {/* <DonateMessage message={msg}/> */}
         <Box
@@ -479,7 +658,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           }}
         ></Box>
       </Box>
-      <Box className={classes.chatBoard}>
+      <Box className={classes.chatBoard} id="chatBoard">
         {stateMessages
           // sort messages oldest to newest client-side
           .sort((a: any, b: any) => a.createdAt.localeCompare(b.createdAt))
@@ -506,17 +685,26 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
               ''
             )
           })}
+        {/* {chartDataFake.map((message, index) => {
+          const { user, content, id } = message
+          return (
+            <Typography key={id} id={`chat_${id}`}>
+              <span className={classes.chatMessageUser}>{`${user}: `}</span>
+              {index + ' ' + content}
+            </Typography>
+          )
+        })}   */}
       </Box>
       {chatInputComponent()}
     </Box>
   )
-  const getUserWatchingList = () =>
-    Array(20)
-      .fill('')
-      .map((_, i) => ({
-        id: i,
-        user_avatar: '/images/dataVideoFake/fake_avatar.png',
-      }))
+  // const getUserWatchingList = () =>
+  //   Array(20)
+  //     .fill('')
+  //     .map((_, i) => ({
+  //       id: i,
+  //       user_avatar: '/images/dataVideoFake/fake_avatar.png',
+  //     }))
 
   const userDoesNotHaveViewingTicketView = () => (
     <Box className={classes.chatPurchaseTicketBox}>
@@ -524,29 +712,36 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     </Box>
   )
 
-  const scrollToCurrentMess = () => {
-    const current_mess = document.getElementById('chat_23')
-    const mess_container = current_mess.parentNode as Element
-    mess_container.scrollTop = current_mess.offsetTop
-  }
+  
 
+  // const mess_container = document.getElementById('chatBoard')
+  // if(mess_container) {
+  //   mess_container.onscroll = function() {
+  //     if (mess_container.scrollTop + mess_container.offsetHeight >= mess_container.scrollHeight) {
+  //         // console.log("🚀 ~ 000", mess_container)
+  //         setDisplaySeeMore(false)
+  //         // you're at the bottom of the page
+  //     }
+  //   };
+  // }
   const chatContent = () => (
     <Box className={classes.chatContent}>
-      <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button>
+      {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
       <Box className={classes.userWatchingList}>
-        {getUserWatchingList().map(({ id, user_avatar }) => (
+        {messagesDonate.sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt)).map((item) => (
           <Box
-            key={id}
+            key={item.id}
             className={classes.userWatchingItem}
+            style={{ backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor }}
             onClick={() => {
               if (messActiveUser || messActiveUser === 0) {
                 setMessActiveUser('')
               } else {
-                setMessActiveUser(id)
+                setMessActiveUser(item.id)
               }
             }}
           >
-            <img src={user_avatar} />
+            <Avatar src={item?.parent?.avatar ? item.parent.avatar : '/images/avatar.png'} size={32} alt={item.parent.user_name} />
           </Box>
         ))}
       </Box>

@@ -9,6 +9,7 @@ import ReactPlayer from 'react-player'
 import screenfull from 'screenfull'
 import ESLoader from '@components/Loader'
 
+import useDetailVideo from '../useDetailVideo'
 interface PlayerProps {
   src?: string
   thumbnail?: string
@@ -44,6 +45,14 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     ended: false,
     loading: true,
   })
+
+  const { changeStreamingSecond, streamingSecond } = useDetailVideo()
+
+  useEffect(() => {
+    if(Math.floor(playedSeconds) !== streamingSecond) {
+      changeStreamingSecond(Math.floor(playedSeconds))
+    }
+  }, [playedSeconds])
 
   const onProgress = (event) => {
     setPlayedSeconds(event.playedSeconds)
