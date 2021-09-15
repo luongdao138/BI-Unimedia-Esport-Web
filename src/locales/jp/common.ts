@@ -1194,6 +1194,7 @@ export default {
     game: 'ゲーム',
     game_placeholder: '選択されていません',
     area: 'エリア',
+    area_detail: 'エリア詳細',
     area_name_placeholder: 'エリア情報を記載',
     public_or_private: 'コミュニティ公開設定',
     public: '公開',
@@ -1215,7 +1216,9 @@ export default {
     },
     confirm: {
       title: 'この内容で作成しますか？',
+      title_edit: 'この内容で編集しますか？',
       submit: '作成する',
+      submit_edit: '編集する',
     },
     edit: {
       title: 'コミュニティを編集する',
@@ -1228,7 +1231,7 @@ export default {
       disband_community: '解散させるコミュニティ',
       description: `コミュニティを解散します。
       一度解散したコミュニティのトピックやアップロードした画像は復元できません。`,
-      disbanded_toast: 'コミュニティを解散しました',
+      disbanded_toast: 'コミュニティを解散しました。',
     },
     community_created_toast: 'コミュニティを作成しました',
     community_updated_toast: 'コミュニティを編集しました',
