@@ -3,12 +3,10 @@ import { LobbyDetail } from '@services/lobby.service'
 import { Box, Theme, makeStyles, Typography } from '@material-ui/core'
 import { LOBBY_STATUS, LOBBY_PARTICIPANT_STATUS, MAIN_ACTIONS } from '@constants/lobby.constants'
 import ButtonPrimary from '@components/ButtonPrimary'
-// import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
 import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
 import LinkButton from '@components/LinkButton'
-// import { useTranslation } from 'react-i18next'
 
 interface Props {
   lobby: LobbyDetail
