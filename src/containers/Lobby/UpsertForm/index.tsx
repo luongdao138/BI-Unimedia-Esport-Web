@@ -30,6 +30,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
+import withProtected from '@containers/Lobby/utils/withProtected'
 
 let activeTabIndex = 0
 
@@ -350,4 +351,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default LobbyCreate
+export default withProtected(LobbyCreate)
