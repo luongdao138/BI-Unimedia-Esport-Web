@@ -98,6 +98,7 @@ const InfoContainer: React.FC = () => {
             classes={{ root: classes.input }}
             margin="dense"
             endAdornment={renderIcon()}
+            inputProps={{ maxLength: 50 }}
           />
 
           <Button

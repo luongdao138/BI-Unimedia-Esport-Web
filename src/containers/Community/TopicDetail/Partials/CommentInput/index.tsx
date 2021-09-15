@@ -1,8 +1,8 @@
-import { Box, IconButton, Icon, Typography, ButtonBase } from '@material-ui/core'
+import { Box, IconButton, Icon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import InputBase from '@material-ui/core/InputBase'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
@@ -13,15 +13,14 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { useAppDispatch } from '@store/hooks'
 import { showDialog } from '@store/common/actions'
 import { NG_WORD_AREA, NG_WORD_DIALOG_CONFIG } from '@constants/common.constants'
-import theme from '@theme/index'
 import useTopicDetail from '../../useTopicDetail'
 
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
-  handleReply?: (params: { hash_key: string; id: number } | any) => void
+  handleReply?: (params: { hash_key: string; comment_no: number } | any) => void
   loadMore: () => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply, loadMore }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, loadMore }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
@@ -33,6 +32,12 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply, loa
   const [isUploading, setUploading] = useState(false)
   const [imageURL, setImageURL] = useState('')
   const [inputText, setInputText] = useState('')
+
+  useEffect(() => {
+    if (!_.isEmpty(reply_param)) {
+      setInputText(inputText.concat('>>' + reply_param.comment_no))
+    }
+  }, [reply_param])
 
   const handleUpload = (file: File) => {
     setUploading(true)
@@ -59,7 +64,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply, loa
       loadMore()
       setInputText('')
       setImageURL('')
-      handleReply({})
     } else {
       dispatch(showDialog({ ...NG_WORD_DIALOG_CONFIG, actionText: NG_WORD_AREA.chat_section }))
     }
@@ -76,16 +80,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, handleReply, loa
           <ImageUploader src={imageURL} onChange={handleUpload} isUploading={isUploading} />
         </Box>
         <Box className={classes.inputCont}>
-          <ButtonBase className={classes.reply} onClick={() => handleReply([])}>
-            <Typography className={classes.replyText} variant="body1">
-              {!_.isEmpty(reply_param) && `>>${reply_param.comment_no}`}
-            </Typography>
-          </ButtonBase>
           <InputBase
             value={inputText}
             onChange={handleChange}
             className={classes.input}
-            style={{ paddingTop: !_.isEmpty(reply_param) && theme.spacing(4) }}
             multiline
             rowsMax={9}
             placeholder={t('common:topic_create.comment_placeholder')}
@@ -146,10 +144,6 @@ const useStyles = makeStyles((theme) => ({
     top: theme.spacing(1),
     left: theme.spacing(1.5),
     zIndex: 2,
-  },
-  replyText: {
-    color: Colors.primary,
-    textDecoration: 'underline',
   },
   sendCont: {
     display: 'flex',

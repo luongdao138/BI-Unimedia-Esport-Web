@@ -22,6 +22,8 @@ import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 
+let currentReplyNumberRectLeft = null
+
 type MenuParams = {
   isTopicOwner: boolean
   isModerator: boolean
@@ -33,8 +35,9 @@ type CommunityHeaderProps = {
   menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
 }
+
 const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply }) => {
-  const classes = useStyles()
+  const classes = useStyles({ currentReplyNumberRectLeft })
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
@@ -47,6 +50,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const handleClickReply = (event) => {
     setReplyAnchorEl(event.currentTarget)
+    currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left
   }
 
   const handleCloseReply = () => {
@@ -67,6 +71,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       hash_key: commentData.hash_key,
     },
   }
+
+  const replyData = commentData
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -94,15 +100,29 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     )
   }
 
+  const reply_regex = /(>>[0-9]+)+/g
+
   const newLineText = (text) => {
     if (commentData?.deleted_at) {
       return <Typography className={classes.content}>{t('common:topic_comment.has_deleted') + '。'}</Typography>
     }
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
-        {str}
+        {_.map(_.split(str, reply_regex), (content, index) => {
+          return content.match(reply_regex) ? renderPopover(content, index) : content
+        })}
       </Typography>
     ))
+  }
+
+  const renderPopover = (content, index) => {
+    return (
+      <>
+        <Link aria-describedby={index} onClick={handleClickReply} className={classes.reply}>
+          <Typography className={classes.replied_id}>{content}</Typography>
+        </Link>
+      </>
+    )
   }
 
   const notDeletedComment = () => {
@@ -142,51 +162,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           </Box>
           {!!commentData && !!commentData.main_comment && (
             <>
-              <Link aria-describedby={'reply'} onClick={handleClickReply} className={classes.reply}>
+              <Link onClick={handleClickReply} className={classes.reply}>
                 <Typography>{`>>${commentData.main_comment.comment_no}`}</Typography>
               </Link>
-              <Popover
-                id={'reply'}
-                open={Boolean(replyAnchorEl)}
-                anchorEl={replyAnchorEl}
-                className={classes.mainComment}
-                onClose={handleCloseReply}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                transformOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-              >
-                <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-                  <Box className={classes.userInfoContainerMain}>
-                    <Typography className={classes.number}>{commentData.main_comment.comment_no}</Typography>
-                    <Box ml={1}>
-                      <ESAvatar
-                        className={classes.avatar}
-                        alt={commentData.main_comment.owner_nickname}
-                        src={commentData.main_comment.owner_profile}
-                      />
-                    </Box>
-                    <Box className={classes.userInfoBox} ml={1}>
-                      <Typography className={classes.username}>{commentData.main_comment.owner_nickname}</Typography>
-                      <Typography className={classes.userCode}>{'@' + commentData.main_comment.user_code}</Typography>
-                    </Box>
-                  </Box>
-                  <Box display="flex" alignItems="center">
-                    <Typography className={classes.date}>{CommonHelper.staticSmartTime(commentData.main_comment.created_at)}</Typography>
-                    <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
-                      <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
-                    </IconButton>
-                  </Box>
-                </Box>
-                <Box mb={3}>
-                  <Typography className={classes.content}>{commentData.main_comment.content}</Typography>
-                  {commentData.main_comment?.assets_url && renderClickableImage(commentData.main_comment?.assets_url, true)}
-                </Box>
-              </Popover>
             </>
           )}
           <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
@@ -218,6 +196,48 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             />
           </>
         )}
+
+        <Popover
+          open={Boolean(replyAnchorEl)}
+          anchorEl={replyAnchorEl}
+          className={classes.mainComment}
+          onClose={handleCloseReply}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+        >
+          <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
+            <Box className={classes.userInfoContainerMain}>
+              <Typography className={classes.number}>{replyData?.main_comment?.comment_no}</Typography>
+              <Box ml={1}>
+                <ESAvatar
+                  className={classes.avatar}
+                  alt={replyData?.main_comment?.owner_nickname}
+                  src={replyData?.main_comment?.owner_profile}
+                />
+              </Box>
+              <Box className={classes.userInfoBox} ml={1}>
+                <Typography className={classes.username}>{replyData?.main_comment?.owner_nickname}</Typography>
+                <Typography className={classes.userCode}>{'@' + replyData?.main_comment?.user_code}</Typography>
+              </Box>
+            </Box>
+            <Box display="flex" alignItems="center">
+              <Typography className={classes.date}>{CommonHelper.staticSmartTime(replyData?.main_comment?.created_at)}</Typography>
+              <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+              </IconButton>
+            </Box>
+          </Box>
+          <Box mb={3}>
+            <Typography className={classes.content}>{replyData?.main_comment?.content}</Typography>
+            {replyData?.main_comment?.assets_url && renderClickableImage(replyData?.main_comment?.assets_url, true)}
+          </Box>
+        </Popover>
       </>
     )
   }
@@ -256,6 +276,11 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  replied_id: {
+    color: Colors.primary,
+    textDecoration: 'underline',
+    display: 'inline',
   },
   container: {
     display: 'flex',
@@ -372,7 +397,7 @@ const useStyles = makeStyles((theme) => ({
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: 8,
+        left: (props: { currentReplyNumberRectLeft: number }) => props.currentReplyNumberRectLeft || 8,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
