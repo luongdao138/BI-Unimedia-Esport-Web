@@ -1,12 +1,13 @@
 // import ESLoader from '@components/Loader'
-import { makeStyles, Theme } from '@material-ui/core'
+import { Icon, makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 // import { Player, ControlBar, BigPlayButton, ProgressControl } from 'video-react'
 import ControlBarPlayer from './ControlBar'
 import SeekBar from './ControlComponent/SeekBar'
 import ReactPlayer from 'react-player'
 import screenfull from 'screenfull'
+import ESLoader from '@components/Loader'
 
 interface PlayerProps {
   src?: string
@@ -34,14 +35,19 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
   const reactPlayerRef = useRef(null)
   const playerContainerRef = useRef(null)
   const [isLive, setIsLive] = useState(false)
+
+  //As of Chrome 66, videos must be muted in order to play automatically
   const [state, setState] = useState({
     playing: false,
-    muted: false,
+    muted: true,
+    volume: 0,
+    ended: false,
+    loading: true,
   })
-  const [volumePlayer, setVolumePlayer] = useState(1)
 
   const onProgress = (event) => {
     setPlayedSeconds(event.playedSeconds)
+    setState({ ...state, loading: false })
     if (isLive) {
       setDurationPlayer(event.loadedSeconds)
     }
@@ -73,8 +79,8 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     player.current = IVSPlayer.create() //MediaPlayer
     // player.current.attachHTMLVideoElement(videoEl.current)
     player.current.load(STREAM_PLAYBACK_URL)
-    player.current.play()
-    player.current.setAutoplay(true)
+    // player.current.play()
+    // player.current.setAutoplay(true)
 
     player.current.addEventListener(READY, onStateChange)
     player.current.addEventListener(PLAYING, onStateChange)
@@ -104,11 +110,6 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     setState({ ...state, playing: false })
   }
 
-  const onHandleVolume = (value) => {
-    setVolumePlayer(value)
-    setState({ ...state, muted: value > 0 ? false : true })
-  }
-
   const toggleFullScreen = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
@@ -116,38 +117,80 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
   }
 
   const handleMute = () => {
-    setState({ ...state, muted: !state.muted })
+    setState({ ...state, muted: !state.muted, volume: !state.muted ? 0 : 1 })
   }
 
-  const { playing, muted } = state
+  const handleChangeVol = (_, val) => {
+    setState({ ...state, volume: val, muted: val === 0 ? true : false })
+  }
+  const handleChangeVolDrag = (_, val) => {
+    setState({ ...state, volume: val, muted: val === 0 ? true : false })
+  }
+  const onEnded = () => {
+    setState({ ...state, ended: true })
+  }
+  const handlePlayPauseOut = () => {
+    setState({ ...state, playing: !state.playing })
+  }
+  const onError = (error, data) => {
+    console.warn('onError player', error, data)
+  }
+  const onBuffer = () => {
+    setState({ ...state, loading: true })
+  }
+  const onSeek = () => {
+    setState({ ...state, loading: true })
+  }
+  const onReady = () => {
+    setState({ ...state, loading: false })
+  }
+
+  const { playing, muted, volume, ended, loading } = state
   return (
     <div className={classes.videoPlayer}>
       <div ref={playerContainerRef} className={classes.playerContainer}>
-        <ReactPlayer
-          ref={reactPlayerRef}
-          url={STREAM_PLAYBACK_URL}
-          // controls
-          playsinline
-          width="100%"
-          height={'100%'}
-          playing={playing}
-          onProgress={onProgress}
-          onDuration={onDuration}
-          // onBuffer={onBuffer}
-          onPlay={onPlay}
-          onPause={onPause}
-          volume={volumePlayer}
-          muted={muted}
-          className={classes.reactPlayer}
-        />
+        <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
+          <ReactPlayer
+            ref={reactPlayerRef}
+            url={STREAM_PLAYBACK_URL}
+            playsinline
+            width="100%"
+            height={'100%'}
+            playing={playing}
+            onProgress={onProgress}
+            onDuration={onDuration}
+            onBuffer={onBuffer}
+            onPlay={onPlay}
+            onPause={onPause}
+            volume={volume}
+            muted={muted}
+            onEnded={onEnded}
+            className={classes.reactPlayer}
+            config={{
+              file: {
+                attributes: {
+                  autoPlay: false,
+                  muted: muted,
+                  volume: volume,
+                },
+              },
+            }}
+            onError={onError}
+            onReady={onReady}
+            onSeek={onSeek}
+          />
+          {ended ||
+            (!playing && (
+              <div className={classes.playOverView}>
+                <Icon className={`fas fa-play ${classes.fontSizeLarge}`} />
+              </div>
+            ))}
+        </div>
 
         <div className={classes.processControl}>
           <SeekBar videoRef={reactPlayerRef} durationsPlayer={durationPlayer} currentTime={playedSeconds} />
           <div className={classes.controlOut}>
             <ControlBarPlayer
-              onChangeVolume={(value) => {
-                onHandleVolume(value)
-              }}
               videoRef={reactPlayerRef}
               onPlayPause={handlePlayPause}
               playing={playing}
@@ -156,60 +199,56 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
               currentTime={playedSeconds}
               handleFullScreen={toggleFullScreen}
               onMute={handleMute}
+              onChangeVol={handleChangeVol}
+              onChangeVolDrag={handleChangeVolDrag}
+              volume={volume}
             />
           </div>
         </div>
-      </div>
-      {/* {playState?.ended && <div className={classes.blurBackground} />} 
-       {playState?.paused && (
-          <div className={classes.playOverView}>
-            <Icon className={`fas fa-play ${classes.fontSizeLarge}`} /> 
-       <img src={'/images/ic_play_big.svg'} /> 
-       </div>
+        {loading && (
+          <div className={classes.loading}>
+            <ESLoader />
+          </div>
         )}
-        {(playState?.error === null && !playState.waiting) ||
-          (playState?.readyState !== 0 && (
-            <div className={classes.playOverView}>
-              <ESLoader />
-            </div>
-          ))} */}
+      </div>
     </div>
   )
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  process: (props: { checkStatusVideo: number }) => {
-    return {
-      zIndex: 1,
-      opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
-      '& .video-react-slider-bar': {},
-      '& .video-react-play-progress': {
-        backgroundColor: '#FF4786',
-        height: 7,
-      },
-      '& .video-react-progress-holder': {
-        backgroundColor: '#4D4D4D',
-        position: 'absolute',
-        bottom: 40,
-        width: '100%',
-        height: 7,
-      },
-      '& .video-react-control-text': {
-        display: 'none',
-      },
-      '& .video-react-load-progress': {},
-    }
-  },
-  bigPlayButton: {
-    display: 'none',
-    '& .video-react-big-play-button': {},
-    '& .video-react-big-play-button-left': {},
-    '& .video-react-control-text': {
-      display: 'none',
-    },
-  },
+  // process: (props: { checkStatusVideo: number }) => {
+  //   return {
+  //     zIndex: 1,
+  //     opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
+  //     '& .video-react-slider-bar': {},
+  //     '& .video-react-play-progress': {
+  //       backgroundColor: '#FF4786',
+  //       height: 7,
+  //     },
+  //     '& .video-react-progress-holder': {
+  //       backgroundColor: '#4D4D4D',
+  //       position: 'absolute',
+  //       bottom: 40,
+  //       width: '100%',
+  //       height: 7,
+  //     },
+  //     '& .video-react-control-text': {
+  //       display: 'none',
+  //     },
+  //     '& .video-react-load-progress': {},
+  //   }
+  // },
+  // bigPlayButton: {
+  //   display: 'none',
+  //   '& .video-react-big-play-button': {},
+  //   '& .video-react-big-play-button-left': {},
+  //   '& .video-react-control-text': {
+  //     display: 'none',
+  //   },
+  // },
   playOverView: {
     backgroundColor: 'rgba(0,0,0,0.3)',
+    // backgroundColor: 'rgba(174,3,250,0.3)',
     height: '100%',
     width: '100%',
     position: 'absolute',
@@ -218,6 +257,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1,
+  },
+  loading: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    // backgroundColor: 'rgba(174,3,250,0.7)',
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 99,
   },
   [theme.breakpoints.down('xs')]: {
     fontSizeLarge: {
@@ -225,21 +278,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   //video-react-video
-  videoPlayerCustom: {
-    '& .video-react-video': {
-      display: 'flex',
-      width: '100%',
-      height: '100%',
-    },
-    '&:hover $controlBar': {
-      transition: 'opacity 0.3s ease-in',
-      opacity: 1,
-    },
-    '&:hover $process': {
-      opacity: 1,
-      transition: 'opacity 0.3s ease-in',
-    },
-  },
+  // videoPlayerCustom: {
+  //   '& .video-react-video': {
+  //     display: 'flex',
+  //     width: '100%',
+  //     height: '100%',
+  //   },
+  //   '&:hover $controlBar': {
+  //     transition: 'opacity 0.3s ease-in',
+  //     opacity: 1,
+  //   },
+  //   '&:hover $process': {
+  //     opacity: 1,
+  //     transition: 'opacity 0.3s ease-in',
+  //   },
+  // },
   controlBar: (props: { checkStatusVideo: number }) => {
     return {
       width: '100%',
@@ -290,7 +343,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
   },
   controlOut: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    // backgroundColor: 'rgba(0,0,0,0.3)',
     display: 'flex',
     justifyContent: 'space-between',
   },
@@ -307,9 +360,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       // alignItems: 'center',
       // paddingLeft: 26,
       // justifyContent: 'space-between',
-      zIndex: 9,
+      zIndex: 99,
       // transition: 'opacity 0.3s ease-in',
       opacity: props.checkStatusVideo === 1 ? 1 : 0, //always show controlBar by status video
+      background: 'linear-gradient(rgb(128 128 128 / 0%) 20%, rgb(39 39 39) 100%)',
     }
   },
   playerContainer: {},
@@ -322,4 +376,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default VideoPlayer
+export default memo(VideoPlayer)

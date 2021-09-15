@@ -14,13 +14,14 @@ interface ControlProps {
   currentTime?: number
   durationsPlayer?: number
   handleFullScreen?: () => void
-  onChangeVolume?: (value?: number) => void
   muted?: boolean
   onMute?: () => void
+  onChangeVol?: (_, value) => void
+  onChangeVolDrag?: (_, value) => void
+  volume?: number
 }
 
 const ControlBarPlayer: React.FC<ControlProps> = ({
-  onChangeVolume,
   videoRef,
   onPlayPause,
   playing = false,
@@ -29,31 +30,13 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
   handleFullScreen,
   muted,
   onMute,
+  onChangeVol,
+  onChangeVolDrag,
+  volume,
 }) => {
   const classes = useStyles()
   const { t } = useTranslation('common')
-  const [volumeValue, setVolumeValue] = useState<number>(1)
-  const [isMuted, setIsMuted] = useState<boolean>(muted)
   const [isFull, setFull] = useState<boolean>(false)
-
-  const handleChange = (_, newValue) => {
-    setVolumeValue(newValue)
-    // setVolume(newValue)
-    setIsMuted(newValue !== 0 ? false : true)
-    onChangeVolume(newValue)
-  }
-  const handleClickChange = (_, value) => {
-    setVolumeValue(value)
-    // setVolume(newValue)
-    setIsMuted(value !== 0 ? false : true)
-    onChangeVolume(value)
-  }
-  const matchMuteVolume = () => {
-    setIsMuted(!isMuted)
-    setVolumeValue(!isMuted ? 0 : 1)
-    onChangeVolume(!isMuted ? 0 : 1)
-    onMute()
-  }
 
   //Tooltip
   // const PlayerTooltip = (id: string, title: string, offset?: any) => {
@@ -75,34 +58,23 @@ const ControlBarPlayer: React.FC<ControlProps> = ({
         <Play onPlayPause={onPlayPause} playing={playing} />
         <Reload videoRef={videoRef} typeButton={'reload'} />
         <Box className={classes.buttonVolume}>
-          <Box
-            className={classes.boxIconVolume}
-            onClick={() => {
-              matchMuteVolume()
-            }}
-            data-tip
-            data-for="mute"
-          >
-            {!isMuted ? (
+          <Box className={classes.boxIconVolume} onClick={onMute} data-tip data-for="mute">
+            {!muted ? (
               <img src={'/images/ic_volume.svg'} />
             ) : (
               <Icon fontSize={'small'} className={`fas fa-volume-mute ${classes.mutedIcon}`} />
             )}
           </Box>
-          <PlayerTooltip
-            id={'mute'}
-            title={!isMuted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')}
-            offset={{ top: -2, left: 0 }}
-          />
+          <PlayerTooltip id={'mute'} title={!muted ? t('videos_top_tab.mute') : t('videos_top_tab.unmute')} offset={{ top: -2, left: 0 }} />
           <div className={classes.slider}>
             <Slider
               max={1}
               min={0}
-              value={volumeValue}
+              value={volume}
               step={0.1}
               className={classes.volumeBar}
-              onChange={handleChange}
-              onChangeCommitted={handleClickChange}
+              onChange={onChangeVol}
+              onChangeCommitted={onChangeVolDrag}
             />
           </div>
         </Box>

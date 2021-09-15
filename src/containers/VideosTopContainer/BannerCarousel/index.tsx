@@ -13,6 +13,7 @@ type BannerCarouselProps = {
   bannerCurrentVisibleSlide?: number
   buttonLeftContainer?: any
   buttonRightContainer?: any
+  bannerCustomScales?: any
 }
 
 function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerItem> }) {
@@ -119,7 +120,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
           let currentVisibleSlide = checkCurrentVisible() //1|3|5
           if (parentWidth <= 992) currentVisibleSlide = 3
           if (parentWidth <= 768) currentVisibleSlide = 1
-          const { bannerHeight, bannerMaxVisibleSlide, bannerCurrentVisibleSlide } = props
+          const { bannerHeight, bannerMaxVisibleSlide, bannerCurrentVisibleSlide, bannerCustomScales } = props
 
           let width = 700
           let height = 340
@@ -131,7 +132,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
             <StackedCarousel
               ref={carouselRef}
               fadeDistance={0}
-              customScales={checkCustomScales()} //[1, 0.85]|[1, 0.85, 0.7]|[1, 0.85, 0.7, 0.55]
+              customScales={bannerCustomScales ?? checkCustomScales()} //[1, 0.85]|[1, 0.85, 0.7]|[1, 0.85, 0.7, 0.55]
               data={data}
               carouselWidth={parentWidth}
               slideWidth={width}

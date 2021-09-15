@@ -57,7 +57,8 @@ const useStyles = makeStyles(() => ({
     transition: 'width 0.4s ease-in',
     alignItems: 'flex-end',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    // backgroundColor: 'pink',
+    paddingBottom: 10,
     // height:20,
   },
   seekBar: {
@@ -68,16 +69,16 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     '& .MuiSlider-rail': {
       color: '#C3C3C3',
-      height: 4,
+      height: 7,
       borderRadius: 2,
     },
     '& .MuiSlider-track': {
       color: '#FF4786',
-      height: 4,
+      height: 7,
       borderRadius: 2,
     },
     '& .MuiSlider-thumb': {
-      color: '#FF4786', //circle
+      color: 'transparent', //circle
       width: 14,
       height: 14,
       borderRadius: 7,
