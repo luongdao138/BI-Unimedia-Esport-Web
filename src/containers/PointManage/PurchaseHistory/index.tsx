@@ -23,7 +23,7 @@ const PurchaseHistory: FC = () => {
   const [page, setPage] = useState<number>(1)
   const [querySelected, setQuerySelected] = useState<string>('')
   const [filterOptions, setFilterOptions] = useState(filterOptionsData)
-  const { getHistoryPointData, meta_history_points, historyPointsData } = usePointsManage()
+  const { getHistoryPointData, meta_history_points, historyPointsData, resetPointsHistory } = usePointsManage()
 
   const listFilterData = historyPointsData?.date_by_points
   const listPurchaseHistoryData = historyPointsData?.points
@@ -43,6 +43,9 @@ const PurchaseHistory: FC = () => {
   }
   useEffect(() => {
     getHistoryPointData(querySelected != '' ? paramsPeriod : params)
+    return () => {
+      resetPointsHistory()
+    }
   }, [page, querySelected])
 
   useEffect(() => {

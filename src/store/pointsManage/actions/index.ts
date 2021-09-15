@@ -1,6 +1,11 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
 import * as services from '@services/points.service'
 import { POINT_MANAGE_ACTION_TYPE } from './types'
+
+export const resetPointsActive = createAction(POINT_MANAGE_ACTION_TYPE.RESET_LIST_POINTS_ACTIVE)
+export const resetPointsHistory = createAction(POINT_MANAGE_ACTION_TYPE.RESET_POINTS_HISTORY)
+export const resetUsagePoints = createAction(POINT_MANAGE_ACTION_TYPE.RESET_USAGE_POINTS)
+export const resetDetailUsagePointsHistory = createAction(POINT_MANAGE_ACTION_TYPE.RESET_DETAIL_USAGE_POINTS_HISTORY)
 
 export const getMyPointData = createAsyncThunk<services.ListMyPointsResponse, services.ListPointsParams>(
   POINT_MANAGE_ACTION_TYPE.GET_LIST_MY_POINTS,

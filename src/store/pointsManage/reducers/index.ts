@@ -46,20 +46,36 @@ export default createReducer(initialState, (builder) => {
     const listMyPoints = action.payload.data
     state.list_my_points = listMyPoints
   })
+  //reset my points active
+  builder.addCase(actions.resetPointsActive, (state) => {
+    state.list_my_points = null
+  })
   // get list history data points
   builder.addCase(actions.getListHistoryPoints.fulfilled, (state, action) => {
     const listHistoryPoints = action.payload.data
     state.list_history_points = listHistoryPoints
+  })
+  //reset points history
+  builder.addCase(actions.resetPointsHistory, (state) => {
+    state.list_history_points = null
   })
   // get list used data points
   builder.addCase(actions.getListUsedPoints.fulfilled, (state, action) => {
     const listUsedPoints = action.payload.data
     state.list_used_points = listUsedPoints
   })
+  //reset usage points
+  builder.addCase(actions.resetUsagePoints, (state) => {
+    state.list_used_points = null
+  })
   // get detail usage points history
   builder.addCase(actions.getDetailUsagePoint.fulfilled, (state, action) => {
     const listUsedPoints = action.payload.data.purchase_point
     state.detail_usage_points_history = listUsedPoints
+  })
+  //reset detail usage points history
+  builder.addCase(actions.resetDetailUsagePointsHistory, (state) => {
+    state.detail_usage_points_history = null
   })
   // purchase ticket super chat
   builder.addCase(actions.purchaseTicketSuperChat.fulfilled, (state, action) => {

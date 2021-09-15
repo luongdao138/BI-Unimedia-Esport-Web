@@ -10,7 +10,7 @@ import i18n from '@locales/i18n'
 
 const PointManagementTab: FC = () => {
   const classes = useStyles()
-  const { getMyPointData, meta_my_points, myPointsData } = usePointsManage()
+  const { getMyPointData, meta_my_points, myPointsData, resetMyPointsActive } = usePointsManage()
   const totalMyPoints = myPointsData?.total_point
   const listMyPointsData = myPointsData?.aggregate_points
   const totalPages = Math.ceil(myPointsData?.total / 10)
@@ -25,6 +25,9 @@ const PointManagementTab: FC = () => {
   }
   useEffect(() => {
     getMyPointData(params)
+    return () => {
+      resetMyPointsActive()
+    }
   }, [page])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {

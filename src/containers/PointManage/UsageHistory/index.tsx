@@ -36,6 +36,8 @@ const UsageHistory: FC = () => {
     getUsagePointsHistoryData,
     meta_used_points_detail,
     usagePointsHistoryDetail,
+    resetDetailUsagePointsHistory,
+    resetUsagePoints,
   } = usePointsManage()
 
   const listFilterData = usedPointsData?.date_use_points
@@ -68,6 +70,9 @@ const UsageHistory: FC = () => {
 
   useEffect(() => {
     getUsedPointData(querySelected != '' ? paramsPeriod : params)
+    return () => {
+      resetUsagePoints()
+    }
   }, [page, querySelected])
 
   useEffect(() => {
@@ -88,7 +93,10 @@ const UsageHistory: FC = () => {
   }
   useEffect(() => {
     getUsagePointsHistoryData(detailParams)
-  }, [purchasePointId, usageHistoryDetail])
+    return () => {
+      resetDetailUsagePointsHistory()
+    }
+  }, [purchasePointId, usageHistoryDetail, pageDetail])
 
   const onChangePage = (_event: React.ChangeEvent<unknown>, value: number): void => {
     setPage(value)
