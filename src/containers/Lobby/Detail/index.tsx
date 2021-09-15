@@ -22,10 +22,9 @@ import { Colors } from '@theme/colors'
 import Participants from '@containers/Lobby/Participants'
 import ConfirmParticipants from '../ConfirmParticipants'
 import { useConfirm } from '@components/Confirm'
-import { LOBBY_DIALOGS } from '@constants/lobby.constants'
+import { LOBBY_DIALOGS, LOBBY_STATUS } from '@constants/lobby.constants'
 
 const LobbyDetailBody: React.FC = () => {
-  // const { tournament, meta, userProfile, handleBack } = useLobbyDetail()
   const [openList, setList] = useState<boolean>(false)
   const [openConfirmList, setConfirmList] = useState<boolean>(false)
   const classes = useStyles()
@@ -34,6 +33,7 @@ const LobbyDetailBody: React.FC = () => {
 
   const { handleBack, lobby } = useLobbyDetail()
   const { status, title, cover_image_url } = _.get(lobby, 'attributes', { status: -1, title: '', cover_image_url: null })
+  const isEditable = status !== LOBBY_STATUS.CANCELLED
 
   const hashKey = _.get(lobby, 'attributes.hash_key', null)
 
@@ -96,7 +96,7 @@ const LobbyDetailBody: React.FC = () => {
     <div>
       <ESLoader open={lobby === undefined} />
       {lobby && renderBody()}
-      <ESModal open={router.asPath.endsWith('/edit')}>
+      <ESModal open={isEditable && router.asPath.endsWith('/edit')}>
         <BlankLayout>
           <UpsertForm />
         </BlankLayout>
