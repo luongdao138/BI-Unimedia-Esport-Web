@@ -4,7 +4,6 @@ import { LobbyDetail } from '@services/lobby.service'
 import { useTranslation } from 'react-i18next'
 import { Colors } from '@theme/colors'
 import moment from 'moment'
-// import { TOURNAMENT_STATUS } from '@constants/tournament.constants'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
 
 interface Props {
