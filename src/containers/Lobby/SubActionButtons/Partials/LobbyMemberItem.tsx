@@ -15,9 +15,10 @@ interface Props {
   unFollow?: (userCode: string) => void
   unBlock?: (userCode: string) => void
   isMe: boolean
+  isAuth: boolean
 }
 
-const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goToProfile, isMe }) => {
+const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goToProfile, isMe, isAuth }) => {
   const classes = useStyles()
   const userCode = _.defaultTo(data.attributes.user_code, '')
   const nickName = _.defaultTo(data.attributes.nickname, '')
@@ -110,7 +111,7 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
         </Typography>
       </ListItemText>
 
-      {isMe === false && (
+      {isMe === false && isAuth && (
         <ListItemSecondaryAction className={classes.secondaryAction}>
           {renderFollow()}
           {renderUnBlock()}
