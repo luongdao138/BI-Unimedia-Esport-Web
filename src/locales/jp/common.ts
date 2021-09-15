@@ -828,6 +828,9 @@ export default {
       holding_period: '開催日時',
       address: '会場詳細',
     },
+    edit: {
+      submit: 'この内容で編集する',
+    },
   },
   lobbySearchFilters: {
     all: 'すべて',

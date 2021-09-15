@@ -30,6 +30,7 @@ import useCheckNgWord from '@utils/hooks/useCheckNgWord'
 import { LobbyHelper } from '@utils/helpers/LobbyHelper'
 import { LobbyUpsertParams } from '@services/lobby.service'
 import { LOBBY_STATUS } from '@constants/lobby.constants'
+import withProtected from '@containers/Lobby/utils/withProtected'
 
 let activeTabIndex = 0
 
@@ -232,7 +233,7 @@ const LobbyCreate: React.FC = () => {
                 disabled={!_.isEmpty(formik.errors)}
                 className={classes.footerButton}
               >
-                {i18n.t('common:lobby.create.submit')}
+                {isEdit ? i18n.t('common:lobby.edit.submit') : i18n.t('common:lobby.create.submit')}
               </ButtonPrimary>
             </Box>
           ) : (
@@ -350,4 +351,4 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }))
 
-export default LobbyCreate
+export default withProtected(LobbyCreate)
