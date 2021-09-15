@@ -34,7 +34,7 @@ const Highlight = ({ search = '', children = '', isSearched = false, contentRect
       const range = _.toLower(content).lastIndexOf(_.toLower(search))
       const divisor = isJapanese ? TOPIC_ROW_ITEM_DIVISOR.JAPANESE : TOPIC_ROW_ITEM_DIVISOR.NORMAL
       if (range > contentRect.width / divisor) {
-        content = '...'.concat(content.slice(range - contentRect.width / (divisor * 2)))
+        content = ''.concat(content.slice(range - TOPIC_ROW_ITEM_DIVISOR.CHARACTER_BEFORE_KEYWORD))
       }
 
       parts = String(content).split(keyword)

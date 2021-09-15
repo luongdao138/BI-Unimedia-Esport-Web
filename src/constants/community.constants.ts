@@ -73,4 +73,5 @@ export const TOPIC_STATUS = {
 export const TOPIC_ROW_ITEM_DIVISOR = {
   NORMAL: 5.65,
   JAPANESE: 12,
+  CHARACTER_BEFORE_KEYWORD: 10,
 }
