@@ -6,10 +6,7 @@ import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
-import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { REPORT_TYPE } from '@constants/common.constants'
-import ESReport from '@containers/Report'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
@@ -57,8 +54,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({
 }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
-  const { isAuthenticated } = useCommunityDetail()
-  const [openReport, setOpenReport] = useState(false)
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
@@ -214,17 +209,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({
             </Box>
           )}
         </Box>
-        {isAuthenticated && (
-          <>
-            <ESReport
-              reportType={REPORT_TYPE.TOPIC_COMMENT}
-              target_id={detail.attributes.hash_key}
-              data={detail}
-              open={openReport}
-              handleClose={() => setOpenReport(false)}
-            />
-          </>
-        )}
       </>
     )
   }
