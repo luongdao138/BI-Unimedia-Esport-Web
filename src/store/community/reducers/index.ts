@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { COMMUNITY_ACTION_TYPE } from '../actions/types'
+import _ from 'lodash'
 import {
   CommunityDetail,
   CommunityResponse,
@@ -122,5 +123,12 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getCommentsList.fulfilled, (state, action) => {
     state.commentsList = action.payload.data
     state.commentsListMeta = action.payload.meta
+  })
+  builder.addCase(actions.deleteTopicComment.fulfilled, (state, action) => {
+    state.commentsList = _.map(state.commentsList, (comment) => {
+      return comment.attributes.hash_key === action.meta.arg
+        ? { ...comment, attributes: { ...comment.attributes, deleted_at: 'date' } }
+        : comment
+    })
   })
 })

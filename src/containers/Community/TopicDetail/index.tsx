@@ -16,7 +16,11 @@ import useTopicHelper from './useTopicHelper'
 import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
 
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { useTranslation } from 'react-i18next'
+
 const TopicDetailContainer: React.FC = () => {
+  const { t } = useTranslation(['common'])
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
@@ -32,8 +36,9 @@ const TopicDetailContainer: React.FC = () => {
     commentsList,
     commentsListMeta,
     commentsListPageMeta,
+    deleteComment,
   } = useTopicDetail()
-  const { getCommunityDetail, communityDetail } = useCommunityDetail()
+  const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
 
   const [render, setRender] = useState(false)
@@ -46,6 +51,14 @@ const TopicDetailContainer: React.FC = () => {
     isModerator: isModerator,
     isPublic: isPublic,
     isTopicOwner: isOwner,
+  }
+
+  const [openDelete, setOpenDelete] = useState(false)
+  const [selectedCommentHashKey, setSelectedCommentHashKey] = useState('')
+
+  const handleDeleteComment = () => {
+    deleteComment(selectedCommentHashKey)
+    setOpenDelete(false)
   }
 
   const [page, setPage] = useState(1)
@@ -115,7 +128,16 @@ const TopicDetailContainer: React.FC = () => {
             !!commentsList &&
             !_.isEmpty(commentsList) &&
             commentsList.map((comment, i) => {
-              return <Comment key={i} comment={comment} menuParams={menuParams} handleReply={setReply} />
+              return (
+                <Comment
+                  key={i}
+                  comment={comment}
+                  menuParams={menuParams}
+                  handleReply={setReply}
+                  setOpenDelete={setOpenDelete}
+                  setSelectedCommentHashKey={setSelectedCommentHashKey}
+                />
+              )
             })
           )}
         </Box>
@@ -146,6 +168,19 @@ const TopicDetailContainer: React.FC = () => {
           <Box className={classes.inputContainer}>
             <CommentInput reply_param={reply} handleReply={setReply} setPage={setPage} />
           </Box>
+        )}
+
+        {isAuthenticated && (
+          <>
+            <DiscardDialog
+              title={t('common:topic_comment.delete.title')}
+              open={openDelete}
+              onClose={() => setOpenDelete(false)}
+              onSubmit={handleDeleteComment}
+              description={t('common:topic_comment.delete.description')}
+              confirmTitle={t('common:topic_comment.delete.submit')}
+            />
+          </>
         )}
       </Box>
     </>

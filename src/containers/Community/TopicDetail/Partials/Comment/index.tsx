@@ -7,16 +7,14 @@ import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
 import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { REPORT_TYPE } from '@constants/common.constants'
 import ESReport from '@containers/Report'
-import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import useTopicDetail from '../../useTopicDetail'
-import router, { useRouter } from 'next/router'
+import router from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
@@ -45,15 +43,14 @@ type CommunityHeaderProps = {
   comment: CommentsResponse
   menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
+  setOpenDelete?: Dispatch<SetStateAction<boolean>>
+  setSelectedCommentHashKey?: Dispatch<SetStateAction<string>>
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply, setOpenDelete, setSelectedCommentHashKey }) => {
   const classes = useStyles()
-  const { query } = useRouter()
-  const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const { isAuthenticated } = useCommunityDetail()
   const [openReport, setOpenReport] = useState(false)
-  const [openDelete, setOpenDelete] = useState(false)
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
@@ -66,9 +63,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     setReplyAnchorEl(null)
   }
 
-  const { deleteComment, getCommentsList } = useTopicDetail()
+  // const { deleteComment, getCommentsList } = useTopicDetail()
   const commentData = comment.attributes
   const hash_key = commentData.hash_key
+
   const detail = {
     attributes: {
       nickname: commentData.owner_nickname,
@@ -85,12 +83,8 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     setOpenReport(true)
   }
   const handleDeleteOpen = () => {
+    setSelectedCommentHashKey(hash_key)
     setOpenDelete(true)
-  }
-  const handleDeleteSubmit = async () => {
-    await deleteComment(hash_key)
-    setOpenDelete(false)
-    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
   }
 
   const handleCommentReply = () => {
@@ -220,14 +214,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               data={detail}
               open={openReport}
               handleClose={() => setOpenReport(false)}
-            />
-            <DiscardDialog
-              title={t('common:topic_comment.delete.title')}
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-              onSubmit={handleDeleteSubmit}
-              description={t('common:topic_comment.delete.description')}
-              confirmTitle={t('common:topic_comment.delete.submit')}
             />
           </>
         )}
