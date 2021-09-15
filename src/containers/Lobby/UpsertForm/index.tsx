@@ -232,7 +232,7 @@ const LobbyCreate: React.FC = () => {
                 disabled={!_.isEmpty(formik.errors)}
                 className={classes.footerButton}
               >
-                {i18n.t('common:lobby.create.submit')}
+                {isEdit ? i18n.t('common:lobby.edit.submit') : i18n.t('common:lobby.create.submit')}
               </ButtonPrimary>
             </Box>
           ) : (
