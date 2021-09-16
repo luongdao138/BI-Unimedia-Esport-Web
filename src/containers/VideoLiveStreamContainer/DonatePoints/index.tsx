@@ -7,6 +7,7 @@ import Stage2 from './Stage2'
 import Stage3 from './Stage3'
 import Head from 'next/head'
 interface DonatePointsProps {
+  isPurchaseLackPoint?: boolean
   myPoint: number
   lackedPoint: number
   showModalPurchasePoint: boolean
@@ -298,4 +299,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }))
+
+DonatePoints.defaultProps = {
+  isPurchaseLackPoint: true,
+}
+
 export default DonatePoints

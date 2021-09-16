@@ -82,7 +82,8 @@ const useStyles = makeStyles(() => ({
   },
   accountInfo: {
     display: 'flex',
-    marginBottom: 4,
+    marginRight: '13px',
+    marginBottom: '13px',
     flexDirection: 'column',
     backgroundColor: 'white',
     borderRadius: 4,

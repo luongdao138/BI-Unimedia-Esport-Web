@@ -236,6 +236,14 @@ export type StreamingChangeParams = {
   streaming_second: number
 }
 
+export type PlayedSecondChangeParams = {
+  played_second: number
+}
+
+export type ChangeIsViewingStreamParams = {
+  is_viewing_stream: boolean
+}
+
 export type VideoDetailResponse = {
   message?: string
   code?: number

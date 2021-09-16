@@ -4,7 +4,7 @@
 import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery, ButtonBase } from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import sanitizeHtml from 'sanitize-html'
 import i18n from '@locales/i18n'
 import useStyles from './styles'
@@ -38,6 +38,7 @@ type ChatContainerProps = {
   key_video_id?: string
   myPoint?: any
   handleKeyboardVisibleState: any
+  donateConfirmModalIsShown: () => boolean
 }
 
 export const purchasePoints = {
@@ -129,6 +130,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   key_video_id,
   myPoint,
   handleKeyboardVisibleState,
+  donateConfirmModalIsShown,
 }) => {
   // const { t } = useTranslation('common')
   // const [messageText, setMessageText] = useState<string>('')
@@ -141,20 +143,21 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [displaySeeMore, setDisplaySeeMore] = useState(false)
   const [isMessInBottom, setIsMessInBottom] = useState(false)
 
-  // const getChatData = () =>
-  //   Array(30)
-  //     .fill('')
-  //     .map((_, i) => ({
-  //       id: i,
-  //       user: 'Account Name',
-  //       content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
-  //     }))
+  const getChatData = () =>
+    Array(30)
+      .fill('')
+      .map((_, i) => ({
+        id: i,
+        user: 'Account Name',
+        content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
+      }))
 
-  // const [chartDataFake, setChartDataFake] = useState(getChatData())
-  
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  const [chartDataFake, setChartDataFake] = useState(getChatData())
 
   const { selectors } = userProfileStore
-  
+
   const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
   // const userProfile={
   //   attributes: {
@@ -165,12 +168,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   // console.log('userProfile', JSON.stringify(userProfile));
   const initialFruits: APIt.Message[] = []
   const [stateMessages, setStateMessages] = useState(initialFruits)
+  console.log('🚀 ~ stateMessages', stateMessages)
   const [chatUser, setChatUser] = useState<any>([])
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const { checkNgWord } = useCheckNgWord()
+  const [savedMess, setSavedMess] = useState([])
+  console.log('🚀 ~ savedMess', savedMess)
+  const [savedDonateMess, setSavedDonateMess] = useState([])
 
-  const { userResult, streamingSecond } = useDetailVideo()
+  const { userResult, streamingSecond, playedSecond, isViewingStream } = useDetailVideo()
   // const userResult = {streamer: 0}
   const { dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   // const dispatch = useAppDispatch()
@@ -243,7 +250,84 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }
 
-  const isPremiumChat = (message) => +message.point > 300 && (+message.display_avatar_time > +streamingSecond)
+  const isPremiumChat = (message: any, is_check_time = true, compare_second?: any) => {
+    let compareSecond = compare_second
+    if (!compareSecond) {
+      if (isViewingStream) {
+        compareSecond = streamingSecond
+      } else {
+        compareSecond = playedSecond
+      }
+    }
+    console.log('🚀 ~ isPremiumChat ~ compareSecond', compareSecond)
+    const conditionWithoutTime = +message.point > 300 && message.is_premium === true && !message.delete_flag
+    if (!is_check_time) {
+      return conditionWithoutTime
+    }
+    return +message.display_avatar_time > +compareSecond && conditionWithoutTime
+  }
+
+  const refOnCreateMess = useRef(null)
+  const onCreateMess = (createdMessage) => {
+    console.log('🚀 ~ subscribeAction ~ 1234', savedMess)
+    if (!createdMessage.delete_flag) {
+      if (isViewingStream) {
+        // render new messages with savedMess
+        setStateMessages([...savedMess, createdMessage])
+        scrollToCurrentMess()
+
+        // render new users donate
+        if (isPremiumChat(createdMessage, false)) {
+          setMessagesDonate([...savedDonateMess, createdMessage])
+        }
+      }
+      // save mess for local
+      setSavedMess((messages) => [...messages, createdMessage])
+      // save donated messages for local (not check display time)
+      if (isPremiumChat(createdMessage, false)) {
+        setSavedDonateMess((messages) => [...messages, createdMessage])
+      }
+    }
+  }
+  refOnCreateMess.current = onCreateMess
+
+  const findMessUpdated = (oldMess, updatedMess) => {
+    return oldMess.findIndex((item) => {
+      return item.id === updatedMess.id
+    })
+  }
+
+  const refOnUpdateMess = useRef(null)
+  const onUpdateMess = (updatedMess) => {
+    let foundIndex = findMessUpdated(stateMessages, updatedMess)
+    if (foundIndex !== -1) {
+      const newStateMess = [...stateMessages]
+      newStateMess[foundIndex] = updatedMess
+      setStateMessages(newStateMess)
+    }
+
+    foundIndex = findMessUpdated(messagesDonate, updatedMess)
+    if (foundIndex !== -1) {
+      const newDonateMess = [...messagesDonate]
+      newDonateMess[foundIndex] = updatedMess
+      setMessagesDonate(newDonateMess)
+    }
+
+    foundIndex = findMessUpdated(savedMess, updatedMess)
+    if (foundIndex !== -1) {
+      const newSavedMess = [...savedMess]
+      newSavedMess[foundIndex] = updatedMess
+      setSavedMess(newSavedMess)
+    }
+
+    foundIndex = findMessUpdated(savedDonateMess, updatedMess)
+    if (foundIndex !== -1) {
+      const newSavedDonateMess = [...savedDonateMess]
+      newSavedDonateMess[foundIndex] = updatedMess
+      setSavedDonateMess(newSavedDonateMess)
+    }
+  }
+  refOnUpdateMess.current = onUpdateMess
 
   const subscribeAction = () => {
     const pubSubClient = API.graphql(graphqlOperation(onCreateMessage))
@@ -254,11 +338,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         const subMessage = sub?.value
         if (subMessage.data.onCreateMessage.video_id === key_video_id) {
           const createdMessage = subMessage.data.onCreateMessage
-          setStateMessages((stateMessages) => [...stateMessages, createdMessage])
-          if(isPremiumChat(createdMessage)) {
-            console.log("🚀 ~ subscribeAction ~ isPremiumChat(createdMessage)", isPremiumChat(createdMessage))
-            setMessagesDonate((messages) => [...messages, createdMessage])
-          }
+          // checkMessIsInBottom()
+          refOnCreateMess.current(createdMessage)
         }
       },
       error: (error) => console.warn(error),
@@ -272,18 +353,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         const subMessage = sub?.value
         const updatedMess = subMessage.data.onUpdateMessage
         if (updatedMess.video_id === key_video_id) {
-          setStateMessages((stateMessages) => {
-            const foundIndex = stateMessages.findIndex((item) => {
-              return item.id === updatedMess.id
-            })
-            const newStateMess = [...stateMessages]
-            if (foundIndex !== -1) {
-              newStateMess[foundIndex] = updatedMess
-              return [...newStateMess]
-            } else {
-              return [...stateMessages]
-            }
-          })
+          refOnUpdateMess.current(updatedMess)
         }
       },
       error: (error) => console.warn(error),
@@ -292,9 +362,24 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   useEffect(() => {
     // console.log("🚀 ~ useEffect ~ streamingSecond", streamingSecond)
-    const newMessagesDonate = messagesDonate.filter(item => isPremiumChat(item))
-    setMessagesDonate(newMessagesDonate)
+    if (isViewingStream) {
+      // only check displaying of user donate icon
+      const newMessagesDonate = messagesDonate.filter((item) => +item.display_avatar_time <= +streamingSecond)
+      setMessagesDonate(newMessagesDonate)
+    }
   }, [streamingSecond])
+
+  useEffect(() => {
+    if (!isViewingStream) {
+      const newMess = [...savedMess]
+      // render messages by time of local
+      setStateMessages(newMess.filter((item) => +item.video_time <= +playedSecond))
+      const newMessDonate = [...savedDonateMess]
+      // render user donate icon by time of local
+      setMessagesDonate(newMessDonate.filter((item) => +item.display_avatar_time <= +playedSecond))
+      scrollToCurrentMess()
+    }
+  }, [playedSecond])
 
   useEffect(() => {
     getListUser()
@@ -310,25 +395,30 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // }, 2000)
   }, [])
 
-  const filterMessagesDonate = (messages) => {
-    const foundMessages = messages.filter(item => {
-      return isPremiumChat(item)
-    });
-    return foundMessages
-  }
+  // const filterMessagesDonate = (messages: any, compare_second ?: any) => {
+  //   const foundMessages = messages.filter(item => {
+  //     return isPremiumChat(item, true, compare_second)
+  //   });
+  //   return foundMessages
+  // }
 
   const getUsersDonate = async () => {
     try {
-      // point + streaming time 
-      const listQV: APIt.ListMessagesQueryVariables = { filter: { 
-        // video_id: { eq: "2f1141b031696738c1eb72cc450afadb"},
-        video_id: { eq: key_video_id},
-        is_premium: { eq: true },
-        delete_flag: { ne: true },
-      }}
+      // point + streaming time
+      const listQV: APIt.ListMessagesQueryVariables = {
+        filter: {
+          // video_id: { eq: "2f1141b031696738c1eb72cc450afadb"},
+          video_id: { eq: key_video_id },
+          is_premium: { eq: true },
+          delete_flag: { ne: true },
+        },
+      }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       console.log('getUsersDonate Results; ', messagesResults)
-      setMessagesDonate(filterMessagesDonate(messagesResults.data.listMessages.items.filter(item => item.parent))) 
+      console.log('streamingSecond', streamingSecond)
+      const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent && +item.point > 300)
+      // setMessagesDonate(filterMessagesDonate(transformMess, streamingSecond))
+      setSavedDonateMess(transformMess)
     } catch (error) {
       console.error(error)
     }
@@ -336,10 +426,18 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const getMessages = async () => {
     try {
-      const listQV: APIt.ListMessagesQueryVariables = key_video_id ? { filter: { video_id: { eq: key_video_id } } } : {}
+      const listQV: APIt.ListMessagesQueryVariables = {
+        filter: {
+          video_id: { eq: key_video_id },
+          delete_flag: { ne: true },
+        },
+      }
       const messagesResults: any = await API.graphql(graphqlOperation(listMessages, listQV))
       console.log('getMessages Results; ', messagesResults)
-      setStateMessages(messagesResults.data.listMessages.items.filter(item => item.parent))
+      const transformMess = messagesResults.data.listMessages.items.filter((item) => item.parent)
+      // setStateMessages(transformMess)
+      // save mess for use in local
+      setSavedMess(transformMess)
       subscribeAction()
     } catch (error) {
       console.error(error)
@@ -438,7 +536,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const purchaseInfoDialog = () => (
     <PremiumChatDialog
       createMess={createMess}
-      onClickOutside={handlePremiumChatBoxClickOutside}
+      onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
       onPressDonate={onPressDonate}
       myPoint={myPoint}
     />
@@ -491,83 +589,84 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }
 
-  // const checkMessIsInBottom = () => {
-  //   const mess_container = document.getElementById('chatBoard')
-  //   // mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
-  //   // // if scrollbar is not in container bottom
-  //   // // height of scroll to top + max height < height of container
-  //   // if(!isMessInBottom){ 
-  //     console.log("🚀 ~ 222 ~ scrollHeight", mess_container.scrollHeight)
-  //   console.log("🚀 ~ 2222 ~ offsetHeight", mess_container.offsetHeight)
-  //   console.log("🚀 ~ 2222 ~ scrollTop", mess_container.scrollTop)
-  //     console.log("🚀 ~ false => Mess Is InBottom: ", mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight)
-  //     if(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
-  //       setIsMessInBottom(false)
-  //       setDisplaySeeMore(true)
-  //     } else {
-  //       // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
-  //       if(mess_container.offsetHeight < mess_container.scrollHeight) {
-  //         setIsMessInBottom(true)
-  //         setDisplaySeeMore(false)
-  //       }
-  //     }
-  //   // }
-   
-  // }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  const checkMessIsInBottom = () => {
+    const mess_container = document.getElementById('chatBoard')
+    // mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
+    // // if scrollbar is not in container bottom
+    // // height of scroll to top + max height < height of container
+    // if(!isMessInBottom){
+    console.log('🚀 ~ 111 ~ scrollHeight', mess_container.scrollHeight)
+    console.log('🚀 ~ 111 ~ offsetHeight', mess_container.offsetHeight)
+    console.log('🚀 ~ 1111 ~ scrollTop', mess_container.scrollTop)
+    console.log('🚀 ~ Mess Is InBottom: ', !(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight))
+    if (mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
+      setIsMessInBottom(false)
+      setDisplaySeeMore(true)
+    } else {
+      // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
+      if (mess_container.offsetHeight < mess_container.scrollHeight) {
+        setIsMessInBottom(true)
+        setDisplaySeeMore(false)
+      }
+    }
+    // }
+  }
 
   // console.log("🚀 ~ scrollToCurrentMess ~ offsetTop", current_mess.offsetTop)
-    // mess_container.scrollTop = mess_container.scrollHeight 
-    // current_mess.scrollIntoView()   
+  // mess_container.scrollTop = mess_container.scrollHeight
+  // current_mess.scrollIntoView()
 
-    // let scrollDiv = current_mess.offsetTop;
+  // let scrollDiv = current_mess.offsetTop;
 
-// mess_container.scrollTo({ top: current_mess.offsetTop - (142 - 21), behavior: 'smooth'});
-// mess_container.scrollTo({ top: current_mess.offsetTop - (414 - 42), behavior: 'smooth'});
+  // mess_container.scrollTo({ top: current_mess.offsetTop - (142 - 21), behavior: 'smooth'});
+  // mess_container.scrollTo({ top: current_mess.offsetTop - (414 - 42), behavior: 'smooth'});
 
-    // if scrollbar is not in container bottom
-    // height of scroll to top + max height < height of container
-    // if(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
-    //   console.log("🚀 ~1111", mess_container.scrollTop + mess_container.offsetHeight)
-    //   setDisplaySeeMore(true)
-    // } else {
-    //   // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
-    //   if(mess_container.offsetHeight < mess_container.scrollHeight) {
-    //     console.log("🚀 ~2222", mess_container.scrollTop + mess_container.offsetHeight)
-    //     console.log("🚀 ~3", mess_container.scrollHeight)
-    //     mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
-    //     setDisplaySeeMore(false)
-    //   }
-    // }
+  // if scrollbar is not in container bottom
+  // height of scroll to top + max height < height of container
+  // if(mess_container.scrollTop + mess_container.offsetHeight < mess_container.scrollHeight) {
+  //   console.log("🚀 ~1111", mess_container.scrollTop + mess_container.offsetHeight)
+  //   setDisplaySeeMore(true)
+  // } else {
+  //   // if scrollbar is in container bottom and not scrollbar (as max height is smaller than height of container)
+  //   if(mess_container.offsetHeight < mess_container.scrollHeight) {
+  //     console.log("🚀 ~2222", mess_container.scrollTop + mess_container.offsetHeight)
+  //     console.log("🚀 ~3", mess_container.scrollHeight)
+  //     mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
+  //     setDisplaySeeMore(false)
+  //   }
+  // }
   const scrollToCurrentMess = () => {
     // const current_mess = document.getElementById('chat_20')
     // console.log("🚀 ~ scrollToCurrentMess ~ current_mess", current_mess)
     // const mess_container = current_mess.parentNode as Element
     const mess_container = document.getElementById('chatBoard')
     // const mess_container = current_mess.parentNode as Element
-    console.log("🚀 ~ scrollToCurrentMess ~ scrollHeight", mess_container.scrollHeight)
-    console.log("🚀 ~ scrollToCurrentMess ~ offsetHeight", mess_container.offsetHeight)
-    console.log("🚀 ~ scrollToCurrentMess ~ scrollTop", mess_container.scrollTop)
-    
-    console.log("🚀 ~ scrollToCurrentMess ~ isMessInBottom", isMessInBottom)
-    if(isMessInBottom) {
-      mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
-      setDisplaySeeMore(false)
-      setIsMessInBottom(false)
-    } else {
-      setDisplaySeeMore(true)
-      // setIsMessInBottom(false)
-    }
-// mess_container.scrollTop = current_mess.offsetTop - (414 - 42);
+    console.log('🚀 ~ 222222 ~ scrollHeight', mess_container.scrollHeight)
+    console.log('🚀 ~ 222222 ~ offsetHeight', mess_container.offsetHeight)
+    console.log('🚀 ~ 222222 ~ scrollTop', mess_container.scrollTop)
+
+    console.log('🚀 ~ 222222 ~ isMessInBottom', isMessInBottom)
+
+    mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth' })
+    // if(isMessInBottom) {
+    //   mess_container.scrollTo({ top: mess_container.scrollHeight, behavior: 'smooth'});
+    //   setDisplaySeeMore(false)
+    //   setIsMessInBottom(false)
+    // } else {
+    //   setDisplaySeeMore(true)
+    //   // setIsMessInBottom(false)
+    // }
+    // mess_container.scrollTop = current_mess.offsetTop - (414 - 42);
   }
-  
-  useEffect(() => { 
-    console.log("🚀 ~ 555555", isMessInBottom)
-    if(isMessInBottom) {
+
+  useEffect(() => {
+    console.log('🚀 ~ isMessInBottom', isMessInBottom)
+    if (isMessInBottom) {
       scrollToCurrentMess()
     }
-
   }, [isMessInBottom])
-    
 
   const handleSubmitChatContent = async () => {
     // checkMessIsInBottom()
@@ -576,13 +675,14 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     //   user: 'Account Name ' + (chartDataFake.length + 2),
     //   content: 'チャットのコメントははここに表示されます。チャットのコメントははここに表示されます。',
     // }])
-    
+
+    handleSubmit()
+
     // setTimeout(() => {
-      
-      
-      // scrollToCurrentMess()
+
+    // scrollToCurrentMess()
     // }, 1000);
-    
+
     // const content = messageText
     // if (content.length === 0) {
     //   setChatInputValidationError(t('live_stream_screen.chat_input_text_validate_msg_empty'))
@@ -595,7 +695,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     // if (!_.isEmpty(checkNgWord(content))) {
     //   setChatInputValidationError('チャットが未入力です')
     // }
-    handleSubmit()
+
     // // Submit chat message
   }
 
@@ -636,7 +736,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         {i18n.t('common:live_stream_screen.show_more_mess')}
       </ButtonBase>
 
-     
       {/* <ESButton
         onClick={() => {
           return ''
@@ -712,38 +811,39 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     </Box>
   )
 
-  
+  const mess_container = document.getElementById('chatBoard')
+  if (mess_container) {
+    mess_container.onscroll = function () {
+      if (mess_container.scrollTop + mess_container.offsetHeight >= mess_container.scrollHeight) {
+        // console.log("🚀 ~ 000", mess_container)
+        setDisplaySeeMore(false)
+        // you're at the bottom of the page
+      }
+    }
+  }
 
-  // const mess_container = document.getElementById('chatBoard')
-  // if(mess_container) {
-  //   mess_container.onscroll = function() {
-  //     if (mess_container.scrollTop + mess_container.offsetHeight >= mess_container.scrollHeight) {
-  //         // console.log("🚀 ~ 000", mess_container)
-  //         setDisplaySeeMore(false)
-  //         // you're at the bottom of the page
-  //     }
-  //   };
-  // }
   const chatContent = () => (
     <Box className={classes.chatContent}>
-      {/* <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button> */}
+      <Button onClick={scrollToCurrentMess}>Scroll to chat mess</Button>
       <Box className={classes.userWatchingList}>
-        {messagesDonate.sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt)).map((item) => (
-          <Box
-            key={item.id}
-            className={classes.userWatchingItem}
-            style={{ backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor }}
-            onClick={() => {
-              if (messActiveUser || messActiveUser === 0) {
-                setMessActiveUser('')
-              } else {
-                setMessActiveUser(item.id)
-              }
-            }}
-          >
-            <Avatar src={item?.parent?.avatar ? item.parent.avatar : '/images/avatar.png'} size={32} alt={item.parent.user_name} />
-          </Box>
-        ))}
+        {messagesDonate
+          .sort((a: any, b: any) => b.createdAt.localeCompare(a.createdAt))
+          .map((item) => (
+            <Box
+              key={item.id}
+              className={classes.userWatchingItem}
+              style={{ backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor }}
+              onClick={() => {
+                if (messActiveUser || messActiveUser === 0) {
+                  setMessActiveUser('')
+                } else {
+                  setMessActiveUser(item.id)
+                }
+              }}
+            >
+              <Avatar src={item?.parent?.avatar ? item.parent.avatar : '/images/avatar.png'} size={32} alt={item.parent.user_name} />
+            </Box>
+          ))}
       </Box>
       {chatBoardComponent()}
     </Box>

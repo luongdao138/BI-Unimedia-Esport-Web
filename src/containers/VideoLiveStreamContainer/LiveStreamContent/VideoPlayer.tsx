@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // import ESLoader from '@components/Loader'
 import { Icon, makeStyles, Theme } from '@material-ui/core'
 import { Colors } from '@theme/colors'
@@ -46,19 +47,47 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     loading: true,
   })
 
-  const { changeStreamingSecond, streamingSecond } = useDetailVideo()
+  const {
+    changeStreamingSecond,
+    streamingSecond,
+    changeIsViewingStream,
+    isViewingStream,
+    changePlayedSecond,
+    playedSecond,
+  } = useDetailVideo()
 
-  useEffect(() => {
-    if(Math.floor(playedSeconds) !== streamingSecond) {
-      changeStreamingSecond(Math.floor(playedSeconds))
-    }
-  }, [playedSeconds])
+  // useEffect(() => {
+  //   if(Math.floor(playedSeconds) !== streamingSecond) {
+  //     changeStreamingSecond(Math.floor(playedSeconds))
+  //   }
+  // }, [playedSeconds])
+
+  // useEffect(() => {
+  //   console.log("🚀 ~ useEffect ~ durationPlayer", durationPlayer)
+  // }, [durationPlayer])
 
   const onProgress = (event) => {
+    console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
+    console.log('🚀 ~ onProgress ~ 2222-----playedSeconds', event.playedSeconds)
+    console.log('🚀 ~ onProgress ~ 3333-----loadedSeconds', event.loadedSeconds)
     setPlayedSeconds(event.playedSeconds)
     setState({ ...state, loading: false })
     if (isLive) {
       setDurationPlayer(event.loadedSeconds)
+    }
+    // trigger change streaming second in redux
+    if (Math.floor(event.loadedSeconds) !== streamingSecond) {
+      let is_viewing_video = true
+      if (Math.floor(event.playedSeconds) < Math.floor(event.loadedSeconds)) {
+        is_viewing_video = false
+      }
+      if (isViewingStream !== is_viewing_video) {
+        changeIsViewingStream(is_viewing_video)
+      }
+      changeStreamingSecond(Math.floor(event.loadedSeconds))
+    }
+    if (Math.floor(event.playedSeconds) !== playedSecond) {
+      changePlayedSecond(Math.floor(event.playedSeconds))
     }
   }
   const onDuration = (duration) => {

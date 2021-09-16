@@ -18,3 +18,5 @@ export const totalSearchResult = createSelector(getRoot, (state) => state.totalR
 export const videoDetailResult = createSelector(getRoot, (state) => state.videoDetailData)
 export const userStreamerResult = createSelector(getRoot, (state) => state.userDetailData)
 export const streamingSecond = createSelector(getRoot, (state) => state.streaming_second)
+export const playedSecond = createSelector(getRoot, (state) => state.played_second)
+export const isViewingStream = createSelector(getRoot, (state) => state.is_viewing_stream)
