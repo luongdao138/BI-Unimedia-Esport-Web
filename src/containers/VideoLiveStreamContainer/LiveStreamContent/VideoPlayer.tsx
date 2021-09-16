@@ -22,12 +22,14 @@ declare global {
   }
 }
 
-const VideoPlayer: React.FC<PlayerProps> = () => {
+const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
   const checkStatusVideo = 1
   const classes = useStyles({ checkStatusVideo })
 
   const player = useRef(null)
-  const STREAM_PLAYBACK_URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'
+  // const videoEl = useRef(null)
+  // const STREAM_PLAYBACK_URL = 'https://62a8db2bbfb6.us-west-2.playback.live-video.net/api/video/v1/us-west-2.615813521463.channel.UIkHcKPfQp9p.m3u8'
+  // const STREAM_PLAYBACK_URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'
   // const STREAM_PLAYBACK_URL = 'https://usher.ttvnw.net/api/lvs/hls/lvs.lvs-client-example.c6341be8-a3c7-42bc-b89a-8dabe040eae9.m3u8'
 
   const { IVSPlayer } = window
@@ -67,7 +69,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
   // }, [durationPlayer])
 
   const onProgress = (event) => {
-    console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
+    console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event, src)
     console.log('🚀 ~ onProgress ~ 2222-----playedSeconds', event.playedSeconds)
     console.log('🚀 ~ onProgress ~ 3333-----loadedSeconds', event.loadedSeconds)
     setState({ ...state, loading: false })
@@ -107,7 +109,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
 
     const onStateChange = () => {
       const playerState = player.current.getState()
-      console.warn(`Player State - ${playerState} - ${player.current.getDuration()}--${player.current.getDuration()}`)
+      console.warn(`Player State - ${playerState} - ${player.current.getDuration()}--${player.current.getDuration()}---src===${src}`)
       setIsLive(player.current.getDuration() === Infinity ? true : false)
     }
     const onError = (err) => {
@@ -116,7 +118,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
 
     player.current = IVSPlayer.create() //MediaPlayer
     // player.current.attachHTMLVideoElement(videoEl.current)
-    player.current.load(STREAM_PLAYBACK_URL)
+    player.current.load(src)
     player.current.play()
     player.current.setMuted(true)
     // player.current.setAutoplay(true)
@@ -135,7 +137,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
   }, [
     // IVSPlayer,
     // isPlayerSupported,
-    STREAM_PLAYBACK_URL,
+    src,
   ])
 
   const handlePlayPause = () => {
@@ -187,11 +189,12 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
   const { playing, muted, volume, ended, loading } = state
   return (
     <div className={classes.videoPlayer}>
+      {/* <video ref={videoEl} controls playsinline src={STREAM_PLAYBACK_URL}></video> */}
       <div ref={playerContainerRef} className={classes.playerContainer}>
         <div style={{ height: '100%' }} onClick={handlePlayPauseOut}>
           <ReactPlayer
             ref={reactPlayerRef}
-            url={STREAM_PLAYBACK_URL}
+            url={src}
             playsinline
             width="100%"
             height={'100%'}

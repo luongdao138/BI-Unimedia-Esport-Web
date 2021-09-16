@@ -26,6 +26,7 @@ const useListVideoAll = (): {
   const getListVideoPopular = () => dispatch(actions.getCategoryPopularVideo())
   const bannerTop = () => dispatch(actions.getBannerTop())
 
+  //TODO: add limit (if you need)
   const listLiveVideo = () => {
     getListVideoTop({ type: TYPE_VIDEO_TOP.ALL })
   }
