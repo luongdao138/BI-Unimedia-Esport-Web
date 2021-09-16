@@ -243,6 +243,8 @@ export default {
     report: '通報',
     community_id: 'コミュニティコード：',
     copy_shared_url: '共有URLをコピー',
+    community_results: 'コミュニティ「:key」 の検索結果',
+    community_results_all: 'コミュニティの検索結果',
     copy_shared_url_toast: 'このコミュニティを共有URLをクリップボードにコピーにしました',
     toast_follow: 'このコミュニティに参加しました',
     toast_unfollowed: 'フォローを解除しました',

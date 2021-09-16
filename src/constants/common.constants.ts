@@ -15,10 +15,6 @@ export const searchOptions = [
     value: searchTypes.USER,
     name: 'ニックネーム・ID',
   },
-  // {
-  //   value: searchTypes.COMMUNITY,
-  //   name: 'コミュニティ',
-  // },
   {
     value: searchTypes.TOURNAMENT,
     name: '大会',
@@ -30,6 +26,10 @@ export const searchOptions = [
   {
     value: searchTypes.LOBBY,
     name: 'ロビー',
+  },
+  {
+    value: searchTypes.COMMUNITY,
+    name: 'コミュニティ',
   },
 ]
 

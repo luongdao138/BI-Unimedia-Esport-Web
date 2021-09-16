@@ -27,7 +27,7 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
       <Box
         style={{
           background: `url(${cover || '/images/default_card.png'})`,
-          paddingTop: isMobile ? '45.41%' : '23.44%',
+          paddingTop: isMobile ? '45.41%' : '30.29%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',

@@ -24,15 +24,15 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
       {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
         <Box mt={2}>
           {!_.isEmpty(data.game_titles) && (
-            <Box mr={1} display="inline">
+            <Box display="inline">
               {data.game_titles.map((game) => {
-                return <ESChip key={game.id} className={classes.chip} label={game.display_name} />
+                return <ESChip key={game.id} className={classes.chip} isGameList={true} label={game.display_name} />
               })}
             </Box>
           )}
           {!_.isEmpty(data.features) &&
             data.features.map((item) => {
-              return <ESChip key={item.id} className={classes.chip} label={item.feature} />
+              return <ESChip key={item.id} className={classes.chip} isGameList={true} label={item.feature} />
             })}
         </Box>
       )}
