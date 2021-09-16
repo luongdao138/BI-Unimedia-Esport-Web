@@ -41,7 +41,10 @@ const useArenaHome = (): {
   }
 
   useEffect(() => {
-    return () => resetMeta()
+    return () => {
+      resetMeta()
+      dispatch(actions.resetSearchTournaments())
+    }
   }, [])
   return { arenas, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter, arenasFiltered }
 }

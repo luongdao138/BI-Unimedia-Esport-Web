@@ -61,7 +61,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.tournamentSearch.fulfilled, (state, action) => {
     let searchTournaments = action.payload.data
     if (action.payload.meta != undefined && action.payload.meta.current_page > 1) {
-      searchTournaments = state.searchTournaments.concat(action.payload.data)
+      searchTournaments = _.unionBy(state.searchTournaments, action.payload.data, 'attributes.hash_key')
     }
 
     state.searchTournaments = searchTournaments
