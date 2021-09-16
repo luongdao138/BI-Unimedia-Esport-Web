@@ -4,7 +4,7 @@ import VideoPreviewItem from '../VideoPreviewItem'
 import i18n from '@locales/i18n'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveVideos from './useLiveVideos'
 import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
@@ -17,12 +17,13 @@ interface Props {
 }
 
 const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow }) => {
-  const page = 2
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const { loadMore, listLiveVideo, meta, getListVideoTop, resetLiveVideos } = useLiveVideos()
-
+  const { listLiveVideo, meta, getListVideoTop, resetLiveVideos } = useLiveVideos()
   const classes = useStyles()
+  const [page, setPage] = useState<number>(1)
+  const [hasMore, setHasMore] = useState(true)
+
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
       <>
@@ -41,17 +42,28 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow }) => {
 
   useEffect(() => {
     if (listLiveVideo.length === 0) {
-      getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: 1, limit: LIMIT_ITEM, follow: follow })
+      getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: page, limit: LIMIT_ITEM, follow: follow })
     }
     return () => {
+      setPage(1)
       resetLiveVideos()
       setFollow(0)
     }
   }, [follow])
 
   useEffect(() => {
-    loadMore(page + 1, follow)
-  }, [])
+    if (page > 1) getListVideoTop({ type: TYPE_VIDEO_TOP.LIVE, page: page, limit: LIMIT_ITEM, follow: follow })
+  }, [page])
+
+  const handleLoadMore = async () => {
+    if (listLiveVideo.length > 0 && listLiveVideo.length < LIMIT_ITEM * page) {
+      setHasMore(false)
+      return
+    }
+    if (listLiveVideo.length > 0 && listLiveVideo.length == LIMIT_ITEM * page) {
+      await setPage(page + 1)
+    }
+  }
 
   const renderPreLoad = () => {
     const arrayPreLoad = Array(9)
@@ -83,14 +95,11 @@ const LiveStreamVideos: React.FC<Props> = ({ follow, setFollow }) => {
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={listLiveVideo.length}
-          next={() => {
-            loadMore(page, follow)
-          }}
-          hasMore={true}
+          next={handleLoadMore}
+          hasMore={hasMore}
           loader={null}
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
-          // scrollableTarget="scrollableDiv"
         >
           {listLiveVideo.length > 0 ? (
             <Grid container spacing={3} className={classes.contentContainer}>

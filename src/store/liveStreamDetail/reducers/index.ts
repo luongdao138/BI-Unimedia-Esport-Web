@@ -18,7 +18,7 @@ const initialState: StateType = {
 export default createReducer(initialState, (builder) => {
   builder.addCase(actions.getListArchivedVideoStream.fulfilled, (state, action) => {
     let listVideoArchived = action.payload.data
-    if (action.payload.data.length >= 0) {
+    if (action.meta.arg.page > 1) {
       listVideoArchived = state.videoArchived.concat(action.payload.data)
     }
     state.videoArchived = listVideoArchived
@@ -30,7 +30,7 @@ export default createReducer(initialState, (builder) => {
 
   builder.addCase(actions.getListRelatedVideoStream.fulfilled, (state, action) => {
     let listVideoRelated = action.payload.data
-    if (action.payload.data.length >= 0) {
+    if (action.meta.arg.page > 1) {
       listVideoRelated = state.videoRelated.concat(action.payload.data)
     }
     state.videoRelated = listVideoRelated

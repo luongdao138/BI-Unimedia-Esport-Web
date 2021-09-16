@@ -5,7 +5,7 @@ import i18n from '@locales/i18n'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import useArchivedVideos from './useArchivedVideos'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ESLoader from '@components/Loader'
 import { LIMIT_ITEM, TypeVideo, TYPE_VIDEO_TOP } from '@services/videoTop.services'
@@ -17,11 +17,12 @@ interface Props {
 }
 
 const ArchivedVideos: React.FC<Props> = ({ follow, setFollow }) => {
-  const page = 2
+  const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const { loadMore, listArchivedVideo, meta, getListVideoTop, resetArchiveVideos } = useArchivedVideos()
-  const classes = useStyles()
+  const { listArchivedVideo, meta, getListVideoTop, resetArchiveVideos } = useArchivedVideos()
+  const [page, setPage] = useState<number>(1)
+  const [hasMore, setHasMore] = useState(true)
 
   const renderLiveItem = (item: TypeVideo, index: number) => {
     return (
@@ -41,17 +42,28 @@ const ArchivedVideos: React.FC<Props> = ({ follow, setFollow }) => {
 
   useEffect(() => {
     if (listArchivedVideo.length === 0) {
-      getListVideoTop({ type: TYPE_VIDEO_TOP.ARCHIVE, page: 1, limit: LIMIT_ITEM, follow: follow })
+      getListVideoTop({ type: TYPE_VIDEO_TOP.ARCHIVE, page: page, limit: LIMIT_ITEM, follow: follow })
     }
     return () => {
+      setPage(1)
       resetArchiveVideos()
       setFollow(0)
     }
   }, [follow])
 
   useEffect(() => {
-    loadMore(page + 1, follow)
-  }, [])
+    if (page > 1) getListVideoTop({ type: TYPE_VIDEO_TOP.ARCHIVE, page: page, limit: LIMIT_ITEM, follow: follow })
+  }, [page])
+
+  const handleLoadMore = async () => {
+    if (listArchivedVideo.length > 0 && listArchivedVideo.length < LIMIT_ITEM * page) {
+      setHasMore(false)
+      return
+    }
+    if (listArchivedVideo.length > 0 && listArchivedVideo.length == LIMIT_ITEM * page) {
+      await setPage(page + 1)
+    }
+  }
 
   const renderPreLoad = () => {
     const arrayPreLoad = Array(9)
@@ -83,10 +95,8 @@ const ArchivedVideos: React.FC<Props> = ({ follow, setFollow }) => {
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={listArchivedVideo.length}
-          next={() => {
-            loadMore(page, follow)
-          }}
-          hasMore={true}
+          next={handleLoadMore}
+          hasMore={hasMore}
           loader={null}
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
