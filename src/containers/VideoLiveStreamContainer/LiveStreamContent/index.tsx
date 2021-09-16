@@ -132,10 +132,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       <ButtonBase
         onClick={() =>
           window
-            .open(
-              `https://twitter.com/intent/tweet?text=${'配信者の名前がはいります'}\n${'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}`,
-              '_blank'
-            )
+            .open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}\n${detailVideoResult?.archived_file_url}`, '_blank')
             ?.focus()
         }
       >

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Slider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { memo, useEffect, useState } from 'react'
@@ -18,7 +19,7 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
   // const [currentTimeState, setCurrentTime] = useState(0);
   // const [duration, setDuration] = useState(0)
   const [timePlayed, setTimePlayed] = useState(0)
-  // const { changeStreamingSecond, streamingSecond } = useDetailVideo()
+  // const { changePlayedSecond, playedSecond, streamingSecond, changeIsViewingStream, isViewingStream } = useDetailVideo()
 
   useEffect(() => {
     // setCurrentTime(videoRef.current.getCurrentTime()) //
@@ -26,8 +27,22 @@ const SeekBar: React.FC<Props> = ({ currentTime, durationsPlayer, videoRef }) =>
   })
 
   const handleChange = (_, value) => {
+    console.log('🚀 ~ 11111', value)
+    const newSecond = (value * durationsPlayer) / 100
     setTimePlayed(value)
-    videoRef.current.seekTo((value * durationsPlayer) / 100, 'seconds')
+    videoRef.current.seekTo(newSecond, 'seconds')
+    console.log('🚀 ~ handleChange', newSecond)
+    // trigger change played second in redux
+    // if(Math.floor(newSecond) !== playedSecond) {
+    //   changePlayedSecond(Math.floor(newSecond))
+    // }
+    // let is_viewing_video = true
+    // if(Math.floor(newSecond) < Math.floor(streamingSecond)) {
+    //   is_viewing_video = false
+    // }
+    // if(isViewingStream !== is_viewing_video) {
+    //   changeIsViewingStream(is_viewing_video)
+    // }
   }
 
   const handleCommit = (_, value) => {

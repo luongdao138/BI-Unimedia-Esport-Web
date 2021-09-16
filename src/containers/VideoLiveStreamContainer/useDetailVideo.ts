@@ -15,7 +15,11 @@ const useDetailVideo = () => {
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actions.videoDetail(params))
   const meta = useAppSelector(_getDetailMeta)
   const streamingSecond = useAppSelector(selectors.streamingSecond)
+  const playedSecond = useAppSelector(selectors.playedSecond)
+  const isViewingStream = useAppSelector(selectors.isViewingStream)
   const changeStreamingSecond = (streaming_second) => dispatch(actions.changeStreamingSecond({ streaming_second }))
+  const changePlayedSecond = (played_second) => dispatch(actions.changePlayedSecond({ played_second }))
+  const changeIsViewingStream = (is_viewing_stream) => dispatch(actions.changeIsViewingStream({ is_viewing_stream }))
 
   return {
     meta,
@@ -24,6 +28,10 @@ const useDetailVideo = () => {
     getVideoDetail,
     changeStreamingSecond,
     streamingSecond,
+    playedSecond,
+    changePlayedSecond,
+    changeIsViewingStream,
+    isViewingStream,
   }
 }
 

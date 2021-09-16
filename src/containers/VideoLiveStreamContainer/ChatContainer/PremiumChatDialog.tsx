@@ -68,11 +68,15 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   }, [dataPurchaseTicketSuperChat])
 
   useEffect(() => {
-    // document.addEventListener('mousedown', handleClickOutside)
-    // return () => {
-    //   document.removeEventListener('mousedown', handleClickOutside)
-    // }
-  }, [])
+    if (onClickOutside) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [onClickOutside])
 
   const excludeItemTriggeredHideDialog = ['btnOpenPremiumChatDialogImage', 'btnOpenPremiumChatDialog']
 
@@ -118,6 +122,10 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
     // Submit chat message
     setPremiumChatValidationError(null)
     handleSubmit()
+  }
+
+  const openPurchasePoint = () => {
+    // console.log("🚀 ~ openPurchasePoint ~ openPurchasePoint", 1111)
   }
 
   return (
@@ -170,7 +178,9 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
               'common:common.eXe_points'
             )}`}
           </Typography>
-          <Typography className={classes.purchasePointText}>{i18n.t('common:live_stream_screen.purchase_points')}</Typography>
+          <Typography className={classes.purchasePointText} onClick={openPurchasePoint}>
+            {i18n.t('common:live_stream_screen.purchase_points')}
+          </Typography>
         </Box>
       </Box>
       <img src="/images/ic_down_triangle.svg" className={classes.downTriangle} />

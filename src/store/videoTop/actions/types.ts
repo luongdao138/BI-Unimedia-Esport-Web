@@ -13,4 +13,6 @@ export const ACTION_VIDEO_TOP = {
   RESET_SCHEDULE: 'streaming/resetLiveSchedule',
   RESET_ARCHIVE: 'streaming/resetLiveArchive',
   CHANGE_STREAMING_SECOND: 'streaming/changeStreamingSecond',
+  CHANGE_PLAYED_SECOND: 'streaming/changePlayedSecond',
+  CHANGE_IS_VIEWING_STREAM: 'streaming/changeIsViewingStream',
 }

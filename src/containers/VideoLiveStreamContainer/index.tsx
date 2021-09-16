@@ -66,8 +66,7 @@ const VideosTop: React.FC = () => {
 
   const { getVideoDetail, detailVideoResult, userResult, meta } = useDetailVideo()
 
-  const isPending = meta_purchase_ticket_super_chat.pending || meta_my_points.pending || getUserProfileMeta.pending 
-                  || meta.pending
+  const isPending = meta_purchase_ticket_super_chat.pending || meta_my_points.pending || getUserProfileMeta.pending || meta.pending
 
   const ticket_points = 100
 
@@ -204,16 +203,23 @@ const VideosTop: React.FC = () => {
     </Box>
   )
 
+  const modalIsShown = () => {
+    return showConfirmModal || showPurchaseTicketModal || showModalPurchasePoint
+  }
+
   const sideChatContainer = () => (
     <Box style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
       <ChatContainer
         myPoint={myPoint}
         // fake key_video_id and user profile
         key_video_id={detailVideoResult?.key_video_id}
+        // VOjyj1m048y7sAjx -
         // key_video_id="2f1141b031696738c1eb72cc450afadb"
+        // key_video_id="5eafa95943a1b5c118be607d42742a48"
         onPressDonate={confirmDonatePoint}
         userHasViewingTicket={userHasViewingTicket()}
         handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
+        donateConfirmModalIsShown={modalIsShown}
       />
       {buttonPurchaseTicket(handlePurchaseTicket)}
     </Box>
