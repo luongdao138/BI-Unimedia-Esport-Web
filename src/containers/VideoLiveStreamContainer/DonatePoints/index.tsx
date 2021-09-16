@@ -13,7 +13,9 @@ interface DonatePointsProps {
   showModalPurchasePoint: boolean
   setShowModalPurchasePoint: (value: boolean) => void
 }
-const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, setShowModalPurchasePoint, lackedPoint, myPoint }) => {
+const DonatePoints: React.FC<DonatePointsProps> = ({ 
+  showModalPurchasePoint, setShowModalPurchasePoint, lackedPoint, myPoint , isPurchaseLackPoint
+}) => {
   // const { t } = useTranslation('common')
   const classes = useStyles()
   const [stage, setStage] = useState(1)
@@ -106,6 +108,7 @@ const DonatePoints: React.FC<DonatePointsProps> = ({ showModalPurchasePoint, set
             {stage === 1 && (
               <Box className={classes.stepOneContainer}>
                 <Stage1
+                  isPurchaseLackPoint={isPurchaseLackPoint}
                   myPoints={myPoint}
                   lackedPoint={lackedPoint}
                   onClickPurchaseLackedPoint={onClickPurchaseLackedPoint}

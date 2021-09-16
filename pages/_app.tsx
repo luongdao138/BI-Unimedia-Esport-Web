@@ -28,34 +28,12 @@ import ToastContainer from '@containers/ToastContainer'
 import DialogContainer from '@containers/DialogContainer'
 import ESHead from '@components/ESHead'
 import Amplify from 'aws-amplify'
-// {
-//   aws_project_region: 'ap-northeast-1',
-//   aws_appsync_graphqlEndpoint: 'https://eoufedqqoffwbiq5emuseetii4.appsync-api.ap-northeast-1.amazonaws.com/graphql',
-//   aws_appsync_region: 'ap-northeast-1',
-//   aws_appsync_authenticationType: 'API_KEY',
-//   aws_appsync_apiKey: 'da2-uo6r5of45vcwlk3kb7qqffonj4',
-// }
-const NEXT_PUBLIC_API = process.env.NEXT_PUBLIC_API
-const AWS_PROJECT_REGION = process.env.AWS_PROJECT_REGION
-const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.AWS_APPSYNC_GRAPHQLENDPOINT
-const AWS_APPSYNC_REGION = process.env.AWS_APPSYNC_REGION
-const AWS_APPSYNC_AUTHENTICATIONTYPE = process.env.AWS_APPSYNC_AUTHENTICATIONTYPE
-const AWS_APPSYNC_APIKEY = process.env.AWS_APPSYNC_APIKEY
 
-console.log(
-  'NEXT_PUBLIC_API',
-  NEXT_PUBLIC_API,
-  'AWS_PROJECT_REGION',
-  AWS_PROJECT_REGION,
-  'AWS_APPSYNC_GRAPHQLENDPOINT ',
-  AWS_APPSYNC_GRAPHQLENDPOINT,
-  'AWS_APPSYNC_REGION ',
-  AWS_APPSYNC_REGION,
-  'AWS_APPSYNC_AUTHENTICATIONTYPE',
-  AWS_APPSYNC_AUTHENTICATIONTYPE,
-  'AWS_APPSYNC_APIKEY',
-  AWS_APPSYNC_APIKEY
-)
+const AWS_PROJECT_REGION = process.env.NEXT_PUBLIC_AWS_PROJECT_REGION
+const AWS_APPSYNC_GRAPHQLENDPOINT = process.env.NEXT_PUBLIC_AWS_APPSYNC_GRAPHQLENDPOINT
+const AWS_APPSYNC_REGION = process.env.NEXT_PUBLIC_AWS_APPSYNC_REGION
+const AWS_APPSYNC_AUTHENTICATIONTYPE = process.env.NEXT_PUBLIC_AWS_APPSYNC_AUTHENTICATIONTYPE
+const AWS_APPSYNC_APIKEY = process.env.NEXT_PUBLIC_AWS_APPSYNC_APIKEY
 
 Amplify.configure({
   ...{

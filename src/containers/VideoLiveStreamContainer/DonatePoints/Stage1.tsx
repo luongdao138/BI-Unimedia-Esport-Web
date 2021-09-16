@@ -8,23 +8,26 @@ interface StepOneProps {
   onClickPurchaseNewPoints: () => void
   myPoints: number
   lackedPoint?: number
+  isPurchaseLackPoint: boolean
 }
 
-const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseLackedPoint, onClickPurchaseNewPoints, myPoints, lackedPoint }) => {
+const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseLackedPoint, onClickPurchaseNewPoints, myPoints, lackedPoint, isPurchaseLackPoint }) => {
   const classes = useStyles()
 
   return (
     <Box className={classes.container}>
       <Box width="100%">
         <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXePoint'} />
-        {lackedPoint && (
+        {lackedPoint && isPurchaseLackPoint && (
           <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXePoint'} />
         )}
       </Box>
       <Box className={classes.buttonRootContainer}>
-        <Box className={classes.buttonContainer} onClick={onClickPurchaseLackedPoint}>
-          <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_missing_points')}</Typography>
-        </Box>
+        {isPurchaseLackPoint && (
+          <Box className={classes.buttonContainer} onClick={onClickPurchaseLackedPoint}>
+            <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_missing_points')}</Typography>
+          </Box>
+        )}
         <Box className={classes.buttonContainer} onClick={onClickPurchaseNewPoints}>
           <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_new_points')}</Typography>
         </Box>

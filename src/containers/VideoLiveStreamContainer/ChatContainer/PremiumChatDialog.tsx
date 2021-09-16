@@ -14,6 +14,7 @@ type PremiumChatBoxProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   myPoint: number
   createMess: (message: string, point?: number) => Promise<void>
+  openPurchasePointModal?: () => void
 }
 
 type PremiumMessageValidationType = {
@@ -27,6 +28,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   onPressDonate,
   myPoint,
   createMess,
+  openPurchasePointModal
 }) => {
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')
@@ -124,10 +126,6 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
     handleSubmit()
   }
 
-  const openPurchasePoint = () => {
-    // console.log("🚀 ~ openPurchasePoint ~ openPurchasePoint", 1111)
-  }
-
   return (
     <div className={classes.purchaseDialogContainer} ref={ref}>
       <Box className={classes.purchaseDialogContent}>
@@ -178,7 +176,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
               'common:common.eXe_points'
             )}`}
           </Typography>
-          <Typography className={classes.purchasePointText} onClick={openPurchasePoint}>
+          <Typography className={classes.purchasePointText} onClick={openPurchasePointModal}>
             {i18n.t('common:live_stream_screen.purchase_points')}
           </Typography>
         </Box>
