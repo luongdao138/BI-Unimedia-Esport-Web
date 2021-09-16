@@ -37,14 +37,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   const [hasMore, setHasMore] = useState(true)
   const [selected, setSelected] = useState<number[]>([])
   const [filtered, setFiltered] = useState<ConfirmParticipantItem[]>([])
-
   const router = useRouter()
   const confirm = useConfirm()
-
   const windowHeight = use100vh()
-
   const { height } = useRect(contentRef)
-
+  const { userProfile } = useGetProfile()
   const {
     participants,
     participantsMeta,
@@ -60,13 +57,24 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
   } = useLobbyActions()
   const { status, max_participants, hash_key } = lobby.attributes
 
-  const page = participantsPageMeta
-
-  const { userProfile } = useGetProfile()
+  const currentPage = _.get(participantsPageMeta, 'current_page', 1)
+  const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
+  const [isInitialPageLoad, setInitialPageLoad] = useState(false)
 
   useEffect(() => {
     if (open) {
+      setInitialPageLoad(true)
       getParticipants({ page: 1, hash_key: hash_key })
+    }
+
+    return () => {
+      if (open) {
+        resetParticipants()
+        resetMeta()
+        setHasMore(true)
+        setInitialPageLoad(false)
+        setSelected([])
+      }
     }
   }, [open])
 
@@ -83,12 +91,18 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
     )
   }, [selected, participants])
 
+  useEffect(() => {
+    if (isInitialPageLoad && !participantsMeta.pending) {
+      setInitialPageLoad(false)
+    }
+  }, [isInitialPageLoad, participantsMeta.pending])
+
   const fetchMoreData = () => {
-    if (page.current_page >= page.total_pages) {
+    if (currentPage >= totalPage) {
       setHasMore(false)
       return
     }
-    getParticipants({ page: page.current_page + 1, hash_key: hash_key })
+    getParticipants({ page: Number(currentPage) + 1, hash_key: hash_key })
   }
 
   useEffect(() => {
@@ -111,26 +125,15 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
     }
   }
 
-  const handleToProfile = (userCode: string) => {
-    onClose()
-    router.push(`${ESRoutes.PROFILE}/${userCode}`)
-  }
-
-  const onClose = () => {
-    resetParticipants()
-    resetMeta()
-    setHasMore(true)
-    handleClose()
-    setSelected([])
-  }
+  const handleToProfile = (userCode: string) => router.push(`${ESRoutes.PROFILE}/${userCode}`)
 
   return (
     <Box>
-      <ESModal open={open} handleClose={onClose}>
+      <ESModal open={open}>
         <Container className={classes.container} maxWidth={'md'}>
           <div id="scrollableDiv" style={{ height: windowHeight }} className={`${classes.scroll} ${classes.list}`}>
             <Box className={classes.header} display="flex" flexDirection="row" alignItems="center">
-              <IconButton className={classes.iconButtonBg} onClick={onClose}>
+              <IconButton className={classes.iconButtonBg} onClick={handleClose}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
               <Box pl={2}>
@@ -156,6 +159,11 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
                 <Typography className={classes.subTitle}>{t('common:confirm_member.from')}</Typography>
               </Box>
             </Box>
+            {isInitialPageLoad && participantsMeta.pending && (
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            )}
             {_.isArray(participants) && !_.isEmpty(participants) && open ? (
               <InfiniteScroll
                 dataLength={participants.length}
@@ -217,6 +225,7 @@ const CloseRecruitmentModal: React.FC<CloseRecruitmentModalProps> = ({ lobby, op
               <Box className={classes.actionButton}>
                 <LoginRequired>
                   <ButtonPrimaryOutlined
+                    disabled={isInitialPageLoad && participantsMeta.pending}
                     onClick={() => {
                       confirm({ ...LOBBY_DIALOGS.CONFIRM_MEMBER.shuffle })
                         .then(() => {
