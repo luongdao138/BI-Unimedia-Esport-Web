@@ -13,8 +13,12 @@ interface DonatePointsProps {
   showModalPurchasePoint: boolean
   setShowModalPurchasePoint: (value: boolean) => void
 }
-const DonatePoints: React.FC<DonatePointsProps> = ({ 
-  showModalPurchasePoint, setShowModalPurchasePoint, lackedPoint, myPoint , isPurchaseLackPoint
+const DonatePoints: React.FC<DonatePointsProps> = ({
+  showModalPurchasePoint,
+  setShowModalPurchasePoint,
+  lackedPoint,
+  myPoint,
+  isPurchaseLackPoint,
 }) => {
   // const { t } = useTranslation('common')
   const classes = useStyles()

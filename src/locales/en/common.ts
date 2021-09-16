@@ -935,6 +935,7 @@ export default {
     },
     renew_success_toast: '再発行しました。',
     public_time_title: 'アーカイブ配信終了日時',
+    note_channel: '配信する場合は、配信者情報を設定してください',
   },
   delivery_reservation_tab: {
     category: 'カテゴリー',

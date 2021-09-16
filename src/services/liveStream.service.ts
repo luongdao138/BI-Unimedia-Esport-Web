@@ -15,6 +15,14 @@ export const TYPE_SECRET_KEY = {
   SCHEDULE: 0,
 }
 
+export const TYPE_RM = {
+  NOTIFY: 'notify',
+  PUBLISH: 'publish',
+  SELL: 'sell',
+  ALL: 'all',
+  NEW: 'new',
+}
+
 export type LiveStreamSetting = {
   id: number
   uuid: string
@@ -51,7 +59,7 @@ export type DistributorStepSetting = {
 }
 
 export type LiveStreamSettingResponse = {
-  data: {
+  data?: {
     id: number
     uuid: string
     title: string
@@ -75,6 +83,7 @@ export type LiveStreamSettingResponse = {
     sell_ticket_start_time?: string
     created_at?: string
     status?: number
+    channel_id?: number
   }
 }
 export type LiveStreamSettingParams = {

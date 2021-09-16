@@ -28,7 +28,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
   onPressDonate,
   myPoint,
   createMess,
-  openPurchasePointModal
+  openPurchasePointModal,
 }) => {
   const getPurchasePointList = () => Object.values(purchasePoints)
   const [purchaseValueSelected, setPurchaseValueSelected] = useState<string>('p_100')

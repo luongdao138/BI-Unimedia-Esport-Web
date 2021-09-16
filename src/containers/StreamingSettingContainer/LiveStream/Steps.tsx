@@ -338,7 +338,7 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, category }) => {
                     src={formik.values.stepSettingOne.thumbnail}
                     onChange={handleUpload}
                     isUploading={isUploading}
-                    disabled={true}
+                    disabled={isLive}
                     size="big"
                     onOpenStateChange={handleCoverDailogStateChange}
                   />

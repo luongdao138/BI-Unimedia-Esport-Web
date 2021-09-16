@@ -172,7 +172,6 @@ export const videoDetail = createAsyncThunk<services.VideoDetailResponse, servic
   async (params, { rejectWithValue }) => {
     try {
       const res = await services.DetailVideo(params)
-      // console.log("=====DETAIL====",res)
       if (res?.code === 200) {
         return res
       } else {

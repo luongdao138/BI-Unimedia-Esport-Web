@@ -11,7 +11,13 @@ interface StepOneProps {
   isPurchaseLackPoint: boolean
 }
 
-const StepOne: React.FC<StepOneProps> = ({ onClickPurchaseLackedPoint, onClickPurchaseNewPoints, myPoints, lackedPoint, isPurchaseLackPoint }) => {
+const StepOne: React.FC<StepOneProps> = ({
+  onClickPurchaseLackedPoint,
+  onClickPurchaseNewPoints,
+  myPoints,
+  lackedPoint,
+  isPurchaseLackPoint,
+}) => {
   const classes = useStyles()
 
   return (

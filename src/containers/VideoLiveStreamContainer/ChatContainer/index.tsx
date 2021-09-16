@@ -132,7 +132,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   myPoint,
   handleKeyboardVisibleState,
   donateConfirmModalIsShown,
-  openPurchasePointModal
+  openPurchasePointModal,
 }) => {
   // const { t } = useTranslation('common')
   // const [messageText, setMessageText] = useState<string>('')
@@ -159,7 +159,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [chartDataFake, setChartDataFake] = useState(getChatData())
 
   const { selectors } = userProfileStore
-  
+
   const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
   // const userProfile={
   //   attributes: {

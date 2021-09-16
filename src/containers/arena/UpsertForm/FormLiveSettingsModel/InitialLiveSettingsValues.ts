@@ -39,7 +39,7 @@ export const getInitialScheduleValues = (data?: LiveStreamSetting): FormLiveType
     stream_key: data && data.stream_key ? data.stream_key : '',
     publish_flag: data && data.publish_flag ? (data.publish_flag == 1 ? true : false) : true,
     video_publish_end_time: data && data.video_publish_end_time ? CommonHelper.formatDateTime(data.video_publish_end_time) : null,
-    status: data?.status,
+    status: data && data.status ? data.status : 0,
     //cross-fields validations
     schedule_live_date: '',
     notify_live_start_date: '',

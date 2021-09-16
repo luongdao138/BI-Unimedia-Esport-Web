@@ -8,7 +8,11 @@ import ESModal from '@components/Modal'
 import BlankLayout from '@layouts/BlankLayout'
 import { useTranslation } from 'react-i18next'
 
-const DistributorInformationContainer: React.FC = () => {
+interface Props {
+  hasChannel?: boolean
+}
+
+const DistributorInformationContainer: React.FC<Props> = ({ hasChannel }) => {
   const [step, setStep] = useState(1)
   const router = useRouter()
   const { channelInfo } = useLiveSetting()
@@ -32,7 +36,7 @@ const DistributorInformationContainer: React.FC = () => {
 
   return (
     <>
-      <Steps step={step} onNext={onChangeStep} channel={channelInfo} />
+      <Steps step={step} onNext={onChangeStep} channel={channelInfo} hasChannel={hasChannel} />
       <ESModal open={modal} handleClose={() => setModal(false)}>
         <BlankLayout>
           <SettingsCompleted

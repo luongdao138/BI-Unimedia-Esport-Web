@@ -27,14 +27,15 @@ interface StepsProps {
   step: number
   onNext: (step: number) => void
   channel: GetChannelResponse
+  hasChannel?: boolean
 }
 
-const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
+const Steps: React.FC<StepsProps> = ({ step, onNext, channel, hasChannel }) => {
   const classes = useStyles()
   const dispatch = useAppDispatch()
   const [social, setSocial] = useState(null)
   const [hasError, setError] = useState(false)
-  const initialValues = getInitialDistributorValues(channel.data ? channel.data : null)
+  const initialValues = getInitialDistributorValues(channel?.data ? channel.data : null)
   const formik = useFormik<FormLiveType>({
     initialValues: initialValues,
     validationSchema: validationLDistributorScheme(),
@@ -133,10 +134,11 @@ const Steps: React.FC<StepsProps> = ({ step, onNext, channel }) => {
   }
 
   return (
-    <Box py={4} className={classes.container}>
+    <Box py={!hasChannel ? 2 : 4} className={classes.container}>
       <Box className={classes.formContainer}>
+        {!hasChannel && <Typography className={classes.noteChannel}>{i18n.t('common:streaming_setting_screen.note_channel')}</Typography>}
         <form onSubmit={formik.handleSubmit}>
-          <Box pb={2} className={classes.wrap_input}>
+          <Box pb={2} pt={!hasChannel && 12 / 8} className={classes.wrap_input}>
             <Box className={classes.firstItem}>
               <ESInput
                 id="name"
@@ -325,5 +327,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: '-2px',
     },
+  },
+  noteChannel: {
+    color: Colors.secondary,
+    fontSize: 12,
   },
 }))
