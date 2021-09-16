@@ -33,12 +33,10 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
         <ESButton
           onClick={() => unBlock(userCode)}
           variant="outlined"
-          className={classes.button}
+          className={classes.unblockButton}
           size="medium"
           round
           disabled={isLoading}
-          normalColor={Colors.red[10]}
-          hoverColor={Colors.red[30]}
         >
           {i18n.t('common:common.blocking')}
         </ESButton>
@@ -133,6 +131,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 140,
   },
   button: {},
+  unblockButton: {
+    color: Colors.red[10],
+    borderColor: Colors.red[10],
+    '&:hover': {
+      color: Colors.red[10],
+      background: Colors.red[30],
+    },
+  },
   [theme.breakpoints.down('sm')]: {
     secondaryAction: {
       right: theme.spacing(2),
