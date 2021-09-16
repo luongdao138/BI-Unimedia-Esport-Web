@@ -39,6 +39,7 @@ type ChatContainerProps = {
   myPoint?: any
   handleKeyboardVisibleState: any
   donateConfirmModalIsShown: () => boolean
+  openPurchasePointModal?: () => void
 }
 
 export const purchasePoints = {
@@ -113,7 +114,7 @@ export const purchasePoints = {
     displayTime: 3600,
   },
 }
-
+// NEXT_PUBLIC_API=http://172.16.110.93:3002
 type MessageValidationType = {
   message: string
 }
@@ -131,6 +132,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   myPoint,
   handleKeyboardVisibleState,
   donateConfirmModalIsShown,
+  openPurchasePointModal
 }) => {
   // const { t } = useTranslation('common')
   // const [messageText, setMessageText] = useState<string>('')
@@ -157,7 +159,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   const [chartDataFake, setChartDataFake] = useState(getChatData())
 
   const { selectors } = userProfileStore
-
+  
   const userProfile = useAppSelector<UserProfile>(selectors.getUserProfile)
   // const userProfile={
   //   attributes: {
@@ -539,6 +541,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       onClickOutside={donateConfirmModalIsShown() ? null : handlePremiumChatBoxClickOutside}
       onPressDonate={onPressDonate}
       myPoint={myPoint}
+      openPurchasePointModal={openPurchasePointModal}
     />
   )
 

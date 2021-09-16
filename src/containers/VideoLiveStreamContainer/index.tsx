@@ -63,6 +63,7 @@ const VideosTop: React.FC = () => {
   const [purchaseType, setPurchaseType] = useState<number>(null)
   const [donatedPoints, setDonatedPoints] = useState<number>(0)
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
+  const [isPurchaseLackPoint, setIsPurchaseLackPoint] = useState(true)
 
   const { getVideoDetail, detailVideoResult, userResult, meta } = useDetailVideo()
 
@@ -104,6 +105,7 @@ const VideosTop: React.FC = () => {
     } else {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
+      setIsPurchaseLackPoint(true)
     }
   }
   const handleClose = () => {
@@ -136,6 +138,7 @@ const VideosTop: React.FC = () => {
     } else {
       dispatch(addToast(i18n.t('common:donate_points.lack_point_mess')))
       setShowModalPurchasePoint(true)
+      setIsPurchaseLackPoint(true)
     }
   }
   // purchase ticket
@@ -220,6 +223,10 @@ const VideosTop: React.FC = () => {
         userHasViewingTicket={userHasViewingTicket()}
         handleKeyboardVisibleState={changeSoftKeyboardVisibleState}
         donateConfirmModalIsShown={modalIsShown}
+        openPurchasePointModal={() => {
+          setIsPurchaseLackPoint(false)
+          setShowModalPurchasePoint(true)
+        }}
       />
       {buttonPurchaseTicket(handlePurchaseTicket)}
     </Box>
@@ -292,6 +299,7 @@ const VideosTop: React.FC = () => {
       />
       {showModalPurchasePoint && (
         <DonatePoints
+          isPurchaseLackPoint={isPurchaseLackPoint}
           myPoint={myPoint}
           lackedPoint={purchaseType === PURCHASE_TYPE.PURCHASE_SUPER_CHAT ? lackedPoint : ticket_points}
           showModalPurchasePoint={showModalPurchasePoint}
