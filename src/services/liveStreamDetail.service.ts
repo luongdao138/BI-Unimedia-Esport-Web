@@ -6,7 +6,7 @@ export const LIMIT_ITEM = 6
 export type TypeVideoArchived = {
   id?: number
   uuid?: string
-  archived_file_url?: string
+  archived_url?: string
   thumbnail?: string
   title?: string
   description?: string

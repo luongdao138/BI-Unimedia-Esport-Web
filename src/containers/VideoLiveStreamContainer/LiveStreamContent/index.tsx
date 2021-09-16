@@ -132,7 +132,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
       <ButtonBase
         onClick={() =>
           window
-            .open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}\n${detailVideoResult?.archived_file_url}`, '_blank')
+            .open(`https://twitter.com/intent/tweet?text=${detailVideoResult?.title}\n${detailVideoResult?.archived_url}`, '_blank')
             ?.focus()
         }
       >
@@ -152,11 +152,7 @@ const LiveStreamContent: React.FC<LiveStreamContentProps> = (props) => {
 
   const mediaPlayer = () => {
     return (
-      <VideoPlayer
-        src={'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4'}
-        thumbnail={'/images/live_stream/exelab_thumb.png'}
-        statusVideo={props.videoType}
-      />
+      <VideoPlayer src={detailVideoResult?.archived_url} thumbnail={'/images/live_stream/exelab_thumb.png'} statusVideo={props.videoType} />
     )
   }
 

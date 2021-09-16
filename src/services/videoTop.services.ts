@@ -69,7 +69,7 @@ export type ListVideoTopParams = {
 export type TypeVideo = {
   id?: number
   uuid?: string
-  archived_file_url?: string
+  archived_url?: string
   thumbnail?: string
   title?: string
   description?: string
@@ -194,7 +194,7 @@ export type VideoDetailParams = {
 
 export type VideoDetailData = {
   uuid?: string
-  archived_file_url?: string
+  archived_url?: string
   thumbnail?: string
   title?: string
   description?: string
