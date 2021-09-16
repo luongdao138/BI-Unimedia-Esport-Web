@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ESAvatar from '@components/Avatar'
 import { Colors } from '@theme/colors'
 import ESMenu from '@components/Menu'
+import ESLoader from '@components/Loader'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
@@ -47,8 +48,10 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
+  const { getCommentDetail, commentDetail, commentDetailMeta } = useTopicDetail()
 
-  const handleClickReply = (event) => {
+  const handleClickReply = (event, content) => {
+    getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
     setReplyAnchorEl(event.currentTarget)
     currentReplyNumberRectLeft = event.currentTarget.getBoundingClientRect().left
   }
@@ -66,13 +69,13 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       user_code: commentData.user_code,
       content: commentData.content,
       date: CommonHelper.staticSmartTime(commentData.created_at),
-      image: commentData.attachments[0]?.assets_url,
+      image: commentData.attachments && commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
     },
   }
 
-  const replyData = commentData
+  const replyData = commentDetail?.attributes
 
   const handleReportOpen = () => {
     setOpenReport(true)
@@ -118,7 +121,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const renderPopover = (content, index) => {
     return (
       <>
-        <Link aria-describedby={index} onClick={handleClickReply} className={classes.reply}>
+        <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
           <Typography className={classes.replied_id}>{content}</Typography>
         </Link>
       </>
@@ -160,13 +163,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               )}
             </Box>
           </Box>
-          {!!commentData && !!commentData.main_comment && (
-            <>
-              <Link onClick={handleClickReply} className={classes.reply}>
-                <Typography>{`>>${commentData.main_comment.comment_no}`}</Typography>
-              </Link>
-            </>
-          )}
           <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
           {commentData.attachments[0]?.assets_url && renderClickableImage(commentData.attachments[0]?.assets_url)}
           {!isOwner && (
@@ -211,32 +207,45 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             horizontal: 'right',
           }}
         >
-          <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
-            <Box className={classes.userInfoContainerMain}>
-              <Typography className={classes.number}>{replyData?.main_comment?.comment_no}</Typography>
-              <Box ml={1}>
-                <ESAvatar
-                  className={classes.avatar}
-                  alt={replyData?.main_comment?.owner_nickname}
-                  src={replyData?.main_comment?.owner_profile}
-                />
+          {!_.isEmpty(commentDetail) && commentDetailMeta.loaded && (
+            <>
+              <Box display="flex" alignItems="flex-start" justifyContent="space-between" mb={1}>
+                <Box className={classes.userInfoContainerMain}>
+                  <Typography className={classes.number}>{replyData?.comment_no}</Typography>
+                  <Box ml={1}>
+                    <ESAvatar className={classes.avatar} alt={replyData?.owner_nickname} src={replyData?.owner_profile} />
+                  </Box>
+                  <Box className={classes.userInfoBox} ml={1}>
+                    <Typography className={classes.username}>{replyData?.owner_nickname}</Typography>
+                    <Typography className={classes.userCode}>{'@' + replyData?.user_code}</Typography>
+                  </Box>
+                </Box>
+                <Box display="flex" alignItems="center">
+                  <Typography className={classes.date}>{CommonHelper.staticSmartTime(replyData?.created_at)}</Typography>
+                  <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
+                    <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
+                  </IconButton>
+                </Box>
               </Box>
-              <Box className={classes.userInfoBox} ml={1}>
-                <Typography className={classes.username}>{replyData?.main_comment?.owner_nickname}</Typography>
-                <Typography className={classes.userCode}>{'@' + replyData?.main_comment?.user_code}</Typography>
+              <Box mb={3}>
+                <Typography className={classes.content}>{replyData?.content}</Typography>
+                {replyData?.attachments[0]?.assets_url && renderClickableImage(replyData?.attachments[0]?.assets_url, true)}
               </Box>
-            </Box>
-            <Box display="flex" alignItems="center">
-              <Typography className={classes.date}>{CommonHelper.staticSmartTime(replyData?.main_comment?.created_at)}</Typography>
+            </>
+          )}
+          {commentDetailMeta.error && (
+            <Box my={1} display="flex" justifyContent="space-between">
+              Not found
               <IconButton className={classes.closeMainComment} onClick={handleCloseReply}>
                 <IconClose fontSize="small" className={classes.closeMainCommentIcon} />
               </IconButton>
             </Box>
-          </Box>
-          <Box mb={3}>
-            <Typography className={classes.content}>{replyData?.main_comment?.content}</Typography>
-            {replyData?.main_comment?.assets_url && renderClickableImage(replyData?.main_comment?.assets_url, true)}
-          </Box>
+          )}
+          {commentDetailMeta.pending && (
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <ESLoader />
+            </Box>
+          )}
         </Popover>
       </>
     )

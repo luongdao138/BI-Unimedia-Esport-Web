@@ -6,6 +6,8 @@ import {
   CommentsListParams,
   PageMeta,
   TopicDeleteParams,
+  CommentDetailParams,
+  CommentDetail,
 } from '@services/community.service'
 import community from '@store/community'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
@@ -20,13 +22,16 @@ import { useTranslation } from 'react-i18next'
 const { selectors, actions } = community
 const getTopicDetailMeta = createMetaSelector(actions.getTopicDetail)
 const getDeleteTopicMeta = createMetaSelector(actions.deleteTopic)
+const getTopicCommentMeta = createMetaSelector(actions.getTopicComment)
 const getCommentsListMeta = createMetaSelector(actions.getCommentsList)
 const getCommentsListPageMeta = createMetaSelector(actions.getCommentsListPage)
 const getCommentsListNextMeta = createMetaSelector(actions.getCommentsListNext)
 
 const useTopicDetail = (): {
   topic: TopicDetail
+  commentDetail: CommentDetail
   getTopicDetail: (TopicDetailParams) => void
+  getCommentDetail: (CommentDetailParams) => void
   getCommentsList: (CommentsListParams) => void
   getCommentsListNext: (CommentsListParams) => void
   getCommentsListPage: (CommentsListParams) => void
@@ -34,6 +39,7 @@ const useTopicDetail = (): {
   resetMeta: () => void
   topicDetailMeta: Meta
   deleteTopicMeta: Meta
+  commentDetailMeta: Meta
   createComment: (params: CommentCreateParams) => void
   deleteComment: (hash_key: string) => void
   commentsListMeta: Meta
@@ -47,8 +53,11 @@ const useTopicDetail = (): {
   const router = useRouter()
   const topic = useAppSelector(selectors.getTopicDetail)
   const getTopicDetail = (param: TopicDetailParams) => dispatch(actions.getTopicDetail(param))
+  const getCommentDetail = (param: CommentDetailParams) => dispatch(actions.getTopicComment(param))
   const topicDetailMeta = useAppSelector(getTopicDetailMeta)
   const deleteTopicMeta = useAppSelector(getDeleteTopicMeta)
+  const commentDetailMeta = useAppSelector(getTopicCommentMeta)
+  const commentDetail = useAppSelector(selectors.getCommentDetail)
   const resetTopicMeta = () => dispatch(actions.clearTopicDetail())
   const createComment = (params: CommentCreateParams) => dispatch(actions.createTopicComment(params))
   const resetMeta = () => dispatch(clearMetaData(actions.getCommentsList.typePrefix))
@@ -80,6 +89,7 @@ const useTopicDetail = (): {
 
   return {
     getTopicDetail,
+    getCommentDetail,
     deleteTopic,
     deleteTopicMeta,
     createComment,
@@ -88,10 +98,12 @@ const useTopicDetail = (): {
     getCommentsListNext,
     resetMeta,
     topic,
+    commentDetail,
     commentsList,
     pages,
     commentsListMeta,
     topicDetailMeta,
+    commentDetailMeta,
     getCommentsListPage,
     commentsListPageMeta,
     commentsListNextMeta,
