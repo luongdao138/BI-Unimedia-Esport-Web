@@ -2,12 +2,13 @@ import { Box, Theme, makeStyles, Grid, Typography } from '@material-ui/core'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PreloadPreviewItem } from '../PreloadContainer'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import i18n from '@locales/i18n'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import ESLoader from '@components/Loader'
 
 type RelatedVideosProps = {
   video_id?: string | string[]
@@ -16,34 +17,35 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   const classes = useStyles()
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
-  const page = 1
-  const {
-    meta_related_video_stream,
-    relatedVideoStreamData,
-    getRelatedVideoStream,
-    resetRelatedVideoStream,
-    loadMoreRelated,
-  } = useLiveStreamDetail()
-  // const relatedVideoStreamData = []
+  const [page, setPage] = useState<number>(1)
+  const [hasMore, setHasMore] = useState(true)
+  const limit = LIMIT_ITEM
+  const { meta_related_video_stream, relatedVideoStreamData, getRelatedVideoStream, resetRelatedVideoStream } = useLiveStreamDetail()
   const isLoading = meta_related_video_stream?.pending
 
-  const params = {
-    video_id: video_id,
-    page: page,
-    limit: LIMIT_ITEM,
-  }
   useEffect(() => {
-    if (relatedVideoStreamData?.length === 0) {
-      getRelatedVideoStream(params)
+    if (video_id) {
+      getRelatedVideoStream({ video_id: video_id, page: 1, limit: limit })
     }
     return () => {
+      setPage(1)
       resetRelatedVideoStream()
     }
   }, [video_id])
 
   useEffect(() => {
-    loadMoreRelated(page + 1, video_id)
-  }, [])
+    if (page > 1) getRelatedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
+  }, [page])
+
+  const handleLoadMore = async () => {
+    if (relatedVideoStreamData.length > 0 && relatedVideoStreamData.length < LIMIT_ITEM * page) {
+      setHasMore(false)
+      return
+    }
+    if (relatedVideoStreamData.length > 0 && relatedVideoStreamData.length == LIMIT_ITEM * page) {
+      await setPage(page + 1)
+    }
+  }
 
   const renderRelatedVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
@@ -88,11 +90,15 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={relatedVideoStreamData.length}
-          next={() => {
-            loadMoreRelated(page, video_id)
-          }}
-          hasMore={true}
-          loader={null}
+          next={handleLoadMore}
+          hasMore={hasMore}
+          loader={
+            isLoading && (
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            )
+          }
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
         >
@@ -115,6 +121,14 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({ video_id }) => {
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
+  loaderCenter: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: theme.spacing(3),
+    textAlign: 'center',
+  },
   container: {
     display: 'flex',
     justifyContent: 'center',

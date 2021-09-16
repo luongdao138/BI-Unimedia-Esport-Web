@@ -1,4 +1,4 @@
-import { FollowChannelParams, LIMIT_ITEM, ListArchivedVideoStreamParams, ReactionUserParams } from '@services/liveStreamDetail.service'
+import { FollowChannelParams, ListArchivedVideoStreamParams, ReactionUserParams } from '@services/liveStreamDetail.service'
 import { useAppDispatch, useAppSelector } from '@store/hooks'
 import { createMetaSelector } from '@store/metadata/selectors'
 import liveStreamDetail from '@store/liveStreamDetail'
@@ -19,21 +19,11 @@ const useLiveStreamDetail = () => {
   const archivedVideoStreamData = useAppSelector(selectors.archivedVideoStream)
   const getArchivedVideoStream = (params: ListArchivedVideoStreamParams) => dispatch(actions.getListArchivedVideoStream(params))
   const meta_archived_video_stream = useAppSelector(_getListArchivedVideoStreamMeta)
-  const loadMoreArchived = (page: number, video_id: string | string[]) => {
-    if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length <= LIMIT_ITEM) {
-      getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
-    }
-  }
   const resetArchivedVideoStream = () => dispatch(actions.resetArchivedVideoStream())
 
   const relatedVideoStreamData = useAppSelector(selectors.relatedVideoStream)
   const getRelatedVideoStream = (params: ListArchivedVideoStreamParams) => dispatch(actions.getListRelatedVideoStream(params))
   const meta_related_video_stream = useAppSelector(_getRelatedVideoStreamMeta)
-  const loadMoreRelated = (page: number, video_id: string | string[]) => {
-    if (relatedVideoStreamData.length > 0 && relatedVideoStreamData.length <= LIMIT_ITEM) {
-      getRelatedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
-    }
-  }
   const resetRelatedVideoStream = () => dispatch(actions.resetRelatedVideoStream())
 
   const getVideoDetail = (params: VideoDetailParams) => dispatch(actionsVideoTop.videoDetail(params))
@@ -65,13 +55,11 @@ const useLiveStreamDetail = () => {
     archivedVideoStreamData,
     getArchivedVideoStream,
     resetArchivedVideoStream,
-    loadMoreArchived,
 
     relatedVideoStreamData,
     getRelatedVideoStream,
     meta_related_video_stream,
     resetRelatedVideoStream,
-    loadMoreRelated,
 
     reactionVideoStreamData,
     userReactionVideoStream,

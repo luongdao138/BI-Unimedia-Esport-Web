@@ -70,23 +70,23 @@ export default createReducer(initialState, (builder) => {
   })
   builder.addCase(actions.getVideoLive.fulfilled, (state, action) => {
     let listVideoLive = action.payload.data.live
-    if (action.payload.data.live.length >= 0) {
+    if (action.meta.arg.page > 1) {
       listVideoLive = state.videoLive.concat(action.payload.data.live)
     }
     state.videoLive = listVideoLive
   })
   builder.addCase(actions.getVideoSchedule.fulfilled, (state, action) => {
     let listVideoSchedule = action.payload.data.schedule
-    // if (action.payload.data.schedule.length >= 0) {
-    listVideoSchedule = state.videoSchedule.concat(action.payload.data.schedule)
-    // }
+    if (action.meta.arg.page > 1) {
+      listVideoSchedule = state.videoSchedule.concat(action.payload.data.schedule)
+    }
     state.videoSchedule = listVideoSchedule
   })
   builder.addCase(actions.getVideoArchived.fulfilled, (state, action) => {
     let listVideoArchived = action.payload.data.archived
-    // if (action.payload.data.schedule.length >= 0) {
-    listVideoArchived = state.videoArchived.concat(action.payload.data.archived)
-    // }
+    if (action.meta.arg.page > 1) {
+      listVideoArchived = state.videoArchived.concat(action.payload.data.archived)
+    }
     state.videoArchived = listVideoArchived
   })
   builder.addCase(actions.getListVideoFavorite.fulfilled, (state, action) => {

@@ -9,6 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
 import useDetailVideo from '../useDetailVideo'
+import ESLoader from '@components/Loader'
 
 type ProgramInfoProps = {
   video_id?: string | string[]
@@ -18,38 +19,38 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
 
-  const {
-    meta_archived_video_stream,
-    archivedVideoStreamData,
-    getArchivedVideoStream,
-    resetArchivedVideoStream,
-    loadMoreArchived,
-  } = useLiveStreamDetail()
+  const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const { detailVideoResult } = useDetailVideo()
   const isLoadingData = meta_archived_video_stream?.pending
   const getDescription = detailVideoResult?.description
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
-  const page = 1
+  const [page, setPage] = useState<number>(1)
+  const [hasMore, setHasMore] = useState(true)
 
-  const params = {
-    video_id: video_id,
-    page: page,
-    limit: LIMIT_ITEM,
+  const handleLoadMore = async () => {
+    if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length < LIMIT_ITEM * page) {
+      setHasMore(false)
+      return
+    }
+    if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length == LIMIT_ITEM * page) {
+      await setPage(page + 1)
+    }
   }
 
   useEffect(() => {
-    if (archivedVideoStreamData.length === 0) {
-      getArchivedVideoStream(params)
+    if (video_id) {
+      getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
     }
     return () => {
+      setPage(1)
       resetArchivedVideoStream()
     }
   }, [video_id])
 
   useEffect(() => {
-    loadMoreArchived(page + 1, video_id)
-  }, [])
+    if (page > 1) getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
+  }, [page])
 
   const renderArchiveVideoItem = (item: TypeVideoArchived, index: number) => {
     return (
@@ -140,12 +141,16 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
       <Box className={classes.wrapContentContainer}>
         <InfiniteScroll
           className={classes.scrollContainer}
-          dataLength={archivedVideoStreamData?.length}
-          next={() => {
-            loadMoreArchived(page, video_id)
-          }}
-          hasMore={true}
-          loader={null}
+          dataLength={archivedVideoStreamData.length}
+          next={handleLoadMore}
+          hasMore={hasMore}
+          loader={
+            isLoadingData && (
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            )
+          }
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
         >
@@ -168,6 +173,14 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
+  loaderCenter: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: theme.spacing(3),
+    textAlign: 'center',
+  },
   container: {
     display: 'flex',
     justifyContent: 'center',

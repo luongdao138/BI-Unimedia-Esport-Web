@@ -9,7 +9,8 @@ import i18n from '@locales/i18n'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { PreloadChannel, PreloadPreviewItem } from '../PreloadContainer'
 import useLiveStreamDetail from '../useLiveStreamDetail'
-import { TypeVideoArchived } from '@services/liveStreamDetail.service'
+import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
+import ESLoader from '@components/Loader'
 
 interface dataItem {
   id: number
@@ -24,17 +25,36 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   const theme = useTheme()
   const downMd = useMediaQuery(theme.breakpoints.down(769))
   const isLoading = false
-  const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream } = useLiveStreamDetail()
+  const { meta_archived_video_stream, archivedVideoStreamData, getArchivedVideoStream, resetArchivedVideoStream } = useLiveStreamDetail()
   const isLoadingData = meta_archived_video_stream?.pending
 
   const [descriptionCollapse, setDescriptionCollapse] = useState(true)
+  const [page, setPage] = useState<number>(1)
+  const [hasMore, setHasMore] = useState(true)
 
-  const params = {
-    video_id,
+  const handleLoadMore = async () => {
+    if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length < LIMIT_ITEM * page) {
+      setHasMore(false)
+      return
+    }
+    if (archivedVideoStreamData.length > 0 && archivedVideoStreamData.length == LIMIT_ITEM * page) {
+      await setPage(page + 1)
+    }
   }
+
   useEffect(() => {
-    getArchivedVideoStream(params)
+    if (video_id) {
+      getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
+    }
+    return () => {
+      setPage(1)
+      resetArchivedVideoStream()
+    }
   }, [video_id])
+
+  useEffect(() => {
+    if (page > 1) getArchivedVideoStream({ video_id: video_id, page: page, limit: LIMIT_ITEM })
+  }, [page])
 
   const getDistributorSocialInfo = () => [
     {
@@ -178,11 +198,15 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
         <InfiniteScroll
           className={classes.scrollContainer}
           dataLength={archivedVideoStreamData.length}
-          next={() => {
-            // loadMore(page, follow)
-          }}
-          hasMore={true}
-          loader={null}
+          next={handleLoadMore}
+          hasMore={hasMore}
+          loader={
+            isLoadingData && (
+              <div className={classes.loaderCenter}>
+                <ESLoader />
+              </div>
+            )
+          }
           scrollThreshold={0.8}
           style={{ overflow: 'hidden' }}
         >
@@ -205,6 +229,14 @@ const DistributorInfo: React.FC<DistributorInfoProps> = ({ video_id }) => {
   )
 }
 const useStyles = makeStyles((theme: Theme) => ({
+  loaderCenter: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: theme.spacing(3),
+    textAlign: 'center',
+  },
   container: {
     display: 'flex',
     justifyContent: 'center',
