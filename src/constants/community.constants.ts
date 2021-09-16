@@ -75,3 +75,7 @@ export const TOPIC_ROW_ITEM_DIVISOR = {
   JAPANESE: 12,
   CHARACTER_BEFORE_KEYWORD: 10,
 }
+
+export const CARD_TAG = {
+  THREE_DOT_SPACE: 21,
+}

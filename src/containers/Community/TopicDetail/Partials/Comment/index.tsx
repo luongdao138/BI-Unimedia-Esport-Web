@@ -397,7 +397,7 @@ const useStyles = makeStyles((theme) => ({
         content: "''",
         position: 'absolute',
         top: 'Calc(100% + 3px)',
-        left: (props: { currentReplyNumberRectLeft: number }) => props.currentReplyNumberRectLeft || 8,
+        left: (props: { currentReplyNumberRectLeft: number }) => `min(${props.currentReplyNumberRectLeft}px, 747px)`,
         marginLeft: -5,
         borderWidth: 5,
         borderStyle: 'solid',
