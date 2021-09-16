@@ -8,7 +8,7 @@ export const FIELD_TITLES = {
     game_titles: i18n.t('common:community_create.game'),
     join_condition: i18n.t('common:community_create.participation_approval'),
     area_id: i18n.t('common:community_create.area'),
-    address: i18n.t('common:community_create.area'),
+    address: i18n.t('common:community_create.area_detail'),
     open_range: i18n.t('common:community_create.public_or_private'),
   },
 }

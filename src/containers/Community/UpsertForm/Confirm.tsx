@@ -81,7 +81,7 @@ const Confirm: React.FC<ConfirmProps> = ({ values, prefectures }) => {
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.area')} value={areaName} disabled={true} fullWidth />
-      <ESInput value={values.stepOne.address} disabled={true} fullWidth />
+      <ESInput value={values.stepOne.address} disabled={true} multiline={true} fullWidth />
       <Box pb={2} />
 
       <ESInput labelPrimary={t('common:community_create.public_or_private')} value={openRange} disabled={true} fullWidth />

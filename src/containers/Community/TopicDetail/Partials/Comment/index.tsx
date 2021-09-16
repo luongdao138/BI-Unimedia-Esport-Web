@@ -6,17 +6,12 @@ import ESMenu from '@components/Menu'
 import ESMenuItem from '@components/Menu/MenuItem'
 import LoginRequired from '@containers/LoginRequired'
 import { useTranslation } from 'react-i18next'
-import useCommunityDetail from '@containers/Community/Detail/useCommunityDetail'
-import { useState } from 'react'
-import { REPORT_TYPE } from '@constants/common.constants'
-import ESReport from '@containers/Report'
-import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { SRLWrapper } from 'simple-react-lightbox'
 import { LIGHTBOX_OPTIONS } from '@constants/common.constants'
 import { CommentsResponse } from '@services/community.service'
 import { CommonHelper } from '@utils/helpers/CommonHelper'
-import useTopicDetail from '../../useTopicDetail'
-import router, { useRouter } from 'next/router'
+import router from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
 import _ from 'lodash'
@@ -28,19 +23,37 @@ type MenuParams = {
   isNotMember: boolean
   isPublic: boolean
 }
+
+export type ReportData = {
+  attributes: {
+    nickname: string
+    user_code: string
+    content: string
+    date: string
+    image: string
+    number: number
+    hash_key: string
+  }
+}
+
 type CommunityHeaderProps = {
   comment: CommentsResponse
   menuParams?: MenuParams
   handleReply?: (params: { hash_key: string; comment_no: number }) => void
+  setOpenDelete?: Dispatch<SetStateAction<boolean>>
+  setSelectedCommentHashKey?: Dispatch<SetStateAction<string>>
+  onReport?: (comment: ReportData) => void
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleReply }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({
+  comment,
+  menuParams,
+  handleReply,
+  setOpenDelete,
+  setSelectedCommentHashKey,
+  onReport,
+}) => {
   const classes = useStyles()
-  const { query } = useRouter()
-  const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
-  const { isAuthenticated } = useCommunityDetail()
-  const [openReport, setOpenReport] = useState(false)
-  const [openDelete, setOpenDelete] = useState(false)
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
@@ -53,9 +66,9 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
     setReplyAnchorEl(null)
   }
 
-  const { deleteComment, getCommentsList } = useTopicDetail()
   const commentData = comment.attributes
   const hash_key = commentData.hash_key
+
   const detail = {
     attributes: {
       nickname: commentData.owner_nickname,
@@ -65,19 +78,16 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
       image: commentData.attachments[0]?.assets_url,
       number: commentData.comment_no,
       hash_key: commentData.hash_key,
+      avatar_image: commentData.owner_profile,
     },
   }
 
-  const handleReportOpen = () => {
-    setOpenReport(true)
-  }
   const handleDeleteOpen = () => {
+    setSelectedCommentHashKey(hash_key)
     setOpenDelete(true)
   }
-  const handleDeleteSubmit = async () => {
-    await deleteComment(hash_key)
-    setOpenDelete(false)
-    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
+  const handleReport = () => {
+    onReport && onReport(detail)
   }
 
   const handleCommentReply = () => {
@@ -96,7 +106,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const newLineText = (text) => {
     if (commentData?.deleted_at) {
-      return <Typography className={classes.content}>{t('common:topic_comment.has_deleted') + '。'}</Typography>
+      return <Typography className={classes.content}>{t('common:topic_comment.has_deleted_comment')}</Typography>
     }
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
@@ -133,7 +143,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
                   )}
                   {!isOwner && (
                     <LoginRequired>
-                      <ESMenuItem onClick={handleReportOpen}>{t('common:topic_comment.report.button')}</ESMenuItem>
+                      <ESMenuItem onClick={handleReport}>{t('common:topic_comment.report.button')}</ESMenuItem>
                     </LoginRequired>
                   )}
                 </ESMenu>
@@ -199,25 +209,6 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
             </Box>
           )}
         </Box>
-        {isAuthenticated && (
-          <>
-            <ESReport
-              reportType={REPORT_TYPE.TOPIC_COMMENT}
-              target_id={detail.attributes.hash_key}
-              data={detail}
-              open={openReport}
-              handleClose={() => setOpenReport(false)}
-            />
-            <DiscardDialog
-              title={t('common:topic_comment.delete.title')}
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-              onSubmit={handleDeleteSubmit}
-              description={t('common:topic_comment.delete.description')}
-              confirmTitle={t('common:topic_comment.delete.submit')}
-            />
-          </>
-        )}
       </>
     )
   }
@@ -341,7 +332,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     transition: 'all 0.5s ease',
     borderRadius: 7,
-    width: '66%',
+    maxHeight: 300,
+    maxWidth: 300,
+    objectFit: 'contain',
   },
   popOverImage: {
     maxHeight: '50vh',

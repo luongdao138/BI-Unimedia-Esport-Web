@@ -126,7 +126,7 @@ const ESReport: React.FC<ESReportProps> = ({ data, target_id, room_id, chat_id, 
           )}
           <Box display="flex" mb={2}>
             <Box ml={1}>
-              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.nickname ? '' : '/images/avatar.png'} />
+              <Avatar className={classes.topicAvatar} alt={attr.nickname} src={attr.avatar_image} />
             </Box>
 
             <Box className={classes.userInfoBox} ml={1} maxWidth="77%">

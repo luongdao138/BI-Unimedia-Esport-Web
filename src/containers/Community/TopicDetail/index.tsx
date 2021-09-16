@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import TopicDetailHeader from '@containers/Community/TopicDetail/Partials/TopicDetailHeader'
-import Comment from '@containers/Community/TopicDetail/Partials/Comment'
+import Comment, { ReportData } from '@containers/Community/TopicDetail/Partials/Comment'
 import MainTopic from '@containers/Community/TopicDetail/Partials/MainTopic'
-import { Link, Box, Grid } from '@material-ui/core'
-import { makeStyles, Theme } from '@material-ui/core'
+import { Box, useMediaQuery, useTheme, makeStyles, Theme } from '@material-ui/core'
+import Pagination from '@material-ui/lab/Pagination'
+import PaginationMobile from '../Partials/PaginationMobile'
 import CommentInput from './Partials/CommentInput'
 import useTopicDetail from './useTopicDetail'
+import { Colors } from '@theme/colors'
 import ESLoader from '@components/Loader'
 import { useRouter } from 'next/router'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { useTranslation } from 'react-i18next'
-import _ from 'lodash'
 import useCommunityDetail from '../Detail/useCommunityDetail'
 import useCommunityHelper from '../hooks/useCommunityHelper'
 import useTopicHelper from './useTopicHelper'
+import _ from 'lodash'
 import { ESRoutes } from '@constants/route.constants'
+import { REPORT_TYPE } from '@constants/common.constants'
+
+import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
+import { useTranslation } from 'react-i18next'
+import ESReport from '@containers/Report'
 
 const TopicDetailContainer: React.FC = () => {
   const { t } = useTranslation(['common'])
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('sm'))
   const classes = useStyles()
   const router = useRouter()
   const { back } = useRouter()
@@ -28,18 +35,14 @@ const TopicDetailContainer: React.FC = () => {
     topicDetailMeta,
     deleteTopic,
     getCommentsList,
-    getCommentsListPage,
     commentsList,
-    pages,
     commentsListMeta,
     commentsListPageMeta,
-    getCommentsListNext,
-    commentsListNextMeta,
+    deleteComment,
   } = useTopicDetail()
-  const { getCommunityDetail, communityDetail } = useCommunityDetail()
+  const { getCommunityDetail, communityDetail, isAuthenticated } = useCommunityDetail()
   const [reply, setReply] = useState<{ hash_key: string; comment_no: number } | any>({})
-  const [lastCommentHashKey, setLastCommentHashKey] = useState<string>('')
-  const [isBottomOfPage, setIsBottomOfPage] = useState<boolean>(false)
+
   const [render, setRender] = useState(false)
   const { isNotMember, isModerator, isPublic, isAutomatic } = useCommunityHelper(communityDetail)
   const data = topic?.attributes
@@ -52,13 +55,44 @@ const TopicDetailContainer: React.FC = () => {
     isTopicOwner: isOwner,
   }
 
+  const [openDelete, setOpenDelete] = useState(false)
+  const [selectedCommentHashKey, setSelectedCommentHashKey] = useState('')
+  const [reportData, setReportData] = useState<ReportData | null>(null)
+
+  const handleDeleteComment = () => {
+    deleteComment(selectedCommentHashKey)
+    setOpenDelete(false)
+  }
+
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(1)
+
+  useEffect(() => {
+    getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
+  }, [])
+
   useEffect(() => {
     if (topic_hash_key) {
       getCommunityDetail(String(hash_key))
       getTopicDetail({ topic_hash: String(topic_hash_key), community_hash: String(hash_key) })
-      getCommentsListPage({ hash_key: String(topic_hash_key) })
+      getCommentsList({ hash_key: String(topic_hash_key) })
     }
   }, [router])
+
+  useEffect(() => {
+    getCommentsList({ hash_key: String(topic_hash_key), page: page })
+  }, [page])
+
+  useEffect(() => {
+    if (!commentsListMeta.pending && commentsListMeta.loaded) {
+      setCount(commentsListPageMeta?.total_pages)
+    }
+  }, [commentsListMeta])
+
+  const handleChange = (event, value) => {
+    setPage(value)
+    return event
+  }
 
   useEffect(() => {
     if (communityDetail && !isAutomatic && isNotMember) {
@@ -68,55 +102,15 @@ const TopicDetailContainer: React.FC = () => {
     }
   }, [communityDetail])
 
-  useEffect(() => {
-    if (commentsListPageMeta.loaded) {
-      getCommentsList({ hash_key: String(topic_hash_key), page: Number(pages.total_pages) })
-    }
-  }, [commentsListPageMeta])
-
-  useEffect(() => {
-    if (commentsList) {
-      setLastCommentHashKey(String(commentsList[_.findLastIndex(commentsList)]?.attributes?.hash_key))
-    }
-  }, [commentsList])
-
-  useEffect(() => {
-    if (isBottomOfPage && !commentsListNextMeta.pending) {
-      loadMore()
-    }
-  }, [isBottomOfPage])
-
   const handleDeleteTopic = () => {
     deleteTopic({ hash_key: String(topic_hash_key) })
   }
 
+  const handleReportComment = (detail: ReportData) => {
+    setReportData(detail)
+  }
+
   const handleBack = () => back()
-
-  const hasPrevious = pages && Number(pages.current_page) > 1
-
-  const loadMore = () => {
-    if (_.isEmpty(commentsList)) {
-      getCommentsListNext({ hash_key: String(topic_hash_key) })
-      return
-    }
-    getCommentsListNext({ hash_key: String(topic_hash_key), comment_hash_key: lastCommentHashKey })
-  }
-
-  const loadPrevious = () => {
-    if (hasPrevious && !commentsListMeta.pending) {
-      getCommentsList({ hash_key: String(topic_hash_key), page: Number(pages.current_page) - 1 })
-    }
-  }
-
-  const renderComments = () => {
-    return (
-      <>
-        {commentsList.map((comment, i) => {
-          return <Comment key={i} comment={comment} menuParams={menuParams} handleReply={setReply} />
-        })}
-      </>
-    )
-  }
 
   if (!render) {
     return <></>
@@ -132,53 +126,76 @@ const TopicDetailContainer: React.FC = () => {
               <MainTopic topic={topic} handleDelete={handleDeleteTopic} community={communityDetail} />
             </>
           )}
-          {hasPrevious && (
-            <Box className={classes.link}>
-              <Link onClick={loadPrevious} style={{ cursor: 'pointer' }}>
-                {t('common:community.topic.view_past_comments')}
-              </Link>
-            </Box>
-          )}
-          {commentsListMeta.pending && (
-            <Box my={4} display="flex" justifyContent="center" alignItems="center">
+
+          {commentsListMeta.pending ? (
+            <Box className={classes.loaderBox}>
               <ESLoader />
             </Box>
-          )}
-          {!!commentsList && commentsList.length > 0 && (
-            <InfiniteScroll
-              dataLength={commentsList.length}
-              next={() => {
-                return
-              }}
-              hasMore={true}
-              scrollableTarget="scrollableDiv"
-              scrollThreshold={0.99}
-              style={{ overflow: 'hidden ' }}
-              loader={null}
-              onScroll={() => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - (commentsListNextMeta.pending ? 164 : 50)) {
-                  setIsBottomOfPage(true)
-                } else {
-                  setIsBottomOfPage(false)
-                }
-              }}
-            >
-              {renderComments()}
-            </InfiniteScroll>
-          )}
-
-          {commentsListNextMeta.pending && (
-            <Grid item xs={12}>
-              <Box my={4} mb={6} display="flex" justifyContent="center" alignItems="center">
-                <ESLoader />
-              </Box>
-            </Grid>
+          ) : (
+            !!commentsList &&
+            !_.isEmpty(commentsList) &&
+            commentsList.map((comment, i) => {
+              return (
+                <Comment
+                  key={i}
+                  comment={comment}
+                  menuParams={menuParams}
+                  handleReply={setReply}
+                  setOpenDelete={setOpenDelete}
+                  setSelectedCommentHashKey={setSelectedCommentHashKey}
+                  onReport={handleReportComment}
+                />
+              )
+            })
           )}
         </Box>
+
+        <Box display="flex" justifyContent="center" my={2}>
+          {commentsListMeta.pending ? (
+            <></>
+          ) : isMobile ? (
+            <PaginationMobile page={page} pageNumber={count} setPage={setPage} />
+          ) : (
+            <Pagination
+              className={classes.pagination}
+              count={count}
+              page={page}
+              onChange={handleChange}
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+              hideNextButton
+              hidePrevButton
+              showFirstButton
+              showLastButton
+            />
+          )}
+        </Box>
+
         {!isNotMember && (
           <Box className={classes.inputContainer}>
-            <CommentInput reply_param={reply} handleReply={setReply} loadMore={loadMore} />
+            <CommentInput reply_param={reply} handleReply={setReply} setPage={setPage} />
           </Box>
+        )}
+
+        {isAuthenticated && reportData && (
+          <>
+            <DiscardDialog
+              title={t('common:topic_comment.delete.title')}
+              open={openDelete}
+              onClose={() => setOpenDelete(false)}
+              onSubmit={handleDeleteComment}
+              description={t('common:topic_comment.delete.description')}
+              confirmTitle={t('common:topic_comment.delete.submit')}
+            />
+            <ESReport
+              reportType={REPORT_TYPE.TOPIC_COMMENT}
+              target_id={reportData.attributes.hash_key}
+              data={reportData}
+              open={reportData !== null}
+              handleClose={() => setReportData(null)}
+            />
+          </>
         )}
       </Box>
     </>
@@ -201,6 +218,34 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     background: '#101010',
     willChange: 'transform',
+    zIndex: 2,
+  },
+  loaderBox: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pagination: {
+    zIndex: 1,
+    '& .MuiPaginationItem-root': {
+      color: Colors.white,
+      borderRadius: 4,
+    },
+    '& .MuiPaginationItem-outlined': {
+      borderColor: Colors.primary,
+    },
+    '& .Mui-selected': {
+      backgroundColor: Colors.primary,
+      color: Colors.white,
+    },
+    '& .MuiPaginationItem-ellipsis': {
+      height: 32,
+      border: '1px solid',
+      borderColor: Colors.primary,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   },
 }))
 

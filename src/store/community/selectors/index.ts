@@ -22,4 +22,3 @@ export const getTopicSearchList = createSelector(getRoot, (state) => state.topic
 export const getTopicSearchListMeta = createSelector(getRoot, (state) => state.topicSearchListMeta)
 export const getCommentsList = createSelector(getRoot, (state) => state.commentsList)
 export const getCommentsListMeta = createSelector(getRoot, (state) => state.commentsListMeta)
-export const getCommentsListNextMeta = createSelector(getRoot, (state) => state.commentsListNextMeta)
