@@ -14,7 +14,7 @@ import DonatePoints from './DonatePoints'
 import DonatePointsConfirmModal from './DonatePointsConfirmModal/DonatePointsConfirmModal'
 import ProgramInfoNoViewingTicket from '@containers/VideoLiveStreamContainer/ProgramInfoNoViewingTicket'
 import usePointsManage from '@containers/PointManage/usePointsManage'
-import ESLoader from '@components/FullScreenLoader'
+// import ESLoader from '@components/FullScreenLoader'
 import { addToast } from '@store/common/actions'
 import { useAppDispatch } from '@store/hooks'
 import PurchaseTicketSuperChat from './PurchaseTicketSuperChat'
@@ -22,7 +22,6 @@ import { useRouter } from 'next/router'
 import usePurchaseTicketSuperChat from './usePurchaseTicket'
 import useDetailVideo from './useDetailVideo'
 import moment from 'moment'
-import useGetProfile from '@utils/hooks/useGetProfile'
 
 enum TABS {
   PROGRAM_INFO = 0,
@@ -49,9 +48,8 @@ const VideosTop: React.FC = () => {
   const router = useRouter()
   const video_id = router.query?.vid // uuid video
 
-  const { getMyPointData, myPointsData, meta_my_points } = usePointsManage()
-  const { getUserProfileMeta } = useGetProfile()
-  const { purchaseTicketSuperChat, dataPurchaseTicketSuperChat, meta_purchase_ticket_super_chat } = usePurchaseTicketSuperChat()
+  const { getMyPointData, myPointsData } = usePointsManage()
+  const { purchaseTicketSuperChat, dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
 
   const [tab, setTab] = useState(0)
@@ -65,9 +63,9 @@ const VideosTop: React.FC = () => {
   const [softKeyboardIsShown, setSoftKeyboardIsShown] = useState(false)
   const [isPurchaseLackPoint, setIsPurchaseLackPoint] = useState(true)
 
-  const { getVideoDetail, detailVideoResult, userResult, meta } = useDetailVideo()
+  const { getVideoDetail, detailVideoResult, userResult } = useDetailVideo()
 
-  const isPending = meta_purchase_ticket_super_chat.pending || meta_my_points.pending || getUserProfileMeta.pending || meta.pending
+  // const isPending = meta.pending || meta_my_points.pending
 
   const ticket_points = 100
 
@@ -125,7 +123,6 @@ const VideosTop: React.FC = () => {
 
   useEffect(() => {
     if (dataPurchaseTicketSuperChat?.code === 200) {
-      getMyPointData(params)
       handleClose()
       dispatch(addToast(i18n.t('common:donate_points.purchase_ticket_success')))
     }
@@ -198,7 +195,7 @@ const VideosTop: React.FC = () => {
         height: 50,
         marginLeft: theme.spacing(5),
         marginRight: theme.spacing(5),
-        marginTop: 160,
+        marginTop: theme.spacing(5),
       }}
       onClick={onClick}
     >
@@ -214,7 +211,6 @@ const VideosTop: React.FC = () => {
     <Box style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
       <ChatContainer
         myPoint={myPoint}
-        // fake key_video_id and user profile
         key_video_id={detailVideoResult?.key_video_id}
         // VOjyj1m048y7sAjx -
         // key_video_id="2f1141b031696738c1eb72cc450afadb"
@@ -264,7 +260,7 @@ const VideosTop: React.FC = () => {
 
   return (
     <Box className={classes.root}>
-      {isPending && <ESLoader open={isPending} />}
+      {/* {isPending && <ESLoader open={meta_my_points.pending} />} */}
       <Box className={classes.container}>
         <LiveStreamContent
           video_id={video_id}

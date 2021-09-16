@@ -70,11 +70,11 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)
     console.log('🚀 ~ onProgress ~ 2222-----playedSeconds', event.playedSeconds)
     console.log('🚀 ~ onProgress ~ 3333-----loadedSeconds', event.loadedSeconds)
-    setPlayedSeconds(event.playedSeconds)
     setState({ ...state, loading: false })
     if (isLive) {
       setDurationPlayer(event.loadedSeconds)
     }
+    setPlayedSeconds(event.playedSeconds)
     // trigger change streaming second in redux
     if (Math.floor(event.loadedSeconds) !== streamingSecond) {
       let is_viewing_video = true
@@ -107,7 +107,7 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
 
     const onStateChange = () => {
       const playerState = player.current.getState()
-      console.warn(`Player State - ${playerState} - ${player.current.getDuration()}--${player.current.getBuffered()}`)
+      console.warn(`Player State - ${playerState} - ${player.current.getDuration()}--${player.current.getDuration()}`)
       setIsLive(player.current.getDuration() === Infinity ? true : false)
     }
     const onError = (err) => {
@@ -117,7 +117,8 @@ const VideoPlayer: React.FC<PlayerProps> = () => {
     player.current = IVSPlayer.create() //MediaPlayer
     // player.current.attachHTMLVideoElement(videoEl.current)
     player.current.load(STREAM_PLAYBACK_URL)
-    // player.current.play()
+    player.current.play()
+    player.current.setMuted(true)
     // player.current.setAutoplay(true)
 
     player.current.addEventListener(READY, onStateChange)

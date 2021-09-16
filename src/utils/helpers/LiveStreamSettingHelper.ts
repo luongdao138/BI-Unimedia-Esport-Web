@@ -1,8 +1,9 @@
 import { FormLiveType } from '@containers/arena/UpsertForm/FormLiveSettingsModel/FormLiveSettingsType'
+import { TYPE_RM } from '@services/liveStream.service'
 import { FormikErrors } from 'formik'
 import _ from 'lodash'
 
-const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>): boolean => {
+const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>, type_rm?: string): boolean => {
   const { stepSettingOne, stepSettingTwo, stepSettingThree } = errors
   const requiredFieldErrors = []
   switch (tab) {
@@ -24,12 +25,19 @@ const checkRequiredFields = (tab: number, errors: FormikErrors<FormLiveType>): b
         requiredFieldErrors.push(stepSettingTwo.title)
         requiredFieldErrors.push(stepSettingTwo.description)
         requiredFieldErrors.push(stepSettingTwo.category)
-        requiredFieldErrors.push(stepSettingTwo.stream_notify_time)
         requiredFieldErrors.push(stepSettingTwo.stream_schedule_start_time)
         requiredFieldErrors.push(stepSettingTwo.stream_schedule_end_time)
         if (stepSettingTwo.sell_optional && stepSettingTwo.sell_ticket_start_time) {
           requiredFieldErrors.push(stepSettingTwo.ticket_price)
-          requiredFieldErrors.push(stepSettingTwo.sell_ticket_start_time)
+          if (type_rm === TYPE_RM.SELL || type_rm === TYPE_RM.NEW) {
+            requiredFieldErrors.push(stepSettingTwo.sell_ticket_start_time)
+          }
+        }
+        if (stepSettingTwo.video_publish_end_time && (type_rm === TYPE_RM.PUBLISH || type_rm === TYPE_RM.NEW)) {
+          requiredFieldErrors.push(stepSettingTwo.video_publish_end_time)
+        }
+        if (type_rm === TYPE_RM.NOTIFY || type_rm === TYPE_RM.NEW) {
+          requiredFieldErrors.push(stepSettingTwo.stream_notify_time)
         }
       }
       const filteredErrors = _.filter(requiredFieldErrors, (o) => o !== undefined)

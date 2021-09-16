@@ -28,8 +28,8 @@ export const validationLiveSettingsScheme = (): any => {
       }),
 
       video_publish_end_time: Yup.date()
-        .nullable()
-        .notRequired()
+        // .nullable()
+        // .notRequired()
         // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
         .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
     }),
@@ -70,67 +70,41 @@ export const validationScheduleScheme = (): any => {
       }),
       sell_optional: Yup.boolean().when(['use_ticket'], {
         is: true,
-        then: Yup.boolean().nullable().required(i18n.t('common:streaming_setting_screen.validation.input_required')),
+        then: Yup.boolean().required(i18n.t('common:streaming_setting_screen.validation.input_required')),
       }),
 
-      sell_ticket_start_time: Yup.date().when(['use_ticket'], {
-        is: true,
-        then: Yup.date()
-          .nullable()
-          .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
-          .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-      }),
+      sell_ticket_start_time: Yup.date()
+        .nullable()
+        .when(['use_ticket'], {
+          is: true,
+          then: Yup.date()
+            .nullable()
+            .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+            .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
+        }),
 
-      status: Yup.number(),
+      status: Yup.number().oneOf([0, 1, 2]),
 
-      // stream_notify_time: Yup.date()
-      //   .nullable()
-      //   .required(i18n.t('common:common.input_required'))
-      //   .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-      stream_notify_time: Yup.date().when(['status'], {
-        is: (status) => {
-          //0-schedule=>update
-          return status === 0
-        },
-        then: Yup.date()
-          .nullable()
-          .required(i18n.t('common:common.input_required'))
-          .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-      }),
+      stream_notify_time: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
-      stream_schedule_start_time: Yup.date().when(['status'], {
-        is: (status) => {
-          //0-schedule=>update
-          return status === 0
-        },
-        then: Yup.date()
-          .nullable()
-          .required(i18n.t('common:common.input_required'))
-          .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-      }),
+      stream_schedule_start_time: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minStartDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
-      stream_schedule_end_time: Yup.date().when(['status'], {
-        is: (status) => {
-          //0-schedule=>update
-          return status === 0
-        },
-        then: Yup.date()
-          .nullable()
-          .required(i18n.t('common:common.input_required'))
-          .min(minEndDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-      }),
+      stream_schedule_end_time: Yup.date()
+        .nullable()
+        .required(i18n.t('common:common.input_required'))
+        .min(minEndDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
-      video_publish_end_time: Yup.date().when(['status'], {
-        is: (status) => {
-          //0-schedule=>update
-          return status !== 1
-        },
-        then: Yup.date()
-          .nullable()
-          .notRequired()
-          // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
-          .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
-      }),
+      video_publish_end_time: Yup.date()
+        .nullable()
+        // .notRequired()
+        // .required(i18n.t('common:streaming_setting_screen.validation.input_required'))
+        .min(approximateMinDate, i18n.t('common:streaming_setting_screen.validation.min_date')),
 
       //cross-fields validations
       schedule_live_date: Yup.string().when(['stream_schedule_start_time', 'stream_schedule_end_time'], {
