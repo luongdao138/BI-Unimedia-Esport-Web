@@ -20,6 +20,7 @@ enum TABS {
   ARCHIVED_VIDEOS = 3,
   FAVORITE_VIDEOS = 4,
 }
+
 export const TabsVideo = {
   VIDEOS_LIST: 0,
   LIVE_VIDEOS: 1,
@@ -103,6 +104,9 @@ const useStyles = makeStyles((theme) => ({
   tabsContainer: {
     paddingRight: 122,
   },
+  tabMin: {
+    minWidth: 0,
+  },
   tabContent: {
     padding: '0 122px 0 24px',
   },
@@ -166,11 +170,12 @@ const useStyles = makeStyles((theme) => ({
     tabContent: {
       paddingRight: 0,
     },
+    tabMin: {
+      padding: '6px 0',
+      marginRight: '12px',
+    },
   },
   [theme.breakpoints.down(415)]: {
-    tabMin: {
-      minWidth: 56,
-    },
     bannerContainer: {
       marginTop: 0,
     },

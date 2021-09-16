@@ -3,7 +3,7 @@ import Fab from '@material-ui/core/Fab'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
 import React, { useEffect, useRef } from 'react'
-import { Box, Theme, makeStyles } from '@material-ui/core'
+import { Box, Theme, makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import { BannerItem } from '@services/videoTop.services'
 
 type BannerCarouselProps = {
@@ -80,6 +80,8 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
   const onCenterSlideDataIndexChange = (activeSlide: number) => {
     setCenterSlideDataIndex(activeSlide)
   }
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down(750))
 
   const playSlider = () => {
     if (ref.current && data.length) {
@@ -123,7 +125,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
           const { bannerHeight, bannerMaxVisibleSlide, bannerCurrentVisibleSlide, bannerCustomScales } = props
 
           let width = 700
-          let height = 340
+          let height = isMobile ? 203 : 340
           if (parentWidth <= 414) {
             width = parentWidth
             height = parentWidth * (17 / 35)
@@ -225,7 +227,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 3,
     backgroundColor: '#FFFFFF',
     opacity: 0,
-    transition: 'all 500ms',
     ...props.buttonRightContainer,
   }),
   iconBtnStyle: {
@@ -234,25 +235,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     color: '#707070',
   },
-  [theme.breakpoints.down(415)]: {
+  [theme.breakpoints.down(750)]: {
     sliderContainer: {
       height: ((window.innerWidth - 48) * 17) / 35,
     },
-    buttonLeftContainer: {
+    buttonLeftContainer: () => ({
       left: 0,
       right: 'auto',
       top: '40%',
       width: 36,
       height: 36,
       opacity: 1,
-    },
-    buttonRightContainer: {
+    }),
+    buttonRightContainer: () => ({
       right: 0,
       left: 'auto',
       top: '40%',
       width: 36,
       height: 36,
       opacity: 1,
+    }),
+    iconBtnStyle: {
+      fontSize: 20,
     },
   },
 }))
