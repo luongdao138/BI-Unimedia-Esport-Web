@@ -27,7 +27,10 @@ const useArenaHome = (): {
   const meta = useAppSelector(getTournamentSearchMeta)
   const [selectedFilter, setSelectedFilter] = useState(TournamentFilterOption.all)
   const tournamentSearch = (param: TournamentSearchParams) => dispatch(actions.tournamentSearch(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.tournamentSearch.typePrefix))
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.tournamentSearch.typePrefix))
+    dispatch(actions.resetSearchTournaments())
+  }
   const loadMore = () => {
     if (page && page.current_page < page.total_pages) {
       tournamentSearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter })
@@ -43,7 +46,6 @@ const useArenaHome = (): {
   useEffect(() => {
     return () => {
       resetMeta()
-      dispatch(actions.resetSearchTournaments())
     }
   }, [])
   return { arenas, meta, page, loadMore, onFilterChange, selectedFilter, setSelectedFilter, arenasFiltered }
