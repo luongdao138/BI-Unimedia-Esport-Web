@@ -155,7 +155,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          {i18n.t('common:community_create.edit.title')}
+          {i18n.t('common:community_create.edit.check_edited_content')}
         </ButtonPrimary>
         <CancelDialog communityName={communityName} />
       </Box>

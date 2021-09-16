@@ -1228,7 +1228,7 @@ export default {
     edit: {
       title: 'コミュニティを編集する',
       disband_button: 'コミュニティを解散する',
-      confirm_disband: '編集内容を確定する',
+      check_edited_content: '編集内容を確認する',
     },
     disband: {
       title: 'コミュニティを解散する',
