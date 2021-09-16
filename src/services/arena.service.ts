@@ -115,6 +115,7 @@ export type TournamentDetail = {
     overview: string
     notes: string
     rule: TournamentRule
+    sort: string
     max_participants: number
     status: TournamentStatus
     is_freezed: boolean

@@ -17,6 +17,13 @@ export const PARTICIPATION_TYPES = [
 export const RULES = [
   { label: 'トーナメント', value: 'single' },
   { label: 'バトルロイヤル', value: 'battle_royale' },
+  { label: 'スコアアタック', value: 'score_attack' },
+  { label: 'タイムアタック', value: 'time_attack' },
+]
+
+export const SORTING_METHOD = [
+  { label: '昇順', value: 'asc' },
+  { label: '降順', value: 'desc' },
 ]
 
 export const T_TYPES = [

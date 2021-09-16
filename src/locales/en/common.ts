@@ -653,6 +653,7 @@ export default {
     overview: '概要',
     please_enter: '入力してください',
     holding_format: '開催形式',
+    sorting_method: 'ソート方法',
     has_third_place: '3位決定戦あり',
     participation: '参加形式',
     participation_term: '参加条件・ルール',

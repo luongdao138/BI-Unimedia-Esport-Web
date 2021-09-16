@@ -1,6 +1,6 @@
 import { Box, makeStyles } from '@material-ui/core'
 import { TournamentHelper } from '@utils/helpers/TournamentHelper'
-import { PARTICIPATION_TYPES, RULES } from '@constants/tournament.constants'
+import { PARTICIPATION_TYPES, RULES, SORTING_METHOD } from '@constants/tournament.constants'
 import { FormType } from './FormModel/FormType'
 import { FormikProps } from 'formik'
 import { EditableTypes } from './useTournamentCreate'
@@ -48,6 +48,24 @@ const StepTwo: React.FC<Props> = ({ formik, editables }) => {
           ))}
         </ESSelect>
       </Box>
+      {(formik.values.stepTwo.rule === 'score_attack' || formik.values.stepTwo.rule === 'time_attack') && (
+        <ESSelect
+          className={classes.selectWidth}
+          name="stepTwo.sort"
+          value={formik.values.stepTwo.sort}
+          // onChange={formik.handleChange}
+          label={i18n.t('common:tournament_create.sorting_method')}
+          required={true}
+          size="small"
+        >
+          {SORTING_METHOD.map((sorting_method, index) => (
+            <option key={index} value={sorting_method.value}>
+              {sorting_method.label}
+            </option>
+          ))}
+        </ESSelect>
+      )}
+      <Box></Box>
       <Box pb={4}>
         {formik.values.stepTwo.rule === 'single' && (
           <ESCheckbox

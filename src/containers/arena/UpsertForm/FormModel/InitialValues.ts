@@ -13,6 +13,7 @@ export const getInitialValues = (data?: TournamentDetail): FormType => ({
   },
   stepTwo: {
     rule: data ? data.attributes.rule : -1,
+    sort: data ? data.attributes.sort : 'asc',
     has_third_place: data ? data.attributes.has_third_place : false,
     participant_type: data ? data.attributes.participant_type : -1,
     max_participants: data ? data.attributes.max_participants : 0,

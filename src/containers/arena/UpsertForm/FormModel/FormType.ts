@@ -15,6 +15,7 @@ export type FormType = {
   }
   stepTwo: {
     rule: string | -1
+    sort: string
     t_type: 't_public' | 't_private' | -1
     has_third_place: boolean
     participant_type: number
