@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions'
 import { ParticipantsData, PageMeta, LobbyListItem, CategoryItem, LobbyDetail, ParticipantsItem } from '@services/lobby.service'
+import _ from 'lodash'
 
 type StateType = {
   participants: ParticipantsData
@@ -23,7 +24,7 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.searchLobby.fulfilled, (_state, _action) => {
     let searchLobbies = _action.payload.data
     if (_action.payload.meta != undefined && _action.payload.meta.current_page > 1) {
-      searchLobbies = _state.searchLobbies.concat(_action.payload.data)
+      searchLobbies = _.unionBy(_state.searchLobbies, _action.payload.data, 'attributes.hash_key')
     }
 
     _state.searchLobbies = searchLobbies
