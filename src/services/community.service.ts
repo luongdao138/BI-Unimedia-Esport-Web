@@ -8,9 +8,14 @@ export enum CommunityFilterOption {
   organized = 'organized',
 }
 
-export type CommunitySearchParams = {
+export type CommunityListParams = {
   page: number
   filter?: CommunityFilterOption
+}
+
+export type CommunitySearchParams = {
+  page: number
+  keyword: string
 }
 
 export type CommunityListByUserParams = {
@@ -19,7 +24,12 @@ export type CommunityListByUserParams = {
 }
 
 export type CommunityListResponse = {
-  data: Array<CommunityResponse>
+  data: CommunityResponse[]
+  meta: PageMeta
+}
+
+export type CommunitySearchResponse = {
+  data: CommunityResponse[]
   meta: PageMeta
 }
 
@@ -118,7 +128,7 @@ export type CommunityFeature = {
 }
 
 export type CommunityFeaturesResponse = {
-  data: Array<CommunityFeature>
+  data: CommunityFeature[]
 }
 
 export type PageMeta = {
@@ -160,20 +170,20 @@ export type CommunityMember = {
 }
 
 export type CommunityMembersResponse = {
-  data: Array<CommunityMember>
+  data: CommunityMember[]
   meta: PageMeta
 }
 
 export type CommunityMembersApproveCancelParams = {
   data: {
-    member_ids: Array<number>
+    member_ids: number[]
   }
   hash_key: string
 }
 
 export type CommunityMemberChangeRoleParams = {
   data: {
-    member_id: number
+    member_ids: number[]
     member_role: number
   }
   hash_key: string
@@ -181,7 +191,7 @@ export type CommunityMemberChangeRoleParams = {
 
 export type CommunityMemberRemoveParams = {
   data: {
-    member_id: number
+    member_ids: number[]
   }
   hash_key: string
 }
@@ -226,6 +236,7 @@ export type LastComment = {
       user_id: number
       topic_id: number
       created_at: string
+      deleted_at: string
       reply_to_comment_id: string | null
       comment_no: number
       is_liked: boolean
@@ -233,7 +244,7 @@ export type LastComment = {
       is_mine: boolean
       owner_name: string
       owner_profile: string
-      attachments: Array<CommentsAttachmentResponse>
+      attachments: CommentsAttachmentResponse[]
     }
   }
 }
@@ -248,13 +259,13 @@ export type TopicDetail = {
     community_id: number
     created_at: string
     user_id: number
-    attachments: Array<TopicAttachments> | null
+    attachments: TopicAttachments[] | null
     owner_name: string
     owner_email: string
     owner_profile: string
     owner_user_code: string
     like_count: number
-    game_title: Array<TopicGameTitle>
+    game_title: TopicGameTitle[]
     is_liked: boolean
     member_role: string
     community_name: string
@@ -276,13 +287,13 @@ export type TopicDetailList = {
     created_at: string
     last_comment_date: string
     user_id: number
-    attachments: Array<TopicAttachments> | null
+    attachments: TopicAttachments[] | null
     owner_name: string
     owner_email: string
     owner_profile: string
     owner_user_code: string
     like_count: number
-    game_title: Array<TopicGameTitle>
+    game_title: TopicGameTitle[]
     is_liked: boolean
     member_role: string
     comment_count: number
@@ -311,7 +322,7 @@ export type TopicDeleteParams = {
 }
 
 export type TopicFollowersResponse = {
-  data: Array<FollowersTopicResponse>
+  data: FollowersTopicResponse[]
   meta: PageMeta
 }
 
@@ -330,7 +341,6 @@ export type CommunityDetailResponse = {
 export type TopicParams = {
   title: string
   content: string
-  topic_type: string
   community_hash: string
   attachments?: string
 }
@@ -374,7 +384,7 @@ export type TopicListParams = {
 }
 
 export type TopicListResponse = {
-  data: Array<TopicDetailList>
+  data: TopicDetailList[]
   meta: PageMeta
 }
 
@@ -418,7 +428,7 @@ export type TopicSearchItem = {
 }
 
 export type TopicSearchResponse = {
-  data: Array<TopicSearchItem>
+  data: TopicSearchItem[]
   meta: PageMeta
 }
 
@@ -429,10 +439,36 @@ export type CommentCreateParams = {
   attachments: string
 }
 
+export type CommentDetailParams = {
+  topic_hash: string
+  comment_no: string
+}
+
 export type CommentsAttachmentResponse = {
   id: number
   assets_url: string
   comment_id: number
+}
+
+export type CommentDetail = {
+  id: string
+  type: string
+  attributes: {
+    id: number
+    comment_no: number
+    deleted_at: string | null
+    created_at: string
+    content: string
+    is_mine: true
+    attachments: CommentsAttachmentResponse[] | null
+    owner_nickname: string
+    user_code: string
+    owner_profile: string
+  }
+}
+
+export type CommentDetailResponse = {
+  data: CommentDetail
 }
 
 export type CommentsResponse = {
@@ -445,7 +481,7 @@ export type CommentsResponse = {
     deleted_at: string
     content: string
     is_mine: true
-    attachments: Array<CommentsAttachmentResponse>
+    attachments: CommentsAttachmentResponse[] | null
     owner_nickname: string
     user_code: string
     owner_profile: string
@@ -466,7 +502,7 @@ export type CommentsResponse = {
 }
 
 export type CommentsListResponse = {
-  data: Array<CommentsResponse>
+  data: CommentsResponse[]
   meta: PageMeta
 }
 export type CommentsListParams = {
@@ -475,12 +511,17 @@ export type CommentsListParams = {
   comment_hash_key?: string
 }
 
-export const communityList = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
+export const communitySearch = async (params: CommunitySearchParams): Promise<CommunitySearchResponse> => {
+  const { data } = await api.get<CommunitySearchResponse>(URI.COMMUNITY_SEARCH, { params })
+  return data
+}
+
+export const communityList = async (params: CommunityListParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PRIVATE, { params })
   return data
 }
 
-export const communityListPublic = async (params: CommunitySearchParams): Promise<CommunityListResponse> => {
+export const communityListPublic = async (params: CommunityListParams): Promise<CommunityListResponse> => {
   const { data } = await api.get<CommunityListResponse>(URI.COMMUNITY_LIST_PUBLIC, { params })
   return data
 }
@@ -567,6 +608,11 @@ export const getTopicList = async (params: TopicListParams): Promise<TopicListRe
 
 export const createTopicComment = async (params: CommentCreateParams): Promise<void> => {
   const { data } = await api.post<void>(URI.TOPIC_COMMENT_CREATE, params)
+  return data
+}
+
+export const getTopicComment = async (params: CommentDetailParams): Promise<CommentDetailResponse> => {
+  const { data } = await api.get<CommentDetailResponse>(URI.TOPIC_COMMENT_DETAILS.replace(/:id/gi, params.comment_no), { params })
   return data
 }
 

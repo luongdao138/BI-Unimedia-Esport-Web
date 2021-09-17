@@ -1,5 +1,7 @@
 export enum COMMUNITY_ACTION_TYPE {
   GET_COMMUNITY_LIST = 'community/list',
+  SEARCH_COMMUNITY = 'community/search',
+  RESET_SEARCH_COMMUNITY = 'community/reset_search',
   GET_COMMUNITY_LIST_BY_USER = 'community/list_by_user',
   GET_FOLLOWERS_TOPIC_LIST = 'community/topic_followers',
   CLEAR_COMMUNITY_LIST = 'community/clearList',
@@ -13,6 +15,7 @@ export enum COMMUNITY_ACTION_TYPE {
   DELETE_TOPIC = 'topic/delete',
   CLEAR_TOPIC_DETAIL = 'community/topic/clearDetail',
   CREATE_TOPIC_COMMENT = 'topic/comment/create',
+  GET_TOPIC_COMMENT = 'topic/comment/detail',
   DELETE_TOPIC_COMMENT = 'topic/comment/delete',
   SEARCH_TOPIC = 'topic/search',
   GET_COMMUNITY_MEMBERS = 'community/members',
@@ -27,6 +30,4 @@ export enum COMMUNITY_ACTION_TYPE {
   UNFOLLOW_COMMUNITY = 'community/leave',
   UNFOLLOW_COMMUNITY_PENDING = 'community/leave/pending',
   GET_COMMENTS_LIST = 'comments/list',
-  GET_COMMENTS_LIST_PAGE = 'comments/list/page',
-  GET_COMMENTS_LIST_NEXT = 'comments/list/next',
 }

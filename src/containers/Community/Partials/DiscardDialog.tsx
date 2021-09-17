@@ -1,4 +1,4 @@
-import { Box, Dialog, makeStyles, Typography, withStyles } from '@material-ui/core'
+import { Box, Dialog, makeStyles, Typography, withStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import MuiDialogContent from '@material-ui/core/DialogContent'
 import { Colors } from '@theme/colors'
 import ButtonPrimary from '@components/ButtonPrimary'
@@ -28,6 +28,8 @@ const DialogContent = withStyles((theme) => ({
 const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onSubmit, title, description, confirmTitle }) => {
   const classes = useStyles()
   const { t } = useTranslation(['common'])
+  const _theme = useTheme()
+  const isMobile = useMediaQuery(_theme.breakpoints.down('md'))
 
   const handleClose = () => {
     onClose()
@@ -55,21 +57,31 @@ const DiscardDialog: React.FC<IndividualEntryModalProps> = ({ onClose, open, onS
           e.preventDefault()
         },
       }}
+      PaperProps={{
+        style: {
+          margin: isMobile ? 0 : 32,
+          maxHeight: isMobile ? '100vh' : 'calc(100% - 64px)',
+          height: isMobile ? '100vh' : 'initial',
+          width: isMobile ? '100%' : 'calc(100% - 64px)',
+        },
+      }}
     >
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
         <Box className={classes.container}>
-          <Typography className={classes.dialogTitle} gutterBottom>
-            {title}
-          </Typography>
+          <Typography className={classes.dialogTitle}>{title}</Typography>
           <Typography className={classes.message}>{description}</Typography>
         </Box>
         <Box className={classes.actionBox}>
-          <ButtonPrimary size="small" className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
-            {t('common:common.cancel')}
-          </ButtonPrimary>
-          <ButtonPrimary size="small" className={classes.actionBtnConfirm} onClick={handleSubmit}>
-            {confirmTitle}
-          </ButtonPrimary>
+          <Box maxWidth="100%" className={classes.actionBtnCloseWrap}>
+            <ButtonPrimary fullWidth className={classes.actionBtnClose} gradient={false} onClick={handleClose}>
+              {t('common:common.cancel')}
+            </ButtonPrimary>
+          </Box>
+          <Box maxWidth="100%" className={classes.actionBtnConfirmWrap}>
+            <ButtonPrimary fullWidth className={classes.actionBtnConfirm} onClick={handleSubmit}>
+              {confirmTitle}
+            </ButtonPrimary>
+          </Box>
         </Box>
       </DialogContent>
     </Dialog>
@@ -85,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.white,
     textAlign: 'center',
     paddingTop: theme.spacing(1),
+    marginBottom: theme.spacing(9),
     fontSize: 24,
     fontWeight: 'bold',
   },
@@ -96,22 +109,45 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
+  dialogContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  actionBtnCloseWrap: {
+    marginRight: theme.spacing(2),
+    width: 220,
+  },
+  actionBtnClose: {
+    color: `${Colors.white_opacity[70]} !important`,
+  },
+  actionBtnConfirmWrap: {
+    width: 220,
+  },
   message: {
     color: Colors.text[200],
     textAlign: 'center',
   },
-  actionBtnClose: {
-    width: '100%',
-    margin: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      order: 1,
+  [theme.breakpoints.down('md')]: {
+    dialogTitle: {
+      fontSize: 22,
+      marginBottom: theme.spacing(4),
     },
-  },
-  actionBtnConfirm: {
-    width: '100%',
-    margin: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      order: 0,
+    actionBox: {
+      flexDirection: 'column',
+    },
+    actionBtnCloseWrap: {
+      marginRight: theme.spacing(0),
+      order: 2,
+      width: '100%',
+    },
+    actionBtnConfirmWrap: {
+      order: 1,
+      marginBottom: theme.spacing(3),
+      width: '100%',
+    },
+    dialogContent: {
+      background: '#2d2d2d',
     },
   },
 }))

@@ -9,11 +9,12 @@ import _ from 'lodash'
 
 interface Props {
   data: ConfirmParticipantItem
+  isMe: boolean
   toProfile?: (userCode: string) => void
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ParticipantRow: React.FC<Props> = ({ data, toProfile, handleChange }) => {
+const ParticipantRow: React.FC<Props> = ({ data, isMe, toProfile, handleChange }) => {
   const classes = useStyles()
 
   const userCode = _.defaultTo(data.attributes.user_code, '')
@@ -29,13 +30,12 @@ const ParticipantRow: React.FC<Props> = ({ data, toProfile, handleChange }) => {
         </ButtonBase>
         <Box overflow="hidden" textOverflow="ellipsis" ml={2} display="flex" flexDirection="column" justifyContent="center">
           <Box color={Colors.white}>
-            <Typography variant="h3" noWrap>
+            <Typography variant="h3" noWrap style={isMe === true ? { color: Colors.yellow } : undefined}>
               {nickName}
             </Typography>
           </Box>
           <Typography variant="caption" noWrap>
-            {i18n.t('common:common.at')}
-            {userCode}
+            {!_.isEmpty(userCode) ? i18n.t('common:common.at') + userCode : ''}
           </Typography>
         </Box>
       </Box>
@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'start',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
   },
   button: {
     top: '50%',

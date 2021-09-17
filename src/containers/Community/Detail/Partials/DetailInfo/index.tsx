@@ -24,7 +24,7 @@ import { CommunityDetail, TopicDetailList } from '@services/community.service'
 import useCommunityHelper from '@containers/Community/hooks/useCommunityHelper'
 import DiscardDialog from '@containers/Community/Partials/DiscardDialog'
 import DetailInfoButtons from '../../../Partials/DetailInfoButtons'
-import { MEMBER_ROLE, JOIN_CONDITION } from '@constants/community.constants'
+import { MEMBER_ROLE, JOIN_CONDITION, TABS } from '@constants/community.constants'
 import { TwitterShareButton } from 'react-share'
 import _ from 'lodash'
 
@@ -38,14 +38,8 @@ const ROLE_TYPES = {
 type Props = {
   detail: CommunityDetail
   toEdit?: () => void
-  topicList: Array<TopicDetailList>
+  topicList: TopicDetailList[]
   showTopicListAndSearchTab: boolean
-}
-
-enum TABS {
-  INFO = 0,
-  TOPIC_LIST = 1,
-  SEARCH = 2,
 }
 
 const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListAndSearchTab }) => {
@@ -58,7 +52,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isDiscard, setIsDiscard] = useState(false)
   const [isDiscardApplying, setIsDiscardApplying] = useState(false)
   const data = detail.attributes
-  const { isNotMember, isPublic, isOfficial } = useCommunityHelper(detail)
+  const { isNotMember, isPublic, isOfficial, isAutomatic } = useCommunityHelper(detail)
 
   const {
     isAuthenticated,
@@ -78,6 +72,12 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [isRequested, setIsRequested] = useState<boolean>(false)
   const [isCommunityAutomatic, setIsCommunityAutomatic] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (router?.query) {
+      setTab(isAutomatic ? TABS.TOPIC_LIST : isNotMember ? TABS.INFO : TABS.TOPIC_LIST)
+    }
+  }, [router.query])
 
   const setOtherRoleFalse = (setRoleType: string) => {
     if (setRoleType === ROLE_TYPES.IS_ADMIN) {
@@ -153,6 +153,9 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     followCommunity(String(hash_key))
     if (!isCommunityAutomatic) {
       setIsRequested(true)
+      dispatch(commonActions.addToast(t('common:community.toast_follow_manual_approval')))
+    } else {
+      dispatch(commonActions.addToast(t('common:community.toast_follow')))
     }
   }
 
@@ -171,6 +174,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const unfollowApplyingDialogHandle = () => {
     unfollowCommunityPending(String(hash_key))
+    dispatch(commonActions.addToast(t('common:community.toast_cancel_follow_request')))
     setIsDiscardApplying(false)
   }
   const cancelApplyingHandle = () => {
@@ -179,35 +183,43 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   const DetailInfoButton = () => {
     return (
-      <>
-        {isAuthenticated ? (
-          isAdmin || isCoOrganizer ? (
-            <DetailInfoButtons title={t('common:community.edit')} variant="outlined" disabled={false} onClick={toEdit} />
-          ) : isRequested ? (
-            <DetailInfoButtons
-              title={t('common:community.applying')}
-              variant="outlined"
-              disabled={unfollowCommunityMeta.pending}
-              onClick={cancelApplyingHandle}
-            />
-          ) : isFollowing ? (
-            <DetailInfoButtons
-              title={t('common:profile.following')}
-              variant="contained"
-              color="primary"
-              disabled={unfollowCommunityMeta.pending}
-              onClick={unfollowHandle}
-            />
-          ) : (
-            <DetailInfoButtons
-              title={t('common:profile.follow_as')}
-              variant="outlined"
-              disabled={followCommunityMeta.pending}
-              onClick={followHandle}
-            />
-          )
-        ) : null}
-      </>
+      <LoginRequired>
+        {isAdmin || isCoOrganizer ? (
+          <DetailInfoButtons
+            primaryTextColor={false}
+            title={t('common:community.edit')}
+            variant="outlined"
+            disabled={false}
+            onClick={toEdit}
+          />
+        ) : isRequested ? (
+          <DetailInfoButtons
+            title={t('common:community.applying')}
+            variant="outlined"
+            color="primary"
+            primaryTextColor={true}
+            disabled={unfollowCommunityMeta.pending}
+            onClick={cancelApplyingHandle}
+          />
+        ) : isFollowing ? (
+          <DetailInfoButtons
+            primaryTextColor={false}
+            title={t('common:profile.following')}
+            variant="contained"
+            color="primary"
+            disabled={unfollowCommunityMeta.pending}
+            onClick={unfollowHandle}
+          />
+        ) : (
+          <DetailInfoButtons
+            primaryTextColor={false}
+            title={t('common:profile.follow_as')}
+            variant="outlined"
+            disabled={followCommunityMeta.pending}
+            onClick={followHandle}
+          />
+        )}
+      </LoginRequired>
     )
   }
 
@@ -219,51 +231,55 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
     if (window.navigator.clipboard) {
       window.navigator.clipboard.writeText(window.location.toString())
     }
-    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast_text')))
+    dispatch(commonActions.addToast(t('common:community.copy_shared_url_toast')))
   }
 
   const getHeader = () => {
     return (
       <>
-        <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" mb={2}>
-          <Box color={Colors.white} display="flex">
-            <Typography className={classes.title} variant="h3">
-              {data.name}
-            </Typography>
-            <Box>
-              {isOfficial && (
-                <span className={classes.checkIcon}>
-                  <Icon className="fa fa-check" fontSize="small" />
-                </span>
+        <Box mb={2}>
+          <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Box color={Colors.white} display="flex">
+              <Typography className={classes.title} variant="h3">
+                {data.name}
+              </Typography>
+              <Box>
+                {isOfficial && (
+                  <span className={classes.checkIcon}>
+                    <Icon className="fa fa-check" fontSize="small" />
+                  </span>
+                )}
+                {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
+              </Box>
+            </Box>
+            <Box className={classes.detailCommonButtons}>
+              {DetailInfoButton()}
+              {!isOfficial && (
+                <Box className={classes.menuOuter}>
+                  <ESMenu>
+                    <LoginRequired>
+                      <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
+                    </LoginRequired>
+                  </ESMenu>
+                </Box>
               )}
-              {!isPublic && <Icon className={`fas fa-lock ${classes.lockIcon}`} />}
             </Box>
           </Box>
-          <Box className={classes.detailCommonButtons}>
-            {DetailInfoButton()}
-            {!isOfficial && (
-              <Box ml={3}>
-                <ESMenu>
-                  <LoginRequired>
-                    <ESMenuItem onClick={handleReportOpen}>{t('common:community.report')}</ESMenuItem>
-                  </LoginRequired>
-                </ESMenu>
-              </Box>
-            )}
-          </Box>
         </Box>
-        <Box display="flex" flexDirection="row" alignItems="center">
-          <Typography>{`${t('common:community.community_id')}${detail.id}`}</Typography>
-          <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
-            <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
-            <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
+        <Box>
+          <Box display="flex" flexDirection="row" alignItems="center" flexWrap="wrap">
+            <Typography className={classes.communityId}>{`${t('common:community.community_id')}${detail.id}`}</Typography>
+            <Box display="flex" justifyContent="flex-end" className={classes.urlCopy} onClick={handleCopy}>
+              <Icon className={`fa fa-link ${classes.link}`} fontSize="small" />
+              <Typography className={classes.sharedUrl}>{t('common:community.copy_shared_url')}</Typography>
+            </Box>
+            <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')}>
+              <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
+            </TwitterShareButton>
           </Box>
-          <TwitterShareButton url={window.location.toString()} title={_.defaultTo(detail.attributes.name, '')} style={{ marginLeft: 12 }}>
-            <img className={classes.twitter_logo} src="/images/twitter_logo.png" />
-          </TwitterShareButton>
         </Box>
 
-        <Box marginTop={2} display="flex">
+        <Box mt={2}>
           <FollowList community={detail} />
         </Box>
 
@@ -294,7 +310,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
   const getContent = () => {
     switch (tab) {
       case TABS.INFO:
-        return <InfoContainer data={data} />
+        return <InfoContainer isOfficial={isOfficial} data={data} />
       case TABS.TOPIC_LIST:
         return !!topicList && showTopicListAndSearchTab && <TopicListContainer />
       case TABS.SEARCH:
@@ -310,7 +326,7 @@ const DetailInfo: React.FC<Props> = ({ detail, topicList, toEdit, showTopicListA
 
   return (
     <Grid container className={classes.container}>
-      <Box color={Colors.grey[300]} display="flex" flex="1" flexDirection="column" width="100%">
+      <Box color={Colors.grey[300]} width="100%">
         {getHeader()}
         {getTabs()}
         {getContent()}
@@ -363,6 +379,7 @@ const useStyles = makeStyles((theme) => ({
   lockIcon: {
     color: Colors.primary,
     fontSize: 18,
+    marginLeft: theme.spacing(1),
   },
   checkIcon: {
     width: 18,
@@ -379,8 +396,9 @@ const useStyles = makeStyles((theme) => ({
       fontSize: '0.7rem',
     },
   },
+  communityId: { marginRight: 20 },
   urlCopy: {
-    marginLeft: 20,
+    marginRight: 12,
     cursor: 'pointer',
     color: '#EB5686',
   },
@@ -438,10 +456,13 @@ const useStyles = makeStyles((theme) => ({
     width: 99,
     left: 'calc(100% - 99px)',
     position: 'sticky',
-    bottom: theme.spacing(4),
+    bottom: theme.spacing(2),
   },
   boxContainer: {
     display: 'flex',
+  },
+  menuOuter: {
+    marginLeft: theme.spacing(3),
   },
   [theme.breakpoints.down('sm')]: {
     commentIcon: {
@@ -462,6 +483,12 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    commentIconContainer: {
+      bottom: theme.spacing(10),
+    },
+    menuOuter: {
+      marginLeft: theme.spacing(0),
     },
   },
 }))

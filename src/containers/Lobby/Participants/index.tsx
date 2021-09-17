@@ -1,12 +1,11 @@
-import { useEffect, useState, createRef } from 'react'
-import { Box, Typography, IconButton, Icon, Theme } from '@material-ui/core'
+import { useEffect, useState } from 'react'
+import { Box, Typography, IconButton, Icon, Theme, Container } from '@material-ui/core'
 import ESModal from '@components/Modal'
 import ESLoader from '@components/Loader'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
-import BlankLayout from '@layouts/BlankLayout'
 import { LobbyDetail, ParticipantsItem } from '@services/lobby.service'
 import useGetProfile from '@utils/hooks/useGetProfile'
 import LobbyMemberItem from '@containers/Lobby/SubActionButtons/Partials/LobbyMemberItem'
@@ -15,14 +14,14 @@ import _ from 'lodash'
 import router from 'next/router'
 import { ESRoutes } from '@constants/route.constants'
 import { use100vh } from 'react-div-100vh'
-import { useRect } from '@utils/hooks/useRect'
+import { getIsAuthenticated } from '@store/auth/selectors'
+import { useAppSelector } from '@store/hooks'
 
 export interface ParticipantsProps {
   open: boolean
-  handleClose: () => void
   data: LobbyDetail
+  handleClose: () => void
 }
-const contentRef = createRef<HTMLDivElement>()
 
 const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) => {
   const { t } = useTranslation(['common'])
@@ -31,67 +30,68 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
   const classes = useStyles()
   const [hasMore, setHasMore] = useState(true)
   const windowHeight = use100vh()
-
-  const { height } = useRect(contentRef)
-
+  const isAuth = useAppSelector(getIsAuthenticated)
+  const { userProfile } = useGetProfile()
   const {
     participants,
+    participantsMeta,
+    participantsPageMeta,
     getParticipants,
     resetParticipants,
     resetMeta,
-    participantsPageMeta,
-    participantsMeta,
     follow,
     unFollow,
     unBlock,
   } = useLobbyActions()
 
-  const { userProfile } = useGetProfile()
-
-  const page = participantsPageMeta
+  const currentPage = _.get(participantsPageMeta, 'current_page', 1)
+  const totalPage = _.get(participantsPageMeta, 'total_pages', 1)
+  const [isInitialPageLoad, setInitialPageLoad] = useState(false)
 
   useEffect(() => {
     if (open) {
+      setInitialPageLoad(true)
       getParticipants({ page: 1, hash_key: hash_key })
-    } else {
-      resetParticipants()
     }
 
     return () => {
-      resetParticipants()
-      resetMeta()
+      if (open) {
+        resetParticipants()
+        resetMeta()
+        setHasMore(true)
+        setInitialPageLoad(false)
+      }
     }
   }, [open])
 
+  useEffect(() => {
+    if (isInitialPageLoad && !participantsMeta.pending) {
+      setInitialPageLoad(false)
+    }
+  }, [isInitialPageLoad, participantsMeta.pending])
+
   const fetchMoreData = () => {
-    if (page.current_page >= page.total_pages) {
+    if (currentPage >= totalPage) {
       setHasMore(false)
       return
     }
-    getParticipants({ page: page.current_page + 1, hash_key: hash_key })
+    getParticipants({ page: Number(currentPage) + 1, hash_key: hash_key })
   }
 
-  const onFollow = (userCode: string) => {
-    follow(userCode)
-  }
-  const onUnFollow = (userCode: string) => {
-    unFollow(userCode)
-  }
-  const onUnBlock = (userCode: string) => {
-    unBlock(userCode)
-  }
+  const onFollow = (userCode: string) => follow(userCode)
 
-  const goToProfile = (userCode: string) => {
-    handleClose()
-    router.push(`${ESRoutes.PROFILE}/${userCode}`)
-  }
+  const onUnFollow = (userCode: string) => unFollow(userCode)
+
+  const onUnBlock = (userCode: string) => unBlock(userCode)
+
+  const goToProfile = (userCode: string) => router.push(`${ESRoutes.PROFILE}/${userCode}`)
 
   return (
-    <ESModal open={open} handleClose={handleClose}>
-      <BlankLayout>
-        <div ref={contentRef}>
-          <Box pt={7.5} className={classes.topContainer}>
-            <Box py={2} display="flex" flexDirection="row" alignItems="center">
+    <ESModal open={open}>
+      <Container className={classes.container} maxWidth="md">
+        <div id="scrollableDiv" style={{ height: windowHeight }} className={`${classes.scroll} ${classes.list}`}>
+          <Box className={classes.topContainer}>
+            <Box className={classes.header} display="flex" flexDirection="row" alignItems="center">
               <IconButton className={classes.iconButtonBg} onClick={handleClose}>
                 <Icon className="fa fa-arrow-left" fontSize="small" />
               </IconButton>
@@ -101,7 +101,14 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                 </Typography>
               </Box>
             </Box>
-            <Box py={2} textAlign="right" flexDirection="row" display="flex" alignItems="center" justifyContent="flex-end">
+            <Box
+              className={classes.subHeader}
+              textAlign="right"
+              flexDirection="row"
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-end"
+            >
               <Box display="flex" flexDirection="column">
                 <Box display="flex" flexDirection="row" alignItems="flex-end">
                   <Box mr={2}>
@@ -133,8 +140,11 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
               </Box>
             </Box>
           </Box>
-        </div>
-        <div id="scrollableDiv" style={{ height: windowHeight - height, paddingRight: 10 }} className={`${classes.scroll} ${classes.list}`}>
+          {isInitialPageLoad && participantsMeta.pending && (
+            <div className={classes.loaderCenter}>
+              <ESLoader />
+            </div>
+          )}
           {_.isArray(participants) && !_.isEmpty(participants) && open ? (
             <InfiniteScroll
               dataLength={participants.length}
@@ -157,7 +167,8 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
                   unFollow={onUnFollow}
                   unBlock={onUnBlock}
                   goToProfile={goToProfile}
-                  isMe={Number(userProfile.id) === _.get(p, 'attributes.user_id', '')}
+                  isMe={Number(_.get(userProfile, 'id', -1)) === _.get(p, 'attributes.user_id', '')}
+                  isAuth={isAuth}
                   data={p}
                   key={i}
                 />
@@ -165,7 +176,7 @@ const Participants: React.FC<ParticipantsProps> = ({ open, data, handleClose }) 
             </InfiniteScroll>
           ) : null}
         </div>
-      </BlankLayout>
+      </Container>
     </ESModal>
   )
 }
@@ -179,6 +190,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   loaderCenter: {
     textAlign: 'center',
+  },
+  header: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(2),
+  },
+  subHeader: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
   },
   countLabel: {
     marginLeft: 2,
@@ -207,6 +230,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   list: {
     overflow: 'auto',
     overflowX: 'hidden',
+    willChange: 'transform',
   },
   [theme.breakpoints.down('sm')]: {
     container: {
@@ -215,6 +239,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     topContainer: {
       paddingTop: 0,
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    container: {
+      padding: 0,
+    },
+    header: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
     },
   },
 }))

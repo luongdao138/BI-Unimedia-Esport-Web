@@ -24,7 +24,10 @@ const useLobbyHome = (): {
   const meta = useAppSelector(getTournamentSearchMeta)
   const [selectedFilter, setSelectedFilter] = useState(LobbyFilterOption.all)
   const lobbySearch = (param: LobbySearchParams) => dispatch(actions.searchLobby(param))
-  const resetMeta = () => dispatch(clearMetaData(actions.searchLobby.typePrefix))
+  const resetMeta = () => {
+    dispatch(clearMetaData(actions.searchLobby.typePrefix))
+    dispatch(actions.resetSearchLobbies())
+  }
   const loadMore = () => {
     if (page && page.current_page < page.total_pages) {
       lobbySearch({ page: page.current_page + 1, keyword: '', filter: selectedFilter })

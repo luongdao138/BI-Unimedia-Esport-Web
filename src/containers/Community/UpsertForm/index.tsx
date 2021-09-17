@@ -28,6 +28,8 @@ import { CommunityFeature } from '@services/community.service'
 import { GameTitle } from '@services/game.service'
 import { useRouter } from 'next/router'
 import community from '@store/community'
+import * as commonActions from '@store/common/actions'
+
 const { selectors } = community
 
 type CommunityCreateProps = {
@@ -45,7 +47,16 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   const [isConfirm, setIsConfirm] = useState(false)
   const [hasError, setHasError] = useState(true)
   const isFirstRun = useRef(true)
-  const { editables, isEdit, submit, update, getCommunityFeatures, community, getCreateCommunityMeta } = useCommunityCreate()
+  const {
+    editables,
+    isEdit,
+    submit,
+    update,
+    getCommunityFeatures,
+    community,
+    getCreateCommunityMeta,
+    getUpdateCommunityMeta,
+  } = useCommunityCreate()
   const communityFeatures = useAppSelector(selectors.getCommunityFeatures)
   const [detailFeatures, setDetailFeatures] = useState([])
 
@@ -70,7 +81,6 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
         game_titles: (values.stepOne.game_titles as GameTitle['attributes'][]).map((game) => game.id),
         join_condition: Number(values.stepOne.join_condition),
       }
-      // console.log(data)
       if (isEdit) {
         update({ hash_key: String(router.query.community_id), data })
       } else {
@@ -88,8 +98,18 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   useEffect(() => {
     if (getCreateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
       setIsAlreadyUsedTitle(true)
+    } else if (getCreateCommunityMeta.error) {
+      renderFailedDataToast()
     }
   }, [getCreateCommunityMeta])
+
+  useEffect(() => {
+    if (getUpdateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
+      setIsAlreadyUsedTitle(true)
+    } else if (getCreateCommunityMeta.error) {
+      renderFailedDataToast()
+    }
+  }, [getUpdateCommunityMeta])
 
   useEffect(() => {
     if (isFirstRun.current) {
@@ -97,7 +117,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
       return
     } else {
       const isRequiredFieldsValid = CommunityHelper.checkCommunityRequiredFields(formik.errors)
-      setHasError(!isRequiredFieldsValid)
+      setHasError(_.has(formik.errors, 'stepOne') || !isRequiredFieldsValid)
       if (isConfirm) {
         setIsConfirm(false)
       }
@@ -127,11 +147,15 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     }
   }, [isEdit])
 
+  const renderFailedDataToast = () => {
+    dispatch(commonActions.addToast(t('common:common.failed_to_get_data')))
+  }
+
   const renderEditButton = () => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          {i18n.t('common:community_create.edit.title')}
+          {i18n.t('common:community_create.edit.check_edited_content')}
         </ButtonPrimary>
         <CancelDialog communityName={communityName} />
       </Box>
@@ -193,7 +217,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           {isConfirm ? (
             <Box className={classes.footerErrorContainer}>
               {isAlreadyUsedTitle && (
-                <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+                <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
                   <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
                 </Box>
               )}
@@ -202,7 +226,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
                   {i18n.t('common:common.cancel')}
                 </ButtonPrimary>
                 <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                  {i18n.t('common:community_create.confirm.submit')}
+                  {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
                 </ButtonPrimary>
               </Box>
             </Box>
@@ -230,7 +254,9 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             <Box pl={2}>
               <Typography variant="h2">
                 {isConfirm
-                  ? i18n.t('common:community_create.confirm.title')
+                  ? isEdit
+                    ? i18n.t('common:community_create.confirm.title_edit')
+                    : i18n.t('common:community_create.confirm.title')
                   : isEdit
                   ? i18n.t('common:community_create.edit.title')
                   : i18n.t('common:community_create.title')}

@@ -63,17 +63,16 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ communityName }) => {
   const renderDetailContainer = () => {
     return (
       <Box py={4} className={classes.detailContainer}>
-        <ESLabel label={t('common:community_create.disband.dispand_community')} size="small" />
+        <ESLabel label={t('common:community_create.disband.disband_community')} size="small" />
         <Box className={classes.userInfoContainer} mb={4}>
           <Box display="flex" alignItems="center" mr={2}>
             <Icon className={`fas fa-users ${classes.communityIcon}`} />
           </Box>
-          <Typography variant="body1" style={{ color: Colors.white }}>
+          <Typography variant="body1" className={classes.communityTitle}>
             {communityName}
           </Typography>
         </Box>
         <ESLabel label={t('common:community_create.disband.description')} size="small" />
-        <ESLabel label={t('common:community_create.disband.description2')} size="small" />
       </Box>
     )
   }
@@ -113,6 +112,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   communityIcon: {
     fontSize: 16,
     color: Colors.white,
+  },
+  communityTitle: {
+    color: Colors.white,
+    wordBreak: 'break-all',
   },
   confirmButton: {},
   cancelButton: {},

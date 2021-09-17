@@ -12,7 +12,7 @@ import { OPEN_RANGE, JOIN_CONDITION } from '@constants/community.constants'
 import Linkify from 'react-linkify'
 import { Colors } from '@theme/colors'
 
-const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data }) => {
+const InfoContainer: React.FC<{ isOfficial: boolean; data: CommunityDetail['attributes'] }> = ({ isOfficial, data }) => {
   const router = useRouter()
   const classes = useStyles()
   const { t } = useTranslation(['common'])
@@ -22,17 +22,17 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
   return (
     <>
       {(!_.isEmpty(data.game_titles) || !_.isEmpty(data.features)) && (
-        <Box marginTop={2}>
+        <Box mt={2}>
           {!_.isEmpty(data.game_titles) && (
-            <Box mr={1} display="inline">
+            <Box display="inline">
               {data.game_titles.map((game) => {
-                return <ESChip key={game.id} className={classes.chip} label={game.display_name} />
+                return <ESChip key={game.id} className={classes.chip} isGameList={true} label={game.display_name} />
               })}
             </Box>
           )}
           {!_.isEmpty(data.features) &&
             data.features.map((item) => {
-              return <ESChip key={item.id} className={classes.chip} label={item.feature} />
+              return <ESChip key={item.id} className={classes.chip} isGameList={true} label={item.feature} />
             })}
         </Box>
       )}
@@ -73,7 +73,7 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
       </Box>
 
       {/* approval method */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1}>
+      <Box display="flex" flexDirection="row" alignContent="flex-start" mt={1}>
         <Box className={classes.label}>
           <Typography>{t('common:community.approval_method')}</Typography>
         </Box>
@@ -87,18 +87,21 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
       </Box>
 
       {/* caretaker */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
+      <Box display="flex" flexDirection="row" alignContent="flex-start" mt={1}>
         <Box className={classes.userLabel}>
           <Typography>{t('common:community.caretaker')}</Typography>
         </Box>
         <Box className={classes.userValue}>
           {data.admin && (
-            <Box display="flex" flexDirection="row" alignItems="center">
+            <Box display="flex" flexDirection="row" alignItems="center" mb={1}>
               <LoginRequired>
-                <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
-                  <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
-                </ButtonBase>
-
+                {isOfficial ? (
+                  <ESAvatar src={'/images/avatar.png'} />
+                ) : (
+                  <ButtonBase onClick={() => toProfile(data.admin.user_code)}>
+                    <ESAvatar alt={data.admin.nickname} src={data.admin.avatar_image_url} />
+                  </ButtonBase>
+                )}
                 <Typography className={classes.ellipsis}>{data.admin.nickname}</Typography>
               </LoginRequired>
             </Box>
@@ -106,16 +109,15 @@ const InfoContainer: React.FC<{ data: CommunityDetail['attributes'] }> = ({ data
         </Box>
       </Box>
 
-      {/* //TODO when co organizer added to backend */}
       {/* deputy caretaker */}
-      <Box display="flex" flexDirection="row" alignContent="flex-start" marginTop={1} width="100%">
+      <Box display="flex" flexDirection="row" alignContent="flex-start" mt={1}>
         <Box className={classes.userLabel}>
           <Typography>{t('common:community.deputy_caretaker')}</Typography>
         </Box>
         <Box className={classes.userValue}>
           {!_.isEmpty(data.co_organizers) ? (
             data.co_organizers.map((organizer, i) => (
-              <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0}>
+              <Box key={i} display="flex" flexDirection="row" alignItems="center" mt={0} mb={1}>
                 <LoginRequired>
                   <ButtonBase onClick={() => toProfile(organizer.user_code)}>
                     <ESAvatar alt={organizer.nickname} src={organizer.avatar_image_url} />
@@ -142,6 +144,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkify: {
     color: Colors.white,
     textDecoration: 'underline',
+    wordBreak: 'break-all',
   },
   label: {
     display: 'flex',
@@ -187,9 +190,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '35%',
     },
     userValue: {
-      display: 'flex',
-      wordBreak: 'break-word',
-      whiteSpace: 'pre-wrap',
       width: '65%',
     },
   },

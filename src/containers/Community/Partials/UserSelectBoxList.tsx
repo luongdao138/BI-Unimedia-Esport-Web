@@ -20,13 +20,13 @@ type SelectionOptionType = {
   value: string | number
 }
 
-const APPLYING_OPTIONS: Array<SelectionOptionType> = [
+const APPLYING_OPTIONS: SelectionOptionType[] = [
   { label: i18n.t('common:community.member_list.approve'), value: MEMBER_ROLE.MEMBER },
   { label: i18n.t('common:community.member_list.cancel'), value: MEMBER_ROLE.NOT_MEMBER },
   { label: i18n.t('common:community.member_list.hold'), value: MEMBER_ROLE.ON_HOLD },
 ]
 
-const PARTICIPATING_OPTIONS: Array<SelectionOptionType> = [
+const PARTICIPATING_OPTIONS: SelectionOptionType[] = [
   { label: i18n.t('common:community.member_list.user'), value: MEMBER_ROLE.MEMBER },
   { label: i18n.t('common:community.member_list.co_organizer'), value: MEMBER_ROLE.CO_ORGANIZER },
   { label: i18n.t('common:community.member_list.kick'), value: MEMBER_ROLE.LEAVE },
@@ -61,7 +61,7 @@ const UserSelectBoxList: React.FC<UserSelectBoxListProps> = ({ member, setValue,
               <Typography className={classes.username}>{data.nickname}</Typography>
             </Box>
             <Box display="flex" alignItems="center" height="50%">
-              <Typography className={classes.mail}>{data.user_code}</Typography>
+              <Typography className={classes.mail}>{'@' + data.user_code}</Typography>
             </Box>
           </Box>
         </Box>

@@ -17,7 +17,7 @@ const { actions, selectors } = community
 const getMeta = createMetaSelector(actions.getCommunityMembers)
 
 const useFollowList = (): {
-  membersList: Array<CommunityMember>
+  membersList: CommunityMember[]
   getMembers: (params: CommunityMembersParams) => void
   pages: PageMeta
   membersMeta: Meta

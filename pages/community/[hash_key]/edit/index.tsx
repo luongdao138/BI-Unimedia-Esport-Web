@@ -5,9 +5,11 @@ import useAuthenticated from '@utils/hooks/useAuthenticated'
 
 const CommunityCreatePage: PageWithLayoutType = () => {
   useAuthenticated()
-  return <CommunityCreate />
+  return (
+    <BlankLayout isWide={false}>
+      <CommunityCreate />
+    </BlankLayout>
+  )
 }
-
-CommunityCreatePage.Layout = BlankLayout
 
 export default CommunityCreatePage

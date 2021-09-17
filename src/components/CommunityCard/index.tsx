@@ -1,4 +1,4 @@
-import { Typography, Box, makeStyles, Icon, Chip } from '@material-ui/core'
+import { Typography, Box, makeStyles, Icon, Chip, useTheme } from '@material-ui/core'
 import ESChip from '@components/Chip'
 import ESAvatar from '@components/Avatar'
 import ESCard from '@components/Card'
@@ -9,7 +9,14 @@ import { useTranslation } from 'react-i18next'
 import { ESRoutes } from '@constants/route.constants'
 import { useRouter } from 'next/router'
 import { CommunityResponse } from '@services/community.service'
-
+import { createRef, useRef } from 'react'
+import { useRect } from '@utils/hooks/useRect'
+import styled from 'styled-components'
+import React from 'react'
+import _ from 'lodash'
+import { CARD_TAG } from '@constants/community.constants'
+const StyledBox = styled(Box)``
+const cardRef = createRef<HTMLDivElement>()
 interface Props {
   community: CommunityResponse
 }
@@ -18,9 +25,14 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   const { t } = useTranslation(['common'])
   const classes = useStyles()
   const router = useRouter()
-
+  const _theme = useTheme()
+  const total = useRef<number>(0)
+  const cardRect = useRect(cardRef)
   const attr = community.attributes
-  const cover_image_url = attr.cover_image_url ? attr.cover_image_url : '/images/default_card.png'
+  const lineRefs = useRef([])
+  lineRefs.current = attr.features.map((_, i) => lineRefs.current[i] ?? createRef())
+  let isNulled = false
+  total.current = 0
 
   const getMediaScreen = () => {
     return (
@@ -61,19 +73,39 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
   }
   const getTags = (tags: { feature: string }[]) => {
     return (
-      <Box display="flex" flexDirection="row" mt={1} flexWrap="wrap" flexGrow="1">
-        {tags.map((tag, i) => (
+      <StyledBox display="flex" mt={1} ref={cardRef} maxHeight={21}>
+        {_.map(tags, (tag, i) => {
+          if (lineRefs.current[i].current) {
+            total.current += lineRefs.current[i].current?.clientWidth + _theme.spacing(1.5)
+            if (total.current + (tags.length >= i ? CARD_TAG.THREE_DOT_SPACE : 0) > cardRect.width) {
+              isNulled = true
+              return null
+            }
+          }
+          return (
+            <ESChip
+              key={i}
+              className={classes.tagChip}
+              isGameList={true}
+              label={
+                <StyledBox color={Colors.white} ref={lineRefs.current[i]}>
+                  <Typography variant="overline">{tag.feature}</Typography>
+                </StyledBox>
+              }
+            />
+          )
+        })}
+        {isNulled && (
           <ESChip
-            key={i}
             className={classes.tagChip}
             label={
               <Box color={Colors.white}>
-                <Typography variant="overline">{tag.feature}</Typography>
+                <Typography variant="overline">...</Typography>
               </Box>
             }
           />
-        ))}
-      </Box>
+        )}
+      </StyledBox>
     )
   }
   const getParticipants = () => {
@@ -90,7 +122,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
                   style={{ zIndex: participants.length - i }}
                   className={classes.pAvatar}
                   src={participant.profile_image}
-                  alt={String(participant.id)}
+                  alt={String(participant.nickname)}
                 />
               ))
           : null}
@@ -102,7 +134,7 @@ const CommunityCard: React.FC<Props> = ({ community }) => {
       <Box>
         <ESCardMedia
           cornerIcon={<Icon className="fas fa-users" fontSize="small" />}
-          image={cover_image_url}
+          image={attr.cover_image_url}
           triangleColor={attr.is_official ? 'rgba(255, 71, 134, 0.8)' : null}
         >
           {getMediaScreen()}
@@ -198,4 +230,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default CommunityCard
+export default React.memo(CommunityCard)

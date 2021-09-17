@@ -5,9 +5,11 @@ import useAuthenticated from '@utils/hooks/useAuthenticated'
 
 const LobbyEditPage: PageWithLayoutType = () => {
   useAuthenticated()
-  return <UpsertForm />
+  return (
+    <BlankLayout isWide={false}>
+      <UpsertForm />
+    </BlankLayout>
+  )
 }
-
-LobbyEditPage.Layout = BlankLayout
 
 export default LobbyEditPage

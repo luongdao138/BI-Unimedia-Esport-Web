@@ -3,6 +3,12 @@ export const PARTICIPANT_TYPE = {
   GUEST: 'guest',
 }
 
+export enum TABS {
+  INFO,
+  TOPIC_LIST,
+  SEARCH,
+}
+
 export const T_TYPE = {
   PUBLIC: 0,
   PRIVATE: 1,
@@ -61,4 +67,15 @@ export const TOPIC_STATUS = {
   ALL: 'all',
   MINE: 'mine',
   NEW: 'new',
+}
+
+// width to character_count divisor for font size 12
+export const TOPIC_ROW_ITEM_DIVISOR = {
+  NORMAL: 5.65,
+  JAPANESE: 12,
+  CHARACTER_BEFORE_KEYWORD: 10,
+}
+
+export const CARD_TAG = {
+  THREE_DOT_SPACE: 21,
 }

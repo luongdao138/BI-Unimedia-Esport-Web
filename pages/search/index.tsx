@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import UserSearchContainer from '@containers/Search/UserSearch'
 import TournamentSearchContainer from '@containers/Search/TournamentSearch'
 import LobbySearchContainer from '@containers/Search/LobbySearch'
+import CommunitySearchContainer from '@containers/Search/CommunitySearch'
 import { Box, makeStyles, Typography, IconButton, Icon, Theme } from '@material-ui/core'
 import MainLayout from '@layouts/MainLayout'
 import { searchTypes } from '@constants/common.constants'
@@ -32,6 +33,8 @@ const SearchPage: PageWithLayoutType = () => {
         return <TournamentSearchContainer />
       case searchTypes.LOBBY:
         return <LobbySearchContainer />
+      case searchTypes.COMMUNITY:
+        return <CommunitySearchContainer />
       default:
         return <></>
     }
@@ -54,6 +57,11 @@ const SearchPage: PageWithLayoutType = () => {
           return t('common:lobby.lobby_results').replace(/:key/gi, keyword)
         }
         return t('common:lobby.lobby_results_all')
+      case searchTypes.COMMUNITY:
+        if (keyword) {
+          return t('common:community.community_results').replace(/:key/gi, keyword)
+        }
+        return t('common:community.community_results_all')
       default:
         return <></>
     }

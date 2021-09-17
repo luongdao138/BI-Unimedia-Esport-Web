@@ -3,12 +3,10 @@ import { LobbyDetail } from '@services/lobby.service'
 import { Box, Theme, makeStyles, Typography } from '@material-ui/core'
 import { LOBBY_STATUS, LOBBY_PARTICIPANT_STATUS, MAIN_ACTIONS } from '@constants/lobby.constants'
 import ButtonPrimary from '@components/ButtonPrimary'
-// import useLobbyHelper from '@containers/lobby/hooks/useLobbyHelper'
 import LoginRequired from '@containers/LoginRequired'
 import i18n from '@locales/i18n'
 import _ from 'lodash'
 import LinkButton from '@components/LinkButton'
-// import { useTranslation } from 'react-i18next'
 
 interface Props {
   lobby: LobbyDetail
@@ -80,7 +78,11 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, memberConfi
   }
 
   const renderMemberEdit = () => {
-    if ((status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.READY) && isOwner && !isFreezed) {
+    if (
+      (status === LOBBY_STATUS.READY || status === LOBBY_STATUS.RECRUITING || status === LOBBY_STATUS.ENTRY_CLOSED) &&
+      isOwner &&
+      !isFreezed
+    ) {
       return (
         <>
           <Box className={classes.actionButton}>
@@ -97,7 +99,9 @@ const MainActionButtons: React.FC<Props> = ({ lobby, entry, decline, memberConfi
           </Box>
           {status === LOBBY_STATUS.RECRUITING && (
             <Box pb={2} className={classes.description}>
-              <Typography variant="body2">{i18n.t('common:lobby.buttons.description')}</Typography>
+              <Typography variant="body2" className={classes.descriptionText}>
+                {i18n.t('common:lobby.buttons.description')}
+              </Typography>
             </Box>
           )}
         </>
@@ -126,6 +130,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   description: {
     marginTop: theme.spacing(3),
     textAlign: 'center',
+  },
+  descriptionText: {},
+  [theme.breakpoints.down('sm')]: {
+    descriptionText: {
+      fontSize: 11,
+    },
   },
 }))
 

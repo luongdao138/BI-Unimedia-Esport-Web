@@ -1,6 +1,7 @@
 import { Box, Icon, IconButton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
+import { isMobile } from 'react-device-detect'
 
 type CommunityDetailHeaderProps = {
   title: string
@@ -26,12 +27,11 @@ const CommunityDetailHeader: React.FC<CommunityDetailHeaderProps> = ({ title, co
       <Box
         style={{
           background: `url(${cover || '/images/default_card.png'})`,
-          paddingTop: '30.27%',
+          paddingTop: isMobile ? '45.41%' : '30.29%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
         }}
-        mb={3}
       />
     </>
   )

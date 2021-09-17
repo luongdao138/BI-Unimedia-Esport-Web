@@ -15,9 +15,10 @@ interface Props {
   unFollow?: (userCode: string) => void
   unBlock?: (userCode: string) => void
   isMe: boolean
+  isAuth: boolean
 }
 
-const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goToProfile, isMe }) => {
+const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goToProfile, isMe, isAuth }) => {
   const classes = useStyles()
   const userCode = _.defaultTo(data.attributes.user_code, '')
   const nickName = _.defaultTo(data.attributes.nickname, '')
@@ -32,12 +33,10 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
         <ESButton
           onClick={() => unBlock(userCode)}
           variant="outlined"
-          className={classes.button}
+          className={classes.unblockButton}
           size="medium"
           round
           disabled={isLoading}
-          normalColor={Colors.red[10]}
-          hoverColor={Colors.red[30]}
         >
           {i18n.t('common:common.blocking')}
         </ESButton>
@@ -106,11 +105,11 @@ const LobbyMemberItem: React.FC<Props> = ({ data, follow, unFollow, unBlock, goT
           {nickName}
         </Typography>
         <Typography noWrap={true} variant="body2">
-          {!_.isEmpty(userCode) ? '@' + userCode : ''}
+          {!_.isEmpty(userCode) ? i18n.t('common:common.at') + userCode : ''}
         </Typography>
       </ListItemText>
 
-      {isMe === false && (
+      {isMe === false && isAuth && (
         <ListItemSecondaryAction className={classes.secondaryAction}>
           {renderFollow()}
           {renderUnBlock()}
@@ -125,18 +124,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'flex-start',
     listStyle: 'none',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
   listItem: {
     paddingRight: 140,
   },
   button: {},
-  [theme.breakpoints.down('sm')]: {
-    root: {
-      paddingRight: 0,
-      paddingLeft: 0,
+  unblockButton: {
+    color: Colors.red[10],
+    borderColor: Colors.red[10],
+    '&:hover': {
+      color: Colors.red[10],
+      background: Colors.red[30],
     },
+  },
+  [theme.breakpoints.down('sm')]: {
     secondaryAction: {
-      right: 0,
+      right: theme.spacing(2),
     },
   },
   loader: {
