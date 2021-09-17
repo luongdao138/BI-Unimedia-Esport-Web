@@ -22,8 +22,8 @@ export const RULES = [
 ]
 
 export const SORTING_METHOD = [
-  { label: '昇順', value: 'asc' },
-  { label: '降順', value: 'desc' },
+  { label: '昇順', value: 'by_asc' },
+  { label: '降順', value: 'by_desc' },
 ]
 
 export const T_TYPES = [
