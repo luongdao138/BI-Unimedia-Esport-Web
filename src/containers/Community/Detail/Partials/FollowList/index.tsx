@@ -157,12 +157,13 @@ const FollowList: React.FC<Props> = ({ community }) => {
 
   const handleSubmit = async () => {
     _.map(groupedMembers, (member, i) => {
-      _.map(_.differenceWith(changedGroupedMembers[i].value, groupedMembers[i].value, _.isEqual), (m) => {
-        const handler = actionHandler[m.attributes.member_role]
-        if (handler) {
-          handler(m, i)
-        }
-      })
+      member &&
+        _.map(_.differenceWith(changedGroupedMembers[i].value, groupedMembers[i].value, _.isEqual), (m) => {
+          const handler = actionHandler[m.attributes.member_role]
+          if (handler) {
+            handler(m, i)
+          }
+        })
     })
     submitMembers(submitParams)
   }
