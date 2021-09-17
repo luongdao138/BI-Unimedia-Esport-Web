@@ -24,10 +24,10 @@ import useDetailVideo from './useDetailVideo'
 import moment from 'moment'
 
 enum TABS {
-  PROGRAM_INFO = 0,
-  DISTRIBUTOR_INFO = 1,
-  RELATED_VIDEOS = 2,
-  COMMENT = 3,
+  PROGRAM_INFO = 1,
+  DISTRIBUTOR_INFO = 2,
+  RELATED_VIDEOS = 3,
+  COMMENT = 0,
 }
 
 export enum VIDEO_TYPE {
@@ -52,7 +52,8 @@ const VideosTop: React.FC = () => {
   const { purchaseTicketSuperChat, dataPurchaseTicketSuperChat } = usePurchaseTicketSuperChat()
   const myPoint = myPointsData?.total_point ? Number(myPointsData.total_point) : 0
 
-  const [tab, setTab] = useState(0)
+  const [tab, setTab] = useState(TABS.PROGRAM_INFO)
+
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showModalPurchasePoint, setShowModalPurchasePoint] = useState(false)
   const [lackedPoint, setLackedPoint] = useState(0)
@@ -147,8 +148,8 @@ const VideosTop: React.FC = () => {
   }
 
   useEffect(() => {
-    setTab(0)
-  }, [])
+    setTab(isMobile ? TABS.COMMENT : TABS.PROGRAM_INFO)
+  }, [isMobile])
   const getTabs = () => {
     return (
       <Grid item xs={12}>
