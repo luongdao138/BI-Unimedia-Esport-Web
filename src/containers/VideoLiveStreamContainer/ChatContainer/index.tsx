@@ -220,7 +220,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
     const abc = await API.graphql(
       graphqlOperation(createUser, {
-        input: { 
+        input: {
           // id:userProfile?.id,
           uuid: userProfile?.attributes?.uuid,
           avatar: userProfile?.attributes?.avatar_url,
@@ -780,11 +780,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         {stateMessages
           // sort messages oldest to newest client-side
           .sort((a: any, b: any) => a.createdAt.localeCompare(b.createdAt))
-          .map((msg: any, i) => {
+          .map((msg: any, i: number) => {
             // only display message is not deleted or display all mess if user is streamer
             return !msg.delete_flag || userResult.streamer ? (
               msg.is_premium ? (
                 <DonateMessage
+                  // key={msg?.id || i}
+                  key={i}
                   message={msg}
                   deleteMess={deleteMsg}
                   getMessageWithoutNgWords={getMessageWithoutNgWords}
@@ -792,6 +794,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                 />
               ) : (
                 <ChatTextMessage
+                  // key={msg?.id || i}
                   key={i}
                   message={msg}
                   getMessageWithoutNgWords={getMessageWithoutNgWords}

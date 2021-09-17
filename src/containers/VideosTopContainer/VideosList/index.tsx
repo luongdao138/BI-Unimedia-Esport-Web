@@ -36,12 +36,12 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
     return (
       <>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Box className={classes.xsItemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Box>
         ) : (
-          <Grid item xs={6} className={classes.itemContainer} key={index} style={videoItemStyle}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Grid item xs={6} className={classes.itemContainer} key={item?.id || index} style={videoItemStyle}>
+            <VideoPreviewItem data={item} />
           </Grid>
         )}
       </>
@@ -93,21 +93,19 @@ const VideosList: React.FC<VideoListProps> = ({ setTab, videoItemStyle }) => {
     const arrayPreLoad = Array(number)
       .fill('')
       .map((_, i) => ({ i }))
-    return arrayPreLoad.map(() => (
-      <>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <Box className={classes.wrapPreLoadContainer}>
-              <PreLoadContainer />
-            </Box>
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer} style={videoItemStyle}>
+    return arrayPreLoad.map((_item: any, index: number) =>
+      downMd ? (
+        <Box className={classes.xsItemContainer} key={index}>
+          <Box className={classes.wrapPreLoadContainer}>
             <PreLoadContainer />
-          </Grid>
-        )}
-      </>
-    ))
+          </Box>
+        </Box>
+      ) : (
+        <Grid item xs={6} className={classes.itemContainer} key={index} style={videoItemStyle}>
+          <PreLoadContainer />
+        </Grid>
+      )
+    )
   }
 
   const renderPreLoadPopular = () => {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import VideoPreviewItem from '@containers/VideosTopContainer/VideoPreviewItem'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import { PreloadDescription, PreloadPreviewItem } from '../PreloadContainer'
+import { PreloadPreviewItem } from '../PreloadContainer'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useLiveStreamDetail from '../useLiveStreamDetail'
 import { LIMIT_ITEM, TypeVideoArchived } from '@services/liveStreamDetail.service'
@@ -56,12 +56,12 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
     return (
       <>
         {downMd ? (
-          <Box className={classes.xsItemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Box className={classes.xsItemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Box>
         ) : (
-          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={index}>
-            <VideoPreviewItem data={item} key={item.id} />
+          <Grid item xs={6} lg={6} xl={4} className={classes.itemContainer} key={item?.id || index}>
+            <VideoPreviewItem data={item} />
           </Grid>
         )}
       </>
@@ -71,21 +71,19 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
     const arrayPreLoad = Array(6)
       .fill('')
       .map((_, i) => ({ i }))
-    return arrayPreLoad.map(() => (
-      <>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <Box className={classes.wrapPreLoadContainer}>
-              <PreloadPreviewItem />
-            </Box>
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer}>
+    return arrayPreLoad.map((_item: any, index: number) =>
+      downMd ? (
+        <Box className={classes.xsItemContainer} key={index}>
+          <Box className={classes.wrapPreLoadContainer}>
             <PreloadPreviewItem />
-          </Grid>
-        )}
-      </>
-    ))
+          </Box>
+        </Box>
+      ) : (
+        <Grid item xs={6} className={classes.itemContainer} key={index}>
+          <PreloadPreviewItem />
+        </Grid>
+      )
+    )
   }
   const getDescriptionTruncated = () => {
     return descriptionCollapse ? `${getDescription.substring(0, downMd ? 70 : 200)}...` : getDescription
@@ -112,29 +110,10 @@ const ProgramInfo: React.FC<ProgramInfoProps> = ({ video_id }) => {
       </>
     )
   }
-  const renderPreloadDescription = () => {
-    return (
-      <>
-        {downMd ? (
-          <Box className={classes.xsItemContainer}>
-            <Box className={classes.wrapPreLoadDescription}>
-              <PreloadDescription />
-            </Box>
-          </Box>
-        ) : (
-          <Grid item xs={6} className={classes.itemContainer}>
-            <PreloadDescription />
-          </Grid>
-        )}
-      </>
-    )
-  }
 
   return (
     <Box className={classes.container}>
-      <Box className={classes.descriptionContainer}>
-        {getDescription?.length > 0 ? <>{renderDescription()}</> : <>{renderPreloadDescription()}</>}
-      </Box>
+      <Box className={classes.descriptionContainer}>{getDescription?.length > 0 && renderDescription()}</Box>
       <Box className={classes.archiveVideoTitleContainer}>
         <Typography className={classes.archiveVideoTitle}>{i18n.t('common:live_stream_screen.archived_stream_video')}</Typography>
       </Box>

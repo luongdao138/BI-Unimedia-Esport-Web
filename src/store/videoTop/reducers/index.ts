@@ -96,7 +96,9 @@ export default createReducer(initialState, (builder) => {
   builder.addCase(actions.videoSearch.fulfilled, (state, action) => {
     let arrayVideo = action.payload.data.videos
     const total = action.payload.data.total
-    arrayVideo = state.listVideoSearch.concat(action.payload.data.videos)
+    if (action.meta.arg.page > 1) {
+      arrayVideo = state.listVideoSearch.concat(action.payload.data.videos)
+    }
     state.listVideoSearch = arrayVideo
     state.totalResult = total
   })

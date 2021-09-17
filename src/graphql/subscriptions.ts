@@ -33,7 +33,7 @@ export const onCreateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const onUpdateUser = /* GraphQL */ `
   subscription OnUpdateUser {
     onUpdateUser {
@@ -58,14 +58,14 @@ export const onUpdateUser = /* GraphQL */ `
           userId
           createdAt
           updatedAt
-        }        
+        }
         nextToken
       }
       createdAt
       updatedAt
     }
   }
-`;
+`
 export const onDeleteUser = /* GraphQL */ `
   subscription OnDeleteUser {
     onDeleteUser {
@@ -97,7 +97,7 @@ export const onDeleteUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const onCreateMessage = /* GraphQL */ `
   subscription OnCreateMessage {
     onCreateMessage {
@@ -129,7 +129,7 @@ export const onCreateMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const onUpdateMessage = /* GraphQL */ `
   subscription OnUpdateMessage {
     onUpdateMessage {
@@ -161,7 +161,7 @@ export const onUpdateMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const onDeleteMessage = /* GraphQL */ `
   subscription OnDeleteMessage {
     onDeleteMessage {
@@ -193,4 +193,4 @@ export const onDeleteMessage = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
