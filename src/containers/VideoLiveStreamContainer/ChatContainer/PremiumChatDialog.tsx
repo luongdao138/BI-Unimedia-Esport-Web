@@ -1,4 +1,4 @@
-import { Box, Button, Input, makeStyles, Typography } from '@material-ui/core'
+import { Box, Button, makeStyles, Typography, InputAdornment } from '@material-ui/core'
 import i18n from '@locales/i18n'
 import React, { useEffect, useRef, useState } from 'react'
 import { purchasePoints, sanitizeMess } from './index'
@@ -6,6 +6,8 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import usePurchaseTicketSuperChat from '../usePurchaseTicket'
 import { FormatHelper } from '@utils/helpers/FormatHelper'
+import ESInput from '@components/Input'
+import { Colors } from '@theme/colors'
 
 type PremiumChatBoxProps = {
   handleChatInputOnFocus?: () => void
@@ -14,7 +16,7 @@ type PremiumChatBoxProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
   myPoint: number
   createMess: (message: string, point?: number) => Promise<void>
-  openPurchasePointModal?: () => void
+  openPurchasePointModal?: (point: any) => void
 }
 
 type PremiumMessageValidationType = {
@@ -42,14 +44,14 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
       .required(i18n.t('common:live_stream_screen.chat_premium_text_validate_msg_empty'))
       .max(
         purchasePoints[purchaseValueSelected].maxLengthInput,
-        `${i18n.t('common:live_stream_screen.premium_message_too_long_pre')} ${
+        `${i18n.t('common:live_stream_screen.premium_message_too_long_pre')}${
           purchasePoints[purchaseValueSelected].maxLengthInput
-        } ${i18n.t('common:live_stream_screen.premium_message_too_long_post')}`
+        }${i18n.t('common:live_stream_screen.premium_message_too_long_post')}`
       )
       .trim(),
   })
 
-  const { handleChange, values, handleSubmit, errors } = useFormik<PremiumMessageValidationType>({
+  const { handleChange, values, handleSubmit, errors, touched } = useFormik<PremiumMessageValidationType>({
     initialValues: {
       message: '',
     },
@@ -131,22 +133,31 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
       <Box className={classes.purchaseDialogContent}>
         <Typography className={classes.dialogTitle}>{i18n.t('common:live_stream_screen.premium_comment')}</Typography>
         <Box className={classes.purchaseCommentInputContainer}>
-          <Input
+          <ESInput
             id="message"
+            name="message"
             multiline
-            rows={4}
+            rows={5}
             placeholder={i18n.t('common:live_stream_screen.please_enter_a_comment')}
             fullWidth
             value={values.message}
             onChange={handleChange}
-            disableUnderline
-            classes={{ root: classes.purchaseCommentRoot, input: classes.purchaseCommentInput }}
+            classes={{ 
+              root: classes.purchaseCommentRoot, input: classes.purchaseCommentInput,
+              adornedEnd: classes.end 
+            }}
             onFocus={handleChatInputOnFocus}
             onBlur={handleChatInputOnBlur}
+            error={touched.message && !!errors?.message}
+            size="big"
+            endAdornment={
+              <InputAdornment position="end" >
+                <Typography className={classes.purchaseCommentTextLimit}>
+                  {`${values.message.length} / ${purchasePoints[purchaseValueSelected].maxLengthInput}`}
+                </Typography>
+              </InputAdornment>
+            }
           />
-          <Typography className={classes.purchaseCommentTextLimit}>
-            {`${values.message.length} / ${purchasePoints[purchaseValueSelected].maxLengthInput}`}
-          </Typography>
         </Box>
         <Box className={classes.pointList}>
           <Box className={classes.pointListRow}>
@@ -176,7 +187,7 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
               'common:common.eXe_points'
             )}`}
           </Typography>
-          <Typography className={classes.purchasePointText} onClick={openPurchasePointModal}>
+          <Typography className={classes.purchasePointText} onClick={() => openPurchasePointModal(purchasePoints[purchaseValueSelected].value)}>
             {i18n.t('common:live_stream_screen.purchase_points')}
           </Typography>
         </Box>
@@ -187,6 +198,9 @@ const PremiumChatBox: React.FC<PremiumChatBoxProps> = ({
 }
 
 const useStyles = makeStyles((theme) => ({
+  end: {
+
+  },
   purchaseCommentInput: {
     fontSize: '12px',
     color: '#FFFFFF',
@@ -194,6 +208,42 @@ const useStyles = makeStyles((theme) => ({
       color: '#FFFFFF',
       opacity: 1,
     },
+  },
+  purchaseCommentRoot: {
+    backgroundColor: '#212121',
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderWidth: 1,
+      borderColor: '#fff',
+    },
+    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+      background: 'rgba(247, 247, 53, 0.1)',
+    },
+    '&.Mui-disabled': {
+      backgroundColor: 'transparent',
+      color: Colors.white_opacity['30'],
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'transparent',
+      },
+      '&.MuiOutlinedInput-multiline.MuiOutlinedInput-marginDense': {
+        padding: 0,
+      },
+    },
+    '& .MuiInputBase-input.Mui-disabled': {
+      padding: 0,
+      paddingBottom: theme.spacing(1),
+    },
+    '& :-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #000000 inset',
+    },
+    '& .MuiInputAdornment-root ': {
+      position: "absolute", 
+      bottom: 6, 
+      right: 14,
+      alignItems: "flex-end"
+    },
+    '& .MuiOutlinedInput-inputMultiline': {
+      marginBottom: "14px"
+    }
   },
   purchasePointText: {
     fontSize: 10,
@@ -265,9 +315,6 @@ const useStyles = makeStyles((theme) => ({
   purchaseCommentTextLimit: {
     fontSize: '12px',
     fontWeight: 'bold',
-    marginRight: '16px',
-    marginBottom: '10px',
-    marginTop: '10px',
     color: '#FFFFFF',
   },
   purchaseDialogContent: {
@@ -291,18 +338,11 @@ const useStyles = makeStyles((theme) => ({
   },
   purchaseCommentInputContainer: {
     width: '100%',
-    marginTop: '12px',
+    marginTop: '10px',
     backgroundColor: '#212121',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
-    borderRadius: '4px',
-  },
-  purchaseCommentRoot: {
-    backgroundColor: '#212121',
-    height: '83px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
     borderRadius: '4px',
   },
   ...purchasePoints,

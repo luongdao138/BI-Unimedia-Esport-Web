@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   purchaseDialogContainer: {
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: 10,
+    marginBottom: 4,
   },
   purchaseDialogContent: {
     padding: 16,
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     // marginTop: 16,
-    paddingTop: 8,
+    marginTop: 8,
     scrollbarColor: '#222 transparent',
     '&::-webkit-scrollbar': {
       width: '20px',
@@ -156,17 +156,23 @@ const useStyles = makeStyles((theme) => ({
   chatBox: {
     display: 'flex',
     flexDirection: 'row',
+    width: '100%',
+    '& .MuiFormControl-root': {
+      flex: 1
+    }
   },
-  input: (props: { chatValidationError?: boolean }) => ({
-    height: 48,
+  input: () => ({
+    height: 42,
     borderBottomRightRadius: 'unset',
     zIndex: 11,
     width: '100%',
     borderTopRightRadius: 'unset',
-    backgroundColor: !props?.chatValidationError ? '#4D4D4D' : '#F7F73544',
+    // backgroundColor: !props?.chatValidationError ? '#4D4D4D' : '#F7F73544',
+    backgroundColor: '#4D4D4D',
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderWidth: 1,
-      borderColor: !props?.chatValidationError ? '#FFFFFF' : '#F7F560',
+      // borderColor: !props?.chatValidationError ? '#FFFFFF' : '#F7F560',
+      borderColor: '#FFFFFF',
     },
     '&.Mui-error .MuiOutlinedInput-notchedOutline': {
       background: 'rgba(247, 247, 53, 0.1)',
@@ -182,6 +188,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }),
   iconButtonBg: {
+    height: 42,
     backgroundColor: '#FF4786',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 4,
@@ -255,16 +262,18 @@ const useStyles = makeStyles((theme) => ({
     background: '#000000ab',
     height: '100%',
     zIndex: 18,
-    right: 9,
+    right: 0,
     display: 'flex',
     flexDirection: 'column',
     opacity: 0,
     visibility: 'hidden',
     transition: 'all 0.5s',
+    top: 8
   },
   dialogMessShow: {
     opacity: 1,
     visibility: 'visible',
+    width: "100%", 
   },
   messContentOuter: {
     flex: 1,

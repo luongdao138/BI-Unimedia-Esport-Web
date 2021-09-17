@@ -8,7 +8,6 @@ interface StepOneProps {
   onClickPurchaseNewPoints: () => void
   myPoints: number
   lackedPoint?: number
-  isPurchaseLackPoint: boolean
 }
 
 const StepOne: React.FC<StepOneProps> = ({
@@ -16,7 +15,6 @@ const StepOne: React.FC<StepOneProps> = ({
   onClickPurchaseNewPoints,
   myPoints,
   lackedPoint,
-  isPurchaseLackPoint,
 }) => {
   const classes = useStyles()
 
@@ -24,16 +22,19 @@ const StepOne: React.FC<StepOneProps> = ({
     <Box className={classes.container}>
       <Box width="100%">
         <PointCardItem titleText={i18n.t('common:donate_points.my_points')} points={myPoints} pointText={'eXePoint'} />
-        {lackedPoint && isPurchaseLackPoint && (
-          <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXePoint'} />
-        )}
+        <PointCardItem titleText={i18n.t('common:donate_points.missing_points')} points={lackedPoint} pointText={'eXePoint'} />
       </Box>
       <Box className={classes.buttonRootContainer}>
-        {isPurchaseLackPoint && (
-          <Box className={classes.buttonContainer} onClick={onClickPurchaseLackedPoint}>
-            <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_missing_points')}</Typography>
-          </Box>
-        )}
+        <Box 
+          className={`${classes.buttonContainer} ${+lackedPoint <= 0 ? classes.disable_btn : ''}`} 
+          onClick={() => {
+            if(+lackedPoint > 0) {
+              onClickPurchaseLackedPoint()
+            }
+          }}
+        >
+          <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_missing_points')}</Typography>
+        </Box>
         <Box className={classes.buttonContainer} onClick={onClickPurchaseNewPoints}>
           <Typography className={classes.buttonTextStyle}>{i18n.t('common:donate_points.purchase_new_points')}</Typography>
         </Box>
@@ -59,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 60,
   },
   buttonContainer: {
+    cursor: "pointer",
     display: 'flex',
     backgroundColor: '#4D4D4D',
     borderRadius: 4,
@@ -91,6 +93,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'center',
       marginBottom: 24,
     },
+  },
+  disable_btn: {
+    cursor: "not-allowed", 
+    '& p': {
+      color: '#ffffff4d'
+    }
   },
 }))
 export default StepOne

@@ -59,6 +59,9 @@ const VideoPlayer: React.FC<PlayerProps> = ({ src }) => {
   } = useDetailVideo()
 
   const onProgress = (event) => {
+    // console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event, src)
+    // console.log('🚀 ~ onProgress ~ 2222-----playedSeconds', event.playedSeconds)
+    // console.log('🚀 ~ onProgress ~ 3333-----loadedSeconds', event.loadedSeconds)
     setState({ ...state, loading: false })
     if (isLive) {
       console.log('🚀 ~ onProgress ~ 1111-----playedSeconds', event)

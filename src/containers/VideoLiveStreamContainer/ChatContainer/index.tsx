@@ -1,7 +1,9 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Typography, Icon, Button, OutlinedInput, IconButton, useTheme, useMediaQuery, ButtonBase } from '@material-ui/core'
+import { 
+  Box, Typography, Icon, Button, IconButton, useTheme, useMediaQuery, ButtonBase, ClickAwayListener 
+} from '@material-ui/core'
 // import { useTranslation } from 'react-i18next'
 // import i18n from '@locales/i18n'
 import React, { useState, useEffect, useRef } from 'react'
@@ -30,6 +32,7 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import DonateMessage from './DonateMessage'
 import Avatar from '@components/Avatar/'
+import ESInput from '@components/Input'
 
 type ChatContainerProps = {
   onPressDonate?: (donatedPoint: number, purchaseComment: string) => void
@@ -39,7 +42,7 @@ type ChatContainerProps = {
   myPoint?: any
   handleKeyboardVisibleState: any
   donateConfirmModalIsShown: () => boolean
-  openPurchasePointModal?: () => void
+  openPurchasePointModal?: (point: any) => void
 }
 
 export const purchasePoints = {
@@ -136,12 +139,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   // const { t } = useTranslation('common')
   // const [messageText, setMessageText] = useState<string>('')
   const [purchaseDialogVisible, setPurchaseDialogVisible] = useState<boolean>(false)
-  const [messActiveUser, setMessActiveUser] = useState<string | number>('')
+  const [messActiveUser, setMessActiveUser] = useState<any>(null)
   const [allUsers, setAllUsers] = useState([])
   const [successFlagGetListUSer, setSuccessFlagGetListUSer] = useState(false)
   const [successFlagGetAddUSer, setSuccessFlagGetAddUSer] = useState(false)
   const [messagesDonate, setMessagesDonate] = useState([])
   const [displaySeeMore, setDisplaySeeMore] = useState(false)
+  const [displayDialogMess, setDisplayDialogMess] = useState(false)
   // const [isMessInBottom, setIsMessInBottom] = useState(false)
 
   const getChatData = () =>
@@ -190,7 +194,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       .trim(),
   })
 
-  const { handleChange, values, handleSubmit, errors } = useFormik<MessageValidationType>({
+  const { handleChange, values, handleSubmit, errors, touched } = useFormik<MessageValidationType>({
     initialValues: {
       message: '',
     },
@@ -373,6 +377,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
       setMessagesDonate(newMessagesDonate)
     }
   }, [streamingSecond])
+
+  useEffect(() => {
+    // hide dialog message if message donate is no longer show
+    if (messActiveUser && !messagesDonate.find(item => item.id === messActiveUser.id)) {
+      setMessActiveUser(null)
+    }
+  }, [messagesDonate])
 
   // useEffect(() => {
   //   if (!isViewingStream) {
@@ -727,11 +738,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           <img id="btnOpenPremiumChatDialogImage" src="/images/ic_purchase.svg" />
         </IconButton>
         <Box className={classes.chatBox}>
-          <OutlinedInput
+          <ESInput
             id={'message'}
-            multiline
-            rows={1}
-            autoComplete="nope"
+            name="message"
             onChange={handleChange}
             placeholder={i18n.t('common:live_stream_screen.message_placeholder')}
             value={values.message}
@@ -739,43 +748,48 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             margin="dense"
             onFocus={handleChatInputOnFocus}
             onBlur={handleChatInputOnBlur}
+            helperText={touched.message && errors?.message}
+            error={touched.message && !!errors?.message}
           />
           <Button onClick={handleSubmitChatContent} className={classes.iconButtonBg}>
             <Icon className={`fa fa-paper-plane ${classes.sendIcon}`} fontSize="small" />
           </Button>
         </Box>
-        {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>}
+        {/* {errors.message && <Typography className={classes.chatInputErrorText}>{errors.message}</Typography>} */}
       </Box>
     </Box>
   )
+
+  const closeDialogActiveUser = () => {
+    if(messActiveUser && !displayDialogMess) {
+      setMessActiveUser(null)
+    }
+    setDisplayDialogMess(false)
+  }
 
   const chatBoardComponent = () => (
     <Box className={`${classes.chatBoardContainer}`}>
       <ButtonBase onClick={() => ''} className={`${classes.btn_show_more} ${displaySeeMore ? classes.displaySeeMore : ''}`}>
         {i18n.t('common:live_stream_screen.show_more_mess')}
       </ButtonBase>
-
-      {/* <ESButton
-        onClick={() => {
-          return ''
-        }}
-        className={classes.btn_show_more}
-        variant="outlined"
-        round
-        fullWidth
-        size="large"
-      >
-        {i18n.t('common:live_stream_screen.show_more_mess')}
-      </ESButton> */}
-      <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
-        {/* <DonateMessage message={msg}/> */}
-        <Box
-          className={`${classes.messContentOuter}`}
-          onClick={() => {
-            setMessActiveUser('')
-          }}
-        ></Box>
-      </Box>
+      <ClickAwayListener onClickAway={() => closeDialogActiveUser()}>
+        <Box className={`${classes.dialogMess} ${messActiveUser ? classes.dialogMessShow : ''}`}>
+          {messActiveUser && (
+            <DonateMessage
+              message={messActiveUser}
+              deleteMess={deleteMsg}
+              getMessageWithoutNgWords={getMessageWithoutNgWords}
+              is_streamer={userResult?.streamer}
+            />
+          )}
+          <Box
+            className={`${classes.messContentOuter}`}
+            onClick={() => {
+              setMessActiveUser(null)
+            }}
+          ></Box>
+        </Box>
+      </ClickAwayListener>
       <Box className={classes.chatBoard} id="chatBoard">
         {stateMessages
           // sort messages oldest to newest client-side
@@ -854,13 +868,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
             <Box
               key={item.id}
               className={classes.userWatchingItem}
-              style={{ backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor }}
+              style={{ 
+                backgroundColor: purchasePoints[`p_${item.point}`].backgroundColor, 
+                opacity: !messActiveUser ? 1 : (item.id === messActiveUser.id ? 1 : 0.5)
+              }}
               onClick={() => {
-                if (messActiveUser || messActiveUser === 0) {
-                  setMessActiveUser('')
-                } else {
-                  setMessActiveUser(item.id)
-                }
+                setDisplayDialogMess(true)
+                setMessActiveUser(item)
               }}
             >
               <Avatar src={item?.parent?.avatar ? item.parent.avatar : '/images/avatar.png'} size={32} alt={item.parent.user_name} />
