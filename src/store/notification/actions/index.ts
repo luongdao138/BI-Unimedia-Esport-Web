@@ -79,3 +79,4 @@ export const getNotificationDetail = createAsyncThunk<services.NotificationDetai
 
 export const clearNotificationDetail = createAction(NOTIFICATION_ACTION_TYPE.CLEAR_NOTIFICATION)
 export const clearNotificationBadge = createAction(NOTIFICATION_ACTION_TYPE.CLEAR_NOTIFICATION_BADGE)
+export const clearNotificationList = createAction(NOTIFICATION_ACTION_TYPE.CLEAR_NOTIFICATION_LIST)
