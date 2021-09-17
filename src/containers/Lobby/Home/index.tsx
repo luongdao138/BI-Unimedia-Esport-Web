@@ -82,7 +82,7 @@ const LobbyHome: React.FC<LobbyHomeProps> = ({ filter }) => {
   }, [router.query])
 
   const onFilter = (filter: LobbyFilterOption) => {
-    router.push(`${ESRoutes.LOBBY}?filter=${filter}`, undefined, { shallow: true })
+    if (!meta.pending) router.push(`${ESRoutes.LOBBY}?filter=${filter}`, undefined, { shallow: true })
     return null
   }
 
