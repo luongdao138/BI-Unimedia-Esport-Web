@@ -326,6 +326,11 @@ const useStyles = makeStyles((theme) => ({
     purchaseDialogContainer: {
       width: 318,
     },
+    chatInputMobileContainer: {
+      position: 'fixed',
+      bottom: 0,
+      zIndex: 2,
+    },
   },
 }))
 
