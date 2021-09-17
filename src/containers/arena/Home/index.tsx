@@ -13,7 +13,6 @@ import useReturnHref from '@utils/hooks/useReturnHref'
 import ESLoader from '@components/Loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import HeaderArea from './HeaderArea'
-import BRScoreInput from '@containers/arena/battle_royale/Partials/BRScoreInput'
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -117,7 +116,6 @@ const ArenaHome: React.FC<ArenaHomeProps> = ({ filter }) => {
   return (
     <>
       <HeaderArea onFilter={onFilter} toCreate={toCreate} filter={filter} />
-      <BRScoreInput index={'1'} />
       <div>
         <div className={classes.container}>
           <InfiniteScroll

@@ -27,6 +27,7 @@ const useStyles = makeStyles(() => ({
     width: 158,
     transform: 'translate(0,-50%)',
     '& .MuiOutlinedInput-root': {
+      backgroundColor: Colors.white_opacity[15],
       borderRadius: 5,
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
