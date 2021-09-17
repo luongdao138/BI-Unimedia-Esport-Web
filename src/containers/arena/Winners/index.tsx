@@ -18,7 +18,7 @@ import { ROLE } from '@constants/tournament.constants'
 
 const ArenaWinners: React.FC = () => {
   const { t } = useTranslation(['common'])
-  const { arenaWinners, arena, handleBack, toDetail } = useArenaWinners()
+  const { arenaWinners, arena, handleBack, toDetail, resetMeta } = useArenaWinners()
   const showWinner = arenaWinners['1'] && !!arenaWinners['1'].length
   const classes = useStyles()
   const [showSummary, setShowSummary] = useState(false)
@@ -34,6 +34,8 @@ const ArenaWinners: React.FC = () => {
       const backButtonBottomOffset = getClientRect(backButtonRef).bottom
       setUpdate(winnerListTopOffset < 620 || backButtonBottomOffset > 60)
     }
+
+    return () => resetMeta()
   }, [])
 
   const getClientRect = (ref) => {
