@@ -1,11 +1,12 @@
+/* eslint-disable no-console */
 import { StackedCarousel, ResponsiveContainer, StackedCarouselSlideProps } from 'react-stacked-center-carousel'
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Box, Theme, makeStyles, useMediaQuery, useTheme } from '@material-ui/core'
 import { BannerItem } from '@services/videoTop.services'
-
+import moment from 'moment'
 type BannerCarouselProps = {
   data: Array<BannerItem>
   bannerHeight?: number
@@ -16,15 +17,16 @@ type BannerCarouselProps = {
   bannerCustomScales?: any
 }
 
-function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerItem> }) {
+function Pagination(props: { centerSlideDataIndex: number; data: Array<BannerItem>; onUpdatePosition }) {
   const classes = useStyles({ buttonLeftContainer: {}, buttonRightContainer: {} })
-  const { centerSlideDataIndex, data } = props
+  const { centerSlideDataIndex, data, onUpdatePosition } = props
   return (
     <Box className={classes.paginationContainer}>
       {data.map((_, index) => {
         const isCenterSlide = centerSlideDataIndex === index
         return (
           <div
+            onClick={onUpdatePosition(index)}
             key={index}
             style={{
               height: 10,
@@ -60,15 +62,7 @@ const SlideItem = React.memo(function (props: StackedCarouselSlideProps) {
   // }
   return (
     <Box className={classes.sliderContainer} key={data[dataIndex]?.id} onClick={() => window.open(data[dataIndex]?.url, '_blank')?.focus()}>
-      <img
-        ref={refImage}
-        className={classes.sliderStyle}
-        draggable={false}
-        src={cover}
-        // src={load?'/images/live_stream/exelab_thumb.png':'https://i.pinimg.com/564x/09/b5/27/09b52762cc9d8aee221ebb6a062dee98.jpg'}
-        // onLoad={handleLoading}
-        // onError={handleError}
-      />
+      <img ref={refImage} className={classes.sliderStyle} draggable={false} src={cover} />
     </Box>
   )
 })
@@ -77,29 +71,61 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
   const { buttonLeftContainer, buttonRightContainer } = props
   const classes = useStyles({ buttonLeftContainer, buttonRightContainer })
   const [centerSlideDataIndex, setCenterSlideDataIndex] = React.useState(0)
+  const [clickTime, setClickTime] = useState(moment())
   const onCenterSlideDataIndexChange = (activeSlide: number) => {
     setCenterSlideDataIndex(activeSlide)
   }
   const _theme = useTheme()
   const isMobile = useMediaQuery(_theme.breakpoints.down(750))
 
+  const handleUpdateActivePosition = (index: number) => () => {
+    const halfOfList = Math.round(data.length / 2)
+    console.log('\n----Vị trí hiện tại : ', centerSlideDataIndex, '\n----Vị trí muốn nhảy tới: ', index, 'Vị trí 1/2 list ', halfOfList)
+    if (centerSlideDataIndex == 0 && index > halfOfList) {
+      // Nếu vị trí hiện tại =0 và vị trí muốn nhảy tới > 1/2 list
+      if (index == data.length - 1) {
+        // nếu vị trí nhảy tới là item cuối cùng, index hiện tại =0 => lùi lại 1 bước
+        ref?.current?.goBack()
+        setClickTime(moment())
+      } else {
+        // nếu vị trí nhảy tới là item gần cuối cùng, index hiện tại =0 => lùi lại x bước : x= Lenght của data - index của vị trí muốn nhảy với
+        ref?.current?.swipeTo(index - data.length)
+        setClickTime(moment())
+      }
+    } else {
+      if (index !== centerSlideDataIndex) {
+        if (index > centerSlideDataIndex) {
+          ref?.current?.swipeTo(index - centerSlideDataIndex)
+          setClickTime(moment())
+        }
+        if (index < centerSlideDataIndex) {
+          ref?.current?.swipeTo(index - centerSlideDataIndex)
+          setClickTime(moment())
+        }
+      }
+    }
+  }
+
   const playSlider = () => {
     if (ref.current && data.length) {
       if (centerSlideDataIndex + 1 < data.length) {
         // swipe to next slide
-        ref.current.swipeTo(1)
+        ref?.current?.swipeTo(1)
       } else {
         // swipe to first slide
-        ref.current.swipeTo(-(data.length - 1))
+        ref?.current?.swipeTo(1 - data.length)
       }
     }
   }
 
   useEffect(() => {
-    setInterval(function () {
+    const interval = setInterval(() => {
+      // eslint-disable-next-line no-console
+      console.log('This will run every 5 second!')
       playSlider()
     }, 5000)
-  }, [])
+    return () => clearInterval(interval)
+  }, [clickTime])
 
   const checkCurrentVisible = () => {
     const length = data.length
@@ -114,6 +140,15 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
     else return [1, 0.85, 0.7, 0.55]
   }
 
+  const handleBack = () => {
+    ref?.current?.goBack()
+    setClickTime(moment())
+  }
+
+  const handleNext = () => {
+    ref?.current?.goNext()
+    setClickTime(moment())
+  }
   return (
     <Box className={classes.container}>
       <ResponsiveContainer
@@ -148,13 +183,13 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({ data, ...props }) => {
           )
         }}
       />
-      <Fab className={classes.buttonLeftContainer} onClick={() => ref.current.goBack()}>
+      <Fab className={classes.buttonLeftContainer} onClick={handleBack}>
         <KeyboardArrowLeftIcon className={classes.iconBtnStyle} />
       </Fab>
-      <Fab className={classes.buttonRightContainer} onClick={() => ref.current.goNext()}>
+      <Fab className={classes.buttonRightContainer} onClick={handleNext}>
         <KeyboardArrowRightIcon className={classes.iconBtnStyle} />
       </Fab>
-      <Pagination centerSlideDataIndex={centerSlideDataIndex} data={data} />
+      <Pagination centerSlideDataIndex={centerSlideDataIndex} data={data} onUpdatePosition={handleUpdateActivePosition} />
     </Box>
   )
 }
