@@ -55,7 +55,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.getPurchaseHistory.fulfilled, (state, action) => {
       let tmpPurchaseHistory = action.payload.data
       if (action.payload.links.meta != undefined && action.payload.links.meta.current_page > 1) {
-        tmpPurchaseHistory = state.purchaseHistory.concat(action.payload.data)
+        tmpPurchaseHistory = _.unionBy(state.purchaseHistory, action.payload.data, 'id')
       }
       state.purchaseHistory = tmpPurchaseHistory
       state.purchaseHistoryMeta = action.payload.links.meta
@@ -72,5 +72,9 @@ export default createReducer(initialState, (builder) => {
     .addCase(actions.clearBlockedUsers, (state) => {
       state.blockedUsersMeta = undefined
       state.blockedUsers = []
+    })
+    .addCase(actions.clearPurchaseHistory, (state) => {
+      state.purchaseHistory = []
+      state.purchaseHistoryMeta = undefined
     })
 })
