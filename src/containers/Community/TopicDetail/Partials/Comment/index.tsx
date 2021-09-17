@@ -15,6 +15,7 @@ import { CommonHelper } from '@utils/helpers/CommonHelper'
 import router, { useRouter } from 'next/router'
 import { Close as IconClose } from '@material-ui/icons'
 import { ESRoutes } from '@constants/route.constants'
+import Linkify from 'react-linkify'
 import _ from 'lodash'
 import useTopicHelper from '../../useTopicHelper'
 import useTopicDetail from '../../useTopicDetail'
@@ -56,7 +57,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
   const [replyAnchorEl, setReplyAnchorEl] = useState(null)
   const { isOwner } = useTopicHelper(comment.attributes.user_code)
   const { isModerator, isPublic, isNotMember, isTopicOwner } = menuParams
-  const { getCommentDetail, commentDetail, commentDetailMeta } = useTopicDetail()
+  const { getCommentDetail, commentDetail, commentDetailMeta, resetCommentDetail } = useTopicDetail()
 
   const handleClickReply = (event, content) => {
     getCommentDetail({ topic_hash: topic_hash_key, comment_no: content.slice(2) })
@@ -66,6 +67,7 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const handleCloseReply = () => {
     setReplyAnchorEl(null)
+    resetCommentDetail()
   }
 
   const commentData = comment.attributes
@@ -110,25 +112,29 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
 
   const reply_regex = /(>>[0-9]+)/g
 
-  const newLineText = (text) => {
+  const newLineText = (text, isReply = false) => {
     return _.map(_.split(text, '\n'), (str, i) => (
       <Typography key={i} className={classes.content}>
         {_.map(
           _.filter(_.split(str, reply_regex), (el) => !_.isEmpty(el)),
           (content, index) => {
-            return content.match(reply_regex) ? renderPopover(content, index) : content
+            return content.match(reply_regex) ? renderPopover(content, index, isReply) : content
           }
         )}
       </Typography>
     ))
   }
 
-  const renderPopover = (content, index) => {
+  const renderPopover = (content, index, isReply = false) => {
     return (
       <>
-        <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+        {isReply ? (
           <Typography className={classes.replied_id}>{content}</Typography>
-        </Link>
+        ) : (
+          <Link id={index} onClick={(e) => handleClickReply(e, content)} className={classes.reply}>
+            <Typography className={classes.replied_id}>{content}</Typography>
+          </Link>
+        )}
       </>
     )
   }
@@ -155,7 +161,17 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
           </Box>
         </Box>
         <Box mb={3}>
-          <Typography className={classes.content}>{replyData.content}</Typography>
+          <Typography className={classes.content}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <Typography>{newLineText(replyData.content, true)}</Typography>
+            </Linkify>
+          </Typography>
           {replyData.attachments &&
             replyData.attachments[0]?.assets_url &&
             renderClickableImage(replyData.attachments[0]?.assets_url, true)}
@@ -199,7 +215,17 @@ const Comment: React.FC<CommunityHeaderProps> = ({ comment, menuParams, handleRe
               )}
             </Box>
           </Box>
-          <Box className={classes.contentContainer}>{newLineText(commentData.content)}</Box>
+          <Box className={classes.contentContainer}>
+            <Linkify
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key} className={classes.linkify}>
+                  {decoratedText}
+                </a>
+              )}
+            >
+              <Typography>{newLineText(commentData.content)}</Typography>
+            </Linkify>
+          </Box>
           {commentData.attachments &&
             commentData.attachments[0]?.assets_url &&
             renderClickableImage(commentData.attachments[0]?.assets_url)}
@@ -289,6 +315,11 @@ const useStyles = makeStyles((theme) => ({
     color: Colors.primary,
     textDecoration: 'underline',
     display: 'inline',
+  },
+  linkify: {
+    color: Colors.white,
+    textDecoration: 'underline',
+    wordBreak: 'break-all',
   },
   container: {
     display: 'flex',

@@ -267,8 +267,8 @@ export default {
     },
     follow_list: 'フォローリスト',
     member_list: {
-      approve: '承認',
-      cancel: '拒否',
+      approve: '許可',
+      cancel: '却下',
       hold: '保留',
       user: '一般ユーザー',
       co_organizer: '共同管理者',
