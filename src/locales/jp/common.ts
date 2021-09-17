@@ -601,6 +601,7 @@ export default {
     },
   },
   topic_comment: {
+    there_is_no_topic: '該当のトピックはありません。',
     report: {
       button: 'コメントを通報',
       title: '通報するコメント',
@@ -614,7 +615,8 @@ export default {
       submit: '削除する',
       success_toast: 'コメントを削除しました。',
     },
-    has_deleted: 'この投稿は削除されました',
+    has_deleted_comment: 'この投稿は削除されました。',
+    has_deleted_last_comment: 'この投稿は削除されました',
   },
   tournament_cancel: {
     confirm_cancel_btn: '大会を中止する',
@@ -827,6 +829,9 @@ export default {
       please_review: 'を見直してください',
       holding_period: '開催日時',
       address: '会場詳細',
+    },
+    edit: {
+      submit: 'この内容で編集する',
     },
   },
   lobbySearchFilters: {
@@ -1194,6 +1199,7 @@ export default {
     game: 'ゲーム',
     game_placeholder: '選択されていません',
     area: 'エリア',
+    area_detail: 'エリア詳細',
     area_name_placeholder: 'エリア情報を記載',
     public_or_private: 'コミュニティ公開設定',
     public: '公開',
@@ -1215,12 +1221,14 @@ export default {
     },
     confirm: {
       title: 'この内容で作成しますか？',
+      title_edit: 'この内容で編集しますか？',
       submit: '作成する',
+      submit_edit: '編集する',
     },
     edit: {
       title: 'コミュニティを編集する',
       disband_button: 'コミュニティを解散する',
-      confirm_disband: '編集内容を確定する',
+      check_edited_content: '編集内容を確認する',
     },
     disband: {
       title: 'コミュニティを解散する',
@@ -1228,7 +1236,7 @@ export default {
       disband_community: '解散させるコミュニティ',
       description: `コミュニティを解散します。
       一度解散したコミュニティのトピックやアップロードした画像は復元できません。`,
-      disbanded_toast: 'コミュニティを解散しました',
+      disbanded_toast: 'コミュニティを解散しました。',
     },
     community_created_toast: 'コミュニティを作成しました',
     community_updated_toast: 'コミュニティを編集しました',

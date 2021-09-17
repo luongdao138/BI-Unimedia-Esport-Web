@@ -98,7 +98,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   useEffect(() => {
     if (getCreateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
       setIsAlreadyUsedTitle(true)
-    } else if (getCreateCommunityMeta.error['message']) {
+    } else if (getCreateCommunityMeta.error) {
       renderFailedDataToast()
     }
   }, [getCreateCommunityMeta])
@@ -106,7 +106,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
   useEffect(() => {
     if (getUpdateCommunityMeta.error['message'] === SUBMIT_TITLE_ERROR_MESSAGE) {
       setIsAlreadyUsedTitle(true)
-    } else if (getCreateCommunityMeta.error['message']) {
+    } else if (getCreateCommunityMeta.error) {
       renderFailedDataToast()
     }
   }, [getUpdateCommunityMeta])
@@ -155,7 +155,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" className={classes.editButtonContainer}>
         <ButtonPrimary onClick={handleSetConfirm} round className={`${classes.footerButton} ${classes.confirmButton}`} disabled={hasError}>
-          {i18n.t('common:community_create.edit.title')}
+          {i18n.t('common:community_create.edit.check_edited_content')}
         </ButtonPrimary>
         <CancelDialog communityName={communityName} />
       </Box>
@@ -217,7 +217,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
           {isConfirm ? (
             <Box className={classes.footerErrorContainer}>
               {isAlreadyUsedTitle && (
-                <Box textAlign="center" style={isEdit ? { marginTop: 16 } : { marginBottom: 16 }} color={Colors.secondary} px={1}>
+                <Box textAlign="center" style={{ marginBottom: 16 }} color={Colors.secondary} px={1}>
                   <Typography variant="body2">{i18n.t('common:community_create.title_already_in_use')}</Typography>
                 </Box>
               )}
@@ -226,7 +226,7 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
                   {i18n.t('common:common.cancel')}
                 </ButtonPrimary>
                 <ButtonPrimary type="submit" onClick={handleSetConfirm} round disabled={hasError} className={classes.footerButton}>
-                  {i18n.t('common:community_create.confirm.submit')}
+                  {isEdit ? i18n.t('common:community_create.confirm.submit_edit') : i18n.t('common:community_create.confirm.submit')}
                 </ButtonPrimary>
               </Box>
             </Box>
@@ -254,7 +254,9 @@ const CommunityCreate: React.FC<CommunityCreateProps> = ({ communityName }) => {
             <Box pl={2}>
               <Typography variant="h2">
                 {isConfirm
-                  ? i18n.t('common:community_create.confirm.title')
+                  ? isEdit
+                    ? i18n.t('common:community_create.confirm.title_edit')
+                    : i18n.t('common:community_create.confirm.title')
                   : isEdit
                   ? i18n.t('common:community_create.edit.title')
                   : i18n.t('common:community_create.title')}

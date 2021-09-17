@@ -6,7 +6,7 @@ import { useContextualRouting } from 'next-use-contextual-routing'
 import _ from 'lodash'
 
 const useLobbyHelper = (
-  tournament?: LobbyDetail
+  lobby?: LobbyDetail
 ): {
   toMatches: () => void
   toResults: () => void
@@ -34,29 +34,28 @@ const useLobbyHelper = (
   const router = useRouter()
   const { makeContextualHref } = useContextualRouting()
 
-  const hashKey = tournament?.attributes?.hash_key
-  const chatRoomId = tournament?.attributes?.chatroom_id
-  // const myRole = tournament?.attributes?.is_owner
-  const status = tournament?.attributes?.status
-  const isModerator = tournament?.attributes?.is_owner // myRole === ROLE.ADMIN || myRole === ROLE.CO_ORGANIZER
+  const hashKey = lobby?.attributes?.hash_key
+  const chatRoomId = lobby?.attributes?.chatroom_id
+  const status = lobby?.attributes?.status
+  const isModerator = lobby?.attributes?.is_owner
   const isInProgress = status === LOBBY_STATUS.IN_PROGRESS
   const isCancelled = status === LOBBY_STATUS.CANCELLED
   const isCompleted = status === LOBBY_STATUS.ENDED
-  const isRecruitmentClosed = status === LOBBY_STATUS.ENTRY_CLOSED // || status === LOBBY_STATUS.READY_TO_START
-  const isBattleRoyale = false // tournament?.attributes?.rule === RULE.BATTLE_ROYALE
+  const isRecruitmentClosed = status === LOBBY_STATUS.ENTRY_CLOSED
+  const isBattleRoyale = false
   const isRecruiting = status === LOBBY_STATUS.RECRUITING
-  const isTeam = false //tournament?.attributes?.participant_type > 1
+  const isTeam = false
   const isEditable = isModerator && status !== LOBBY_STATUS.CANCELLED
-  const isFreezed = tournament?.attributes?.is_freezed
+  const isFreezed = lobby?.attributes?.is_freezed
   const isNotHeld = isCompleted && !isFreezed
   const isReady = status === LOBBY_STATUS.READY
-  const isEntered = tournament?.attributes?.participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
-  const isUnselected = isEntered && isFreezed // && myRole === ROLE.INTERESTED
-  const isSelected = isEntered // && myRole === ROLE.PARTICIPANT
+  const isEntered = lobby?.attributes?.participant_status === LOBBY_PARTICIPANT_STATUS.ENTERED
+  const isUnselected = isEntered && isFreezed
+  const isSelected = isEntered
 
   const checkAdminJoined = () => {
     if (!isModerator) return false
-    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    const myInfoList = _.get(lobby, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return false
 
     return _.some(myInfoList, { role: ROLE.INTERESTED })
@@ -64,7 +63,7 @@ const useLobbyHelper = (
   const isAdminJoined = checkAdminJoined()
 
   const checkTeamLeader = () => {
-    const myInfoList = _.get(tournament, 'attributes.my_info', [])
+    const myInfoList = _.get(lobby, 'attributes.my_info', [])
     if (!_.isArray(myInfoList)) return false
 
     return _.some(myInfoList, { is_leader: true })

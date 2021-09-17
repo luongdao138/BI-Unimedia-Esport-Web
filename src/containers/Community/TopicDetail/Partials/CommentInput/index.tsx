@@ -2,7 +2,7 @@ import { Box, IconButton, Icon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Colors } from '@theme/colors'
 import InputBase from '@material-ui/core/InputBase'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Dispatch, SetStateAction } from 'react'
 import useUploadImage from '@utils/hooks/useUploadImage'
 import { useTranslation } from 'react-i18next'
 import ImageUploader from '../ImageUploader'
@@ -17,17 +17,16 @@ import useTopicDetail from '../../useTopicDetail'
 
 type CommunityHeaderProps = {
   reply_param?: { hash_key: string; comment_no: number }
-  handleReply?: (params: { hash_key: string; comment_no: number } | any) => void
-  loadMore: () => void
+  setPage: Dispatch<SetStateAction<number>>
 }
-const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, loadMore }) => {
+const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, setPage }) => {
   const classes = useStyles()
   const { query } = useRouter()
   const { topic_hash_key } = query
   const { t } = useTranslation(['common'])
   const dispatch = useAppDispatch()
   const { checkNgWord } = useCheckNgWord()
-  const { createComment } = useTopicDetail()
+  const { createComment, createCommentMeta, getCommentsList } = useTopicDetail()
   const { uploadArenaCoverImage } = useUploadImage()
   const [isUploading, setUploading] = useState(false)
   const [imageURL, setImageURL] = useState('')
@@ -52,16 +51,30 @@ const Comment: React.FC<CommunityHeaderProps> = ({ reply_param, loadMore }) => {
     setImageURL('')
   }
 
+  const isInputEmpty = (text: string) => {
+    const textArray = _.split(text, '\n')
+    for (let i = 0; i < textArray.length; i++) {
+      if (textArray[i] !== '') {
+        return false
+      }
+    }
+    return true
+  }
+
   const send = async () => {
     if (_.isEmpty(checkNgWord(inputText.trim()))) {
       const data = {
         topic_hash: String(topic_hash_key),
-        content: inputText,
+        content: isInputEmpty(inputText) ? '' : inputText,
         reply_to_comment_hash: !_.isEmpty(reply_param) && reply_param.hash_key,
         attachments: imageURL,
       }
-      await createComment(data)
-      loadMore()
+      if (!createCommentMeta.pending) {
+        await createComment(data)
+        setPage(1)
+      }
+
+      getCommentsList({ hash_key: String(topic_hash_key), page: 1 })
       setInputText('')
       setImageURL('')
     } else {

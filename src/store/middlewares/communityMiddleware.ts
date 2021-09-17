@@ -22,8 +22,6 @@ import {
   createTopicComment,
   deleteTopicComment,
   searchTopic,
-  getCommentsListNext,
-  getCommentsListPage,
   unfollowCommunityPending,
   followCommunity,
 } from '@store/community/actions/index'
@@ -51,8 +49,6 @@ const messages = {
   [`${createTopicComment.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${deleteTopicComment.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${searchTopic.rejected}`]: i18n.t('common:common.failed_to_get_data'),
-  [`${getCommentsListNext.rejected}`]: i18n.t('common:common.failed_to_get_data'),
-  [`${getCommentsListPage.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${unfollowCommunityPending.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${unfollowCommunity.rejected}`]: i18n.t('common:common.failed_to_get_data'),
   [`${followCommunity.rejected}`]: i18n.t('common:common.failed_to_get_data'),

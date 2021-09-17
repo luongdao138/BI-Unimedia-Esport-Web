@@ -62,7 +62,7 @@ const TopicRowItem: React.FC<TopicRowItemProps> = ({
 
   const renderContent = (contentRect) => {
     if (lastCommentData?.deleted_at) {
-      return t('common:topic_comment.has_deleted')
+      return t('common:topic_comment.has_deleted_last_comment')
     }
     return lastCommentData?.content ? (
       <Highlight search={keyword} isSearched={isSearched} contentRect={contentRect}>
