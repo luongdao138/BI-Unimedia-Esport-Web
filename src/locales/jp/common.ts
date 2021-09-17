@@ -241,7 +241,7 @@ export default {
   },
   community: {
     report: '通報',
-    community_id: 'コミュニティコード：',
+    community_id: 'コミュニティID：',
     copy_shared_url: '共有URLをコピー',
     community_results: 'コミュニティ「:key」 の検索結果',
     community_results_all: 'コミュニティの検索結果',
@@ -281,8 +281,8 @@ export default {
     applying: '申請中',
     participating: '参加中',
     topic_creation: 'トピック作成',
-    confirm_follow_list: 'フォローリストを確定する',
-    no_data: '該当のコミュニティはありません。',
+    confirm_follow_list: '更新する',
+    no_data: '該当のコミュニティはありません',
     topic: {
       delete_success: 'トピックを削除しました。',
       view_past_comments: '↑過去のコメントを表示する',
